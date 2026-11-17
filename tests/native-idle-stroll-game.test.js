@@ -28,16 +28,16 @@ test('stroll writeback rejects another Game, watermark, source pose and substitu
  }finally{f.close();}
 });
 
-test('live transport accepts actual stroll semantics while persistent saves remain closed',()=>{
+test('live transport and semantic save accept actual stroll values while ordinary UI saving remains closed',()=>{
  const f=nativeIdleStrollGameFixture();try{
-  assert(confirmedStateSaveAvailable(f.state));f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.1);f.planner.projectNativeIdleStroll(f.state,f.worker);const encoded=serializeConfirmedState(f.state),restored=deserializeConfirmedState(encoded);assert.deepEqual(restored.workers[0],f.worker);assert.equal(prepareConfirmedStateTransport(f.state).snapshot,encoded);assert(!encoded.includes('native-idle-stroll-attestation'));assert(!encoded.includes('expectedRouteHandle'));assert.equal(confirmedStateSaveAvailable(f.state),false);assert.throws(()=>serialize(f.state),/Solicitud de recursos nativa/);
+  assert(confirmedStateSaveAvailable(f.state));f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.1);f.planner.projectNativeIdleStroll(f.state,f.worker);const encoded=serializeConfirmedState(f.state),restored=deserializeConfirmedState(encoded);assert.deepEqual(restored.workers[0],f.worker);assert.equal(prepareConfirmedStateTransport(f.state).snapshot,encoded);assert(!encoded.includes('native-idle-stroll-attestation'));assert(!encoded.includes('expectedRouteHandle'));assert.equal(confirmedStateSaveAvailable(f.state),false);assert.deepEqual(JSON.parse(serialize(f.state)).workers[0],f.worker);
   for(const mutate of [w=>{w.path=[];},w=>{w.idleState.mode='rest';},w=>{w.idleState.rng=-1;},w=>{w.idleState.binding={};},w=>{w.destinationId=null;}]){const bad=structuredClone(f.state);mutate(bad.workers[0]);assert.throws(()=>serializeConfirmedState(bad),/stroll/);}
  }finally{f.close();}
 });
 
-test('actual stroll Game writeback does not whitelist its unfinished task/Home/rest cohort',()=>{
+test('Game advances the acquired stroll in its native cohort and rejects an unsupported return before moving',()=>{
  const f=nativeIdleStrollGameFixture();try{
-  f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.planner.nativeGameExecutionState(),-1);const body=f.body(1),at=f.state.elapsed,worker=structuredClone(f.worker);assert.throws(()=>tick(f.state,.1,f.nav),/still requires projection/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);
+  f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.planner.nativeGameExecutionState(),1);const before=f.body(1),rng=f.state.rng;tick(f.state,.1,f.nav);assert.notDeepEqual(f.body(1),before);assert.equal(f.state.rng,rng);f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;const body=f.body(1),at=f.state.elapsed,worker=structuredClone(f.worker);assert.throws(()=>tick(f.state,.1,f.nav),/unsupported return boundary/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);
  }finally{f.close();}
 });
 
@@ -55,6 +55,6 @@ test('the prepared transaction writes Game only after its actual native stroll a
 
 test('pthread stroll writeback reads the same executed pose and retains the terminal WALK',async()=>{
  const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');const runtime=await createThreadedSpatialWorld(factory);let f;try{
-  f=nativeIdleStrollGameFixture({core:runtime.core});f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.2);const view=f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.worker.x,view.pose.x);assert.equal(f.worker.z,view.pose.z);assert.equal(f.worker.idleState.mode,'walk');assert.equal(f.planner.nativeGameExecutionState(),-1);
+  f=nativeIdleStrollGameFixture({core:runtime.core});f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.2);const view=f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.worker.x,view.pose.x);assert.equal(f.worker.z,view.pose.z);assert.equal(f.worker.idleState.mode,'walk');assert.equal(f.planner.nativeGameExecutionState(),1);
  }finally{f?.close();await runtime.dispose();}
 });

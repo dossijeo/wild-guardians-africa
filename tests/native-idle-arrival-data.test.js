@@ -73,9 +73,9 @@ test('REST preparation rejects stale Game pose, private intent and source waterm
  }finally{f.close();}}
 });
 
-test('Game does not project desired REST before acquisition or whitelist the unfinished ordinary cohort',()=>{
+test('Game projects REST only after acquisition and reads its actual held-body native cohort',()=>{
  const f=nativeIdleArrivalFixture();try{
-  f.arrive();const body=f.body(1),worker=structuredClone(f.worker),p=f.prepareRest();assert.deepEqual(f.worker,worker);assert.equal(f.planner.projectNativeIdleCycle(f.state,f.worker),null);const binding=f.commitRest(p,{project:false});assert.deepEqual(f.worker,worker);f.planner.projectNativeIdleCycle(f.state,f.worker);assert.equal(f.worker.idleState.rng,binding.reference.initialState.rng);assert.deepEqual(f.body(1),body);const idle=f.worker.idleState;f.planner.projectNativeIdleCycle(f.state,f.worker);assert.equal(f.worker.idleState,idle);assert.equal(f.planner.nativeGameExecutionState(),-1);const at=f.state.elapsed;assert.throws(()=>tick(f.state,.1,{intentTaskPlanner:f.planner}),/still requires projection/);assert.equal(f.state.elapsed,at);
+  f.arrive();const body=f.body(1),worker=structuredClone(f.worker),p=f.prepareRest();assert.deepEqual(f.worker,worker);assert.equal(f.planner.projectNativeIdleCycle(f.state,f.worker),null);const binding=f.commitRest(p,{project:false});assert.deepEqual(f.worker,worker);f.planner.projectNativeIdleCycle(f.state,f.worker);assert.equal(f.worker.idleState.rng,binding.reference.initialState.rng);assert.deepEqual(f.body(1),body);const idle=f.worker.idleState;f.planner.projectNativeIdleCycle(f.state,f.worker);assert.equal(f.worker.idleState,idle);assert.equal(f.planner.nativeGameExecutionState(),1);const at=f.state.elapsed;f.advance(.1);const view=f.planner.projectNativeIdleCycle(f.state,f.worker);assert.equal(view.executedThrough,f.state.elapsed);assert.equal(f.state.elapsed,at+.1);assert.deepEqual(f.body(1),body);
  }finally{f.close();}
 });
 

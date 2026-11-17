@@ -1,4 +1,4 @@
-import {copyNativeIdleStrollRequestReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
+import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
@@ -104,13 +104,35 @@ function inactiveHomeEntry(state,worker){
   return entry&&Number.isFinite(entry.x)&&Number.isFinite(entry.z)&&worker.x===entry.x&&worker.z===entry.z?entry:null;
 }
 
+function restoredStrollGameState(state,worker){
+  const semantic=nativeIdleStrollSavedState(state,worker),idle=semantic.idleState,center=state.structures.find(c=>c.id===worker.centerId),match=/^farm-(plant|structure)-(\d+)$/.exec(idle.anchorId);
+  const plant=match?.[1]==='plant'?state.plants.find(p=>p.id===`plant-${match[2]}`&&p.centerId===worker.centerId&&p.alive):null;
+  if(!match||match[1]==='plant'&&!plant||match[1]==='structure'&&center.id!==`structure-${match[2]}`)throw Error('Invalid saved native stroll anchor');
+  // Reuse the original policy with the SAVED anchor ID. Re-evaluating the
+  // nearest crop here would change the selected WALK target after loading.
+  const a=idleFarmAnchor(state,worker,center,plant?[plant]:[]),anchor={kind:plant?1:2,id:Number(match[2]),x:a.x,z:a.z,radius:a.idleRadius},calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
+  if(a.id!==idle.anchorId||!calibration||!['x','z','radius'].every(k=>Number.isFinite(anchor[k]))||anchor.radius<=0||anchor.radius>8||Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.radius||Math.hypot(idle.destination.x-anchor.x,idle.destination.z-anchor.z)>anchor.radius+1e-9)throw Error('Invalid saved native stroll geometry');
+  return {...semantic,anchor,calibration};
+}
+function restoredStrollMatchesWorker(state,worker,request){
+  if(!worker||request.actorId!==numericId(worker.id)||request.requestedAt>state.elapsed||worker.profile!==request.workerProfile||numericId(worker.centerId)!==request.centerId)return false;
+  try{const {pose,idleState:i,anchor:a}=restoredStrollGameState(state,worker);return Object.keys(pose).every(k=>pose[k]===request.pose[k])&&['kind','id','x','z','radius'].every(k=>a[k]===request.anchor[k])&&i.rng===request.walkRng&&i.approachRetry===request.approachRetry&&i.destination.x===request.destination.x&&i.destination.z===request.destination.z;}catch{return false;}
+}
 function normalizeNativeIntentRestoration(state,wasm){
   const initialIdles=state.workers.filter(w=>['pending-idle-resources','native-idle'].includes(w.nativeRouteAdmission));
   if(initialIdles.length&&(wasm.nav_initial_idle_request_version?.()!==1||typeof wasm.nav_intent_request_initial_idle!=='function'))throw Error('Rebuild native initial Idle restoration');
   if(initialIdles.length&&wasm.spatial_body_count()!==0)throw Error('Native initial Idle restoration requires a fresh physical world');
   if(initialIdles.some(w=>w.nativeRouteAdmission==='native-idle')&&wasm.nav_initial_idle_body_proposal_version?.()!==1)throw Error('Rebuild native initial Idle body restoration');
   for(const worker of initialIdles)nativeInitialIdleSavedState(state,worker,{canonical:true});
-  const homeWorkers=state.workers.filter(w=>['native-home','pending-home-resources'].includes(w.nativeRouteAdmission));
+  const strollers=state.workers.filter(w=>w.nativeRouteAdmission==='native-idle-stroll'||w.nativeRouteAdmission==='pending-stroll-resources');
+  if(strollers.length&&(wasm.nav_idle_stroll_restore_version?.()!==1||typeof wasm.nav_intent_restore_idle_stroll!=='function'||typeof wasm.nav_idle_stroll_restore_declaration_snapshot!=='function'||typeof wasm.nav_intent_restored_idle_stroll_home_request!=='function'))throw Error('Rebuild native stroll restoration');
+  if(strollers.length&&wasm.spatial_body_count()!==0)throw Error('Native stroll restoration requires a fresh physical world');
+  const strolls=strollers.map(worker=>{
+    nativeIdleStrollSavedState(state,worker);
+    if(contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile)){const home={...worker};cancelIdle(home);Object.assign(home,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});return {worker,home};}
+    restoredStrollGameState(state,worker);return {worker};
+  });
+  const homeWorkers=[...state.workers.filter(w=>['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)),...strolls.filter(p=>p.home).map(p=>p.home)];
   if(homeWorkers.length&&(wasm.nav_home_request_version?.()!==1||typeof wasm.nav_intent_restore_home_request!=='function'))throw Error('Rebuild native Home restoration');
   if(homeWorkers.length&&wasm.spatial_body_count()!==0)throw Error('Native Home restoration requires a fresh physical world');
   const homes=homeWorkers.map(worker=>{
@@ -127,6 +149,7 @@ function normalizeNativeIntentRestoration(state,wasm){
   for(const {worker,action} of prepared){worker.nativeTaskAction=action;worker.nativeRouteAdmission='pending-action-resources';worker.status='waiting-task';worker.path=null;worker.taskApproach=null;worker.running=false;worker.gateWaiting=false;}
   for(const worker of homes){worker.nativeRouteAdmission='pending-home-resources';worker.running=false;worker.gateWaiting=false;}
   for(const worker of initialIdles)worker.nativeRouteAdmission='pending-idle-resources';
+  for(const {worker,home} of strolls)if(home)Object.assign(worker,home);else worker.nativeRouteAdmission='pending-stroll-resources';
 }
 
 export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
@@ -1374,16 +1397,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(wasm.nav_initial_idle_body_binding_actors===undefined)return Object.freeze([]);const count=wasm.nav_initial_idle_body_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native initial Idle body cohort');
     const actors=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_binding_ptr(),count));return Object.freeze(actors.map(actor=>{const binding=nativeInitialIdleBodyBinding(actor);if(!binding)throw Error('Native initial Idle body lost its owner');return binding;}));
   };
-  const idleStrollRequestFromRow=a=>{
+  const idleStrollRequestFromRow=(a,bound=true)=>{
     if(a.length!==28||a[0]!==1||!a.every(Number.isFinite)||a[2]!==wasm.nav_intent_session())throw Error('Invalid native restored stroll request');
-    return copyNativeIdleStrollRequestReference({kind:'native-idle-stroll-request-reference',version:1,authorityEpoch:epoch(),nativeSession:a[2],actorId:a[1],requestSequence:a[3],requestedAt:a[4],centerId:a[5],bodyId:a[6],profile:a[7],bodyFlags:a[8],pose:{x:a[9],z:a[10],yaw:a[11],radius:a[12],runPhase:a[13],walkPhase:a[14],carryPhase:a[15],runRemaining:a[16]},workerProfile:PROFILES[a[17]]?.id,anchor:{kind:a[18],id:a[19],x:a[20],z:a[21],radius:a[22]},idleSeconds:a[23],walkRng:a[24],approachRetry:a[25],destination:{x:a[26],z:a[27]}});
+    return (bound?copyNativeIdleStrollRequestReference:copyNativeIdleStrollDeclarationReference)({kind:bound?'native-idle-stroll-request-reference':'native-idle-stroll-declaration-reference',version:1,authorityEpoch:epoch(),nativeSession:a[2],actorId:a[1],requestSequence:a[3],requestedAt:a[4],centerId:a[5],...(bound?{bodyId:a[6],bodyFlags:a[8]}:{}),profile:a[7],pose:{x:a[9],z:a[10],yaw:a[11],...(bound?{radius:a[12]}:{}),runPhase:a[13],walkPhase:a[14],carryPhase:a[15],runRemaining:a[16]},workerProfile:PROFILES[a[17]]?.id,anchor:{kind:a[18],id:a[19],x:a[20],z:a[21],radius:a[22]},idleSeconds:a[23],walkRng:a[24],approachRetry:a[25],destination:{x:a[26],z:a[27]}});
   };
-  const readIdleStrollRequest=(actorId,source=false)=>{
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),method=source?'nav_idle_stroll_restore_source_snapshot':'nav_idle_stroll_restore_request_snapshot';if(wasm[method]===undefined)return null;
+  const readIdleStrollRequest=(actorId,source=false,declaration=false)=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),method=declaration?'nav_idle_stroll_restore_declaration_snapshot':source?'nav_idle_stroll_restore_source_snapshot':'nav_idle_stroll_restore_request_snapshot';if(wasm[method]===undefined)return null;
     if(wasm.nav_idle_stroll_restore_version?.()!==1)throw Error('Rebuild native restored stroll requests');if(wasm[method](actor)!==1)return null;
-    const value=idleStrollRequestFromRow(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_idle_stroll_restore_request_ptr(),28)));if(value.actorId!==actor)throw Error('Native restored stroll actor mismatch');return value;
+    const value=idleStrollRequestFromRow(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_idle_stroll_restore_request_ptr(),28)),!declaration);if(value.actorId!==actor)throw Error('Native restored stroll actor mismatch');return value;
   };
   const nativeIdleStrollRequestReference=actor=>readIdleStrollRequest(actor);
+  const nativeIdleStrollDeclarationReference=actor=>readIdleStrollRequest(actor,false,true);
   const nativeIdleStrollSourceRequestReference=actor=>readIdleStrollRequest(actor,true);
   const nativeIdleStrollRequestReferences=()=>{
     if(wasm.nav_idle_stroll_restore_requests_snapshot===undefined)return Object.freeze([]);
@@ -1392,7 +1416,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const restoredStrollRequestCurrent=request=>{
     const state=owningState,worker=state?.workers.find(w=>numericId(w.id)===request.actorId);if(!worker||contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile)||!sameNativeIdleStrollRequestReference(request,nativeIdleStrollRequestReference(request.actorId)))return false;
-    try{const {pose,idleState:i}=nativeIdleStrollSavedState(state,worker),a=request.anchor;return worker.profile===request.workerProfile&&numericId(worker.centerId)===request.centerId&&Object.keys(pose).every(k=>pose[k]===request.pose[k])&&i.anchorId===`${a.kind===1?'farm-plant':'farm-structure'}-${a.id}`&&i.rng===request.walkRng&&i.approachRetry===request.approachRetry&&i.destination.x===request.destination.x&&i.destination.z===request.destination.z;}catch{return false;}
+    return restoredStrollMatchesWorker(state,worker,request);
   };
   const idleStrollReference=(h,m,ticket)=>{
     if(h[0]!==1||m[0]!==1||!h.every(Number.isFinite)||!m.every(Number.isFinite))throw Error('Invalid native Idle stroll source');
@@ -1638,6 +1662,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(typeof wasm.nav_intent_initial_idle_home_request!=='function')throw Error('Rebuild native initial Idle Home request');syncBoundaryTime();
     if(wasm.nav_intent_initial_idle_home_request(r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native initial Idle Home request rejected');
     return nativeHomeRequestReference(r.actorId);
+  };
+  const requestNativeRestoredIdleStrollHome=(source,home)=>{
+    const declared=source?.kind==='native-idle-stroll-declaration-reference',r=(declared?copyNativeIdleStrollDeclarationReference:copyNativeIdleStrollRequestReference)(source),current=declared?nativeIdleStrollDeclarationReference(r.actorId):nativeIdleStrollRequestReference(r.actorId);
+    if(r.authorityEpoch!==epoch()||JSON.stringify(current)!==JSON.stringify(r))throw Error('Native restored stroll Home source is not current');
+    if(typeof wasm.nav_intent_restored_idle_stroll_home_request!=='function')throw Error('Rebuild native restored stroll Home');syncBoundaryTime();
+    if(wasm.nav_intent_restored_idle_stroll_home_request(r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native restored stroll Home request rejected');return nativeHomeRequestReference(r.actorId);
   };
   const requestNativeInitialIdleBodyHome=(source,home)=>{
     const held=copyNativeInitialIdleBodyAttestation(source),r=held.reference;
@@ -2283,10 +2313,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     for(const worker of workers)declareNativeInitialIdleRequest(worker,{canonical:true});
     return {restoredInitialIdleIds:workers.map(w=>w.id)};
   };
+  const restoreIdleStrollIntents=state=>{
+    const workers=state.workers.filter(w=>w.nativeRouteAdmission==='pending-stroll-resources').sort((a,b)=>numericId(a.id)-numericId(b.id));
+    for(const worker of workers){const {pose:p,idleState:i,anchor:a,calibration:c}=restoredStrollGameState(state,worker);session.actorSectorRevision({worker:true});
+      if(wasm.nav_intent_restore_idle_stroll(numericId(worker.id),PROFILES.findIndex(v=>v.id===worker.profile),a.kind,a.id,a.x,a.z,a.radius,c.idleSeconds,i.rng,i.approachRetry,i.destination.x,i.destination.z,p.yaw,p.runPhase,p.walkPhase,p.carryPhase,p.runRemaining)!==1)throw Error('Native saved stroll declaration rejected');}
+    return {restoredIdleStrollIds:workers.map(w=>w.id)};
+  };
   const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
     nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
-    restoreHomeIntents,restoreInitialIdleIntents,declareNativeInitialIdleRequest,
+    restoreHomeIntents,restoreInitialIdleIntents,restoreIdleStrollIntents,declareNativeInitialIdleRequest,
     proposalRoute,pendingTaskRoute,nativeTaskStartBinding,startNativeTaskRouteAfterGpuQuiescence,
     getDamagedWalls:()=>getDamaged('wall'),
     getDamagedCenters:()=>getDamaged('center'),
@@ -2298,7 +2334,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
-    nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences,
+    nativeIdleStrollDeclarationReference,requestNativeRestoredIdleStrollHome,nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences,
     startNativeIdleStrollAfterGpuQuiescence,nativeIdleStrollBinding,nativeIdleStrollBindings,nativeIdleStrollExecution,nativeIdleStrollHeldExecution,prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding,prepareNativeIdleStrollProposal,captureNativeIdleStrollProposal,revalidateNativeIdleStrollProposal,cancelNativeIdleStrollProposal,
     nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,prepareNativeIdleCycleProposal,startNativeIdleCycleAfterGpuQuiescence,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
     nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference,requestNativeInitialIdleHome,requestNativeInitialIdleBodyHome,nativeInitialIdleBodyBinding,nativeInitialIdleBodyBindings,nativeInitialIdleBodyState,requestNativeIdleCycleHome,requestNativeIdleStrollHome,prepareNativeInitialIdleBodyProposal,captureNativeInitialIdleBodyProposal,revalidateNativeInitialIdleBodyProposal,cancelNativeInitialIdleBodyProposal,startNativeInitialIdleBodyAfterGpuQuiescence,requestNativeIdleHome,startNativeHomeRouteAfterGpuQuiescence,nativeHomeRequestReference,nativeHomeRequestReferences,nativeHomeRouteBinding,nativeHomeRouteBindings,nativeHomeRouteExecution,prepareNativeHomeRouteProposal,captureNativeHomeRouteProposal,revalidateNativeHomeRouteProposal,cancelNativeHomeRouteProposal,
@@ -2408,6 +2444,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const restoredRetreats=bridge.restoreRetreatIntents(state);
     const restoredHomes=bridge.restoreHomeIntents(state);
     const restoredInitialIdles=bridge.restoreInitialIdleIntents?.(state)??{restoredInitialIdleIds:[]};
+    const restoredStrolls=bridge.restoreIdleStrollIntents?.(state)??{restoredIdleStrollIds:[]};
     homeRoutesRestored=restoredHomes.restoredHomeRouteIds.length;
     eligible.clear();projectedPositions.clear();pendingAttackRoutes.clear();
     retreatRoutes.clear();
@@ -2439,7 +2476,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     structureConditionSnapshot=structureConditionListeners.size?
       new Map(state.structures.map(item=>[item.id,structureCondition(item)])):null;
     return {...result,...restored,...restoredAnimals,...restoredRetreats,
-      ...restoredHomes,...restoredInitialIdles};
+      ...restoredHomes,...restoredInitialIdles,...restoredStrolls};
   };
   const publishCropProtectionChanges=({cropOnly=false,cropAdded=false}={})=>{
     if(!cropProtectionListeners.size)return;
@@ -2875,6 +2912,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       Object.keys(semantic.pose).some(k=>request.pose[k]!==semantic.pose[k])||JSON.stringify(request.idleState)!==JSON.stringify(semantic.idleState))throw Error('Native initial Idle projection is not the retained game source');
     return request;
   };
+  const projectRestoredStrollSource=(state,worker,bound)=>{
+    if(state!==sourceState&&state!==observedTaskState)throw Error('Native restored stroll belongs to another game');if(worker.nativeRouteAdmission!=='pending-stroll-resources')return null;
+    const request=bound?bridge.nativeIdleStrollRequestReference(worker.id):bridge.nativeIdleStrollDeclarationReference(worker.id);if(!request)return null;
+    if(!restoredStrollMatchesWorker(state,worker,request))throw Error('Native restored stroll differs from its retained Game state');projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return request;
+  };
+  const projectNativeIdleStrollRequest=(state,worker)=>projectRestoredStrollSource(state,worker,true);
+  const projectNativeIdleStrollDeclaration=(state,worker)=>projectRestoredStrollSource(state,worker,false);
   const projectNativeInitialIdleRequest=(state,worker)=>projectInitialIdleSource(state,worker,true);
   const projectNativeInitialIdleDeclaration=(state,worker)=>projectInitialIdleSource(state,worker,false);
   const requestNativeInitialIdleResources=(state,worker,options)=>{
@@ -2922,7 +2966,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle stroll belongs to another game');
     const view=bridge.nativeIdleStrollExecution(worker.id)??bridge.nativeIdleStrollHeldExecution(worker.id);if(!view)return null;const r=view.sourceReference??view.binding.reference,p=view.pose,actor=numericId(worker.id),anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`,destination={id:`idle-${worker.id}`,x:r.destination.x,z:r.destination.z},previous=projectedPositions.get(actor);
     if(!state.workers.includes(worker)||view.executedThrough!==state.elapsed||view.actorId!==actor||view.bodyId!==r.bodyId||worker.profile!==r.workerProfile||numericId(worker.centerId)!==r.centerId||previous&&(worker.x!==previous[0]||worker.z!==previous[1]))throw Error('Native Idle stroll is not the executed game boundary');
-    if(worker.nativeRouteAdmission==='native-idle'){
+    if(worker.nativeRouteAdmission==='pending-stroll-resources'){
+      if(!r.sourceRequest||!restoredStrollMatchesWorker(state,worker,r.sourceRequest))throw Error('Native restored stroll has no matching saved Game source');
+    }else if(worker.nativeRouteAdmission==='native-idle'){
       const semantic=nativeInitialIdleRetainedState(state,worker,{canonical:true});
       if(semantic.idleState?.mode!=='watch'||semantic.idleState.remaining!==0||semantic.idleState.anchorId!==anchorId||Object.keys(semantic.pose).some(k=>semantic.pose[k]!==r.pose[k]))throw Error('Native Idle stroll has no matching executed source phase');
     }else{
@@ -2944,11 +2990,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const requestNativeIdleHome=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle Home belongs to another game');
-    const cycle=bridge.nativeIdleCycleExecution(worker.id),held=bridge.nativeIdleStrollHeldExecution(worker.id),initial=worker.nativeRouteAdmission==='pending-idle-resources',body=!!cycle||worker.nativeRouteAdmission==='native-idle'||!!bridge.nativeInitialIdleBodyState?.(worker.id);
-    if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission&&!initial&&!body&&!held||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
-    const execution=held?projectNativeIdleStroll(state,worker):cycle?projectNativeIdleCycle(state,worker):body?projectNativeInitialIdleBody(state,worker):initial?projectNativeInitialIdleDeclaration(state,worker):projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
-    if(!execution||!held&&!initial&&!body&&execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
-    const goal={villageId:numericId(village.id),x:home.x,z:home.z},request=held?bridge.requestNativeIdleStrollHome(execution,goal):cycle?bridge.requestNativeIdleCycleHome(execution.binding,goal):body?bridge.requestNativeInitialIdleBodyHome(execution.binding,goal):initial?bridge.requestNativeInitialIdleHome(execution,goal):bridge.requestNativeIdleHome(execution.binding,goal);
+    const cycle=bridge.nativeIdleCycleExecution(worker.id),held=bridge.nativeIdleStrollHeldExecution(worker.id),restored=worker.nativeRouteAdmission==='pending-stroll-resources',initial=worker.nativeRouteAdmission==='pending-idle-resources',body=!!cycle||worker.nativeRouteAdmission==='native-idle'||!!bridge.nativeInitialIdleBodyState?.(worker.id);
+    if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission&&!restored&&!initial&&!body&&!held||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
+    const execution=restored?projectNativeIdleStrollDeclaration(state,worker):held?projectNativeIdleStroll(state,worker):cycle?projectNativeIdleCycle(state,worker):body?projectNativeInitialIdleBody(state,worker):initial?projectNativeInitialIdleDeclaration(state,worker):projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
+    if(!execution||!restored&&!held&&!initial&&!body&&execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
+    const goal={villageId:numericId(village.id),x:home.x,z:home.z},request=restored?bridge.requestNativeRestoredIdleStrollHome(execution,goal):held?bridge.requestNativeIdleStrollHome(execution,goal):cycle?bridge.requestNativeIdleCycleHome(execution.binding,goal):body?bridge.requestNativeInitialIdleBodyHome(execution.binding,goal):initial?bridge.requestNativeInitialIdleHome(execution,goal):bridge.requestNativeIdleHome(execution.binding,goal);
     cancelIdle(worker);
     Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});
     notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
@@ -3405,6 +3451,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,projectNativeSettledWorkerExecution,
     async startNativeIdleStrollAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleStrollAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleStrollBinding.reference.actorId);if(worker)projectNativeIdleStroll(state,worker);}return result;},
     prepareNativeIdleStrollStopProposal:bridge.prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal:bridge.captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal:bridge.revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal:bridge.cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding:bridge.nativeIdleStrollStopBinding,
+    nativeIdleStrollDeclarationReference:bridge.nativeIdleStrollDeclarationReference,projectNativeIdleStrollRequest,projectNativeIdleStrollDeclaration,
     nativeIdleStrollRequestReference:bridge.nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference:bridge.nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences:bridge.nativeIdleStrollRequestReferences,
     nativeIdleStrollBinding:bridge.nativeIdleStrollBinding,nativeIdleStrollBindings:bridge.nativeIdleStrollBindings,nativeIdleStrollExecution:bridge.nativeIdleStrollExecution,nativeIdleStrollHeldExecution:bridge.nativeIdleStrollHeldExecution,requestNativeIdleStrollHome:bridge.requestNativeIdleStrollHome,projectNativeIdleStroll,prepareNativeIdleStrollProposal:bridge.prepareNativeIdleStrollProposal,captureNativeIdleStrollProposal:bridge.captureNativeIdleStrollProposal,revalidateNativeIdleStrollProposal:bridge.revalidateNativeIdleStrollProposal,cancelNativeIdleStrollProposal:bridge.cancelNativeIdleStrollProposal,
     nativeIdleCycleBinding:bridge.nativeIdleCycleBinding,nativeIdleCycleBindings:bridge.nativeIdleCycleBindings,nativeIdleCycleNextRequest:bridge.nativeIdleCycleNextRequest,nativeIdleCycleExecution:bridge.nativeIdleCycleExecution,projectNativeIdleCycle,prepareNativeIdleCycleProposal:bridge.prepareNativeIdleCycleProposal,async startNativeIdleCycleAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleCycleAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleCycleBinding.reference.actorId);if(worker)projectNativeIdleCycle(state,worker);}return result;},captureNativeIdleCycleProposal:bridge.captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal:bridge.revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal:bridge.cancelNativeIdleCycleProposal,

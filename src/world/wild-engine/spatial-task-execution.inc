@@ -8,7 +8,10 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  if(!s.gates.empty()||!s.suspendedBodies.empty())return -1;
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;
+  if(intent.strollRequest){if(!nativeIdleStrollRequestBodyCurrent(s,intent))return -1;continue;}
+  if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding){if(!currentIdleStroll(double(actor)))return -1;continue;}
   if(intent.heldIdleTaskSource){if(!nativeHeldIdleTaskBodyCurrent(s,intent))return -1;continue;}
+  if(intent.idleCycle){if(!nativeIdleCycleBodyCurrent(s,intent))return -1;continue;}
   if(intent.initialIdleBodyBinding){if(!nativeInitialIdleBodyCurrent(s,intent))return -1;continue;}
   if(intent.initialIdleRequest){if(!nativeInitialIdleRequestBodyCurrent(s,intent))return -1;continue;}
   if(intent.homeRequest){if(!nativeHomeRequestBodyCurrent(s,intent))return -1;continue;}

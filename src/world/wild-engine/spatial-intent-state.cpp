@@ -161,7 +161,7 @@ struct NativeWorkerPoseResourceRequest {
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
- uint32_t idleStrollSourceGeneration=0;double homeX=0,homeZ=0;
+ uint64_t strollRequestSourceSequence=0;uint32_t idleStrollSourceGeneration=0;double homeX=0,homeZ=0;
 };
 struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t center=0,anchor=0;int workerProfile=0,mode=0,anchorKind=0;
@@ -620,14 +620,15 @@ static bool nativeHeldIdleStrollBodyCurrent(const IntentState& s,const ActiveInt
  if(home){const auto& r=*intent.homeRequest;if(r.initialIdleSourceSequence||r.idleCycleSourceSequence||r.body!=route.reservationBody||r.profile!=intent.profile||r.bodyFlags!=body.flags||r.radius!=body.r||r.at<route.suspendedAt||r.sequence<=sequence||r.x!=p[0]||r.z!=p[1]||r.yaw!=p[4]||r.runPhase!=p[9]||r.walkPhase!=p[10]||r.carryPhase!=p[11]||r.runRemaining!=p[14])return false;}
  return true;
 }
-// A task claim retains only the already executed body values. Its ONE route
+// A task claim retains executed/restored pose values. Its ONE route
 // slot owns the new unpublished request; the former22 corridor is discarded.
 static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.heldIdleTaskSource||!intent.requiresResources||!intent.lease||intent.state!=PlanningState::AwaitingResources||!intent.task||!intent.target||intent.animal||intent.home||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||intent.homeRequest||intent.slot>=s.routeSlots.size())return false;
  const auto& r=*intent.heldIdleTaskSource;const auto& route=s.routeSlots[intent.slot];const auto worker=s.workers.find(intent.actor);const auto task=s.tasks.find(intent.task);const auto target=s.targets.find(intent.target);SpatialBodyView body;
- return r.actor==intent.actor&&r.session==s.session&&r.sequence&&r.sequence<intent.resourceRequestSequence&&r.at<=intent.resourceRequestedAt&&r.profile==intent.profile&&route.active&&route.pendingResources&&!route.suspended&&route.actor==intent.actor&&route.generation==intent.generation&&route.originX==r.x&&route.originZ==r.z&&
-  worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==r.body&&worker->second.x==r.x&&worker->second.z==r.z&&task!=s.tasks.end()&&task->second.assigned==intent.actor&&task->second.target==intent.target&&task->second.center==worker->second.center&&target!=s.targets.end()&&target->second.active&&
-  spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==r.radius&&body.x==r.x&&body.z==r.z&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+ if(!(r.actor==intent.actor&&r.session==s.session&&r.sequence&&r.sequence<intent.resourceRequestSequence&&r.at<=intent.resourceRequestedAt&&r.profile==intent.profile&&route.active&&route.pendingResources&&!route.suspended&&route.actor==intent.actor&&route.generation==intent.generation&&route.originX==r.x&&route.originZ==r.z&&
+  worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z&&task!=s.tasks.end()&&task->second.assigned==intent.actor&&task->second.target==intent.target&&task->second.center==worker->second.center&&target!=s.targets.end()&&target->second.active))return false;
+ if(!r.body)return !worker->second.bodyBound&&!worker->second.body;
+ return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==r.radius&&body.x==r.x&&body.z==r.z&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
 static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldIdleTaskSource(const IntentState& s,const ActiveIntent& intent){
  const auto& route=s.routeSlots[intent.slot];const auto& p=route.executionPose;auto r=std::make_shared<NativeWorkerPoseResourceRequest>();
@@ -2251,7 +2252,7 @@ static int commitTaskProposal(bool pendingResources){
     const auto worker=s.workers.find(workerId);
     if(task==s.tasks.end()||worker==s.workers.end()||task->second.assigned||
       !worker->second.eligible){clearProposal(s);return 0;}
-    const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.strollRequest){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.strollRequest&&(!pendingResources||!nativeIdleStrollRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
@@ -2269,7 +2270,7 @@ static int commitTaskProposal(bool pendingResources){
     const size_t count=size_t(s.results[at+4])*2;
     if(offset+count>s.routes.size())continue;
     const auto existing=s.activeIntents.find(workerId);
-    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
+    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
     const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;

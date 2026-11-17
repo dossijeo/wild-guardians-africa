@@ -28,12 +28,13 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_bind_worker(double actor,double id){
   if(found==s.workers.end()||!spatialReadBody(uint64_t(id),body)||body.kind!=0)return 0;
   const auto old=s.gateBodyActors.find(uint64_t(id));if(old!=s.gateBodyActors.end()&&old->second!=uint64_t(actor))return 0;
   auto& worker=found->second;if(worker.bodyBound&&worker.body==uint64_t(id))return 1;
-  const auto intent=s.activeIntents.find(uint64_t(actor));if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.settlementBinding||intent->second.initialIdleBodyBinding||intent->second.idleCycle||(intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.strollRequest)&&(worker.bodyBound||body.x!=worker.x||body.z!=worker.z||!(body.flags&1)||(body.flags&2))))return 0;
+  const auto intent=s.activeIntents.find(uint64_t(actor));if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.settlementBinding||intent->second.initialIdleBodyBinding||intent->second.idleCycle||(intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.strollRequest||intent->second.heldIdleTaskSource)&&(worker.bodyBound||body.x!=worker.x||body.z!=worker.z||!(body.flags&1)||(body.flags&2))))return 0;
   if(worker.bodyBound&&(s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return 0;
   NativeWorkerPoseResourceRequest* request=intent==s.activeIntents.end()?nullptr:intent->second.homeRequest?static_cast<NativeWorkerPoseResourceRequest*>(intent->second.homeRequest.get()):intent->second.initialIdleRequest?static_cast<NativeWorkerPoseResourceRequest*>(intent->second.initialIdleRequest.get()):intent->second.strollRequest.get();
-  if(request&&(id==0||body.r<=0||body.r>2))return 0;
+  if((request||intent!=s.activeIntents.end()&&intent->second.heldIdleTaskSource)&&(id==0||body.r<=0||body.r>2))return 0;
   cancelGateMotionProposal(s);if(worker.bodyBound)s.gateBodyActors.erase(worker.body);
   worker.bodyBound=true;worker.body=uint64_t(id);worker.inactiveSequence=0;s.gateBodyActors.insert_or_assign(worker.body,worker.id);
+  if(intent!=s.activeIntents.end()&&intent->second.heldIdleTaskSource&&!intent->second.heldIdleTaskSource->body){auto completed=std::make_shared<NativeWorkerPoseResourceRequest>(*intent->second.heldIdleTaskSource);completed->body=worker.body;completed->radius=body.r;completed->bodyFlags=body.flags;intent->second.heldIdleTaskSource=std::move(completed);}
   if(request){auto& r=*request;r.body=worker.body;r.radius=body.r;r.bodyFlags=body.flags;r.at=s.effectiveTime;r.sequence=emitIntentChange(s,intent->second);}
   return 1;
 }

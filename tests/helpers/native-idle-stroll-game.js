@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import {nativeIdleCycleGameFixture} from './native-idle-cycle-game.js';
 import {tick} from '../../src/simulation/game.js';
 
-// Actual Game21 and native WALK acquisition. The complete Game.tick cohort
-// remains closed until moving Idle task/Home/rest source transitions exist.
+// Actual Game21 and native WALK acquisition. Native projection now covers
+// the acquired22; ordinary async producer/stop orchestration remains separate.
 export function nativeIdleStrollGameFixture(options={}){
  const f=nativeIdleCycleGameFixture({mode:'watch',remaining:.03,rng:1,...options});
  try{

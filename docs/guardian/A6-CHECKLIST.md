@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion de Idle: [guardado/carga WALK en Game](e-r3-native-idle-stroll-restoration-game-20261117.md). Snapshot semantico, declaracion nueva, espera antes/despues del cuerpo y ejecucion22 conservan pose/fases/destino/RNG; Task/Home durante espera conservan la fuente real. Pasan 1812 pruebas/163 archivos, 19 nuevas, ambos WASM, regresion Task GPU y build. La interfaz de guardado sigue cerrada hasta consumidor grafico. Faltan publicacion/control/puertos/roster/Surface/GPU de restauracion, productor/cohort integral y otros finales/puertas; recuperacion incremental de3123 y siete fallos antiguos siguen pendientes. A6/A/B/C no se cierran; D no se inicia.
+
+
 Continuacion de Idle: [referencia tipada del paseo restaurado](e-r3-native-idle-stroll-restoration-data-20261117.md). El bridge copia la peticion nativa nueva y su22 preparado/adquirido, valida la procedencia explicita y conserva llegada cero sin inventar21 ni permisos antiguos. Pasan 1793 pruebas/162 archivos, 30 especificas (ocho nuevas) y build; los62 inputs nativos permanecen exactos, sin repetir GPU. Faltan guardado/carga Game, publicacion/control y consumidor/GPU de restauracion; otros finales/puertas, productor/cohort y recuperacion incremental integral de3123 siguen pendientes. Los siete fallos antiguos siguen abiertos paraC. A6/A/B/C no se cierran.
 
 
