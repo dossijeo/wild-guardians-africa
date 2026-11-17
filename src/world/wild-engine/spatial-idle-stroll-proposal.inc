@@ -75,16 +75,24 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_binding_snapshot(double actor){auto& s=
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_binding_ptr(){return state().idleStrollBindingResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_binding_actors(){auto& s=state();auto& out=s.idleStrollBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding){if(!currentIdleStroll(double(actor)))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_binding_gates(double actor){auto& s=state();s.gateResult.clear();if(!currentIdleStroll(actor))return -1;for(auto id:s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot].gateReservations)s.gateResult.push_back(double(id));return int(s.gateResult.size());}
-EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_execution(double actor){
- auto& s=state();auto& out=s.idleStrollExecutionResult;out.fill(0);const auto b=currentIdleStroll(actor);if(!b)return 0;
+static int idleStrollExecutionSnapshot(double actor,bool held){
+ auto& s=state();auto& out=s.idleStrollExecutionResult;out.fill(0);const auto b=held?currentHeldIdleStroll(actor):currentIdleStroll(actor);if(!b)return 0;
  const auto& intent=s.activeIntents.at(uint64_t(actor));const auto& route=s.routeSlots[intent.slot];const auto& h=b->actual.header;const auto& m=b->semantic;
  const std::array<double,12> header={1,actor,double(route.reservationBody),double(s.session),double(intent.slot),double(intent.generation),double(intent.assignmentSequence),s.effectiveTime,m[1],h[21],m[3],m[2]};
  std::copy(header.begin(),header.end(),out.begin());std::copy(route.executionPose.begin(),route.executionPose.end(),out.begin()+12);
- const double age=std::clamp(s.effectiveTime-h[10],0.,h[11]-h[10]),retry=std::max(0.,m[16]-age);
+ if(held){out[19]=route.suspendedAt;out[27]=out[28]=0;out[29]=2;}
+ const double age=std::clamp((held?route.suspendedAt:s.effectiveTime)-h[10],0.,h[11]-h[10]),retry=std::max(0.,m[16]-age);
  const std::array<double,6> phase={3,0,0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
  // Pure original cancelWalk blueprint, observable only after actual arrival.
  // It has no new intent sequence/permission and cannot start resting by itself.
  if(route.executionPose[6]==1){const auto rest=idleStrollRestState(*b,s.effectiveTime);std::copy(rest.begin(),rest.end(),out.begin()+36);}
  return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_execution(double actor){return idleStrollExecutionSnapshot(actor,false);}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_held_execution(double actor){return idleStrollExecutionSnapshot(actor,true);}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_held_source_snapshot(double actor){
+ auto& out=state().idleStrollBindingResult;out.clear();const auto b=currentHeldIdleStroll(actor);if(!b)return 0;
+ // Actual source metadata only, never a reconstructed graphical attestation.
+ out={1,double(b->assignmentSequence),double(b->actual.ticket)};out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());out.insert(out.end(),b->semantic.begin(),b->semantic.end());return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_execution_ptr(){return state().idleStrollExecutionResult.data();}

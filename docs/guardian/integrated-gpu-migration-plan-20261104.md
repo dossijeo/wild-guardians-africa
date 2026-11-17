@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion de Idle: [fuente tipada y peticion Home desde el paseo suspendido](e-r3-native-idle-moving-home-data-20261117.md). La lectura retenida22 conserva pose/fases/retry y distingue procedencia de permiso ejecutable. Proyeccion/peticion de Game y control directo mantienen el cuerpo durante Home pendiente; la suspension antigua sigue estricta. Pasan 1719 pruebas/152 archivos, standalone/pthread y build. La parada anterior se revalida en NVIDIA/Turing con los binarios nuevos: 678 IDs conservados y cero asignaciones tras READY; no es aun Home grafico. Faltan roster/Surface/GPU de este origen, tarea/restauracion/cohort/producer, otros finales/puertas y recuperacion incremental integral de 3123. A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [parada movil con pose final en el consumidor original](e-r3-native-idle-stroll-stop-final-consumer-20261117.md). Transactor/puertos/Surface/Host adquieren los valores nativos finales sobre el actor retenido mientras avanzan autoridad y paseo. NVIDIA/Turing dibuja 54 frames durante 1800 ms de bloqueo, conserva 679 IDs y no asigna tras READY; prepara 68 recursos de protocolo y 138 copias de uniformes/bindings (18432 bytes). La pose se instala una vez en los snapshots existentes. Pasan 1709 pruebas/151 archivos y build. Puertas/NeedsPlan, Home desde suspension, tarea/restauracion/cohort/producer y recuperacion incremental integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
 
 

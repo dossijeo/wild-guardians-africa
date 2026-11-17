@@ -8,6 +8,12 @@ static const NativeIdleStrollBinding* currentIdleStroll(double actor){
   !spatialReadBody(route.reservationBody,body)||body.kind!=0||double(body.flags)!=b->semantic[4]||body.r!=route.radius||body.x!=route.executionPose[0]||body.z!=route.executionPose[1]||worker->second.x!=body.x||worker->second.z!=body.z)return nullptr;
  return b.get();
 }
+// A logical held source is distinct from the executable route association.
+// Reuse the exact slot/body checks already required by its Home request.
+static const NativeIdleStrollBinding* currentHeldIdleStroll(double actor){
+ const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return nullptr;const auto& intent=found->second;
+ return nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)?s.routeSlots[intent.slot].idleStrollBinding.get():nullptr;
+}
 static std::array<double,6> idleStrollRestState(const NativeIdleStrollBinding& b,double at){
  const auto& h=b.actual.header;const auto& m=b.semantic;uint32_t rng=uint32_t(m[15]);const double age=std::clamp(at-h[10],0.,h[11]-h[10]);
  return {1,0,m[17]*(2+std::floor(idleCycleRandom(rng)*3)),double(rng),std::max(0.,m[16]-age),0};

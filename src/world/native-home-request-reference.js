@@ -39,3 +39,10 @@ export function nativeHomeRequestContinuesIdleCycle(request,cycle){
  return request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&
   request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>cycle.cycleSequence&&request.requestedAt>=w.effectiveTime&&poseFields.every(k=>request.pose[k]===q.pose[k]);
 }
+// Both values crossed their typed native/direct boundaries. The old stroll
+// describes provenance only; Home must start at the actually suspended pose.
+export function nativeHomeRequestContinuesHeldIdleStroll(request,source){
+ const r=source?.sourceReference,h=source?.resumeHandle;
+ return !!request&&source?.kind==='native-idle-stroll-held-execution'&&!!r&&!!h&&request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.bodyFlags===r.bodyFlags&&request.profile===r.profile&&
+  request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>source.assignmentSequence&&request.requestedAt>=source.suspendedAt&&poseFields.every(k=>request.pose[k]===source.pose[k]);
+}

@@ -3,7 +3,7 @@ import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.j
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle} from '../world/native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers} from '../world/native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers} from '../world/native-idle-cycle.js';
@@ -134,6 +134,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(idleCycle&&(!actor||!cyclePreparationSourceMatches(idleCycle.reference,actor)))throw Error('Native Idle cycle acquisition has no exact admitted body source');
     if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||actor.latestSequence!==idleCycleNext.sourceCycle.cycleSequence))throw Error('Native Idle cycle successor has no current native cycle');
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
+    const heldStrollHome=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
+    if(homeRequest&&actor?.stoppedProjection&&(!heldStrollHome||!nativeHomeRequestContinuesHeldIdleStroll(homeRequest,heldStrollHome)))throw Error('Native Home differs from its actual stopped stroll body');
+    const keepStoppedBody=!!heldStrollHome&&!current&&event.type==='IntentChanged'&&event.state===6;
     const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
@@ -162,12 +165,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
       safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null,sourceIdleCycle:actor?.idleCycleSource?.binding??null,sourceIdleCycleNext:actor?.pendingIdleCycleRequest??null,sourceIdleCycleAdmitted:!!actor?.idleCycleProof&&cycleRecordCurrent(actor.idleCycleProof.reference,actor),issuedStroll:stroll};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
     if(actor){
+      if(keepStoppedBody)actor.revoked.stoppedHomeRequest=homeRequest;
       if(!keepIdleCycle){if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=Math.min(actor.idleCycleRecord.safeUntil,event.effectiveTime);actor.idleCycleProof=null;actor.idleCycleRecord=null;actor.idleCycleSource=idleCycle?{binding:idleCycle,fromBaseline:false,phaseUntil:Infinity}:null;actor.pendingIdleCycleRequest=null;}
       else if(event.state===6){actor.idleCycleSource.phaseUntil=Math.min(actor.idleCycleSource.phaseUntil,event.effectiveTime);if(actor.idleCycleRecord)actor.idleCycleRecord.phaseUntil=Math.min(actor.idleCycleRecord.phaseUntil,event.effectiveTime);}
       if(idleCycleNext)actor.pendingIdleCycleRequest=idleCycleNext;
       if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody;}
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
-      if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;actor.strollProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;actor.stoppedProjection=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
+      if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;actor.strollProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;if(!keepStoppedBody)actor.stoppedProjection=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       // NeedsPlan retains its existing intent and revoked record, never a draw clock.
       if(!actor.current&&actor.state!==0&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
     if(actor){actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
@@ -183,6 +187,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   const stopBody=(reference,owner)=>copyNativeSuspendedBodyReference({kind:'native-suspended-body',version:1,nativeRoute:owner.nativeRoute,worldBoundary:reference.worldBoundary,bodyId:owner.bodyId,resumeGeneration:owner.resumeGeneration,suspendedAt:reference.worldBoundary.effectiveTime});
   function stoppedRecordCurrent(owner,boundary,actor,record){
     return !closed&&!!clock&&!!actor&&!!record&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===null&&actor.state===owner.state&&actor.revoked===record&&record.revokedState===owner.state&&actor.latestSequence===record.revokedSequence&&actor.latestSequence<=clock.intentSequence&&record.safeUntil===boundary.effectiveTime&&matches(record,owner.nativeRoute);
+  }
+  function stoppedHomeSource(actor){
+    const record=actor?.revoked,proof=record?.stopProof,stroll=record?.issuedStroll,body=actor?.proof;
+    if(!proof||!stroll||!body||actor.stoppedProjection?.proof!==proof||!matches(record,proof.reference.sourceRoute)||body.bodyId!==stroll.reference.bodyId||body.nativeRoute.assignmentSequence!==stroll.assignmentSequence)return null;
+    return {kind:'native-idle-stroll-held-execution',sourceReference:stroll.reference,assignmentSequence:stroll.assignmentSequence,resumeHandle:{...body.nativeRoute.routeHandle,generation:body.resumeGeneration},suspendedAt:body.suspendedAt,pose:actor.stoppedProjection.homePose(stroll.reference.pose.radius)};
+  }
+  function stoppedHomeCurrent(actor,record,body){
+    const request=record?.stoppedHomeRequest;
+    return !!request&&!closed&&!!clock&&!actor.closed&&actors.get(request.actorId)===actor&&actor.current===null&&actor.revoked===record&&actor.state===6&&record.revokedState===4&&record.safeUntil===body.suspendedAt&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence&&actor.pendingHomeRequest===request&&sameNativeSuspendedBodyReference(actor.proof,body);
   }
   function resumeSourceMatches(reference,proof){
     const source=reference.sourceResumeHandle,old=proof?.nativeRoute;
@@ -432,7 +445,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         }
       }
       // All validation precedes every write, including a bad later proof.
-      for(const {actor,record,proof,reference,pose} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?Object.freeze({proof,read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];}}):null;}
+      for(const {actor,record,proof,reference,pose} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?Object.freeze({proof,read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];},homePose(radius){return Object.freeze({x:pose[0],z:pose[1],yaw:pose[4],radius,runPhase:pose[9],walkPhase:pose[10],carryPhase:pose[11],runRemaining:pose[14]});}}):null;}
       return staged.length;
     },
     admitStrollStop(value,{preparingWorldBoundary=null}={}){
@@ -449,7 +462,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const reference=copyNativeIdleStrollStoppedBody(value),owner=reference.stop.routes.find(r=>r.nativeRoute.actorId===reference.actorId),actor=actors.get(reference.actorId),record=actor?.current??actor?.revoked;
       let observed=null,covers=false,body=null;
       const current=()=>{const proof=record?.stopProof??null;if(proof!==observed){observed=proof;covers=!!proof&&nativeIdleStrollStopAttestationCovers(proof,reference.stop);body=covers?stopBody(proof.reference,owner):null;}
-        return covers&&actor?.stoppedProjection?.proof===observed&&stoppedRecordCurrent(owner,observed.reference.worldBoundary,actor,record)&&suspendedCurrent(body,record,actor);};
+        return covers&&actor?.stoppedProjection?.proof===observed&&(stoppedRecordCurrent(owner,observed.reference.worldBoundary,actor,record)&&suspendedCurrent(body,record,actor)||stoppedHomeCurrent(actor,record,body));};
       const bundle=current()?null:this.admitStrollStop(reference.stop,{preparingWorldBoundary});
       const pending=()=>!!bundle&&bundle.isPrepared()&&actor?.current===record&&active.get(reference.actorId)===record&&actor.state===1&&matches(record,owner.nativeRoute);
       if(!current()&&!pending())throw Error('Native stopped body lacks its acquired final projection');
