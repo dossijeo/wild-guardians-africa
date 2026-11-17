@@ -8,7 +8,7 @@ import {copyNativeFarmArrivalRouteResources} from '../../src/world/native-farm-a
 export async function nativeFarmArrivalGraphicsFixture({urgent=false,...options}={}){
  const native=nativeFarmArrivalRouteFixture({peer:true,...options});let f;
  try{f=await nativeWorkerGraphicsFixture({...native,actor:native.worker.id},{idle:true,clips:['Walk_Skip','Run','Idle']});const p=native.planner.prepareNativeFarmArrivalRouteProposal(native.requestSource,{urgent});assert.equal(p.status,'proposed');const proposal=p.proposal,supportFor=value=>f.terrain.prepareNativeFarmArrivalProposal(value,{terrainManifest:f.manifest});assert(supportFor(proposal)?.valid());
-  return {...f,nativeActor:native.actor,proposal,support:supportFor(proposal),supportFor,
+  return {...f,nativeActor:native.actor,proposal,support:supportFor(proposal),supportFor,get acquires(){return f.acquires;},
    sync(){f.state.workers=[structuredClone(f.worker)];for(const key of ['tasks','crates','structures','elapsed','time','day'])f.state[key]=structuredClone(f.nativeState[key]);f.roster.sync();},
    advance(seconds){native.move(seconds);assert(native.planner.projectNativeFarmArrivalExecution(native.state,native.worker));},
    commitFarm(prepared=proposal){assert.equal(native.commit({ticket:prepared.ticket.ticket}),1);assert(native.planner.projectNativeFarmArrivalExecution(native.state,native.worker));const binding=native.planner.nativeFarmArrivalRouteBinding(native.actor),nativeRoute={actorId:binding.reference.actorId,assignmentSequence:binding.assignmentSequence,routeHandle:binding.reference.expectedRouteHandle},worldBoundary=binding.reference.worldBoundary,presentation=native.planner.captureNativeRoutePresentation(nativeRoute.routeHandle);

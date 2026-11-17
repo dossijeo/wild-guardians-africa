@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [actor original Farm retenido a Task](e-r3-native-farm-moving-task-graphics-20261117.md). Roster comparte continuacion12/24 sin Idle ficticio: pose/politica exactas, activacion/rollback y adquisicion14 sobre misma raiz/geometrias/indices/bancos. Nueva tabla solo para trayectoria Task; propietario retenido se retira al adquirir. Referencias: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan2461 pruebas/234 archivos (una omision opcional),133 dirigidas y build;64 inputs nativos sin cambios. Renderer/admision/frame simulado; faltan Surface/Host/hardware del relevo, Home/finales/cohort/productor. Intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [control y admision Farm retenido a Task](e-r3-native-farm-moving-task-control-20261117.md). Lease tipada conserva cuerpo/pose mientras solicitud6 espera; version/familia/generacion/proyeccion exactas, sin ascenso de prueba incompleta ni Home ficticio. ACK14 propio con plantilla/version1 en Host/publicador y comprobacion independiente de admision. Referencias: codigo Id<T>/Queue/LifetimeTracker de wgpu26.0.1. Pasan2440 pruebas/233 archivos (una omision opcional),100 dirigidas y build;64 inputs nativos sin cambios. Puertos reales, paquete/drain GPU simulados; faltan actor/Surface/hardware del relevo, Home/finales/cohort/productor. Intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
 
 
