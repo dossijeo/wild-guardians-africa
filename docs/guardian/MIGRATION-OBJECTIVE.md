@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [template tipado de parada movil en el canal de terreno](e-r3-native-idle-stroll-stop-terrain-20261117.md). El slot existente conserva propietarios y efectos copiados, contabiliza los metadatos y exige el template exacto en preparador/ACK. Surface y el commit temporal siguen cerrados al relevo revalidado hasta integrar la pose final. Pasan 571 pruebas/42 archivos y build; la GPU anterior no se presenta como evidencia nueva. Faltan transactor y pose/fases/picking GPU finales con autoridad continua antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
+
+
 Continuacion de Idle: [template y recibo de parada movil en el canal directo](e-r3-native-idle-stroll-stop-publication-20261117.md). El mismo hold exige identidad preparada, version propia y atestacion final; rechaza sustituciones, omisiones y mezcla con cuerpos antiguos. El Host rechaza explicitamente esta familia hasta conectar la pose final. Pasan 556 pruebas/41 archivos y build, sin repetir la GPU del commit anterior. Faltan transactor/terreno y muestreo GPU final con autoridad continua antes de Home; tarea/restauracion/cohort/producer y recuperacion integral de 3123 siguen pendientes. A6/A/B/C permanecen abiertos.
 
 

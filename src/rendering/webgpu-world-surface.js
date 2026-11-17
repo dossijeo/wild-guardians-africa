@@ -175,7 +175,8 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     try{parts.push(...gates.map(part=>part.chunkParticipant()));}catch(error){for(const gate of gates)gate.cancel();throw error;}
    }else parts.push(...(workers?.prepareNativeTerrainRetention(view)??[]));return parts;}catch(error){for(const part of parts.reverse())part.cancel();throw error;}
   }
-  async function prepareNativeTerrainProposal(messages,{signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null}){
+  async function prepareNativeTerrainProposal(messages,{signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null,nativeIdleStrollStopTemplate=null}){
+   if(nativeIdleStrollStopTemplate)throw Error('Native moving stop requires prepared final-pose support');
    if(stopEffects?.gateEffects.rows.length&&!stopEffects?.routeEffects.rows.length)throw Error('Native stop requires a coordinated terrain/body/motor batch');
    const routesRetainable=()=>{const status=workers?.status();return !status?.nativePreparing&&(!status?.native||retainsNativeAssignments||!!stopEffects?.routeEffects.rows.length);};
    if(remoteGpu&&(nativeGateProposal||nativeRoutePreparations||!routesRetainable()))throw Error('Native terrain commands require projected route assignments before recording moving actors');
