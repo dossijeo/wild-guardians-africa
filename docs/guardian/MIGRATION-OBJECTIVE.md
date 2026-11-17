@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [control y admision Farm retenido a Task](e-r3-native-farm-moving-task-control-20261117.md). Lease tipada conserva cuerpo/pose mientras solicitud6 espera; version/familia/generacion/proyeccion exactas, sin ascenso de prueba incompleta ni Home ficticio. ACK14 propio con plantilla/version1 en Host/publicador y comprobacion independiente de admision. Referencias: codigo Id<T>/Queue/LifetimeTracker de wgpu26.0.1. Pasan2440 pruebas/233 archivos (una omision opcional),100 dirigidas y build;64 inputs nativos sin cambios. Puertos reales, paquete/drain GPU simulados; faltan actor/Surface/hardware del relevo, Home/finales/cohort/productor. Intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm retenido a solicitud Task/TaskStart nativos](e-r3-native-farm-moving-task-source-20261117.md). Captura compartida conserva cuerpo/fases/presupuesto, solo publica solicitud6 y adquiere movimiento con14. Game reconoce Farm retenido exacto y reclama Task incluso por maduracion dentro del tick, sin Idle ni mover JS; otro Task avanza. Referencias: codigo DetourCrowd1.6.0/Godot4.4-stable. Pasan2412 pruebas/231 archivos (una omision opcional),189 dirigidas y build; ambos WASM recompilados,64 inputs nativos exactos/4 cambios. Fuente/ABI de confianza: faltan control/admision/puertos/actor/Surface del relevo, Home/finales/cohort/productor. Sin hardware nuevo; intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
 
 

@@ -101,6 +101,7 @@ const profiles=Object.freeze({
     proposalKind:'native-task-start-proposal',
     templateField:'preparedTaskStartTemplate',bindingField:'nativeTaskStartBinding',releaseField:'nativeStartedRoutes',
     reference:nativeTaskStartReferenceFromProposal,sameReference:sameNativeTaskStartReference,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeTaskStartVersion===1&&sameNativeTaskStartReference(receipt.preparedTaskStartTemplate,prepared),
     compatible:routeCompatible,
     attest(native,reference,preparedReference){
       const actual=issuedRoute(native,reference),fact=native.nativeTaskStartBinding(reference.actorId);

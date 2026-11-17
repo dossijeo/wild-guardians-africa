@@ -1367,6 +1367,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                ...(message.preparedIdleStrollTemplate?{nativeIdleStrollVersion:1,preparedIdleStrollTemplate:copyNativeIdleStrollReference(message.preparedIdleStrollTemplate)}:{}),
                ...(message.preparedFarmArrivalTemplate?{nativeFarmArrivalVersion:1,preparedFarmArrivalTemplate:copyNativeFarmArrivalRouteReference(message.preparedFarmArrivalTemplate)}:{}),
                ...(message.preparedHomeRouteTemplate?{nativeHomeRouteVersion:1,preparedHomeRouteTemplate:copyNativeHomeRouteReference(message.preparedHomeRouteTemplate)}:{}),
+               ...(message.preparedTaskStartTemplate?{nativeTaskStartVersion:1,preparedTaskStartTemplate:copyNativeTaskStartReference(message.preparedTaskStartTemplate)}:{}),
                ...(message.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate)}:{}),
                ...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
            }).catch(error=>fail(error));return;
