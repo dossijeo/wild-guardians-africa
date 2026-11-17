@@ -213,6 +213,7 @@ struct WorldResourcePublication {
   bool valid=false;
   std::array<double,9> header{};
   std::array<double,5> stopBinding{};
+  std::array<double,6> stopSource{}; // version,session,actor,slot,generation,assignment
   std::vector<int32_t> changes;
 };
 WILD_SAMPLING_LOCAL WorldResourcePublication* worldResourcePublication=nullptr;
@@ -1912,7 +1913,7 @@ void spatialRecordMotionResourceBoundary(double session,double ticket,double tim
   if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
   auto& publication=*worldResourcePublication;publication.changes.clear();publication.prepared.reset();
   publication.header={1,session,ticket,time,double(kind),0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
-  publication.stopBinding.fill(0);publication.valid=true;
+  publication.stopBinding.fill(0);publication.stopSource.fill(0);publication.valid=true;
 }
 extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
@@ -3128,7 +3129,12 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
     publication.prepared.reset();
     if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
-    publication.stopBinding=stopBinding;publication.valid=true;
+    publication.stopBinding=stopBinding;publication.stopSource.fill(0);
+    if(input.kind==12||input.kind==24){
+      const auto& ids=input.integers;const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
+      publication.stopSource={1,double(id(0)),double(id(2)),double(uint32_t(ids[4])),double(uint32_t(ids[5])),double(id(6))};
+    }
+    publication.valid=true;
   }
   return result==1?1:-6;
 }
@@ -3139,6 +3145,12 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_binding_ptr(){
   if(spatial_world_resource_snapshot()!=1||(worldResourcePublication->header[4]!=12&&worldResourcePublication->header[4]!=24))return nullptr;
   const auto& p=*worldResourcePublication;return p.stopBinding[0]==1&&p.stopBinding[3]==p.header[2]&&p.stopBinding[4]==p.header[3]?p.stopBinding.data():nullptr;
+}
+// Selected source on the same last committed publication. A dependency stopped
+// by its held-disc closure cannot impersonate the source instruction's actor.
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_source_ptr(){
+  if(!spatial_world_stop_binding_ptr()||worldResourcePublication->stopSource[0]!=1)return nullptr;
+  return worldResourcePublication->stopSource.data();
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}
 int spatial_edge(int x,int z,int nx,int nz){return std::abs(x-nx)+std::abs(z-nz)==1&&edge(x,z,nx,nz);}

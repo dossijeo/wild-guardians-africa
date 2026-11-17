@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [datos y asociacion Farm24](e-r3-native-farm-arrival-stop-data-20261117.md). Esquema/adapter existentes compartidos12/24, etiquetas y generacion exactas; journal nativo de ultima publicacion identifica la fuente elegida, no solo dependencias detenidas. Referencia: codigo Id<T> de wgpu26.0.1. Pasan2250 pruebas/223 archivos (una omision opcional),89 dirigidas y build; standalone/pthread recompilados,64 inputs/artefactos congelados. Faltan proyeccion/control/puertos/consumidor y relevos Game; no hardware24. Siguen pendientes huecos y recuperacion3123. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [parada Farm24 nativa preparada](e-r3-native-farm-arrival-stop-source-20261117.md). Se comparte el nucleo de parada12 con fuente Farm explicita: mismo cuerpo/slot, pose final revalidada y recibo ligado al ticket preparado; Task peer sigue avanzando. Referencias: codigo DetourCrowd1.6.0/Godot4.4. Pasan2232 pruebas/222 archivos (una omision opcional),40 dirigidas y build; standalone/pthread recompilados,64 inputs/artefactos congelados. Faltan datos/proyeccion/control/puertos/consumidor y relevos Game; no hardware24. Siguen pendientes huecos y recuperacion3123. A6/A/B/C abiertos,D no iniciado.
 
 
