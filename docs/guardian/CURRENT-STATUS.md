@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion de Idle: [fuente TaskStart desde la parada movil real](e-r3-native-idle-moving-task-source-20261117.md). Fuente nativa/Game/control y ambos puertos conservan el cuerpo final22 durante la peticion Task14; rechazan reclamaciones durante WALK y avisos que rebobinan la pose. Pasan 1757 pruebas/158 archivos y 17 especificas (13 incluidas); siete fallos de la seleccion ampliada se reproducen en el padre y siguen abiertos. Ambos WASM, regresion Home en GPU y build validados. Falta consumidor grafico Task desde22 detenido, restauracion, otros finales/puertas, productor/cohort ordinarios y recuperacion incremental integral de 3123. A6/A/B/C siguen abiertos.
+
+
 Continuacion de Idle: [Home desde el paseo suspendido en el consumidor original](e-r3-native-idle-moving-home-consumer-20261117.md). Roster/Surface/puertos/Host conservan la presentacion suspendida y adquieren Home18 desde la pose real22. NVIDIA/Turing conserva 678 IDs de geometria/bancos, retira solo el dato de ruta22 sustituido y reutiliza shaders/pipelines. Cada bloqueo de 1800 ms conserva 54 frames; prepara 70 recursos de protocolo y 120 copias de uniformes/bindings (13664 bytes), sin asignaciones tras READY. Pasan 1727 pruebas/153 archivos y build. Tarea/restauracion movil, otros finales/puertas, productor/cohort ordinarios y recuperacion incremental integral de 3123 siguen pendientes. A6/A/B/C siguen abiertos.
 
 

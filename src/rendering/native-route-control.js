@@ -136,7 +136,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
     const heldStrollHome=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
     if(homeRequest&&actor?.stoppedProjection&&(!heldStrollHome||!nativeHomeRequestContinuesHeldIdleStroll(homeRequest,heldStrollHome)))throw Error('Native Home differs from its actual stopped stroll body');
-    const keepStoppedBody=!!heldStrollHome&&!current&&event.type==='IntentChanged'&&event.state===6;
+    const heldStrollTask=taskRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
+    if(taskRequest&&actor?.stoppedProjection&&!heldStrollTask)throw Error('Native task request lacks its actual stopped stroll body');
+    const keepStoppedBody=!!(heldStrollHome||heldStrollTask)&&!current&&event.type==='IntentChanged'&&event.state===6;
     const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
@@ -154,6 +156,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actor?.settlementRecord?.lastDrawTime!==null&&actor?.settlementRecord?.lastDrawTime!==undefined&&event.effectiveTime<actor.settlementRecord.lastDrawTime){const error=Error('Native settlement revocation arrived after its presented time');error.code='native-settlement-revocation-late';throw error;}
     if(actor?.actionRecord&&actor.actionRecord.lastDrawTime!==null&&event.effectiveTime<actor.actionRecord.lastDrawTime){const error=Error('Native action revocation arrived after its presented time');error.code='native-action-revocation-late';throw error;}
     const sourceSuspension=assigned&&actor?.proof&&suspendedCurrent(actor.proof,actor.revoked,actor)?{reference:actor.proof,sequence:actor.latestSequence}:null;
+    const sourceStoppedTaskBody=assigned&&actor?.proof&&stoppedTaskCurrent(actor,actor.revoked,actor.proof)?actor.proof:null;
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
       if(actor){actor.revoked=current;actor.current=null;actor.proof=null;}
@@ -163,9 +166,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const sourceHome=assigned&&actor?.settlementProof?.reference.home&&settlementCurrent(actor.settlementProof.reference,actor)?actor.settlementProof:null,sourceTaskRequest=assigned?actor?.pendingTaskRequest??null:null,sourceAction=assigned&&actor?.actionProof&&actionCurrent(actor.actionProof.reference,actor)?actor.actionProof:null;
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
-      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null,sourceIdleCycle:actor?.idleCycleSource?.binding??null,sourceIdleCycleNext:actor?.pendingIdleCycleRequest??null,sourceIdleCycleAdmitted:!!actor?.idleCycleProof&&cycleRecordCurrent(actor.idleCycleProof.reference,actor),issuedStroll:stroll};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+      safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceStoppedTaskBody,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null,sourceIdleCycle:actor?.idleCycleSource?.binding??null,sourceIdleCycleNext:actor?.pendingIdleCycleRequest??null,sourceIdleCycleAdmitted:!!actor?.idleCycleProof&&cycleRecordCurrent(actor.idleCycleProof.reference,actor),issuedStroll:stroll};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
     if(actor){
-      if(keepStoppedBody)actor.revoked.stoppedHomeRequest=homeRequest;
+      if(keepStoppedBody){actor.revoked.stoppedHomeRequest=homeRequest;actor.revoked.stoppedTaskRequest=taskRequest;}
       if(!keepIdleCycle){if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=Math.min(actor.idleCycleRecord.safeUntil,event.effectiveTime);actor.idleCycleProof=null;actor.idleCycleRecord=null;actor.idleCycleSource=idleCycle?{binding:idleCycle,fromBaseline:false,phaseUntil:Infinity}:null;actor.pendingIdleCycleRequest=null;}
       else if(event.state===6){actor.idleCycleSource.phaseUntil=Math.min(actor.idleCycleSource.phaseUntil,event.effectiveTime);if(actor.idleCycleRecord)actor.idleCycleRecord.phaseUntil=Math.min(actor.idleCycleRecord.phaseUntil,event.effectiveTime);}
       if(idleCycleNext)actor.pendingIdleCycleRequest=idleCycleNext;
@@ -196,6 +199,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function stoppedHomeCurrent(actor,record,body){
     const request=record?.stoppedHomeRequest;
     return !!request&&!closed&&!!clock&&!actor.closed&&actors.get(request.actorId)===actor&&actor.current===null&&actor.revoked===record&&actor.state===6&&record.revokedState===4&&record.safeUntil===body.suspendedAt&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence&&actor.pendingHomeRequest===request&&sameNativeSuspendedBodyReference(actor.proof,body);
+  }
+  function stoppedTaskCurrent(actor,record,body){
+    const request=record?.stoppedTaskRequest,h=body?.nativeRoute.routeHandle;
+    return !!request&&!closed&&!!clock&&!actor.closed&&actors.get(request.actorId)===actor&&actor.current===null&&actor.revoked===record&&actor.state===6&&record.revokedState===4&&record.safeUntil===body.suspendedAt&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence&&request.requestSequence>record.revokedSequence&&request.requestedAt>=body.suspendedAt&&request.requestHandle.authorityEpoch===h.authorityEpoch&&request.requestHandle.session===h.session&&actor.pendingTaskRequest===request&&sameNativeSuspendedBodyReference(actor.proof,body);
   }
   function resumeSourceMatches(reference,proof){
     const source=reference.sourceResumeHandle,old=proof?.nativeRoute;
@@ -387,6 +394,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(closed||!clock||typeof bootstrap!=='boolean'||!Array.isArray(values)||values.length>32768||!bootstrap&&(!boundary||boundary.effectiveTime!==clock.committedThrough)||boundary&&(boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession))throw Error('Invalid native started route boundary');
       const staged=[],ids=new Set(),bodies=new Set();
       for(const input of values){const value=copyNativeTaskStartAttestation(input),r=value.reference,actor=actors.get(r.actorId),record=actor?.current,world=r.worldBoundary;
+        if(record?.sourceStoppedTaskBody&&r.bodyId!==record.sourceStoppedTaskBody.bodyId)throw Error('Native start differs from its stopped stroll body');
         if(record?.sourceInitialIdleBody&&r.bodyId!==record.sourceInitialIdleBody.bodyId)throw Error('Native start differs from its held initial Idle body');
         if(record?.sourceIdleCycle&&r.bodyId!==record.sourceIdleCycle.reference.bodyId)throw Error('Native start differs from its held Idle cycle body');
         if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||!bootstrap&&!sameNativeWorldBoundary(world,boundary)||ids.has(r.actorId)||bodies.has(r.bodyId)||!record||actor.closed||actor.state!==1||active.get(r.actorId)!==record||actor.latestSequence!==record.assignmentSequence||record.assignmentSequence!==value.assignmentSequence||!sameHandle(record.handle,r.expectedRouteHandle)||record.startTime!==world.effectiveTime||!bootstrap&&!nativeTaskRequestMatchesStart(record.sourceTaskRequest,r))throw Error('Native start attestation differs from issued route or request');
@@ -396,7 +404,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     },
     admitStart(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeTaskStartReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
-      const current=()=>startCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===6&&actor.latestSequence===reference.requestSequence&&nativeTaskRequestMatchesStart(actor.pendingTaskRequest,reference)&&(!actor.initialIdleBodySource||reference.bodyId===actor.initialIdleBodySource.request.bodyId)&&(!actor.idleCycleSource||reference.bodyId===actor.idleCycleSource.binding.reference.bodyId)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
+      const current=()=>startCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===6&&actor.latestSequence===reference.requestSequence&&nativeTaskRequestMatchesStart(actor.pendingTaskRequest,reference)&&(!actor.initialIdleBodySource||reference.bodyId===actor.initialIdleBodySource.request.bodyId)&&(!actor.idleCycleSource||reference.bodyId===actor.idleCycleSource.binding.reference.bodyId)&&(!actor.stoppedProjection||reference.bodyId===actor.proof?.bodyId)&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native start is obsolete or lacks direct request/assignment proof');error.code='native-start-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.startProof.reference.endTime:null;}});
     },
@@ -462,7 +470,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const reference=copyNativeIdleStrollStoppedBody(value),owner=reference.stop.routes.find(r=>r.nativeRoute.actorId===reference.actorId),actor=actors.get(reference.actorId),record=actor?.current??actor?.revoked;
       let observed=null,covers=false,body=null;
       const current=()=>{const proof=record?.stopProof??null;if(proof!==observed){observed=proof;covers=!!proof&&nativeIdleStrollStopAttestationCovers(proof,reference.stop);body=covers?stopBody(proof.reference,owner):null;}
-        return covers&&actor?.stoppedProjection?.proof===observed&&(stoppedRecordCurrent(owner,observed.reference.worldBoundary,actor,record)&&suspendedCurrent(body,record,actor)||stoppedHomeCurrent(actor,record,body));};
+        return covers&&actor?.stoppedProjection?.proof===observed&&(stoppedRecordCurrent(owner,observed.reference.worldBoundary,actor,record)&&suspendedCurrent(body,record,actor)||stoppedHomeCurrent(actor,record,body)||stoppedTaskCurrent(actor,record,body));};
       const bundle=current()?null:this.admitStrollStop(reference.stop,{preparingWorldBoundary});
       const pending=()=>!!bundle&&bundle.isPrepared()&&actor?.current===record&&active.get(reference.actorId)===record&&actor.state===1&&matches(record,owner.nativeRoute);
       if(!current()&&!pending())throw Error('Native stopped body lacks its acquired final projection');

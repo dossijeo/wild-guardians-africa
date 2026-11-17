@@ -254,6 +254,8 @@ struct ActiveIntent {
   std::shared_ptr<NativeInitialIdleResourceRequest> initialIdleRequest;
   std::shared_ptr<const NativeInitialIdleBodyBinding> initialIdleBodyBinding;
   std::shared_ptr<NativeIdleCycle> idleCycle;
+  // Final executed values from a prepared22 suspension, not its old corridor.
+  std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
   std::shared_ptr<const NativeTaskActionBinding> actionBinding;
   bool delivery=false;uint64_t carriedTarget=0;
   std::shared_ptr<const NativeTaskSettlementBinding> settlementBinding;
@@ -326,6 +328,7 @@ struct PendingNativeMotionDraft {
   std::array<double,20> idleStrollSemantic{};
   std::shared_ptr<const NativeTaskSettlementBinding> stationarySource;
   std::shared_ptr<const NativeInitialIdleBodyBinding> initialIdleBodySource;
+  std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
@@ -607,6 +610,20 @@ static bool nativeHeldIdleStrollBodyCurrent(const IntentState& s,const ActiveInt
  if(home){const auto& r=*intent.homeRequest;if(r.initialIdleSourceSequence||r.idleCycleSourceSequence||r.body!=route.reservationBody||r.profile!=intent.profile||r.bodyFlags!=body.flags||r.radius!=body.r||r.at<route.suspendedAt||r.sequence<=sequence||r.x!=p[0]||r.z!=p[1]||r.yaw!=p[4]||r.runPhase!=p[9]||r.walkPhase!=p[10]||r.carryPhase!=p[11]||r.runRemaining!=p[14])return false;}
  return true;
 }
+// A task claim retains only the already executed body values. Its ONE route
+// slot owns the new unpublished request; the former22 corridor is discarded.
+static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(!intent.heldIdleTaskSource||!intent.requiresResources||!intent.lease||intent.state!=PlanningState::AwaitingResources||!intent.task||!intent.target||intent.animal||intent.home||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||intent.homeRequest||intent.slot>=s.routeSlots.size())return false;
+ const auto& r=*intent.heldIdleTaskSource;const auto& route=s.routeSlots[intent.slot];const auto worker=s.workers.find(intent.actor);const auto task=s.tasks.find(intent.task);const auto target=s.targets.find(intent.target);SpatialBodyView body;
+ return r.actor==intent.actor&&r.session==s.session&&r.sequence&&r.sequence<intent.resourceRequestSequence&&r.at<=intent.resourceRequestedAt&&r.profile==intent.profile&&route.active&&route.pendingResources&&!route.suspended&&route.actor==intent.actor&&route.generation==intent.generation&&route.originX==r.x&&route.originZ==r.z&&
+  worker!=s.workers.end()&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==r.body&&worker->second.x==r.x&&worker->second.z==r.z&&task!=s.tasks.end()&&task->second.assigned==intent.actor&&task->second.target==intent.target&&task->second.center==worker->second.center&&target!=s.targets.end()&&target->second.active&&
+  spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==r.radius&&body.x==r.x&&body.z==r.z&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
+}
+static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldIdleTaskSource(const IntentState& s,const ActiveIntent& intent){
+ const auto& route=s.routeSlots[intent.slot];const auto& p=route.executionPose;auto r=std::make_shared<NativeWorkerPoseResourceRequest>();
+ r->actor=intent.actor;r->session=s.session;r->sequence=intent.assignmentSequence;r->body=route.reservationBody;r->at=route.suspendedAt;r->profile=intent.profile;r->bodyFlags=int(route.idleStrollBinding->semantic[4]);r->radius=route.radius;
+ r->x=p[0];r->z=p[1];r->yaw=p[4];r->runPhase=p[9];r->walkPhase=p[10];r->carryPhase=p[11];r->runRemaining=p[14];return r;
+}
 bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources)return false;
  const auto& r=*intent.homeRequest;const bool stroll=r.idleStrollSourceSequence&&nativeHeldIdleStrollBodyCurrent(s,intent,r.idleStrollSourceSequence,r.idleStrollSourceGeneration);
@@ -630,6 +647,7 @@ bool nativeInitialIdleRequestBodyCurrent(const IntentState& s,const ActiveIntent
  return intent.initialIdleRequest&&intent.initialIdleRequest->body&&nativeInitialIdleRequestCurrent(s,intent);
 }
 bool nativeTaskActionsCoherent(const IntentState& s){
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.heldIdleTaskSource&&!nativeHeldIdleTaskBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent)||intent.idleCycle&&!nativeIdleCycleBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
    for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent))return false;
@@ -639,7 +657,7 @@ bool nativeTaskActionsCoherent(const IntentState& s){
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
   const auto owner=s.gateBodyActors.find(id);if(owner==s.gateBodyActors.end())return nullptr;
   const auto intent=s.activeIntents.find(owner->second);
-  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle)?&intent->second:nullptr;
+  return intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.settlementBinding||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle||intent->second.heldIdleTaskSource)?&intent->second:nullptr;
 }
 bool nativeTaskActionBodyCanChange(const IntentState& s,uint64_t id,const SpatialBodyView& proposed){
   const auto* intent=nativeTaskActionForBody(s,id);if(!intent)return true;
@@ -806,6 +824,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
   intent.settlementBinding.reset();
   intent.initialIdleBodyBinding.reset();
   intent.idleCycle.reset();
+  intent.heldIdleTaskSource.reset();
   clearRouteDependencies(s,intent);
   if(intent.slot<s.routeSlots.size()){
     RouteSlot& route=s.routeSlots[intent.slot];
@@ -1488,7 +1507,7 @@ void spatialIntentBodyRemoving(uint64_t id){
   auto& s=state();SpatialBodyView previous;
   if(const auto binding=s.gateBodyActors.find(id);binding!=s.gateBodyActors.end()){
     const auto intent=s.activeIntents.find(binding->second);
-    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
+    if(intent!=s.activeIntents.end()&&(intent->second.actionBinding||intent->second.restoredActionSource||intent->second.homeRequest||intent->second.initialIdleRequest||intent->second.initialIdleBodyBinding||intent->second.idleCycle||intent->second.heldIdleTaskSource)){releaseIntent(s,intent->first,PlanningState::Cancelled);s.activeIntents.erase(intent);}
     if(const auto worker=s.workers.find(binding->second);worker!=s.workers.end())worker->second.bodyBound=false;
     s.gateBodyActors.erase(binding);
   }
@@ -1497,7 +1516,7 @@ void spatialIntentBodyRemoving(uint64_t id){
 }
 void spatialIntentBodiesResetting(){
   auto& s=state();
-  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle)actions.push_back(actor);
+  std::vector<uint64_t> actions;for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.homeRequest||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||intent.heldIdleTaskSource)actions.push_back(actor);
   std::sort(actions.begin(),actions.end());for(uint64_t actor:actions){releaseIntent(s,actor,PlanningState::Cancelled);s.activeIntents.erase(actor);}
   for(auto& [id,worker]:s.workers)worker.bodyBound=false;s.gateBodyActors.clear();
   s.resettingBodies=true;
@@ -2211,6 +2230,7 @@ static int commitTaskProposal(bool pendingResources){
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
     // A moved stationary body retains its actual cycle through the pending
     // task request. Only prepared TaskStart may acquire its next trajectory.
     if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
@@ -2225,11 +2245,13 @@ static int commitTaskProposal(bool pendingResources){
     const size_t count=size_t(s.results[at+4])*2;
     if(offset+count>s.routes.size())continue;
     const auto existing=s.activeIntents.find(workerId);
+    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].idleStrollBinding?captureHeldIdleTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
     const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;
     if(existing!=s.activeIntents.end()){
-      if(!stationary&&!initialIdleBody&&!cycle)releaseIntent(s,workerId,PlanningState::Cancelled);
+      if(heldIdle)releaseIntent(s,workerId,PlanningState::Cancelled,false);
+      else if(!stationary&&!initialIdleBody&&!cycle)releaseIntent(s,workerId,PlanningState::Cancelled);
       else {auto owners=s.byTarget.find(existing->second.target);if(owners!=s.byTarget.end()){owners->second.erase(workerId);if(owners->second.empty())s.byTarget.erase(owners);}clearRouteDependencies(s,existing->second);}
     }
     uint32_t slot=uint32_t(s.routeSlots.size());
@@ -2242,7 +2264,7 @@ static int commitTaskProposal(bool pendingResources){
     if(!route.generation)route.generation=1;
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
       pendingResources?PlanningState::AwaitingResources:PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
-    intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();intent.settlementBinding=stationary;intent.initialIdleBodyBinding=initialIdleBody;intent.idleCycle=cycle;
+    intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();intent.settlementBinding=stationary;intent.initialIdleBodyBinding=initialIdleBody;intent.idleCycle=cycle;intent.heldIdleTaskSource=heldIdle;
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);

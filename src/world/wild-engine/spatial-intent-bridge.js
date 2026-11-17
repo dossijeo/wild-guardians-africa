@@ -2960,6 +2960,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     for(const change of latest.values()){
       const worker=workers.get(change.actorId);
       if(worker&&bridge.nativeHomeRouteExecution(worker.id)){projectNativeHomeExecution(state,worker);continue;}
+      if(worker&&bridge.nativeIdleStrollHeldExecution(worker.id)){projectNativeIdleStroll(state,worker);continue;}
       if(worker&&bridge.nativeIdleCycleExecution(worker.id)){projectNativeIdleCycle(state,worker);continue;}
       if(worker&&bridge.nativeInitialIdleBodyState?.(worker.id)){projectNativeInitialIdleBody(state,worker);continue;}
       if(worker&&change.state===7){if(!projectNativeSettledWorkerExecution(state,worker))throw Error('Native idle transition lost its body');continue;}
@@ -3102,11 +3103,17 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const flushTaskEvents=()=>{
     if(!pendingTaskEvents.length)return 0;
-    const workerEvents=new Map(),taskEvents=[];
+    const workerEvents=new Map(),taskEvents=[],currentWorker=workerEntityLookup(()=>observedTaskState.workers);
     for(const event of pendingTaskEvents){
       if(event.type==='worker'){
         const id=event.remove?event.id:event.entity.id;
-        workerEvents.set(id,event);
+        // Eligibility notices retain their confirmed semantics, but a queued
+        // pose cannot rewind a native-owned body which Game already projected.
+        // Reject an altered live Game pose before entering the native delta.
+        const point=!event.remove?projectedPositions.get(numericId(id)):null,worker=point?currentWorker(id):null;
+        if(worker?.nativeRouteAdmission&&(worker.x!==point[0]||worker.z!==point[1]))throw Error('Native worker planning notice differs from the executed Game pose');
+        const notice=worker?.nativeRouteAdmission?{...event,entity:{...event.entity,x:point[0],z:point[1]}}:event;
+        workerEvents.set(id,notice);
       }else taskEvents.push(event);
     }
     const events=[...taskEvents,...[...workerEvents]
