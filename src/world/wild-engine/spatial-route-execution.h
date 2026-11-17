@@ -32,6 +32,20 @@ bool nativeHomeBodyCurrent(const IntentState& s,const ActiveIntent& intent){
   spatialReadBody(route.reservationBody,body)&&body.kind==0&&body.flags==source.bodyFlags&&body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&body.r==route.radius&&
   worker->second.x==body.x&&worker->second.z==body.z;
 }
+bool nativeFarmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(intent.home||intent.task||intent.target||intent.lease||intent.delivery||intent.animal||intent.retreat||!intent.requiresResources||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size()||intent.farmArrivalRequest)return false;
+ const auto& route=s.routeSlots[intent.slot];const auto& b=route.farmArrivalBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
+ if(!b||!b->requestSource||!route.hasExecution||route.motionFlags>1||worker==s.workers.end())return false;
+ const auto& r=*b->requestSource;const auto& h=b->actual.header;const auto center=s.targets.find(r.center);
+ const double endX=route.points.empty()?route.originX:route.points[route.points.size()-2],endZ=route.points.empty()?route.originZ:route.points.back();
+ return r.actor==intent.actor&&r.session==s.session&&double(r.sequence)==h[21]&&r.at==h[22]&&r.profile==route.profile&&
+  b->assignmentSequence==intent.assignmentSequence&&double(route.generation)==h[4]&&double(intent.slot)==h[20]&&route.startTime==h[10]&&double(route.motionFlags)==h[6]&&
+  worker->second.eligible&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
+  center!=s.targets.end()&&center->second.kind==4&&center->second.active&&center->second.status==0&&center->second.serviceKnown&&center->second.serviceX==r.targetX&&center->second.serviceZ==r.targetZ&&center->second.x==r.centerX&&center->second.z==r.centerZ&&
+  intent.approachKnown&&intent.approachX==float(r.targetX)&&intent.approachZ==float(r.targetZ)&&intent.approachRadius==2&&std::hypot(endX-r.targetX,endZ-r.targetZ)<=2&&
+  executionBindingCoherent(s,route.reservationBody,intent.slot)&&spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==route.radius&&body.r==r.radius&&
+  body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&worker->second.x==body.x&&worker->second.z==body.z;
+}
 void projectExecutedPose(IntentState& s,RouteSlot& route,const std::array<double,18>& pose){
   SpatialBodyView before;spatialReadBody(route.reservationBody,before);
   spatialMoveBodyFromIntent(route.reservationBody,pose[0],pose[1]);

@@ -582,6 +582,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(remaining<=0)return [];
     const data=Array.from(new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_change_ptr()+offset*15*8,remaining*15));
+    if(data.some((value,i)=>i%15===0&&data[i+1]===1&&wasm.nav_farm_arrival_route_binding_snapshot?.(value)===1))throw Error('Native farm arrival routes require prepared graphical admission');
     const requestsChanged=data.some((value,i)=>i%15===1&&value===6),requestReferences=new Map((requestsChanged?nativeTaskRequestReferences():[]).map(value=>[value.actorId,value])),actionRequestReferences=new Map((requestsChanged?nativeTaskActionRestoreReferences():[]).map(value=>[value.actorId,value])),homeRequestReferences=new Map((requestsChanged?nativeHomeRequestReferences():[]).map(value=>[value.actorId,value])),initialIdleRequestReferences=new Map((requestsChanged?nativeInitialIdleRequestReferences():[]).map(value=>[value.actorId,value])),strollRequestReferences=new Map((requestsChanged?nativeIdleStrollRequestReferences():[]).map(value=>[value.actorId,value])),farmArrivalRequestReferences=new Map((requestsChanged?nativeFarmArrivalRequestReferences():[]).map(value=>[value.actorId,value]));
     const cycleEvents=data.some((value,i)=>i%15===1&&value===7),cycleBindings=new Map((cycleEvents?nativeIdleCycleBindings():[]).map(value=>[value.reference.actorId,value])),cycleNext=new Map([...cycleBindings.keys()].map(actor=>[actor,nativeIdleCycleNextRequest(actor)]));
     const strollEvents=data.some((value,i)=>i%15===1&&value===1),strollBindings=new Map((strollEvents?nativeIdleStrollBindings():[]).map(value=>[value.reference.actorId,value]));
@@ -639,6 +640,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(count<0)throw Error('Native intent control baseline is incoherent');
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6));
     if(nativeIdleStrollBindings().length)throw Error('Native Idle strolls require prepared graphical admission');
+    if((wasm.nav_farm_arrival_route_binding_actors?.()??0)!==0)throw Error('Native farm arrival routes require prepared graphical admission');
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');

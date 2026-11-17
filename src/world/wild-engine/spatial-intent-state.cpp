@@ -237,6 +237,11 @@ struct NativeIdleStrollBinding {
  std::array<double,20> semantic{};
  std::shared_ptr<const NativeIdleStrollResourceRequest> requestSource;
 };
+struct NativeFarmArrivalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
+struct NativeFarmArrivalRouteBinding {
+ NativeFarmArrivalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;
+ std::shared_ptr<const NativeFarmArrivalResourceRequest> requestSource;
+};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -289,6 +294,7 @@ struct NativeTaskStartBinding {
   uint64_t assignmentSequence=0;
 };
 struct RouteSlot {
+  std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalBinding;
   std::shared_ptr<const NativeIdleStrollBinding> idleStrollBinding;
   std::shared_ptr<const NativeHomeRouteBinding> homeBinding;
   std::shared_ptr<const NativeTaskStartBinding> startBinding;
@@ -298,7 +304,7 @@ struct RouteSlot {
   // Modes 1 (animal walk) / 2 (worker rules) are static candidates, not autonomy.
   std::vector<double> distances;
   std::vector<RouteHold> holds;
-  double originX=0,originZ=0,startTime=0,speed=0,radius=0;
+  double originX=0,originZ=0,originYaw=0,startTime=0,speed=0,radius=0;
   double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
   bool gateAdmitted=false;
   bool resumable=false,suspended=false;
@@ -336,6 +342,7 @@ struct PendingNativeMotionDraft {
   std::array<double,3> taskPhaseSeed{};
   std::optional<NativeTaskStartOrigin> previousStart;
   std::optional<NativeHomeRouteOrigin> previousHome;
+  std::optional<NativeFarmArrivalRouteOrigin> previousFarmArrival;
   std::optional<NativeIdleStrollOrigin> previousStroll;
   std::shared_ptr<NativeIdleCycle> idleCycleSource;
   std::array<double,20> idleStrollSemantic{};
@@ -344,6 +351,7 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
   std::shared_ptr<const NativeIdleStrollResourceRequest> strollRequestSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
+  std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
   std::array<double,11> timeTranslation{};
@@ -378,7 +386,7 @@ struct PendingHomeArrivalDraft {
   std::array<double,8> timeTranslation{};
 };
 struct PendingBarrierProposal {
-  std::optional<PendingNativeMotionDraft> resume,start,home;
+  std::optional<PendingNativeMotionDraft> resume,start,home,farmArrivalRoute;
   std::optional<PendingTaskActionDraft> action;
   std::optional<PendingTaskConsequenceDraft> consequence;
   std::optional<PendingTaskSettlementDraft> settlement;
@@ -496,7 +504,8 @@ struct IntentState {
   std::vector<double> taskActionBindingResult;
   std::vector<double> taskConsequenceBindingResult;
   std::array<double,30> deliveryExecutionResult{};
-  std::vector<double> taskSettlementBindingResult,homeBindingResult;
+  std::vector<double> taskSettlementBindingResult,homeBindingResult,farmArrivalRouteBindingResult;
+  std::array<double,30> farmArrivalExecutionResult{};
   std::vector<double> initialIdleBodyBindingResult;
   std::vector<double> idleCycleBindingResult;
   std::array<double,14> idleCycleExecutionResult{};
@@ -600,6 +609,7 @@ bool nativeDeliveryBodyCurrent(const IntentState&,const ActiveIntent&);
 static bool nativeIdleCycleBodyCurrent(const IntentState&,const ActiveIntent&);
 static bool nativeIdleCycleCurrent(const IntentState&,const ActiveIntent&);
 bool nativeHomeBodyCurrent(const IntentState&,const ActiveIntent&);
+bool nativeFarmArrivalBodyCurrent(const IntentState&,const ActiveIntent&);
 bool nativeInitialIdleBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.initialIdleBodyBinding||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest)return false;
  const auto& b=*intent.initialIdleBodyBinding;if(!b.source||!b.bodySequence)return false;const auto& r=*b.source;const auto& h=b.actual.header;
@@ -690,7 +700,7 @@ bool nativeTaskActionsCoherent(const IntentState& s){
   for(const auto& [actor,intent]:s.activeIntents)if(intent.farmArrivalRequest&&!nativeFarmArrivalRequestBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
    for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent))return false;
-  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent))return false;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent)||intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding&&!nativeFarmArrivalBodyCurrent(s,intent))return false;
   return true;
 }
 const ActiveIntent* nativeTaskActionForBody(const IntentState& s,uint64_t id){
@@ -880,7 +890,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;
-      route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.idleStrollBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.idleStrollBinding.reset();route.farmArrivalBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
@@ -1421,12 +1431,12 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.idleStrollStop.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.farmArrivalRoute.reset();p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.idleStrollStop.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=22)?p.kind!=kind:p.kind<2||p.kind>12))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=23)?p.kind!=kind:p.kind<2||p.kind>12))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -1594,7 +1604,7 @@ void nav_intent_reset(){
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
   s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
-  s.farmArrivalRequestResult.fill(0);s.farmArrivalRequestsResult.clear();
+  s.farmArrivalRequestResult.fill(0);s.farmArrivalRequestsResult.clear();s.farmArrivalRouteBindingResult.clear();s.farmArrivalExecutionResult.fill(0);
   s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.strollRequestResult.fill(0);s.strollRequestsResult.clear();s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();s.initialIdleBodyBindingResult.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
@@ -2273,6 +2283,9 @@ static int commitTaskProposal(bool pendingResources){
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
+    // Moving/arrived farm routes need their own prepared successor, never an
+    // immediate Task replacement that releases an executing physical owner.
+    if(old!=s.activeIntents.end()&&old->second.state==PlanningState::RouteActive&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding){clearProposal(s);return 0;}
     // A moved stationary body retains its actual cycle through the pending
     // task request. Only prepared TaskStart may acquire its next trajectory.
     if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
@@ -2605,6 +2618,7 @@ EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state
 #include "spatial-idle-stroll-resource-request.inc"
 #include "spatial-idle-stroll-proposal.inc"
 #include "spatial-home-route-proposal.inc"
+#include "spatial-farm-arrival-route-proposal.inc"
 #include "spatial-home-arrival-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_evaluations(){return double(state().executionEvaluations);}

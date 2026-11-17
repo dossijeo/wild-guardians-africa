@@ -111,7 +111,8 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     const bool cycle=idleCycleFrom&&action->idleCycle&&action->idleCycle->binding.get()==idleCycleFrom&&nativeIdleCycleBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool heldIdle=heldIdlePoseFrom&&action->heldIdleTaskSource.get()==heldIdlePoseFrom&&nativeHeldIdleTaskBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool restoredIdle=heldIdlePoseFrom&&action->strollRequest.get()==heldIdlePoseFrom&&nativeIdleStrollRequestBodyCurrent(s,*action)&&action->actor==route.actor;
-    if(!task&&!stationary&&!home&&!initial&&!cycle&&!heldIdle&&!restoredIdle)return false;
+    const bool farmArrival=heldIdlePoseFrom&&action->farmArrivalRequest.get()==heldIdlePoseFrom&&nativeFarmArrivalRequestBodyCurrent(s,*action)&&action->actor==route.actor;
+    if(!task&&!stationary&&!home&&!initial&&!cycle&&!heldIdle&&!restoredIdle&&!farmArrival)return false;
   }
   const ReservationPath path{&route};
   double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;

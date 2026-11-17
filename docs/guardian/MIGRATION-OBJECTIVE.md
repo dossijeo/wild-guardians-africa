@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [corredor nativo preparado de llegada](e-r3-native-farm-arrival-route-source-20261117.md). Familia 23 usa peticion, cuerpo, slot y pruebas fisicas existentes; conserva zona libre de 2 m, urgencia 0/1 y llegada cero con pose/fases exactas. Referencias: codigo DetourCrowd 1.6.0 y Godot 4.4, sin dependencia nueva. Pasan 2062 pruebas/212 archivos (una comparacion opcional omitida), 71 dirigidas, ambos WASM y build. GPU de vertical previa conserva 569 IDs; 30 recursos tardios y maximo global 66.72 ms mantienen C abierto. Faltan referencia/proyeccion/recibo/consumidor, finales y cohort de llegada, productor integral y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [publicacion/control de llegada pendiente](e-r3-native-farm-arrival-control-20261117.md). Baseline/eventos y Host originales validan la fuente vinculada en el slot existente, con identidad y watermark causal; la declaracion sin cuerpo no concede permiso. Rechaza alias, mezclas y revocaciones inventadas; Task genuino conserva el cuerpo. Pasan 1652 pruebas/147 archivos (1 omision opcional), 50 dirigidas y build; 63 inputs nativos exactos, sin recompilar ni repetir GPU. Faltan ruta/recibo/consumidor grafico, finales/Home y productor ordinario de llegada. A6/A/B/C abiertos, D no iniciado; continuidad y recuperacion incremental integral de 3123 pendientes.
 
 

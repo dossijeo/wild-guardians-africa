@@ -44,7 +44,7 @@ int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
      motionFlags<0||motionFlags>63||!std::isfinite(runBudget)||runBudget<0||runBudget>1e9||
      mode==1&&(motionFlags||runBudget))return -3;
   if(spatial_execution_profile_kind()!=(mode==2?0:1))return -2;
-  route.originX=x;route.originZ=z;route.startTime=time;
+  route.originX=x;route.originZ=z;route.originYaw=0;route.startTime=time;
   route.departureTime=time;route.gateCandidate=gateCandidate;route.waitGate=0;route.holds.clear();
   route.speed=mode==2?workerWalkSpeed*workerTravelMultiplier:1.5;
   route.radius=radius;route.actor=actor;route.profile=lazy_selected_context();
@@ -103,7 +103,7 @@ std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
   const size_t index=size_t(next-route.distances.begin());
   const bool geometricEnd=index==route.distances.size(),arrived=geometricEnd&&(route.holds.empty()||at>=endTime),worker=route.timingMode==2,
     carrying=route.motionFlags&8,running=runDistance<route.runDistance&&!arrived&&!waiting;
-  double x=route.originX,z=route.originZ,yaw=0;
+  double x=route.originX,z=route.originZ,yaw=route.originYaw;
   if(!route.points.empty()){
     size_t segment=geometricEnd?route.distances.size()-1:index;
     while(segment>0&&route.distances[segment]==route.distances[segment-1])segment--;

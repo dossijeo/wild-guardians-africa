@@ -6,7 +6,7 @@ import {createSpatialNavigationMovement} from '../../src/world/wild-engine/spati
 export function nativeFarmArrivalGameFixture({declare=true,...options}={}){
  const f=nativeInitialIdleRequestFixture({mode:null,declareRequest:false,...options,configureState(state,{point}){
   state.structures=state.structures.filter(s=>!s.gate);Object.assign(state,{pauses:[],result:null,initialPreparation:false,raid:null,spells:[],dayPlan:{done:true},nightPlan:{done:true}});if(state.awakenings)state.awakenings.enabled=false;state.tutorial.step='done';for(const p of state.plants)p.water=[];
-  Object.assign(state.workers[0],{status:'arriving',destinationId:null,idleState:null});state.villages.find(v=>v.id===state.workers[0].villageId).entry=point(6,0);options.configureState?.(state);
+  Object.assign(state.workers[0],{status:'arriving',destinationId:null,idleState:null});state.villages.find(v=>v.id===state.workers[0].villageId).entry=point(6,0);options.configureState?.(state,{point});
  }});
  try{
   const request=()=>f.planner.requestNativeFarmArrivalResources(f.state,f.worker),requested=declare?request():null;
