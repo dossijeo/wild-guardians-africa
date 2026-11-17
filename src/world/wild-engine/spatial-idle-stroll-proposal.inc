@@ -1,7 +1,9 @@
 // Prepared ambient walking uses the existing route slot, reservation proof,
 // phase kernel and body registry. Choosing a path alone never moves the body.
 static bool idleStrollSourceCurrent(const IntentState& s,const PendingNativeMotionDraft& d){
- const auto found=s.activeIntents.find(d.route.actor);if(found==s.activeIntents.end()||!nativeIdleCycleCurrent(s,found->second)||found->second.idleCycle!=d.idleCycleSource)return false;
+ const auto found=s.activeIntents.find(d.route.actor);if(found==s.activeIntents.end())return false;
+ if(d.strollRequestSource){const auto& r=*d.strollRequestSource;return found->second.strollRequest==d.strollRequestSource&&nativeIdleStrollRequestBodyCurrent(s,found->second)&&double(r.sequence)==d.header[21]&&r.at==d.header[22]&&d.idleStrollSemantic[1]==0;}
+ if(!nativeIdleCycleCurrent(s,found->second)||found->second.idleCycle!=d.idleCycleSource)return false;
  const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;
  return idleCycleAnchorCurrent(s,cycle.binding->actual.header)&&nativeIdleCycleFinished(cycle,s.effectiveTime)&&next.status==1&&next.state[0]==3&&
   double(cycle.binding->cycleSequence)==d.idleStrollSemantic[1]&&double(next.sequence)==d.header[21]&&
@@ -10,10 +12,19 @@ static bool idleStrollSourceCurrent(const IntentState& s,const PendingNativeMoti
 static int stageIdleStroll(double actor,double session,double sourceSequence){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence))return -1;
- const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeIdleCycleCurrent(s,found->second))return -2;
- PendingNativeMotionDraft d;d.idleCycleSource=found->second.idleCycle;const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;
- if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
- const auto& q=cycle.binding->source;const auto& h=cycle.binding->actual.header;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;
+ PendingNativeMotionDraft d;NativeIdleCycleBodySource q;std::array<double,24> h{};NativeIdleCycleDecision restoredNext;const NativeIdleCycleDecision* nextSource=nullptr;uint64_t sourceCycle=0;
+ if(found->second.strollRequest){
+  if(!nativeIdleStrollRequestBodyCurrent(s,found->second)||double(found->second.strollRequest->sequence)!=sourceSequence)return -2;
+  d.strollRequestSource=found->second.strollRequest;const auto& r=*d.strollRequestSource;static_cast<NativeWorkerPoseResourceRequest&>(q)=r;q.center=r.center;q.workerProfile=r.workerProfile;
+  h[9]=r.anchorKind;h[10]=double(r.anchor);h[11]=r.anchorX;h[12]=r.anchorZ;h[13]=r.anchorRadius;h[14]=r.idleSeconds;
+  restoredNext.sequence=r.sequence;restoredNext.requestedAt=r.at;restoredNext.x=r.destinationX;restoredNext.z=r.destinationZ;restoredNext.state={3,0,0,double(r.rng),r.approachRetry,0};nextSource=&restoredNext;
+ }else{
+  if(!nativeIdleCycleCurrent(s,found->second))return -2;d.idleCycleSource=found->second.idleCycle;const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;nextSource=&next;
+  if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
+  q=cycle.binding->source;h=cycle.binding->actual.header;sourceCycle=cycle.binding->cycleSequence;
+ }
+ const auto& next=*nextSource;
  d.body=q.body;d.slot=uint32_t(s.routeSlots.size());for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  const int previous=lazy_selected_context();if(previous!=q.profile)spatial_select_nav_profile_index(q.profile);
@@ -29,13 +40,13 @@ static int stageIdleStroll(double actor,double session,double sourceSequence){
  if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;d.gates=s.gates;s.reservationResult.fill(0);
- result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,cycle.binding->body.get(),cycle.binding.get());if(result!=1)return result;
+ result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,d.idleCycleSource?d.idleCycleSource->binding->body.get():nullptr,d.idleCycleSource?d.idleCycleSource->binding.get():nullptr,d.strollRequestSource.get());if(result!=1)return result;
  result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=22;captureNativeMotionRows(d);const auto& route=d.route;
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,
   route.originX,route.originZ,route.startTime,routeTimeAtDistance(route,route.distances.back()),route.distances.back(),route.speed,route.runDistance,route.runSpeed,route.runBudget,double(route.timingMode),
   double(route.points.size()/2),double(d.rows.size()/16),double(d.slot),sourceSequence,next.requestedAt,double(p.intents)};
- d.idleStrollSemantic={1,double(cycle.binding->cycleSequence),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.yaw,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,h[9],h[10],h[11],h[12],h[13],next.state[3],next.state[4],h[14],next.x,next.z};
+ d.idleStrollSemantic={1,double(sourceCycle),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.yaw,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,h[9],h[10],h[11],h[12],h[13],next.state[3],next.state[4],h[14],next.x,next.z};
  p.idleStroll=std::move(d);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_version(){return 1;}
@@ -57,7 +68,7 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_cancel(double session,double t
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||session!=double(p.session)||ticket!=double(p.ticket))return -1;
  auto old=std::move(*p.idleStroll);clearWorldMutationProposal(p);const int result=stageIdleStroll(old.header[1],session,old.header[21]);if(result!=1)return result;
- auto& next=*p.idleStroll;next.previousStroll=NativeIdleStrollOrigin{old.header,uint64_t(ticket)};const bool same=old.idleCycleSource==next.idleCycleSource&&old.idleStrollSemantic==next.idleStrollSemantic&&old.slot==next.slot&&old.generation==next.generation;
+ auto& next=*p.idleStroll;next.previousStroll=NativeIdleStrollOrigin{old.header,uint64_t(ticket)};const bool same=old.idleCycleSource==next.idleCycleSource&&old.strollRequestSource==next.strollRequestSource&&old.idleStrollSemantic==next.idleStrollSemantic&&old.slot==next.slot&&old.generation==next.generation;
  next.timeTranslation={2,ticket,double(p.ticket),old.header[10],old.header[11],next.header[10],next.header[11],same&&sameNativeMotionDraft(old,next)?1.:0.,sameNativeMotionGates(s,old,next)?1.:0.,same&&sameNativeMotionDraft(old,next,true)?1.:0.,sameNativeMotionGates(s,old,next,true)?1.:0.};return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_proposal_time_translation_ptr(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==22&&p.idleStroll&&session==double(p.session)&&ticket==double(p.ticket)&&p.idleStroll->timeTranslation[0]==2?p.idleStroll->timeTranslation.data():nullptr;}
@@ -65,7 +76,7 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_commit_bound(double session,do
  auto& s=state();const auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||!integer(preparedTicket))return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,22);if(valid!=1)return valid;const auto& d=*p.idleStroll;
  if(!idleStrollSourceCurrent(s,d)||d.slot>s.routeSlots.size()||d.slot<s.routeSlots.size()&&(s.routeSlots[d.slot].active||s.routeSlots[d.slot].generation!=d.generation)){clearWorldMutationProposal(s.barrierProposal);return -2;}
- auto binding=std::make_shared<NativeIdleStrollBinding>();binding->actual={d.header,uint64_t(ticket)};binding->semantic=d.idleStrollSemantic;
+ auto binding=std::make_shared<NativeIdleStrollBinding>();binding->actual={d.header,uint64_t(ticket)};binding->semantic=d.idleStrollSemantic;binding->requestSource=d.strollRequestSource;
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previousStroll&&preparedTicket==double(d.previousStroll->ticket)&&d.timeTranslation[9]==1&&d.timeTranslation[10]==1)binding->prepared=*d.previousStroll;else return -9;
  auto draft=std::move(*s.barrierProposal.idleStroll);clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(draft.route.actor);
  if(draft.slot==s.routeSlots.size())s.routeSlots.emplace_back();publishGateRouteAdmission(s,intent,draft.slot,draft.route,draft.body,draft.gates,draft.boundaries);

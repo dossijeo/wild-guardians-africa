@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion de Idle: [fuente nativa de restauracion del paseo](e-r3-native-idle-stroll-restoration-source-20261117.md). Una declaracion WALK nueva conserva pose/fases/destino/RNG guardados y adquiere un22 preparado sobre el cuerpo exacto, sin permisos antiguos ni20/21 ficticios; tambien conserva la llegada de longitud cero. Pasan 1785 pruebas/161 archivos, 43 especificas (15 nuevas), ambos WASM, regresion Task GPU y build. Falta guardado/carga Game, fuente tipada/publicacion/control y consumidor/GPU de restauracion; otros finales/puertas, productor/cohort y recuperacion incremental integral de 3123 siguen abiertos. Los siete fallos antiguos siguen pendientes de C. A6/A/B/C no se cierran.
+
+
 Continuacion de Idle: [TaskStart movil en el consumidor original](e-r3-native-idle-moving-task-consumer-20261117.md). Roster/Surface/puertos/Host adquieren Task14 sobre el cuerpo detenido22 para una tarea solicitada durante WALK. NVIDIA/Turing conserva 685 IDs de geometria/bancos, retira solo el dato22 sustituido, reutiliza shaders/pipelines y mantiene 54 frames por bloqueo de 1800 ms. Prepara 70 recursos de protocolo y 122 copias de uniformes/bindings (14688 bytes), cero asignaciones tras READY. Pasan 1770 pruebas/160 archivos y build; siete fallos antiguos reproducidos en el padre siguen pendientes de C. Faltan restauracion movil, otros finales/puertas, productor/cohort ordinarios y recuperacion incremental integral de 3123. A6/A/B/C siguen abiertos.
 
 
