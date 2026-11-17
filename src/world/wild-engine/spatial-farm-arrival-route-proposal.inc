@@ -95,6 +95,12 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_commit_bound(double ses
 static const NativeFarmArrivalRouteBinding* currentFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_snapshot(double actor){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();const auto b=currentFarmArrivalRoute(actor);if(!b)return 0;out={1,double(b->assignmentSequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());return 1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_binding_ptr(){return state().farmArrivalRouteBindingResult.data();}
+// Bounded metadata from the same route owner. Reuse execution scratch so typed
+// execution reads never copy a whole corridor or maintain an endpoint registry.
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_destination_snapshot(double actor){
+ auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);if(!currentFarmArrivalRoute(actor))return 0;
+ const auto& route=s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];out[0]=1;out[1]=route.points.empty()?route.originX:route.points[route.points.size()-2];out[2]=route.points.empty()?route.originZ:route.points.back();out[3]=double(route.points.size()/2);return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_actors(){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding){if(!currentFarmArrivalRoute(double(actor)))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_gates(double actor){auto& s=state();s.gateResult.clear();if(!currentFarmArrivalRoute(actor))return -1;for(auto id:s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot].gateReservations)s.gateResult.push_back(double(id));return int(s.gateResult.size());}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_source_snapshot(double actor,double ticket){

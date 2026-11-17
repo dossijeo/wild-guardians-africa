@@ -1,0 +1,31 @@
+# Referencia tipada del corredor de llegada a granja
+
+Continúa el [corredor nativo preparado](e-r3-native-farm-arrival-route-source-20261117.md) del [plan principal](integrated-gpu-migration-plan-20261104.md). El bridge puede capturar, cancelar, revalidar y leer la asociación/ejecución real de la familia 23 con valores propios. Distingue el punto de servicio del extremo elegido dentro de su zona de 2 metros y conserva la llegada de longitud cero. No activa Game ni el consumidor gráfico de esta ruta; A6/A/B/C permanecen abiertos y D no se inicia.
+
+## Referencia y decisión
+
+Antes de implementar se consulta el código real de [`Arena::get`, `remove` e `Index`, Rapier v0.22.0](https://github.com/dimforge/rapier/blob/v0.22.0/src/data/arena.rs#L467). La lectura exige que la generación del slot coincida con el índice solicitado; la retirada hace que la referencia anterior deje de resolver al objeto. `Index` reúne índice y generación y recomienda envolverlos con un tipo propio. Se adapta esta separación entre identidad y objeto vigente a los handles de sesión/slot/generación que Wild Guardians ya posee, junto con su época y secuencia causal. No se incorpora otra arena, caché de extremos, registro de cuerpos o dependencia. El hash de la implementación consultada queda en la evidencia.
+
+## Implementación
+
+La referencia propia contiene la petición nativa exacta, el handle esperado, la frontera, secuencia de control, flags, distancia y extremo físico elegido. No inventa Task, Home, Idle previo o secuencia futura de asignación. La propuesta conserva sus flags de autonomía/paso en `false`. La asociación sólo incorpora la secuencia de asignación realmente emitida y contrasta el programa preparado con el adquirido; revalidar no convierte una preparación anterior en un permiso nuevo.
+
+El codec copia y congela valores anidados, y copia los arrays de muestras, puntos y puertas en los límites de transferencia. Las referencias sobreviven como datos a la reutilización del scratch nativo o al crecimiento real de memoria, pero una referencia retirada deja de resolver por el propietario nativo. Los codecs no acreditan que la GPU haya preparado o instalado esos datos.
+
+Captura y revalidación23 reutilizan el adaptador común de movimiento de Task/Resume/consecuencia/Home. La propuesta copia el corredor completo una vez al preparar; una llegada cero acepta cero puntos y una única muestra, conservando posición double, orientación, fases y presupuesto. Se validan el origen, extremo, filas inicial/final, flags de caminar/correr, velocidad calibrada y transición al agotar el presupuesto. La urgencia sigue siendo un dato 0/1 del llamador; su contraste con la semántica ordinaria de Game continúa pendiente.
+
+La asociación conserva su ABI de **52 valores**. Un export adicional, `nav_farm_arrival_route_destination_snapshot`, devuelve **cuatro valores** desde el mismo `RouteSlot` y reutiliza el scratch de ejecución existente. Así las lecturas tipadas de asociación/ejecución obtienen el extremo y número de puntos sin copiar la polilínea ni mantener una caché duplicada. La lectura de ejecución copia sus 30 valores antes de consultar la asociación, porque ambas consultas reutilizan el mismo scratch. Ambos artefactos canónicos exponen ahora los **22 exports** de esta familia; los 21 anteriores siguen presentes.
+
+El sobre `kind:23, phase:'committed'` describe la asociación física nativa y sus muestras. Contrasta actor, cuerpo, handle, frontera, fases y extremo; no equivale a un recibo gráfico ni a una admisión del Host. El baseline y los eventos genéricos siguen rechazando esta clase mientras falta su consumidor preparado. El cohort de Game continúa devolviendo clase no soportada; la autoridad ordinaria y la disponibilidad de guardado mantienen sus protecciones.
+
+## Validación y continuación
+
+Pasan **2083 pruebas en 213 archivos**, una comparación opcional omitida, sin fallos ni cancelaciones. Las **92 dirigidas** están incluidas y no se suman otra vez. Ambos WASM se reconstruyen y el build de producto pasa en 1m 58s. Los 345 inputs congelados y los 64 inputs/artefactos nativos permanecen exactos durante las validaciones.
+
+La [evidencia](performance/native-farm-arrival-route-data-validation-20261117.json) registra la selección final y sus hashes. Las 21 pruebas nuevas usan los módulos nativos reales: cuatro perfiles caminando/corriendo en standalone, llegada cero y revalidación en pthread, presupuesto cero/parcial, cancelación/reintento, fuente alterada/ajena, generación retirada, arrays propios, crecimiento de memoria y rechazo de alias entre familias. Los datos de recursos de esas pruebas toman su frontera de la asociación nativa y usan commits de ABI de confianza explícita; no se fabrica un recibo GPU.
+
+Cien lecturas de ejecución verifican **cero consultas de puntos y cero enumeraciones del cohort**, con una lectura acotada de extremo por llamada. Es evidencia del coste estructural de esa lectura, no una medición de continuidad gráfica. Un loader ESM de sólo lectura sustituye el getter por una copia de la ruta; la misma prueba falla al detectar 100 consultas de puntos en vez de cero, sin modificar archivos de trabajo ni los WASM. Las 92 pruebas dirigidas incluyen estas 21 y las 71 anteriores de llegada; no se suman otra vez a la regresión.
+
+Se reconstruyen ambos artefactos nativos por el getter nuevo. No se modifican roster, Surface, puertos, Host ni el kernel de movimiento ejecutable. No se repite hardware en este incremento: los 569 IDs conservados, 30 recursos tardíos, máximo global de 66,72 ms y operación tardía de 17,66 ms pertenecen a la regresión del incremento anterior, y mantienen sus límites. La recuperación incremental integral de los 3.123 recursos y la eliminación de tirones siguen sin acreditarse.
+
+El siguiente punto es integrar la proyección de Game y el relevo preparado con su recibo, control directo, puertos y consumidor originales, antes de activar esta clase en el productor ordinario. Siguen pendientes el final hacia Idle/Task/Home, la parada preparada durante el movimiento, las alternativas de entrada para todo el cohort, contratos/puertas/raid, guardado y aceptación integrada A6/B/C. No se cambia la mecánica de asignación de tareas para ocultar esas dependencias.

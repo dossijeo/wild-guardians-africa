@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [referencia tipada del corredor de llegada](e-r3-native-farm-arrival-route-data-20261117.md). El bridge reutiliza captura/revalidacion y datos propios; distingue servicio/extremo y conserva llegada cero, sin permiso nuevo. Referencia: codigo Rapier v0.22.0. Getter acotado evita copiar el corredor o enumerar el cohort en lecturas de ejecucion, sin cache nueva. Pasan 2083 pruebas/213 archivos (una comparacion opcional omitida), 92 dirigidas, ambos WASM y build; no se repite GPU. Faltan Game/control/recibo/puertos/consumidor, finales y cohort de llegada, productor integral y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
+
+
 Continuacion e-R3: [corredor nativo preparado de llegada](e-r3-native-farm-arrival-route-source-20261117.md). Familia 23 usa peticion, cuerpo, slot y pruebas fisicas existentes; conserva zona libre de 2 m, urgencia 0/1 y llegada cero con pose/fases exactas. Referencias: codigo DetourCrowd 1.6.0 y Godot 4.4, sin dependencia nueva. Pasan 2062 pruebas/212 archivos (una comparacion opcional omitida), 71 dirigidas, ambos WASM y build. GPU de vertical previa conserva 569 IDs; 30 recursos tardios y maximo global 66.72 ms mantienen C abierto. Faltan referencia/proyeccion/recibo/consumidor, finales y cohort de llegada, productor integral y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 
