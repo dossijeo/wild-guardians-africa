@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [Farm23 en Surface/Workers originales](e-r3-native-farm-arrival-route-surface-20261117.md). Se amplia el ciclo retenido y Worker anuncia version1; referencia: codigo wgpu26.0.1. GPU NVIDIA conserva 564/561 IDs en dos runs, prepara102 recursos y crea0 tras READY; ambos puertos, movimiento/picking y drain reales. Siguen huecos:172.74ms globales en primer run;158.18ms globales/61.20ms en bloqueo del run con traza. No acredita ausencia de tirones ni recuperacion3123. Pasan2215 pruebas/221 archivos (una omision opcional) y build,64 inputs nativos exactos. Faltan relevos/cohort/productor y continuidad integral. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm23 en actor y banco originales](e-r3-native-farm-arrival-route-graphics-20261117.md). El roster prepara/adopta/retargetea sobre la misma raiz, geometria e indices con una adquisicion del banco; exige fuente y asociacion23 exactas. Referencia: implementaciones Mesh.copy/SkeletonUtils.clone de Three r180. Pasan 2215 pruebas/221 archivos (una omision opcional), 17 nuevas y build; 64 inputs nativos exactos. GLB/bakes y compilacion TSL reales, renderer/admision simulados; no hardware. Faltan Surface, capacidad Worker, relevos/cohort y recuperacion incremental de 3.123. A6/A/B/C abiertos, D no iniciado.
 
 

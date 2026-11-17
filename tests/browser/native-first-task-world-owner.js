@@ -1,3 +1,5 @@
+import {auditNativeFarmArrivalWorldOwner} from './native-farm-arrival-route-world-owner.js';
+import {centerServicePoint} from '../../src/world/centers.js';
 import {auditNativeIdleStrollRestorationWorldOwner} from './native-idle-stroll-restoration-world-owner.js';
 import {serialize} from '../../src/persistence/snapshots.js';
 import {auditNativeIdleCycleWorldOwner} from './native-idle-cycle-world-owner.js';
@@ -25,7 +27,8 @@ import {createNativeResourcePreparationConnection} from '../../src/simulation/na
 
 // A is claimed by the ordinary global task planner. It never receives a Home,
 // executable handle or suspended route before its retained GPU resources exist.
-export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false,initialIdleCycle=false,initialIdleCycleRepeat=false,initialIdleCycleHome=false,initialIdleCycleStroll=false,initialIdleCycleStrollRest=false,initialIdleCycleStrollRestHome=false,initialIdleCycleStrollRestTask=false,initialIdleCycleStrollStop=false,initialIdleCycleStrollStopHome=false,initialIdleCycleStrollStopTask=false,strollRestore=false,strollRestoreArrived=false,ordinaryProduction=false}={}){
+export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false,initialIdleCycle=false,initialIdleCycleRepeat=false,initialIdleCycleHome=false,initialIdleCycleStroll=false,initialIdleCycleStrollRest=false,initialIdleCycleStrollRestHome=false,initialIdleCycleStrollRestTask=false,initialIdleCycleStrollStop=false,initialIdleCycleStrollStopHome=false,initialIdleCycleStrollStopTask=false,strollRestore=false,strollRestoreArrived=false,ordinaryProduction=false,farmArrival=false}={}){
+ if(farmArrival&&(ordinaryProduction||strollRestore||initialIdleBody||action||restore||consequence||settlement||homeRoute||homeArrival||homeRestore||idleHome))throw Error('Farm audit requires its own pending source');
  if(ordinaryProduction)strollRestore=true;
  if(strollRestoreArrived)strollRestore=true;
  if(strollRestore){initialIdleBody=true;initialIdleCycle=true;initialIdleCycleStroll=true;}
@@ -69,6 +72,15 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   if(initialIdleHome)state.villages.find(v=>v.id===state.workers[0].villageId).entry={...end};
  }
 
+ if(farmArrival){
+  // Author the real pending arrival before this native authority is created.
+  // No earlier Task/Home/Idle graphics permission is installed for this actor.
+  state.plants=[];state.tasks=[];state.structures=state.structures.filter(s=>!s.gate);
+  const worker=state.workers[0],farm=state.structures.find(s=>s.id===worker.centerId),service=centerServicePoint(farm,state,.8);
+  Object.assign(worker,{status:'arriving',heading:.37,runRemaining:40,destinationId:null,idleState:null,raidReturn:false});for(const key of ['nativeTaskAction','nativeDelivery','nativeRouteAdmission'])delete worker[key];
+  farm.x+=end.x-service.x;farm.z+=end.z-service.z;
+  session.dispose();loaded.clear();session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:chunk=>loaded.set(`${chunk.cx},${chunk.cz}`,chunk)});w=session.core.wasm;primeChunks();
+ }
  if(consequence||homeRestore){
   // Author the checkpoint before creating its native authority. This is not a
   // live structure move, a route grant or a substitute for ordinary gameplay.
@@ -78,16 +90,17 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
  let planner=createEventDrivenTaskPlanner(session);planner.resetFromState(state);session.actorSectorRevision({worker:true});
  const bOrigin=point(-6,6),bEnd=point(6,6);
  function bindIndependentWorker(start){
-  session.actorSectorRevision({worker:true});const path=initialIdleBody||settlement||homeRestore?Array.from({length:11},(_,i)=>i%2?bOrigin:bEnd):action||restore?[bEnd,bOrigin,bEnd,bOrigin,bEnd]:[bEnd],pointer=w.nav_intent_attack_route_input_ptr(path.length);new Float32Array(w.memory.buffer,pointer,path.length*2).set(path.flatMap(p=>[p.x,p.z]));if(w.nav_intent_restore_home(900012,start.x,start.z,bEnd.x,bEnd.z,path.length)!==1)throw Error('Independent native intention unavailable');
+  session.actorSectorRevision({worker:true});const path=farmArrival||initialIdleBody||settlement||homeRestore?Array.from({length:11},(_,i)=>i%2?bOrigin:bEnd):action||restore?[bEnd,bOrigin,bEnd,bOrigin,bEnd]:[bEnd],pointer=w.nav_intent_attack_route_input_ptr(path.length);new Float32Array(w.memory.buffer,pointer,path.length*2).set(path.flatMap(p=>[p.x,p.z]));if(w.nav_intent_restore_home(900012,start.x,start.z,bEnd.x,bEnd.z,path.length)!==1)throw Error('Independent native intention unavailable');
   const raw=planner.intentChanges().at(-1).routeHandle,prepared=planner.prepareNativeRouteMotion(raw,{radius:.28,...(restore||homeRestore?{walkPhase:state.workers[1].walkPhase??0}: {})});if(prepared.status!=='prepared'||w.spatial_body_upsert(2,start.x,start.z,.28,0,1)!==1||planner.reserveNativeRoute(prepared.routeHandle,2).status!=='reserved')throw Error('Independent native body unavailable');return prepared.routeHandle;
  }
  let b=bindIndependentWorker(bOrigin);
  if(w.spatial_body_upsert(1,origin.x,origin.z,.28,0,1)!==1||w.nav_gate_bind_worker(900011,1)!==1)throw Error('First-task bound body unavailable');
  if(planner.beginNativeRouteExecution().status!=='started')throw Error('Native cohort unavailable');
- let observeWorld=initialIdleBody||settlement||homeRestore?planner.observeWorld(state):()=>{};
- let observe=planner.observeTasks(state);if(initialIdleBody)planner.requestNativeInitialIdleResources(state,state.workers[0]);else{const batch=planner.planIfNeeded(state.elapsed);if(planner.commitTaskBatchToState(state,batch,{navVersion:1,pendingResources:true})!==1||state.tasks[0].workerId!=='worker-900011')throw Error('Global planner did not claim the genuine first task');}
+ let observeWorld=farmArrival||initialIdleBody||settlement||homeRestore?planner.observeWorld(state):()=>{};
+ let observe=planner.observeTasks(state);if(farmArrival)planner.requestNativeFarmArrivalResources(state,state.workers[0]);else if(initialIdleBody)planner.requestNativeInitialIdleResources(state,state.workers[0]);else{const batch=planner.planIfNeeded(state.elapsed);if(planner.commitTaskBatchToState(state,batch,{navVersion:1,pendingResources:true})!==1||state.tasks[0].workerId!=='worker-900011')throw Error('Global planner did not claim the genuine first task');}
  console.log('first-task-stage:claimed');
- let request=initialIdleBody?null:planner.pendingTaskRoute('worker-900011');if(!initialIdleBody&&(!request||planner.nativeSuspendedGateRoute(900011)!==null))throw Error('First task has an invalid source');
+ const farmSetup=farmArrival?{sourceRequest:planner.nativeFarmArrivalRequestReference(state.workers[0].id)}:null;
+ let request=farmArrival||initialIdleBody?null:planner.pendingTaskRoute('worker-900011');if(!farmArrival&&!initialIdleBody&&(!request||planner.nativeSuspendedGateRoute(900011)!==null))throw Error('First task has an invalid source');
  function commit(paused){const result=planner.commitNativeCausalClock({paused,rate:1});if(!['committed','unchanged'].includes(result.status))throw Error('Native first-task clock rejected');}
  let restorationSetup=null;
  if(strollRestore){
@@ -138,6 +151,7 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   await Promise.all([client.ready,publication.ready]);console.log('first-task-stage:ready');await client.waitForFirstFrame();console.log('first-task-stage:first-frame');let initial;const deadline=performance.now()+60000;do{initial=await client.inspect();if(initial.workers.ready===2&&initial.workers.assets?.profiles.every(p=>p.textured)&&(state.plants.every(plant=>!plant.alive)||initial.crops?.ready)&&initial.crops.confirmedPlants===state.plants.filter(plant=>plant.alive).length)break;await new Promise(resolve=>setTimeout(resolve,16));}while(performance.now()<deadline&&!errors.length);if(errors.length||state.plants.some(plant=>plant.alive)&&!initial.crops?.ready||initial.crops.confirmedPlants!==state.plants.filter(plant=>plant.alive).length)throw Error('First-task crop or worker assets did not settle '+JSON.stringify({errors,workers:initial.workers,crops:initial.crops,expectedPlants:state.plants.filter(plant=>plant.alive).length}));
   console.log('first-task-stage:assets');const bRoute=planner.captureNativeRoutePresentation(b),preparedB=await client.prepareNativeRoute('worker-900012',bRoute,{terrainManifest:publisher.manifest()});if(!preparedB)throw Error('Independent original worker was not prepared');console.log('first-task-stage:b-prepared');
   const resourcesChannel=new MessageChannel();resourceConnection=createNativeResourcePreparationConnection({port:resourcesChannel.port1,session:transportSession});client.attachNativeResourcePreparation(resourcesChannel.port2);await resourceConnection.ready;
+  if(farmArrival){receipt=await auditNativeFarmArrivalWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,farmSetup});return receipt;}
   if(strollRestore){receipt=await auditNativeIdleStrollRestorationWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,restorationSetup});return receipt;}
   if(initialIdleBody){
    const worker=state.workers[0],before=await client.inspect(),held=JSON.stringify(worker),privateIdle=JSON.stringify(worker.idleState),rng=state.rng,peerBefore=planner.nativeRouteExecution(b),body=()=>{const count=w.spatial_bodies_near(0,0,1e6),rows=new Float64Array(w.memory.buffer,w.spatial_bodies_result_ptr(),count*6);for(let i=0;i<count;i++)if(rows[i*6]===1)return Array.from(rows.slice(i*6,i*6+6));return null;},heldBody=body();let ready,reference,committedAt,calls=0,issued=false,homeMoving=false,homeRequested=false;
