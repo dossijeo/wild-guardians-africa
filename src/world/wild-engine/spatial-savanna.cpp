@@ -2940,7 +2940,7 @@ int applyWorldProposalInput(const SpatialWorldProposalInput& input){
     if(result)worldProposalResult={x,z,added-1};
   }
 #endif
-  if(input.kind==12)result=spatialIntentStopIdleStroll(input);
+  if(input.kind==12||input.kind==24)result=spatialIntentStopWorkerRoute(input);
   return result;
 }
 EMSCRIPTEN_KEEPALIVE float* spatial_world_proposal_float_ptr(int count){
@@ -2961,7 +2961,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
 // 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
-// 12 explicitly stops a native Idle stroll without changing world geometry.
+// 12/24 explicitly stop a native Idle stroll/Farm arrival without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
   if(captureResources&&kind<6)return -2;
   WorldResourcePreview candidate;
@@ -3020,7 +3020,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 #ifndef __EMSCRIPTEN_PTHREADS__
     return -1;
 #endif
-  }else if(kind==12){
+  }else if(kind==12||kind==24){
     if(mode||floatCount||intCount!=8)return -1;
     for(int i:{1,3,7})if(ids[i]<0||ids[i]>0x1fffff)return -1;
     if((!ids[0]&&!ids[1])||(!ids[2]&&!ids[3])||!ids[5]||(!ids[6]&&!ids[7]))return -1;
@@ -3046,11 +3046,11 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
-// The original world preview for kind12 owns no terrain buffers. Refresh its
+// The original world preview for kinds12/24 owns no terrain buffers. Refresh its
 // receipt only after native recomputation; other families keep exact snapshots.
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_stop(double session,double ticket){
-  if(!worldResourcePreview||worldResourcePreview->header[4]!=12||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
-  std::array<double,8> translation{};const int result=spatialIntentRevalidateIdleStrollStop(session,ticket,translation);
+  if(!worldResourcePreview||(worldResourcePreview->header[4]!=12&&worldResourcePreview->header[4]!=24)||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
+  std::array<double,8> translation{};const int result=spatialIntentRevalidateWorkerRouteStop(session,ticket,translation);
   if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
   std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
   auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
@@ -3107,9 +3107,9 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   // semantics. Keep its canonical path until that owner uses protected commits.
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
-  std::array<double,5> stopBinding{};SpatialWorldProposalInput input;const int valid=stopBound?spatialIntentTakeIdleStrollStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  std::array<double,5> stopBinding{};SpatialWorldProposalInput input;const int valid=stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
-  if(!stopBound&&input.kind==12)stopBinding={1,ticket,time,ticket,time};
+  if(!stopBound&&(input.kind==12||input.kind==24))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
   struct ResourceGuard {
     std::map<std::pair<int,int>,int>* previous;
@@ -3137,7 +3137,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session
 // One receipt on the existing last committed world publication, not a history
 // of permissions. The authority attests the prepared/current frontier pair.
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_binding_ptr(){
-  if(spatial_world_resource_snapshot()!=1||worldResourcePublication->header[4]!=12)return nullptr;
+  if(spatial_world_resource_snapshot()!=1||(worldResourcePublication->header[4]!=12&&worldResourcePublication->header[4]!=24))return nullptr;
   const auto& p=*worldResourcePublication;return p.stopBinding[0]==1&&p.stopBinding[3]==p.header[2]&&p.stopBinding[4]==p.header[3]?p.stopBinding.data():nullptr;
 }
 int spatial_walkable(int x,int z){return walkable(x,z);}

@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [parada Farm24 nativa preparada](e-r3-native-farm-arrival-stop-source-20261117.md). Se comparte el nucleo de parada12 con fuente Farm explicita: mismo cuerpo/slot, pose final revalidada y recibo ligado al ticket preparado; Task peer sigue avanzando. Referencias: codigo DetourCrowd1.6.0/Godot4.4. Pasan2232 pruebas/222 archivos (una omision opcional),40 dirigidas y build; standalone/pthread recompilados,64 inputs/artefactos congelados. Faltan datos/proyeccion/control/puertos/consumidor y relevos Game; no hardware24. Siguen pendientes huecos y recuperacion3123. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm23 en Surface/Workers originales](e-r3-native-farm-arrival-route-surface-20261117.md). Se amplia el ciclo retenido y Worker anuncia version1; referencia: codigo wgpu26.0.1. GPU NVIDIA conserva 564/561 IDs en dos runs, prepara102 recursos y crea0 tras READY; ambos puertos, movimiento/picking y drain reales. Siguen huecos:172.74ms globales en primer run;158.18ms globales/61.20ms en bloqueo del run con traza. No acredita ausencia de tirones ni recuperacion3123. Pasan2215 pruebas/221 archivos (una omision opcional) y build,64 inputs nativos exactos. Faltan relevos/cohort/productor y continuidad integral. A6/A/B/C abiertos,D no iniciado.
 
 
