@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuacion e-R3: [fuente Farm retenido a Home y Game](e-r3-native-farm-moving-home-source-20261117.md). Nucleo Home detenido compartido con entrada Farm explicita: misma pose/cuerpo/slot hasta adquirir18, sin Idle ficticio ni nueva tarea. Game solicita Home al vencer contrato/hora250/300; Task independiente avanza. Solo lectura retenida admite contrato vencido, declaraciones Farm nuevas siguen cerradas. Referencias: codigo DetourCrowd1.6.0/Godot4.4-stable. Pasan2480 pruebas/235 archivos (una omision opcional),155 dirigidas y build; ambos WASM y modulo pthread recompilados,64 inputs nativos/7 cambios. Falta control/admision/puertos/actor/Surface/GPU Farm-Home y finales/cohort/productor. GPU anterior cbf31c436 no acredita nuevos binarios; intervalos y recuperacion3123 abiertos. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [Farm retenido a Task en Surface/GPU](e-r3-native-farm-moving-task-surface-20261117.md). Mismo actor/Surface/Workers/puertos/Host; Task genuina encolada al llegar, parada24, solicitud6 y adquisicion14. NVIDIA/Turing conserva646 IDs inmutables, retira solo tabla Farm, prepara70 recursos y crea0 despues de READY;0 shaders/pipelines nuevos,54 dibujos por bloqueo y ACK14/picking/adopcion5/drain reales. Idle retenido a Task conserva683 IDs/0 tardios. Relevo129 muestras/max34.89ms; captura global785/max139.89ms y5 huecos>50ms en montaje inicial, sin atribucion causal ni garantia sin tirones. Pasan2461 pruebas/234 archivos (una omision opcional),133 dirigidas y build;64 inputs nativos sin cambios. Faltan Home/finales/cohort/productor/recuperacion3123. A6/A/B/C abiertos,D no iniciado.
 
 

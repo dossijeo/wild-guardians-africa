@@ -33,10 +33,12 @@ bool nativeHomeBodyCurrent(const IntentState& s,const ActiveIntent& intent){
   worker->second.x==body.x&&worker->second.z==body.z;
 }
 static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& intent,bool held){
- if(intent.home||intent.task||intent.target||intent.lease||intent.delivery||intent.animal||intent.retreat||!intent.requiresResources||intent.state!=(held?PlanningState::WaitingBlocked:PlanningState::RouteActive)||intent.slot>=s.routeSlots.size()||intent.farmArrivalRequest)return false;
+ const bool home=held&&intent.home&&intent.homeRequest&&intent.state==PlanningState::AwaitingResources;
+ if((intent.home&&!home)||intent.task||intent.target||intent.lease||intent.delivery||intent.animal||intent.retreat||!intent.requiresResources||intent.state!=(home?PlanningState::AwaitingResources:held?PlanningState::WaitingBlocked:PlanningState::RouteActive)||intent.slot>=s.routeSlots.size()||intent.farmArrivalRequest)return false;
  const auto& route=s.routeSlots[intent.slot];const auto& b=route.farmArrivalBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
  if(!b||!b->requestSource||!route.hasExecution||route.motionFlags>1||worker==s.workers.end())return false;
  const auto& r=*b->requestSource;const auto& h=b->actual.header;const auto center=s.targets.find(r.center);
+ if(home){const auto& q=*intent.homeRequest;const auto& p=route.executionPose;if(q.initialIdleSourceSequence||q.idleCycleSourceSequence||q.idleStrollSourceSequence||q.idleStrollSourceGeneration||q.farmArrivalSourceSequence!=b->assignmentSequence||q.farmArrivalSourceGeneration!=intent.generation||q.body!=route.reservationBody||q.profile!=intent.profile||q.bodyFlags!=r.bodyFlags||q.radius!=route.radius||q.at<route.suspendedAt||q.sequence<=b->assignmentSequence||q.x!=p[0]||q.z!=p[1]||q.yaw!=p[4]||q.runPhase!=p[9]||q.walkPhase!=p[10]||q.carryPhase!=p[11]||q.runRemaining!=p[14])return false;}
  const double endX=route.points.empty()?route.originX:route.points[route.points.size()-2],endZ=route.points.empty()?route.originZ:route.points.back();
  uint32_t resumed=uint32_t(h[4])+1;if(!resumed)resumed=1;
  const auto suspended=s.suspendedBodies.find(r.body);
@@ -45,9 +47,9 @@ static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& inte
   double(route.generation)==h[4]&&executionBindingCoherent(s,route.reservationBody,intent.slot);
  return r.actor==intent.actor&&r.session==s.session&&double(r.sequence)==h[21]&&r.at==h[22]&&r.profile==route.profile&&
   b->assignmentSequence==intent.assignmentSequence&&owned&&double(intent.slot)==h[20]&&route.startTime==h[10]&&double(route.motionFlags)==h[6]&&
-  worker->second.eligible&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
+  (home?!worker->second.eligible:worker->second.eligible)&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
   center!=s.targets.end()&&center->second.kind==4&&center->second.active&&center->second.status==0&&center->second.serviceKnown&&center->second.serviceX==r.targetX&&center->second.serviceZ==r.targetZ&&center->second.x==r.centerX&&center->second.z==r.centerZ&&
-  intent.approachKnown&&intent.approachX==float(r.targetX)&&intent.approachZ==float(r.targetZ)&&intent.approachRadius==2&&std::hypot(endX-r.targetX,endZ-r.targetZ)<=2&&
+  intent.approachKnown&&intent.approachX==float(home?intent.homeRequest->homeX:r.targetX)&&intent.approachZ==float(home?intent.homeRequest->homeZ:r.targetZ)&&intent.approachRadius==2&&std::hypot(endX-r.targetX,endZ-r.targetZ)<=2&&
   spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==route.radius&&body.r==r.radius&&
   body.x==route.executionPose[0]&&body.z==route.executionPose[1]&&worker->second.x==body.x&&worker->second.z==body.z;
 }

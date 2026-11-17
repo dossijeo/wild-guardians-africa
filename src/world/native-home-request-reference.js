@@ -46,3 +46,10 @@ export function nativeHomeRequestContinuesHeldIdleStroll(request,source){
  return !!request&&source?.kind==='native-idle-stroll-held-execution'&&!!r&&!!h&&request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.bodyFlags===r.bodyFlags&&request.profile===r.profile&&
   request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>source.assignmentSequence&&request.requestedAt>=source.suspendedAt&&poseFields.every(k=>request.pose[k]===source.pose[k]);
 }
+// Farm keeps its own typed ancestry; the new Home goal uses only the final
+// physical pose. It cannot borrow an Idle decision or a moving Farm corridor.
+export function nativeHomeRequestContinuesHeldFarmArrival(request,source){
+ const r=source?.sourceReference,q=r?.sourceRequest,h=source?.resumeHandle;
+ return !!request&&source?.kind==='native-farm-arrival-held-execution'&&!!q&&!!h&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&
+  request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>source.assignmentSequence&&request.requestedAt>=source.suspendedAt&&poseFields.every(k=>request.pose[k]===source.pose[k]);
+}

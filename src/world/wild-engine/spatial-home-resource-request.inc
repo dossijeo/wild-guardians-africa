@@ -56,21 +56,24 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_cycle_home_request(double actor,double 
  intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);s.workers.at(intent.actor).eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
-// The existing prepared suspension has already revoked moving22. Retarget
+// The existing prepared suspension has already revoked moving22/23. Retarget
 // its held native pose without creating a rest cycle or releasing its slot.
-EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){
+static int requestHeldWorkerHome(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ,bool farm){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(assignmentSequence)||!integer(generation)||generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
- if(!nativeHeldIdleStrollBodyCurrent(s,intent,uint64_t(assignmentSequence),uint32_t(generation)))return -2;
+ if(farm?intent.assignmentSequence!=uint64_t(assignmentSequence)||intent.generation!=uint32_t(generation)||!nativeHeldFarmArrivalBodyCurrent(s,intent):!nativeHeldIdleStrollBodyCurrent(s,intent,uint64_t(assignmentSequence),uint32_t(generation)))return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;if(!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
  const auto& route=s.routeSlots[intent.slot];const auto& pose=route.executionPose;SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=intent.actor;request->session=s.session;request->body=route.reservationBody;request->profile=intent.profile;request->bodyFlags=body.flags;request->radius=route.radius;request->at=s.effectiveTime;
- request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);
+ request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
+ if(farm){request->farmArrivalSourceSequence=uint64_t(assignmentSequence);request->farmArrivalSourceGeneration=uint32_t(generation);}else{request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);}
  intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
  s.workers.at(intent.actor).eligible=false;intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
+EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,false);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,true);}
 // A genuine initial Idle may expire before graphics, or even its first body,
 // have been admitted. Retarget that semantic source on the same intent owner.
 EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
