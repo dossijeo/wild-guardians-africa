@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [cliente y Host Farm24](e-r3-native-farm-arrival-stop-remote-20261117.md). Paquete retenido exige plantilla24, reloj relativo y todos los valores finales; ACK tras promesa de drain y liberacion instala prueba nativa exacta. Commit local usa copia de metadata, no objetos del caller. Referencia: codigo Queue/LifetimeTracker de wgpu26.0.1. Pasan2374 pruebas/229 archivos (una omision opcional),110 dirigidas y build;64 inputs nativos exactos sin recompilar. Dispositivo/triangulo simulados; faltan Surface/roster/capacidad Worker24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [reloj y picking Farm detenido](e-r3-native-farm-arrival-stop-clock-20261117.md). Selector12/24 en reloj y kernel TSL existentes; misma textura/datos/version, pose final real despues del giro y picking desde frame presentado. Rechaza tiempos anteriores a parada; cliente no reutiliza capacidad Idle para Farm. Referencia: codigo NodeUtils de Three r180. Pasan2347 pruebas/228 archivos (una omision opcional),64 dirigidas y build;64 inputs nativos exactos sin recompilar. TSL real, frame/backend/GPU simulados; falta Host/Surface/roster24 y relevos Task/Home. Continuidad y recuperacion3123 pendientes. A6/A/B/C abiertos,D no iniciado.
 
 
