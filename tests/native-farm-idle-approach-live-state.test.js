@@ -20,9 +20,18 @@ for(const profile of PROFILES)test(`${profile.id} live actual approach transport
 for(const field of ['remaining','destination','pending'])test(`live approach transport rejects malformed ${field} without changing its native owner`,()=>{
  const f=fixture({peer:false});try{
   const binding=f.commitApproach(f.prepareApproach()),body=f.body(1);
-  if(field==='remaining')f.worker.idleState.remaining=0;
+  if(field==='remaining')f.worker.idleState.remaining=-1;
   else if(field==='destination')f.worker.destinationId='idle-'+f.worker.id;
-  else {f.worker.nativeRouteAdmission='pending-stroll-resources';f.worker.idleState.remaining=0;}
+  else {f.worker.nativeRouteAdmission='pending-stroll-resources';f.worker.idleState.remaining=0;f.worker.idleState.binding=binding;}
   assert.throws(()=>serializeConfirmedState(f.state),/Idle/);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeIdleStrollBinding(f.actor).assignmentSequence,binding.assignmentSequence);
+ }finally{f.close();}
+});
+
+// Zero is valid semantic data after a retry knot. The existing native owner
+// must still reject a different live value; transporting data grants no route.
+test('semantic zero remaining can be transported but cannot replace the active Farm approach owner',()=>{
+ const f=fixture({peer:false});try{
+  const binding=f.commitApproach(f.prepareApproach()),body=f.body(1),worker=structuredClone(f.worker);assert.notEqual(binding.reference.sourceFarm.idleState.remaining,0);f.worker.idleState.remaining=0;
+  const copy=deserializeConfirmedState(serializeConfirmedState(f.state));assert.equal(copy.workers[0].idleState.remaining,0);assert.throws(()=>f.planner.projectNativeIdleStroll(f.state,f.worker),/native owner/);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeIdleStrollBinding(f.actor).assignmentSequence,binding.assignmentSequence);Object.assign(f.worker,worker);assert(f.planner.projectNativeIdleStroll(f.state,f.worker));
  }finally{f.close();}
 });

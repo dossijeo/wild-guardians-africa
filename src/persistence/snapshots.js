@@ -134,7 +134,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
       if(initialIdle)nativeInitialIdleSavedState(state,worker,{canonical:true});
       // A live projection does not declare a loadable checkpoint. An approach
-      // retains its original birth/anchor; cold local-WALK restoration stays strict.
+      // retains its actual WALK remaining/anchor; loading requires a fresh declaration.
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
       if(!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }

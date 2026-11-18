@@ -48,7 +48,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
   if(!nativeIdleStrollRequestBodyCurrent(s,found->second)||double(found->second.strollRequest->sequence)!=sourceSequence)return -2;
   d.strollRequestSource=found->second.strollRequest;const auto& r=*d.strollRequestSource;static_cast<NativeWorkerPoseResourceRequest&>(q)=r;q.center=r.center;q.workerProfile=r.workerProfile;
   h[9]=r.anchorKind;h[10]=double(r.anchor);h[11]=r.anchorX;h[12]=r.anchorZ;h[13]=r.anchorRadius;h[14]=r.idleSeconds;
-  restoredNext.sequence=r.sequence;restoredNext.requestedAt=r.at;restoredNext.x=r.destinationX;restoredNext.z=r.destinationZ;restoredNext.state={3,0,r.approach?r.idleSeconds*2:0,double(r.rng),r.approachRetry,0};nextSource=&restoredNext;
+  restoredNext.sequence=r.sequence;restoredNext.requestedAt=r.at;restoredNext.x=r.destinationX;restoredNext.z=r.destinationZ;restoredNext.state={3,0,r.walkRemaining.value_or(r.approach?r.idleSeconds*2:0),double(r.rng),r.approachRetry,0};nextSource=&restoredNext;
  }else{
   if(!nativeIdleCycleCurrent(s,found->second))return -2;d.idleCycleSource=found->second.idleCycle;const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;nextSource=&next;
   if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
@@ -80,7 +80,8 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,
   route.originX,route.originZ,route.startTime,routeTimeAtDistance(route,route.distances.back()),route.distances.back(),route.speed,route.runDistance,route.runSpeed,route.runBudget,double(route.timingMode),
   double(route.points.size()/2),double(d.rows.size()/16),double(d.slot),sourceSequence,next.requestedAt,double(p.intents)};
- d.idleStrollSemantic={selectedApproach?2.:1.,double(sourceCycle),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.yaw,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,h[9],h[10],h[11],h[12],h[13],next.state[3],next.state[4],h[14],next.x,next.z,selectedApproach?next.state[2]:0};
+ const bool retainsRemaining=selectedApproach||(d.strollRequestSource&&d.strollRequestSource->walkRemaining.has_value());
+ d.idleStrollSemantic={retainsRemaining?2.:1.,double(sourceCycle),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.yaw,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,h[9],h[10],h[11],h[12],h[13],next.state[3],next.state[4],h[14],next.x,next.z,retainsRemaining?next.state[2]:0};
  p.idleStroll=std::move(d);return 1;
 }
 // Live approach is an existing22 draft with an actual23 origin. It never
@@ -119,7 +120,7 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_gate(double session,double tic
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=22||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||session!=double(p.session)||ticket!=double(p.ticket))return -1;
- auto old=std::move(*p.idleStroll);clearWorldMutationProposal(p);const int result=stageIdleStroll(old.header[1],session,old.header[21],old.strollFarmPose,{old.idleStrollSemantic[12],old.idleStrollSemantic[13],old.idleStrollSemantic[14],old.idleStrollSemantic[17]},old.idleStrollSemantic[0]==2);if(result!=1)return result;
+ auto old=std::move(*p.idleStroll);clearWorldMutationProposal(p);const int result=stageIdleStroll(old.header[1],session,old.header[21],old.strollFarmPose,{old.idleStrollSemantic[12],old.idleStrollSemantic[13],old.idleStrollSemantic[14],old.idleStrollSemantic[17]},old.idleCycleSource&&old.idleStrollSemantic[0]==2);if(result!=1)return result;
  auto& next=*p.idleStroll;next.previousStroll=NativeIdleStrollOrigin{old.header,uint64_t(ticket)};const bool same=old.idleCycleSource==next.idleCycleSource&&old.strollRequestSource==next.strollRequestSource&&old.strollFarmSource==next.strollFarmSource&&old.idleStrollSemantic==next.idleStrollSemantic&&old.slot==next.slot&&old.generation==next.generation;
  next.timeTranslation={2,ticket,double(p.ticket),old.header[10],old.header[11],next.header[10],next.header[11],same&&sameNativeMotionDraft(old,next)?1.:0.,sameNativeMotionGates(s,old,next)?1.:0.,same&&sameNativeMotionDraft(old,next,true)?1.:0.,sameNativeMotionGates(s,old,next,true)?1.:0.};return 1;
 }

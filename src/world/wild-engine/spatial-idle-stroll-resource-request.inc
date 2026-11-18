@@ -3,7 +3,8 @@
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_version(){return 2;}
 static int restoreIdleStroll(bool approach,double actor,double workerProfile,double anchorKind,double anchor,
  double anchorX,double anchorZ,double anchorRadius,double idleSeconds,double rng,double approachRetry,double destinationX,double destinationZ,
- double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining){
+ double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining,std::optional<double> walkRemaining=std::nullopt){
+ if(walkRemaining&&(!approach||!std::isfinite(*walkRemaining)||!std::isfinite(float(*walkRemaining))||*walkRemaining<0))return -1;
  auto& s=state();if(!integer(actor)||!integer(workerProfile,true)||workerProfile>3||!integer(anchorKind)||anchorKind>2||!integer(anchor)||!integer(rng,true)||rng>4294967295.)return -1;
  for(double v:{anchorX,anchorZ,anchorRadius,idleSeconds,approachRetry,destinationX,destinationZ,yaw,runPhase,walkPhase,carryPhase,runRemaining})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
  if(!coordinate(anchorX)||!coordinate(anchorZ)||!coordinate(destinationX)||!coordinate(destinationZ)||anchorRadius<=0||anchorRadius>8||idleSeconds<=0||idleSeconds>3600||approachRetry<0||runPhase<0||walkPhase<0||carryPhase<0||runRemaining<0||(approach?(destinationX!=anchorX||destinationZ!=anchorZ):std::hypot(destinationX-anchorX,destinationZ-anchorZ)>anchorRadius+1e-9))return -1;
@@ -13,14 +14,14 @@ static int restoreIdleStroll(bool approach,double actor,double workerProfile,dou
  if(const auto found=s.activeIntents.find(uint64_t(actor));found!=s.activeIntents.end()){
   const auto& intent=found->second;const auto r=intent.strollRequest;
   if(!r||!nativeIdleStrollRequestCurrent(s,intent))return -2;
-  return r->approach==approach&&r->workerProfile==int(workerProfile)&&r->anchorKind==int(anchorKind)&&r->anchor==uint64_t(anchor)&&r->anchorX==anchorX&&r->anchorZ==anchorZ&&r->anchorRadius==anchorRadius&&r->idleSeconds==idleSeconds&&r->rng==uint32_t(rng)&&r->approachRetry==approachRetry&&r->destinationX==destinationX&&r->destinationZ==destinationZ&&r->yaw==yaw&&r->runPhase==runPhase&&r->walkPhase==walkPhase&&r->carryPhase==carryPhase&&r->runRemaining==runRemaining?1:-3;
+  return r->walkRemaining==walkRemaining&&r->approach==approach&&r->workerProfile==int(workerProfile)&&r->anchorKind==int(anchorKind)&&r->anchor==uint64_t(anchor)&&r->anchorX==anchorX&&r->anchorZ==anchorZ&&r->anchorRadius==anchorRadius&&r->idleSeconds==idleSeconds&&r->rng==uint32_t(rng)&&r->approachRetry==approachRetry&&r->destinationX==destinationX&&r->destinationZ==destinationZ&&r->yaw==yaw&&r->runPhase==runPhase&&r->walkPhase==walkPhase&&r->carryPhase==carryPhase&&r->runRemaining==runRemaining?1:-3;
  }
  // A restored declaration precedes the first binding/clock. It cannot replace
  // a live body or disturb an already admitted native cohort.
  if(w.bodyBound||s.causalClock||s.executionEnabled)return -4;
  auto r=std::make_shared<NativeIdleStrollResourceRequest>();r->actor=uint64_t(actor);r->session=s.session;r->at=s.effectiveTime;r->center=w.center;r->x=w.x;r->z=w.z;r->profile=lazy_selected_context();
  r->approach=approach;r->workerProfile=int(workerProfile);r->anchorKind=int(anchorKind);r->anchor=uint64_t(anchor);r->anchorX=anchorX;r->anchorZ=anchorZ;r->anchorRadius=anchorRadius;r->idleSeconds=idleSeconds;r->rng=uint32_t(rng);r->approachRetry=approachRetry;r->destinationX=destinationX;r->destinationZ=destinationZ;
- r->yaw=yaw;r->runPhase=runPhase;r->walkPhase=walkPhase;r->carryPhase=carryPhase;r->runRemaining=runRemaining;
+ r->walkRemaining=walkRemaining;r->yaw=yaw;r->runPhase=runPhase;r->walkPhase=walkPhase;r->carryPhase=carryPhase;r->runRemaining=runRemaining;
  ActiveIntent intent;intent.actor=r->actor;intent.requiresResources=true;intent.lease=false;intent.state=PlanningState::AwaitingResources;intent.profile=r->profile;intent.strollRequest=std::move(r);
  if(!nativeIdleStrollRequestAnchorCurrent(s,*intent.strollRequest))return -2;
  auto& stored=s.activeIntents.emplace(intent.actor,std::move(intent)).first->second;stored.strollRequest->sequence=emitIntentChange(s,stored);s.entityRevision++;return 1;
@@ -33,8 +34,13 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_idle_stroll(double actor,double work
 EMSCRIPTEN_KEEPALIVE int nav_intent_restore_idle_approach(double actor,double workerProfile,double anchorKind,double anchor,double anchorX,double anchorZ,double anchorRadius,double idleSeconds,double rng,double approachRetry,double destinationX,double destinationZ,double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining){
  return restoreIdleStroll(true,actor,workerProfile,anchorKind,anchor,anchorX,anchorZ,anchorRadius,idleSeconds,rng,approachRetry,destinationX,destinationZ,yaw,runPhase,walkPhase,carryPhase,runRemaining);
 }
+// Explicit semantic state on the same cold request; no old corridor/permission.
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_state_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restore_idle_approach_state(double actor,double workerProfile,double anchorKind,double anchor,double anchorX,double anchorZ,double anchorRadius,double idleSeconds,double rng,double approachRetry,double destinationX,double destinationZ,double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining,double walkRemaining){
+ return restoreIdleStroll(true,actor,workerProfile,anchorKind,anchor,anchorX,anchorZ,anchorRadius,idleSeconds,rng,approachRetry,destinationX,destinationZ,yaw,runPhase,walkPhase,carryPhase,runRemaining,walkRemaining);
+}
 static int snapshotIdleStrollRequest(IntentState& s,const NativeIdleStrollResourceRequest& r){
- s.strollRequestResult={1,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.center),double(r.body),double(r.profile),double(r.bodyFlags),r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.workerProfile),double(r.anchorKind),double(r.anchor),r.anchorX,r.anchorZ,r.anchorRadius,r.idleSeconds,double(r.rng),r.approachRetry,r.destinationX,r.destinationZ,r.approach?1.:0.};return 1;
+ s.strollRequestResult={r.walkRemaining?2.:1.,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.center),double(r.body),double(r.profile),double(r.bodyFlags),r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.workerProfile),double(r.anchorKind),double(r.anchor),r.anchorX,r.anchorZ,r.anchorRadius,r.idleSeconds,double(r.rng),r.approachRetry,r.destinationX,r.destinationZ,r.approach?1.:0.,r.walkRemaining.value_or(0)};return 1;
 }
 // A cold declaration is observable for Game's hold, without a usable body
 // reference or an executable resource grant. Binding emits a fresh birth.
@@ -77,9 +83,11 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_failed_request_snapshot(double actor,dou
  return request?snapshotIdleStrollRequest(s,*request):0;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_restore_request_ptr(){return state().strollRequestResult.data();}
-EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_requests_snapshot(){
+static int snapshotIdleStrollRequests(bool extended){
  auto& s=state();s.strollRequestsResult.clear();std::vector<uint64_t> actors;
  for(const auto& [actor,intent]:s.activeIntents)if(intent.strollRequest&&intent.strollRequest->body)actors.push_back(actor);
- std::sort(actors.begin(),actors.end());for(auto actor:actors){if(nav_idle_stroll_restore_request_snapshot(double(actor))!=1){s.strollRequestsResult.clear();return -1;}s.strollRequestsResult.insert(s.strollRequestsResult.end(),s.strollRequestResult.begin(),s.strollRequestResult.end());}return int(actors.size());
+ std::sort(actors.begin(),actors.end());for(auto actor:actors){if(nav_idle_stroll_restore_request_snapshot(double(actor))!=1||(!extended&&s.strollRequestResult[0]!=1)){s.strollRequestsResult.clear();return -1;}s.strollRequestsResult.insert(s.strollRequestsResult.end(),s.strollRequestResult.begin(),s.strollRequestResult.begin()+(extended?30:29));}return int(actors.size());
 }
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_requests_snapshot(){return snapshotIdleStrollRequests(false);}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_state_requests_snapshot(){return snapshotIdleStrollRequests(true);}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_restore_requests_ptr(){return state().strollRequestsResult.data();}
