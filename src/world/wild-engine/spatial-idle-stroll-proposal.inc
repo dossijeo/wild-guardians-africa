@@ -14,26 +14,6 @@ static bool idleStrollSourceCurrent(const IntentState& s,const PendingNativeMoti
   double(cycle.binding->cycleSequence)==d.idleStrollSemantic[1]&&double(next.sequence)==d.header[21]&&
   next.requestedAt==d.header[22]&&next.x==d.idleStrollSemantic[18]&&next.z==d.idleStrollSemantic[19]&&next.state[3]==d.idleStrollSemantic[15];
 }
-// Match spatial-navigation-movement.js's known-empty endpoint test using the
-// same native component/connector query. Missing components remain unknown;
-// no path outcome is a reservation conflict or an executable motion grant.
-static int idleStrollPathOutcome(int count,float x,float z,float tx,float tz){
- if(count>=0)return count?1:-7;
- auto* input=spatial_region_batch_input_ptr(2);if(!input)return -6;
- input[0]=x;input[1]=z;input[2]=tx;input[3]=tz;
- if(spatial_region_batch(2)!=2)return -6;const auto* rows=spatial_region_batch_output_ptr();
- for(int i=0;i<2;i++)if(rows[i*5]==0&&rows[i*5+1]<0)return -7;
- return -6;
-}
-// The cold request uses the same finite endpoint and local-radius checks
-// for both admission and the failed REST blueprint. A physical detour outside
-// the original anchor is not a permitted local stroll.
-static int idleStrollRequestPathOutcome(int count,const NativeIdleStrollResourceRequest& r){
- const int status=idleStrollPathOutcome(count,float(r.x),float(r.z),float(r.destinationX),float(r.destinationZ));if(status!=1)return status;
- const auto* points=spatial_world_route_ptr();if(!points||points[(count-1)*2]!=float(r.destinationX)||points[(count-1)*2+1]!=float(r.destinationZ))return -7;
- for(int i=0;!r.approach&&i<count;i++)if(std::hypot(double(points[i*2])-r.anchorX,double(points[i*2+1])-r.anchorZ)>r.anchorRadius)return -7;
- return 1;
-}
 // Pure cancelWalk blueprint on a real pending request, not an arrived22 or
 // an Idle owner. The private stream is copied; only a later admitted state
 // transition may install this desired REST in Game.
@@ -73,7 +53,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
   if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
   q=cycle.binding->source;h=cycle.binding->actual.header;sourceCycle=cycle.binding->cycleSequence;
  }
- const auto& next=*nextSource;
+ const auto& next=*nextSource;if(next.approach)return -8;
  d.body=q.body;d.slot=uint32_t(s.routeSlots.size());for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  const int previous=lazy_selected_context();if(previous!=q.profile)spatial_select_nav_profile_index(q.profile);

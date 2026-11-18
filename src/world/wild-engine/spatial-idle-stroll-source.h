@@ -30,3 +30,34 @@ static bool idleStrollCycleReleaseClear(IntentState& s,uint64_t body){
  // must not incidentally revoke a peer whose stop has not been prepared.
  bool conflicts=false;visitStoppedReservationConflicts(s,body,[](uint64_t){return false;},[&](uint64_t,double){conflicts=true;});return !conflicts;
 }
+
+// Match spatial-navigation-movement.js's known-empty endpoint test using the
+// same native component/connector query. Missing components remain unknown;
+// no path outcome is a reservation conflict or an executable motion grant.
+static int idleStrollPathOutcome(int count,float x,float z,float tx,float tz){
+ if(count>=0)return count?1:-7;
+ auto* input=spatial_region_batch_input_ptr(2);if(!input)return -6;
+ input[0]=x;input[1]=z;input[2]=tx;input[3]=tz;
+ if(spatial_region_batch(2)!=2)return -6;const auto* rows=spatial_region_batch_output_ptr();
+ for(int i=0;i<2;i++)if(rows[i*5]==0&&rows[i*5+1]<0)return -7;
+ return -6;
+}
+// The cold request uses the same finite endpoint and local-radius checks
+// for both admission and the failed REST blueprint. A physical detour outside
+// the original anchor is not a permitted local stroll.
+static int idleStrollRequestPathOutcome(int count,const NativeIdleStrollResourceRequest& r){
+ const int status=idleStrollPathOutcome(count,float(r.x),float(r.z),float(r.destinationX),float(r.destinationZ));if(status!=1)return status;
+ const auto* points=spatial_world_route_ptr();if(!points||points[(count-1)*2]!=float(r.destinationX)||points[(count-1)*2+1]!=float(r.destinationZ))return -7;
+ for(int i=0;!r.approach&&i<count;i++)if(std::hypot(double(points[i*2])-r.anchorX,double(points[i*2+1])-r.anchorZ)>r.anchorRadius)return -7;
+ return 1;
+}
+// Failure source shares the pending request's bound pose and exact path
+// classification. The copied private stream is installed only by commit21.
+static std::optional<NativeIdleCycleBodySource> failedIdleStrollCycleSource(const IntentState& s,const ActiveIntent& intent,uint64_t sequence){
+ if(!nativeIdleStrollRequestBodyCurrent(s,intent)||intent.strollRequest->sequence!=sequence)return std::nullopt;
+ const auto& r=*intent.strollRequest;const int previous=lazy_selected_context();if(previous!=r.profile)spatial_select_nav_profile_index(r.profile);
+ const int count=spatial_world_route_cached(float(r.x),float(r.z),float(r.destinationX),float(r.destinationZ)),status=idleStrollRequestPathOutcome(count,r);
+ if(previous!=r.profile)spatial_select_nav_profile_index(previous);if(status!=-7)return std::nullopt;
+ NativeIdleCycleBodySource q;static_cast<NativeWorkerPoseResourceRequest&>(q)=r;q.kind=1;q.center=r.center;q.workerProfile=r.workerProfile;q.anchorKind=r.anchorKind;q.anchor=r.anchor;
+ uint32_t rng=r.rng;q.initial={1,0,r.idleSeconds*(2+std::floor(idleCycleRandom(rng)*3)),double(rng),r.approachRetry,0};return q;
+}

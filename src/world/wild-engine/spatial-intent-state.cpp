@@ -205,7 +205,7 @@ struct NativeIdleCycleBinding {
  NativeIdleCycleBodySource source;
 };
 struct NativeIdleCycleDecision {
- int status=0;std::array<double,6> state{};double x=0,z=0;
+ int status=0;bool approach=false;std::array<double,6> state{};double x=0,z=0;
  uint64_t topology=0,sequence=0;double requestedAt=0;
  std::vector<float> points;
 };
@@ -407,6 +407,7 @@ struct PendingBarrierProposal {
    std::array<double,24> header{};std::shared_ptr<const NativeInitialIdleBodyBinding> body;
    std::shared_ptr<NativeIdleCycle> previousCycle;
    std::shared_ptr<const NativeIdleStrollBinding> strollSource;
+   std::shared_ptr<const NativeIdleStrollResourceRequest> failedRequest;
    std::shared_ptr<const NativeFarmArrivalRouteBinding> farmSource;NativeIdleCycleBodySource source;
    std::optional<NativeIdleCycleOrigin> previous;std::array<double,8> timeTranslation{};
   };
