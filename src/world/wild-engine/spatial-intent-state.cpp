@@ -239,7 +239,7 @@ struct NativeHomeRouteBinding {
 struct NativeIdleStrollOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeIdleStrollBinding {
  NativeIdleStrollOrigin prepared,actual;uint64_t assignmentSequence=0;
- std::array<double,20> semantic{};
+ std::array<double,21> semantic{};
  std::shared_ptr<const NativeIdleStrollResourceRequest> requestSource;
  std::optional<NativeIdleCycleBodySource> farmSource;
 };
@@ -351,7 +351,7 @@ struct PendingNativeMotionDraft {
   std::optional<NativeFarmArrivalRouteOrigin> previousFarmArrival;
   std::optional<NativeIdleStrollOrigin> previousStroll;
   std::shared_ptr<NativeIdleCycle> idleCycleSource;
-  std::array<double,20> idleStrollSemantic{};
+  std::array<double,21> idleStrollSemantic{};
   std::shared_ptr<const NativeTaskSettlementBinding> stationarySource;
   std::shared_ptr<const NativeInitialIdleBodyBinding> initialIdleBodySource;
   std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
