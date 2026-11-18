@@ -34,6 +34,9 @@ export function copyNativeIdleStrollReference(value){
  if(farm&&(source||farm.kind!=='native-farm-arrival-idle-source'||farm.authorityEpoch!==worldBoundary.authorityEpoch||farm.nativeSession!==worldBoundary.nativeSession||farm.sourceSequence!==value.sourceDecisionSequence||farm.sourceAt!==value.requestedAt||['actorId','bodyId','bodyFlags','centerId','profile','workerProfile'].some(k=>farm[k]!==value[k])||poseKeys.some(k=>farm.pose[k]!==p[k])||farm.idleState.anchorId!==anchorId(a)||value.walkRng!==farm.idleState.rng||value.approachRetry!==1||d.x!==a.x||d.z!==a.z))throw TypeError('Native Idle approach differs from its actual Farm source');
  return Object.freeze({...Object.fromEntries(fields.filter(k=>!['sourceRequest','sourceFarm'].includes(k)&&(k!=='walkRemaining'||selected)).map(k=>[k,value[k]])),...(source?{sourceRequest:source}:{}),...(farm?{sourceFarm:farm}:{}),worldBoundary,pose:Object.freeze(Object.fromEntries(poseKeys.map(k=>[k,p[k]]))),anchor:Object.freeze({kind:a.kind,id:a.id,x:a.x,z:a.z,radius:a.radius}),destination:Object.freeze({x:d.x,z:d.z}),expectedRouteHandle:Object.freeze({authorityEpoch:h.authorityEpoch,session:h.session,slot:h.slot,generation:h.generation})});
 }
+// Semantic selectors for already decoded references. These grant no permission.
+export const nativeIdleStrollWalkRemaining=r=>r.version===2?r.walkRemaining:r.sourceFarm?r.sourceFarm.idleState.remaining:r.sourceRequest?.approach?r.idleSeconds*2:0;
+export const nativeIdleStrollApproachesAnchor=r=>r.version===2||!!r.sourceFarm||r.sourceRequest?.approach===true;
 export function sameNativeIdleStrollReference(a,b){try{return JSON.stringify(copyNativeIdleStrollReference(a))===JSON.stringify(copyNativeIdleStrollReference(b));}catch{return false;}}
 const program=({worldBoundary,sourceControlSequence,endTime,...value})=>value;
 const sameProgram=(a,b)=>JSON.stringify(program(a))===JSON.stringify(program(b));

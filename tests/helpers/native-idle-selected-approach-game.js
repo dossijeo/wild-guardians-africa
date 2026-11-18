@@ -22,10 +22,14 @@ export async function selectedApproachGame({profile='youngMale',threaded=false,r
   stopTasks=planner.observeTasks(f.state);stop=planner.observeWorld(f.state);const fail=()=>{throw Error('Selected native Idle must not use a JS mover or clearance');};nav.path=fail;nav.workerMotionClear=fail;nav.workerRouteClear=fail;
   if(bind){assert.equal(w.spatial_body_upsert(1,worker.x,worker.z,.28,0,1),1);assert.equal(w.nav_gate_bind_worker(actor,1),1);assert(['committed','unchanged'].includes(planner.commitNativeCausalClock().status));}
   const tuple=()=>{assert.equal(w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(w.memory.buffer,w.nav_intent_barrier_proposal_ticket_ptr(),6));};
-  return {...f,planner,worker,actor,nav,tuple,
+  let failedWall;
+  const prepareFailedCycle=()=>{const q=planner.nativeIdleStrollRequestReference(actor);assert(q);failedWall=f.session.core.addWall(q.destination.x,q.destination.z,.4,.4);assert(failedWall>0);const p=planner.prepareNativeIdleCycleProposal(actor);assert.equal(p.status,'proposed');return p.proposal;};
+  const commitFailedCycle=p=>{assert.equal(w.nav_idle_cycle_proposal_commit_bound(...tuple().slice(0,5),p.ticket.ticket),1);assert(['committed','unchanged'].includes(planner.commitNativeCausalClock().status));assert(planner.projectNativeIdleCycle(f.state,worker));return planner.nativeIdleCycleBinding(actor);};
+  const finishFailedCycle=p=>{assert.equal(f.session.core.removeWall(failedWall),1);tick(f.state,p.nativeIdleCycle.duration,nav);const next=planner.nativeIdleCycleNextRequest(actor);assert(next?.approach);return next;};
+  return {...f,planner,worker,actor,nav,tuple,prepareFailedCycle,commitFailedCycle,finishFailedCycle,
    prepare(){const r=planner.prepareNativeIdleStrollProposal(actor);assert.equal(r.status,'proposed',JSON.stringify(r));return r.proposal;},
    commit(p,{project=true}={}){assert.equal(w.nav_idle_stroll_proposal_commit_bound(...tuple().slice(0,5),p.ticket.ticket),1);assert.equal(planner.beginNativeRouteExecution().status,'started');assert(['committed','unchanged'].includes(planner.commitNativeCausalClock().status));if(project)assert(planner.projectNativeIdleStroll(f.state,worker));return planner.nativeIdleStrollBinding(actor);},
-   select(){const q=planner.nativeIdleStrollRequestReference(actor);assert(q);const wall=f.session.core.addWall(q.destination.x,q.destination.z,.4,.4);assert(wall>0);const p=planner.prepareNativeIdleCycleProposal(actor);assert.equal(p.status,'proposed');assert.equal(w.nav_idle_cycle_proposal_commit_bound(...tuple().slice(0,5),p.proposal.ticket.ticket),1);assert(['committed','unchanged'].includes(planner.commitNativeCausalClock().status));assert(planner.projectNativeIdleCycle(f.state,worker));assert.equal(f.session.core.removeWall(wall),1);tick(f.state,p.proposal.nativeIdleCycle.duration,nav);const next=planner.nativeIdleCycleNextRequest(actor);assert(next?.approach);return next;},
+   select(){const p=prepareFailedCycle();commitFailedCycle(p);return finishFailedCycle(p);},
    advance(dt){tick(f.state,dt,nav);},
    save(){return {state:deserialize(serialize(f.state)),selected:true};},
    async dispose(){stop?.();stopTasks?.();f.session.dispose();await runtime?.dispose();}
