@@ -58,7 +58,7 @@ test('zero Farm arrival still rejects held revocation without changing its live 
 
 test('only the exact moving Farm held revocation is accepted before release installation',()=>{
  const f=fixture();try{const lease=f.c.admitFarmArrivalStop(f.prepared.nativeStop,{preparingWorldBoundary:f.prepared.worldBoundary});f.pauseEvents(true);f.pauseClocks(true);f.commitStop();const event=f.events.at(-1),before=f.c.status().sequence;
-  for(const mutate of [e=>e.state=0,e=>e.state=5,e=>e.type='RouteCompleted',e=>e.effectiveTime=f.binding.reference.endTime,e=>e.revokedRouteHandle.generation++,e=>e.routeHandle=e.revokedRouteHandle,e=>e.taskId=999]){const bad=structuredClone(event);mutate(bad);assert.throws(()=>f.c.accept(bad));assert.equal(f.c.status().sequence,before);assert(f.routeLease.isCurrent());}
+  for(const mutate of [e=>e.state=0,e=>e.type='RouteCompleted',e=>e.effectiveTime=f.binding.reference.endTime,e=>e.revokedRouteHandle.generation++,e=>e.routeHandle=e.revokedRouteHandle,e=>e.taskId=999]){const bad=structuredClone(event);mutate(bad);assert.throws(()=>f.c.accept(bad));assert.equal(f.c.status().sequence,before);assert(f.routeLease.isCurrent());}
   assert(f.c.accept(event));assert.equal(f.routeLease.isCurrent(),false);f.acceptClock();assert.throws(()=>f.c.admitFarmArrivalStop(f.prepared.nativeStop),/obsolete/);assert.equal(lease.isCurrent(),false);assert.equal(lease.isPrepared(),false);
  }finally{f.close();}
 });
@@ -68,5 +68,5 @@ test('metadata without final native projection grants no body values, and owner 
 });
 
 test('cancellation and control disposal never turn a prepared Farm stop into execution',()=>{
- const f=fixture();try{const p=f.prepared,lease=f.c.admitFarmArrivalStop(p.nativeStop,{preparingWorldBoundary:p.worldBoundary}),body=f.c.admitFarmArrivalStoppedBody(selector(p,f.actor),{preparingWorldBoundary:p.worldBoundary});assert(f.planner.cancelNativeFarmArrivalStopProposal(f.ticket));f.advance(.1);assert(f.routeLease.isCurrent());assert.equal(lease.isCurrent(),false);assert.equal(body.isCurrent(),false);f.c.dispose();assert.equal(lease.isPrepared(),false);assert.equal(body.isPrepared(),false);assert.equal(lease.binding,null);}finally{f.close();}
+ const f=fixture();try{const p=f.prepared,lease=f.c.admitFarmArrivalStop(p.nativeStop,{preparingWorldBoundary:p.worldBoundary}),body=f.c.admitFarmArrivalStoppedBody(selector(p,f.actor),{preparingWorldBoundary:p.worldBoundary});assert(f.planner.cancelNativeFarmArrivalStopProposal(f.ticket));f.advance(.1);assert(f.routeLease.isCurrent());assert.equal(lease.isCurrent(),false);assert.equal(body.isCurrent(),false);assert.equal(f.w.nav_intent_retire_actor(f.actor),1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');assert.equal(f.routeLease.isCurrent(),false);assert.equal(lease.isPrepared(),false);assert.equal(body.isPrepared(),false);f.c.dispose();assert.equal(lease.isPrepared(),false);assert.equal(body.isPrepared(),false);assert.equal(lease.binding,null);}finally{f.close();}
 });

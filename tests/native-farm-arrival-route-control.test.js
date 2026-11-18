@@ -52,10 +52,11 @@ test('another family cannot bootstrap an invented Home proof onto the issued Far
  }finally{f.close();}
 });
 
-test('true zero arrival retains its exact endpoint and stays Farm until a prepared successor exists',()=>{
+test('true zero arrival retains its endpoint until a prepared successor or native cancellation',()=>{
  const f=controlled({inside:true});try{
   const body=f.body(1),p=f.prepare(true),lease=f.c.admitFarmArrival(p.nativeFarmArrival,{preparingWorldBoundary:p.worldBoundary}),b=f.commit(p);assert.equal(p.distance,0);assert.deepEqual(f.body(1),body);assert.equal(f.c.installFarmArrivals(b.reference.worldBoundary,[b]),1);assert(lease.isCurrent());assert.equal(lease.executionEpoch,lease.executionEnd);const event=f.events.at(-1),before=f.c.status().sequence;
-  for(const state of [0,4,5,6,7]){const bad={...event,type:'RouteInvalidated',state,sequence:before+1,routeHandle:null,revokedRouteHandle:event.routeHandle};delete bad.nativeFarmArrival;assert.throws(()=>f.c.accept(bad),/prepared lifecycle/);assert.equal(f.c.status().sequence,before);assert(lease.isCurrent());}
+  for(const state of [0,4,6,7]){const bad={...event,type:'RouteInvalidated',state,sequence:before+1,routeHandle:null,revokedRouteHandle:event.routeHandle};delete bad.nativeFarmArrival;assert.throws(()=>f.c.accept(bad),/prepared lifecycle/);assert.equal(f.c.status().sequence,before);assert(lease.isCurrent());}
+  assert.equal(f.w.nav_intent_retire_actor(f.actor),1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');assert.equal(lease.isCurrent(),false);assert.equal(lease.isPrepared(),false);assert.equal(lease.routeRecord,null);assert.deepEqual(f.body(1),body);
   f.c.dispose();assert.equal(lease.isCurrent(),false);assert.equal(lease.isPrepared(),false);assert.equal(lease.routeRecord,null);
  }finally{f.close();}
 });
