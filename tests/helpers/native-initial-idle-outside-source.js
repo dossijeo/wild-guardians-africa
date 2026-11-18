@@ -8,14 +8,22 @@ import {idleFarmAnchor} from '../../src/simulation/game.js';
 import {LOCOMOTION} from '../../src/simulation/locomotion-calibration.js';
 import {updateIdle} from '../../src/simulation/idle.js';
 
+export async function savedNativeInitialIdleOutside({mode='rest',profile='youngMale',threaded=false,retry=mode==='watch'?'watch':1}={}){
+ let old;
+ try{
+  old=await selectedApproachGame({profile,threaded,retry});const failed=old.prepareFailedCycle();old.commitFailedCycle(failed);if(retry!==0)old.advance(mode==='watch'?failed.nativeIdleCycle.watchStartOffset+.1:.05);assert.equal(old.worker.idleState.mode,mode);
+  const saved=old.save(),oldCycle=old.planner.nativeIdleCycleBinding(old.actor);await old.dispose();old=null;
+  return {saved,oldCycle};
+ }finally{await old?.dispose();}
+}
+
 // Public save of actual outside REST/WATCH, then a fresh authority and real20.
 // Subsequent raw native commits are ABI evidence, never graphic permissions or
 // a Game/ordinary-producer projection. The independent Home peer really moves.
 export async function initialIdleOutsideSource({mode='rest',profile='youngMale',threaded=false,retry=mode==='watch'?'watch':1,acquireBody=true,blocked=false}={}){
- let old,f,runtime;
+ let f,runtime;
  try{
-  old=await selectedApproachGame({profile,threaded,retry});const failed=old.prepareFailedCycle();old.commitFailedCycle(failed);if(retry!==0)old.advance(mode==='watch'?failed.nativeIdleCycle.watchStartOffset+.1:.05);assert.equal(old.worker.idleState.mode,mode);
-  const saved=old.save(),oldCycle=old.planner.nativeIdleCycleBinding(old.actor);await old.dispose();old=null;
+  const {saved,oldCycle}=await savedNativeInitialIdleOutside({mode,profile,threaded,retry});
   if(threaded){const {default:factory}=await import('../../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory);}
   f=createNativeRouteExecutionFixture({core:runtime?.core});Object.assign(f.state,saved.state);const {state,session,w}=f,worker=state.workers[0],actor=Number(worker.id.split('-').at(-1)),peerOrigin=f.point(-6,6),peerEnd=f.point(6,6);
   const peerWorker={...structuredClone(worker),id:'worker-900012',...peerOrigin,status:'returning',idleState:null};delete peerWorker.nativeRouteAdmission;state.workers.push(peerWorker);
@@ -42,5 +50,5 @@ export async function initialIdleOutsideSource({mode='rest',profile='youngMale',
    source(ticket=0){return w.nav_idle_cycle_source_snapshot(actor,ticket)===1?Array.from(new Float64Array(w.memory.buffer,w.nav_idle_cycle_source_ptr(),26)):null;},
    async dispose(){f.session.dispose();await runtime?.dispose();}
   };
- }catch(error){await old?.dispose();f?.session.dispose();await runtime?.dispose();throw error;}
+ }catch(error){f?.session.dispose();await runtime?.dispose();throw error;}
 }
