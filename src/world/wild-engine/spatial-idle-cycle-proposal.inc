@@ -89,7 +89,7 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_commit_bound(double session,dou
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=21||!p.idleCycle||!integer(preparedTicket))return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,21);if(valid!=1)return valid;
  if(!idleCycleDraftCurrent(s,*p.idleCycle)){clearWorldMutationProposal(p);return -2;}
- const auto& d=*p.idleCycle;auto binding=std::make_shared<NativeIdleCycleBinding>();binding->actual={d.header,uint64_t(ticket)};binding->body=d.body;binding->source=d.source;
+ const auto& d=*p.idleCycle;auto binding=std::make_shared<NativeIdleCycleBinding>();binding->actual={d.header,uint64_t(ticket)};binding->body=d.body;binding->source=d.source;binding->failedRequestSource=d.failedRequest?d.failedRequest:d.previousCycle?d.previousCycle->binding->failedRequestSource:nullptr;
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previous&&preparedTicket==double(d.previous->ticket)&&d.timeTranslation[7]==1)binding->prepared=*d.previous;else return -9;
  if((d.strollSource||d.farmSource)&&!idleStrollCycleReleaseClear(s,d.source.body)){clearWorldMutationProposal(p);return -2;}
  const bool failedRequest=bool(d.failedRequest),releaseRouteSource=bool(d.strollSource)||bool(d.farmSource);const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(p);auto& intent=s.activeIntents.at(actor);

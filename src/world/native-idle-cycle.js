@@ -1,4 +1,4 @@
-import {ceilFloat32} from '../float32-time.js';
+import {ceilFloat32,floorFloat32} from '../float32-time.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
 import {copyNativeInitialIdleState} from './native-initial-idle-request-reference.js';
@@ -10,13 +10,24 @@ const fields=['kind','version','actorId','bodyId','profile','sourceBody','source
 // Immutable finite rest/watch program. Its next stochastic semantic request is
 // a separate native fact; neither this reference nor its draft grants movement.
 export function copyNativeIdleCycleReference(value){
- if(value?.kind!=='native-idle-cycle-reference'||value.version!==1||Object.keys(value).some(k=>!fields.includes(k)))throw TypeError('Invalid native Idle cycle reference');
- const sourceBody=copyNativeIdleCycleBodySource(value.sourceBody),worldBoundary=copyNativeWorldBoundary(value.worldBoundary),initialState=copyNativeInitialIdleState(value.initialState),q=nativeIdleCycleBodyState(sourceBody),a=value.anchor,d=value.durations,calibration=LOCOMOTION.sources.find(s=>s.profile===q.workerProfile);
- if(!initialState||value.actorId!==q.actorId||value.bodyId!==q.bodyId||value.profile!==q.profile||!Number.isSafeInteger(value.sourceCycleSequence)||value.sourceCycleSequence<0||value.sourceCycleSequence!==0&&value.sourceCycleSequence<=q.sourceSequence||!id(value.sourceControlSequence)||value.sourceControlSequence<Math.max(q.sourceSequence,value.sourceCycleSequence)||worldBoundary.authorityEpoch!==q.authorityEpoch||worldBoundary.nativeSession!==q.nativeSession||worldBoundary.effectiveTime<q.sourceAt||
-  !a||Object.keys(a).some(k=>!['id','x','z','radius'].includes(k))||a.id!==q.idleState.anchorId||a.id!==initialState.anchorId||!['x','z','radius'].every(k=>Number.isFinite(a[k])&&Number.isFinite(Math.fround(a[k])))||a.radius<=0||a.radius>8||Math.hypot(q.pose.x-a.x,q.pose.z-a.z)>a.radius||
+ if(value?.kind!=='native-idle-cycle-reference'||![1,2].includes(value.version)||Object.keys(value).some(k=>!fields.includes(k)))throw TypeError('Invalid native Idle cycle reference');
+ const sourceBody=copyNativeIdleCycleBodySource(value.sourceBody),worldBoundary=copyNativeWorldBoundary(value.worldBoundary),initialState=copyNativeInitialIdleState(value.initialState),q=nativeIdleCycleBodyState(sourceBody),a=value.anchor,d=value.durations,calibration=LOCOMOTION.sources.find(s=>s.profile===q.workerProfile),failed=sourceBody.kind==='native-idle-stroll-failed-source';
+ if(value.version!==(failed?2:1)||!initialState||value.actorId!==q.actorId||value.bodyId!==q.bodyId||value.profile!==q.profile||!Number.isSafeInteger(value.sourceCycleSequence)||value.sourceCycleSequence<0||value.sourceCycleSequence!==0&&value.sourceCycleSequence<=q.sourceSequence||!id(value.sourceControlSequence)||value.sourceControlSequence<Math.max(q.sourceSequence,value.sourceCycleSequence)||worldBoundary.authorityEpoch!==q.authorityEpoch||worldBoundary.nativeSession!==q.nativeSession||worldBoundary.effectiveTime<q.sourceAt||
+  !a||Object.keys(a).some(k=>!['id','x','z','radius'].includes(k))||a.id!==q.idleState.anchorId||a.id!==initialState.anchorId||!['x','z','radius'].every(k=>Number.isFinite(a[k])&&Number.isFinite(Math.fround(a[k])))||a.radius<=0||a.radius>8||!failed&&Math.hypot(q.pose.x-a.x,q.pose.z-a.z)>a.radius||failed&&['x','z','radius'].some(k=>a[k]!==q.sourceRequest.anchor[k])||
   !d||Object.keys(d).some(k=>!['rest','watch'].includes(k))||d.rest!==calibration.idleSeconds||d.watch!==calibration.alertSeconds||
-  !Number.isSafeInteger(value.watchRng)||value.watchRng<0||value.watchRng>0xffffffff||value.watchRng!==(initialState.mode==='rest'?nextRng(initialState.rng):initialState.rng)||!['watchStartOffset','duration'].every(k=>Number.isFinite(value[k])&&Number.isFinite(Math.fround(value[k]))&&value[k]>=0)||value.watchStartOffset!==(initialState.mode==='rest'?initialState.remaining:0)||value.duration!==value.watchStartOffset+(initialState.mode==='rest'?d.watch*(1+Math.floor(value.watchRng/4294967296*2)):initialState.remaining)||!value.sourceCycleSequence&&JSON.stringify(initialState)!==JSON.stringify(q.idleState)||value.sourceCycleSequence&&(initialState.mode!=='rest'||initialState.elapsed!==0))throw TypeError('Native Idle cycle differs from its source or original calibration');
- return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceBody,sourceCycleSequence:value.sourceCycleSequence,sourceControlSequence:value.sourceControlSequence,worldBoundary,anchor:Object.freeze({id:a.id,x:a.x,z:a.z,radius:a.radius}),durations:Object.freeze({rest:d.rest,watch:d.watch}),initialState,watchStartOffset:value.watchStartOffset,watchRng:value.watchRng,duration:value.duration});
+  !Number.isSafeInteger(value.watchRng)||value.watchRng<0||value.watchRng>0xffffffff||value.watchRng!==(initialState.mode==='rest'?nextRng(initialState.rng):initialState.rng)||!['watchStartOffset','duration'].every(k=>Number.isFinite(value[k])&&Number.isFinite(Math.fround(value[k]))&&value[k]>=0)||value.watchStartOffset!==(initialState.mode==='rest'?initialState.remaining:0)||!value.sourceCycleSequence&&JSON.stringify(initialState)!==JSON.stringify(q.idleState)||value.sourceCycleSequence&&!failed&&(initialState.mode!=='rest'||initialState.elapsed!==0))throw TypeError('Native Idle cycle differs from its source or original calibration');
+ const full=value.watchStartOffset+(initialState.mode==='rest'?d.watch*(1+Math.floor(value.watchRng/4294967296*2)):initialState.remaining),outside=Math.hypot(q.pose.x-a.x,q.pose.z-a.z)>a.radius,duration=failed&&outside?Math.min(full,initialState.approachRetry):full;
+ if(value.duration!==duration||failed&&(!Number.isFinite(worldBoundary.effectiveTime+duration)||duration>0&&worldBoundary.effectiveTime+duration<=worldBoundary.effectiveTime))throw TypeError('Native Idle cycle has a different finite horizon');
+ return Object.freeze({kind:value.kind,version:value.version,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceBody,sourceCycleSequence:value.sourceCycleSequence,sourceControlSequence:value.sourceControlSequence,worldBoundary,anchor:Object.freeze({id:a.id,x:a.x,z:a.z,radius:a.radius}),durations:Object.freeze({rest:d.rest,watch:d.watch}),initialState,watchStartOffset:value.watchStartOffset,watchRng:value.watchRng,duration:value.duration});
+}
+// Immutable frontier facts used only to validate native DTOs. This is not a
+// Game clock, policy selector, per-frame sampler, or successor producer.
+const outsideAnchor=r=>{const p=nativeIdleCycleBodyState(r.sourceBody).pose;return Math.hypot(p.x-r.anchor.x,p.z-r.anchor.z)>r.anchor.radius;};
+const fullDuration=r=>r.watchStartOffset+(r.initialState.mode==='rest'?r.durations.watch*(1+Math.floor(r.watchRng/4294967296*2)):r.initialState.remaining);
+const retryFrontier=r=>r.version===2&&outsideAnchor(r)&&r.initialState.approachRetry<=fullDuration(r);
+function terminalFacts(r){
+ const s=r.initialState,t=r.duration,retryRest=retryFrontier(r)&&s.mode==='rest'&&t<=r.watchStartOffset,watch=s.mode==='watch'||!retryRest&&(r.worldBoundary.effectiveTime+r.watchStartOffset)-(r.worldBoundary.effectiveTime+t)<=1e-9,local=watch?Math.max(0,t-r.watchStartOffset):t;
+ return {anchorId:r.anchor.id,mode:watch?'watch':'rest',elapsed:(watch?(s.mode==='watch'?s.elapsed:0):s.elapsed)+local,remaining:Math.max(0,(watch?fullDuration(r)-r.watchStartOffset:s.remaining)-local),rng:watch?r.watchRng:s.rng,approachRetry:Math.max(0,s.approachRetry-t)};
 }
 export function sameNativeIdleCycleReference(a,b){try{return JSON.stringify(copyNativeIdleCycleReference(a))===JSON.stringify(copyNativeIdleCycleReference(b));}catch{return false;}}
 export function nativeIdleCycleSuccessor(previous,next){
@@ -41,19 +52,28 @@ export function sameNativeIdleCycleAttestation(a,b){return !!a&&!!b&&a.cycleSequ
 // A native semantic successor, not a walking reservation or graphic permit.
 // The path stays in the native owner; control needs only its immutable target.
 export function copyNativeIdleCycleNextRequest(value){
- if(value?.kind!=='native-idle-cycle-next-request'||value.version!==1||Object.keys(value).some(k=>!['kind','version','sourceCycle','requestSequence','requestedAt','idleState'].includes(k)))throw TypeError('Invalid native Idle cycle next request');
- const sourceCycle=copyNativeIdleCycleAttestation(value.sourceCycle),r=sourceCycle.reference,s=value.idleState;
- if(!id(value.requestSequence)||value.requestSequence<=sourceCycle.cycleSequence||!Number.isFinite(value.requestedAt)||r.worldBoundary.effectiveTime+r.duration-value.requestedAt>1e-9||!s||s.anchorId!==r.anchor.id||s.elapsed!==0)throw TypeError('Native Idle successor differs from its cycle or deadline');
+ if(value?.kind!=='native-idle-cycle-next-request'||![1,2].includes(value.version)||value.version===1&&Object.hasOwn(value,'approach')||Object.keys(value).some(k=>!['kind','version','sourceCycle','requestSequence','requestedAt','idleState','approach'].includes(k))||value.approach!==undefined&&value.approach!==true)throw TypeError('Invalid native Idle cycle next request');
+ const sourceCycle=copyNativeIdleCycleAttestation(value.sourceCycle),r=sourceCycle.reference,s=value.idleState,approach=value.approach===true,terminal=terminalFacts(r),outside=outsideAnchor(r),retryDue=r.version===2&&outside&&terminal.approachRetry===0;
+ if(value.version!==r.version||approach&&!retryDue||!id(value.requestSequence)||value.requestSequence<=sourceCycle.cycleSequence||!Number.isFinite(value.requestedAt)||r.worldBoundary.effectiveTime+r.duration-value.requestedAt>(retryFrontier(r)?0:1e-9)||!s||s.anchorId!==r.anchor.id||r.version===1&&s.elapsed!==0)throw TypeError('Native Idle successor differs from its cycle or deadline');
  let idleState;
- if(s.mode==='rest'){
+ if(s.mode==='rest'||s.mode==='watch'){
   idleState=copyNativeInitialIdleState(s);
-  if(idleState.remaining!==r.durations.rest*(2+Math.floor(idleState.rng/4294967296*3)))throw TypeError('Native Idle successor has a different rest duration');
+  if(approach)throw TypeError('Native approach is not a WALK intention');
+  if(r.version===2&&outside){
+   let expected;
+   if(terminal.remaining>1e-9)expected={...terminal,approachRetry:1};
+   else if(terminal.mode==='rest'){const rng=nextRng(terminal.rng);expected={anchorId:r.anchor.id,mode:'watch',elapsed:0,remaining:r.durations.watch*(1+Math.floor(rng/4294967296*2)),rng,approachRetry:retryDue?1:terminal.approachRetry};}
+   else{const rng=nextRng(nextRng(terminal.rng));expected={anchorId:r.anchor.id,mode:'rest',elapsed:0,remaining:r.durations.rest*(2+Math.floor(rng/4294967296*3)),rng,approachRetry:retryDue?1:terminal.approachRetry};}
+   if(JSON.stringify(idleState)!==JSON.stringify(copyNativeInitialIdleState(expected)))throw TypeError('Native Idle retry differs from its finite source phase');
+  }else if(s.mode!=='rest'||s.elapsed!==0||idleState.remaining!==r.durations.rest*(2+Math.floor(idleState.rng/4294967296*3)))throw TypeError('Native Idle successor has a different rest duration');
  }else{
   const d=s.destination;
-  if(s.mode!=='walk'||Object.keys(s).some(k=>!['anchorId','mode','elapsed','remaining','rng','approachRetry','pathVersion','destination'].includes(k))||s.remaining!==0||!Number.isSafeInteger(s.rng)||s.rng<0||s.rng>0xffffffff||!Number.isFinite(s.approachRetry)||s.approachRetry<0||!Number.isSafeInteger(s.pathVersion)||s.pathVersion<0||!d||Object.keys(d).some(k=>!['id','x','z'].includes(k))||d.id!==`idle-worker-${r.actorId}`||!['x','z'].every(k=>Number.isFinite(d[k])&&Number.isFinite(Math.fround(d[k])))||Math.hypot(d.x-r.anchor.x,d.z-r.anchor.z)>r.anchor.radius+1e-9||Math.hypot(d.x-nativeIdleCycleBodyState(r.sourceBody).pose.x,d.z-nativeIdleCycleBodyState(r.sourceBody).pose.z)<.75)throw TypeError('Invalid native pending stroll semantics');
+  if(s.mode!=='walk'||Object.keys(s).some(k=>!['anchorId','mode','elapsed','remaining','rng','approachRetry','pathVersion','destination'].includes(k))||s.elapsed!==0||!Number.isSafeInteger(s.rng)||s.rng<0||s.rng>0xffffffff||!Number.isFinite(s.approachRetry)||s.approachRetry<0||!Number.isSafeInteger(s.pathVersion)||s.pathVersion<0||!d||Object.keys(d).some(k=>!['id','x','z'].includes(k))||!['x','z'].every(k=>Number.isFinite(d[k])&&Number.isFinite(Math.fround(d[k]))))throw TypeError('Invalid native pending stroll semantics');
+  if(approach){if(d.id!==r.anchor.id||d.x!==r.anchor.x||d.z!==r.anchor.z||s.remaining!==terminal.remaining||s.rng!==terminal.rng||s.approachRetry!==1)throw TypeError('Native approach differs from its retained Idle phase');}
+  else if(r.version===2&&outside||s.remaining!==0||d.id!==`idle-worker-${r.actorId}`||Math.hypot(d.x-r.anchor.x,d.z-r.anchor.z)>r.anchor.radius+1e-9||Math.hypot(d.x-nativeIdleCycleBodyState(r.sourceBody).pose.x,d.z-nativeIdleCycleBodyState(r.sourceBody).pose.z)<.75)throw TypeError('Native local stroll differs from its source or radius');
   idleState=Object.freeze({...s,destination:Object.freeze({id:d.id,x:d.x,z:d.z})});
  }
- return Object.freeze({kind:value.kind,version:1,sourceCycle,requestSequence:value.requestSequence,requestedAt:value.requestedAt,idleState});
+ return Object.freeze({kind:value.kind,version:value.version,sourceCycle,requestSequence:value.requestSequence,requestedAt:value.requestedAt,idleState,...(approach?{approach:true}:{})});
 }
 export function sameNativeIdleCycleNextRequest(a,b){try{return JSON.stringify(copyNativeIdleCycleNextRequest(a))===JSON.stringify(copyNativeIdleCycleNextRequest(b));}catch{return false;}}
 
@@ -68,6 +88,9 @@ export function nativeIdleCycleWatchKnot(value,executionEpoch=value.worldBoundar
  const r=copyNativeIdleCycleReference(value);
  if(!Number.isFinite(executionEpoch)||executionEpoch<r.worldBoundary.effectiveTime)throw TypeError('Invalid native Idle cycle execution origin');
  if(r.initialState.mode==='watch')return 0;
+ // A retry at/before the REST knot retains REST until its admitted successor.
+ // Put the knot strictly beyond the physical f32 clamp, including duration0.
+ if(retryFrontier(r)&&r.duration<=r.watchStartOffset){const f=new Float32Array(1),bits=new Uint32Array(f.buffer);f[0]=floorFloat32(r.duration);bits[0]++;if(!Number.isFinite(f[0]))throw RangeError('Native Idle retry knot exceeds float32');return f[0];}
  const f=new Float32Array(1),bits=new Uint32Array(f.buffer);f[0]=ceilFloat32(r.duration);let first=0,length=bits[0]+1;
  while(length){const half=Math.floor(length/2),mid=first+half;bits[0]=mid;
   if((executionEpoch+r.watchStartOffset)-(executionEpoch+f[0])>1e-9){first=mid+1;length-=half+1;}else length=half;

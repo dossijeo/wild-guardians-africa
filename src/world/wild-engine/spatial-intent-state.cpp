@@ -201,6 +201,7 @@ struct NativeIdleStrollBinding;
 struct NativeIdleCycleOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeIdleCycleBinding {
  NativeIdleCycleOrigin prepared,actual;uint64_t cycleSequence=0;
+  std::shared_ptr<const NativeIdleStrollResourceRequest> failedRequestSource;
  std::shared_ptr<const NativeInitialIdleBodyBinding> body;
  NativeIdleCycleBodySource source;
 };

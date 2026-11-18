@@ -7,6 +7,7 @@ static std::array<double,26> idleCycleBodySourceData(const NativeIdleCycleBodySo
 static bool nativeIdleCycleBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.idleCycle||!intent.idleCycle->binding)return false;const auto& b=*intent.idleCycle->binding;const auto& q=b.source;
  if(b.body)return q.kind==20&&b.body==intent.initialIdleBodyBinding&&nativeInitialIdleBodyCurrent(s,intent);
+ if((q.kind==1)!=bool(b.failedRequestSource))return false;
  const bool pendingHome=intent.home&&intent.homeRequest&&!intent.task&&!intent.target&&!intent.generation&&intent.state==PlanningState::AwaitingResources&&intent.homeRequest->idleCycleSourceSequence==b.cycleSequence;
  const bool pendingTask=intent.task&&intent.target&&!intent.home&&!intent.homeRequest&&intent.generation&&intent.state==PlanningState::AwaitingResources&&intent.resourceRequestSequence>b.cycleSequence&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].active&&s.routeSlots[intent.slot].pendingResources&&!s.routeSlots[intent.slot].suspended&&s.routeSlots[intent.slot].actor==intent.actor&&s.routeSlots[intent.slot].generation==intent.generation&&s.routeSlots[intent.slot].originX==q.x&&s.routeSlots[intent.slot].originZ==q.z;
  const bool idle=!intent.home&&!intent.homeRequest&&!intent.task&&!intent.target&&!intent.generation&&intent.state==PlanningState::StationaryActive;

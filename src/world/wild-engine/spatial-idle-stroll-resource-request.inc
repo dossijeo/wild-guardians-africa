@@ -64,6 +64,18 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_source_snapshot(double actor){
  const auto& intent=found->second;if(intent.strollRequest)return nativeIdleStrollRequestBodyCurrent(s,intent)?snapshotIdleStrollRequest(s,*intent.strollRequest):0;
  const auto active=currentIdleStroll(actor),held=active?nullptr:currentHeldIdleStroll(actor);const auto b=active?active:held;return b&&b->requestSource?snapshotIdleStrollRequest(s,*b->requestSource):0;
 }
+// The original failed WALK is bounded request metadata, not route/cycle
+// ancestry. Retain it in the existing21 binding so projection can validate
+// the saved destination and stream even after commit consumed the request.
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_failed_request_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_failed_request_snapshot(double actor,double ticket){
+ auto& s=state();s.strollRequestResult.fill(0);if(!integer(actor)||!integer(ticket,true))return 0;
+ std::shared_ptr<const NativeIdleStrollResourceRequest> request;
+ if(ticket){const auto& p=s.barrierProposal;if(!p.pending||p.kind!=21||!p.idleCycle||p.idleCycle->source.kind!=1||double(p.ticket)!=ticket||p.idleCycle->header[1]!=actor||!idleCycleDraftCurrent(s,*p.idleCycle))return 0;
+  request=p.idleCycle->failedRequest?p.idleCycle->failedRequest:p.idleCycle->previousCycle?p.idleCycle->previousCycle->binding->failedRequestSource:nullptr;
+ }else{const auto cycle=currentIdleCycle(actor);if(!cycle||cycle->binding->source.kind!=1)return 0;request=cycle->binding->failedRequestSource;}
+ return request?snapshotIdleStrollRequest(s,*request):0;
+}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_restore_request_ptr(){return state().strollRequestResult.data();}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_requests_snapshot(){
  auto& s=state();s.strollRequestsResult.clear();std::vector<uint64_t> actors;
