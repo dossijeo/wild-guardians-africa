@@ -11,10 +11,10 @@ import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-
 // its existing operation; tests only vary the request and the relevant facts.
 // Real WASM, source publication, resource MessageChannel, client and draw host;
 // deterministic fake GPU queue. Hardware/visual acceptance remains separate.
-export async function createNativeAdmissionVertical({planner,elapsed,kind,retainStaticBuffer=false,idleStrollIdlePhase=false,idleStrollDecoderClock=true,idleStrollIdlePhaseCapability=idleStrollIdlePhase,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{},onCommit=()=>{}}){
+export async function createNativeAdmissionVertical({planner,elapsed,kind,retainStaticBuffer=false,idleCycleIdlePhase=false,idleCycleDecoderClock=true,idleCycleIdlePhaseCapability=idleCycleIdlePhase,idleStrollIdlePhase=false,idleStrollDecoderClock=true,idleStrollIdlePhaseCapability=idleStrollIdlePhase,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{},onCommit=()=>{}}){
   let currentKind=kind,profile=nativeResourceAdmissionProfile(kind);
   const [sourcePort,drawPort]=pair();
-  const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',...(idleStrollIdlePhaseCapability?{nativeIdleStrollIdlePhaseVersion:1}:{}),
+  const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',...(idleStrollIdlePhaseCapability?{nativeIdleStrollIdlePhaseVersion:1}:{}),...(idleCycleIdlePhaseCapability?{nativeIdleCycleIdlePhaseVersion:1}:{}),
     nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
     nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},
     {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
@@ -37,8 +37,9 @@ export async function createNativeAdmissionVertical({planner,elapsed,kind,retain
         preparations++;
         await onPrepare({method,resources,options,source,...graphics});
         const reference=profile.reference(resources),acting=currentKind==='task-action',consequence=currentKind==='task-consequence',home=currentKind==='home-route',stroll=currentKind==='idle-stroll',arrival=currentKind==='home-arrival',initialBody=currentKind==='initial-idle-body',cycle=currentKind==='idle-cycle',settlement=currentKind==='task-settlement';
-        if(!arrival)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:initialBody||cycle||settlement?resources.worldBoundary.effectiveTime:resources.startTime,...(acting||initialBody||cycle||settlement?{}:{resourceEnd:stroll&&idleStrollIdlePhase&&idleStrollDecoderClock?nativeClockResourceEnd(resources.startTime,resources.endTime):resources.endTime}),
+        if(!arrival&&!(cycle&&idleCycleIdlePhase&&!idleCycleDecoderClock))graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:initialBody||cycle||settlement?resources.worldBoundary.effectiveTime:resources.startTime,...(acting||initialBody||cycle||settlement?{}:{resourceEnd:stroll&&idleStrollIdlePhase&&idleStrollDecoderClock?nativeClockResourceEnd(resources.startTime,resources.endTime):resources.endTime}),
           ...(stroll?{nativeStroll:reference}:cycle?{nativeIdleCycle:reference}:initialBody?{nativeInitialIdleBody:reference}:settlement?{nativeSettlement:reference}:acting?{nativeAction:reference}:consequence?{nativeConsequence:reference}:home?{nativeHome:reference}:currentKind==='task-start'?{nativeStart:reference}:{nativeResume:reference})});
+        if(cycle&&idleCycleIdlePhase)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:4,semantic:'idle-offset',epoch:resources.worldBoundary.effectiveTime,period:2.5,nativeIdleCycle:reference});
         if(stroll&&idleStrollIdlePhase)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:4,semantic:'idle-offset',epoch:resources.startTime,period:2.5,nativeStroll:reference});
         const templateKey=stroll?'strollTemplate':cycle?'cycleTemplate':initialBody?'initialBodyTemplate':settlement?'settlementTemplate':acting?'actionTemplate':consequence?'consequenceTemplate':home?'homeTemplate':currentKind==='task-start'?'startTemplate':'resumeTemplate';
         const packet=arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):await preparedWorldDraw({...graphics,clock,[templateKey]:reference},resources.worldBoundary,0,options.signal);

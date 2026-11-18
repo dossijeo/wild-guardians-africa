@@ -26,8 +26,8 @@ export function markRemoteStoppedNode(node,reference,epoch,field=null){
 export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeGate=null,nativeSuspended=null,nativeResume=null,period=null,resourceEnd=null,nativeStart=null,nativeAction=null,nativeConsequence=null,nativeSettlement=null,nativeHome=null,nativeInitialIdleBody=null,nativeIdleCycle=null,nativeStroll=null,nativeFarmArrival=null){
  if(!node?.isNode||!['absolute','relative','origin-modulo','idle-offset','idle-cycle-watch-knot'].includes(semantic)||!Number.isFinite(epoch)||epoch<0)throw TypeError('Invalid remote clock node');
  if(semantic==='idle-cycle-watch-knot'&&nativeIdleCycle===null)throw TypeError('Native watch knot requires its cycle');
- if(semantic==='idle-offset'&&(nativeFarmArrival===null&&nativeStroll===null||resourceEnd!==null))throw TypeError('Native Idle offset requires its Farm body');
- if(['origin-modulo','idle-offset'].includes(semantic)?nativeResume===null&&nativeStart===null&&nativeConsequence===null&&nativeSettlement===null&&nativeHome===null&&nativeStroll===null&&nativeFarmArrival===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
+ if(semantic==='idle-offset'&&(nativeFarmArrival===null&&nativeStroll===null&&nativeIdleCycle===null||resourceEnd!==null))throw TypeError('Native Idle offset requires its Farm body');
+ if(['origin-modulo','idle-offset'].includes(semantic)?nativeResume===null&&nativeStart===null&&nativeConsequence===null&&nativeSettlement===null&&nativeHome===null&&nativeStroll===null&&nativeFarmArrival===null&&nativeIdleCycle===null||!Number.isFinite(period)||period<=0:period!==null)throw TypeError('Invalid native origin phase clock');
  if(resourceEnd!==null&&(!Number.isFinite(resourceEnd)||resourceEnd<epoch))throw TypeError('Invalid native clock resource end');
  let route=null;
  if(nativeRoute!==null){
@@ -37,7 +37,7 @@ export function markRemoteClockNode(node,semantic,epoch,nativeRoute=null,nativeG
  }
  if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement,nativeHome,nativeInitialIdleBody,nativeIdleCycle,nativeStroll,nativeFarmArrival].filter(value=>value!==null).length>1)throw TypeError('Conflicting native clock references');
  const cycle=nativeIdleCycle===null?null:copyNativeIdleCycleReference(nativeIdleCycle);
- if(cycle&&(!['relative','idle-cycle-watch-knot'].includes(semantic)||epoch!==cycle.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native Idle cycle clock');
+ if(cycle&&(!['relative','idle-cycle-watch-knot','idle-offset'].includes(semantic)||epoch!==cycle.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native Idle cycle clock');
  const initialBody=nativeInitialIdleBody===null?null:copyNativeInitialIdleBodyReference(nativeInitialIdleBody);
  if(initialBody&&(semantic!=='relative'||epoch!==initialBody.worldBoundary.effectiveTime||resourceEnd!==null))throw TypeError('Invalid native initial Idle body clock');
  const stroll=nativeStroll===null?null:copyNativeIdleStrollReference(nativeStroll);

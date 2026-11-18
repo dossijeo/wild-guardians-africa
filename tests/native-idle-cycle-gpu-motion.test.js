@@ -20,7 +20,7 @@ function fixture({mode='rest',elapsed=.7,remaining=2.3,profile='youngMale',epoch
  }catch(error){f.close();throw error;}
 }
 
-for(const mode of ['rest','watch'])for(const elapsed of [.7,10000000000.125])test(`finite ${mode} program keeps both clips and native private phase at ${elapsed}`,()=>{
+for(const mode of ['rest','watch'])for(const elapsed of [.7,10000000000.125])test(`finite ${mode} program keeps its native body and terminal clip loop at ${elapsed}`,()=>{
  const f=fixture({mode,elapsed});let motion;try{
   motion=createNativeIdleCycleGpuMotion({actorId:f.worker.id,support:f.support});const r=f.reference,body=f.body(1),rng=f.state.rng;
   const metadata=motion.clockNode[Symbol.for('wild-guardians.remote-clock')];assert.deepEqual(metadata.nativeIdleCycle,r);assert.equal(metadata.nativeInitialIdleBody,undefined);assert.equal(metadata.resourceEnd,undefined);assert.deepEqual(motion.clipNames,['Idle','Alert']);
@@ -29,11 +29,11 @@ for(const mode of ['rest','watch'])for(const elapsed of [.7,10000000000.125])tes
   for(const age of samples){
    const delta=r.worldBoundary.effectiveTime+age-f.state.elapsed;if(delta>0)f.advance(delta);const native=f.planner.nativeIdleCycleExecution(f.actor),clip=motion.sampleClip(age),duration=clip==='Idle'?r.durations.rest:r.durations.watch;
    assert.equal(clip,native.idleState.mode==='rest'?'Idle':'Alert',`mode at ${age}`);
-   const sampled=motion.sampleForClip(age,clip,duration)%duration,expected=native.idleState.elapsed%duration;
+   const sampled=motion.sampleForClip(age,clip,duration)%duration,expected=(native.idleState.elapsed+Math.max(0,age-floorFloat32(r.duration)))%duration;
    assert(Math.min(Math.abs(sampled-expected),Math.abs(Math.abs(sampled-expected)-duration))<.000005,JSON.stringify({age,sampled,expected,clip}));
    assert(motion.resolve(null,clip,duration).isNode);const pose=motion.sample(age);assert.equal(pose.currentSpeed,0);assert.equal(pose.x,Math.fround(f.worker.x));
   }
-  assert.equal(motion.sampleForClip(Math.fround(r.duration+8),'Alert',r.durations.watch),motion.sampleForClip(ceilFloat32(r.duration),'Alert',r.durations.watch));assert.deepEqual(f.body(1),body);assert.equal(f.state.rng,rng);
+  assert.equal(motion.sampleForClip(Math.fround(r.duration+8),'Alert',r.durations.watch,0),motion.sampleForClip(ceilFloat32(r.duration),'Alert',r.durations.watch,0));assert.deepEqual(f.body(1),body);assert.equal(f.state.rng,rng);
   for(const age of [-1,.1,Infinity,NaN]){assert.throws(()=>motion.sample(age));assert.throws(()=>motion.sampleClip(age));}assert.throws(()=>motion.resolve(null,'Harvest',1));assert.throws(()=>motion.resolve(null,'Idle',Number.MIN_VALUE));
  }finally{motion?.dispose();f.close();}
 });
@@ -59,7 +59,7 @@ test('the actual Three WGSL builder retains one typed cycle clock and both data-
  const f=fixture(),geometry=new BoxGeometry(),material=new MeshStandardNodeMaterial(),mesh=new Mesh(geometry,material),gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});gpu.hasFeature=()=>true;let motion;
  try{
   motion=createNativeIdleCycleGpuMotion({actorId:f.worker.id,support:f.support});motion.bind(material);const selected=motion.clipNode.equal(0).select(motion.resolve(null,'Idle',3.8),motion.resolve(null,'Alert',4.04));material.positionNode=material.positionNode.add(selected.mul(.000001));f.scene.add(mesh);const builder=gpu.backend.createNodeBuilder(mesh,gpu);builder.scene=f.scene;builder.camera=new PerspectiveCamera();builder.build();
-  const tags=builder.getBindings().flatMap(g=>g.bindings??[]).flatMap(b=>b.uniforms??[]).map(u=>u.nodeUniform?.node?.[Symbol.for('wild-guardians.remote-clock')]).filter(Boolean);assert(tags.some(t=>t.nativeIdleCycle));assert(tags.every(t=>!t.nativeInitialIdleBody&&!t.nativeRoute&&!t.nativeAction));assert.match(builder.vertexShader,/select|if/);assert.doesNotMatch(builder.vertexShader,/textureLoad/);assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);
+  const tags=builder.getBindings().flatMap(g=>g.bindings??[]).flatMap(b=>b.uniforms??[]).map(u=>u.nodeUniform?.node?.[Symbol.for('wild-guardians.remote-clock')]).filter(Boolean);assert(tags.some(t=>t.nativeIdleCycle));assert.deepEqual([...new Set(tags.filter(t=>t.semantic==='idle-offset').map(t=>t.period))].sort((a,b)=>a-b),[3.8,4.04]);assert(tags.every(t=>!t.nativeInitialIdleBody&&!t.nativeRoute&&!t.nativeAction));assert.match(builder.vertexShader,/select|if/);assert.doesNotMatch(builder.vertexShader,/textureLoad/);assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);
  }finally{motion?.dispose();geometry.dispose();material.dispose();f.close();}
 });
 
@@ -71,9 +71,9 @@ for(const remaining of [5e-10,Math.fround(.1)+5e-10])test(`the native one-nanose
  }finally{motion?.dispose();f.close();}
 });
 
-test('an already exhausted watch retains its finite endpoint without extending the private phase',()=>{
+test('an exhausted watch retains its physical endpoint and repeats only its terminal clip',()=>{
  const f=fixture({mode:'watch',remaining:0});let motion;try{
-  motion=createNativeIdleCycleGpuMotion({actorId:f.worker.id,support:f.support});assert.equal(f.reference.duration,0);for(const age of [0,1,100]){assert.equal(motion.sampleClip(age),'Alert');assert.equal(motion.sampleForClip(age,'Alert',4.04),Math.fround(.7%4.04));}
+  motion=createNativeIdleCycleGpuMotion({actorId:f.worker.id,support:f.support});assert.equal(f.reference.duration,0);for(const age of [0,1,100]){assert.equal(motion.sampleClip(age),'Alert');assert.equal(motion.sampleForClip(age,'Alert',4.04,0),Math.fround(.7%4.04));const sampled=motion.sampleForClip(age,'Alert',4.04)%4.04;assert(Math.abs(sampled-(age+.7)%4.04)<2e-5);}
  }finally{motion?.dispose();f.close();}
 });
 
