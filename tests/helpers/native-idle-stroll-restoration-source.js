@@ -20,7 +20,7 @@ export function nativeIdleStrollRestorationSource(saved=savedNativeIdleStroll(),
   const source=()=>w.nav_idle_stroll_restore_source_snapshot(actor)===1?Array.from(new Float64Array(w.memory.buffer,w.nav_idle_stroll_restore_request_ptr(),28)):null;
   const tuple=()=>{assert.equal(w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(w.memory.buffer,w.nav_intent_barrier_proposal_ticket_ptr(),6));};
   const bindBody=()=>{assert.equal(w.spatial_body_upsert(1,worker.x,worker.z,.28,0,1),1);assert.equal(w.nav_gate_bind_worker(actor,1),1);};
-  if(declare)assert.equal(w.nav_intent_restore_idle_stroll(...args()),1);if(bind)bindBody();
+  if(declare)assert.equal(w[worker.idleState.destination.id===worker.idleState.anchorId?'nav_intent_restore_idle_approach':'nav_intent_restore_idle_stroll'](...args()),1);if(bind)bindBody();
   return {...f,worker,actor,saved,args,request,source,tuple,bindBody,admitPeer:()=>f.worker(2,f.point(-6,6),f.point(6,6)),
    prepare(){const q=request();assert(q);assert(w.nav_intent_clock_commit(1,0)>=0);assert.equal(w.nav_idle_stroll_proposal_stage(actor,w.nav_intent_session(),q[3]),1);return {ticket:tuple()[1],header:Array.from(new Float64Array(w.memory.buffer,w.nav_idle_stroll_proposal_header_ptr(),24)),semantic:Array.from(new Float64Array(w.memory.buffer,w.nav_idle_stroll_proposal_semantic_ptr(),20))};},
    close(){f.session.dispose();}};

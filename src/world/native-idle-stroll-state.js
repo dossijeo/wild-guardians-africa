@@ -14,10 +14,4 @@ function strollState(state,worker,pending=false){
 export function nativeIdleStrollLiveState(state,worker){return strollState(state,worker);}
 // This validates semantic values only. Accepting a saved/pending marker here
 // does not make a snapshot loadable or grant a native/graphical permission.
-export function nativeIdleStrollSavedState(state,worker){
- const value=strollState(state,worker,true);
- // The existing cold declaration carries local WALK semantics (remaining0,
- // idle-worker destination), not the retained birth state of an approach.
- if(value.idleState.destination.id===value.idleState.anchorId)throw Error('Native Idle approach restoration requires its own semantic declaration');
- return value;
-}
+export function nativeIdleStrollSavedState(state,worker){return strollState(state,worker,true);}

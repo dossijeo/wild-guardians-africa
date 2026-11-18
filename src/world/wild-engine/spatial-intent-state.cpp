@@ -175,7 +175,7 @@ struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
 // One restored WALK intention. Its saved target/pose are semantic values;
 // the new authority must bind a body and prepare a fresh22 before execution.
 struct NativeIdleStrollResourceRequest:NativeWorkerPoseResourceRequest {
- uint64_t center=0,anchor=0;int workerProfile=0,anchorKind=0;uint32_t rng=0;
+ uint64_t center=0,anchor=0;int workerProfile=0,anchorKind=0;uint32_t rng=0;bool approach=false;
  double anchorX=0,anchorZ=0,anchorRadius=0,idleSeconds=0,approachRetry=0,destinationX=0,destinationZ=0;
 };
 // Prepared residency of an actual initial stationary body. No task, route,
@@ -524,7 +524,7 @@ struct IntentState {
   std::vector<double> homeRequestsResult;
   std::array<double,23> farmArrivalRequestResult{};std::vector<double> farmArrivalRequestsResult;
   std::array<double,25> initialIdleRequestResult{};
-  std::array<double,28> strollRequestResult{};std::vector<double> strollRequestsResult;
+  std::array<double,29> strollRequestResult{};std::vector<double> strollRequestsResult;
   std::vector<double> initialIdleRequestsResult;
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;

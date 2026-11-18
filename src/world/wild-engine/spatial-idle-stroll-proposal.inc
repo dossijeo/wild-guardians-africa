@@ -30,7 +30,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
   if(!nativeIdleStrollRequestBodyCurrent(s,found->second)||double(found->second.strollRequest->sequence)!=sourceSequence)return -2;
   d.strollRequestSource=found->second.strollRequest;const auto& r=*d.strollRequestSource;static_cast<NativeWorkerPoseResourceRequest&>(q)=r;q.center=r.center;q.workerProfile=r.workerProfile;
   h[9]=r.anchorKind;h[10]=double(r.anchor);h[11]=r.anchorX;h[12]=r.anchorZ;h[13]=r.anchorRadius;h[14]=r.idleSeconds;
-  restoredNext.sequence=r.sequence;restoredNext.requestedAt=r.at;restoredNext.x=r.destinationX;restoredNext.z=r.destinationZ;restoredNext.state={3,0,0,double(r.rng),r.approachRetry,0};nextSource=&restoredNext;
+  restoredNext.sequence=r.sequence;restoredNext.requestedAt=r.at;restoredNext.x=r.destinationX;restoredNext.z=r.destinationZ;restoredNext.state={3,0,r.approach?r.idleSeconds*2:0,double(r.rng),r.approachRetry,0};nextSource=&restoredNext;
  }else{
   if(!nativeIdleCycleCurrent(s,found->second))return -2;d.idleCycleSource=found->second.idleCycle;const auto& cycle=*d.idleCycleSource;const auto& next=cycle.next;nextSource=&next;
   if(!idleCycleAnchorCurrent(s,cycle.binding->actual.header)||!nativeIdleCycleFinished(cycle,s.effectiveTime)||next.status!=1||next.state[0]!=3||double(next.sequence)!=sourceSequence)return -2;
@@ -47,7 +47,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=count<0?-6:count==0?0:1;if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
  if(result==1){
   if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=0;
-  for(size_t i=0;!d.strollFarmSource&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=0;
+  for(size_t i=0;!d.strollFarmSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=0;
  }
  if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;
@@ -121,7 +121,7 @@ static int idleStrollExecutionSnapshot(double actor,bool held){
  std::copy(header.begin(),header.end(),out.begin());std::copy(route.executionPose.begin(),route.executionPose.end(),out.begin()+12);
  if(held){out[19]=route.suspendedAt;out[27]=out[28]=0;out[29]=2;}
  const double age=std::clamp((held?route.suspendedAt:s.effectiveTime)-h[10],0.,h[11]-h[10]),retry=std::max(0.,m[16]-age);
- const std::array<double,6> phase={3,0,b->farmSource?b->farmSource->initial[2]:0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
+ const std::array<double,6> phase={3,0,b->farmSource?b->farmSource->initial[2]:b->requestSource&&b->requestSource->approach?m[17]*2:0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
  // Pure original cancelWalk blueprint, observable only after actual arrival.
  // It has no new intent sequence/permission and cannot start resting by itself.
  if(route.executionPose[6]==1){const auto rest=idleStrollRestState(*b,s.effectiveTime);std::copy(rest.begin(),rest.end(),out.begin()+36);}
