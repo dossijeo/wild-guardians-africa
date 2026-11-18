@@ -5,9 +5,9 @@ import {copyNativeFarmArrivalRouteResources} from '../../src/world/native-farm-a
 
 // Actual native source, authored worker/bakes and terrain. Renderer/admission
 // are fixture doubles; raw ABI commit is not a graphical receipt.
-export async function nativeFarmArrivalGraphicsFixture({urgent=false,...options}={}){
+export async function nativeFarmArrivalGraphicsFixture({urgent=false,idleCycle=false,...options}={}){
  const native=nativeFarmArrivalRouteFixture({peer:true,...options});let f;
- try{f=await nativeWorkerGraphicsFixture({...native,actor:native.worker.id},{idle:true,clips:['Walk_Skip','Run','Idle']});const p=native.planner.prepareNativeFarmArrivalRouteProposal(native.requestSource,{urgent});assert.equal(p.status,'proposed');const proposal=p.proposal,supportFor=value=>f.terrain.prepareNativeFarmArrivalProposal(value,{terrainManifest:f.manifest});assert(supportFor(proposal)?.valid());
+ try{f=await nativeWorkerGraphicsFixture({...native,actor:native.worker.id},{idle:true,alert:idleCycle,clips:['Walk_Skip','Run','Idle',...(idleCycle?['Alert']:[])]});const p=native.planner.prepareNativeFarmArrivalRouteProposal(native.requestSource,{urgent});assert.equal(p.status,'proposed');const proposal=p.proposal,supportFor=value=>f.terrain.prepareNativeFarmArrivalProposal(value,{terrainManifest:f.manifest});assert(supportFor(proposal)?.valid());
   return {...f,nativeActor:native.actor,proposal,support:supportFor(proposal),supportFor,get acquires(){return f.acquires;},
    sync(){f.state.workers=[structuredClone(f.worker)];for(const key of ['tasks','crates','structures','elapsed','time','day'])f.state[key]=structuredClone(f.nativeState[key]);f.roster.sync();},
    advance(seconds){native.move(seconds);assert(native.planner.projectNativeFarmArrivalExecution(native.state,native.worker));},
