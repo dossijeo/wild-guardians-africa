@@ -39,8 +39,8 @@ test('changed topology revalidates the path without consuming or replacing the s
  const f=await selectedApproachSource();try{const p=stage(f),next=f.next(),body=f.body(1);const wall=f.session.core.addWall(f.q.anchor.x,f.q.anchor.z,.4,.4);assert(wall>0);assert.equal(f.w.nav_idle_stroll_proposal_revalidate(f.q.nativeSession,p.ticket),-7);assert.equal(f.binding(),null);assert.deepEqual(f.next(),next);assert.deepEqual(f.body(1),body);assert.equal(f.session.core.removeWall(wall),1);assert.equal(stage(f).semantic[20],next[8]);}finally{await f.dispose();}
 });
 
-test('large native epoch keeps the selected semantic2 and legacy DTO readers reject it',async()=>{
- const f=await selectedApproachSource({epoch:2**20});try{const p=stage(f);assert(p.header[10]>=2**20);assert.throws(()=>f.bridge.captureNativeIdleStrollProposal({kind:'native-idle-stroll-proposal-ticket',authorityEpoch:f.bridge.nativeIdleCycleBinding(f.actor).reference.worldBoundary.authorityEpoch,session:f.q.nativeSession,ticket:p.ticket}),/Invalid native Idle stroll source/);assert.equal(f.binding(),null);assert.equal(f.commit(p),1);assert.equal(f.execution()[32],p.semantic[20]);}finally{await f.dispose();}
+test('large native epoch keeps selected semantic2 in the typed bridge',async()=>{
+ const f=await selectedApproachSource({epoch:2**20});try{const p=stage(f);assert(p.header[10]>=2**20);const decoded=f.bridge.captureNativeIdleStrollProposal({kind:'native-idle-stroll-proposal-ticket',authorityEpoch:f.bridge.nativeIdleCycleBinding(f.actor).reference.worldBoundary.authorityEpoch,session:f.q.nativeSession,ticket:p.ticket});assert.equal(decoded.nativeIdleStroll.version,2);assert.equal(decoded.nativeIdleStroll.walkRemaining,p.semantic[20]);assert.equal(f.binding(),null);assert.equal(f.commit(p),1);assert.equal(f.execution()[32],p.semantic[20]);}finally{await f.dispose();}
 });
 
 for(const threaded of [false,true])test(`${threaded?'pthread':'standalone'} held selected22 exposes remaining in its bounded native source`,async()=>{
