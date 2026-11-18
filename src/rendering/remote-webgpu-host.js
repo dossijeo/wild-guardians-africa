@@ -849,7 +849,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord,initialIdleBodyRecord:motionRecord.initialIdleBodyRecord};
       }
       if(binding.nativeIdleCycle){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&sameNativeIdleCycleReference(b.nativeIdleCycle,binding.nativeIdleCycle)&&b.resourceEnd===undefined))throw Error('Native Idle cycle phase requires its submitted physical clock');
+        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,binding.nativeIdleCycle)&&b.resourceEnd===undefined))throw Error('Native Idle cycle phase requires its submitted physical clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,nativeWorldBoundary))throw Error('Native Idle cycle requires its applied world and causal clock');
         const motionRecord=routeControl.admitIdleCycle(binding.nativeIdleCycle,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleCycleReference(binding.nativeIdleCycle,packet.metadata.nativeIdleCycleTemplate))throw Error('Pending settlement clock differs from its retained template');
@@ -879,7 +879,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord};
       }
       if(binding.nativeStroll){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime)))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
+        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime)))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleStrollReferenceCovered(binding.nativeStroll,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleStrollReferenceCovered(binding.nativeStroll,nativeWorldBoundary))throw Error('Native Idle stroll requires its exact template and causal world');
         const motionRecord=routeControl.admitStroll(binding.nativeStroll,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleStrollReference(binding.nativeStroll,packet.metadata.nativeIdleStrollTemplate))throw Error('Pending Idle stroll clock differs from its retained template');
@@ -888,7 +888,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord,executionEpoch:motionRecord.executionEpoch}:{})};
       }
       if(binding.nativeFarmArrival){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,binding.nativeFarmArrival)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)))throw Error('Native Farm Idle phase requires its terminal decoder clock');
+        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,binding.nativeFarmArrival)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)))throw Error('Native Farm Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,nativeWorldBoundary))throw Error('Native farm arrival requires its exact template and causal world');
         const motionRecord=routeControl.admitFarmArrival(binding.nativeFarmArrival,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeFarmArrivalRouteReference(binding.nativeFarmArrival,packet.metadata.nativeFarmArrivalTemplate))throw Error('Pending farm arrival clock differs from its retained template');
