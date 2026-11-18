@@ -59,7 +59,7 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
    presentations=[baked,bakedRun,bakedCarry,bakedGetUp,bakedFall,bakedIdle,bakedAlert,bakedWater,bakedPlant,bakedHarvest].filter(Boolean),
    visibility=presentations.map(value=>({value,enabled:value.isEnabled()}));
   if(closed||!selected||[bakedGetUp,bakedFall,bakedWater,bakedPlant,bakedHarvest].some(value=>value?.isEnabled()))throw Error('Native locomotion variant unavailable');
-  const previous=nativePickVariant,prepared=selected.prepareMaterialVariant(nextPhaseSource,{clipBakes,allowDisabled:clip!==null}),sourceVisibility=[];model.traverse(node=>{if(node.isMesh)sourceVisibility.push({node,visible:node.visible});});let released=false,active=false;
+  let previous=nativePickVariant;const prepared=selected.prepareMaterialVariant(nextPhaseSource,{clipBakes,allowDisabled:clip!==null}),sourceVisibility=[];model.traverse(node=>{if(node.isMesh)sourceVisibility.push({node,visible:node.visible});});let released=false,active=false;
   const unchanged=()=>visibility.every(item=>item.value.isEnabled()===item.enabled)&&sourceVisibility.every(item=>item.node.visible===item.visible),ownsSelected=()=>[baked,bakedRun,bakedCarry,bakedIdle,bakedAlert].includes(selected),
    current=()=>!released&&!closed&&ownsSelected()&&selected.isEnabled()&&nativePickVariant===token;
   const token={materialAlternatives:prepared.materialAlternatives,replicaSources:prepared.replicaSources,valid:()=>!released&&!active&&!closed&&nativePickVariant===previous&&ownsSelected()&&unchanged()&&prepared.valid(),
@@ -69,6 +69,8 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
     for(const value of presentations)if(value!==selected)value.disable();
     if(!selected.isEnabled())selected.set(0,{advance:false});for(const value of presentations)value.hideSources();active=true;nativePickVariant=token;
    },current,
+    canReuse:()=>!released&&!closed&&prepared.reusable&&ownsSelected()&&selected.isEnabled(),prepareReuse(){if(released||closed||active||!prepared.reusable||!ownsSelected()||!selected.isEnabled()||nativePickVariant===token)throw Error('Retired native variant unavailable');prepared.prepareReuse();previous=nativePickVariant;for(const item of visibility)item.enabled=item.value.isEnabled();for(const item of sourceVisibility)item.visible=item.node.visible;return true;},
+    suspend(){if(released||closed||!active||nativePickVariant===token||!prepared.reusable)throw Error('Native variant is not retired');prepared.rollbackActivation();active=false;previous=null;},
    rollbackActivation(){
     if(released||!active||nativePickVariant!==token||presentations.some(value=>value.isEnabled()!==(value===selected)))throw Error('Native motion activation cannot be rolled back');
     prepared.rollbackActivation();
@@ -78,7 +80,7 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
    },hideExtraMeshes:()=>prepared.hideExtraMeshes(),restoreExtraMeshes:()=>prepared.restoreExtraMeshes(),
    deactivate(){if(nativePickVariant===token){prepared.deactivate();nativePickVariant=null;}},
    preparePick:()=>{if(!current())throw Error('Native motion pick unavailable');return prepared.preparePick();},
-   dispose(){if(released)return;released=true;if(nativePickVariant===token){prepared.deactivate();nativePickVariant=null;}prepared.dispose();}};
+   dispose(){if(released)return;released=true;if(nativePickVariant===token){prepared.deactivate();nativePickVariant=null;}previous=null;prepared.dispose();}};
   return token;
  }
 

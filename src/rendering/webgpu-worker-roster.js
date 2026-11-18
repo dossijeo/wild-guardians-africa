@@ -158,7 +158,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  function retireNative(value){
   for(const participant of value.gateParticipants??[])participant.cancel();
   const proof=value.nativeIdleCycleBinding??value.nativeIdleStrollBinding??value.nativeFarmArrivalBinding??value.nativeHomeRouteBinding,materialOwner=proof?entries.get(`worker-${proof.reference.actorId}`):null,kind=value.nativeIdleCycleBinding?'idle':'finiteRoute';
-  const release=()=>{value.binding.dispose({retainMaterials:materialOwner?releaseMaterials=>{
+  if(value.reusableIdleCycle&&materialOwner?.nativeState?.nativeIdleCycleBinding&&materialOwner.nativeState!==value&&value.variant.canReuse()){retainIdleGraph(value,materialOwner);return;}
+   const release=()=>{value.binding.dispose({retainMaterials:materialOwner?releaseMaterials=>{
    // Two fixed families on the existing actor: Idle and the finite programme
    // shared by stroll/Home. Only the latest retired set of each stays warm.
    // Binding/clock ownership is gone; motion data still retires below.
@@ -167,6 +168,19 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   }:null});value.variant.dispose();value.motion.dispose();};
   if(typeof pipelineAdmission?.deferRelease==='function')pipelineAdmission.deferRelease(value.actor.root,release);else release();
  }
+  function retainIdleGraph(value,entry){
+   const retained=entry.retainedNativeMaterials??={idle:null,finiteRoute:null};let available=false,released=false,taken=false,settle;const ready=new Promise(resolve=>settle=resolve),dispose=()=>{value.binding.dispose();value.variant.dispose();value.motion.dispose();};
+   const release=()=>{if(released||taken)return;released=true;if(available){dispose();release.idleCycle=null;if(retained.idle===release)retained.idle=null;}};
+   release.idleCycle=value;release.ready=ready;release.take=()=>{if(!available||released||taken)return null;taken=true;release.idleCycle=null;return value;};
+   const old=retained.idle;retained.idle=release;old?.();
+   const retire=()=>{if(released||closed||entries.get(entry.entity?.id)!==entry||!value.variant.canReuse()){released=true;dispose();release.idleCycle=null;if(retained.idle===release)retained.idle=null;settle(false);return;}try{value.binding.suspend();value.variant.suspend();available=true;settle(true);}catch(error){released=true;dispose();release.idleCycle=null;if(retained.idle===release)retained.idle=null;settle(false);throw error;}};
+   if(typeof pipelineAdmission?.deferRelease==='function')pipelineAdmission.deferRelease(value.actor.root,retire);else retire();
+  }
+  async function takeIdleGraph(entry,support,clipBakes,signal){
+   const slot=entry.retainedNativeMaterials?.idle,value=slot?.idleCycle;if(!value)return null;
+   let abort;try{await Promise.race([slot.ready,new Promise((_,reject)=>{abort=()=>reject(new DOMException('Idle graph reuse cancelled','AbortError'));signal.addEventListener('abort',abort,{once:true});if(signal.aborted)abort();})]);}finally{signal.removeEventListener('abort',abort);}
+   if(signal.aborted)throw new DOMException('Idle graph reuse cancelled','AbortError');if(entry.retainedNativeMaterials?.idle!==slot||!slot.idleCycle)return null;if(!value.motion.canReuseNativeIdleCycle(support)||!value.variant.canReuse()||value.clipBakes.length!==clipBakes.length||value.clipBakes.some((bake,i)=>bake!==clipBakes[i])){slot();return null;}entry.retainedNativeMaterials.idle=null;return slot.take();
+  }
  function nativeLocomotionEntity(entry,carrying,allowGateWait=false){const entity=entry.entity;return entity&&!entity.recovery&&!entity.recoveryExitRemaining&&!entity.fallRemaining&&!entity.incapacitated&&(!entity.gateWaiting||allowGateWait)&&(carrying?carryingConfirmed(entity):!entity.crateId&&['walking','arriving','returning'].includes(entity.status));}
  async function prepareNativeRoute(actorId,support,{getPickTime,signal,isCurrent=()=>true,prepareGateParticipants=null}={}){
   const entry=entries.get(actorId),packet=copyNativeRoutePresentation(support?.presentation),carrying=(packet.motionFlags&8)!==0,crateId=carrying?entry?.entity?.crateId:null;
@@ -254,7 +268,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  }
  function prepareNativeInitialIdleBodyProposal(support,options){return prepareNativeStationaryIdleProposal(support,options,false);}
  function prepareNativeIdleCycleProposal(support,options){return prepareNativeStationaryIdleProposal(support,options,true);}
- async function prepareNativeStationaryIdleProposal(support,{getPickAge,getPickPhaseOffset=null,signal}={},cycle=false){
+ async function prepareNativeStationaryIdleProposal(support,{getPickAge,getPickPhaseOffset=null,reuseClock=null,signal}={},cycle=false){
   const copyRef=cycle?copyNativeIdleCycleReference:copyNativeInitialIdleBodyReference,copyProof=cycle?copyNativeIdleCycleAttestation:copyNativeInitialIdleBodyAttestation,covers=cycle?nativeIdleCycleAttestationCovers:nativeInitialIdleBodyAttestationCovers,key=cycle?'nativeIdleCycle':'nativeInitialIdleBody',bindingKey=cycle?'nativeIdleCycleBinding':'nativeInitialIdleBodyBinding';
   let ref=copyRef(support?.reference);const id=`worker-${ref.actorId}`,entry=entries.get(id),previous=entry?.nativeState,oldMotion=entry?.motion,oldBinding=entry?.motionBinding,q=cycle?nativeIdleCycleBodyState(ref.sourceBody):ref.sourceRequest,fromFailed=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-failed-source',fromStroll=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-arrival-source',fromFarm=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-farm-arrival-idle-source';
   const sourceCurrent=()=>!cycle||fromFailed?!previous:!!previous&&previous.motion.valid()&&(ref.sourceCycleSequence?previous.nativeIdleCycleBinding?.cycleSequence===ref.sourceCycleSequence&&JSON.stringify(previous.nativeIdleCycleBinding.reference.sourceBody)===JSON.stringify(ref.sourceBody):fromFarm?idleCycleContinuesCompletedFarm(q,previous,entry.entity,state.elapsed):fromStroll?nativeIdleStrollArrivalSourceMatches(ref.sourceBody,previous.nativeIdleStrollBinding):JSON.stringify(previous.nativeInitialIdleBodyBinding)===JSON.stringify(ref.sourceBody));
@@ -273,18 +287,21 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    // Deferred ordinary clip installs cannot replace this candidate's materials.
    entry.motionPreparing=pending;locked=true;
    const clipBakes=await Promise.all([bakedIdleBank.get(entry.profile),bakedAlertBank.get(entry.profile)]);check();
-   const actor=entry.actor,anchor=actor.root.getWorldPosition(new Vector3()),yaw=new Quaternion();actor.root.getWorldQuaternion(yaw);const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motion=(cycle?createNativeIdleCycleGpuMotion:createNativeInitialIdleBodyGpuMotion)({actorId:id,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025}),pickAge=()=>getPickAge(ref);let variant,binding;
-   try{const phases={clipNames:motion.clipNames,clipNode:motion.clipNode,resolve:motion.resolve,sampleClip:()=>motion.sampleClip(pickAge()),sampleForClip:(clip,duration)=>motion.sampleForClip(pickAge(),clip,duration,cycle&&getPickPhaseOffset?getPickPhaseOffset(ref,duration):undefined)};variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:actor.isBakedAlert?.()?'Alert':actor.isBakedIdle?.()?'Idle':'Walk_Skip'});const options={motion,getPickTime:pickAge,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};binding=oldBinding?oldBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId:id,resourceRegistry,staged:true,...options});
-    // Resident graph coverage only. The native association and common causal
-    // clock bound drawing; this introduces no authored Idle action interval.
-    candidate={actor,motion,variant,binding,support,[key]:ref,nativeRoute:null,start:ref.worldBoundary.effectiveTime,end:Number.MAX_SAFE_INTEGER,gateParticipants:[]};
-   }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
+   const actor=entry.actor;let picking={reference:ref,getPickAge,getPickPhaseOffset},motion,variant,binding,reused=false;const pickAge=()=>picking.getPickAge(picking.reference);
+   try{
+    const cached=cycle&&typeof reuseClock==='function'?await takeIdleGraph(entry,support,clipBakes,controller.signal):null;
+    if(cached){motion=cached.motion;variant=cached.variant;binding=cached.binding;picking=cached.picking;picking.reference=ref;picking.getPickAge=getPickAge;picking.getPickPhaseOffset=getPickPhaseOffset;check();if(!motion.reuseNativeIdleCycle(support,{retagClock:reuseClock}))throw Error('Retired Idle graph is incompatible');variant.prepareReuse();binding.prepareReuse(oldBinding,pickAge);reused=true;}
+    else{const anchor=actor.root.getWorldPosition(new Vector3()),yaw=new Quaternion();actor.root.getWorldQuaternion(yaw);const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z));motion=(cycle?createNativeIdleCycleGpuMotion:createNativeInitialIdleBodyGpuMotion)({actorId:id,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025});
+     const phases={clipNames:motion.clipNames,clipNode:motion.clipNode,resolve:motion.resolve,sampleClip:()=>motion.sampleClip(pickAge()),sampleForClip:(clip,duration)=>motion.sampleForClip(pickAge(),clip,duration,cycle&&picking.getPickPhaseOffset?picking.getPickPhaseOffset(picking.reference,duration):undefined)};variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:actor.isBakedAlert?.()?'Alert':actor.isBakedIdle?.()?'Idle':'Walk_Skip'});const options={motion,getPickTime:pickAge,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};binding=oldBinding?oldBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId:id,resourceRegistry,staged:true,...options});
+    }
+    candidate={actor,motion,variant,binding,support,picking,clipBakes,reusableIdleCycle:cycle&&typeof reuseClock==='function'&&variant.canReuse(),[key]:ref,nativeRoute:null,start:ref.worldBoundary.effectiveTime,end:Number.MAX_SAFE_INTEGER,gateParticipants:[]};
+   }catch(error){binding?.dispose();variant?.dispose();motion?.dispose();throw error;}
    const valid=()=>current()&&(activated?variant.current()&&binding.current():variant.valid()&&binding.canActivate());
    function restore(){if(activated){if(oldBinding)binding.rollbackActivation();else binding.detach();variant.rollbackActivation();entry.nativeState=previous;entry.motion=oldMotion;entry.motionBinding=oldBinding;activated=false;}}
    function cancel(){if(finished)return false;restore();finished=true;controller.abort();if(entry.nativePending===pending)entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;signal?.removeEventListener('abort',abort);retireNative(candidate);return true;}
    function validateCommit(data){const proof=copyProof(data?.[bindingKey]);if(!valid()||!activated||!covers(proof,ref))throw Error('Native initial Idle body differs from its issued source');return proof;}
-   pending.stage='preparing';pending.cancel=cancel;return {request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},valid,validateCommit,rollback(){check();restore();},cancel,
-    retarget(nextSupport,options){check();if(activated)throw Error('Native initial Idle body must be rolled back before retargeting');const result=(cycle?motion.retargetNativeIdleCycle:motion.retargetNativeInitialIdleBody)(nextSupport,options);if(!result)return false;ref=copyRef(nextSupport.reference);support=nextSupport;pending[key]=ref;candidate[key]=ref;candidate.support=support;candidate.start=ref.worldBoundary.effectiveTime;return true;},
+   pending.stage='preparing';pending.cancel=cancel;return {reused,request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},valid,validateCommit,rollback(){check();restore();},cancel,
+    retarget(nextSupport,options){check();if(activated)throw Error('Native initial Idle body must be rolled back before retargeting');const result=(cycle?motion.retargetNativeIdleCycle:motion.retargetNativeInitialIdleBody)(nextSupport,options);if(!result)return false;ref=copyRef(nextSupport.reference);picking.reference=ref;support=nextSupport;pending[key]=ref;candidate[key]=ref;candidate.support=support;candidate.start=ref.worldBoundary.effectiveTime;return true;},
     activate(){if(!valid()||activated)throw Error('Native initial Idle activation unavailable');variant.activate();try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}entry.nativeState=candidate;entry.motion=motion;entry.motionBinding=binding;activated=true;},
     finalize(data){const proof=validateCommit(data);candidate[bindingKey]=proof;candidate.start=proof.reference.worldBoundary.effectiveTime;motion.setExecutionEpoch(candidate.start);motion.seal();entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;finished=true;signal?.removeEventListener('abort',abort);if(previous)retireNative(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}onSelectableChange();}
    };

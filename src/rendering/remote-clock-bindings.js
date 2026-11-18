@@ -84,7 +84,11 @@ export function installRemoteClockBindings(renderer,remote){
   for(const entry of nodeBindings.get(node)??[]){const group=entry.group.deref();if(!group)continue;live.push(entry);const buffer=registered.get(group);if(buffer&&backend.get(group).buffer===buffer)remote.registerClockBinding(buffer,{byteOffset:entry.byteOffset,...next});}
   Object.defineProperty(node,clockMetadata,{value:next,enumerable:false,configurable:true});nodeBindings.set(node,live);return true;
  }
- return {retagNativeIdleCycle(node,previous,value){
+ return {reuseNativeIdleCycle(node,previous,value){
+  const before=copyNativeIdleCycleReference(previous),after=copyNativeIdleCycleReference(value),metadata=node?.[clockMetadata];
+  if(disposed||!sameNativeIdleCycleReference(metadata?.nativeIdleCycle,before)||metadata.epoch!==before.worldBoundary.effectiveTime||after.actorId!==before.actorId||after.bodyId!==before.bodyId||after.profile!==before.profile||after.worldBoundary.authorityEpoch!==before.worldBoundary.authorityEpoch||after.worldBoundary.nativeSession!==before.worldBoundary.nativeSession||after.worldBoundary.ticket<=before.worldBoundary.ticket||after.worldBoundary.effectiveTime<before.worldBoundary.effectiveTime+before.duration||after.sourceCycleSequence===0||JSON.stringify(after.sourceBody)!==JSON.stringify(before.sourceBody))throw Error('Retired Idle graph cannot bind a foreign program');
+  return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeIdleCycle:after}));
+ },retagNativeIdleCycle(node,previous,value){
   const before=copyNativeIdleCycleReference(previous),after=copyNativeIdleCycleReference(value),metadata=node?.[clockMetadata];
   if(disposed||!sameNativeIdleCycleReference(metadata?.nativeIdleCycle,before)||metadata.epoch!==before.worldBoundary.effectiveTime||!nativeIdleCycleSuccessor(before,after))throw Error('Native Idle cycle clock cannot be retagged');
   return replace(node,Object.freeze({...metadata,epoch:after.worldBoundary.effectiveTime,nativeIdleCycle:after}));
