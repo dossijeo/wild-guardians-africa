@@ -14,6 +14,17 @@ static bool idleStrollSourceCurrent(const IntentState& s,const PendingNativeMoti
   double(cycle.binding->cycleSequence)==d.idleStrollSemantic[1]&&double(next.sequence)==d.header[21]&&
   next.requestedAt==d.header[22]&&next.x==d.idleStrollSemantic[18]&&next.z==d.idleStrollSemantic[19]&&next.state[3]==d.idleStrollSemantic[15];
 }
+// Match spatial-navigation-movement.js's known-empty endpoint test using the
+// same native component/connector query. Missing components remain unknown;
+// no path outcome is a reservation conflict or an executable motion grant.
+static int idleStrollPathOutcome(int count,float x,float z,float tx,float tz){
+ if(count>=0)return count?1:-7;
+ auto* input=spatial_region_batch_input_ptr(2);if(!input)return -6;
+ input[0]=x;input[1]=z;input[2]=tx;input[3]=tz;
+ if(spatial_region_batch(2)!=2)return -6;const auto* rows=spatial_region_batch_output_ptr();
+ for(int i=0;i<2;i++)if(rows[i*5]==0&&rows[i*5+1]<0)return -7;
+ return -6;
+}
 static int stageIdleStroll(double actor,double session,double sourceSequence,const std::optional<NativeIdleCycleBodySource>& farm=std::nullopt,const std::array<double,4>& farmAnchor={}){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence))return -1;
@@ -44,10 +55,10 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  // Like NavigationAgent3D's query cache, a map revision invalidates the
  // derived path, not the already selected target or cosmetic RNG stream.
  if(next.topology==lazy_route_revision())d.route.points=next.points;
- else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=count<0?-6:count==0?0:1;if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
+ else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=idleStrollPathOutcome(count,float(q.x),float(q.z),float(next.x),float(next.z));if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
  if(result==1){
-  if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=0;
-  for(size_t i=0;!d.strollFarmSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=0;
+  if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=-7;
+  for(size_t i=0;!d.strollFarmSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=-7;
  }
  if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;

@@ -16,7 +16,7 @@ for(const profile of PROFILES)for(const position of ['outside','inside','arrived
    // fresh geometry. The native no-path -> REST policy is a separate pending
    // migration item; never pretend a corridor or move/retarget this request.
    const original=createSpatialNavigationMovement(f.session,f.state);assert.equal(original.path(f.worker,f.worker.idleState.destination,.28,null,true),null);
-   assert.equal(f.planner.prepareNativeIdleStrollProposal(f.actor).status,'unknown');assert.equal(f.planner.nativeIdleStrollBinding(f.actor),null);assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);assert.deepEqual(f.planner.nativeIdleStrollRequestReference(f.actor),q);tick(f.state,.2,f.nav);assert.deepEqual(f.worker,old);assert.deepEqual(f.body(1),body);assert.equal(f.state.rng,rng);return;
+   assert.equal(f.planner.prepareNativeIdleStrollProposal(f.actor).status,'blocked');assert.equal(f.planner.nativeIdleStrollBinding(f.actor),null);assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);assert.deepEqual(f.planner.nativeIdleStrollRequestReference(f.actor),q);tick(f.state,.2,f.nav);assert.deepEqual(f.worker,old);assert.deepEqual(f.body(1),body);assert.equal(f.state.rng,rng);return;
   }
   const candidate=f.prepare();tick(f.state,.2,f.nav);assert.deepEqual(f.worker,old);assert.equal(f.planner.revalidateNativeIdleStrollProposal(candidate.ticket).status,'revalidated');const binding=f.commit(candidate);
   assert.equal(f.worker.nativeRouteAdmission,'native-idle-stroll');assert.equal(f.worker.destinationId,old.destinationId);assert.equal(f.worker.idleState.remaining,old.idleState.remaining);assert.equal(f.worker.idleState.rng,old.idleState.rng);assert.deepEqual(f.body(1),body);

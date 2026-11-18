@@ -1,0 +1,21 @@
+# Resultado nativo del camino Idle
+
+Continúa la [restauración en Surface/GPU](native-idle-approach-restoration-surface-20261118.md). Antes de migrar cancelWalk/REST/reintento hay que distinguir un fallo físico conocido de conectividad todavía ausente. Este incremento resuelve esa clasificación; A6/A/B/C siguen abiertos y D no iniciado.
+
+## Referencias y decisión
+
+Se consulta el código real de [DetourCrowd1.6](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L638): updateMoveRequest separa estados de solicitud y valida el resultado antes de instalarlo en el corredor. La política concreta procede de nuestro spatial-navigation-movement.js, que ya distingue un endpoint sin componentes y con vecindario conocido frente a datos ausentes. Se adapta esa rama usando spatial_region_batch, la misma consulta nativa que sustenta componentsWorldBatch. No se sustituye navegación ni se añade dependencia, caché, registro o propietario.
+
+La preparación22 devuelve -7/blocked cuando el recorrido es imposible o un endpoint no tiene componente alcanzable y su fila marca unknown0. Si falta algún componente, mantiene -6/unknown conservador. El código0 queda para conflicto de admisión/reservas posterior; no se confunde con un recorrido inexistente. Se distingue también el resultado de revalidación. La firma, versión del formato de propuesta y exportaciones existentes se conservan; se amplía el resultado de fallo interno. No cambia el comportamiento del planificador de rutas compartido por otros subsistemas.
+
+No se mueve el cuerpo, crea ticket, consume RNG, retargetea el ancla ni se proyecta REST al consultar un fallo. El control sigue reteniendo WALK hasta que exista una transición nativa preparada y admitida. El chequeo de props local de la navegación original no se migra por aproximación: las incertidumbres que la consulta de componentes no puede certificar siguen siendo unknown.
+
+## Validación y límites
+
+Pasan diez pruebas nuevas. Los cuatro perfiles en standalone/pthread reproducen el checkpoint exterior realmente ejecutado y guardado: la navegación original devuelve null y la preparación nativa informa blocked, conservando solicitud, Game, cuerpo, secuencia y RNG al repetirla. Dos controles declaran explícitamente un ancla semántica en terreno ausente; ese destino es una fixture de disponibilidad, no una ejecución antigua acreditada. Ambos mantienen unknown y carecen de permisos. Una prueba previa de destino recién bloqueado por pared exige ahora -7 exacto, conservando el estado anterior.
+
+Las pruebas finales contra el WASM anterior cargado de sólo lectura producen cuatro fallos esperados, uno aprobado y cinco filtrados. Pasan156 dirigidas en10 archivos y3000/3001 en la suite amplia seleccionada de263 archivos, sin fallos/cancelaciones y una comparación opcional omitida. Mantiene las siete exclusiones históricas reproducidas de la referencia; no equivale a toda la suite del repositorio. Build correcto: ✓ built in 47.40s. Normal y pthread se reconstruyen con el script canónico: cambian dos fuentes nativas y dos WASM; el módulo JS pthread permanece idéntico.435 inputs de prueba y64 inputs/artefactos nativos coinciden con el congelado; worker pthread y16 archivos ajenos intactos.
+
+La regresión GPU sin capturas ejecuta de nuevo la restauración22 → REST21/WATCH con estos binarios, sobre Surface, puertos y Host originales. Conserva650/651 IDs inmutables,100/98 recursos preparados y cero posteriores a READY, sin shaders duplicados; adopción4, selección y drain pasan. Ventana 676 frames, máximo49.455ms y0>50ms; global994, máximo62.495ms y2>50ms. Sin atribución de causa ni aceptación global de cadencia. Las imágenes de94b803848 mantienen su alcance anterior; este ensayo timing no aporta aceptación visual nueva.
+
+Los [resultados, trazas, hashes y referencias](performance/native-idle-stroll-path-outcome-validation-20261118.json) delimitan la evidencia. Se conservan bytes previos de los cuatro documentos principales. Pendientes: transición nativa de fallo a REST/reintento, productor/cohort ordinarios, recuperación incremental integral de3.123 recursos y aceptación de cadencia/plataforma. La clasificación por sí sola no resuelve el WALK bloqueado ni habilita el guardado en UI.

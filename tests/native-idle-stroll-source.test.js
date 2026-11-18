@@ -62,7 +62,7 @@ test('a navigation revision requeries the selected destination without rerolling
 test('a newly blocked destination fails closed without changing the selected request or held body',()=>{
  const f=fixture();try{
   const body=f.body(1),next=f.next(),worker=structuredClone(f.worker),worldRng=f.state.rng;assert(f.session.core.addWall(next.data[11],next.data[12],.4,.4)>0);assert(['committed','unchanged'].includes(f.planner.commitNativeCausalClock().status));
-  const p=f.stage();assert([0,-6].includes(p.status),`Unavailable destination: ${p.status}`);assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);assert.equal(f.stroll(),null);assert.deepEqual(f.body(1),body);assert.deepEqual(f.next(),next);assert.deepEqual(f.worker,worker);assert.equal(f.state.rng,worldRng);
+  const p=f.stage();assert.equal(p.status,-7);assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);assert.equal(f.stroll(),null);assert.deepEqual(f.body(1),body);assert.deepEqual(f.next(),next);assert.deepEqual(f.worker,worker);assert.equal(f.state.rng,worldRng);
  }finally{f.close();}
 });
 
