@@ -1,6 +1,19 @@
+// The actual23 endpoint supplies the physical source. REST birth is the
+// original Game semantic input (seeded private stream, no random draw yet).
+// Keep it in the existing provisional21, never in a fictitious20/24 owner.
+static std::optional<NativeIdleCycleBodySource> arrivedFarmIdleCycleSource(const IntentState& s,const ActiveIntent& intent,uint64_t sequence,int anchorKind,uint64_t anchor,uint32_t rng,double idleSeconds){
+ if(!nativeCompletedFarmArrivalBodyCurrent(s,intent)||intent.assignmentSequence!=sequence)return std::nullopt;
+ const auto& route=s.routeSlots[intent.slot];const auto& b=*route.farmArrivalBinding;const auto& p=route.executionPose;const auto& r=*b.requestSource;
+ NativeIdleCycleBodySource q;q.kind=23;q.actor=intent.actor;q.body=route.reservationBody;q.session=s.session;q.sequence=sequence;q.at=b.actual.header[11];q.profile=intent.profile;q.workerProfile=r.workerProfile;q.center=r.center;q.bodyFlags=r.bodyFlags;
+ q.x=p[0];q.z=p[1];q.yaw=p[4];q.radius=route.radius;q.runPhase=p[9];q.walkPhase=p[10];q.carryPhase=p[11];q.runRemaining=p[14];q.anchorKind=anchorKind;q.anchor=anchor;q.initial={1,0,idleSeconds*2,double(rng),0,0};return q;
+}
 static bool idleCycleDraftCurrent(const IntentState& s,const PendingBarrierProposal::IdleCycleDraft& d){
  const auto found=s.activeIntents.find(uint64_t(d.header[1]));if(found==s.activeIntents.end())return false;const auto& intent=found->second;
  if(!idleCycleAnchorCurrent(s,d.header))return false;
+ if(d.farmSource){
+  const auto& h=d.header;const auto source=arrivedFarmIdleCycleSource(s,intent,uint64_t(h[3]),int(h[9]),uint64_t(h[10]),uint32_t(d.source.initial[3]),h[14]);
+  return source&&s.routeSlots[intent.slot].farmArrivalBinding==d.farmSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
+ }
  if(d.strollSource){
   const auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(d.header[3]));
   return source&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding==d.strollSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
@@ -9,14 +22,17 @@ static bool idleCycleDraftCurrent(const IntentState& s,const PendingBarrierPropo
   intent.initialIdleBodyBinding==d.body&&intent.idleCycle==d.previousCycle&&
   (d.previousCycle?nativeIdleCycleCurrent(s,intent)&&d.previousCycle->next.status==1&&d.previousCycle->next.state[0]==1:nativeInitialIdleBodyCurrent(s,intent));
 }
-static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds){
+static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,std::optional<uint32_t> farmRng=std::nullopt){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(anchorKind)||anchorKind>2||!integer(anchorId))return -1;
  for(double v:{x,z,radius,idleSeconds,alertSeconds})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
  if(std::abs(x)>=2147483000.||std::abs(z)>=2147483000.||radius<=0||radius>8||idleSeconds<=0||idleSeconds>3600||alertSeconds<=0||alertSeconds>3600)return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;const auto& intent=found->second;
  PendingBarrierProposal::IdleCycleDraft draft;uint64_t sourceCycle=0;
- if(intent.idleCycle){
+ if(farmRng){
+  const auto source=arrivedFarmIdleCycleSource(s,intent,uint64_t(sourceSequence),int(anchorKind),uint64_t(anchorId),*farmRng,idleSeconds);if(!source||!idleStrollCycleReleaseClear(s,source->body))return -2;
+  draft.source=*source;draft.farmSource=s.routeSlots[intent.slot].farmArrivalBinding;
+ }else if(intent.idleCycle){
   if(!nativeIdleCycleCurrent(s,intent)||intent.idleCycle->next.status!=1||intent.idleCycle->next.state[0]!=1||double(intent.idleCycle->next.sequence)!=sourceSequence)return -2;
   draft.previousCycle=intent.idleCycle;draft.body=intent.idleCycle->binding->body;draft.source=intent.idleCycle->binding->source;sourceCycle=intent.idleCycle->binding->cycleSequence;
  }else if(nativeInitialIdleBodyCurrent(s,intent)&&intent.state==PlanningState::StationaryActive){
@@ -39,14 +55,18 @@ static int stageIdleCycle(double actor,double session,double sourceSequence,doub
 }
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds){return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds);}
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_farm_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,double rng){
+ if(!integer(rng)||rng>4294967295.)return -1;
+ return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds,uint32_t(rng));
+}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),21):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_cycle_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?p.idleCycle->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=21||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=21||!p.idleCycle||session!=double(p.session)||ticket!=double(p.ticket))return -1;
  auto old=std::move(*p.idleCycle);clearWorldMutationProposal(p);const auto& h=old.header;
- const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15]);if(result!=1)return result;
- auto& next=*p.idleCycle;bool same=old.body==next.body&&old.previousCycle==next.previousCycle&&old.strollSource==next.strollSource&&idleCycleBodySourceData(old.source)==idleCycleBodySourceData(next.source);
+ const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15],old.farmSource?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt);if(result!=1)return result;
+ auto& next=*p.idleCycle;bool same=old.body==next.body&&old.previousCycle==next.previousCycle&&old.strollSource==next.strollSource&&old.farmSource==next.farmSource&&idleCycleBodySourceData(old.source)==idleCycleBodySourceData(next.source);
  for(size_t i=0;i<h.size();i++)if(i!=5&&i!=6&&h[i]!=next.header[i])same=false;
  next.previous=NativeIdleCycleOrigin{h,uint64_t(ticket)};next.timeTranslation={1,ticket,double(p.ticket),h[5],h[5]+h[23],next.header[5],next.header[5]+next.header[23],same?1.:0.};return 1;
 }
@@ -57,9 +77,9 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_commit_bound(double session,dou
  if(!idleCycleDraftCurrent(s,*p.idleCycle)){clearWorldMutationProposal(p);return -2;}
  const auto& d=*p.idleCycle;auto binding=std::make_shared<NativeIdleCycleBinding>();binding->actual={d.header,uint64_t(ticket)};binding->body=d.body;binding->source=d.source;
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previous&&preparedTicket==double(d.previous->ticket)&&d.timeTranslation[7]==1)binding->prepared=*d.previous;else return -9;
- if(d.strollSource&&!idleStrollCycleReleaseClear(s,d.source.body)){clearWorldMutationProposal(p);return -2;}
- const bool releaseStroll=bool(d.strollSource);const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(p);auto& intent=s.activeIntents.at(actor);
- if(releaseStroll){releaseRoute(s,intent);intent.state=PlanningState::StationaryActive;intent.lease=false;s.workers.at(actor).eligible=true;}
+ if((d.strollSource||d.farmSource)&&!idleStrollCycleReleaseClear(s,d.source.body)){clearWorldMutationProposal(p);return -2;}
+ const bool releaseRouteSource=bool(d.strollSource)||bool(d.farmSource);const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(p);auto& intent=s.activeIntents.at(actor);
+ if(releaseRouteSource){releaseRoute(s,intent);intent.state=PlanningState::StationaryActive;intent.lease=false;s.workers.at(actor).eligible=true;}
  auto cycle=std::make_shared<NativeIdleCycle>();cycle->binding=binding;intent.idleCycle=cycle;
  binding->cycleSequence=emitIntentChange(s,intent);if(nativeIdleCycleFinished(*cycle,s.effectiveTime))publishNativeIdleCycleDecision(s,intent,chooseNativeIdleCycleNext(s,*cycle));s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,21);return 1;
 }

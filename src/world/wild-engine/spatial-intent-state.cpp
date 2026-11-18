@@ -400,7 +400,8 @@ struct PendingBarrierProposal {
   struct IdleCycleDraft {
    std::array<double,24> header{};std::shared_ptr<const NativeInitialIdleBodyBinding> body;
    std::shared_ptr<NativeIdleCycle> previousCycle;
-   std::shared_ptr<const NativeIdleStrollBinding> strollSource;NativeIdleCycleBodySource source;
+   std::shared_ptr<const NativeIdleStrollBinding> strollSource;
+   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmSource;NativeIdleCycleBodySource source;
    std::optional<NativeIdleCycleOrigin> previous;std::array<double,8> timeTranslation{};
   };
   std::optional<IdleCycleDraft> idleCycle;
