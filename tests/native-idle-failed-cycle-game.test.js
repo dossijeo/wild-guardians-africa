@@ -123,10 +123,10 @@ test('ordinary harvest genuinely preempts a local failed-WALK REST and acquires 
  }finally{await f.dispose();}
 });
 
-test('a typed failed-source proposal does not grant a lease through the still unsupported graphics control',async()=>{
+test('a typed failed-source proposal may prepare a lease but metadata alone cannot make it current',async()=>{
  const f=await nativeIdleFailedCycleGame();let c,detach;try{
   detach=f.planner.observeNativeIntentControl({onBaseline(b){c=createNativeRouteControl({authorityEpoch:b.authorityEpoch,initialSequence:b.sequence,initialTime:b.effectiveTime,routes:b.routes,pendingIdleStrollRequests:b.pendingIdleStrollRequests??[]});c.acceptClock({...b.clock,anchorAbsoluteMs:1000,anchorLogicalTime:b.clock.committedThrough},{baseline:true});},onChanges(changes){for(const e of changes)c.accept(e);},onClock(clock){const prior=c.status().clock;c.acceptClock({...clock,anchorAbsoluteMs:prior.anchorAbsoluteMs,anchorLogicalTime:prior.anchorLogicalTime});}});
-  const p=f.prepareCycle();assert.throws(()=>c.admitIdleCycle(p.nativeIdleCycle,{preparingWorldBoundary:p.worldBoundary}),error=>error.code==='native-idle-cycle-admission-obsolete');assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);assert.equal(f.worker.idleState.mode,'walk');
+  const p=f.prepareCycle(),lease=c.admitIdleCycle(p.nativeIdleCycle,{preparingWorldBoundary:p.worldBoundary});assert(lease.isPrepared());assert.equal(lease.isCurrent(),false);assert.equal(lease.idleCycleRecord,null);assert.equal(f.planner.nativeIdleCycleBinding(f.actor),null);assert.equal(f.worker.idleState.mode,'walk');
  }finally{detach?.();c?.dispose();await f.dispose();}
 });
 
