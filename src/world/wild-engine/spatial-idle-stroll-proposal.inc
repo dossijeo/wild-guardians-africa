@@ -25,6 +25,32 @@ static int idleStrollPathOutcome(int count,float x,float z,float tx,float tz){
  for(int i=0;i<2;i++)if(rows[i*5]==0&&rows[i*5+1]<0)return -7;
  return -6;
 }
+// The cold request uses the same finite endpoint and local-radius checks
+// for both admission and the failed REST blueprint. A physical detour outside
+// the original anchor is not a permitted local stroll.
+static int idleStrollRequestPathOutcome(int count,const NativeIdleStrollResourceRequest& r){
+ const int status=idleStrollPathOutcome(count,float(r.x),float(r.z),float(r.destinationX),float(r.destinationZ));if(status!=1)return status;
+ const auto* points=spatial_world_route_ptr();if(!points||points[(count-1)*2]!=float(r.destinationX)||points[(count-1)*2+1]!=float(r.destinationZ))return -7;
+ for(int i=0;!r.approach&&i<count;i++)if(std::hypot(double(points[i*2])-r.anchorX,double(points[i*2+1])-r.anchorZ)>r.anchorRadius)return -7;
+ return 1;
+}
+// Pure cancelWalk blueprint on a real pending request, not an arrived22 or
+// an Idle owner. The private stream is copied; only a later admitted state
+// transition may install this desired REST in Game.
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_failed_rest_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_failed_rest_snapshot(double actor,double session,double sequence){
+ auto& s=state();auto& out=s.strollFailedRestResult;out.fill(0);
+ if(!integer(actor)||session!=double(s.session)||!integer(sequence))return -1;
+ const auto found=s.activeIntents.find(uint64_t(actor));
+ if(found==s.activeIntents.end()||!nativeIdleStrollRequestBodyCurrent(s,found->second)||double(found->second.strollRequest->sequence)!=sequence)return -2;
+ const auto& r=*found->second.strollRequest;const int previous=lazy_selected_context();if(previous!=r.profile)spatial_select_nav_profile_index(r.profile);
+ const int count=spatial_world_route_cached(float(r.x),float(r.z),float(r.destinationX),float(r.destinationZ)),status=idleStrollRequestPathOutcome(count,r);
+ const auto topology=lazy_route_revision();if(previous!=r.profile)spatial_select_nav_profile_index(previous);
+ if(status!=-7)return status==-6?-6:0;
+ uint32_t rng=r.rng;const double remaining=r.idleSeconds*(2+std::floor(idleCycleRandom(rng)*3));
+ out={1,actor,session,sequence,s.effectiveTime,double(topology),remaining,double(rng),r.approachRetry};return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_failed_rest_ptr(){return state().strollFailedRestResult.data();}
 static int stageIdleStroll(double actor,double session,double sourceSequence,const std::optional<NativeIdleCycleBodySource>& farm=std::nullopt,const std::array<double,4>& farmAnchor={}){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence))return -1;
@@ -55,7 +81,7 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  // Like NavigationAgent3D's query cache, a map revision invalidates the
  // derived path, not the already selected target or cosmetic RNG stream.
  if(next.topology==lazy_route_revision())d.route.points=next.points;
- else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=idleStrollPathOutcome(count,float(q.x),float(q.z),float(next.x),float(next.z));if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
+ else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=d.strollRequestSource?idleStrollRequestPathOutcome(count,*d.strollRequestSource):idleStrollPathOutcome(count,float(q.x),float(q.z),float(next.x),float(next.z));if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
  if(result==1){
   if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=-7;
   for(size_t i=0;!d.strollFarmSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=-7;

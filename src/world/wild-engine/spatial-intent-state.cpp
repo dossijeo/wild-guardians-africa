@@ -528,6 +528,7 @@ struct IntentState {
   std::array<double,23> farmArrivalRequestResult{};std::vector<double> farmArrivalRequestsResult;
   std::array<double,25> initialIdleRequestResult{};
   std::array<double,29> strollRequestResult{};std::vector<double> strollRequestsResult;
+  std::array<double,9> strollFailedRestResult{};
   std::vector<double> initialIdleRequestsResult;
   std::set<uint64_t> stoppedReservationBodies,removingBodies;
   std::set<uint64_t> stoppedGateRouteActors;
@@ -1624,7 +1625,7 @@ void nav_intent_reset(){
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
   s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
   s.farmArrivalRequestResult.fill(0);s.farmArrivalRequestsResult.clear();s.farmArrivalRouteBindingResult.clear();s.farmArrivalExecutionResult.fill(0);
-  s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.strollRequestResult.fill(0);s.strollRequestsResult.clear();s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();s.initialIdleBodyBindingResult.clear();
+  s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.strollRequestResult.fill(0);s.strollRequestsResult.clear();s.strollFailedRestResult.fill(0);s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();s.initialIdleBodyBindingResult.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;
   s.gateStaticPairs=s.gateStaticEvaluations=s.gateStaticRejected=0;s.gateStaticResult.fill(0);
   s.gateStaticProofs=0;s.gateStaticWorldStamp.fill(0);
