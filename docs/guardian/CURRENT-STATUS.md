@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [fuente Farm23 terminada a Task6/14](native-farm-arrived-task-source-20261118.md). Preflight exige final fisico atestiguado y solicitud pendiente; reutiliza portador de pose/cuerpo, sin24/Idle ficticios. Revoca handle23 exacto en el mismo evento6 y solo14 adquiere movimiento. Referencias: codigo Godot4.4/DetourCrowd1.6. Pasan228 dirigidas,2560/2561 regresion243 archivos (una omision opcional) y build;397 inputs congelados,64 nativos/3 cambios tras rebuild standalone/pthread. Regresion GPU del relevo ANTERIOR24-Task conserva646 IDs,70 preparados/0 tardios,54 dibujos y drain; no acredita consumidor23-final. Faltan control/consumidor terminal23, finales Idle/Home, productor/cohort/recuperacion3123. A6/A/B/C abiertos,D no iniciado; continuidad/plataforma siguen evidencia de cadencia.
+
+
 Continuacion A6/C3: [presentacion pendiente al liberar barrera](native-mutation-release-presentation-20261118.md). El Host termina la RAF perdida al recibir release validado, misma cadena y todos los guards/fences. Referencia: codigo DisplayScheduler de Chromium140 y LifetimeTracker wgpu26. GPU Home con demoras30/50/100ms conserva639/640/640 IDs,70 preparados/0 tardios; traza sitúa dibujo8.47ms antes de siguiente RAF. Task normal646 IDs/0 tardios. Holds largos y maximos113.44/128.13ms permanecen observables, sin atribucion ni garantia cero tirones. Display observado30Hz explica base33.3ms. Pasan309 dirigidas y build; regresion agregada2531/2532 con una omision,12 casos recuperados con WASM explicito. A6/A/B/C abiertos,D no iniciado; siguen finales/cohort/productor/recuperacion3123.
 
 

@@ -648,7 +648,7 @@ static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveInten
 }
 static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldWorkerTaskSource(const IntentState& s,const ActiveIntent& intent){
  const auto& route=s.routeSlots[intent.slot];const auto& p=route.executionPose;auto r=std::make_shared<NativeWorkerPoseResourceRequest>();
- r->actor=intent.actor;r->session=s.session;r->sequence=intent.assignmentSequence;r->body=route.reservationBody;r->at=route.suspendedAt;r->profile=intent.profile;r->bodyFlags=route.farmArrivalBinding?route.farmArrivalBinding->requestSource->bodyFlags:int(route.idleStrollBinding->semantic[4]);r->radius=route.radius;
+ r->actor=intent.actor;r->session=s.session;r->sequence=intent.assignmentSequence;r->body=route.reservationBody;r->at=route.suspended?route.suspendedAt:route.farmArrivalBinding->actual.header[11];r->profile=intent.profile;r->bodyFlags=route.farmArrivalBinding?route.farmArrivalBinding->requestSource->bodyFlags:int(route.idleStrollBinding->semantic[4]);r->radius=route.radius;
  r->x=p[0];r->z=p[1];r->yaw=p[4];r->runPhase=p[9];r->walkPhase=p[10];r->carryPhase=p[11];r->runRemaining=p[14];return r;
 }
 bool nativeHeldFarmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& intent);
@@ -2288,10 +2288,14 @@ static int commitTaskProposal(bool pendingResources){
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
-    // Moving/arrived farm routes need their own prepared successor, never an
-    // immediate Task replacement that releases an executing physical owner.
-    // Only the exact Farm24 held owner can seed an unpublished Task request.
-    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldFarmArrivalBodyCurrent(s,old->second))){clearProposal(s);return 0;}
+    // Farm keeps its physical endpoint through the unpublished Task request.
+    // A completed23 needs no artificial24 suspension. Geometric arrival alone
+    // cannot end a remaining native turn: require the actual terminal boundary.
+    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding){
+      const auto& route=s.routeSlots[old->second.slot];
+      const bool arrived=nativeFarmArrivalBodyCurrent(s,old->second)&&route.hasExecution&&route.executionPose[6]==1&&route.executionPose[15]==0&&route.executionPose[16]==0&&s.effectiveTime>=route.farmArrivalBinding->actual.header[11];
+      if(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldFarmArrivalBodyCurrent(s,old->second)&&!arrived){clearProposal(s);return 0;}
+    }
     // A moved stationary body retains its actual cycle through the pending
     // task request. Only prepared TaskStart may acquire its next trajectory.
     if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
@@ -2328,6 +2332,9 @@ static int commitTaskProposal(bool pendingResources){
     ActiveIntent intent{workerId,taskId,s.tasks.at(taskId).target,
       pendingResources?PlanningState::AwaitingResources:PlanningState::RouteActive,slot,route.generation,lazy_route_revision()};
     intent.requiresResources=pendingResources;intent.profile=lazy_selected_context();intent.settlementBinding=stationary;intent.initialIdleBodyBinding=initialIdleBody;intent.idleCycle=cycle;intent.heldIdleTaskSource=heldIdle;
+    // The completed moving source still needs its exact revocation in this
+    // same request event; a previously suspended source was already revoked.
+    if(heldIdle&&existing!=s.activeIntents.end()){intent.revokedSlot=existing->second.revokedSlot;intent.revokedGeneration=existing->second.revokedGeneration;}
     s.activeIntents.insert_or_assign(workerId,intent);
     s.byTarget[intent.target].insert(workerId);
     s.byTask[intent.task].insert(workerId);
