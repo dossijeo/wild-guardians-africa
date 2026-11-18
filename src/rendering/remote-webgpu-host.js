@@ -1511,6 +1511,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(message.nativeStrolls?.length)routeControl.installStrolls(boundary,message.nativeStrolls);
              if(hold.preparedTaskActionTemplate)pending.admittedActionRecord=routeControl.admitAction(hold.preparedTaskActionTemplate);
              nativeWorldBoundary=boundary;
+             // Retiming can acquire later than the drained hold. The actual
+             // certified world boundary, rather than the earlier fence time,
+             // is the first legal presentation of this committed generation.
+             nativeMutationFloor=Math.max(nativeMutationFloor??0,boundary.effectiveTime);
              nativeMutationEpoch++;
              invalidatePendingNativeWorld('Native mutation invalidated the prepared frame');
            }

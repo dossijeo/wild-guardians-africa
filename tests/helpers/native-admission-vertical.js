@@ -11,13 +11,13 @@ import {nativeClockResourceEnd} from '../../src/rendering/native-clock-resource-
 // its existing operation; tests only vary the request and the relevant facts.
 // Real WASM, source publication, resource MessageChannel, client and draw host;
 // deterministic fake GPU queue. Hardware/visual acceptance remains separate.
-export async function createNativeAdmissionVertical({planner,elapsed,kind,retainStaticBuffer=false,idleCycleIdlePhase=false,idleCyclePhasePeriods=[2.5],idleCycleDecoderClock=true,idleCycleIdlePhaseCapability=idleCycleIdlePhase,idleStrollIdlePhase=false,idleStrollDecoderClock=true,idleStrollIdlePhaseCapability=idleStrollIdlePhase,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{},onCommit=()=>{}}){
+export async function createNativeAdmissionVertical({planner,elapsed,kind,retainStaticBuffer=false,idleCycleIdlePhase=false,idleCyclePhasePeriods=[2.5],idleCycleDecoderClock=true,idleCycleIdlePhaseCapability=idleCycleIdlePhase,idleStrollIdlePhase=false,idleStrollDecoderClock=true,idleStrollIdlePhaseCapability=idleStrollIdlePhase,onPrepare=()=>{},onReady=()=>{},onDrain=()=>{},onCommit=()=>{},absoluteNow=()=>Number.MAX_SAFE_INTEGER}){
   let currentKind=kind,profile=nativeResourceAdmissionProfile(kind);
   const [sourcePort,drawPort]=pair();
   const graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',...(idleStrollIdlePhaseCapability?{nativeIdleStrollIdlePhaseVersion:1}:{}),...(idleCycleIdlePhaseCapability?{nativeIdleCycleIdlePhaseVersion:1}:{}),
     nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,
     nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},
-    {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+    {intentControl:{port:drawPort,session:'admission-vertical'},absoluteNow});
   if(retainStaticBuffer){graphics.staticBuffer=graphics.client.device.createBuffer({size:36,usage:40});graphics.client.device.queue.writeBuffer(graphics.staticBuffer,0,new Float32Array([0,0,0,1,0,0,0,1,0]));}
   const {port1,port2}=new MessageChannel(),errors=[],packets=[];
   let source,connection,endpoint,preparations=0,commits=0,aborts=0,active=false,committedPacket;
