@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [Idle terminal y Farm23 terminada a Task14 en consumidor original](native-farm-idle-phase-20261118.md). Reutiliza uniforme Idle, actor/bancos y shader; cota fisica finita y lease tipada permiten quiescencia Task6 sin24/Idle ficticios. Referencias: codigo AnimationMixer/AnimationAction Three r180 y LifetimeTracker/Id wgpu26. GPU visual y timing conservan646 IDs, sustituyen solo textura de movimiento,70 preparados/0 tardios y0 shaders/pipelines,54 dibujos por bloqueo1800ms, picking/adopcion5/drain reales. Ventana completa de relevo max38.03/35.78ms sin>50; global219.36/93.50ms con7/2 huecos>50, sin atribucion ni garantia global. Home24 regresion conserva640 IDs/0 tardios. Pasan16 nuevos y2633/2634 amplia247 archivos (una omision opcional), build1m36s;404 inputs y64 nativos identicos. A6/A/B/C abiertos,D no iniciado; siguen finalesHome/Idle, productor/cohort/recuperacion3123 y cadencia/plataforma.
+
+
 Continuacion e-R3: [actor Farm23 terminada a Task14](native-farm-arrived-task-graphics-20261118.md). Roster acepta ultima fila nativa23 instalada, mismo cuerpo/pose/fases/politica, sin24/Idle ficticios; conserva raiz/mallas/geometrias/indices/bancos y sustituye solo movimiento. Referencias: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan36 casos nuevos y2617/2618 amplia246 archivos (una omision opcional), build1m46s;402 inputs y64 nativos identicos. Renderer/admision/frame simulados; falta reloj Idle terminal y cadena Surface/Host/GPU. Diagnostico confirma fase Idle congelada tras final fisico; AnimationMixer/AnimationAction son referencia del siguiente mecanismo. A6/A/B/C abiertos,D no iniciado; finalesHome/Idle/productor/cohort/recuperacion3123 y cadencia/plataforma pendientes.
 
 
