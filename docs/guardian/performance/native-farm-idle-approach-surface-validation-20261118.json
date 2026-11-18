@@ -1,0 +1,2521 @@
+{
+  "scope": "Actual Farm23 -> approach22 -> REST21/WATCH on original Surface/actor/ports/Host, in-page source, minimal desert, independently authored Home peer; ordinary production/cohort, complete recovery and global cadence remain open.",
+  "parent": "b8faa3593",
+  "ownedHashes": {
+    "tests/browser/native-farm-idle-approach-world-owner.js": "aff0690abde40e4c0781686079065414b7b61ac6dbbcd3913d32cc87cf186270",
+    "tests/browser/native-farm-arrival-route-world-owner.js": "b0986db4b6f355bc4605a246a57588a2cc83faeeb9b67053aedff13a14c2ae3f",
+    "tests/browser/native-farm-arrived-idle-cycle-world-owner.js": "0de8d93e361d155d46852147a6e9fa3860fd28ada598b06f8915740a8eff6904",
+    "tests/browser/native-first-task-world-owner.js": "9e58777ce49ec23f206ca455c24970cb7d25befa2965db73073b72c3af42d690",
+    "tools/guardian/audit_native_first_task_world_owner.mjs": "44cec1b4ea487a0fe733946779b6a6db5406fde7dc1f717637f1a7720c1d709c"
+  },
+  "syntaxModules": 5,
+  "testedInputs": 427,
+  "nativeInputs": 64,
+  "validationReference": {
+    "path": "docs/guardian/performance/native-idle-stroll-idle-phase-validation-20261118.json",
+    "sha256": "a291d74fa45f8841cc7ba491d8df6b3904839a6209acbf9baba7698ea49a2f99",
+    "directedTests": 108,
+    "regression": {
+      "tests": 2920,
+      "pass": 2919,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 1
+    },
+    "build": "\u2713 built in 48.20s",
+    "allTestedAndNativeHashesStillExact": true
+  },
+  "gpu": [
+    {
+      "mode": "timing",
+      "source": ".cache/native-farm-idle-approach-surface-loop-fixed.json",
+      "sha256": "f2714256b7dbdb9b6c392336de896a55a8761da508485371577718a715894548",
+      "traceAnd650ImmutableIdsReference": "native-idle-stroll-idle-phase-validation-20261118.json#/gpu/0",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "drained": true,
+      "producerQuiescedBeforeRetirement": true,
+      "retirement": {
+        "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+        "session": "first-task-33e66cfd-d218-4f6e-9b52-d762212d926e",
+        "retirementId": "3acf059c-f77f-4cae-8a23-82180b439714",
+        "sequence": 6,
+        "effectiveTime": 50.60000000000244,
+        "clockSequence": 2044
+      },
+      "parts": {
+        "approach": {
+          "reference": {
+            "kind": "native-idle-stroll-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "centerId": 2,
+            "profile": 1,
+            "workerProfile": "youngMale",
+            "bodyFlags": 1,
+            "pose": {
+              "x": -6,
+              "z": -5.789974689483643,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 33.972769348183284,
+              "walkPhase": 41.75,
+              "carryPhase": 9.5,
+              "runRemaining": 13.965353564360107
+            },
+            "anchor": {
+              "kind": 1,
+              "id": 900098,
+              "x": -0.8000000000000007,
+              "z": -3.8,
+              "radius": 3
+            },
+            "sourceCycleSequence": 0,
+            "sourceDecisionSequence": 4,
+            "requestedAt": 24.06776934818322,
+            "walkRng": 1656692718,
+            "approachRetry": 1,
+            "idleSeconds": 3.799999952316284,
+            "destination": {
+              "x": -0.8000000000000007,
+              "z": -3.8
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "session": 1,
+              "slot": 2,
+              "generation": 2
+            },
+            "sourceControlSequence": 4,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.87999999999966
+            },
+            "endTime": 32.81784078544326,
+            "sourceFarm": {
+              "kind": "native-farm-arrival-idle-source",
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 4,
+              "sourceAt": 24.06776934818322,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 7.599999904632568,
+                "rng": 1656692718,
+                "approachRetry": 0
+              }
+            }
+          },
+          "binding": {
+            "kind": "native-idle-stroll-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "assignmentSequence": 5,
+            "reference": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.06776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 4,
+                "effectiveTime": 26.37999999999965
+              },
+              "endTime": 33.31784078544325,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.06776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "preparedReference": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.06776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 25.87999999999966
+              },
+              "endTime": 32.81784078544326,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.06776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "gateIds": []
+          },
+          "receipt": {
+            "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+            "session": "first-task-33e66cfd-d218-4f6e-9b52-d762212d926e",
+            "holdId": 2,
+            "sequence": 4,
+            "effectiveTime": 26.37999999999965,
+            "clockSequence": 826,
+            "nativeIdleStrollVersion": 1,
+            "preparedIdleStrollTemplate": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.06776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 25.87999999999966
+              },
+              "endTime": 32.81784078544326,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.06776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "preparedWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.87999999999966
+            },
+            "preparedFrameSequence": 208
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 26.37999999999965
+          },
+          "timeTranslation": {
+            "kind": "native-route-time-translation",
+            "version": 2,
+            "preparedStart": 25.87999999999966,
+            "preparedEnd": 32.81784078544326,
+            "actualStart": 26.37999999999965,
+            "actualEnd": 33.31784078544325,
+            "sameProgram": false,
+            "sameGateProgram": true,
+            "sameRelativeProgram": true,
+            "sameRelativeGateProgram": true
+          },
+          "resourcesPrepared": 70,
+          "resourcesAfterReady": 0,
+          "duplicateShaders": [],
+          "adoption": {
+            "readiness": "ready",
+            "sequence": 5
+          },
+          "preparationBlock": {
+            "start": 1794989241614.41,
+            "end": 1794989243414.435,
+            "drawFrames": 54
+          },
+          "block": {
+            "start": 1794989243915.925,
+            "end": 1794989245715.94,
+            "committedAt": 1794989243928.555,
+            "drawFrames": 54
+          },
+          "preparedCalls": 1,
+          "retainedImmutableCount": 650,
+          "replacedMotionData": [
+            {
+              "index": 2894,
+              "kind": "createTexture",
+              "size": {
+                "width": 140,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-farm-arrival-route:900011:3",
+              "reference": "Texture:3501"
+            }
+          ],
+          "createdTextures": [
+            {
+              "index": 2992,
+              "kind": "createTexture",
+              "size": {
+                "width": 50,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-idle-stroll-route:900011:4",
+              "reference": "Texture:3767"
+            }
+          ],
+          "inputPick": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -4.141998880135235,
+              "y": 17.134443405490106,
+              "z": -6.137944352009476
+            },
+            "point": {
+              "x": -4.613404828615376,
+              "z": -5.5030716723548
+            },
+            "sequence": 5
+          },
+          "peerPick": {
+            "entityId": "worker-900012",
+            "hitPoint": {
+              "x": -13.393677022612609,
+              "y": 17.01418816795963,
+              "z": 2.126697742785166
+            },
+            "point": {
+              "x": -14.045050319633301,
+              "z": 2.892832813328493
+            },
+            "sequence": 5
+          }
+        },
+        "rest": {
+          "reference": {
+            "kind": "native-idle-cycle-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "profile": 1,
+            "sourceBody": {
+              "kind": "native-idle-stroll-arrival-source",
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 5,
+              "sourceAt": 33.31784078544325,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -0.800000011920929,
+                "z": -3.799999952316284,
+                "yaw": 0.7853980143858497,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 52.156761178165404,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              }
+            },
+            "sourceCycleSequence": 0,
+            "sourceControlSequence": 5,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 35.18000000000003
+            },
+            "anchor": {
+              "id": "farm-plant-900098",
+              "x": -0.8000000000000007,
+              "z": -3.8,
+              "radius": 3
+            },
+            "durations": {
+              "rest": 3.799999952316284,
+              "watch": 4.0416669845581055
+            },
+            "initialState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 11.399999856948853,
+              "rng": 2836493999,
+              "approachRetry": 0
+            },
+            "watchStartOffset": 11.399999856948853,
+            "watchRng": 2136898797,
+            "duration": 15.441666841506958
+          },
+          "binding": {
+            "kind": "native-idle-cycle-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "cycleSequence": 6,
+            "reference": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.31784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 6,
+                "effectiveTime": 36.180000000000184
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            },
+            "preparedReference": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.31784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 35.18000000000003
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            }
+          },
+          "receipt": {
+            "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+            "session": "first-task-33e66cfd-d218-4f6e-9b52-d762212d926e",
+            "holdId": 3,
+            "sequence": 5,
+            "effectiveTime": 36.180000000000184,
+            "clockSequence": 1321,
+            "nativeIdleCycleVersion": 1,
+            "preparedIdleCycleTemplate": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.31784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 35.18000000000003
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            },
+            "preparedWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 35.18000000000003
+            },
+            "preparedFrameSequence": 292
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "6bb976fd-5b3a-423c-9816-f6a76b507847/1",
+            "nativeSession": 1,
+            "ticket": 6,
+            "effectiveTime": 36.180000000000184
+          },
+          "timeTranslation": {
+            "kind": "native-idle-cycle-time-translation",
+            "version": 1,
+            "preparedStart": 35.18000000000003,
+            "preparedEnd": 50.621666841506986,
+            "actualStart": 36.180000000000184,
+            "actualEnd": 51.62166684150714,
+            "compatible": true
+          },
+          "resourcesPrepared": 98,
+          "resourcesAfterReady": 0,
+          "duplicateShaders": [],
+          "adoption": {
+            "readiness": "ready",
+            "sequence": 8
+          },
+          "preparationBlock": {
+            "start": 1794989251117.56,
+            "end": 1794989252917.575,
+            "drawFrames": 54
+          },
+          "block": {
+            "start": 1794989253974.925,
+            "end": 1794989255774.935,
+            "committedAt": 1794989253990.2,
+            "drawFrames": 54
+          },
+          "preparedCalls": 1,
+          "retainedImmutableCount": 650,
+          "replacedMotionData": [
+            {
+              "index": 2992,
+              "kind": "createTexture",
+              "size": {
+                "width": 50,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-idle-stroll-route:900011:4",
+              "reference": "Texture:3767"
+            }
+          ],
+          "createdTextures": [
+            {
+              "index": 3059,
+              "kind": "createTexture",
+              "size": {
+                "width": 112,
+                "height": 123,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "",
+              "reference": "Texture:3933"
+            }
+          ],
+          "inputPick": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.6647096234945309,
+              "y": 17.270461594890005,
+              "z": -4.0593065304139335
+            },
+            "point": {
+              "x": -1.0866894320011493,
+              "z": -3.250511896569588
+            },
+            "sequence": 8
+          },
+          "peerPick": {
+            "entityId": "worker-900012",
+            "hitPoint": {
+              "x": -13.597008565385778,
+              "y": 17.00025585440998,
+              "z": 2.1404874046818017
+            },
+            "point": {
+              "x": -14.241638881435456,
+              "z": 2.8928328133273418
+            },
+            "sequence": 8
+          }
+        }
+      },
+      "window": {
+        "frames": 1238,
+        "maxMs": 46.6201171875,
+        "p95Ms": 33.425048828125,
+        "over50Ms": 0
+      },
+      "global": {
+        "frames": 1519,
+        "maxMs": 153.72021484375,
+        "p95Ms": 33.449951171875,
+        "over50Ms": 4
+      },
+      "phaseBlock": {
+        "start": 1794989263376.52,
+        "end": 1794989268376.54,
+        "drawFrames": 150
+      },
+      "rest": {
+        "at": 1794989254909.41,
+        "finishedAt": 1794989254913.9148,
+        "nativeAge": 0.9400000000001469,
+        "mode": "rest"
+      },
+      "watch": {
+        "at": 1794989265373.6748,
+        "finishedAt": 1794989265378.4849,
+        "nativeAge": 11.400000000001782,
+        "mode": "watch"
+      },
+      "idleContinuity": {
+        "delta": 1.7600000000002751,
+        "error": 3.6716488693855354e-07
+      }
+    },
+    {
+      "mode": "visual",
+      "source": ".cache/native-farm-idle-approach-surface-loop-visual.json",
+      "sha256": "5f7c8be641d793b306a43fced9b6e44f4c2daf4d535174593c9bfa0185251ef2",
+      "traceAnd650ImmutableIdsReference": "native-idle-stroll-idle-phase-validation-20261118.json#/gpu/1",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "drained": true,
+      "producerQuiescedBeforeRetirement": true,
+      "retirement": {
+        "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+        "session": "first-task-c5ce2043-779b-4c4a-a2c1-f90e53035aed",
+        "retirementId": "5b294280-fea5-46cf-808f-596b47d7f41b",
+        "sequence": 6,
+        "effectiveTime": 50.82000000000247,
+        "clockSequence": 2055
+      },
+      "parts": {
+        "approach": {
+          "reference": {
+            "kind": "native-idle-stroll-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "centerId": 2,
+            "profile": 1,
+            "workerProfile": "youngMale",
+            "bodyFlags": 1,
+            "pose": {
+              "x": -6,
+              "z": -5.789974689483643,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 33.972769348183284,
+              "walkPhase": 41.75,
+              "carryPhase": 9.5,
+              "runRemaining": 13.965353564360107
+            },
+            "anchor": {
+              "kind": 1,
+              "id": 900098,
+              "x": -0.8000000000000007,
+              "z": -3.8,
+              "radius": 3
+            },
+            "sourceCycleSequence": 0,
+            "sourceDecisionSequence": 4,
+            "requestedAt": 24.02776934818322,
+            "walkRng": 1656692718,
+            "approachRetry": 1,
+            "idleSeconds": 3.799999952316284,
+            "destination": {
+              "x": -0.8000000000000007,
+              "z": -3.8
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "session": 1,
+              "slot": 2,
+              "generation": 2
+            },
+            "sourceControlSequence": 4,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.859999999999662
+            },
+            "endTime": 32.79784078544326,
+            "sourceFarm": {
+              "kind": "native-farm-arrival-idle-source",
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 4,
+              "sourceAt": 24.02776934818322,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 7.599999904632568,
+                "rng": 1656692718,
+                "approachRetry": 0
+              }
+            }
+          },
+          "binding": {
+            "kind": "native-idle-stroll-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "assignmentSequence": 5,
+            "reference": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.02776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 4,
+                "effectiveTime": 26.39999999999965
+              },
+              "endTime": 33.33784078544325,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.02776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "preparedReference": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.02776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 25.859999999999662
+              },
+              "endTime": 32.79784078544326,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.02776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "gateIds": []
+          },
+          "receipt": {
+            "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+            "session": "first-task-c5ce2043-779b-4c4a-a2c1-f90e53035aed",
+            "holdId": 2,
+            "sequence": 4,
+            "effectiveTime": 26.39999999999965,
+            "clockSequence": 827,
+            "nativeIdleStrollVersion": 1,
+            "preparedIdleStrollTemplate": {
+              "kind": "native-idle-stroll-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "bodyFlags": 1,
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "anchor": {
+                "kind": 1,
+                "id": 900098,
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "sourceCycleSequence": 0,
+              "sourceDecisionSequence": 4,
+              "requestedAt": 24.02776934818322,
+              "walkRng": 1656692718,
+              "approachRetry": 1,
+              "idleSeconds": 3.799999952316284,
+              "destination": {
+                "x": -0.8000000000000007,
+                "z": -3.8
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "session": 1,
+                "slot": 2,
+                "generation": 2
+              },
+              "sourceControlSequence": 4,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 25.859999999999662
+              },
+              "endTime": 32.79784078544326,
+              "sourceFarm": {
+                "kind": "native-farm-arrival-idle-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 4,
+                "sourceAt": 24.02776934818322,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -6,
+                  "z": -5.789974689483643,
+                  "yaw": 0,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 41.75,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 7.599999904632568,
+                  "rng": 1656692718,
+                  "approachRetry": 0
+                }
+              }
+            },
+            "preparedWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.859999999999662
+            },
+            "preparedFrameSequence": 214
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 26.39999999999965
+          },
+          "timeTranslation": {
+            "kind": "native-route-time-translation",
+            "version": 2,
+            "preparedStart": 25.859999999999662,
+            "preparedEnd": 32.79784078544326,
+            "actualStart": 26.39999999999965,
+            "actualEnd": 33.33784078544325,
+            "sameProgram": false,
+            "sameGateProgram": true,
+            "sameRelativeProgram": true,
+            "sameRelativeGateProgram": true
+          },
+          "resourcesPrepared": 70,
+          "resourcesAfterReady": 0,
+          "duplicateShaders": [],
+          "adoption": {
+            "readiness": "ready",
+            "sequence": 5
+          },
+          "preparationBlock": {
+            "start": 1794989394172.0151,
+            "end": 1794989395972.0352,
+            "drawFrames": 54
+          },
+          "block": {
+            "start": 1794989396510.175,
+            "end": 1794989398310.1902,
+            "committedAt": 1794989396524.0151,
+            "drawFrames": 54
+          },
+          "preparedCalls": 1,
+          "retainedImmutableCount": 650,
+          "replacedMotionData": [
+            {
+              "index": 2894,
+              "kind": "createTexture",
+              "size": {
+                "width": 140,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-farm-arrival-route:900011:3",
+              "reference": "Texture:3505"
+            }
+          ],
+          "createdTextures": [
+            {
+              "index": 2992,
+              "kind": "createTexture",
+              "size": {
+                "width": 50,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-idle-stroll-route:900011:4",
+              "reference": "Texture:3772"
+            }
+          ],
+          "inputPick": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -4.141998880135235,
+              "y": 17.134443405490106,
+              "z": -6.137944352009476
+            },
+            "point": {
+              "x": -4.613404828615376,
+              "z": -5.5030716723548
+            },
+            "sequence": 5
+          },
+          "peerPick": {
+            "entityId": "worker-900012",
+            "hitPoint": {
+              "x": -13.421950006802593,
+              "y": 17.00620101767546,
+              "z": 2.13460311338655
+            },
+            "point": {
+              "x": -14.067166866784522,
+              "z": 2.892832813328443
+            },
+            "sequence": 5
+          }
+        },
+        "rest": {
+          "reference": {
+            "kind": "native-idle-cycle-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "profile": 1,
+            "sourceBody": {
+              "kind": "native-idle-stroll-arrival-source",
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 5,
+              "sourceAt": 33.33784078544325,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -0.800000011920929,
+                "z": -3.799999952316284,
+                "yaw": 0.7853980143858497,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 52.156761178165404,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              }
+            },
+            "sourceCycleSequence": 0,
+            "sourceControlSequence": 5,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 35.220000000000034
+            },
+            "anchor": {
+              "id": "farm-plant-900098",
+              "x": -0.8000000000000007,
+              "z": -3.8,
+              "radius": 3
+            },
+            "durations": {
+              "rest": 3.799999952316284,
+              "watch": 4.0416669845581055
+            },
+            "initialState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 11.399999856948853,
+              "rng": 2836493999,
+              "approachRetry": 0
+            },
+            "watchStartOffset": 11.399999856948853,
+            "watchRng": 2136898797,
+            "duration": 15.441666841506958
+          },
+          "binding": {
+            "kind": "native-idle-cycle-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "cycleSequence": 6,
+            "reference": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.33784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 6,
+                "effectiveTime": 36.40000000000022
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            },
+            "preparedReference": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.33784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 35.220000000000034
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            }
+          },
+          "receipt": {
+            "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+            "session": "first-task-c5ce2043-779b-4c4a-a2c1-f90e53035aed",
+            "holdId": 3,
+            "sequence": 5,
+            "effectiveTime": 36.40000000000022,
+            "clockSequence": 1332,
+            "nativeIdleCycleVersion": 1,
+            "preparedIdleCycleTemplate": {
+              "kind": "native-idle-cycle-reference",
+              "version": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "profile": 1,
+              "sourceBody": {
+                "kind": "native-idle-stroll-arrival-source",
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "actorId": 900011,
+                "bodyId": 1,
+                "bodyFlags": 1,
+                "sourceSequence": 5,
+                "sourceAt": 33.33784078544325,
+                "centerId": 2,
+                "profile": 1,
+                "workerProfile": "youngMale",
+                "pose": {
+                  "x": -0.800000011920929,
+                  "z": -3.799999952316284,
+                  "yaw": 0.7853980143858497,
+                  "radius": 0.28,
+                  "runPhase": 33.972769348183284,
+                  "walkPhase": 52.156761178165404,
+                  "carryPhase": 9.5,
+                  "runRemaining": 13.965353564360107
+                },
+                "idleState": {
+                  "anchorId": "farm-plant-900098",
+                  "mode": "rest",
+                  "elapsed": 0,
+                  "remaining": 11.399999856948853,
+                  "rng": 2836493999,
+                  "approachRetry": 0
+                }
+              },
+              "sourceCycleSequence": 0,
+              "sourceControlSequence": 5,
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+                "nativeSession": 1,
+                "ticket": 5,
+                "effectiveTime": 35.220000000000034
+              },
+              "anchor": {
+                "id": "farm-plant-900098",
+                "x": -0.8000000000000007,
+                "z": -3.8,
+                "radius": 3
+              },
+              "durations": {
+                "rest": 3.799999952316284,
+                "watch": 4.0416669845581055
+              },
+              "initialState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 11.399999856948853,
+                "rng": 2836493999,
+                "approachRetry": 0
+              },
+              "watchStartOffset": 11.399999856948853,
+              "watchRng": 2136898797,
+              "duration": 15.441666841506958
+            },
+            "preparedWorldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 35.220000000000034
+            },
+            "preparedFrameSequence": 295
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "1847bfe0-e7f5-4395-b9c4-a9a8aed14ac0/1",
+            "nativeSession": 1,
+            "ticket": 6,
+            "effectiveTime": 36.40000000000022
+          },
+          "timeTranslation": {
+            "kind": "native-idle-cycle-time-translation",
+            "version": 1,
+            "preparedStart": 35.220000000000034,
+            "preparedEnd": 50.66166684150699,
+            "actualStart": 36.40000000000022,
+            "actualEnd": 51.84166684150718,
+            "compatible": true
+          },
+          "resourcesPrepared": 98,
+          "resourcesAfterReady": 0,
+          "duplicateShaders": [],
+          "adoption": {
+            "readiness": "ready",
+            "sequence": 8
+          },
+          "preparationBlock": {
+            "start": 1794989403845.625,
+            "end": 1794989405645.6401,
+            "drawFrames": 54
+          },
+          "block": {
+            "start": 1794989406896.56,
+            "end": 1794989408696.575,
+            "committedAt": 1794989406910.465,
+            "drawFrames": 54
+          },
+          "preparedCalls": 1,
+          "retainedImmutableCount": 650,
+          "replacedMotionData": [
+            {
+              "index": 2992,
+              "kind": "createTexture",
+              "size": {
+                "width": 50,
+                "height": 1,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "wg-native-idle-stroll-route:900011:4",
+              "reference": "Texture:3772"
+            }
+          ],
+          "createdTextures": [
+            {
+              "index": 3059,
+              "kind": "createTexture",
+              "size": {
+                "width": 112,
+                "height": 123,
+                "depthOrArrayLayers": 1
+              },
+              "usage": 23,
+              "label": "",
+              "reference": "Texture:3935"
+            }
+          ],
+          "inputPick": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.6647096234945309,
+              "y": 17.270461594890005,
+              "z": -4.0593065304139335
+            },
+            "point": {
+              "x": -1.0866894320011493,
+              "z": -3.250511896569588
+            },
+            "sequence": 8
+          },
+          "peerPick": {
+            "entityId": "worker-900012",
+            "hitPoint": {
+              "x": -13.806086346314533,
+              "y": 17.033001852966358,
+              "z": 2.1080766893350016
+            },
+            "point": {
+              "x": -14.4849166818042,
+              "z": 2.892832813328564
+            },
+            "sequence": 8
+          }
+        }
+      },
+      "window": {
+        "frames": 1248,
+        "maxMs": 214.0849609375,
+        "p95Ms": 33.425048828125,
+        "over50Ms": 3
+      },
+      "global": {
+        "frames": 1534,
+        "maxMs": 214.0849609375,
+        "p95Ms": 33.445068359375,
+        "over50Ms": 6
+      },
+      "phaseBlock": {
+        "start": 1794989416296.7852,
+        "end": 1794989421296.79,
+        "drawFrames": 150
+      },
+      "rest": {
+        "at": 1794989407830.61,
+        "finishedAt": 1794989407964.095,
+        "nativeAge": 0.9400000000001469,
+        "mode": "rest"
+      },
+      "watch": {
+        "at": 1794989418307.11,
+        "finishedAt": 1794989418432.62,
+        "nativeAge": 11.400000000001782,
+        "mode": "watch"
+      },
+      "idleContinuity": {
+        "delta": 1.7800000000002782,
+        "error": 8.630755345961916e-07
+      }
+    }
+  ],
+  "stationaryRegression": {
+    "source": ".cache/native-farm-idle-approach-surface-stationary-regression.json",
+    "sha256": "4bd1c09dd226806eeda997a9eb0551f1aa98ce8b655b3f0cca2ef9733f1f6e17",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "drained": true,
+    "producerQuiescedBeforeRetirement": true,
+    "retirement": {
+      "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+      "session": "first-task-4959da6c-ef9d-4d27-af62-ab8661fff188",
+      "retirementId": "ba2c9902-6f6d-45f3-a54e-8d3dde0ce35b",
+      "sequence": 5,
+      "effectiveTime": 37.62000000000041,
+      "clockSequence": 1390
+    },
+    "parts": {
+      "idle": {
+        "reference": {
+          "kind": "native-idle-cycle-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "profile": 1,
+          "sourceBody": {
+            "kind": "native-farm-arrival-idle-source",
+            "version": 1,
+            "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+            "nativeSession": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "bodyFlags": 1,
+            "sourceSequence": 4,
+            "sourceAt": 24.06776934818322,
+            "centerId": 2,
+            "profile": 1,
+            "workerProfile": "youngMale",
+            "pose": {
+              "x": -6,
+              "z": -5.789974689483643,
+              "yaw": 0,
+              "radius": 0.28,
+              "runPhase": 33.972769348183284,
+              "walkPhase": 41.75,
+              "carryPhase": 9.5,
+              "runRemaining": 13.965353564360107
+            },
+            "idleState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 7.599999904632568,
+              "rng": 1656692718,
+              "approachRetry": 0
+            }
+          },
+          "sourceCycleSequence": 0,
+          "sourceControlSequence": 4,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 25.93999999999966
+          },
+          "anchor": {
+            "id": "farm-plant-900098",
+            "x": -5.800000000000001,
+            "z": -3.8,
+            "radius": 3
+          },
+          "durations": {
+            "rest": 3.799999952316284,
+            "watch": 4.0416669845581055
+          },
+          "initialState": {
+            "anchorId": "farm-plant-900098",
+            "mode": "rest",
+            "elapsed": 0,
+            "remaining": 7.599999904632568,
+            "rng": 1656692718,
+            "approachRetry": 0
+          },
+          "watchStartOffset": 7.599999904632568,
+          "watchRng": 2836493999,
+          "duration": 15.68333387374878
+        },
+        "binding": {
+          "kind": "native-idle-cycle-attestation",
+          "version": 1,
+          "projectionVersion": 1,
+          "cycleSequence": 5,
+          "reference": {
+            "kind": "native-idle-cycle-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "profile": 1,
+            "sourceBody": {
+              "kind": "native-farm-arrival-idle-source",
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 4,
+              "sourceAt": 24.06776934818322,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 7.599999904632568,
+                "rng": 1656692718,
+                "approachRetry": 0
+              }
+            },
+            "sourceCycleSequence": 0,
+            "sourceControlSequence": 4,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 26.999999999999638
+            },
+            "anchor": {
+              "id": "farm-plant-900098",
+              "x": -5.800000000000001,
+              "z": -3.8,
+              "radius": 3
+            },
+            "durations": {
+              "rest": 3.799999952316284,
+              "watch": 4.0416669845581055
+            },
+            "initialState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 7.599999904632568,
+              "rng": 1656692718,
+              "approachRetry": 0
+            },
+            "watchStartOffset": 7.599999904632568,
+            "watchRng": 2836493999,
+            "duration": 15.68333387374878
+          },
+          "preparedReference": {
+            "kind": "native-idle-cycle-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "profile": 1,
+            "sourceBody": {
+              "kind": "native-farm-arrival-idle-source",
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 4,
+              "sourceAt": 24.06776934818322,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 7.599999904632568,
+                "rng": 1656692718,
+                "approachRetry": 0
+              }
+            },
+            "sourceCycleSequence": 0,
+            "sourceControlSequence": 4,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.93999999999966
+            },
+            "anchor": {
+              "id": "farm-plant-900098",
+              "x": -5.800000000000001,
+              "z": -3.8,
+              "radius": 3
+            },
+            "durations": {
+              "rest": 3.799999952316284,
+              "watch": 4.0416669845581055
+            },
+            "initialState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 7.599999904632568,
+              "rng": 1656692718,
+              "approachRetry": 0
+            },
+            "watchStartOffset": 7.599999904632568,
+            "watchRng": 2836493999,
+            "duration": 15.68333387374878
+          }
+        },
+        "receipt": {
+          "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+          "session": "first-task-4959da6c-ef9d-4d27-af62-ab8661fff188",
+          "holdId": 2,
+          "sequence": 4,
+          "effectiveTime": 26.979999999999638,
+          "clockSequence": 856,
+          "nativeIdleCycleVersion": 1,
+          "preparedIdleCycleTemplate": {
+            "kind": "native-idle-cycle-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "profile": 1,
+            "sourceBody": {
+              "kind": "native-farm-arrival-idle-source",
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "sourceSequence": 4,
+              "sourceAt": 24.06776934818322,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -6,
+                "z": -5.789974689483643,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 33.972769348183284,
+                "walkPhase": 41.75,
+                "carryPhase": 9.5,
+                "runRemaining": 13.965353564360107
+              },
+              "idleState": {
+                "anchorId": "farm-plant-900098",
+                "mode": "rest",
+                "elapsed": 0,
+                "remaining": 7.599999904632568,
+                "rng": 1656692718,
+                "approachRetry": 0
+              }
+            },
+            "sourceCycleSequence": 0,
+            "sourceControlSequence": 4,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 25.93999999999966
+            },
+            "anchor": {
+              "id": "farm-plant-900098",
+              "x": -5.800000000000001,
+              "z": -3.8,
+              "radius": 3
+            },
+            "durations": {
+              "rest": 3.799999952316284,
+              "watch": 4.0416669845581055
+            },
+            "initialState": {
+              "anchorId": "farm-plant-900098",
+              "mode": "rest",
+              "elapsed": 0,
+              "remaining": 7.599999904632568,
+              "rng": 1656692718,
+              "approachRetry": 0
+            },
+            "watchStartOffset": 7.599999904632568,
+            "watchRng": 2836493999,
+            "duration": 15.68333387374878
+          },
+          "preparedWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 25.93999999999966
+          },
+          "preparedFrameSequence": 205
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "8025c201-76e2-4495-a4e0-9ad87eda2316/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 26.999999999999638
+        },
+        "timeTranslation": {
+          "kind": "native-idle-cycle-time-translation",
+          "version": 1,
+          "preparedStart": 25.93999999999966,
+          "preparedEnd": 41.623333873748436,
+          "actualStart": 26.999999999999638,
+          "actualEnd": 42.68333387374842,
+          "compatible": true
+        },
+        "resourcesPrepared": 98,
+        "resourcesAfterReady": 0,
+        "duplicateShaders": [],
+        "adoption": {
+          "readiness": "ready",
+          "sequence": 5
+        },
+        "preparationBlock": {
+          "start": 1794990149400.73,
+          "end": 1794990151200.7751,
+          "drawFrames": 54
+        },
+        "block": {
+          "start": 1794990152297.2102,
+          "end": 1794990154097.245,
+          "committedAt": 1794990152311.315,
+          "drawFrames": 54
+        },
+        "preparedCalls": 1,
+        "retainedImmutableCount": 650,
+        "replacedMotionData": [
+          {
+            "index": 2894,
+            "kind": "createTexture",
+            "size": {
+              "width": 140,
+              "height": 1,
+              "depthOrArrayLayers": 1
+            },
+            "usage": 23,
+            "label": "wg-native-farm-arrival-route:900011:3",
+            "reference": "Texture:3496"
+          }
+        ],
+        "createdTextures": [
+          {
+            "index": 2988,
+            "kind": "createTexture",
+            "size": {
+              "width": 112,
+              "height": 123,
+              "depthOrArrayLayers": 1
+            },
+            "usage": 23,
+            "label": "",
+            "reference": "Texture:3759"
+          }
+        ],
+        "inputPick": {
+          "entityId": "worker-900011",
+          "hitPoint": {
+            "x": -6.004471585257665,
+            "y": 16.932510269985062,
+            "z": -5.784512589516196
+          },
+          "point": {
+            "x": -6.410921501706341,
+            "z": -5.288028692304337
+          },
+          "sequence": 5
+        },
+        "peerPick": {
+          "entityId": "worker-900012",
+          "hitPoint": {
+            "x": -11.87738417333322,
+            "y": 17.05774925857546,
+            "z": 2.083582670090615
+          },
+          "point": {
+            "x": -12.523958272575847,
+            "z": 2.892832813327992
+          },
+          "sequence": 5
+        }
+      }
+    },
+    "window": {
+      "frames": 841,
+      "maxMs": 39.3349609375,
+      "p95Ms": 33.420166015625,
+      "over50Ms": 0
+    },
+    "global": {
+      "frames": 1122,
+      "maxMs": 82.909912109375,
+      "p95Ms": 33.445068359375,
+      "over50Ms": 2
+    },
+    "phaseBlock": {
+      "start": 1794990157918.955,
+      "end": 1794990162918.995,
+      "drawFrames": 150
+    },
+    "rest": {
+      "at": 1794990153219.67,
+      "finishedAt": 1794990153225,
+      "nativeAge": 0.9199999999999804,
+      "mode": "rest"
+    },
+    "watch": {
+      "at": 1794990159910.625,
+      "finishedAt": 1794990159916.285,
+      "nativeAge": 7.6000000000003,
+      "mode": "watch"
+    },
+    "idleContinuity": {
+      "delta": 1.7999999999999616,
+      "error": 7.629394147556923e-07
+    }
+  },
+  "missingRestTemplate": {
+    "source": ".cache/native-farm-idle-approach-surface-no-rest-template.json",
+    "sha256": "1a6e62fd71b9b9e13692549c4f8dd96c379d94f4646309ce08d0fad7e1e92026",
+    "expectedExitCode": 1,
+    "matches": 1,
+    "error": "Error: page.evaluate: Error: Farm Idle graphical admission failed {\"status\":\"control-failed\",\"error\":\"Pending settlement clock differs from its retained template\",\"errors\":[]}\n    at auditNativeFarmArrivedIdleCycleWorldOwner (http://127.0.0.1:5181/tests/browser/native-farm-arrived-idle-cycle-world-owner.js?t=1794989097239:32:41)\n    at async auditNativeFarmIdleApproachWorldOwner (http://127.0.0.1:5181/tests/browser/native-farm-idle-approach-world-owner.js?t=1794989097239:35:13)\n    at async auditNativeFarmArrivalWorldOwner (http://127.0.0.1:5181/tests/browser/native-farm-arrival-route-world-owner.js?t=1794989097239:47:28)\n    at async auditNativeFirstTaskWorldOwner (http://127.0.0.1:5181/tests/browser/native-first-task-world-owner.js?t=1794989097239:165:27)\n    at async <anonymous>:381:23",
+    "approachBinding": {
+      "kind": "native-idle-stroll-attestation",
+      "version": 1,
+      "projectionVersion": 1,
+      "assignmentSequence": 5,
+      "reference": {
+        "kind": "native-idle-stroll-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "centerId": 2,
+        "profile": 1,
+        "workerProfile": "youngMale",
+        "bodyFlags": 1,
+        "pose": {
+          "x": -6,
+          "z": -5.789974689483643,
+          "yaw": 0,
+          "radius": 0.28,
+          "runPhase": 33.972769348183284,
+          "walkPhase": 41.75,
+          "carryPhase": 9.5,
+          "runRemaining": 13.965353564360107
+        },
+        "anchor": {
+          "kind": 1,
+          "id": 900098,
+          "x": -0.8000000000000007,
+          "z": -3.8,
+          "radius": 3
+        },
+        "sourceCycleSequence": 0,
+        "sourceDecisionSequence": 4,
+        "requestedAt": 24.02776934818322,
+        "walkRng": 1656692718,
+        "approachRetry": 1,
+        "idleSeconds": 3.799999952316284,
+        "destination": {
+          "x": -0.8000000000000007,
+          "z": -3.8
+        },
+        "expectedRouteHandle": {
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "session": 1,
+          "slot": 2,
+          "generation": 2
+        },
+        "sourceControlSequence": 4,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 26.35999999999965
+        },
+        "endTime": 33.29784078544325,
+        "sourceFarm": {
+          "kind": "native-farm-arrival-idle-source",
+          "version": 1,
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "nativeSession": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "bodyFlags": 1,
+          "sourceSequence": 4,
+          "sourceAt": 24.02776934818322,
+          "centerId": 2,
+          "profile": 1,
+          "workerProfile": "youngMale",
+          "pose": {
+            "x": -6,
+            "z": -5.789974689483643,
+            "yaw": 0,
+            "radius": 0.28,
+            "runPhase": 33.972769348183284,
+            "walkPhase": 41.75,
+            "carryPhase": 9.5,
+            "runRemaining": 13.965353564360107
+          },
+          "idleState": {
+            "anchorId": "farm-plant-900098",
+            "mode": "rest",
+            "elapsed": 0,
+            "remaining": 7.599999904632568,
+            "rng": 1656692718,
+            "approachRetry": 0
+          }
+        }
+      },
+      "preparedReference": {
+        "kind": "native-idle-stroll-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "centerId": 2,
+        "profile": 1,
+        "workerProfile": "youngMale",
+        "bodyFlags": 1,
+        "pose": {
+          "x": -6,
+          "z": -5.789974689483643,
+          "yaw": 0,
+          "radius": 0.28,
+          "runPhase": 33.972769348183284,
+          "walkPhase": 41.75,
+          "carryPhase": 9.5,
+          "runRemaining": 13.965353564360107
+        },
+        "anchor": {
+          "kind": 1,
+          "id": 900098,
+          "x": -0.8000000000000007,
+          "z": -3.8,
+          "radius": 3
+        },
+        "sourceCycleSequence": 0,
+        "sourceDecisionSequence": 4,
+        "requestedAt": 24.02776934818322,
+        "walkRng": 1656692718,
+        "approachRetry": 1,
+        "idleSeconds": 3.799999952316284,
+        "destination": {
+          "x": -0.8000000000000007,
+          "z": -3.8
+        },
+        "expectedRouteHandle": {
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "session": 1,
+          "slot": 2,
+          "generation": 2
+        },
+        "sourceControlSequence": 4,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 25.859999999999662
+        },
+        "endTime": 32.79784078544326,
+        "sourceFarm": {
+          "kind": "native-farm-arrival-idle-source",
+          "version": 1,
+          "authorityEpoch": "6e9cb008-a082-4690-974a-829c6c576515/1",
+          "nativeSession": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "bodyFlags": 1,
+          "sourceSequence": 4,
+          "sourceAt": 24.02776934818322,
+          "centerId": 2,
+          "profile": 1,
+          "workerProfile": "youngMale",
+          "pose": {
+            "x": -6,
+            "z": -5.789974689483643,
+            "yaw": 0,
+            "radius": 0.28,
+            "runPhase": 33.972769348183284,
+            "walkPhase": 41.75,
+            "carryPhase": 9.5,
+            "runRemaining": 13.965353564360107
+          },
+          "idleState": {
+            "anchorId": "farm-plant-900098",
+            "mode": "rest",
+            "elapsed": 0,
+            "remaining": 7.599999904632568,
+            "rng": 1656692718,
+            "approachRetry": 0
+          }
+        }
+      },
+      "gateIds": []
+    },
+    "body": [
+      1,
+      -0.800000011920929,
+      -3.799999952316284,
+      0.28,
+      0,
+      1
+    ],
+    "idleBinding": null,
+    "idleExecution": null,
+    "idleMoving": false
+  },
+  "images": [
+    {
+      "path": "docs/guardian/performance/native-farm-idle-approach-surface-farm-approach-confirmed-20261118.png",
+      "sha256": "58440ebb6aa8571658bef8ac9ecae43eef16aacd79ca6860dd650fb587d3a74e",
+      "source": ".cache/native-farm-idle-approach-surface-loop-visual-farm-approach-confirmed.png",
+      "checkpoint": {
+        "label": "farm-approach-confirmed",
+        "mode": "visual",
+        "startedAt": 1794989398474.74,
+        "image": ".cache/native-farm-idle-approach-surface-loop-visual-farm-approach-confirmed.png",
+        "finishedAt": 1794989398601.715
+      }
+    },
+    {
+      "path": "docs/guardian/performance/native-farm-idle-approach-surface-farm-idle-rest-blocked-20261118.png",
+      "sha256": "4907ad39f53d4a8f0fcfab65877cd8d00d837c3bb14b5e120f6df76deb690748",
+      "source": ".cache/native-farm-idle-approach-surface-loop-visual-farm-idle-rest-blocked.png",
+      "checkpoint": {
+        "label": "farm-idle-rest-blocked",
+        "mode": "visual",
+        "startedAt": 1794989407832.605,
+        "image": ".cache/native-farm-idle-approach-surface-loop-visual-farm-idle-rest-blocked.png",
+        "finishedAt": 1794989407961.745
+      }
+    },
+    {
+      "path": "docs/guardian/performance/native-farm-idle-approach-surface-farm-idle-watch-blocked-20261118.png",
+      "sha256": "5b88814f007a5742753ab2b433540b58b3800d95fb8da15cbf79f5eda9fda933",
+      "source": ".cache/native-farm-idle-approach-surface-loop-visual-farm-idle-watch-blocked.png",
+      "checkpoint": {
+        "label": "farm-idle-watch-blocked",
+        "mode": "visual",
+        "startedAt": 1794989418309.25,
+        "image": ".cache/native-farm-idle-approach-surface-loop-visual-farm-idle-watch-blocked.png",
+        "finishedAt": 1794989418431.185
+      }
+    }
+  ],
+  "preservedDocumentSuffixes": {
+    "docs/guardian/integrated-gpu-migration-plan-20261104.md": "4b3c53676d0e63bcab0f2e93e9cba01f1e9d12b65d9a71199171744d02c7b8ca",
+    "docs/guardian/MIGRATION-OBJECTIVE.md": "9ff4a59fa0a953be6623374b52a6292910e2855b6e5dce65a7d7d6fefb092d19",
+    "docs/guardian/A6-CHECKLIST.md": "b59099c632c930d962355e1caeb5a31692dd20416b1e1845f272854fb7c7dcfa",
+    "docs/guardian/CURRENT-STATUS.md": "1d3ecca0f672a5768c4e3acec366c280e15866161fffefd9d3cecbd18bffeb3e"
+  },
+  "protectedFiles": 16,
+  "preservedThreadedWorker": true
+}
