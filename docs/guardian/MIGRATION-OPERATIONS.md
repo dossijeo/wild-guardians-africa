@@ -5,6 +5,9 @@
 [checklist A6](A6-CHECKLIST.md) y su [corrección prevalente](intent-route-architecture-correction-20261108.md).
 Orden A → B → C → D. Este apoyo no activa autonomía ni cierra criterios.
 
+Para investigar intervalos de presentación: [diagnóstico y herramientas de cadencia](native-frame-cadence-diagnosis-20261118.md).
+Separa refresco de pantalla, guards del Host, CPU de dibujo y espera del compositor.
+
 Desde la raíz del repositorio:
 
 ```powershell
