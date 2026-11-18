@@ -7,9 +7,14 @@ import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const nextRng=rng=>{let value=rng;value^=value<<13;value^=value>>>17;value^=value<<5;return value>>>0;};
 const fields=['kind','version','actorId','bodyId','profile','sourceBody','sourceCycleSequence','sourceControlSequence','worldBoundary','anchor','durations','initialState','watchStartOffset','watchRng','duration'];
+// Only this decoder's own frozen outputs can skip structural decoding. A wire
+// clone or foreign frozen object still takes every validation below. Weak keys
+// neither keep programmes alive nor attest a live native owner.
+const canonicalReferences=new WeakMap();
 // Immutable finite rest/watch program. Its next stochastic semantic request is
 // a separate native fact; neither this reference nor its draft grants movement.
 export function copyNativeIdleCycleReference(value){
+ if(canonicalReferences.has(value))return value;
  if(value?.kind!=='native-idle-cycle-reference'||![1,2].includes(value.version)||Object.keys(value).some(k=>!fields.includes(k)))throw TypeError('Invalid native Idle cycle reference');
  const sourceBody=copyNativeIdleCycleBodySource(value.sourceBody),worldBoundary=copyNativeWorldBoundary(value.worldBoundary),initialState=copyNativeInitialIdleState(value.initialState),q=nativeIdleCycleBodyState(sourceBody),a=value.anchor,d=value.durations,calibration=LOCOMOTION.sources.find(s=>s.profile===q.workerProfile),failed=sourceBody.kind==='native-idle-stroll-failed-source';
  if(value.version!==(failed?2:1)||!initialState||value.actorId!==q.actorId||value.bodyId!==q.bodyId||value.profile!==q.profile||!Number.isSafeInteger(value.sourceCycleSequence)||value.sourceCycleSequence<0||value.sourceCycleSequence!==0&&value.sourceCycleSequence<=q.sourceSequence||!id(value.sourceControlSequence)||value.sourceControlSequence<Math.max(q.sourceSequence,value.sourceCycleSequence)||worldBoundary.authorityEpoch!==q.authorityEpoch||worldBoundary.nativeSession!==q.nativeSession||worldBoundary.effectiveTime<q.sourceAt||
@@ -18,7 +23,8 @@ export function copyNativeIdleCycleReference(value){
   !Number.isSafeInteger(value.watchRng)||value.watchRng<0||value.watchRng>0xffffffff||value.watchRng!==(initialState.mode==='rest'?nextRng(initialState.rng):initialState.rng)||!['watchStartOffset','duration'].every(k=>Number.isFinite(value[k])&&Number.isFinite(Math.fround(value[k]))&&value[k]>=0)||value.watchStartOffset!==(initialState.mode==='rest'?initialState.remaining:0)||!value.sourceCycleSequence&&JSON.stringify(initialState)!==JSON.stringify(q.idleState)||value.sourceCycleSequence&&!failed&&(initialState.mode!=='rest'||initialState.elapsed!==0))throw TypeError('Native Idle cycle differs from its source or original calibration');
  const full=value.watchStartOffset+(initialState.mode==='rest'?d.watch*(1+Math.floor(value.watchRng/4294967296*2)):initialState.remaining),outside=Math.hypot(q.pose.x-a.x,q.pose.z-a.z)>a.radius,duration=failed&&outside?Math.min(full,initialState.approachRetry):full;
  if(value.duration!==duration||failed&&(!Number.isFinite(worldBoundary.effectiveTime+duration)||duration>0&&worldBoundary.effectiveTime+duration<=worldBoundary.effectiveTime))throw TypeError('Native Idle cycle has a different finite horizon');
- return Object.freeze({kind:value.kind,version:value.version,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceBody,sourceCycleSequence:value.sourceCycleSequence,sourceControlSequence:value.sourceControlSequence,worldBoundary,anchor:Object.freeze({id:a.id,x:a.x,z:a.z,radius:a.radius}),durations:Object.freeze({rest:d.rest,watch:d.watch}),initialState,watchStartOffset:value.watchStartOffset,watchRng:value.watchRng,duration:value.duration});
+ const reference=Object.freeze({kind:value.kind,version:value.version,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceBody,sourceCycleSequence:value.sourceCycleSequence,sourceControlSequence:value.sourceControlSequence,worldBoundary,anchor:Object.freeze({id:a.id,x:a.x,z:a.z,radius:a.radius}),durations:Object.freeze({rest:d.rest,watch:d.watch}),initialState,watchStartOffset:value.watchStartOffset,watchRng:value.watchRng,duration:value.duration});
+ canonicalReferences.set(reference,null);return reference;
 }
 // Immutable frontier facts used only to validate native DTOs. This is not a
 // Game clock, policy selector, per-frame sampler, or successor producer.
@@ -29,7 +35,8 @@ function terminalFacts(r){
  const s=r.initialState,t=r.duration,retryRest=retryFrontier(r)&&s.mode==='rest'&&t<=r.watchStartOffset,watch=s.mode==='watch'||!retryRest&&(r.worldBoundary.effectiveTime+r.watchStartOffset)-(r.worldBoundary.effectiveTime+t)<=1e-9,local=watch?Math.max(0,t-r.watchStartOffset):t;
  return {anchorId:r.anchor.id,mode:watch?'watch':'rest',elapsed:(watch?(s.mode==='watch'?s.elapsed:0):s.elapsed)+local,remaining:Math.max(0,(watch?fullDuration(r)-r.watchStartOffset:s.remaining)-local),rng:watch?r.watchRng:s.rng,approachRetry:Math.max(0,s.approachRetry-t)};
 }
-export function sameNativeIdleCycleReference(a,b){try{return JSON.stringify(copyNativeIdleCycleReference(a))===JSON.stringify(copyNativeIdleCycleReference(b));}catch{return false;}}
+function referenceKey(value){const reference=copyNativeIdleCycleReference(value);let key=canonicalReferences.get(reference);if(key===null){key=JSON.stringify(reference);canonicalReferences.set(reference,key);}return key;}
+export function sameNativeIdleCycleReference(a,b){try{return referenceKey(a)===referenceKey(b);}catch{return false;}}
 export function nativeIdleCycleSuccessor(previous,next){
  const a=copyNativeIdleCycleReference(previous),b=copyNativeIdleCycleReference(next),program=({worldBoundary,sourceControlSequence,...value})=>value;
  return JSON.stringify(program(a))===JSON.stringify(program(b))&&b.sourceControlSequence>=a.sourceControlSequence&&a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&(b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeIdleCycleReference(a,b));
