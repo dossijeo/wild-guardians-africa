@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuacion e-R3: [actor Farm23 terminada a Task14](native-farm-arrived-task-graphics-20261118.md). Roster acepta ultima fila nativa23 instalada, mismo cuerpo/pose/fases/politica, sin24/Idle ficticios; conserva raiz/mallas/geometrias/indices/bancos y sustituye solo movimiento. Referencias: codigo Mesh.copy/SkeletonUtils.clone de Three r180. Pasan36 casos nuevos y2617/2618 amplia246 archivos (una omision opcional), build1m46s;402 inputs y64 nativos identicos. Renderer/admision/frame simulados; falta reloj Idle terminal y cadena Surface/Host/GPU. Diagnostico confirma fase Idle congelada tras final fisico; AnimationMixer/AnimationAction son referencia del siguiente mecanismo. A6/A/B/C abiertos,D no iniciado; finalesHome/Idle/productor/cohort/recuperacion3123 y cadencia/plataforma pendientes.
+
+
 Continuacion e-R3: [control Farm23 terminada a Task6/14](native-farm-arrived-task-control-20261118.md). Reutiliza registro revocado y prueba23 instalada, cota en final REAL aun con origen preparado anterior; mismo cuerpo hasta14, sin24/Idle ficticio. Log nativo sin residencia no obtiene permiso antiguo;14 rechaza cuerpo distinto antes de preparar/instalar. Referencias: codigo Id<T>/LifetimeTracker wgpu26. Pasan296 dirigidas,2580/2581 amplia244 archivos (una omision opcional) y1 suplementaria tardia separada, build;400 inputs finales y64 nativos identicos. Sin GPU nueva: faltan actor/roster/puertos/Surface del relevo terminal, finalesHome/Idle/productor/cohort/recuperacion3123. A6/A/B/C abiertos,D no iniciado; continuidad/plataforma conservan evidencia separada.
 
 
