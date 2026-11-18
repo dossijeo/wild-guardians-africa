@@ -536,9 +536,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     // their live clocks/camera; no JS position stream or extra GPU resource.
     for (const entry of changed) device.queue.writeBuffer(entry.value, 0, entry.uniformShadow);
   }
-  // Installed Farm endpoint data remains drawable while its same native body
-  // waits for Task. This is not permission to execute past the route end.
-  function retainedFarmEndpoint(binding,at){return !!binding.nativeFarmArrival&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
+  // Installed Farm/Stroll endpoint data remains drawable while the same body
+  // waits for its next prepared owner. This is not permission to execute past the route end.
+  function retainedIdleEndpoint(binding,at){return !!(binding.nativeFarmArrival||binding.nativeStroll)&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
   function patchPresentation(elapsed, camera, nativeTimes) {
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
@@ -548,14 +548,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const executionEpoch=binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
         const scoped=!!(binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??Infinity;
-        const terminalFarm=retainedFarmEndpoint(binding,bindingTime);
-        const routeTime=terminalFarm?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
+        const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalIdle=retainedIdleEndpoint(binding,bindingTime);
+        const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,idleRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
         // Finite actions retain their declared duration. Do not add the age to
         // a large absolute epoch and subtract it again before its float upload.
-        const farmRelative=binding.nativeFarmArrival?Math.max(0,Math.min((nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)-binding.epoch),routeTime-executionEpoch)):null;
-        const idleOffset=binding.semantic==='idle-offset'?nativeFarmIdlePhaseOffset({elapsed:bindingTime,executionEpoch,relativeTime:floorFloat32(farmRelative),duration:floorFloat32(binding.nativeFarmArrival.endTime-binding.epoch),period:binding.period}):null;
+        const idleRelative=idleRoute?Math.max(0,Math.min((nativeClockResourceEnd(binding.epoch,idleRoute.endTime)-binding.epoch),routeTime-executionEpoch)):null;
+        const idleOffset=binding.semantic==='idle-offset'?nativeFarmIdlePhaseOffset({elapsed:bindingTime,executionEpoch,relativeTime:floorFloat32(idleRelative),duration:floorFloat32(idleRoute.endTime-binding.epoch),period:binding.period}):null;
         const value=idleOffset??(binding.nativeStopped&&binding.semantic==='stop-value'?binding.submittedStopValue:binding.semantic==='idle-cycle-watch-knot'?binding.idleCycleWatchKnot:(binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.semantic==='relative'?Math.max(0,Math.min(resourceCeiling-binding.epoch,routeTime-executionEpoch)):binding.nativeInitialIdleBody&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeIdleCycle&&binding.semantic==='relative'?Math.min(binding.nativeIdleCycle.duration,Math.max(0,routeTime-executionEpoch)):binding.nativeSettlement&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?nativeTaskActionRemainingDuration(binding.nativeAction.request):Math.min(nativeTaskActionRemainingDuration(binding.nativeAction.request),Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime);
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const fixedStop=binding.nativeStopped&&binding.semantic==='stop-value';
@@ -566,13 +566,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(!fact){fact={nativeStopped:binding.nativeStopped,semantic:'relative',epoch:binding.epoch,bodyReference:binding.motionRecord.bodyReference,projection:{}};nativeTimes.set(key,fact);}
           if(binding.semantic==='relative'){fact.elapsed=submittedValue+binding.epoch;fact.relativeTime=submittedValue;}else fact.projection[binding.stopField]=submittedValue;
         }
-        if(binding.semantic==='idle-offset')nativeTimes.set(binding.nativeClockKey,{nativeFarmArrival:binding.nativeFarmArrival,semantic:'idle-offset',epoch:binding.epoch,period:binding.period,executionEpoch,relativeTime:floorFloat32(farmRelative),phaseOffset:submittedValue,elapsed:binding.epoch+floorFloat32(farmRelative)});
+        if(binding.semantic==='idle-offset')nativeTimes.set(binding.nativeClockKey,{...(binding.nativeFarmArrival?{nativeFarmArrival:binding.nativeFarmArrival}:{nativeStroll:binding.nativeStroll}),semantic:'idle-offset',epoch:binding.epoch,period:binding.period,executionEpoch,relativeTime:floorFloat32(idleRelative),phaseOffset:submittedValue,elapsed:binding.epoch+floorFloat32(idleRelative)});
         if(binding.semantic!=='idle-offset'&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-cycle-watch-knot'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle))nativeTimes.set(binding.nativeClockKey,{
           ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:binding.nativeStroll?{nativeStroll:binding.nativeStroll,relativeTime:submittedValue}:binding.nativeFarmArrival?{nativeFarmArrival:binding.nativeFarmArrival,relativeTime:submittedValue}:binding.nativeHome?{nativeHome:binding.nativeHome,relativeTime:submittedValue}:binding.nativeConsequence?{nativeConsequence:binding.nativeConsequence}:binding.nativeInitialIdleBody?{nativeInitialIdleBody:binding.nativeInitialIdleBody,relativeTime:submittedValue}:binding.nativeIdleCycle?{nativeIdleCycle:binding.nativeIdleCycle,relativeTime:submittedValue}:binding.nativeSettlement?{nativeSettlement:binding.nativeSettlement,relativeTime:submittedValue}:binding.nativeAction?{nativeAction:binding.nativeAction,relativeTime:submittedValue}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle)?{executionEpoch}:{}),
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
         if(binding.routeRecord&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-offset')binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
-          Math.min(routeTime,binding.nativeFarmArrival?binding.motionRecord.executionEnd:Infinity,binding.semantic==='relative'?submittedValue+executionEpoch:submittedValue));
+          Math.min(routeTime,idleRoute?binding.motionRecord.executionEnd:Infinity,binding.semantic==='relative'?submittedValue+executionEpoch:submittedValue));
         if(binding.initialIdleBodyRecord&&binding.semantic!=='origin-modulo')binding.initialIdleBodyRecord.lastDrawTime=Math.max(binding.initialIdleBodyRecord.lastDrawTime??-Infinity,Math.min(routeTime,executionEpoch+submittedValue));
         if(binding.idleCycleRecord&&binding.semantic==='relative')binding.idleCycleRecord.lastDrawTime=Math.max(binding.idleCycleRecord.lastDrawTime??-Infinity,Math.min(routeTime,executionEpoch+submittedValue));
         if(binding.settlementRecord&&binding.semantic!=='origin-modulo')binding.settlementRecord.lastDrawTime=Math.max(binding.settlementRecord.lastDrawTime??-Infinity,Math.min(routeTime,executionEpoch+submittedValue));
@@ -876,6 +876,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord};
       }
       if(binding.nativeStroll){
+        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime)))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleStrollReferenceCovered(binding.nativeStroll,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleStrollReferenceCovered(binding.nativeStroll,nativeWorldBoundary))throw Error('Native Idle stroll requires its exact template and causal world');
         const motionRecord=routeControl.admitStroll(binding.nativeStroll,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleStrollReference(binding.nativeStroll,packet.metadata.nativeIdleStrollTemplate))throw Error('Pending Idle stroll clock differs from its retained template');
@@ -1235,7 +1236,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         break;
       }
       case 'clock-binding': {
-        if(message.binding.semantic==='idle-offset'&&(!message.binding.nativeFarmArrival||message.binding.resourceEnd!==undefined||!Number.isFinite(message.binding.period)||message.binding.period<=0))throw Error('Invalid native Farm Idle phase offset');
+        if(message.binding.semantic==='idle-offset'&&(!(message.binding.nativeFarmArrival||message.binding.nativeStroll)||message.binding.resourceEnd!==undefined||!Number.isFinite(message.binding.period)||message.binding.period<=0))throw Error('Invalid native Farm Idle phase offset');
         if(message.binding.semantic==='stop-value'&&!message.binding.nativeStopped)throw Error('Native stopped value requires its body');
         const stopped=message.binding.nativeStopped?copyNativeStoppedClock(message.binding):null;
         if(message.binding.resourceEnd!==undefined&&(!Number.isFinite(message.binding.resourceEnd)||message.binding.resourceEnd<message.binding.epoch))throw Error('Invalid native clock resource end');
@@ -1248,7 +1249,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const nativeSuspended=message.binding.nativeSuspended?copyNativeSuspendedBodyReference(message.binding.nativeSuspended):null,nativeAction=message.binding.nativeAction?copyNativeTaskActionReference(message.binding.nativeAction):null;
         const nativeConsequence=message.binding.nativeConsequence?copyNativeTaskConsequenceReference(message.binding.nativeConsequence):null;
         const nativeStroll=message.binding.nativeStroll?copyNativeIdleStrollReference(message.binding.nativeStroll):null;
-        if(nativeStroll&&(!['relative','origin-modulo'].includes(message.binding.semantic)||message.binding.epoch!==nativeStroll.worldBoundary.effectiveTime))throw Error('Invalid native Idle stroll clock');
+        if(nativeStroll&&(!['relative','origin-modulo','idle-offset'].includes(message.binding.semantic)||message.binding.epoch!==nativeStroll.worldBoundary.effectiveTime))throw Error('Invalid native Idle stroll clock');
         const nativeFarmArrival=message.binding.nativeFarmArrival===undefined?null:copyNativeFarmArrivalRouteReference(message.binding.nativeFarmArrival);
         const nativeHome=message.binding.nativeHome?copyNativeHomeRouteReference(message.binding.nativeHome):null;
         if(nativeFarmArrival&&(!['relative','origin-modulo','idle-offset'].includes(message.binding.semantic)||message.binding.epoch!==nativeFarmArrival.worldBoundary.effectiveTime))throw Error('Invalid native farm arrival clock');
@@ -1345,7 +1346,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               !Number.isSafeInteger(message.holdId)||message.holdId!==lastNativeMutationFence+1||
-              active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedFarmEndpoint(binding,message.effectiveTime)))
+              active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedIdleEndpoint(binding,message.effectiveTime)))
              throw Error('Invalid or unsafe native mutation quiescence boundary');
            const preparedWorldBoundary=copyNativeWorldBoundary(message.preparedWorldBoundary??null);
            if(preparedWorldBoundary&&(!pending?.preparedUploadsComplete||!sameNativeWorldBoundary(pending.preparedWorldBoundary,preparedWorldBoundary))){
