@@ -237,6 +237,7 @@ struct NativeIdleStrollBinding {
  NativeIdleStrollOrigin prepared,actual;uint64_t assignmentSequence=0;
  std::array<double,20> semantic{};
  std::shared_ptr<const NativeIdleStrollResourceRequest> requestSource;
+ std::optional<NativeIdleCycleBodySource> farmSource;
 };
 struct NativeFarmArrivalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeFarmArrivalRouteBinding {
@@ -351,6 +352,8 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeInitialIdleBodyBinding> initialIdleBodySource;
   std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
   std::shared_ptr<const NativeIdleStrollResourceRequest> strollRequestSource;
+  std::shared_ptr<const NativeFarmArrivalRouteBinding> strollFarmSource;
+  std::optional<NativeIdleCycleBodySource> strollFarmPose;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   // Evidence about the previous native-owned draft, never an execution grant.
