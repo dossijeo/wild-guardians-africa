@@ -109,6 +109,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
   let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
   let previousFrameAt = null, sampleCursor = 0;
+  let previousOpportunityAt = null, opportunityCursor = 0;
+  const presentationOpportunities = new Array(512);
   let nativeRouteFrame = null;
   let hidden = !!initiallyHidden, hiddenStartedAt = initiallyHidden ? absoluteNow() : null;
   let resourceSliceStarted = absoluteNow(), queuedMessages = 0;
@@ -578,15 +580,21 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function present() {
     if (stopped || failed) return;
     frameHandle = requestFrame(present);
-    draw();
+    const at = absoluteNow(), holdId = nativeMutationHold?.holdId ?? null;
+    const outcome = draw();
+    presentationOpportunities[opportunityCursor++ % presentationOpportunities.length] = {
+      at, intervalMs: previousOpportunityAt === null ? null : at - previousOpportunityAt,
+      outcome, holdId, sequence: active?.sequence ?? null,
+    };
+    previousOpportunityAt = at;
   }
   function draw(trigger = 'raf') {
-    if (stopped || failed) return;
-    if (hidden) return;
-    if(nativeConsumerRetirement)return;
-    if(nativeMutationHold){nativeMutationHold.presentationMissed=true;return;} // No submission between drain and release.
-    if(intentControl&&!routeControl)return; // A prepared image is not a native baseline.
-    if (!deviceConfigured || (!active && !pending)) return;
+    if (stopped || failed) return 'stopped';
+    if (hidden) return 'hidden';
+    if(nativeConsumerRetirement)return 'consumer-retirement';
+    if(nativeMutationHold){nativeMutationHold.presentationMissed=true;return 'mutation-hold';} // No submission between drain and release.
+    if(intentControl&&!routeControl)return 'awaiting-native-baseline'; // A prepared image is not a native baseline.
+    if (!deviceConfigured || (!active && !pending)) return 'awaiting-prepared-frame';
     try {
       const startedAt = absoluteNow();
       currentTexture = null; currentViews = new Map();
@@ -612,16 +620,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>bounded))next=null;
       }
       const candidate = next || active;
-      if(!candidate||candidate.admittedActionRecord&&!candidate.admittedActionRecord.isCurrent()||candidate.admittedClockBindings.some(binding=>binding.suspendedRecord&&!binding.suspendedRecord.isCurrent()||binding.motionRecord&&!binding.motionRecord.isCurrent()))return;
+      if(!candidate||candidate.admittedActionRecord&&!candidate.admittedActionRecord.isCurrent()||candidate.admittedClockBindings.some(binding=>binding.suspendedRecord&&!binding.suspendedRecord.isCurrent()||binding.motionRecord&&!binding.motionRecord.isCurrent()))return 'stale-binding';
       // Never replay a packet prepared before a physical commit. f-R4 will
       // coordinate replacement resources; until then retain the last image.
-      if(candidate.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(candidate))return;
+      if(candidate.nativeMutationEpoch!==nativeMutationEpoch||!frameWorldCurrent(candidate))return 'stale-world';
       // Causal mode belongs to the direct connection, not a preparer's tags.
       // Omitting a nativeRoute binding in a later packet cannot restore an
       // unbounded producer clock or bypass the compute replay restriction.
       const causalLease=routeControl?.clockLease(frameClock(candidate)?.epoch,frameClock(candidate)?.safeUntil),
         effectiveLease=causalLease??candidate.metadata?.clock??null;
-      if(nativeMutationFloor!==null&&(!causalLease||causalLease.safeUntil<nativeMutationFloor))return;
+      if(nativeMutationFloor!==null&&(!causalLease||causalLease.safeUntil<nativeMutationFloor))return 'causal-floor';
       if(causalLease&&candidate.hasCompute)throw Error('Native causal clock cannot replay one-shot compute');
       const timeTicket = frameTime.propose({ generation: candidate.sequence, lease: effectiveLease, absoluteNow: startedAt,
         minimum:nativeMutationFloor });
@@ -675,7 +683,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         port.postMessage({ type: 'presented', sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
         releaseSnapshot(previous?.resourceSnapshot);
       }
-    } catch (error) { fail(error); }
+      return submitted ? 'submitted' : 'no-submission';
+    } catch (error) { fail(error); return 'failed'; }
     finally { resolutionResources = null; }
   }
   function packetBytes(value) {
@@ -1606,11 +1615,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           active.metadata = { ...active.metadata, clock: { ...active.metadata.clock, anchorAbsoluteMs: active.metadata.clock.anchorAbsoluteMs + duration } };
         }
         if (pending) pending.receivedAt = pending.receivedAt >= hiddenStartedAt ? now : pending.receivedAt + duration;
-        hiddenStartedAt = null; previousFrameAt = null;
+        hiddenStartedAt = null; previousFrameAt = null; previousOpportunityAt = null;
       }
       hidden = nextHidden;
     },
-    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: frameClock(active) || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!frameClock(active) && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,frameClock(active).safeUntil), nativeRouteFrame: nativeRouteFrame ? structuredClone(nativeRouteFrame) : null, errors: errors.slice(), samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
+    inspect: () => ({ ...metrics, hidden, resources: resources.size, pendingResources: pendingResources.size, activeSequence: active?.sequence || null, pendingSequence: pending?.sequence || null, queuedMessages, stagedOperations: stagedOperations.length,retainedPreparationResources:retainedPreparationSnapshot?.size??0,retainedPreparationBytes:retainedPreparationSnapshot?packetBytes(stagedOperations):0,preparationRecoveryRequired, obsoleteVersions: obsoleteVersions.size, failed, backend: 'webgpu', rafIndependent: true, adapterInfo, frameTime: frameTime.status(), frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), lease: frameClock(active) || null, nativeCausalClock:routeControl?.status().clock??null, nativeMutationHold:nativeMutationHold?.holdId??null,nativeMutationFloor,nativeMutationEpoch, cameraSafe: active?.metadata?.cameraSafe ?? false, cameraEnvelope: active?.metadata?.cameraEnvelope || null, clockBindings: active?.clockBindings.length || 0, cameraBindings: active?.cameraBindings.length || 0, clockAtHorizon: !!frameClock(active) && frameTime.status().elapsed >= Math.min(routeControl?.status().clock?.committedThrough??Infinity,frameClock(active).safeUntil), nativeRouteFrame: nativeRouteFrame ? structuredClone(nativeRouteFrame) : null, errors: errors.slice(), presentationOpportunities: opportunityCursor < presentationOpportunities.length ? presentationOpportunities.slice(0, opportunityCursor) : [...presentationOpportunities.slice(opportunityCursor % presentationOpportunities.length), ...presentationOpportunities.slice(0, opportunityCursor % presentationOpportunities.length)], samples: sampleCursor < samples.length ? samples.slice(0, sampleCursor) : [...samples.slice(sampleCursor % samples.length), ...samples.slice(0, sampleCursor % samples.length)] }),
     dispose() {
       if (stopped) return disposalPromise; stopped = true;
       admittingFrame?.cancel();discardRetainedPreparations();

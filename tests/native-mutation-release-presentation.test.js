@@ -43,10 +43,12 @@ for(const delay of [30,50,100])test(`a missed presentation resumes at the exact 
     f.gpu.device.queue.onSubmittedWorkDone=async()=>{};
     f.step(1000+delay);assert.equal(f.gpu.submitted.length,before,'no submit after ACK but before release');
     assert.equal(f.host.inspect().activeSequence,1);
+    assert.deepEqual(f.host.inspect().presentationOpportunities.slice(-2).map(r=>r.outcome),['mutation-hold','mutation-hold']);
     f.setNow(1002+delay);finishReceipt();assert.equal((await result).status,'committed');await flush();
     const status=f.host.inspect();assert.equal(status.activeSequence,2);assert.equal(status.nativeMutationHold,null);
     await prepared.presented;
     assert.equal(f.gpu.submitted.length,before+1);assert.equal(f.gpu.buffers.length,resources);
+    assert.equal(status.presentationOpportunities.at(-1).outcome,'mutation-hold','direct release adds no RAF callback');
     assert.equal(status.samples.at(-1).trigger,'mutation-release');assert.equal(status.samples.at(-1).at,1002+delay);
     assert.equal(status.samples.at(-1).intervalMs,delay+2,'long hold duration remains visible, without an extra RAF interval');
     assert.equal(status.nativeRouteFrame.sequence,2);assert.equal(status.nativeRouteFrame.clockElapsed,10);
