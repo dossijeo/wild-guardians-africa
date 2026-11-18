@@ -53,6 +53,12 @@ export function nativeHomeRequestContinuesHeldFarmArrival(request,source){
  return !!request&&source?.kind==='native-farm-arrival-held-execution'&&!!q&&!!h&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&
   request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>source.assignmentSequence&&request.requestedAt>=source.suspendedAt&&poseFields.every(k=>request.pose[k]===source.pose[k]);
 }
+// A real23 endpoint is not a24 suspension. Typed native inputs retain the
+// executed body's pose and ancestry; only18 may acquire another trajectory.
+export function nativeHomeRequestContinuesCompletedFarmArrival(request,source){
+ const b=source?.binding,r=b?.reference,q=r?.sourceRequest,h=source?.nativeRoute;
+ return !!request&&source?.kind==='native-farm-arrival-route-execution'&&source.version===1&&Number.isFinite(source.executedThrough)&&source.arrived===true&&source.running===false&&source.currentSpeed===0&&!!q&&!!h?.routeHandle&&source.executedThrough>=r.endTime&&source.actorId===r.actorId&&source.bodyId===r.bodyId&&h.actorId===r.actorId&&h.assignmentSequence===b.assignmentSequence&&['authorityEpoch','session','slot','generation'].every(k=>h.routeHandle[k]===r.expectedRouteHandle[k])&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>b.assignmentSequence&&request.requestedAt>=r.endTime&&poseFields.every(k=>request.pose[k]===(k==='radius'?q.pose.radius:source[k]));
+}
 export function nativeHomeRequestContinuesHeldWorker(request,source){
  return nativeHomeRequestContinuesHeldIdleStroll(request,source)||nativeHomeRequestContinuesHeldFarmArrival(request,source);
 }
