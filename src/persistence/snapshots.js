@@ -1,7 +1,7 @@
 import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState} from '../world/native-farm-arrival-state.js';
 import {copyNativeTaskActionProgress} from '../world/native-task-action-presentation.js';
 import {nativeInitialIdleSavedState} from '../world/native-initial-idle-state.js';
-import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
+import {nativeIdleStrollLiveState,nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
 import {validDamageProfile} from '../simulation/raid-agricultural-impact.js';
 import {validateAwakenings} from '../simulation/awakenings.js';
 import {validateBlessings} from '../simulation/blessings.js';
@@ -133,7 +133,9 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
         farmArrival=['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission),initialIdle=['pending-idle-resources','native-idle'].includes(worker.nativeRouteAdmission),strolling=worker.nativeRouteAdmission==='native-idle-stroll'||worker.nativeRouteAdmission==='pending-stroll-resources';
       if(farmArrival){if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});}
       if(initialIdle)nativeInitialIdleSavedState(state,worker,{canonical:true});
-      if(strolling)nativeIdleStrollSavedState(state,worker);
+      // A live projection does not declare a loadable checkpoint. An approach
+      // retains its original birth/anchor; cold local-WALK restoration stays strict.
+      if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
       if(!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
