@@ -1,3 +1,4 @@
+import {auditNativeIdleFailedCycleWorldOwner} from './native-idle-failed-cycle-world-owner.js';
 import {prepareNativeIdleApproachCheckpoint} from './native-idle-approach-restoration-checkpoint.js';
 import {auditNativeFarmArrivalWorldOwner} from './native-farm-arrival-route-world-owner.js';
 import {centerServicePoint} from '../../src/world/centers.js';
@@ -28,7 +29,8 @@ import {createNativeResourcePreparationConnection} from '../../src/simulation/na
 
 // A is claimed by the ordinary global task planner. It never receives a Home,
 // executable handle or suspended route before its retained GPU resources exist.
-export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false,initialIdleCycle=false,initialIdleCycleRepeat=false,initialIdleCycleHome=false,initialIdleCycleStroll=false,initialIdleCycleStrollRest=false,initialIdleCycleStrollRestHome=false,initialIdleCycleStrollRestTask=false,initialIdleCycleStrollStop=false,initialIdleCycleStrollStopHome=false,initialIdleCycleStrollStopTask=false,strollRestore=false,strollRestoreArrived=false,approachRestore=false,approachRestoreArrived=false,ordinaryProduction=false,farmArrival=false,farmArrivalTask=false,farmArrivalHome=false,farmArrivalIdle=false,farmArrivalIdleApproach=false,farmArrivalStop=false,farmArrivalStopTask=false,farmArrivalStopHome=false}={}){
+export async function auditNativeFirstTaskWorldOwner({action=false,restore=false,consequence=false,settlement=false,settlementHome=false,homeRoute=false,homeArrival=false,homeRestore=false,idleHome=false,initialIdleBody=false,initialIdleMode='watch',initialIdleHome=false,initialIdleCycle=false,initialIdleCycleRepeat=false,initialIdleCycleHome=false,initialIdleCycleStroll=false,initialIdleCycleStrollRest=false,initialIdleCycleStrollRestHome=false,initialIdleCycleStrollRestTask=false,initialIdleCycleStrollStop=false,initialIdleCycleStrollStopHome=false,initialIdleCycleStrollStopTask=false,strollRestore=false,strollRestoreArrived=false,approachRestore=false,approachRestoreArrived=false,failedApproachRestore=false,ordinaryProduction=false,farmArrival=false,farmArrivalTask=false,farmArrivalHome=false,farmArrivalIdle=false,farmArrivalIdleApproach=false,farmArrivalStop=false,farmArrivalStopTask=false,farmArrivalStopHome=false}={}){
+ if(failedApproachRestore){if(approachRestoreArrived)throw Error('Failed WALK audit cannot start at arrival');approachRestore=true;}
  if(approachRestoreArrived)approachRestore=true;
  if(approachRestore&&(strollRestore||strollRestoreArrived||ordinaryProduction||farmArrivalTask||farmArrivalHome||farmArrivalIdle||farmArrivalIdleApproach))throw Error('Choose one cold approach checkpoint');
  if([farmArrivalTask,farmArrivalHome,farmArrivalIdle,farmArrivalIdleApproach].filter(Boolean).length>1)throw Error('Choose one terminal Farm handoff');
@@ -119,7 +121,7 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   // Actual local20/21/22 or Farm23/approach22 before any graphical world.
   // Only semantic values survive the public save/load into the new authority.
   const actor='worker-900011',worker=state.workers[0],tuple=()=>{if(w.nav_intent_barrier_proposal_ticket()!==1)throw Error('Missing restored WALK setup ticket');return Array.from(new Float64Array(w.memory.buffer,w.nav_intent_barrier_proposal_ticket_ptr(),6));};
-  if(approachRestore)prepareNativeIdleApproachCheckpoint({state,planner,w,commit,arrived:approachRestoreArrived});
+  if(approachRestore)prepareNativeIdleApproachCheckpoint({state,planner,w,commit,arrived:approachRestoreArrived,...(failedApproachRestore?{progress:.2}:{})});
   else{
   commit(false);const body=planner.prepareNativeInitialIdleBodyProposal(planner.nativeInitialIdleRequestReference(actor));if(body.status!=='proposed'||w.nav_initial_idle_body_proposal_commit_bound(...tuple().slice(0,5),body.proposal.ticket.ticket)!==1)throw Error('Restored WALK setup20 failed');planner.projectNativeInitialIdleBody(state,worker);commit(false);
   const cycle=planner.prepareNativeIdleCycleProposal(actor);if(cycle.status!=='proposed'||w.nav_idle_cycle_proposal_commit_bound(...tuple().slice(0,5),cycle.proposal.ticket.ticket)!==1)throw Error('Restored WALK setup21 failed');commit(false);planner.projectNativeIdleCycle(state,worker);state.elapsed=cycle.proposal.worldBoundary.effectiveTime+cycle.proposal.nativeIdleCycle.duration+.01;if(planner.advanceNativeRouteExecution(state.elapsed).status!=='advanced')throw Error('Restored WALK setup watch failed');commit(false);planner.projectNativeIdleCycle(state,worker);
@@ -131,7 +133,17 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   if(w.spatial_body_upsert(1,state.workers[0].x,state.workers[0].z,.28,0,1)!==1||w.nav_gate_bind_worker(900011,1)!==1||planner.beginNativeRouteExecution().status!=='started')throw Error('Restored WALK fresh body unavailable');observeWorld=planner.observeWorld(state);observe=planner.observeTasks(state);request=planner.nativeIdleStrollRequestReference(actor);if(!request||planner.nativeIdleStrollBinding(actor)||planner.nativeIdleCycleBinding(actor)||planner.nativeInitialIdleBodyBinding(actor)||request.authorityEpoch===old.reference.worldBoundary.authorityEpoch)throw Error('Restored WALK reused an old permission');restorationSetup={oldAuthorityEpoch:old.reference.worldBoundary.authorityEpoch,sourceRequest:request,savedPose:structuredClone(request.pose),savedIdle:structuredClone(state.workers[0].idleState),arrived:approachRestore?approachRestoreArrived:strollRestoreArrived,approach:approachRestore};if(approachRestore)farmArrival=false;
  }
 
- if(restore||homeRestore){
+ if(failedApproachRestore){
+   const q=restorationSetup.sourceRequest;
+   if(Math.hypot(q.pose.x-q.anchor.x,q.pose.z-q.anchor.z)<=q.anchor.radius)throw Error('Failed approach checkpoint must retain its real outside body');
+   // Explicit physical fault before the graphical world: retain saved body and
+   // anchor, add only a blocked destination, never manufacture an old lease.
+   const wall=session.core.addWall(q.destination.x,q.destination.z,.4,.4);
+   if(!(wall>0))throw Error('Failed approach destination fault unavailable');
+   restorationSetup.failure={kind:'native destination wall fixture',wall,x:q.destination.x,z:q.destination.z};
+  }
+
+  if(restore||homeRestore){
   // Build a genuine semantic save with the old source, before any GPU world
   // exists. The fresh source below never invents a route for restored A.
   const tuple=()=>{if(w.nav_intent_barrier_proposal_ticket()!==1)throw Error('Missing source fixture proposal');return Array.from(new Float64Array(w.memory.buffer,w.nav_intent_barrier_proposal_ticket_ptr(),6));};
@@ -169,7 +181,8 @@ export async function auditNativeFirstTaskWorldOwner({action=false,restore=false
   console.log('first-task-stage:assets');if(farmArrivalStop||farmArrivalTask||farmArrivalHome||farmArrivalIdle||farmArrivalIdleApproach||approachRestore){const deadline=performance.now()+30000;for(;;){const check=await client.inspect();if(check.nativeFrameReadiness==='ready'&&!check.terrain.pending&&!check.terrain.presentationPending)break;if(performance.now()>deadline)throw Error('Farm stop terrain bootstrap did not settle '+JSON.stringify({terrain:check.terrain,state:check.state,preparation:check.preparation,nativeFrameReadiness:check.nativeFrameReadiness}));await new Promise(requestAnimationFrame);}}const bRoute=planner.captureNativeRoutePresentation(b),preparedB=await client.prepareNativeRoute('worker-900012',bRoute,{terrainManifest:publisher.manifest()});if(!preparedB)throw Error('Independent original worker was not prepared');console.log('first-task-stage:b-prepared');
   const resourcesChannel=new MessageChannel();resourceConnection=createNativeResourcePreparationConnection({port:resourcesChannel.port1,session:transportSession});client.attachNativeResourcePreparation(resourcesChannel.port2);await resourceConnection.ready;
   if(farmArrival){receipt=await auditNativeFarmArrivalWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,farmSetup},{stop:farmArrivalStop,task:farmArrivalStopTask||farmArrivalTask,home:farmArrivalStopHome||farmArrivalHome,idle:farmArrivalIdle,approach:farmArrivalIdleApproach});return receipt;}
-  if(strollRestore||approachRestore){receipt=await auditNativeIdleStrollRestorationWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,restorationSetup});return receipt;}
+  if(failedApproachRestore){receipt=await auditNativeIdleFailedCycleWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,restorationSetup});return receipt;}
+   if(strollRestore||approachRestore){receipt=await auditNativeIdleStrollRestorationWorldOwner({state,planner,w,client,publisher,publication,preparer,resourceConnection,b,starts,ends,waitStart,waitEnd,now,errors,pick,commit,transportSession,serialize:serializeConfirmedState,restorationSetup});return receipt;}
   if(initialIdleBody){
    const worker=state.workers[0],before=await client.inspect(),held=JSON.stringify(worker),privateIdle=JSON.stringify(worker.idleState),rng=state.rng,peerBefore=planner.nativeRouteExecution(b),body=()=>{const count=w.spatial_bodies_near(0,0,1e6),rows=new Float64Array(w.memory.buffer,w.spatial_bodies_result_ptr(),count*6);for(let i=0;i<count;i++)if(rows[i*6]===1)return Array.from(rows.slice(i*6,i*6+6));return null;},heldBody=body();let ready,reference,committedAt,calls=0,issued=false,homeMoving=false,homeRequested=false;
    const publish=sequence=>{publisher.commit(sequence);client.presentationPort.postMessage({kind:'publication',session:transportSession,publication:{session:transportSession,sequence,elapsed:state.elapsed,physicsPose:null,snapshot:serializeConfirmedState(state),events:[]}});};
