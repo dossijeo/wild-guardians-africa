@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [actor Farm23 terminada a Home19/18](native-farm-arrived-home-graphics-20261118.md). Roster reconoce ultima fila nativa23, asociacion instalada y politica original; conserva actor/raiz/mallas/geometrias/indices/bancos, prepara solo variante/movimiento Home y retira diferido. Distingue epoca preparada de final REAL tras Farm tardia, sin24/Idle ficticios. Referencias: codigo Mesh.copy/SkeletonUtils.clone Three r180. Pasan38 nuevos,95 dirigidos y2718/2719 amplia250 archivos (una omision opcional), build1m35s;410 inputs y64 nativos identicos. Renderer/admision/frame simulados, sin GPU nueva. Siguientes Surface/puertos/Host/GPU Home, finalIdle, productor/cohort/recuperacion3123 y cadencia/plataforma. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [control Farm23 terminada a Home19/18](native-farm-arrived-home-control-20261118.md). Reutiliza registro revocado/prueba instalada y retencion Task, extremo REAL finito, mismo cuerpo/request completo incluso bootstrap, sin24/Idle ficticios. Referencias: codigo Id<T>/LifetimeTracker wgpu26. Pasan23 nuevos,56 dirigidos y2680/2681 amplia249 archivos (una omision opcional), build1m39s;408 inputs y64 nativos identicos, sin rebuild WASM. Instalaciones graficas simuladas; no hay GPU nueva. Sonda del consumidor conserva una adquisicion del modelo y obtiene18, pero falta reconocer la ascendencia Farm en roster. Pendientes actor/puertos/Surface/GPU Home, finalIdle, productor/cohort/recuperacion3123 y cadencia/plataforma. A6/A/B/C abiertos,D no iniciado.
 
 
