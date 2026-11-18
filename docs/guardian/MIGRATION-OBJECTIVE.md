@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [control Farm23 terminada a Task6/14](native-farm-arrived-task-control-20261118.md). Reutiliza registro revocado y prueba23 instalada, cota en final REAL aun con origen preparado anterior; mismo cuerpo hasta14, sin24/Idle ficticio. Log nativo sin residencia no obtiene permiso antiguo;14 rechaza cuerpo distinto antes de preparar/instalar. Referencias: codigo Id<T>/LifetimeTracker wgpu26. Pasan296 dirigidas,2580/2581 amplia244 archivos (una omision opcional) y1 suplementaria tardia separada, build;400 inputs finales y64 nativos identicos. Sin GPU nueva: faltan actor/roster/puertos/Surface del relevo terminal, finalesHome/Idle/productor/cohort/recuperacion3123. A6/A/B/C abiertos,D no iniciado; continuidad/plataforma conservan evidencia separada.
+
+
 Continuacion e-R3: [fuente Farm23 terminada a Task6/14](native-farm-arrived-task-source-20261118.md). Preflight exige final fisico atestiguado y solicitud pendiente; reutiliza portador de pose/cuerpo, sin24/Idle ficticios. Revoca handle23 exacto en el mismo evento6 y solo14 adquiere movimiento. Referencias: codigo Godot4.4/DetourCrowd1.6. Pasan228 dirigidas,2560/2561 regresion243 archivos (una omision opcional) y build;397 inputs congelados,64 nativos/3 cambios tras rebuild standalone/pthread. Regresion GPU del relevo ANTERIOR24-Task conserva646 IDs,70 preparados/0 tardios,54 dibujos y drain; no acredita consumidor23-final. Faltan control/consumidor terminal23, finales Idle/Home, productor/cohort/recuperacion3123. A6/A/B/C abiertos,D no iniciado; continuidad/plataforma siguen evidencia de cadencia.
 
 
