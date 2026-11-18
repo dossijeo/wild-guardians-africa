@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuacion e-R3: [control Farm23 terminada a Home19/18](native-farm-arrived-home-control-20261118.md). Reutiliza registro revocado/prueba instalada y retencion Task, extremo REAL finito, mismo cuerpo/request completo incluso bootstrap, sin24/Idle ficticios. Referencias: codigo Id<T>/LifetimeTracker wgpu26. Pasan23 nuevos,56 dirigidos y2680/2681 amplia249 archivos (una omision opcional), build1m39s;408 inputs y64 nativos identicos, sin rebuild WASM. Instalaciones graficas simuladas; no hay GPU nueva. Sonda del consumidor conserva una adquisicion del modelo y obtiene18, pero falta reconocer la ascendencia Farm en roster. Pendientes actor/puertos/Surface/GPU Home, finalIdle, productor/cohort/recuperacion3123 y cadencia/plataforma. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [fuente Farm23 terminada a Home19/18](native-farm-arrived-home-source-20261118.md). Reutiliza request/pose/cuerpo Home, extremo nativo atestiguado y revocacion23 unica, sin24/Idle ficticios. Referencias: codigo DetourCrowd1.6/Godot4.4. Pasan24 nuevos,63 dirigidos y2657/2658 amplia248 archivos (una omision opcional), build1m44s;406 inputs y64 nativos/4 cambios tras rebuild canonico standalone/pthread. API Game admite contrato terminado y ticks despues19; Farm activa antes19/productor/cohort siguen pendientes. GPU de regresion del relevo ANTERIOR23-Task conserva645 IDs,70 preparados/0 tardios,0 shaders/pipelines,54 dibujos/bloqueo y drain; timing global66.64ms con2>50, no prueba nuevoHome ni cero tirones. Sonda confirma controlador anterior rechaza evento Home terminal; faltan control/puertos/actor/Surface/GPU, finalIdle y recuperacion3123. A6/A/B/C abiertos,D no iniciado.
 
 
