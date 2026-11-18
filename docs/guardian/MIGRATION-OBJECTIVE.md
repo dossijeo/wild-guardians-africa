@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuacion e-R3: [Farm23 terminada a Home19/18 en Surface/GPU](native-farm-arrived-home-surface-20261118.md). Ensayo original/puertos/Host, API contrato real, sin24/Idle ficticios; reusa gates de terreno y camara inicial noreste, sin cambios de mecanismos de producto. GPU visual/timing/traza conserva646/644/644 IDs, sustituye solo una textura de movimiento,70 preparados/0 tardios y0 shaders/pipelines; picking/adopcion5/drain y control negativo de plantilla pasan. Ventana completa max33.555/264.465/35.025ms: timing tiene2 tirones, bloques54/44 frente54/54 visual/traza; CADENCIA NO ACEPTADA, causa sin atribuir. Global127.610/264.465/215.700ms con5/4/6>50.410 inputs/64 nativos exactos; sintaxis4 modulos; regresion/build de producto anterior8c2f23128 conservan su alcance, sin repetirlos por cambios de ensayo. Pendientes finalIdle/productor/cohort/recuperacion3123/cadencia/plataforma. A6/A/B/C abiertos,D no iniciado.
+
+
 Continuacion e-R3: [actor Farm23 terminada a Home19/18](native-farm-arrived-home-graphics-20261118.md). Roster reconoce ultima fila nativa23, asociacion instalada y politica original; conserva actor/raiz/mallas/geometrias/indices/bancos, prepara solo variante/movimiento Home y retira diferido. Distingue epoca preparada de final REAL tras Farm tardia, sin24/Idle ficticios. Referencias: codigo Mesh.copy/SkeletonUtils.clone Three r180. Pasan38 nuevos,95 dirigidos y2718/2719 amplia250 archivos (una omision opcional), build1m35s;410 inputs y64 nativos identicos. Renderer/admision/frame simulados, sin GPU nueva. Siguientes Surface/puertos/Host/GPU Home, finalIdle, productor/cohort/recuperacion3123 y cadencia/plataforma. A6/A/B/C abiertos,D no iniciado.
 
 
