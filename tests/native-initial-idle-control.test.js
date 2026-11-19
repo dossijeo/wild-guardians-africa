@@ -84,10 +84,10 @@ test('the real remote baseline transports initial metadata and its Home handoff 
 
 test('the remote host rejects duplicate or foreign-session initial metadata instead of ignoring the new baseline field',async()=>{
  for(const duplicate of [false,true]){
-  const f=nativeInitialIdleGameFixture({peer:true});let graphics,source;try{
-   const [sourcePort,drawPort]=pair();graphics=await fixture({}, {intentControl:{port:drawPort,session:'initial-idle-negative'}});
+  const f=nativeInitialIdleGameFixture({peer:true});let graphics,source;const incoming=[],outgoing=[];try{
+   const [sourcePort,drawPort]=pair();const post=sourcePort.postMessage;sourcePort.postMessage=data=>{outgoing.push(data);post(data);};graphics=await fixture({}, {intentControl:{port:drawPort,session:'initial-idle-negative'}});
    source=createNativeIntentControlPublication({port:sourcePort,session:'initial-idle-negative',timeoutMs:1000,observe(options){return f.planner.observeNativeIntentControl({...options,onBaseline(b){const q=b.pendingInitialIdleRequests[0];options.onBaseline({...b,pendingInitialIdleRequests:duplicate?[q,q]:[{...q,nativeSession:q.nativeSession+1}]});}});}});
-   await assert.rejects(source.ready,/timed out/);await flush();await graphics.host.idle();assert.equal(graphics.host.inspect().failed,true);assert.match(graphics.errors[0].message,/initial Idle/);assert.equal(graphics.gpu.submitted.length,0);
+   const receive=sourcePort.onmessage;sourcePort.onmessage=e=>{incoming.push(e.data);receive(e);};let rejected;await assert.rejects(source.ready,error=>{rejected=error;return /timed out|Native intent control closed: consumer-retired/.test(error.message);});await flush();await graphics.host.idle();const retired=incoming.filter(m=>m.type==='intent-control-retired');assert.equal(incoming.some(m=>m.type==='intent-control-applied'&&m.accepted),false);if(source.status().drained){assert.match(rejected.message,/consumer-retired/);assert.equal(retired.length,1);assert.equal(retired[0].consumerToken,outgoing.find(m=>m.type==='IntentBaseline').consumerToken);assert.equal(retired[0].drained,true);}else{assert.match(rejected.message,/timed out/);assert.equal(retired.length,0);}assert.equal(graphics.host.inspect().failed,true);assert.match(graphics.errors[0].message,/initial Idle/);assert.equal(graphics.gpu.submitted.length,0);
   }finally{source?.dispose();graphics?.client.dispose();await graphics?.host.dispose();f.close();}
  }
 });

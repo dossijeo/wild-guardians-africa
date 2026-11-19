@@ -32,7 +32,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   let nextFence=0;const gpuFences=new Map();
   let nextMutationFence=0,mutationHold=null;
   const consumerToken=crypto.randomUUID();
-  let retirement=null,drained=false;
+  let retirement=null,drained=false,consumerDrainReceipt=null;
   let worldBoundary=null;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
@@ -94,6 +94,7 @@ export function createNativeIntentControlPublication({port,session,observe,
       if(data.protocolVersion!==2||data.consumerToken!==consumerToken||data.drained!==true){
         fail(Error('Native GPU retirement lacks a connection-bound drain receipt'));return;
       }
+      consumerDrainReceipt=Object.freeze({type:data.type,protocolVersion:2,session,authorityEpoch,consumerToken,sequence:data.sequence,drained:true});
       drained=true;
       if(retirement)retirement.resolve(Object.freeze({authorityEpoch,session,retirementId:retirement.id,
         sequence:retirement.sequence,effectiveTime:retirement.time,clockSequence:retirement.clockSequence}));
@@ -295,6 +296,9 @@ export function createNativeIntentControlPublication({port,session,observe,
   }
   function retireGpu(reason='replaced'){
     if(retirement)return retirement.promise;
+    // An unsolicited terminal receipt already stopped and drained this exact
+    // connection. Reuse it; never mint a new requested retirement token.
+    if(drained&&consumerDrainReceipt)return Promise.resolve(consumerDrainReceipt);
     if(closed||appliedSequence===null||mutationHold||gpuFences.size)
       return Promise.reject(Error('Native GPU retirement boundary is not ready'));
     // A fresh token, rather than a counter reset on each connection, prevents

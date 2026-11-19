@@ -79,7 +79,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     port.postMessage({type:'frame-obsolete',sequence,reason:'Prepared world frame cancelled',resourcePreparationsRetained:true});
   }
   let nativeConsumerRetirement=null;
-  let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false;
+  let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false,nativeDrainPromise=null;
+  // Terminal callers freeze every submission before capturing this queue.
+  // Failure, requested retirement and disposal share its actual completion.
+  function drainNativeSubmissions(){return nativeDrainPromise??=Promise.resolve().then(()=>device.queue.onSubmittedWorkDone());}
   function notifyNativeRetired(){
     if(nativeRetirementNotified)return;nativeRetirementNotified=true;
     try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',protocolVersion:2,
@@ -184,6 +187,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     settleMutationSubmissions(error);
     routeControl?.dispose();settleNativeControl(error);
     errors.push(error?.stack || String(error));
+    // A validation failure stops drawing, not completion of accepted GPU work.
+    // Keep its resources until explicit disposal and certify only the real
+    // queue completion (or the existing explicit device-loss proof).
+    if(routeControl&&nativeConsumerToken)drainNativeSubmissions().then(notifyNativeRetired,error=>{if(deviceIsLost)notifyNativeRetired();else errors.push(error?.stack||String(error));});
     port.postMessage({ type: 'error', error: error?.stack || String(error) });
   }
   function references(value, result = new Set()) {
@@ -1337,7 +1344,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            // Freeze both rAF and standalone submissions before capturing the
            // queue. Resource jobs may finish, but cannot submit after this fence.
            routeControl.dispose();settleNativeControl(Error('Native GPU consumer is retiring'));
-           Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
+           drainNativeSubmissions().then(()=>{
              if(stopped||failed||nativeConsumerRetirement?.retirementId!==message.retirementId)return;
              nativeConsumerRetirement.drained=true;metrics.nativeRetiredAt=absoluteNow();
              intentControl.port.postMessage({...message,type:'intent-control-drained',accepted:true});
@@ -1621,7 +1628,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   frameHandle = requestFrame(present);
   const api = {
     handle, present, idle: () => chain,
-    intentControlStatus:()=>routeControl?{...routeControl.status(),retiring:nativeConsumerRetirement!==null,drained:nativeConsumerRetirement?.drained??false}:null,
+    intentControlStatus:()=>routeControl?{...routeControl.status(),retiring:nativeConsumerRetirement!==null||nativeDrainPromise!==null,drained:!!nativeConsumerRetirement?.drained||nativeRetirementNotified}:null,
     setVisibility(nextHidden) {
       nextHidden = !!nextHidden;
       if (nextHidden === hidden) return;
@@ -1648,7 +1655,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);
-      disposalPromise=device.queue.onSubmittedWorkDone().then(notifyNativeRetired,error=>{
+      disposalPromise=drainNativeSubmissions().then(notifyNativeRetired,error=>{
         if(deviceIsLost)notifyNativeRetired();else throw error;
       }).finally(() => {
         for (const [key, entry] of resources) if (key !== '@device') entry.value?.destroy?.();
