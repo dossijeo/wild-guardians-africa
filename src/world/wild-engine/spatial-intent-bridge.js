@@ -3,7 +3,7 @@ import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationRefe
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
 import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,copyNativeFarmArrivalHeldExecution,sameNativeFarmArrivalRouteAttestation} from '../native-farm-arrival-route.js';
 import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-request-reference.js';
-import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState,nativeFarmArrivalBoundState} from '../native-farm-arrival-state.js';
+import {nativeFarmArrivalState,nativeFarmArrivalRetainedPendingState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState,nativeFarmArrivalBoundState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec} from '../native-worker-route-stop-codec.js';
@@ -20,7 +20,7 @@ import {copyNativeTaskActionAttestation} from '../native-task-action-attestation
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,copyNativeTaskConsequenceReference} from '../native-task-consequence.js';
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteSource,nativeHomeRouteSourceSequence} from '../native-home-route.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival} from '../native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival} from '../native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference,copyNativeInitialIdleState} from '../native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation} from '../native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
@@ -1776,6 +1776,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const request=nativeHomeRequestReference(held.actorId);if(!nativeHomeRequestContinuesHeldIdleStroll(request,held))throw Error('Native held Idle stroll Home lost its actual body');return request;
   };
   const requestNativeFarmArrivalHome=(source,home)=>{
+    if(['native-farm-arrival-request-reference','native-farm-arrival-declaration-reference'].includes(source?.kind)){
+      const bound=source.kind==='native-farm-arrival-request-reference',q=(bound?copyNativeFarmArrivalRequestReference:copyNativeFarmArrivalDeclarationReference)(source),actual=bound?nativeFarmArrivalRequestReference(q.actorId):nativeFarmArrivalDeclarationReference(q.actorId);
+      if(q.authorityEpoch!==epoch()||JSON.stringify(actual)!==JSON.stringify(q))throw Error('Native pending Farm Home source is not current');
+      if(typeof wasm.nav_intent_pending_farm_home_request!=='function')throw Error('Rebuild native pending Farm Home request');syncBoundaryTime();
+      if(wasm.nav_intent_pending_farm_home_request(q.actorId,q.nativeSession,q.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native pending Farm Home request rejected');
+      const request=nativeHomeRequestReference(q.actorId);if(bound&&!nativeHomeRequestContinuesFarmRequest(request,q))throw Error('Native pending Farm Home lost its actual body');return request;
+    }
     const completed=source?.kind==='native-farm-arrival-route-execution',held=completed?source:copyNativeFarmArrivalHeldExecution(source),actual=completed?nativeFarmArrivalRouteExecution(held.actorId):nativeFarmArrivalHeldExecution(held.actorId),identity=value=>JSON.stringify({...value,executedThrough:0});
     if(!actual||!Number.isFinite(held.executedThrough)||held.executedThrough>actual.executedThrough||identity(held)!==identity(actual)||completed&&(!actual.arrived||actual.running||actual.currentSpeed!==0||held.executedThrough<actual.binding.reference.endTime))throw Error('Native Farm Home source is not current');
     if(typeof wasm.nav_intent_farm_arrival_home_request!=='function')throw Error('Rebuild native Farm Home request');
@@ -3136,7 +3143,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const projectFarmArrivalSource=(state,worker,bound)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native farm arrival belongs to another game');if(worker.nativeRouteAdmission!=='pending-farm-arrival-resources')return null;
-    const semantic=nativeFarmArrivalState(state,worker,{canonical:true}),source=bound?bridge.nativeFarmArrivalRequestReference(worker.id):bridge.nativeFarmArrivalDeclarationReference(worker.id);if(!source)return null;
+    const semantic=nativeFarmArrivalRetainedPendingState(state,worker),source=bound?bridge.nativeFarmArrivalRequestReference(worker.id):bridge.nativeFarmArrivalDeclarationReference(worker.id);if(!source)return null;
     if(source.actorId!==numericId(worker.id)||source.centerId!==semantic.centerId||source.workerProfile!==worker.profile||source.requestedAt>state.elapsed||Object.keys(semantic.pose).some(k=>source.pose[k]!==semantic.pose[k])||Object.keys(semantic.goal).some(k=>source.goal[k]!==semantic.goal[k]))throw Error('Native farm arrival differs from retained Game source');
     return source;
   };
@@ -3281,9 +3288,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const requestNativeFarmHome=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Farm Home belongs to another game');
-    if(!state.workers.includes(worker)||worker.status!=='arriving'||!['native-farm-arrival-held','native-farm-arrival'].includes(worker.nativeRouteAdmission)||worker.taskId||worker.crateId||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Farm Home requires a finished arriving contract and actual held body');
-    const execution=projectNativeFarmArrivalExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
-    if(!home||execution?.kind!=='native-farm-arrival-held-execution'&&(execution?.kind!=='native-farm-arrival-route-execution'||!execution.arrived||execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.binding.reference.endTime))throw Error('Native Farm Home requires its actual completed or stopped source');
+    if(!state.workers.includes(worker)||worker.status!=='arriving'||!['pending-farm-arrival-resources','native-farm-arrival-held','native-farm-arrival'].includes(worker.nativeRouteAdmission)||worker.taskId||worker.crateId||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Farm Home requires a finished arriving contract and actual held body');
+    const pending=worker.nativeRouteAdmission==='pending-farm-arrival-resources',execution=pending?(projectNativeFarmArrivalRequest(state,worker)??projectNativeFarmArrivalDeclaration(state,worker)):projectNativeFarmArrivalExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
+    if(!home||!execution||!pending&&execution?.kind!=='native-farm-arrival-held-execution'&&(execution?.kind!=='native-farm-arrival-route-execution'||!execution.arrived||execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.binding.reference.endTime))throw Error('Native Farm Home requires its actual completed or stopped source');
     const request=bridge.requestNativeFarmArrivalHome(execution,{villageId:numericId(village.id),x:home.x,z:home.z});cancelIdle(worker);Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };
   const projectNativeTaskActionExecution=(state,worker)=>{

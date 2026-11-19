@@ -66,16 +66,16 @@ test('a semantic save/load recreates a fresh cold arrival and body without carry
  }finally{restored?.close();f.close();}
 });
 
-test('losing a pending arrival body or reaching an unsupported contract edge rejects before advancing its Task peer',()=>{
- for(const cause of ['body','contract','day']){const f=fixture({peer:true});try{
-  if(cause==='body')assert.equal(f.w.spatial_body_remove(1),1);else if(cause==='contract')f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;else f.worker.contractDay--;
+test('losing a pending Farm body or crossing its unmigrated Task peer return edge still rejects before time',()=>{
+ for(const cause of ['body','contract']){const f=fixture({peer:true});try{
+  if(cause==='body')assert.equal(f.w.spatial_body_remove(1),1);else f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;
   const elapsed=f.state.elapsed,peer=f.body(3);assert.throws(()=>tick(f.state,.1,f.nav));assert.equal(f.state.elapsed,elapsed);assert.deepEqual(f.body(3),peer);
  }finally{f.close();}}
 });
 
-test('a cold unbound arrival also rejects an unsupported return edge before changing Game time',()=>{
+test('a cold arrival with a retired native source cannot borrow the supported Home return edge',()=>{
  const f=fixture({bound:false});try{
-  f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;const at=f.state.elapsed,time=f.state.time;assert.throws(()=>tick(f.state,.1,f.nav),/unsupported return boundary/);assert.equal(f.state.elapsed,at);assert.equal(f.state.time,time);assert.equal(f.w.spatial_body_count(),0);
+  assert.equal(f.w.nav_intent_retire_actor(f.actor),1);f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;const at=f.state.elapsed,time=f.state.time;assert.throws(()=>tick(f.state,.1,f.nav),/native|Native|source/);assert.equal(f.state.elapsed,at);assert.equal(f.state.time,time);assert.equal(f.w.spatial_body_count(),0);
  }finally{f.close();}
 });
 

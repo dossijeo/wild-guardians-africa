@@ -15,6 +15,9 @@ function farmArrivalState(state,worker,{yaw=worker?.heading,canonical=false}={},
 export function nativeFarmArrivalState(state,worker,options){return farmArrivalState(state,worker,options,false);}
 export function nativeFarmArrivalExecutionState(state,worker){return farmArrivalState(state,worker,{canonical:true},true);}
 export function nativeFarmArrivalHeldState(state,worker){return farmArrivalState(state,worker,{canonical:true},true,true);}
+// Read an existing pending source while expiry retargets its goal. New
+// declarations and acquisitions still require a valid contract.
+export function nativeFarmArrivalRetainedPendingState(state,worker){return farmArrivalState(state,worker,{canonical:true},false,false,true);}
 
 // A current native owner can still project its authorized corridor while a
 // finished contract waits for prepared stop24. This grants no new declaration.

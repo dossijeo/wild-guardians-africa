@@ -1573,7 +1573,8 @@ function nativeCompletedFarmArrival(worker,planner){
 function expireNativeWorkerContracts(s,nav){
   const planner=nav.intentTaskPlanner;
   for(const w of s.workers)if(contractExpired(w,s)||s.time>=profile(w).end){
-    if(w.status==='arriving'&&w.nativeRouteAdmission==='native-farm-arrival'&&!nativeCompletedFarmArrival(w,planner)){if(!planner.projectNativeFarmArrivalExecution(s,w))throw Error('Expired Farm has no current native body');if(planner.nativeWorkerTaskEligible?.(w.id))notifyWorkerPlanningChange(s,w);}
+    if(w.status==='arriving'&&w.nativeRouteAdmission==='pending-farm-arrival-resources')planner.requestNativeFarmHome(s,w);
+    else if(w.status==='arriving'&&w.nativeRouteAdmission==='native-farm-arrival'&&!nativeCompletedFarmArrival(w,planner)){if(!planner.projectNativeFarmArrivalExecution(s,w))throw Error('Expired Farm has no current native body');if(planner.nativeWorkerTaskEligible?.(w.id))notifyWorkerPlanningChange(s,w);}
     else if(w.status==='arriving'&&(w.nativeRouteAdmission==='native-farm-arrival-held'||nativeCompletedFarmArrival(w,planner)))planner.requestNativeFarmHome(s,w);
     else if(w.status==='idle'&&(w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'||planner.nativeInitialIdleBodyState?.(w.id)||planner.nativeIdleCycleExecution?.(w.id)||planner.nativeIdleStrollHeldExecution?.(w.id)||planner.nativeSettledWorkerExecution?.(w.id)))planner.requestNativeIdleHome(s,w);
   }
@@ -1582,6 +1583,7 @@ function nativeReturnBoundarySupported(w,planner){
   const settled=planner.nativeSettledWorkerExecution?.(w.id);
   return w.status==='home'&&planner.nativeWorkerHomeInactive?.(w.id)||
     !!planner.nativeHomeRouteExecution?.(w.id)||
+    w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='pending-farm-arrival-resources'&&!!(planner.nativeFarmArrivalRequestReference?.(w.id)??planner.nativeFarmArrivalDeclarationReference?.(w.id))||
     w.nativeRouteAdmission==='native-farm-arrival-held'&&w.status==='arriving'&&!w.taskId&&!!planner.nativeFarmArrivalHeldExecution?.(w.id)||
     w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='native-farm-arrival'&&!!planner.nativeFarmArrivalRouteExecution?.(w.id)||
     w.nativeRouteAdmission==='pending-home-resources'&&!!planner.nativeHomeRequestReference?.(w.id)||
@@ -1889,7 +1891,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     }
     let nativeExecution=nav.intentTaskPlanner?.nativeGameExecutionState?.()??0;
     if(nativeExecution<0)throw Error('Native game execution still requires projection for this intention class');
-    if(nativeExecution!==0||s.workers.some(w=>w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')){
+    if(nativeExecution!==0||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources')){
       // Commands received since the last step revoke/replace at the current
       // boundary, before the old timetable can move a body for another step.
       expireNativeWorkerContracts(s,nav);if(nativeExecution!==0){reconcileNativeIntents(s,nav);nav.intentTaskPlanner.flushTaskEvents();}
@@ -1911,7 +1913,7 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     s.elapsed+=step;
     const nextTime=Math.min(600,s.time+step);
     s.time=clockEdges.find(boundary=>Math.abs(nextTime-boundary)<1e-9)??nextTime;
-    if(nativeExecution===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'))expireNativeWorkerContracts(s,nav);
+    if(nativeExecution===1||s.workers.some(w=>w.nativeRouteAdmission==='pending-farm-arrival-resources'||w.nativeRouteAdmission==='pending-idle-resources'||w.nativeRouteAdmission==='pending-stroll-resources'))expireNativeWorkerContracts(s,nav);
     for(const kind of Object.keys(s.cooldowns)) {
       if(kind!=='shield'&&kind!=='attack'){s.cooldowns[kind]=0;continue;}
       const remaining=s.cooldowns[kind]-step;

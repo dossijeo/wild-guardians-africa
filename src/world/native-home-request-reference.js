@@ -29,6 +29,11 @@ export function nativeHomeRequestContinuesInitialIdle(request,initial){
  return !!request&&!!initial&&['authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','profile'].every(k=>request[k]===initial[k])&&
   request.requestSequence>initial.requestSequence&&request.requestedAt>=initial.requestedAt&&poseFields.every(k=>request.pose[k]===initial.pose[k]);
 }
+// A genuine pending Farm13 can change its goal before ever acquiring23.
+// Its typed source, body and pose remain exact; there is no Idle ancestry.
+export function nativeHomeRequestContinuesFarmRequest(request,source){
+ return source?.kind==='native-farm-arrival-request-reference'&&source.version===1&&nativeHomeRequestContinuesInitialIdle(request,source);
+}
 
 // Link a new Home request to the actual acquired cycle, not its older body
 // declaration or the stroll which originally reached this stationary pose.
