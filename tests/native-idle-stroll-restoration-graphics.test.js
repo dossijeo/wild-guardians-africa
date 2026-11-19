@@ -6,8 +6,45 @@ import {installRemoteClockBindings} from '../src/rendering/remote-clock-bindings
 import {copyNativeIdleStrollResources} from '../src/world/native-idle-stroll.js';
 import {PerspectiveCamera,Vector3} from 'three';
 import {createWebGpuPicker} from '../src/rendering/webgpu-picker.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
 
 function meshes(root){const out=[];root.traverse(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)out.push({mesh,geometry:mesh.geometry,index:mesh.geometry.index,material:mesh.material,visible:mesh.visible});});return out;}
+
+test('finite native preparation keeps its published materials until cancellation permits late historical admission',async()=>{
+ const clock=createConfirmedHistoricalClock({initialElapsed:0}),f=await nativeIdleStrollRestorationGraphicsFixture({historicalMotion:{clock,actorIds:[]}}),actor=f.roster.get(f.actor),before=meshes(actor.root);let release,requested,part,preparing,publications=0;
+ const idleReady=new Promise(resolve=>requested=resolve),held=new Promise(resolve=>release=resolve),get=f.bakes.get.bind(f.bakes),publish=f.admission.prepareAndPublish.bind(f.admission);
+ f.bakes.get=name=>name==='Idle'?(requested(),held.then(()=>get(name))):get(name);
+ f.admission.prepareAndPublish=(...args)=>{publications++;return publish(...args);};
+ const settle=async()=>{for(let i=0;i<40;i++)await Promise.resolve();};
+ try{
+  preparing=f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime});preparing.catch(()=>{});await idleReady;
+  f.roster.setHistoricalActors([f.actor]);await settle();assert.equal(publications,0,'ordinary material replacement must wait for the native candidate');for(const item of before)assert.equal(item.mesh.material,item.material);
+  release();part=await preparing;assert(part.valid());assert(part.cancel());f.roster.setHistoricalActors([f.actor]);await settle();assert.equal(publications,1,'cancellation must release the existing preparation slot');assert(before.some(item=>item.mesh.material!==item.material));assert.deepEqual(f.errors,[]);
+ }finally{release();if(preparing)part??=await preparing.catch(()=>null);part?.cancel();f.close();clock.dispose();}
+});
+
+test('failed finite clip loading releases material ownership for ordinary admission',async()=>{
+ const clock=createConfirmedHistoricalClock({initialElapsed:0}),f=await nativeIdleStrollRestorationGraphicsFixture({historicalMotion:{clock,actorIds:[]}});let publications=0;
+ const get=f.bakes.get.bind(f.bakes),publish=f.admission.prepareAndPublish.bind(f.admission);f.bakes.get=name=>{if(name==='Idle')throw Error('Fixture Idle loading failed');return get(name);};f.admission.prepareAndPublish=(...args)=>{publications++;return publish(...args);};
+ try{await assert.rejects(f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime}),/Fixture Idle loading failed/);f.roster.setHistoricalActors([f.actor]);for(let i=0;i<40;i++)await Promise.resolve();assert.equal(publications,1);assert.equal(f.roster.status().nativePreparing,0);assert.deepEqual(f.errors,[]);}
+ finally{f.close();clock.dispose();}
+});
+
+test('finite native preparation waits for existing ordinary admission before taking its materials',async()=>{
+ const clock=createConfirmedHistoricalClock({initialElapsed:0}),f=await nativeIdleStrollRestorationGraphicsFixture({historicalMotion:{clock,actorIds:[]}});let release,part,preparing,settled=false;const held=new Promise(resolve=>release=resolve),publish=f.admission.prepareAndPublish.bind(f.admission);f.admission.prepareAndPublish=async(...args)=>{await held;return publish(...args);};
+ try{
+  f.roster.setHistoricalActors([f.actor]);for(let i=0;i<40;i++)await Promise.resolve();preparing=f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime}).then(value=>(part=value)).finally(()=>{settled=true;});preparing.catch(()=>{});for(let i=0;i<40;i++)await Promise.resolve();assert.equal(settled,false,'existing ordinary admission is a prerequisite, not an invalid source');assert.equal(f.roster.status().nativePreparing,0);
+  release();part=await preparing;assert(part.valid());assert(part.cancel());assert.deepEqual(f.errors,[]);
+ }finally{release();if(preparing)await preparing.catch(()=>null);part?.cancel();for(let i=0;i<40;i++)await Promise.resolve();f.close();clock.dispose();}
+});
+
+test('cancelling native acquisition waits for the existing ordinary callback and never claims its materials',async()=>{
+ const clock=createConfirmedHistoricalClock({initialElapsed:0}),f=await nativeIdleStrollRestorationGraphicsFixture({historicalMotion:{clock,actorIds:[]}}),controller=new AbortController();let release,preparing,part,settled=false;const held=new Promise(resolve=>release=resolve),publish=f.admission.prepareAndPublish.bind(f.admission);f.admission.prepareAndPublish=async(...args)=>{await held;return publish(...args);};
+ try{
+  f.roster.setHistoricalActors([f.actor]);for(let i=0;i<40;i++)await Promise.resolve();preparing=f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime,signal:controller.signal}).then(value=>(part=value)).finally(()=>{settled=true;});preparing.catch(()=>{});controller.abort();for(let i=0;i<40;i++)await Promise.resolve();assert.equal(settled,false);assert.equal(f.roster.status().nativePreparing,0);
+  release();await assert.rejects(preparing,/matching source worker/);assert.equal(f.roster.status().nativePreparing,0);assert.deepEqual(f.errors,[]);
+ }finally{release();if(preparing)await preparing.catch(()=>null);part?.cancel();for(let i=0;i<40;i++)await Promise.resolve();f.close();clock.dispose();}
+});
 for(const profile of PROFILES)test(`${profile.id} restored WALK acquires its original actor without any invented20/21 presentation`,async()=>{
  const f=await nativeIdleStrollRestorationGraphicsFixture({profile:profile.id});let part;try{
   const actor=f.roster.get(f.actor),before=meshes(actor.root),position=actor.root.position.clone(),body=f.body(1),worker=structuredClone(f.worker);assert(f.proposal.nativeIdleStroll.sourceRequest);assert.equal(f.planner.nativeIdleCycleBinding(f.nativeActor),null);assert.equal(f.planner.nativeInitialIdleBodyBinding(f.nativeActor),null);part=await f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime});assert(part.valid());part.activate();part.rollback();assert(part.valid());for(const item of before){assert.equal(item.mesh.material,item.material);assert.equal(item.mesh.visible,item.visible);}assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);part.activate();const data=f.commitStroll();assert.deepEqual(copyNativeIdleStrollResources(data.resources),data.resources);part.finalize(data);f.sync();f.flush();assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);assert(actor.root.position.equals(position));for(const item of before){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.mesh.geometry.index,item.index);}assert.equal(f.registry.status().owned.filter(r=>r.namespace==='native-gpu-motion').length,1);f.advance(.1);f.setPickTime(f.proposal.startTime+.1);const restore=actor.preparePick();restore();assert.notDeepEqual(f.body(1),body);assert.deepEqual(f.errors,[]);
