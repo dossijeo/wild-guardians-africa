@@ -1,5 +1,9 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación e-R3/f-R4: [recuperación incremental, baseline actual y límites](native-incremental-product-recovery-20261119.md). Recorrido histórico3.123 ahora recrea1.893 recursos con mark-lost/fresh-surface: sigue sin ser incremental. Código real Babylon8.0 reset/NodeFrame Three inspeccionado; la sonda aislada con canales vivos rechaza frontera sin propuesta admitida y fence con uploads retenidos no publicados; errores íntegros, ninguna recuperación aceptada ni guard debilitado. Dos sesiones NVIDIA, seis dibujos del baseline/cero GPU errores, PNG revisado y raw gzip;487/64intactos/16exactos,483 previas intactas, sin producción/build/WASM nuevos;201 dirigidas/3492de3493/una omisión/build49,03s anteriores solo heredados. Siguiente reproducir esos dos límites en tests y adaptar admisión de base retenida/vida de uploads tras investigar código consolidado. Productor/cohort/paradas/relevos ordinarios, cadencia/plataforma y A6/A/B/C abiertos,D no iniciado,f-R3 seguridad conserva cierre.
+
+
+
 Continuación e-R3/f-R4: [retirada del consumidor nativo fallido](native-failed-consumer-drain-20261119.md). Fallo/retirada/disposición comparten finalización GPU real; recursos admitidos hasta disposición y recibo existente ligado a conexión, idempotente sin token solicitado ficticio. Código Dawn095e430d inspeccionado; sin dependencia/dueño/caché/reinicio. Seis fallos baseline→seis pases;201 dirigidas/7,3492/3493 seleccionadas/288/una omisión/siete exclusiones históricas,6 sintaxis, build49.03s;483/64sin cambios/16exactos. NVIDIA negativo sin plantilla21 conserva20/rechaza ciclo y retira sin timeout; positivo98/96/98/68,cero tardíos/duplicados/drain. Host fallido no se recupera; cadencia no aceptada (ventana286.585ms/3>50). Siguiente recuperación incremental3.123 y productor/cohort/paradas/relevos ordinarios;cadencia/plataforma y A6/A/B/C abiertos,D no iniciado,f-R3 seguridad conserva cierre.
 
 
