@@ -366,6 +366,29 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }
     entry.dependencyEntries?.clear();
   }
+  function unchangedPublishedUniformWrite(op) {
+    if (op.method !== 'writeBuffer') return false;
+    const key = op.args[0][REF], entry = resources.get(key);
+    if (!entry?.uniformShadow || !(entry.descriptor.usage & 8)) return false;
+    const packets = [active, pending].filter(packet => packet?.resourceSnapshot?.get(key) === entry);
+    if (!packets.length || packets.some(packet => packet.gpuWrittenBuffers.has(key))) return false;
+    const offset = op.args[1], data = op.args[2], bytes = new Uint8Array(data.buffer || data, data.byteOffset || 0, data.byteLength);
+    // Equality must not bypass native bounds/alignment validation.
+    if (!Number.isSafeInteger(offset) || offset < 0 || offset % 4 || bytes.length % 4 || offset + bytes.length > entry.uniformShadow.length) return false;
+    // Presentation clocks/cameras patch native bytes without changing the
+    // producer shadow. Those ranges are not certified equal by this shadow.
+    const overlaps = (start, size) => offset < start + size && start < offset + bytes.length;
+    if (packets.some(packet => packet.clockBindings?.some(binding => binding.id === key && overlaps(binding.byteOffset, 4)) || packet.cameraBindings?.some(binding => binding.id === key))) return false;
+    let shadow = entry.uniformShadow;
+    // Pending CPU writes already belong to the producer's logical state. Never
+    // compare against only the older frame currently displayed by the consumer.
+    if (pending?.resourceSnapshot?.get(key) === entry) for (const write of pending.operations) {
+      if (write.method !== 'writeBuffer' || write.args[0][REF] !== key) continue;
+      if (shadow === entry.uniformShadow) shadow = shadow.slice();
+      shadow.set(new Uint8Array(write.args[2].buffer || write.args[2], write.args[2].byteOffset || 0, write.args[2].byteLength), write.args[1]);
+    }
+    return bytes.every((value, index) => value === shadow[offset + index]);
+  }
   function forkPublishedBuffer(key) {
     const entry = resources.get(key);
     if (!entry || entry.kind !== 'createBuffer') return false;
@@ -1030,6 +1053,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             throw Error('Native mutation invalidated a pending standalone GPU submission');
           if(!drawCommandsCurrent(message.op,nativeWorldBoundary))throw Error('Standalone drawing resources do not match the committed native world');
         }
+        // Like Three's uniform groups, omit unchanged uploads before creating
+        // a GPU version and rebuilding its immutable dependent bindings.
+        if (!stagedOperations.length && unchangedPublishedUniformWrite(message.op)) break;
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
         const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF]);
         if (stagedOperations.length || (touchesPublishedState && !canFork)) {

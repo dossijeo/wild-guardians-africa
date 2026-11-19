@@ -73,7 +73,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
      prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,deferredStart,minSequence:transaction.minSequence,terrainManifest:manifest})});
     if(closed)return null;
     if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
-    last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.error?{error:String(result.error)}:{})};
+    last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};
     if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control');
     if(result.status==='control-failed')throw Error(result.error??'Native production control failed');
     return result;

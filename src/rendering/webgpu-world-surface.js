@@ -360,6 +360,9 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    // adopting. Wait on the existing publication predicate before claiming the
    // same preparation slot; no retry timer or second retained queue is needed.
    if(nativeGateProposal?.descriptor.phase==='adopting')await waitNativePublication(minSequence,callerSignal??new AbortController().signal,()=>!nativeGateProposal);
+   // The source can request resources before its latest terrain publication
+   // finishes adopting. Check the existing preflight at that actual boundary.
+   await waitNativePublication(minSequence,callerSignal??new AbortController().signal);
    if(settling&&motionRef(resources).sourceCarry.gateIds.length)throw Error('Native settlement gate graphics are not prepared');
    if(arrival&&motionRef(resources).sourceHome.gateIds.length)throw Error('Native Home absence gate graphics are not prepared');
    if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
