@@ -72,8 +72,8 @@ function adapter(harness){
  harness.postMessage=data=>{harness.messages.push(data);if(!api.closed)queueMicrotask(()=>api.onmessage?.({data}));};harness.close=()=>{api.closed=true;};return api;
 }
 async function sourceFixture(options={}){
- const saved=nativeIdleStrollGameSave(),snapshot=serialize(saved.state);let onSourceError=()=>{},created=0;
- const native=await nativeProductionAuthority(saved.state,{...options,attach:false,transportSession:'s',onNativeIntentControlError:error=>onSourceError(error)}),wasm=readFileSync('src/world/wild-engine/spatial-savanna.wasm'),originalFetch=globalThis.fetch;
+ const {state=nativeIdleStrollGameSave().state,...nativeOptions}=options,snapshot=serialize(state);let onSourceError=()=>{},created=0;
+ const native=await nativeProductionAuthority(state,{...nativeOptions,attach:false,transportSession:'s',onNativeIntentControlError:error=>onSourceError(error)}),wasm=readFileSync('src/world/wild-engine/spatial-savanna.wasm'),originalFetch=globalThis.fetch;
  const source={self:{},messages:[],fetch:async url=>url==='native-lifecycle-wasm'?{ok:true,arrayBuffer:async()=>wasm.buffer.slice(wasm.byteOffset,wasm.byteOffset+wasm.byteLength)}:originalFetch(url),createAuthority(...args){created++;onSourceError=args[3].onNativeIntentControlError;return native.authority;}},sourceWorker=adapter(source);
  await loadWorker('source',source);return {native,source,sourceWorker,snapshot,created:()=>created,async close(){sourceWorker.terminate();await flush();await native.close();}};
 }
@@ -119,6 +119,25 @@ for(const rejectCommit of [false,true])test(`source Worker suspension waits for 
   else{const receipt=await waiting;assert.equal(f.native.records[0].committed,true);assert.equal(f.native.authority.nativeResourcePreparationStatus().pending,0);await f.runtime.resumeNativeIntentProduction(receipt.holdId);assert.deepEqual(f.native.faults,[]);}
   assert.equal(f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence,lastSequence);assert.equal(f.created(),1);
  }finally{release();releaseMessages();await f.close();}
+});
+
+test('the production chain carries its real publication floor after an unpublished native commit without consuming a source sequence',async()=>{
+ const f=await fullFixture();try{
+  const before=await f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true}),lastSequence=()=>f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence;
+  assert.equal(before.publicationFloor,lastSequence());assert.equal(f.sourceWorker.sent.at(-1).data.withPublicationFloor,true);
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);await f.runtime.resumeNativeIntentProduction(before.holdId);
+  await until(()=>f.native.records[0]?.committed,()=>f.native.present());assert.equal(f.state.workers[0].nativeRouteAdmission,'pending-stroll-resources');
+  const held=await f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true});assert.equal(held.publicationFloor,lastSequence());assert.equal(held.publicationFloor,before.publicationFloor);
+  assert.equal(f.native.authority.nativeIntentProductionStatus().publicationSequence,held.publicationFloor);assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'suspended');
+  const publication=await f.runtime.submit({kind:'snapshot'});assert.equal(publication.sequence,held.publicationFloor+1);assert.equal(f.state.workers[0].nativeRouteAdmission,'native-idle-stroll');assert.equal(f.created(),1);await f.runtime.resumeNativeIntentProduction(held.holdId);assert.deepEqual(f.native.faults,[]);
+ }finally{await f.close();}
+});
+
+test('an explicitly requested null floor never fabricates a native producer or releases the existing inactive hold',async()=>{
+ const state=nativeIdleStrollGameSave().state;delete state.workers[0].nativeRouteAdmission;const f=await fullFixture({state});try{
+  const held=await f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true});assert.equal(held.publicationFloor,null);assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'inactive');
+  await assert.rejects(f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true}),/held|suspension/i);await f.runtime.resumeNativeIntentProduction(held.holdId);assert.equal(f.native.records.length,0);assert.equal(f.created(),1);assert.deepEqual(f.native.faults,[]);
+ }finally{await f.close();}
 });
 
 test('the full hosted protocol waits for active native work while ordinary command sequences continue unchanged',async()=>{

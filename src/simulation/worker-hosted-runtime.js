@@ -42,7 +42,8 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
     const item=pending.get(data.id);if(!item)return;if(item.kind!=='nativeIntentProduction')throw Error('Unexpected native production response');pending.delete(data.id);
     if(data.kind==='nativeIntentProductionControlError'){item.reject(Error(data.message||'Native production control failed'));return;}
     if(data.version!==1||data.holdId!==item.holdId||data.kind!==(item.action==='quiesce'?'nativeIntentProductionQuiesced':'nativeIntentProductionResumed')){const error=Error('Invalid native production response');item.reject(error);throw error;}
-    item.resolve({version:1,holdId:item.holdId});return;
+    if(item.withPublicationFloor&&data.publicationFloor!==null&&(!Number.isSafeInteger(data.publicationFloor)||data.publicationFloor<0)){const error=Error('Invalid native publication floor response');item.reject(error);throw error;}
+    item.resolve({version:1,holdId:item.holdId,...(item.withPublicationFloor?{publicationFloor:data.publicationFloor}:{})});return;
    }
    if(data.kind==='nativeResourcePreparationAttached'||data.kind==='nativeResourcePreparationAttachError'){
     const item=pending.get(data.id);if(!item||item.kind!=='nativeResourcePreparation')throw Error('Unexpected native resource attachment');pending.delete(data.id);if(data.kind==='nativeResourcePreparationAttachError')item.reject(Error(data.message));else if(data.version!==1){const error=Error('Invalid native resource attachment');item.reject(error);throw error;}else item.resolve({version:1,session});return;
@@ -65,14 +66,15 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
  }catch(error){fail(error);}};
  worker.onerror=event=>fail(Error(event.message||'Runtime host failed'));worker.onmessageerror=()=>fail(Error('Runtime host message failed'));
  function recoveryRequest(kind,payload={},transfer=[],{timeoutMs=null,signal=null}={}){if(phase!=='running')return Promise.reject(Error('Hosted runtime not running'));if(timeoutMs!==null&&(!Number.isFinite(timeoutMs)||timeoutMs<=0)||signal!==null&&typeof signal?.addEventListener!=='function')return Promise.reject(TypeError('Invalid visual recovery deadline'));if(signal?.aborted)return Promise.reject(new DOMException('Visual recovery request cancelled','AbortError'));const expected=recoveryReplies[kind];if((timeoutMs!==null||signal)&&!expected)return Promise.reject(TypeError('Unsupported visual recovery deadline'));const id=next++;return new Promise((resolve,reject)=>{let timer=null;const cleanup=()=>{if(timer!==null)clearTimeout(timer);signal?.removeEventListener('abort',abort);},done=fn=>value=>{cleanup();fn(value);},expire=error=>{if(!pending.delete(id))return;cleanup();if(expiredRecovery.size>=1024){fail(Error('Too many unresolved visual recovery requests'));reject(error);return;}expiredRecovery.set(id,expected);reject(error);},abort=()=>expire(new DOMException('Visual recovery request cancelled','AbortError'));pending.set(id,{resolve:done(resolve),reject:done(reject),kind:'visualRecovery',request:kind});if(timeoutMs!==null)timer=setTimeout(()=>expire(Error('Visual recovery request timed out')),timeoutMs);signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted){abort();return;}try{worker.postMessage({kind,session,id,...payload},transfer);}catch(error){pending.delete(id);cleanup();reject(error);}});}
- function nativeProductionRequest(action,holdId){
+ function nativeProductionRequest(action,holdId,{withPublicationFloor=false}={}){
   if(phase!=='running'||[...pending.values()].some(item=>item.kind==='nativeIntentProduction'))return Promise.reject(fault??Error('Native production control unavailable'));
+  if(typeof withPublicationFloor!=='boolean'||withPublicationFloor&&action!=='quiesce')return Promise.reject(TypeError('Invalid native publication floor option'));
   if(!Number.isSafeInteger(next)||action==='resume'&&(!Number.isSafeInteger(holdId)||holdId<1||holdId>=next))return Promise.reject(Error('Invalid native production hold identity'));
   const id=next++;if(action==='quiesce')holdId=id;
-  return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject,kind:'nativeIntentProduction',action,holdId});try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{})});}catch(error){pending.delete(id);reject(error);}});
+  return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject,kind:'nativeIntentProduction',action,holdId,withPublicationFloor});try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{}),...(withPublicationFloor?{withPublicationFloor:true}:{})});}catch(error){pending.delete(id);reject(error);}});
  }
   return {
-   quiesceNativeIntentProduction(){return nativeProductionRequest('quiesce');},
+   quiesceNativeIntentProduction(options){return nativeProductionRequest('quiesce',undefined,options);},
    resumeNativeIntentProduction(holdId){return nativeProductionRequest('resume',holdId);},
    attachNativeResourcePreparation(port){
     if(phase!=='running'||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native resource attachment unavailable'));

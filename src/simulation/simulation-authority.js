@@ -156,7 +156,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeResourcePreparation?.flush()??Promise.resolve(null);
     },
-    nativeIntentProductionStatus:()=>nativeProduction?.status()??{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
+    nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction(){
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce()??Promise.resolve(null);

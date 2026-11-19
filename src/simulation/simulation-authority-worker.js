@@ -49,6 +49,7 @@ self.onmessage=async ({data})=>{
     const source=authority;let createdHold=null;
     try{
      if(!Number.isSafeInteger(data.id)||data.id<=lastNativeProductionRequestId)throw Error('Invalid native production request identity');
+     if(data.withPublicationFloor!==undefined&&(data.kind!=='quiesceNativeIntentProduction'||data.withPublicationFloor!==true))throw Error('Invalid native publication floor request');
      lastNativeProductionRequestId=data.id;
      if(data.kind==='quiesceNativeIntentProduction'){
       if(nativeProductionHold)throw Error('Native production suspension already held');
@@ -56,8 +57,10 @@ self.onmessage=async ({data})=>{
       const receipt=await source.quiesceNativeIntentProduction();
       await source.flushNativeResourcePreparation();
       if(authority!==source||nativeProductionHold!==createdHold)return;
+      const publicationFloor=data.withPublicationFloor===true&&receipt!==null?source.nativeIntentProductionStatus().publicationSequence:null;
+      if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');
       createdHold.receipt=receipt;createdHold.settled=true;
-      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id});
+      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(data.withPublicationFloor===true?{publicationFloor}:{})});
      }else{
       const hold=nativeProductionHold;
       if(!hold?.settled||data.holdId!==hold.id||!Number.isSafeInteger(data.holdId)||data.holdId<1||data.holdId>=data.id)throw Error('Native production hold is stale or unavailable');

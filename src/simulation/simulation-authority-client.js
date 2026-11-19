@@ -11,11 +11,12 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
   let farReplica=null;
   let nativeIntentAttachment=null,nativeResourceAttachment=null,nativeProductionControl=null,lastNativeProductionRequestId=0;
   function rejectNativeProductionControl(error){const item=nativeProductionControl;nativeProductionControl=null;item?.reject(error);}
-  function nativeProductionRequest(action,id,holdId=id){
+  function nativeProductionRequest(action,id,holdId=id,{withPublicationFloor=false}={}){
    if(state!=='ready'||nativeProductionControl)return Promise.reject(Error('Native production control unavailable'));
+   if(typeof withPublicationFloor!=='boolean'||withPublicationFloor&&action!=='quiesce')return Promise.reject(TypeError('Invalid native publication floor option'));
    if(!Number.isSafeInteger(id)||id<=lastNativeProductionRequestId||!Number.isSafeInteger(holdId)||holdId<1||action==='resume'&&holdId>=id)return Promise.reject(Error('Invalid native production request identity'));
    lastNativeProductionRequestId=id;
-   return new Promise((resolve,reject)=>{const item={action,id,holdId,resolve,reject};nativeProductionControl=item;try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{})});}catch(error){if(nativeProductionControl===item)rejectNativeProductionControl(error);}});
+   return new Promise((resolve,reject)=>{const item={action,id,holdId,withPublicationFloor,resolve,reject};nativeProductionControl=item;try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{}),...(withPublicationFloor?{withPublicationFloor:true}:{})});}catch(error){if(nativeProductionControl===item)rejectNativeProductionControl(error);}});
   }
   function receiveNativeProductionControl(data){
    if(!['nativeIntentProductionQuiesced','nativeIntentProductionResumed','nativeIntentProductionControlError'].includes(data.kind))return false;
@@ -24,7 +25,8 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
    nativeProductionControl=null;
    if(data.kind==='nativeIntentProductionControlError'){item.reject(Error(data.message||'Native production control failed'));return true;}
    if(state!=='ready'||data.version!==1||data.holdId!==item.holdId||data.kind!==(item.action==='quiesce'?'nativeIntentProductionQuiesced':'nativeIntentProductionResumed')){const error=Error('Invalid native production response');item.reject(error);fail(error);return true;}
-   item.resolve({version:1,holdId:item.holdId});return true;
+   if(item.withPublicationFloor){const sent=inflight?.sequence??next-queue.length-1,confirmed=sent-(inflight?1:0),floor=data.publicationFloor;if(floor!==null&&(!Number.isSafeInteger(floor)||floor<confirmed||floor>sent)){const error=Error('Invalid native publication floor response');item.reject(error);fail(error);return true;}}
+   item.resolve({version:1,holdId:item.holdId,...(item.withPublicationFloor?{publicationFloor:data.publicationFloor}:{})});return true;
   }
   function rejectNativeResourceAttachment(error){const item=nativeResourceAttachment;nativeResourceAttachment=null;if(item){item.reject(error);item.port.close?.();}}
   function receiveNativeResourceAttachment(data){if(!['nativeResourcePreparationAttached','nativeResourcePreparationAttachError'].includes(data.kind))return false;const item=nativeResourceAttachment;if(!item){fail(Error('Unexpected native resource attachment'));return true;}nativeResourceAttachment=null;if(data.kind==='nativeResourcePreparationAttachError')item.reject(Error(data.message||'Native resource attachment failed'));else if(data.version!==1){const error=Error('Invalid native resource attachment');item.reject(error);fail(error);}else item.resolve({version:1,session});return true;}
@@ -49,7 +51,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
    }else item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence});
    pump();return true;
   }
-  const nativeIntentControlApi={quiesceNativeIntentProduction(id){return nativeProductionRequest('quiesce',id);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port){
+  const nativeIntentControlApi={quiesceNativeIntentProduction(id,options){return nativeProductionRequest('quiesce',id,id,options);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port){
    if(state!=='ready'||nativeResourceAttachment||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native resource attachment unavailable'));
    return new Promise((resolve,reject)=>{nativeResourceAttachment={port,resolve,reject};try{worker.postMessage({kind:'attachNativeResourcePreparation',session,port},[port]);}catch(error){rejectNativeResourceAttachment(error);}});
   },attachNativeIntentControl(port){
