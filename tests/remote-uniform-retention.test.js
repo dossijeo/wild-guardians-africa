@@ -40,3 +40,14 @@ test('consumer clock patches cannot be mistaken for unchanged producer bytes',as
   assert.equal(f.gpu.buffers.length,2);assert.equal(contents(f.gpu.buffers[0])[0],2);assert.equal(contents(f.gpu.buffers[1])[0],7);assert.deepEqual(f.errors,[]);
  }finally{f.client.dispose();await f.host.dispose();}
 });
+
+test('equal bytes still isolate a producer snapshot from future writes by the published clock',async()=>{
+ let now=0;const f=await fixture({}, {absoluteNow:()=>now});try{
+  f.client.registerClockBinding(f.buffer,{byteOffset:0,semantic:'absolute',epoch:0});
+  const clock={version:1,epoch:0,elapsed:7,safeUntil:9,anchorAbsoluteMs:0,paused:false,segments:[{start:7,end:9,rate:1,realDuration:2}]},shown=f.frame(7,{clock});await flush();await f.host.idle();f.host.present();await shown;
+  const published=f.gpu.buffers[0];assert.equal(contents(published)[0],7);await write(f,[7]);assert.equal(contents(published)[0],7);
+  now=1000;f.host.present();assert.equal(contents(published)[0],8);
+  const target=f.client.device.createBuffer({size:16,usage:8}),encoder=f.client.device.createCommandEncoder();encoder.copyBufferToBuffer(f.buffer,0,target,0,16);f.client.device.queue.submit([encoder.finish()]);await flush();await f.host.idle();
+  assert.equal(contents(f.gpu.buffers.at(-1))[0],7,'future preparation must read its producer snapshot, not the older frame clock');assert.deepEqual(f.errors,[]);
+ }finally{f.client.dispose();await f.host.dispose();}
+});
