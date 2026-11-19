@@ -660,7 +660,9 @@ function addHiredWorker(s,profileId,centerId,usedPeople){
   let person=s.people.find(p=>p.profile===profileId&&!usedPeople.has(p.id));
   if(!person){person={id:`person-${s.nextId++}`,profile:profileId,recoveryUntil:0};s.people.push(person);}usedPeople.add(person.id);
   const entry=village.entry??village;
-  s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
+  // Own the newborn's presentation defaults before its first planning notice.
+  // Restored and already admitted workers keep their own heading and phases.
+  s.workers.push({id:`worker-${s.nextId++}`,personId:person.id,profile:profileId,contractDay:s.day,centerId:centerId??null,villageId:village.id,x:entry.x,z:entry.z,heading:0,runPhase:0,walkPhase:0,carryPhase:0,status:center?'arriving':'waiting',taskId:null,crateId:null,path:null,hits:0,incapacitated:false,recovering:s.day<=person.recoveryUntil,runRemaining:dailyRunMetres(),actionRemaining:0});
   notifyWorkerPlanningChange(s,s.workers.at(-1));
 }
 export function validateHireAdditional(s,id,selection,centerId){

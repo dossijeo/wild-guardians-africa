@@ -1,6 +1,9 @@
 # Current delivery status (2026-10-29)
 
 
+Continuación e-R3/f-R4: [Pose de nacimiento propia](native-worker-birth-pose-20261119.md). Game inicializa orientación/fases exclusivamente al crear contratados; no rellena ni altera poses previas. EnTT/Flecs leídos en fuente, sin dependencia/registro/reloj/cola nuevos. Siete casos nuevos; selección48/48, dos sintaxis y build WebGPU/Worker46.17s. Cuatro perfiles declaran Farm real sin yaw aportado y conservan compañero/época; bind explícito de fuente, no alta ordinaria/GPU.64 inputs nativos/16 ajenos/38 A5 intactos. Siguiente admisión incremental, entradas bloqueadas e independencia de lotes; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Farm restaurada en autoridad ordinaria](native-farm-restored-authority-20261119.md). Registro/bind/productor existentes admiten13/23/24 frío;41 nuevos cubren23→21/22→21, parada24→Task/Home, expiración/cierre/fallo/terreno/cohort mixto. Corrige opción Gate, publicación viva vencida y watermark actual omitido15→17; conserva guardas y save frío estricto, sin nuevo dueño/cola/reloj/ABI/dependencia. Detour leído en fuente. Selección 4783/4784/360, una omisión, once sintaxis/build 60.114s.644 inputs/64 nativos sin cambios/16 ajenos/38 A5 exactos. GPU5c heredada, no nueva aceptación de cohort/cadencia. Siguiente nacimientos/admisión incremental/lotes e integración Worker/Surface y demás pendientes; tres exclusiones históricas abiertas,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
