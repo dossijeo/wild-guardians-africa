@@ -59,8 +59,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
   let nativeBodies=null,nativeProduction=null;
-  const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources']);
-  const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission));
+  const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
+  const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeRosterSupported=nativeRestoration&&!game.raid&&!game.structures.some(s=>s.gate&&s.status!=='ruined')&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;

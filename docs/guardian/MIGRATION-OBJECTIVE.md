@@ -1,6 +1,9 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
 
+Continuación e-R3/f-R4: [Farm restaurada en autoridad ordinaria](native-farm-restored-authority-20261119.md). Registro/bind/productor existentes admiten13/23/24 frío;41 nuevos cubren23→21/22→21, parada24→Task/Home, expiración/cierre/fallo/terreno/cohort mixto. Corrige opción Gate, publicación viva vencida y watermark actual omitido15→17; conserva guardas y save frío estricto, sin nuevo dueño/cola/reloj/ABI/dependencia. Detour leído en fuente. Selección 4783/4784/360, una omisión, once sintaxis/build 60.114s.644 inputs/64 nativos sin cambios/16 ajenos/38 A5 exactos. GPU5c heredada, no nueva aceptación de cohort/cadencia. Siguiente nacimientos/admisión incremental/lotes e integración Worker/Surface y demás pendientes; tres exclusiones históricas abiertas,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Farm terminal en productor](native-farm-terminal-production-20261119.md). Fuente/ancla terminal existente selecciona21 o22→21; tarea/Home/hechos pendientes invalidan hasta el commit por callback causal, sin dueño/cola/reloj/dependencia nuevos. Godot leído en fuente;30 nuevos pasan, selección 2090/2090/122 sin omisiones, seis sintaxis/build 55.771s. Dos GPU NVIDIA:652/653 IDs residentes, tres relevos con 1 textura cada uno, 0 geometrías/shaders duplicados,98/70/98 preparados y0 tras READY; picking/adopción/drain, no productor de SimulationAuthority/cadencia.642 inputs/64 nativos intactos/16 ajenos/38 A5 exactos. Siguiente cohort Farm restaurado; nacimientos/lotes y demás integración pendientes. Tres exclusiones históricas abiertas; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

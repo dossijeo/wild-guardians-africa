@@ -61,10 +61,10 @@ for(const arrived of [false,true])test(`semantic save and fresh restoration reta
  }finally{restored?.close();f.close();}
 });
 
-test('a saved route cannot reset the live physical world or silently activate the ordinary authority',()=>{
+test('a saved route cannot reset the live physical world and a new authority waits for prepared admission',()=>{
  const f=fixture();let authority;try{
   admit(f);f.move(.2);f.planner.projectNativeFarmArrivalExecution(f.state,f.worker);const saved=deserialize(serialize(f.state)),input=structuredClone(saved),session=f.w.nav_intent_session(),body=f.body(1),binding=f.planner.nativeFarmArrivalRouteBinding(f.actor);assert.throws(()=>f.planner.resetFromState(saved),/fresh supported world/);assert.deepEqual(saved,input);assert.equal(f.w.nav_intent_session(),session);assert.deepEqual(f.body(1),body);assert.deepEqual(f.planner.nativeFarmArrivalRouteBinding(f.actor),binding);
-  authority=createSimulationAuthority(new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),serialize(input),['-1,-1','0,-1','1,-1','-1,0','0,0','1,0','-1,1','0,1','1,1']);assert.equal(authority.nativeIntentProductionStatus().phase,'unsupported-cohort');const restored=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot);assert.equal(restored.workers[0].nativeRouteAdmission,'pending-farm-arrival-resources');assert.equal(restored.workers[0].x,f.worker.x);assert.equal(confirmedStateSaveAvailable(restored),false);
+  authority=createSimulationAuthority(new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),serialize(input),['-1,-1','0,-1','1,-1','-1,0','0,0','1,0','-1,1','0,1','1,1']);assert.equal(authority.nativeIntentProductionStatus().phase,'idle');assert.equal(authority.nativeIntentProductionStatus().last,null);const restored=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot);assert.equal(restored.workers[0].nativeRouteAdmission,'pending-farm-arrival-resources');assert.equal(restored.workers[0].x,f.worker.x);assert.equal(restored.workers[0].z,f.worker.z);assert.equal(confirmedStateSaveAvailable(restored),false);
  }finally{authority?.dispose();f.close();}
 });
 

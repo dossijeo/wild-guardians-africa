@@ -1026,7 +1026,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const advanceNativeGameExecution=(at,{rate=1}={})=>{
     if(nativeGameExecutionState()!==1||!Number.isFinite(at)||at<owningState.elapsed||!Number.isFinite(rate)||rate<=0||rate>1000000)throw Error('Native task execution cannot advance this game cohort');
-    if(wasm.nav_intent_clock_commit(rate,0)<0)throw Error('Native task clock policy rejected');
+    const clock=wasm.nav_intent_clock_commit(rate,0);if(clock<0)throw Error('Native task clock policy rejected');
+    // An intent/policy change can commit a watermark at the current time.
+    // Deliver it before advancing; the end-of-step watermark cannot replace it.
+    if(clock===1)flushNativeIntentControl();
     // No observer runs between the native advance and Game adopting this time.
     // The new watermark is committed only after the same step's semantic work.
     const result=wasm.nav_intent_execution_advance(at);if(result<0)throw Error(`Native task execution rejected: ${result}`);

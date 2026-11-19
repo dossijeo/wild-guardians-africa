@@ -81,7 +81,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise=(async()=>{
    try{
     const {operation,prepare,...options}=request,result=await planner[operation]({...options,getPublication,signal:transaction.controller.signal,
-     prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,deferredStart,minSequence:transaction.minSequence,terrainManifest:manifest})});
+     prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest})});
     if(closed)return null;
     if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};

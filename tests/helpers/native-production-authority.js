@@ -6,30 +6,32 @@ import {attachNativeResourcePreparationEndpoint} from '../../src/rendering/nativ
 import {nativeResourceAdmissionProfile} from '../../src/world/native-resource-admission-profiles.js';
 import {pair,fixture,flush,preparedWorldDraw} from './remote-webgpu-fixture.js';
 import {prepareHomeAbsenceDraw} from './native-home-arrival-remote.js';
+import {NATIVE_STOP_POSE_FIELDS} from '../../src/world/native-worker-route-stop-codec.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL('../../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
-const kinds={prepareNativeIdleStrollResources:['idle-stroll','strollTemplate','nativeStroll'],prepareNativeIdleCycleResources:['idle-cycle','cycleTemplate','nativeIdleCycle'],prepareNativeInitialIdleBodyResources:['initial-idle-body','initialBodyTemplate','nativeInitialIdleBody'],prepareNativeHomeRouteResources:['home-route','homeTemplate','nativeHome'],prepareNativeHomeArrivalResources:['home-arrival'],prepareNativeTaskStartResources:['task-start','startTemplate','nativeStart'],prepareNativeTaskActionResources:['task-action','actionTemplate','nativeAction'],prepareNativeTaskConsequenceResources:['task-consequence','consequenceTemplate','nativeConsequence'],prepareNativeTaskSettlementResources:['task-settlement','settlementTemplate','nativeSettlement']};
+const kinds={prepareNativeFarmArrivalResources:['farm-arrival','farmArrivalTemplate','nativeFarmArrival'],prepareNativeIdleStrollResources:['idle-stroll','strollTemplate','nativeStroll'],prepareNativeIdleCycleResources:['idle-cycle','cycleTemplate','nativeIdleCycle'],prepareNativeInitialIdleBodyResources:['initial-idle-body','initialBodyTemplate','nativeInitialIdleBody'],prepareNativeHomeRouteResources:['home-route','homeTemplate','nativeHome'],prepareNativeHomeArrivalResources:['home-arrival'],prepareNativeTaskStartResources:['task-start','startTemplate','nativeStart'],prepareNativeTaskActionResources:['task-action','actionTemplate','nativeAction'],prepareNativeTaskConsequenceResources:['task-consequence','consequenceTemplate','nativeConsequence'],prepareNativeTaskSettlementResources:['task-settlement','settlementTemplate','nativeSettlement']};
 
 // Actual authority and both production ports, existing remote draw Host and
 // retained packets; the GPU queue is deterministic, not hardware/visual QA.
 export async function nativeProductionAuthority(state,{onPrepare=()=>{},onReady=()=>{},attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),{getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
- const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+ const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  const {port1,port2}=new MessageChannel(),records=[];
  const clock={version:1,epoch:0,elapsed:state.elapsed,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:state.elapsed,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-state.elapsed}]};
  const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
-  const [kind,template,clockField]=kinds[method],profile=nativeResourceAdmissionProfile(kind),reference=profile.reference(resources),record={kind,resources,minSequence:options.minSequence,terrainManifest:options.terrainManifest,committed:false,aborted:false};records.push(record);
+  const [kind,template,clockField]=method==='prepareNativeGateResources'&&resources.kind===24?['farm-arrival-stop']:kinds[method],profile=nativeResourceAdmissionProfile(kind),reference=profile.reference(resources),record={kind,resources,minSequence:options.minSequence,terrainManifest:options.terrainManifest,committed:false,aborted:false};records.push(record);
   await onPrepare(record);
   if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
   // Same single-generation backpressure used by the real WorldSurface.
   await graphics.client.whenFrameSettled();
   if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
   const stationary=['initial-idle-body','idle-cycle','task-settlement'].includes(kind),acting=kind==='task-action',arrival=kind==='home-arrival';
-  if(!arrival)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
-  const packet=arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal);packet.presented.catch(()=>{});record.packet=packet;
+  const stopped=kind==='farm-arrival-stop';
+  if(!arrival&&!stopped)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
+  const packet=stopped?await prepareFarmStoppedDraw(graphics,reference,records,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record);}catch(error){packet.abort();throw error;}
-  return {preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);return record.committed;},abort(){record.aborted=true;packet.abort();}};
+  return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);return record.committed;},abort(){record.aborted=true;packet.abort();}};
  }});
  let sequence=0;
  const result={authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,
@@ -41,6 +43,17 @@ export async function nativeProductionAuthority(state,{onPrepare=()=>{},onReady=
   async close(){authority.dispose();endpoint.dispose();port1.close();port2.close();graphics.client.dispose();await graphics.host.dispose();}
  };
  try{if(attach)await result.attach();return result;}catch(error){await result.close();throw error;}
+}
+
+// Same stopped-value packet as native-farm-arrival-stop-remote.js. The real
+// Host must derive every stopped field and validate the typed24 template.
+function prepareFarmStoppedDraw(g,stop,records,signal){
+ const prior=records.findLast(r=>r.kind==='farm-arrival'&&r.committed&&r.resources.nativeFarmArrival.actorId===stop.sourceRoute.actorId);if(!prior)throw Error('Stopped Farm has no acquired packet');
+ const epoch=prior.resources.nativeFarmArrival.worldBoundary.effectiveTime,selector={kind:'native-farm-arrival-stopped-body',version:1,stop,actorId:stop.sourceRoute.actorId};g.client.beginFrame({nativeWorldBoundary:stop.worldBoundary});
+ const buffer=g.client.device.createBuffer({label:'farm-authority-stopped-values',size:48,usage:72}),group=g.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});g.client.device.queue.writeBuffer(buffer,0,new Float32Array(12));
+ g.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,nativeStopped:selector});['age',...Object.keys(NATIVE_STOP_POSE_FIELDS)].forEach((field,i)=>g.client.registerClockBinding(buffer,{byteOffset:(i+1)*4,semantic:'stop-value',epoch,nativeStopped:selector,stopField:field}));
+ const encoder=g.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:g.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setPipeline(g.pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();g.client.device.queue.submit([encoder.finish()]);
+ return g.client.prepareNativeWorldFrame({nativeWorldBoundary:stop.worldBoundary,nativeFarmArrivalStopTemplate:stop,clock:{version:1,epoch:0,elapsed:stop.worldBoundary.effectiveTime,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:true,segments:[]}},{signal});
 }
 
 export async function untilProduction(f,condition){

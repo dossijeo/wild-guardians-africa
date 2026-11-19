@@ -98,9 +98,9 @@ test('an unmarked arrival cannot enter Game merely because its native pending cl
  }finally{f.close();}
 });
 
-test('ordinary authority reports the new farm cohort unsupported until its graphical producer is integrated',()=>{
+test('ordinary authority binds restored Farm and waits for its graphical producer',()=>{
  const f=fixture();let authority;try{
-  const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));authority=createSimulationAuthority(module,serialize(f.state),['-1,-1','0,-1','1,-1','-1,0','0,0','1,0','-1,1','0,1','1,1']);assert.equal(authority.nativeIntentProductionStatus().phase,'unsupported-cohort');const snapshot=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot);assert.equal(snapshot.workers[0].nativeRouteAdmission,'pending-farm-arrival-resources');assert.equal(confirmedStateSaveAvailable(snapshot),false);
+  const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));authority=createSimulationAuthority(module,serialize(f.state),['-1,-1','0,-1','1,-1','-1,0','0,0','1,0','-1,1','0,1','1,1']);assert.equal(authority.nativeIntentProductionStatus().phase,'idle');assert.equal(authority.nativeIntentProductionStatus().active,null);assert.equal(authority.nativeIntentProductionStatus().last,null);const snapshot=JSON.parse(authority.execute({kind:'snapshot',sequence:1}).snapshot);assert.equal(snapshot.workers[0].nativeRouteAdmission,'pending-farm-arrival-resources');assert.equal(snapshot.workers[0].x,f.worker.x);assert.equal(snapshot.workers[0].z,f.worker.z);assert.equal(confirmedStateSaveAvailable(snapshot),false);
  }finally{authority?.dispose();f.close();}
 });
 
