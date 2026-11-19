@@ -52,27 +52,81 @@ export async function prepareWebGpuTemporalTerrain(messages,{signal,scene,reside
  }catch(error){for(const part of [...dependents].reverse())try{part.cancel();}catch{}for(const token of tokens.reverse())try{token.abort();}catch{}discard();throw error;}
 }
 
-// Recovery can install a versioned baseline into a fresh graphical owner. A
-// caller still has to restore and coordinate the confirmed state, poses,
-// events and effects before acknowledging recovery; this is terrain only.
+// Recovery installs a complete versioned resource baseline. Fresh owners are
+// required by default; explicit retention also requires current owner/state
+// read sets and authoritative handoff revisions for every removed old chunk.
+// State, poses, events, effects and native GPU admission remain the caller's
+// responsibility. This preparation never grants a native clock/world permit.
 export async function prepareWebGpuTemporalCheckpoint(message,options={}){
- const {session,scene,residency,biome,signal}=options,checkpoint=message?.terrainCheckpoint,manifest=checkpoint?.terrainManifest;
+ const {session,scene,residency,biome,signal,retainCurrent=false,assertCurrent}=options,checkpoint=message?.terrainCheckpoint,manifest=checkpoint?.terrainManifest;
+ if(typeof retainCurrent!=='boolean')throw TypeError('Invalid retained checkpoint mode');
  if(typeof session!=='string'||!session||message?.session!==session||!Number.isSafeInteger(message.sequence)||message.sequence<0||!checkpoint||checkpoint.sequence!==message.sequence||!Array.isArray(checkpoint.chunks)||typeof message.snapshot!=='string'||!Number.isFinite(message.elapsed)||message.elapsed<0||!manifest||typeof manifest.epoch!=='string'||!manifest.epoch||!Array.isArray(manifest.chunks)||manifest.chunks.length!==checkpoint.chunks.length||!scene?.isScene||!Number.isSafeInteger(residency?.size)||typeof biome?.status!=='function')throw TypeError('Invalid temporal terrain checkpoint');
  const snapshot=deserializeConfirmedState(message.snapshot);if(snapshot.elapsed!==message.elapsed||!Array.isArray(snapshot.suppressed)||snapshot.suppressed.some(id=>typeof id!=='string'))throw TypeError('Invalid temporal checkpoint snapshot');
  const nativeWorldBoundary=copyNativeWorldBoundary(checkpoint.nativeWorldBoundary??null);
  if(nativeWorldBoundary&&nativeWorldBoundary.effectiveTime>message.elapsed)throw Error('Native world checkpoint is ahead of confirmed time');
- const empty=()=>residency.size===0&&biome.status().chunks===0;if(!empty())throw Error('Temporal checkpoint requires fresh graphical owners');
+ const empty=()=>residency.size===0&&biome.status().chunks===0;
+ let terrainBase=null,biomeBase=null;
+ if(retainCurrent){
+  if(typeof assertCurrent!=='function'||typeof residency.captureCheckpointState!=='function'||typeof biome.captureCheckpointState!=='function'||typeof residency.matchesCheckpoint!=='function'||typeof biome.matchesRetainedCheckpoint!=='function'||typeof options.validateInstances!=='function')throw TypeError('Retained checkpoint requires existing owner and state read sets');
+  assertCurrent();terrainBase=residency.captureCheckpointState();biomeBase=biome.captureCheckpointState();
+  const props=new Map(biomeBase.chunks.map(chunk=>[`${chunk.cx},${chunk.cz}`,chunk]));
+  if(terrainBase.chunks.length!==props.size||terrainBase.chunks.some(chunk=>{const other=props.get(`${chunk.cx},${chunk.cz}`);return chunk.epoch!==manifest.epoch||other?.epoch!==chunk.epoch||other?.revision!==chunk.revision;}))throw Error('Retained checkpoint owner footprints or source epochs differ');
+ }else if(!empty())throw Error('Temporal checkpoint requires fresh graphical owners');
  const revisions=new Map();for(const item of manifest.chunks){const key=`${item?.cx},${item?.cz}`;if(!Number.isSafeInteger(item?.cx)||!Number.isSafeInteger(item?.cz)||!Number.isSafeInteger(item?.revision)||item.revision<1||revisions.has(key))throw TypeError('Invalid temporal checkpoint manifest');revisions.set(key,item.revision);}
- const messages=[];for(const payload of checkpoint.chunks){const key=`${payload?.cx},${payload?.cz}`,revision=revisions.get(key),terrain=payload?.terrain;if(revision===undefined||payload?.authority!=='spatial-wasm'||payload.capturedAt!==undefined&&(!Number.isFinite(payload.capturedAt)||payload.capturedAt<0||payload.capturedAt>message.elapsed)||!(terrain?.positions instanceof Float32Array)||terrain.positions.length!==49*49*3||!terrain.positions.every(Number.isFinite)||!(terrain.colors instanceof Float32Array)||terrain.colors.length!==terrain.positions.length||!terrain.colors.every(Number.isFinite)||!(terrain.indices instanceof Uint16Array)||terrain.indices.length!==48*48*6||!terrain.indices.every(index=>index<49*49)||payload.water!==undefined&&(!(payload.water instanceof Float32Array)||payload.water.length%9!==0||!payload.water.every(Number.isFinite))||payload.groundMask!==undefined&&(!(payload.groundMask instanceof Uint8Array)||payload.groundMask.length!==35*35*4))throw TypeError('Invalid temporal checkpoint chunk');revisions.delete(key);messages.push({payload,revision,sequence:message.sequence,epoch:manifest.epoch});}
+ const messages=[];for(const payload of checkpoint.chunks){const key=`${payload?.cx},${payload?.cz}`,revision=revisions.get(key),terrain=payload?.terrain;if(revision===undefined||payload?.authority!=='spatial-wasm'||payload.capturedAt!==undefined&&(!Number.isFinite(payload.capturedAt)||payload.capturedAt<0||payload.capturedAt>message.elapsed)||!(terrain?.positions instanceof Float32Array)||terrain.positions.length!==49*49*3||!terrain.positions.every(Number.isFinite)||!(terrain.colors instanceof Float32Array)||terrain.colors.length!==terrain.positions.length||!terrain.colors.every(Number.isFinite)||!(terrain.indices instanceof Uint16Array)||terrain.indices.length!==48*48*6||!terrain.indices.every(index=>index<49*49)||payload.water!==undefined&&(!(payload.water instanceof Float32Array)||payload.water.length%9!==0||!payload.water.every(Number.isFinite))||payload.groundMask!==undefined&&(!(payload.groundMask instanceof Uint8Array)||payload.groundMask.length!==35*35*4))throw TypeError('Invalid temporal checkpoint chunk');revisions.delete(key);if(retainCurrent)options.validateInstances(payload);messages.push({payload,revision,sequence:message.sequence,epoch:manifest.epoch});}
  if(revisions.size)throw TypeError('Incomplete temporal checkpoint manifest');
- // A recovery surface has no render loop until recovery completes. A missing
- // target must fail explicitly rather than wait for a frame that cannot run.
  if(nativeWorldBoundary){const hidden=new Set(snapshot.suppressed);if(messages.some(({payload})=>payload.instances?.some(items=>items.some(item=>hidden.has(item.id)))))throw Error('Native world checkpoint hides canonical props');}
- const batch=messages.length?await prepareWebGpuTemporalTerrain(messages,{...options,suppressed:snapshot.suppressed,requireShadowTarget:true}):null;let active=true,committed=false;
- return {sequence:message.sequence,epoch:manifest.epoch,elapsed:message.elapsed,suppressed:[...snapshot.suppressed],chunks:messages.map(({payload,revision})=>({payload,revision,epoch:manifest.epoch,sequence:message.sequence})),
+ const target=new Map(messages.map(item=>[`${item.payload.cx},${item.payload.cz}`,item])),unchanged=[],removals=[];
+ let preparedMessages=messages;
+ if(retainCurrent){
+  const handoff=checkpoint.terrainHandoff,retired=new Map();
+  if(handoff!==undefined){
+   if(!handoff||handoff.epoch!==manifest.epoch||handoff.lastSequence!==message.sequence||!Array.isArray(handoff.chunks)||handoff.chunks.length>32768)throw TypeError('Invalid retained checkpoint terrain handoff');
+   const seen=new Set();let present=0;
+   for(const row of handoff.chunks){
+    const key=`${row?.cx},${row?.cz}`;
+    if(!row||!Number.isSafeInteger(row.cx)||!Number.isSafeInteger(row.cz)||!Number.isSafeInteger(row.revision)||row.revision<1||seen.has(key)||Object.keys(row).some(key=>!['cx','cz','revision','removed','capturedAt'].includes(key))||row.removed!==undefined&&row.removed!==true||row.capturedAt!==undefined&&(!Number.isFinite(row.capturedAt)||row.capturedAt<0||row.capturedAt>message.elapsed))throw TypeError('Invalid retained checkpoint handoff revision');
+    seen.add(key);
+    if(row.removed===true){if(target.has(key)||!Number.isFinite(row.capturedAt))throw Error('Invalid retained checkpoint retirement proof');retired.set(key,row);}
+    else{if(target.get(key)?.revision!==row.revision)throw Error('Retained checkpoint handoff differs from its manifest');present++;}
+   }
+   if(present!==target.size)throw Error('Incomplete retained checkpoint handoff');
+  }
+  const current=new Map(terrainBase.chunks.map(chunk=>[`${chunk.cx},${chunk.cz}`,chunk]));
+  const props=new Map(biomeBase.chunks.map(chunk=>[`${chunk.cx},${chunk.cz}`,chunk]));
+  preparedMessages=messages.filter(item=>{
+   const key=`${item.payload.cx},${item.payload.cz}`,prior=current.get(key),metadata={epoch:item.epoch,revision:item.revision};
+   if(prior&&residency.matchesCheckpoint(item.payload,metadata)&&biome.matchesRetainedCheckpoint(item.payload,metadata,snapshot.suppressed)){unchanged.push({item,terrain:prior,biome:props.get(key)});return false;}
+   if(prior&&item.revision<=prior.revision)throw Error('Retained checkpoint revision conflicts with its current payload');
+   return true;
+  });
+  for(const [key,prior] of current){
+   if(target.has(key))continue;
+   const proof=retired.get(key);if(!proof||proof.revision<=prior.revision)throw Error('Retained checkpoint retirement lacks its exact source handoff revision');
+   removals.push({payload:{authority:'spatial-wasm',cx:proof.cx,cz:proof.cz,removed:true,capturedAt:proof.capturedAt},revision:proof.revision,sequence:message.sequence,epoch:manifest.epoch});
+  }
+  preparedMessages=[...preparedMessages,...removals];
+ }
+ const sourceChunks=checkpoint.chunks.slice(),sourceSnapshot=message.snapshot,sourceMeta=JSON.stringify({sequence:message.sequence,elapsed:message.elapsed,checkpointSequence:checkpoint.sequence,manifest:checkpoint.terrainManifest,handoff:checkpoint.terrainHandoff??null});
+ const sourceCurrent=()=>message.terrainCheckpoint===checkpoint&&message.snapshot===sourceSnapshot&&checkpoint.chunks.length===sourceChunks.length&&checkpoint.chunks.every((payload,i)=>payload===sourceChunks[i])&&JSON.stringify({sequence:message.sequence,elapsed:message.elapsed,checkpointSequence:checkpoint.sequence,manifest:checkpoint.terrainManifest,handoff:checkpoint.terrainHandoff??null})===sourceMeta;
+ const retainedCurrent=()=>unchanged.every(({item,terrain,biome:props})=>terrain.valid()&&props.valid()&&residency.matchesCheckpoint(item.payload,{epoch:item.epoch,revision:item.revision})&&biome.matchesRetainedCheckpoint(item.payload,{epoch:item.epoch,revision:item.revision},snapshot.suppressed));
+ function current(){
+  if(signal?.aborted)throw new DOMException('Temporal checkpoint cancelled','AbortError');
+  if(retainCurrent){assertCurrent();if(!sourceCurrent()||!terrainBase.valid()||!biomeBase.valid()||!retainedCurrent())throw Error('Retained checkpoint owner read set became stale');}
+  else if(!empty())throw Error('Temporal checkpoint became stale');
+  if(!sameNativeWorldBoundary(copyNativeWorldBoundary(checkpoint.nativeWorldBoundary??null),nativeWorldBoundary))throw Error('Temporal checkpoint became stale');
+ }
+ current();let batch=null,active=true,committed=false;
+ try{batch=preparedMessages.length?await prepareWebGpuTemporalTerrain(preparedMessages,{...options,suppressed:snapshot.suppressed,requireShadowTarget:true}):null;current();}catch(error){try{batch?.abort();}catch{}throw error;}
+ return {sequence:message.sequence,epoch:manifest.epoch,elapsed:message.elapsed,suppressed:[...snapshot.suppressed],chunks:messages.map(({payload,revision})=>({payload,revision,epoch:manifest.epoch,sequence:message.sequence})),...(retainCurrent?{retained:true,removals}:{}),
   get nativeWorldBoundary(){return committed?nativeWorldBoundary:null;},
-  commit(){if(!active)throw Error('Temporal checkpoint already consumed');let current;try{current=copyNativeWorldBoundary(checkpoint.nativeWorldBoundary??null);}catch(error){active=false;batch?.abort();throw error;}
-   if(signal?.aborted||!empty()||!sameNativeWorldBoundary(current,nativeWorldBoundary)){active=false;batch?.abort();throw Error('Temporal checkpoint became stale');}active=false;
-   try{const result=batch?batch.commit():true;committed=result===true;if(!committed)batch?.abort();return result;}catch(error){try{batch?.abort();}catch{}throw error;}},
+  commit(){if(!active)throw Error('Temporal checkpoint already consumed');try{
+    current();active=false;const result=batch?batch.commit():true;
+    if(result!==true){batch?.abort();return result;}
+    // Once the existing atomic batch committed, a late abort does not undo it.
+    // A changed retained owner still prevents a false resource certificate.
+    if(retainCurrent){assertCurrent();if(!sourceCurrent()||!retainedCurrent())throw Error('Retained checkpoint owner changed during commit');}
+    committed=true;return true;
+   }catch(error){active=false;try{batch?.abort();}catch{}throw error;}},
   abort(){if(!active)return false;active=false;batch?.abort();return true;}};
 }
