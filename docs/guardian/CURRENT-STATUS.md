@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Desbloqueo A1 durante la integración A4: [consulta y voz del tutorial sobre vista confirmada](native-confirmed-tutorial-read-20261119.md). Consulta diaria sin mutar la vista inmutable; narración externa filtrada por el catálogo existente antes del protocolo estricto. Autoridad/registro/guardado conservados;sin dependencia/dueño nuevo. Baseline20pases/2fallos→22/22 y4sintaxis. Validación CPU acotada;relevo Worker/cliente/Surface/UI aún en progreso,sin aceptación GPU/cadencia ni cierre A6/A/B/C,D no iniciado.
+
+
 Continuación A4/e-R3/f-R4: [attachment retenido del host](native-retained-host-20261119.md). Host de producción obtiene su handoff autoritativo y prepara checkpoint/sufijo antes del relevo de terreno; replay inicia después, conserva base original y no sustituye control nativo. Patrón Redis8.2.1 leído en código; sin dependencia/diario/dueño nuevos.12nuevas,baselines2fallos+10fallos;599dirigidas/40,4209/4210seleccionadas/328/1omisión,build49.93s/5sintaxis;556inputs/64nativos intactos/16ajenos exactos. Modo producción/autoridad Wild Engine/MessageChannel reales,con adaptadores de conexión/terreno/FX. Directo/preparado2→3sin prefijo,ACK real y completo4/delta5 tras activación. Tres controles separados antes/actual:histórico3pases/2fallos releaseCommand,timeline19/20timeout,host25s;raws íntegros. Sin GPU nueva:ceros de Surface solo HEREDADOS de a6643b56c. Siguiente WorldWorker/cliente/UI mismos binding/canvas/frame nuevo;productor/cohort/paradas/relevos/cadencia/plataforma y A6/A/B/C abiertos,D no iniciado,f-R3 seguridad cerrado.
 
 

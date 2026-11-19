@@ -6,6 +6,14 @@ import {dailyTutorialMessages,recordTutorialMessageToday,tutorialMessageShownTod
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 const profile=()=>{const seen=new Set();return {read:()=>seen,record:id=>seen.add(id),basicCompleted:false};};
+test('daily-message queries accept frozen confirmed views without creating or resetting their history',()=>{
+ for(const shownToday of [undefined,{day:1,ids:['budget.reserve']},{day:2,ids:['budget.reserve']}]){
+  const tutorial=Object.freeze(shownToday===undefined?{}:{shownToday:Object.freeze({...shownToday,ids:Object.freeze([...shownToday.ids])})}),view=Object.freeze({day:2,tutorial});
+  assert.equal(tutorialMessageShownToday(view,'budget.reserve'),shownToday?.day===2);
+  assert.equal(tutorialMessageShownToday(view,'other'),false);
+  assert.equal(Object.hasOwn(tutorial,'shownToday'),shownToday!==undefined);
+ }
+});
 test('queries and hidden time do not consume a message; one reading stays visible until dismissed',()=>{
  const s=Game.newGame({seed:712}),c=new TutorialController(s,profile());
  assert.equal(c.presentation({record:false}).id,'basic.introduction');
