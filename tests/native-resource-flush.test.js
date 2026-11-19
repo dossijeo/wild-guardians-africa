@@ -9,15 +9,16 @@ const resources=()=>({version:1,kind:12,phase:'proposal',worldBoundary:{...bound
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate){const end=Date.now()+3000;while(!predicate()){if(Date.now()>end)throw Error('Resource flush fixture timed out');await turn();}}
 function fixture({prepare,timeoutMs=1000,onCommit=()=>{}}={}){
- const {port1,port2}=new MessageChannel(),calls=[],errors=[],requests=[],replies=[];
+ const {port1,port2}=new MessageChannel(),calls=[],errors=[],requests=[],replies=[],received=[];
  const sendRequest=port1.postMessage.bind(port1),sendReply=port2.postMessage.bind(port2);
  let holdRequests=false,holdReplies=false;
  port1.postMessage=message=>{if(holdRequests&&['commitNativeGateResources','flushNativeResources'].includes(message.kind))requests.push(message);else sendRequest(message);};
  port2.postMessage=message=>{if(holdReplies&&message.kind==='nativeResourcesFlushed')replies.push(message);else sendReply(message);};
  const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:'flush-test',isRunning:()=>true,onError:e=>errors.push(e),onCommit,prepare:prepare??(async(kind,r)=>({preparedWorldBoundary:r.worldBoundary,valid:()=>true,commit(data){calls.push(data);return true;},abort(){}}))});
+ const receive=port2.onmessage;port2.onmessage=event=>{received.push(event.data);return receive(event);};
  const connection=createNativeResourcePreparationConnection({port:port1,session:'flush-test',timeoutMs,onError:e=>errors.push(e)});
  connection.ready.catch(()=>{});
- return {connection,endpoint,calls,errors,requests,replies,sendRequest,sendReply,holdRequests:()=>{holdRequests=true;},holdReplies:()=>{holdReplies=true;},releaseRequests(){holdRequests=false;for(const message of requests.splice(0))sendRequest(message);},close(){connection.dispose();endpoint.dispose();port1.close();port2.close();}};
+ return {connection,endpoint,calls,errors,requests,replies,received,sendRequest,sendReply,holdRequests:()=>{holdRequests=true;},holdReplies:()=>{holdReplies=true;},releaseRequests(){holdRequests=false;for(const message of requests.splice(0))sendRequest(message);},close(){connection.dispose();endpoint.dispose();port1.close();port2.close();}};
 }
 
 test('same-port flush waits for the actual remote commit despite empty local counters',async()=>{
@@ -50,14 +51,14 @@ test('an earlier flush response cannot settle a later barrier on the same live c
  }finally{f.close();}
 });
 
-for(const stage of ['prepare','refresh'])test(`flush rejects an aborted ${stage} whose asynchronous callback has not actually finished`,async()=>{
+for(const stage of ['prepare','refresh'])test(`flush waits for an aborted ${stage} until its asynchronous callback actually finishes`,async()=>{
  let release,started=false;const gate=new Promise(resolve=>{release=resolve;});
  const f=fixture({prepare:async(kind,r)=>{if(stage==='prepare'){started=true;await gate;}return {preparedWorldBoundary:r.worldBoundary,valid:()=>true,async refresh(){started=true;await gate;return true;},abort(){}};}});
  try{await f.connection.ready;const controller=new AbortController(),r=stage==='prepare'?resources():{kind:'native-route-resume-proposal',worldBoundary:boundary};let waiting;
   if(stage==='prepare')waiting=f.connection.prepareNativeGateResources(r,{signal:controller.signal});
   else{const handle=await f.connection.prepareNativeResumeResources(r,{signal:controller.signal});waiting=handle.refresh(r);}
   const rejected=assert.rejects(waiting,{name:'AbortError'});rejected.catch(()=>{});await until(()=>started);controller.abort();await rejected;await until(()=>f.endpoint.status().pending===null);
-  assert.equal(f.connection.status().pending,0);assert.equal(f.connection.status().retained,0);await assert.rejects(f.connection.flush(),/pending|unavailable|closed/i);assert.equal(f.connection.status().phase,'failed');
+  assert.equal(f.connection.status().pending,0);assert.equal(f.connection.status().retained,0);let settled=false;const draining=f.connection.flush();draining.then(()=>{settled=true;},()=>{settled=true;});await until(()=>f.received.some(m=>m.kind==='flushNativeResources'));assert.equal(settled,false);assert.equal(f.endpoint.status().closed,false);assert.equal(f.connection.status().phase,'running');release();assert.deepEqual(await draining,{version:1});assert.equal(f.endpoint.status().inflight,0);assert.equal(f.connection.status().phase,'running');assert.deepEqual(f.errors,[]);
  }finally{release();f.close();}
 });
 
@@ -71,6 +72,16 @@ test('a missing flush response times out terminally instead of declaring the end
 
 test('disposal rejects a pending flush and late acknowledgements cannot revive its connection',async()=>{
  const f=fixture();try{await f.connection.ready;f.holdReplies();const waiting=f.connection.flush(),rejected=assert.rejects(waiting,/disposed/i);rejected.catch(()=>{});await until(()=>f.replies.length===1);const receive=f.connection.status().phase==='running'&&f.sendReply;f.connection.dispose();receive(f.replies.shift());await rejected;assert.equal(f.connection.status().phase,'closed');assert.equal(f.connection.status().pending,0);await assert.rejects(f.connection.flush(),/closed|unavailable/i);}finally{f.close();}
+});
+
+test('closing an endpoint while its cancelled callback drains cannot emit a late flush ACK',async()=>{
+ let release,started=false;const gate=new Promise(resolve=>{release=resolve;});const f=fixture({prepare:async(kind,r)=>{started=true;await gate;return {preparedWorldBoundary:r.worldBoundary,abort(){}};}});
+ try{await f.connection.ready;const controller=new AbortController(),preparing=f.connection.prepareNativeGateResources(resources(),{signal:controller.signal}),cancelled=assert.rejects(preparing,{name:'AbortError'});cancelled.catch(()=>{});await until(()=>started);controller.abort();await cancelled;await until(()=>f.endpoint.status().pending===null);f.holdReplies();const draining=f.connection.flush(),rejected=assert.rejects(draining,/closed/i);rejected.catch(()=>{});await until(()=>f.received.some(m=>m.kind==='flushNativeResources'));assert.equal(f.endpoint.status().closed,false);f.endpoint.dispose();await rejected;assert.equal(f.endpoint.status().inflight,1);release();await until(()=>f.endpoint.status().inflight===0);await turn();assert.equal(f.replies.length,0);assert.equal(f.connection.status().phase,'failed');}finally{release();f.close();}
+});
+
+test('a failed late-handle cleanup cannot be certified by its waiting flush',async()=>{
+ let release,started=false;const gate=new Promise(resolve=>{release=resolve;});const f=fixture({prepare:async(kind,r)=>{started=true;await gate;return {preparedWorldBoundary:r.worldBoundary,abort(){throw Error('late abort fixture failed');}};}});
+ try{await f.connection.ready;const controller=new AbortController(),preparing=f.connection.prepareNativeGateResources(resources(),{signal:controller.signal}),cancelled=assert.rejects(preparing,{name:'AbortError'});cancelled.catch(()=>{});await until(()=>started);controller.abort();await cancelled;await until(()=>f.endpoint.status().pending===null);f.holdReplies();const draining=f.connection.flush(),rejected=assert.rejects(draining,/cleanup|closed/i);rejected.catch(()=>{});await until(()=>f.received.some(m=>m.kind==='flushNativeResources'));assert.equal(f.endpoint.status().closed,false);release();await rejected;await until(()=>f.endpoint.status().inflight===0);assert.equal(f.replies.length,0);assert.equal(f.connection.status().phase,'failed');assert(f.errors.some(e=>/cleanup failed/i.test(e.message)));}finally{release();f.close();}
 });
 
 for(const failure of ['false','throw','notification'])test(`flush cannot certify a previous failed commit (${failure}) even if onError only records it`,async()=>{
