@@ -55,11 +55,13 @@ self.onmessage=async ({data})=>{
       if(nativeProductionHold)throw Error('Native production suspension already held');
       createdHold={id:data.id,receipt:null,settled:false};nativeProductionHold=createdHold;
       const receipt=await source.quiesceNativeIntentProduction();
+      if(authority!==source||nativeProductionHold!==createdHold)return;
+      createdHold.receipt=receipt;
       await source.flushNativeResourcePreparation();
       if(authority!==source||nativeProductionHold!==createdHold)return;
       const publicationFloor=data.withPublicationFloor===true&&receipt!==null?source.nativeIntentProductionStatus().publicationSequence:null;
       if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');
-      createdHold.receipt=receipt;createdHold.settled=true;
+      createdHold.settled=true;
       postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(data.withPublicationFloor===true?{publicationFloor}:{})});
      }else{
       const hold=nativeProductionHold;
@@ -67,7 +69,7 @@ self.onmessage=async ({data})=>{
       if(source.resumeNativeIntentProduction(hold.receipt)!==true)throw Error('Native production did not resume');
       nativeProductionHold=null;postMessage({kind:'nativeIntentProductionResumed',session,id:data.id,version:1,holdId:hold.id});
      }
-    }catch(error){if(authority!==source)return;if(createdHold&&nativeProductionHold===createdHold)nativeProductionHold=null;postMessage({kind:'nativeIntentProductionControlError',session,id:data.id,message:String(error?.message??error)});}
+    }catch(error){if(authority!==source)return;if(createdHold&&nativeProductionHold===createdHold){if(createdHold.receipt!==null){postMessage({kind:'nativeIntentControlFailure',session,message:'Native production resource drain failed: '+String(error?.message??error)});return;}nativeProductionHold=null;}postMessage({kind:'nativeIntentProductionControlError',session,id:data.id,message:String(error?.message??error)});}
     return;
    }
    if(data.kind==='attachNativeResourcePreparation'){

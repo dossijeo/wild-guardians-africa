@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {build} from 'esbuild';
 import {resolve} from 'node:path';
 import {readFileSync} from 'node:fs';
+import {MessageChannel} from 'node:worker_threads';
+import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 import {serialize} from '../src/persistence/snapshots.js';
@@ -115,10 +117,30 @@ for(const rejectCommit of [false,true])test(`source Worker suspension waits for 
   assert.deepEqual(withheld.map(m=>m.kind),['commitNativeGateResources','flushNativeResources']);
   const lastSequence=f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence;
   releaseMessages();
-  if(rejectCommit){await assert.rejects(waiting,/commit|closed|unavailable|flush/i);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentProductionQuiesced').length,0);assert.equal(f.native.authority.nativeResourcePreparationStatus().phase,'failed');}
+  if(rejectCommit){await assert.rejects(waiting,/commit|closed|unavailable|flush/i);await until(()=>f.runtime.status().closed||f.runtime.status().fault);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentProductionQuiesced').length,0);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentControlFailure').length,1);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentProductionControlError').length,0);await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='closed');assert.equal(f.sourceWorker.terminated,true);assert.equal(f.hostWorker.terminated,true);}
   else{const receipt=await waiting;assert.equal(f.native.records[0].committed,true);assert.equal(f.native.authority.nativeResourcePreparationStatus().pending,0);await f.runtime.resumeNativeIntentProduction(receipt.holdId);assert.deepEqual(f.native.faults,[]);}
   assert.equal(f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence,lastSequence);assert.equal(f.created(),1);
  }finally{release();releaseMessages();await f.close();}
+});
+
+test('a failed resource barrier after a completed native commit closes the production chain instead of orphaning a resumable source',async()=>{
+ const f=await fullFixture();try{
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);await until(()=>f.native.records.some(r=>r.committed),()=>f.native.present());
+  const sequence=f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence,send=f.native.resourcePort.postMessage.bind(f.native.resourcePort);
+  f.native.resourcePort.postMessage=message=>send(message.kind==='flushNativeResources'?{...message,session:'rejected-resource-session'}:message);
+  await assert.rejects(f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true}),/drain|session|closed/i);await until(()=>f.runtime.status().fault);await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='closed');
+  assert.equal(f.sourceWorker.terminated,true);assert.equal(f.hostWorker.terminated,true);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentControlFailure').length,1);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentProductionControlError'||m.kind==='nativeIntentProductionQuiesced').length,0);
+  await assert.rejects(f.runtime.quiesceNativeIntentProduction(),/failed|unavailable|drain|session|closed/i);await assert.rejects(f.runtime.submit({kind:'snapshot'}),/failed|running|drain|session|closed/i);assert.equal(f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence,sequence);assert.equal(f.created(),1);
+ }finally{await f.close();}
+});
+
+test('a failed resource barrier without a native producer stays recoverable and permits a real replacement port and null-hold release',async()=>{
+ const state=nativeIdleStrollGameSave().state;delete state.workers[0].nativeRouteAdmission;const f=await fullFixture({state});let endpoint,port;try{
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);const send=f.native.resourcePort.postMessage.bind(f.native.resourcePort);f.native.resourcePort.postMessage=message=>send(message.kind==='flushNativeResources'?{...message,session:'rejected-resource-session'}:message);
+  await assert.rejects(f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true}),/session|closed/i);assert.equal(f.runtime.status().running,true);assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'inactive');assert.equal(f.source.messages.some(m=>m.kind==='nativeIntentControlFailure'),false);
+  const channel=new MessageChannel();port=channel.port1;endpoint=attachNativeResourcePreparationEndpoint({port:channel.port2,session:'s',isRunning:()=>true,prepare:()=>{throw Error('Inactive producer must not prepare resources');}});await f.runtime.attachNativeResourcePreparation(port);
+  const hold=await f.runtime.quiesceNativeIntentProduction({withPublicationFloor:true});assert.equal(hold.publicationFloor,null);await f.runtime.resumeNativeIntentProduction(hold.holdId);await f.runtime.submit({kind:'snapshot'});assert.equal(f.native.records.length,0);assert.equal(f.created(),1);assert.equal(f.sourceWorker.terminated,false);assert.equal(f.hostWorker.terminated,false);
+ }finally{endpoint?.dispose();port?.close();await f.close();}
 });
 
 test('the production chain carries its real publication floor after an unpublished native commit without consuming a source sequence',async()=>{
@@ -161,6 +183,15 @@ test('closing the full hosted chain during quiescence rejects the request and ca
 
 async function initializeSource(f){await f.source.self.onmessage({data:{kind:'initialize',session:'s',snapshot:f.snapshot,chunkKeys:[]}});assert(f.source.messages.some(m=>m.kind==='ready'));}
 async function sendSource(f,data){await f.source.self.onmessage({data:{session:'s',...data}});}
+test('a source whose native resource drain failed retains its unsettled hold until disposal and cannot issue a replacement witness',async()=>{
+ const f=await sourceFixture();try{
+  await initializeSource(f);await f.native.attach();await until(()=>f.native.records.some(r=>r.committed),()=>f.native.present());const send=f.native.resourcePort.postMessage.bind(f.native.resourcePort);f.native.resourcePort.postMessage=message=>send(message.kind==='flushNativeResources'?{...message,session:'rejected-resource-session'}:message);
+  await sendSource(f,{kind:'quiesceNativeIntentProduction',id:30});assert.equal(f.source.messages.at(-1).kind,'nativeIntentControlFailure');assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'suspended');
+  await sendSource(f,{kind:'resumeNativeIntentProduction',id:31,holdId:30});assert.equal(f.source.messages.at(-1).kind,'nativeIntentProductionControlError');assert.match(f.source.messages.at(-1).message,/stale|unavailable/i);
+  await sendSource(f,{kind:'quiesceNativeIntentProduction',id:32});assert.equal(f.source.messages.at(-1).kind,'nativeIntentProductionControlError');assert.match(f.source.messages.at(-1).message,/held|suspension/i);assert.equal(f.source.messages.some(m=>m.kind==='nativeIntentProductionQuiesced'||m.kind==='nativeIntentProductionResumed'),false);assert.equal(f.created(),1);
+ }finally{await f.close();assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'closed');}
+});
+
 test('the authority Worker rejects repeated and stale lifecycle identities without releasing its current local receipt',async()=>{
  const f=await sourceFixture();try{
   await initializeSource(f);await sendSource(f,{kind:'quiesceNativeIntentProduction',id:10});assert(f.source.messages.some(m=>m.kind==='nativeIntentProductionQuiesced'&&m.holdId===10));
