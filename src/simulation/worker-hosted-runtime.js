@@ -74,7 +74,7 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
   ...(recovery.enabled?{
    markVisualLost(options={timeoutMs:15000}){return recoveryRequest('markVisualLost',{},[],options);},
    prepareVisualRecovery(){return recoveryRequest('prepareVisualRecovery');},
-    attachVisualRecovery({terrainPort,presentationPort,recoveryPort,intentControlPort=null}){if(!terrainPort||!presentationPort||!recoveryPort)return Promise.reject(Error('Invalid visual recovery ports'));return recoveryRequest('attachVisualRecovery',{terrainPort,presentationPort,recoveryPort,...(intentControlPort?{intentControlPort}:{})},[terrainPort,presentationPort,recoveryPort,...(intentControlPort?[intentControlPort]:[])]);},
+    attachVisualRecovery({terrainPort,presentationPort,recoveryPort,intentControlPort=null,retainedCheckpoint=null}){if(!terrainPort||!presentationPort||!recoveryPort)return Promise.reject(Error('Invalid visual recovery ports'));return recoveryRequest('attachVisualRecovery',{terrainPort,presentationPort,recoveryPort,...(intentControlPort?{intentControlPort}:{}),...(retainedCheckpoint===null?{}:{retainedCheckpoint})},[terrainPort,presentationPort,recoveryPort,...(intentControlPort?[intentControlPort]:[])]);},
    finishVisualRecovery(){if(phase!=='running')throw Error('Hosted runtime not running');worker.postMessage({kind:'finishVisualRecovery',session});},
    finishVisualRecoveryConfirmed(options={timeoutMs:10000}){return recoveryRequest('finishVisualRecoveryConfirmed',{},[],options);},
    stageRecoveryVisibility(hidden,options={timeoutMs:10000}){if(typeof hidden!=='boolean')return Promise.reject(TypeError('Invalid recovery visibility'));return recoveryRequest('stageRecoveryVisibility',{hidden},[],options);},
@@ -88,7 +88,7 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
    ...(runtimeOptions.qaVisualRecovery===true?{
     markVisualLostForQa(){return recoveryRequest('markVisualLost');},
     prepareVisualRecoveryForQa(){return recoveryRequest('prepareVisualRecovery');},
-     attachVisualRecoveryForQa({terrainPort,presentationPort,recoveryPort,intentControlPort=null}){if(!terrainPort||!presentationPort||!recoveryPort)return Promise.reject(Error('Invalid visual recovery ports'));return recoveryRequest('attachVisualRecovery',{terrainPort,presentationPort,recoveryPort,...(intentControlPort?{intentControlPort}:{})},[terrainPort,presentationPort,recoveryPort,...(intentControlPort?[intentControlPort]:[])]);},
+     attachVisualRecoveryForQa({terrainPort,presentationPort,recoveryPort,intentControlPort=null,retainedCheckpoint=null}){if(!terrainPort||!presentationPort||!recoveryPort)return Promise.reject(Error('Invalid visual recovery ports'));return recoveryRequest('attachVisualRecovery',{terrainPort,presentationPort,recoveryPort,...(intentControlPort?{intentControlPort}:{}),...(retainedCheckpoint===null?{}:{retainedCheckpoint})},[terrainPort,presentationPort,recoveryPort,...(intentControlPort?[intentControlPort]:[])]);},
     finishVisualRecoveryForQa(){if(phase!=='running')throw Error('Hosted runtime not running');worker.postMessage({kind:'finishVisualRecovery',session});},
     cancelVisualRecoveryForQa(){return recoveryRequest('cancelVisualRecovery');},
    }:{})

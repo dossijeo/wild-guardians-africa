@@ -3,16 +3,16 @@ import {projectRetainedPresentationCheckpoint} from './historical-terrain-recove
 // Replays one acknowledged checkpoint and its ordered post-checkpoint journal.
 // The caller owns the handoff to live publication and must prevent gaps while
 // switching ports. The checkpoint is restored as state, not re-emitted as events.
-export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,retainedCheckpoint=null,onCaughtUp=()=>{},onProgress=()=>{},onError=()=>{}}={}){
- if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(checkpoint?.sequence)||checkpoint.sequence<1||typeof journal?.entry!=='function'||typeof journal?.status!=='function'||typeof atomicBoundaries!=='boolean'||maxGroupBytes!==null&&(!Number.isSafeInteger(maxGroupBytes)||maxGroupBytes<1)||typeof onCaughtUp!=='function'||typeof onProgress!=='function'||typeof onError!=='function')throw TypeError('Invalid presentation recovery replay');
+export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,retainedCheckpoint=null,deferStart=false,onCaughtUp=()=>{},onProgress=()=>{},onError=()=>{}}={}){
+ if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(checkpoint?.sequence)||checkpoint.sequence<1||typeof journal?.entry!=='function'||typeof journal?.status!=='function'||typeof atomicBoundaries!=='boolean'||typeof deferStart!=='boolean'||maxGroupBytes!==null&&(!Number.isSafeInteger(maxGroupBytes)||maxGroupBytes<1)||typeof onCaughtUp!=='function'||typeof onProgress!=='function'||typeof onError!=='function')throw TypeError('Invalid presentation recovery replay');
  if(retainedCheckpoint!==null&&(!retainedCheckpoint||typeof retainedCheckpoint!=='object'||Array.isArray(retainedCheckpoint)||Object.keys(retainedCheckpoint).some(key=>!['sequence','handoff','presentationCheckpoint','workCheckpoint'].includes(key))))throw TypeError('Invalid retained recovery replay');
  if(retainedCheckpoint!==null&&!atomicBoundaries)throw Error('Retained recovery requires atomic boundaries');
  const journalBase=checkpoint.sequence,initial=journal.status();if(initial.closed||initial.base!==journalBase)throw Error('Recovery checkpoint and journal mismatch');const groupLimit=maxGroupBytes??initial.maxBytes;if(atomicBoundaries&&(!Number.isSafeInteger(groupLimit)||groupLimit<1))throw TypeError('Invalid recovery boundary capacity');
  const retained=retainedCheckpoint===null?null:projectRetainedPresentationCheckpoint({journal,checkpoint,...retainedCheckpoint});if(retained)checkpoint=retained.checkpoint;const base=checkpoint.sequence;
- let closed=false,failed=false,waiting=null,id=0,index=retained?.index??0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
+ let paused=deferStart,closed=false,failed=false,waiting=null,id=0,index=retained?.index??0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
  function fail(error){if(closed||failed)return;failed=true;group=[];groupBytes=0;try{onError(error instanceof Error?error:Error(String(error)));}catch{}}
  function send(phase,sequence,payload){const message={kind:'recovery'+phase[0].toUpperCase()+phase.slice(1),session,id:++id,sequence,...payload};waiting={id,phase,sequence};port.postMessage(message);}
- function pump(){if(closed||failed||waiting)return;try{
+ function pump(){if(paused||closed||failed||waiting)return;try{
   const state=journal.status();if(state.closed||state.base!==journalBase)throw Error('Recovery journal base changed during replay');
   if(!started){started=true;send('checkpoint',base,{checkpoint,...(retained?{retainCurrent:true}:{})});return;}
   if(atomicBoundaries){
@@ -35,5 +35,5 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
   const completed=waiting;waiting=null;if(completed.phase==='publication'){cursor=completed.sequence;terrainPending=false;}else if(completed.phase==='terrain')terrainPending=true;else if(completed.phase==='boundary')cursor=completed.sequence;if(completed.phase==='boundary')index+=completed.entries;else if(completed.phase!=='checkpoint')index++;onProgress({phase:completed.phase,sequence:completed.sequence});pump();
  }catch(error){fail(error);}};
  port.onmessageerror=()=>fail(Error('Recovery acknowledgement transfer failed'));port.start?.();pump();
- return {wake:pump,status(){return {closed,failed,base,cursor,index,waiting:waiting?{...waiting}:null,caughtUp:caught,...(atomicBoundaries?{groupBytes,groupLimit}:{})};},dispose(){if(closed)return;closed=true;group=[];groupBytes=0;port.onmessage=null;port.onmessageerror=null;}};
+ return {start(){if(closed||failed)throw Error('Recovery replay unavailable');paused=false;pump();},wake:pump,status(){return {closed,failed,base,cursor,index,waiting:waiting?{...waiting}:null,caughtUp:caught,...(atomicBoundaries?{groupBytes,groupLimit}:{})};},dispose(){if(closed)return;closed=true;group=[];groupBytes=0;port.onmessage=null;port.onmessageerror=null;}};
 }
