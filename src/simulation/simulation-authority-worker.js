@@ -9,6 +9,9 @@ import {createMainSnapshotEncoder} from './main-thread-snapshot-transport.js';
 import wasmUrl from '../world/wild-engine/spatial-savanna.wasm?url';
 let authority=null,initializing=false,session=null,dynamicPhysics=false,diagnostics=false,qaAttackDelayMs=0,qaPlantDelayMs=0,qaStructureDelayMs=0,terrainPublication=null,terrainJournalEnabled=false,terrainBootstrapEnabled=false,terrainHistory=null,recoverHistoricalTerrainFailures=false,fatalTerrainError=null,guardianBiome=null,guardianMetadata=null,guardianPlacementEnabled=false,nativeCheckpointsEnabled=false,guardianMetadataReady=null,resultEncoder=null,farVisualQueries=false;
 let publishedFarRevision=null;
+// The receipt never crosses a structured-clone boundary. Only the existing
+// caller RPC identity names this one local producer suspension.
+let nativeProductionHold=null,lastNativeProductionRequestId=0;
 // Publish a compact derived read view only when its native inputs change.
 // Commands are acknowledged one at a time; the receiving replica coalesces
 // revisions while busy. No simulation state is advanced by the read worker.
@@ -39,9 +42,30 @@ self.onmessage=async ({data})=>{
    postMessage({kind:'ready',session:data.session});return;
   }
   if(data?.session!==session)throw Error('Simulation session mismatch');
-  if(data?.kind==='dispose'){terrainPublication?.dispose();authority?.dispose();authority=null;close();return;}
+  if(data?.kind==='dispose'){nativeProductionHold=null;terrainPublication?.dispose();authority?.dispose();authority=null;close();return;}
   if(fatalTerrainError&&data.kind!=='inspectTerrainRecoveryHandoff'&&!(data.kind==='reattachTerrain'&&data.historicalHandoff!==undefined))throw Error('Terrain history session failed: '+String(fatalTerrainError.message??fatalTerrainError));
    if(!authority)throw Error('Simulation authority is not ready');
+   if(data.kind==='quiesceNativeIntentProduction'||data.kind==='resumeNativeIntentProduction'){
+    const source=authority;let createdHold=null;
+    try{
+     if(!Number.isSafeInteger(data.id)||data.id<=lastNativeProductionRequestId)throw Error('Invalid native production request identity');
+     lastNativeProductionRequestId=data.id;
+     if(data.kind==='quiesceNativeIntentProduction'){
+      if(nativeProductionHold)throw Error('Native production suspension already held');
+      createdHold={id:data.id,receipt:null,settled:false};nativeProductionHold=createdHold;
+      const receipt=await source.quiesceNativeIntentProduction();
+      if(authority!==source||nativeProductionHold!==createdHold)return;
+      createdHold.receipt=receipt;createdHold.settled=true;
+      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id});
+     }else{
+      const hold=nativeProductionHold;
+      if(!hold?.settled||data.holdId!==hold.id||!Number.isSafeInteger(data.holdId)||data.holdId<1||data.holdId>=data.id)throw Error('Native production hold is stale or unavailable');
+      if(source.resumeNativeIntentProduction(hold.receipt)!==true)throw Error('Native production did not resume');
+      nativeProductionHold=null;postMessage({kind:'nativeIntentProductionResumed',session,id:data.id,version:1,holdId:hold.id});
+     }
+    }catch(error){if(authority!==source)return;if(createdHold&&nativeProductionHold===createdHold)nativeProductionHold=null;postMessage({kind:'nativeIntentProductionControlError',session,id:data.id,message:String(error?.message??error)});}
+    return;
+   }
    if(data.kind==='attachNativeResourcePreparation'){
     try{const result=await authority.attachNativeResourcePreparation(data.port,session);postMessage({kind:'nativeResourcePreparationAttached',session,...result});}
     catch(error){data.port?.close?.();postMessage({kind:'nativeResourcePreparationAttachError',session,message:String(error?.message??error)});}
