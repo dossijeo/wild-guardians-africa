@@ -1,16 +1,20 @@
 import {estimateRetainedBytes} from './retained-size.js';
+import {projectRetainedPresentationCheckpoint} from './historical-terrain-recovery.js';
 // Replays one acknowledged checkpoint and its ordered post-checkpoint journal.
 // The caller owns the handoff to live publication and must prevent gaps while
 // switching ports. The checkpoint is restored as state, not re-emitted as events.
-export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,onCaughtUp=()=>{},onProgress=()=>{},onError=()=>{}}={}){
+export function createPresentationRecoveryReplay({port,session,checkpoint,journal,atomicBoundaries=false,maxGroupBytes=null,retainedCheckpoint=null,onCaughtUp=()=>{},onProgress=()=>{},onError=()=>{}}={}){
  if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session||!Number.isSafeInteger(checkpoint?.sequence)||checkpoint.sequence<1||typeof journal?.entry!=='function'||typeof journal?.status!=='function'||typeof atomicBoundaries!=='boolean'||maxGroupBytes!==null&&(!Number.isSafeInteger(maxGroupBytes)||maxGroupBytes<1)||typeof onCaughtUp!=='function'||typeof onProgress!=='function'||typeof onError!=='function')throw TypeError('Invalid presentation recovery replay');
- const base=checkpoint.sequence,initial=journal.status();if(initial.closed||initial.base!==base)throw Error('Recovery checkpoint and journal mismatch');const groupLimit=maxGroupBytes??initial.maxBytes;if(atomicBoundaries&&(!Number.isSafeInteger(groupLimit)||groupLimit<1))throw TypeError('Invalid recovery boundary capacity');
- let closed=false,failed=false,waiting=null,id=0,index=0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
+ if(retainedCheckpoint!==null&&(!retainedCheckpoint||typeof retainedCheckpoint!=='object'||Array.isArray(retainedCheckpoint)||Object.keys(retainedCheckpoint).some(key=>!['sequence','handoff','presentationCheckpoint','workCheckpoint'].includes(key))))throw TypeError('Invalid retained recovery replay');
+ if(retainedCheckpoint!==null&&!atomicBoundaries)throw Error('Retained recovery requires atomic boundaries');
+ const journalBase=checkpoint.sequence,initial=journal.status();if(initial.closed||initial.base!==journalBase)throw Error('Recovery checkpoint and journal mismatch');const groupLimit=maxGroupBytes??initial.maxBytes;if(atomicBoundaries&&(!Number.isSafeInteger(groupLimit)||groupLimit<1))throw TypeError('Invalid recovery boundary capacity');
+ const retained=retainedCheckpoint===null?null:projectRetainedPresentationCheckpoint({journal,checkpoint,...retainedCheckpoint});if(retained)checkpoint=retained.checkpoint;const base=checkpoint.sequence;
+ let closed=false,failed=false,waiting=null,id=0,index=retained?.index??0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
  function fail(error){if(closed||failed)return;failed=true;group=[];groupBytes=0;try{onError(error instanceof Error?error:Error(String(error)));}catch{}}
  function send(phase,sequence,payload){const message={kind:'recovery'+phase[0].toUpperCase()+phase.slice(1),session,id:++id,sequence,...payload};waiting={id,phase,sequence};port.postMessage(message);}
  function pump(){if(closed||failed||waiting)return;try{
-  const state=journal.status();if(state.closed||state.base!==base)throw Error('Recovery journal base changed during replay');
-  if(!started){started=true;send('checkpoint',base,{checkpoint});return;}
+  const state=journal.status();if(state.closed||state.base!==journalBase)throw Error('Recovery journal base changed during replay');
+  if(!started){started=true;send('checkpoint',base,{checkpoint,...(retained?{retainCurrent:true}:{})});return;}
   if(atomicBoundaries){
    for(;;){const entry=journal.entry(index+group.length);if(!entry){if(!group.length&&!caught){caught=true;onCaughtUp({sequence:cursor,entries:index});}return;}caught=false;
     if(entry.sequence!==cursor+1||(entry.firstSequence??entry.sequence)!==entry.sequence)throw Error('Recovery boundary sequence gap');

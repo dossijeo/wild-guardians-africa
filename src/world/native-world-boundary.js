@@ -14,13 +14,11 @@ export function sameNativeWorldBoundary(a,b){
  return a!==undefined&&b!==undefined&&keys.every(key=>a[key]===b[key]);
 }
 
-// Correlate physical publications with this consumer's applied graphical
-// batch. This grants no time and does not prepare other presentation owners.
-export function reconcileNativeWorldResources({publication,admitted,previous=null}={}){
+// Parse source commit identities once; consumer admission is checked below.
+function readNativeWorldResources(publication,previous){
  const before=copyNativeWorldBoundary(previous),records=publication?.nativeWorldResources;
  if(records===undefined){
-  if(before&&admitted?.changes?.length)throw Error('Terrain changed without a native world resource boundary');
-  return before;
+  return {boundary:before,expected:null};
  }
  if(!Array.isArray(records)||!records.length||records.length>32768||!Number.isSafeInteger(publication.sequence)||publication.sequence<0||
     !Number.isFinite(publication.elapsed)||publication.elapsed<0||publication.unchanged===true)throw TypeError('Invalid native world resource publication');
@@ -42,6 +40,16 @@ export function reconcileNativeWorldResources({publication,admitted,previous=nul
   }
   boundary=next;
  }
+ return {boundary,expected};
+}
+// Source history may copy a descriptor without claiming a consumer applied it.
+// Drawing still requires reconcileNativeWorldResources and real scene admission.
+export function copyPublishedNativeWorldBoundary(publication,previous=null){return readNativeWorldResources(publication,previous).boundary;}
+// Correlate physical publications with this consumer's applied graphical
+// batch. This grants no time and does not prepare other presentation owners.
+export function reconcileNativeWorldResources({publication,admitted,previous=null}={}){
+ const {boundary,expected}=readNativeWorldResources(publication,previous);
+ if(expected===null){if(boundary&&admitted?.changes?.length)throw Error('Terrain changed without a native world resource boundary');return boundary;}
  if(!admitted||admitted.version!==1||admitted.sequence!==publication.sequence||typeof admitted.epoch!=='string'||!admitted.epoch||
     admitted.canonicalPropsUnmasked!==true||!Array.isArray(admitted.changes)||admitted.changes.length!==expected.size||
     (!expected.size?admitted.empty!==true:admitted.empty!==undefined))throw Error('Native resources lack their applied graphical batch');
