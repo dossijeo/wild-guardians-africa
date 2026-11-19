@@ -58,7 +58,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   let nativeIntentControl=null;
   let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
-  let nativeBodies=null,nativeProduction=null;
+  let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeRosterSupported=nativeRestoration&&!game.raid&&!game.structures.some(s=>s.gate&&s.status!=='ruined')&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
@@ -90,6 +90,23 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,onError:error=>onNativeIntentControlError?.(error)});
+  }
+  function admitPendingNativeBirths({force=false}={}){
+   if(!nativeBodies||!nativeBirthsPending)return;
+   const dependency=()=>`${nativeBodies.revision()}:${session.core.wasm.nav_intent_transition_sequence()}`;
+   const revision=dependency();if(!force&&revision===nativeBirthRevision)return;
+   const bindings=createSpatialGateIntents(session,game);let changed=false,pending=false;
+   for(const worker of game.workers){
+    if(nativeBodies.id(worker.id)!==undefined)continue;
+    const source=worker.nativeRouteAdmission==='pending-farm-arrival-resources'?planner.projectNativeFarmArrivalDeclaration(game,worker):worker.nativeRouteAdmission==='pending-home-resources'?planner.nativeHomeDeclarationReference(worker.id):worker.nativeRouteAdmission==='pending-resources'?planner.pendingTaskRoute(worker.id):null;
+    if(!source)continue;
+    const origin=source.pose??source.origin;if(origin.x!==worker.x||origin.z!==worker.z)throw Error('Native newborn differs from its declared origin');
+    const body=nativeBodies.admit(worker.id,{x:worker.x,z:worker.z,radius:WORKER_SPATIAL_PROFILE.radius,kind:0,flags:1});
+    if(body===null){pending=true;continue;}
+    if(!bindings.bindWorker(worker.id,body))throw Error('Native newborn body binding rejected');changed=true;
+   }
+   nativeBirthsPending=pending;nativeBirthRevision=dependency();
+   if(changed){const clock=planner.nativeCausalClock();if(!['committed','unchanged'].includes(planner.commitNativeCausalClock({rate:clock?.rate??1,paused:!!game.pauses.length||!!game.result}).status))throw Error('Native newborn body clock unavailable');}
   }
   function setNavigationView(view){if(!view||!Array.isArray(view.bounds)||![view.eye?.x,view.eye?.z,view.target?.x,view.target?.z].every(Number.isFinite))throw TypeError('Invalid navigation view');nav.setActiveBounds(view.bounds);nav.setRaidView(view.eye,view.target);}
   if(navigationView!==null)setNavigationView(navigationView);
@@ -320,7 +337,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='hire'||command.kind==='hireAdditional'){
      if(typeof command.id!=='string'||!command.id||!command.selection||typeof command.selection!=='object'||Array.isArray(command.selection)||command.kind==='hireAdditional'&&(typeof command.centerId!=='string'||!command.centerId))throw TypeError('Invalid hiring command');
      try{if(command.kind==='hire')validateHire(game,command.id,command.selection);else validateHireAdditional(game,command.id,command.selection,command.centerId);}catch(error){rejection=error.message;}
+     const previousWorkers=nativeBodies?new Set(game.workers.map(w=>w.id)):null;
      value=rejection?false:(command.kind==='hire'?hire(game,command.id,command.selection):hireAdditional(game,command.id,command.selection,command.centerId))??null;
+     if(previousWorkers){
+      planner.flushTaskEvents();
+      const newborns=game.workers.filter(worker=>!previousWorkers.has(worker.id)&&worker.status==='arriving');
+      for(const worker of newborns)planner.requestNativeFarmArrivalResources(game,worker,{canonical:false});
+      if(newborns.length)nativeBirthsPending=true;
+      planner.flushTaskEvents();admitPendingNativeBirths({force:newborns.length>0});
+     }
     }else if(command.kind==='buildWallChain'){
      if(typeof command.id!=='string'||!command.id||typeof command.material!=='string'||!command.material||!Array.isArray(command.points)||command.capacityLimit!==undefined&&typeof command.capacityLimit!=='boolean'||command.options!==undefined&&(!command.options||typeof command.options!=='object'||Array.isArray(command.options)||Object.hasOwn(command.options,'preparedPlan')||command.capacityLimit&&Object.hasOwn(command.options,'maxPieces')))throw TypeError('Invalid wall chain command');
      if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
@@ -358,7 +383,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
-     planner.flushNativeIntentControl();
+     admitPendingNativeBirths();planner.flushNativeIntentControl();
      const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
     const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','raidCameraFocus','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
     // Until event-level dependencies and continuous contacts are certified,

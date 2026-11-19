@@ -1,6 +1,9 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
 
+Continuación e-R3/f-R4: [Altas Farm en el registro existente](native-farm-birth-admission-20261119.md). Contratación diaria/adicional declara13 y admite solo cuerpos nuevos; bloqueo físico conserva fuente y compañeros, con reintento por revisiones existentes y sin trabajo de admisión tras terminar las altas. Home19 sin cuerpo y Task14 directo conservan pose; verifica dueño/generación de slot antes de transferir. EnTT/Flecs leídos, sin dependencia/registro/cola/reloj nuevos.17 casos nuevos,30 dirigidos, selección4807/4808/362, una omisión,8 sintaxis/build56.157s; standalone/pthread canónicos.646 inputs/64 nativos probados/16 ajenos/38 A5 exactos. Sin nueva GPU/cadencia ni cierre del caso3.123. Siguiente Worker/Surface, reutilización gráfica y demás lotes/recuperación; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Pose de nacimiento propia](native-worker-birth-pose-20261119.md). Game inicializa orientación/fases exclusivamente al crear contratados; no rellena ni altera poses previas. EnTT/Flecs leídos en fuente, sin dependencia/registro/reloj/cola nuevos. Siete casos nuevos; selección48/48, dos sintaxis y build WebGPU/Worker46.17s. Cuatro perfiles declaran Farm real sin yaw aportado y conservan compañero/época; bind explícito de fuente, no alta ordinaria/GPU.64 inputs nativos/16 ajenos/38 A5 intactos. Siguiente admisión incremental, entradas bloqueadas e independencia de lotes; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

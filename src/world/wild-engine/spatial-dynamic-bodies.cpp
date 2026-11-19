@@ -157,6 +157,17 @@ int spatial_body_upsert(double id,double x,double z,double radius,int kind,int f
  indexAdd(key,body);
  return 1;
 }
+// First admission only. Do not create overlapping newborns at a shared entry;
+// the existing reservation fence still checks the whole future corridor.
+int spatial_body_admit(double id,double x,double z,double radius,int kind,int flags){
+ if(!validId(id)||id<1||bodies.count(uint64_t(id))||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(radius)||radius<=0||radius>2||kind!=0||flags!=1)return -1;
+ const Body actor{x,z,radius,kind,flags,0};
+ if(visitBox(x-radius-maxRadius,z-radius-maxRadius,x+radius+maxRadius,z+radius+maxRadius,[&](uint64_t,const Body& other){
+   return participates(actor,other,-1)&&std::hypot(x-other.x,z-other.z)<radius+other.r;
+ }))return 0;
+ return spatial_body_upsert(id,x,z,radius,kind,flags);
+}
+double spatial_bodies_mutation_revision(){return double(spatialBodiesMutationRevision());}
 int spatial_body_remove(double id){if(!validId(id))return 0;auto it=bodies.find(uint64_t(id));if(it==bodies.end())return 0;spatialIntentBodyRemoving(it->first);if(indexed)indexRemove(it->first,it->second);bodies.erase(it);bodyMutationCommitted();if(indexed&&bodies.size()<32){cells.clear();unindexed.clear();indexed=false;}return 1;}
 int spatial_body_count(){return int(bodies.size());}
 // A negative range asks for all participating bodies; otherwise the same

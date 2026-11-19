@@ -20,7 +20,8 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_request_farm_arrival(double actor,double wor
  const auto& worker=found->second;const auto center=s.targets.find(worker.center);SpatialBodyView body;
  if(!worker.eligible||worker.actionActive||worker.inactiveSequence||!worker.center||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0||!center->second.serviceKnown)return -2;
  if(worker.bodyBound&&(!worker.body||!spatialReadBody(worker.body,body)||body.kind!=0||!(body.flags&1)||(body.flags&2)||body.x!=worker.x||body.z!=worker.z||body.r<=0||body.r>2||s.reservedBodies.count(worker.body)||s.suspendedBodies.count(worker.body)))return -2;
- if(!worker.bodyBound&&(s.causalClock||s.executionEnabled))return -4;
+ // A bodyless declaration is semantic only. It cannot appear in executable
+ // request snapshots or route proposals until an exact first body is bound.
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
  if(const auto previous=s.activeIntents.find(uint64_t(actor));previous!=s.activeIntents.end()){
   const auto& intent=previous->second;const auto* r=intent.farmArrivalRequest.get();if(!r||!nativeFarmArrivalRequestCurrent(s,intent))return -2;

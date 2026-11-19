@@ -694,6 +694,13 @@ bool nativeFarmArrivalRequestCurrent(const IntentState& s,const ActiveIntent& in
  return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
 bool nativeFarmArrivalRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){return intent.farmArrivalRequest&&intent.farmArrivalRequest->body&&nativeFarmArrivalRequestCurrent(s,intent);}
+// A Farm contract can expire while its first physical admission is blocked.
+// This is only that retained semantic source, never a body or route proof.
+bool nativeUnboundFarmHomeCurrent(const IntentState& s,const ActiveIntent& intent){
+ if(!intent.homeRequest||!intent.home||intent.state!=PlanningState::AwaitingResources||!intent.requiresResources||intent.lease||intent.task||intent.target||intent.generation||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleBodyBinding||intent.idleCycle||intent.farmArrivalRequest||intent.initialIdleRequest||intent.strollRequest||intent.heldIdleTaskSource)return false;
+ const auto& r=*intent.homeRequest;const auto worker=s.workers.find(intent.actor);
+ return !r.body&&r.farmRequestSourceSequence&&r.farmRequestSourceSequence<r.sequence&&!r.farmArrivalSourceSequence&&!r.idleStrollSourceSequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&worker!=s.workers.end()&&!worker->second.bodyBound&&!worker->second.body&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z;
+}
 bool nativeInitialIdleRequestCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.initialIdleRequest||intent.home||intent.task||intent.target||intent.lease||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleBodyBinding||intent.homeRequest||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
  const auto& r=*intent.initialIdleRequest;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(r.center);SpatialBodyView body;
@@ -720,9 +727,9 @@ bool nativeTaskActionsCoherent(const IntentState& s){
   for(const auto& [actor,intent]:s.activeIntents)if(intent.strollRequest&&!nativeIdleStrollRequestBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.heldIdleTaskSource&&!nativeHeldIdleTaskBodyCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent)||intent.idleCycle&&!nativeIdleCycleBodyCurrent(s,intent))return false;
-  for(const auto& [actor,intent]:s.activeIntents)if(intent.farmArrivalRequest&&!nativeFarmArrivalRequestBodyCurrent(s,intent))return false;
+  for(const auto& [actor,intent]:s.activeIntents)if(intent.farmArrivalRequest&&!nativeFarmArrivalRequestCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.initialIdleRequest&&!nativeInitialIdleRequestBodyCurrent(s,intent))return false;
-   for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent))return false;
+   for(const auto& [actor,intent]:s.activeIntents)if(intent.homeRequest&&!nativeHomeRequestBodyCurrent(s,intent)&&!nativeUnboundFarmHomeCurrent(s,intent))return false;
   for(const auto& [actor,intent]:s.activeIntents)if(intent.actionBinding&&!nativeTaskActionBodyCurrent(s,intent)||intent.delivery&&!nativeDeliveryBodyCurrent(s,intent)||intent.settlementBinding&&!nativeSettlementBodyCurrent(s,intent)||intent.home&&intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding&&!nativeHomeBodyCurrent(s,intent)||intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding&&!nativeFarmArrivalBodyCurrent(s,intent))return false;
   return true;
 }
@@ -2309,11 +2316,12 @@ static int commitTaskProposal(bool pendingResources){
     const auto old=s.activeIntents.find(workerId);if(old!=s.activeIntents.end()&&old->second.farmArrivalRequest&&(!pendingResources||!nativeFarmArrivalRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.strollRequest&&(!pendingResources||!nativeIdleStrollRequestCurrent(s,old->second))){clearProposal(s);return 0;}if(old!=s.activeIntents.end()&&old->second.settlementBinding&&(!pendingResources||!nativeSettlementBodyCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleRequest&&(!pendingResources||!nativeInitialIdleRequestCurrent(s,old->second))){clearProposal(s);return 0;}
     if(old!=s.activeIntents.end()&&old->second.initialIdleBodyBinding&&(!pendingResources||!nativeInitialIdleBodyCurrent(s,old->second))){clearProposal(s);return 0;}
-    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
+    const auto* ownedRoute=old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].active&&s.routeSlots[old->second.slot].actor==workerId&&s.routeSlots[old->second.slot].generation==old->second.generation?&s.routeSlots[old->second.slot]:nullptr;
+    if(ownedRoute&&ownedRoute->idleStrollBinding&&(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldIdleStrollBodyCurrent(s,old->second,old->second.assignmentSequence,old->second.generation))){clearProposal(s);return 0;}
     // Farm keeps its physical endpoint through the unpublished Task request.
     // A completed23 needs no artificial24 suspension. Geometric arrival alone
     // cannot end a remaining native turn: require the actual terminal boundary.
-    if(old!=s.activeIntents.end()&&old->second.slot<s.routeSlots.size()&&s.routeSlots[old->second.slot].farmArrivalBinding){
+    if(ownedRoute&&ownedRoute->farmArrivalBinding){
       const bool arrived=nativeCompletedFarmArrivalBodyCurrent(s,old->second);
       if(!pendingResources||old->second.profile!=lazy_selected_context()||!nativeHeldFarmArrivalBodyCurrent(s,old->second)&&!arrived){clearProposal(s);return 0;}
     }
@@ -2333,7 +2341,8 @@ static int commitTaskProposal(bool pendingResources){
     const auto existing=s.activeIntents.find(workerId);
     // The same pose-only transfer also retains a pending farm arrival. No
     // Idle/route history is fabricated; only prepared TaskStart may move it.
-    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&(s.routeSlots[existing->second.slot].idleStrollBinding||s.routeSlots[existing->second.slot].farmArrivalBinding)?captureHeldWorkerTaskSource(s,existing->second):nullptr;
+    const auto* ownedRoute=existing!=s.activeIntents.end()&&existing->second.slot<s.routeSlots.size()&&s.routeSlots[existing->second.slot].active&&s.routeSlots[existing->second.slot].actor==workerId&&s.routeSlots[existing->second.slot].generation==existing->second.generation?&s.routeSlots[existing->second.slot]:nullptr;
+    const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):ownedRoute&&(ownedRoute->idleStrollBinding||ownedRoute->farmArrivalBinding)?captureHeldWorkerTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
     const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;

@@ -10,11 +10,21 @@ export function createSpatialDynamicBodies(wasm){
   if(!wasm.spatial_body_upsert(id,x,z,radius,kind,flags))throw TypeError('Invalid dynamic body');
   if(created){ids.set(key,id);next++;}return id;
  }
+ function admit(key,{x,z,radius,kind,flags}){
+  assertLive();if(key==null)throw TypeError('Expected body identity');
+  if(ids.has(key))return ids.get(key);
+  if(typeof wasm.spatial_body_admit!=='function')throw Error('Rebuild native body admission');
+  const result=wasm.spatial_body_admit(next,x,z,radius,kind,flags);
+  if(result<0)throw TypeError('Invalid first body admission');
+  if(result===0)return null;
+  const id=next++;ids.set(key,id);return id;
+ }
+ function revision(){assertLive();const value=wasm.spatial_bodies_mutation_revision?.();if(!Number.isSafeInteger(value)||value<1)throw Error('Rebuild native body mutation revision');return value;}
  function remove(key){assertLive();const id=ids.get(key);if(id===undefined)return false;wasm.spatial_body_remove(id);ids.delete(key);return true;}
  function clear(key,start,end,mask){assertLive();const id=ids.get(key);if(id===undefined)throw Error('Unknown dynamic body');const result=wasm.spatial_body_segment_clear(id,start.x,start.z,end.x,end.z,mask);if(result<0)throw TypeError('Invalid segment');return result===1;}
  function hasBlockers(key,range){assertLive();const id=ids.get(key);if(id===undefined)throw Error('Unknown dynamic body');const result=wasm.spatial_body_has_blockers(id,range);if(result<0)throw TypeError('Invalid range');return result===1;}
  function detour(key,goal,mask){assertLive();const id=ids.get(key);if(id===undefined)throw Error('Unknown dynamic body');const count=wasm.spatial_body_detour(id,goal.x,goal.z,mask);if(count<0)throw TypeError('Invalid detour');if(!count)return null;const values=new Float64Array(wasm.memory.buffer,wasm.spatial_bodies_result_ptr(),count*2);return Array.from({length:count},(_,i)=>({x:values[i*2],z:values[i*2+1]}));}
  function terrainCacheStats(){assertLive();if(typeof wasm.spatial_body_terrain_cache_hits!=='function'||typeof wasm.spatial_body_terrain_cache_misses!=='function')return null;return {hits:wasm.spatial_body_terrain_cache_hits(),misses:wasm.spatial_body_terrain_cache_misses(),entries:wasm.spatial_body_terrain_cache_entries?.()??null,memoryBytes:wasm.memory.buffer.byteLength,blockedEdges:typeof wasm.spatial_body_blocked_edge_hits==='function'?{hits:wasm.spatial_body_blocked_edge_hits(),rechecks:wasm.spatial_body_blocked_edge_rechecks(),misses:wasm.spatial_body_blocked_edge_misses(),entries:wasm.spatial_body_blocked_edge_entries()}:null};}
  function dispose(){if(disposed)return;disposed=true;wasm.spatial_bodies_reset();ids.clear();}
- wasm.spatial_bodies_reset();return {publish,id(key){assertLive();return ids.get(key);},remove,clear,hasBlockers,detour,terrainCacheStats,dispose};
+ wasm.spatial_bodies_reset();return {publish,admit,revision,id(key){assertLive();return ids.get(key);},remove,clear,hasBlockers,detour,terrainCacheStats,dispose};
 }

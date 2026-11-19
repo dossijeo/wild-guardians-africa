@@ -26,7 +26,8 @@ for(const p of PROFILES)test(`${p.id} farm arrival snapshot keeps the real pose 
 
 test('cold farm declaration only becomes a resource request on the first exact body binding',()=>{
  const f=fixture({bound:false});try{
-  assert.equal(f.declare(),1);const cold=f.read(false);assert(cold);assert.equal(cold[6],0);assert.equal(f.read(),null);assert.equal(f.w.nav_farm_arrival_requests_snapshot(),0);assert.notEqual(f.planner.commitNativeCausalClock().status,'committed');
+  assert.equal(f.declare(),1);const cold=f.read(false);assert(cold);assert.equal(cold[6],0);assert.equal(f.read(),null);assert.equal(f.w.nav_farm_arrival_requests_snapshot(),0);assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  assert.notEqual(f.w.nav_farm_arrival_route_proposal_stage(f.actor,cold[2],cold[3],0),1,'a semantic clock cannot acquire a bodyless route');
   assert.equal(f.w.spatial_body_upsert(1,f.worker.x+.1,f.worker.z,.28,0,1),1);assert.equal(f.w.nav_gate_bind_worker(f.actor,1),0);assert.equal(f.read(),null);
   assert.equal(f.w.spatial_body_upsert(1,f.worker.x,f.worker.z,.28,0,1),1);assert.equal(f.w.nav_gate_bind_worker(f.actor,1),1);const bound=f.read();assert.equal(bound[6],1);assert(bound[3]>cold[3]);assert.deepEqual(bound.slice(9,12),cold.slice(9,12));assert.deepEqual(bound.slice(13),cold.slice(13));assert.equal(f.w.nav_gate_bind_worker(f.actor,1),1);assert.deepEqual(f.read(),bound);
   assert.equal(f.w.spatial_body_upsert(2,f.worker.x,f.worker.z,.28,0,1),1);assert.equal(f.w.nav_gate_bind_worker(f.actor,2),0);

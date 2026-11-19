@@ -16,14 +16,14 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
   if(intent.state==PlanningState::Cancelled)continue;
   if(nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)||nativeHeldFarmArrivalBodyCurrent(s,intent))continue;
   if(nativeFarmArrivalBodyCurrent(s,intent))continue;
-  if(intent.farmArrivalRequest){if(!nativeFarmArrivalRequestBodyCurrent(s,intent))return -1;continue;}
+  if(intent.farmArrivalRequest){if(!nativeFarmArrivalRequestCurrent(s,intent))return -1;continue;}
   if(intent.strollRequest){if(!nativeIdleStrollRequestBodyCurrent(s,intent))return -1;continue;}
   if(intent.state==PlanningState::RouteActive&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding){if(!currentIdleStroll(double(actor)))return -1;continue;}
   if(intent.heldIdleTaskSource){if(!nativeHeldIdleTaskBodyCurrent(s,intent))return -1;continue;}
   if(intent.idleCycle){if(!nativeIdleCycleBodyCurrent(s,intent))return -1;continue;}
   if(intent.initialIdleBodyBinding){if(!nativeInitialIdleBodyCurrent(s,intent))return -1;continue;}
   if(intent.initialIdleRequest){if(!nativeInitialIdleRequestBodyCurrent(s,intent))return -1;continue;}
-  if(intent.homeRequest){if(!nativeHomeRequestBodyCurrent(s,intent))return -1;continue;}
+  if(intent.homeRequest){if(!nativeHomeRequestBodyCurrent(s,intent)&&!nativeUnboundFarmHomeCurrent(s,intent))return -1;continue;}
   if(intent.delivery){if(!nativeDeliveryBodyCurrent(s,intent))return -1;continue;}
   if(intent.home&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].homeBinding){if(!nativeHomeBodyCurrent(s,intent))return -1;continue;}
   if(intent.settlementBinding){if(!nativeSettlementBodyCurrent(s,intent))return -1;continue;}

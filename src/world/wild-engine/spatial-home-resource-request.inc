@@ -138,6 +138,13 @@ EMSCRIPTEN_KEEPALIVE int nav_home_request_snapshot(double actor,double ticket){
  return nativeHomeBodyCurrent(s,intent)&&snapshotHomeRequest(s,s.routeSlots[intent.slot].homeBinding->requestSource.get())?1:0;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_home_request_ptr(){return state().homeRequestResult.data();}
+// Bodyless Farm-origin Home is observable but is never an executable request.
+EMSCRIPTEN_KEEPALIVE int nav_home_declaration_snapshot(double actor){
+ auto& s=state();s.homeRequestResult.fill(0);if(!integer(actor))return 0;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeUnboundFarmHomeCurrent(s,found->second))return 0;
+ const auto& r=*found->second.homeRequest;
+ s.homeRequestResult={1,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.village),r.homeX,r.homeZ,r.x,r.z,r.yaw,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.profile),0,0,0};return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;
  // Subscriptions may precede physical initialization. Unbound declarations
