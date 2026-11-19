@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+
+Continuación A4/e-R3/f-R4: [recuperación retenida desde Worker y partida](native-retained-handoff-20261119.md). La partida reutiliza binding, canvas, WorldWorker, Surface y recursos válidos; espera el envío pendiente y exige ACK y frame de la nueva generación. Corrige además el inicio duplicado de hierba y la reentrada durante cierre. Se adaptan patrones de código de Redis, Babylon y Three, sin dependencias ni propietarios nuevos. Pasan 737 dirigidas/51 archivos, 4.337 de 4.338 seleccionadas/337 (una omisión), nueve sintaxis y build completo de 60,29 s; 571 inputs, 64 nativos intactos y 16 ajenos exactos. Cinco casos GPU finales NVIDIA: dos reconexiones con cero recursos, forks y compilaciones nuevos; publicaciones completas/delta y drain real; pérdida real de dispositivo y controles C++ de reconexión, readmisión y rechazo. La partida está pausada en sabana/tiempo0; los componentes nativos se informan por separado. Tres fallos previos del host/timeline permanecen abiertos. Siguen pendientes productor/cohort, paradas, relevos, cadencia y plataformas; A6/A/B/C abiertos, D no iniciado y f-R3 conserva su cierre de seguridad.
+
 Desbloqueo A1 durante la integración A4: [consulta y voz del tutorial sobre vista confirmada](native-confirmed-tutorial-read-20261119.md). Consulta diaria sin mutar la vista inmutable; narración externa filtrada por el catálogo existente antes del protocolo estricto. Autoridad/registro/guardado conservados;sin dependencia/dueño nuevo. Baseline20pases/2fallos→22/22 y4sintaxis. Validación CPU acotada;relevo Worker/cliente/Surface/UI aún en progreso,sin aceptación GPU/cadencia ni cierre A6/A/B/C,D no iniciado.
 
 
