@@ -5,7 +5,7 @@ import {root,git,files,digest,fingerprint,changedFiles,selectTests,runDirectory,
 
 const [mode='help',...args]=process.argv.slice(2);
 const value=key=>{const i=args.indexOf(key);if(i<0)return undefined;if(!args[i+1]||args[i+1].startsWith('--'))throw Error(`Missing value for ${key}`);return args[i+1];};
-const allowed={context:['--json'],impact:['--base','--files','--tier','--run','--gpu'],lab:['--scenario','--run','--gpu','--require-complete'],research:['--topic'],check:[],help:[]};
+const allowed={a5:['--scenario','--run','--gpu','--receipt'],context:['--json'],impact:['--base','--files','--tier','--run','--gpu'],lab:['--scenario','--run','--gpu','--require-complete'],research:['--topic'],check:[],help:[]};
 if(!allowed[mode]||args.some(a=>a.startsWith('--')&&!allowed[mode].includes(a)))throw Error('Unknown command/option. Use help.');
 const emit=x=>console.log(JSON.stringify(x,null,2));
 function context(){
@@ -51,6 +51,7 @@ async function run(tests,jobs,label,{pending=[],build=false,requiredGpu=false,se
   process.exitCode=results.some(r=>r.status==='failed')?1:results.some(r=>r.status==='incomplete')||!report.context.stable||report.missingGpu||(args.includes('--require-complete')&&pending.length)?2:0;
 }
 async function main(){
+  if(mode==='a5')return (await import('./a5-lab.mjs')).runA5Lab(args);
   if(mode==='context')return context();
   if(mode==='impact'){
     const changed=value('--files')?.split(',').filter(Boolean)??changedFiles(value('--base'));
@@ -83,6 +84,9 @@ async function main(){
     emit({output,procedure:'docs/guardian/MIGRATION-RESEARCH.md',delegation:'Optional one-shot read-only research; never start a persistent agent or write production code.'});return;
   }
   console.log(`node tools/guardian/migration-support/cli.mjs <command>
+a5 [--scenario all|cold,progressive,steady,recovery,local,retirement] [--run] [--gpu]
+a5 --receipt FILE                       Recheck .json/.json.gz evidence; does not execute GPU
+A5 guide: docs/guardian/a5-resource-lab-handoff-20261119.md
 context [--json]                         Derive state from canonical documents/Git
 impact [--base REV|--files a,b] [--tier focused|integration|broad] [--run] [--gpu]
 lab [--scenario harvest|all|a,b] [--run] [--gpu] [--require-complete]
