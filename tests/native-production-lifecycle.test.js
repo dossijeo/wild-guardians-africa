@@ -102,6 +102,25 @@ test('production hosted/source Worker modules keep the real receipt local while 
  }finally{await f.close();}
 });
 
+for(const rejectCommit of [false,true])test(`source Worker suspension waits for its resource endpoint before replying (commit rejected=${rejectCommit})`,async()=>{
+ let release;const gate=new Promise(resolve=>{release=resolve;});const f=await fullFixture({onReady:record=>{if(rejectCommit)record.packet.commit=()=>false;return gate;}});
+ const port=f.native.resourcePort,send=port.postMessage.bind(port),withheld=[];let blocked=true,settled=false;
+ port.postMessage=message=>{if(blocked&&['commitNativeGateResources','flushNativeResources'].includes(message.kind))withheld.push(message);else send(message);};
+ const releaseMessages=()=>{blocked=false;for(const message of withheld.splice(0))send(message);};
+ try{
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(port);await until(()=>f.native.records[0]?.packet,()=>f.native.present());
+  const waiting=f.runtime.quiesceNativeIntentProduction();waiting.then(()=>{settled=true;},()=>{settled=true;});
+  await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='quiescing');release();await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='suspended',()=>f.native.present());
+  await flush();await flush();assert.equal(f.native.authority.nativeResourcePreparationStatus().retained,0);assert.equal(f.native.records[0].committed,false);assert.equal(settled,false);
+  assert.deepEqual(withheld.map(m=>m.kind),['commitNativeGateResources','flushNativeResources']);
+  const lastSequence=f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence;
+  releaseMessages();
+  if(rejectCommit){await assert.rejects(waiting,/commit|closed|unavailable|flush/i);assert.equal(f.source.messages.filter(m=>m.kind==='nativeIntentProductionQuiesced').length,0);assert.equal(f.native.authority.nativeResourcePreparationStatus().phase,'failed');}
+  else{const receipt=await waiting;assert.equal(f.native.records[0].committed,true);assert.equal(f.native.authority.nativeResourcePreparationStatus().pending,0);await f.runtime.resumeNativeIntentProduction(receipt.holdId);assert.deepEqual(f.native.faults,[]);}
+  assert.equal(f.sourceWorker.sent.filter(m=>m.data.kind==='command').at(-1).data.command.sequence,lastSequence);assert.equal(f.created(),1);
+ }finally{release();releaseMessages();await f.close();}
+});
+
 test('the full hosted protocol waits for active native work while ordinary command sequences continue unchanged',async()=>{
  let release;const gate=new Promise(resolve=>{release=resolve;});const f=await fullFixture({onPrepare:()=>gate});
  try{

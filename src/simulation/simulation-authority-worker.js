@@ -54,6 +54,7 @@ self.onmessage=async ({data})=>{
       if(nativeProductionHold)throw Error('Native production suspension already held');
       createdHold={id:data.id,receipt:null,settled:false};nativeProductionHold=createdHold;
       const receipt=await source.quiesceNativeIntentProduction();
+      await source.flushNativeResourcePreparation();
       if(authority!==source||nativeProductionHold!==createdHold)return;
       createdHold.receipt=receipt;createdHold.settled=true;
       postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id});

@@ -47,6 +47,13 @@ test('a pending resource preparation is never bypassed by retained transport rep
  const f=await fixture();let release;try{f.resourceGate(new Promise(resolve=>{release=resolve;}));const preparing=f.send({kind:'prepareNativeGateResources',id:1,resources:{kind:1,worldBoundary:{version:1,authorityEpoch:'fixture',nativeSession:1,ticket:1,effectiveTime:10}}});await until(()=>f.calls.includes('prepareResource'));await f.send(f.ports(8).message);assert.equal(f.messages.at(-1).kind,'recovery-rebind-error');assert.equal(f.calls.includes('health'),false);assert.equal(f.calls.some(c=>Array.isArray(c)&&c[0]==='rebind'),false);release();await preparing;await f.send({kind:'abortNativeGateResources',id:1});}finally{release?.();await f.dispose();}
 });
 
+test('retained rebind refuses an aborted preparation until its late callback actually settles',async()=>{
+ const f=await fixture();let release;try{f.resourceGate(new Promise(resolve=>{release=resolve;}));const preparing=f.send({kind:'prepareNativeGateResources',id:1,resources:{kind:1,worldBoundary:{version:1,authorityEpoch:'fixture',nativeSession:1,ticket:1,effectiveTime:10}}});await until(()=>f.calls.includes('prepareResource'));
+  await f.send({kind:'abortNativeGateResources',id:1});await f.send(f.ports(8).message);assert.equal(f.messages.at(-1).kind,'recovery-rebind-error');assert.equal(f.calls.includes('health'),false);assert.equal(f.calls.some(c=>Array.isArray(c)&&c[0]==='rebind'),false);
+  release();await preparing;await f.send(f.ports(9).message);assert.equal(f.messages.at(-1).kind,'recovery-rebound');assert.deepEqual(f.counts(),{created:1,disposed:0});
+ }finally{release?.();await f.dispose();}
+});
+
 test('incorrect recovery identity cannot finish replay or mint a live-frame witness',async()=>{
  const f=await fixture();try{const p=f.ports(3);await f.send(p.message);await replayCheckpoint(f,p);await f.send({kind:'recovery-live',recoveryId:2});assert.equal(f.calls.includes('finish'),false);assert.equal(f.messages.some(m=>m.kind==='recoveryLive'),false);assert.equal(f.messages.some(m=>m.kind==='rendered-frame'&&m.recoveryId===3),false);}finally{await f.dispose();}
 });
