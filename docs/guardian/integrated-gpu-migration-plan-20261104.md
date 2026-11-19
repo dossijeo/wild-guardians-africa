@@ -1,6 +1,9 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
 
+Continuación e-R3/f-R4: [Altas Farm Worker/Surface reales](native-farm-birth-worker-surface-20261120.md). Cuatro perfiles y una pasada sin capturas: autoridad Worker, contratación pagada, productor/puertos/Surface originales y GPU NVIDIA;575 IDs invariantes conservados, mismo perfil comparte26 buffers vivos, picking y drenaje reales. Dos bloqueos del preparador de1.8s mantienen54 dibujos cada uno; fuente sigue independiente. Tras READY quedan0/0/4/14/8 recursos de huellas, no cero asignaciones ni aceptación de cadencia (~33ms). Three r180 leído en fuente; solo cuatro QA, sin cambios de producto/dependencias. Tres sintaxis+inline propio y309 scripts rastreados;646 inputs previos/64 nativos/16 ajenos/38 A5 exactos, regresión/build heredados. Siguiente altas concurrentes/cancelación/fallos y demás ciclo; recuperación3.123 sigue abierta,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Altas Farm en el registro existente](native-farm-birth-admission-20261119.md). Contratación diaria/adicional declara13 y admite solo cuerpos nuevos; bloqueo físico conserva fuente y compañeros, con reintento por revisiones existentes y sin trabajo de admisión tras terminar las altas. Home19 sin cuerpo y Task14 directo conservan pose; verifica dueño/generación de slot antes de transferir. EnTT/Flecs leídos, sin dependencia/registro/cola/reloj nuevos.17 casos nuevos,30 dirigidos, selección4807/4808/362, una omisión,8 sintaxis/build56.157s; standalone/pthread canónicos.646 inputs/64 nativos probados/16 ajenos/38 A5 exactos. Sin nueva GPU/cadencia ni cierre del caso3.123. Siguiente Worker/Surface, reutilización gráfica y demás lotes/recuperación; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
