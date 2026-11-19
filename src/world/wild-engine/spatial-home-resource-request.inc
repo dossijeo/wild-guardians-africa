@@ -60,7 +60,9 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_cycle_home_request(double actor,double 
 // its held native pose without creating a rest cycle or releasing its slot.
 static int requestHeldWorkerHome(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ,bool farm){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(assignmentSequence)||!integer(generation)||generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
- if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto& pending=s.barrierProposal;
+ const bool farmContinuation=farm&&pending.pending&&pending.kind==23&&pending.farmArrivalRoute&&pending.farmArrivalRoute->header[1]==actor&&pending.farmArrivalRoute->farmArrivalHeldBinding;
+ if(pending.pending&&!farmContinuation||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
  // A completed Farm owns a final pose, not a synthetic suspension. Its same
  // request remains idempotent after the executable corridor has been released.
@@ -69,7 +71,11 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  if(farm?intent.assignmentSequence!=uint64_t(assignmentSequence)||intent.generation!=uint32_t(generation)||!nativeHeldFarmArrivalBodyCurrent(s,intent)&&!completed:!nativeHeldIdleStrollBodyCurrent(s,intent,uint64_t(assignmentSequence),uint32_t(generation)))return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;if(!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
- const auto& route=s.routeSlots[intent.slot];const auto& pose=route.executionPose;SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
+ const auto& route=s.routeSlots[intent.slot];
+ // Only the exact retained Farm source can obsolete its own prepared successor.
+ // Keep every other proposal and all source/body checks unchanged.
+ if(farmContinuation){if(pending.farmArrivalRoute->farmArrivalHeldBinding!=route.farmArrivalBinding)return -4;clearWorldMutationProposal(s.barrierProposal);}
+ const auto& pose=route.executionPose;SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=intent.actor;request->session=s.session;request->body=route.reservationBody;request->profile=intent.profile;request->bodyFlags=body.flags;request->radius=route.radius;request->at=s.effectiveTime;
  request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
  if(farm){request->farmArrivalSourceSequence=uint64_t(assignmentSequence);request->farmArrivalSourceGeneration=uint32_t(generation);}else{request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);}

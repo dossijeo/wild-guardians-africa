@@ -121,6 +121,9 @@ static int prepareNativeGateRouteResume(double session,double slot,double genera
     std::vector<GateCrossingBoundary>& boundaries,uint32_t& topology,uint64_t& bodyId){
   auto& s=state();s.timingRejection=0;s.reservationResult.fill(0);s.gateSweepResult.fill(0);s.gateStaticResult.fill(0);
   const auto old=suspendedGateRoute(session,slot,generation);if(!old)return -1;
+  // Farm retains its own typed goal/source and prepared23 association.
+  // A generic resume must not discard that binding or bypass its acquisition.
+  if(old->farmArrivalBinding)return -2;
   if(!gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   const auto found=s.activeIntents.find(old->actor);const auto worker=s.workers.find(old->actor);SpatialBodyView body;
   if(worker==s.workers.end()||!gateBody(worker->second,body)||worker->second.body!=old->reservationBody||

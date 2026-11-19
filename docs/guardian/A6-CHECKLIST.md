@@ -1,6 +1,9 @@
 # Seguimiento de cierre de A6
 
 
+Continuación e-R3/f-R4: [Farm preparada tras parada24](native-farm-held-continuation-20261119.md). Resuelve tarea retirada después de24: mismo cuerpo/slot/intención, fuente plana acotada y adquisición23; Task/Home pueden invalidar durante preparación. Reanudación genérica Farm cerrada. Detour leído en fuente; sin dependencia/cola/reloj/dueño nuevos.75 nuevos pasan; selección 4628/4629 en 353 archivos, una omisión,16 sintaxis/build 57.251s. GPU componente645 IDs retenidos,1 textura de movimiento,70 preparados/0 después de READY, picking/adopción/drain y0 errores; no aceptación de productor ordinario/cadencia.633 inputs/64 nativos/16 ajenos exactos;38paths A5 adoptados como base externa38012c437, evidencia separada. Siguiente preparación inicialFarm yIdle terminal/productor/roster; nacimientos/lotes y demás integración pendientes. Tres exclusiones históricas abiertas; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Farm móvil en Game y parada preparada](native-farm-moving-game-20261119.md). Caché/reloj/cuerpo nativos; lote elegido permanece sin asignar hasta Farm24 y replantea a Task6/14, contrato prioriza24→19/18. Detour leído en fuente; disponibilidad física separada como Stroll, sin dueño/cola/reloj/dependencia nuevos. Control previo 2/44; 50 nuevos,133 dirigidos y 300 contratos pasan; selección final 4553/4554 en 348 archivos, una omisión, 17 sintaxis y build producto 59.231 s. GPU componente conserva 649 IDs, 70 preparados/0 después de READY; no aceptación de productor ni cadencia. 628 inputs/64 nativos/16 ajenos exactos. Reproducer: tarea retirada DESPUÉS de24 deja cuerpo retenido sin sucesor; siguiente resolver continuación preparada antes de abrir roster Farm ordinario. Lote indivisible/nacimientos y demás integración pendientes. Tres exclusiones históricas abiertas; A6/A/B/C abiertos, D no iniciado y f-R3 seguro.
 
 

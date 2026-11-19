@@ -39,6 +39,11 @@ static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& inte
  if(!b||!b->requestSource||!route.hasExecution||route.motionFlags>1||worker==s.workers.end())return false;
  const auto& r=*b->requestSource;const auto& h=b->actual.header;const auto center=s.targets.find(r.center);
  if(home){const auto& q=*intent.homeRequest;const auto& p=route.executionPose;if(q.initialIdleSourceSequence||q.idleCycleSourceSequence||q.idleStrollSourceSequence||q.idleStrollSourceGeneration||q.farmArrivalSourceSequence!=b->assignmentSequence||q.farmArrivalSourceGeneration!=intent.generation||q.body!=route.reservationBody||q.profile!=intent.profile||q.bodyFlags!=r.bodyFlags||q.radius!=route.radius||q.at<route.suspendedAt||q.sequence<=b->assignmentSequence||q.x!=p[0]||q.z!=p[1]||q.yaw!=p[4]||q.runPhase!=p[9]||q.walkPhase!=p[10]||q.carryPhase!=p[11]||q.runRemaining!=p[14])return false;}
+ const auto& origin=b->heldSource;
+ const std::array<double,8> source=origin?origin->pose:std::array<double,8>{r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining};
+ if(origin){uint32_t next=origin->generation+2;if(!next)next=1;
+  if(origin->sequence<=r.sequence||origin->sequence>=b->assignmentSequence||origin->at<r.at||origin->at>h[10]||double(next)!=h[4])return false;}
+ if(route.originX!=source[0]||route.originZ!=source[1]||route.originYaw!=source[2]||route.radius!=source[3]||route.motionOffset[2]!=source[4]||route.motionOffset[3]!=source[5]||route.motionOffset[4]!=source[6]||route.runBudget!=source[7]||h[8]!=source[0]||h[9]!=source[1]||h[16]!=source[7])return false;
  const double endX=route.points.empty()?route.originX:route.points[route.points.size()-2],endZ=route.points.empty()?route.originZ:route.points.back();
  uint32_t resumed=uint32_t(h[4])+1;if(!resumed)resumed=1;
  const auto suspended=s.suspendedBodies.find(r.body);

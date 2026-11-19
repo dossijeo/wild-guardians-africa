@@ -102,7 +102,7 @@ std::set<uint64_t> reservationBodyCandidates(const IntentState& s,const SpatialB
   return reservationBoxCandidates(s,body.x-body.r,body.z-body.r,body.x+body.r,body.z+body.r);
 }
 bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot& route,
-    uint64_t body,const SpatialBodyView& physical,bool suffix=false,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr,const NativeInitialIdleBodyBinding* initialIdleBodyFrom=nullptr,const NativeIdleCycleBinding* idleCycleFrom=nullptr,const NativeWorkerPoseResourceRequest* heldIdlePoseFrom=nullptr){
+    uint64_t body,const SpatialBodyView& physical,bool suffix=false,const NativeTaskActionBinding* transferFrom=nullptr,const NativeTaskSettlementBinding* stationaryFrom=nullptr,const NativeHomeResourceRequest* homeRequestFrom=nullptr,const NativeInitialIdleBodyBinding* initialIdleBodyFrom=nullptr,const NativeIdleCycleBinding* idleCycleFrom=nullptr,const NativeWorkerPoseResourceRequest* heldIdlePoseFrom=nullptr,const NativeFarmArrivalRouteBinding* heldFarmFrom=nullptr){
   if(const auto action=nativeTaskActionForBody(s,body);action){
     const bool task=transferFrom&&action->actionBinding.get()==transferFrom&&nativeTaskActionBodyCurrent(s,*action)&&action->actor==route.actor&&s.effectiveTime>=transferFrom->actual[16];
     const bool stationary=stationaryFrom&&action->settlementBinding.get()==stationaryFrom&&nativeSettlementBodyCurrent(s,*action)&&action->actor==route.actor;
@@ -112,7 +112,8 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     const bool heldIdle=heldIdlePoseFrom&&action->heldIdleTaskSource.get()==heldIdlePoseFrom&&nativeHeldIdleTaskBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool restoredIdle=heldIdlePoseFrom&&action->strollRequest.get()==heldIdlePoseFrom&&nativeIdleStrollRequestBodyCurrent(s,*action)&&action->actor==route.actor;
     const bool farmArrival=heldIdlePoseFrom&&action->farmArrivalRequest.get()==heldIdlePoseFrom&&nativeFarmArrivalRequestBodyCurrent(s,*action)&&action->actor==route.actor;
-    if(!task&&!stationary&&!home&&!initial&&!cycle&&!heldIdle&&!restoredIdle&&!farmArrival)return false;
+    const bool heldFarm=heldFarmFrom&&action->slot<s.routeSlots.size()&&s.routeSlots[action->slot].farmArrivalBinding.get()==heldFarmFrom&&nativeHeldFarmArrivalBodyCurrent(s,*action)&&action->actor==route.actor;
+    if(!task&&!stationary&&!home&&!initial&&!cycle&&!heldIdle&&!restoredIdle&&!farmArrival&&!heldFarm)return false;
   }
   const ReservationPath path{&route};
   double minX=route.originX,maxX=route.originX,minZ=route.originZ,maxZ=route.originZ;
