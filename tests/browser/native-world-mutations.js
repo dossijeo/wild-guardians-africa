@@ -5,7 +5,8 @@ import {createNativeIntentControlPublication} from '../../src/simulation/native-
 import {createNativeIntentControlCohort} from '../../src/simulation/native-intent-control-cohort.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,retainedPreparations=false}={}){
+async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,retainedPreparations=false,unpublishedFence=false}={}){
+ if(unpublishedFence&&!retainedPreparations)throw TypeError('Unpublished fence requires retained preparations');
  const state=deserialize(text),template=structuredClone(state.workers[0]);
  state.workers=[];state.tasks=[];state.plants=[];state.crates=[];state.spells=[];state.raid=null;state.elapsed=10;state.pauses=[];
  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded,onData:c=>loaded.set(`${c.cx},${c.cz}`,c)}),
@@ -49,7 +50,7 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,
    attached=publication.attach(control.port1,transportSession);}
   else {publication=createNativeIntentControlPublication({port:control.port1,session:transportSession,observe:bridge.observeNativeIntentControl});attached=publication.ready;}
   await Promise.all([attached,expect('device-ready')]);
-  const startPacket={kind:'start',retainPreparations:retainedPreparations,startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
+  const startPacket={kind:'start',retainPreparations:retainedPreparations,unpublishedFence,startTime:plan.startTime,endTime:plan.endTime,rows,route:{actorId:plan.actorId,routeHandle:handle,assignmentSequence:plan.assignmentSequence}};
   preparer.postMessage(startPacket);const initialDrawing=await expect('drawing');
   if(lifecycle)return await exerciseControlLifecycle({state,session,bridge,publication,preparer,expect,transportSession,startPacket,mutation});
   if(resourceIdentity){preparer.postMessage({kind:'prepare-frame',id:2,...(retainedPreparations?{retainedUpload:123}:{})});await expect('frame-prepared-2');}
@@ -82,13 +83,20 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,
     changes:mutationResult.changes.map(e=>({type:e.type,sequence:e.sequence,effectiveTime:e.effectiveTime,actorId:e.actorId}))},
    drawStats:{quiescedAt:host.nativeMutationQuiescedAt,releasedAt:host.nativeMutationReleasedAt,mutationEpoch:host.nativeMutationEpoch,
     floor:host.nativeMutationFloor,packets:host.packets,nativeFrames:host.nativeFrames,gpuErrors:host.gpuErrors,failed:host.failed}};
+  let fenceReport=null;
+  if(unpublishedFence){
+   preparer.postMessage({kind:'retained-buffer-fence',id:2});fenceReport=await expect('retained-buffer-fence-2');
+   const before=fenceReport.before,after=fenceReport.after,consumer=after.consumer;
+   if(fenceReport.value!==123||before.resourcesCreated!==after.resourcesCreated||consumer.retainedNonUniformBufferUploads!==1||consumer.retainedPreparationResources!==0||consumer.stagedOperations!==0||consumer.failed||consumer.gpuErrors)throw Error('Retained unpublished buffer fence did not finish its actual upload');
+   summary.retainedBufferFence={readback:fenceReport.value,resourceId:fenceReport.resourceId,resourcesBefore:before.resourcesCreated,resourcesAfter:after.resourcesCreated,before,after};
+  }
   if(resourceIdentity){
    preparer.postMessage({kind:'prepare-frame',id:3,worldBoundary:mutationResult.result.worldBoundary});await expect('frame-prepared-3');
    preparer.postMessage({kind:'publish-frame',id:3});if((await expect('frame-published-3')).outcome!=='presented')throw Error('Fresh native resource identity did not admit replacement');
    preparer.postMessage({kind:'inspect',id:3});const fresh=await expect('inspection-3'),after=fresh.execution.consumer;
    if(after.packets!==2||after.activeSequence!==3||after.failed||after.gpuErrors||fresh.values[0]!==10.25)throw Error('Replacement world did not draw at the native boundary');
    if(retainedPreparations){
-    if(fresh.retainedValue!==123||fresh.retainedResourceId!==initialDrawing.retainedResourceId||fresh.execution.resourcesCreated!==initialDrawing.resourceBaseline.resourcesCreated||after.retainedPreparationResources!==0||host.retainedPreparationBytes!==16||after.uniformForks!==0||after.bindingForks!==0)throw Error('The original device resources were not reused');
+    if(fresh.retainedValue!==123||fresh.retainedResourceId!==initialDrawing.retainedResourceId||fresh.execution.resourcesCreated!==initialDrawing.resourceBaseline.resourcesCreated||after.retainedPreparationResources!==0||host.retainedPreparationBytes!==(unpublishedFence?32:16)||after.uniformForks!==(fenceReport?.after.consumer.uniformForks??0)||after.bindingForks!==(fenceReport?.after.consumer.bindingForks??0))throw Error('The original device resources were not reused');
     summary.retainedPreparations={readback:fresh.retainedValue,bufferBefore:initialDrawing.retainedResourceId,bufferAfter:fresh.retainedResourceId,
       resourcesBefore:initialDrawing.resourceBaseline.resourcesCreated,resourcesAfter:fresh.execution.resourcesCreated,
       bufferForks:after.uniformForks,bindingForks:after.bindingForks,retainedBytesBeforeFrame:host.retainedPreparationBytes,retainedResourcesAfterFrame:after.retainedPreparationResources,consumerNativeFrames:after.nativeFrames,
@@ -97,6 +105,7 @@ async function runCase(module,text,kind,{lifecycle=false,resourceIdentity=false,
    summary.resourceIdentity={latePacket:'obsolete',freshPacket:'presented',worldBoundary:mutationResult.result.worldBoundary,
     activeSequence:after.activeSequence,packets:after.packets,presentedTime:fresh.values[0],scope:'Native resource identity and packet replacement; unchanged diagnostic route, no characters or visible mutation projection.'};
   }
+  if(unpublishedFence){const retirement=await publication.retireGpu('retained-buffer-fence-finished');if(publication.status().drained!==true)throw Error('Retained buffer audit consumer did not drain');summary.retainedBufferFence.retirement=retirement;summary.retainedBufferFence.drained=true;}
   return summary;
  };
  try{return await Promise.race([run(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Native world mutation audit timed out: '+kind)),30000);})]);}
@@ -185,4 +194,9 @@ export async function auditNativeRetainedPreparations(){
   module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
  return {checklistId:'A6-04.f-R4',backend:'webgpu',...await runCase(module,text,'residency-add',{resourceIdentity:true,retainedPreparations:true}),
   scope:'Retained uploads and original GPU resources after an obsolete frame; diagnostic triangle, not product characters or visible mutation projection.',authorizedAutonomy:false,authorizedPassage:false};
+}
+
+export async function auditNativeRetainedBufferFence(){
+ const bytes=new Uint8Array(await(await fetch('/tests/fixtures/desierto983-d15-partial-state.json.gz')).arrayBuffer()),text=bytes[0]===31&&bytes[1]===139?await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text():new TextDecoder().decode(bytes),module=await WebAssembly.compileStreaming(fetch('/src/world/wild-engine/spatial-savanna.wasm'));
+ return {checklistId:'A6-04.f-R4',backend:'webgpu',...await runCase(module,text,'residency-add',{resourceIdentity:true,retainedPreparations:true,unpublishedFence:true}),scope:'Existing GPU fence submits retained unpublished non-uniform bytes in place, actual mapped readback and fresh native drawing/drain. Diagnostic triangle; no product world recovery or cadence acceptance.',authorizedAutonomy:false,authorizedPassage:false};
 }

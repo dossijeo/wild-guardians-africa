@@ -1,7 +1,7 @@
 import {createRemoteWebGpu} from '../../src/rendering/remote-webgpu-client.js';
 
 const now=()=>performance.timeOrigin+performance.now();
-let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute,prepareFrame,retainedBuffer,retainedReadback;
+let remote,clockBuffer,diagnosticClock,resultBuffer,readback,computeGroup,compute,prepareFrame,retainedBuffer,retainedReadback,unpublishedBuffer;
 self.onmessage=async({data})=>{
  try{
   if(data.kind==='initialize'){
@@ -18,6 +18,7 @@ self.onmessage=async({data})=>{
    const knots=device.createBuffer({size:rows.byteLength,usage:136});device.queue.writeBuffer(knots,0,rows);
    resultBuffer=device.createBuffer({size:32,usage:132});readback=device.createBuffer({size:32,usage:9});
    if(data.retainPreparations){retainedBuffer=device.createBuffer({size:16,usage:76});retainedReadback=device.createBuffer({size:16,usage:9});device.queue.writeBuffer(retainedBuffer,0,new Float32Array(4));}
+   if(data.unpublishedFence){if(!retainedBuffer)throw Error('Unpublished fence requires retained preparation');unpublishedBuffer=device.createBuffer({size:16,usage:9});}
    const layout=device.createBindGroupLayout({entries:[
     {binding:0,visibility:1,buffer:{type:'uniform'}},{binding:1,visibility:1,buffer:{type:'read-only-storage'}},
     ...(data.retainPreparations?[{binding:3,visibility:2,buffer:{type:'uniform'}}]:[]),
@@ -66,7 +67,7 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    remote.registerClockBinding(clockBuffer,{byteOffset:0,semantic:'absolute',epoch:0,nativeRoute:data.route});
    const anchor=now()+50,clock={version:1,epoch:0,elapsed:data.startTime,safeUntil:data.endTime,
     anchorAbsoluteMs:anchor,paused:false,segments:[{start:data.startTime,end:data.endTime,rate:1,realDuration:data.endTime-data.startTime}]};
-   prepareFrame=(worldBoundary,upload=null)=>{remote.beginFrame({clock,nativeWorldBoundary:worldBoundary});if(upload!==null){if(!retainedBuffer)throw Error('Retained upload fixture unavailable');device.queue.writeBuffer(retainedBuffer,0,new Float32Array([upload,0,0,0]));}const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
+   prepareFrame=(worldBoundary,upload=null)=>{remote.beginFrame({clock,nativeWorldBoundary:worldBoundary});if(upload!==null){if(!retainedBuffer)throw Error('Retained upload fixture unavailable');device.queue.writeBuffer(retainedBuffer,0,new Float32Array([upload,0,0,0]));if(unpublishedBuffer)device.queue.writeBuffer(unpublishedBuffer,0,new Uint32Array([upload,0,0,0]));}const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({
     colorAttachments:[{view:remote.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store',clearValue:{r:.01,g:.02,b:.03,a:1}}],
    });
    pass.setPipeline(render);pass.setBindGroup(0,group);pass.draw(3);pass.end();device.queue.submit([encoder.finish()]);};
@@ -85,6 +86,12 @@ struct Vertex { @builtin(position) position:vec4f, @location(0) phase:f32 }
    const values=Array.from(new Float32Array(readback.getMappedRange()));readback.unmap();
    let retainedValue=null;if(retainedBuffer){const copy=remote.device.createCommandEncoder();copy.copyBufferToBuffer(retainedBuffer,0,retainedReadback,0,16);remote.device.queue.submit([copy.finish()]);await retainedReadback.mapAsync(1);retainedValue=new Float32Array(retainedReadback.getMappedRange())[0];retainedReadback.unmap();}
    postMessage({kind:'inspection',id:data.id,values,retainedValue,retainedResourceId:retainedBuffer?.__remoteGpuId??null,execution:await remote.inspectAsync()});return;
+  }
+  if(data.kind==='retained-buffer-fence'){
+   if(!unpublishedBuffer)throw Error('Unpublished fence buffer unavailable');
+   const before=await remote.inspectAsync();await remote.device.queue.onSubmittedWorkDone();
+   await unpublishedBuffer.mapAsync(1);const value=new Uint32Array(unpublishedBuffer.getMappedRange())[0];unpublishedBuffer.unmap();
+   postMessage({kind:'retained-buffer-fence',id:data.id,value,resourceId:unpublishedBuffer.__remoteGpuId,before,after:await remote.inspectAsync()});return;
   }
   if(data.kind==='status'){postMessage({kind:'status',id:data.id,execution:await remote.inspectAsync()});return;}
   if(data.kind==='prepare-frame'){prepareFrame(data.worldBoundary??null,data.retainedUpload??null);postMessage({kind:'frame-prepared',id:data.id});return;}

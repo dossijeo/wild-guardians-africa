@@ -802,7 +802,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // submitted before a real queue fence is acknowledged.
   function submitRetainedCpuPreparations(){
     if(!retainedPreparationSnapshot||!stagedOperations.length||pending||admittingFrame||nativeMutationHold||nativeConsumerRetirement||preparationRecoveryRequired)return false;
-    const keys=new Set(),textures=new Set();
+    const keys=new Set(),textures=new Set(),nonUniformKeys=new Set();
     for(const op of stagedOperations){
       if(op.method==='writeTexture'){
         const key=op.args[0].texture[REF],prior=retainedPreparationSnapshot.get(key);
@@ -810,14 +810,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       if(op.method!=='writeBuffer'){metrics.retainedFenceBlock={method:op.method};return false;}
       const key=op.args[0][REF],entry=resources.get(key),prior=retainedPreparationSnapshot.get(key);
-      if(!entry?.uniformShadow||prior&&prior!==entry){metrics.retainedFenceBlock={key,uniform:!!entry?.uniformShadow,generation:entry?.generation,prior:prior?.generation};return false;}keys.add(key);
+      // New native generations can receive CPU uploads in place. A published
+      // non-uniform generation still requires its explicit ownership protocol.
+      const published=active?.resourceSnapshot?.get(key)===entry||pending?.resourceSnapshot?.get(key)===entry;
+      if(!entry||entry.kind!=='createBuffer'||prior&&prior!==entry||!entry.uniformShadow&&published){metrics.retainedFenceBlock={key,uniform:!!entry?.uniformShadow,generation:entry?.generation,prior:prior?.generation};return false;}
+      keys.add(key);if(!entry.uniformShadow)nonUniformKeys.add(key);
     }
-    for(const key of keys)if(!forkPublishedBuffer(key))throw Error('Retained uniform preparation lost its copy-on-write owner');
+    for(const key of keys)if(!forkPublishedBuffer(key))throw Error('Retained buffer preparation lost its copy-on-write owner');
     for(const key of textures)if(!forkPublishedTexture(key))throw Error('Retained texture preparation lost its copy-on-write owner');
     const operations=stagedOperations;stagedOperations=[];retainedPreparationOperationCount=0;
     for(const op of operations)applyQueue(op);
     const retained=retainedPreparationSnapshot;retainedPreparationSnapshot=null;releaseSnapshot(retained);
-    metrics.retainedUniformUploads=(metrics.retainedUniformUploads||0)+operations.filter(op=>op.method==='writeBuffer').length;
+    metrics.retainedUniformUploads=(metrics.retainedUniformUploads||0)+operations.filter(op=>op.method==='writeBuffer'&&!nonUniformKeys.has(op.args[0][REF])).length;
+    metrics.retainedNonUniformBufferUploads=(metrics.retainedNonUniformBufferUploads||0)+operations.filter(op=>op.method==='writeBuffer'&&nonUniformKeys.has(op.args[0][REF])).length;
     metrics.retainedTextureUploads=(metrics.retainedTextureUploads||0)+operations.filter(op=>op.method==='writeTexture').length;
     for(const entry of pendingRetirement)tryRetire(entry);
     return true;

@@ -1869,3 +1869,74 @@ test('a close RPC joins an already stopped host and survives expected device los
  const f=await fixture();let releaseDrain,drains=0,settled=false;
  try{f.gpu.device.queue.onSubmittedWorkDone=()=>{drains++;return new Promise(resolve=>{releaseDrain=resolve;});};const stopped=f.host.dispose(),closing=f.client.disposeAsync();closing.then(()=>{settled=true;});await flush();assert.equal(drains,1);assert.equal(settled,false);f.gpu.device.destroy();await flush();assert.equal(settled,false);releaseDrain();await stopped;assert.deepEqual(await closing,{disposed:true});assert.equal(drains,1);assert.deepEqual(f.errors,[]);}finally{releaseDrain?.();f.client.dispose();f.host.dispose();}
 });
+
+// The production native authority, client and Host are used here; GPU and
+// transport are deterministic doubles. These are upload/lifetime checks,
+// not acceptance of retained world recovery or hardware cadence.
+function unpublishedFenceUploadDraw(f,buffer,metadata){
+ f.client.beginFrame(metadata);f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([123]));f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([2]));
+ const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
+}
+function unpublishedFenceVertexDraw(f,vertex,metadata,upload=null,extra=null){
+ f.client.beginFrame(metadata);
+ f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([1]));
+ if(extra)f.client.device.queue.writeBuffer(extra,0,new Uint32Array([29]));
+ if(upload!==null)f.client.device.queue.writeBuffer(vertex,0,new Uint32Array([upload]));
+ const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.setVertexBuffer(0,vertex);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
+}
+
+test('retained unpublished non-uniform upload reaches the existing queue fence without changing the displayed generation',async()=>{
+ const f=await nativePreparationFixture();let release,original;
+ try{
+  const first=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const displayed=f.gpu.buffers[0],buffer=f.client.device.createBuffer({size:16,usage:9});await flush();await f.host.idle();const nativeBuffer=f.gpu.buffers[1],committed=await f.commit();
+  const rejected=unpublishedFenceUploadDraw(f,buffer,{clock:f.clock});
+  await assert.rejects(rejected,e=>e.resourcePreparationsRetained===true);assert.equal(new Uint32Array(nativeBuffer.data.buffer)[0],0);
+  original=f.gpu.device.queue.onSubmittedWorkDone;let completed=false,calls=0;f.gpu.device.queue.onSubmittedWorkDone=()=>{calls++;return new Promise(resolve=>{release=resolve;});};
+  const fence=f.client.device.queue.onSubmittedWorkDone().then(()=>{completed=true;});fence.catch(()=>{});await flush();await f.host.idle();await flush();
+  assert.equal(calls,1);assert.equal(completed,false);assert.equal(new Uint32Array(nativeBuffer.data.buffer)[0],123);assert.equal(new Float32Array(displayed.data.buffer)[0],1);assert.equal(f.host.inspect().bufferForks??0,0);
+  release();await fence;assert.equal(f.host.inspect().retainedNonUniformBufferUploads,1);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.equal(f.host.inspect().stagedOperations,0);
+  f.gpu.device.queue.onSubmittedWorkDone=original;original=null;
+  const next=f.frame(3,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await next;
+  assert.equal(new Uint32Array(nativeBuffer.data.buffer)[0],123);assert.deepEqual(f.errors,[]);
+ }finally{if(original)f.gpu.device.queue.onSubmittedWorkDone=original;release?.();f.close();}
+});
+
+test('destroyed unpublished retained buffer completes its queued upload before actual deferred destruction',async()=>{
+ const f=await nativePreparationFixture();try{
+  await f.commit();const buffer=f.client.device.createBuffer({size:16,usage:9});await flush();await f.host.idle();const nativeBuffer=f.gpu.buffers[1],destroy=nativeBuffer.destroy;let destroyedBytes=null;
+  nativeBuffer.destroy=()=>{destroyedBytes=new Uint32Array(nativeBuffer.data.buffer)[0];destroy.call(nativeBuffer);};
+  await assert.rejects(unpublishedFenceUploadDraw(f,buffer,{clock:f.clock}),e=>e.resourcePreparationsRetained===true);buffer.destroy();await flush();await f.host.idle();assert.equal(nativeBuffer.destroyed,false);
+  await f.client.device.queue.onSubmittedWorkDone();await flush();assert.equal(destroyedBytes,123);assert.equal(nativeBuffer.destroyed,true);assert.equal(f.host.inspect().retainedNonUniformBufferUploads,1);assert.equal(f.host.inspect().retainedPreparationResources,0);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a retained published vertex buffer remains protected from admission fence uploads',async()=>{
+ const f=await nativePreparationFixture();try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});f.client.device.queue.writeBuffer(vertex,0,new Uint32Array([3]));const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const nativeVertex=f.gpu.buffers[1];await f.commit();await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),e=>e.resourcePreparationsRetained===true);
+  const buffers=f.gpu.buffers.length;await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted changes/);
+  assert.equal(new Uint32Array(nativeVertex.data.buffer)[0],3);assert.equal(f.gpu.buffers.length,buffers);assert.equal(f.host.inspect().failed,false);assert(f.host.inspect().stagedOperations>0);
+ }finally{f.close();}
+});
+
+test('an unpublished COW vertex generation can finish retained uploads while the old published generation remains unchanged',async()=>{
+ const f=await nativePreparationFixture();try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});f.client.device.queue.writeBuffer(vertex,0,new Uint32Array([3]));const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const displayed=f.gpu.buffers[1];f.client.device.queue.writeBuffer(vertex,0,new Uint32Array([11]));await flush();await f.host.idle();const pending=f.gpu.buffers[2];assert.notEqual(pending,displayed);assert.equal(f.host.inspect().bufferForks,1);
+  const committed=await f.commit();await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},22),e=>e.resourcePreparationsRetained===true);await f.client.device.queue.onSubmittedWorkDone();
+  assert.equal(new Uint32Array(displayed.data.buffer)[0],3);assert.equal(new Uint32Array(pending.data.buffer)[0],22);assert.equal(f.host.inspect().bufferForks,1);assert.equal(f.host.inspect().retainedNonUniformBufferUploads,1);
+  const next=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});await flush();await f.host.idle();f.host.present();await next;assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('a mixed retained fence batch validates every destination before writing an unpublished buffer or forking a displayed uniform',async()=>{
+ const f=await nativePreparationFixture();try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});f.client.device.queue.writeBuffer(vertex,0,new Uint32Array([3]));const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const extra=f.client.device.createBuffer({size:16,usage:9});await flush();await f.host.idle();const pending=f.gpu.buffers[2];await f.commit();await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99,extra),e=>e.resourcePreparationsRetained===true);
+  const buffers=f.gpu.buffers.length,writes=f.gpu.calls.filter(v=>v[0]==='writeBuffer').length;await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted changes/);
+  assert.equal(new Uint32Array(pending.data.buffer)[0],0);assert.equal(f.gpu.calls.filter(v=>v[0]==='writeBuffer').length,writes);assert.equal(f.gpu.buffers.length,buffers);assert.equal(f.host.inspect().failed,false);
+ }finally{f.close();}
+});
