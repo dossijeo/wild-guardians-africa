@@ -25,3 +25,32 @@ export function nativeResourceOwnership(result){
  const completeSnapshotCounts=new Set(snapshots.map(s=>s.id)).size===snapshots.length&&snapshots.length===after.drawExecution.consumer.uniformForks-before.drawExecution.consumer.uniformForks;
  return {accepted:completeFactoryCounts&&completeSnapshotCounts&&unattributed.length===0&&snapshots.every(s=>s.qualified),scope:'Native writer lifetime and actual factory origins; not minimum allocation or cadence acceptance.',completeFactoryCounts,completeSnapshotCounts,counts,factories,unattributed,snapshots};
 }
+
+// A separate acceptance for a paused actual-main world after its first regional
+// demand has settled. This does not approve the cost or minimality of cold work.
+export function mainRetainedResourceReuse(report){
+ const before=report.before,base=before?.renderer,controls=report.noRecoveryControl??[],recoveries=report.recoveries??[],violations=[];
+ const require=(condition,reason)=>{if(!condition)violations.push(reason);};
+ require(report.functionalOk===true&&report.errors?.length===0&&report.httpFailures?.length===0,'functional-witness');
+ require(report.resourceStartupAcks?.length===1&&report.resourceStartupAcks[0].ready?.version===1&&report.disposed===1,'startup-and-disposal');
+ require(controls.length>=3&&recoveries.length>=2,'reference-and-recovery-windows');
+ const data=base?.qaNativeBufferOwners,owners=base?.qaResidentOwners,trace=base?.qaResourceTrace,counts=base?.qaCumulativeFactories;
+ require(Array.isArray(data)&&data.length>0&&Array.isArray(owners?.actors)&&owners.actors.length>0&&Array.isArray(owners?.instances)&&Array.isArray(trace)&&counts&&Object.keys(counts).length>0,'resident-inventory');
+ require(base?.preparation?.admission&&base?.drawExecution?.consumer&&before?.ui,'baseline-owners');
+ if(!Array.isArray(data)||!owners||!Array.isArray(trace)||!counts||!base?.preparation?.admission||!base?.drawExecution?.consumer||!before?.ui)return {accepted:false,violations};
+ const key=row=>row.mesh+':'+row.attribute,baseKeys=new Set(data.map(key));require(baseKeys.size===data.length,'duplicate-base-data');
+ const snapshots=[...controls,...recoveries.map(value=>value.after)];
+ for(const [index,snapshot]of snapshots.entries()){
+  const view=snapshot?.renderer,far=view?.farCoverage,admission=view?.preparation?.admission;
+  require(far?.closed===false&&far.wanted>0&&far.offered===far.wanted&&far.deferred===0&&far.pending===null&&far.revision===base.farCoverage?.revision,'regional-demand-'+index);
+  require(admission?.closed===false&&admission.active===false&&admission.queued===0&&admission.inflightCompiles===0&&admission.compilesStarted===base.preparation.admission.compilesStarted,'admission-'+index);
+  require(snapshot?.clients===1&&snapshot.ui?.hasCurrent===true&&snapshot.ui.status?.phase==='running'&&['binding','client','canvas'].every(k=>snapshot.ui[k]===before.ui[k]),'graphical-owner-'+index);
+  require(view?.drawExecution?.consumer?.gpuErrors===0&&view.drawExecution.consumer.uniformForks===base.drawExecution.consumer.uniformForks&&view.drawExecution.consumer.bindingForks===base.drawExecution.consumer.bindingForks,'consumer-'+index);
+  require(view?.drawExecution?.resourcesCreated===base.drawExecution.resourcesCreated&&JSON.stringify(view.qaCumulativeFactories)===JSON.stringify(counts)&&view.qaResourceTrace?.slice(trace.length).every(row=>!row.kind.startsWith('create'))===true,'new-factories-'+index);
+  require(JSON.stringify(view?.qaResidentOwners)===JSON.stringify(owners),'resident-objects-'+index);
+  const rows=view?.qaNativeBufferOwners??[],map=new Map(rows.map(row=>[key(row),row]));
+  require(rows.length===data.length&&map.size===rows.length&&data.every(row=>{const next=map.get(key(row));return next&&['reference','geometry','bytes','version','hash'].every(k=>next[k]===row[k]);}),'resident-data-'+index);
+ }
+ require(recoveries.every(value=>value.result?.retained===true),'retained-handoff');
+ return {accepted:violations.length===0,violations,residentDataRows:data.length,referenceWindows:controls.length-1,retainedRecoveries:recoveries.length,producerResourcesCreated:base.drawExecution.resourcesCreated,compiles:base.preparation.admission.compilesStarted,scope:'Settled paused actual-main reuse; not cold allocation minimality, native WALK integration or cadence acceptance.'};
+}
