@@ -16,6 +16,11 @@ export function nativeFarmArrivalState(state,worker,options){return farmArrivalS
 export function nativeFarmArrivalExecutionState(state,worker){return farmArrivalState(state,worker,{canonical:true},true);}
 export function nativeFarmArrivalHeldState(state,worker){return farmArrivalState(state,worker,{canonical:true},true,true);}
 
+// A current native owner can still project its authorized corridor while a
+// finished contract waits for prepared stop24. This grants no new declaration.
+// Callers must verify the actual execution/binding and common clock as well.
+export function nativeFarmArrivalBoundState(state,worker){return farmArrivalState(state,worker,{canonical:true},true,false,true);}
+
 // Read-only terminal projection after native completion, including an expired
 // contract. Callers must prove the actual endpoint; declarations stay closed.
 export function nativeFarmArrivalTerminalState(state,worker){return farmArrivalState(state,worker,{canonical:true},true,false,true);}

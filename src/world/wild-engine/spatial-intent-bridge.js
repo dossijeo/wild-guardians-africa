@@ -3,7 +3,7 @@ import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationRefe
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
 import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,copyNativeFarmArrivalHeldExecution,sameNativeFarmArrivalRouteAttestation} from '../native-farm-arrival-route.js';
 import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-request-reference.js';
-import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState} from '../native-farm-arrival-state.js';
+import {nativeFarmArrivalState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState,nativeFarmArrivalBoundState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec} from '../native-worker-route-stop-codec.js';
@@ -2783,6 +2783,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     };
   };
   const applyEvents=(state,events)=>{
+    if(lastPlan?.some(row=>row.status===1))dirty=true;
     lastPlan=null;lastPlanFacts=null;
     let result;
     const previousChanges=session.core.wasm.nav_intent_change_count();
@@ -2876,7 +2877,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const tasksByNumericId=new Map(state.tasks.map(task=>[numericId(task.id),task]));
     const workersByNumericId=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
     const targetFor=taskTargetLookup(state);
-    const assignments=[];
+    const assignments=[];let awaitingFarmStop=false;
     for(const row of plan){
       if(row.status!==1)continue;
       const task=tasksByNumericId.get(row.taskId),worker=workersByNumericId.get(row.workerId);
@@ -2885,12 +2886,14 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
         'delivered' in target&&target.delivered||
         task.kind==='repair'&&target.hp>=target.maxHp)
         throw Error('Native proposal target changed before commit');
+      const farm=pendingResources&&worker.nativeRouteAdmission==='native-farm-arrival'?bridge.nativeFarmArrivalRouteExecution(worker.id):null,stopping=!!farm&&!(farm.arrived&&farm.running===false&&farm.currentSpeed===0&&farm.executedThrough>=farm.binding.reference.endTime);
+      if(stopping)awaitingFarmStop=true;
       const fact=lastPlanFacts.get(task.id);
       if(!fact||fact.workerId!==worker.id||fact.targetId!==task.targetId||
         fact.centerId!==task.centerId||fact.kind!==task.kind||
         fact.workerX!==worker.x||fact.workerZ!==worker.z||
         fact.targetX!==target.x||fact.targetZ!==target.z||
-        workerRow(worker,state)[6]!==1)
+        workerRow(worker,state)[6]!==1&&!stopping)
         throw Error('Native proposal inputs changed before commit');
       const path=bridge.proposalRoute(row);
       const interaction=['repair','initial','water'].includes(task.kind);
@@ -2899,6 +2902,10 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       assignments.push({taskId:task.id,workerId:worker.id,path,destination});
     }
     if(!pendingResources&&assignments.some(a=>bridge.nativeTaskSettlementBinding(a.workerId)))throw Error('Native stationary ownership requires prepared task resources');
+    // The existing native batch owns the choice while stop24 prepares. Do not
+    // exclude a moving Farm candidate, claim its task early or copy a queue.
+    // Its real stop notification invalidates this proposal and wakes replanning.
+    if(awaitingFarmStop)return 0;
     // Validate the JS side before committing WASM. A stale native revision
     // rejects the whole lease; no JS task or worker has changed yet.
     applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true,pendingResources});
@@ -3229,6 +3236,20 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});
     notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };
+  const nativeFarmArrivalStopRequest=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
+    if(!worker||worker.nativeRouteAdmission!=='native-farm-arrival')return null;
+    const execution=bridge.nativeFarmArrivalRouteExecution(actorId);
+    if(!execution||execution.arrived&&execution.running===false&&execution.currentSpeed===0&&execution.executedThrough>=execution.binding.reference.endTime)return null;
+    const semantic=nativeFarmArrivalBoundState(state,worker),q=execution.binding.reference.sourceRequest;
+    if(execution.actorId!==numericId(worker.id)||execution.centerId!==semantic.centerId||q.centerId!==semantic.centerId||q.workerProfile!==worker.profile||execution.executedThrough!==state.elapsed||Object.keys(semantic.pose).some(k=>semantic.pose[k]!==execution[k])||Object.keys(semantic.goal).some(k=>semantic.goal[k]!==q.goal[k]))throw Error('Farm stop request differs from its executed Game source');
+    const binding=execution.binding;
+    if(contractExpired(worker,state)||state.time>=(profileEnd.get(worker.profile)??0))return Object.freeze({reason:'home',taskId:null,binding});
+    if(dirty||pendingTaskEvents.length||pendingWorldEvents.length||!lastPlan)return null;
+    const row=lastPlan.find(r=>r.status===1&&r.workerId===actor),task=row&&state.tasks.find(t=>numericId(t.id)===row.taskId),fact=task&&lastPlanFacts?.get(task.id),target=task&&taskTargetLookup(state)(task.targetId);
+    if(!task||task.workerId||!fact||!target||'alive' in target&&!target.alive||'delivered' in target&&target.delivered||task.kind==='repair'&&target.hp>=target.maxHp||workerRow(worker,state)[6]!==1||fact.workerId!==worker.id||fact.targetId!==task.targetId||fact.centerId!==task.centerId||fact.kind!==task.kind||fact.targetX!==target.x||fact.targetZ!==target.z)return null;
+    return Object.freeze({reason:'task',taskId:task.id,binding});
+  };
   const requestNativeFarmHome=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Farm Home belongs to another game');
     if(!state.workers.includes(worker)||worker.status!=='arriving'||!['native-farm-arrival-held','native-farm-arrival'].includes(worker.nativeRouteAdmission)||worker.taskId||worker.crateId||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Farm Home requires a finished arriving contract and actual held body');
@@ -3425,7 +3446,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     }
     const events=[...taskEvents,...[...workerEvents]
       .sort(([a],[b])=>numericId(a)-numericId(b)).map(([,event])=>event)];
-    const wasDirty=dirty;
+    const wasDirty=dirty||!!lastPlan?.some(row=>row.status===1);
     const eligibilityChanged=events.some(event=>event.type==='worker'&&
       eligible.has(numericId(event.remove?event.id:event.entity.id))!==
       (!event.remove&&workerRow(event.entity,observedTaskState)[6]===1));
@@ -3499,7 +3520,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,
-    commitTaskBatchToState,
+    commitTaskBatchToState,nativeFarmArrivalStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
       pendingNativeChanges=true;

@@ -15,6 +15,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const worker=workers[(start+i)%workers.length];
    const actorId=worker.id,marker=worker.nativeRouteAdmission;
    if(onlyActor!==null&&actorId!==onlyActor)continue;
+   if(marker==='native-farm-arrival'){
+    const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);
+    if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+   }
    if(marker==='pending-idle-resources'&&planner.nativeInitialIdleRequestReference(actorId))return {actorId,kind:'initial-idle-body',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources'};
    if(marker==='pending-stroll-resources'&&planner.nativeIdleStrollRequestReference(actorId))return {actorId,kind:'idle-stroll',operation:'startNativeIdleStrollAfterGpuQuiescence',prepare:'prepareNativeIdleStrollResources'};
    if(marker==='pending-home-resources'&&planner.nativeHomeRequestReference(actorId)||!marker&&worker.status==='returning'&&planner.nativeTaskSettlementBinding(actorId)?.reference.home)return {actorId,kind:'home-route',operation:'startNativeHomeRouteAfterGpuQuiescence',prepare:'prepareNativeHomeRouteResources'};
@@ -39,6 +43,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
  function sourceIdentity(request){
   const actor=request.actorId;
   switch(request.kind){
+   case 'farm-arrival-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));
    case 'idle-stroll':return JSON.stringify(planner.nativeIdleStrollRequestReference(actor)??planner.nativeIdleCycleBinding(actor));
    case 'idle-cycle':return JSON.stringify(planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleCycleBinding(actor)??planner.nativeIdleStrollBinding(actor));

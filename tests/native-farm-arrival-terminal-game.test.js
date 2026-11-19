@@ -49,8 +49,8 @@ for(const threaded of [false,true])for(const profile of PROFILES)test(`${threade
  }finally{f?.close();await runtime?.dispose();}
 });
 
-test('an unfinished Farm route still rejects Game before either body or time advances',()=>{
- const f=nativeFarmMovingTaskFixture({stop:false});try{const worker=structuredClone(f.worker),bodies=[f.body(1),f.body(3)],at=f.state.elapsed;assert.equal(f.planner.nativeGameExecutionState(),-1);assert.throws(()=>tick(f.state,.1,f.nav),/intention class/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.worker,worker);assert.deepEqual([f.body(1),f.body(3)],bodies);}finally{f.close();}
+test('a moving Farm marker cannot impersonate a physically stopped Farm body',()=>{
+ const f=nativeFarmMovingTaskFixture({stop:false});try{assert.equal(f.planner.nativeGameExecutionState(),1);f.worker.nativeRouteAdmission='native-farm-arrival-held';const worker=structuredClone(f.worker),bodies=[f.body(1),f.body(3)],at=f.state.elapsed;assert.throws(()=>tick(f.state,.1,f.nav),/native|Native|semantic/i);assert.equal(f.state.elapsed,at);assert.deepEqual(f.worker,worker);assert.deepEqual([f.body(1),f.body(3)],bodies);}finally{f.close();}
 });
 
 for(const cause of ['retired','changed-center'])test(`completed Farm marker cannot authorize Game with ${cause} source`,()=>{

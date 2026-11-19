@@ -34,7 +34,7 @@ function queuedPlan(f){const p=f.point(6,0),target=createPlant(`plant-${f.state.
 for(const pendingResources of [false,true])test(`${pendingResources?'moving':'arrived but unprepared'} Farm cannot be replaced by a Task before its required boundary`,()=>{
  const f=pendingResources?nativeFarmMovingTaskFixture({stop:false}):fixture();try{
   const body=f.body(1),source=f.planner.nativeFarmArrivalRouteBinding(f.actor),worker=structuredClone(f.worker),rows=queuedPlan(f),events=f.events.length;assert.equal(rows.filter(r=>r.status===1).length,1);
-  assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources}),/became stale/);
+  if(pendingResources)assert.equal(f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources}),0);else assert.throws(()=>f.planner.commitTaskBatchToState(f.state,rows,{navVersion:1,pendingResources}),/became stale/);
   assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);assert.deepEqual(f.planner.nativeFarmArrivalRouteBinding(f.actor),source);assert.equal(f.planner.pendingTaskRoute(f.actor),null);assert.equal(f.events.length,events);
  }finally{f.close();}
 });

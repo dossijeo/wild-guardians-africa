@@ -45,9 +45,11 @@ static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& inte
  const bool owned=held?route.active&&route.suspended&&route.resumable&&!route.reserved&&route.generation==resumed&&intent.generation==resumed&&route.actor==intent.actor&&route.profile==intent.profile&&!route.pendingResources&&
   suspended!=s.suspendedBodies.end()&&suspended->second==intent.slot&&!s.reservedBodies.count(r.body)&&route.executionPose[6]==0&&route.suspendedAt>=h[10]&&route.suspendedAt<h[11]:
   double(route.generation)==h[4]&&executionBindingCoherent(s,route.reservationBody,intent.slot);
+ // Like Stroll, task availability can end before the prepared Home stop.
+ // Keep the exact physical owner; an existing Home request stays ineligible.
  return r.actor==intent.actor&&r.session==s.session&&double(r.sequence)==h[21]&&r.at==h[22]&&r.profile==route.profile&&
   b->assignmentSequence==intent.assignmentSequence&&owned&&double(intent.slot)==h[20]&&route.startTime==h[10]&&double(route.motionFlags)==h[6]&&
-  (home?!worker->second.eligible:worker->second.eligible)&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
+  (!home||!worker->second.eligible)&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
   center!=s.targets.end()&&center->second.kind==4&&center->second.active&&center->second.status==0&&center->second.serviceKnown&&center->second.serviceX==r.targetX&&center->second.serviceZ==r.targetZ&&center->second.x==r.centerX&&center->second.z==r.centerZ&&
   intent.approachKnown&&intent.approachX==float(home?intent.homeRequest->homeX:r.targetX)&&intent.approachZ==float(home?intent.homeRequest->homeZ:r.targetZ)&&intent.approachRadius==2&&std::hypot(endX-r.targetX,endZ-r.targetZ)<=2&&
   spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==route.radius&&body.r==r.radius&&
