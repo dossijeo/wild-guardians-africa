@@ -105,6 +105,7 @@ import {captureStructureTemplate} from '../simulation/worker-structure-geometry.
 import {captureNativeAuthorityBootstrap} from '../simulation/native-authority-bootstrap.js';
 import {savedNativeAuthorityOptions} from '../simulation/native-authority-checkpoint.js';
 import {earlyNativeStartupCommand} from '../simulation/early-native-startup.js';
+import {attachWebGpuNativeResources} from './webgpu-native-startup.js';
 import {createEarlyWorkerWorld} from './early-worker-world.js';
 import {loadLegacyWorldScene,loadLegacyLoadingDiorama} from './load-legacy-world-scene.js';
 import {WorkerLoadingDiorama} from '../rendering/worker-loading-diorama.js';
@@ -353,6 +354,7 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
      if(owner.disposed)throw Error('World closed during worker startup');
      if(nativeIntentControlChannel)await runtime.attachNativeIntentControl(nativeIntentControlChannel.port1);
      if(owner.disposed)throw Error('World closed during native intent control startup');
+     if(nativeIntentControlChannel)await attachWebGpuNativeResources({client:gpuClient,runtime,isCurrent:()=>owner===world&&ownerState===state&&!owner.disposed&&owner.webGpuWorld?.client===gpuClient});
      if(early){while((early.hudOnly?owner.actorAudio?.pauses??ownerState.pauses:ownerState.pauses).includes('hidden')!==early.desiredHidden){const hidden=early.desiredHidden;await runtime.submit({kind:hidden?'pause':'resume',reason:'hidden'});if(owner.disposed)throw Error('World closed during worker startup');}owner.workerRuntime=runtime;owner.earlyNativeRuntime=null;await runtime.activateClock();if(owner.disposed)throw Error('World closed during worker startup');}if(early&&import.meta.env.DEV&&gpuClient&&params.has('qa-webgpu-world-motion'))await runtime.submit({kind:'trackPathMotion',actorId:null,world:true});else if(import.meta.env.DEV&&gpuClient&&!params.has('qa-webgpu-world-motion')&&params.has('qa-webgpu-motion')){const actor=ownerState.raid?.animals.find(item=>item.status!=='gone');if(!actor)throw Error('WebGPU motion audit requires an active animal');await runtime.submit({kind:'trackPathMotion',actorId:actor.id,includePeers:true});}runtime.hostedClock=hosted;owner.workerRuntime=runtime;owner.earlyNativeRuntime=null;
     if(gpuClient&&recoveryProfile.enabled)owner.webGpuRecovery=async()=>{
       if(owner.pendingQualityClient)throw Error('Visual recovery is already active');

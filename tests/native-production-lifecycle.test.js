@@ -4,6 +4,7 @@ import {build} from 'esbuild';
 import {resolve} from 'node:path';
 import {readFileSync} from 'node:fs';
 import {MessageChannel} from 'node:worker_threads';
+import {attachWebGpuNativeResources} from '../src/app/webgpu-native-startup.js';
 import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-resource-preparation-receiver.js';
 import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
@@ -90,6 +91,16 @@ async function fullFixture(options={}){
   await runtime.start();return {runtime,native,source,host,sourceWorker,hostWorker,state,created:base.created,close};
  }catch(error){await close();throw error;}
 }
+
+test('ordinary startup resource wiring admits the real native actor through the existing host and source',async()=>{
+ const f=await fullFixture();let attached=false;const graphicsPort={};
+ try{
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);
+  const ready=await attachWebGpuNativeResources({client:{attachNativeResourcePreparation(port){assert.equal(port,graphicsPort);attached=true;}},runtime:f.runtime,isCurrent:()=>f.runtime.status().running,channelFactory:()=>({port1:f.native.resourcePort,port2:graphicsPort})});
+  assert.equal(attached,true);assert.deepEqual(ready,{version:1,session:'s'});await until(()=>f.native.records.some(r=>r.committed),()=>f.native.present());await f.runtime.submit({kind:'snapshot'});
+  assert.equal(f.state.workers[0].nativeRouteAdmission,'native-idle-stroll');assert.equal(f.created(),1);assert.equal(f.native.authority.nativeResourcePreparationStatus().phase,'running');assert.deepEqual(f.native.faults,[]);
+ }finally{await f.close();}
+});
 
 test('production hosted/source Worker modules keep the real receipt local while both native ports attach under suspension',async()=>{
  const f=await fullFixture();try{

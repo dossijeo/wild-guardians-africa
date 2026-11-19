@@ -5,6 +5,7 @@ import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.j
 import {temporalPresentationOptions} from '../../src/app/temporal-presentation-options.js';
 import {webGpuWorldOptions} from '../../src/app/webgpu-world-options.js';
 import {PerspectiveCamera,Vector3} from 'three';
+import {attachWebGpuNativeResources} from '../../src/app/webgpu-native-startup.js';
 
 // Same production workers and owner APIs; restored semantic save, not an ABI
 // controller or a page-side simulation clock. Instrumentation is observational.
@@ -21,7 +22,7 @@ export async function auditNativeActiveRetainedRecovery(seed,{moving=false}={}){
   runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session,clientOptions:{snapshot:seed.snapshot,chunkKeys:seed.chunkKeys,nativeAuthorityCheckpoints:true,observeWorldMotion:true,captureHistoricalEvents:true,terrainHistory:temporal.terrainHistory},terrainPort:client.terrainPort,presentationPort:client.presentationPort,runtimeOptions:{startupSuspended:true,presentationTimeline:true,presentationInputs:options.presentationInputs,historicalRecovery:true,mainThreadProjection:true,coalescePublications:true,...recovery},onError:error=>errors.push(String(error.stack??error))});
   note('starting');await Promise.all([runtime.start(),client.ready]);note('started');await runtime.attachNativeIntentControl(control.port1);await client.waitForFirstFrame();
   await wait(()=>runtime.status().recoveryBaseSequence!==null&&runtime.status().recoveryBaseSequence!==undefined,'initial checkpoint ACK');baseline=await inspect();note('base-ready');
-  const resources=new MessageChannel();client.attachNativeResourcePreparation(resources.port2);await runtime.attachNativeResourcePreparation(resources.port1);await runtime.activateClock();
+  await attachWebGpuNativeResources({client,runtime,isCurrent:()=>client.status().phase==='running'&&runtime.status().running});await runtime.activateClock();
   await wait(()=>state.workers.find(w=>w.id===actor)?.nativeRouteAdmission==='native-idle-stroll','native acquisition');note('native-acquired');await frame(runtime.status().confirmedSequence);note('native-frame');before=await inspect();
   if(!before.nativeWorldBoundary||!before.drawExecution?.consumer?.nativeRouteFrame?.bindings?.some(b=>b.nativeStroll))throw Error('Missing actual active native cohort');
   if(moving){const start={x:state.workers[0].x,z:state.workers[0].z};await runtime.submit({kind:'resume',reason:'native-recovery-qa'});await wait(()=>Math.hypot(state.workers[0].x-start.x,state.workers[0].z-start.z)>.05,'native movement');before=await inspect();}
