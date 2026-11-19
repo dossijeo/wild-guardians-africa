@@ -19,6 +19,7 @@ export async function auditNativeFarmArrivedIdleCycleWorldOwner(c){
  if(!old||!last||old.relativeTime!==last.relativeTime||nativeDecodedClockAge(last.relativeTime,duration)!==duration||latest.clockElapsed-initial.clockElapsed<.5||JSON.stringify(body())!==JSON.stringify(heldBody))throw Error('Farm Idle lost its retained endpoint');
  const delta=latest.clockElapsed-initial.clockElapsed,error=Math.abs(((last.phaseOffset-old.phaseOffset-delta+last.period*1.5)%last.period)-last.period*.5);
  if(error>2e-4)throw Error('Farm Idle froze during preparation');const idleContinuity={initial,latest,delta,error,inputPick:await pick(sourcePose,worker.id)};
+ if(!fromStroll){planner.planIfNeeded(state.elapsed);if(!planner.nativeFarmArrivalIdleSource(worker.id))throw Error('Farm Idle has no settled terminal arbitration');}
  const admitted=await planner.startNativeIdleCycleAfterGpuQuiescence({actorId:worker.id,getPublication:()=>publication,prepareResources:async({resources,signal,deferredStart})=>{
   calls++;packet=resources;reference=nativeIdleCycleReferenceFromProposal(resources);const q=nativeIdleCycleBodyState(reference.sourceBody);
   if(reference.sourceBody.kind!==(fromStroll?'native-idle-stroll-arrival-source':'native-farm-arrival-idle-source')||reference.sourceCycleSequence!==0||q.bodyId!==source.bodyId||q.sourceSequence!==source.binding.assignmentSequence||q.sourceAt!==sourceReference.endTime||Object.keys(sourcePose).some(k=>q.pose[k]!==sourcePose[k]))throw Error('Farm Idle lost its exact actual23 source');

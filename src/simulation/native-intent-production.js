@@ -19,6 +19,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(marker==='native-farm-arrival'){
     const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);
     if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+    const farmIdleSource=planner.nativeFarmArrivalIdleSource?.(actorId);
+    if(farmIdleSource){const stroll=farmIdleSource.approach;return {actorId,kind:stroll?'idle-stroll':'idle-cycle',operation:stroll?'startNativeIdleStrollAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence',prepare:stroll?'prepareNativeIdleStrollResources':'prepareNativeIdleCycleResources',farmIdleSource};}
    }
    if(marker==='native-farm-arrival-held'&&planner.nativeFarmArrivalContinuationSource?.(actorId))return {actorId,kind:'farm-arrival-continuation',operation:'continueNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources'};
    if(marker==='pending-idle-resources'&&planner.nativeInitialIdleRequestReference(actorId))return {actorId,kind:'initial-idle-body',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources'};
@@ -49,8 +51,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'farm-arrival-continuation':{const source=planner.nativeFarmArrivalContinuationSource(actor);return source&&JSON.stringify({...source,executedThrough:0});}
    case 'farm-arrival-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));
-   case 'idle-stroll':return JSON.stringify(planner.nativeIdleStrollRequestReference(actor)??planner.nativeIdleCycleBinding(actor));
-   case 'idle-cycle':return JSON.stringify(planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleCycleBinding(actor)??planner.nativeIdleStrollBinding(actor));
+   case 'idle-stroll':return JSON.stringify(request.farmIdleSource??planner.nativeIdleStrollRequestReference(actor)??planner.nativeIdleCycleBinding(actor));
+   case 'idle-cycle':return JSON.stringify(request.farmIdleSource??planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleCycleBinding(actor)??planner.nativeIdleStrollBinding(actor));
    case 'home-route':return JSON.stringify(planner.nativeHomeRequestReference(actor)??planner.nativeTaskSettlementBinding(actor));
    case 'home-arrival':return JSON.stringify(planner.nativeHomeRouteBinding(actor));
    case 'task-start':return JSON.stringify([request.request.requestHandle,request.request.requestSequence,request.policy]);
