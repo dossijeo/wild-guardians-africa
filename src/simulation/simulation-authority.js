@@ -217,7 +217,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     if(command.captureClockSegments!==undefined&&(command.kind!=='advance'||typeof command.captureClockSegments!=='boolean'))throw TypeError('Invalid clock segment request');
     let value=null,rejection=null,stepsExecuted=null,motionTrace=null,worldMotionTrace=null,motionTopologyBefore=null;const eventBoundaries=captureHistoricalEvents&&command.kind==='advance'?createHistoricalEventBoundaryCapture(game):null,commandLoadedChunks=[],previousTrackedActor=trackedActor,wasSuspended=game.pauses.length>0||!!game.result,clockCapture=command.captureClockSegments===true?{version:1,start:game.elapsed,end:game.elapsed,startPauses:[...game.pauses],endPauses:null,complete:true,segments:[]}:null;
     // trackIncome([]) can repair a stale day even when the game is paused.
-    const pausedUnchangedCandidate=compactPausedAcks&&!clockCapture&&hasPublishedSnapshot&&command.kind==='advance'&&command.visualTerrain!==true&&game.pauses.length>0&&!trackedActor&&!trackWorldMotion&&(!physics||physics.actorIds.length===0)&&(!trackMicroIncome||game.microevents?.day===game.day)&&typeof nav.serviceRaidConnectivityDemand!=='function';
+    // A native owner may commit Game changes asynchronously, including while
+    // paused or waiting for ports. Neither an idle slot nor unchanged terrain
+    // certifies that its last published snapshot still describes Game.
+    const pausedUnchangedCandidate=compactPausedAcks&&nativeProduction===null&&!clockCapture&&hasPublishedSnapshot&&command.kind==='advance'&&command.visualTerrain!==true&&game.pauses.length>0&&!trackedActor&&!trackWorldMotion&&(!physics||physics.actorIds.length===0)&&(!trackMicroIncome||game.microevents?.day===game.day)&&typeof nav.serviceRaidConnectivityDemand!=='function';
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
      const start=trackedActor?{at:game.elapsed,x:trackedActor.x,z:trackedActor.z}:null;if(start){motionSegments=[];motionTopologyBefore=nav.version;}const peerCapture=start&&trackMotionPeers?captureMotionPeers(game,trackedActor):null,worldCapture=trackWorldMotion?captureWorldMotion(game,()=>({topology:nav.version,chunks:session.core.chunkRevision(),terrain:session.horizonSource.revision(),payloads:terrainGeneration}),()=>workerPhysicsActivity(physics),{...(command.captureClockSegments===true?{spatialNavigation:nav,...(physics?{readPhysicsPoses:()=>physics.postStepPoses()}:{})}:{}),includeHyenaSamples:captureHyenaDiagnostics}):null;
@@ -365,7 +368,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const resident=residency(),presentationWorkerHeadings=presentationHeadings?.capture(game);let pausedPoses;
     // Only authority can certify that skipping future paused ticks removes no work.
     // Remain conservative when a physics registry or a navigation service exists.
-    const pausedQuiescent=pausedAuthorityQuiescent({enabled:compactPausedAcks,hasSnapshot:hasPublishedSnapshot,game,physics,trackMicroIncome,nav,resident,terrainGeneration,reportedTerrainGeneration});
+    const pausedQuiescent=pausedAuthorityQuiescent({enabled:compactPausedAcks,hasSnapshot:hasPublishedSnapshot,game,physics,trackMicroIncome,nav,resident,terrainGeneration,reportedTerrainGeneration,hasNativeProduction:nativeProduction!==null});
     const tutorialGuideRevision=tutorialGuideTracker.publication(game);
     if(pausedUnchangedCandidate&&!pendingNativeWorldResources.length&&game.pauses.length>0&&!emitted.length&&!emittedSettlements.length&&!lifecycle.length&&!presentationWorkerHeadings?.length&&terrainGeneration===reportedTerrainGeneration){
      // Preserve the physics driver's normal publication-side work even for an
