@@ -6,7 +6,7 @@ import {urgentWork} from './locomotion.js';
 // source. There is no copied request queue, movement clock or retry timer here.
 export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,onError=()=>{}}){
  if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
- let closed=false,fault=null,active=null,last=null;
+ let closed=false,fault=null,active=null,last=null,quiescence=null;
  function next(onlyActor=null){
   // Rotate the existing roster after the last attempt. A blocked native source
   // must not starve another ready agent; no duplicate request queue is retained.
@@ -59,6 +59,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(!current||current.kind!==active.kind||sourceIdentity(current)!==active.source){active.obsolete=true;active.controller.abort();}
    return active.promise;
   }
+  if(quiescence)return Promise.resolve(null);
   const publication=getPublication(),resources=getResources();
   if(!publication?.status().coherent||publication.status().closed||resources?.status().phase!=='running'||resources.status().pending||resources.status().retained)return Promise.resolve(null);
   // Geometry revisions come from the existing terrain publisher. A source
@@ -86,6 +87,25 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise.then(()=>{if(!closed&&transaction.obsolete)wake();});
   return transaction.promise;
  }
- return {wake,status:()=>({phase:closed?'closed':fault?'failed':active?'preparing':'idle',fault,active:active?{actorId:active.actorId,kind:active.kind}:null,last:last&&{...last}}),
+ function quiesce(){
+  if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
+  if(quiescence)return quiescence.promise;
+  if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
+  // Holding dispatch is not completion. Only the existing operation's actual
+  // settlement can certify a stable source; its errors remain terminal.
+  const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
+  hold.promise=Promise.resolve(active?.promise).then(()=>{
+   if(closed||fault)throw Error(fault?'Native intent production failed: '+fault:'Native intent production closed');
+   if(quiescence!==hold)throw Error('Native production quiescence became obsolete');
+   hold.settled=true;return hold.receipt;
+  });
+  return hold.promise;
+ }
+ function resume(receipt){
+  if(closed||fault)throw Error(fault?'Native intent production failed: '+fault:'Native intent production closed');
+  if(!quiescence?.settled||receipt!==quiescence.receipt)throw Error('Invalid native production quiescence receipt');
+  quiescence=null;wake();return true;
+ }
+ return {wake,quiesce,resume,status:()=>({phase:closed?'closed':fault?'failed':quiescence?quiescence.settled?'suspended':'quiescing':active?'preparing':'idle',fault,active:active?{actorId:active.actorId,kind:active.kind}:null,last:last&&{...last}}),
   dispose(){if(closed)return;closed=true;active?.controller.abort();}};
 }

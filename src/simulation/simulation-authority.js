@@ -153,6 +153,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     },
     nativeResourcePreparationStatus:()=>nativeResourcePreparation?.status()??null,
     nativeIntentProductionStatus:()=>nativeProduction?.status()??{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
+    quiesceNativeIntentProduction(){
+      if(closed)return Promise.reject(Error('Simulation authority is closed'));
+      return nativeProduction?.quiesce()??Promise.resolve(null);
+    },
+    resumeNativeIntentProduction(receipt){
+      if(closed)throw Error('Simulation authority is closed');
+      if(nativeProduction)return nativeProduction.resume(receipt);
+      if(receipt!==null)throw TypeError('Invalid native production quiescence receipt');
+      return true;
+    },
     prepareNativeGateResources(resources,options){
       if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
       return nativeResourcePreparation.prepareNativeGateResources(resources,options);
