@@ -15,6 +15,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const worker=workers[(start+i)%workers.length];
    const actorId=worker.id,marker=worker.nativeRouteAdmission;
    if(onlyActor!==null&&actorId!==onlyActor)continue;
+   if(marker==='pending-farm-arrival-resources'&&planner.nativeFarmArrivalRequestReference?.(actorId))return {actorId,kind:'farm-arrival',operation:'startNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources',urgent:urgentWork(state,worker)};
    if(marker==='native-farm-arrival'){
     const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);
     if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
@@ -44,6 +45,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
  function sourceIdentity(request){
   const actor=request.actorId;
   switch(request.kind){
+   case 'farm-arrival':return JSON.stringify([planner.nativeFarmArrivalRequestReference(actor),request.urgent]);
    case 'farm-arrival-continuation':{const source=planner.nativeFarmArrivalContinuationSource(actor);return source&&JSON.stringify({...source,executedThrough:0});}
    case 'farm-arrival-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));

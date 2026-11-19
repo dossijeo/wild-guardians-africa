@@ -1,6 +1,9 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
 
+Continuación e-R3/f-R4: [inicio Farm en productor](native-farm-initial-production-20261119.md). Farm13 selecciona su operación preparada23 con petición real y urgencia en la identidad; cancelación y guardas existentes, sin dueño/cola/reloj/dependencia nuevos. Detour leído en fuente. Baseline final5/16→16/16; selección relevante 1241/1241/64 archivos sin omisiones, dos sintaxis y build 57.361s. 640 inputs/64 nativos sin cambios/16 ajenos/38 A5 exactos; sin nueva GPU ni aceptación de cadencia. Siguiente sucesor terminal21/22 y ciclo completo antes de abrir roster Farm. Nacimientos/cohortes y demás integración pendientes; tres exclusiones históricas abiertas, A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Home desde Farm13 pendiente](native-farm-pending-home-20261119.md). Requisito del ciclo completo detectado antes de abrir roster: día/hora retargetean la intención13 a19 y esperan18, mismo cuerpo/fases o declaración sin cuerpo; cancela solo su23 pendiente. Godot y patrón Stroll existentes leídos; sin dependencia/cola/reloj/dueño nuevos.68 nuevos y19 contratos pasan; selección 4696/4697 en 357 archivos, una omisión,13 sintaxis/build 63.428s. GPU conserva571IDs,0 geometrías/daños/shaders duplicados,1 trayectoria+1 Idle de primera demanda con propietario/hash verificados;100 preparados/0 después de READY,picking/adopción/drain. Rechazo sin atribución archivado; anotaciones soloQA. 639 inputs/64nativos/16ajenos exactos,A5externo preservado. Siguiente inicialFarm/Idleterminal/productor antes de roster; nacimientos/cohortes y demás integración/cadencia pendientes. Tres exclusiones históricas abiertas; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
