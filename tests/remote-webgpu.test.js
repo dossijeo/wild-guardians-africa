@@ -345,6 +345,9 @@ test('a GPU copy cannot overwrite a prepared native presentation clock after con
 
 test('cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid',async()=>{
  const f=await nativePreparationFixture();try{
+  // Adversarial caller skips the scheduling notification as well as lying
+  // about validity. The original physical Quiesce guard must still reject it.
+  f.source.waitForMutationOpportunity=async()=>{};
   const before=f.native.session.core.snapshot(),outcome=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4},prepareResources:async({proposedWorldBoundary})=>{
    const prepared=await preparedWorldDraw(f,proposedWorldBoundary);prepared.abort();await flush();await f.host.idle();
    return {preparedWorldBoundary:proposedWorldBoundary,valid:()=>true,commit(){throw Error('Cancelled packet must not commit');},abort(){}};
@@ -781,9 +784,9 @@ test('conditioned native barrier drains GPU, blocks pre-commit packets and waits
   const receipt=f.frame(0,{clock:{version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,
    segments:[{start:10,end:20,rate:1,realDuration:10}]}});await flush();await f.host.idle();f.host.present();await receipt;
   assert.equal(native.advance(11).status,'advanced');native.bridge.commitNativeCausalClock();await flush();
-  const before=native.session.core.snapshot(),draws=f.gpu.submitted.length;
-  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;});
-  const pending=native.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>source,...native.point(2,0),halfX:.15,halfZ:.6,yaw:.2});await flush();
+  const before=native.session.core.snapshot();let started;const drainStarted=new Promise(resolve=>{started=resolve;});
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;started();});
+  const pending=native.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>source,...native.point(2,0),halfX:.15,halfZ:.6,yaw:.2});await drainStarted;const draws=f.gpu.submitted.length;
   assert.equal(f.host.inspect().nativeMutationHold,1);assert.deepEqual(native.session.core.snapshot(),before);assert(native.bridge.nativeRouteTiming(handle));
   now=100;f.host.present();f.host.present();assert.equal(f.gpu.submitted.length,draws,'no draw can be submitted while the mutation receipt is pending');
   release();release=null;const result=await pending;assert.equal(result.status,'committed');await flush();
@@ -825,12 +828,14 @@ test('a frame prepared before the physical commit but sent afterwards cannot bor
   source=createNativeIntentControlPublication({port:sourcePort,session:'late-world-frame',observe:native.bridge.observeNativeIntentControl});await source.ready;
   const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
   const first=f.frame(1,{clock});await flush();await f.host.idle();f.host.present();await first;
-  const count=f.gpu.submitted.length;
   f.client.beginFrame({clock});const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({
    colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
   pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.draw(3);pass.end();f.client.device.queue.submit([encoder.finish()]);
   const committed=await native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}});
   assert.equal(committed.status,'committed');await flush();assert.deepEqual(f.client.requiredNativeWorldBoundary(),committed.worldBoundary);
+  // A normal opportunity before the physical hold may still draw the old
+  // world. Count from commit: no old packet may submit after this boundary.
+  const count=f.gpu.submitted.length;
   assert(native.bridge.nativeRouteTiming(handle),'the route stays valid: world identity must reject the late packet independently');
   const late=f.client.endFrame(),rejected=assert.rejects(late,e=>e.code==='remote-frame-native-mutation-obsolete');
   await rejected;await f.host.idle();f.host.present();assert.equal(f.gpu.submitted.length,count);

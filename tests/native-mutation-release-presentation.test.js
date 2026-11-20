@@ -6,23 +6,23 @@ import {createNativeIntentControlPublication} from '../src/simulation/native-int
 
 // Real WASM authority, direct publication and Host; simulated GPU and virtual
 // presentation times. These tests do not measure hardware/compositor cadence.
-async function setup(){
+async function setup(startAt=1000){
   const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();
-  const raf=new Map();let serial=0,now=1000;
+  const raf=new Map();let serial=0,now=startAt;
   const f=await fixture({}, {intentControl:{port:drawPort,session:'release-presentation'},absoluteNow:()=>now,
     requestFrame:callback=>{raf.set(++serial,callback);return serial;},cancelFrame:id=>raf.delete(id)});
   native.worker(1,native.point(-6,0),native.point(6,0));
   native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
   const source=createNativeIntentControlPublication({port:sourcePort,session:'release-presentation',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});
   await source.ready;
-  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:1000,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
+  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:startAt,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
   function step(at){now=at;assert.equal(raf.size,1,'only the original RAF chain');const [id,callback]=raf.entries().next().value;raf.delete(id);callback();assert.equal(raf.size,1);}
-  const shown=f.frame(1,{clock});await flush();await f.host.idle();step(1000);await shown;
+  const shown=f.frame(1,{clock});await flush();await f.host.idle();step(startAt);await shown;
   return {...f,native,source,clock,step,setNow:value=>{now=value;},async close(){source.dispose();f.client.dispose();await f.host.dispose();native.session.dispose();assert.equal(raf.size,0);}};
 }
 
 for(const delay of [30,50,100])test(`a missed presentation resumes at the exact committed release without a second RAF (${delay}ms virtual hold)`,async()=>{
-  const f=await setup();let prepared,finishDrain,finishReceipt,receiptReady;
+  const f=await setup(984);let prepared,finishDrain,finishReceipt,receiptReady;
   const receiptReached=new Promise(resolve=>{receiptReady=resolve;});
   try{
     const quiesce=f.source.quiesceGpuForMutation.bind(f.source);
@@ -35,7 +35,10 @@ for(const delay of [30,50,100])test(`a missed presentation resumes at the exact 
       f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{finishDrain=resolve;});
       return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,commit:data=>prepared.commit(data.worldBoundary),abort:prepared.abort};
     }});
-    for(let i=0;i<100&&!finishDrain;i++)await new Promise(resolve=>setTimeout(resolve,1));
+    for(let i=0;i<100&&!finishDrain;i++){
+      if(f.host.inspect().mutationOpportunityWaiting)f.step(1000);
+      await new Promise(resolve=>setTimeout(resolve,1));
+    }
     assert.equal(typeof finishDrain,'function');assert(f.host.inspect().nativeMutationHold);
     const before=f.gpu.submitted.length,resources=f.gpu.buffers.length;
     f.step(1016);assert.equal(f.gpu.submitted.length,before,'no submit while GPU drain is pending');
@@ -75,9 +78,10 @@ for(const mode of ['abort','no-missed-frame','hidden'])test(`release presentatio
 test('a release without replacement commands never replays the old world to finish its missed presentation',async()=>{
   const f=await setup();
   try{
-    const quiesce=f.source.quiesceGpuForMutation.bind(f.source),before=f.gpu.submitted.length;
-    f.source.quiesceGpuForMutation=async options=>{const receipt=await quiesce(options);f.step(1016);return receipt;};
-    const result=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4}});
+    const quiesce=f.source.quiesceGpuForMutation.bind(f.source);let before;
+    f.source.quiesceGpuForMutation=async options=>{const receipt=await quiesce(options);before=f.gpu.submitted.length;f.step(1016);return receipt;};
+    const requested=f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,mutation:{type:'addChunk',cx:4,cz:4}});
+    await flush();f.step(1008);const result=await requested;
     assert.equal(result.status,'committed');await flush();
     assert.equal(f.host.inspect().nativeMutationHold,null);assert.equal(f.host.inspect().activeSequence,1);
     assert.equal(f.gpu.submitted.length,before);f.step(1032);assert.equal(f.gpu.submitted.length,before);

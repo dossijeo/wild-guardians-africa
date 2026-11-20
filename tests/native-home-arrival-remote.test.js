@@ -18,8 +18,8 @@ for(const mode of ['exact','late','missing-template','still-visible','missing-at
 });
 
 test('the actual absence ACK waits for the submitted queue drain while the Home endpoint stays owned',async()=>{
- const f=await nativeHomeArrivalRemoteFixture();let release,signal;const ready=new Promise(resolve=>{signal=resolve;});try{const body=f.native.body(1),running=admit(f,{afterReady:()=>{f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;});signal();}});await ready;await flush();assert(release);assert.deepEqual(f.native.body(1),body);assert(f.native.planner.nativeHomeRouteBinding(f.native.actor));f.gpu.device.queue.onSubmittedWorkDone=async()=>{};release();const {result:r,prepared}=await running;assert.equal(r.status,'committed',JSON.stringify(r));assert.equal(f.native.body(1),null);await flush();f.host.present();await prepared.presented;assert.deepEqual(f.errors,[]);
- }finally{release?.();await f.close();}
+ const f=await nativeHomeArrivalRemoteFixture();let release,signal;const drained=f.gpu.device.queue.onSubmittedWorkDone,drainStarted=new Promise(resolve=>{signal=resolve;});try{const body=f.native.body(1),running=admit(f,{afterReady:()=>{f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>{release=resolve;signal();});}});await drainStarted;assert(release);assert.deepEqual(f.native.body(1),body);assert(f.native.planner.nativeHomeRouteBinding(f.native.actor));f.gpu.device.queue.onSubmittedWorkDone=drained;release();const {result:r,prepared}=await running;assert.equal(r.status,'committed',JSON.stringify(r));assert.equal(f.native.body(1),null);await flush();f.host.present();await prepared.presented;assert.deepEqual(f.errors,[]);
+ }finally{f.gpu.device.queue.onSubmittedWorkDone=drained;release?.();await f.close();}
 });
 
 

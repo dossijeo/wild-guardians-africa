@@ -57,6 +57,9 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
       }
       const preparedWorldBoundary=copyNativeWorldBoundary(preparedResources?.preparedWorldBoundary??null);
       if(preparedWorldBoundary&&(preparedWorldBoundary.authorityEpoch!==owner||preparedWorldBoundary.nativeSession!==nativeSession||preparedWorldBoundary.ticket!==ticket||preparedWorldBoundary.effectiveTime!==time))throw Error('Prepared command packet names a different native mutation');
+      if(source.waitForMutationOpportunity)await source.waitForMutationOpportunity({signal:preparationController.signal,preparedWorldBoundary});
+      if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
+      if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');
       const quiescence=protocol?.deferred?source.status():{sentSequence:sequence,sentTime:time,clockSequence};
       receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,...(preparedMotionTemplate?{[templateField]:preparedMotionTemplate}:{})}:undefined);const current=source.status();
       if(epoch()!==owner||getPublication()!==source||current.closed||current.session!==control.session||current.authorityEpoch!==owner||!coversGpuConsumers(source))

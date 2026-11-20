@@ -62,6 +62,20 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
       transaction.receipt=Object.freeze({...first,holdId:transaction.id});return transaction.receipt;
     }catch(error){fail(error);if(boundary===transaction)boundary=null;throw error;}
   }
+  async function waitForMutationOpportunity(options={}){
+    const transaction=begin('opportunity'),controller=new AbortController(),abort=()=>controller.abort();
+    options.signal?.addEventListener('abort',abort,{once:true});if(options.signal?.aborted)abort();
+    // Wait for every connection before any member captures a physical hold.
+    // Cancelling one waiter must drain the other notifications before attach
+    // or another boundary can enter; no notification is a GPU drain receipt.
+    const jobs=transaction.members.map(async member=>member.waitForMutationOpportunity({...options,signal:controller.signal}));
+    try{
+      await Promise.all(jobs);
+      if(controller.signal.aborted)throw new DOMException('Native mutation opportunity cancelled','AbortError');
+      if(status().closed||boundary!==transaction)throw Error('Native GPU cohort opportunity became obsolete');
+    }catch(error){controller.abort();await Promise.allSettled(jobs);throw error;}
+    finally{options.signal?.removeEventListener('abort',abort);if(boundary===transaction)boundary=null;}
+  }
   function releaseGpuAfterMutation(receipt,options){
     const transaction=boundary;
     if(status().closed||transaction?.kind!=='mutation'||!transaction.receipt||receipt!==transaction.receipt)
@@ -71,7 +85,7 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
       boundary=null;return true;
     }catch(error){fail(error);throw error;}
   }
-  const api={attach,status,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,ownsGpuConsumer:consumer=>members.has(consumer),
+  const api={attach,status,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,ownsGpuConsumer:consumer=>members.has(consumer),
     connections:()=>({current:current?.status()??null,pending:pending?.status()??null,cohort:status()}),
     dispose(reason='disposed'){if(closed)return;closed=true;for(const member of members)member.dispose(reason);}};
   return api;

@@ -7,12 +7,14 @@ import {createNativeIntentControlPublication} from '../src/simulation/native-int
 import {createNativeRouteControl} from '../src/rendering/native-route-control.js';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 
-function consumer({baseline=true,quiesce=true,retire=true,prepared=false}={}){
+function consumer({baseline=true,quiesce=true,retire=true,prepared=false,opportunity=false}={}){
  const {port1,port2}=new MessageChannel(),messages=[];let draw;
- const send=data=>port2.postMessage({...data,accepted:true});
+ const send=data=>port2.postMessage({accepted:true,...data});
  function ack(m){
   if(m.type==='IntentBaseline')send({type:'intent-control-applied',session:m.session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,
-   clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});
+   clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough,...(opportunity?{mutationOpportunityVersion:1,consumerToken:m.consumerToken}:{})});
+  if(m.type==='IntentMutationOpportunity')send({...m,type:'intent-mutation-opportunity'});
+  if(m.type==='IntentMutationOpportunityCancel')send({...m,type:'intent-mutation-opportunity',accepted:false,reason:'request-cancelled'});
   if(m.type==='IntentMutationQuiesce')send({...m,type:'intent-mutation-quiesced',...(prepared&&m.preparedWorldBoundary?{preparedFrameSequence:17}:{})});
   if(m.type==='IntentControlRetire')send({...m,type:'intent-control-drained'});
  }
@@ -25,6 +27,7 @@ function consumer({baseline=true,quiesce=true,retire=true,prepared=false}={}){
    draw.acceptClock(m);send({type:'intent-clock-applied',session:m.session,authorityEpoch:m.authorityEpoch,
     clockSequence:m.clockSequence,intentSequence:m.intentSequence,committedThrough:m.committedThrough});
   }else if(m.type==='IntentMutationQuiesce'){if(quiesce)ack(m);}
+  else if(m.type==='IntentMutationOpportunity'||m.type==='IntentMutationOpportunityCancel'){}
   else if(m.type==='IntentControlRetire'){draw.dispose();if(retire)ack(m);}
   else if(m.type==='IntentControlClosed')draw.dispose();
   else if(m.type!=='IntentMutationRelease'){
@@ -43,6 +46,16 @@ function setup(){
  return {...f,cohort,errors,mutate:()=>f.bridge.addNativeBarrierAfterGpuQuiescence({getPublication:()=>cohort,
   ...f.point(2,0),halfX:.15,halfZ:.6}),dispose(){cohort.dispose();f.session.dispose();}};
 }
+
+test('preflight freezes cohort membership until cancellation settles, without closing healthy channels or taking a hold',async()=>{
+ const f=setup(),a=consumer({opportunity:true}),b=consumer(),controller=new AbortController();try{
+  await f.cohort.attach(a.port,'cohort');const pending=f.cohort.waitForMutationOpportunity({signal:controller.signal}),rejected=assert.rejects(pending,{name:'AbortError'});
+  await a.request('IntentMutationOpportunity');await assert.rejects(f.cohort.attach(b.port,'cohort'),/unavailable/);await assert.rejects(f.cohort.quiesceGpuForMutation(),/not ready/);
+  controller.abort();const cancelled=await a.request('IntentMutationOpportunityCancel');await assert.rejects(f.cohort.attach(b.port,'cohort'),/unavailable/);
+  assert.equal(a.messages.some(m=>m.type==='IntentMutationQuiesce'),false);a.ack(cancelled);await rejected;
+  assert.equal(f.cohort.status().closed,false);await f.cohort.attach(b.port,'cohort');assert.equal(f.cohort.status().consumers,1);assert.deepEqual(f.errors,[]);
+ }finally{a.dispose();b.dispose();f.dispose();}
+});
 
 test('the cohort forwards a prepared world requirement and rejects peers without the connection-bound frame witness',async()=>{
  for(const prepared of [true,false]){const f=setup(),a=consumer({prepared});try{

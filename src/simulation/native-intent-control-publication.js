@@ -31,6 +31,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     stop=null,closed=false,fault=null,timer=null,resolveReady,rejectReady;
   let nextFence=0;const gpuFences=new Map();
   let nextMutationFence=0,mutationHold=null;
+  let mutationOpportunityVersion=0,nextMutationOpportunity=0,mutationOpportunity=null;
   const consumerToken=crypto.randomUUID();
   let retirement=null,drained=false,consumerDrainReceipt=null;
   let worldBoundary=null;
@@ -59,6 +60,7 @@ export function createNativeIntentControlPublication({port,session,observe,
     if(closed)return;closed=true;clearTimeout(timer);stop?.();stop=null;
     for(const fence of gpuFences.values()){clearTimeout(fence.timer);fence.reject(Error('Native GPU fence closed: '+(fault??reason)));}
     gpuFences.clear();
+    if(mutationOpportunity){clearTimeout(mutationOpportunity.timer);mutationOpportunity.cleanup();mutationOpportunity.reject(Error('Native mutation opportunity closed: '+(fault??reason)));mutationOpportunity=null;}
     if(mutationHold){clearTimeout(mutationHold.timer);mutationHold.reject(Error('Native mutation fence closed: '+(fault??reason)));mutationHold=null;}
     clockReceipts.clear();
     if(retirement){clearTimeout(retirement.timer);retirement.reject(Error('Native GPU retirement closed: '+(fault??reason)));}
@@ -74,6 +76,18 @@ export function createNativeIntentControlPublication({port,session,observe,
   }
   port.onmessage=({data})=>{
     if(closed)return;
+    if(data?.type==='intent-mutation-opportunity'){
+      const pending=mutationOpportunity;
+      if(!pending||data.protocolVersion!==2||data.opportunityVersion!==1||data.session!==session||
+         data.authorityEpoch!==authorityEpoch||data.consumerToken!==consumerToken||data.opportunityId!==pending.id||
+         !(data.accepted===true||data.accepted===false&&(data.reason==='prepared-frame-unavailable'||data.reason==='request-cancelled'&&pending.cancelled))){
+        fail(Error('Invalid native mutation opportunity notification'));return;
+      }
+      mutationOpportunity=null;clearTimeout(pending.timer);pending.cleanup();
+      if(pending.cancelled)pending.reject(new DOMException('Native mutation opportunity cancelled','AbortError'));
+      else if(data.accepted)pending.resolve();else pending.reject(Error('Native mutation prepared frame unavailable'));
+      return;
+    }
     if(data?.type==='intent-control-drained'){
       const pending=retirement;
       if(!pending||data.accepted!==true||data.protocolVersion!==2||data.fenceVersion!==1||
@@ -127,6 +141,10 @@ export function createNativeIntentControlPublication({port,session,observe,
        data.sequence>sentSequence||appliedSequence!==null&&data.sequence<appliedSequence){
       fail(Error('Invalid native intent control acknowledgement'));return;
     }
+    if(data.mutationOpportunityVersion!==undefined){
+      if(appliedSequence!==null||data.mutationOpportunityVersion!==1||data.consumerToken!==consumerToken){fail(Error('Invalid native mutation opportunity negotiation'));return;}
+      mutationOpportunityVersion=1;
+    }
     appliedSequence=data.sequence;clearTimeout(timer);
     if(baselineClockSequence!==null&&appliedClockSequence===null){
       try{if(data.clockSequence!==baselineClockSequence)throw Error('Native causal clock bootstrap was not applied');
@@ -150,7 +168,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
           throw Error('Native world resources precede their causal baseline');
         baselineClockSequence=initial?.clockSequence??null;
-        port.postMessage({...baseline,...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,session,consumerToken});
+        port.postMessage({...baseline,...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
       },
       onClock(record){
         if(closed||retirement)return;
@@ -175,7 +193,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   function fenceGpu(){
     // Receipt only: the caller still needs an authoritative pending mutation,
     // clock ordering and all live consumers before committing physical effects.
-    if(closed||retirement||appliedSequence===null||mutationHold)return Promise.reject(Error('Native GPU fence connection is not ready'));
+    if(closed||retirement||appliedSequence===null||mutationHold||mutationOpportunity)return Promise.reject(Error('Native GPU fence connection is not ready'));
     if(gpuFences.size>=64)return Promise.reject(Error('Too many pending native GPU fences'));
     if(!Number.isSafeInteger(nextFence+1))return Promise.reject(Error('Native GPU fence identity exhausted'));
     const fenceId=++nextFence,sequence=sentSequence,effectiveTime=sentTime;
@@ -186,10 +204,37 @@ export function createNativeIntentControlPublication({port,session,observe,
          session,authorityEpoch,sequence,effectiveTime,fenceId,...(clock?{clockSequence:clock.clockSequence}:{})});}catch(error){fail(error);}
     });
   }
-  function quiesceGpuForMutation({preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null,preparedTaskSettlementTemplate=null,preparedInitialIdleBodyTemplate=null,preparedIdleCycleTemplate=null,preparedIdleStrollStopTemplate=null,preparedFarmArrivalStopTemplate=null,preparedIdleStrollTemplate=null,preparedHomeRouteTemplate=null,preparedFarmArrivalTemplate=null,preparedHomeArrivalTemplate=null}={}){
+  function waitForMutationOpportunity({preparedWorldBoundary=null,signal=null}={}){
+    if(signal?.aborted)return Promise.reject(new DOMException('Native mutation opportunity cancelled','AbortError'));
+    if(closed||retirement||appliedSequence===null||!clock)return Promise.reject(Error('Native mutation opportunity connection is not ready'));
+    if(mutationOpportunity||mutationHold||gpuFences.size)return Promise.reject(Error('Native mutation opportunity boundary is busy'));
+    preparedWorldBoundary=copyNativeWorldBoundary(preparedWorldBoundary);
+    if(preparedWorldBoundary&&(preparedWorldBoundary.authorityEpoch!==authorityEpoch||preparedWorldBoundary.nativeSession!==clock.nativeSession))throw Error('Invalid native mutation opportunity preparation');
+    // Legacy peers retain their original safety protocol. This versioned
+    // notification does not claim to improve their presentation scheduling.
+    if(mutationOpportunityVersion!==1)return Promise.resolve();
+    return requestMutationOpportunity(preparedWorldBoundary,signal);
+  }
+  function requestMutationOpportunity(preparedWorldBoundary,signal){
+    if(!Number.isSafeInteger(nextMutationOpportunity+1))return Promise.reject(Error('Native mutation opportunity identity exhausted'));
+    const id=++nextMutationOpportunity;
+    return new Promise((resolve,reject)=>{
+      const abort=()=>{
+        if(mutationOpportunity?.id!==id)return;mutationOpportunity.cancelled=true;
+        try{port.postMessage({type:'IntentMutationOpportunityCancel',protocolVersion:2,opportunityVersion:1,
+          session,authorityEpoch,consumerToken,opportunityId:id});}catch(error){fail(error);}
+      };
+      mutationOpportunity={id,resolve,reject,cancelled:false,cleanup:()=>signal?.removeEventListener('abort',abort),timer:setTimeout(()=>fail(Error('Native mutation opportunity timed out')),timeoutMs)};
+      signal?.addEventListener('abort',abort,{once:true});
+      try{port.postMessage({type:'IntentMutationOpportunity',protocolVersion:2,opportunityVersion:1,
+        session,authorityEpoch,consumerToken,opportunityId:id,...(preparedWorldBoundary?{preparedWorldBoundary}:{})});}catch(error){fail(error);}
+    });
+  }
+  function quiesceGpuForMutation({signal=null,preparedWorldBoundary=null,preparedResumeTemplate=null,preparedTaskStartTemplate=null,preparedTaskActionTemplate=null,preparedTaskConsequenceTemplate=null,preparedTaskSettlementTemplate=null,preparedInitialIdleBodyTemplate=null,preparedIdleCycleTemplate=null,preparedIdleStrollStopTemplate=null,preparedFarmArrivalStopTemplate=null,preparedIdleStrollTemplate=null,preparedHomeRouteTemplate=null,preparedFarmArrivalTemplate=null,preparedHomeArrivalTemplate=null}={}){
+    if(signal?.aborted)return Promise.reject(new DOMException('Native mutation opportunity cancelled','AbortError'));
     if(closed||retirement||appliedSequence===null||!clock||clock.intentSequence!==sentSequence||clock.committedThrough!==sentTime)
       return Promise.reject(Error('Native causal mutation boundary is not ready'));
-    if(mutationHold||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
+    if(mutationHold||mutationOpportunity||gpuFences.size)return Promise.reject(Error('Native GPU mutation boundary is busy'));
     if(!Number.isSafeInteger(nextMutationFence+1))return Promise.reject(Error('Native mutation fence identity exhausted'));
     if([preparedResumeTemplate,preparedTaskStartTemplate,preparedTaskActionTemplate,preparedTaskConsequenceTemplate,preparedTaskSettlementTemplate,preparedInitialIdleBodyTemplate,preparedIdleCycleTemplate,preparedIdleStrollStopTemplate,preparedFarmArrivalStopTemplate,preparedIdleStrollTemplate,preparedHomeRouteTemplate,preparedFarmArrivalTemplate,preparedHomeArrivalTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
     if(preparedHomeArrivalTemplate){preparedHomeArrivalTemplate=copyNativeHomeArrivalReference(preparedHomeArrivalTemplate);if(!preparedWorldBoundary)throw Error('Native Home arrival requires a prepared packet');}
@@ -313,9 +358,10 @@ export function createNativeIntentControlPublication({port,session,observe,
     catch(error){fail(error);}
     return promise;
   }
-  return Object.assign(publication,{ready,dispose,fenceGpu,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,
+  return Object.assign(publication,{ready,dispose,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,
     ownsGpuConsumer:consumer=>consumer===publication,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
     ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),
+    mutationOpportunityVersion,pendingMutationOpportunity:mutationOpportunity?.id??null,
     pendingMutationHold:mutationHold?.holdId??null,retiring:retirement!==null,drained,worldBoundary})});
 }

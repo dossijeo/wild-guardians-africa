@@ -67,8 +67,16 @@ function preparedWorldDraw(f,boundary,value=77,signal=null){
 
 async function fixture(clientOptions = {}, hostOptions = {}) {
   const [producerPort, consumerPort] = pair(), gpu = fakeGpu(), errors = [];
-  const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: () => 0, cancelFrame() {}, ...hostOptions });
+  let virtualFrame=null;
+  const host = createRemoteWebGpuHost({ ...gpu, canvas: { width: 20, height: 10 }, port: consumerPort, requestFrame: callback => {virtualFrame=callback;return 0;}, cancelFrame() {virtualFrame=null;}, ...hostOptions });
   const client = createRemoteWebGpuClient({ port: producerPort, capabilities: { width: 20, height: 10, format: 'rgba8unorm' }, onError: error => errors.push(error), ...clientOptions });
+  // Lifecycle tests normally present manually. Drive the original virtual RAF
+  // when the direct preflight requests an opportunity. A custom RAF remains
+  // exclusively controlled by its test; no production guard is bypassed.
+  if(!hostOptions.requestFrame&&hostOptions.intentControl?.port){
+    const control=hostOptions.intentControl.port,receive=control.onmessage;
+    control.onmessage=event=>{receive(event);if(host.inspect().mutationOpportunityWaiting)setImmediate(()=>{if(host.inspect().mutationOpportunityWaiting)virtualFrame?.();});};
+  }
   client.context.configure({ device: client.device, format: 'rgba8unorm' });
   const buffer = client.device.createBuffer({ size: 16, usage: 72 });
   const group = client.device.createBindGroup({ entries: [{ binding: 0, resource: { buffer } }] });
