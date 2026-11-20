@@ -23,6 +23,16 @@ export function copyNativeIdleCycleBodySource(value){
  }
  return Object.freeze({...Object.fromEntries(fields.map(k=>[k,value[k]])),...(failed?{sourceRequest}:{}),pose:Object.freeze(Object.fromEntries(poseFields.map(k=>[k,p[k]]))),idleState});
 }
+// Correlate bounded native17 metadata with an already validated acquired
+// settlement. This structural relation is not an execution or GPU permission.
+// Worker animation profile/bodyFlags are absent from the old public17 proof;
+// never infer them. Native issued associations and the live actor still check
+// the full new reference before installation/drawing.
+export function nativeSettledIdleSourceMatches(value,proof){
+ try{const q=copyNativeIdleCycleBodySource(value),r=proof?.reference,w=r?.worldBoundary;
+  return q.kind==='native-settled-worker-idle-source'&&proof?.kind==='native-task-settlement-attestation'&&proof.version===1&&!r.home&&q.sourceSequence===proof.settlementSequence&&q.sourceAt===w.effectiveTime&&q.authorityEpoch===w.authorityEpoch&&q.nativeSession===w.nativeSession&&['actorId','bodyId','centerId','profile'].every(k=>q[k]===r[k])&&poseFields.every(k=>q.pose[k]===r.pose[k]);
+ }catch{return false;}
+}
 // Common read view, not a new semantic request. Keep the original20 DTO intact
 // while actual22/23 counterparts remain bounded value descriptors.
 export function nativeIdleCycleBodyState(value){

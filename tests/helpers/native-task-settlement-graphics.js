@@ -4,8 +4,8 @@ import {projectNativeHarvestConsequence,prepareCrateDeliveryConsequence,projectN
 
 // Real source transitions and original authored assets on the same roster.
 // Source ABI setup and simulated admission do not certify a hardware fence.
-export async function nativeTaskSettlementGraphicsFixture({home=false}={}){
- const f=await nativeTaskConsequenceGraphicsFixture({idle:true});
+export async function nativeTaskSettlementGraphicsFixture({home=false,...options}={}){
+ const f=await nativeTaskConsequenceGraphicsFixture({idle:true,...options});
  try{const carryPart=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});carryPart.activate();const data=f.commit();carryPart.finalize(data);projectNativeHarvestConsequence(f.nativeState,f.worker,f.preview,f.planner);const carry=data.nativeTaskConsequenceBinding;
   f.advance(carry.reference.endTime+.05-f.nativeState.elapsed);assert(f.planner.projectNativeDeliveryExecution(f.nativeState,f.worker).arrived);
   if(home)f.worker.contractDay=f.nativeState.day-1;

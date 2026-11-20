@@ -31,10 +31,10 @@ export async function nativeWorkerGraphicsFixture(f,{idle=false,alert=false,init
 
 // The preceding action is specific to this consequence fixture. Other native
 // owners reuse the resident authored actor without inventing action history.
-export async function nativeTaskConsequenceGraphicsFixture({idle=false}={}){
- const native=nativeTaskConsequenceFixture(),initialState=structuredClone(native.state);
+export async function nativeTaskConsequenceGraphicsFixture({idle=false,alert=false,...nativeOptions}={}){
+ const native=nativeTaskConsequenceFixture(nativeOptions),initialState=structuredClone(native.state);
  Object.assign(initialState.workers.find(w=>w.id===native.actor),{status:'waiting-task',nativeRouteAdmission:'pending-action-resources',path:null});
- const f=await nativeWorkerGraphicsFixture(native,{idle,initialState});
+ const f=await nativeWorkerGraphicsFixture(native,{idle,alert,initialState});
  try{
   const action=await f.roster.prepareNativeTaskActionProposal(f.terrain.prepareNativeTaskAction(f.source.reference),{getPickAge:()=>0,nativeTaskActionBinding:f.source});action.activate();action.finalize({nativeTaskActionBinding:f.source});f.state.workers[0]=structuredClone(f.worker);f.roster.sync();f.flush();
   const prepared=f.prepare();assert.equal(prepared.status,'proposed');const support=f.terrain.prepareNativeTaskConsequenceProposal(prepared.proposal,{terrainManifest:f.manifest});assert(support?.valid());

@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuación A2/A4/A7/e-R3/f-R4: [admisión y selección de Idle adquirido](native-post-settlement-idle-consumer-20261120.md). Conserva cuerpo/actor/geometría y reloj presentado17→21/22; prueba nativa exacta antes de dibujo, fase Idle retenida hasta WATCH y fuente Farm23 consultable durante candidata21.20 casos nuevos,44 dirigidos,5006/5007 en379 archivos/una omisión y build nuevos. Fuentes Godot/Detour/Three leídas; sin dependencia/ABI/Host nuevos. ProductorIdle aún desactivado. Integra commits externos de [recuperación automática](native-incremental-auto-recovery-handoff-20261120.md) y [auditoría](frame-stutter-architecture-audit-20261120.md). Siguiente acotar preparación CPU monolítica antes de ampliar productor; pérdida real de dispositivo pendiente. 718/998/64 entradas,16 ajenos/38 A5 exactos; A6/A/B/C/cadencia abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/e-R3/f-R4: [origen Idle desde liquidación17](native-post-settlement-idle-source-20261120.md). Godot/Detour leídos en código; mismo cuerpo adquirido para21 o acercamiento22, sin20/REST/Task ficticios ni dependencia/reloj/dueño nuevos. Cuatro exports aditivos y dos WASM canónicos nuevos;30 casos nuevos,95 dirigidos,4969/4970 en373 archivos/una omisión y build nuevos.707 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Solo componente nativo: siguiente consumidor gráfico/control, productor ordinario e interrupciones antes de GPU. Cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
