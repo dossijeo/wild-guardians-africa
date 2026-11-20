@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El puente de Task25 ya prepara, revalida y cancela mediante el selector nativo, y verifica el recibo de la pose retenida. La parada conserva vacíos los cambios de chunks. La selección pasó 693 pruebas y la compilación de producto aprobó. Quedan el canal de recursos y control, la proyección en GPU y el relevo ordinario a Home. [Puente y validación](native-task-stop-bridge-20261120.md).
+
 El contraste a 4K/60 Hz confirmó que limitar las fábricas explícitas reduce su concurrencia de seis a una. El intervalo de arranque persistió (177,275 y 183,575 ms) y la primera adquisición tardó más en el recorrido candidato. El límite queda como parche de investigación. Las dos historias se verificaron hasta el drenaje, sin pérdida de traza y con restauración de 4K/30 Hz. Los bloqueos causales y C4 siguen abiertos. [Contraste y recibos](native-pipeline-cadence-comparison-20261120.md).
 
 El cuerpo de una Task detenida ya da origen a una solicitud nativa de Home. Se libera la asignación anterior y Home18 adquiere el mismo cuerpo. La selección dirigida pasó 293 pruebas y la compilación aprobó. Quedan el disparo ordinario desde Game y el relevo por el canal real hasta GPU. [Transferencia nativa y validación](native-task-stopped-home-source-20261120.md).

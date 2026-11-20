@@ -3143,8 +3143,10 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session
 // One receipt on the existing last committed world publication, not a history
 // of permissions. The authority attests the prepared/current frontier pair.
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_binding_ptr(){
-  if(spatial_world_resource_snapshot()!=1||(worldResourcePublication->header[4]!=12&&worldResourcePublication->header[4]!=24))return nullptr;
-  const auto& p=*worldResourcePublication;return p.stopBinding[0]==1&&p.stopBinding[3]==p.header[2]&&p.stopBinding[4]==p.header[3]?p.stopBinding.data():nullptr;
+  if(spatial_world_resource_snapshot()!=1)return nullptr;
+  const auto& p=*worldResourcePublication;const auto kind=p.header[4];
+  if(kind!=12&&kind!=24&&kind!=25)return nullptr;
+  return p.stopBinding[0]==1&&p.stopBinding[3]==p.header[2]&&p.stopBinding[4]==p.header[3]?p.stopBinding.data():nullptr;
 }
 // Selected source on the same last committed publication. A dependency stopped
 // by its held-disc closure cannot impersonate the source instruction's actor.

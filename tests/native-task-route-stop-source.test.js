@@ -29,6 +29,90 @@ async function fixture(threaded,run){let runtime,f;try{
 
 for(const threaded of [false,true]){
  const engine=threaded?'pthread':'standalone';
+ test(`${engine} typed Task stop refreshes the exact issued ticket and verifies its final held pose`,async()=>fixture(threaded,f=>{
+  tick(f.state,.1,f.nav);
+  const p=f.planner.prepareNativeTaskRouteStopProposal(f.actor);
+  assert.equal(p.status,'proposed');
+  const initial=p.proposal.nativeStop,body=f.body(1),peer=f.body(3),claim=f.state.workers[0].taskId;
+  assert.deepEqual(initial.sourceRoute,f.route);
+  assert.equal(initial.routes[0].bodyId,f.execution.bodyId);
+  assert.deepEqual(p.proposal.chunks,[]);
+  assert.deepEqual(p.proposal.removed,[]);
+  assert.equal(f.planner.nativeTaskRouteStopBinding(initial),null);
+  const read=f.planner.captureNativeTaskRouteStopProposal(structuredClone(p.ticket));
+  assert.deepEqual(read,p.proposal);
+  read.routeEffects.rows[8]++;
+  assert.deepEqual(f.planner.captureNativeTaskRouteStopProposal(p.ticket),p.proposal);
+  tick(f.state,.2,f.nav);
+  const fresh=f.planner.revalidateNativeTaskRouteStopProposal(structuredClone(p.ticket));
+  assert.equal(fresh.status,'revalidated');
+  assert.equal(fresh.timeTranslation.kind,'native-task-route-stop-translation');
+  assert.equal(fresh.timeTranslation.preparedTicket,p.ticket.ticket);
+  assert.equal(fresh.timeTranslation.actualTicket,fresh.ticket.ticket);
+  assert.equal(fresh.timeTranslation.sameResourceOwners,true);
+  assert.equal(f.planner.captureNativeTaskRouteStopProposal(p.ticket),null);
+  assert.equal(f.planner.cancelNativeTaskRouteStopProposal(p.ticket),false);
+  assert.notDeepEqual(f.body(1),body);
+  assert.notDeepEqual(f.body(3),peer);
+  const current=fresh.proposal.nativeStop,finalBody=f.body(1);
+  const resources=f.session.core.captureNativeWorldProposalResources(current.worldBoundary);
+  assert.equal(resources.kind,25);
+  assert.deepEqual(resources.chunks,[]);
+  assert.deepEqual(resources.removed,[]);
+  assert.equal(f.w.spatial_world_proposal_stop_commit_bound(...tuple(f).slice(0,5),p.ticket.ticket),1);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  assert.equal(f.session.core.captureNativeWorldResources(current.worldBoundary).kind,25);
+  const projection={version:1,routeEffects:fresh.proposal.routeEffects,gateEffects:fresh.proposal.gateEffects};
+  const h=f.route.routeHandle,b=current.worldBoundary;
+  assert.equal(f.w.nav_intent_stopped_route_matches(f.route.actorId,h.session,h.slot,h.generation,f.route.assignmentSequence,f.execution.bodyId,4,b.effectiveTime),1);
+  const selector=f.w.spatial_world_stop_source_ptr();
+  assert(selector);
+  assert.deepEqual(Array.from(new Float64Array(f.w.memory.buffer,selector,6)),[1,h.session,f.route.actorId,h.slot,h.generation,f.route.assignmentSequence]);
+  const held=f.planner.nativeSuspendedGateRoute(f.route.actorId);
+  assert(held);
+  assert.deepEqual(Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_gate_suspended_route_ptr(),27)).slice(9),Array.from(projection.routeEffects.rows).slice(8));
+  const proof=f.planner.nativeTaskRouteStopBinding(current,initial,{projection});
+  assert.equal(proof.kind,'native-task-route-stop-attestation');
+  assert(Object.isFrozen(proof.projection.routeEffects.rows));
+  assert.deepEqual(f.body(1),finalBody);
+  assert.equal(f.state.workers[0].taskId,claim);
+  assert.equal(f.planner.nativeTaskRouteStopBinding(initial),null);
+  const bad=structuredClone(projection);bad.routeEffects.rows[8]+=.01;
+  assert.equal(f.planner.nativeTaskRouteStopBinding(current,initial,{projection:bad}),null);
+  const alias=v=>({...v,kind:'native-farm-arrival-stop-reference'});
+  assert.equal(f.planner.nativeFarmArrivalStopBinding(alias(current),alias(initial)),null);
+ }));
+
+ test(`${engine} typed Task stop declines substituted actors and cross-family tickets before native mutation`,async()=>fixture(threaded,f=>{
+  tick(f.state,.1,f.nav);
+  const p=f.planner.prepareNativeTaskRouteStopProposal(f.actor);
+  assert.equal(p.status,'proposed');
+  const peer=f.planner.nativeTaskExecution(f.state.workers[1].id);
+  assert(peer&&!peer.arrived);
+  const initial=tuple(f),body=f.body(1);
+  const aliases=[{...p.ticket,sourceRoute:peer.nativeRoute},{...p.ticket,kind:'native-farm-arrival-stop-proposal-ticket'}];
+  assert.equal(f.planner.captureNativeTaskRouteStopProposal(aliases[0]),null);
+  assert.equal(f.planner.cancelNativeTaskRouteStopProposal(aliases[0]),false);
+  assert.equal(f.planner.revalidateNativeTaskRouteStopProposal(aliases[0]).status,'stale');
+  assert.equal(f.planner.cancelNativeFarmArrivalStopProposal(aliases[1]),false);
+  assert.equal(f.planner.revalidateNativeFarmArrivalStopProposal(aliases[1]).status,'stale');
+  assert.deepEqual(tuple(f),initial);
+  assert.deepEqual(f.body(1),body);
+  const r=p.ticket.sourceRoute,h=r.routeHandle;
+  const matches=(session=p.ticket.session,ticket=p.ticket.ticket,actor=r.actorId,slot=h.slot,generation=h.generation,assignment=r.assignmentSequence)=>
+   f.w.nav_task_route_stop_proposal_source_matches(session,ticket,actor,slot,generation,assignment);
+  assert.equal(matches(),1);
+  assert.equal(matches(p.ticket.session+2**32),0);
+  assert.equal(matches(p.ticket.session,p.ticket.ticket,r.actorId,h.slot,h.generation,r.assignmentSequence+2**32),0);
+  assert.equal(f.planner.prepareNativeTaskRouteStopProposal(f.actor).status,'busy');
+  assert.equal(f.planner.cancelNativeTaskRouteStopProposal(structuredClone(p.ticket)),true);
+  assert.equal(matches(),0);
+  assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);
+  assert.equal(f.planner.nativeTaskRouteStopBinding(p.proposal.nativeStop),null);
+  tick(f.state,.1,f.nav);
+  assert.notDeepEqual(f.body(1),body);
+ }));
+
  test(`${engine} a stopped Task hands its exact body and pose to Home and releases its claim`,async()=>fixture(threaded,f=>{
   tick(f.state,.1,f.nav);
   const goal=f.point(-8,0),actor=f.route.actorId,handle=f.route.routeHandle;

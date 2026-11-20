@@ -6,7 +6,7 @@ import {sameNativeFarmArrivalRequestReference} from '../native-farm-arrival-requ
 import {nativeFarmArrivalState,nativeFarmArrivalRetainedPendingState,nativeFarmArrivalExecutionState,nativeFarmArrivalHeldState,nativeFarmArrivalTerminalState,nativeFarmArrivalBoundState} from '../native-farm-arrival-state.js';
 import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
-import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec} from '../native-worker-route-stop-codec.js';
+import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec} from '../native-worker-route-stop-codec.js';
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
 import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollHeldExecution,sameNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollContinuesRestoredRequest,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../native-idle-stroll.js';
@@ -845,9 +845,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       (markCommitted,...boundary)=>{const id=wasm.spatial_barrier_proposal_commit(...boundary);
         if(id<=0)return {status:id};markCommitted({barrierId:id});return {status:1,value:{barrierId:id}};});
   };
-  const nativeWorkerRouteStopInput=binding=>{
-    const r=binding.reference,h=r.expectedRouteHandle,split=value=>[Number(BigInt(value)&0xffffffffn)|0,Math.floor(value/4294967296)];
-    return [...split(h.session),...split(r.actorId),h.slot|0,h.generation|0,...split(binding.assignmentSequence)];
+  const nativeWorkerRouteStopInput=({actorId,routeHandle:h,assignmentSequence})=>{
+    const split=value=>[Number(BigInt(value)&0xffffffffn)|0,Math.floor(value/4294967296)];
+    return [...split(h.session),...split(actorId),h.slot|0,h.generation|0,...split(assignmentSequence)];
   };
   const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null}={})=>{
     if(prepareResources!==null&&typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid native resource preparation');
@@ -909,7 +909,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         if(!handle?.preparedWorldBoundary){handle?.abort?.();throw Error('Native stroll stop requires a retained command packet');}
         return handle;
       };
-      kind=12;integers=nativeWorkerRouteStopInput(binding);
+      kind=12;integers=nativeWorkerRouteStopInput(stopSourceRoute(binding));
     }else throw TypeError('Unsupported native world mutation');
     // Only serialization into the authority-owned temporary input buffers.
     return commitNativeWorldProposal(getPublication,()=>{
@@ -1528,13 +1528,27 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(!wasm.nav_idle_stroll_binding_actors)return Object.freeze([]);const count=wasm.nav_idle_stroll_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native Idle stroll cohort');const actors=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_idle_stroll_binding_ptr(),count));
     return Object.freeze(actors.map(actor=>{const binding=nativeIdleStrollBinding(actor);if(!binding)throw Error('Native Idle stroll lost its physical source');return binding;}));
   };
-  const stopSourceRoute=binding=>copyNativeRouteReference({actorId:binding.reference.actorId,assignmentSequence:binding.assignmentSequence,routeHandle:binding.reference.expectedRouteHandle});
-  const workerRouteStopCodec=kind=>kind===24?nativeFarmArrivalStopCodec:nativeIdleStrollStopCodec;
-  const workerRouteStopSource=(kind,actor)=>kind===24?nativeFarmArrivalRouteBinding(actor):nativeIdleStrollBinding(actor);
+  const stopSourceRoute=binding=>copyNativeRouteReference(binding.nativeRoute??{actorId:binding.reference.actorId,assignmentSequence:binding.assignmentSequence,routeHandle:binding.reference.expectedRouteHandle});
+  const workerRouteStops={
+    12:{codec:nativeIdleStrollStopCodec,source:nativeIdleStrollBinding,api:'nav_idle_stroll_stop_proposal'},
+    24:{codec:nativeFarmArrivalStopCodec,source:actor=>nativeFarmArrivalRouteBinding(actor),api:'nav_farm_arrival_stop_proposal'},
+    25:{codec:nativeTaskRouteStopCodec,source:actor=>{const task=nativeTaskExecution(actor);return task&&!task.arrived?task:null;},api:'nav_task_route_stop_proposal'},
+  };
+  const workerRouteStopCodec=kind=>workerRouteStops[kind].codec;
+  const workerRouteStopSource=(kind,actor)=>workerRouteStops[kind].source(actor);
+  const currentWorkerRouteStopTicket=(kind,ticket)=>{
+    if(ticket.authorityEpoch!==epoch()||ticket.session!==wasm.nav_intent_session()||wasm.nav_intent_barrier_proposal_ticket()!==1)return null;
+    const t=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);
+    if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==kind)return null;
+    if(kind===25){
+      const {actorId,routeHandle,assignmentSequence}=ticket.sourceRoute;
+      if(wasm.nav_task_route_stop_proposal_source_matches?.(ticket.session,ticket.ticket,actorId,routeHandle.slot,routeHandle.generation,assignmentSequence)!==1)return null;
+    }
+    return Array.from(t);
+  };
   const captureNativeWorkerRouteStopProposal=(kind,value)=>{
     const codec=workerRouteStopCodec(kind);
-    const ticket=codec.copyTicket(value);if(ticket.authorityEpoch!==epoch()||ticket.session!==wasm.nav_intent_session()||wasm.nav_intent_barrier_proposal_ticket()!==1)return null;
-    const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==kind)return null;
+    const ticket=codec.copyTicket(value),t=currentWorkerRouteStopTicket(kind,ticket);if(!t)return null;
     const binding=workerRouteStopSource(kind,ticket.sourceRoute.actorId);if(!binding||JSON.stringify(stopSourceRoute(binding))!==JSON.stringify(ticket.sourceRoute))return null;
     const worldBoundary={version:1,authorityEpoch:epoch(),nativeSession:t[0],ticket:t[1],effectiveTime:t[3]},resources=session.core.captureNativeWorldProposalResources(worldBoundary),routes=[],gates=[];
     for(let i=0;i<resources.routeEffects.rows.length;i+=26){const r=resources.routeEffects.rows.subarray(i,i+26);routes.push({nativeRoute:{actorId:r[0],assignmentSequence:r[1],routeHandle:{authorityEpoch:epoch(),session:t[0],slot:r[2],generation:r[3]}},bodyId:r[4],state:r[5],resumeGeneration:r[7]});}
@@ -1545,27 +1559,30 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const cancelNativeWorkerRouteStopProposal=(kind,value)=>{
     const codec=workerRouteStopCodec(kind);
     if(value?.kind!==codec.ticketKind||value.authorityEpoch!==epoch())return false;const ticket=codec.copyTicket(value);
-    if(ticket.session!==wasm.nav_intent_session()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));if(t[0]!==ticket.session||t[1]!==ticket.ticket||t[5]!==kind)return false;const cancelled=wasm.nav_intent_barrier_proposal_cancel(ticket.session,ticket.ticket)===1;wasm.spatial_world_proposal_resource_release(ticket.session,ticket.ticket);return cancelled;
+    if(!currentWorkerRouteStopTicket(kind,ticket))return false;
+    const cancelled=wasm.nav_intent_barrier_proposal_cancel(ticket.session,ticket.ticket)===1;
+    wasm.spatial_world_proposal_resource_release(ticket.session,ticket.ticket);return cancelled;
   };
   const prepareNativeWorkerRouteStopProposal=(kind,actorId)=>{
     const codec=workerRouteStopCodec(kind);
     const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
-    if(typeof wasm.spatial_world_proposal_revalidate_stop!=='function'||typeof wasm.spatial_world_proposal_stop_commit_bound!=='function'||typeof wasm.spatial_world_stop_binding_ptr!=='function'||typeof wasm.spatial_world_stop_source_ptr!=='function'||kind===24&&wasm.nav_farm_arrival_stop_proposal_version?.()!==1||typeof wasm.nav_intent_stopped_route_matches!=='function')throw Error('Rebuild native moving stop resources');
+    if(typeof wasm.spatial_world_proposal_revalidate_stop!=='function'||typeof wasm.spatial_world_proposal_stop_commit_bound!=='function'||typeof wasm.spatial_world_stop_binding_ptr!=='function'||typeof wasm.spatial_world_stop_source_ptr!=='function'||kind!==12&&wasm[workerRouteStops[kind].api+'_version']?.()!==1||kind===25&&typeof wasm.nav_task_route_stop_proposal_source_matches!=='function'||typeof wasm.nav_intent_stopped_route_matches!=='function')throw Error('Rebuild native moving stop resources');
     syncBoundaryTime();flushNativeIntentControl();const binding=workerRouteStopSource(kind,actorId);if(!binding)return outcome('unsupported');
-    const input=nativeWorkerRouteStopInput(binding);wasm.spatial_world_proposal_float_ptr(0);const ptr=wasm.spatial_world_proposal_int_ptr(input.length);if(!ptr)throw Error('Native stop proposal allocation failed');new Int32Array(wasm.memory.buffer,ptr,input.length).set(input);
+    const sourceRoute=stopSourceRoute(binding),input=nativeWorkerRouteStopInput(sourceRoute);wasm.spatial_world_proposal_float_ptr(0);const ptr=wasm.spatial_world_proposal_int_ptr(input.length);if(!ptr)throw Error('Native stop proposal allocation failed');new Int32Array(wasm.memory.buffer,ptr,input.length).set(input);
     const status=wasm.spatial_world_proposal_stage_resources(kind,0,0,input.length);if(status!==1)return outcome(status===-4?'busy':status===0?'blocked':'stale');
-    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native stop lost its proposal ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=codec.copyTicket({kind:codec.ticketKind,authorityEpoch:epoch(),session:t[0],ticket:t[1],sourceRoute:stopSourceRoute(binding)});
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native stop lost its proposal ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=codec.copyTicket({kind:codec.ticketKind,authorityEpoch:epoch(),session:t[0],ticket:t[1],sourceRoute});
     try{const proposal=captureNativeWorkerRouteStopProposal(kind,ticket);if(!proposal)throw Error('Native stop source changed during capture');return outcome('proposed',{proposal,ticket});}catch(error){cancelNativeWorkerRouteStopProposal(kind,ticket);throw error;}
   };
   const revalidateNativeWorkerRouteStopProposal=(kind,value)=>{
     const codec=workerRouteStopCodec(kind);
     const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
-    if(value?.kind!==codec.ticketKind||value.authorityEpoch!==epoch())return outcome('stale');const previous=codec.copyTicket(value);if(previous.session!==wasm.nav_intent_session())return outcome('stale');syncBoundaryTime();flushNativeIntentControl();
+    if(value?.kind!==codec.ticketKind||value.authorityEpoch!==epoch())return outcome('stale');const previous=codec.copyTicket(value);if(!currentWorkerRouteStopTicket(kind,previous))return outcome('stale');syncBoundaryTime();flushNativeIntentControl();
+    if(!currentWorkerRouteStopTicket(kind,previous))return outcome('stale');
     const binding=workerRouteStopSource(kind,previous.sourceRoute.actorId);if(!binding||JSON.stringify(stopSourceRoute(binding))!==JSON.stringify(previous.sourceRoute))return outcome('stale');
     const status=wasm.spatial_world_proposal_revalidate_stop(previous.session,previous.ticket);if(status!==1)return outcome(status===-4?'busy':'stale');if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native stop refresh lost its ticket');
     const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=codec.copyTicket({...previous,session:t[0],ticket:t[1]});
     try{
-      const ptr=wasm[kind===24?'nav_farm_arrival_stop_proposal_translation_ptr':'nav_idle_stroll_stop_proposal_translation_ptr'](t[0],t[1]),a=ptr?Array.from(new Float64Array(wasm.memory.buffer,ptr,8)):null,proposal=captureNativeWorkerRouteStopProposal(kind,ticket);
+      const ptr=wasm[workerRouteStops[kind].api+'_translation_ptr'](t[0],t[1]),a=ptr?Array.from(new Float64Array(wasm.memory.buffer,ptr,8)):null,proposal=captureNativeWorkerRouteStopProposal(kind,ticket);
       if(!a||a[0]!==1||!a.every(Number.isFinite)||!proposal||!Number.isSafeInteger(a[1])||a[1]<1||a[1]>=a[2]||a[2]!==ticket.ticket||a[3]<0||a[4]<a[3]||a[4]!==proposal.effectiveTime||![0,1].includes(a[5])||a[6]!==proposal.nativeStop.routes.length||a[7]!==proposal.nativeStop.gates.length)throw Error('Invalid native stop refresh receipt');
       return outcome('revalidated',{ticket,proposal,timeTranslation:Object.freeze({kind:codec.translationKind,version:1,preparedTicket:a[1],actualTicket:a[2],preparedAt:a[3],effectiveTime:a[4],sameResourceOwners:a[5]===1,routeCount:a[6],gateCount:a[7]})});
     }catch(error){cancelNativeWorkerRouteStopProposal(kind,ticket);throw error;}
@@ -1603,6 +1620,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const prepareNativeFarmArrivalStopProposal=value=>prepareNativeWorkerRouteStopProposal(24,value);
   const revalidateNativeFarmArrivalStopProposal=value=>revalidateNativeWorkerRouteStopProposal(24,value);
   const nativeFarmArrivalStopBinding=(reference,preparedReference=reference,options={})=>nativeWorkerRouteStopBinding(24,reference,preparedReference,options);
+  const captureNativeTaskRouteStopProposal=value=>captureNativeWorkerRouteStopProposal(25,value);
+  const cancelNativeTaskRouteStopProposal=value=>cancelNativeWorkerRouteStopProposal(25,value);
+  const prepareNativeTaskRouteStopProposal=value=>prepareNativeWorkerRouteStopProposal(25,value);
+  const revalidateNativeTaskRouteStopProposal=value=>revalidateNativeWorkerRouteStopProposal(25,value);
+  const nativeTaskRouteStopBinding=(reference,preparedReference=reference,options={})=>nativeWorkerRouteStopBinding(25,reference,preparedReference,options);
   const nativeIdleStrollHeldExecution=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);
     if(typeof wasm.nav_idle_stroll_held_execution!=='function'||typeof wasm.nav_idle_stroll_held_source_snapshot!=='function')throw Error('Rebuild native held Idle stroll source');
@@ -2592,6 +2614,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
     nativeIdleStrollDeclarationReference,requestNativeRestoredIdleStrollHome,nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences,
     nativeIdleStrollFailedRestReference,startNativeIdleStrollAfterGpuQuiescence,nativeIdleStrollBinding,nativeIdleStrollBindings,nativeIdleStrollExecution,nativeIdleStrollHeldExecution,prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding,prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding,prepareNativeIdleStrollProposal,captureNativeIdleStrollProposal,revalidateNativeIdleStrollProposal,cancelNativeIdleStrollProposal,
+    prepareNativeTaskRouteStopProposal,captureNativeTaskRouteStopProposal,revalidateNativeTaskRouteStopProposal,cancelNativeTaskRouteStopProposal,nativeTaskRouteStopBinding,
     nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,prepareNativeIdleCycleProposal,startNativeIdleCycleAfterGpuQuiescence,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
     prepareNativeFarmArrivalContinuationProposal,prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution,nativeFarmArrivalHeldExecution,
     nativeFarmArrivalRequestReference,nativeFarmArrivalRequestReferences,nativeFarmArrivalDeclarationReference,nativeFarmArrivalIdleSource,
@@ -3816,6 +3839,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,requestNativeFarmHome,projectNativeSettledWorkerExecution,
     async startNativeIdleStrollAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleStrollAfterGpuQuiescence(options,farmIdleAdmissionCurrent(options?.actorId));if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleStrollBinding.reference.actorId);if(worker)projectNativeIdleStroll(state,worker);}return result;},
     prepareNativeFarmArrivalStopProposal:bridge.prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal:bridge.captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal:bridge.revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal:bridge.cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding:bridge.nativeFarmArrivalStopBinding,
+    prepareNativeTaskRouteStopProposal:bridge.prepareNativeTaskRouteStopProposal,captureNativeTaskRouteStopProposal:bridge.captureNativeTaskRouteStopProposal,revalidateNativeTaskRouteStopProposal:bridge.revalidateNativeTaskRouteStopProposal,cancelNativeTaskRouteStopProposal:bridge.cancelNativeTaskRouteStopProposal,nativeTaskRouteStopBinding:bridge.nativeTaskRouteStopBinding,
     prepareNativeIdleStrollStopProposal:bridge.prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal:bridge.captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal:bridge.revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal:bridge.cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding:bridge.nativeIdleStrollStopBinding,
     nativeIdleStrollDeclarationReference:bridge.nativeIdleStrollDeclarationReference,projectNativeIdleStrollRequest,projectNativeIdleStrollDeclaration,
     nativeIdleStrollRequestReference:bridge.nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference:bridge.nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences:bridge.nativeIdleStrollRequestReferences,

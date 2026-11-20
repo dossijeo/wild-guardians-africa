@@ -1576,6 +1576,15 @@ extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_stop_proposal_tra
   const auto& p=state().barrierProposal;return p.pending&&p.kind==24&&p.workerRouteStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.workerRouteStop->translation[0]==1?p.workerRouteStop->translation.data():nullptr;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_task_route_stop_proposal_version(){return 1;}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_task_route_stop_proposal_source_matches(double session,double ticket,double actor,double slot,double generation,double assignment){
+  const auto& p=state().barrierProposal;
+  if(!p.pending||p.kind!=25||!p.workerRouteStop||session!=double(p.session)||ticket!=double(p.ticket))return 0;
+  const auto& ids=p.worldInput.integers;
+  if(ids.size()!=8)return 0;
+  const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
+  return session==double(id(0))&&actor==double(id(2))&&slot==double(uint32_t(ids[4]))&&
+         generation==double(uint32_t(ids[5]))&&assignment==double(id(6));
+}
 extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_task_route_stop_proposal_translation_ptr(double session,double ticket){
   const auto& p=state().barrierProposal;return p.pending&&p.kind==25&&p.workerRouteStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.workerRouteStop->translation[0]==1?p.workerRouteStop->translation.data():nullptr;
 }

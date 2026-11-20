@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El puente de Task25 ya prepara, revalida y cancela mediante el selector nativo, y verifica el recibo de la pose retenida. La parada conserva vacíos los cambios de chunks. La selección pasó 693 pruebas y la compilación de producto aprobó. Quedan el canal de recursos y control, la proyección en GPU y el relevo ordinario a Home. [Puente y validación](native-task-stop-bridge-20261120.md).
+
 El cuerpo de una Task detenida ya da origen a una solicitud nativa de Home. Se libera la asignación anterior y Home18 adquiere el mismo cuerpo. La selección dirigida pasó 293 pruebas y la compilación aprobó. Quedan el disparo ordinario desde Game y el relevo por el canal real hasta GPU. [Transferencia nativa y validación](native-task-stopped-home-source-20261120.md).
 
 Continuación parcial A6 e-R3/f-R4. La parada nativa de Task en marcha reutiliza la preparación y el cierre de paradas existentes. Sus 18 casos pasan en standalone y pthread. La regresión seleccionada pasa 5.177 pruebas en 394 archivos con una omisión histórica y compilación aprobada. Quedan la proyección retenida, la liberación de la tarea y el relevo hacia Home por el canal real. [Fuente, referencias y pruebas](native-task-route-stop-source-20261120.md).
