@@ -13,7 +13,7 @@ export async function auditOrdinaryTaskAction(c,taskBinding){
  await wait(()=>blocks.some(v=>v.kind==='birth-block-end'&&v.stage==='action-ready'),'Action READY preparer stall');
  const held=await client.inspect();Object.assign(progress,{stage:'held-action-ready',held,sourceHeld:structuredClone(getConfirmed())});
  // Keep this receipt inside the actual declared action, before Carry's
- // separately prepared consequence. Young male harvests last only two seconds.
+ // separately prepared consequence. Use its actual declared duration.
  const commitBlockMs=Math.min(1800,Math.round((q.duration-.6)*1000));if(commitBlockMs<750)throw Error('Action is too short for this acquisition-window audit');
  preparer.postMessage({kind:'release-birth-action-ready',durationMs:commitBlockMs});
  const committed=()=>lifecycleMessages.find(v=>v.kind==='birth-resource-committed'&&v.family==='task-action'&&nativeTaskActionActor(v.binding.reference.request)===actor);

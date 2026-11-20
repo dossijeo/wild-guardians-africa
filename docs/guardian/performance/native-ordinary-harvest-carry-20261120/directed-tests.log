@@ -1,0 +1,356 @@
+TAP version 13
+# (node:4456) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:4456) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 1 - olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1726.4769
+  ...
+# Subtest: olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 2 - olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1266.5403
+  ...
+# Subtest: youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 3 - youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1421.0858
+  ...
+# Subtest: youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 4 - youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1035.6822
+  ...
+# Subtest: authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+ok 5 - authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+  ---
+  duration_ms: 2022.2929
+  ...
+# Subtest: a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+ok 6 - a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+  ---
+  duration_ms: 833.7553
+  ...
+# Subtest: authority automatically acquires fresh Home and its prepared absence at the real endpoint
+ok 7 - authority automatically acquires fresh Home and its prepared absence at the real endpoint
+  ---
+  duration_ms: 1977.2607
+  ...
+# Subtest: restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+ok 8 - restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+  ---
+  duration_ms: 2157.9303
+  ...
+# Subtest: closing the authority aborts its one pending preparation without publishing a late WALK
+ok 9 - closing the authority aborts its one pending preparation without publishing a late WALK
+  ---
+  duration_ms: 760.0251
+  ...
+# Subtest: a preparation failure is observable and cannot turn into a repeated failed production loop
+ok 10 - a preparation failure is observable and cannot turn into a repeated failed production loop
+  ---
+  duration_ms: 746.5515
+  ...
+# Subtest: a mixed legacy roster keeps native activation closed until every mover has a source projection
+ok 11 - a mixed legacy roster keeps native activation closed until every mover has a source projection
+  ---
+  duration_ms: 725.082
+  ...
+# Subtest: real authority Home peer advances while restored WALK waits for resource preparation
+ok 12 - real authority Home peer advances while restored WALK waits for resource preparation
+  ---
+  duration_ms: 795.1999
+  ...
+# Subtest: a Home missing resident data does not starve the next ready restored stroll
+ok 13 - a Home missing resident data does not starve the next ready restored stroll
+  ---
+  duration_ms: 764.2193
+  ...
+# Subtest: changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+ok 14 - changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+  ---
+  duration_ms: 705.0176
+  ...
+# Subtest: ordinary native production waits for the terrain publisher and forwards its exact current manifest
+ok 15 - ordinary native production waits for the terrain publisher and forwards its exact current manifest
+  ---
+  duration_ms: 769.6007
+  ...
+# (node:22560) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:22560) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+ok 16 - a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+  ---
+  duration_ms: 959.7789
+  ...
+# Subtest: an actual arrived action declaration retains its own resource class through the existing port and refresh
+ok 17 - an actual arrived action declaration retains its own resource class through the existing port and refresh
+  ---
+  duration_ms: 677.5495
+  ...
+# Subtest: the action resource port rejects a template from another declaration
+ok 18 - the action resource port rejects a template from another declaration
+  ---
+  duration_ms: 589.3663
+  ...
+# Subtest: the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+ok 19 - the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+  ---
+  duration_ms: 1270.7142
+  ...
+# Subtest: a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+ok 20 - a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+  ---
+  duration_ms: 1256.0269
+  ...
+# Subtest: abort during preparation disposes a handle that arrives late and permits a later request
+ok 21 - abort during preparation disposes a handle that arrives late and permits a later request
+  ---
+  duration_ms: 51.0177
+  ...
+# Subtest: abort after ready retires its proxy and releases capacity for the next request
+ok 22 - abort after ready retires its proxy and releases capacity for the next request
+  ---
+  duration_ms: 16.1627
+  ...
+# Subtest: the retained endpoint supports invalidate and refresh without a new preparation
+ok 23 - the retained endpoint supports invalidate and refresh without a new preparation
+  ---
+  duration_ms: 3.5217
+  ...
+# Subtest: incompatible refresh and failed refresh both release the retained proxy
+ok 24 - incompatible refresh and failed refresh both release the retained proxy
+  ---
+  duration_ms: 4.7907
+  ...
+# Subtest: a duplicate refresh cannot release the first refresh or its retained reservation
+ok 25 - a duplicate refresh cannot release the first refresh or its retained reservation
+  ---
+  duration_ms: 3.1297
+  ...
+# Subtest: connection disposal invalidates ready proxies and rejects a pending preparation
+ok 26 - connection disposal invalidates ready proxies and rejects a pending preparation
+  ---
+  duration_ms: 20.7941
+  ...
+# Subtest: preparation timeout cancels the existing retained handle without closing the healthy endpoint
+ok 27 - preparation timeout cancels the existing retained handle without closing the healthy endpoint
+  ---
+  duration_ms: 60.9547
+  ...
+# Subtest: wrong-session and unsolicited responses close the connection and invalidate retained handles
+ok 28 - wrong-session and unsolicited responses close the connection and invalidate retained handles
+  ---
+  duration_ms: 31.455
+  ...
+# Subtest: aborting before the handshake does not dispatch a resource request
+ok 29 - aborting before the handshake does not dispatch a resource request
+  ---
+  duration_ms: 1.2009
+  ...
+# Subtest: genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+ok 30 - genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+  ---
+  duration_ms: 1032.1952
+  ...
+# Subtest: Home absence preparation and refresh use the same retained direct resource endpoint
+ok 31 - Home absence preparation and refresh use the same retained direct resource endpoint
+  ---
+  duration_ms: 1260.809
+  ...
+# (node:484) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:484) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: task-consequence: one preparation survives advancing simulation and drains before native commit
+ok 32 - task-consequence: one preparation survives advancing simulation and drains before native commit
+  ---
+  duration_ms: 1730.7125
+  ...
+# Subtest: task-consequence: cancellation during preparation cannot issue an assignment
+ok 33 - task-consequence: cancellation during preparation cannot issue an assignment
+  ---
+  duration_ms: 1182.332
+  ...
+# Subtest: task-consequence: changed native intention during drain rejects prepared resources
+ok 34 - task-consequence: changed native intention during drain rejects prepared resources
+  ---
+  duration_ms: 1337.8964
+  ...
+# Subtest: task-consequence: preparation failure leaves the native source uncommitted
+ok 35 - task-consequence: preparation failure leaves the native source uncommitted
+  ---
+  duration_ms: 1049.7904
+  ...
+# Subtest: task-consequence: release failure after physical commit never reports a rollback
+ok 36 - task-consequence: release failure after physical commit never reports a rollback
+  ---
+  duration_ms: 1009.1529
+  ...
+# Subtest: the real source/resource/consumer channels confirm the exact consequence template before Game commits and replay its issued clock
+ok 37 - the real source/resource/consumer channels confirm the exact consequence template before Game commits and replay its issued clock
+  ---
+  duration_ms: 942.3436
+  ...
+# (node:23808) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23808) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: Harvest removes only its crop instance, preserves batch resources and can restore the preceding presentation
+ok 38 - Harvest removes only its crop instance, preserves batch resources and can restore the preceding presentation
+  ---
+  duration_ms: 1672.1664
+  ...
+# Subtest: a cancelled crop consequence neither consumes source state nor removes the live crop batch
+ok 39 - a cancelled crop consequence neither consumes source state nor removes the live crop batch
+  ---
+  duration_ms: 1236.442
+  ...
+# Subtest: an offscreen crop consequence retains an absence proof without allocating GPU batches
+ok 40 - an offscreen crop consequence retains an absence proof without allocating GPU batches
+  ---
+  duration_ms: 1301.8584
+  ...
+# (node:6348) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:6348) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: the shared source admission projects Harvest exactly once before retaining its consequence resources
+ok 41 - the shared source admission projects Harvest exactly once before retaining its consequence resources
+  ---
+  duration_ms: 1718.2583
+  ...
+# Subtest: the source rechecks semantic input after preparation and after the drain before committing a native effect
+ok 42 - the source rechecks semantic input after preparation and after the drain before committing a native effect
+  ---
+  duration_ms: 2554.4272
+  ...
+# Subtest: a long consequence preparation preserves the held body while the peer advances on the same native clock
+ok 43 - a long consequence preparation preserves the held body while the peer advances on the same native clock
+  ---
+  duration_ms: 1099.8737
+  ...
+# Subtest: source cancellation retains the original action and cannot consume its semantic inputs
+ok 44 - source cancellation retains the original action and cannot consume its semantic inputs
+  ---
+  duration_ms: 984.7497
+  ...
+# Subtest: semantic markers and preview JSON cannot project an uncommitted native consequence
+ok 45 - semantic markers and preview JSON cannot project an uncommitted native consequence
+  ---
+  duration_ms: 1020.3961
+  ...
+# Subtest: native Harvest consumes the existing loss allowance once and transfers the original committed power
+ok 46 - native Harvest consumes the existing loss allowance once and transfers the original committed power
+  ---
+  duration_ms: 779.294
+  ...
+# Subtest: native Carry arrival holds the body and cargo without paying an unprepared delivery consequence
+ok 47 - native Carry arrival holds the body and cargo without paying an unprepared delivery consequence
+  ---
+  duration_ms: 897.1842
+  ...
+# Subtest: an unsupported saved delivery rejects restoration before replacing its live native session
+ok 48 - an unsupported saved delivery rejects restoration before replacing its live native session
+  ---
+  duration_ms: 801.7707
+  ...
+# Subtest: pthread uses the same source consequence admission, Game projection and Carry execution
+ok 49 - pthread uses the same source consequence admission, Game projection and Carry execution
+  ---
+  duration_ms: 970.4292
+  ...
+# Subtest: a consumer must explicitly acknowledge the exact versioned consequence template before its native commit
+ok 50 - a consumer must explicitly acknowledge the exact versioned consequence template before its native commit
+  ---
+  duration_ms: 3061.4798
+  ...
+# (node:24380) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24380) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: the native consequence prepares original Carry and nine crate pieces on its resident action actor, and can roll back before commit
+ok 51 - the native consequence prepares original Carry and nine crate pieces on its resident action actor, and can roll back before commit
+  ---
+  duration_ms: 1974.1928
+  ...
+# Subtest: a foreign consequence proof cannot finalize the Carry candidate and cancelling preserves its native action actor
+ok 52 - a foreign consequence proof cannot finalize the Carry candidate and cancelling preserves its native action actor
+  ---
+  duration_ms: 1536.0161
+  ...
+# (node:23688) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23688) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+ok 53 - actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+  ---
+  duration_ms: 32.9105
+  ...
+# Subtest: grouped terrain remains selectable and occludes entities behind it
+ok 54 - grouped terrain remains selectable and occludes entities behind it
+  ---
+  duration_ms: 8.9726
+  ...
+# Subtest: empty-ground spell selection carries the visible terrain height without changing placement coordinates
+ok 55 - empty-ground spell selection carries the visible terrain height without changing placement coordinates
+  ---
+  duration_ms: 10.026
+  ...
+# Subtest: grouped biome props still occlude selectable objects
+ok 56 - grouped biome props still occlude selectable objects
+  ---
+  duration_ms: 2.5663
+  ...
+# Subtest: prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+ok 57 - prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+  ---
+  duration_ms: 7.5031
+  ...
+# Subtest: picks confirmed animal, nearest crop, and terrain without the old scene
+ok 58 - picks confirmed animal, nearest crop, and terrain without the old scene
+  ---
+  duration_ms: 14.534
+  ...
+# Subtest: terrain and confirmed world geometry occlude candidates
+ok 59 - terrain and confirmed world geometry occlude candidates
+  ---
+  duration_ms: 2.4803
+  ...
+# Subtest: ignores transparent foliage texels and retains opaque or unavailable data
+ok 60 - ignores transparent foliage texels and retains opaque or unavailable data
+  ---
+  duration_ms: 7.5554
+  ...
+# Subtest: selects the nearest visible worker or structure while respecting terrain and props
+ok 61 - selects the nearest visible worker or structure while respecting terrain and props
+  ---
+  duration_ms: 26.6911
+  ...
+# Subtest: transparent cutout does not occlude a selectable structure
+ok 62 - transparent cutout does not occlude a selectable structure
+  ---
+  duration_ms: 2.2151
+  ...
+# Subtest: reports an incomplete visual scene until all confirmed selectable objects are resident
+ok 63 - reports an incomplete visual scene until all confirmed selectable objects are resident
+  ---
+  duration_ms: 1.826
+  ...
+# Subtest: geometry outside the chunk clip cannot hide a selectable target
+ok 64 - geometry outside the chunk clip cannot hide a selectable target
+  ---
+  duration_ms: 2.337
+  ...
+# Subtest: crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+ok 65 - crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+  ---
+  duration_ms: 2.0079
+  ...
+1..65
+# tests 65
+# suites 0
+# pass 65
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18577.1224

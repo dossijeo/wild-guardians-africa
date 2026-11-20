@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación e-R3/f-R4: [productor ordinario Harvest15 → Carry16](native-ordinary-harvest-carry-20261120.md). Misma autoridad/cuerpo2/Surface/draw, READY real retenido, retirada atómica de cultivo/tarea y caja portada; sin cambios de producto. Cuatro perfiles conservan576/585 IDs y banco refs2, picking tras cosecha y drenaje reales; control Task14 válido.65 CPU y seis sintaxis nuevos; suites/build completos heredados.694 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cero fábricas en bloqueo READY y17 posteriores, no mínimo exclusivo. Historial amplio182,920–334,100ms: cadencia y caso global3.123 abiertos. Siguiente: entrega17 y continuidad/Home. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Corrección de auditoría A7: [prioridad compartida de cultivos](native-crop-selection-parity-20261120.md). WorldScene.pick también superpone los volúmenes de cultivo a las mallas; la observación anterior no acredita un defecto exclusivo de migración. Se descarta y retira el candidato de triángulos que cambiaba esa política, aunque pasaba sus pruebas. Producto y harnesses restaurados por bytes a755812f61; nueva regresión de paridad13/13 y dos sintaxis. Suites/build completos heredados, no nuevos.693 inputs/64 nativos/16 ajenos/38 A5 exactos. Siguiente pendiente real: productor ordinario Harvest15 → Carry16 → entrega17/Home. A6/A/B/C y cadencia abiertos,D no iniciado,f-R3 seguro.
 
 
