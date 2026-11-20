@@ -1,0 +1,147 @@
+{
+  "filesExact": true,
+  "metrics": {
+    "firstUseSubmissions": 7,
+    "firstUsePasses": 21,
+    "firstUseDraws": 78,
+    "firstUsePipelines": 36,
+    "firstUseTargets": 49
+  },
+  "phases": {
+    "action": {
+      "ready": {
+        "kind": "birth-block-end",
+        "stage": "action-ready",
+        "start": 1795154055400.41,
+        "end": 1795154057200.43,
+        "drawFrames": 54,
+        "confirmedPublications": 87,
+        "clockAdvance": 1.7000000000002657,
+        "peerProgress": 0,
+        "maxGapMs": 33.554931640625
+      },
+      "commit": {
+        "kind": "birth-block-end",
+        "stage": "action-commit",
+        "start": 1795154057234.165,
+        "end": 1795154059034.17,
+        "drawFrames": 54,
+        "confirmedPublications": 87,
+        "clockAdvance": 1.7200000000002689,
+        "peerProgress": 0,
+        "maxGapMs": 33.44482421875
+      },
+      "before": {
+        "firstUseSubmissions": 5,
+        "firstUsePasses": 15,
+        "firstUseDraws": 33,
+        "firstUsePipelines": 22,
+        "firstUseTargets": 35
+      },
+      "after": {
+        "firstUseSubmissions": 5,
+        "firstUsePasses": 15,
+        "firstUseDraws": 33,
+        "firstUsePipelines": 22,
+        "firstUseTargets": 35
+      }
+    },
+    "carry": {
+      "ready": {
+        "kind": "birth-block-end",
+        "stage": "consequence-ready",
+        "start": 1795154063081.055,
+        "end": 1795154064881.075,
+        "drawFrames": 54,
+        "confirmedPublications": 87,
+        "clockAdvance": 1.7000000000002657,
+        "bornProgress": 0,
+        "maxGapMs": 33.469970703125
+      },
+      "commit": {
+        "kind": "birth-block-end",
+        "stage": "consequence-commit",
+        "start": 1795154064911.685,
+        "end": 1795154066711.705,
+        "drawFrames": 54,
+        "confirmedPublications": 88,
+        "clockAdvance": 1.7000000000002657,
+        "bornProgress": 1.8074561844981845,
+        "maxGapMs": 33.434814453125
+      },
+      "before": {
+        "firstUseSubmissions": 6,
+        "firstUsePasses": 18,
+        "firstUseDraws": 69,
+        "firstUsePipelines": 30,
+        "firstUseTargets": 42
+      },
+      "after": {
+        "firstUseSubmissions": 6,
+        "firstUsePasses": 18,
+        "firstUseDraws": 69,
+        "firstUsePipelines": 30,
+        "firstUseTargets": 42
+      }
+    },
+    "settlement": {
+      "ready": {
+        "kind": "birth-block-end",
+        "stage": "settlement-ready",
+        "start": 1795154070876.285,
+        "end": 1795154072676.305,
+        "drawFrames": 54,
+        "confirmedPublications": 88,
+        "clockAdvance": 1.7000000000002657,
+        "maxGapMs": 33.489990234375
+      },
+      "commit": {
+        "kind": "birth-block-end",
+        "stage": "settlement-commit",
+        "start": 1795154072713.615,
+        "end": 1795154074513.625,
+        "drawFrames": 54,
+        "confirmedPublications": 87,
+        "clockAdvance": 1.7000000000002657,
+        "maxGapMs": 33.449951171875
+      },
+      "before": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 78,
+        "firstUsePipelines": 36,
+        "firstUseTargets": 49
+      },
+      "after": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 78,
+        "firstUsePipelines": 36,
+        "firstUseTargets": 49
+      }
+    }
+  },
+  "largestGaps": [
+    {
+      "from": 1795154040249.0051,
+      "to": 1795154040541.835,
+      "ms": 292.829833984375
+    },
+    {
+      "from": 1795154040548.865,
+      "to": 1795154040704.3901,
+      "ms": 155.525146484375
+    },
+    {
+      "from": 1795154040748.995,
+      "to": 1795154040897.135,
+      "ms": 148.139892578125
+    },
+    {
+      "from": 1795154072682.495,
+      "to": 1795154072744.31,
+      "ms": 61.81494140625
+    }
+  ],
+  "retained": 576
+}

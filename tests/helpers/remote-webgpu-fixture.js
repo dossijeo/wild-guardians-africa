@@ -24,6 +24,8 @@ function fakeGpu() {
       submit(commands) { for (const command of commands) { assert(!submitted.includes(command)); for (const copy of command.copies || []) copy(); submitted.push(command); calls.push(['submit', command]); } },
       onSubmittedWorkDone: async () => {},
     },
+    pushErrorScope() {},
+    popErrorScope: async()=>null,
     createBuffer(descriptor) {
       const data = new Uint8Array(descriptor.size);
       const buffer = { data, descriptor, destroyed: false, mapAsync: async () => {}, getMappedRange(offset = 0, size = descriptor.size) { assert.equal(offset, 0); assert.equal(size, descriptor.size); return data.buffer; }, unmap() { calls.push(['unmap']); }, destroy() { this.destroyed = true; } };
@@ -49,7 +51,9 @@ function fakeGpu() {
     destroy() { calls.push(['deviceDestroy']); resolveLost({ reason: 'destroyed', message: 'Explicit native destruction' }); },
   };
   const context = { configure() {}, unconfigure() {}, getCurrentTexture() { const version = ++textureVersion; return { createView: () => ({ version }) }; } };
-  return { device, context, calls, buffers, submitted };
+  return { device, context, calls, buffers, submitted,
+    get canvasSubmissions(){return submitted.filter(command=>command.passes.some(pass=>pass.colorAttachments?.some(a=>a?.view?.version!==undefined||a?.resolveTarget?.version!==undefined)));},
+  };
 }
 const flush = async () => { for (let i = 0; i < 40; i++) await Promise.resolve(); };
 

@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación A3/A4/e-R3/f-R4: [primer uso GPU antes de READY](native-prepared-first-use-20261120.md). Adapta código real Drei/Three/Babylon: solo dibujos fríos en attachments privados, entradas nativas reutilizadas, fence/validación y retirada antes de READY; sin dependencia/ABI/dueño/reloj nuevos.29 casos nuevos,187 dirigidos,4880/4881 en367 archivos/una omisión y build nuevos. Cuatro cohortes hasta liquidación/Idle y control Task:576/585 IDs/refs2/picking/drain, cinco capturas revisadas. Cadencia no aceptada,3.123 abierto.698 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Siguiente continuidad/tarea/Home; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A3/A4/e-R3/f-R4: [identidad y tiempos de pipelines](native-pipeline-gap-attribution-20261120.md). Observer QA optativo conserva85 jobs/descriptor/WGSL/marcas originales; fuente Chromium/Dawn leída y revisión pública distinguida del binario Edge no localizable. Dos GPU mantienen576 IDs/refs2, entrega Idle/picking/drain;247 CPU y tres sintaxis+dos anotados frescos, suites/build heredados. Hueco193,340ms tras Carry no coincide con promesas nativas pendientes; fuente confirma pases de dibujo retenidos hasta commit. Siguiente verificar primer uso GPU/sincronización antes de corregir, y continuidad/Home.696 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cadencia/3.123 abiertos,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

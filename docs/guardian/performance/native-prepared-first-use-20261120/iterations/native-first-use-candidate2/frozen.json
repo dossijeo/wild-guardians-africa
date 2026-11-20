@@ -1,0 +1,71 @@
+{
+  "baseCommit": "c0b796b026e0363fe0f1901ee9111360afc65de7",
+  "files": {
+    "src/rendering/remote-webgpu-host.js": "e0b57854eae577f5d8b8e5f8d11a02a6712521fb42fcee14e4810a5b0db65de5",
+    "src/rendering/remote-webgpu-client.js": "d93997b0cf39f2177db21b3c71a437463c61ef316a99a05209e451c25626f34a",
+    "tests/helpers/remote-webgpu-fixture.js": "c5e2f860c91fcd016cb617f209daa4da9af68d1d96a37f1c0fb5426baad00262",
+    "tests/remote-webgpu.test.js": "107da87f58feee5c67201eb02d29c1b5b054305f8d9b7f40ba8c04b8322cb019",
+    "tests/native-task-settlement-remote.test.js": "f66df447d4a2d45cc546ae9041d68ceed87a3cb230224a98e8874f8926c4ef05",
+    "src/rendering/remote-prepared-first-use.js": "8c3c4250a2fa941e945632041c1aea207cc3c8a5fbacba39fdc4214298c7ba30",
+    "tests/remote-prepared-first-use.test.js": "c53d0947be01946eda1066daba5afda2e2e7013bdb901e92643b130bb1c41947"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-final-olderMale.json",
+      "log": ".cache/native-first-use-final-olderMale.log",
+      "startedAt": "2026-11-20T06:07:31.320Z",
+      "finishedAt": "2026-11-20T06:08:47.662Z",
+      "wallMs": 76342,
+      "exitCode": 0
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-final-olderFemale.json",
+      "log": ".cache/native-first-use-final-olderFemale.log",
+      "startedAt": "2026-11-20T06:08:47.672Z",
+      "finishedAt": "2026-11-20T06:10:05.508Z",
+      "wallMs": 77836,
+      "exitCode": 0
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-final-youngFemale.json",
+      "log": ".cache/native-first-use-final-youngFemale.log",
+      "startedAt": "2026-11-20T06:10:05.513Z",
+      "finishedAt": "2026-11-20T06:11:22.498Z",
+      "wallMs": 76985,
+      "exitCode": 0
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-final-youngMale.json",
+      "log": ".cache/native-first-use-final-youngMale.log",
+      "startedAt": "2026-11-20T06:11:22.506Z",
+      "finishedAt": "2026-11-20T06:12:39.393Z",
+      "wallMs": 76887,
+      "exitCode": 0
+    },
+    {
+      "label": "task-control",
+      "profile": "youngFemale",
+      "followSettlement": false,
+      "output": ".cache/native-first-use-final-task-control.json",
+      "log": ".cache/native-first-use-final-task-control.log",
+      "startedAt": "2026-11-20T06:12:39.398Z",
+      "finishedAt": "2026-11-20T06:13:09.551Z",
+      "wallMs": 30153,
+      "exitCode": 0
+    }
+  ],
+  "candidate": 2,
+  "scope": "Final product excludes unrelated texture copies from pipeline warm-up; successful earlier candidate1 pilot is preserved separately and not reused as final-source evidence."
+}

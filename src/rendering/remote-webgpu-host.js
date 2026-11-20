@@ -31,6 +31,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-w
 
 import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {rejectedFramePreparations,closePreparationImages} from './remote-frame-preparations.js';
+import {remoteDrawPipelineEntries,prepareRemoteFirstUse} from './remote-prepared-first-use.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const NATIVE_ADMISSION_OBSOLETE=new Set(['native-route-admission-obsolete','native-idle-cycle-admission-obsolete','native-initial-idle-body-admission-obsolete','native-settlement-admission-obsolete','native-home-arrival-admission-obsolete','native-idle-stroll-admission-obsolete','native-home-admission-obsolete','native-consequence-admission-obsolete','native-action-admission-obsolete','native-start-admission-obsolete','native-resume-admission-obsolete','native-stroll-stop-admission-obsolete','native-farm-arrival-stop-admission-obsolete','native-farm-arrival-admission-obsolete','native-suspended-admission-obsolete']);
@@ -112,7 +113,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let stagedOperations = [],retainedPreparationSnapshot=null,preparationRecoveryRequired=false,lastReceivedFrameSequence=0,retainedPreparationOperationCount=0;
   let disposalPromise=null;
   let active = null, pending = null, stopped = false, failed = false, deviceDestroyRequested = false, frameHandle = null, chain = Promise.resolve();
-  let currentTexture = null, currentViews = new Map(), deviceConfigured = false;
+  let currentTexture = null, currentViews = new Map(), deviceConfigured = false, canvasConfiguration = null;
   let previousFrameAt = null, sampleCursor = 0;
   let previousOpportunityAt = null, opportunityCursor = 0;
   const presentationOpportunities = new Array(512);
@@ -123,7 +124,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   const frameTimings = [], fenceTimings = [];
   function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
   const frameTime = createRemoteFrameTimeGuard();
-  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null, resourceJobMaxStage: null, resourceJobMaxAt: null };
+  const metrics = { nativeFrames: 0, replayFrames: 0, packets: 0, computePackets: 0, commands: 0, queueWrites: 0, gpuErrors: 0, cameraUpdatesRejected: 0, uniformForks: 0, uniformForkBytes: 0, bindingForks: 0, resourceRetirements: 0, dependencyVisits: 0, retirementChecks: 0, producerReleases: 0, hiddenMs: 0, visibilityTransitions: 0, resourceTaskYields: 0, resourceJobMaxMs: 0, resourceJobMaxType: null, resourceJobMaxStage: null, resourceJobMaxAt: null,firstUseSubmissions:0,firstUsePasses:0,firstUseDraws:0,firstUsePipelines:0,firstUseTargets:0 };
   function resourceJob(type,stage,run){
     const started=absoluteNow();
     try{return run();}finally{const elapsed=absoluteNow()-started;if(elapsed>metrics.resourceJobMaxMs){metrics.resourceJobMaxMs=elapsed;metrics.resourceJobMaxType=type;metrics.resourceJobMaxStage=stage;metrics.resourceJobMaxAt=started;}}
@@ -711,6 +712,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
+      if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
@@ -1068,11 +1070,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       case 'configure':
         if (active || pending) throw Error('Remote canvas configuration is fixed while a frame is published; recreate the renderer to change it');
-        context.configure(resolve(message.descriptor)); deviceConfigured = true; break;
+        context.configure(resolve(message.descriptor));canvasConfiguration={...message.descriptor};deviceConfigured = true; break;
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'prepare-world-frame':
       case 'frame': {
-        if(['preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
+        if(['preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
         const preparing=message.type==='prepare-world-frame';
         if(preparing&&message.version!==1)throw Error('Unsupported prepared world frame version');
         if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
@@ -1152,6 +1154,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           rejectPreparedFrame({...packet,operations:message.packet.operations},error.message,false,'native-route');break;
         }
         classifyBufferOwnership(packet);
+
         if(routeControl?.status().clock&&packet.admittedClockBindings.some(binding=>packet.gpuWrittenBuffers.has(binding.id)))throw Error('Native presentation clocks cannot be overwritten by GPU commands');
         const writeCounts = new Map();
         for (const op of packet.operations) if (op.method === 'writeBuffer') {
@@ -1173,6 +1176,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           }
         }
         for (const key of packet.baselineBuffers) if (!packet.resourceSnapshot.get(key)?.uniformShadow) throw Error(`Cannot replay an unversioned GPU buffer read before its first write: ${key}`);
+        packet.drawnPipelines=remoteDrawPipelineEntries(packet.operations,packet.resourceSnapshot,{strict:preparing});
         if(preparing){
           if(hasCompute)throw Error('Prepared native world frame cannot contain one-shot compute');
           initializePreparedWorldFrame(packet);
@@ -1186,10 +1190,33 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         pending = packet;
         packet.transportTiming.admittedAt = absoluteNow();
         if(preparing){
-          await Promise.race([device.queue.onSubmittedWorkDone(),cancelled]);
+          // Compile completion is not first GPU use. Exercise only cold render
+          // pipelines with private writable attachments and existing bindings.
+          // No warm-up is a presented image or an authority/clock witness.
+          let firstUse=null,submitted=false,validation;const previousResolution=resolutionResources;
+          device.pushErrorScope('validation');resolutionResources=packet.resourceSnapshot;
+          try{
+            firstUse=prepareRemoteFirstUse({device,packet,canvasConfiguration,resolve});
+            if(firstUse.buffers.length){device.queue.submit(firstUse.buffers);submitted=true;metrics.firstUseSubmissions++;}
+            metrics.firstUsePasses+=firstUse.passes;metrics.firstUseDraws+=firstUse.draws;metrics.firstUseTargets+=firstUse.textures.length;
+          }finally{
+            resolutionResources=previousResolution;validation=device.popErrorScope();validation.catch(()=>{});
+            for(const texture of firstUse?.textures??[])if(!submitted)texture.destroy();
+          }
+          const firstUseComplete=Promise.all([device.queue.onSubmittedWorkDone(),validation,...firstUse.waiting]).then(([,error])=>{
+            if(error)throw Error('Prepared pipeline first use failed: '+error.message);
+            for(const pipeline of firstUse.pipelines)pipeline.firstUseSubmitted=true;
+            metrics.firstUsePipelines+=firstUse.pipelines.size;
+          }).finally(()=>{
+            if(submitted)for(const texture of firstUse.textures)texture.destroy();
+            for(const pipeline of firstUse.pipelines)if(pipeline.firstUseCompletion===firstUseComplete)delete pipeline.firstUseCompletion;
+          });
+          for(const pipeline of firstUse.pipelines)pipeline.firstUseCompletion=firstUseComplete;
+          firstUseComplete.catch(fail); // Cancellation cannot hide a native validation failure.
+          await Promise.race([firstUseComplete,cancelled]);
           if(!current()||pending!==packet){cancelPreparedWorldFrame(packet.sequence);reply(message,null,Error('Prepared world frame cancelled'));break;}
           packet.preparedUploadsComplete=true;
-          reply(message,{version:1,sequence:packet.sequence,worldBoundary:boundary,uploadsSubmitted:true});
+          reply(message,{version:1,sequence:packet.sequence,worldBoundary:boundary,uploadsSubmitted:true,pipelineFirstUseComplete:true});
           preparedReady=true;
         }
         for (const entry of pendingRetirement) tryRetire(entry);

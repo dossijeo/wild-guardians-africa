@@ -1,0 +1,33 @@
+{
+  "baseCommit": "c0b796b026e0363fe0f1901ee9111360afc65de7",
+  "command": [
+    ".cache/tooling/node20.exe",
+    "--experimental-loader",
+    "./.cache/native-first-use-parent-loader.mjs",
+    "--test",
+    "--test-name-pattern",
+    "^native first-use validation failure",
+    "tests/remote-prepared-first-use.test.js"
+  ],
+  "modules": [
+    {
+      "file": "src/rendering/remote-webgpu-host.js",
+      "target": ".cache/native-first-use-parent-remote-webgpu-host.js",
+      "sha256": "4a7b24b9a21a744aa8f76f300652918d7a4eff60e22dcbd782760d631ba3c14f"
+    },
+    {
+      "file": "src/rendering/remote-webgpu-client.js",
+      "target": ".cache/native-first-use-parent-remote-webgpu-client.js",
+      "sha256": "f0d28c8902b924c8f2908e4d9b26b3f7ce8dd3383af2456d09e2ca72e33f8a7e"
+    }
+  ],
+  "log": ".cache/native-first-use-parent-negative.log",
+  "sha256": "e6c9d418e6ad4f7037e9275192808ac786cb5992a0d1573b20e3f7c8c06633e7",
+  "exitCode": 1,
+  "tests": 29,
+  "pass": 0,
+  "fail": 1,
+  "cancelled": 0,
+  "skipped": 28,
+  "scope": "Read-only parent host AND client at their original module URLs, other dependencies unchanged. Selected new native-source validation case must fail because parent can commit without executing/validating private first use."
+}
