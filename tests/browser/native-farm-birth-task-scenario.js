@@ -1,3 +1,5 @@
+import {auditOrdinaryTaskAction} from './native-ordinary-task-action-scenario.js';
+
 // A lifecycle branch of the ordinary birth audit: all owners, ports, clocks
 // and publications belong to its original authority and graphical client.
 export async function auditTaskSupersedesFarmBirth(c){
@@ -17,6 +19,7 @@ export async function auditTaskSupersedesFarmBirth(c){
  preparer.postMessage({kind:'release-birth-task-ready',durationMs:1800});await wait(acquired,'actual replacement Task14 acquisition');await wait(()=>blocks.some(v=>v.kind==='birth-block-end'&&v.stage==='task-commit'),'Task commit while preparer blocked');
  const acquiredInspection=await client.inspect();
  if(scenario==='cancel-after-task')await forwardLate();
+ const action=c.followAction?await auditOrdinaryTaskAction(c,acquired().binding):null;
  await delay(250);await stopSource();await delay(80);
  const confirmed=getConfirmed(),after=await client.inspect(),consumer=after.drawExecution.consumer,committed=acquired(),samples=consumer.samples??[];
  if(consumer.failed||consumer.gpuErrors||c.errors.length||c.sourceMessages.length||publications.some(p=>p.born?.mode==='native-farm-arrival')||lifecycleMessages.some(v=>v.kind==='birth-resource-committed'&&v.family==='farm-arrival'&&v.binding.reference.actorId===actor))throw Error('Cancelled Farm obtained an executable source or a GPU failure');
@@ -39,5 +42,6 @@ export async function auditTaskSupersedesFarmBirth(c){
  const preparationBlock=blockReceipt('preparation'),block=blockReceipt('late-ready'),taskBlock=blockReceipt('task-commit'),inputPick=await pick(confirmed.workers.find(w=>w.id===bornId)),peerPick=await pick(confirmed.workers.find(w=>w.id===oldId));
  await window.captureNativeFarmBirth?.('ordinary-farm-birth-'+scenario);
  const result={ordinaryFarmBirth:true,ordinaryAuthorityProduction:true,cancelledBeforeAcquisition:true,taskSupersedesFarm:true,scenario,scope:'Actual paid newborn Farm13 is superseded by a genuine harvest before23 acquisition; actual Task14 and shared-bank ownership. Not all tasks/cohorts/failures/recovery/cadence acceptance.',adapter:consumer.adapterInfo,reference,replacement:{ready:taskReady,committed,drawFrames:drawn.length,actualTask},source:{oldId,bornId,newbornProfile:born.profile,newbornCount:1,born,confirmed},inputPick,peerPick,resourceIdentity:{retainedGeometryAndBankIds:retained,oldGeometryBuffers:buffers,immutableTextures:textures,duplicateShaderModules:duplicates,retired:[]},sharedProfileBank:{before:bankBefore,ready:bankReady,after:bankAfter},resourceChanges:{prepared:ready.drawExecution.resourcesCreated-before.drawExecution.resourcesCreated,afterReady:after.drawExecution.resourcesCreated-ready.drawExecution.resourcesCreated,trace,scope:'Includes legitimate replacement Task preparation and concurrent effects; not exclusive cancelled Farm cost.'},preparationBlock,block,taskBlock,lifecycleMessages,publications,host:consumer,rigs:{ready:ready.qaBirthRigs,acquired:acquiredInspection.qaBirthRigs,after:after.qaBirthRigs,acquiredAt:acquiredConsumer.samples.at(-1).at},owners:{ready:ready.qaResidentOwners,after:after.qaResidentOwners},workers:after.workers,visualTransport:visual.status(),final:{gpuErrors:consumer.gpuErrors},errors:c.errors};
+ if(action)result.action=action;
  result.disposal=await closeGraphics();result.drained=true;return result;
 }

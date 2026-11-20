@@ -11,7 +11,7 @@ import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,cop
 import {copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeInitialIdleBodyResources,nativeInitialIdleBodyPresentationMatches,nativeInitialIdleBodySuccessor} from '../world/native-initial-idle-body.js';
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteAttestation,nativeHomeRoutePresentationMatches,nativeHomeRouteSuccessor,nativeHomeRouteSource} from '../world/native-home-route.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches,nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
-import {copyNativeTaskActionProposal,nativeTaskActionReferenceFromProposal,nativeTaskActionSuccessor} from '../world/native-task-action-presentation.js';
+import {copyNativeTaskActionProposal,nativeTaskActionReferenceFromProposal,nativeTaskActionSuccessor,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionAttestation,copyNativeTaskActionResources,nativeTaskActionPresentationMatches} from '../world/native-task-action-attestation.js';
 import {copyNativeTaskStartProposal} from '../world/native-task-start-presentation.js';
 import {copyNativeTaskStartAttestation,nativeTaskStartPresentationMatches} from '../world/native-task-start-attestation.js';
@@ -366,10 +366,10 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    if(settling&&motionRef(resources).sourceCarry.gateIds.length)throw Error('Native settlement gate graphics are not prepared');
    if(arrival&&motionRef(resources).sourceHome.gateIds.length)throw Error('Native Home absence gate graphics are not prepared');
    if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
-   // TaskStart captures the same immutable packet as the other deferred
-   // locomotion families. Keep its source publication stable through draw,
-   // then adopt the authoritative assignment using the existing stream hold.
-   const holdsPublication=farm||stroll||cycle||initialBody||arrival||home||consequence||settling||starting;
+   // Deferred tasks capture the same immutable packet as locomotion. Keep
+   // their source publication stable through draw, then adopt the issued
+   // assignment using the existing stream hold.
+   const holdsPublication=farm||stroll||cycle||initialBody||arrival||home||consequence||settling||starting||acting;
    const controller=new AbortController(),abort=()=>controller.abort(),item={descriptor:{phase:'preparing',worldBoundary:boundary},controller};nativeGateProposal=item;nativeRoutePreparations++;callerSignal?.addEventListener('abort',abort,{once:true});
    let participants=[],tickets=[],finished=false,preparedFrame=null,preparedSequence=null,publicationHeld=false;
    const releasePublication=()=>{if(!publicationHeld)return;publicationHeld=false;if(!stream.status().closed&&stream.status().holding)stream.releasePresentation();};
@@ -436,6 +436,10 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
        if(starting){const r=binding.reference,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`),task=state.tasks.find(t=>t.id===`task-${r.taskId}`);
         return !!worker&&!!task&&['native-task','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.taskId===task.id&&task.workerId===worker.id&&nativeEntityNumericId(task.targetId)===r.targetId;
+       };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
+       if(acting){const q=binding.reference.request,actorId=`worker-${nativeTaskActionActor(q)}`,projected=()=>{
+        const worker=state.workers.find(w=>w.id===actorId),task=state.tasks.find(t=>t.id===`task-${q.taskId}`);
+        return !!worker&&!!task&&worker.nativeRouteAdmission==='native-action'&&worker.status==='acting'&&worker.taskId===task.id&&task.workerId===actorId&&nativeEntityNumericId(task.targetId)===q.targetId&&worker.nativeTaskAction?.kind===q.actionKind&&worker.nativeTaskAction.duration===q.duration;
        };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
        if(cycle){const q=nativeIdleCycleBodyState(binding.reference.sourceBody),p=q.pose,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);

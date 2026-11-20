@@ -9,18 +9,20 @@ import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state
 import {createNativeAuditCapture} from './native-audit-capture.mjs';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {cropSpec} from '../../src/simulation/rules.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
 
 const output=process.env.OUTPUT??'.cache/native-farm-birth-gpu.json',sha=value=>createHash('sha256').update(value).digest('hex'),modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
-let input;const scenario=process.env.QA_NATIVE_BIRTH_SCENARIO??'birth';if(!['birth','cancel-before-home','cancel-after-home','cancel-before-task','cancel-after-task'].includes(scenario))throw Error('Unknown birth scenario');const newbornCount=Number(process.env.QA_NATIVE_BIRTH_COUNT??1),targetCenter='structure-900097';if(![1,2].includes(newbornCount))throw Error('Expected one or two births');
+let input;const scenario=process.env.QA_NATIVE_BIRTH_SCENARIO??'birth',followAction=process.env.QA_NATIVE_BIRTH_FOLLOW_ACTION==='true';if(!['birth','cancel-before-home','cancel-after-home','cancel-before-task','cancel-after-task'].includes(scenario)||followAction&&!scenario.endsWith('task'))throw Error('Unknown birth scenario');const newbornCount=Number(process.env.QA_NATIVE_BIRTH_COUNT??1),targetCenter='structure-900097';if(![1,2].includes(newbornCount))throw Error('Expected one or two births');
+const existingProfile=process.env.QA_NATIVE_EXISTING_PROFILE??(followAction?(process.env.QA_NATIVE_NEWBORN_PROFILE??'youngFemale'):'youngFemale');if(!PROFILES.some(p=>p.id===existingProfile))throw Error('Unknown existing worker profile');
 // Source-only semantic checkpoint. Dispose its world before starting the actual
 // browser authority. No old permission/handle enters that authority.
-const f=nativeFarmArrivalRouteFixture({peer:false,profile:'youngFemale',configureState(s,c){
- const w=s.workers[0],crop=createPlant('plant-900098','mijo',c.target.x+5,c.target.z,w.centerId);for(const water of crop.water)water.status='manual';s.plants.push(crop);s.hiringPaidDay=s.day;s.hiringSelection={youngFemale:1};s.ledger.balance=rational(100000);s.villages.find(v=>v.id===w.villageId).entry={x:w.x,z:w.z+6};
- if(scenario!=='birth')s.time=240;
+const f=nativeFarmArrivalRouteFixture({peer:false,profile:existingProfile,configureState(s,c){
+ const w=s.workers[0],crop=createPlant('plant-900098','mijo',c.target.x+5,c.target.z,w.centerId);for(const water of crop.water)water.status='manual';s.plants.push(crop);s.hiringPaidDay=s.day;s.hiringSelection={[existingProfile]:1};s.ledger.balance=rational(100000);s.villages.find(v=>v.id===w.villageId).entry={x:w.x,z:w.z+6};
+ if(scenario!=='birth')s.time=followAction?160:240;
  if(newbornCount===2||scenario!=='birth'){const original=s.structures.find(v=>v.id===w.centerId),center={...original,id:targetCenter,z:original.z+16};s.structures.push(center);const point=centerServicePoint(center,s,.8),plant=createPlant('plant-900099','mijo',point.x+5,point.z,center.id);for(const water of plant.water)water.status='manual';if(scenario.endsWith('task'))plant.growth=cropSpec('mijo').growth_seconds-8;s.plants.push(plant);}
 }});
-try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??(scenario==='birth'||scenario.endsWith('task')?'youngFemale':'olderMale'),newbornCount,scenario,...(newbornCount===2||scenario!=='birth'?{hiringCenterId:targetCenter}:{})};}finally{f.close();}
+try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??(followAction?existingProfile:scenario==='birth'||scenario.endsWith('task')?'youngFemale':'olderMale'),newbornCount,scenario,...(followAction?{followAction:true}:{}),...(newbornCount===2||scenario!=='birth'?{hiringCenterId:targetCenter}:{})};}finally{f.close();}
 fs.writeFileSync(output.replace(/\.json$/,'.checkpoint.json'),JSON.stringify(input,null,2)+'\n');
 const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer,traceSession,traceComplete,traceClockAnchor;
 try{

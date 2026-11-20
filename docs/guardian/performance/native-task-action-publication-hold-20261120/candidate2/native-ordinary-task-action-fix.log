@@ -1,0 +1,14 @@
+(node:23156) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+(Use `node20 --trace-warnings ...` to show where the warning was created)
+(node:23156) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: Invalid picking coordinate
+    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795123743522:29:4120)
+    at C:\Users\Gabriel\source\repos\wild-guardians-africa\tools\guardian\audit_native_farm_birth_world_owner.mjs:43:26 {
+  log: []
+}
+
+Node.js v20.19.0

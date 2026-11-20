@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación A2/A4/e-R3/f-R4: [TaskAction conserva su publicación](native-task-action-publication-hold-20261120.md). Corrige fallo GPU real Task14 → Harvest15 mediante el hold existente hasta dibujo/adopción; fuente Chromium contrastada, sin dependencia/ABI/reloj nuevos. Dos perfiles jóvenes y control pasan con585 IDs y banco refs2;147 dirigidas,4838/4839 en365 archivos/una omisión y build nuevos. OlderFemale/Male adquieren Action pero fallan picking: caja de cultivo sobrescribe malla real; fuente Three leída y defecto abierto como siguiente punto. Nueva ventana167,650ms pese a cero fábricas READY; no aceptación de cadencia ni del caso global3.123.691 inputs/64 nativos/16 ajenos/38 A5 exactos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/e-R3/f-R4: [TaskStart conserva su publicación](native-task-start-publication-hold-20261120.md). Corrige fallo GPU real Farm READY → tarea: Task14 usa el hold existente hasta dibujo/adopción, sin eludir secuencia/paquete/frontera. Chromium/Detour/Three leídos en fuente; sin dependencia/dueño/cola/reloj/ABI nuevos. Dos GPU conservan585 IDs y banco compartido refs1→2→2; Farm obsoleta antes/después no se dibuja. Control Home575 IDs; tres bloqueos54 dibujos cada caso, picking/rig adquirido/drain reales.22+26 dirigidas, regresión4838/4839/365/una omisión y build nuevos; seis sintaxis,690 inputs/64 nativos/16 ajenos/38 A5 exactos. Costes/VFX/3.123/cohortes/fallos/cadencia pendientes;168ms/50.71ms abiertos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
