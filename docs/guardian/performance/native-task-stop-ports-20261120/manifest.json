@@ -1,0 +1,107 @@
+{
+  "base": "fe0e8a4bf84a895fe4c719940d02fef84681c1a3",
+  "scope": "Typed Task25 original terrain and resource ports, retained lifecycle, nearby stop/remote and terrain regressions. Production build. No physical GPU.",
+  "selection": [
+    "tests/confirmed-terrain-receiver.test.js",
+    "tests/native-farm-arrival-stop-ports.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-idle-stroll-stop-terrain.test.js",
+    "tests/native-resource-flush.test.js",
+    "tests/native-resource-preparation-channel.test.js",
+    "tests/native-resource-retained-flush.test.js",
+    "tests/native-task-route-stop-ports.test.js",
+    "tests/native-world-prepared-terrain.test.js",
+    "tests/simulation-terrain-history-worker.test.js",
+    "tests/terrain-bootstrap-publication.test.js",
+    "tests/terrain-history-cancellation.test.js",
+    "tests/terrain-history-detached.test.js",
+    "tests/terrain-history-replay.test.js",
+    "tests/terrain-history.test.js",
+    "tests/terrain-native-proposal.test.js",
+    "tests/terrain-publication.test.js",
+    "tests/terrain-resource-payload.test.js",
+    "tests/terrain-resource-removal.test.js",
+    "tests/webgpu-retained-worker.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 239,
+    "pass": 239,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "54.44s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9055,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/GoogleChromeLabs/comlink/blob/v4.4.2/src/comlink.ts#L591-L605",
+    "https://github.com/GoogleChromeLabs/comlink/blob/v4.4.2/src/comlink.ts#L377-L396"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3630,
+      "payloadSha256": "11cfaa611d110ca6030ac93ffdb3d3ed1675d3fb8aaa0887ee91f306aed3d0af",
+      "gzipBytes": 1750,
+      "gzipSha256": "0c9f1dea86f457832c7c95df3ff53aa96311860575153a6ba19ec2ed59344a82"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1181644,
+      "payloadSha256": "fdd653cea88e45cc31b1c74c0598f0c975338fa3e37ef2a05bb32ed2d70b706a",
+      "gzipBytes": 446040,
+      "gzipSha256": "f7652bb2555ae3092914d193cbc7d305e7a86454fb40bca24859036373ddd858"
+    },
+    "red.log.gz": {
+      "payloadBytes": 3496,
+      "payloadSha256": "3e087f1b8a396196804a0abe5d8849c71c6a2783d1a5f05317a890b22e7cd102",
+      "gzipBytes": 978,
+      "gzipSha256": "e3dc9988563da43b12922a230d7ef28cb4a571118144e03d1e436bf983c4a4c2"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 1326,
+      "payloadSha256": "72f9f2d0ab17e3d5f7397ad8058a1f1cbba6c7878ee5f0808146ec0fe983a096",
+      "gzipBytes": 493,
+      "gzipSha256": "608fed59a2e43fa573ed8e5faf2e81f2b601cc1e59322bae8cd2df6225110b3c"
+    },
+    "focused.log.gz": {
+      "payloadBytes": 11103,
+      "payloadSha256": "e87567f100ee9caf214332b6ed232c4253381e5450768272eeed81a981491432",
+      "gzipBytes": 1770,
+      "gzipSha256": "5c7ddfbfed3b89d60275cd5ee61252143edfe8be1cdab588ad64ee045f6d02f3"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 57450,
+      "payloadSha256": "6d5dde6aedf6ff785fa0c66f1d7aa8a5b518b24ffeceb14409907768bb5ed436",
+      "gzipBytes": 9612,
+      "gzipSha256": "61183a1761dfc45b2c662a651242869f57020783b08d1229823720f975109510"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3938,
+      "payloadSha256": "e5812d18a9ce5ffe6e11ebc0d23f0abeffcf5249cb15cb1fb707dde41bebcbde",
+      "gzipBytes": 1569,
+      "gzipSha256": "10561f30081ff8248c729c4e5f05b8ab397010e356cadfb7f99e8e867720fd71"
+    }
+  }
+}

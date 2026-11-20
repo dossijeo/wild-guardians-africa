@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Task25 tiene plantilla, recibo y atestación propios en los canales de recursos y terreno. El recorrido verifica la adopción de una pose retenida y cero mensajes de geometría. La regresión de 239 pruebas y la compilación aprobaron. Quedan el consumidor gráfico, el control de la primera presentación y el disparo desde Game. [Canales y validación](native-task-stop-ports-20261120.md).
+
 El puente de Task25 ya prepara, revalida y cancela mediante el selector nativo, y verifica el recibo de la pose retenida. La parada conserva vacíos los cambios de chunks. La selección pasó 693 pruebas y la compilación de producto aprobó. Quedan el canal de recursos y control, la proyección en GPU y el relevo ordinario a Home. [Puente y validación](native-task-stop-bridge-20261120.md).
 
 El cuerpo de una Task detenida ya da origen a una solicitud nativa de Home. Se libera la asignación anterior y Home18 adquiere el mismo cuerpo. La selección dirigida pasó 293 pruebas y la compilación aprobó. Quedan el disparo ordinario desde Game y el relevo por el canal real hasta GPU. [Transferencia nativa y validación](native-task-stopped-home-source-20261120.md).

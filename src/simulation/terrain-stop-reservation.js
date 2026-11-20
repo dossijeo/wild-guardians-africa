@@ -1,10 +1,29 @@
-import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
+import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec} from '../world/native-worker-route-stop-codec.js';
 import {estimateRetainedBytes} from './retained-size.js';
 
 const idleStop=Object.freeze({codec:nativeIdleStrollStopCodec,wireTemplateField:'nativeIdleStrollStopTemplate',preparedTemplateField:'preparedIdleStrollStopTemplate',bindingField:'nativeIdleStrollStopBinding'});
 const farmStop=Object.freeze({codec:nativeFarmArrivalStopCodec,wireTemplateField:'nativeFarmArrivalStopTemplate',preparedTemplateField:'preparedFarmArrivalStopTemplate',bindingField:'nativeFarmArrivalStopBinding'});
+const taskStop=Object.freeze({codec:nativeTaskRouteStopCodec,wireTemplateField:'nativeTaskRouteStopTemplate',preparedTemplateField:'preparedTaskRouteStopTemplate',bindingField:'nativeTaskRouteStopBinding'});
+const stops=[idleStop,farmStop,taskStop];
 // Bounded transport descriptions only; owners remain native/controller records.
-export function terrainStopProtocol(kind){if(kind===12||kind===nativeIdleStrollStopCodec.referenceKind)return idleStop;if(kind===24||kind===nativeFarmArrivalStopCodec.referenceKind)return farmStop;throw TypeError('Invalid native stop proposal family');}
+export function terrainStopProtocol(kind){
+ const stop=stops.find(({codec})=>kind===codec.kind||kind===codec.referenceKind);
+ if(!stop)throw TypeError('Invalid native stop proposal family');
+ return stop;
+}
+export const isTerrainStopKind=kind=>stops.some(({codec})=>codec.kind===kind);
+export function terrainStopProposalProtocol(resources){
+ if(resources?.nativeStop===undefined)return resources?.kind===24||resources?.kind===25?terrainStopProtocol(resources.kind):null;
+ const stop=terrainStopProtocol(resources.kind);
+ if(resources.nativeStop?.kind!==stop.codec.referenceKind)throw TypeError('Invalid native stop proposal family');
+ return stop;
+}
+export const hasOtherTerrainStopField=(value,field,current=null)=>stops.some(stop=>stop!==current&&value?.[stop[field]]!==undefined);
+export function terrainStopWireProtocol(value){
+ const stop=stops.find(item=>value[item.wireTemplateField]!==undefined)??null;
+ if(hasOtherTerrainStopField(value,'wireTemplateField',stop))throw Error('Conflicting native terrain stop templates');
+ return stop;
+}
 
 // Reserve the copied preview plus the final association that may arrive while
 // it is retained. Numeric retiming changes values, never this bounded shape.
