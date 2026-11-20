@@ -10,6 +10,7 @@ import {createNativeAuditCapture} from './native-audit-capture.mjs';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {cropSpec} from '../../src/simulation/rules.js';
 import {PROFILES} from '../../src/simulation/workforce.js';
+import {observeNativePipelineTimings} from './native-audit-pipeline-timings.mjs';
 
 const output=process.env.OUTPUT??'.cache/native-farm-birth-gpu.json',sha=value=>createHash('sha256').update(value).digest('hex'),modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
@@ -27,6 +28,7 @@ fs.writeFileSync(output.replace(/\.json$/,'.checkpoint.json'),JSON.stringify(inp
 const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer,traceSession,traceComplete,traceClockAnchor;
 try{
  timer=setTimeout(()=>browser.close(),150000);
+ if(process.env.QA_NATIVE_PIPELINE_TRACE==='true')await observeNativePipelineTimings(page,overrides);
  if(process.env.QA_NATIVE_TRACE==='true'){
   traceSession=await browser.newBrowserCDPSession();traceComplete=new Promise(resolve=>traceSession.once('Tracing.tracingComplete',resolve));
   await traceSession.send('Tracing.start',{categories:process.env.QA_NATIVE_TRACE_CATEGORIES??'toplevel,blink,blink.user_timing,devtools.timeline,v8.execute,gpu,viz,cc',transferMode:'ReturnAsStream'});

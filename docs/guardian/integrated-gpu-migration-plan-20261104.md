@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación A3/A4/e-R3/f-R4: [identidad y tiempos de pipelines](native-pipeline-gap-attribution-20261120.md). Observer QA optativo conserva85 jobs/descriptor/WGSL/marcas originales; fuente Chromium/Dawn leída y revisión pública distinguida del binario Edge no localizable. Dos GPU mantienen576 IDs/refs2, entrega Idle/picking/drain;247 CPU y tres sintaxis+dos anotados frescos, suites/build heredados. Hueco193,340ms tras Carry no coincide con promesas nativas pendientes; fuente confirma pases de dibujo retenidos hasta commit. Siguiente verificar primer uso GPU/sincronización antes de corregir, y continuidad/Home.696 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cadencia/3.123 abiertos,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [entrega ordinaria Carry16 → liquidación17 → Idle](native-ordinary-delivery-settlement-20261120.md). Misma contratación/autoridad/cuerpo2/Surface/draw; READY real retenido, ingreso único y caja sin portador solo tras commit. Cuatro perfiles, control Carry y traza adicional; IDs/rigs/banco compartido conservados, picking/drain reales. Dawn/Flecs leídos en fuente; soloQA. 106 CPU y seis sintaxis frescas; suites/build heredados.695 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cadencia y caso global3.123 abiertos; máximo amplio264.325ms sin atribución causal. Siguiente tarea/continuidad/Home. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
