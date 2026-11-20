@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Task25 ya se revalida y confirma dentro de la transacción común de la autoridad. El canal directo exige un recibo de la misma familia y devuelve una sola atestación proyectada. Pasaron 245 pruebas y la compilación. Quedan el consumidor gráfico efectivo y el disparo desde Game. [Admisión y validación](native-task-stop-admission-20261120.md).
+
 El roster de Task25 ya prepara la pose detenida sobre el actor, la geometría y la asignación de movimiento que estaban en uso. La prueba comprueba el mismo cuerpo y la selección sobre la pose final. Pasaron 243 pruebas y la compilación. Quedan Surface y Host, las paradas con motor de puerta y el disparo ordinario desde Game. [Roster y validación](native-task-stop-graphics-20261120.md).
 
 El controlador de Task25 ya liga la parada al cuerpo de una asignación admitida, incluida su reanudación. La pose exige revocación exacta, reloj vigente y atestación proyectada. Pasaron 330 pruebas y la compilación. Quedan los recibos en Surface y Host y el disparo ordinario desde Game hasta Home. [Control y validación](native-task-stop-control-20261120.md).

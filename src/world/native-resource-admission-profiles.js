@@ -1,5 +1,4 @@
-import {nativeFarmArrivalStopReferenceFromProposal,sameNativeFarmArrivalStopReference} from './native-farm-arrival-stop.js';
-import {nativeIdleStrollStopReferenceFromProposal,sameNativeIdleStrollStopReference} from './native-idle-stroll-stop.js';
+import {nativeFarmArrivalStopCodec,nativeIdleStrollStopCodec,nativeTaskRouteStopCodec} from './native-worker-route-stop-codec.js';
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {nativeIdleStrollReferenceFromProposal,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {nativeHomeArrivalReferenceFromProposal,sameNativeHomeArrivalReference,copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
@@ -16,18 +15,27 @@ import {nativeInitialIdleBodyReferenceFromProposal,sameNativeInitialIdleBodyRefe
 // Transport/resource identities only. Compatibility is reported by the current
 // native revalidation; none of these profiles can issue an execution permission.
 const routeCompatible=translation=>translation.sameFloat32Motion&&translation.sameFloat32Gates;
+function projectedStopProfile(codec,name,{templateField,bindingField,releaseField,versionField}){
+  return Object.freeze({
+    proposalKind:codec.kind,templateField,bindingField,releaseField,projectedStop:true,
+    reference:codec.referenceFromProposal,sameReference:codec.sameReference,compatible:translation=>translation.sameResourceOwners===true,
+    receiptCompatible:(receipt,prepared)=>receipt[versionField]===1&&codec.sameReference(receipt[templateField],prepared),
+    attest(native,reference,preparedReference,protocol){
+      const fact=protocol.binding(reference,preparedReference);
+      if(!fact?.projection||!codec.sameReference(fact.reference,reference)||!codec.sameReference(fact.preparedReference,preparedReference))throw Error(`Native ${name} stop final association unavailable`);
+      return fact;
+    }
+  });
+}
 const profiles=Object.freeze({
-  'farm-arrival-stop':Object.freeze({
-    proposalKind:24,templateField:'preparedFarmArrivalStopTemplate',bindingField:'nativeFarmArrivalStopBinding',releaseField:'nativeFarmArrivalStops',projectedStop:true,
-    reference:nativeFarmArrivalStopReferenceFromProposal,sameReference:sameNativeFarmArrivalStopReference,compatible:translation=>translation.sameResourceOwners===true,
-    receiptCompatible:(receipt,prepared)=>receipt.nativeFarmArrivalStopVersion===1&&sameNativeFarmArrivalStopReference(receipt.preparedFarmArrivalStopTemplate,prepared),
-    attest(native,reference,preparedReference,protocol){const fact=protocol.binding(reference,preparedReference);if(!fact?.projection||!sameNativeFarmArrivalStopReference(fact.reference,reference)||!sameNativeFarmArrivalStopReference(fact.preparedReference,preparedReference))throw Error('Native farm arrival stop final association unavailable');return fact;}
+  'task-route-stop':projectedStopProfile(nativeTaskRouteStopCodec,'task route',{
+    templateField:'preparedTaskRouteStopTemplate',bindingField:'nativeTaskRouteStopBinding',releaseField:'nativeTaskRouteStops',versionField:'nativeTaskRouteStopVersion'
   }),
-  'idle-stroll-stop':Object.freeze({
-    proposalKind:12,templateField:'preparedIdleStrollStopTemplate',bindingField:'nativeIdleStrollStopBinding',releaseField:'nativeStrollStops',projectedStop:true,
-    reference:nativeIdleStrollStopReferenceFromProposal,sameReference:sameNativeIdleStrollStopReference,compatible:translation=>translation.sameResourceOwners===true,
-    receiptCompatible:(receipt,prepared)=>receipt.nativeIdleStrollStopVersion===1&&sameNativeIdleStrollStopReference(receipt.preparedIdleStrollStopTemplate,prepared),
-    attest(native,reference,preparedReference,protocol){const fact=protocol.binding(reference,preparedReference);if(!fact?.projection||!sameNativeIdleStrollStopReference(fact.reference,reference)||!sameNativeIdleStrollStopReference(fact.preparedReference,preparedReference))throw Error('Native moving stop final association unavailable');return fact;}
+  'farm-arrival-stop':projectedStopProfile(nativeFarmArrivalStopCodec,'farm arrival',{
+    templateField:'preparedFarmArrivalStopTemplate',bindingField:'nativeFarmArrivalStopBinding',releaseField:'nativeFarmArrivalStops',versionField:'nativeFarmArrivalStopVersion'
+  }),
+  'idle-stroll-stop':projectedStopProfile(nativeIdleStrollStopCodec,'moving',{
+    templateField:'preparedIdleStrollStopTemplate',bindingField:'nativeIdleStrollStopBinding',releaseField:'nativeStrollStops',versionField:'nativeIdleStrollStopVersion'
   }),
   'idle-stroll':Object.freeze({
     proposalKind:'native-idle-stroll-proposal',templateField:'preparedIdleStrollTemplate',bindingField:'nativeIdleStrollBinding',releaseField:'nativeStrolls',
