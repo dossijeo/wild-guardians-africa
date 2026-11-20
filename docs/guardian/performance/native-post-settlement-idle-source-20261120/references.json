@@ -1,0 +1,14 @@
+[
+  {
+    "path": ".cache/research-godot-navigation-agent-4.4.cpp",
+    "url": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/navigation_agent_3d.cpp",
+    "decision": "Actual transition_to_navigation_finished retains the same agent RID; reuse body17 ownership, without copying its direct velocity reset outside the WG prepared boundary.",
+    "sha256": "62809057f8d42cee938d30f3386ee84de2bed5267eacc4cf67ea7ad8efe7d357"
+  },
+  {
+    "path": ".cache/research-detourcrowd-farm-stop-v1.6.0.cpp",
+    "url": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp",
+    "decision": "requestMoveTarget/resetMoveTarget change intention on the same existing agent; WG reuses prepared21/22 and existing route proof rather than replacing the body or introducing another timer/queue.",
+    "sha256": "c0d5164dabc3e68ee25ba479d13ae7f77066ccf7bfb461963d16a144caaf3ac5"
+  }
+]

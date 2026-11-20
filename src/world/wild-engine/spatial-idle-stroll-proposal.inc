@@ -2,6 +2,11 @@
 // phase kernel and body registry. Choosing a path alone never moves the body.
 static bool idleStrollSourceCurrent(const IntentState& s,const PendingNativeMotionDraft& d){
  const auto found=s.activeIntents.find(d.route.actor);if(found==s.activeIntents.end())return false;
+ if(d.strollSettlementSource){
+  const auto& m=d.idleStrollSemantic;const auto source=settledIdleCycleSource(s,found->second,uint64_t(d.header[21]),int(m[10]),uint64_t(m[11]),uint32_t(m[15]),m[17],int(m[2]));
+  std::array<double,24> h{};h[9]=m[10];h[10]=m[11];h[11]=m[12];h[12]=m[13];
+  return source&&d.strollSettlementPose&&found->second.settlementBinding==d.strollSettlementSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(*d.strollSettlementPose)&&idleCycleAnchorCurrent(s,h);
+ }
  if(d.strollFarmSource){
   const auto& m=d.idleStrollSemantic;const auto source=arrivedFarmIdleCycleSource(s,found->second,uint64_t(d.header[21]),int(m[10]),uint64_t(m[11]),uint32_t(m[15]),m[17]);
   std::array<double,24> h{};h[9]=m[10];h[10]=m[11];h[11]=m[12];h[12]=m[13];
@@ -38,9 +43,9 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;
  PendingNativeMotionDraft d;NativeIdleCycleBodySource q;std::array<double,24> h{};NativeIdleCycleDecision restoredNext;const NativeIdleCycleDecision* nextSource=nullptr;uint64_t sourceCycle=0;
  if(farm){
-  const auto source=arrivedFarmIdleCycleSource(s,found->second,uint64_t(sourceSequence),farm->anchorKind,farm->anchor,uint32_t(farm->initial[3]),farm->initial[2]/2);
+  const auto source=farm->kind==17?settledIdleCycleSource(s,found->second,uint64_t(sourceSequence),farm->anchorKind,farm->anchor,uint32_t(farm->initial[3]),farm->initial[2]/2,farm->workerProfile):arrivedFarmIdleCycleSource(s,found->second,uint64_t(sourceSequence),farm->anchorKind,farm->anchor,uint32_t(farm->initial[3]),farm->initial[2]/2);
   if(!source||idleCycleBodySourceData(*source)!=idleCycleBodySourceData(*farm)||std::hypot(source->x-farmAnchor[0],source->z-farmAnchor[1])<=farmAnchor[2])return -2;
-  q=*source;d.strollFarmPose=q;d.strollFarmSource=s.routeSlots[found->second.slot].farmArrivalBinding;
+  q=*source;if(q.kind==17){d.strollSettlementPose=q;d.strollSettlementSource=found->second.settlementBinding;}else{d.strollFarmPose=q;d.strollFarmSource=s.routeSlots[found->second.slot].farmArrivalBinding;}
   h[9]=q.anchorKind;h[10]=double(q.anchor);h[11]=farmAnchor[0];h[12]=farmAnchor[1];h[13]=farmAnchor[2];h[14]=farmAnchor[3];
   if(!idleCycleAnchorCurrent(s,h))return -2;
   restoredNext.sequence=q.sequence;restoredNext.requestedAt=q.at;restoredNext.x=farmAnchor[0];restoredNext.z=farmAnchor[1];restoredNext.state={3,0,q.initial[2],q.initial[3],1,0};nextSource=&restoredNext;
@@ -69,12 +74,12 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
  else{const int count=spatial_world_route_cached(float(q.x),float(q.z),float(next.x),float(next.z));result=d.strollRequestSource?idleStrollRequestPathOutcome(count,*d.strollRequestSource):idleStrollPathOutcome(count,float(q.x),float(q.z),float(next.x),float(next.z));if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}}
  if(result==1){
   if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=-7;
-  for(size_t i=0;!selectedApproach&&!d.strollFarmSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=-7;
+  for(size_t i=0;!selectedApproach&&!d.strollFarmSource&&!d.strollSettlementSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=-7;
  }
  if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;d.gates=s.gates;s.reservationResult.fill(0);
- result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,d.idleCycleSource?d.idleCycleSource->binding->body.get():nullptr,d.idleCycleSource?d.idleCycleSource->binding.get():nullptr,d.strollRequestSource.get());if(result!=1)return result;
+ result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,d.strollSettlementSource.get(),nullptr,d.idleCycleSource?d.idleCycleSource->binding->body.get():nullptr,d.idleCycleSource?d.idleCycleSource->binding.get():nullptr,d.strollRequestSource.get());if(result!=1)return result;
  result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=22;captureNativeMotionRows(d);const auto& route=d.route;
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,
@@ -86,6 +91,19 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
 }
 // Live approach is an existing22 draft with an actual23 origin. It never
 // registers a cold/restored WALK or consumes a private random draw.
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_settlement_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchor,double x,double z,double radius,double idleSeconds,double rng,double workerProfile){
+ if(!integer(actor)||!integer(sourceSequence)||session!=double(state().session)||!integer(anchorKind)||anchorKind>2||!integer(anchor)||!integer(rng)||rng>4294967295.||!integer(workerProfile,true)||workerProfile>3)return -1;
+ for(double v:{x,z,radius,idleSeconds})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
+ if(std::abs(x)>=2147483000.||std::abs(z)>=2147483000.||radius<=0||radius>8||idleSeconds<=0||idleSeconds>3600)return -1;
+ const auto found=state().activeIntents.find(uint64_t(actor));if(found==state().activeIntents.end())return -2;
+ const auto q=settledIdleCycleSource(state(),found->second,uint64_t(sourceSequence),int(anchorKind),uint64_t(anchor),uint32_t(rng),idleSeconds,int(workerProfile));if(!q)return -2;
+ return stageIdleStroll(actor,session,sourceSequence,q,{x,z,radius,idleSeconds});
+}
+EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_settlement_source_snapshot(double actor,double ticket){
+ auto& s=state();s.idleCycleSourceResult.fill(0);if(!integer(actor)||!integer(ticket,true))return 0;
+ if(ticket){const auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||double(p.ticket)!=ticket||p.idleStroll->header[1]!=actor||!p.idleStroll->strollSettlementPose||!idleStrollSourceCurrent(s,*p.idleStroll))return 0;s.idleCycleSourceResult=idleCycleBodySourceData(*p.idleStroll->strollSettlementPose);return 1;}
+ const auto active=currentIdleStroll(actor),b=active?active:currentHeldIdleStroll(actor);if(!b||!b->settlementSource)return 0;s.idleCycleSourceResult=idleCycleBodySourceData(*b->settlementSource);return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_farm_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchor,double x,double z,double radius,double idleSeconds,double rng){
  if(!integer(actor)||!integer(sourceSequence)||session!=double(state().session)||!integer(anchorKind)||anchorKind>2||!integer(anchor)||!integer(rng)||rng>4294967295.)return -1;
  for(double v:{x,z,radius,idleSeconds})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
@@ -120,8 +138,8 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_gate(double session,double tic
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=22||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||session!=double(p.session)||ticket!=double(p.ticket))return -1;
- auto old=std::move(*p.idleStroll);clearWorldMutationProposal(p);const int result=stageIdleStroll(old.header[1],session,old.header[21],old.strollFarmPose,{old.idleStrollSemantic[12],old.idleStrollSemantic[13],old.idleStrollSemantic[14],old.idleStrollSemantic[17]},old.idleCycleSource&&old.idleStrollSemantic[0]==2);if(result!=1)return result;
- auto& next=*p.idleStroll;next.previousStroll=NativeIdleStrollOrigin{old.header,uint64_t(ticket)};const bool same=old.idleCycleSource==next.idleCycleSource&&old.strollRequestSource==next.strollRequestSource&&old.strollFarmSource==next.strollFarmSource&&old.idleStrollSemantic==next.idleStrollSemantic&&old.slot==next.slot&&old.generation==next.generation;
+ auto old=std::move(*p.idleStroll);clearWorldMutationProposal(p);const int result=stageIdleStroll(old.header[1],session,old.header[21],old.strollSettlementPose?old.strollSettlementPose:old.strollFarmPose,{old.idleStrollSemantic[12],old.idleStrollSemantic[13],old.idleStrollSemantic[14],old.idleStrollSemantic[17]},old.idleCycleSource&&old.idleStrollSemantic[0]==2);if(result!=1)return result;
+ auto& next=*p.idleStroll;next.previousStroll=NativeIdleStrollOrigin{old.header,uint64_t(ticket)};const bool same=old.idleCycleSource==next.idleCycleSource&&old.strollRequestSource==next.strollRequestSource&&old.strollFarmSource==next.strollFarmSource&&old.strollSettlementSource==next.strollSettlementSource&&old.idleStrollSemantic==next.idleStrollSemantic&&old.slot==next.slot&&old.generation==next.generation;
  next.timeTranslation={2,ticket,double(p.ticket),old.header[10],old.header[11],next.header[10],next.header[11],same&&sameNativeMotionDraft(old,next)?1.:0.,sameNativeMotionGates(s,old,next)?1.:0.,same&&sameNativeMotionDraft(old,next,true)?1.:0.,sameNativeMotionGates(s,old,next,true)?1.:0.};return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_stroll_proposal_time_translation_ptr(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==22&&p.idleStroll&&session==double(p.session)&&ticket==double(p.ticket)&&p.idleStroll->timeTranslation[0]==2?p.idleStroll->timeTranslation.data():nullptr;}
@@ -129,9 +147,10 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_proposal_commit_bound(double session,do
  auto& s=state();const auto& p=s.barrierProposal;if(!p.pending||p.kind!=22||!p.idleStroll||!integer(preparedTicket))return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,22);if(valid!=1)return valid;const auto& d=*p.idleStroll;
  if(!idleStrollSourceCurrent(s,d)||d.slot>s.routeSlots.size()||d.slot<s.routeSlots.size()&&(s.routeSlots[d.slot].active||s.routeSlots[d.slot].generation!=d.generation)){clearWorldMutationProposal(s.barrierProposal);return -2;}
- auto binding=std::make_shared<NativeIdleStrollBinding>();binding->actual={d.header,uint64_t(ticket)};binding->semantic=d.idleStrollSemantic;binding->requestSource=d.strollRequestSource;binding->farmSource=d.strollFarmPose;
+ auto binding=std::make_shared<NativeIdleStrollBinding>();binding->actual={d.header,uint64_t(ticket)};binding->semantic=d.idleStrollSemantic;binding->requestSource=d.strollRequestSource;binding->farmSource=d.strollFarmPose;binding->settlementSource=d.strollSettlementPose;
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previousStroll&&preparedTicket==double(d.previousStroll->ticket)&&d.timeTranslation[9]==1&&d.timeTranslation[10]==1)binding->prepared=*d.previousStroll;else return -9;
  auto draft=std::move(*s.barrierProposal.idleStroll);clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(draft.route.actor);
+ if(draft.strollSettlementSource)releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
  if(draft.slot==s.routeSlots.size())s.routeSlots.emplace_back();publishGateRouteAdmission(s,intent,draft.slot,draft.route,draft.body,draft.gates,draft.boundaries);
  binding->assignmentSequence=intent.assignmentSequence;s.routeSlots[intent.slot].idleStrollBinding=std::move(binding);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,22);return 1;
 }
@@ -146,7 +165,7 @@ static int idleStrollExecutionSnapshot(double actor,bool held){
  std::copy(header.begin(),header.end(),out.begin());std::copy(route.executionPose.begin(),route.executionPose.end(),out.begin()+12);
  if(held){out[19]=route.suspendedAt;out[27]=out[28]=0;out[29]=2;}
  const double age=std::clamp((held?route.suspendedAt:s.effectiveTime)-h[10],0.,h[11]-h[10]),retry=std::max(0.,m[16]-age);
- const std::array<double,6> phase={3,0,m[0]==2?m[20]:b->farmSource?b->farmSource->initial[2]:b->requestSource&&b->requestSource->approach?m[17]*2:0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
+ const std::array<double,6> phase={3,0,m[0]==2?m[20]:b->settlementSource?b->settlementSource->initial[2]:b->farmSource?b->farmSource->initial[2]:b->requestSource&&b->requestSource->approach?m[17]*2:0,m[15],retry,age};std::copy(phase.begin(),phase.end(),out.begin()+30);
  // Pure original cancelWalk blueprint, observable only after actual arrival.
  // It has no new intent sequence/permission and cannot start resting by itself.
  if(route.executionPose[6]==1){const auto rest=idleStrollRestState(*b,s.effectiveTime);std::copy(rest.begin(),rest.end(),out.begin()+36);}

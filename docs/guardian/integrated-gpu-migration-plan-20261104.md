@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación A2/A4/e-R3/f-R4: [origen Idle desde liquidación17](native-post-settlement-idle-source-20261120.md). Godot/Detour leídos en código; mismo cuerpo adquirido para21 o acercamiento22, sin20/REST/Task ficticios ni dependencia/reloj/dueño nuevos. Cuatro exports aditivos y dos WASM canónicos nuevos;30 casos nuevos,95 dirigidos,4969/4970 en373 archivos/una omisión y build nuevos.707 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Solo componente nativo: siguiente consumidor gráfico/control, productor ordinario e interrupciones antes de GPU. Cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/A7/e-R3/f-R4: [segunda tarea ordinaria y selección retenida](native-post-settlement-next-task-20261120.md). Detour/Three leídos en código; rollback/reactivación del participante adquirido para consultar su imagen anterior, sin reloj ficticio/dependencia/escena nueva.7 casos nuevos,37 dirigidos,4939/4940 en372 archivos/una omisión y build nuevos. Cuatro perfiles adquieren otra Task14 sobre cuerpo2, control liquidación, IDs/rig/banco/drenaje y9 imágenes; consulta conserva incomplete y no acepta acciones. Piloto reutilizado por hashes.705 inputs/998 ejecución/64 nativos intactos/16 ajenos/38 A5 exactos. Siguiente Idle autónomo desde liquidación y cobertura restante; cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

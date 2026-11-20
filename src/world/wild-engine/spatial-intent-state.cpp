@@ -241,7 +241,7 @@ struct NativeIdleStrollBinding {
  NativeIdleStrollOrigin prepared,actual;uint64_t assignmentSequence=0;
  std::array<double,21> semantic{};
  std::shared_ptr<const NativeIdleStrollResourceRequest> requestSource;
- std::optional<NativeIdleCycleBodySource> farmSource;
+ std::optional<NativeIdleCycleBodySource> farmSource,settlementSource;
 };
 struct NativeFarmArrivalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 // One bounded physical source, not a linked history of former trajectories.
@@ -360,7 +360,8 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeWorkerPoseResourceRequest> heldIdleTaskSource;
   std::shared_ptr<const NativeIdleStrollResourceRequest> strollRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> strollFarmSource;
-  std::optional<NativeIdleCycleBodySource> strollFarmPose;
+  std::optional<NativeIdleCycleBodySource> strollFarmPose,strollSettlementPose;
+  std::shared_ptr<const NativeTaskSettlementBinding> strollSettlementSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalHeldBinding;
@@ -414,7 +415,8 @@ struct PendingBarrierProposal {
    std::shared_ptr<NativeIdleCycle> previousCycle;
    std::shared_ptr<const NativeIdleStrollBinding> strollSource;
    std::shared_ptr<const NativeIdleStrollResourceRequest> failedRequest;
-   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmSource;NativeIdleCycleBodySource source;
+   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmSource;
+   std::shared_ptr<const NativeTaskSettlementBinding> settlementSource;NativeIdleCycleBodySource source;
    std::optional<NativeIdleCycleOrigin> previous;std::array<double,8> timeTranslation{};
   };
   std::optional<IdleCycleDraft> idleCycle;

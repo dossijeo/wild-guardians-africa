@@ -1,3 +1,18 @@
+// Detour changes an existing agent's target state; Godot retains the finished
+// agent RID. Here the acquired17 owns the pose until the prepared successor.
+// Semantic REST birth declares only anchor/private seed, never another body.
+static std::optional<NativeIdleCycleBodySource> settledIdleCycleSource(const IntentState& s,const ActiveIntent& intent,uint64_t sequence,int anchorKind,uint64_t anchor,uint32_t rng,double idleSeconds,int workerProfile){
+ if(!nativeSettlementBodyCurrent(s,intent)||!intent.settlementBinding||intent.settlementBinding->settlementSequence!=sequence||intent.state!=PlanningState::StationaryActive||intent.home||intent.homeRequest||intent.task||intent.generation||intent.lease)return std::nullopt;
+ const auto& h=intent.settlementBinding->actual.header;const auto worker=s.workers.find(intent.actor);
+ if(h[21]||intent.target!=uint64_t(h[4])||worker==s.workers.end()||!worker->second.eligible||workerProfile<0||workerProfile>3||!rng)return std::nullopt;
+ NativeIdleCycleBodySource q;q.kind=17;q.actor=intent.actor;q.body=uint64_t(h[2]);q.session=s.session;q.sequence=sequence;q.at=h[17];q.profile=int(h[18]);q.workerProfile=workerProfile;q.center=uint64_t(h[4]);q.bodyFlags=int(h[19]);
+ q.x=h[9];q.z=h[10];q.yaw=h[11];q.radius=h[12];q.runPhase=h[13];q.walkPhase=h[14];q.carryPhase=h[15];q.runRemaining=h[16];q.anchorKind=anchorKind;q.anchor=anchor;q.initial={1,0,idleSeconds*2,double(rng),0,0};return q;
+}
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_settlement_source_snapshot(double actor,double session,double sequence,double anchorKind,double anchor,double idleSeconds,double rng,double workerProfile){
+ auto& s=state();s.idleCycleSourceResult.fill(0);
+ if(!integer(actor)||session!=double(s.session)||!integer(sequence)||!integer(anchorKind)||anchorKind>2||!integer(anchor)||!integer(rng)||rng>4294967295.||!integer(workerProfile,true)||workerProfile>3||!std::isfinite(idleSeconds)||!std::isfinite(float(idleSeconds))||idleSeconds<=0||idleSeconds>3600)return 0;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;const auto q=settledIdleCycleSource(s,found->second,uint64_t(sequence),int(anchorKind),uint64_t(anchor),uint32_t(rng),idleSeconds,int(workerProfile));if(!q)return 0;s.idleCycleSourceResult=idleCycleBodySourceData(*q);return 1;
+}
 // The actual23 endpoint supplies the physical source. REST birth is the
 // original Game semantic input (seeded private stream, no random draw yet).
 // Keep it in the existing provisional21, never in a fictitious20/24 owner.
@@ -18,6 +33,10 @@ static bool idleCycleDraftCurrent(const IntentState& s,const PendingBarrierPropo
   const auto& h=d.header;const auto source=arrivedFarmIdleCycleSource(s,intent,uint64_t(h[3]),int(h[9]),uint64_t(h[10]),uint32_t(d.source.initial[3]),h[14]);
   return source&&s.routeSlots[intent.slot].farmArrivalBinding==d.farmSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
  }
+ if(d.settlementSource){
+  const auto& h=d.header;const auto source=settledIdleCycleSource(s,intent,uint64_t(h[3]),int(h[9]),uint64_t(h[10]),uint32_t(d.source.initial[3]),h[14],d.source.workerProfile);
+  return source&&intent.settlementBinding==d.settlementSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
+ }
  if(d.strollSource){
   const auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(d.header[3]));
   return source&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding==d.strollSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
@@ -26,7 +45,7 @@ static bool idleCycleDraftCurrent(const IntentState& s,const PendingBarrierPropo
   intent.initialIdleBodyBinding==d.body&&intent.idleCycle==d.previousCycle&&
   (d.previousCycle?nativeIdleCycleCurrent(s,intent)&&d.previousCycle->next.status==1&&d.previousCycle->next.state[0]!=3:nativeInitialIdleBodyCurrent(s,intent));
 }
-static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,std::optional<uint32_t> farmRng=std::nullopt,bool failedRest=false,bool initialRetry=false){
+static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,std::optional<uint32_t> farmRng=std::nullopt,bool failedRest=false,bool initialRetry=false,int settlementProfile=-1){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(anchorKind)||anchorKind>2||!integer(anchorId))return -1;
  for(double v:{x,z,radius,idleSeconds,alertSeconds})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
@@ -38,8 +57,8 @@ static int stageIdleCycle(double actor,double session,double sourceSequence,doub
   draft.source=*source;draft.failedRequest=intent.strollRequest;const auto& r=*draft.failedRequest;
   if(x!=r.anchorX||z!=r.anchorZ||radius!=r.anchorRadius||idleSeconds!=r.idleSeconds)return -2;
  }else if(farmRng){
-  const auto source=arrivedFarmIdleCycleSource(s,intent,uint64_t(sourceSequence),int(anchorKind),uint64_t(anchorId),*farmRng,idleSeconds);if(!source||!idleStrollCycleReleaseClear(s,source->body))return -2;
-  draft.source=*source;draft.farmSource=s.routeSlots[intent.slot].farmArrivalBinding;
+  const auto source=settlementProfile>=0?settledIdleCycleSource(s,intent,uint64_t(sourceSequence),int(anchorKind),uint64_t(anchorId),*farmRng,idleSeconds,settlementProfile):arrivedFarmIdleCycleSource(s,intent,uint64_t(sourceSequence),int(anchorKind),uint64_t(anchorId),*farmRng,idleSeconds);if(!source||settlementProfile<0&&!idleStrollCycleReleaseClear(s,source->body))return -2;
+  draft.source=*source;if(settlementProfile>=0)draft.settlementSource=intent.settlementBinding;else draft.farmSource=s.routeSlots[intent.slot].farmArrivalBinding;
  }else if(intent.idleCycle){
   if(!nativeIdleCycleCurrent(s,intent)||intent.idleCycle->next.status!=1||intent.idleCycle->next.state[0]==3||double(intent.idleCycle->next.sequence)!=sourceSequence)return -2;
   draft.previousCycle=intent.idleCycle;draft.body=intent.idleCycle->binding->body;draft.source=intent.idleCycle->binding->source;sourceCycle=intent.idleCycle->binding->cycleSequence;
@@ -82,14 +101,18 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_farm_proposal_stage(double actor,double 
  if(!integer(rng)||rng>4294967295.)return -1;
  return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds,uint32_t(rng));
 }
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_settlement_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,double rng,double workerProfile){
+ if(!integer(rng)||rng>4294967295.||!integer(workerProfile,true)||workerProfile>3)return -1;
+ return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds,uint32_t(rng),false,false,int(workerProfile));
+}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),21):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_cycle_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?p.idleCycle->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=21||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=21||!p.idleCycle||session!=double(p.session)||ticket!=double(p.ticket))return -1;
  auto old=std::move(*p.idleCycle);clearWorldMutationProposal(p);const auto& h=old.header;
- const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15],old.farmSource?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt,bool(old.failedRequest),old.source.kind==20&&h[0]==2);if(result!=1)return result;
- auto& next=*p.idleCycle;bool same=old.body==next.body&&old.previousCycle==next.previousCycle&&old.strollSource==next.strollSource&&old.farmSource==next.farmSource&&old.failedRequest==next.failedRequest&&idleCycleBodySourceData(old.source)==idleCycleBodySourceData(next.source);
+ const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15],old.farmSource||old.settlementSource?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt,bool(old.failedRequest),old.source.kind==20&&h[0]==2,old.settlementSource?old.source.workerProfile:-1);if(result!=1)return result;
+ auto& next=*p.idleCycle;bool same=old.body==next.body&&old.previousCycle==next.previousCycle&&old.strollSource==next.strollSource&&old.farmSource==next.farmSource&&old.settlementSource==next.settlementSource&&old.failedRequest==next.failedRequest&&idleCycleBodySourceData(old.source)==idleCycleBodySourceData(next.source);
  for(size_t i=0;i<h.size();i++)if(i!=5&&i!=6&&h[i]!=next.header[i])same=false;
  next.previous=NativeIdleCycleOrigin{h,uint64_t(ticket)};next.timeTranslation={1,ticket,double(p.ticket),h[5],h[5]+h[23],next.header[5],next.header[5]+next.header[23],same?1.:0.};return 1;
 }
@@ -101,9 +124,10 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_commit_bound(double session,dou
  const auto& d=*p.idleCycle;auto binding=std::make_shared<NativeIdleCycleBinding>();binding->actual={d.header,uint64_t(ticket)};binding->body=d.body;binding->source=d.source;binding->failedRequestSource=d.failedRequest?d.failedRequest:d.previousCycle?d.previousCycle->binding->failedRequestSource:nullptr;
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previous&&preparedTicket==double(d.previous->ticket)&&d.timeTranslation[7]==1)binding->prepared=*d.previous;else return -9;
  if((d.strollSource||d.farmSource)&&!idleStrollCycleReleaseClear(s,d.source.body)){clearWorldMutationProposal(p);return -2;}
- const bool failedRequest=bool(d.failedRequest),releaseRouteSource=bool(d.strollSource)||bool(d.farmSource);const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(p);auto& intent=s.activeIntents.at(actor);
+ const bool failedRequest=bool(d.failedRequest),releaseRouteSource=bool(d.strollSource)||bool(d.farmSource),releaseSettlement=bool(d.settlementSource);const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(p);auto& intent=s.activeIntents.at(actor);
  if(failedRequest){intent.strollRequest.reset();intent.state=PlanningState::StationaryActive;}
  if(releaseRouteSource){releaseRoute(s,intent);intent.state=PlanningState::StationaryActive;intent.lease=false;s.workers.at(actor).eligible=true;}
+ if(releaseSettlement){releaseIntent(s,actor,PlanningState::Cancelled,false);intent.state=PlanningState::StationaryActive;intent.lease=false;s.workers.at(actor).eligible=true;}
  auto cycle=std::make_shared<NativeIdleCycle>();cycle->binding=binding;intent.idleCycle=cycle;
  binding->cycleSequence=emitIntentChange(s,intent);if(nativeIdleCycleFinished(*cycle,s.effectiveTime))publishNativeIdleCycleDecision(s,intent,chooseNativeIdleCycleNext(s,*cycle));s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,21);return 1;
 }
