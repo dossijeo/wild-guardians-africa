@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+El roster conserva la pose y el actor durante el relevo Task25 a Home18. La prueba cubre los dos órdenes de llegada del estado de Game y del recibo. Pasaron 483 pruebas y la compilación. Quedan el disparo ordinario, los motores y la validación de cadencia en GPU física. [Adopción gráfica](native-task-stop-home-graphics-20261120.md).
+
 Game puede liberar una Task vencida tras la parada confirmada Task25 y solicitar Home18 desde el mismo cuerpo. El controlador conserva la pose si Home aporta la misma identidad y posición. Pasaron 537 pruebas y la compilación. Quedan la adopción en el roster, el disparo ordinario y la GPU física. [Relevo a Home y validación](native-task-stop-home-game-20261120.md).
 
 Task25 ya tiene paquete retenido y proyección de primer dibujo en cliente y Host. Surface omite la preparación de lotes residentes cuando Task25 tiene diario vacío. Pasaron 41 pruebas dirigidas y la compilación. La selección amplia obtuvo 724 de 726, con los mismos dos fallos también en el código anterior. Quedan Game, motores de puerta y validación en GPU física. [Canal de dibujo y validación](native-task-stop-remote-20261120.md).

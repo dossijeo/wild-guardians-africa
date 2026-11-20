@@ -72,5 +72,12 @@ export function nativeHomeRequestContinuesCompletedIdleStroll(request,source){
  return !!request&&source?.kind==='native-idle-stroll-execution'&&source.version===1&&source.arrived===true&&Number.isFinite(source.executedThrough)&&!!r&&source.executedThrough>=r.endTime&&source.actorId===r.actorId&&source.bodyId===r.bodyId&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===r.bodyFlags&&request.profile===r.profile&&request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>b.assignmentSequence&&request.requestedAt>=r.endTime&&poseFields.every(k=>request.pose[k]===source.pose[k]);
 }
 export function nativeHomeRequestContinuesHeldWorker(request,source){
+ if(source?.kind==='native-task-route-held-execution'){
+  const route=source.nativeRoute,handle=route?.routeHandle;
+  return !!request&&!!handle&&!!source.pose&&request.actorId===route.actorId&&request.bodyId===source.bodyId&&request.profile===source.profile&&
+   request.authorityEpoch===handle.authorityEpoch&&request.nativeSession===handle.session&&
+   request.requestSequence>route.assignmentSequence&&request.requestedAt>=source.suspendedAt&&
+   poseFields.every(key=>request.pose[key]===source.pose[key]);
+ }
  return nativeHomeRequestContinuesHeldIdleStroll(request,source)||nativeHomeRequestContinuesHeldFarmArrival(request,source);
 }
