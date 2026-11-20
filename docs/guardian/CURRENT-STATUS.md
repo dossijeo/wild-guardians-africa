@@ -1,5 +1,8 @@
 # Current delivery status (2026-10-29)
 
+Continuación A2/A4/e-R3/f-R4: [liquidación → Home → ausencia ordinarias](native-post-settlement-home-20261120.md). Godot/Detour/Comlink leídos en fuente; parada12 existente, Home desde WALK terminal sobre el mismo cuerpo y adopción del endpoint acreditado, sin dependencia/ABI/dueño/reloj nuevos.52 casos nuevos,275 dirigidos finales,4932/4933 en371 archivos/una omisión y build nuevos; standalone/pthread recompilados. Cuatro perfiles retiran ambos actores mediante Home20; control liquidación, IDs invariantes/picking/drain y13 capturas revisadas; intervalo amplio máximo469,900ms sin atribución.703 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Siguiente tarea/disponibilidad y cobertura global; cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A3/A4/e-R3/f-R4: [primer uso GPU antes de READY](native-prepared-first-use-20261120.md). Adapta código real Drei/Three/Babylon: solo dibujos fríos en attachments privados, entradas nativas reutilizadas, fence/validación y retirada antes de READY; sin dependencia/ABI/dueño/reloj nuevos.29 casos nuevos,187 dirigidos,4880/4881 en367 archivos/una omisión y build nuevos. Cuatro cohortes hasta liquidación/Idle y control Task:576/585 IDs/refs2/picking/drain, cinco capturas revisadas. Cadencia no aceptada,3.123 abierto.698 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Siguiente continuidad/tarea/Home; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

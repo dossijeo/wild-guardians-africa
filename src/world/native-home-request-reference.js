@@ -66,6 +66,11 @@ export function nativeHomeRequestContinuesCompletedFarmArrival(request,source){
  const b=source?.binding,r=b?.reference,q=r?.sourceRequest,h=source?.nativeRoute;
  return !!request&&source?.kind==='native-farm-arrival-route-execution'&&source.version===1&&Number.isFinite(source.executedThrough)&&source.arrived===true&&source.running===false&&source.currentSpeed===0&&!!q&&!!h?.routeHandle&&source.executedThrough>=r.endTime&&source.actorId===r.actorId&&source.bodyId===r.bodyId&&h.actorId===r.actorId&&h.assignmentSequence===b.assignmentSequence&&['authorityEpoch','session','slot','generation'].every(k=>h.routeHandle[k]===r.expectedRouteHandle[k])&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===q.bodyFlags&&request.profile===q.profile&&request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>b.assignmentSequence&&request.requestedAt>=r.endTime&&poseFields.every(k=>request.pose[k]===(k==='radius'?q.pose.radius:source[k]));
 }
+// A completed WALK supplies its executed endpoint, never a fabricated REST.
+export function nativeHomeRequestContinuesCompletedIdleStroll(request,source){
+ const b=source?.binding,r=b?.reference;
+ return !!request&&source?.kind==='native-idle-stroll-execution'&&source.version===1&&source.arrived===true&&Number.isFinite(source.executedThrough)&&!!r&&source.executedThrough>=r.endTime&&source.actorId===r.actorId&&source.bodyId===r.bodyId&&request.actorId===source.actorId&&request.bodyId===source.bodyId&&request.bodyFlags===r.bodyFlags&&request.profile===r.profile&&request.authorityEpoch===r.worldBoundary.authorityEpoch&&request.nativeSession===r.worldBoundary.nativeSession&&request.requestSequence>b.assignmentSequence&&request.requestedAt>=r.endTime&&poseFields.every(k=>request.pose[k]===source.pose[k]);
+}
 export function nativeHomeRequestContinuesHeldWorker(request,source){
  return nativeHomeRequestContinuesHeldIdleStroll(request,source)||nativeHomeRequestContinuesHeldFarmArrival(request,source);
 }

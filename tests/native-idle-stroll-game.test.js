@@ -35,9 +35,9 @@ test('live transport and semantic save accept actual stroll values while ordinar
  }finally{f.close();}
 });
 
-test('Game advances the acquired stroll in its native cohort and rejects an unsupported return before moving',()=>{
- const f=nativeIdleStrollGameFixture();try{
-  f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.planner.nativeGameExecutionState(),1);const before=f.body(1),rng=f.state.rng;tick(f.state,.1,f.nav);assert.notDeepEqual(f.body(1),before);assert.equal(f.state.rng,rng);f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;const body=f.body(1),at=f.state.elapsed,worker=structuredClone(f.worker);assert.throws(()=>tick(f.state,.1,f.nav),/unsupported return boundary/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);
+test('Game requires its prepared-stop capability before crossing the live stroll contract edge',()=>{
+ const f=nativeIdleStrollGameFixture({peer:false});try{
+  f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);assert.equal(f.planner.nativeGameExecutionState(),1);const before=f.body(1),rng=f.state.rng;tick(f.state,.1,f.nav);assert.notDeepEqual(f.body(1),before);assert.equal(f.state.rng,rng);f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;const body=f.body(1),at=f.state.elapsed,worker=structuredClone(f.worker);const unsupported={...f.nav,intentTaskPlanner:{...f.planner,nativeIdleStrollStopRequest:undefined}};assert.throws(()=>tick(f.state,.1,unsupported),/unsupported return boundary/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);tick(f.state,.1,f.nav);assert.notDeepEqual(f.body(1),body);assert.equal(f.worker.nativeRouteAdmission,'native-idle-stroll');assert.equal(f.planner.nativeIdleStrollStopRequest(f.actor).reason,'home');assert.equal(f.planner.nativeHomeRequestReference(f.actor),null);
  }finally{f.close();}
 });
 

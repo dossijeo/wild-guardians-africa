@@ -20,7 +20,7 @@ import {copyNativeTaskActionAttestation} from '../native-task-action-attestation
 import {copyNativeTaskStartAttestation} from '../native-task-start-attestation.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,copyNativeTaskConsequenceReference} from '../native-task-consequence.js';
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteSource,nativeHomeRouteSourceSequence} from '../native-home-route.js';
-import {copyNativeHomeRequestReference,copyNativeHomeDeclarationReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival} from '../native-home-request-reference.js';
+import {copyNativeHomeRequestReference,copyNativeHomeDeclarationReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival,nativeHomeRequestContinuesCompletedIdleStroll} from '../native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference,copyNativeInitialIdleState} from '../native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation} from '../native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
@@ -1783,13 +1783,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const request=nativeHomeRequestReference(r.actorId);if(!request)throw Error('Native Idle Home lost its physical owner');return request;
   };
   const requestNativeIdleStrollHome=(source,home)=>{
-    const held=copyNativeIdleStrollHeldExecution(source),actual=nativeIdleStrollHeldExecution(held.actorId);
+    const completed=source?.kind==='native-idle-stroll-execution',held=completed?source:copyNativeIdleStrollHeldExecution(source),actual=completed?nativeIdleStrollExecution(held.actorId):nativeIdleStrollHeldExecution(held.actorId);
     const identity=value=>JSON.stringify({...value,executedThrough:0});
-    if(!actual||held.executedThrough>actual.executedThrough||identity(held)!==identity(actual))throw Error('Native held Idle stroll Home source is not current');
+    if(!actual||!Number.isFinite(held.executedThrough)||held.executedThrough>actual.executedThrough||identity(held)!==identity(actual)||completed&&(!actual.arrived||actual.executedThrough<actual.binding.reference.endTime))throw Error('Native Idle stroll Home source is not current');
     if(typeof wasm.nav_intent_idle_stroll_home_request!=='function')throw Error('Rebuild native held Idle stroll Home request');
     syncBoundaryTime();
-    if(wasm.nav_intent_idle_stroll_home_request(held.actorId,held.resumeHandle.session,held.assignmentSequence,held.resumeHandle.generation,home.villageId,home.x,home.z)!==1)throw Error('Native held Idle stroll Home request rejected');
-    const request=nativeHomeRequestReference(held.actorId);if(!nativeHomeRequestContinuesHeldIdleStroll(request,held))throw Error('Native held Idle stroll Home lost its actual body');return request;
+    const handle=completed?actual.binding.reference.expectedRouteHandle:held.resumeHandle,sequence=completed?actual.binding.assignmentSequence:held.assignmentSequence,status=wasm.nav_intent_idle_stroll_home_request(held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z);
+    // An obsolete in-flight stop must settle through its existing controller.
+    // Neither a pending proposal nor a peer reservation is ours to revoke here.
+    if(completed&&(status===-4||status===0))return null;
+    if(status!==1)throw Error('Native Idle stroll Home request rejected');
+    const request=nativeHomeRequestReference(held.actorId);if(!(completed?nativeHomeRequestContinuesCompletedIdleStroll:nativeHomeRequestContinuesHeldIdleStroll)(request,held))throw Error('Native Idle stroll Home lost its actual body');return request;
   };
   const requestNativeFarmArrivalHome=(source,home)=>{
     if(['native-farm-arrival-request-reference','native-farm-arrival-declaration-reference'].includes(source?.kind)){
@@ -3271,14 +3275,26 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const requestNativeIdleHome=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle Home belongs to another game');
-    const cycle=bridge.nativeIdleCycleExecution(worker.id),held=bridge.nativeIdleStrollHeldExecution(worker.id),restored=worker.nativeRouteAdmission==='pending-stroll-resources',initial=worker.nativeRouteAdmission==='pending-idle-resources',body=!!cycle||worker.nativeRouteAdmission==='native-idle'||!!bridge.nativeInitialIdleBodyState?.(worker.id);
-    if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission&&!restored&&!initial&&!body&&!held||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
-    const execution=restored?projectNativeIdleStrollDeclaration(state,worker):held?projectNativeIdleStroll(state,worker):cycle?projectNativeIdleCycle(state,worker):body?projectNativeInitialIdleBody(state,worker):initial?projectNativeInitialIdleDeclaration(state,worker):projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
-    if(!execution||!restored&&!held&&!initial&&!body&&execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
-    const goal={villageId:numericId(village.id),x:home.x,z:home.z},request=restored?bridge.requestNativeRestoredIdleStrollHome(execution,goal):held?bridge.requestNativeIdleStrollHome(execution,goal):cycle?bridge.requestNativeIdleCycleHome(execution.binding,goal):body?bridge.requestNativeInitialIdleBodyHome(execution.binding,goal):initial?bridge.requestNativeInitialIdleHome(execution,goal):bridge.requestNativeIdleHome(execution.binding,goal);
+    const cycle=bridge.nativeIdleCycleExecution(worker.id),held=bridge.nativeIdleStrollHeldExecution(worker.id),completed=worker.nativeRouteAdmission==='native-idle-stroll'&&bridge.nativeIdleStrollExecution(worker.id)?.arrived===true,restored=worker.nativeRouteAdmission==='pending-stroll-resources',initial=worker.nativeRouteAdmission==='pending-idle-resources',body=!!cycle||worker.nativeRouteAdmission==='native-idle'||!!bridge.nativeInitialIdleBodyState?.(worker.id);
+    if(!state.workers.includes(worker)||worker.status!=='idle'||worker.taskId||worker.crateId||worker.nativeRouteAdmission&&!restored&&!initial&&!body&&!held&&!completed||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Idle Home requires a finished idle contract');
+    const execution=restored?projectNativeIdleStrollDeclaration(state,worker):held||completed?projectNativeIdleStroll(state,worker):cycle?projectNativeIdleCycle(state,worker):body?projectNativeInitialIdleBody(state,worker):initial?projectNativeInitialIdleDeclaration(state,worker):projectNativeSettledWorkerExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
+    if(!execution||!restored&&!held&&!completed&&!initial&&!body&&execution.binding.reference.home||!home)throw Error('Native Idle Home requires its actual stationary source');
+    const goal={villageId:numericId(village.id),x:home.x,z:home.z},request=restored?bridge.requestNativeRestoredIdleStrollHome(execution,goal):held||completed?bridge.requestNativeIdleStrollHome(execution,goal):cycle?bridge.requestNativeIdleCycleHome(execution.binding,goal):body?bridge.requestNativeInitialIdleBodyHome(execution.binding,goal):initial?bridge.requestNativeInitialIdleHome(execution,goal):bridge.requestNativeIdleHome(execution.binding,goal);
+    // Only completed WALK can be busy; unbound declarations legitimately return no body reference.
+    if(completed&&!request)return null;
     cancelIdle(worker);
     Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});
     notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
+  };
+  const nativeIdleStrollStopRequest=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
+    if(!worker||worker.nativeRouteAdmission!=='native-idle-stroll'||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))return null;
+    const execution=bridge.nativeIdleStrollExecution(actor);if(!execution||execution.arrived)return null;
+    const {pose,idleState:idle}=nativeIdleStrollLiveState(state,worker),r=execution.binding.reference,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`;
+    if(execution.actorId!==actor||execution.executedThrough!==state.elapsed||r.workerProfile!==worker.profile||r.centerId!==numericId(worker.centerId)||worker.radius!==undefined&&worker.radius!==r.pose.radius||Object.keys(pose).some(k=>pose[k]!==execution.pose[k])||idle.anchorId!==anchorId||idle.rng!==r.walkRng||idle.remaining!==nativeIdleStrollWalkRemaining(r)||['x','z'].some(k=>idle.destination[k]!==r.destination[k]))throw Error('Idle stroll stop request differs from its executed Game source');
+    // Godot pauses its existing agent independently of the world. Our existing
+    // family12 additionally waits for prepared graphics before retaining it.
+    return Object.freeze({reason:'home',binding:execution.binding});
   };
   const nativeFarmArrivalStopRequest=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
@@ -3583,7 +3599,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,
-    commitTaskBatchToState,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
+    commitTaskBatchToState,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
       pendingNativeChanges=true;

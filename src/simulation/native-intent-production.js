@@ -1,5 +1,7 @@
 import {WORKER_SPATIAL_PROFILE} from '../world/wild-engine/spatial-movement-profiles.js';
 import {urgentWork} from './locomotion.js';
+import {contractExpired,PROFILES} from './workforce.js';
+const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
@@ -23,6 +25,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if(farmIdleSource){const stroll=farmIdleSource.approach;return {actorId,kind:stroll?'idle-stroll':'idle-cycle',operation:stroll?'startNativeIdleStrollAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence',prepare:stroll?'prepareNativeIdleStrollResources':'prepareNativeIdleCycleResources',farmIdleSource};}
    }
    if(marker==='native-farm-arrival-held'&&planner.nativeFarmArrivalContinuationSource?.(actorId))return {actorId,kind:'farm-arrival-continuation',operation:'continueNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources'};
+   if(marker==='native-idle-stroll'){
+    const stopRequest=planner.nativeIdleStrollStopRequest?.(actorId);
+    if(stopRequest)return {actorId,kind:'idle-stroll-stop',operation:'stopNativeIdleStrollAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+   }
    if(marker==='pending-idle-resources'&&planner.nativeInitialIdleRequestReference(actorId))return {actorId,kind:'initial-idle-body',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources'};
    if(marker==='pending-stroll-resources'&&planner.nativeIdleStrollRequestReference(actorId))return {actorId,kind:'idle-stroll',operation:'startNativeIdleStrollAfterGpuQuiescence',prepare:'prepareNativeIdleStrollResources'};
    if(marker==='pending-home-resources'&&planner.nativeHomeRequestReference(actorId)||!marker&&worker.status==='returning'&&planner.nativeTaskSettlementBinding(actorId)?.reference.home)return {actorId,kind:'home-route',operation:'startNativeHomeRouteAfterGpuQuiescence',prepare:'prepareNativeHomeRouteResources'};
@@ -31,7 +37,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     const cycle=planner.nativeIdleCycleExecution(actorId),request=cycle&&planner.nativeIdleCycleNextRequest(actorId);
     if(!cycle&&planner.nativeInitialIdleBodyState(actorId)||request){const stroll=request?.idleState.mode==='walk';return {actorId,kind:stroll?'idle-stroll':'idle-cycle',operation:stroll?'startNativeIdleStrollAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence',prepare:stroll?'prepareNativeIdleStrollResources':'prepareNativeIdleCycleResources'};}
    }
-   if(marker==='native-idle-stroll'&&planner.nativeIdleStrollExecution(actorId)?.arrived)return {actorId,kind:'idle-cycle',operation:'startNativeIdleCycleAfterGpuQuiescence',prepare:'prepareNativeIdleCycleResources'};
+   if(marker==='native-idle-stroll'&&!contractExpired(worker,state)&&state.time<profileEnd.get(worker.profile)&&planner.nativeIdleStrollExecution(actorId)?.arrived)return {actorId,kind:'idle-cycle',operation:'startNativeIdleCycleAfterGpuQuiescence',prepare:'prepareNativeIdleCycleResources'};
    if(marker==='pending-resources'){
     const request=planner.pendingTaskRoute(actorId),id=bodyId(actorId);
     if(request&&id!==undefined)return {actorId,kind:'task-start',operation:'startNativeTaskRouteAfterGpuQuiescence',prepare:'prepareNativeTaskStartResources',request,policy:{bodyId:id,radius:WORKER_SPATIAL_PROFILE.radius,urgent:urgentWork(state,worker),runRemaining:worker.runRemaining,runPhase:worker.runPhase??0,walkPhase:worker.walkPhase??0,carryPhase:worker.carryPhase??0}};
@@ -50,6 +56,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'farm-arrival':return JSON.stringify([planner.nativeFarmArrivalRequestReference(actor),request.urgent]);
    case 'farm-arrival-continuation':{const source=planner.nativeFarmArrivalContinuationSource(actor);return source&&JSON.stringify({...source,executedThrough:0});}
    case 'farm-arrival-stop':return JSON.stringify(request.stopRequest);
+   case 'idle-stroll-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));
    case 'idle-stroll':return JSON.stringify(request.farmIdleSource??planner.nativeIdleStrollRequestReference(actor)??planner.nativeIdleCycleBinding(actor));
    case 'idle-cycle':return JSON.stringify(request.farmIdleSource??planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleCycleBinding(actor)??planner.nativeIdleStrollBinding(actor));

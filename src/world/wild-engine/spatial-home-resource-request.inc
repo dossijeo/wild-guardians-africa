@@ -64,14 +64,15 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  const bool farmContinuation=farm&&pending.pending&&pending.kind==23&&pending.farmArrivalRoute&&pending.farmArrivalRoute->header[1]==actor&&pending.farmArrivalRoute->farmArrivalHeldBinding;
  if(pending.pending&&!farmContinuation||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
- // A completed Farm owns a final pose, not a synthetic suspension. Its same
+ // A completed route owns a final pose, not a synthetic suspension. Its same
  // request remains idempotent after the executable corridor has been released.
- if(farm&&intent.homeRequest&&intent.homeRequest->completedFarmArrival){const auto& r=*intent.homeRequest;if(r.farmArrivalSourceSequence!=uint64_t(assignmentSequence)||r.farmArrivalSourceGeneration!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
- const bool completed=farm&&nativeCompletedFarmArrivalBodyCurrent(s,intent);
- if(farm?intent.assignmentSequence!=uint64_t(assignmentSequence)||intent.generation!=uint32_t(generation)||!nativeHeldFarmArrivalBodyCurrent(s,intent)&&!completed:!nativeHeldIdleStrollBodyCurrent(s,intent,uint64_t(assignmentSequence),uint32_t(generation)))return -2;
+ if(intent.homeRequest&&(farm?intent.homeRequest->completedFarmArrival:intent.homeRequest->completedIdleStroll)){const auto& r=*intent.homeRequest;if((farm?r.farmArrivalSourceSequence:r.idleStrollSourceSequence)!=uint64_t(assignmentSequence)||(farm?r.farmArrivalSourceGeneration:r.idleStrollSourceGeneration)!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
+ const bool completed=farm?nativeCompletedFarmArrivalBodyCurrent(s,intent):nativeCompletedIdleStrollBodyCurrent(s,intent);
+ if(intent.assignmentSequence!=uint64_t(assignmentSequence)||intent.generation!=uint32_t(generation)||!(farm?nativeHeldFarmArrivalBodyCurrent(s,intent):nativeHeldIdleStrollBodyCurrent(s,intent,uint64_t(assignmentSequence),uint32_t(generation)))&&!completed)return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;if(!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
  const auto& route=s.routeSlots[intent.slot];
+ if(completed&&!farm&&!idleStrollCycleReleaseClear(s,route.reservationBody))return 0;
  // Only the exact retained Farm source can obsolete its own prepared successor.
  // Keep every other proposal and all source/body checks unchanged.
  if(farmContinuation){if(pending.farmArrivalRoute->farmArrivalHeldBinding!=route.farmArrivalBinding)return -4;clearWorldMutationProposal(s.barrierProposal);}
@@ -79,7 +80,7 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=intent.actor;request->session=s.session;request->body=route.reservationBody;request->profile=intent.profile;request->bodyFlags=body.flags;request->radius=route.radius;request->at=s.effectiveTime;
  request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
  if(farm){request->farmArrivalSourceSequence=uint64_t(assignmentSequence);request->farmArrivalSourceGeneration=uint32_t(generation);}else{request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);}
- request->completedFarmArrival=completed;
+ request->completedFarmArrival=completed&&farm;request->completedIdleStroll=completed&&!farm;
  if(completed)releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
  intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
  // publish has no intervening intent event. The copied pose must already be

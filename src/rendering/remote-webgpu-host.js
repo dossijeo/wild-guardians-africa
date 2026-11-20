@@ -658,7 +658,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const permit=routeControl.clockLease(frameClock(next).epoch,frameClock(next).safeUntil),at=evaluateRemoteClock(permit,startedAt);
         const bounded=Math.max(at,nativeMutationFloor??-Infinity);
         if(nativeMutationFloor!==null&&(permit.safeUntil<nativeMutationFloor||next.admittedClockBindings.some(binding=>
-             binding.routeRecord&&binding.routeRecord.safeUntil<nativeMutationFloor))||bounded<next.metadata.clock.elapsed||
+             binding.routeRecord&&binding.routeRecord.safeUntil<nativeMutationFloor&&!retainedIdleEndpoint(binding,nativeMutationFloor)))||bounded<next.metadata.clock.elapsed||
            next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>bounded))next=null;
       }
       const candidate = next || active;

@@ -1,0 +1,25 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {controlledNativeIdleStroll} from './helpers/native-idle-stroll-control.js';
+import {PROFILES} from '../src/simulation/workforce.js';
+import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
+
+function fixture(options={}){const f=controlledNativeIdleStroll(options);try{
+ const proposal=f.prepare(),lease=f.c.admitStroll(proposal.nativeIdleStroll,{preparingWorldBoundary:proposal.worldBoundary}),binding=f.commitStroll(proposal);if(options.installStroll!==false)f.c.installStrolls(binding.reference.worldBoundary,[binding]);f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(binding.reference.endTime-f.state.elapsed+.1);const source=f.planner.projectNativeIdleStroll(f.state,f.worker);assert(source.arrived);const home=f.point(6,0); // Verified clear Home corridor of the native component fixture.
+ return {...f,lease,binding,source,requestHome(){const request=f.planner.requestNativeIdleStrollHome(source,{villageId:1,x:home.x,z:home.z});assert(request);f.planner.commitNativeCausalClock();return request;},prepareHome(){const p=f.planner.prepareNativeHomeRouteProposal(f.planner.nativeHomeRequestReference(f.actor));assert.equal(p.status,'proposed');return p.proposal;},commitHome(p,prepared=p){assert.equal(f.w.nav_home_route_proposal_commit_bound(...f.tuple().slice(0,5),prepared.ticket.ticket),1);f.planner.beginNativeRouteExecution();f.planner.commitNativeCausalClock();return f.planner.nativeHomeRouteBinding(f.actor);}};
+ }catch(e){f.close();throw e;}}
+for(const threaded of [false,true])for(const p of PROFILES)test(`${threaded?'pthread':'standalone'} ${p.id} completed WALK retains only its installed finite lease until exact Home acquisition`,async()=>{
+ let runtime,f;try{if(threaded){const{default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory);}f=fixture({profile:p.id,core:runtime?.core});const record=f.lease.routeRecord,end=f.lease.executionEnd,body=f.body(1);assert(f.lease.isCurrent());f.requestHome();assert(f.lease.isCurrent());assert.equal(f.lease.routeRecord,record);assert.equal(record.safeUntil,end);assert.equal(f.lease.executionEnd,end);const prepared=f.prepareHome(),home=f.c.admitHome(prepared.nativeHome,{preparingWorldBoundary:prepared.worldBoundary});assert(home.isPrepared());assert(!home.isCurrent());f.advance(.3);assert(f.lease.isCurrent());assert.deepEqual(f.body(1),body);const refreshed=f.planner.revalidateNativeHomeRouteProposal(prepared.ticket);assert.equal(refreshed.status,'revalidated');const binding=f.commitHome(refreshed.proposal,prepared);assert(!f.lease.isCurrent());assert.equal(f.c.installHomes(binding.reference.worldBoundary,[binding]),1);assert(home.isCurrent());assert.deepEqual(f.body(1),body);
+ }finally{f?.close();await runtime?.dispose();}
+});
+test('completed WALK without old GPU installation permits fresh Home but cannot retroactively admit WALK',()=>{
+ const f=fixture({installStroll:false});try{f.requestHome();assert(!f.lease.isCurrent());assert.throws(()=>f.c.admitStroll(f.binding.reference));const p=f.prepareHome(),lease=f.c.admitHome(p.nativeHome,{preparingWorldBoundary:p.worldBoundary});assert(lease.isPrepared());const b=f.commitHome(p);assert.equal(f.c.installHomes(b.reference.worldBoundary,[b]),1);assert(lease.isCurrent());assert(!f.lease.isCurrent());}finally{f.close();}
+});
+test('completed WALK Home rejects body substitution even through bootstrap',()=>{
+ const f=fixture();try{f.requestHome();const binding=f.commitHome(f.prepareHome()),bad=structuredClone(binding);for(const r of [bad.reference,bad.preparedReference]){r.bodyId=3;r.sourceRequest.bodyId=3;}assert.throws(()=>f.c.installHomes(binding.reference.worldBoundary,[bad],{bootstrap:true}));assert.equal(f.c.installHomes(binding.reference.worldBoundary,[binding]),1);}finally{f.close();}
+});
+test('completed WALK finite permission waits for the actual request clock watermark',()=>{
+ const f=fixture();try{f.pauseClock(true);f.requestHome();assert(!f.lease.isCurrent());f.acceptLastClock();assert(f.lease.isCurrent());assert.equal(f.lease.executionEnd,f.binding.reference.endTime);}finally{f.close();}
+});
+for(const field of ['body','position','profile'])test(`completed WALK rejects a forged Home ${field} without revoking its installed source`,()=>{
+ const f=fixture();try{f.pauseControl(true);f.pauseClock(true);const sequence=f.c.status().sequence;f.requestHome();const original=f.events.findLast(e=>e.actorId===f.actor&&e.homeRequest),bad=structuredClone(original);if(field==='body')bad.homeRequest.bodyId++;else if(field==='position')bad.homeRequest.pose.x+=.1;else bad.homeRequest.profile=bad.homeRequest.profile===4?1:bad.homeRequest.profile+1;assert.throws(()=>f.c.accept(bad));assert.equal(f.c.status().sequence,sequence);assert(f.lease.isCurrent());f.c.accept(original);f.acceptLastClock();assert(f.lease.isCurrent());}finally{f.close();}
+});

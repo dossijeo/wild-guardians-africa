@@ -165,7 +165,7 @@ struct NativeWorkerPoseResourceRequest {
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
  uint64_t strollRequestSourceSequence=0,farmRequestSourceSequence=0,farmArrivalSourceSequence=0;uint32_t idleStrollSourceGeneration=0,farmArrivalSourceGeneration=0;double homeX=0,homeZ=0;
- bool completedFarmArrival=false;
+ bool completedFarmArrival=false,completedIdleStroll=false;
 };
 // Semantic arrival goal on the existing owner; no route or Idle history.
 struct NativeFarmArrivalResourceRequest:NativeWorkerPoseResourceRequest {
@@ -662,6 +662,12 @@ static bool nativeHeldIdleTaskBodyCurrent(const IntentState& s,const ActiveInten
  if(!r.body)return !worker->second.bodyBound&&!worker->second.body;
  return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.kind==0&&body.flags==r.bodyFlags&&body.r==r.radius&&body.x==r.x&&body.z==r.z&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }
+static const NativeIdleStrollBinding* currentIdleStroll(double actor);
+static bool nativeCompletedIdleStrollBodyCurrent(const IntentState& s,const ActiveIntent& intent){
+ const auto* binding=currentIdleStroll(double(intent.actor));if(!binding)return false;
+ const auto& route=s.routeSlots[intent.slot];
+ return route.executionPose[6]==1&&route.executionPose[15]==0&&route.executionPose[16]==0&&s.effectiveTime>=binding->actual.header[11];
+}
 static bool nativeCompletedFarmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!nativeFarmArrivalBodyCurrent(s,intent))return false;
  const auto& route=s.routeSlots[intent.slot];
@@ -675,8 +681,8 @@ static std::shared_ptr<const NativeWorkerPoseResourceRequest> captureHeldWorkerT
 bool nativeHeldFarmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& intent);
 bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources)return false;
- const auto& r=*intent.homeRequest;const bool stroll=r.idleStrollSourceSequence&&nativeHeldIdleStrollBodyCurrent(s,intent,r.idleStrollSourceSequence,r.idleStrollSourceGeneration),farm=r.farmArrivalSourceSequence&&(r.completedFarmArrival?!intent.generation&&!s.suspendedBodies.count(r.body)&&r.farmArrivalSourceGeneration&&r.farmArrivalSourceSequence==intent.assignmentSequence&&r.farmArrivalSourceSequence<r.sequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&!r.idleStrollSourceSequence&&!r.idleStrollSourceGeneration:nativeHeldFarmArrivalBodyCurrent(s,intent));
- if(r.completedFarmArrival&&!farm)return false;
+ const auto& r=*intent.homeRequest;const bool stroll=r.idleStrollSourceSequence&&(r.completedIdleStroll?!intent.generation&&!s.suspendedBodies.count(r.body)&&r.idleStrollSourceGeneration&&r.idleStrollSourceSequence==intent.assignmentSequence&&r.idleStrollSourceSequence<r.sequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&!r.farmArrivalSourceSequence&&!r.farmArrivalSourceGeneration:nativeHeldIdleStrollBodyCurrent(s,intent,r.idleStrollSourceSequence,r.idleStrollSourceGeneration)),farm=r.farmArrivalSourceSequence&&(r.completedFarmArrival?!intent.generation&&!s.suspendedBodies.count(r.body)&&r.farmArrivalSourceGeneration&&r.farmArrivalSourceSequence==intent.assignmentSequence&&r.farmArrivalSourceSequence<r.sequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&!r.idleStrollSourceSequence&&!r.idleStrollSourceGeneration:nativeHeldFarmArrivalBodyCurrent(s,intent));
+ if(r.completedFarmArrival&&!farm||r.completedIdleStroll&&!stroll||r.completedFarmArrival&&r.completedIdleStroll)return false;
  if(r.idleStrollSourceSequence&&r.farmArrivalSourceSequence||(r.idleStrollSourceSequence?!stroll:r.farmArrivalSourceSequence?!farm:intent.generation!=0))return false;
  if(intent.settlementBinding&&(!nativeSettlementBodyCurrent(s,intent)||intent.settlementBinding->actual.header[21]))return false;
  if(intent.initialIdleBodyBinding&&!nativeInitialIdleBodyCurrent(s,intent))return false;

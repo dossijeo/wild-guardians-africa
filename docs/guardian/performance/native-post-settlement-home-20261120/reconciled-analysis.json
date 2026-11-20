@@ -1,0 +1,4394 @@
+{
+  "frozen": ".cache/native-post-settlement-home-reconciled-frozen.json",
+  "files": {
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs": "193f1ba7b8b8ccc0ae5794a2bca07e455d95d5e18e88320194fa260fe361a635",
+    "tests/browser/native-farm-birth-world-owner.js": "b166e90c222f65bbf4a92c1b43a2227b49ed42b80abd5db069dab11ef646ec9a",
+    "tests/browser/native-farm-birth-task-scenario.js": "9fc7de219b9234ae5e4c79dccee99699b8347bb76516d570a4cf2a89089762d5",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js": "5612bb9d0abc9a1e57ee8f15ebd90662983d846a726a95b0a4c36f4cc0d0f89a",
+    "src/simulation/game.js": "a951e2a524b6512ca6cc20f1b920ea8e0f5ede4360086d1c88629bb78289dd5d",
+    "src/simulation/native-intent-production.js": "7694d7f32158c49e2f91b26659d7bdcc62c23fd4875ef452193a78d6eb474088",
+    "src/world/wild-engine/spatial-intent-bridge.js": "4dd542091af11ed53b9429fc1e56416dfc162ea3eb1a67a8af402eb419ea31fa",
+    "tests/native-idle-stroll-game.test.js": "1a123e60e8a3ba9d5d99545f1be748d1459d1e799c7feb26e95f42469cf3d8a5",
+    "src/world/wild-engine/spatial-intent-state.cpp": "d854224de357a68c2142832e1d8c7335d527a4890bf92b3ea7a1d19ed78e6486",
+    "src/world/wild-engine/spatial-home-resource-request.inc": "83af7959d309edfe937ace9342fc56e48d362256810a413dbce108db662b514f",
+    "src/world/native-home-request-reference.js": "0d1eec0944a65237d697d087ad2df5fbe095f2eabcfeecf16a7ce97788c4ba84",
+    "src/world/wild-engine/spatial-savanna.wasm": "842843c21c0cdfbb9d6f656be5e815b0d7a09a1cf6e467586c373d26331c3358",
+    "public/wild-engine/spatial-threaded.mjs": "05ad7c6c3234e8d958795ebcc58b1c38b4d31034f2a9404d11c46debad562a9f",
+    "public/wild-engine/spatial-threaded.wasm": "957640bea689d86d2ba85467b2bb534357f9a5f5a8f44fd67933f154a26911ad",
+    "src/rendering/webgpu-worker-roster.js": "ad6f35c433d267e7ff40c2cffe4485dd1175adaab2a5e88548724cdf840132e0",
+    "src/rendering/native-route-control.js": "a35c4dec18de3f221ed82d9886129fb6a33b56fd4a58d02f30cf4a74d97fad6d",
+    "src/rendering/remote-webgpu-host.js": "3d6ec6e923871dd20d24fdff08d21b03bc167b7cd0e9c26ff3352c6b7758616c",
+    "tests/native-idle-current-home-data.test.js": "c0a642d62e937103a62e7827e4c378f2a3c5cce3ffa1c2fdc55527966d87c1e3",
+    "tests/browser/native-post-settlement-home-scenario.js": "cce23103d22ef7979bc932f5128693414d3a08f40e4f3806e51675346a4fe7fa",
+    "tests/native-idle-stroll-contract-home.test.js": "cb323cd66673177651eaeebee2bfee3554d7edd81e1d9726e53e562dbc267255",
+    "tests/native-idle-completed-home-graphics.test.js": "3b86e64857e305014c126d3b27f5c1d9f0ded01d092a409559f6f831feb5f83b",
+    "tests/native-idle-completed-home-control.test.js": "a154c3737173ac57b0589ecff45fb6ec3bd5b9bf29413745b92b66bd08e269c6",
+    "tests/native-idle-completed-home-remote.test.js": "49d3d5fb2cbdb0e2e38368cfcb15e0d4dc5588376f21e9e922a43b3516668b1e"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "followHome": true,
+      "output": ".cache/native-post-settlement-home-reconciled-olderMale.json",
+      "log": ".cache/native-post-settlement-home-reconciled-olderMale.log",
+      "startedAt": "2026-11-20T08:20:15.555Z",
+      "finishedAt": "2026-11-20T08:23:47.612Z",
+      "wallMs": 212056,
+      "exitCode": 0,
+      "receiptSha256": "40acf356000b6f1bff6e36d9c2746f54fdc2faa7d5551eec0859afadf0337429",
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "home": {
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 13,
+          "at": 1795162927595.7852,
+          "family": "home-route",
+          "binding": {
+            "kind": "native-home-route-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "reference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 21,
+                "requestedAt": 99.99999999995134,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 6
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "ticket": 25,
+                "effectiveTime": 102.15999999995091
+              },
+              "sourceControlSequence": 21,
+              "endTime": 122.95064499003988
+            },
+            "preparedReference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 21,
+                "requestedAt": 99.99999999995134,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 6
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "ticket": 24,
+                "effectiveTime": 99.99999999995134
+              },
+              "sourceControlSequence": 21,
+              "endTime": 120.7906449900403
+            },
+            "assignmentSequence": 22,
+            "gateIds": []
+          }
+        },
+        "arrivalCommit": {
+          "kind": "birth-resource-committed",
+          "id": 14,
+          "at": 1795162951265.56,
+          "family": "home-arrival",
+          "binding": {
+            "kind": "native-home-arrival-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "retiredSequence": 24,
+            "reference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 21,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 25,
+                    "effectiveTime": 102.15999999995091
+                  },
+                  "sourceControlSequence": 21,
+                  "endTime": 122.95064499003988
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 21,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 24,
+                    "effectiveTime": 99.99999999995134
+                  },
+                  "sourceControlSequence": 21,
+                  "endTime": 120.7906449900403
+                },
+                "assignmentSequence": 22,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "ticket": 27,
+                "effectiveTime": 125.03999999994636
+              },
+              "sourceControlSequence": 23,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            },
+            "preparedReference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 21,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 25,
+                    "effectiveTime": 102.15999999995091
+                  },
+                  "sourceControlSequence": 21,
+                  "endTime": 122.95064499003988
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 21,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 24,
+                    "effectiveTime": 99.99999999995134
+                  },
+                  "sourceControlSequence": 21,
+                  "endTime": 120.7906449900403
+                },
+                "assignmentSequence": 22,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                "nativeSession": 1,
+                "ticket": 26,
+                "effectiveTime": 122.95999999994677
+              },
+              "sourceControlSequence": 23,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            }
+          }
+        },
+        "retirements": [
+          {
+            "root": 641,
+            "actorId": 900011,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 16,
+              "at": 1795163005133.175,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 26,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 23,
+                        "requestedAt": 102.15999999995091,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 29,
+                        "effectiveTime": 127.11999999994595
+                      },
+                      "sourceControlSequence": 24,
+                      "endTime": 179.31115354609494
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 23,
+                        "requestedAt": 102.15999999995091,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 28,
+                        "effectiveTime": 125.05999999994636
+                      },
+                      "sourceControlSequence": 24,
+                      "endTime": 177.25115354609534
+                    },
+                    "assignmentSequence": 25,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 31,
+                    "effectiveTime": 179.35999999997205
+                  },
+                  "sourceControlSequence": 25,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 121.43755958527456,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 23,
+                        "requestedAt": 102.15999999995091,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 29,
+                        "effectiveTime": 127.11999999994595
+                      },
+                      "sourceControlSequence": 24,
+                      "endTime": 179.31115354609494
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 23,
+                        "requestedAt": 102.15999999995091,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 28,
+                        "effectiveTime": 125.05999999994636
+                      },
+                      "sourceControlSequence": 24,
+                      "endTime": 177.25115354609534
+                    },
+                    "assignmentSequence": 25,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 30,
+                    "effectiveTime": 179.31999999997203
+                  },
+                  "sourceControlSequence": 25,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 121.43755958527456,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          },
+          {
+            "root": 713,
+            "actorId": 1000001,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 14,
+              "at": 1795162951265.56,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 24,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 21,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 25,
+                        "effectiveTime": 102.15999999995091
+                      },
+                      "sourceControlSequence": 21,
+                      "endTime": 122.95064499003988
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 21,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 24,
+                        "effectiveTime": 99.99999999995134
+                      },
+                      "sourceControlSequence": 21,
+                      "endTime": 120.7906449900403
+                    },
+                    "assignmentSequence": 22,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 27,
+                    "effectiveTime": 125.03999999994636
+                  },
+                  "sourceControlSequence": 23,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 21,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 25,
+                        "effectiveTime": 102.15999999995091
+                      },
+                      "sourceControlSequence": 21,
+                      "endTime": 122.95064499003988
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 21,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                        "nativeSession": 1,
+                        "ticket": 24,
+                        "effectiveTime": 99.99999999995134
+                      },
+                      "sourceControlSequence": 21,
+                      "endTime": 120.7906449900403
+                    },
+                    "assignmentSequence": 22,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "4a52545a-8225-40d5-8069-e98c1c1d08d9/1",
+                    "nativeSession": 1,
+                    "ticket": 26,
+                    "effectiveTime": 122.95999999994677
+                  },
+                  "sourceControlSequence": 23,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          }
+        ],
+        "notSelectableIds": [
+          "worker-1000001",
+          "worker-900011"
+        ],
+        "drawFrames": 55,
+        "absenceDrawFrames": 64,
+        "blocks": [
+          {
+            "kind": "birth-block-end",
+            "stage": "post-settlement-home-ready",
+            "start": 1795162923948.6501,
+            "end": 1795162925748.675,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7199999999996578,
+            "maxGapMs": 33.445068359375
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-commit",
+            "start": 1795162925795.58,
+            "end": 1795162927595.59,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7199999999996578,
+            "maxGapMs": 33.43994140625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-ready",
+            "start": 1795162947559.5151,
+            "end": 1795162949359.54,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7199999999996578,
+            "maxGapMs": 33.4599609375
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-commit",
+            "start": 1795162949465.0151,
+            "end": 1795162951265.0251,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7199999999996578,
+            "maxGapMs": 33.455078125
+          }
+        ],
+        "finalWorkers": [
+          {
+            "id": "worker-900011",
+            "status": "home"
+          },
+          {
+            "id": "worker-1000001",
+            "status": "home"
+          }
+        ],
+        "scope": "Same actual paid hire and delivered Idle body through ordinary contract Home18 and prepared absence20, with genuine READY delays and endpoint picking before/after. Both expired contracts reach actual Home; rigs remain unchanged until their acquired retirement. No global cadence/next-task/failure acceptance."
+      },
+      "broadGaps": [
+        {
+          "from": 1795162920181.98,
+          "through": 1795162920372.68,
+          "ms": 190.699951171875
+        },
+        {
+          "from": 1795162980215.5698,
+          "through": 1795162980396.2048,
+          "ms": 180.635009765625
+        },
+        {
+          "from": 1795162920386,
+          "through": 1795162920557.24,
+          "ms": 171.239990234375
+        },
+        {
+          "from": 1795162980415.535,
+          "through": 1795162980529.05,
+          "ms": 113.51513671875
+        },
+        {
+          "from": 1795162920582.055,
+          "through": 1795162920691.835,
+          "ms": 109.780029296875
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795162878977.1702,
+            "image": ".cache/native-post-settlement-home-reconciled-olderMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795162879173.75
+          },
+          {
+            "label": "ordinary-post-settlement-home-arrived",
+            "mode": "visual",
+            "startedAt": 1795162947426.9102,
+            "image": ".cache/native-post-settlement-home-reconciled-olderMale-ordinary-post-settlement-home-arrived.png",
+            "finishedAt": 1795162947557.8352
+          },
+          {
+            "label": "ordinary-post-settlement-home-absence",
+            "mode": "visual",
+            "startedAt": 1795163005539.745,
+            "image": ".cache/native-post-settlement-home-reconciled-olderMale-ordinary-post-settlement-home-absence.png",
+            "finishedAt": 1795163005685.8352
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100003"
+      },
+      "scope": "Functional ordinary lifecycle and identity, not global cadence or 3123 recovery acceptance."
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followHome": true,
+      "output": ".cache/native-post-settlement-home-reconciled-olderFemale.json",
+      "log": ".cache/native-post-settlement-home-reconciled-olderFemale.log",
+      "startedAt": "2026-11-20T08:23:47.643Z",
+      "finishedAt": "2026-11-20T08:27:45.767Z",
+      "wallMs": 238124,
+      "exitCode": 0,
+      "receiptSha256": "c5016cfe7403d472edb94fe3fd6df26986584b71b965b1767d17c3b38e2338c4",
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "home": {
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 17,
+          "at": 1795163191546.2249,
+          "family": "home-route",
+          "binding": {
+            "kind": "native-home-route-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "reference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "actorId": 1000000,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 28,
+                "requestedAt": 149.99999999995703,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 6
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "ticket": 33,
+                "effectiveTime": 152.15999999995813
+              },
+              "sourceControlSequence": 28,
+              "endTime": 172.9506449900471
+            },
+            "preparedReference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "actorId": 1000000,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 28,
+                "requestedAt": 149.99999999995703,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 6
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "ticket": 32,
+                "effectiveTime": 149.99999999995703
+              },
+              "sourceControlSequence": 28,
+              "endTime": 170.790644990046
+            },
+            "assignmentSequence": 29,
+            "gateIds": []
+          }
+        },
+        "arrivalCommit": {
+          "kind": "birth-resource-committed",
+          "id": 19,
+          "at": 1795163215229.4648,
+          "family": "home-arrival",
+          "binding": {
+            "kind": "native-home-arrival-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "retiredSequence": 31,
+            "reference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "actorId": 1000000,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 28,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 33,
+                    "effectiveTime": 152.15999999995813
+                  },
+                  "sourceControlSequence": 28,
+                  "endTime": 172.9506449900471
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "actorId": 1000000,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 28,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 32,
+                    "effectiveTime": 149.99999999995703
+                  },
+                  "sourceControlSequence": 28,
+                  "endTime": 170.790644990046
+                },
+                "assignmentSequence": 29,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "ticket": 36,
+                "effectiveTime": 175.07999999996986
+              },
+              "sourceControlSequence": 30,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            },
+            "preparedReference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "actorId": 1000000,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 28,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 33,
+                    "effectiveTime": 152.15999999995813
+                  },
+                  "sourceControlSequence": 28,
+                  "endTime": 172.9506449900471
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "actorId": 1000000,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 28,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 6
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 32,
+                    "effectiveTime": 149.99999999995703
+                  },
+                  "sourceControlSequence": 28,
+                  "endTime": 170.790644990046
+                },
+                "assignmentSequence": 29,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                "nativeSession": 1,
+                "ticket": 35,
+                "effectiveTime": 172.95999999996877
+              },
+              "sourceControlSequence": 30,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            }
+          }
+        },
+        "retirements": [
+          {
+            "root": 606,
+            "actorId": 900011,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 21,
+              "at": 1795163241769.695,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 33,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 30,
+                        "requestedAt": 152.51999999995832,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": 0.7759265899658203,
+                          "z": 2.1798853874206543,
+                          "yaw": 0.3419641510764521,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 49.89081954300132,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 38,
+                        "effectiveTime": 177.1199999999709
+                      },
+                      "sourceControlSequence": 31,
+                      "endTime": 202.64795276045072
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 30,
+                        "requestedAt": 152.51999999995832,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": 0.7759265899658203,
+                          "z": 2.1798853874206543,
+                          "yaw": 0.3419641510764521,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 49.89081954300132,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 37,
+                        "effectiveTime": 175.09999999996987
+                      },
+                      "sourceControlSequence": 31,
+                      "endTime": 200.62795276044966
+                    },
+                    "assignmentSequence": 32,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 40,
+                    "effectiveTime": 202.67999999998398
+                  },
+                  "sourceControlSequence": 32,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 88.18274868372103,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 30,
+                        "requestedAt": 152.51999999995832,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": 0.7759265899658203,
+                          "z": 2.1798853874206543,
+                          "yaw": 0.3419641510764521,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 49.89081954300132,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 38,
+                        "effectiveTime": 177.1199999999709
+                      },
+                      "sourceControlSequence": 31,
+                      "endTime": 202.64795276045072
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 30,
+                        "requestedAt": 152.51999999995832,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": 0.7759265899658203,
+                          "z": 2.1798853874206543,
+                          "yaw": 0.3419641510764521,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 49.89081954300132,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 37,
+                        "effectiveTime": 175.09999999996987
+                      },
+                      "sourceControlSequence": 31,
+                      "endTime": 200.62795276044966
+                    },
+                    "assignmentSequence": 32,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 39,
+                    "effectiveTime": 202.65999999998397
+                  },
+                  "sourceControlSequence": 32,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 88.18274868372103,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          },
+          {
+            "root": 713,
+            "actorId": 1000000,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 19,
+              "at": 1795163215229.4648,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 31,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000000,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 1000000,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 28,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 33,
+                        "effectiveTime": 152.15999999995813
+                      },
+                      "sourceControlSequence": 28,
+                      "endTime": 172.9506449900471
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000000,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 1000000,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 28,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 32,
+                        "effectiveTime": 149.99999999995703
+                      },
+                      "sourceControlSequence": 28,
+                      "endTime": 170.790644990046
+                    },
+                    "assignmentSequence": 29,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 36,
+                    "effectiveTime": 175.07999999996986
+                  },
+                  "sourceControlSequence": 30,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000000,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000000,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 1000000,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 28,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 33,
+                        "effectiveTime": 152.15999999995813
+                      },
+                      "sourceControlSequence": 28,
+                      "endTime": 172.9506449900471
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000000,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "actorId": 1000000,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 28,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "session": 1,
+                        "slot": 1,
+                        "generation": 6
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                        "nativeSession": 1,
+                        "ticket": 32,
+                        "effectiveTime": 149.99999999995703
+                      },
+                      "sourceControlSequence": 28,
+                      "endTime": 170.790644990046
+                    },
+                    "assignmentSequence": 29,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "16e73e78-aef5-42a9-bf88-3c629fb7091e/1",
+                    "nativeSession": 1,
+                    "ticket": 35,
+                    "effectiveTime": 172.95999999996877
+                  },
+                  "sourceControlSequence": 30,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          }
+        ],
+        "notSelectableIds": [
+          "worker-1000000",
+          "worker-900011"
+        ],
+        "drawFrames": 55,
+        "absenceDrawFrames": 63,
+        "blocks": [
+          {
+            "kind": "birth-block-end",
+            "stage": "post-settlement-home-ready",
+            "start": 1795163187897.805,
+            "end": 1795163189697.82,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.72000000000088,
+            "maxGapMs": 33.465087890625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-commit",
+            "start": 1795163189745.95,
+            "end": 1795163191545.96,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000008697,
+            "maxGapMs": 33.419921875
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-ready",
+            "start": 1795163211523.025,
+            "end": 1795163213323.04,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000008697,
+            "maxGapMs": 33.425048828125
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-commit",
+            "start": 1795163213429.015,
+            "end": 1795163215229.025,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000008697,
+            "maxGapMs": 33.425048828125
+          }
+        ],
+        "finalWorkers": [
+          {
+            "id": "worker-900011",
+            "status": "home"
+          },
+          {
+            "id": "worker-1000000",
+            "status": "home"
+          }
+        ],
+        "scope": "Same actual paid hire and delivered Idle body through ordinary contract Home18 and prepared absence20, with genuine READY delays and endpoint picking before/after. Both expired contracts reach actual Home; rigs remain unchanged until their acquired retirement. No global cadence/next-task/failure acceptance."
+      },
+      "broadGaps": [
+        {
+          "from": 1795163160216.35,
+          "through": 1795163160517.425,
+          "ms": 301.074951171875
+        },
+        {
+          "from": 1795163180250.09,
+          "through": 1795163180441.44,
+          "ms": 191.349853515625
+        },
+        {
+          "from": 1795163180050.81,
+          "through": 1795163180236.71,
+          "ms": 185.89990234375
+        },
+        {
+          "from": 1795163220216.615,
+          "through": 1795163220385.0051,
+          "ms": 168.39013671875
+        },
+        {
+          "from": 1795163180483.09,
+          "through": 1795163180621.53,
+          "ms": 138.43994140625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795163091530.91,
+            "image": ".cache/native-post-settlement-home-reconciled-olderFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795163091739.855
+          },
+          {
+            "label": "ordinary-post-settlement-home-arrived",
+            "mode": "visual",
+            "startedAt": 1795163211376.575,
+            "image": ".cache/native-post-settlement-home-reconciled-olderFemale-ordinary-post-settlement-home-arrived.png",
+            "finishedAt": 1795163211520.9248
+          },
+          {
+            "label": "ordinary-post-settlement-home-absence",
+            "mode": "visual",
+            "startedAt": 1795163242180.805,
+            "image": ".cache/native-post-settlement-home-reconciled-olderFemale-ordinary-post-settlement-home-absence.png",
+            "finishedAt": 1795163242322.4949
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000002",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99997"
+      },
+      "scope": "Functional ordinary lifecycle and identity, not global cadence or 3123 recovery acceptance."
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followHome": true,
+      "output": ".cache/native-post-settlement-home-reconciled-youngMale.json",
+      "log": ".cache/native-post-settlement-home-reconciled-youngMale.log",
+      "startedAt": "2026-11-20T08:27:45.804Z",
+      "finishedAt": "2026-11-20T08:30:47.426Z",
+      "wallMs": 181622,
+      "exitCode": 0,
+      "receiptSha256": "2c94067c704bd7b3df7180a297b222d8124e96a4b35d869274011ca26014be07",
+      "retained": 585,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "home": {
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 12,
+          "at": 1795163378656.6902,
+          "family": "home-route",
+          "binding": {
+            "kind": "native-home-route-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "reference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 20,
+                "requestedAt": 99.99999999995134,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 8
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "ticket": 23,
+                "effectiveTime": 102.25999999995089
+              },
+              "sourceControlSequence": 20,
+              "endTime": 123.05064499003987
+            },
+            "preparedReference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 20,
+                "requestedAt": 99.99999999995134,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 8
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "ticket": 22,
+                "effectiveTime": 99.99999999995134
+              },
+              "sourceControlSequence": 20,
+              "endTime": 120.7906449900403
+            },
+            "assignmentSequence": 21,
+            "gateIds": []
+          }
+        },
+        "arrivalCommit": {
+          "kind": "birth-resource-committed",
+          "id": 13,
+          "at": 1795163402269.26,
+          "family": "home-arrival",
+          "binding": {
+            "kind": "native-home-arrival-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "retiredSequence": 22,
+            "reference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 20,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 8
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 23,
+                    "effectiveTime": 102.25999999995089
+                  },
+                  "sourceControlSequence": 20,
+                  "endTime": 123.05064499003987
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 20,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 8
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 22,
+                    "effectiveTime": 99.99999999995134
+                  },
+                  "sourceControlSequence": 20,
+                  "endTime": 120.7906449900403
+                },
+                "assignmentSequence": 21,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "ticket": 25,
+                "effectiveTime": 125.3599999999463
+              },
+              "sourceControlSequence": 21,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            },
+            "preparedReference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 20,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 8
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 23,
+                    "effectiveTime": 102.25999999995089
+                  },
+                  "sourceControlSequence": 20,
+                  "endTime": 123.05064499003987
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 20,
+                    "requestedAt": 99.99999999995134,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 8
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 22,
+                    "effectiveTime": 99.99999999995134
+                  },
+                  "sourceControlSequence": 20,
+                  "endTime": 120.7906449900403
+                },
+                "assignmentSequence": 21,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                "nativeSession": 1,
+                "ticket": 24,
+                "effectiveTime": 123.05999999994675
+              },
+              "sourceControlSequence": 21,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            }
+          }
+        },
+        "retirements": [
+          {
+            "root": 644,
+            "actorId": 900011,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 15,
+              "at": 1795163425079.49,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 24,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 19,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -0.800000011920929,
+                          "z": 0.20000000298023224,
+                          "yaw": 0.7853981261445445,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 39.85511863698224,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 27,
+                        "effectiveTime": 127.3199999999459
+                      },
+                      "sourceControlSequence": 22,
+                      "endTime": 149.1400794659068
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 19,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -0.800000011920929,
+                          "z": 0.20000000298023224,
+                          "yaw": 0.7853981261445445,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 39.85511863698224,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 26,
+                        "effectiveTime": 125.37999999994629
+                      },
+                      "sourceControlSequence": 22,
+                      "endTime": 147.20007946590718
+                    },
+                    "assignmentSequence": 23,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 29,
+                    "effectiveTime": 149.1799999999566
+                  },
+                  "sourceControlSequence": 23,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 72.58523783592358,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 19,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -0.800000011920929,
+                          "z": 0.20000000298023224,
+                          "yaw": 0.7853981261445445,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 39.85511863698224,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 27,
+                        "effectiveTime": 127.3199999999459
+                      },
+                      "sourceControlSequence": 22,
+                      "endTime": 149.1400794659068
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 19,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -0.800000011920929,
+                          "z": 0.20000000298023224,
+                          "yaw": 0.7853981261445445,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 39.85511863698224,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 26,
+                        "effectiveTime": 125.37999999994629
+                      },
+                      "sourceControlSequence": 22,
+                      "endTime": 147.20007946590718
+                    },
+                    "assignmentSequence": 23,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 28,
+                    "effectiveTime": 149.1599999999566
+                  },
+                  "sourceControlSequence": 23,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 72.58523783592358,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          },
+          {
+            "root": 720,
+            "actorId": 1000001,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 13,
+              "at": 1795163402269.26,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 22,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 20,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 8
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 23,
+                        "effectiveTime": 102.25999999995089
+                      },
+                      "sourceControlSequence": 20,
+                      "endTime": 123.05064499003987
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 20,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 8
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 22,
+                        "effectiveTime": 99.99999999995134
+                      },
+                      "sourceControlSequence": 20,
+                      "endTime": 120.7906449900403
+                    },
+                    "assignmentSequence": 21,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 25,
+                    "effectiveTime": 125.3599999999463
+                  },
+                  "sourceControlSequence": 21,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 20,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 8
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 23,
+                        "effectiveTime": 102.25999999995089
+                      },
+                      "sourceControlSequence": 20,
+                      "endTime": 123.05064499003987
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 20,
+                        "requestedAt": 99.99999999995134,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 8
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                        "nativeSession": 1,
+                        "ticket": 22,
+                        "effectiveTime": 99.99999999995134
+                      },
+                      "sourceControlSequence": 20,
+                      "endTime": 120.7906449900403
+                    },
+                    "assignmentSequence": 21,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "ef875657-0c9e-4726-a0d9-1942164e17fe/1",
+                    "nativeSession": 1,
+                    "ticket": 24,
+                    "effectiveTime": 123.05999999994675
+                  },
+                  "sourceControlSequence": 21,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          }
+        ],
+        "notSelectableIds": [
+          "worker-1000001",
+          "worker-900011"
+        ],
+        "drawFrames": 55,
+        "absenceDrawFrames": 61,
+        "blocks": [
+          {
+            "kind": "birth-block-end",
+            "stage": "post-settlement-home-ready",
+            "start": 1795163375003.33,
+            "end": 1795163376803.3452,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7199999999996578,
+            "maxGapMs": 33.449951171875
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-commit",
+            "start": 1795163376856.4402,
+            "end": 1795163378656.455,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.6999999999996618,
+            "maxGapMs": 35.965087890625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-ready",
+            "start": 1795163398573.52,
+            "end": 1795163400373.54,
+            "drawFrames": 50,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.5599999999996896,
+            "maxGapMs": 33.4150390625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-commit",
+            "start": 1795163400468.955,
+            "end": 1795163402268.9702,
+            "drawFrames": 48,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.5199999999996976,
+            "maxGapMs": 66.25
+          }
+        ],
+        "finalWorkers": [
+          {
+            "id": "worker-900011",
+            "status": "home"
+          },
+          {
+            "id": "worker-1000001",
+            "status": "home"
+          }
+        ],
+        "scope": "Same actual paid hire and delivered Idle body through ordinary contract Home18 and prepared absence20, with genuine READY delays and endpoint picking before/after. Both expired contracts reach actual Home; rigs remain unchanged until their acquired retirement. No global cadence/next-task/failure acceptance."
+      },
+      "broadGaps": [
+        {
+          "from": 1795163400217.175,
+          "through": 1795163400687.075,
+          "ms": 469.89990234375
+        },
+        {
+          "from": 1795163340217.05,
+          "through": 1795163340498.97,
+          "ms": 281.919921875
+        },
+        {
+          "from": 1795163340516.97,
+          "through": 1795163340649.58,
+          "ms": 132.610107421875
+        },
+        {
+          "from": 1795163340683.59,
+          "through": 1795163340815.25,
+          "ms": 131.659912109375
+        },
+        {
+          "from": 1795163326683.995,
+          "through": 1795163326751.275,
+          "ms": 67.27978515625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795163329573.0898,
+            "image": ".cache/native-post-settlement-home-reconciled-youngMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795163329775.5698
+          },
+          {
+            "label": "ordinary-post-settlement-home-arrived",
+            "mode": "visual",
+            "startedAt": 1795163398413.65,
+            "image": ".cache/native-post-settlement-home-reconciled-youngMale-ordinary-post-settlement-home-arrived.png",
+            "finishedAt": 1795163398571.645
+          },
+          {
+            "label": "ordinary-post-settlement-home-absence",
+            "mode": "visual",
+            "startedAt": 1795163425469.895,
+            "image": ".cache/native-post-settlement-home-reconciled-youngMale-ordinary-post-settlement-home-absence.png",
+            "finishedAt": 1795163425589.73
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100000"
+      },
+      "scope": "Functional ordinary lifecycle and identity, not global cadence or 3123 recovery acceptance."
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followHome": true,
+      "output": ".cache/native-post-settlement-home-reconciled-youngFemale.json",
+      "log": ".cache/native-post-settlement-home-reconciled-youngFemale.log",
+      "startedAt": "2026-11-20T08:30:47.450Z",
+      "finishedAt": "2026-11-20T08:35:15.211Z",
+      "wallMs": 267761,
+      "exitCode": 0,
+      "receiptSha256": "590da8e10a79d91dc20cefca2c07dfe941e4e1e68ae0dc1e29d840854f6f3a6b",
+      "retained": 585,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "home": {
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 16,
+          "at": 1795163612061.72,
+          "family": "home-route",
+          "binding": {
+            "kind": "native-home-route-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "reference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 27,
+                "requestedAt": 149.99999999995703,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 11
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "ticket": 31,
+                "effectiveTime": 152.2799999999582
+              },
+              "sourceControlSequence": 27,
+              "endTime": 173.07064499004716
+            },
+            "preparedReference": {
+              "kind": "native-home-route-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceRequest": {
+                "kind": "native-home-request-reference",
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "actorId": 1000001,
+                "bodyId": 2,
+                "bodyFlags": 1,
+                "requestSequence": 27,
+                "requestedAt": 149.99999999995703,
+                "profile": 1,
+                "home": {
+                  "villageId": 1,
+                  "x": -17.8,
+                  "z": 6.2
+                },
+                "pose": {
+                  "x": -6.008856296539307,
+                  "z": 16.17082405090332,
+                  "yaw": -0.051798177382495085,
+                  "radius": 0.28,
+                  "runPhase": 0,
+                  "walkPhase": 27.39330478359077,
+                  "carryPhase": 7.574856549633837,
+                  "runRemaining": 105.80409353316266
+                }
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 11
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "ticket": 30,
+                "effectiveTime": 149.99999999995703
+              },
+              "sourceControlSequence": 27,
+              "endTime": 170.790644990046
+            },
+            "assignmentSequence": 28,
+            "gateIds": []
+          }
+        },
+        "arrivalCommit": {
+          "kind": "birth-resource-committed",
+          "id": 17,
+          "at": 1795163635704.84,
+          "family": "home-arrival",
+          "binding": {
+            "kind": "native-home-arrival-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "retiredSequence": 29,
+            "reference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 27,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 11
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 31,
+                    "effectiveTime": 152.2799999999582
+                  },
+                  "sourceControlSequence": 27,
+                  "endTime": 173.07064499004716
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 27,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 11
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 30,
+                    "effectiveTime": 149.99999999995703
+                  },
+                  "sourceControlSequence": 27,
+                  "endTime": 170.790644990046
+                },
+                "assignmentSequence": 28,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "ticket": 33,
+                "effectiveTime": 175.19999999996992
+              },
+              "sourceControlSequence": 28,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            },
+            "preparedReference": {
+              "kind": "native-home-arrival-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "sourceHome": {
+                "kind": "native-home-route-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "reference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 27,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 11
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 31,
+                    "effectiveTime": 152.2799999999582
+                  },
+                  "sourceControlSequence": 27,
+                  "endTime": 173.07064499004716
+                },
+                "preparedReference": {
+                  "kind": "native-home-route-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceRequest": {
+                    "kind": "native-home-request-reference",
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "actorId": 1000001,
+                    "bodyId": 2,
+                    "bodyFlags": 1,
+                    "requestSequence": 27,
+                    "requestedAt": 149.99999999995703,
+                    "profile": 1,
+                    "home": {
+                      "villageId": 1,
+                      "x": -17.8,
+                      "z": 6.2
+                    },
+                    "pose": {
+                      "x": -6.008856296539307,
+                      "z": 16.17082405090332,
+                      "yaw": -0.051798177382495085,
+                      "radius": 0.28,
+                      "runPhase": 0,
+                      "walkPhase": 27.39330478359077,
+                      "carryPhase": 7.574856549633837,
+                      "runRemaining": 105.80409353316266
+                    }
+                  },
+                  "expectedRouteHandle": {
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "session": 1,
+                    "slot": 0,
+                    "generation": 11
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 30,
+                    "effectiveTime": 149.99999999995703
+                  },
+                  "sourceControlSequence": 27,
+                  "endTime": 170.790644990046
+                },
+                "assignmentSequence": 28,
+                "gateIds": []
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                "nativeSession": 1,
+                "ticket": 32,
+                "effectiveTime": 173.07999999996883
+              },
+              "sourceControlSequence": 28,
+              "pose": {
+                "x": -17.799999237060547,
+                "z": 6.199999809265137,
+                "yaw": 0.7854005475798287,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 58.57927226872423,
+                "carryPhase": 7.574856549633837,
+                "runRemaining": 105.80409353316266
+              },
+              "profile": 1,
+              "bodyFlags": 1
+            }
+          }
+        },
+        "retirements": [
+          {
+            "root": 644,
+            "actorId": 900011,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 19,
+              "at": 1795163689803.255,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 31,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 26,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 35,
+                        "effectiveTime": 177.39999999997104
+                      },
+                      "sourceControlSequence": 29,
+                      "endTime": 229.59115354612004
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 26,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 34,
+                        "effectiveTime": 175.21999999996993
+                      },
+                      "sourceControlSequence": 29,
+                      "endTime": 227.41115354611892
+                    },
+                    "assignmentSequence": 30,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 37,
+                    "effectiveTime": 229.63999999999777
+                  },
+                  "sourceControlSequence": 30,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 121.43755958527456,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 900011,
+                  "bodyId": 1,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 26,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 35,
+                        "effectiveTime": 177.39999999997104
+                      },
+                      "sourceControlSequence": 29,
+                      "endTime": 229.59115354612004
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 900011,
+                      "bodyId": 1,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 900011,
+                        "bodyId": 1,
+                        "bodyFlags": 1,
+                        "requestSequence": 26,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -1.5388884544372559,
+                          "z": -2.0194027423858643,
+                          "yaw": -2.880814100153855,
+                          "radius": 0.28,
+                          "runPhase": 23.25,
+                          "walkPhase": 43.150829266051055,
+                          "carryPhase": 9.5,
+                          "runRemaining": 40
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 14
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 34,
+                        "effectiveTime": 175.21999999996993
+                      },
+                      "sourceControlSequence": 29,
+                      "endTime": 227.41115354611892
+                    },
+                    "assignmentSequence": 30,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 36,
+                    "effectiveTime": 229.59999999999775
+                  },
+                  "sourceControlSequence": 30,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 23.25,
+                    "walkPhase": 121.43755958527456,
+                    "carryPhase": 9.5,
+                    "runRemaining": 40
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          },
+          {
+            "root": 720,
+            "actorId": 1000001,
+            "commit": {
+              "kind": "birth-resource-committed",
+              "id": 17,
+              "at": 1795163635704.84,
+              "family": "home-arrival",
+              "binding": {
+                "kind": "native-home-arrival-attestation",
+                "version": 1,
+                "projectionVersion": 1,
+                "retiredSequence": 29,
+                "reference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 27,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 31,
+                        "effectiveTime": 152.2799999999582
+                      },
+                      "sourceControlSequence": 27,
+                      "endTime": 173.07064499004716
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 27,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 30,
+                        "effectiveTime": 149.99999999995703
+                      },
+                      "sourceControlSequence": 27,
+                      "endTime": 170.790644990046
+                    },
+                    "assignmentSequence": 28,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 33,
+                    "effectiveTime": 175.19999999996992
+                  },
+                  "sourceControlSequence": 28,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                },
+                "preparedReference": {
+                  "kind": "native-home-arrival-reference",
+                  "version": 1,
+                  "actorId": 1000001,
+                  "bodyId": 2,
+                  "sourceHome": {
+                    "kind": "native-home-route-attestation",
+                    "version": 1,
+                    "projectionVersion": 1,
+                    "reference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 27,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 31,
+                        "effectiveTime": 152.2799999999582
+                      },
+                      "sourceControlSequence": 27,
+                      "endTime": 173.07064499004716
+                    },
+                    "preparedReference": {
+                      "kind": "native-home-route-reference",
+                      "version": 1,
+                      "actorId": 1000001,
+                      "bodyId": 2,
+                      "sourceRequest": {
+                        "kind": "native-home-request-reference",
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "actorId": 1000001,
+                        "bodyId": 2,
+                        "bodyFlags": 1,
+                        "requestSequence": 27,
+                        "requestedAt": 149.99999999995703,
+                        "profile": 1,
+                        "home": {
+                          "villageId": 1,
+                          "x": -17.8,
+                          "z": 6.2
+                        },
+                        "pose": {
+                          "x": -6.008856296539307,
+                          "z": 16.17082405090332,
+                          "yaw": -0.051798177382495085,
+                          "radius": 0.28,
+                          "runPhase": 0,
+                          "walkPhase": 27.39330478359077,
+                          "carryPhase": 7.574856549633837,
+                          "runRemaining": 105.80409353316266
+                        }
+                      },
+                      "expectedRouteHandle": {
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "session": 1,
+                        "slot": 0,
+                        "generation": 11
+                      },
+                      "worldBoundary": {
+                        "version": 1,
+                        "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                        "nativeSession": 1,
+                        "ticket": 30,
+                        "effectiveTime": 149.99999999995703
+                      },
+                      "sourceControlSequence": 27,
+                      "endTime": 170.790644990046
+                    },
+                    "assignmentSequence": 28,
+                    "gateIds": []
+                  },
+                  "worldBoundary": {
+                    "version": 1,
+                    "authorityEpoch": "f2a178f6-4ee5-49df-8269-a88ab511bb60/1",
+                    "nativeSession": 1,
+                    "ticket": 32,
+                    "effectiveTime": 173.07999999996883
+                  },
+                  "sourceControlSequence": 28,
+                  "pose": {
+                    "x": -17.799999237060547,
+                    "z": 6.199999809265137,
+                    "yaw": 0.7854005475798287,
+                    "radius": 0.28,
+                    "runPhase": 0,
+                    "walkPhase": 58.57927226872423,
+                    "carryPhase": 7.574856549633837,
+                    "runRemaining": 105.80409353316266
+                  },
+                  "profile": 1,
+                  "bodyFlags": 1
+                }
+              }
+            }
+          }
+        ],
+        "notSelectableIds": [
+          "worker-1000001",
+          "worker-900011"
+        ],
+        "drawFrames": 54,
+        "absenceDrawFrames": 68,
+        "blocks": [
+          {
+            "kind": "birth-block-end",
+            "stage": "post-settlement-home-ready",
+            "start": 1795163608406.98,
+            "end": 1795163610207.005,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.72000000000088,
+            "maxGapMs": 33.489990234375
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-commit",
+            "start": 1795163610261.5,
+            "end": 1795163612061.51,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.72000000000088,
+            "maxGapMs": 34.385009765625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-ready",
+            "start": 1795163631993.945,
+            "end": 1795163633793.96,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000008697,
+            "maxGapMs": 33.429931640625
+          },
+          {
+            "kind": "birth-block-end",
+            "stage": "home-arrival-commit",
+            "start": 1795163633893.735,
+            "end": 1795163635693.75,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000008697,
+            "maxGapMs": 33.4501953125
+          }
+        ],
+        "finalWorkers": [
+          {
+            "id": "worker-900011",
+            "status": "home"
+          },
+          {
+            "id": "worker-1000001",
+            "status": "home"
+          }
+        ],
+        "scope": "Same actual paid hire and delivered Idle body through ordinary contract Home18 and prepared absence20, with genuine READY delays and endpoint picking before/after. Both expired contracts reach actual Home; rigs remain unchanged until their acquired retirement. No global cadence/next-task/failure acceptance."
+      },
+      "broadGaps": [
+        {
+          "from": 1795163640218.1199,
+          "through": 1795163640514.9949,
+          "ms": 296.875
+        },
+        {
+          "from": 1795163640519.16,
+          "through": 1795163640688.91,
+          "ms": 169.75
+        },
+        {
+          "from": 1795163580217.94,
+          "through": 1795163580387.47,
+          "ms": 169.530029296875
+        },
+        {
+          "from": 1795163580417.865,
+          "through": 1795163580531.255,
+          "ms": 113.389892578125
+        },
+        {
+          "from": 1795163580584.5698,
+          "through": 1795163580668.27,
+          "ms": 83.7001953125
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795163511643.145,
+            "image": ".cache/native-post-settlement-home-reconciled-youngFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795163511849.025
+          },
+          {
+            "label": "ordinary-post-settlement-home-arrived",
+            "mode": "visual",
+            "startedAt": 1795163631860.46,
+            "image": ".cache/native-post-settlement-home-reconciled-youngFemale-ordinary-post-settlement-home-arrived.png",
+            "finishedAt": 1795163631991.72
+          },
+          {
+            "label": "ordinary-post-settlement-home-absence",
+            "mode": "visual",
+            "startedAt": 1795163690203.9749,
+            "image": ".cache/native-post-settlement-home-reconciled-youngFemale-ordinary-post-settlement-home-absence.png",
+            "finishedAt": 1795163690321.95
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99992"
+      },
+      "scope": "Functional ordinary lifecycle and identity, not global cadence or 3123 recovery acceptance."
+    },
+    {
+      "label": "settlement-control",
+      "profile": "olderMale",
+      "followHome": false,
+      "output": ".cache/native-post-settlement-home-reconciled-settlement-control.json",
+      "log": ".cache/native-post-settlement-home-reconciled-settlement-control.log",
+      "startedAt": "2026-11-20T08:35:15.252Z",
+      "finishedAt": "2026-11-20T08:36:32.093Z",
+      "wallMs": 76841,
+      "exitCode": 0,
+      "receiptSha256": "fc2370d1da1c2b944f60e314041f706a6dba7311bfbc5784be6eb882d5b3e748",
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "home": null,
+      "broadGaps": [
+        {
+          "from": 1795163760251.87,
+          "through": 1795163760425.705,
+          "ms": 173.8349609375
+        },
+        {
+          "from": 1795163760451.87,
+          "through": 1795163760569.08,
+          "ms": 117.2099609375
+        },
+        {
+          "from": 1795163760585.08,
+          "through": 1795163760701.0852,
+          "ms": 116.005126953125
+        },
+        {
+          "from": 1795163743351.86,
+          "through": 1795163743399.87,
+          "ms": 48.010009765625
+        },
+        {
+          "from": 1795163776285.3052,
+          "through": 1795163776331.37,
+          "ms": 46.06494140625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795163778843.5051,
+            "image": ".cache/native-post-settlement-home-reconciled-settlement-control-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795163779030.115
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100003"
+      },
+      "scope": "Functional ordinary lifecycle and identity, not global cadence or 3123 recovery acceptance."
+    }
+  ],
+  "cadenceAccepted": false,
+  "fullMigrationComplete": false
+}
