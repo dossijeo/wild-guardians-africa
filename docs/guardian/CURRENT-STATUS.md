@@ -1,6 +1,9 @@
 # Current delivery status (2026-10-29)
 
 
+Continuación e-R3/f-R4: [Cancelación de alta preparada](native-farm-birth-cancellation-20261120.md). Sin cambios de producto: respuesta Farm READY real reenviada antes/después de Home no adquiere23;13→19/18→20 conserva cuerpo2 y compañero. Comlink/Three leídos en fuente, sin dependencia/protocolo nuevos. Tres CPU nuevos y20 dirigidos pasan, cinco sintaxis; dos cancelaciones GPU conservan578/575 IDs,54 dibujos y reloj1.70–1.72s en cada bloqueo1.8s, picking/ausencia/drenaje reales. Control funcional pasa pero registra tres huecos hasta168ms: cadencia NO aceptada, atribución pendiente.688 inputs/64 nativos/16 ajenos/38 A5 exactos; regresión/build c01 heredados. Lotes/perfil compartido/fallos/cierre GPU/recuperación3.123 y demás ciclo abiertos; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Continuaciones de contratados nativos](native-farm-newborn-continuations-20261120.md). Roster acepta ausencia de caché JS de camino en23→21/22/Home/Task y conserva rechazo de conflictos/comprobantes físicos; sin campos ficticios/ABI/dependencias. Detour/Three leídos en fuente.26 casos nuevos,196 dirigidos, regresión4833/4834/364 con una omisión y build124.459s; seis sintaxis. Dos lotes GPU (mismo/perfil nuevo) adquieren cuerpos2/3 y primero22;575 IDs conservados, geometría0/18 buffers nuevos vivos,108 dibujos por bloqueo3.6s; control individual pasa. QA usa coalescencia ordinaria, cola máxima1; dos recursos tardíos sin atribución y costes/VFX pendientes, no cadencia.686 inputs/64 nativos/16 ajenos/38 A5 exactos. Destino ocupado, cancelación/fallos/recuperación3.123 y demás ciclo abiertos; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
