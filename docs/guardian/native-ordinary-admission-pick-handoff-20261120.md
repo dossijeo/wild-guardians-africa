@@ -2,6 +2,8 @@
 
 See the [technical report](native-ordinary-admission-pick-20261120.md) and [SHA-verified evidence manifest](performance/native-ordinary-admission-pick-20261120/manifest.json). This delivery is subordinate to the integrated plan. **No A5/A6/C4 or 60 fps closure.**
 
+Follow-up: [complete 60 Hz capture and remaining cadence failures](native-60fps-capture-handoff-20261120.md). The collector limitation described below is historical; commit `708eaf6cc` adds bounded gzip streaming, and STREAM1 records the full lifetime without CDP loss. Cadence still fails independently.
+
 ## Integrated changes
 
 - `f9af19d9c`: ordinary Host inspection uses the existing incremental resource budget; snapshots are pinned across yields and released/transferred on cancellation/publication. Tests: `remote-ordinary-admission-slices.test.js`.

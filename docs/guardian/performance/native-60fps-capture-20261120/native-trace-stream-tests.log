@@ -1,0 +1,90 @@
+TAP version 13
+# Subtest: an interval below 50ms is still reported against the caller target, independently of a short draw
+ok 1 - an interval below 50ms is still reported against the caller target, independently of a short draw
+  ---
+  duration_ms: 4.4585
+  ...
+# Subtest: no supplied target means no invented acceptance threshold
+ok 2 - no supplied target means no invented acceptance threshold
+  ---
+  duration_ms: 0.8245
+  ...
+# Subtest: duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+ok 3 - duplicate snapshots are not extra evidence and incomplete or misordered holds are not completed
+  ---
+  duration_ms: 3.0885
+  ...
+# Subtest: a truncated ring without whole-history instrumentation cannot substitute for the complete record
+ok 4 - a truncated ring without whole-history instrumentation cannot substitute for the complete record
+  ---
+  duration_ms: 1.4826
+  ...
+# Subtest: trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+ok 5 - trace reconciles a post-inspect tail and only terminal observation can certify its recorded lifetime
+  ---
+  duration_ms: 3.6581
+  ...
+# Subtest: all ordered admission stages are required, including internal work between start and admitted
+ok 6 - all ordered admission stages are required, including internal work between start and admitted
+  ---
+  duration_ms: 3.0529
+  ...
+# Subtest: duplicated or reordered stages cannot masquerade as a complete admission
+ok 7 - duplicated or reordered stages cannot masquerade as a complete admission
+  ---
+  duration_ms: 0.2896
+  ...
+# Subtest: unknown stages and invalid or reversed timestamps are incomplete evidence
+ok 8 - unknown stages and invalid or reversed timestamps are incomplete evidence
+  ---
+  duration_ms: 0.4172
+  ...
+# Subtest: trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+ok 9 - trace capacity is explicit and bounded without dropping categories or switching to a rolling recording
+  ---
+  duration_ms: 5.8355
+  ...
+# Subtest: compressed binary chunks preserve the original trace with one export and a closed stream
+ok 10 - compressed binary chunks preserve the original trace with one export and a closed stream
+  ---
+  duration_ms: 33.6645
+  ...
+# Subtest: a lossy recording remains a failure while preserving its complete export and loss metadata
+ok 11 - a lossy recording remains a failure while preserving its complete export and loss metadata
+  ---
+  duration_ms: 19.8164
+  ...
+# Subtest: an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+not ok 12 - an interrupted export closes its stream and cannot look like complete evidence even with dataLossOccurred false
+  ---
+  duration_ms: 14.142
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-audit-trace.test.js:46:1'
+  failureType: 'hookFailed'
+  error: "ENOTEMPTY: directory not empty, rmdir 'C:\\Users\\Gabriel\\AppData\\Local\\Temp\\wg-native-trace-9yRNXi'"
+  code: 'ENOTEMPTY'
+  stack: |-
+    Object.rmdirSync (node:fs:1215:11)
+    _rmdirSync (node:internal/fs/rimraf:262:21)
+    rimrafSync (node:internal/fs/rimraf:195:7)
+    Object.rmSync (node:fs:1264:10)
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-audit-trace.test.js:12:110)
+    TestHook.runInAsyncScope (node:async_hooks:206:9)
+    TestHook.run (node:internal/test_runner/test:796:25)
+    TestHook.run (node:internal/test_runner/test:1041:18)
+    TestHook.run (node:internal/util:524:20)
+    Test.runHook (node:internal/test_runner/test:723:20)
+  ...
+# Subtest: missing streams and existing evidence are rejected rather than replaced
+ok 13 - missing streams and existing evidence are rejected rather than replaced
+  ---
+  duration_ms: 12.2153
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 12
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 302.6344

@@ -1,0 +1,1392 @@
+{
+  "at": "2026-11-20T18:44:37.436056+00:00",
+  "scope": "Root independent read of compact reports and completion metadata; no new full-trace parse or physical presentation acceptance.",
+  "targetMs": 16.666666666666668,
+  "coverage": {
+    "tracedLifetime": true,
+    "from": 1795199884601.16,
+    "to": 1795199968276.38,
+    "terminal": "retired-drained",
+    "terminalOpportunities": 5008,
+    "terminalSubmittedDraws": 4964,
+    "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+  },
+  "traceComplete": {
+    "dataLossOccurred": false,
+    "traceFormat": "json",
+    "streamCompression": "gzip",
+    "browserVersion": "157.0.4341.60",
+    "options": {
+      "traceConfig": {
+        "recordMode": "recordUntilFull",
+        "traceBufferSizeInKb": 524288,
+        "includedCategories": [
+          "toplevel",
+          "blink",
+          "blink.user_timing",
+          "devtools.timeline",
+          "v8.execute",
+          "gpu",
+          "viz",
+          "cc",
+          "benchmark",
+          "disabled-by-default-gpu.dawn"
+        ]
+      },
+      "transferMode": "ReturnAsStream",
+      "streamFormat": "json",
+      "streamCompression": "gzip",
+      "bufferUsageReportingInterval": 1000
+    },
+    "peakBufferUsage": 0.3897556662559509,
+    "usageReports": 121,
+    "collectionComplete": true,
+    "tracePath": ".cache/native-ordinary-60hz-stream1.trace.json.gz",
+    "exportedBytes": 84124541,
+    "sha256": "9ca03333628e9674eeeb4678f1bcd7c45b1d20f21fa1f326791e9ed659699aec"
+  },
+  "counts": {
+    "frames": 4964,
+    "opportunities": 5008,
+    "outcomes": {
+      "awaiting-prepared-frame": 32,
+      "submitted": 4962,
+      "mutation-hold": 2,
+      "hidden": 12
+    }
+  },
+  "triggerCounts": {
+    "raf": 4962,
+    "mutation-release": 2
+  },
+  "exceedanceCounts": {
+    "submittedDrawStarts": 2472,
+    "callbacks": 2479,
+    "draws": 0
+  },
+  "maxima": {
+    "submittedDrawStartIntervalMs": 168.275146484375,
+    "callbackIntervalMs": 168.280029296875,
+    "drawMs": 8.18505859375
+  },
+  "largestDrawStartIntervals": [
+    {
+      "at": 1795199887705.855,
+      "sequence": 4,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 168.275146484375,
+      "drawMs": 0.280029296875,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null,
+      "ordinal": 146
+    },
+    {
+      "at": 1795199924529.3499,
+      "sequence": 335,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 39.580000000000716
+      },
+      "intervalMs": 43.10986328125,
+      "drawMs": 4.0849609375,
+      "replay": true,
+      "clockElapsed": 42.80000000000122,
+      "safeUntil": 42.80000000000122,
+      "cameraVersion": null,
+      "ordinal": 2353
+    },
+    {
+      "at": 1795199892128.2449,
+      "sequence": 50,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 42.199951171875,
+      "drawMs": 1.780029296875,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null,
+      "ordinal": 410
+    },
+    {
+      "at": 1795199965456.325,
+      "sequence": 1098,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 19,
+        "effectiveTime": 71.54000000000303
+      },
+      "intervalMs": 36.8349609375,
+      "drawMs": 2.954833984375,
+      "replay": true,
+      "clockElapsed": 82.38000000000088,
+      "safeUntil": 82.38000000000088,
+      "cameraVersion": null,
+      "ordinal": 4808
+    },
+    {
+      "at": 1795199967851.095,
+      "sequence": 1104,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 23,
+        "effectiveTime": 84.20000000000051
+      },
+      "intervalMs": 31.465087890625,
+      "drawMs": 3.054931640625,
+      "replay": true,
+      "clockElapsed": 84.20000000000051,
+      "safeUntil": 84.20000000000051,
+      "cameraVersion": null,
+      "ordinal": 4951
+    },
+    {
+      "at": 1795199893248.0398,
+      "sequence": 51,
+      "trigger": "mutation-release",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 12.519999999999946
+      },
+      "intervalMs": 28.7099609375,
+      "drawMs": 3.14501953125,
+      "replay": false,
+      "clockElapsed": 12.519999999999946,
+      "safeUntil": 12.519999999999946,
+      "cameraVersion": null,
+      "ordinal": 477
+    },
+    {
+      "at": 1795199968014.25,
+      "sequence": 1106,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 23,
+        "effectiveTime": 84.20000000000051
+      },
+      "intervalMs": 27.97509765625,
+      "drawMs": 2.56494140625,
+      "replay": true,
+      "clockElapsed": 84.20000000000051,
+      "safeUntil": 84.20000000000051,
+      "cameraVersion": null,
+      "ordinal": 4960
+    },
+    {
+      "at": 1795199967763.785,
+      "sequence": 1103,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 23,
+        "effectiveTime": 84.20000000000051
+      },
+      "intervalMs": 27.510009765625,
+      "drawMs": 2.550048828125,
+      "replay": true,
+      "clockElapsed": 84.20000000000051,
+      "safeUntil": 84.20000000000051,
+      "cameraVersion": null,
+      "ordinal": 4946
+    },
+    {
+      "at": 1795199965330.285,
+      "sequence": 1098,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 19,
+        "effectiveTime": 71.54000000000303
+      },
+      "intervalMs": 27.31494140625,
+      "drawMs": 1.81005859375,
+      "replay": true,
+      "clockElapsed": 82.30000000000089,
+      "safeUntil": 82.30000000000089,
+      "cameraVersion": null,
+      "ordinal": 4801
+    },
+    {
+      "at": 1795199963413.565,
+      "sequence": 1098,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 19,
+        "effectiveTime": 71.54000000000303
+      },
+      "intervalMs": 27.294921875,
+      "drawMs": 1.675048828125,
+      "replay": true,
+      "clockElapsed": 80.46000000000126,
+      "safeUntil": 80.46000000000126,
+      "cameraVersion": null,
+      "ordinal": 4686
+    },
+    {
+      "at": 1795199925612.97,
+      "sequence": 335,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 39.580000000000716
+      },
+      "intervalMs": 26.864990234375,
+      "drawMs": 3.534912109375,
+      "replay": true,
+      "clockElapsed": 43.84000000000138,
+      "safeUntil": 43.84000000000138,
+      "cameraVersion": null,
+      "ordinal": 2418
+    },
+    {
+      "at": 1795199967679.77,
+      "sequence": 1102,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7c6112de-563b-4276-800a-657f8069fd27/1",
+        "nativeSession": 1,
+        "ticket": 23,
+        "effectiveTime": 84.20000000000051
+      },
+      "intervalMs": 26.830078125,
+      "drawMs": 2.514892578125,
+      "replay": true,
+      "clockElapsed": 84.20000000000051,
+      "safeUntil": 84.20000000000051,
+      "cameraVersion": null,
+      "ordinal": 4941
+    }
+  ],
+  "holds": [
+    {
+      "holdId": 1,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 23.849853515625,
+      "drainMs": 6.65478515625,
+      "missedOpportunities": [
+        {
+          "ordinal": 509,
+          "at": 1795199893236.045,
+          "intervalMs": 16.719970703125,
+          "outcome": "mutation-hold",
+          "holdId": 1,
+          "sequence": 50
+        }
+      ]
+    },
+    {
+      "holdId": 2,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 12.7099609375,
+      "drainMs": 2.864990234375,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 3,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 14.4248046875,
+      "drainMs": 3.044921875,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 4,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 9.010009765625,
+      "drainMs": 3.545166015625,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 5,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 7.35986328125,
+      "drainMs": 3.679931640625,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 6,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 12.150146484375,
+      "drainMs": 3.420166015625,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 7,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 4.110107421875,
+      "drainMs": 0.469970703125,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 8,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 8.919921875,
+      "drainMs": 3,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 9,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 7.905029296875,
+      "drainMs": 4.8251953125,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 10,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 9.474853515625,
+      "drainMs": 5.909912109375,
+      "missedOpportunities": []
+    },
+    {
+      "holdId": 11,
+      "complete": true,
+      "ordered": true,
+      "holdMs": 8.175048828125,
+      "drainMs": 3.815185546875,
+      "missedOpportunities": [
+        {
+          "ordinal": 4961,
+          "at": 1795199967469.625,
+          "intervalMs": 7.830078125,
+          "outcome": "mutation-hold",
+          "holdId": 11,
+          "sequence": 1099
+        }
+      ]
+    }
+  ],
+  "worstWindow": {
+    "from": 1795199887537.5798,
+    "to": 1795199887705.855,
+    "frame": {
+      "at": 1795199887705.855,
+      "sequence": 4,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 168.275146484375,
+      "drawMs": 0.280029296875,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null,
+      "ordinal": 146
+    },
+    "ordinary": [],
+    "hostTasks": [
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261009.633,
+        "ms": 0.965,
+        "cpuMs": 0.467,
+        "at": 1795199887537.482
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261010.609,
+        "ms": 0.008,
+        "cpuMs": 0.005,
+        "at": 1795199887538.4578
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261010.621,
+        "ms": 0.005,
+        "cpuMs": 0.003,
+        "at": 1795199887538.47
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261010.629,
+        "ms": 0.04,
+        "cpuMs": 0.034,
+        "at": 1795199887538.4778
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261010.671,
+        "ms": 3.653,
+        "cpuMs": 3.636,
+        "at": 1795199887538.5198
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261014.334,
+        "ms": 0.044,
+        "cpuMs": 0.037,
+        "at": 1795199887542.1829
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261014.381,
+        "ms": 3.661,
+        "cpuMs": 6.832,
+        "at": 1795199887542.23
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261018.055,
+        "ms": 0.047,
+        "cpuMs": 0.041,
+        "at": 1795199887545.9038
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261018.105,
+        "ms": 3.51,
+        "cpuMs": 3.489,
+        "at": 1795199887545.9539
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261021.625,
+        "ms": 0.05,
+        "cpuMs": 0.043,
+        "at": 1795199887549.4739
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261021.678,
+        "ms": 3.742,
+        "cpuMs": 3.723,
+        "at": 1795199887549.5269
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261025.431,
+        "ms": 0.041,
+        "cpuMs": 0.036,
+        "at": 1795199887553.2798
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261025.475,
+        "ms": 3.413,
+        "cpuMs": 3.393,
+        "at": 1795199887553.324
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261028.898,
+        "ms": 0.041,
+        "cpuMs": 0.034,
+        "at": 1795199887556.7468
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261028.942,
+        "ms": 3.465,
+        "cpuMs": 3.444,
+        "at": 1795199887556.7908
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261032.424,
+        "ms": 0.05,
+        "cpuMs": 0.045,
+        "at": 1795199887560.273
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261032.478,
+        "ms": 3.499,
+        "cpuMs": 3.45,
+        "at": 1795199887560.327
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261035.985,
+        "ms": 0.035,
+        "cpuMs": 0.03,
+        "at": 1795199887563.834
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261036.024,
+        "ms": 3.82,
+        "cpuMs": 3.797,
+        "at": 1795199887563.8728
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261039.856,
+        "ms": 0.046,
+        "cpuMs": 0.039,
+        "at": 1795199887567.7048
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261039.906,
+        "ms": 3.712,
+        "cpuMs": 3.654,
+        "at": 1795199887567.755
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261043.627,
+        "ms": 0.064,
+        "cpuMs": 0.055,
+        "at": 1795199887571.4758
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261043.694,
+        "ms": 3.747,
+        "cpuMs": 3.724,
+        "at": 1795199887571.543
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261047.458,
+        "ms": 0.047,
+        "cpuMs": 0.041,
+        "at": 1795199887575.307
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261047.509,
+        "ms": 3.49,
+        "cpuMs": 3.462,
+        "at": 1795199887575.358
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261051.009,
+        "ms": 0.043,
+        "cpuMs": 0.037,
+        "at": 1795199887578.858
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261051.055,
+        "ms": 3.773,
+        "cpuMs": 3.747,
+        "at": 1795199887578.9038
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261054.836,
+        "ms": 0.031,
+        "cpuMs": 0.026,
+        "at": 1795199887582.6848
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261054.87,
+        "ms": 2.912,
+        "cpuMs": 2.89,
+        "at": 1795199887582.719
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261057.789,
+        "ms": 0.027,
+        "cpuMs": 0.022,
+        "at": 1795199887585.638
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261057.819,
+        "ms": 0.428,
+        "cpuMs": 0.396,
+        "at": 1795199887585.668
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.698,
+        "ms": 0.105,
+        "cpuMs": 0.094,
+        "at": 1795199887594.5469
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.763,
+        "ms": 0.034,
+        "cpuMs": 0.033,
+        "at": 1795199887594.6118
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.808,
+        "ms": 0.038,
+        "cpuMs": 0.033,
+        "at": 1795199887594.657
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.848,
+        "ms": 0.029,
+        "cpuMs": 0.023,
+        "at": 1795199887594.6968
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.88,
+        "ms": 0.02,
+        "cpuMs": 0.015,
+        "at": 1795199887594.7288
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261066.901,
+        "ms": 0.154,
+        "cpuMs": 0.148,
+        "at": 1795199887594.7498
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.06,
+        "ms": 0.098,
+        "cpuMs": 0.091,
+        "at": 1795199887594.909
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.096,
+        "ms": 0.056,
+        "cpuMs": 0.055,
+        "at": 1795199887594.9448
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.161,
+        "ms": 0.058,
+        "cpuMs": 0.049,
+        "at": 1795199887595.0098
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.189,
+        "ms": 0.025,
+        "cpuMs": 0.023,
+        "at": 1795199887595.0378
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.222,
+        "ms": 0.067,
+        "cpuMs": 0.062,
+        "at": 1795199887595.0708
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.248,
+        "ms": 0.037,
+        "cpuMs": 0.035,
+        "at": 1795199887595.097
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.292,
+        "ms": 0.059,
+        "cpuMs": 0.051,
+        "at": 1795199887595.1409
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.318,
+        "ms": 0.027,
+        "cpuMs": 0.025,
+        "at": 1795199887595.167
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.354,
+        "ms": 0.054,
+        "cpuMs": 0.047,
+        "at": 1795199887595.203
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.379,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887595.2278
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.411,
+        "ms": 0.061,
+        "cpuMs": 0.054,
+        "at": 1795199887595.2598
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.433,
+        "ms": 0.034,
+        "cpuMs": 0.032,
+        "at": 1795199887595.282
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.475,
+        "ms": 0.057,
+        "cpuMs": 0.049,
+        "at": 1795199887595.324
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.504,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887595.3528
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.535,
+        "ms": 0.053,
+        "cpuMs": 0.047,
+        "at": 1795199887595.3838
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.56,
+        "ms": 0.024,
+        "cpuMs": 0.023,
+        "at": 1795199887595.409
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.592,
+        "ms": 0.061,
+        "cpuMs": 0.054,
+        "at": 1795199887595.441
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.614,
+        "ms": 0.034,
+        "cpuMs": 0.032,
+        "at": 1795199887595.463
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.656,
+        "ms": 0.061,
+        "cpuMs": 0.054,
+        "at": 1795199887595.505
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.684,
+        "ms": 0.028,
+        "cpuMs": 0.026,
+        "at": 1795199887595.533
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.72,
+        "ms": 0.053,
+        "cpuMs": 0.046,
+        "at": 1795199887595.5688
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.744,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887595.5928
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.776,
+        "ms": 0.063,
+        "cpuMs": 0.056,
+        "at": 1795199887595.6248
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.798,
+        "ms": 0.036,
+        "cpuMs": 0.034,
+        "at": 1795199887595.647
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.842,
+        "ms": 0.054,
+        "cpuMs": 0.047,
+        "at": 1795199887595.691
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.868,
+        "ms": 0.023,
+        "cpuMs": 0.022,
+        "at": 1795199887595.7168
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.898,
+        "ms": 0.058,
+        "cpuMs": 0.05,
+        "at": 1795199887595.7468
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.928,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887595.7769
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.959,
+        "ms": 0.06,
+        "cpuMs": 0.053,
+        "at": 1795199887595.8079
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261067.981,
+        "ms": 0.033,
+        "cpuMs": 0.031,
+        "at": 1795199887595.8298
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.022,
+        "ms": 0.053,
+        "cpuMs": 0.045,
+        "at": 1795199887595.8708
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.047,
+        "ms": 0.023,
+        "cpuMs": 0.021,
+        "at": 1795199887595.896
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.078,
+        "ms": 0.052,
+        "cpuMs": 0.044,
+        "at": 1795199887595.9268
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.102,
+        "ms": 0.023,
+        "cpuMs": 0.021,
+        "at": 1795199887595.951
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.132,
+        "ms": 0.062,
+        "cpuMs": 0.054,
+        "at": 1795199887595.981
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.154,
+        "ms": 0.035,
+        "cpuMs": 0.033,
+        "at": 1795199887596.003
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.196,
+        "ms": 0.053,
+        "cpuMs": 0.047,
+        "at": 1795199887596.045
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.221,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887596.0698
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.252,
+        "ms": 0.055,
+        "cpuMs": 0.048,
+        "at": 1795199887596.1008
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.279,
+        "ms": 0.023,
+        "cpuMs": 0.021,
+        "at": 1795199887596.128
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.31,
+        "ms": 0.063,
+        "cpuMs": 0.057,
+        "at": 1795199887596.159
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.332,
+        "ms": 0.036,
+        "cpuMs": 0.035,
+        "at": 1795199887596.181
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.375,
+        "ms": 0.056,
+        "cpuMs": 0.048,
+        "at": 1795199887596.2239
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.402,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887596.251
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.433,
+        "ms": 0.054,
+        "cpuMs": 0.046,
+        "at": 1795199887596.282
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.457,
+        "ms": 0.024,
+        "cpuMs": 0.022,
+        "at": 1795199887596.306
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.49,
+        "ms": 0.123,
+        "cpuMs": 0.108,
+        "at": 1795199887596.3389
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.538,
+        "ms": 0.068,
+        "cpuMs": 0.067,
+        "at": 1795199887596.387
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.617,
+        "ms": 0.092,
+        "cpuMs": 0.085,
+        "at": 1795199887596.4658
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.664,
+        "ms": 0.039,
+        "cpuMs": 0.038,
+        "at": 1795199887596.513
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.713,
+        "ms": 0.086,
+        "cpuMs": 0.08,
+        "at": 1795199887596.5618
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.751,
+        "ms": 0.042,
+        "cpuMs": 0.041,
+        "at": 1795199887596.5999
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.804,
+        "ms": 0.1,
+        "cpuMs": 0.094,
+        "at": 1795199887596.6528
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.839,
+        "ms": 0.058,
+        "cpuMs": 0.057,
+        "at": 1795199887596.688
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.908,
+        "ms": 0.073,
+        "cpuMs": 0.067,
+        "at": 1795199887596.7568
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.949,
+        "ms": 0.025,
+        "cpuMs": 0.024,
+        "at": 1795199887596.7979
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261068.986,
+        "ms": 0.04,
+        "cpuMs": 0.033,
+        "at": 1795199887596.835
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.029,
+        "ms": 0.023,
+        "cpuMs": 0.019,
+        "at": 1795199887596.878
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.055,
+        "ms": 0.024,
+        "cpuMs": 0.021,
+        "at": 1795199887596.9038
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.082,
+        "ms": 0.071,
+        "cpuMs": 0.068,
+        "at": 1795199887596.931
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.156,
+        "ms": 0.026,
+        "cpuMs": 0.021,
+        "at": 1795199887597.005
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.185,
+        "ms": 0.023,
+        "cpuMs": 0.019,
+        "at": 1795199887597.034
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.21,
+        "ms": 0.025,
+        "cpuMs": 0.02,
+        "at": 1795199887597.0588
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.237,
+        "ms": 0.016,
+        "cpuMs": 0.012,
+        "at": 1795199887597.086
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.255,
+        "ms": 0.152,
+        "cpuMs": 0.146,
+        "at": 1795199887597.1038
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.411,
+        "ms": 0.042,
+        "cpuMs": 0.036,
+        "at": 1795199887597.2598
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.456,
+        "ms": 0.032,
+        "cpuMs": 0.026,
+        "at": 1795199887597.305
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.499,
+        "ms": 0.036,
+        "cpuMs": 0.03,
+        "at": 1795199887597.348
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261069.594,
+        "ms": 0.036,
+        "cpuMs": 0.029,
+        "at": 1795199887597.4429
+      },
+      {
+        "name": "ThreadControllerImpl::RunTask",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261177.863,
+        "ms": 0.036,
+        "cpuMs": 0.029,
+        "at": 1795199887705.712
+      },
+      {
+        "name": "RunMicrotasks",
+        "pid": 19056,
+        "tid": 10716,
+        "traceAt": 616261177.902,
+        "ms": 0.614,
+        "cpuMs": 0.511,
+        "at": 1795199887705.751
+      }
+    ]
+  },
+  "ordinarySequences": 1096,
+  "incompleteSequences": []
+}
