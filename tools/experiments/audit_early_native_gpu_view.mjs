@@ -41,22 +41,22 @@ async function auditRetainedMainRecovery(mode){
   const meta=()=>page.evaluate(()=>({ui:globalThis.__retainedUiIds?.(),runtime:globalThis.wildGuardiansWorkerQa?.(),notices:globalThis.__retainedNotices??[],authorityFailures:globalThis.__retainedAuthorityFailures??[],frames:globalThis.__retainedFrameNotices??[],clients:globalThis.__retainedClientOwners,disposals:globalThis.__retainedDisposals??[]}));
   // Metadata and selection of the inspect target must share one browser turn.
   // A previous meta() result may refer to the owner removed by device loss.
-  const inspect=(stableOnly=false)=>page.evaluate(async stableOnly=>{
+  const inspect=(stableOnly=false,excludedClient=null)=>page.evaluate(async ({stableOnly,excludedClient})=>{
    const ui=globalThis.__retainedUiIds?.(),runtime=globalThis.wildGuardiansWorkerQa?.();
-   const eligible=(u,r)=>u?.hasCurrent&&!u.pending&&r?.screen==='game'&&!r.status?.visualDispatchBlocked&&r.status?.recoveryBaseSequence&&r.status.recoveryJournal?.candidate===null;
+   const eligible=(u,r)=>u?.hasCurrent&&u.client!==excludedClient&&!u.pending&&r?.screen==='game'&&!r.status?.visualDispatchBlocked&&r.status?.recoveryBaseSequence&&r.status.recoveryJournal?.candidate===null;
    if(stableOnly&&!eligible(ui,runtime))return null;
    let timer;let renderer;
    try{renderer=await Promise.race([globalThis.wildGuardiansWebGpuWorldQa(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('GPU inspection deadline')),5000);})]);}finally{clearTimeout(timer);}
    const afterUi=globalThis.__retainedUiIds?.(),afterRuntime=globalThis.wildGuardiansWorkerQa?.();
    if(stableOnly&&(!eligible(afterUi,afterRuntime)||afterUi.binding!==ui.binding||afterUi.client!==ui.client||afterUi.canvas!==ui.canvas))return null;
    return {ui:afterUi,renderer,runtime:afterRuntime,clients:globalThis.__retainedClientOwners,frames:globalThis.__retainedFrameNotices??[]};
-  },stableOnly);
-  async function waitStable(label){
+  },{stableOnly,excludedClient});
+  async function waitStable(label,excludedClient=null){
    let signature=null,since=0,last;const deadline=Date.now()+180000;
    for(;;){
     const m=await meta();
     if(m.authorityFailures.length||m.notices.some(n=>n.loadingFailure)||m.runtime?.status?.fault||m.runtime?.status?.recoveryFault)throw Error('Ordinary source/UI failed: '+JSON.stringify(m));
-    const sample=await inspect(true);
+    const sample=await inspect(true,excludedClient);
     if(sample){
      last=sample;const r=last.renderer,d=r?.drawExecution,c=d?.consumer,a=r?.preparation?.admission,f=r?.farCoverage,g=r?.grass;
      const ready=!!c&&!!a&&r.state.sequence>=last.runtime.status.confirmedSequence&&r.preparation.timeline.pending===0&&!a.active&&a.queued===0&&c.failed===false&&c.gpuErrors===0&&r.props?.ready===true&&(!g||g.pending===0&&g.generating===0)&&(!f||f.pending===null);
@@ -79,7 +79,9 @@ async function auditRetainedMainRecovery(mode){
     if(i===1){await page.locator('#menuButton').click();const pausedDeadline=Date.now()+10000;while(!(await meta()).runtime?.pauses.includes('menu')){if(Date.now()>pausedDeadline)throw Error('UI pause was not confirmed');await page.waitForTimeout(50);}await page.locator('#resume').click();const resumeDeadline=Date.now()+10000;while((await meta()).runtime?.pauses.includes('menu')){if(Date.now()>resumeDeadline)throw Error('UI resume was not confirmed');await page.waitForTimeout(50);}report.live=await waitStable('after-ui-pause-resume');const wire=report.live.renderer.retainedPublicationKinds;if(wire[0]?.kind!=='full'||!wire.slice(1).some(p=>p.kind==='delta')||report.live.renderer.state.sequence<=after.renderer.state.sequence)throw Error('Ordinary UI did not resume full/delta publications on the new transport');}
    }
   }else{
-   report.lossRequested=true;await page.evaluate(()=>globalThis.wildGuardiansWebGpuLoseDeviceQa());report.afterLoss=await waitStable('after-real-device-loss');if(report.afterLoss.ui.client===before.ui.client||report.afterLoss.ui.canvas===before.ui.canvas||report.afterLoss.renderer.inspectionGeneration===before.renderer.inspectionGeneration||report.afterLoss.clients!==2)throw Error('Real device loss did not replace its unusable owner');report.afterLossImage=await capture('after-loss');
+   // Device loss can reject an inspection that started on the old owner before
+   // its failure reached main. This boundary only observes the replacement.
+   report.lossRequested=true;await page.evaluate(()=>globalThis.wildGuardiansWebGpuLoseDeviceQa());report.afterLoss=await waitStable('after-real-device-loss',before.ui.client);if(report.afterLoss.ui.client===before.ui.client||report.afterLoss.ui.canvas===before.ui.canvas||report.afterLoss.renderer.inspectionGeneration===before.renderer.inspectionGeneration||report.afterLoss.clients!==2)throw Error('Real device loss did not replace its unusable owner');report.afterLossImage=await capture('after-loss');
   }
   await page.locator('#menuButton').click();await page.locator('#exit').click();const drainDeadline=Date.now()+25000;for(;;){report.disposal=await meta();const rows=report.disposal.disposals;if(rows.some(value=>value.drain?.disposed===true)&&report.disposal.runtime?.screen==='menu')break;if(Date.now()>drainDeadline)throw Error('Ordinary close lacked its actual successful GPU drain receipt');await page.waitForTimeout(100);}
   report.sources=[...served];if(report.errors.length||report.httpFailures.length||report.requestErrors.length)throw Error('Unexpected browser/GPU/network diagnostics');report.ok=true;await save();console.log('Ordinary recovery audit passed',mode);

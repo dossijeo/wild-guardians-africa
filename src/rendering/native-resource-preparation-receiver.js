@@ -63,17 +63,20 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
 // graphical client. Session scope belongs to the endpoint, not to a GPU lease.
 export function attachNativeResourcePreparationEndpoint({port,session,onClosed=()=>{},...options}){
  if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session)throw TypeError('Invalid native resource endpoint');
- let closed=false,cleanupFailed=false;
+ let closed=false,cleanupFailed=false,protocolFailed=false;
  const receiver=createNativeResourcePreparationReceiver({...options,onError:error=>{cleanupFailed=true;options.onError?.(error);},postMessage:message=>port.postMessage({...message,session})});
+ function fail(error){if(closed)return;protocolFailed=true;close(String(error?.message??error));}
  function close(message='Native resource preparer closed'){
   if(closed)return;closed=true;
   try{receiver.dispose();}catch(error){cleanupFailed=true;throw error;}finally{
+   // Only explicit retirement offers the terminal callback receipt. Protocol
+   // failure must remain a failed barrier even when cleanup later finishes.
    // Closed rejects requests immediately. Retired is a separate same-session
    // callback receipt; neither message certifies GPU retirement.
    port.onmessage=port.onmessageerror=null;
-   try{port.postMessage({kind:'nativeResourcesClosed',session,message,retirementVersion:2});}catch{}
+   try{port.postMessage({kind:'nativeResourcesClosed',session,message,...(!protocolFailed?{retirementVersion:2}:{})});}catch{}
    const finish=()=>{const status=receiver.status();try{port.postMessage({kind:'nativeResourcesRetired',session,retirementVersion:2,
-     callbacksSettled:!cleanupFailed&&status.closed&&status.pending===null&&status.inflight===0});}
+     callbacksSettled:!protocolFailed&&!cleanupFailed&&status.closed&&status.pending===null&&status.inflight===0});}
     catch{}finally{port.close?.();onClosed();}};
    if(receiver.status().inflight===0)finish();else receiver.whenCallbacksSettled().then(finish);
   }
@@ -82,9 +85,9 @@ export function attachNativeResourcePreparationEndpoint({port,session,onClosed=(
   if(data?.session!==session)throw Error('Native resource session mismatch');
   if(data.kind==='nativeResourcesClose'){close();return;}
   const result=receiver.accept(data);if(result===false)throw Error('Unknown native resource request');
-  Promise.resolve(result).catch(error=>close(String(error?.message??error)));
- }catch(error){close(String(error?.message??error));}};
- port.onmessageerror=()=>close('Native resource request transfer failed');port.start?.();
- try{port.postMessage({kind:'nativeResourcesReady',session,version:1,retirementVersion:2});}catch(error){close();throw error;}
+  Promise.resolve(result).catch(fail);
+ }catch(error){fail(error);}};
+ port.onmessageerror=()=>fail(Error('Native resource request transfer failed'));port.start?.();
+ try{port.postMessage({kind:'nativeResourcesReady',session,version:1,retirementVersion:2});}catch(error){fail(error);throw error;}
  return {dispose:close,status:()=>{const status=receiver.status();return {...status,closed:closed||status.closed};}};
 }
