@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La colocación individual de centro y muro superó la prueba en NVIDIA Turing y activó una sola copia de textura de 1×64 con cero errores WebGPU. El contraste físico del fence verificó que el resto de los recursos conserva su identidad. Pasaron las 337 pruebas relacionadas y el build. La latencia del gesto y C4 siguen abiertas. [Aislamiento de la textura y recibos](native-standalone-texture-upload-20261121.md).
+
 El arrastre de muralla ya espera el frame de la secuencia confirmada. Dos ensayos en GPU física compraron y mostraron tres módulos con una sola orden cada uno. La espera medida fue de 4,33 y 4,80 s y la latencia sigue abierta. El soporte de una ruta Farm comprueba todas las regiones del corredor utilizado. Queda publicar su parada gráfica para adquirir el relevo tras el muro. [Arrastre](native-build-stroke-readiness-20261120.md) · [Relevo Farm](native-build-active-farm-20261120.md).
 
 La vista de producto se recupera de la pérdida real del dispositivo en la partida pausada de Sabana probada en NVIDIA Turing. El retiro explícito del preparador espera sus callbacks y conserva el rechazo de sesiones inválidas. La vista de reemplazo vuelve a dibujar la publicación 14 y confirma el drenaje al salir. Pasaron las 291 pruebas relacionadas y el build. Quedan el caso con productor activo y C4. [Contrato y evidencia](native-terminal-resource-recovery-20261120.md).

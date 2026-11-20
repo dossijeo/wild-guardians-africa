@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+El Host ya puede aislar una escritura CPU de textura entre dos publicaciones sin reconstruir recursos ajenos. La colocación individual de centro y muro activó una copia de 1×64 en NVIDIA Turing y terminó sin errores WebGPU. El contraste físico del Host reprodujo el rechazo anterior y verificó los texels, los IDs y el fence después del cambio. Pasaron las 337 pruebas seleccionadas y el build. La latencia del gesto y C4 siguen abiertas. [Implementación y evidencia](native-standalone-texture-upload-20261121.md).
+
 La prioridad operativa pasa a integración por familias. Primero se completa el ciclo ordinario Farm, Harvest, Carry y Home. Water y Plant pueden adaptarse reutilizando los contratos que ya se ejecutan en Game. Cada activación exige las guardas de autoridad, recursos y reloj que usa esa mecánica y mantiene sus excepciones reproducidas como dependencias. Los problemas transversales de C4 siguen abiertos y se contrastan en su propio recorrido.
 
 El Host reutiliza comprobaciones de la misma identidad dentro de cada llamada. Las comprobaciones dirigidas pasaron de 72/72/24 a 3/3/1 y la regresión de 738 pruebas y la compilación aprobaron. C4 sigue abierto tras dos capturas a 60 Hz. El primer hold fue de 23,170 y 24,505 ms y el máximo de arranque fue de 188,545 y 206,190 ms. [Contraste y validación](native-binding-cadence-20261120.md).

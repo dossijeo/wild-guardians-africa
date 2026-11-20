@@ -446,6 +446,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const entry=resources.get(key);if(!entry||entry.kind!=='createTexture')return false;
     if(active?.resourceSnapshot.get(key)!==entry&&pending?.resourceSnapshot.get(key)!==entry)return true;
     const d=entry.descriptor;
+    // Compressed copies require physical block extents at every mip. Keep
+    // them on the existing publication path until that path is covered.
+    if ((d.usage & 8) !== 0 || /^(bc|etc2|eac|astc)/.test(d.format)) return false;
+    for (const packet of [active, pending]) if (packet?.resourceSnapshot.get(key) === entry) {
+      // Never copy an output whose contents are still owned by a replay or
+      // unexecuted pass. Pending CPU writes have an exact overlay below.
+      if (packet.gpuWrittenTextures.has(key)) return false;
+      if (packet === pending && packet.operations.some(op => op.method !== 'writeTexture' && op.method !== 'submit' && writtenResources(op).has(key))) return false;
+    }
     return (d.usage&3)===3&&(d.sampleCount??1)===1&&(d.dimension??'2d')==='2d'&&typeof d.format==='string'&&!/depth|stencil/.test(d.format);
   }
   function forkPublishedTexture(key){
@@ -453,7 +462,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const entry=resources.get(key);if(active?.resourceSnapshot.get(key)!==entry&&pending?.resourceSnapshot.get(key)!==entry)return true;
     const d=entry.descriptor,size=Array.isArray(d.size)||ArrayBuffer.isView(d.size)?Array.from(d.size):[d.size.width,d.size.height??1,d.size.depthOrArrayLayers??1],value=device.createTexture(d),encoder=device.createCommandEncoder();
     for(let mipLevel=0;mipLevel<(d.mipLevelCount??1);mipLevel++)encoder.copyTextureToTexture({texture:entry.value,mipLevel},{texture:value,mipLevel},[Math.max(1,Math.floor(size[0]/2**mipLevel)),Math.max(1,Math.floor((size[1]??1)/2**mipLevel)),size[2]??1]);
-    device.queue.submit([encoder.finish()]);setResource(key,{...entry,value});rebuildDependentBindings(key);
+    device.queue.submit([encoder.finish()]);
+    // Copy the logical producer prefix, including an unpresented packet's CPU
+    // updates. Its pinned generation and immutable bindings remain unchanged.
+    if (pending?.resourceSnapshot.get(key) === entry) for (const op of pending.operations) {
+      if (op.method !== 'writeTexture' || op.args[0].texture[REF] !== key) continue;
+      const [destination, data, layout, size] = op.args;
+      device.queue.writeTexture({ ...resolve(destination), texture: value }, data, layout, size);
+    }
+    setResource(key,{...entry,value});rebuildDependentBindings(key);
     metrics.textureForks=(metrics.textureForks||0)+1;metrics.textureForkMipLevels=(metrics.textureForkMipLevels||0)+(d.mipLevelCount??1);metrics.textureForkLastResource={reference:key,label:d.label??'',size:d.size,format:d.format,usage:d.usage};return true;
   }
   function forkPublishedReadOnlyBuffer(key, entry) {
@@ -481,8 +498,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     rebuildDependentBindings(key);
     return true;
   }
-  function classifyBufferOwnership(packet) {
-    packet.unsafeForkBuffers = new Set(); packet.gpuWrittenBuffers = new Set();
+  function markTextureDestination(packet, target) {
+    const entry = packet.resourceSnapshot.get(target?.[REF]);
+    if (entry?.kind === 'createTexture') packet.gpuWrittenTextures.add(entry.id);
+    else if (entry?.kind === 'view') for (const [key, texture] of entry.dependencyEntries) {
+      if (texture.kind === 'createTexture') packet.gpuWrittenTextures.add(key);
+    }
+  }
+  function classifyResourceOwnership(packet) {
+    packet.unsafeForkBuffers = new Set();
+    packet.gpuWrittenBuffers = new Set();
+    packet.gpuWrittenTextures = new Set();
     // Explicit layouts are authoritative. Pipeline-inferred layouts have no
     // inspectable access declaration, so never infer read-only from usage bits.
     for (const group of packet.resourceSnapshot.values()) if (group.kind === 'createBindGroup') {
@@ -501,6 +527,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         : command.method === 'clearBuffer' ? command.args[0]
         : command.method === 'copyTextureToBuffer' ? command.args[1]?.buffer : null;
       if (destination?.[REF]) packet.gpuWrittenBuffers.add(destination[REF]);
+      // Fold texture destinations into the existing command traversal. Only
+      // attachment views and copy destinations can write non-storage textures;
+      // storage usage is excluded before COW, without visiting compute groups.
+      if (command.method === 'beginRenderPass') {
+        const pass = command.args[0];
+        for (const attachment of pass.colorAttachments ?? []) if (attachment) {
+          markTextureDestination(packet, attachment.view);
+          markTextureDestination(packet, attachment.resolveTarget);
+        }
+        markTextureDestination(packet, pass.depthStencilAttachment?.view);
+      } else if (command.method === 'copyTextureToTexture' || command.method === 'copyBufferToTexture') {
+        markTextureDestination(packet, command.args[1]?.texture);
+      }
     }
   }
   function rebuildDependentBindings(key) {
@@ -1193,7 +1232,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // a GPU version and rebuilding its immutable dependent bindings.
         if (!stagedOperations.length && unchangedPublishedUniformWrite(message.op)) break;
         const touchesPublishedState = [...writtenResources(message.op)].some(key => active?.resourceSnapshot?.has(key) || pending?.resourceSnapshot?.has(key));
-        const canFork = !stagedOperations.length && touchesPublishedState && message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF]);
+        const canFork = !stagedOperations.length && touchesPublishedState && (
+          (message.op.method === 'writeBuffer' && forkPublishedBuffer(message.op.args[0][REF])) ||
+          (message.op.method === 'writeTexture' && forkPublishedTexture(message.op.args[0].texture[REF]))
+        );
         if (stagedOperations.length || (touchesPublishedState && !canFork)) {
           // Preparation may touch existing resources. Such mutations belong to
           // the next atomic generation, even if Three issued them before render.
@@ -1302,7 +1344,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // no route/time and does not turn this into a physical world change.
           rejectPreparedFrame({...packet,operations:message.packet.operations},error.message,false,'native-route');break;
         }
-        classifyBufferOwnership(packet);
+        classifyResourceOwnership(packet);
         {const pause=checkpoint();if(pause)await pause;}
 
         if(routeControl?.status().clock&&packet.admittedClockBindings.some(binding=>packet.gpuWrittenBuffers.has(binding.id)))throw Error('Native presentation clocks cannot be overwritten by GPU commands');

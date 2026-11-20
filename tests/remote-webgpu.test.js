@@ -1945,3 +1945,81 @@ test('a mixed retained fence batch validates every destination before writing an
   assert.equal(new Uint32Array(pending.data.buffer)[0],0);assert.equal(f.gpu.calls.filter(v=>v[0]==='writeBuffer').length,writes);assert.equal(f.gpu.buffers.length,buffers);assert.equal(f.host.inspect().failed,false);
  }finally{f.close();}
 });
+
+// Real transport, retained Host packets and native-object lifetimes; the queue
+// records byte-level effects in the existing double, not physical GPU timing.
+for(const pendingFrame of [false,true])test(`standalone sampled texture upload fences without changing ${pendingFrame?'pending':'active'} publication`,async()=>{
+ const f=await fixture(),record=textureCopies(f);let pendingReceipt;
+ try{
+  const texture=f.client.device.createTexture({size:[4,2,2],mipLevelCount:2,usage:23,format:'rgba8unorm'}),view=texture.createView(),group=f.client.device.createBindGroup({entries:[{binding:0,resource:view}]});
+  const draw=update=>{f.client.beginFrame();update?.();const e=f.client.device.createCommandEncoder(),p=e.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});p.setPipeline(f.pipeline);p.setBindGroup(0,group);p.draw(3);p.end();f.client.device.queue.submit([e.finish()]);return f.client.endFrame();};
+  const first=draw(()=>{f.client.device.queue.writeTexture({texture},new Uint8Array(64).fill(1),{bytesPerRow:16,rowsPerImage:2},[4,2,2]);f.client.device.queue.writeTexture({texture,mipLevel:1},new Uint8Array(16).fill(2),{bytesPerRow:8,rowsPerImage:1},[2,1,2]);});await flush();await f.host.idle();f.host.present();await first;
+  const old=record.textures[0],oldGroup=record.groups[0],created=f.client.inspect().resourcesCreated;
+  if(pendingFrame){pendingReceipt=draw(()=>f.client.device.queue.writeTexture({texture,origin:[1,0,1]},new Uint8Array(8).fill(3),{bytesPerRow:8},[2,1,1]));pendingReceipt.catch(()=>{});await flush();await f.host.idle();}
+  f.client.device.queue.writeTexture({texture,origin:[2,0,1]},new Uint8Array(4).fill(9),{bytesPerRow:4},[1,1,1]);
+  f.client.device.queue.writeBuffer(f.buffer,0,new Float32Array([7]));
+  await f.client.device.queue.onSubmittedWorkDone();assert.equal(f.host.inspect().stagedOperations,0);assert.equal(record.textures.length,2);assert.equal(f.host.inspect().textureForks,1);
+  const next=record.textures[1];assert(old.levels[0].every(v=>v===1));assert(old.levels[1].every(v=>v===2));assert(next.levels[1].every(v=>v===2));assert.deepEqual(Array.from(next.levels[0].slice(32,48)),[1,1,1,1,...Array(4).fill(pendingFrame?3:1),9,9,9,9,1,1,1,1]);
+  assert.equal(oldGroup.descriptor.entries[0].resource.texture,old);assert.equal(record.groups.at(-1).descriptor.entries[0].resource.texture,next);assert.equal(f.client.inspect().resourcesCreated,created);
+  f.client.device.queue.writeTexture({texture,origin:[0,1,0]},new Uint8Array(4).fill(5),{bytesPerRow:4},[1,1,1]);await f.client.device.queue.onSubmittedWorkDone();assert.equal(record.textures.length,2,'reuse the unpublished generation');
+  if(pendingReceipt){f.host.present();await pendingReceipt;pendingReceipt=null;assert.deepEqual(Array.from(old.levels[0].slice(32,48)),[1,1,1,1,3,3,3,3,3,3,3,3,1,1,1,1]);}
+  const last=draw();await flush();await f.host.idle();f.host.present();await last;assert.deepEqual(f.errors,[]);
+ }finally{pendingReceipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
+});
+
+for(const unsafe of ['storage','attachment','pending-copy','no-copy-src'])test(`standalone texture ${unsafe} cannot bypass the publication fence`,async()=>{
+ const f=await fixture(),record=textureCopies(f);let receipt;
+ try{
+  const texture=f.client.device.createTexture({size:[2,2],usage:unsafe==='storage'?15:unsafe==='no-copy-src'?6:23,format:'rgba8unorm'}),view=texture.createView(),group=f.client.device.createBindGroup({entries:[{binding:0,resource:view}]});
+  f.client.beginFrame();f.client.device.queue.writeTexture({texture},new Uint8Array(16).fill(1),{bytesPerRow:8},[2,2]);
+  const e=f.client.device.createCommandEncoder(),p=e.beginRenderPass({colorAttachments:[{view:unsafe==='attachment'?view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});p.setPipeline(f.pipeline);p.setBindGroup(0,group);p.draw(3);p.end();
+  if(unsafe==='pending-copy')e.copyTextureToTexture({texture},{texture},[2,2]);
+  f.client.device.queue.submit([e.finish()]);receipt=f.client.endFrame();receipt.catch(()=>{});await flush();await f.host.idle();
+  if(unsafe!=='pending-copy'){f.host.present();await receipt;receipt=null;}
+  f.client.device.queue.writeTexture({texture},new Uint8Array(16).fill(9),{bytesPerRow:8},[2,2]);await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted/);
+  assert.equal(record.textures.length,1);assert.equal(f.host.inspect().textureForks??0,0);assert(f.host.inspect().stagedOperations>0);assert.equal(f.host.inspect().failed,false);
+  if(receipt){f.host.present();await receipt;receipt=null;}
+ }finally{receipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
+});
+
+test('a 1x64 upload forks only its sampled generation and retires it after its real queue fence',async()=>{
+ const f=await fixture(),record=textureCopies(f),fences=[];let receipt,originalFence;
+ try{
+  const descriptor={size:[1,64],usage:23,format:'rgba8unorm'},texture=f.client.device.createTexture(descriptor),untouched=f.client.device.createTexture(descriptor),group=f.client.device.createBindGroup({entries:[{binding:0,resource:texture.createView()},{binding:1,resource:untouched.createView()}]});
+  const draw=update=>{f.client.beginFrame();update?.();const e=f.client.device.createCommandEncoder(),p=e.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});p.setPipeline(f.pipeline);p.setBindGroup(0,group);p.draw(3);p.end();f.client.device.queue.submit([e.finish()]);return f.client.endFrame();};
+  receipt=draw(()=>{for(const t of [texture,untouched])f.client.device.queue.writeTexture({texture:t},new Uint8Array(256).fill(1),{bytesPerRow:4},[1,64]);});await flush();await f.host.idle();f.host.present();await receipt;receipt=null;
+  const old=record.textures[0],other=record.textures[1],before=f.client.inspect().resourcesCreated;
+  receipt=draw(()=>f.client.device.queue.writeTexture({texture,origin:[0,10]},new Uint8Array(4).fill(3),{bytesPerRow:4},[1,1]));receipt.catch(()=>{});await flush();await f.host.idle();
+  originalFence=f.gpu.device.queue.onSubmittedWorkDone;f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(r=>fences.push(r));
+  f.client.device.queue.writeTexture({texture,origin:[0,20]},new Uint8Array(4).fill(9),{bytesPerRow:4},[1,1]);let complete=false;const fence=f.client.device.queue.onSubmittedWorkDone().then(()=>complete=true);fence.catch(()=>{});await flush();await f.host.idle();await flush();
+  assert.equal(complete,false);assert.equal(record.textures.length,3);assert.equal(record.copies.length,1);assert.deepEqual(record.copies[0].size,[1,64,1]);assert.equal(record.textures[2].levels[0].byteLength,256);
+  assert.equal(other,record.textures[1]);assert(other.levels[0].every(v=>v===1));assert.equal(old.destroyed,undefined);assert(old.levels[0].every(v=>v===1));assert.equal(f.client.inspect().resourcesCreated,before);assert.equal(f.host.inspect().stagedOperations,0);
+  assert.equal(record.groups.at(-1).descriptor.entries[1].resource.texture,other);assert.equal(record.groups.at(-1).descriptor.entries[0].resource.texture,record.textures[2]);
+  for(const done of fences.splice(0))done();await fence;assert.equal(complete,true);assert.equal(old.destroyed,undefined,'pending snapshot still pins the old texture');
+  f.host.present();await receipt;receipt=null;assert.equal(old.destroyed,undefined,'active snapshot still owns its texture');
+  receipt=draw();await flush();await f.host.idle();f.host.present();await receipt;receipt=null;await flush();assert.equal(old.destroyed,undefined,'retirement still awaits the native queue fence');assert(fences.length>0);
+  for(const done of fences.splice(0))done();await flush();await flush();assert.equal(old.destroyed,true);assert.equal(other.destroyed,undefined);assert.equal(record.textures[2].destroyed,undefined);assert.deepEqual(f.errors,[]);
+ }finally{if(originalFence)f.gpu.device.queue.onSubmittedWorkDone=originalFence;for(const done of fences.splice(0))done();receipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
+});
+
+for(const format of ['bc1-rgba-unorm','etc2-rgba8unorm','eac-rg11unorm','astc-4x4-unorm'])test(`standalone compressed ${format} stays behind the publication fence`,async()=>{
+ const f=await fixture();let receipt;
+ try{
+  const texture=f.client.device.createTexture({size:[4,4],usage:7,format}),group=f.client.device.createBindGroup({entries:[{binding:0,resource:texture.createView()}]});
+  f.client.beginFrame();const e=f.client.device.createCommandEncoder(),p=e.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});p.setPipeline(f.pipeline);p.setBindGroup(0,group);p.draw(3);p.end();f.client.device.queue.submit([e.finish()]);receipt=f.client.endFrame();await flush();await f.host.idle();f.host.present();await receipt;receipt=null;
+  f.client.device.queue.writeTexture({texture},new Uint8Array(16),{bytesPerRow:16},[4,4]);await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted/);assert.equal(f.host.inspect().textureForks??0,0);assert.equal(f.host.inspect().failed,false);
+ }finally{receipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
+});
+
+for(const destination of ['resolve','depth','buffer-copy'])test(`texture destination classification protects ${destination} without traversing unrelated bindings`,async()=>{
+ const f=await fixture(),record=textureCopies(f);let receipt;
+ try{
+  const texture=f.client.device.createTexture({size:[2,2],usage:23,format:'rgba8unorm'}),view=texture.createView(),group=f.client.device.createBindGroup({entries:[{binding:0,resource:view}]});
+  f.client.beginFrame();f.client.device.queue.writeTexture({texture},new Uint8Array(16).fill(1),{bytesPerRow:8},[2,2]);const e=f.client.device.createCommandEncoder(),desc={colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store',...(destination==='resolve'?{resolveTarget:view}:{})}],...(destination==='depth'?{depthStencilAttachment:{view,depthLoadOp:'clear',depthStoreOp:'store'}}:{})};
+  // Descriptor doubles deliberately classify a depth destination irrespective
+  // of format; physical format validation remains the GPU's separate contract.
+  const p=e.beginRenderPass(desc);p.setPipeline(f.pipeline);p.setBindGroup(0,group);p.draw(3);p.end();if(destination==='buffer-copy'){const source=f.client.device.createBuffer({size:512,usage:12});e.copyBufferToTexture({buffer:source,bytesPerRow:256},{texture},[2,2]);}
+  f.client.device.queue.submit([e.finish()]);receipt=f.client.endFrame();receipt.catch(()=>{});await flush();await f.host.idle();
+  f.client.device.queue.writeTexture({texture},new Uint8Array(16).fill(9),{bytesPerRow:8},[2,2]);await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted/);assert.equal(record.textures.length,1);assert.equal(f.host.inspect().textureForks??0,0);assert.equal(f.host.inspect().failed,false);
+ }finally{receipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
+});
