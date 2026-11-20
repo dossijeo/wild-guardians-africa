@@ -45,7 +45,10 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_home_request(double actor,double sessio
 // retained until the existing prepared Home route acquires its real boundary.
 EMSCRIPTEN_KEEPALIVE int nav_intent_idle_cycle_home_request(double actor,double session,double cycleSequence,double village,double homeX,double homeZ){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(cycleSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
- if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ // Retarget only the retained actor, as settlement17 Home already does.
+ // The pending proposal keeps its ticket; an Idle successor becomes stale
+ // through nativeIdleCycleCurrent, without revoking a foreign proposal.
+ if(s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;if(r.idleCycleSourceSequence!=uint64_t(cycleSequence)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
  if(!nativeIdleCycleCurrent(s,intent)||intent.idleCycle->binding->cycleSequence!=uint64_t(cycleSequence))return -2;

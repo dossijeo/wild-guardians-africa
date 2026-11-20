@@ -29,10 +29,11 @@ test('current-cycle Home rejects substituted source metadata and cannot prepare 
  }finally{f.close();}
 });
 
-test('a pending barrier rejects the Game Home request without cancelling the actual Idle phase',()=>{
+test('Home supersedes its pending Idle successor while the current graphical phase keeps its body',()=>{
  const f=nativeIdleCurrentHomeFixture();try{
-  const view=f.planner.nativeIdleCycleExecution(f.actor);f.advance(view.binding.reference.worldBoundary.effectiveTime+view.binding.reference.duration-f.state.elapsed+.01);f.planner.projectNativeIdleCycle(f.state,f.worker);const next=f.planner.nativeIdleCycleNextRequest(f.actor),proposal=next.idleState.mode==='rest'?f.planner.prepareNativeIdleCycleProposal(f.actor):f.planner.prepareNativeIdleStrollProposal(f.actor);assert.equal(proposal.status,'proposed');f.worker.contractDay=f.state.day-1;
-  const worker=structuredClone(f.worker),body=f.body(1);assert.throws(()=>f.planner.requestNativeIdleHome(f.state,f.worker),/request rejected/);assert.deepEqual(f.worker,worker);assert.deepEqual(f.body(1),body);assert.equal(f.planner.nativeHomeRequestReference(f.actor),null);assert(f.idleLease.isCurrent());
+  const view=f.planner.nativeIdleCycleExecution(f.actor);f.advance(view.binding.reference.worldBoundary.effectiveTime+view.binding.reference.duration-f.state.elapsed+.01);f.planner.projectNativeIdleCycle(f.state,f.worker);const next=f.planner.nativeIdleCycleNextRequest(f.actor),rest=next.idleState.mode==='rest',proposal=rest?f.planner.prepareNativeIdleCycleProposal(f.actor):f.planner.prepareNativeIdleStrollProposal(f.actor);assert.equal(proposal.status,'proposed');f.worker.contractDay=f.state.day-1;
+  const ticket=f.tuple(),body=f.body(1),home=f.planner.requestNativeIdleHome(f.state,f.worker);assert(home);assert.equal(home.bodyId,1);assert.equal(f.worker.status,'returning');assert.equal(f.worker.nativeRouteAdmission,'pending-home-resources');assert.equal(f.worker.idleState,null);assert.deepEqual(f.tuple(),ticket);assert.deepEqual(f.body(1),body);assert(f.idleLease.isCurrent());
+  assert.equal((rest?f.planner.revalidateNativeIdleCycleProposal(proposal.proposal.ticket):f.planner.revalidateNativeIdleStrollProposal(proposal.proposal.ticket)).status,'stale');assert.deepEqual(f.planner.nativeHomeRequestReference(f.actor),home);assert.deepEqual(f.body(1),body);assert(f.idleLease.isCurrent());
  }finally{f.close();}
 });
 

@@ -23,24 +23,47 @@ antes de integrar; el comando de contexto no hace red.
 
 ## Siguiente entrega verificable
 
-Punto de referencia: `44b6d40dd` (2026-11-15). Proyección de acción nativa en
-`Game.tick` y admisión común implementadas; productor ordinario, consecuencia
-preparada y ciclo completo siguen pendientes. Restauración está en trabajo local
-de Sol: consultar `context` y sus commits antes de inferir que aún falta el código.
-e-R3/e-R4/f-R4 y todos los padres A6 permanecen abiertos según la fuente en esta
-revisión. Las fechas de esta guía no sustituyen el estado derivado.
+La vertical ordinaria Farm → Task → Harvest → Carry → Settlement → siguiente
+Task ya tiene evidencia Worker/Surface/GPU; consultar sus informes desde
+[CURRENT-STATUS](CURRENT-STATUS.md). El [origen Idle desde liquidación17](native-post-settlement-idle-source-20261120.md)
+y su [consumidor adquirido](native-post-settlement-idle-consumer-20261120.md)
+están implementados como componentes; su productor ordinario sigue desactivado.
+La [corrección de recepción y preparación](native-resource-correction-20261120.md)
+ya está publicada, con sus costes y límites documentados.
 
-El siguiente resultado de producto que hay que demostrar es **una cosecha real
-seguida de la siguiente tarea**, con el mismo propietario nativo y recursos
-admitidos antes del efecto. Antes requiere terminar las dependencias de e-R3 y
-f-R4; el orden de implementación lo decide Sol en el plan original. Hoy el
-laboratorio llega a la acción Harvest admitida como componente. No convierte
-su fuente de autoridad en la página en un productor ordinario de partida.
+El relevo causal de incorporación Farm perdió una oportunidad de dibujo bajo
+`nativeMutationHold`:49,415ms no acredita fluidez. Falta atribuir fence,
+commit y comunicación antes de corregirlo; conservar las guardas. No ampliar ni
+aceptar una dependencia cuyo defecto confirmado siga abierto. El siguiente
+avance dependiente debe partir de esa base corregida y después integrar Idle
+desde17 con interrupciones Task/Home y los cuerpos ya adquiridos. Home con una
+propuesta pendiente se entrega por separado como componente nativo, sin activar
+el productor ni aceptar GPU física. A6/A/B/C permanecen abiertos y D no se inicia.
+
+## Coordinación de incidencias de cadencia
+
+Por instrucción del usuario del20 de noviembre, el implementador de migración
+detecta y comunica las incidencias; el agente de corrección investiga, implementa
+y entrega la solución con evidencia, commits y restricciones. El implementador
+contrasta la entrega antes de construir sobre ella. El plan original conserva
+la autoridad; este reparto no cambia causalidad, identidad ni retirada.
+
+En cada aviso incluir la frecuencia/plazo objetivo y su procedencia, commit y
+cambios locales, comando/configuración y recibo/traza, intervalo y fase, tipo de
+medida (CPU, GPU, envío del Host o presentación efectiva), rutas en edición y
+jobs activos. Indicar datos ausentes; agrupar repeticiones de una causa abierta
+y comunicar agravamiento o evidencia nueva. Acordar propiedad de las rutas antes
+de modificar producción y una ventana sin suites/builds antes de medir GPU.
+
+50ms es diagnóstico, no aceptación. La mediana de callbacks no fija el objetivo
+del producto ni prueba scanout. Medir los plazos incumplidos y la variación de
+la historia y las transiciones completas según C4. El primer caso del reparto
+es el relevo causal anterior; no se rebaja ninguna guarda para ocultar su coste.
 
 | Frontera | Propietarios que debe reutilizar Sol | Evidencia disponible |
 |---|---|---|
 | Asignación/ruta/acción | `src/world/wild-engine/spatial-intent-state.cpp`, `spatial-task-execution.inc`, `spatial-task-action-proposal.inc`, `spatial-intent-bridge.js` (incluye `createEventDrivenTaskPlanner`) | `native-task-resource-requests`, `native-task-start-*`, `native-task-action-*` |
-| Proyección/consecuencia | `src/simulation/game.js`, `tasks.js`, `src/persistence/snapshots.js` | `native-task-game-execution`, `native-task-action-game-execution`; restauración en curso |
+| Proyección/consecuencia | `src/simulation/game.js`, `tasks.js`, `src/persistence/snapshots.js` | `native-task-game-execution`, `native-task-action-game-execution`; restauración y consecuencia preparadas |
 | Admisión/control/recursos | `src/world/native-resource-admission.js`, perfiles existentes; `src/simulation/native-resource-preparation-client.js`, `native-intent-control-publication.js` | `native-admission-vertical`, `native-resource-preparation-channel`, guards del catálogo |
 | Dibujo y propiedad | `src/rendering/webgpu-world-surface.js`, `webgpu-worker-roster.js`, `remote-webgpu-host.js`, `native-task-action-gpu-motion.js` | harness `native-first-task-world-owner`, `native-worker-world-owner`, lifecycle |
 
