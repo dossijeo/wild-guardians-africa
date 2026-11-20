@@ -1,0 +1,125 @@
+{
+  "base": "6d20cc23692ee7c89ac82f6edab0222e80b22260",
+  "scope": "Task25 Game request for Home and direct held-controller continuity, close Home lifecycle and Task regressions. Production build. No physical GPU.",
+  "selection": [
+    "tests/native-campaign-opening-contracts.test.js",
+    "tests/native-farm-arrived-home-control.test.js",
+    "tests/native-farm-arrived-home-graphics.test.js",
+    "tests/native-farm-arrived-home-source.test.js",
+    "tests/native-farm-moving-home-admission.test.js",
+    "tests/native-farm-moving-home-control.test.js",
+    "tests/native-farm-moving-home-graphics.test.js",
+    "tests/native-farm-moving-home-source.test.js",
+    "tests/native-farm-pending-home-control.test.js",
+    "tests/native-farm-pending-home-graphics.test.js",
+    "tests/native-farm-pending-home-ports.test.js",
+    "tests/native-farm-pending-home-source.test.js",
+    "tests/native-home-arrival-control.test.js",
+    "tests/native-home-arrival-game.test.js",
+    "tests/native-home-arrival-graphics.test.js",
+    "tests/native-home-arrival-proposal.test.js",
+    "tests/native-home-arrival-remote.test.js",
+    "tests/native-home-inactive-restoration.test.js",
+    "tests/native-home-restoration.test.js",
+    "tests/native-home-route-clock.test.js",
+    "tests/native-home-route-control.test.js",
+    "tests/native-home-route-game.test.js",
+    "tests/native-home-route-graphics.test.js",
+    "tests/native-home-route-proposal.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-completed-home-graphics.test.js",
+    "tests/native-idle-completed-home-remote.test.js",
+    "tests/native-idle-current-home-data.test.js",
+    "tests/native-idle-current-home-graphics.test.js",
+    "tests/native-idle-current-home-source.test.js",
+    "tests/native-idle-home-pending-proposal.test.js",
+    "tests/native-idle-home.test.js",
+    "tests/native-idle-moving-home-data.test.js",
+    "tests/native-idle-moving-home-graphics.test.js",
+    "tests/native-idle-moving-home-source.test.js",
+    "tests/native-idle-stroll-contract-home.test.js",
+    "tests/native-resume-control.test.js",
+    "tests/native-task-route-stop-admission.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-graphics.test.js",
+    "tests/native-task-route-stop-ports.test.js",
+    "tests/native-task-route-stop-remote.test.js",
+    "tests/native-task-route-stop-source.test.js",
+    "tests/native-task-shift-end-game.test.js",
+    "tests/spatial-native-worker-home.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 537,
+    "pass": 537,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 6s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9059,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L607-L662",
+    "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/navigation_agent_3d.cpp#L643-L655"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3481,
+      "payloadSha256": "eb428e1f3678f3cd27366d9a5f081d2822b92d0d9f666c5eafb5cb9c749ce1c3",
+      "gzipBytes": 1684,
+      "gzipSha256": "a8181a797afb144b94f53bb59254f6f7680a478dc97e22129e70f5fec71fca52"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1184844,
+      "payloadSha256": "d2fe0bee7f8d98ae4a5c07c56a35ac169e34cbd3bd2e063d330bf4863ce0f07b",
+      "gzipBytes": 446408,
+      "gzipSha256": "47f22a3625c2d82be3143a887cca92f87789c77f7b8f2a8251aa17e6b5fca818"
+    },
+    "red.log.gz": {
+      "payloadBytes": 3105,
+      "payloadSha256": "826ecf7db213eda06750b3e5b625ad32d5154ab40a6ce2f76dcab8de4a8fcc5b",
+      "gzipBytes": 983,
+      "gzipSha256": "fbe52452d129581a18dd762a85d797783e80f894bd2eec2f88dea33458436763"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 1338,
+      "payloadSha256": "f497a2248b2a486d1fe2c7a64d6088320ae74a727ef71e21f8885e811f4d67c3",
+      "gzipBytes": 544,
+      "gzipSha256": "be4b2d7772c15958ab1f8b2847f046a2faab46550f116231a2be6cc4e73ad5dd"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 150748,
+      "payloadSha256": "cae88485c8586d90b6f8e91a8fd98d6ea8120e57578bdc31d01689cdf9d2afb3",
+      "gzipBytes": 17358,
+      "gzipSha256": "c23c1c766ba52d5df9af957c658a6b2cbbac1df3ae70e7cac2f68dada0e5fd06"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3937,
+      "payloadSha256": "4e0a3875ff7df182e86ec626056f7b2576649f216224c4d057a728e2c648e4ab",
+      "gzipBytes": 1567,
+      "gzipSha256": "7438196688ed23d4d934bcb22267c554980c5d9e389ab9903bb8e879234580f0"
+    }
+  }
+}

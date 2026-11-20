@@ -186,12 +186,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(idleCycle&&(!actor||!cyclePreparationSourceMatches(idleCycle.reference,actor)))throw Error('Native Idle cycle acquisition has no exact admitted body source');
     if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||actor.latestSequence!==idleCycleNext.sourceCycle.cycleSequence))throw Error('Native Idle cycle successor has no current native cycle');
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
-    const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival);
+    const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival||actor.revoked.taskStopBodyId);
     const heldHomeSource=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
-    if(homeRequest&&stoppedRouteSourceRequired&&(!heldHomeSource||!nativeHomeRequestContinuesHeldWorker(homeRequest,heldHomeSource)))throw Error('Native Home differs from its actual stopped worker body');
+    const heldTaskHome=homeRequest&&stoppedTaskHomeMatches(actor,homeRequest);
+    if(homeRequest&&stoppedRouteSourceRequired&&!heldTaskHome&&(!heldHomeSource||!nativeHomeRequestContinuesHeldWorker(homeRequest,heldHomeSource)))throw Error('Native Home differs from its actual stopped worker body');
     const heldTaskSource=taskRequest?stoppedHomeSource(actor):null;
     if(taskRequest&&stoppedRouteSourceRequired&&!heldTaskSource)throw Error('Native task request lacks its actual stopped worker body');
-    const keepStoppedBody=!!(heldHomeSource||heldTaskSource)&&!current&&event.type==='IntentChanged'&&event.state===6;
+    const keepStoppedBody=!!(heldHomeSource||heldTaskHome||heldTaskSource)&&!current&&event.type==='IntentChanged'&&event.state===6;
     const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     const phaseDelay=idleCycle?inheritedIdleCyclePhaseDelay(idleCycle,actor):0;
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
@@ -265,6 +266,18 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     return !!record&&sameNativeFarmArrivalRequestReference(reference.sourceRequest,record.sourceFarmArrivalRequest)&&JSON.stringify(reference.sourceHeld)===JSON.stringify(record.sourceFarmArrivalHeld??undefined);
   }
   function stoppedHomeSource(actor){return stoppedWorkerSource(actor,strollStopFamily)??stoppedWorkerSource(actor,farmStopFamily);}
+  function stoppedTaskHomeMatches(actor,request){
+    const record=actor?.revoked,projection=actor?.stoppedProjection,proof=record?.stopProof,body=actor?.proof;
+    if(proof?.kind!==taskStopFamily.codec.attestationKind||projection?.proof!==proof||!body||
+       !matches(record,proof.reference.sourceRoute)||!matches(record,body.nativeRoute)||record.taskStopBodyId!==body.bodyId||
+       !suspendedCurrent(body,record,actor)||request.actorId!==body.nativeRoute.actorId||request.bodyId!==body.bodyId||
+       request.authorityEpoch!==body.worldBoundary.authorityEpoch||request.nativeSession!==body.worldBoundary.nativeSession||
+       request.requestSequence<=record.revokedSequence||request.requestedAt<body.suspendedAt)return false;
+    // WASM validates radius, profile and flags when issuing the request for
+    // this exact retained body. The presentation receipt owns its pose.
+    const pose=projection.homePose();
+    return ['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>request.pose[key]===pose[key]);
+  }
   function stoppedHomeCurrent(actor,record,body){
     const request=record?.stoppedHomeRequest;
     return !!request&&!closed&&!!clock&&!actor.closed&&actors.get(request.actorId)===actor&&actor.current===null&&actor.revoked===record&&actor.state===6&&record.revokedState===4&&record.safeUntil===body.suspendedAt&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence&&actor.pendingHomeRequest===request&&sameNativeSuspendedBodyReference(actor.proof,body);
