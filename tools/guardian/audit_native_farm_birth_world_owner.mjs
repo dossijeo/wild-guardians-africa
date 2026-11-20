@@ -21,9 +21,13 @@ const f=nativeFarmArrivalRouteFixture({peer:false,profile:'youngFemale',configur
 }});
 try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??(scenario==='birth'?'youngFemale':'olderMale'),newbornCount,scenario,...(newbornCount===2||scenario!=='birth'?{hiringCenterId:targetCenter}:{})};}finally{f.close();}
 fs.writeFileSync(output.replace(/\.json$/,'.checkpoint.json'),JSON.stringify(input,null,2)+'\n');
-const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer;
+const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer,traceSession,traceComplete,traceClockAnchor;
 try{
  timer=setTimeout(()=>browser.close(),150000);
+ if(process.env.QA_NATIVE_TRACE==='true'){
+  traceSession=await browser.newBrowserCDPSession();traceComplete=new Promise(resolve=>traceSession.once('Tracing.tracingComplete',resolve));
+  await traceSession.send('Tracing.start',{categories:process.env.QA_NATIVE_TRACE_CATEGORIES??'toplevel,blink,blink.user_timing,devtools.timeline,v8.execute,gpu,viz,cc',transferMode:'ReturnAsStream'});
+ }
  page.on('pageerror',e=>errors.push(String(e.stack??e)));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});page.on('response',r=>{if(r.status()>=400)httpFailures.push({url:r.url(),status:r.status()});});page.on('requestfailed',r=>requestFailures.push({url:r.url(),failure:r.failure()}));
  // QA metadata only on real, checksum-verified bank/route objects. Neither
  // geometry/data nor shader ownership is changed by these served annotations.
@@ -34,11 +38,16 @@ try{
  ])await page.context().route('**/src/rendering/'+file+'*',async route=>{const response=await route.fetch(),body=await response.text(),annotated=transform(body);overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'QA object name/origin only'});await route.fulfill({response,body:annotated});});
  const capture=createNativeAuditCapture(page,{output,mode:process.env.QA_NATIVE_CAPTURE_MODE??'visual'});await page.exposeFunction('captureNativeFarmBirth',label=>capture.checkpoint(label));
  await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5218')+'/tests/browser/native-farm-birth-world-owner.html');await page.waitForFunction(()=>typeof window.runNativeFarmBirthWorldOwner==='function');
+ if(traceSession)traceClockAnchor=await page.evaluate(()=>{const mark=performance.mark('native-farm-birth-trace-origin');return {name:mark.name,absoluteMs:performance.timeOrigin+mark.startTime};});
  const result=await page.evaluate(input=>window.runNativeFarmBirthWorldOwner(input),input);
- fs.writeFileSync(output,JSON.stringify({result,sourceCheckpoint:{sha256:sha(JSON.stringify(input)),path:output.replace(/\.json$/,'.checkpoint.json')},resourceOriginOverrides:overrides,capture:capture.evidence(),errors,consoleErrors,httpFailures,requestFailures},null,2)+'\n');
+ fs.writeFileSync(output,JSON.stringify({result,sourceCheckpoint:{sha256:sha(JSON.stringify(input)),path:output.replace(/\.json$/,'.checkpoint.json')},resourceOriginOverrides:overrides,capture:capture.evidence(),errors,consoleErrors,httpFailures,requestFailures,...(traceClockAnchor?{traceClockAnchor}: {})},null,2)+'\n');
  if(errors.length||consoleErrors.length||httpFailures.length||requestFailures.length||result.errors?.length||result.final.gpuErrors||!result.drained||result.disposal?.gpu?.disposed!==true||result.disposal?.sourceAliveUntilGraphicalClose!==true||/swiftshader|software/i.test(JSON.stringify(result.adapter))||!result.adapter.vendor)throw Error('Ordinary Farm birth hardware validation failed; see '+output);
  console.log(JSON.stringify({output,profile:result.source.newbornProfile,adapter:result.adapter,retained:result.resourceIdentity.retainedGeometryAndBankIds.length,prepared:result.resourceChanges.prepared,afterReady:result.resourceChanges.afterReady,prep:result.preparationBlock.cadence,commit:result.block.cadence,drained:result.drained}));
 }catch(error){
  let failure;try{failure=await page.evaluate(()=>window.nativeFarmBirthFailureReceipt??null);}catch(e){failure={inspectionError:String(e)};}
- fs.writeFileSync(output.replace(/\.json$/,'.failure.json'),JSON.stringify({error:String(error.stack??error),failure,resourceOriginOverrides:overrides,errors,consoleErrors,httpFailures,requestFailures},null,2)+'\n');throw error;
-}finally{clearTimeout(timer);await browser.close();}
+ fs.writeFileSync(output.replace(/\.json$/,'.failure.json'),JSON.stringify({error:String(error.stack??error),failure,resourceOriginOverrides:overrides,errors,consoleErrors,httpFailures,requestFailures,...(traceClockAnchor?{traceClockAnchor}: {})},null,2)+'\n');throw error;
+}finally{
+ clearTimeout(timer);
+ try{if(traceSession){await traceSession.send('Tracing.end');const {stream,...completion}=await traceComplete;if(!stream)throw Error('Native birth trace has no stream');const chunks=[];try{for(;;){const item=await traceSession.send('IO.read',{handle:stream});chunks.push(Buffer.from(item.data,item.base64Encoded?'base64':'utf8'));if(item.eof)break;}}finally{await traceSession.send('IO.close',{handle:stream});}fs.writeFileSync(output.replace(/\.json$/,'.trace.json'),Buffer.concat(chunks));fs.writeFileSync(output.replace(/\.json$/,'.trace-complete.json'),JSON.stringify(completion,null,2)+'\n');if(completion.dataLossOccurred!==false)throw Error('Native birth trace did not establish loss-free completion');}}
+ finally{await browser.close();}
+}

@@ -1,0 +1,1902 @@
+{
+  "receipt": ".cache/native-frame-gap-traced-final.json",
+  "receiptSha256": "45f36b4df8a1a7655c95cdbb63e94bf507befec4d1144923d9ace899d4c36745",
+  "trace": ".cache/native-frame-gap-traced-final.trace.json",
+  "traceSha256": "44663df5fa8ba16c6f94d9adcf7669af51a1b85a44941cdf4885780d966a3c70",
+  "traceBytes": 243404806,
+  "traceEvents": 1118252,
+  "traceMetadata": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0",
+    "revision": "fbcb2989a6c61b72a4919fe1028e58e70131cd46",
+    "nonzeroProcessorStats": {
+      "clock_sync_cache_miss": 7976,
+      "guess_trace_type_duration_ns": 4900,
+      "parse_trace_duration_ns": 903691719,
+      "traced_buf": [
+        {
+          "abi_violations": 0,
+          "buffer_size": 209715200,
+          "bytes_overwritten": 0,
+          "bytes_read": 65720320,
+          "bytes_written": 66043904,
+          "chunks_committed_out_of_order": 0,
+          "chunks_discarded": 0,
+          "chunks_overwritten": 0,
+          "chunks_read": 16045,
+          "chunks_relocated": 0,
+          "chunks_rewritten": 0,
+          "chunks_written": 16124,
+          "data_loss_chunk_corrupted": 0,
+          "data_loss_orphan_continuation": 0,
+          "data_loss_overwrite": 0,
+          "data_loss_read_gap": 0,
+          "data_loss_reassembly_broken_chain": 0,
+          "data_loss_reassembly_gap": 0,
+          "data_loss_smb_full": 0,
+          "data_loss_writer_abort": 0,
+          "incremental_sequences_dropped": 0,
+          "oversized_packets_dropped": 0,
+          "padding_bytes_cleared": 0,
+          "padding_bytes_written": 0,
+          "patches_failed": 0,
+          "patches_succeeded": 13,
+          "readaheads_failed": 0,
+          "readaheads_succeeded": 13583,
+          "sequence_packet_loss": 0,
+          "trace_writer_packet_loss": 0,
+          "write_wrap_count": 0
+        },
+        {
+          "abi_violations": 0,
+          "buffer_size": 262144,
+          "bytes_overwritten": 0,
+          "bytes_read": 139264,
+          "bytes_written": 139264,
+          "chunks_committed_out_of_order": 0,
+          "chunks_discarded": 0,
+          "chunks_overwritten": 0,
+          "chunks_read": 34,
+          "chunks_relocated": 0,
+          "chunks_rewritten": 0,
+          "chunks_written": 34,
+          "data_loss_chunk_corrupted": 0,
+          "data_loss_orphan_continuation": 0,
+          "data_loss_overwrite": 0,
+          "data_loss_read_gap": 0,
+          "data_loss_reassembly_broken_chain": 0,
+          "data_loss_reassembly_gap": 0,
+          "data_loss_smb_full": 0,
+          "data_loss_writer_abort": 0,
+          "incremental_sequences_dropped": 0,
+          "oversized_packets_dropped": 0,
+          "padding_bytes_cleared": 0,
+          "padding_bytes_written": 0,
+          "patches_failed": 0,
+          "patches_succeeded": 0,
+          "readaheads_failed": 0,
+          "readaheads_succeeded": 2,
+          "sequence_packet_loss": 0,
+          "trace_writer_packet_loss": 0,
+          "write_wrap_count": 0
+        }
+      ],
+      "traced_data_sources_registered": 45,
+      "traced_data_sources_seen": 14,
+      "traced_producers_connected": 7,
+      "traced_producers_seen": 13,
+      "traced_total_buffers": 2,
+      "traced_tracing_sessions": 1
+    },
+    "protocolDataLossOccurred": false
+  },
+  "traceClockAnchor": {
+    "name": "native-farm-birth-trace-origin",
+    "absoluteMs": 1795137359589.1301
+  },
+  "traceOffsetMicroseconds": 1794583627714169.2,
+  "windows": [
+    {
+      "label": "preparationBlock",
+      "from": 1795137370922.32,
+      "through": 1795137372722.385,
+      "milliseconds": 1800.06494140625,
+      "draws": 54,
+      "edgeMarginsMs": {
+        "start": 17.5048828125,
+        "end": 15.955078125
+      },
+      "largestGaps": [
+        {
+          "from": 1795137371373.115,
+          "through": 1795137371406.585,
+          "milliseconds": 33.469970703125
+        },
+        {
+          "from": 1795137372639.8901,
+          "through": 1795137372673.305,
+          "milliseconds": 33.414794921875
+        },
+        {
+          "from": 1795137371439.84,
+          "through": 1795137371473.25,
+          "milliseconds": 33.409912109375
+        },
+        {
+          "from": 1795137371006.455,
+          "through": 1795137371039.855,
+          "milliseconds": 33.39990234375
+        },
+        {
+          "from": 1795137371939.85,
+          "through": 1795137371973.245,
+          "milliseconds": 33.39501953125
+        }
+      ],
+      "threads": [
+        {
+          "role": "authority",
+          "thread": "23188:10896",
+          "name": "DedicatedWorker thread",
+          "tasks": 222,
+          "maxTaskMs": 9.029,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137372440.4272,
+              "durationMs": 9.029,
+              "threadDurationMs": 8.969
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2683,
+              "durationMs": 8.161,
+              "threadDurationMs": 8.088
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370937.0652,
+              "durationMs": 7.872,
+              "threadDurationMs": 7.744
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137372440.4272,
+              "durationMs": 9.029,
+              "threadDurationMs": 8.969
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137372440.4312,
+              "durationMs": 9.024,
+              "threadDurationMs": 8.966
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137372440.4373,
+              "durationMs": 9.016,
+              "threadDurationMs": 8.958
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137372440.4463,
+              "durationMs": 8.991,
+              "threadDurationMs": 8.936,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2683,
+              "durationMs": 8.161,
+              "threadDurationMs": 8.088
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371372.3193,
+              "durationMs": 6.267,
+              "threadDurationMs": 6.117
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137371372.3223,
+              "durationMs": 6.263,
+              "threadDurationMs": 6.115
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137371372.3313,
+              "durationMs": 6.251,
+              "threadDurationMs": 6.105
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137371372.3372,
+              "durationMs": 6.23,
+              "threadDurationMs": 6.085,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371393.3232,
+              "durationMs": 5.459,
+              "threadDurationMs": 5.448
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137371393.3271,
+              "durationMs": 5.454,
+              "threadDurationMs": 5.446
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137371393.3323,
+              "durationMs": 5.448,
+              "threadDurationMs": 5.44
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137371393.3381,
+              "durationMs": 5.43,
+              "threadDurationMs": 5.423,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371398.8284,
+              "durationMs": 0.278,
+              "threadDurationMs": 0.232
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137371398.8303,
+              "durationMs": 0.275,
+              "threadDurationMs": 0.231
+            }
+          ]
+        },
+        {
+          "role": "observer",
+          "thread": "23188:10232",
+          "name": "CrRendererMain",
+          "tasks": 369,
+          "maxTaskMs": 6.568,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370930.4143,
+              "durationMs": 6.568,
+              "threadDurationMs": 6.553
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371688.5173,
+              "durationMs": 4.516,
+              "threadDurationMs": 3.605
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371089.3232,
+              "durationMs": 2.877,
+              "threadDurationMs": 2.864
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370930.4143,
+              "durationMs": 6.568,
+              "threadDurationMs": 6.553
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137370930.4182,
+              "durationMs": 6.563,
+              "threadDurationMs": 6.551
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137370930.4263,
+              "durationMs": 6.549,
+              "threadDurationMs": 6.537
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137370930.6292,
+              "durationMs": 6.339,
+              "threadDurationMs": 6.332
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371688.5173,
+              "durationMs": 4.516,
+              "threadDurationMs": 3.605
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371398.8052,
+              "durationMs": 1.823,
+              "threadDurationMs": 1.816
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137371398.8103,
+              "durationMs": 1.818,
+              "threadDurationMs": 1.812
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137371398.8184,
+              "durationMs": 1.808,
+              "threadDurationMs": 1.802
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371378.6072,
+              "durationMs": 1.77,
+              "threadDurationMs": 1.76
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137371378.6143,
+              "durationMs": 1.763,
+              "threadDurationMs": 1.755
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137371378.6272,
+              "durationMs": 1.747,
+              "threadDurationMs": 1.74
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371378.7153,
+              "durationMs": 1.655,
+              "threadDurationMs": 1.652
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371399.0442,
+              "durationMs": 1.577,
+              "threadDurationMs": 1.574
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137371398.8271,
+              "durationMs": 0.196,
+              "threadDurationMs": 0.195,
+              "url": "http://127.0.0.1:5218/tests/browser/native-farm-birth-world-owner.js?t=1795134365156",
+              "line": 14
+            },
+            {
+              "name": "SerializedScriptValueFactory::deserialize",
+              "at": 1795137371398.8372,
+              "durationMs": 0.181,
+              "threadDurationMs": 0.18
+            }
+          ]
+        },
+        {
+          "role": "draw",
+          "thread": "23188:15128",
+          "name": "DedicatedWorker thread",
+          "tasks": 795,
+          "maxTaskMs": 1.217,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137372441.1333,
+              "durationMs": 1.217,
+              "threadDurationMs": 1.145
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137371308.1921,
+              "durationMs": 0.759,
+              "threadDurationMs": 0.638
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370925.1343,
+              "durationMs": 0.212,
+              "threadDurationMs": 0.205
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371006.4153,
+              "durationMs": 2.109,
+              "threadDurationMs": 1.97
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137371006.4182,
+              "durationMs": 2.098,
+              "threadDurationMs": 1.961
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371106.4473,
+              "durationMs": 2.016,
+              "threadDurationMs": 1.894
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137371106.4512,
+              "durationMs": 2.001,
+              "threadDurationMs": 1.883
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371273.1843,
+              "durationMs": 1.988,
+              "threadDurationMs": 1.873
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.47607421875,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.47607421875,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.466064453125,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.4638671875,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371373.0493,
+              "durationMs": 1.556,
+              "threadDurationMs": 1.428
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137371373.0532,
+              "durationMs": 1.542,
+              "threadDurationMs": 1.418
+            },
+            {
+              "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+              "at": 1795137371373.0562,
+              "durationMs": 1.343,
+              "threadDurationMs": 1.317
+            },
+            {
+              "name": "FireAnimationFrame",
+              "at": 1795137371373.0583,
+              "durationMs": 1.339,
+              "threadDurationMs": 1.315
+            },
+            {
+              "name": "AsyncTask Run",
+              "at": 1795137371373.0652,
+              "durationMs": 1.331,
+              "threadDurationMs": 1.308
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137371373.0693,
+              "durationMs": 1.324,
+              "threadDurationMs": 1.303,
+              "url": "http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795123743522",
+              "line": 621,
+              "function": "present"
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137371406.5164,
+              "durationMs": 1.315,
+              "threadDurationMs": 1.193
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137371406.5193,
+              "durationMs": 1.303,
+              "threadDurationMs": 1.184
+            },
+            {
+              "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+              "at": 1795137371406.5212,
+              "durationMs": 1.09,
+              "threadDurationMs": 1.069
+            },
+            {
+              "name": "FireAnimationFrame",
+              "at": 1795137371406.5222,
+              "durationMs": 1.087,
+              "threadDurationMs": 1.067
+            }
+          ]
+        },
+        {
+          "role": "prepare",
+          "thread": "23188:2172",
+          "name": "DedicatedWorker thread",
+          "tasks": 1,
+          "maxTaskMs": 1800.227,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2163,
+              "durationMs": 1800.227,
+              "threadDurationMs": 1798.628
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2163,
+              "durationMs": 1800.227,
+              "threadDurationMs": 1798.628
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137370922.2192,
+              "durationMs": 1800.223,
+              "threadDurationMs": 1798.626
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137370922.2231,
+              "durationMs": 1800.218,
+              "threadDurationMs": 1798.621
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137370922.2283,
+              "durationMs": 1800.21,
+              "threadDurationMs": 1798.614,
+              "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module",
+              "line": 26,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "V8.BytecodeBudgetInterruptWithStackCheck",
+              "at": 1795137370924.2554,
+              "durationMs": 0.01,
+              "threadDurationMs": 0.01
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2163,
+              "durationMs": 1800.227,
+              "threadDurationMs": 1798.628
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137370922.2192,
+              "durationMs": 1800.223,
+              "threadDurationMs": 1798.626
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137370922.2231,
+              "durationMs": 1800.218,
+              "threadDurationMs": 1798.621
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137370922.2283,
+              "durationMs": 1800.21,
+              "threadDurationMs": 1798.614,
+              "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module",
+              "line": 26,
+              "function": "self.onmessage"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "birthThroughPreparedReady",
+      "from": 1795137370933.4702,
+      "through": 1795137387787.345,
+      "milliseconds": 16853.874755859375,
+      "draws": 506,
+      "edgeMarginsMs": {
+        "start": 6.354736328125,
+        "end": 14.10986328125
+      },
+      "largestGaps": [
+        {
+          "from": 1795137373039.84,
+          "through": 1795137373088.875,
+          "milliseconds": 49.034912109375
+        },
+        {
+          "from": 1795137386606.61,
+          "through": 1795137386648.895,
+          "milliseconds": 42.284912109375
+        },
+        {
+          "from": 1795137387673.29,
+          "through": 1795137387708.92,
+          "milliseconds": 35.6298828125
+        },
+        {
+          "from": 1795137374039.84,
+          "through": 1795137374073.69,
+          "milliseconds": 33.849853515625
+        },
+        {
+          "from": 1795137373173.02,
+          "through": 1795137373206.57,
+          "milliseconds": 33.550048828125
+        }
+      ],
+      "threads": [
+        {
+          "role": "authority",
+          "thread": "23188:10896",
+          "name": "DedicatedWorker thread",
+          "tasks": 1953,
+          "maxTaskMs": 34.586,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374497.6472,
+              "durationMs": 34.586,
+              "threadDurationMs": 8.875
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374581.0054,
+              "durationMs": 20.539,
+              "threadDurationMs": 9.099
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137386241.1812,
+              "durationMs": 12.334,
+              "threadDurationMs": 12.193
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374497.6472,
+              "durationMs": 34.586,
+              "threadDurationMs": 8.875
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137374497.6533,
+              "durationMs": 34.579,
+              "threadDurationMs": 8.871
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137374497.6624,
+              "durationMs": 34.567,
+              "threadDurationMs": 8.861
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137374497.6753,
+              "durationMs": 34.535,
+              "threadDurationMs": 8.831,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374581.0054,
+              "durationMs": 20.539,
+              "threadDurationMs": 9.099
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373037.5474,
+              "durationMs": 6.535,
+              "threadDurationMs": 6.521
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373037.5513,
+              "durationMs": 6.53,
+              "threadDurationMs": 6.518
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137373037.5593,
+              "durationMs": 6.52,
+              "threadDurationMs": 6.509
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137373037.5703,
+              "durationMs": 6.494,
+              "threadDurationMs": 6.485,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373057.5583,
+              "durationMs": 5.695,
+              "threadDurationMs": 5.684
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373057.5623,
+              "durationMs": 5.69,
+              "threadDurationMs": 5.682
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137373057.5693,
+              "durationMs": 5.681,
+              "threadDurationMs": 5.673
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137373057.5813,
+              "durationMs": 5.651,
+              "threadDurationMs": 5.644,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373077.5671,
+              "durationMs": 5.59,
+              "threadDurationMs": 5.577
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373077.5723,
+              "durationMs": 5.584,
+              "threadDurationMs": 5.574
+            }
+          ]
+        },
+        {
+          "role": "observer",
+          "thread": "23188:10232",
+          "name": "CrRendererMain",
+          "tasks": 4306,
+          "maxTaskMs": 11.011,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387776.1882,
+              "durationMs": 11.011,
+              "threadDurationMs": 10.967
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374486.2493,
+              "durationMs": 7.454,
+              "threadDurationMs": 7.436
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137374532.2292,
+              "durationMs": 7.454,
+              "threadDurationMs": 7.412
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387776.1882,
+              "durationMs": 11.011,
+              "threadDurationMs": 10.967
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137387776.1921,
+              "durationMs": 11.007,
+              "threadDurationMs": 10.965
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137387776.2002,
+              "durationMs": 10.996,
+              "threadDurationMs": 10.954
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137387776.2122,
+              "durationMs": 10.017,
+              "threadDurationMs": 9.997,
+              "url": "http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795123743522",
+              "line": 29,
+              "function": "worker.onmessage"
+            },
+            {
+              "name": "SerializedScriptValueFactory::deserialize",
+              "at": 1795137387776.2263,
+              "durationMs": 9.976,
+              "threadDurationMs": 9.958
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373083.1672,
+              "durationMs": 5.927,
+              "threadDurationMs": 4.674
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373083.1711,
+              "durationMs": 5.922,
+              "threadDurationMs": 4.671
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137373083.1802,
+              "durationMs": 5.91,
+              "threadDurationMs": 4.661
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373083.4563,
+              "durationMs": 5.624,
+              "threadDurationMs": 4.385
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373066.1724,
+              "durationMs": 3.386,
+              "threadDurationMs": 3.352
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373066.1743,
+              "durationMs": 3.383,
+              "threadDurationMs": 3.35
+            },
+            {
+              "name": "SimpleWatcher::OnHandleReady",
+              "at": 1795137373066.1763,
+              "durationMs": 3.38,
+              "threadDurationMs": 3.348
+            },
+            {
+              "name": "MessagePort::Accept",
+              "at": 1795137373066.1821,
+              "durationMs": 3.372,
+              "threadDurationMs": 3.342
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137373066.1943,
+              "durationMs": 3.353,
+              "threadDurationMs": 3.323,
+              "url": "http://127.0.0.1:5218/src/simulation/visual-publication-stream.js",
+              "line": 35,
+              "function": "port.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373051.1943,
+              "durationMs": 2.997,
+              "threadDurationMs": 2.988
+            }
+          ]
+        },
+        {
+          "role": "draw",
+          "thread": "23188:15128",
+          "name": "DedicatedWorker thread",
+          "tasks": 11374,
+          "maxTaskMs": 16.504,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373046.2383,
+              "durationMs": 16.504,
+              "threadDurationMs": 16.168
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387722.2812,
+              "durationMs": 16.219,
+              "threadDurationMs": 19.15
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137386636.9941,
+              "durationMs": 11.801,
+              "threadDurationMs": 11.676
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373068.9043,
+              "durationMs": 19.803,
+              "threadDurationMs": 19.734
+            },
+            {
+              "name": "WebGPUMailboxTexture::FromStaticBitmapImage",
+              "at": 1795137373069.0063,
+              "durationMs": 17.482,
+              "threadDurationMs": 17.451
+            },
+            {
+              "name": "RasterImplementation::WritePixels",
+              "at": 1795137373069.0112,
+              "durationMs": 17.456,
+              "threadDurationMs": 17.433
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373046.2383,
+              "durationMs": 16.504,
+              "threadDurationMs": 16.168
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373046.2422,
+              "durationMs": 16.499,
+              "threadDurationMs": 16.166
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 506,
+              "maxIntervalMs": 49.001953125,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 506,
+              "maxIntervalMs": 49.0009765625,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 506,
+              "maxIntervalMs": 49.0390625,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 506,
+              "maxIntervalMs": 49.0400390625,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373068.9043,
+              "durationMs": 19.803,
+              "threadDurationMs": 19.734
+            },
+            {
+              "name": "WebGPUMailboxTexture::FromStaticBitmapImage",
+              "at": 1795137373069.0063,
+              "durationMs": 17.482,
+              "threadDurationMs": 17.451
+            },
+            {
+              "name": "RasterImplementation::WritePixels",
+              "at": 1795137373069.0112,
+              "durationMs": 17.456,
+              "threadDurationMs": 17.433
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373046.2383,
+              "durationMs": 16.504,
+              "threadDurationMs": 16.168
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373046.2422,
+              "durationMs": 16.499,
+              "threadDurationMs": 16.166
+            },
+            {
+              "name": "SimpleWatcher::OnHandleReady",
+              "at": 1795137373046.2441,
+              "durationMs": 16.496,
+              "threadDurationMs": 16.163
+            },
+            {
+              "name": "MessagePort::Accept",
+              "at": 1795137373046.2493,
+              "durationMs": 16.487,
+              "threadDurationMs": 16.155
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137373046.4124,
+              "durationMs": 16.108,
+              "threadDurationMs": 15.811,
+              "url": "http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795123743522",
+              "line": 1329,
+              "function": "port.onmessage"
+            },
+            {
+              "name": "SerializedScriptValueFactory::deserialize",
+              "at": 1795137373046.4263,
+              "durationMs": 16.082,
+              "threadDurationMs": 15.786
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373039.7913,
+              "durationMs": 2.299,
+              "threadDurationMs": 2.171
+            }
+          ]
+        },
+        {
+          "role": "prepare",
+          "thread": "23188:2172",
+          "name": "DedicatedWorker thread",
+          "tasks": 1804,
+          "maxTaskMs": 1800.306,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387787.1533,
+              "durationMs": 1800.306,
+              "threadDurationMs": 1799.216
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2163,
+              "durationMs": 1800.227,
+              "threadDurationMs": 1798.628
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137386257.4143,
+              "durationMs": 363.956,
+              "threadDurationMs": 359.158
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387787.1533,
+              "durationMs": 1800.306,
+              "threadDurationMs": 1799.216
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137387787.1592,
+              "durationMs": 1800.299,
+              "threadDurationMs": 1799.212
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137387787.1772,
+              "durationMs": 1800.279,
+              "threadDurationMs": 1799.193
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137387787.2021,
+              "durationMs": 1800.251,
+              "threadDurationMs": 1799.167,
+              "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module",
+              "line": 26,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137370922.2163,
+              "durationMs": 1800.227,
+              "threadDurationMs": 1798.628
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 458,
+              "maxIntervalMs": 381.493896484375,
+              "over50": 4
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 424,
+              "maxIntervalMs": 400.053955078125,
+              "over50": 4
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 424,
+              "maxIntervalMs": 400.047119140625,
+              "over50": 4
+            },
+            "FireAnimationFrame": {
+              "count": 636,
+              "maxIntervalMs": 400.004150390625,
+              "over50": 4
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373011.8413,
+              "durationMs": 34.392,
+              "threadDurationMs": 34.348
+            },
+            {
+              "name": "SerializedScriptValueFactory::create",
+              "at": 1795137373012.4363,
+              "durationMs": 33.758,
+              "threadDurationMs": 33.721
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137373051.2292,
+              "durationMs": 8.301,
+              "threadDurationMs": 8.249
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137373051.2341,
+              "durationMs": 7.626,
+              "threadDurationMs": 7.58
+            },
+            {
+              "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+              "at": 1795137373051.2354,
+              "durationMs": 7.601,
+              "threadDurationMs": 7.556
+            },
+            {
+              "name": "FireAnimationFrame",
+              "at": 1795137373051.2764,
+              "durationMs": 7.558,
+              "threadDurationMs": 7.519
+            },
+            {
+              "name": "AsyncTask Run",
+              "at": 1795137373051.2773,
+              "durationMs": 7.556,
+              "threadDurationMs": 7.518
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137373051.2793,
+              "durationMs": 7.551,
+              "threadDurationMs": 7.515,
+              "url": "http://127.0.0.1:5218/src/rendering/webgpu-world-worker.js?t=1795131231460",
+              "line": 40,
+              "function": "draw"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137373059.5393,
+              "durationMs": 5.365,
+              "threadDurationMs": 5.351
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137373059.5422,
+              "durationMs": 5.361,
+              "threadDurationMs": 5.349
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "commitBlock",
+      "from": 1795137387787.345,
+      "through": 1795137389587.4,
+      "milliseconds": 1800.054931640625,
+      "draws": 54,
+      "edgeMarginsMs": {
+        "start": 19.625,
+        "end": 14.14990234375
+      },
+      "largestGaps": [
+        {
+          "from": 1795137388473.155,
+          "through": 1795137388506.655,
+          "milliseconds": 33.5
+        },
+        {
+          "from": 1795137388039.84,
+          "through": 1795137388073.27,
+          "milliseconds": 33.429931640625
+        },
+        {
+          "from": 1795137388373.23,
+          "through": 1795137388406.645,
+          "milliseconds": 33.4150390625
+        },
+        {
+          "from": 1795137388206.595,
+          "through": 1795137388240,
+          "milliseconds": 33.405029296875
+        },
+        {
+          "from": 1795137388906.58,
+          "through": 1795137388939.97,
+          "milliseconds": 33.389892578125
+        }
+      ],
+      "threads": [
+        {
+          "role": "authority",
+          "thread": "23188:10896",
+          "name": "DedicatedWorker thread",
+          "tasks": 205,
+          "maxTaskMs": 8.421,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389006.5054,
+              "durationMs": 8.421,
+              "threadDurationMs": 8.404
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387808.2783,
+              "durationMs": 7.907,
+              "threadDurationMs": 7.803
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387889.3062,
+              "durationMs": 7.859,
+              "threadDurationMs": 7.847
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389006.5054,
+              "durationMs": 8.421,
+              "threadDurationMs": 8.404
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137389006.5093,
+              "durationMs": 8.416,
+              "threadDurationMs": 8.402
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137389006.5151,
+              "durationMs": 8.407,
+              "threadDurationMs": 8.394
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137389006.5232,
+              "durationMs": 8.394,
+              "threadDurationMs": 8.382,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387808.2783,
+              "durationMs": 7.907,
+              "threadDurationMs": 7.803
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137388471.0642,
+              "durationMs": 5.319,
+              "threadDurationMs": 5.062
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137388471.0684,
+              "durationMs": 5.314,
+              "threadDurationMs": 5.059
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137388471.0742,
+              "durationMs": 5.305,
+              "threadDurationMs": 5.051
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137388471.0852,
+              "durationMs": 5.288,
+              "threadDurationMs": 5.037,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137388491.0251,
+              "durationMs": 4.995,
+              "threadDurationMs": 4.98
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137388491.0332,
+              "durationMs": 4.987,
+              "threadDurationMs": 4.973
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137388491.0422,
+              "durationMs": 4.976,
+              "threadDurationMs": 4.965
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137388491.0513,
+              "durationMs": 4.964,
+              "threadDurationMs": 4.953,
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module",
+              "line": 31,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "SerializedScriptValueFactory::create",
+              "at": 1795137388476.1653,
+              "durationMs": 0.193,
+              "threadDurationMs": 0.135
+            },
+            {
+              "name": "SerializedScriptValueFactory::create",
+              "at": 1795137388495.8523,
+              "durationMs": 0.152,
+              "threadDurationMs": 0.15
+            }
+          ]
+        },
+        {
+          "role": "observer",
+          "thread": "23188:10232",
+          "name": "CrRendererMain",
+          "tasks": 378,
+          "maxTaskMs": 4.408,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389513.6724,
+              "durationMs": 4.408,
+              "threadDurationMs": 4.032
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389074.4224,
+              "durationMs": 2.33,
+              "threadDurationMs": 2.32
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389239.1702,
+              "durationMs": 2.296,
+              "threadDurationMs": 2.284
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389513.6724,
+              "durationMs": 4.408,
+              "threadDurationMs": 4.032
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137389513.6743,
+              "durationMs": 4.405,
+              "threadDurationMs": 4.031
+            },
+            {
+              "name": "MajorGC",
+              "at": 1795137389513.6982,
+              "durationMs": 4.317,
+              "threadDurationMs": 3.948
+            },
+            {
+              "name": "V8.GC_MARK_COMPACTOR",
+              "at": 1795137389513.7083,
+              "durationMs": 4.273,
+              "threadDurationMs": 3.908
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137389074.4224,
+              "durationMs": 2.33,
+              "threadDurationMs": 2.32
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137388476.3853,
+              "durationMs": 1.776,
+              "threadDurationMs": 1.761
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137388476.3892,
+              "durationMs": 1.77,
+              "threadDurationMs": 1.758
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137388476.3992,
+              "durationMs": 1.758,
+              "threadDurationMs": 1.744
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137388476.4941,
+              "durationMs": 1.659,
+              "threadDurationMs": 1.649
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137388496.0542,
+              "durationMs": 1.545,
+              "threadDurationMs": 1.535
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137388496.0593,
+              "durationMs": 1.539,
+              "threadDurationMs": 1.531
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137388496.0684,
+              "durationMs": 1.528,
+              "threadDurationMs": 1.521
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137388496.1482,
+              "durationMs": 1.444,
+              "threadDurationMs": 1.442
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137388490.9172,
+              "durationMs": 0.085,
+              "threadDurationMs": 0.077
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137388490.9211,
+              "durationMs": 0.081,
+              "threadDurationMs": 0.075
+            }
+          ]
+        },
+        {
+          "role": "draw",
+          "thread": "23188:15128",
+          "name": "DedicatedWorker thread",
+          "tasks": 906,
+          "maxTaskMs": 6.942,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387791.7832,
+              "durationMs": 6.942,
+              "threadDurationMs": 6.919
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387802.8691,
+              "durationMs": 3.984,
+              "threadDurationMs": 3.968
+            },
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387802.5723,
+              "durationMs": 0.244,
+              "threadDurationMs": 0.235
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387791.7832,
+              "durationMs": 6.942,
+              "threadDurationMs": 6.919
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137387791.7861,
+              "durationMs": 6.939,
+              "threadDurationMs": 6.917
+            },
+            {
+              "name": "SimpleWatcher::OnHandleReady",
+              "at": 1795137387791.7883,
+              "durationMs": 6.936,
+              "threadDurationMs": 6.916
+            },
+            {
+              "name": "MessagePort::Accept",
+              "at": 1795137387791.7913,
+              "durationMs": 6.931,
+              "threadDurationMs": 6.912
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137387791.8003,
+              "durationMs": 6.889,
+              "threadDurationMs": 6.879,
+              "url": "http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795123743522",
+              "line": 1358,
+              "function": "intentControl.port.onmessage"
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.47802734375,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.47607421875,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.47900390625,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 54,
+              "maxIntervalMs": 33.487060546875,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137388506.5942,
+              "durationMs": 2.268,
+              "threadDurationMs": 2.094
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137388506.5981,
+              "durationMs": 2.254,
+              "threadDurationMs": 2.084
+            },
+            {
+              "name": "RunMicrotasks",
+              "at": 1795137388473.1162,
+              "durationMs": 2.209,
+              "threadDurationMs": 2.082
+            },
+            {
+              "name": "WorkerAnimationFrameProvider::RequestAnimationFrame",
+              "at": 1795137388473.1191,
+              "durationMs": 2.197,
+              "threadDurationMs": 2.074
+            },
+            {
+              "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+              "at": 1795137388506.6003,
+              "durationMs": 2.015,
+              "threadDurationMs": 1.988
+            },
+            {
+              "name": "FrameRequestCallbackCollection::ExecuteFrameCallbacks",
+              "at": 1795137388473.1213,
+              "durationMs": 2.004,
+              "threadDurationMs": 1.977
+            },
+            {
+              "name": "FireAnimationFrame",
+              "at": 1795137388506.6104,
+              "durationMs": 2.003,
+              "threadDurationMs": 1.977
+            },
+            {
+              "name": "FireAnimationFrame",
+              "at": 1795137388473.1233,
+              "durationMs": 1.999,
+              "threadDurationMs": 1.974
+            },
+            {
+              "name": "AsyncTask Run",
+              "at": 1795137388473.1292,
+              "durationMs": 1.993,
+              "threadDurationMs": 1.968
+            },
+            {
+              "name": "AsyncTask Run",
+              "at": 1795137388506.6252,
+              "durationMs": 1.988,
+              "threadDurationMs": 1.962
+            }
+          ]
+        },
+        {
+          "role": "prepare",
+          "thread": "23188:2172",
+          "name": "DedicatedWorker thread",
+          "tasks": 1,
+          "maxTaskMs": 1800.306,
+          "longestTasks": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387787.1533,
+              "durationMs": 1800.306,
+              "threadDurationMs": 1799.216
+            }
+          ],
+          "longestScopes": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387787.1533,
+              "durationMs": 1800.306,
+              "threadDurationMs": 1799.216
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137387787.1592,
+              "durationMs": 1800.299,
+              "threadDurationMs": 1799.212
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137387787.1772,
+              "durationMs": 1800.279,
+              "threadDurationMs": 1799.193
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137387787.2021,
+              "durationMs": 1800.251,
+              "threadDurationMs": 1799.167,
+              "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module",
+              "line": 26,
+              "function": "self.onmessage"
+            },
+            {
+              "name": "V8.BytecodeBudgetInterruptWithStackCheck",
+              "at": 1795137387788.3193,
+              "durationMs": 0.01,
+              "threadDurationMs": 0.009
+            }
+          ],
+          "raf": {
+            "BeginFrameProvider::OnBeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::BeginFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "WorkerAnimationFrameProvider::RequestAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            },
+            "FireAnimationFrame": {
+              "count": 0,
+              "maxIntervalMs": null,
+              "over50": 0
+            }
+          },
+          "largestGapOverlap": [
+            {
+              "name": "ThreadControllerImpl::RunTask",
+              "at": 1795137387787.1533,
+              "durationMs": 1800.306,
+              "threadDurationMs": 1799.216
+            },
+            {
+              "name": "Edge_RunTask",
+              "at": 1795137387787.1592,
+              "durationMs": 1800.299,
+              "threadDurationMs": 1799.212
+            },
+            {
+              "name": "HandlePostMessage",
+              "at": 1795137387787.1772,
+              "durationMs": 1800.279,
+              "threadDurationMs": 1799.193
+            },
+            {
+              "name": "FunctionCall",
+              "at": 1795137387787.2021,
+              "durationMs": 1800.251,
+              "threadDurationMs": 1799.167,
+              "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module",
+              "line": 26,
+              "function": "self.onmessage"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "limit": "Diagnostic tracing adds overhead; it cannot attribute a different historical untraced gap. Task durations are wall time, not CPU time; overlapping nested events must not be added. BeginFrame/RAF counts do not by themselves establish why a callback was omitted. A missing completion sidecar leaves protocol data loss unknown; absence of an event is not proof of inactivity. No cadence acceptance."
+}

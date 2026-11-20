@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación A2/A4/e-R3/f-R4: [diagnóstico de huecos Farm](native-frame-gap-diagnostics-20261120.md). Fuente Chromium fijada y trazado CDP existente adaptado, solo QA: tres GPU funcionales conservan575 IDs y54 dibujos/RAF por bloqueo1.8s. Otra ventana registra50.710ms con copia de imagen17.067ms coincidente; no explica por sí sola el intervalo ni los168ms históricos. Dos capturas sin indicador de pérdida se preservan; la versión final guarda/valida dataLossOccurred=false. Dos sintaxis,689 inputs/64 nativos/16 ajenos/38 A5 exactos; suites/build heredados. Recuperación WALK retenida y main pausado ya comprobados, no repetirlos como pendientes; cobertura global3.123/cohortes/fallos/VFX/cadencia abiertos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 
 Continuación e-R3/f-R4: [Cancelación de alta preparada](native-farm-birth-cancellation-20261120.md). Sin cambios de producto: respuesta Farm READY real reenviada antes/después de Home no adquiere23;13→19/18→20 conserva cuerpo2 y compañero. Comlink/Three leídos en fuente, sin dependencia/protocolo nuevos. Tres CPU nuevos y20 dirigidos pasan, cinco sintaxis; dos cancelaciones GPU conservan578/575 IDs,54 dibujos y reloj1.70–1.72s en cada bloqueo1.8s, picking/ausencia/drenaje reales. Control funcional pasa pero registra tres huecos hasta168ms: cadencia NO aceptada, atribución pendiente.688 inputs/64 nativos/16 ajenos/38 A5 exactos; regresión/build c01 heredados. Lotes/perfil compartido/fallos/cierre GPU/recuperación3.123 y demás ciclo abiertos; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
