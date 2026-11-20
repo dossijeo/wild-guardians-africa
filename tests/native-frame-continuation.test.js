@@ -54,9 +54,10 @@ test('actual Three shadow nodes skip a same-frame re-record and regenerate on th
 
 // Exercise the actual Worker recording loop. Resource/preparation ownership is
 // tested above and in the real product WebGPU audit; only its bootstrap is replaced.
-function workerFixture(){
+function workerFixture({canRebind=true}={}){
  const notices=[],scheduled=new Map(),timers=new Map(),begins=[],recorded=[];let serial=0,readiness='ready',reject=true,phaseClosed=0,finishes=0;
  const surface={get nativeWorldBoundary(){return reject?old:next;},timelinePump:{advance:()=>0,status:()=>({}),setHistoricalVisibility(){}},get nativeFrameReadiness(){return readiness;},render(){recorded.push('draw');return true;},remoteFrameMetadata:()=>({nativeWorldBoundary:reject?old:next,preparedInterval:null}),retainRejectedNativeFrame(e,m){return !!rejectedNativeFrameTarget(e,m,{prepared:old,required:next,proposal:proposal('armed')});},finishNativeFrameContinuation(){finishes++;}};
+ if(canRebind)surface.rebindTimelineRecovery=()=>{throw Error('This test must not execute recovery');};
  const remote={beginFrame:metadata=>begins.push(metadata),endFrame:async()=>{if(reject)throw error();},cancelFrame(){}};
  let source=readFileSync('src/rendering/webgpu-world-worker.js','utf8').replace(/^import .*;\r?\n/gm,'').replaceAll('import.meta.env.DEV','false');
  source+="\nphase='running';recoveryEnabled=true;surface=testSurface;remoteGpu=testRemote;return {draw,resumePreparation,onmessage:self.onmessage,get phase(){return phase;}};";
@@ -78,4 +79,13 @@ test('disposing the actual Worker cancels a waiting native continuation',async()
 
 test('hidden presentation suspends the continuation watchdog instead of rebuilding a healthy device',async()=>{
  const f=workerFixture();await f.worker.draw();await f.worker.onmessage({data:{kind:'presentation-visibility',hidden:true}});assert.equal(f.timers.size,0);assert.equal(f.worker.phase,'running');await f.worker.onmessage({data:{kind:'presentation-visibility',hidden:false}});assert.equal(f.timers.size,1);assert([...f.timers.values()][0].delay<=10000);assert.equal(f.notices.length,0);await f.worker.onmessage({data:{kind:'dispose'}});
+});
+
+test('a continuation without retained recovery capability closes its owner on failure',async()=>{
+ const f=workerFixture({canRebind:false});await f.worker.draw();
+ [...f.timers.values()][0].fn();
+ assert.equal(f.worker.phase,'failed');assert.equal(f.notices[0].kind,'failure');
+ assert.equal(f.notices[0].code,'remote-frame-native-mutation-obsolete');
+ assert.equal(f.closed,1,'a non-rebindable surface cannot use the retained recovery handoff');
+ assert.equal(f.notices.some(m=>m.kind==='firstFrame'),false);
 });
