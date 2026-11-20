@@ -1,15 +1,32 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
+import {gunzipSync} from 'node:zlib';
+
+// Analyze every interval in each recorded Host history, not only previously
+// selected maxima. Phase concentration is evidence, not a causal attribution.
+export function summarizeNativeGapPhases(cases,{periodMs=60000,phaseWindowMs=1000,longGapMs=100}={}){
+  if(!Array.isArray(cases)||!cases.length||![periodMs,phaseWindowMs,longGapMs].every(n=>Number.isFinite(n)&&n>0)||phaseWindowMs>=periodMs)throw Error('Invalid cadence cohort or phase window');
+  const covered=t=>Math.floor(t/periodMs)*phaseWindowMs+Math.min(t%periodMs,phaseWindowMs);
+  const rows=cases.map(({label,receipt})=>{
+    const samples=collectNativeHostHistory(receipt?.result).frames;
+    if(!label||!Array.isArray(samples)||samples.length<2)throw Error('Complete named Host history required');
+    const gaps=[];for(let i=1;i<samples.length;i++){
+      const previous=samples[i-1],current=samples[i],duration=current.at-previous.at;
+      if(!Number.isFinite(previous.at)||previous.at<0||!Number.isFinite(current.at)||duration<=0||!Number.isFinite(current.intervalMs)||Math.abs(duration-current.intervalMs)>.1)throw Error('Inconsistent Host interval history: '+label);
+      if(duration<=longGapMs)continue;
+      const phaseMs=previous.at%periodMs;
+      gaps.push({from:previous.at,through:current.at,milliseconds:duration,utc:new Date(previous.at).toISOString(),phaseMs,inPhase:phaseMs<phaseWindowMs,trigger:current.trigger??null,drawMs:current.drawMs??null,captures:(receipt.capture?.checkpoints??[]).filter(c=>c.startedAt<current.at&&c.finishedAt>previous.at).map(c=>c.label)});
+    }
+    const first=samples[0].at,last=samples.at(-1).at;
+    return {label,samples:samples.length,first,last,coverageMs:last-first,phaseExposureMs:covered(last)-covered(first),longGaps:gaps.length,inPhase:gaps.filter(g=>g.inPhase).length,gaps};
+  });
+  return {version:1,periodMs,phaseWindowMs,longGapMs,cases:rows,totals:{cases:rows.length,coverageMs:rows.reduce((n,r)=>n+r.coverageMs,0),phaseExposureMs:rows.reduce((n,r)=>n+r.phaseExposureMs,0),longGaps:rows.reduce((n,r)=>n+r.longGaps,0),inPhase:rows.reduce((n,r)=>n+r.inPhase,0)},limit:'Exploratory absolute-clock phase association. No randomization, independence assumption, causal claim, CPU/GPU-time equivalence or cadence acceptance. Coverage is the recorded Host history, not the whole process lifetime.'};
+}
 
 const median=values=>{const a=[...values].sort((a,b)=>a-b);return a.length?a[Math.floor(a.length/2)]:null;};
 const intervals=values=>values.slice(1).map((at,i)=>at-values[i]).filter(n=>n>0);
-export function analyzeNativeFrameCadence(receipt,trace){
-  const anchor=receipt.traceClockAnchor,events=trace.traceEvents;
-  if(!anchor||!Number.isFinite(anchor.absoluteMs)||!Array.isArray(events))throw Error('A receipt with its trace clock anchor and a Chrome trace are required');
-  const marks=events.filter(e=>e.name===anchor.name);
-  if(marks.length!==1)throw Error('Trace must contain exactly one matching clock anchor');
-  const offset=anchor.absoluteMs-marks[0].ts/1000,at=e=>offset+e.ts/1000;
+export function collectNativeHostHistory(result){
   const samples=new Map(),opportunities=new Map();
   function visit(o){
     if(!o||typeof o!=='object')return;
@@ -18,8 +35,17 @@ export function analyzeNativeFrameCadence(receipt,trace){
     if(Number.isFinite(o.at)&&typeof o.outcome==='string'&&'holdId' in o)opportunities.set(o.at,o);
     for(const v of Object.values(o))if(v&&typeof v==='object')visit(v);
   }
-  visit(receipt.result);
+  visit(result);
   const frames=[...samples.values()].sort((a,b)=>a.at-b.at);
+  return {frames,opportunities};
+}
+export function analyzeNativeFrameCadence(receipt,trace){
+  const anchor=receipt.traceClockAnchor,events=trace.traceEvents;
+  if(!anchor||!Number.isFinite(anchor.absoluteMs)||!Array.isArray(events))throw Error('A receipt with its trace clock anchor and a Chrome trace are required');
+  const marks=events.filter(e=>e.name===anchor.name);
+  if(marks.length!==1)throw Error('Trace must contain exactly one matching clock anchor');
+  const offset=anchor.absoluteMs-marks[0].ts/1000,at=e=>offset+e.ts/1000;
+  const {frames,opportunities}=collectNativeHostHistory(receipt.result);
   if(frames.length<2)throw Error('No Host frame samples in receipt');
   const hostCalls=events.filter(e=>e.name==='FunctionCall'&&e.args?.data?.functionName==='present'&&/\/remote-webgpu-host\.js(?:\?|$)/.test(e.args.data.url??''));
   const owners=new Map(hostCalls.map(e=>[`${e.pid}/${e.tid}`,{pid:e.pid,tid:e.tid}]));
@@ -53,6 +79,12 @@ export function analyzeNativeFrameCadence(receipt,trace){
 }
 
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
+  if(process.argv[2]==='--cohort'){
+    const [manifestPath,output]=process.argv.slice(3);if(!manifestPath||!output)throw Error('Usage: --cohort manifest.json output.json');
+    const manifest=JSON.parse(readFileSync(manifestPath)),inputs=[];
+    const cases=manifest.map(({label,path})=>{const bytes=readFileSync(path);inputs.push({label,path,sha256:createHash('sha256').update(bytes).digest('hex')});const receipt=JSON.parse(path.endsWith('.gz')?gunzipSync(bytes):bytes);return {label,receipt:{result:{host:{samples:collectNativeHostHistory(receipt.result).frames}},capture:receipt.capture}};});
+    const report=summarizeNativeGapPhases(cases);report.inputs=inputs;writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({output,...report.totals}));
+  }else{
   const [receiptPath,tracePath,output]=process.argv.slice(2);
   if(!receiptPath||!tracePath||!output)throw Error('Usage: node tools/guardian/analyze_native_frame_cadence.mjs receipt.json trace.json output.json');
   const raw=readFileSync(receiptPath),rawTrace=readFileSync(tracePath),hash=b=>createHash('sha256').update(b).digest('hex');
@@ -60,4 +92,5 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   report.inputs={receipt:{path:receiptPath,sha256:hash(raw)},trace:{path:tracePath,sha256:hash(rawTrace)}};
   writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({output,frameSamples:report.frameSamples,callbackHz:report.estimatedCallbackHz,maxHostDrawCpuMs:report.maxHostDrawCpuMs,maxHostSubmissionIntervalMs:report.maxHostSubmissionIntervalMs,gaps:report.gaps.length}));
+  }
 }

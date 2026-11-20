@@ -1,6 +1,28 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {analyzeNativeFrameCadence} from '../tools/guardian/analyze_native_frame_cadence.mjs';
+import {analyzeNativeFrameCadence,summarizeNativeGapPhases} from '../tools/guardian/analyze_native_frame_cadence.mjs';
+
+const cohortCase=(label,times)=>({label,receipt:{result:{host:{samples:times.map((at,i)=>({at,intervalMs:i?at-times[i-1]:null,drawMs:1,trigger:'raf',sequence:1}))}}}});
+test('phase audit counts full histories, exposure and non-phase controls without declaring cause',()=>{
+ const r=summarizeNativeGapPhases([cohortCase('minute',[60000,60200,60300,60600,61000]),cohortCase('elsewhere',[70000,70200,70300,70600,71000])]);
+ assert.equal(r.totals.longGaps,6);assert.equal(r.totals.inPhase,3);assert.equal(r.totals.phaseExposureMs,1000);assert.equal(r.totals.coverageMs,2000);assert.match(r.limit,/No randomization/);
+});
+test('phase audit merges later snapshots and deduplicates overlapping history',()=>{
+ const c=cohortCase('snapshots',[60000,60033,60200]);
+ c.receipt.result.nextTask={host:cohortCase('later',[60033,60200,60400]).receipt.result.host};
+ c.receipt.result.nextTask.host.samples[0].intervalMs=33;
+ const r=summarizeNativeGapPhases([c]);
+ assert.equal(r.cases[0].samples,4);assert.equal(r.totals.longGaps,2);assert.equal(r.totals.coverageMs,400);
+});
+test('phase audit retains capture overlap and intervals crossing the minute boundary',()=>{
+ const c=cohortCase('crossing',[59900,60150,60500]);c.receipt.capture={checkpoints:[{label:'image',startedAt:60000,finishedAt:60200}]};
+ const r=summarizeNativeGapPhases([c]);assert.equal(r.totals.inPhase,1);assert.equal(r.totals.phaseExposureMs,500);assert.deepEqual(r.cases[0].gaps[0].captures,['image']);assert.equal(r.cases[0].gaps[0].phaseMs,59900);
+});
+test('phase audit rejects missing and contradictory interval histories',()=>{
+ assert.throws(()=>summarizeNativeGapPhases([]),/Invalid/);assert.throws(()=>summarizeNativeGapPhases([cohortCase('one',[1])]),/history/);
+ const c=cohortCase('bad',[60000,60300]);c.receipt.result.host.samples[1].intervalMs=400;assert.throws(()=>summarizeNativeGapPhases([c]),/Inconsistent/);
+ assert.throws(()=>summarizeNativeGapPhases([cohortCase('reverse',[2,1])]),/Inconsistent/);
+});
 
 function fixture(){
   const samples=[0,33,99,132].map(at=>({at:1000+at,intervalMs:at===0?null:at===99?66:33,drawMs:1,sequence:1}));
