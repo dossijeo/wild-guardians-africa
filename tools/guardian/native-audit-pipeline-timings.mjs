@@ -11,10 +11,15 @@ export async function observeNativePipelineTimings(page,overrides){
    body=replace(body,"if(name==='createShaderModule'){record.sameSourceAs=","if(name==='createShaderModule'){record.source=descriptor.code;record.sameSourceAs=");
    return replace(body,'record.reference=object?.__remoteGpuId??null;','record.reference=object?.__remoteGpuId??null;record.resolvedAt=performance.timeOrigin+performance.now();');
   }],
-  ['remote-webgpu-host.js','**/src/rendering/remote-webgpu-host.js*',body=>{
+  ['remote-webgpu-host.js','**/src/rendering/remote-webgpu-host.js*',body=>rewriteNativePipelineHost(body)],
+ ])await page.context().route(pattern,async route=>{const response=await route.fetch(),body=await response.text(),annotated=transform(body);overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA pipeline timings and original encoded descriptor/WGSL identity only; original scheduling, arguments, promises, IDs and admission remain unchanged.'});await route.fulfill({response,body:annotated});});
+}
+
+export function rewriteNativePipelineHost(body,{descriptors=true}={}){
+ const replace=(body,from,to)=>{if(body.split(from).length!==2)throw Error('Pipeline timing observation seam changed: '+from);return body.replace(from,to);};
    body=replace(body,'  function resourceJob(type,stage,run){','  metrics.qaPipelineTimings=[];\n  function resourceJob(type,stage,run){');
    body=replace(body,'    setResource(message.id, entry);',`    setResource(message.id, entry);
-    const qaPipelineTiming=/^create(?:Render|Compute)Pipeline(?:Async)?$/.test(entry.kind)?{id:message.id,method:entry.kind,receivedAt:absoluteNow(),descriptor:structuredClone(message.descriptor),startedAt:null,returnedAt:null,finishedAt:null,status:'waiting'}:null;
+    const qaPipelineTiming=/^create(?:Render|Compute)Pipeline(?:Async)?$/.test(entry.kind)?{id:message.id,method:entry.kind,receivedAt:absoluteNow(),descriptor:${descriptors?'structuredClone(message.descriptor)':'null'},startedAt:null,returnedAt:null,finishedAt:null,status:'waiting'}:null;
     if(qaPipelineTiming)metrics.qaPipelineTimings.push(qaPipelineTiming);`);
    body=replace(body,'    const failedJob = error => {',`    const failedJob = error => {
       if(qaPipelineTiming){qaPipelineTiming.finishedAt=absoluteNow();qaPipelineTiming.status='rejected';qaPipelineTiming.error=String(error);performance.mark('native-pipeline-rejected:'+message.id);}`);
@@ -23,6 +28,4 @@ export async function observeNativePipelineTimings(page,overrides){
    return replace(body,"        const result = resourceJob(entry.kind,'build',build);",`        if(qaPipelineTiming){qaPipelineTiming.startedAt=absoluteNow();qaPipelineTiming.status='building';performance.mark('native-pipeline-build:'+message.id);}
         const result = resourceJob(entry.kind,'build',build);
         if(qaPipelineTiming){qaPipelineTiming.returnedAt=absoluteNow();qaPipelineTiming.status='native-pending';}`);
-  }],
- ])await page.context().route(pattern,async route=>{const response=await route.fetch(),body=await response.text(),annotated=transform(body);overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA pipeline timings and original encoded descriptor/WGSL identity only; original scheduling, arguments, promises, IDs and admission remain unchanged.'});await route.fulfill({response,body:annotated});});
 }

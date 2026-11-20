@@ -1,0 +1,38 @@
+{
+  "scope": "Offline counts in final serialized receipt only. Proves duplicate observation storage, not GC attribution or runtime allocation cost.",
+  "receipt": ".cache\\native-ordinary-60hz-stream1.json",
+  "families": {
+    "qaPreparationStages": {
+      "arrays": 13,
+      "rows": 1635,
+      "maxRows": 180,
+      "compactJsonBytes": 190487,
+      "uniqueRows": 180,
+      "duplicateStoredRows": 1455
+    },
+    "qaOrdinaryFrameStages": {
+      "arrays": 13,
+      "rows": 122280,
+      "maxRows": 19584,
+      "compactJsonBytes": 14334623,
+      "uniqueRows": 19584,
+      "duplicateStoredRows": 102696
+    },
+    "qaMutationStages": {
+      "arrays": 13,
+      "rows": 932,
+      "maxRows": 106,
+      "compactJsonBytes": 372422,
+      "uniqueRows": 106,
+      "duplicateStoredRows": 826
+    },
+    "qaPresentationOpportunities": {
+      "arrays": 13,
+      "rows": 41552,
+      "maxRows": 4959,
+      "compactJsonBytes": 4913899,
+      "uniqueRows": 4959,
+      "duplicateStoredRows": 36593
+    }
+  }
+}

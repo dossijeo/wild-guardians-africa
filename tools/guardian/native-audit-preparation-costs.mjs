@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {rewriteMutationCosts} from './native-audit-mutation-costs.mjs';
+import {rewriteNativePipelineHost} from './native-audit-pipeline-timings.mjs';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {pathToFileURL} from 'node:url';
@@ -82,17 +83,34 @@ export function rewritePreparationCosts(source,{resources=false,ordinary=false}=
 
 export async function observePreparationCosts(page,overrides){
  const sha=value=>createHash('sha256').update(value).digest('hex');
- const mutations=process.env.QA_NATIVE_MUTATION_TRACE==='true';
+ const mutations=process.env.QA_NATIVE_MUTATION_TRACE==='true',traceOnly=process.env.QA_NATIVE_TRACE_ONLY_HISTORY==='true';
+ if(traceOnly&&(process.env.QA_NATIVE_TRACE!=='true'||!mutations||process.env.QA_NATIVE_ORDINARY_FRAME_TRACE!=='true'))throw Error('Trace-only history requires full trace, mutation and ordinary frame observers');
  await page.context().route('**/src/rendering/remote-webgpu-host.js*',async route=>{
-  const response=await route.fetch(),body=await response.text(),phases=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true',ordinary:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true'}),annotated=mutations?rewriteMutationCosts(phases,'host'):phases;
-  overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),ordinaryFrames:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true',scope:'Optional QA preparation and ordinary admission phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
+  const response=await route.fetch(),body=await response.text(),phases=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true',ordinary:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true'}),pipelines=process.env.QA_NATIVE_PIPELINE_PHASE_TRACE==='true'?rewriteNativePipelineHost(phases,{descriptors:false}):phases,observed=mutations?rewriteMutationCosts(pipelines,'host'):pipelines,annotated=traceOnly?rewriteTraceOnlyHistory(observed,{host:true}):observed;
+  overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),ordinaryFrames:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true',pipelinePhases:process.env.QA_NATIVE_PIPELINE_PHASE_TRACE==='true',historyMode:traceOnly?'trace-only':'snapshots-and-trace',scope:'Optional QA preparation, pipeline and ordinary admission phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
   await route.fulfill({response,body:annotated});
  });
  if(mutations)for(const [owner,file]of [['publication','simulation/native-intent-control-publication.js'],['admission','world/native-resource-admission.js'],...(process.env.QA_NATIVE_FARM_COMMIT_TRACE==='true'?[['bridge','world/wild-engine/spatial-intent-bridge.js']]:[])])await page.context().route('**/src/'+file+'*',async route=>{
-  const response=await route.fetch(),body=await response.text(),annotated=rewriteMutationCosts(body,owner);
-  overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA mutation phase marks only. Original protocol, validation, ordering, queue fences and publication are unchanged; wall spans include waiting.'});
+  const response=await route.fetch(),body=await response.text(),observed=rewriteMutationCosts(body,owner),annotated=traceOnly?rewriteTraceOnlyHistory(observed):observed;
+  overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),historyMode:traceOnly?'trace-only':'snapshots-and-trace',scope:'Optional QA mutation phase marks only. Original protocol, validation, ordering, queue fences and publication are unchanged; wall spans include waiting.'});
   await route.fulfill({response,body:annotated});
  });
+}
+
+// CDP is already the complete history authority. Do not also copy its growing
+// high-frequency arrays through every inspect reply. Keep the small preparation
+// and mutation summaries for existing fixtures; all trace marks stay unchanged.
+export function rewriteTraceOnlyHistory(source,{host=false}={}){
+ if(source.includes('function qaTraceMark('))throw Error('Trace-only observation already installed');
+ if(host)for(const seam of ['metrics.qaOrdinaryFrameStages.push(row);','metrics.qaPresentationOpportunities.push(qaOpportunity);']){
+  if(source.split(seam).length!==2)throw Error('Trace-only observation seam changed: '+seam);
+  source=source.replace(seam,'');
+ }
+ const mark=/performance\.mark\('native-(?=preparation:|ordinary-frame:|mutation:|pipeline-(?:build|resolved|rejected):|presentation-opportunity'|submitted-draw')/g;
+ const count=[...source.matchAll(mark)].length;
+ if(count!==(host?5+(source.includes('metrics.qaPipelineTimings=[];')?3:0):1))throw Error('Trace-only observation mark seams changed');
+ source=source.replace(mark,"qaTraceMark('native-");
+ return "function qaTraceMark(name,options){performance.mark(name,options);performance.clearMarks(name);}\n"+source;
 }
 
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){

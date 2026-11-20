@@ -2,6 +2,8 @@
 
 [Report and remaining failures](native-60fps-capture-20261120.md) · [28-artifact manifest](performance/native-60fps-capture-20261120/manifest.json). Subordinate to the integrated plan; no gate closure.
 
+Next code handoff and revised ownership: [bounded compiler admission candidate / smaller QA histories](native-pipeline-admission-handoff-20261120.md). Astra supplies focused corrections; Sol performs integration, broad tests and GPU validation. The previously proposed Astra GPU comparison is cancelled.
+
 `708eaf6cc` replaces the original Farm auditor's in-memory trace export with bounded compressed streaming and explicit buffer capacity. Files: `native-audit-trace.mjs`, `audit_native_farm_birth_world_owner.mjs`, `native-audit-ordinary-report.mjs` under `tools/guardian/`, plus `native-audit-trace.test.js` and `native-audit-ordinary-report.test.js` under `tests/`. No production changes in this delivery.
 
 ```powershell

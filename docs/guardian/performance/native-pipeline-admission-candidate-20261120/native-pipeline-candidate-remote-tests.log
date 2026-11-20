@@ -1,0 +1,2023 @@
+TAP version 13
+# (node:24340) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: envelope certifies immediate pan/orbit/zoom inside its volume and rejects jumps outside
+ok 1 - envelope certifies immediate pan/orbit/zoom inside its volume and rejects jumps outside
+  ---
+  duration_ms: 9.5418
+  ...
+# Subtest: expands only bounded main-camera draw eligibility and leaves auxiliary passes and properties intact
+ok 2 - expands only bounded main-camera draw eligibility and leaves auxiliary passes and properties intact
+  ---
+  duration_ms: 10.7321
+  ...
+# Subtest: restores per-object culling after an interrupted preparation pass
+ok 3 - restores per-object culling after an interrupted preparation pass
+  ---
+  duration_ms: 2.9464
+  ...
+# (node:8592) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: sky WGSL reads the live camera basis and projection without CPU camera sampling
+ok 4 - sky WGSL reads the live camera basis and projection without CPU camera sampling
+  ---
+  duration_ms: 251.0336
+  ...
+# Subtest: blessing billboard WGSL reads the live camera basis without a CPU prepare dependency
+ok 5 - blessing billboard WGSL reads the live camera basis without a CPU prepare dependency
+  ---
+  duration_ms: 27.6452
+  ...
+# (node:17192) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: mailbox camera matches Three WebGPU projection and world/view matrices across viewport and lens changes
+ok 6 - mailbox camera matches Three WebGPU projection and world/view matrices across viewport and lens changes
+  ---
+  duration_ms: 27.5528
+  ...
+# Subtest: camera reader rejects stale/invalid versions and never waits for a writer
+ok 7 - camera reader rejects stale/invalid versions and never waits for a writer
+  ---
+  duration_ms: 1.3282
+  ...
+# Subtest: registers stable byte offsets once and revokes when a buffer is reused by an auxiliary camera
+ok 8 - registers stable byte offsets once and revokes when a buffer is reused by an auxiliary camera
+  ---
+  duration_ms: 7.3168
+  ...
+# Subtest: never registers shadow-only buffers and handles replacement of a main-camera GPU buffer
+ok 9 - never registers shadow-only buffers and handles replacement of a main-camera GPU buffer
+  ---
+  duration_ms: 0.8153
+  ...
+# Subtest: actual Three Bindings initializes aligned offsets before registration, including skipped group updates
+ok 10 - actual Three Bindings initializes aligned offsets before registration, including skipped group updates
+  ---
+  duration_ms: 3.2365
+  ...
+# (node:22684) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: resource recovery preserves initialization order and discards obsolete render commands
+ok 11 - resource recovery preserves initialization order and discards obsolete render commands
+  ---
+  duration_ms: 5.6673
+  ...
+# Subtest: readbacks, compute and undeclared copies require recovery rather than partial replay
+ok 12 - readbacks, compute and undeclared copies require recovery rather than partial replay
+  ---
+  duration_ms: 3.1821
+  ...
+# Subtest: discarding preparations closes each owned external image once
+ok 13 - discarding preparations closes each owned external image once
+  ---
+  duration_ms: 0.5635
+  ...
+# (node:23860) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: prepared successor waits for the displayed interval and inherits its origin without frame rounding drift
+ok 14 - prepared successor waits for the displayed interval and inherits its origin without frame rounding drift
+  ---
+  duration_ms: 5.7694
+  ...
+# Subtest: late preparation holds the safe endpoint and never jumps through the missed interval
+ok 15 - late preparation holds the safe endpoint and never jumps through the missed interval
+  ---
+  duration_ms: 0.7588
+  ...
+# Subtest: a confirmed discrete boundary cannot preempt a still executing certified interval
+ok 16 - a confirmed discrete boundary cannot preempt a still executing certified interval
+  ---
+  duration_ms: 0.4958
+  ...
+# Subtest: rates are simulation rates and a frozen lease cannot pretend to be autonomous
+ok 17 - rates are simulation rates and a frozen lease cannot pretend to be autonomous
+  ---
+  duration_ms: 1.8273
+  ...
+# (node:11504) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: ordinary older producer samples are accepted when evaluated time does not rewind
+ok 18 - ordinary older producer samples are accepted when evaluated time does not rewind
+  ---
+  duration_ms: 4.6369
+  ...
+# Subtest: CPU resources with an older paused lease are rejected, never silently advanced
+ok 19 - CPU resources with an older paused lease are rejected, never silently advanced
+  ---
+  duration_ms: 1.4776
+  ...
+# Subtest: replay advances the same generation only to its safe horizon
+ok 20 - replay advances the same generation only to its safe horizon
+  ---
+  duration_ms: 0.6568
+  ...
+# Subtest: frozen equal-time publications and higher sequences are valid
+ok 21 - frozen equal-time publications and higher sequences are valid
+  ---
+  duration_ms: 0.5361
+  ...
+# Subtest: only successfully consumed frames establish chronology
+ok 22 - only successfully consumed frames establish chronology
+  ---
+  duration_ms: 1.1129
+  ...
+# Subtest: generation, authority sequence and clock epoch cannot be replaced by older identities
+ok 23 - generation, authority sequence and clock epoch cannot be replaced by older identities
+  ---
+  duration_ms: 0.8162
+  ...
+# Subtest: untimed bootstrap is allowed but cannot erase established clock safety
+ok 24 - untimed bootstrap is allowed but cannot erase established clock safety
+  ---
+  duration_ms: 0.5498
+  ...
+# Subtest: reordered wall timestamps cannot rewind autonomous output
+ok 25 - reordered wall timestamps cannot rewind autonomous output
+  ---
+  duration_ms: 0.7383
+  ...
+# Subtest: an explicit mutation minimum advances only within the existing resource ceiling and remains transactional
+ok 26 - an explicit mutation minimum advances only within the existing resource ceiling and remains transactional
+  ---
+  duration_ms: 1.1353
+  ...
+# (node:20856) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: copy primitives become ready only after their original queue completes and releases private targets
+ok 27 - copy primitives become ready only after their original queue completes and releases private targets
+  ---
+  duration_ms: 10.3905
+  ...
+# Subtest: native copy validation failure cannot announce readiness
+ok 28 - native copy validation failure cannot announce readiness
+  ---
+  duration_ms: 3.6842
+  ...
+# Subtest: a partial bootstrap failure drains already-issued work before destroying targets
+ok 29 - a partial bootstrap failure drains already-issued work before destroying targets
+  ---
+  duration_ms: 7.8404
+  ...
+# (node:8756) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: a large ordinary packet yields before publication and leaves the resident generation drawable
+ok 30 - a large ordinary packet yields before publication and leaves the resident generation drawable
+  ---
+  duration_ms: 104.9446
+  ...
+# Subtest: retirement interrupts an ordinary inspection after its snapshot without releasing live buffers before the real drain
+ok 31 - retirement interrupts an ordinary inspection after its snapshot without releasing live buffers before the real drain
+  ---
+  duration_ms: 18.5694
+  ...
+# (node:8240) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: pending native compilation backpressures the existing FIFO while resident draws and inspection continue
+ok 32 - pending native compilation backpressures the existing FIFO while resident draws and inspection continue
+  ---
+  duration_ms: 53.8418
+  ...
+# Subtest: render and compute compilation share admission and retain the original layout dependency
+ok 33 - render and compute compilation share admission and retain the original layout dependency
+  ---
+  duration_ms: 8.8121
+  ...
+# Subtest: disposal rejects queued compilation and does not wait for or start the next native factory
+ok 34 - disposal rejects queued compilation and does not wait for or start the next native factory
+  ---
+  duration_ms: 6.6019
+  ...
+# Subtest: a rejected compilation fails admission without starting the queued pipeline
+ok 35 - a rejected compilation fails admission without starting the queued pipeline
+  ---
+  duration_ms: 48.2565
+  ...
+# (node:14224) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:14224) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:14224) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: one large prepared packet yields internally before GPU changes and keeps the acquired image drawable
+ok 36 - one large prepared packet yields internally before GPU changes and keeps the acquired image drawable
+  ---
+  duration_ms: 1229.4511
+  ...
+# Subtest: cancellation at inspection slice 1 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 37 - cancellation at inspection slice 1 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 616.028
+  ...
+# Subtest: cancellation at inspection slice 4 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 38 - cancellation at inspection slice 4 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 494.1142
+  ...
+# Subtest: cancellation at inspection slice 6 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+ok 39 - cancellation at inspection slice 6 with transport false retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 592.685
+  ...
+# Subtest: cancellation at inspection slice 1 with transport true retains CPU preparations without acquiring the proposal; the retry can use them
+ok 40 - cancellation at inspection slice 1 with transport true retains CPU preparations without acquiring the proposal; the retry can use them
+  ---
+  duration_ms: 452.3382
+  ...
+# Subtest: a late command-count violation remains a failure after slices, with no upload or native acquisition
+ok 41 - a late command-count violation remains a failure after slices, with no upload or native acquisition
+  ---
+  duration_ms: 403.1268
+  ...
+# Subtest: byte limits count typed payloads after a large command tree, before any native upload
+ok 42 - byte limits count typed payloads after a large command tree, before any native upload
+  ---
+  duration_ms: 428.196
+  ...
+# Subtest: a cyclic wire packet fails inspection instead of resuming forever
+ok 43 - a cyclic wire packet fails inspection instead of resuming forever
+  ---
+  duration_ms: 369.1617
+  ...
+# Subtest: cancellation inside prepared uploads preserves the displayed generation and retries retained bytes
+ok 44 - cancellation inside prepared uploads preserves the displayed generation and retries retained bytes
+  ---
+  duration_ms: 462.1979
+  ...
+# Subtest: cancelling between COW buffers repins retained dependencies before the retry forks the remaining buffers
+ok 45 - cancelling between COW buffers repins retained dependencies before the retry forks the remaining buffers
+  ---
+  duration_ms: 463.0722
+  ...
+# (node:18208) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:18208) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:18208) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: first use executes the original native pipeline and banks on compatible private MSAA/resolve attachments
+ok 46 - first use executes the original native pipeline and banks on compatible private MSAA/resolve attachments
+  ---
+  duration_ms: 6.7282
+  ...
+# Subtest: an already used native generation creates no targets, writes, commands or additional first-use work
+ok 47 - an already used native generation creates no targets, writes, commands or additional first-use work
+  ---
+  duration_ms: 0.6116
+  ...
+# Subtest: a new pipeline generation is exercised even when its producer identity matches a used predecessor
+ok 48 - a new pipeline generation is exercised even when its producer identity matches a used predecessor
+  ---
+  duration_ms: 0.7502
+  ...
+# Subtest: in-flight first use is shared by its exact resource entry without duplicating any GPU work
+ok 49 - in-flight first use is shared by its exact resource entry without duplicating any GPU work
+  ---
+  duration_ms: 0.5213
+  ...
+# Subtest: only cold draws execute when the same pass also contains an already used pipeline
+ok 50 - only cold draws execute when the same pass also contains an already used pipeline
+  ---
+  duration_ms: 0.6969
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [{"__remoteGpuId":"pipeline"}]
+ok 51 - binding a pipeline or drawing zero vertices/instances is not first use [{"__remoteGpuId":"pipeline"}]
+  ---
+  duration_ms: 0.4517
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [0]
+ok 52 - binding a pipeline or drawing zero vertices/instances is not first use [0]
+  ---
+  duration_ms: 0.4477
+  ...
+# Subtest: binding a pipeline or drawing zero vertices/instances is not first use [3,0]
+ok 53 - binding a pipeline or drawing zero vertices/instances is not first use [3,0]
+  ---
+  duration_ms: 0.3463
+  ...
+# Subtest: private depth/stencil attachments retain format and view generation without modifying published targets
+ok 54 - private depth/stencil attachments retain format and view generation without modifying published targets
+  ---
+  duration_ms: 1.0141
+  ...
+# Subtest: query writes and readbacks are not duplicated by a warm-up
+ok 55 - query writes and readbacks are not duplicated by a warm-up
+  ---
+  duration_ms: 0.9904
+  ...
+# Subtest: render-target copies remain one-shot image work and are not duplicated for pipeline first use
+ok 56 - render-target copies remain one-shot image work and are not duplicated for pipeline first use
+  ---
+  duration_ms: 0.7741
+  ...
+# Subtest: per-pass uniforms are restored in order using the already isolated native buffers
+ok 57 - per-pass uniforms are restored in order using the already isolated native buffers
+  ---
+  duration_ms: 0.9668
+  ...
+# Subtest: first use rejects unsandboxed writable-buffer before allocating GPU targets
+ok 58 - first use rejects unsandboxed writable-buffer before allocating GPU targets
+  ---
+  duration_ms: 1.2047
+  ...
+# Subtest: first use rejects unsandboxed writable-texture before allocating GPU targets
+ok 59 - first use rejects unsandboxed writable-texture before allocating GPU targets
+  ---
+  duration_ms: 0.5989
+  ...
+# Subtest: first use rejects unsandboxed unknown-storage-texture before allocating GPU targets
+ok 60 - first use rejects unsandboxed unknown-storage-texture before allocating GPU targets
+  ---
+  duration_ms: 0.5145
+  ...
+# Subtest: encoding failure disposes all private targets without touching native shared resources
+ok 61 - encoding failure disposes all private targets without touching native shared resources
+  ---
+  duration_ms: 1.1453
+  ...
+# Subtest: cold bundle draws reuse their exact native resources while preserving the original bundle
+ok 62 - cold bundle draws reuse their exact native resources while preserving the original bundle
+  ---
+  duration_ms: 0.9664
+  ...
+# Subtest: READY waits for actual private first use, preserves the old image/body and retires targets before adoption
+ok 63 - READY waits for actual private first use, preserves the old image/body and retires targets before adoption
+  ---
+  duration_ms: 1246.2275
+  ...
+# Subtest: native first-use validation failure cannot credit a prepared result or authorize the future world
+ok 64 - native first-use validation failure cannot credit a prepared result or authorize the future world
+  ---
+  duration_ms: 576.6057
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: undefined
+ok 65 - an upload-only or malformed receipt cannot certify first use: undefined
+  ---
+  duration_ms: 1.463
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: false
+ok 66 - an upload-only or malformed receipt cannot certify first use: false
+  ---
+  duration_ms: 0.676
+  ...
+# Subtest: an upload-only or malformed receipt cannot certify first use: 1
+ok 67 - an upload-only or malformed receipt cannot certify first use: 1
+  ---
+  duration_ms: 0.6435
+  ...
+# Subtest: unchanged writable draws do not block or execute in cold first use (pass)
+ok 68 - unchanged writable draws do not block or execute in cold first use (pass)
+  ---
+  duration_ms: 1.061
+  ...
+# Subtest: unchanged writable draws do not block or execute in cold first use (bundle)
+ok 69 - unchanged writable draws do not block or execute in cold first use (bundle)
+  ---
+  duration_ms: 0.6334
+  ...
+# Subtest: producer cannot supply host-owned preparedWorldBoundary
+ok 70 - producer cannot supply host-owned preparedWorldBoundary
+  ---
+  duration_ms: 2.9915
+  ...
+# Subtest: producer cannot supply host-owned preparedUploadsComplete
+ok 71 - producer cannot supply host-owned preparedUploadsComplete
+  ---
+  duration_ms: 2.8233
+  ...
+# Subtest: producer cannot supply host-owned initializedPreparation
+ok 72 - producer cannot supply host-owned initializedPreparation
+  ---
+  duration_ms: 1.3282
+  ...
+# Subtest: producer cannot supply host-owned drawnPipelines
+ok 73 - producer cannot supply host-owned drawnPipelines
+  ---
+  duration_ms: 1.4564
+  ...
+# Subtest: producer cannot supply host-owned firstUseTracked
+ok 74 - producer cannot supply host-owned firstUseTracked
+  ---
+  duration_ms: 1.2964
+  ...
+# (node:10856) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: remote playback is opt-in and never mutates the preparing clock
+ok 75 - remote playback is opt-in and never mutates the preparing clock
+  ---
+  duration_ms: 4.7956
+  ...
+# Subtest: leases preserve mixed rates, partially consumed segments and distinct worker origins
+ok 76 - leases preserve mixed rates, partially consumed segments and distinct worker origins
+  ---
+  duration_ms: 1.2118
+  ...
+# Subtest: exact event limits hold until explicitly released and retain carried elapsed time
+ok 77 - exact event limits hold until explicitly released and retain carried elapsed time
+  ---
+  duration_ms: 1.2142
+  ...
+# Subtest: pause, invalidation and inactive clocks cannot extrapolate
+ok 78 - pause, invalidation and inactive clocks cannot extrapolate
+  ---
+  duration_ms: 3.2613
+  ...
+# Subtest: malformed leases cannot invent coverage or reverse time
+ok 79 - malformed leases cannot invent coverage or reverse time
+  ---
+  duration_ms: 1.9208
+  ...
+# Subtest: binding registration uses real Three uniform offsets and only repeats on GPU buffer replacement
+ok 80 - binding registration uses real Three uniform offsets and only repeats on GPU buffer replacement
+  ---
+  duration_ms: 3.2535
+  ...
+# Subtest: clock metadata does not alter enumerable node structure or its structural cache key
+ok 81 - clock metadata does not alter enumerable node structure or its structural cache key
+  ---
+  duration_ms: 1.3574
+  ...
+# Subtest: a prepared resume uniform preserves the Three graph key and cannot be tagged as an assigned route
+ok 82 - a prepared resume uniform preserves the Three graph key and cannot be tagged as an assigned route
+  ---
+  duration_ms: 2.0885
+  ...
+# Subtest: a real Three uniform registers its captured native assignment at the physical buffer offset
+ok 83 - a real Three uniform registers its captured native assignment at the physical buffer offset
+  ---
+  duration_ms: 1.5463
+  ...
+# Subtest: an unpublished resume clock updates its known physical bindings without a uniform upload or graph change
+ok 84 - an unpublished resume clock updates its known physical bindings without a uniform upload or graph change
+  ---
+  duration_ms: 3.2127
+  ...
+# Subtest: native clock tagging rejects invalid actorId before binding
+ok 85 - native clock tagging rejects invalid actorId before binding
+  ---
+  duration_ms: 0.5683
+  ...
+# Subtest: native clock tagging rejects invalid assignmentSequence before binding
+ok 86 - native clock tagging rejects invalid assignmentSequence before binding
+  ---
+  duration_ms: 0.3978
+  ...
+# Subtest: native clock tagging rejects invalid authorityEpoch before binding
+ok 87 - native clock tagging rejects invalid authorityEpoch before binding
+  ---
+  duration_ms: 0.5116
+  ...
+# Subtest: native clock tagging rejects invalid session before binding
+ok 88 - native clock tagging rejects invalid session before binding
+  ---
+  duration_ms: 0.4927
+  ...
+# Subtest: native clock tagging rejects invalid slot before binding
+ok 89 - native clock tagging rejects invalid slot before binding
+  ---
+  duration_ms: 0.3924
+  ...
+# Subtest: native clock tagging rejects invalid generation before binding
+ok 90 - native clock tagging rejects invalid generation before binding
+  ---
+  duration_ms: 0.3997
+  ...
+# (node:7196) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: resource reception stays bounded before the receiver can execute a resource job
+ok 91 - resource reception stays bounded before the receiver can execute a resource job
+  ---
+  duration_ms: 39.1344
+  ...
+# Subtest: dispatch credits preserve FIFO without waiting for a native pipeline completion
+not ok 92 - dispatch credits preserve FIFO without waiting for a native pipeline completion
+  ---
+  duration_ms: 37.5255
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:21:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: transport transfers captured write bytes without detaching caller memory
+not ok 93 - transport transfers captured write bytes without detaching caller memory
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:35:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: forged transport acknowledgements cannot grant capacity
+not ok 94 - forged transport acknowledgements cannot grant capacity
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:48:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: unsent canvas capture is closed after dispose
+not ok 95 - unsent canvas capture is closed after dispose
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:55:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: unsent canvas capture is closed after lost
+not ok 96 - unsent canvas capture is closed after lost
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:55:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: unsent canvas capture is closed after error
+not ok 97 - unsent canvas capture is closed after error
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:55:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a producer cannot inject Host-owned prepared binding identities
+not ok 98 - a producer cannot inject Host-owned prepared binding identities
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:68:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a late canvas capture cannot restart transport after dispose
+not ok 99 - a late canvas capture cannot restart transport after dispose
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:74:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a late canvas capture cannot restart transport after lost
+not ok 100 - a late canvas capture cannot restart transport after lost
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:74:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a late canvas capture cannot restart transport after error
+not ok 101 - a late canvas capture cannot restart transport after error
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-resource-transport.test.js:74:50'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# (node:23336) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: image regions preserve source crop, flip and destination coordinates: false
+ok 102 - image regions preserve source crop, flip and destination coordinates: false
+  ---
+  duration_ms: 147.5912
+  ...
+# Subtest: image regions preserve source crop, flip and destination coordinates: true
+ok 103 - image regions preserve source crop, flip and destination coordinates: true
+  ---
+  duration_ms: 128.2807
+  ...
+# Subtest: an invalid full destination extent is not legalized by partial region writes
+ok 104 - an invalid full destination extent is not legalized by partial region writes
+  ---
+  duration_ms: 2.0422
+  ...
+# Subtest: large external upload yields inside the copy and holds its exact texture until interruption
+ok 105 - large external upload yields inside the copy and holds its exact texture until interruption
+  ---
+  duration_ms: 15.4723
+  ...
+# (node:10272) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: texture filters accept only declared textures and direct or bundled full screen draws
+ok 106 - texture filters accept only declared textures and direct or bundled full screen draws
+  ---
+  duration_ms: 3.8694
+  ...
+# Subtest: texture filters reject canvas, buffers, compute, indexed/indirect draws and queries
+ok 107 - texture filters reject canvas, buffers, compute, indexed/indirect draws and queries
+  ---
+  duration_ms: 2.131
+  ...
+# Subtest: flip-y permits one declared temporary texture but no arbitrary extra texture
+ok 108 - flip-y permits one declared temporary texture but no arbitrary extra texture
+  ---
+  duration_ms: 0.6115
+  ...
+# Subtest: resource clear requires offscreen attachments, an actual clear and no drawing
+ok 109 - resource clear requires offscreen attachments, an actual clear and no drawing
+  ---
+  duration_ms: 0.804
+  ...
+# Subtest: installer scopes only the two Three texture filters and restores methods on disposal
+ok 110 - installer scopes only the two Three texture filters and restores methods on disposal
+  ---
+  duration_ms: 8.3672
+  ...
+# Subtest: client captures texture scope at encoding and restores it after exceptions
+ok 111 - client captures texture scope at encoding and restores it after exceptions
+  ---
+  duration_ms: 13.3461
+  ...
+# (node:2864) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: identical standalone uniform writes retain published buffer and immutable bindings
+ok 112 - identical standalone uniform writes retain published buffer and immutable bindings
+  ---
+  duration_ms: 221.1936
+  ...
+# Subtest: changed partial uniform writes still fork and leave the published generation intact
+ok 113 - changed partial uniform writes still fork and leave the published generation intact
+  ---
+  duration_ms: 16.9338
+  ...
+# Subtest: uniform equality uses pending logical writes rather than displayed bytes (11)
+ok 114 - uniform equality uses pending logical writes rather than displayed bytes (11)
+  ---
+  duration_ms: 46.8887
+  ...
+# Subtest: uniform equality uses pending logical writes rather than displayed bytes (7)
+ok 115 - uniform equality uses pending logical writes rather than displayed bytes (7)
+  ---
+  duration_ms: 28.2866
+  ...
+# Subtest: consumer clock patches cannot be mistaken for unchanged producer bytes
+ok 116 - consumer clock patches cannot be mistaken for unchanged producer bytes
+  ---
+  duration_ms: 9.2313
+  ...
+# Subtest: equal bytes still isolate a producer snapshot from future writes by the published clock
+ok 117 - equal bytes still isolate a producer snapshot from future writes by the published clock
+  ---
+  duration_ms: 8.0495
+  ...
+# (node:18484) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# Subtest: a queue continuation whose dependency outlives its slice yields before touching the GPU
+ok 118 - a queue continuation whose dependency outlives its slice yields before touching the GPU
+  ---
+  duration_ms: 53.0053
+  ...
+# Subtest: resource timing measures a real write resumed after its dependency, excluding the promise wait
+ok 119 - resource timing measures a real write resumed after its dependency, excluding the promise wait
+  ---
+  duration_ms: 5.8989
+  ...
+# Subtest: resource timing includes the native factory released by a pending dependency
+ok 120 - resource timing includes the native factory released by a pending dependency
+  ---
+  duration_ms: 4.0266
+  ...
+# Subtest: a failed native operation retains its measured cost and the original failure
+ok 121 - a failed native operation retains its measured cost and the original failure
+  ---
+  duration_ms: 5.5215
+  ...
+# (node:448) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:448) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:448) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: an issued native action patches only its bounded relative phase and publishes the same pick age (exact origin)
+ok 122 - an issued native action patches only its bounded relative phase and publishes the same pick age (exact origin)
+  ---
+  duration_ms: 820.6893
+  ...
+# Subtest: an issued native action patches only its bounded relative phase and publishes the same pick age (retained origin)
+ok 123 - an issued native action patches only its bounded relative phase and publishes the same pick age (retained origin)
+  ---
+  duration_ms: 472.2523
+  ...
+# Subtest: a long-lived action packet never plays beyond the declared action duration
+ok 124 - a long-lived action packet never plays beyond the declared action duration
+  ---
+  duration_ms: 542.5328
+  ...
+# Subtest: an action reaching a rounded absolute end submits the terminal declared phase
+ok 125 - an action reaching a rounded absolute end submits the terminal declared phase
+  ---
+  duration_ms: 412.3978
+  ...
+# Subtest: action clocks fail closed when the draw owner lacks their capability
+ok 126 - action clocks fail closed when the draw owner lacks their capability
+  ---
+  duration_ms: 2.2301
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (exact)
+ok 127 - native action admission requires its retained packet and actual direct identity (exact)
+  ---
+  duration_ms: 441.2997
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (late)
+ok 128 - native action admission requires its retained packet and actual direct identity (late)
+  ---
+  duration_ms: 400.5395
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (missing-template)
+ok 129 - native action admission requires its retained packet and actual direct identity (missing-template)
+  ---
+  duration_ms: 384.2385
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (missing-attestation)
+ok 130 - native action admission requires its retained packet and actual direct identity (missing-attestation)
+  ---
+  duration_ms: 382.5693
+  ...
+# Subtest: native action admission requires its retained packet and actual direct identity (cancel-during-drain)
+ok 131 - native action admission requires its retained packet and actual direct identity (cancel-during-drain)
+  ---
+  duration_ms: 397.2154
+  ...
+# Subtest: native action admission cannot consume a locally ready packet before its actual queue drain
+ok 132 - native action admission cannot consume a locally ready packet before its actual queue drain
+  ---
+  duration_ms: 374.7559
+  ...
+# Subtest: native action clock admission rejects changed-source
+ok 133 - native action clock admission rejects changed-source
+  ---
+  duration_ms: 419.0194
+  ...
+# Subtest: native action clock admission rejects future-world
+ok 134 - native action clock admission rejects future-world
+  ---
+  duration_ms: 413.38
+  ...
+# Subtest: native action clock admission rejects wrong-epoch
+ok 135 - native action clock admission rejects wrong-epoch
+  ---
+  duration_ms: 406.8535
+  ...
+# Subtest: native action clock admission rejects absolute-clock
+ok 136 - native action clock admission rejects absolute-clock
+  ---
+  duration_ms: 405.0435
+  ...
+# Subtest: native action clock admission rejects resource-extension
+ok 137 - native action clock admission rejects resource-extension
+  ---
+  duration_ms: 415.4667
+  ...
+# Subtest: native action clock admission rejects mixed-route
+ok 138 - native action clock admission rejects mixed-route
+  ---
+  duration_ms: 401.4926
+  ...
+# Subtest: native boundary observers wake only after the validated direct requirement is installed
+ok 139 - native boundary observers wake only after the validated direct requirement is installed
+  ---
+  duration_ms: 1.0193
+  ...
+# Subtest: retained CPU texture updates fork only the changed texture and its views, preserving displayed pixels and every mip
+ok 140 - retained CPU texture updates fork only the changed texture and its views, preserving displayed pixels and every mip
+  ---
+  duration_ms: 421.508
+  ...
+# Subtest: a prepared world packet uploads a separate generation and adopts only the exact direct commit without another producer turn
+ok 141 - a prepared world packet uploads a separate generation and adopts only the exact direct commit without another producer turn
+  ---
+  duration_ms: 404.1254
+  ...
+# Subtest: an actual native suspended body requires direct attestation (true) and stops drawing after cancellation
+ok 142 - an actual native suspended body requires direct attestation (true) and stops drawing after cancellation
+  ---
+  duration_ms: 732.0492
+  ...
+# Subtest: an actual native suspended body requires direct attestation (false) and stops drawing after cancellation
+ok 143 - an actual native suspended body requires direct attestation (false) and stops drawing after cancellation
+  ---
+  duration_ms: 710.836
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 144 - a native resume packet needs the actual direct assignment (true, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 830.2734
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (false, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 145 - a native resume packet needs the actual direct assignment (false, stale false, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 788.6665
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale true, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 146 - a native resume packet needs the actual direct assignment (true, stale true, deferred false, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 783.7481
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 147 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 802.6595
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template true, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+ok 148 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template true, drain cancellation false, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 773.1211
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation true, large delay false, independent horizon false) before causal execution and picking
+ok 149 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation true, large delay false, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 771.7264
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay true, independent horizon false) before causal execution and picking
+ok 150 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay true, independent horizon false) before causal execution and picking
+  ---
+  duration_ms: 797.9412
+  ...
+# Subtest: a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon true) before causal execution and picking
+ok 151 - a native resume packet needs the actual direct assignment (true, stale false, deferred true, missing template false, drain cancellation false, large delay false, independent horizon true) before causal execution and picking
+  ---
+  duration_ms: 805.061
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (current)
+ok 152 - a first-task retained packet requires its genuine request and direct assignment (current)
+  ---
+  duration_ms: 373.8796
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (missing-template)
+ok 153 - a first-task retained packet requires its genuine request and direct assignment (missing-template)
+  ---
+  duration_ms: 347.2029
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (cancel-during-drain)
+ok 154 - a first-task retained packet requires its genuine request and direct assignment (cancel-during-drain)
+  ---
+  duration_ms: 386.1254
+  ...
+# Subtest: a first-task retained packet requires its genuine request and direct assignment (missing-attestation)
+ok 155 - a first-task retained packet requires its genuine request and direct assignment (missing-attestation)
+  ---
+  duration_ms: 392.0536
+  ...
+# Subtest: a draw owner without resume support refuses the candidate clock
+ok 156 - a draw owner without resume support refuses the candidate clock
+  ---
+  duration_ms: 1.2376
+  ...
+# Subtest: a preparer cannot inject direct native execution bindings into a packet
+ok 157 - a preparer cannot inject direct native execution bindings into a packet
+  ---
+  duration_ms: 1.5582
+  ...
+# Subtest: a draw owner without suspension support cannot silently accept the new clock as an ordinary clock
+ok 158 - a draw owner without suspension support cannot silently accept the new clock as an ordinary clock
+  ---
+  duration_ms: 0.7607
+  ...
+# Subtest: a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit
+ok 159 - a cancelled ready world packet retains the displayed generation and cannot activate on a later different commit
+  ---
+  duration_ms: 391.238
+  ...
+# Subtest: a prepared packet ready receipt waits for the actual upload fence while the prior image keeps drawing
+ok 160 - a prepared packet ready receipt waits for the actual upload fence while the prior image keeps drawing
+  ---
+  duration_ms: 346.5626
+  ...
+# Subtest: prepared drawing preserves first-submit resource copies instead of silently treating them as replay
+ok 161 - prepared drawing preserves first-submit resource copies instead of silently treating them as replay
+  ---
+  duration_ms: 398.0374
+  ...
+# Subtest: an already aborted prepared frame is cancelled before FIFO admission without stranding its RPC
+ok 162 - an already aborted prepared frame is cancelled before FIFO admission without stranding its RPC
+  ---
+  duration_ms: 357.595
+  ...
+# Subtest: a ready packet naming a different ticket never adopts the real native mutation
+ok 163 - a ready packet naming a different ticket never adopts the real native mutation
+  ---
+  duration_ms: 399.5282
+  ...
+# Subtest: native consumer retirement invalidates its prepared successor before any later draw
+ok 164 - native consumer retirement invalidates its prepared successor before any later draw
+  ---
+  duration_ms: 350.2611
+  ...
+# Subtest: prepared clock references are immutable even if the producer retags their logical buffer before the commit
+ok 165 - prepared clock references are immutable even if the producer retags their logical buffer before the commit
+  ---
+  duration_ms: 394.4635
+  ...
+# Subtest: a GPU copy cannot overwrite a prepared native presentation clock after consumer patching
+ok 166 - a GPU copy cannot overwrite a prepared native presentation clock after consumer patching
+  ---
+  duration_ms: 339.8392
+  ...
+# Subtest: cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid
+ok 167 - cancelling a successor before quiescence prevents physical commit even if the caller reports its local handle as valid
+  ---
+  duration_ms: 388.8789
+  ...
+# Subtest: the quiesced receipt retains its exact successor through late producer cancellation until native release
+ok 168 - the quiesced receipt retains its exact successor through late producer cancellation until native release
+  ---
+  duration_ms: 395.0764
+  ...
+# Subtest: a future world resource tag cannot prepare an unauthorized native actor assignment
+ok 169 - a future world resource tag cannot prepare an unauthorized native actor assignment
+  ---
+  duration_ms: 345.0133
+  ...
+# Subtest: upload-only command buffers cannot stand in for a prepared world image
+ok 170 - upload-only command buffers cannot stand in for a prepared world image
+  ---
+  duration_ms: 354.3362
+  ...
+# Subtest: obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload
+ok 171 - obsolete initialization survives until fresh commands use the same GPU buffer, without resending its upload
+  ---
+  duration_ms: 398.2454
+  ...
+# Subtest: retained native uniforms can finish admission behind a real fence without modifying the last displayed buffers
+ok 172 - retained native uniforms can finish admission behind a real fence without modifying the last displayed buffers
+  ---
+  duration_ms: 398.2592
+  ...
+# Subtest: independent gate resource coverage never grants time beyond the direct native causal clock
+ok 173 - independent gate resource coverage never grants time beyond the direct native causal clock
+  ---
+  duration_ms: 382.2741
+  ...
+# Subtest: independent gate clocks reject uncommitted and foreign native world references
+ok 174 - independent gate clocks reject uncommitted and foreign native world references
+  ---
+  duration_ms: 767.1424
+  ...
+# Subtest: native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads
+not ok 175 - native commit cancels an obsolete frame waiting for an unused pipeline, preserving only its uploads
+  ---
+  duration_ms: 389.5875
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:431:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: already admitted pending uploads transfer their exact resource pins after a physical commit
+not ok 176 - already admitted pending uploads transfer their exact resource pins after a physical commit
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:445:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: later writes follow the retained initialization and unused released resources retire without being uploaded
+not ok 177 - later writes follow the retained initialization and unused released resources retire without being uploaded
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:453:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: unrepeatable rejected compute requires explicit recovery instead of losing its state and presenting a partial repair
+not ok 178 - unrepeatable rejected compute requires explicit recovery instead of losing its state and presenting a partial repair
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:463:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retained payload capacity is bounded across rejected frames and an overflow releases its retained generations
+not ok 179 - retained payload capacity is bounded across rejected frames and an overflow releases its retained generations
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:470:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retirement discards unsubmitted retained uploads before draining the original GPU queue
+not ok 180 - retirement discards unsubmitted retained uploads before draining the original GPU queue
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:478:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: producer-supplied snapshot metadata cannot choose the native generation retained for an obsolete upload
+not ok 181 - producer-supplied snapshot metadata cannot choose the native generation retained for an obsolete upload
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:485:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retained texture uploads and declared mip passes execute once on the next world, using the original texture
+not ok 182 - retained texture uploads and declared mip passes execute once on the next world, using the original texture
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:494:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: declared offscreen texture preparation survives a native commit and runs once across frame replay
+not ok 183 - declared offscreen texture preparation survives a native commit and runs once across frame replay
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:506:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: remote drawing continues during delayed pipeline preparation, using fresh command buffers and swapchain views
+not ok 184 - remote drawing continues during delayed pipeline preparation, using fresh command buffers and swapchain views
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:535:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native retirement bypasses blocked preparation, freezes every submission and waits for the real queue drain
+not ok 185 - native retirement bypasses blocked preparation, freezes every submission and waits for the real queue drain
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:551:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a late producer frame is cancelled without poisoning an accepted native retirement drain
+not ok 186 - a late producer frame is cancelled without poisoning an accepted native retirement drain
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:576:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a pending operation cannot resume and submit after a native retirement receipt
+not ok 187 - a pending operation cannot resume and submit after a native retirement receipt
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:587:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: disposal does not certify retirement before the queue drains, and actual device loss retires its own connection
+not ok 188 - disposal does not certify retirement before the queue drains, and actual device loss retires its own connection
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:603:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native revocation bypasses a resource FIFO blocked on a pending pipeline
+not ok 189 - native revocation bypasses a resource FIFO blocked on a pending pipeline
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:619:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a failed submission cannot publish new native input clocks
+not ok 190 - a failed submission cannot publish new native input clocks
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:667:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO
+not ok 191 - real native causal watermarks, pause, speed and revocation control one prepared GPU packet outside a blocked resource FIFO
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:685:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a later prepared packet cannot drop a native-route tag to escape the causal clock of its connection
+not ok 192 - a later prepared packet cannot drop a native-route tag to escape the causal clock of its connection
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:720:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it
+not ok 193 - native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:737:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a prepared future resource generation waits for causal time instead of selecting its own logical start
+not ok 194 - a prepared future resource generation waits for causal time instead of selecting its own logical start
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:756:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: conditioned native barrier drains GPU, blocks pre-commit packets and waits for fresh resources at the safe boundary
+not ok 195 - conditioned native barrier drains GPU, blocks pre-commit packets and waits for fresh resources at the safe boundary
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:776:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a cancelled native hold never advances expired prepared resources beyond their validity ceiling
+not ok 196 - a cancelled native hold never advances expired prepared resources beyond their validity ceiling
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:805:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a frame prepared before the physical commit but sent afterwards cannot borrow the new consumer epoch
+not ok 197 - a frame prepared before the physical commit but sent afterwards cannot borrow the new consumer epoch
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:823:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a producer cannot relabel an already prepared frame with a later native world identity
+not ok 198 - a producer cannot relabel an already prepared frame with a later native world identity
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:847:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: old command buffers cannot be wrapped in a newly tagged frame or submitted outside the frame after commit
+not ok 199 - old command buffers cannot be wrapped in a newly tagged frame or submitted outside the frame after commit
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:855:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a control-bound drawing owner cannot present even an untagged scene before receiving its native baseline
+not ok 200 - a control-bound drawing owner cannot present even an untagged scene before receiving its native baseline
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:875:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: standalone canvas commands cannot bypass the native bootstrap wait
+not ok 201 - standalone canvas commands cannot bypass the native bootstrap wait
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:887:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting
+not ok 202 - an older packet still waiting for GPU preparation is rejected after a conditioned mutation instead of resurrecting
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:896:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: standalone GPU queue submissions cannot slip between a mutation drain and release
+not ok 203 - standalone GPU queue submissions cannot slip between a mutation drain and release
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:920:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native permission is checked after resource preparation, preventing late resurrection
+not ok 204 - native permission is checked after resource preparation, preventing late resurrection
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:938:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: an obsolete route packet retains the healthy device and last frame until a prepared replacement arrives
+not ok 205 - an obsolete route packet retains the healthy device and last frame until a prepared replacement arrives
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:965:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO
+not ok 206 - direct native GPU fence waits for submitted GPU work while bypassing a blocked resource FIFO
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:977:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a native GPU fence cannot name an unreceived sequence or outlive its retired draw connection
+not ok 207 - a native GPU fence cannot name an unreceived sequence or outlive its retired draw connection
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1002:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: GPU drain failure closes drawing without issuing a successful native fence receipt
+not ok 208 - GPU drain failure closes drawing without issuing a successful native fence receipt
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1016:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: publication and draw host exchange an exact GPU fence through their live control endpoints
+not ok 209 - publication and draw host exchange an exact GPU fence through their live control endpoints
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1026:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: queued route clock bindings capture the native identity before caller mutation
+not ok 210 - queued route clock bindings capture the native identity before caller mutation
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1038:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a prepared native frame waits for its direct bootstrap rather than using an unscoped permission
+not ok 211 - a prepared native frame waits for its direct bootstrap rather than using an unscoped permission
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1056:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retiring a control connection freezes its admitted clocks without reviving old packets
+not ok 212 - retiring a control connection freezes its admitted clocks without reviving old packets
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1076:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: missing native control fails admission explicitly instead of holding a generation forever
+not ok 213 - missing native control fails admission explicitly instead of holding a generation forever
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1100:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: frame publication is bounded and writes are invisible until the atomic presentation boundary
+not ok 214 - frame publication is bounded and writes are invisible until the atomic presentation boundary
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1113:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: writeBuffer snapshots typed-array ranges without detaching or observing later mutations
+not ok 215 - writeBuffer snapshots typed-array ranges without detaching or observing later mutations
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1126:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: mappedAtCreation uploads through the native mapping without requiring COPY_DST
+not ok 216 - mappedAtCreation uploads through the native mapping without requiring COPY_DST
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1136:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: destroy retains resources referenced by the active frame, then retires after replacement
+not ok 217 - destroy retains resources referenced by the active frame, then retires after replacement
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1146:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: clock patch advances only inside a confirmed lease and overrides producer writes
+not ok 218 - clock patch advances only inside a confirmed lease and overrides producer writes
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1156:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: one-shot buffer copies do not replay and resource fences work before any frame
+not ok 219 - one-shot buffer copies do not replay and resource fences work before any frame
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1167:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: preparation cannot mutate published buffers until the next frame commits
+not ok 220 - preparation cannot mutate published buffers until the next frame commits
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1182:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a write after packet publication forks the pending generation instead of reordering writes
+not ok 221 - a write after packet publication forks the pending generation instead of reordering writes
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1199:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: partial preparation writes fork the logical state of an already published pending frame
+not ok 222 - partial preparation writes fork the logical state of an already published pending frame
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1212:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: endFrame metadata is the final clock/event boundary, not the metadata at beginFrame
+not ok 223 - endFrame metadata is the final clock/event boundary, not the metadata at beginFrame
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1222:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: multipass uniform writes retain queue order on independent replay
+not ok 224 - multipass uniform writes retain queue order on independent replay
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1233:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: replay restores the baseline when a draw precedes the only uniform write
+not ok 225 - replay restores the baseline when a draw precedes the only uniform write
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1251:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a current-texture view created for a future frame survives unrelated retirement
+not ok 226 - a current-texture view created for a future frame survives unrelated retirement
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1269:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: canceling presentation preserves completed upload bookkeeping without publishing the canceled frame
+not ok 227 - canceling presentation preserves completed upload bookkeeping without publishing the canceled frame
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1284:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: one-shot compute cannot silently freeze while a remote animation clock advances
+not ok 228 - one-shot compute cannot silently freeze while a remote animation clock advances
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1307:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: finalizer release drops producer ownership without calling native destroy
+not ok 229 - finalizer release drops producer ownership without calling native destroy
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1317:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: recorded proxies remain retained through ACK and native frame pins outlive producer finalization
+not ok 230 - recorded proxies remain retained through ACK and native frame pins outlive producer finalization
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1331:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a bind group retains released native buffer storage until its own release
+not ok 231 - a bind group retains released native buffer storage until its own release
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1354:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a prepared successor cannot replace the currently executing interval early
+not ok 232 - a prepared successor cannot replace the currently executing interval early
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1368:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: late preparation holds the old safe endpoint then begins the new interval without rewind
+not ok 233 - late preparation holds the old safe endpoint then begins the new interval without rewind
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1387:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: visibility suspension preserves the active interval and shifts the queued successor without catch-up
+not ok 234 - visibility suspension preserves the active interval and shifts the queued successor without catch-up
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1400:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a first packet received while hidden starts at resume rather than skipping its interval
+not ok 235 - a first packet received while hidden starts at resume rather than skipping its interval
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1420:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: invalid resource references are rejected before any frame upload mutates the displayed generation
+not ok 236 - invalid resource references are rejected before any frame upload mutates the displayed generation
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1431:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a valid but regressive clock cannot mutate resources or replace the displayed generation
+not ok 237 - a valid but regressive clock cannot mutate resources or replace the displayed generation
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1445:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retiring N unrelated resources performs N localized checks and no active graph traversals
+not ok 238 - retiring N unrelated resources performs N localized checks and no active graph traversals
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1462:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: explicit native destruction waits for staged preparation to reach a generation boundary
+not ok 239 - explicit native destruction waits for staged preparation to reach a generation boundary
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1477:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: an unrelated asynchronous pipeline cannot block publication of a newer frame using ready resources
+not ok 240 - an unrelated asynchronous pipeline cannot block publication of a newer frame using ready resources
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1497:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: pipeline-derived layouts and bind groups wait only on their branch and follow uniform forks
+not ok 241 - pipeline-derived layouts and bind groups wait only on their branch and follow uniform forks
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1515:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: explicit proxy device destruction reaches the native device and resolves lost before cleanup
+not ok 242 - explicit proxy device destruction reaches the native device and resolves lost before cleanup
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1540:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: clock offsets override stale multipass uniforms and baseline restoration before every submission
+not ok 243 - clock offsets override stale multipass uniforms and baseline restoration before every submission
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1552:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: frame and fence diagnostics distinguish posting, admission, first draw, ACK and local refusal
+not ok 244 - frame and fence diagnostics distinguish posting, admission, first draw, ACK and local refusal
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1568:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: pending native fence promises preserve their queue prefixes without blocking later resources or frames
+not ok 245 - pending native fence promises preserve their queue prefixes without blocking later resources or frames
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1585:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: device loss rejects a pending fence without waiting for its native promise to finish
+not ok 246 - device loss rejects a pending fence without waiting for its native promise to finish
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1609:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: pending mapping, shader diagnostics and error scopes do not block ready frames
+not ok 247 - pending mapping, shader diagnostics and error scopes do not block ready frames
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1621:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: pending mapping cancellation preserves newer mappings and explicit destruction
+not ok 248 - pending mapping cancellation preserves newer mappings and explicit destruction
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1645:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native mapping rejection and device loss restore proxy mapState
+not ok 249 - native mapping rejection and device loss restore proxy mapState
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1667:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: readonly storage forks by native copy, retains GPU contents and preserves the published generation
+not ok 250 - readonly storage forks by native copy, retains GPU contents and preserves the published generation
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1698:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: native storage fork overlays pending CPU writes without publishing them early
+not ok 251 - native storage fork overlays pending CPU writes without publishing them early
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1716:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: writable or unclassified storage and pending GPU outputs cannot bypass the fence invariant
+not ok 252 - writable or unclassified storage and pending GPU outputs cannot bypass the fence invariant
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1727:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: published vertex and index buffers use generation copies without CPU shadows
+not ok 253 - published vertex and index buffers use generation copies without CPU shadows
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1747:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: canvas reconfiguration cannot invalidate pending or active frames and unconfigure stops replay
+not ok 254 - canvas reconfiguration cannot invalidate pending or active frames and unconfigure stops replay
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1764:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: pending query resolution protects its actual destination buffer from premature generation copies
+not ok 255 - pending query resolution protects its actual destination buffer from premature generation copies
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1779:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: ordered resource admission acknowledges captured writes before GPU completion without weakening real fences
+not ok 256 - ordered resource admission acknowledges captured writes before GPU completion without weakening real fences
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1795:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: ordered admission rejects uncommitted local frames and unsafe published mutations
+not ok 257 - ordered admission rejects uncommitted local frames and unsafe published mutations
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1815:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: ordered admission cannot hide a preceding resource upload error
+not ok 258 - ordered admission cannot hide a preceding resource upload error
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1827:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: ordered admission waits for captured external image payloads, never their GPU completion
+not ok 259 - ordered admission waits for captured external image payloads, never their GPU completion
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1835:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: acknowledged remote disposal waits for the real native queue drain before retiring its control connection
+not ok 260 - acknowledged remote disposal waits for the real native queue drain before retiring its control connection
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1856:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: failed disposal RPC rejects without fabricating a successful close acknowledgement
+not ok 261 - failed disposal RPC rejects without fabricating a successful close acknowledgement
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1866:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a close RPC joins an already stopped host and survives expected device loss until its receipt
+not ok 262 - a close RPC joins an already stopped host and survives expected device loss until its receipt
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1873:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: retained unpublished non-uniform upload reaches the existing queue fence without changing the displayed generation
+not ok 263 - retained unpublished non-uniform upload reaches the existing queue fence without changing the displayed generation
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1895:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: destroyed unpublished retained buffer completes its queued upload before actual deferred destruction
+not ok 264 - destroyed unpublished retained buffer completes its queued upload before actual deferred destruction
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1912:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a retained published vertex buffer remains protected from admission fence uploads
+not ok 265 - a retained published vertex buffer remains protected from admission fence uploads
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1921:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: an unpublished COW vertex generation can finish retained uploads while the old published generation remains unchanged
+not ok 266 - an unpublished COW vertex generation can finish retained uploads while the old published generation remains unchanged
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1930:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+# Subtest: a mixed retained fence batch validates every destination before writing an unpublished buffer or forking a displayed uniform
+not ok 267 - a mixed retained fence batch validates every destination before writing an unpublished buffer or forking a displayed uniform
+  ---
+  duration_ms: 0
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-webgpu.test.js:1940:1'
+  failureType: 'cancelledByParent'
+  error: 'Promise resolution is still pending but the event loop has already resolved'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    process.emit (node:events:524:28)
+  ...
+1..267
+# tests 267
+# suites 0
+# pass 164
+# fail 0
+# cancelled 103
+# skipped 0
+# todo 0
+# duration_ms 27196.6876

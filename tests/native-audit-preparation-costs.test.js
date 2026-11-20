@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {rewritePreparationCosts,summarizePreparationCosts} from '../tools/guardian/native-audit-preparation-costs.mjs';
+import {rewritePreparationCosts,summarizePreparationCosts,rewriteTraceOnlyHistory,observePreparationCosts} from '../tools/guardian/native-audit-preparation-costs.mjs';
 import {rewriteMutationCosts} from '../tools/guardian/native-audit-mutation-costs.mjs';
+import {rewriteNativePipelineHost} from '../tools/guardian/native-audit-pipeline-timings.mjs';
 
 test('ordinary admission observations stay opt-in and compose with preparation, resource and mutation observations',()=>{
  const source=readFileSync(new URL('../src/rendering/remote-webgpu-host.js',import.meta.url),'utf8');
@@ -37,4 +38,45 @@ test('failed and incomplete runs keep their status and async waits',()=>{
 test('missing or contradictory marks cannot produce preparation claims',()=>{
  assert.throws(()=>summarizePreparationCosts({result:{}}),/No preparation marks/);
  assert.throws(()=>summarizePreparationCosts({result:{qaPreparationStages:[{sequence:1,stage:'start',at:1},{sequence:1,stage:'start',at:2}]}}),/Conflicting/);
+});
+
+test('trace-only annotations retain every mark and original await/fence while eliminating growing ordinary/opportunity copies',()=>{
+ const source=readFileSync(new URL('../src/rendering/remote-webgpu-host.js',import.meta.url),'utf8'),observed=rewriteMutationCosts(rewritePreparationCosts(source,{ordinary:true}),'host'),bounded=rewriteTraceOnlyHistory(observed,{host:true});
+ for(const seam of ['metrics.qaOrdinaryFrameStages.push(row);','metrics.qaPresentationOpportunities.push(qaOpportunity);']){
+  assert(observed.includes(seam),'negative control: original observer retains the history');assert(!bounded.includes(seam));
+  assert.throws(()=>rewriteTraceOnlyHistory(observed.replace(seam,''),{host:true}),/seam changed/);
+ }
+ assert.equal((bounded.match(/\bawait\b/g)??[]).length,(observed.match(/\bawait\b/g)??[]).length);
+ assert.equal((bounded.match(/\.onSubmittedWorkDone\(/g)??[]).length,(observed.match(/\.onSubmittedWorkDone\(/g)??[]).length);
+ assert.equal((observed.match(/performance\.mark\('native-/g)??[]).length,(bounded.match(/qaTraceMark\('native-/g)??[]).length);
+ assert.match(bounded,/qaMutation\('retired-drained'|deviceIsLost\?'retired-device-loss':'retired-drained'/);
+ assert.match(bounded,/metrics\.qaPreparationStages\.push\(row\)/);assert.match(bounded,/metrics\.qaMutationStages\.push\(row\)/);
+ assert.throws(()=>rewriteTraceOnlyHistory(bounded,{host:true}),/already installed/);
+ assert.throws(()=>rewriteTraceOnlyHistory(observed.replace("performance.mark('native-submitted-draw'","performance.mark('changed'"),{host:true}),/mark seams changed/);
+ // Test the generated wrapper itself. Trace delivery here is a double; real
+ // Chromium trace delivery after clearMarks still requires the GPU auditor.
+ const retained=new Map(),emitted=[],perf={mark(name,options){retained.set(name,options);emitted.push({name,...structuredClone(options)});},clearMarks(name){retained.delete(name);}};
+ const mark=new Function('performance',bounded.split('\n')[0]+'; return qaTraceMark;')(perf);
+ for(let ordinal=1;ordinal<=5008;ordinal++)mark('native-presentation-opportunity',{detail:{ordinal,at:ordinal,outcome:ordinal===4961?'mutation-hold':'submitted'}});
+ assert.equal(retained.size,0);assert.equal(emitted.length,5008);assert.equal(emitted[4960].detail.outcome,'mutation-hold');assert.equal(emitted.at(-1).detail.ordinal,5008);
+});
+
+test('trace-only history cannot run without all full-history trace observers',async()=>{
+ const names=['QA_NATIVE_TRACE_ONLY_HISTORY','QA_NATIVE_TRACE','QA_NATIVE_MUTATION_TRACE','QA_NATIVE_ORDINARY_FRAME_TRACE'],old=Object.fromEntries(names.map(k=>[k,process.env[k]]));
+ try{
+  for(const missing of names.slice(1)){
+   for(const k of names)process.env[k]='true';process.env[missing]='false';
+   await assert.rejects(observePreparationCosts({context(){throw Error('must reject before registering routes');}},[]),/requires full trace/);
+  }
+ }finally{for(const k of names)if(old[k]===undefined)delete process.env[k];else process.env[k]=old[k];}
+});
+
+test('existing pipeline timing annotations compose without a second route or copying descriptors in phase-only mode',()=>{
+ const source=readFileSync(new URL('../src/rendering/remote-webgpu-host.js',import.meta.url),'utf8'),phases=rewritePreparationCosts(source,{ordinary:true}),pipelines=rewriteNativePipelineHost(phases,{descriptors:false}),observed=rewriteMutationCosts(pipelines,'host'),bounded=rewriteTraceOnlyHistory(observed,{host:true});
+ assert.match(bounded,/descriptor:null,startedAt:null/);assert.doesNotMatch(bounded,/descriptor:structuredClone\(message.descriptor\)/);
+ assert.match(rewriteNativePipelineHost(source),/descriptor:structuredClone\(message.descriptor\)/,'original optional descriptor audit remains available');
+ for(const name of ['build','resolved','rejected'])assert(bounded.includes("qaTraceMark('native-pipeline-"+name+":'"));
+ assert.equal((bounded.match(/\bawait\b/g)??[]).length,(source.match(/\bawait\b/g)??[]).length);
+ assert.equal((bounded.match(/\.onSubmittedWorkDone\(/g)??[]).length,(source.match(/\.onSubmittedWorkDone\(/g)??[]).length);
+ assert.throws(()=>rewriteNativePipelineHost(source.replace("resourceJob(entry.kind,'build',build)",'changed()')),/seam changed/);
 });
