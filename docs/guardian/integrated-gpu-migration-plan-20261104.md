@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Corrección de auditoría A7: [prioridad compartida de cultivos](native-crop-selection-parity-20261120.md). WorldScene.pick también superpone los volúmenes de cultivo a las mallas; la observación anterior no acredita un defecto exclusivo de migración. Se descarta y retira el candidato de triángulos que cambiaba esa política, aunque pasaba sus pruebas. Producto y harnesses restaurados por bytes a755812f61; nueva regresión de paridad13/13 y dos sintaxis. Suites/build completos heredados, no nuevos.693 inputs/64 nativos/16 ajenos/38 A5 exactos. Siguiente pendiente real: productor ordinario Harvest15 → Carry16 → entrega17/Home. A6/A/B/C y cadencia abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/e-R3/f-R4: [TaskAction conserva su publicación](native-task-action-publication-hold-20261120.md). Corrige fallo GPU real Task14 → Harvest15 mediante el hold existente hasta dibujo/adopción; fuente Chromium contrastada, sin dependencia/ABI/reloj nuevos. Dos perfiles jóvenes y control pasan con585 IDs y banco refs2;147 dirigidas,4838/4839 en365 archivos/una omisión y build nuevos. OlderFemale/Male adquieren Action pero fallan picking: caja de cultivo sobrescribe malla real; fuente Three leída y defecto abierto como siguiente punto. Nueva ventana167,650ms pese a cero fábricas READY; no aceptación de cadencia ni del caso global3.123.691 inputs/64 nativos/16 ajenos/38 A5 exactos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

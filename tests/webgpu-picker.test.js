@@ -87,3 +87,16 @@ test('geometry outside the chunk clip cannot hide a selectable target',()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100);camera.position.set(0,1,10);camera.lookAt(0,1,0);camera.updateProjectionMatrix();const target=new THREE.Group();target.userData.entityId='wall';target.position.set(0,1,0);target.add(new THREE.Mesh(new THREE.BoxGeometry(1,2,1),new THREE.MeshBasicMaterial()));scene.add(target);
  const geometry=new THREE.PlaneGeometry(2,2);geometry.setAttribute('wgChunkClip',new THREE.InstancedBufferAttribute(new Float32Array([24,-24,72,24]),4));const prop=new THREE.Mesh(geometry,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));prop.userData.nativePropSlot=19;prop.position.set(0,1,5);scene.add(prop);const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[]});assert.equal(picker.pick({x:0,y:0}).entityId,'wall');geometry.getAttribute('wgChunkClip').setXYZW(0,-24,-24,24,24);assert.equal(picker.pick({x:0,y:0}).entityId,null);geometry.dispose();prop.material.dispose();target.children[0].geometry.dispose();target.children[0].material.dispose();
 });
+
+
+test('crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),root=new THREE.Group(),geometry=new THREE.BoxGeometry(.5,2,.5),material=new THREE.MeshBasicMaterial(),body=new THREE.Mesh(geometry,material);
+ camera.position.set(0,1,5);camera.lookAt(0,1,0);camera.updateProjectionMatrix();body.position.y=1;root.add(body);scene.add(root);
+ const crop={id:'plant-900099',x:0,y:0,z:0,radius:.45,height:2};let bounds=[crop];
+ const picker=createWebGpuPicker({scene,camera,state:{workers:[{id:'worker-1',status:'acting'}]},animals:{get:()=>null},workers:{get:()=>({root})},cropBounds:()=>bounds});
+ try{
+  assert.equal(picker.pick({x:0,y:0}).entityId,crop.id,'the logical crop volume has the same overlap priority as WorldScene.pick');
+  bounds=[];assert.equal(picker.pick({x:0,y:0}).entityId,'worker-1','removing the confirmed crop volume exposes the same resident worker');
+  bounds=[crop];const prop=new THREE.Mesh(geometry,material);prop.position.set(0,1,2);prop.userData.nativePropSlot=0;scene.add(prop);assert.equal(picker.pick({x:0,y:0}).entityId,null,'a nearer opaque prop still blocks both selectable targets');
+ }finally{geometry.dispose();material.dispose();}
+});
