@@ -63,10 +63,20 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
 // graphical client. Session scope belongs to the endpoint, not to a GPU lease.
 export function attachNativeResourcePreparationEndpoint({port,session,onClosed=()=>{},...options}){
  if(!port||typeof port.postMessage!=='function'||typeof session!=='string'||!session)throw TypeError('Invalid native resource endpoint');
- let closed=false;
- const receiver=createNativeResourcePreparationReceiver({...options,postMessage:message=>port.postMessage({...message,session})});
+ let closed=false,cleanupFailed=false;
+ const receiver=createNativeResourcePreparationReceiver({...options,onError:error=>{cleanupFailed=true;options.onError?.(error);},postMessage:message=>port.postMessage({...message,session})});
  function close(message='Native resource preparer closed'){
-  if(closed)return;closed=true;try{receiver.dispose();}finally{try{port.postMessage({kind:'nativeResourcesClosed',session,message});}catch{}port.onmessage=port.onmessageerror=null;port.close?.();receiver.whenCallbacksSettled().then(()=>onClosed());}
+  if(closed)return;closed=true;
+  try{receiver.dispose();}catch(error){cleanupFailed=true;throw error;}finally{
+   // Closed rejects requests immediately. Retired is a separate same-session
+   // callback receipt; neither message certifies GPU retirement.
+   port.onmessage=port.onmessageerror=null;
+   try{port.postMessage({kind:'nativeResourcesClosed',session,message,retirementVersion:2});}catch{}
+   const finish=()=>{const status=receiver.status();try{port.postMessage({kind:'nativeResourcesRetired',session,retirementVersion:2,
+     callbacksSettled:!cleanupFailed&&status.closed&&status.pending===null&&status.inflight===0});}
+    catch{}finally{port.close?.();onClosed();}};
+   if(receiver.status().inflight===0)finish();else receiver.whenCallbacksSettled().then(finish);
+  }
  }
  port.onmessage=({data})=>{try{
   if(data?.session!==session)throw Error('Native resource session mismatch');
@@ -75,6 +85,6 @@ export function attachNativeResourcePreparationEndpoint({port,session,onClosed=(
   Promise.resolve(result).catch(error=>close(String(error?.message??error)));
  }catch(error){close(String(error?.message??error));}};
  port.onmessageerror=()=>close('Native resource request transfer failed');port.start?.();
- try{port.postMessage({kind:'nativeResourcesReady',session,version:1});}catch(error){close();throw error;}
+ try{port.postMessage({kind:'nativeResourcesReady',session,version:1,retirementVersion:2});}catch(error){close();throw error;}
  return {dispose:close,status:()=>{const status=receiver.status();return {...status,closed:closed||status.closed};}};
 }

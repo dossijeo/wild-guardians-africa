@@ -23,4 +23,6 @@ No se cierra ningún gate. La inyección tipada de main y la mutación nativa de
 
 El test de timeout de continuación cargaba el Worker de producto con un doble de Surface que carecía de `rebindTimelineRecovery`. La prueba de retención incluye ahora esa capacidad explícita y una segunda prueba exige el cierre cuando falta. Se conservaron las aserciones de retención y se verificaron las 12 pruebas del archivo. El caso de pérdida real del dispositivo conserva su reproducción separada. [Pruebas de continuación](../../tests/native-frame-continuation.test.js).
 
+El control `fresh` pasó después de integrar el recibo terminal y corregir la carrera de observación. El alcance validado es la vista de producto pausada. [Contrato y evidencia del reemplazo físico](native-terminal-resource-recovery-20261120.md).
+
 Los 5.807 inputs y 15 archivos ajenos se comprobaron antes de liberar la ventana. La evidencia corresponde a esa instantánea; no atribuir estos resultados a ediciones posteriores de Idle. Main, Surface, Host y WASM permanecieron intactos durante la corrección medida.

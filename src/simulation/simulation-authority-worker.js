@@ -57,7 +57,9 @@ self.onmessage=async ({data})=>{
       const receipt=await source.quiesceNativeIntentProduction();
       if(authority!==source||nativeProductionHold!==createdHold)return;
       createdHold.receipt=receipt;
-      await source.flushNativeResourcePreparation();
+      // The checkpoint recovery path may consume a terminal callback receipt;
+      // native consumer retirement still requires its independent GPU proof.
+      await source.flushNativeResourcePreparation({allowRetired:data.withPublicationFloor===true});
       if(authority!==source||nativeProductionHold!==createdHold)return;
       const publicationFloor=data.withPublicationFloor===true&&receipt!==null?source.nativeIntentProductionStatus().publicationSequence:null;
       if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');

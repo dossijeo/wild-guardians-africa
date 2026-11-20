@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La vista de producto se recupera de la pérdida real del dispositivo en la partida pausada de Sabana probada en NVIDIA Turing. La retirada del preparador espera sus callbacks y la vista de reemplazo conserva la publicación 14, dibuja la misma imagen y confirma el drenaje al salir. Quedan el caso con productor activo y C4. [Contrato y evidencia](native-terminal-resource-recovery-20261120.md).
+
 Repair ya completa la orden ordinaria para un centro intacto en GPU física. Tras retener y adquirir Idle20, la partida pasó de 300 a 600 HP y cobró 400 monedas una sola vez sobre el mismo cuerpo. Pasaron el build y 417 pruebas de la selección, con nueve omisiones registradas. Quedan las reparaciones que restauran colisión y construcción con rutas activas. [Integración y evidencia](native-intact-center-repair-20261120.md).
 
 La partida ordinaria ya ejecuta Plant desde una orden nueva y Water desde un checkpoint vencido, con un trabajador estacionario tras Farm. Ambas pruebas usaron NVIDIA Turing y comprobaron la ruta nativa, un solo riego, el mismo cuerpo y el drenaje. Quedan el arranque Idle frío, la interrupción de Idle en marcha, otros perfiles y C4. [Recorridos y límites](native-watering-idle-20261120.md).

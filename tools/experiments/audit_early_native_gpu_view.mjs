@@ -39,8 +39,36 @@ async function auditRetainedMainRecovery(mode){
   await page.goto(base+'/tests/browser/create-early-native-plant-save.html');await page.waitForFunction(()=>window.ready,null,{timeout:15000});report.seed=await page.evaluate(()=>window.makeSave());
   await page.goto(base+'/?qa-worker-load-slot='+encodeURIComponent(report.seed.slotId)+'&qa-worker-game&qa-webgpu-world&qa-webgpu-recovery&qa-webgpu-benchmark-barrier&wildEngineThreads=0',{waitUntil:'domcontentloaded'});
   const meta=()=>page.evaluate(()=>({ui:globalThis.__retainedUiIds?.(),runtime:globalThis.wildGuardiansWorkerQa?.(),notices:globalThis.__retainedNotices??[],authorityFailures:globalThis.__retainedAuthorityFailures??[],frames:globalThis.__retainedFrameNotices??[],clients:globalThis.__retainedClientOwners,disposals:globalThis.__retainedDisposals??[]}));
-  const inspect=()=>page.evaluate(async()=>({ui:globalThis.__retainedUiIds(),renderer:await Promise.race([globalThis.wildGuardiansWebGpuWorldQa(),new Promise((_,reject)=>setTimeout(()=>reject(Error('GPU inspection deadline')),5000))]),runtime:globalThis.wildGuardiansWorkerQa(),clients:globalThis.__retainedClientOwners,frames:globalThis.__retainedFrameNotices??[]}));
-  async function waitStable(label){let signature=null,since=0,last;const deadline=Date.now()+180000;for(;;){const m=await meta();if(m.authorityFailures.length||m.notices.some(n=>n.loadingFailure))throw Error('Ordinary source/UI failed: '+JSON.stringify(m));if(m.ui?.hasCurrent&&m.runtime?.screen==='game'&&m.runtime.status?.recoveryBaseSequence&&m.runtime.status.recoveryJournal?.candidate===null){last=await inspect();const r=last.renderer,d=r?.drawExecution,c=d?.consumer,a=r?.preparation?.admission,f=r?.farCoverage,g=r?.grass;if(!last.ui?.hasCurrent||!c||!a){if(Date.now()>deadline)throw Error('Ordinary renderer replacement did not become ready');signature=null;since=0;await page.waitForTimeout(100);continue;}const ready=r.state.sequence>=last.runtime.status.confirmedSequence&&r.preparation.timeline.pending===0&&!a.active&&a.queued===0&&c.failed===false&&c.gpuErrors===0&&r.props?.ready===true&&(!g||g.pending===0&&g.generating===0)&&(!f||f.pending===null);const next=JSON.stringify([d.resourcesCreated,a.compilesStarted,f?.swaps??0,f?.offered??0,g?.generation??0]);if(!ready||next!==signature){signature=next;since=Date.now();}else if(Date.now()-since>=2000){report.stability.push({label,stableMs:Date.now()-since,resourcesCreated:d.resourcesCreated,compilesStarted:a.compilesStarted,far:f,grass:g,sequence:r.state.sequence});console.log('Stable',label,signature);return last;}}if(Date.now()>deadline){report.unstable=last??m;throw Error('Ordinary renderer did not reach a stable preparation boundary');}await page.waitForTimeout(200);}}
+  // Metadata and selection of the inspect target must share one browser turn.
+  // A previous meta() result may refer to the owner removed by device loss.
+  const inspect=(stableOnly=false)=>page.evaluate(async stableOnly=>{
+   const ui=globalThis.__retainedUiIds?.(),runtime=globalThis.wildGuardiansWorkerQa?.();
+   const eligible=(u,r)=>u?.hasCurrent&&!u.pending&&r?.screen==='game'&&!r.status?.visualDispatchBlocked&&r.status?.recoveryBaseSequence&&r.status.recoveryJournal?.candidate===null;
+   if(stableOnly&&!eligible(ui,runtime))return null;
+   let timer;let renderer;
+   try{renderer=await Promise.race([globalThis.wildGuardiansWebGpuWorldQa(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('GPU inspection deadline')),5000);})]);}finally{clearTimeout(timer);}
+   const afterUi=globalThis.__retainedUiIds?.(),afterRuntime=globalThis.wildGuardiansWorkerQa?.();
+   if(stableOnly&&(!eligible(afterUi,afterRuntime)||afterUi.binding!==ui.binding||afterUi.client!==ui.client||afterUi.canvas!==ui.canvas))return null;
+   return {ui:afterUi,renderer,runtime:afterRuntime,clients:globalThis.__retainedClientOwners,frames:globalThis.__retainedFrameNotices??[]};
+  },stableOnly);
+  async function waitStable(label){
+   let signature=null,since=0,last;const deadline=Date.now()+180000;
+   for(;;){
+    const m=await meta();
+    if(m.authorityFailures.length||m.notices.some(n=>n.loadingFailure)||m.runtime?.status?.fault||m.runtime?.status?.recoveryFault)throw Error('Ordinary source/UI failed: '+JSON.stringify(m));
+    const sample=await inspect(true);
+    if(sample){
+     last=sample;const r=last.renderer,d=r?.drawExecution,c=d?.consumer,a=r?.preparation?.admission,f=r?.farCoverage,g=r?.grass;
+     const ready=!!c&&!!a&&r.state.sequence>=last.runtime.status.confirmedSequence&&r.preparation.timeline.pending===0&&!a.active&&a.queued===0&&c.failed===false&&c.gpuErrors===0&&r.props?.ready===true&&(!g||g.pending===0&&g.generating===0)&&(!f||f.pending===null);
+     const next=ready?JSON.stringify([last.ui.binding,last.ui.client,last.ui.canvas,r.inspectionGeneration,d.resourcesCreated,a.compilesStarted,f?.swaps??0,f?.offered??0,g?.generation??0]):null;
+     if(!ready){signature=null;since=0;}
+     else if(next!==signature){signature=next;since=Date.now();}
+     else if(Date.now()-since>=2000){report.stability.push({label,stableMs:Date.now()-since,resourcesCreated:d.resourcesCreated,compilesStarted:a.compilesStarted,far:f,grass:g,sequence:r.state.sequence});console.log('Stable',label,signature);return last;}
+    }else{signature=null;since=0;report.observationTransitions??=[];const row={label,ui:m.ui,visualDispatchBlocked:m.runtime?.status?.visualDispatchBlocked};if(report.observationTransitions.length<32)report.observationTransitions.push(row);}
+    if(Date.now()>deadline){report.unstable=last??m;throw Error('Ordinary renderer did not reach a stable preparation boundary');}
+    await page.waitForTimeout(200);
+   }
+  }
   async function capture(label){const bytes=await page.locator('.qa-webgpu-world').screenshot({path:prefix+'-'+label+'.png'}),visual=await page.evaluate(async bytes=>{const bitmap=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'})),canvas=new OffscreenCanvas(bitmap.width,bitmap.height),ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();const minX=Math.floor(canvas.width*.25),maxX=Math.floor(canvas.width*.70),minY=Math.floor(canvas.height*.25),maxY=Math.floor(canvas.height*.68),pixels=ctx.getImageData(minX,minY,maxX-minX,maxY-minY).data;function count(data){let differing=0;for(let i=0;i<data.length;i+=4)if(Math.abs(data[i]-data[0])+Math.abs(data[i+1]-data[1])+Math.abs(data[i+2]-data[2])>30)differing++;return differing;}const differing=count(pixels);pixels.fill(0);return {width:canvas.width,height:canvas.height,region:{minX,maxX,minY,maxY},differingPixels:differing,minimum:500,ok:differing>=500,blankControlRejected:count(pixels)<500};},[...bytes]);if(!visual.ok||!visual.blankControlRejected)throw Error('Blank ordinary game region');return {...visual,sha256:createHash('sha256').update(bytes).digest('hex'),path:prefix+'-'+label+'.png'};}
   report.before=await waitStable('before');report.beforeImage=await capture('before');const before=report.before;
   if(mode==='true'){
