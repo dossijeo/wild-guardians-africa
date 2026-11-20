@@ -31,14 +31,29 @@ están implementados como componentes; su productor ordinario sigue desactivado.
 La [corrección de recepción y preparación](native-resource-correction-20261120.md)
 ya está publicada, con sus costes y límites documentados.
 
-El relevo causal de incorporación Farm perdió una oportunidad de dibujo bajo
-`nativeMutationHold`:49,415ms no acredita fluidez. Falta atribuir fence,
-commit y comunicación antes de corregirlo; conservar las guardas. No ampliar ni
-aceptar una dependencia cuyo defecto confirmado siga abierto. El siguiente
-avance dependiente debe partir de esa base corregida y después integrar Idle
-desde17 con interrupciones Task/Home y los cuerpos ya adquiridos. Home con una
-propuesta pendiente se entrega por separado como componente nativo, sin activar
-el productor ni aceptar GPU física. A6/A/B/C permanecen abiertos y D no se inicia.
+La [oportunidad previa a la mutación](native-mutation-opportunity-20261120.md)
+y su [traspaso publicado](native-mutation-opportunity-handoff-20261120.md)
+mejoran la alineación del hold, conservando el Quiesce y el drenaje originales.
+Dos recorridos completos no bloquean oportunidades por esa guarda; after3
+reconcilia todos sus ordinales hasta retired-drained. Es una mejora parcial,
+no aceptación del objetivo de 60 FPS.
+
+Permanecen abiertos dos casos bajo el agente de corrección: duración causal
+del primer hold de 20,145 / 19,835 ms, superior a 1000/60, y admisión ordinaria del
+Host asociada a intervalos de 38,750 / 40,885 ms. El
+[contraste de 60 FPS](performance/native-mutation-60fps-contrast-20261120.json)
+conserva los informes históricos y cuantifica las superaciones. La inspección
+de paquetes preparados ya cede; la ruta ordinaria aún recorre bytes,
+operaciones y referencias de forma síncrona pese al presupuesto de recursos.
+Falta aislar sus subfases y corregir ambos casos sin retirar guardas ni
+cachear permisos entre eventos; no clasificarlos como residuales de D sin
+comprobar conformidad con A.
+
+El siguiente avance dependiente debe contrastar esa base corregida antes de
+integrar Idle desde 17 con interrupciones Task/Home y los cuerpos adquiridos.
+[Home con propuesta pendiente](native-idle-home-pending-proposal-20261120.md)
+ya está publicado como componente nativo; el productor Idle sigue desactivado.
+A6/A/B/C permanecen abiertos y D no se inicia.
 
 ## Coordinación de incidencias de cadencia
 
@@ -54,6 +69,11 @@ medida (CPU, GPU, envío del Host o presentación efectiva), rutas en edición y
 jobs activos. Indicar datos ausentes; agrupar repeticiones de una causa abierta
 y comunicar agravamiento o evidencia nueva. Acordar propiedad de las rutas antes
 de modificar producción y una ventana sin suites/builds antes de medir GPU.
+
+Objetivo exigido por el usuario: **60 FPS, 1000/60 = 16,666… ms**.
+Los 30 Hz actuales no rebajan ese requisito; la validación física de 60 FPS
+requiere un entorno adecuado. Comunicar toda superación con su fase,
+procedencia y evidencia, agrupando las repeticiones de una causa.
 
 50ms es diagnóstico, no aceptación. La mediana de callbacks no fija el objetivo
 del producto ni prueba scanout. Medir los plazos incumplidos y la variación de
