@@ -61,3 +61,39 @@ test('a paid wall holds an affected native Farm body while its replacement route
   try{await closing;}finally{source.close();}
  }
 });
+
+test('a paid wall outside the Farm corridor keeps the acquired route and its prepared body',async()=>{
+ const source=nativeFarmArrivalRouteFixture({peer:false});
+ const saved=structuredClone(source.state),from=source.point(0,8),to=source.point(0,14);
+ saved.ledger.balance=rational(100000);
+ let f;
+ try{
+  f=await nativeProductionAuthority(saved);
+  await untilProduction(f,()=>f.records.some(record=>record.kind==='farm-arrival'&&record.committed));
+  for(let i=0;i<2;i++){f.advance();await f.present();}
+  const before=f.snapshot().workers[0],frame=f.host.inspect().nativeRouteFrame;
+  const binding=frame.bindings.find(item=>item.nativeFarmArrival);
+  assert(binding);
+  assert.equal(before.nativeRouteAdmission,'native-farm-arrival');
+
+  const placed=f.command({kind:'buildWallChain',id:'build-away-from-native-farm',material:'zarzas',
+   points:[[from.x,from.z],[to.x,to.z]],options:{smooth:false,snap:false}});
+  assert.equal(placed.value,true);
+  const event=placed.events.find(item=>item.type==='WallChainBuilt');
+  assert.equal(event.count,3);
+  assert.equal(event.gates,0);
+  let after;
+  for(let i=0;i<7;i++){
+   after=f.advance().workers[0];await f.present();
+   assert.equal(after.nativeRouteAdmission,'native-farm-arrival');
+  }
+  assert.notDeepEqual([after.x,after.z],[before.x,before.z]);
+  assert.equal(f.records.length,1,'a wall outside the route must not request another body preparation');
+  const current=f.host.inspect().nativeRouteFrame;
+  assert.deepEqual(current.worldBoundary,frame.worldBoundary);
+  assert.deepEqual(current.bindings.find(item=>item.nativeFarmArrival)?.nativeFarmArrival,binding.nativeFarmArrival);
+  assert.deepEqual(f.faults,[]);
+ }finally{
+  try{await f?.close();}finally{source.close();}
+ }
+});
