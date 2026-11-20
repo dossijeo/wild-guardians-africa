@@ -17,7 +17,9 @@ Edge con NVIDIA Turing, un perfil `youngMale` por ejecución. Se carga una parti
 
 El primer intento de la auditoría adjuntó recursos antes de que estuvieran preparados los actores. El segundo confundió la segunda asignación ya creada por Game con la tarea antigua. El harness espera los propietarios iniciales y compara ahora ambas identidades.
 
-Las cinco pruebas dirigidas pasan, incluido el control Harvest. Standalone y pthread rechazan la preparación prematura, la secuencia incorrecta y la pose modificada, y conservan la acción tras cancelar Idle. Se recompilaron los dos WASM con los flags canónicos y se verificaron las interfaces anteriores. El build de producto pasó. La selección más amplia se ejecuta por separado. Su fallo de hash del banco AO de Sabana también se reproduce con los dos blobs del commit padre.
+Las cinco pruebas dirigidas pasan, incluido el control Harvest. Standalone y pthread rechazan la preparación prematura, la secuencia incorrecta y la pose modificada, y conservan la acción tras cancelar Idle. Se recompilaron los dos WASM con los flags canónicos y se verificaron las interfaces anteriores. El build de producto pasó.
+
+La regresión de 346 archivos terminó con 4.168 aprobadas, 23 omitidas y 8 fallos. Los ocho casos dieron el mismo fallo al cargar los 12 archivos de producto del padre `a17a213b7`, incluidos ambos WASM y el factory, en sus ubicaciones originales y sobre los mismos tests del checkout. El control del padre selecciona solo esos ocho casos. Se conservan ambos TAP y las fuentes del contraste identificadas por SHA. [Recibo de la regresión](performance/native-watering-idle-20261120/validation.json).
 
 Con Vite disponible en el puerto 5218 y Playwright en la ruta indicada por `PLAYWRIGHT_MODULE` o en el entorno de QA existente:
 
