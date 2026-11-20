@@ -60,6 +60,7 @@ import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
 import {updateIdle,cancelIdle,createIdleState} from './idle.js';
 import {copyNativeInitialIdleState} from '../world/native-initial-idle-request-reference.js';
+import {nativeInitialIdleActionSource} from '../world/native-initial-idle-body.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
 
 // A failed plan is a waiting state, not a request to repeat the same search
@@ -1400,29 +1401,67 @@ export function projectNativeHarvestConsequence(s,w,preview,native){
   emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
   return crate;
 }
-export function prepareNativeWateringConsequence(s,w,source,nav){
+export function prepareNativeStationaryTaskConsequence(s,w,source,nav){
   const action=source?.reference,request=action?.request,id=nativeEntityNumericId;
-  if(!w||!nav||!request||!['initial','water'].includes(request.actionKind)||s.elapsed<action.endTime||
+  if(!w||!nav||!request||!['initial','water','repair'].includes(request.actionKind)||s.elapsed<action.endTime||
     w.nativeRouteAdmission!=='native-action'||w.status!=='acting'||!w.taskId||w.crateId||w.incapacitated||w.recovery||w.raidReturn||
     id(w.taskId)!==request.taskId||w.x!==action.origin.x||w.z!==action.origin.z||w.heading!==request.heading)return null;
-  const task=s.tasks.find(t=>t.id===w.taskId),target=s.plants.find(p=>p.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
-  if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target?.alive||target.blessing||id(target.id)!==request.targetId||!center||!operational(center))return null;
+  const task=s.tasks.find(t=>t.id===w.taskId),repair=request.actionKind==='repair';
+  const target=(repair?s.structures:s.plants).find(item=>item.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
+  if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target||id(target.id)!==request.targetId||!center||!operational(center))return null;
+  if(repair?!operational(target):!target.alive||target.blessing)return null;
   const idleState=copyNativeInitialIdleState({...createIdleState(w,idleFarmAnchor(s,w,center),s.seed),approachRetry:0});
-  return {task,target,idleState,reachable:canWaterFrom({...w,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
+  if(repair)return {task,target,idleState,reachable:true,hp:target.hp,maxHp:target.maxHp,cost:target.cost};
+  return {task,target,idleState,reachable:canWaterFrom({x:w.x,z:w.z,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
 }
-export function projectNativeWateringConsequence(s,w,nav,native){
-  const binding=native.nativeInitialIdleBodyBinding(w.id),reference=binding?.reference,source=reference?.wateringSource;
-  const plan=source&&prepareNativeWateringConsequence(s,w,source,nav);
+export function projectNativeStationaryTaskConsequence(s,w,nav,native){
+  const binding=native.nativeInitialIdleBodyBinding(w.id),reference=binding?.reference,source=nativeInitialIdleActionSource(reference);
+  const plan=source&&prepareNativeStationaryTaskConsequence(s,w,source,nav);
   if(!plan||s.elapsed!==reference.worldBoundary.effectiveTime||nativeEntityNumericId(w.id)!==reference.actorId||
-    JSON.stringify(plan.idleState)!==JSON.stringify(reference.sourceRequest.idleState))throw Error('Native watering consequence is not the committed game boundary');
+    JSON.stringify(plan.idleState)!==JSON.stringify(reference.sourceRequest.idleState))throw Error('Native stationary task consequence is not the committed game boundary');
   const {task,target,reachable,idleState}=plan;
-  const watered=reachable&&waterPlant(target);
+  const repair=task.kind==='repair',watered=!repair&&reachable&&waterPlant(target);
   if(!reachable)releaseTask(s,w);
   Object.assign(w,{status:'idle',path:null,taskId:null,taskApproach:null,destinationId:null,idleState:{...idleState},nativeRouteAdmission:'native-idle',actionRemaining:0});
   delete w.nativeTaskAction;
   if(reachable)replaceTasks(s,s.tasks.filter(candidate=>candidate!==task));
   notifyWorkerPlanningChange(s,w);
+  if(repair&&target.hp<target.maxHp)completeRepairTask(s,w,task,target,nav,true);
   if(watered)emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});
+}
+function completeRepairTask(s,w,t,target,nav,retainCenterGeometry=false){
+  try {
+    const access=planRepairAccess(s,target,nav);
+    if(access.status!=='safe')throw new Error(access.status==='unknown'?
+      'La reparación espera información del terreno para conservar el acceso.':
+      'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
+    ensurePurchaseBudget(s,repairCost(target));
+    const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
+    if(transact(s.ledger,paymentId,negate(repairCost(target)))){
+      const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
+      delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
+      for(const update of access.updates){
+        const piece=s.structures.find(item=>item.id===update.id);
+        if(piece)Object.assign(piece,update);
+      }
+      if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
+      if(!retainCenterGeometry){
+      if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
+    }
+      // Read the settled ledger debit: proportional repair prices may be
+      // fractional before transact rounds the actual payment to whole coins.
+      emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
+        repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
+        presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0,structure:{x:target.x,z:target.z}}});
+      if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
+    }
+  }
+  catch(error){
+    if(error.code==='hiring-reserve')
+      notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
+    else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
+    else throw error;
+  }
 }
 function completeTask(s,w,t,target,nav) {
   // Native arrival/action resources authorize their phase, not its effects.
@@ -1442,38 +1481,7 @@ function completeTask(s,w,t,target,nav) {
       const crate={...consequence.crate,id:`crate-${s.nextId++}`,sourcePlantId:target.id,species:target.species,x:w.x,z:w.z,value,profile:w.profile,carrierId:w.id,centerId:w.centerId,multiplyPower:target.multiplyPower??null,...(consequence.crate.blessingSourceIds?{blessingSourceIds:[...consequence.crate.blessingSourceIds]}:{})};delete target.multiplyPower;s.crates.push(crate);w.crateId=crate.id;w.status='carrying';w.path=null;emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
     }
   } else if(t.kind==='crate') {target.carrierId=w.id;w.crateId=target.id;target.centerId=w.centerId;w.status='carrying';w.path=null;}
-  else if(t.kind==='repair') {
-    try {
-      const access=planRepairAccess(s,target,nav);
-      if(access.status!=='safe')throw new Error(access.status==='unknown'?
-        'La reparación espera información del terreno para conservar el acceso.':
-        'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');
-      ensurePurchaseBudget(s,repairCost(target));
-      const paymentId=`repair:${t.id}`,previousHp=target.hp,previousStatus=target.status;
-      if(transact(s.ledger,paymentId,negate(repairCost(target)))){
-        const visual=target.kind==='wall'?wallVisualAt(target,s.elapsed):null;
-        delete target.wallPresentation;target.hp=target.maxHp;target.status='intact';target.collapseRemaining=0;
-        for(const update of access.updates){
-          const piece=s.structures.find(item=>item.id===update.id);
-          if(piece)Object.assign(piece,update);
-        }
-        if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
-        if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
-        // Read the settled ledger debit: proportional repair prices may be
-        // fractional before transact rounds the actual payment to whole coins.
-        emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,
-          repair:{taskId:t.id,paymentId,paidCoins:-numberOf(s.ledger.entries[paymentId]),previousHp,previousStatus,restoredHp:target.hp,maxHp:target.maxHp},
-          presentation:{elapsed:s.elapsed,x:w.x,z:w.z,yaw:w.heading??0,structure:{x:target.x,z:target.z}}});
-        if(target.kind==='center'){recoverDisplacedWorkers(s);enqueueLooseCrates(s);}
-      }
-    }
-    catch(error){
-      if(error.code==='hiring-reserve')
-        notice(s,'La reparación se canceló: fondos insuficientes al llegar.',target.id);
-      else if(error.message?.startsWith('La reparación'))notice(s,error.message,target.id);
-      else throw error;
-    }
-  }
+  else if(t.kind==='repair')completeRepairTask(s,w,t,target,nav);
   nav.intentTaskPlanner?.finishAction(w.id);
   replaceTasks(s,s.tasks.filter(task=>task.id!==t.id));w.taskId=null;w.taskApproach=null;if(w.status!=='carrying')w.status='idle';w.path=null;
   notifyWorkerPlanningChange(s,w);

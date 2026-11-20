@@ -8,7 +8,7 @@ import {rational} from '../../src/simulation/money.js';
 
 const kind=process.env.QA_NATIVE_WATERING_KIND??'water',origin=process.env.QA_NATIVE_WATERING_ORIGIN??'restored';
 if(!['restored','fresh'].includes(origin))throw Error('Expected restored or fresh');
-if(!['initial','water'].includes(kind))throw Error('Expected initial or water');
+if(!['initial','water','repair'].includes(kind)||kind==='repair'&&origin!=='fresh')throw Error('Expected initial, water, or fresh repair');
 const output=process.env.OUTPUT??`.cache/native-watering-${kind}-${origin}-hardware.json`;
 const modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
@@ -34,6 +34,10 @@ function freshInput(){
   for(const slot of anchor.water)slot.status='manual';
   saved.plants.push(anchor);
   let targetId=null;
+  if(kind==='repair'){
+   const building=saved.structures.find(item=>item.id===worker.centerId);
+   building.hp=Math.floor(building.maxHp/2);targetId=building.id;
+  }
   if(kind==='water'){
    targetId=`plant-${saved.nextId++}`;
    const plant=createPlant(targetId,'mijo',point.x,point.z,worker.centerId);
@@ -56,7 +60,7 @@ try{
  },input);
  if(errors.length)throw Error(JSON.stringify(errors));
  writeFileSync(output,JSON.stringify({result,errors},null,2)+'\n');
- console.log(JSON.stringify({output,kind,origin,adapter:result.adapter,bodyId:result.idle.reference.bodyId,draws:result.draws}));
+ console.log(JSON.stringify({output,kind,origin,adapter:result.adapter,bodyId:result.idle.reference.bodyId,draws:result.draws,...(kind==='repair'?{payment:result.sourceAfter.events[0].repair}:{})}));
 }catch(error){
  const failure=await page.evaluate(()=>window.nativeWateringIdleFailure??null).catch(error=>String(error));
  writeFileSync(output.replace(/\.json$/,'.failure.json'),JSON.stringify({error:String(error.stack??error),failure,errors},null,2)+'\n');throw error;

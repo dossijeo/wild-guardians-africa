@@ -13,11 +13,15 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
  }});
  diagnostic.port1.onmessage=({data})=>messages.push(data);
  let client,visual,preparer,running=true,loop,confirmed,stage='initializing';
+ const repair=kind==='repair';
  const current=()=>confirmed.workers.find(worker=>worker.id===workerId);
- const waterStatus=()=>confirmed.plants.find(plant=>plant.id===targetId).water[kind==='initial'?0:1].status;
- const events=()=>confirmed.events.filter(event=>event.type==='WaterSatisfied'&&event.targetId===targetId);
+ const target=()=>repair?confirmed.structures.find(item=>item.id===targetId):confirmed.plants.find(plant=>plant.id===targetId);
+ const waterStatus=()=>repair?null:target().water[kind==='initial'?0:1].status;
+ const completed=()=>repair?target().hp===target().maxHp:waterStatus()==='manual';
+ const events=()=>confirmed.events.filter(event=>event.type===(repair?'RepairApplied':'WaterSatisfied')&&event.targetId===targetId);
  const acquired=(key,match=()=>true)=>messages.find(message=>message.kind==='production-acquired'&&message.key===key&&match(message.binding.reference))?.binding;
- const acquiredIdle=()=>acquired('nativeInitialIdleBodyBinding',r=>r.wateringSource);
+ const actionSource=reference=>reference.wateringSource??reference.centerRepairSource;
+ const acquiredIdle=()=>acquired('nativeInitialIdleBodyBinding',r=>actionSource(r));
  const wait=async(predicate,label,ms=40000)=>{
   const deadline=performance.now()+ms;
   while(!predicate()){
@@ -70,18 +74,27 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
    if(!placementEvent)throw Error('Fresh Plant command has no CropPlaced event');
    targetId=placementEvent.targetId;publish(result);
   }
-  stage='waiting for watering Idle READY';
+  if(repair){
+   stage='requesting repair through the authority';
+   await wait(()=>acquired('nativeFarmArrivalBinding')&&current().nativeRouteAdmission==='native-idle',stage);
+   const id=`repair-${session}`,result=await submit({kind:'requestRepair',id,targetId});
+   if(result.value!==true)throw Error(`Fresh Repair command rejected ${result.rejection}`);
+   if(!JSON.parse(result.snapshot).events.some(event=>event.type==='RepairRequested'&&event.targetId===targetId))throw Error('Fresh Repair command has no RepairRequested event');
+   publish(result);
+  }
+  stage='waiting for stationary task Idle READY';
   const readiness=()=>messages.find(message=>message.kind==='production-resources-ready');
   await wait(readiness,stage,origin==='fresh'?60000:40000);const ready=readiness().reference,action=acquired('nativeTaskActionBinding');
-  if(!action||action.reference.request.actionKind!==kind||action.reference.request.bodyId!==ready.bodyId||ready.wateringSource.actionSequence!==action.actionSequence)throw Error('Watering Idle differs from its acquired Action');
+  if(!action||action.reference.request.actionKind!==kind||action.reference.request.bodyId!==ready.bodyId||actionSource(ready).actionSequence!==action.actionSequence)throw Error('Idle differs from its acquired Action');
+  const beforeRepairHp=repair?target().hp:null,paymentId=`repair:task-${action.reference.request.taskId}`;
   const before=await inspect(),heldAt=confirmed.elapsed;await delay(700);const held=await inspect();
-  if(waterStatus()!=='due'||events().length||current().nativeTaskAction?.elapsed!==action.reference.request.duration||acquiredIdle()||
-     confirmed.elapsed<=heldAt||trace(held).samples.length<=trace(before).samples.length)throw Error('Watering changed the source or paused drawing while its packet was retained');
+  if((repair?target().hp!==beforeRepairHp||Object.hasOwn(confirmed.ledger.entries,paymentId):waterStatus()!=='due')||events().length||current().nativeTaskAction?.elapsed!==action.reference.request.duration||acquiredIdle()||
+     confirmed.elapsed<=heldAt||trace(held).samples.length<=trace(before).samples.length)throw Error('The task changed its target or paused drawing while its packet was retained');
   preparer.postMessage({kind:'release-production-ready',durationMs:650});
-  stage='waiting for watering effect and Idle acquisition';
-  await wait(()=>acquiredIdle()&&waterStatus()==='manual'&&events().length===1,stage);
+  stage='waiting for task effect and Idle acquisition';
+  await wait(()=>acquiredIdle()&&completed()&&events().length===1,stage);
   const idle=acquiredIdle(),atEffect=structuredClone(current()),after=await inspect();
-  if(idle.reference.bodyId!==ready.bodyId||idle.reference.wateringSource.actionSequence!==action.actionSequence||atEffect.taskId===`task-${action.reference.request.taskId}`||confirmed.crates.length||
+  if(idle.reference.bodyId!==ready.bodyId||actionSource(idle.reference).actionSequence!==action.actionSequence||atEffect.taskId===`task-${action.reference.request.taskId}`||confirmed.crates.length||
      idle.reference.sourceRequest.pose.x!==ready.sourceRequest.pose.x||idle.reference.sourceRequest.pose.z!==ready.sourceRequest.pose.z)throw Error('Watering Idle did not retain the original worker and body');
   stage=origin==='fresh'?'verifying initial Task and Idle draw':'waiting for second Task admission';
   if(origin!=='fresh')await wait(()=>acquired('nativeTaskStartBinding'),stage);
@@ -101,6 +114,11 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
   if(priorActor.root!==currentActor.root||JSON.stringify(priorActor.bones)!==JSON.stringify(currentActor.bones)||
      priorActor.meshes.some(mesh=>!currentActor.meshes.some(current=>current.id===mesh.id&&current.geometry===mesh.geometry)))throw Error('Watering replaced original actor resources');
   const sourceAfter={worker:current(),waterStatus:waterStatus(),events:events(),crates:confirmed.crates};
+  if(repair){
+   const event=sourceAfter.events[0].repair,payment=confirmed.ledger.entries[paymentId];
+   if(event.previousHp!==beforeRepairHp||event.restoredHp!==target().maxHp||event.paymentId!==paymentId||!payment||event.paidCoins<=0)throw Error('Repair did not publish the original debit and HP change');
+   sourceAfter.payment=payment;
+  }
   stage='quiescing native production before GPU drain';
   running=false;await loop;
   const quiesced=await source.quiesceNativeIntentProduction(1);

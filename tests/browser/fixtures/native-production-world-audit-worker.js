@@ -27,7 +27,8 @@ self.onmessage=event=>{
    }
   });
   port.postMessage=(message,...args)=>{
-   const reference=holdWatering?(message?.result?.preparedInitialIdleBodyTemplate?.wateringSource?message.result.preparedInitialIdleBodyTemplate:null):message?.result?.preparedIdleStrollTemplate;
+   const initialBody=message?.result?.preparedInitialIdleBodyTemplate;
+   const reference=holdWatering?(initialBody?.wateringSource||initialBody?.centerRepairSource?initialBody:null):message?.result?.preparedIdleStrollTemplate;
    if(!heldOnce&&message.kind==='nativeGateResourcesResult'&&reference){heldOnce=true;held=()=>post(message,...args);diagnostic.postMessage({kind:'production-resources-ready',at:performance.timeOrigin+performance.now(),reference});return;}
    return post(message,...args);
   };

@@ -6,7 +6,7 @@ const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
 // source. There is no copied request queue, movement clock or retry timer here.
-export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,wateringNavigation=null,onError=()=>{}}){
+export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,onError=()=>{}}){
  if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
  let closed=false,fault=null,active=null,last=null,quiescence=null;
  function next(onlyActor=null){
@@ -48,9 +48,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(marker==='native-action'){
     const action=planner.nativeTaskActionExecution(actorId);
     if(action?.completed){
-     const kind=action.binding.reference.request.actionKind;
+     const {actionKind:kind,targetId}=action.binding.reference.request;
      if(kind==='harvest')return {actorId,kind:'task-consequence',operation:'startNativeTaskConsequenceAfterGpuQuiescence',prepare:'prepareNativeTaskConsequenceResources'};
-     if(wateringNavigation&&['initial','water'].includes(kind))return {actorId,kind:'watering-idle',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',wateringNavigation};
+     const centerRepair=kind==='repair'&&state.structures.some(target=>target.id===`structure-${targetId}`&&target.kind==='center'&&target.status==='intact');
+     if(stationaryTaskNavigation&&(centerRepair||['initial','water'].includes(kind)))return {actorId,kind:'stationary-task',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',stationaryTaskNavigation};
     }
    }
    if(marker==='native-delivery'&&planner.nativeDeliveryExecution(actorId)?.arrived)return {actorId,kind:'task-settlement',operation:'startNativeTaskSettlementAfterGpuQuiescence',prepare:'prepareNativeTaskSettlementResources'};
@@ -71,7 +72,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'home-arrival':return JSON.stringify(planner.nativeHomeRouteBinding(actor));
    case 'task-start':return JSON.stringify([request.request.requestHandle,request.request.requestSequence,request.policy]);
    case 'task-action':{const {executedThrough,...source}=request.request;return JSON.stringify(source);}
-   case 'watering-idle':case 'task-consequence':return JSON.stringify(planner.nativeTaskActionBinding(actor));
+   case 'stationary-task':case 'task-consequence':return JSON.stringify(planner.nativeTaskActionBinding(actor));
    case 'task-settlement':return JSON.stringify(planner.nativeTaskConsequenceBinding(actor));
   }
  }

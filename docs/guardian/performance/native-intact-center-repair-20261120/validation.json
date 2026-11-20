@@ -1,0 +1,139 @@
+{
+  "baseHead": "7f17c3d33cb614a9de72df7eae92d555c6ac3d67",
+  "selectedTests": {
+    "tests": 426,
+    "pass": 417,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 9,
+    "files": 46
+  },
+  "build": {
+    "exitCode": 0,
+    "vite": "1m 35s"
+  },
+  "canonicalNative": {
+    "outputs": {
+      "src/world/wild-engine/spatial-savanna.wasm": "eddc1fbaa7741b3b0142cd64123f1861d5893eab253b7ca2f9c094e85c7f7cab",
+      "public/wild-engine/spatial-threaded.mjs": "779f0d8a0b3b601c199830c4e81d34fba7e4c9f3bc9ab982d0453e4632c375f4",
+      "public/wild-engine/spatial-threaded.wasm": "97aa0bfd7191687e19a304937a36b53dec3d472f71f0dfd778d839746ee7398f"
+    },
+    "abi": {
+      "standalone": {
+        "before": 755,
+        "after": 757,
+        "oldNamesAndKindsPreserved": true,
+        "importsUnchanged": true
+      },
+      "pthread": {
+        "before": 776,
+        "after": 778,
+        "publicBefore": 761,
+        "publicAfter": 763,
+        "publicNamesPreserved": true,
+        "pairedFactoryInstantiated": true
+      },
+      "additiveNames": [
+        "nav_initial_idle_body_proposal_stage_center_repair",
+        "nav_initial_idle_body_center_repair_source_snapshot"
+      ]
+    },
+    "phaseLogs": {
+      "standalone": {
+        "sha256": "d19ee8358ca58bdbc7311a4ab3dda436502b0e3b348fedab14e1771711e7f6c1",
+        "exitCode": 0,
+        "seconds": 70.52219729998615
+      },
+      "pthread": {
+        "sha256": "72f11fe281565d0d2895b0534ab2ae91ada1da94d96d2024a8ee42dda1bf3d99",
+        "exitCode": 0,
+        "seconds": 68.78373500006273
+      }
+    }
+  },
+  "hardware": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 147.21000003814697
+      }
+    },
+    "repair": {
+      "taskId": "task-1000001",
+      "paymentId": "repair:task-1000001",
+      "paidCoins": 400,
+      "previousHp": 300,
+      "previousStatus": "intact",
+      "restoredHp": 600,
+      "maxHp": 600
+    },
+    "payment": {
+      "n": "-400",
+      "d": "1"
+    },
+    "body": 1,
+    "heldDraws": 22,
+    "idleDraws": 32,
+    "meshesAndGeometriesRetained": 28,
+    "drained": true
+  },
+  "sourcesSha256": {
+    "src/rendering/native-route-control.js": "7dd475a2862c7f2ae1cc023c18e6efd081bc0bd11265a663df2a9f821390f2fe",
+    "src/rendering/webgpu-worker-roster.js": "5d8d38da2df6206996b986bce72ae8bf6a4ac56cbd5d7b526de825adf89cf348",
+    "src/simulation/game.js": "474d09689d33b92cf674d72db6f69dc6a5e9732f7c45bf210a5a7dc96c80696c",
+    "src/simulation/native-intent-production.js": "e15952a964a2fb2223342e6ecbcc07bb6c26b548b029ee18e96cea6f7c7964c3",
+    "src/simulation/simulation-authority.js": "50f39b06eab49d394c048f843e79ce05a64044c8ed7eac1a2d7ce35b35ba38e7",
+    "src/world/native-initial-idle-body.js": "c3ce14280f100f8545fa427b5ceb8b43e270981e8ece0bc2763e15f5137d39f9",
+    "src/world/wild-engine/spatial-intent-state.cpp": "831a69c3e18046b18b32409b5d16f3f3536bc6d79139c4438139d37d44555a95",
+    "src/world/wild-engine/spatial-initial-idle-body-proposal.inc": "becb177737904bc5174942c07d6acb1e76fca8beda57e4f78ab6213ebc1ec32c",
+    "src/world/wild-engine/spatial-intent-bridge.js": "242d1f5839f2242314f2fabec5b6f94ab9e0b7d58d7e5e0a9d6df6f88adc60ea",
+    "tests/native-intent-production-authority.test.js": "31b8d31312aecfd7ea9a2468b61b62de3093ae363ca516ef62c2d10d6037441b",
+    "tests/browser/native-watering-idle-world-owner.js": "a67bd8d8c38808a0ca6dfe2abdff60e3c13e74cb3fc3801e98f69493684f9caf",
+    "tests/browser/fixtures/native-production-world-audit-worker.js": "664744d48320426f879f2898c5747cc679ab3bafe71622f71002b09e7f3594fd",
+    "tools/guardian/audit_native_watering_idle_world_owner.mjs": "e4e696eb698042d97b0a4ad56241702181efc1aeb114606539665eb3a85ebc2c",
+    "tools/build-spatial-savanna-wasm.sh": "a7d1e9d1ff8b9af69c090af6f852f9b627784180bafc58d600b7f997343a3c55"
+  },
+  "archives": {
+    "hardware.json.gz": {
+      "sha256": "b707f5c936c5c98aa62c319dc86f13754e2c80a0ebaafc63267bcd6d7446bc61",
+      "originalSha256": "ffdfe325e8b099981aa98cd1d0231355cf3877e05b9758285080679b62164a64",
+      "bytes": 41374
+    },
+    "parent-red.tap.gz": {
+      "sha256": "fdbb4d4ccfbf2c201f7a573d8160dd2ae57958063b1c657b9090320e57d3bfbc",
+      "originalSha256": "40bcae8f9c030b9546aa52f3a107782aeaefc7cb30562e6d638682c3fa8120b2",
+      "bytes": 6404
+    },
+    "directed.tap.gz": {
+      "sha256": "73242265bbbfe1835f5f3adf56097cbb9c89dce0b922e046dfb08e9d77f4ea1e",
+      "originalSha256": "af63ac052bf52e0cb90ec45c8d601e715c4d6cd6c6c10e3be64c76811859181b",
+      "bytes": 10065
+    },
+    "validation.tap.gz": {
+      "sha256": "532ca344c4db69397ddc5a7ce6e828604748ee2ae91c849bd9403f5f33b34ae0",
+      "originalSha256": "e0d93b51082981a9aab8b28ed8c85e1b3dbc066bbbeb2c7235011eb9fa6cfa4a",
+      "bytes": 124466
+    },
+    "tests.txt.gz": {
+      "sha256": "aaa03590675feff7c2e690eb00dee3c65b72089e2caacb6e50736fecccd34242",
+      "originalSha256": "0df05b2192a595cd563bda77a856c51e31079144e6fd786271299c4ce941ff96",
+      "bytes": 2037
+    },
+    "build.log.gz": {
+      "sha256": "05b752cac0161ab7749578f64a3cd09184e38192416c92c2844e255b5ba2c121",
+      "originalSha256": "f2735ba15b963f6d58d0061e8c756736a5c575b75f05165488c10d0cae231c6a",
+      "bytes": 3995
+    }
+  },
+  "preservedLocalFiles": 16,
+  "preservedA5Inputs": 38
+}

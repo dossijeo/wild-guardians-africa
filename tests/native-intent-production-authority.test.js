@@ -4,6 +4,7 @@ import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
 import {createPlant} from '../src/simulation/crops.js';
+import {rational} from '../src/simulation/money.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {nativeActionSave} from './helpers/native-task-action-restoration.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
@@ -104,6 +105,38 @@ for(const kind of ['initial','water'])test(`completed ${kind} irrigates only whe
   assert.equal(f.records.some(record=>record.kind==='task-consequence'),false);
   assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
  }finally{release();await f.close();}
+});
+
+test('repairing an intact center debits and restores HP only after the same body acquires its prepared Idle',async()=>{
+ const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
+ let f,release;const held=new Promise(resolve=>{release=resolve;});
+ try{
+  const state=structuredClone(fixture.state),worker=state.workers[0],center=state.structures.find(item=>item.id===worker.centerId);
+  Object.assign(center,fixture.point(5,4));center.hp=Math.floor(center.maxHp/2);state.ledger.balance=rational(100000);
+  f=await nativeProductionAuthority(state,{onPrepare(record){
+   if(record.kind==='initial-idle-body'&&f.records.some(item=>item.kind==='task-action'&&item.committed))return held;
+  }});
+  await untilProduction(f,()=>f.records.some(record=>record.kind==='initial-idle-body'&&record.committed));
+  assert.equal(f.command({kind:'requestRepair',id:'repair-after-task',targetId:center.id}).value,true);
+  const expected=()=>f.records.find((record,index)=>record.kind==='initial-idle-body'&&index>0);
+  for(let i=0;i<240&&!expected();i++){f.advance();await f.present();}
+  const action=f.records.find(record=>record.kind==='task-action'&&record.committed),prepared=expected();
+  assert.equal(action?.resources.request.actionKind,'repair');
+  assert.ok(prepared,'the completed repair must request prepared stationary resources');
+  const before=f.snapshot(),taskId=before.workers[0].taskId,paymentId=`repair:${taskId}`;
+  assert.equal(before.structures.find(item=>item.id===center.id).hp,center.hp);
+  assert.equal(Object.hasOwn(before.ledger.entries,paymentId),false);
+  assert.equal(before.events.some(event=>event.type==='RepairApplied'),false);
+  assert.equal(prepared.resources.nativeInitialIdleBody.bodyId,action.resources.request.bodyId);
+  release();await untilProduction(f,()=>prepared.committed);
+  const after=f.snapshot(),target=after.structures.find(item=>item.id===center.id);
+  assert.equal(target.hp,center.maxHp);assert.equal(target.status,'intact');
+  assert.equal(after.workers[0].taskId,null);assert.equal(after.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(after.events.filter(event=>event.type==='RepairApplied'&&event.repair.paymentId===paymentId).length,1);
+  assert.equal(Object.hasOwn(after.ledger.entries,paymentId),true);
+  assert.equal(f.advance().events.filter(event=>event.type==='RepairApplied').length,1);
+  assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{release();await f?.close();fixture.close();}
 });
 
 test('closing the authority aborts its one pending preparation without publishing a late WALK',async()=>{
