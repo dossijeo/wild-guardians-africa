@@ -148,7 +148,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     metrics.resourceTaskYields++;
     return Promise.resolve(yieldResourceTask()).then(()=>{if(!signal?.aborted)resourceSliceStarted=absoluteNow();});
   }
-  // Preparation stays in the resource FIFO, but pure packet inspection can
+  // All frame admission stays in the resource FIFO, but pure inspection can
   // resume across tasks. No native generation, permission or upload is exposed
   // by these steps. Close the continuation explicitly on abort or failure.
   async function inspectPreparation(steps,current,interrupted,signal,cancelled){
@@ -1206,7 +1206,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const admission={packet:message.packet,cancel,controller,prepared:preparing};admittingFrame=admission;
         if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         const interrupted=Error('Native mutation invalidated the prepared frame');
-        let preparedReady=false;
+        let preparedReady=false,inspectionSnapshot=null;
         const current=()=>!stopped&&!failed&&!nativeConsumerRetirement&&!controller.signal.aborted&&message.nativeMutationEpoch===nativeMutationEpoch&&(preparing||frameWorldCurrent(message.packet));
         const inspect=steps=>inspectPreparation(steps,current,interrupted,controller.signal,cancelled);
         const checkpoint=()=>{
@@ -1215,8 +1215,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           return pause?Promise.race([pause,cancelled]).then(()=>{if(!current())throw interrupted;}):null;
         };
         try{
-        if(preparing)await inspect(packetByteSteps(message.packet));
-        else if(packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
+        await inspect(packetByteSteps(message.packet));
         if(preparing){
           try{boundary=validatePreparedWorldBoundary(message.packet);}catch(error){
             if(!NATIVE_ADMISSION_OBSOLETE.has(error?.code))throw error;
@@ -1242,16 +1241,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.receivedAt = absoluteNow();
         if (!Number.isSafeInteger(packet.sequence) || packet.sequence <= (active?.sequence || 0)) throw Error('Stale remote frame');
         if (!Array.isArray(packet.operations) || packet.operations.length > maxFrameOperations) throw Error('Remote frame exceeds safety limit');
-        if(preparing)await inspect(packetByteSteps(packet));
-        else if(packetBytes(packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
+        await inspect(packetByteSteps(packet));
         if (!packet.operations.some(op => op.method === 'submit')) throw Error('Remote frame contains no drawing submission');
-        if(preparing)await inspect(operationValidationSteps(packet.operations));
-        else validateOperations(packet.operations);
+        await inspect(operationValidationSteps(packet.operations));
         if (packet.metadata?.clock) evaluateRemoteClock(packet.metadata.clock, packet.metadata.clock.anchorAbsoluteMs);
         const hasCompute = packet.operations.some(op => op.method === 'submit' && op.args[0].some(buffer => buffer.__remoteCommands.some(command => command.method === 'beginComputePass')));
         packet.hasCompute=hasCompute;
         if (hasCompute && packet.metadata?.clock && !packet.metadata.clock.paused && packet.metadata.clock.safeUntil > packet.metadata.clock.elapsed) throw Error('An advancing remote clock cannot replay a frame containing one-shot compute; certify a repeatable compute contract first');
-        packet.references = preparing?await inspect(packetReferenceSteps(packet.operations)):references(packet.operations);
+        packet.references = await inspect(packetReferenceSteps(packet.operations));
         const readiness = waitForResources(packet.references);
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await Promise.race([readiness,cancelled]);
@@ -1261,9 +1258,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
         packet.transportTiming.resourcesReadyAt = absoluteNow();
         packet.receivedAt = absoluteNow();
+        {const pause=checkpoint();if(pause)await pause;}
         if(preparing&&!packet.operations.some(op=>op.method==='submit'&&op.args[0].some(buffer=>!buffer.texturePreparation&&buffer.__remoteCommands.some(command=>command.method==='beginRenderPass'&&(command.args[0]?.colorAttachments??[]).some(attachment=>[...references([attachment.view,attachment.resolveTarget])].some(key=>key===CURRENT||resources.get(key)?.currentView))))))throw Error('Prepared world frame contains no canvas presentation pass');
         packet.resourceSnapshot = snapshotResources(packet.references);
-        if(preparing){const pause=checkpoint();if(pause)await pause;}
+        // Admission owns the inspected generations across every subsequent
+        // yield, independently of the producer and the currently drawn packet.
+        inspectionSnapshot=packet.resourceSnapshot;pinSnapshot(inspectionSnapshot);
+        {const pause=checkpoint();if(pause)await pause;}
         const nativeBindings=Array.from(clockBindings.values()).filter(binding=>
           packet.resourceSnapshot.has(binding.id)&&binding.nativeRoute);
         if(nativeBindings.length&&!preparing){
@@ -1286,7 +1287,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           rejectPreparedFrame({...packet,operations:message.packet.operations},error.message,false,'native-route');break;
         }
         classifyBufferOwnership(packet);
-        if(preparing){const pause=checkpoint();if(pause)await pause;}
+        {const pause=checkpoint();if(pause)await pause;}
 
         if(routeControl?.status().clock&&packet.admittedClockBindings.some(binding=>packet.gpuWrittenBuffers.has(binding.id)))throw Error('Native presentation clocks cannot be overwritten by GPU commands');
         const writeCounts = new Map();
@@ -1309,6 +1310,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           }
         }
         for (const key of packet.baselineBuffers) if (!packet.resourceSnapshot.get(key)?.uniformShadow) throw Error(`Cannot replay an unversioned GPU buffer read before its first write: ${key}`);
+        {const pause=checkpoint();if(pause)await pause;}
         packet.drawnPipelines=remoteDrawPipelineEntries(packet.operations,packet.resourceSnapshot,{strict:preparing});
         if(preparing){
           if(hasCompute)throw Error('Prepared native world frame cannot contain one-shot compute');
@@ -1318,6 +1320,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           packet.preparedCameraBindings=Array.from(cameraBindings.values()).filter(binding=>packet.resourceSnapshot.has(binding.id));
         }
         pinSnapshot(packet.resourceSnapshot);
+        releaseSnapshot(inspectionSnapshot);inspectionSnapshot=null;
         closePreparationImages(stagedOperations.filter(op=>!packet.operations.includes(op)));
         stagedOperations = [];retainedPreparationOperationCount=0;const retained=retainedPreparationSnapshot;retainedPreparationSnapshot=null;releaseSnapshot(retained);
         if (hasCompute) metrics.computePackets++;
@@ -1362,7 +1365,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           }
           if(preparing){preparedReady=true;reply(message,null,error);}throw error;
         }
-        finally{if(preparing&&!preparedReady)reply(message,null,Error('Prepared world frame unavailable'));controller.abort();if(admittingFrame===admission)admittingFrame=null;}
+        finally{if(preparing&&!preparedReady)reply(message,null,Error('Prepared world frame unavailable'));controller.abort();releaseSnapshot(inspectionSnapshot);if(admittingFrame===admission)admittingFrame=null;}
       }
       case 'destroy': {
         const entry = resources.get(message.id);
