@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Farm, Harvest, Carry y Home ya tienen un recorrido ordinario demostrado en GPU física con los cuatro perfiles. Water y Plant completan Action15 en Game con WASM. Queda aplicar el riego y liberar el mismo cuerpo en una frontera preparada. El productor ya reserva Carry16 para Harvest. Pasaron 269 pruebas de la selección dirigida y el build. [Prueba y siguiente frontera](native-watering-action-dispatch-20261120.md).
+
 La prioridad operativa pasa a integración por familias. Primero se completa el ciclo ordinario Farm, Harvest, Carry y Home. Water y Plant pueden adaptarse reutilizando los contratos que ya se ejecutan en Game. Cada activación exige las guardas de autoridad, recursos y reloj que usa esa mecánica y mantiene sus excepciones reproducidas como dependencias. Los problemas transversales de C4 siguen abiertos y se contrastan en su propio recorrido.
 
 El Host reutiliza comprobaciones de la misma identidad dentro de cada llamada. Las comprobaciones dirigidas pasaron de 72/72/24 a 3/3/1 y la regresión de 738 pruebas y la compilación aprobaron. C4 sigue abierto tras dos capturas a 60 Hz. El primer hold fue de 23,170 y 24,505 ms y el máximo de arranque fue de 188,545 y 206,190 ms. [Contraste y validación](native-binding-cadence-20261120.md).

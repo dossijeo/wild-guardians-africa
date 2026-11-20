@@ -59,6 +59,34 @@ test('restored harvest action produces Carry and genuine settlement through ordi
  }finally{await f.close();}
 });
 
+for(const kind of ['initial','water'])test(`completed ${kind} stays on its admitted body without dispatching a Harvest delivery`,async()=>{
+ const {saved,oldBinding}=nativeActionSave({kind}),worker=saved.workers[0];
+ saved.workers=[worker];saved.tasks=saved.tasks.filter(task=>task.workerId===worker.id);
+ const plant=saved.plants.find(plant=>plant.id===saved.tasks[0].targetId);
+ Object.assign(plant,createPlant(plant.id,plant.species,plant.x,plant.z,plant.centerId));
+ if(kind==='water'){
+  plant.water[0].status='manual';plant.water[1].status='due';plant.growth=plant.water[1].at;
+ }
+ saved.plants=[plant];
+ const f=await nativeProductionAuthority(saved);try{
+  await untilProduction(f,()=>f.records.some(record=>record.kind==='task-action'&&record.committed));
+  const admitted=f.records[0],duration=oldBinding.reference.request.duration;
+  for(let i=0;i<200&&f.snapshot().workers[0].nativeTaskAction.elapsed<duration;i++){
+   f.advance();await f.present();
+  }
+  await f.present();const state=f.snapshot(),current=state.workers[0];
+  assert.equal(current.nativeTaskAction.elapsed,duration);
+  assert.equal(current.nativeRouteAdmission,'native-action');
+  assert.equal(current.taskId,saved.tasks[0].id);
+  assert.deepEqual([current.x,current.z],[worker.x,worker.z]);
+  assert.equal(state.plants[0].water[kind==='initial'?0:1].status,'due');
+  assert.equal(state.crates.length,0);
+  assert.deepEqual(f.records,[admitted]);
+  assert.equal(f.authority.nativeIntentProductionStatus().last.kind,'task-action');
+  assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{await f.close();}
+});
+
 test('closing the authority aborts its one pending preparation without publishing a late WALK',async()=>{
  const saved=nativeIdleStrollGameSave();let release;const waiting=new Promise(resolve=>{release=resolve;});const f=await nativeProductionAuthority(saved.state,{async onPrepare(){await waiting;}});try{
   await untilProduction(f,()=>f.records.length===1);f.authority.dispose();release();await f.present();assert.equal(f.authority.nativeIntentProductionStatus().phase,'closed');assert.equal(f.records.filter(r=>r.committed).length,0);assert.deepEqual(f.faults,[]);

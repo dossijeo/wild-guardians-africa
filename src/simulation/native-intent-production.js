@@ -45,7 +45,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if((marker==='native-task'||marker==='pending-action-resources')&&!planner.nativeTaskActionBinding(actorId)){
     const request=planner.nativeTaskActionRequest(actorId);if(request)return {actorId,kind:'task-action',operation:'startNativeTaskActionAfterGpuQuiescence',prepare:'prepareNativeTaskActionResources',request};
    }
-   if(marker==='native-action'&&planner.nativeTaskActionExecution(actorId)?.completed)return {actorId,kind:'task-consequence',operation:'startNativeTaskConsequenceAfterGpuQuiescence',prepare:'prepareNativeTaskConsequenceResources'};
+   if(marker==='native-action'){
+    const action=planner.nativeTaskActionExecution(actorId);
+    if(action?.completed&&action.binding.reference.request.actionKind==='harvest')return {actorId,kind:'task-consequence',operation:'startNativeTaskConsequenceAfterGpuQuiescence',prepare:'prepareNativeTaskConsequenceResources'};
+   }
    if(marker==='native-delivery'&&planner.nativeDeliveryExecution(actorId)?.arrived)return {actorId,kind:'task-settlement',operation:'startNativeTaskSettlementAfterGpuQuiescence',prepare:'prepareNativeTaskSettlementResources'};
   }
   return null;
