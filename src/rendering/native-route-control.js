@@ -17,7 +17,7 @@ import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '.
 import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../world/native-resume-attestation.js';
 import {copyNativeResumeReference,sameNativeResumeReference} from '../world/native-resume-reference.js';
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
-import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
+import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
@@ -28,6 +28,8 @@ import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,na
 
 const strollStopFamily=Object.freeze({codec:nativeIdleStrollStopCodec,admitted:'strollAdmitted',issued:'issuedStroll',proof:'strollProof',name:'stroll',errorCode:'native-stroll-stop-admission-obsolete'});
 const farmStopFamily=Object.freeze({codec:nativeFarmArrivalStopCodec,admitted:'farmArrivalAdmitted',issued:'issuedFarmArrival',proof:'farmArrivalProof',name:'farm arrival',errorCode:'native-farm-arrival-stop-admission-obsolete'});
+const taskStopFamily=Object.freeze({codec:nativeTaskRouteStopCodec,name:'task route',errorCode:'native-task-route-stop-admission-obsolete'});
+const stopSourceBody=(family,record)=>family===taskStopFamily?record?.taskStopBodyId:record?.[family.admitted]?record[family.issued]?.reference.bodyId:null;
 
 const eventTypes=new Set(['RouteAssigned','RouteInvalidated','RouteReplaced',
   'IntentChanged','RouteCompleted']);
@@ -395,7 +397,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native moving stop attestation boundary');
     const staged=[],ids=new Set(),bodies=new Set();
     for(const input of values){const value=family.codec.copyAttestation(input),{projection,...metadata}=value,proof=Object.freeze(metadata),r=proof.reference,root=actors.get(r.sourceRoute.actorId),rootRecord=root?.revoked,sourceOwner=r.routes.find(owner=>owner.nativeRoute.actorId===r.sourceRoute.actorId);
-      if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||!rootRecord?.[family.admitted]||!rootRecord[family.issued]||rootRecord[family.issued].reference.bodyId!==sourceOwner.bodyId||!matches(rootRecord,r.sourceRoute))throw Error(`Native moving stop lacks its admitted ${family.name} source`);
+      if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||stopSourceBody(family,rootRecord)!==sourceOwner.bodyId||!matches(rootRecord,r.sourceRoute))throw Error(`Native moving stop lacks its admitted ${family.name} source`);
+      if(family===taskStopFamily&&!projection)throw Error('Native task route stop requires its final projection');
       for(let i=0;i<r.routes.length;i++){const owner=r.routes[i],actor=actors.get(owner.nativeRoute.actorId),record=actor?.revoked;
         if(ids.has(owner.nativeRoute.actorId)||bodies.has(owner.bodyId)||!stoppedRecordCurrent(owner,boundary,actor,record)||record.stopProof||proof.preparedReference.worldBoundary.effectiveTime<record.startTime)throw Error('Native moving stop differs from its exact revocations');
         const reference=owner.state===4?stopBody(r,owner):null;
@@ -410,7 +413,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function admitRouteStop(family,value,{preparingWorldBoundary=null}={}){
     const reference=family.codec.copyReference(value),boundary=copyNativeWorldBoundary(preparingWorldBoundary),root=actors.get(reference.sourceRoute.actorId),rootRecord=root?.current??root?.revoked,
       owners=reference.routes.map(owner=>{const actor=actors.get(owner.nativeRoute.actorId);return {owner,actor,record:actor?.current??actor?.revoked};});
-    const pending=()=>!closed&&!!clock&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&!!rootRecord?.[family.admitted]&&!!root?.[family.proof]&&(family===farmStopFamily?farmArrivalRecordCurrent:strollRecordCurrent)(root[family.proof].reference,root)&&owners.every(({owner,actor,record})=>!!actor&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===record&&active.get(owner.nativeRoute.actorId)===record&&actor.state===1&&matches(record,owner.nativeRoute)&&record.startTime<=reference.worldBoundary.effectiveTime);
+    const sourceOwner=reference.routes.find(owner=>owner.nativeRoute.actorId===reference.sourceRoute.actorId);
+    const sourceCurrent=()=>stopSourceBody(family,rootRecord)===sourceOwner.bodyId&&(family===taskStopFamily||
+      !!root?.[family.proof]&&(family===farmStopFamily?farmArrivalRecordCurrent:strollRecordCurrent)(root[family.proof].reference,root));
+    const pending=()=>!closed&&!!clock&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&sourceCurrent()&&owners.every(({owner,actor,record})=>!!actor&&!actor.closed&&actors.get(owner.nativeRoute.actorId)===actor&&actor.current===record&&active.get(owner.nativeRoute.actorId)===record&&actor.state===1&&matches(record,owner.nativeRoute)&&record.startTime<=reference.worldBoundary.effectiveTime);
     let observed=null,covers=false,actualBodies=[];
     const current=()=>{const proof=rootRecord?.stopProof??null;if(proof!==observed){observed=proof;covers=!!proof&&family.codec.attestationCovers(proof,reference);actualBodies=covers?proof.reference.routes.map(owner=>owner.state===4?stopBody(proof.reference,owner):null):[];}
       return covers&&owners.every(({owner,actor,record},i)=>record?.stopProof===proof&&stoppedRecordCurrent(owner,proof.reference.worldBoundary,actor,record)&&(owner.state===4?suspendedCurrent(actualBodies[i],record,actor):actor.proof===null));};
@@ -597,7 +603,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(world.authorityEpoch!==authorityEpoch||world.nativeSession!==clock.nativeSession||world.effectiveTime>clock.committedThrough||boundary&&(world.ticket>boundary.ticket||world.effectiveTime>boundary.effectiveTime)||!bootstrap&&!sameNativeWorldBoundary(world,boundary)||ids.has(r.actorId)||bodies.has(r.bodyId)||!record||record.issuedFarmArrival||actor.closed||actor.state!==1||active.get(r.actorId)!==record||actor.latestSequence!==record.assignmentSequence||record.assignmentSequence!==value.assignmentSequence||!sameHandle(record.handle,r.expectedRouteHandle)||record.startTime!==world.effectiveTime||!bootstrap&&!nativeTaskRequestMatchesStart(record.sourceTaskRequest,r))throw Error('Native start attestation differs from issued route or request');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
       }
-      for(const {actor,value} of staged)actor.startProof=value;return staged.length;
+      for(const {actor,value} of staged){actor.startProof=value;actor.current.taskStopBodyId=value.reference.bodyId;}return staged.length;
     },
     admitStart(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeTaskStartReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
@@ -612,7 +618,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       for(const input of values){const value=copyNativeResumeAttestation(input),reference=value.reference,actor=actors.get(reference.actorId),record=actor?.current,source=record?.sourceSuspension;
         if(!sameNativeWorldBoundary(reference.worldBoundary,boundary)||ids.has(reference.actorId)||bodies.has(reference.bodyId)||!actor||actor.closed||actor.state!==1||active.get(reference.actorId)!==record||!record||actor.latestSequence!==record.assignmentSequence||value.assignmentSequence!==record.assignmentSequence||record.assignmentSequence<=reference.sourceControlSequence||!source||source.sequence>reference.sourceControlSequence||!resumeSourceMatches(reference,source.reference)||!sameHandle(record.handle,reference.expectedRouteHandle)||record.startTime!==boundary.effectiveTime)throw Error('Native resume attestation does not match its issued assignment and source body');
         ids.add(reference.actorId);bodies.add(reference.bodyId);staged.push({actor,proof:value});}
-      for(const {actor,proof} of staged)actor.resumeProof=proof;return staged.length;
+      for(const {actor,proof} of staged){
+        actor.resumeProof=proof;
+        const old=actor.revoked,r=proof.reference;
+        if(old?.taskStopBodyId===r.bodyId&&old.assignmentSequence===r.sourceAssignmentSequence)
+          actor.current.taskStopBodyId=r.bodyId;
+      }
+      return staged.length;
     },
     admitResume(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeResumeReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary);
@@ -638,10 +650,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     // Installation belongs exclusively to the direct authority's release.
     installStrollStops(boundary,values,options){return installRouteStops(strollStopFamily,boundary,values,options);},
     installFarmArrivalStops(boundary,values,options){return installRouteStops(farmStopFamily,boundary,values,options);},
+    installTaskRouteStops(boundary,values,options){return installRouteStops(taskStopFamily,boundary,values,options);},
     admitStrollStop(value,options){return admitRouteStop(strollStopFamily,value,options);},
     admitFarmArrivalStop(value,options){return admitRouteStop(farmStopFamily,value,options);},
+    admitTaskRouteStop(value,options){return admitRouteStop(taskStopFamily,value,options);},
     admitStoppedBody(value,options){return admitRouteStoppedBody(strollStopFamily,value,options);},
     admitFarmArrivalStoppedBody(value,options){return admitRouteStoppedBody(farmStopFamily,value,options);},
+    admitTaskRouteStoppedBody(value,options){return admitRouteStoppedBody(taskStopFamily,value,options);},
     admitSuspended(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeSuspendedBodyReference(value),actor=actors.get(reference.nativeRoute.actorId),record=actor?.current??actor?.revoked,boundary=copyNativeWorldBoundary(preparingWorldBoundary);
       const pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.nativeRoute.actorId)===actor&&actor.current===record&&active.get(reference.nativeRoute.actorId)===record&&actor.state===1&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&clock.committedThrough===reference.suspendedAt&&record.startTime<=reference.suspendedAt;

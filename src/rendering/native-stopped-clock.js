@@ -1,8 +1,13 @@
-import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
+import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 
 // A selector preserves the explicit stop family, including affected dependants.
-// Copying either family grants no execution or submitted-frame permission.
-export function copyNativeStoppedBodySelector(value){return (value?.kind===nativeFarmArrivalStopCodec.stoppedBodyKind?nativeFarmArrivalStopCodec:nativeIdleStrollStopCodec).copyStoppedBody(value);}
+// The selector describes data, while the direct release owns presentation.
+const stoppedCodecs=[nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec];
+export function copyNativeStoppedBodySelector(value){
+ const codec=stoppedCodecs.find(item=>item.stoppedBodyKind===value?.kind);
+ if(!codec)throw TypeError('Invalid native stopped body selector');
+ return codec.copyStoppedBody(value);
+}
 
 // Scalar projection bindings share the existing physical uniform transport.
 // This describes resources; only the direct stop release grants their values.
