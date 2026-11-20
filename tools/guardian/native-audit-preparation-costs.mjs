@@ -1,4 +1,5 @@
 import {createHash} from 'node:crypto';
+import {rewriteMutationCosts} from './native-audit-mutation-costs.mjs';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {pathToFileURL} from 'node:url';
@@ -67,9 +68,15 @@ export function rewritePreparationCosts(source,{resources=false}={}){
 
 export async function observePreparationCosts(page,overrides){
  const sha=value=>createHash('sha256').update(value).digest('hex');
+ const mutations=process.env.QA_NATIVE_MUTATION_TRACE==='true';
  await page.context().route('**/src/rendering/remote-webgpu-host.js*',async route=>{
-  const response=await route.fetch(),body=await response.text(),annotated=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true'});
+  const response=await route.fetch(),body=await response.text(),phases=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true'}),annotated=mutations?rewriteMutationCosts(phases,'host'):phases;
   overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA preparation phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
+  await route.fulfill({response,body:annotated});
+ });
+ if(mutations)for(const [owner,file]of [['publication','simulation/native-intent-control-publication.js'],['admission','world/native-resource-admission.js']])await page.context().route('**/src/'+file+'*',async route=>{
+  const response=await route.fetch(),body=await response.text(),annotated=rewriteMutationCosts(body,owner);
+  overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA mutation phase marks only. Original protocol, validation, ordering, queue fences and publication are unchanged; wall spans include waiting.'});
   await route.fulfill({response,body:annotated});
  });
 }
