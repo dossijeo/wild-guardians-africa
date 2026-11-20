@@ -9,10 +9,10 @@ function routeInWorld(value,worldBoundary){
  if(h.authorityEpoch!==worldBoundary.authorityEpoch||h.session!==worldBoundary.nativeSession||h.slot>0xffffffff||h.generation>0xffffffff)throw TypeError('Native stop route belongs to another authority or slot generation');
  return route;
 }
-// Same bounded owner/effect schema for explicit native source families12/24.
+// Same bounded owner/effect schema for explicit native source families12/24/25.
 // The immutable family tag remains part of every public identity comparison.
 function createCodec(kind,prefix){
- const title=kind===12?'Idle stroll':'Farm arrival',name=kind===12?'stroll':'farm arrival';
+ const [title,name]={12:['Idle stroll','stroll'],24:['Farm arrival','farm arrival'],25:['Task route','task route']}[kind];
  const referenceKind=prefix+'-stop-reference',ticketKind=prefix+'-stop-proposal-ticket',attestationKind=prefix+'-stop-attestation',translationKind=prefix+'-stop-translation',stoppedBodyKind=prefix+'-stopped-body';
 // Resource identities only. Poses remain owned proposal data; copying this
 // reference neither suspends a body nor grants a presentation horizon.
@@ -89,4 +89,5 @@ const sameStoppedBody=(a,b)=>a?.kind===stoppedBodyKind&&b?.kind===stoppedBodyKin
 }
 export const nativeIdleStrollStopCodec=createCodec(12,'native-idle-stroll');
 export const nativeFarmArrivalStopCodec=createCodec(24,'native-farm-arrival');
+export const nativeTaskRouteStopCodec=createCodec(25,'native-task-route');
 export const NATIVE_STOP_POSE_FIELDS=Object.freeze({x:0,z:1,phase:3,yaw:4,arrived:6,runPhase:9,walkPhase:10,carryPhase:11});

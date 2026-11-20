@@ -32,14 +32,6 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  }
  return 1;
 }
-static const RouteSlot* executedTaskRoute(const IntentState& s,uint64_t actor){
- const auto found=s.activeIntents.find(actor);if(found==s.activeIntents.end())return nullptr;
- const auto& intent=found->second;
- if(intent.animal||intent.home||intent.retreat||!intent.task||!intent.requiresResources||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return nullptr;
- const auto& route=s.routeSlots[intent.slot];SpatialBodyView body;
- if(!s.executionEnabled||!route.hasExecution||!executionBindingCoherent(s,route.reservationBody,intent.slot)||!spatialReadBody(route.reservationBody,body)||body.x!=route.executionPose[0]||body.z!=route.executionPose[1])return nullptr;
- return &route;
-}
 EMSCRIPTEN_KEEPALIVE int nav_intent_task_execution(double actorId){
  auto& s=state();s.taskExecutionResult.fill(0);if(!integer(actorId))return 0;
  const uint64_t actor=uint64_t(actorId);const auto* route=executedTaskRoute(s,actor);if(!route)return 0;

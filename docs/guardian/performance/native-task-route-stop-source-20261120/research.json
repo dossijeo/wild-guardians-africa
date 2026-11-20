@@ -1,0 +1,91 @@
+{
+  "at": "2026-11-20T18:41:32.711214+00:00",
+  "baseHead": "16df3d82d199241ba178405596678cad878c5d7d",
+  "scope": "Static source audit during exclusive peer GPU60; no production edits or test execution. No mechanism chosen yet.",
+  "sources": {
+    "src/simulation/game.js": "61238df5e87f25ebd36c831877842d8de49cbd7da6fb7090a9dbd3caf874b86d",
+    "src/simulation/native-intent-production.js": "7694d7f32158c49e2f91b26659d7bdcc62c23fd4875ef452193a78d6eb474088",
+    "src/world/wild-engine/spatial-intent-bridge.js": "715cccf9a5229b7f17f0c9921b09e6d82325eaff8ca9e6da13e0b208a4153024",
+    "src/world/wild-engine/spatial-intent-state.cpp": "0a5495c84a35d965efe136d49d181fd1d1a51212dd986d010bac32527d81f061",
+    "src/world/wild-engine/spatial-home-resource-request.inc": "2f07cc5194e49ddba78d4652c4ab5fabda03a27bd4e9b0fc90ffe5b96e33516b",
+    "src/world/wild-engine/spatial-home-route-proposal.inc": "b9188d65d5778e2a860db7e85e11567926d9673ff914d8deb6008eb82a4d0916",
+    ".cache/research-detourcrowd-v1.6.0.cpp": "c0d5164dabc3e68ee25ba479d13ae7f77066ccf7bfb461963d16a144caaf3ac5"
+  },
+  "engineReference": {
+    "url": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp",
+    "readRanges": [
+      [
+        607,
+        627
+      ],
+      [
+        646,
+        664
+      ],
+      [
+        1180,
+        1192
+      ]
+    ],
+    "finding": "resetMoveTarget cancels its target and desired velocity while retaining the agent; requestMoveTarget assigns a new request on the same agent, processed by update. Our prepared physical stop and employment rules are not provided by Detour."
+  },
+  "currentCodeEvidence": [
+    {
+      "file": "src/simulation/game.js",
+      "lines": [
+        1584,
+        1598,
+        1901,
+        1916
+      ],
+      "finding": "Shift end already admits acquired Action15/Carry16. The separate contractExpired guard still rejects both; walking Task still fails return-boundary gate. Do not repeat published shift-end change or simply whitelist the walker."
+    },
+    {
+      "file": "src/world/wild-engine/spatial-intent-bridge.js",
+      "lines": [
+        935,
+        952,
+        1533,
+        1554
+      ],
+      "finding": "Worker route stop dispatch currently selects only IdleStroll12 and FarmArrival24; interpreting a Task route through the stroll codec would misrepresent its source."
+    },
+    {
+      "file": "src/world/wild-engine/spatial-intent-state.cpp",
+      "lines": [
+        1394,
+        1408,
+        1414,
+        1439,
+        1492,
+        1519
+      ],
+      "finding": "Native stop guard only accepts12/24 and proves their actual current family. Existing stop closure, held discs/gates, immutable origins and bounded revalidation should be reused. A Task needs authentic source validation."
+    },
+    {
+      "file": "src/world/wild-engine/spatial-home-resource-request.inc",
+      "lines": [
+        64,
+        91
+      ],
+      "finding": "Held Home currently supports Farm/Stroll only and requires no assigned Task. New Task return must release its real claim once after a prepared stop, retaining actual body/pose; no synthetic settlement/Idle/restored declaration."
+    },
+    {
+      "file": "src/world/wild-engine/spatial-intent-state.cpp",
+      "lines": [
+        217,
+        229
+      ],
+      "finding": "Home18 already consumes a genuine request or settlement view. Extend authentic source integration if needed; do not create another scene/body/route queue."
+    },
+    {
+      "file": "src/simulation/native-intent-production.js",
+      "lines": [
+        20,
+        49
+      ],
+      "finding": "Ordinary dispatcher has Farm/Stroll stop but no Task stop. End-to-end Task shift return requires native+bridge+producer+Game integration, not only a guard exception."
+    }
+  ],
+  "nextAudit": "Map typed stop/resource/control/pick support and restoration before choosing representation. Then deterministic negative and native/authority lifecycle tests on real source, including four profiles and standalone/pthread; GPU only after common timing correction and coordinated window. Actual full transition evidence required; contractDay fixture mutations alone cannot prove sunrise."
+}

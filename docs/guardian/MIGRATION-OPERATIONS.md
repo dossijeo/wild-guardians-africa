@@ -1,5 +1,9 @@
 # Entrada operativa de la migración
 
+Continuación parcial A6 e-R3/f-R4. La parada nativa de Task en marcha reutiliza la preparación y el cierre de paradas existentes. Sus 18 casos pasan en standalone y pthread. La regresión seleccionada pasa 5.177 pruebas en 394 archivos con una omisión histórica y compilación aprobada. Quedan la proyección retenida, la liberación de la tarea y el relevo hacia Home por el canal real. [Fuente, referencias y pruebas](native-task-route-stop-source-20261120.md).
+
+La captura posterior a 4K/60 Hz completó el recorrido anterior con 4.964 dibujos y 5.008 oportunidades hasta el drenaje, sin pérdidas de traza. C4 sigue abierto. El arranque registra un intervalo de 168,275 ms y dos oportunidades quedan bloqueadas por mutaciones, incluida una con un bloqueo de 8,175 ms. Windows volvió a 4K/30 Hz. La captura es anterior a la recompilación de la fuente Task25. [Captura completa y casos pendientes](native-60fps-capture-20261120.md).
+
 Índice de trabajo, no otro plan. Mandan el [objetivo](MIGRATION-OBJECTIVE.md), el
 [plan integrado](integrated-gpu-migration-plan-20261104.md), el
 [checklist A6](A6-CHECKLIST.md) y su [corrección prevalente](intent-route-architecture-correction-20261108.md).

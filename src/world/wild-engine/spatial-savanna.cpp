@@ -2941,7 +2941,7 @@ int applyWorldProposalInput(const SpatialWorldProposalInput& input){
     if(result)worldProposalResult={x,z,added-1};
   }
 #endif
-  if(input.kind==12||input.kind==24)result=spatialIntentStopWorkerRoute(input);
+  if(input.kind==12||input.kind==24||input.kind==25)result=spatialIntentStopWorkerRoute(input);
   return result;
 }
 EMSCRIPTEN_KEEPALIVE float* spatial_world_proposal_float_ptr(int count){
@@ -2962,7 +2962,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
 // 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
-// 12/24 explicitly stop a native Idle stroll/Farm arrival without changing world geometry.
+// 12/24/25 explicitly stop a native Idle stroll/Farm arrival/Task route without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
   if(captureResources&&kind<6)return -2;
   WorldResourcePreview candidate;
@@ -3021,7 +3021,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 #ifndef __EMSCRIPTEN_PTHREADS__
     return -1;
 #endif
-  }else if(kind==12||kind==24){
+  }else if(kind==12||kind==24||kind==25){
     if(mode||floatCount||intCount!=8)return -1;
     for(int i:{1,3,7})if(ids[i]<0||ids[i]>0x1fffff)return -1;
     if((!ids[0]&&!ids[1])||(!ids[2]&&!ids[3])||!ids[5]||(!ids[6]&&!ids[7]))return -1;
@@ -3047,10 +3047,10 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
-// The original world preview for kinds12/24 owns no terrain buffers. Refresh its
+// The original world preview for kinds12/24/25 owns no terrain buffers. Refresh its
 // receipt only after native recomputation; other families keep exact snapshots.
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_stop(double session,double ticket){
-  if(!worldResourcePreview||(worldResourcePreview->header[4]!=12&&worldResourcePreview->header[4]!=24)||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
+  if(!worldResourcePreview||(worldResourcePreview->header[4]!=12&&worldResourcePreview->header[4]!=24&&worldResourcePreview->header[4]!=25)||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
   std::array<double,8> translation{};const int result=spatialIntentRevalidateWorkerRouteStop(session,ticket,translation);
   if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
   std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
@@ -3110,7 +3110,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
   std::array<double,5> stopBinding{};SpatialWorldProposalInput input;const int valid=stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
-  if(!stopBound&&(input.kind==12||input.kind==24))stopBinding={1,ticket,time,ticket,time};
+  if(!stopBound&&(input.kind==12||input.kind==24||input.kind==25))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
   struct ResourceGuard {
     std::map<std::pair<int,int>,int>* previous;
@@ -3130,7 +3130,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
     publication.prepared.reset();
     if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
     publication.stopBinding=stopBinding;publication.stopSource.fill(0);
-    if(input.kind==12||input.kind==24){
+    if(input.kind==12||input.kind==24||input.kind==25){
       const auto& ids=input.integers;const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
       publication.stopSource={1,double(id(0)),double(id(2)),double(uint32_t(ids[4])),double(uint32_t(ids[5])),double(id(6))};
     }

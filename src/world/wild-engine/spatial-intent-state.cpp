@@ -1380,6 +1380,17 @@ ServiceRoute findServiceRoute(const Worker& worker,const Target& target,int kind
   }
   return best;
 }
+
+// The execution reader and explicit Task stop use the same native owner proof.
+static const RouteSlot* executedTaskRoute(const IntentState& s,uint64_t actor){
+ const auto found=s.activeIntents.find(actor);if(found==s.activeIntents.end())return nullptr;
+ const auto& intent=found->second;
+ if(intent.animal||intent.home||intent.retreat||!intent.task||!intent.requiresResources||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return nullptr;
+ const auto& route=s.routeSlots[intent.slot];SpatialBodyView body;
+ if(!s.executionEnabled||!route.hasExecution||!executionBindingCoherent(s,route.reservationBody,intent.slot)||!spatialReadBody(route.reservationBody,body)||body.x!=route.executionPose[0]||body.z!=route.executionPose[1])return nullptr;
+ return &route;
+}
+
 }
 
 bool spatialIntentStaticProtectionActive(){return state().bodyDomainActive||state().gateStaticProofs;}
@@ -1392,7 +1403,7 @@ int spatialIntentBeginWorldPreview(){
 }
 void spatialIntentEndWorldPreview(){state().worldMutationPreview=false;}
 int spatialIntentStopWorkerRoute(const SpatialWorldProposalInput& input){
- if((input.kind!=12&&input.kind!=24)||input.mode||!input.floats.empty()||input.integers.size()!=8)return -1;
+ if((input.kind!=12&&input.kind!=24&&input.kind!=25)||input.mode||!input.floats.empty()||input.integers.size()!=8)return -1;
  const auto& ids=input.integers;
  for(int i:{1,3,7})if(ids[i]<0||ids[i]>0x1fffff)return -1;
  const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
@@ -1400,7 +1411,7 @@ int spatialIntentStopWorkerRoute(const SpatialWorldProposalInput& input){
  if(!session||!actor||!assignment||!generation)return -1;
  if(session!=s.session)return 0;
  const auto found=s.activeIntents.find(actor);
- if(found==s.activeIntents.end()||(input.kind==24?!nativeFarmArrivalBodyCurrent(s,found->second):!currentIdleStroll(double(actor)))||found->second.assignmentSequence!=assignment||found->second.slot!=slot||found->second.generation!=generation||!routeCanSuspend(s,found->second))return 0;
+ if(found==s.activeIntents.end()||(input.kind==24?!nativeFarmArrivalBodyCurrent(s,found->second):input.kind==12?!currentIdleStroll(double(actor)):!executedTaskRoute(s,actor))||found->second.assignmentSequence!=assignment||found->second.slot!=slot||found->second.generation!=generation||!routeCanSuspend(s,found->second))return 0;
  // The existing world preflight expands the same held-disc/gate stop closure.
  // Neither preview nor resource capture mutates this actor or its trajectory.
  if(s.worldMutationPreview){s.worldPreviewStoppedRoutes.insert(actor);s.worldPreviewRetainsRoutes=false;return 1;}
@@ -1465,7 +1476,7 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   if(input.kind<2)return -1;
   const int result=stageWorldMutationBoundary(shapes,count);if(result!=1)return result;
   auto& p=state().barrierProposal;p.kind=input.kind;p.worldInput=input;
-  if(input.kind==12||input.kind==24)p.workerRouteStop=PendingBarrierProposal::WorkerRouteStopDraft{p.ticket,p.at,p.routeEffects,p.gateEffects,{}};
+  if(input.kind==12||input.kind==24||input.kind==25)p.workerRouteStop=PendingBarrierProposal::WorkerRouteStopDraft{p.ticket,p.at,p.routeEffects,p.gateEffects,{}};
   return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
@@ -1474,7 +1485,7 @@ void clearWorldMutationProposal(PendingBarrierProposal& p){
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||session!=double(p.session)||ticket!=double(p.ticket)||
-     (kind==1?p.kind!=1:(kind>=13&&kind<=24)?p.kind!=kind:p.kind<2||(p.kind>12&&p.kind!=24)))return -1;
+     (kind==1?p.kind!=1:(kind>=13&&kind<=25)?p.kind!=kind:p.kind<2||(p.kind>12&&p.kind!=24&&p.kind!=25)))return -1;
   const bool current=p.session==s.session&&p.at==s.effectiveTime&&p.bodies==spatialBodiesMutationRevision()&&
     p.bodies!=std::numeric_limits<uint64_t>::max()&&p.entities==s.entityRevision&&p.facts==s.sequence&&
     p.intents==s.intentSequence&&p.reservations==s.residencyPinRevision&&p.clock==s.clockSequence&&
@@ -1489,11 +1500,11 @@ int spatialIntentTakeBarrier(double session,double ticket,double sequence,double
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,1);if(result!=1)return result;
   auto& p=state().barrierProposal;out=p.input;clearWorldMutationProposal(p);return 1;
 }
-// Shared by explicit source families12/24. Refresh only the final stop frontier; immutable route/gate owners must still
+// Shared by explicit source families12/24/25. Refresh only the final stop frontier; immutable route/gate owners must still
 // match the original preparation. Keep one bounded origin, never a chain.
 int spatialIntentRevalidateWorkerRouteStop(double session,double ticket,std::array<double,8>& translation){
   auto& s=state();auto& p=s.barrierProposal;
-  if(!integer(session)||!integer(ticket)||!p.pending||(p.kind!=12&&p.kind!=24)||!p.workerRouteStop||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(!integer(session)||!integer(ticket)||!p.pending||(p.kind!=12&&p.kind!=24&&p.kind!=25)||!p.workerRouteStop||session!=double(p.session)||ticket!=double(p.ticket))return -1;
   if(p.session!=s.session||p.facts!=s.sequence||p.intents!=s.intentSequence||p.gates!=s.gateRevision||p.world!=executionWorldStamp()){
     clearWorldMutationProposal(p);return -2;
   }
@@ -1512,7 +1523,7 @@ int spatialIntentRevalidateWorkerRouteStop(double session,double ticket,std::arr
 }
 int spatialIntentTakeWorkerRouteStop(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,SpatialWorldProposalInput& out,std::array<double,5>& receipt){
   const auto& p=state().barrierProposal;
-  if(!integer(preparedTicket)||!p.pending||(p.kind!=12&&p.kind!=24)||!p.workerRouteStop)return -1;
+  if(!integer(preparedTicket)||!p.pending||(p.kind!=12&&p.kind!=24&&p.kind!=25)||!p.workerRouteStop)return -1;
   const auto& origin=*p.workerRouteStop;
   if(preparedTicket!=double(p.ticket)&&(preparedTicket!=double(origin.preparedTicket)||origin.translation[0]!=1||origin.translation[5]!=1))return -9;
   const std::array<double,5> proof{1,preparedTicket,preparedTicket==double(p.ticket)?p.at:origin.preparedAt,double(p.ticket),p.at};
@@ -1525,6 +1536,11 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_stop_proposal_version(){ret
 extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_stop_proposal_translation_ptr(double session,double ticket){
   const auto& p=state().barrierProposal;return p.pending&&p.kind==24&&p.workerRouteStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.workerRouteStop->translation[0]==1?p.workerRouteStop->translation.data():nullptr;
 }
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_task_route_stop_proposal_version(){return 1;}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_task_route_stop_proposal_translation_ptr(double session,double ticket){
+  const auto& p=state().barrierProposal;return p.pending&&p.kind==25&&p.workerRouteStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.workerRouteStop->translation[0]==1?p.workerRouteStop->translation.data():nullptr;
+}
+
 int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out){
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
   auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
