@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La partida ordinaria ya ejecuta Plant desde una orden nueva y Water desde un checkpoint vencido, con un trabajador estacionario tras Farm. Ambas pruebas usaron NVIDIA Turing y comprobaron la ruta nativa, un solo riego, el mismo cuerpo y el drenaje. Quedan el arranque Idle frío, la interrupción de Idle en marcha, otros perfiles y C4. [Recorridos y límites](native-watering-idle-20261120.md).
+
 Water y Plant ya aplican el riego y continúan a otra tarea conservando el cuerpo. En cada una de dos pruebas de GPU desde un guardado de la acción, el paquete Idle20 retenido dejó avanzar Game y el dibujo, y tras la adquisición se observó un único evento de riego. El build y las pruebas dirigidas pasaron. Queda el recorrido desde una orden Plant nueva y desde un checkpoint que vence durante Game. [Integración y evidencia](native-watering-idle-20261120.md).
 
 Farm, Harvest, Carry y Home ya tienen un recorrido ordinario demostrado en GPU física con los cuatro perfiles. Water y Plant completan Action15 en Game con WASM. Queda aplicar el riego y liberar el mismo cuerpo en una frontera preparada. El productor ya reserva Carry16 para Harvest. Pasaron 269 pruebas de la selección dirigida y el build. [Prueba y siguiente frontera](native-watering-action-dispatch-20261120.md).

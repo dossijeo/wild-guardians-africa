@@ -30,4 +30,21 @@ $env:QA_NATIVE_WATERING_KIND='initial'
 node tools/guardian/audit_native_watering_idle_world_owner.mjs
 ```
 
-Quedan el recorrido en GPU desde una orden Plant recién emitida y desde el vencimiento real de un checkpoint Water, los demás perfiles, las adversidades de esta familia y la aceptación de cadencia C4. [Recibo y hashes](performance/native-watering-idle-20261120/validation.json).
+## Partida ordinaria desde Farm
+
+Dos ejecuciones adicionales empiezan con el trabajador de granja y dejan que Game decida la asignación. En Plant se envía una orden real sobre terreno válido y se comprueba el evento `CropPlaced`. En Water, Game avanza un cultivo existente hasta que vence su siguiente riego. Se observa la cadena completa Task14 → Action15 → Idle20 en la misma autoridad Worker y Surface, con un único `WaterSatisfied` en cada partida. Se retienen el cuerpo, la raíz, los huesos y las 28 mallas con sus geometrías originales. El cierre quiesce el productor antes de retirar el consumidor.
+
+| Origen de la tarea | Dibujos durante READY retenido | Dibujos con Idle20 | Drenaje |
+| --- | ---: | ---: | --- |
+| Orden Plant | 22 | 32 | Completo |
+| Checkpoint Water vencido | 22 | 30 | Completo |
+
+```powershell
+$env:QA_NATIVE_WATERING_ORIGIN='fresh'
+$env:QA_NATIVE_WATERING_KIND='initial'
+node tools/guardian/audit_native_watering_idle_world_owner.mjs
+$env:QA_NATIVE_WATERING_KIND='water'
+node tools/guardian/audit_native_watering_idle_world_owner.mjs
+```
+
+La entrada validada parte de un trabajador estacionario tras Farm. Quedan dos fallos transversales reproducidos y derivados a Astra. El arranque desde Idle20 frío podía llegar a la preparación antes de que estuviera disponible la variante Walk. Una orden Plant válida durante Idle22 en marcha podía quedar con una propuesta de asignación obsoleta. Siguen pendientes los demás perfiles, las adversidades de la familia y C4. [Recibos de hardware, hashes y fallos abiertos](performance/native-watering-idle-20261120/validation.json).

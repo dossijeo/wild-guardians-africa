@@ -160,6 +160,16 @@
       "sha256": "aef46c0e4c6cb1dd14ce65068bd28b40933470c002521138cd16b10d4256bf96",
       "originalSha256": "74cf9fa5a1db9410690b582cd8097e47e3eb28e04be31576d6f15dcc2977b013",
       "bytes": 15509
+    },
+    "initial-ordinary-fresh.json.gz": {
+      "sha256": "10d51c0b19054566a2256fd7a29788ad8a75e30106aab0b3148a65e4e90f897f",
+      "originalSha256": "50359cdec47b797048b14eddee777e2986db107f5f8cdf8dd43a6f149459c233",
+      "bytes": 41123
+    },
+    "water-ordinary-fresh.json.gz": {
+      "sha256": "5f8c277a84c9c4a58b7d99d61659cb00e63cb98bd501312cff12968041027eb9",
+      "originalSha256": "ba2be775a423b1c8d0e0c8fc1f69e4876ca595425628443973b3c06a1247bcc1",
+      "bytes": 41709
     }
   },
   "selectedRegression": {
@@ -213,6 +223,85 @@
       "src/world/wild-engine/spatial-intent-bridge.js": "0b5468e6b5b19aacfe72da47e62a5396c79c7259b9afe569be4e511755279fbf",
       "src/world/wild-engine/spatial-intent-state.cpp": "254d022615de1097c693377afb9c48f84ca9fe659f282d5bf5b33b4c324d2843",
       "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464"
+    }
+  },
+  "freshHardware": {
+    "sourceCommit": "9aa48bbc2f341b4ad71d9a34be165aa3666b4fa6",
+    "runs": {
+      "initial": {
+        "targetId": "plant-1000001",
+        "taskId": 1000002,
+        "bodyId": 1,
+        "worldTickets": [
+          6,
+          8,
+          10
+        ],
+        "wateredEvents": 1,
+        "drawsDuringReadyHold": 22,
+        "idleDraws": 32,
+        "retainedActorMeshesAndGeometry": 28,
+        "rootAndBonesIdentical": true,
+        "drained": true
+      },
+      "water": {
+        "targetId": "plant-1000001",
+        "taskId": 1000002,
+        "bodyId": 1,
+        "worldTickets": [
+          6,
+          8,
+          10
+        ],
+        "wateredEvents": 1,
+        "drawsDuringReadyHold": 22,
+        "idleDraws": 30,
+        "retainedActorMeshesAndGeometry": 28,
+        "rootAndBonesIdentical": true,
+        "drained": true
+      }
+    },
+    "qaSourcesSha256": {
+      "tools/guardian/audit_native_watering_idle_world_owner.mjs": "3f37edd70b4de7e4a6593d3aff9564ab1a3ca1f21f05c8e7ced64086a71cf7d2",
+      "tests/browser/native-watering-idle-world-owner.js": "a0428cdded62e656595cc65dada702db7274574d61d2f2840534a6f8652fe15f",
+      "tests/browser/fixtures/native-production-world-audit-worker.js": "8dcb4e672995649d635007d4876bc1ccb3fec716e1da43d57dda9670f1920188"
+    },
+    "openCases": {
+      "coldIdleWalkAssets": {
+        "receiptSha256": "64b0427a4bcba19f398fc039f8be8d4c0f02919a6c741e6aa11a4306929bc365",
+        "stage": "placing a crop through the authority",
+        "sourceErrors": [
+          {
+            "kind": "nativeIntentControlFailure",
+            "session": "watering-b7bc3980-7d3d-4623-9ccb-41700675bc5b",
+            "message": "Native initial Idle body resource unavailable"
+          }
+        ],
+        "workerBefore": {
+          "id": "worker-900011",
+          "status": "idle",
+          "nativeRouteAdmission": "pending-idle-resources",
+          "taskId": null
+        }
+      },
+      "movingIdleTaskClaim": {
+        "receiptSha256": "0c93186b03ca37302d899d3dc83b0df1a74e74467e31ea15f091568e786c87c4",
+        "stage": "waiting for watering Idle READY",
+        "sourceErrors": [
+          {
+            "kind": "error",
+            "session": "watering-0029fd05-72a7-4f1c-aea3-8e9e46e80ed3",
+            "sequence": 881,
+            "message": "Error: Native task proposal became stale before commit\n    at Object.commitTaskBatchToState (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js?t=1795209832192:3060:13)\n    at reserveAvailableTasks (http://127.0.0.1:5218/src/simulation/game.js?t=1795209832192:1512:15)\n    at reserve (http://127.0.0.1:5218/src/simulation/game.js?t=1795209832192:1638:49)\n    at updateWorkers (http://127.0.0.1:5218/src/simulation/game.js?t=1795209832192:1845:3)\n    at tick (http://127.0.0.1:5218/src/simulation/game.js?t=1795209832192:1983:5)\n    at advanceReal (http://127.0.0.1:5218/src/simulation/game.js?t=1795209832192:2000:44)\n    at Object.execute (http://127.0.0.1:5218/src/simulation/simulation-authority.js?t=1795209832192:248:104)\n    at self.onmessage (http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module:92:1584)"
+          }
+        ],
+        "workerBefore": {
+          "id": "worker-900011",
+          "status": "idle",
+          "nativeRouteAdmission": "native-idle-stroll",
+          "taskId": null
+        }
+      }
     }
   }
 }

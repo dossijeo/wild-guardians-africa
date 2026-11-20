@@ -22,7 +22,7 @@ self.onmessage=event=>{
  if(data?.kind==='attachNativeResourcePreparation'){
   const port=data.port,post=port.postMessage.bind(port);
   if(holdWatering)port.addEventListener('message',({data:request})=>{
-   if(request.kind==='commitNativeGateResources')for(const key of ['nativeTaskActionBinding','nativeInitialIdleBodyBinding','nativeTaskStartBinding']){
+   if(request.kind==='commitNativeGateResources')for(const key of ['nativeFarmArrivalBinding','nativeTaskActionBinding','nativeInitialIdleBodyBinding','nativeTaskStartBinding']){
     const binding=request.commit?.[key];if(binding)diagnostic.postMessage({kind:'production-acquired',key,binding});
    }
   });
