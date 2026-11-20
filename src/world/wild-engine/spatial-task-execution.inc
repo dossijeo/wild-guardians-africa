@@ -6,11 +6,16 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  // Other movers must gain their own source projection before sharing Game.tick.
  // Their existing native clocks and component consumers remain supported.
  if(!s.gates.empty())return -1;
- // A prepared stopped22/23 keeps its exact body while the rest of the cohort
- // advances. Other suspended classes still need their own Game projection.
+ // Prepared stopped workers retain their bodies while the cohort advances.
+ // A stopped Task joins this projection once it owns a valid Home request.
  for(const auto& [body,slot]:s.suspendedBodies){
   const auto actor=s.gateBodyActors.find(body);if(actor==s.gateBodyActors.end())return -1;
-  const auto found=s.activeIntents.find(actor->second);if(found==s.activeIntents.end()||found->second.slot!=slot||!nativeHeldIdleStrollBodyCurrent(s,found->second,found->second.assignmentSequence,found->second.generation)&&!nativeHeldFarmArrivalBodyCurrent(s,found->second))return -1;
+   const auto found=s.activeIntents.find(actor->second);
+   if(found==s.activeIntents.end()||found->second.slot!=slot)return -1;
+   const auto& intent=found->second;
+   const bool stoppedTaskHome=intent.homeRequest&&intent.homeRequest->stoppedTaskSourceSequence&&nativeHomeRequestBodyCurrent(s,intent);
+   if(!stoppedTaskHome&&!nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)&&
+      !nativeHeldFarmArrivalBodyCurrent(s,intent))return -1;
  }
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;

@@ -29,6 +29,56 @@ async function fixture(threaded,run){let runtime,f;try{
 
 for(const threaded of [false,true]){
  const engine=threaded?'pthread':'standalone';
+ test(`${engine} a stopped Task hands its exact body and pose to Home and releases its claim`,async()=>fixture(threaded,f=>{
+  tick(f.state,.1,f.nav);
+  const goal=f.point(-8,0),actor=f.route.actorId,handle=f.route.routeHandle;
+  const request=(generation=handle.generation+1,x=goal.x)=>f.w.nav_intent_stopped_task_home_request(actor,handle.session,f.route.assignmentSequence,generation,1,x,goal.z);
+  assert.equal(typeof f.w.nav_intent_stopped_task_home_request,'function');
+  assert.equal(request(),-2);
+  assert.equal(stage(f,f.route),1);
+  const t=tuple(f),body=f.body(1),peer=f.body(3),count=f.w.spatial_body_count();
+  assert.equal(f.w.spatial_world_proposal_stop_commit_bound(...t.slice(0,5),t[1]),1);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  const held=f.planner.nativeSuspendedGateRoute(actor);
+  assert(held);
+  assert.equal(request(handle.generation),-2);
+  const taskCount=f.w.nav_intent_task_count();
+  assert.equal(request(),1);
+  const requestSequence=f.w.nav_intent_transition_sequence();
+  assert.equal(request(),1);
+  assert.equal(request(handle.generation+1,goal.x+1),-3);
+  assert.equal(f.w.nav_intent_transition_sequence(),requestSequence);
+  assert.equal(f.w.nav_intent_task_count(),taskCount);
+  assert.equal(f.w.nav_intent_actor(actor),1);
+  assert.deepEqual(Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_actor_ptr(),4)),[actor,6,0,0]);
+  assert.deepEqual(f.body(1),body);
+  assert.deepEqual(f.body(3),peer);
+  assert.equal(f.w.spatial_body_count(),count);
+  const home=f.planner.nativeHomeRequestReference(actor);
+  assert(home);
+  assert.equal(home.bodyId,f.execution.bodyId);
+  assert.deepEqual(home.home,{villageId:1,...goal});
+  for(const key of ['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'])assert.equal(home.pose[key],held.pose[key]);
+  assert.equal(f.planner.nativeTaskExecution(actor),null);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  assert.equal(f.planner.nativeGameExecutionState(),1);
+  f.state.elapsed+=.1;
+  assert.equal(f.planner.advanceNativeRouteExecution(f.state.elapsed).status,'advanced');
+  assert.deepEqual(f.body(1),body);
+  assert.notDeepEqual(f.body(3),peer);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  const prepared=f.planner.prepareNativeHomeRouteProposal(home);
+  assert.equal(prepared.status,'proposed');
+  const p=tuple(f);
+  assert.equal(f.w.nav_home_route_proposal_commit_bound(...p.slice(0,5),p[1]),1);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  assert.equal(f.planner.nativeHomeRouteExecution(actor).bodyId,f.execution.bodyId);
+  f.state.elapsed+=.2;
+  assert.equal(f.planner.advanceNativeRouteExecution(f.state.elapsed).status,'advanced');
+  assert.notDeepEqual(f.body(1),body);
+  assert.notDeepEqual(f.body(3),peer);
+  assert.equal(f.w.spatial_body_count(),count);
+ }));
  for(const family of ['farm','stroll'])test(`${engine} a genuine ${family} route cannot be acquired by the Task stop family`,async()=>{
   let runtime,f;try{
    if(threaded){const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory,{wasmBinary:fs.readFileSync(new URL('../public/wild-engine/spatial-threaded.wasm',import.meta.url))});}
