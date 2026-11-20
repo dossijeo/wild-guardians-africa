@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Task25 ya tiene paquete retenido y proyección de primer dibujo en cliente y Host. Surface omite la preparación de lotes residentes cuando Task25 tiene diario vacío. Pasaron 41 pruebas dirigidas y la compilación. La selección amplia obtuvo 724 de 726, con los mismos dos fallos también en el código anterior. Quedan Game, motores de puerta y validación en GPU física. [Canal de dibujo y validación](native-task-stop-remote-20261120.md).
+
 Task25 ya se revalida y confirma dentro de la transacción común de la autoridad. El canal directo exige un recibo de la misma familia y devuelve una sola atestación proyectada. Pasaron 245 pruebas y la compilación. Quedan el consumidor gráfico efectivo y el disparo desde Game. [Admisión y validación](native-task-stop-admission-20261120.md).
 
 El roster de Task25 ya prepara la pose detenida sobre el actor, la geometría y la asignación de movimiento que estaban en uso. La prueba comprueba el mismo cuerpo y la selección sobre la pose final. Pasaron 243 pruebas y la compilación. Quedan Surface y Host, las paradas con motor de puerta y el disparo ordinario desde Game. [Roster y validación](native-task-stop-graphics-20261120.md).
