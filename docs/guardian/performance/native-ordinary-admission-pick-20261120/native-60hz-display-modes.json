@@ -1,0 +1,49 @@
+{
+  "readOnly": true,
+  "api": "EnumDisplayDevicesW / EnumDisplaySettingsW; no settings changed",
+  "devices": [
+    {
+      "name": "\\\\.\\DISPLAY1",
+      "primary": true,
+      "current": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 30,
+        "x": 0,
+        "y": 0
+      },
+      "modes59HzAndAbove": [
+        [
+          1920,
+          1080,
+          59
+        ],
+        [
+          1920,
+          1080,
+          60
+        ],
+        [
+          3840,
+          2160,
+          59
+        ],
+        [
+          3840,
+          2160,
+          60
+        ],
+        [
+          4096,
+          2160,
+          59
+        ],
+        [
+          4096,
+          2160,
+          60
+        ]
+      ]
+    }
+  ]
+}

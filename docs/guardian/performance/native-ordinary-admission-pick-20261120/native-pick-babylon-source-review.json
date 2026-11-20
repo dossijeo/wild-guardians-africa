@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-20T18:00:47.515861+00:00",
+  "url": "https://raw.githubusercontent.com/BabylonJS/Babylon.js/a56427494c5a8741d488e2e6a5bdb24e8f3488ac/packages/dev/core/src/Collisions/gpuPicker.ts",
+  "local": ".cache/native-pick-babylon-a5642749-gpuPicker.ts",
+  "sha256": "f470937305d01012604ae5d578302e14aaf216b4bc6897fd5a44b043432f69e1",
+  "revision": "a56427494c5a8741d488e2e6a5bdb24e8f3488ac",
+  "readRanges": [
+    [
+      342,
+      361
+    ],
+    [
+      447,
+      489
+    ],
+    [
+      602,
+      621
+    ]
+  ],
+  "findings": [
+    "Per-picker _pickingInProgress rejects overlapping calls while mutable readback/maps are shared.",
+    "onAfterRender waits actual readTexturePixels before translating colorId via pick list.",
+    "This revision does not provide our exact owner-version revalidation; do not claim it solves adoption and retirement.",
+    "Adapt narrow principle: isolate per-call state and correlate actual presented acquisition. No Babylon dependency/GPU picker/render target/lock introduced; Three synchronous picker retained."
+  ]
+}
