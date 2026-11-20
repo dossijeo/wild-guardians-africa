@@ -7,6 +7,25 @@ import {MessageChannel} from 'node:worker_threads';
 let generation=0;
 const cp=(sequence=2)=>({sequence,presentationCheckpoint:{version:1,sequence,elapsed:10},workCheckpoint:{version:1,sequence,elapsed:10,effects:[]}});
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+
+test('failed retained Worker drains its original authority endpoint before rebind',async()=>{
+ const f=await fixture(),channel=new MessageChannel(),events=[];channel.port1.on('message',m=>events.push(m));
+ try{
+  await f.send({kind:'attachNativeResourcePreparation',session:'s',port:channel.port2});await until(()=>events.length);
+  f.error(Object.assign(Error('obsolete frame'),{code:'remote-frame-native-mutation-obsolete'}));
+  channel.port1.postMessage({kind:'flushNativeResources',session:'s',id:1});await until(()=>events.some(m=>m.kind==='nativeResourcesFlushed'||m.kind==='nativeResourcesClosed'));
+  assert.equal(events.at(-1).kind,'nativeResourcesFlushed');assert.deepEqual(f.counts(),{created:1,disposed:0});assert.equal(f.calls.includes('prepareResource'),false);
+  const p=f.ports(3);await f.send(p.message);assert.equal(f.messages.at(-1).kind,'recovery-rebound');await replayCheckpoint(f,p);await f.send({kind:'recovery-live',recoveryId:3});await f.draw();assert.equal(f.messages.filter(m=>m.kind==='rendered-frame').at(-1).recoveryId,3);
+ }finally{channel.port1.close();channel.port2.close();await f.dispose();}
+});
+
+test('failed retained Worker also drains its original client receiver, without admitting preparation',async()=>{
+ const f=await fixture();try{f.error(Object.assign(Error('obsolete route'),{code:'remote-frame-native-route-obsolete'}));await f.send({kind:'flushNativeResources',id:1});assert.equal(f.messages.at(-1).kind,'nativeResourcesFlushed');await f.send({kind:'prepareNativeGateResources',id:2,resources:{kind:1}});assert.equal(f.calls.includes('prepareResource'),false);await until(()=>f.counts().disposed===1);}finally{await f.dispose();}
+});
+
+for(const error of [Error('WebGPU device lost: destroyed'),Error('unrelated terminal failure')])test('terminal Worker cannot acknowledge resource drain: '+error.message,async()=>{
+ const f=await fixture();try{f.error(error);await until(()=>f.counts().disposed===1);const start=f.messages.length;await f.send({kind:'flushNativeResources',id:1});assert.equal(f.messages.slice(start).some(m=>m.kind==='nativeResourcesFlushed'),false);assert.equal(f.counts().created,1);}finally{await f.dispose();}
+});
 async function until(predicate){const end=Date.now()+2000;while(!predicate()){if(Date.now()>end)throw Error('Retained Worker fixture timed out');await flush();}}
 async function fixture(){
  const saved={self:globalThis.self,postMessage:globalThis.postMessage,close:globalThis.close,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame,harness:globalThis.__retainedWorker},messages=[],calls=[],frames=new Map();let nextFrame=0,options,healthGate=null,drawGate=null,checkpointGate=null,resourceGate=null,disposed=0,created=0,sequence=2;

@@ -3,7 +3,7 @@ const refreshKinds=new Set(['invalidateNativeFarmArrivalResources','refreshNativ
 
 // Retained handles stay in the existing graphical owner. An endpoint carries
 // only resource declarations, receipts and lifecycle commands, never functions.
-export function createNativeResourcePreparationReceiver({prepare,isRunning,postMessage,onCommit=()=>{},onError=()=>{}}){
+export function createNativeResourcePreparationReceiver({prepare,isRunning,canFlush=isRunning,postMessage,onCommit=()=>{},onError=()=>{}}){
  let entry=null,lastId=0,closed=false,inflight=0,flushId=null,callbacksSettled=null;
  function whenCallbacksSettled(){if(!inflight)return Promise.resolve();if(!callbacksSettled){let resolve;const promise=new Promise(done=>{resolve=done;});callbacksSettled={promise,resolve};}return callbacksSettled.promise;}
  function callbackFinished(){if(--inflight===0){const wait=callbacksSettled;callbacksSettled=null;wait?.resolve();}}
@@ -13,9 +13,11 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,postM
   if(!prepareKinds.has(data?.kind)&&!refreshKinds.has(data?.kind)&&!['commitNativeGateResources','abortNativeGateResources','flushNativeResources'].includes(data?.kind))return false;
   if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid native resource request');
   if(data.kind==='flushNativeResources'){
-   if(closed||!isRunning()||entry||flushId!==null||data.id<=lastId)throw Error('Native resource flush unavailable or preparation pending');
+   // A retained failed renderer can drain the original endpoint while new
+   // preparation remains forbidden. This receipt is not GPU health/admission.
+   if(closed||!canFlush()||entry||flushId!==null||data.id<=lastId)throw Error('Native resource flush unavailable or preparation pending');
    lastId=data.id;flushId=data.id;
-   const finish=()=>{try{if(closed||!isRunning()||entry||inflight)throw Error('Native resource flush unavailable');postMessage({kind:'nativeResourcesFlushed',id:data.id,version:1});return true;}finally{flushId=null;}};
+   const finish=()=>{try{if(closed||!canFlush()||entry||inflight)throw Error('Native resource flush unavailable');postMessage({kind:'nativeResourcesFlushed',id:data.id,version:1});return true;}finally{flushId=null;}};
    return inflight?whenCallbacksSettled().then(finish):finish();
   }
   if(prepareKinds.has(data.kind))return (async()=>{

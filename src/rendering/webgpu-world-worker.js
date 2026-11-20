@@ -15,7 +15,10 @@ const inspectionGeneration=globalThis.crypto.randomUUID();
 const nativeRouteFrames=new Set();
 const nativeResourceReceivers=new Set();
 const nativeResourcePorts=new Map();
-function resourceReceiver(send){const receiver=createNativeResourcePreparationReceiver({prepare:(kind,resources,options)=>{if(!remoteGpu)throw Error('Native gate preparation unavailable');return surface[kind](resources,options);},isRunning:()=>phase==='running',postMessage:send,onCommit:resumePreparation,onError:fail});nativeResourceReceivers.add(receiver);return receiver;}
+// A typed retained failure may drain callbacks before source recovery; it may
+// not prepare new resources. Rebind still waits for the frame and GPU health.
+function canFlushNativeResources(){return phase==='running'||phase==='failed'&&retainedFailure&&surface!==null;}
+function resourceReceiver(send){const receiver=createNativeResourcePreparationReceiver({prepare:(kind,resources,options)=>{if(!remoteGpu)throw Error('Native gate preparation unavailable');return surface[kind](resources,options);},isRunning:()=>phase==='running',canFlush:canFlushNativeResources,postMessage:send,onCommit:resumePreparation,onError:fail});nativeResourceReceivers.add(receiver);return receiver;}
 const nativeResources=resourceReceiver(message=>postMessage(message));
 function cancelNativeGatePreparations(){for(const endpoint of nativeResourcePorts.values())endpoint.dispose();nativeResourcePorts.clear();for(const receiver of nativeResourceReceivers)receiver.dispose();}
 let nativeResourceSession=null;
@@ -65,6 +68,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  }
  if(data?.kind==='dispose'){cancelNativeGatePreparations();settleNativeRouteFrames(Error('World worker disposed'));temporalRecovery?.dispose();cancelDraw();phase='closed';surface=null;try{await owner.close();}finally{postMessage({kind:'disposed'});close();}return;}
  if(data?.kind==='recovery-rebind'){await rebindRecovery(data);return;}
+ if(data?.kind==='flushNativeResources'&&phase==='failed'&&canFlushNativeResources()){await nativeResources.accept(data);return;}
  if(recoveryEnabled&&data.kind==='recovery-live'){const temporal=temporalRecovery?.status();if(phase!=='recovering'||(data.recoveryId??0)!==recoveryGeneration||recoveryStaged.length||temporal&&(temporal.busy||temporal.failed||temporal.cursor===null||surface.stream?.status().sequence!==temporal.cursor))throw Error('Recovery is not ready');if(temporal){if(surface.finishTimelineRecovery?.()!==true)throw Error('Temporal recovery handoff failed');temporalRecovery.dispose();temporalRecovery=null;}phase='running';scheduleDraw();postMessage({kind:'recoveryLive',...(recoveryGeneration?{recoveryId:recoveryGeneration}:{})});return;}
  if(phase!=='initializing'&&phase!=='running'&&phase!=='recovering'&&phase!=='rebinding')throw Error('World worker not running');
  if(import.meta.env.DEV&&data.kind==='qa-presentation-control'){try{if(phase!=='running'||!surface?.stream||!Number.isSafeInteger(data.id))throw Error('Presentation control unavailable');if(data.action==='hold')surface.stream.holdPresentation();else if(data.action==='release')surface.stream.releasePresentation();else throw Error('Unknown presentation control');postMessage({kind:'qa-presentation-result',id:data.id,result:surface.stream.status()});}catch(error){postMessage({kind:'qa-presentation-error',id:data.id,message:String(error?.message??error)});}return;}
@@ -94,7 +98,7 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  if(data.kind==='guardianAwakeningBegin'){surface?.guardianAttack?.beginAwakening(data.command);return;}
  if(data.kind==='attachNativeResourcePreparation'){
   if(phase!=='running'||!remoteGpu||nativeResourcePorts.size||data.session!==nativeResourceSession||!data.port)throw Error('Native resource attachment unavailable');
-  const port=data.port,endpoint=attachNativeResourcePreparationEndpoint({port,session:data.session,prepare:(kind,resources,options)=>surface[kind](resources,options),isRunning:()=>phase==='running',onCommit:resumePreparation,onError:fail,onClosed:()=>nativeResourcePorts.delete(port)});nativeResourcePorts.set(port,endpoint);return;
+  const port=data.port,endpoint=attachNativeResourcePreparationEndpoint({port,session:data.session,prepare:(kind,resources,options)=>surface[kind](resources,options),isRunning:()=>phase==='running',canFlush:canFlushNativeResources,onCommit:resumePreparation,onError:fail,onClosed:()=>nativeResourcePorts.delete(port)});nativeResourcePorts.set(port,endpoint);return;
  }
  const resourceRequest=nativeResources.accept(data);if(resourceRequest!==false){await resourceRequest;return;}
  if(data.kind==='prepareNativeRoute'||data.kind==='releaseNativeRoute'){
