@@ -5,11 +5,14 @@ import {nativeActionSave} from '../../tests/helpers/native-task-action-restorati
 import {createPlant} from '../../src/simulation/crops.js';
 import {nativeFarmArrivalRouteFixture} from '../../tests/helpers/native-farm-arrival-route.js';
 import {rational} from '../../src/simulation/money.js';
+import {PROFILES} from '../../src/simulation/workforce.js';
 
 const kind=process.env.QA_NATIVE_WATERING_KIND??'water',origin=process.env.QA_NATIVE_WATERING_ORIGIN??'restored';
+const profile=process.env.QA_NATIVE_WORKER_PROFILE;
 if(!['restored','fresh'].includes(origin))throw Error('Expected restored or fresh');
 if(!['initial','water','repair'].includes(kind)||kind==='repair'&&origin!=='fresh')throw Error('Expected initial, water, or fresh repair');
-const output=process.env.OUTPUT??`.cache/native-watering-${kind}-${origin}-hardware.json`;
+if(profile!==undefined&&(origin!=='fresh'||!PROFILES.some(item=>item.id===profile)))throw Error('Expected a supported profile for a fresh command');
+const output=process.env.OUTPUT??`.cache/native-watering-${kind}-${origin}${profile?`-${profile}`:''}-hardware.json`;
 const modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
 function restoredInput(){
@@ -25,7 +28,7 @@ function restoredInput(){
  const center={x:worker.x,z:worker.z};return {saved,kind,origin,targetId:plant.id,nextTargetId:next.id,center,ground:worker.y??0,chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`)};
 }
 function freshInput(){
- const f=nativeFarmArrivalRouteFixture({peer:false});
+ const f=nativeFarmArrivalRouteFixture({peer:false,profile});
  try{
   const saved=structuredClone(f.state),worker=saved.workers[0],center={x:worker.x,z:worker.z};
   const point=f.point(-6,0);
@@ -59,8 +62,9 @@ try{
   return auditNativeWateringIdleWorldOwner(input);
  },input);
  if(errors.length)throw Error(JSON.stringify(errors));
+ if(result.atEffect.profile!==input.saved.workers[0].profile)throw Error('Unexpected worker profile at the consequence');
  writeFileSync(output,JSON.stringify({result,errors},null,2)+'\n');
- console.log(JSON.stringify({output,kind,origin,adapter:result.adapter,bodyId:result.idle.reference.bodyId,draws:result.draws,...(kind==='repair'?{payment:result.sourceAfter.events[0].repair}:{})}));
+ console.log(JSON.stringify({output,kind,origin,profile:result.atEffect.profile,adapter:result.adapter,bodyId:result.idle.reference.bodyId,draws:result.draws,...(kind==='repair'?{payment:result.sourceAfter.events[0].repair}:{})}));
 }catch(error){
  const failure=await page.evaluate(()=>window.nativeWateringIdleFailure??null).catch(error=>String(error));
  writeFileSync(output.replace(/\.json$/,'.failure.json'),JSON.stringify({error:String(error.stack??error),failure,errors},null,2)+'\n');throw error;
