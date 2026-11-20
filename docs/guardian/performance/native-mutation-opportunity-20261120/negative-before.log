@@ -1,0 +1,131 @@
+TAP version 13
+# (node:5700) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-opportunity-before-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:5700) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:5700) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: mutation preflight starts a short mutation after the existing opportunity, without sacrificing that opportunity
+not ok 1 - mutation preflight starts a short mutation after the existing opportunity, without sacrificing that opportunity
+  ---
+  duration_ms: 1132.403
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-prepared-ready-opportunity.test.js:29:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    a short mutation must not consume the imminent opportunity
+    
+    1 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-prepared-ready-opportunity.test.js:36:10)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: bootstrap needs no previous image or RAF: {"initial":false}
+ok 2 - bootstrap needs no previous image or RAF: {"initial":false} # SKIP test name does not match pattern
+  ---
+  duration_ms: 1.7915
+  ...
+# Subtest: bootstrap needs no previous image or RAF: {"initial":false,"hidden":true}
+ok 3 - bootstrap needs no previous image or RAF: {"initial":false,"hidden":true} # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2659
+  ...
+# Subtest: hidden consumers do not depend on a suspended RAF (already hidden)
+ok 4 - hidden consumers do not depend on a suspended RAF (already hidden) # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.231
+  ...
+# Subtest: hidden consumers do not depend on a suspended RAF (hide while waiting)
+ok 5 - hidden consumers do not depend on a suspended RAF (hide while waiting) # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2323
+  ...
+# Subtest: cancel releases a mutation preflight waiter without publishing the cancelled preparation
+ok 6 - cancel releases a mutation preflight waiter without publishing the cancelled preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2104
+  ...
+# Subtest: retire releases a mutation preflight waiter without publishing the cancelled preparation
+ok 7 - retire releases a mutation preflight waiter without publishing the cancelled preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2247
+  ...
+# Subtest: dispose releases a mutation preflight waiter without publishing the cancelled preparation
+ok 8 - dispose releases a mutation preflight waiter without publishing the cancelled preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2998
+  ...
+# Subtest: device-loss releases a mutation preflight waiter without publishing the cancelled preparation
+ok 9 - device-loss releases a mutation preflight waiter without publishing the cancelled preparation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4413
+  ...
+# Subtest: a normal opportunity that cannot submit still releases mutation preflight, without manufacturing a presentation
+ok 10 - a normal opportunity that cannot submit still releases mutation preflight, without manufacturing a presentation # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3263
+  ...
+# Subtest: acquisition delayed after READY obtains a fresh opportunity, never a remembered presentation slot
+ok 11 - acquisition delayed after READY obtains a fresh opportunity, never a remembered presentation slot # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2618
+  ...
+# Subtest: preflight does not freeze native movement or clock and the later physical receipt captures fresh state
+ok 12 - preflight does not freeze native movement or clock and the later physical receipt captures fresh state # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2642
+  ...
+# Subtest: the common Farm admission keeps actor B moving during preflight and captures its expected receipt afterwards
+ok 13 - the common Farm admission keeps actor B moving during preflight and captures its expected receipt afterwards # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3069
+  ...
+# Subtest: abort before a hold permits immediate retry, including an in-transit notification: false
+ok 14 - abort before a hold permits immediate retry, including an in-transit notification: false # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4551
+  ...
+# Subtest: abort before a hold permits immediate retry, including an in-transit notification: true
+ok 15 - abort before a hold permits immediate retry, including an in-transit notification: true # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2461
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: session
+ok 16 - an invalid or missing opportunity cannot authorize a physical hold: session # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2563
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: consumerToken
+ok 17 - an invalid or missing opportunity cannot authorize a physical hold: consumerToken # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.4237
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: opportunityId
+ok 18 - an invalid or missing opportunity cannot authorize a physical hold: opportunityId # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.5009
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: duplicate
+ok 19 - an invalid or missing opportunity cannot authorize a physical hold: duplicate # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.3407
+  ...
+# Subtest: an invalid or missing opportunity cannot authorize a physical hold: timeout
+ok 20 - an invalid or missing opportunity cannot authorize a physical hold: timeout # SKIP test name does not match pattern
+  ---
+  duration_ms: 0.2685
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 19
+# todo 0
+# duration_ms 2355.1125

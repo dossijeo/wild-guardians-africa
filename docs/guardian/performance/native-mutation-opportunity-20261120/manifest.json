@@ -1,0 +1,505 @@
+{
+  "scope": "Original receipts/traces for causal mutation presentation investigation. Failed READY-only candidate retained. No gate acceptance inferred.",
+  "artifacts": [
+    {
+      "path": "before-frozen.json",
+      "source": ".cache/native-mutation-before-frozen.json",
+      "encoding": "original-bytes",
+      "bytes": 1131173,
+      "sha256": "15dc95ea565d77d3307a2ecebbf599205fef625b10798957665324f022b76f4d",
+      "originalBytes": 1131173,
+      "originalSha256": "15dc95ea565d77d3307a2ecebbf599205fef625b10798957665324f022b76f4d"
+    },
+    {
+      "path": "before-report.json",
+      "source": ".cache/native-mutation-before-report.json",
+      "encoding": "original-bytes",
+      "bytes": 1764380,
+      "sha256": "acbd98e5f22333328a0679937a857033bf85b2b5e0ee718b4376b4fbc933e2ce",
+      "originalBytes": 1764380,
+      "originalSha256": "acbd98e5f22333328a0679937a857033bf85b2b5e0ee718b4376b4fbc933e2ce"
+    },
+    {
+      "path": "before-trace-report.json",
+      "source": ".cache/native-mutation-before-trace-report.json",
+      "encoding": "original-bytes",
+      "bytes": 106831,
+      "sha256": "f218b823b0f27fb69867341150582a4c772bfab925436e07c85c7002116332c4",
+      "originalBytes": 106831,
+      "originalSha256": "f218b823b0f27fb69867341150582a4c772bfab925436e07c85c7002116332c4"
+    },
+    {
+      "path": "before-observer.mjs",
+      "source": ".cache/native-mutation-before-observer.mjs",
+      "encoding": "original-bytes",
+      "bytes": 5415,
+      "sha256": "7cabf09246a737aa0b8553b81e8ff90bd9a1d4e1a77790271ab9b336ef71ba36",
+      "originalBytes": 5415,
+      "originalSha256": "7cabf09246a737aa0b8553b81e8ff90bd9a1d4e1a77790271ab9b336ef71ba36"
+    },
+    {
+      "path": "before.trace.json.gz",
+      "source": ".cache/native-mutation-before.trace.json",
+      "encoding": "gzip",
+      "bytes": 52556403,
+      "sha256": "8610e2d6a0c768643ee74003db14ab7e360a5a977b42d785c64b8eb1d06f93a0",
+      "originalBytes": 533132268,
+      "originalSha256": "f0eeaa05f7f3d985dc9e388e282483972c05f5d95cc403d34e64c44282a77881"
+    },
+    {
+      "path": "ready-only-frozen.json",
+      "source": ".cache/native-mutation-after1-frozen.json",
+      "encoding": "original-bytes",
+      "bytes": 1131296,
+      "sha256": "15c4ff0979d20bbfa2bf458aaf25d4963a70ddf18f64dd906bc72d6aaaf759cf",
+      "originalBytes": 1131296,
+      "originalSha256": "15c4ff0979d20bbfa2bf458aaf25d4963a70ddf18f64dd906bc72d6aaaf759cf"
+    },
+    {
+      "path": "ready-only-report.json",
+      "source": ".cache/native-mutation-after1-report.json",
+      "encoding": "original-bytes",
+      "bytes": 1781480,
+      "sha256": "0cda33b4ec10996a96604d59eba898aa5a42cc80c8e927d965fc93cc702cf194",
+      "originalBytes": 1781480,
+      "originalSha256": "0cda33b4ec10996a96604d59eba898aa5a42cc80c8e927d965fc93cc702cf194"
+    },
+    {
+      "path": "ready-only-trace-report.json",
+      "source": ".cache/native-mutation-after1-trace-report.json",
+      "encoding": "original-bytes",
+      "bytes": 121307,
+      "sha256": "8bf21e67fe2a3c7229bf8f4a5e4c1666dd350fcb9050eac3204a50e267625ef0",
+      "originalBytes": 121307,
+      "originalSha256": "8bf21e67fe2a3c7229bf8f4a5e4c1666dd350fcb9050eac3204a50e267625ef0"
+    },
+    {
+      "path": "ready-only-observer.mjs",
+      "source": ".cache/native-mutation-after1-observer.mjs",
+      "encoding": "original-bytes",
+      "bytes": 5875,
+      "sha256": "652933b4fd930fa0d64157b0b8dc0ee1febbb51f3c621b556784facaff22ff70",
+      "originalBytes": 5875,
+      "originalSha256": "652933b4fd930fa0d64157b0b8dc0ee1febbb51f3c621b556784facaff22ff70"
+    },
+    {
+      "path": "ready-only.trace.json.gz",
+      "source": ".cache/native-mutation-after1.trace.json",
+      "encoding": "gzip",
+      "bytes": 52696159,
+      "sha256": "a30736977155fd52ec7481e7d41752c8d6fb8c464c725d7d4ea6bd6a00745f7a",
+      "originalBytes": 535820027,
+      "originalSha256": "368da975fdb862559a16d2e7f5756bd119a6b2ddace560d1d1457f369460e17d"
+    },
+    {
+      "path": "ready-only-host.mjs",
+      "source": ".cache/native-ready-only-host.mjs",
+      "encoding": "original-bytes",
+      "bytes": 186948,
+      "sha256": "d3b3b568fb762d508231958256331a8c18abfac0eef94baee1b12ca6d63f2843",
+      "originalBytes": 186948,
+      "originalSha256": "d3b3b568fb762d508231958256331a8c18abfac0eef94baee1b12ca6d63f2843"
+    },
+    {
+      "path": "ready-only.patch",
+      "source": ".cache/native-ready-only.patch",
+      "encoding": "original-bytes",
+      "bytes": 12581,
+      "sha256": "3e6d652b0e1206bc6707309cf00e861688ff26f69fb2f9255ebe299fcbabb487",
+      "originalBytes": 12581,
+      "originalSha256": "3e6d652b0e1206bc6707309cf00e861688ff26f69fb2f9255ebe299fcbabb487"
+    },
+    {
+      "path": "ready-only-tests.mjs",
+      "source": ".cache/native-ready-only-tests.mjs",
+      "encoding": "original-bytes",
+      "bytes": 6901,
+      "sha256": "efdeb6260b283f9a015095a55e941ec86af816c93fd5329ab019c383b7345fff",
+      "originalBytes": 6901,
+      "originalSha256": "efdeb6260b283f9a015095a55e941ec86af816c93fd5329ab019c383b7345fff"
+    },
+    {
+      "path": "negative-before.log",
+      "source": ".cache/native-opportunity-before-negative.log",
+      "encoding": "original-bytes",
+      "bytes": 7041,
+      "sha256": "b58fc5c7015b2459343e6d0cd3b11db7731dfcabaec706103e3040f68bca6c6e",
+      "originalBytes": 7041,
+      "originalSha256": "b58fc5c7015b2459343e6d0cd3b11db7731dfcabaec706103e3040f68bca6c6e"
+    },
+    {
+      "path": "negative-loader.mjs",
+      "source": ".cache/native-opportunity-before-loader.mjs",
+      "encoding": "original-bytes",
+      "bytes": 305,
+      "sha256": "600f0d215d5b0ef7d81ef4c1afdb26b8061d7ec147660921b309b7f7aa087267",
+      "originalBytes": 305,
+      "originalSha256": "600f0d215d5b0ef7d81ef4c1afdb26b8061d7ec147660921b309b7f7aa087267"
+    },
+    {
+      "path": "negative-sources.json",
+      "source": ".cache/native-opportunity-before-sources.json",
+      "encoding": "original-bytes",
+      "bytes": 250738,
+      "sha256": "6605bfee5e46ace2dcbbf9681d7b3ec731f7f39e35d1de218b7edbf07c15c025",
+      "originalBytes": 250738,
+      "originalSha256": "6605bfee5e46ace2dcbbf9681d7b3ec731f7f39e35d1de218b7edbf07c15c025"
+    },
+    {
+      "path": "trace-report.mjs",
+      "source": ".cache/native-mutation-trace-report.mjs",
+      "encoding": "original-bytes",
+      "bytes": 1509,
+      "sha256": "5fd1a50f6a3347139915e919b0b5ca3c923975a708e4bbca946cff104ca0dfb6",
+      "originalBytes": 1509,
+      "originalSha256": "5fd1a50f6a3347139915e919b0b5ca3c923975a708e4bbca946cff104ca0dfb6"
+    },
+    {
+      "path": "research-sources.json",
+      "source": ".cache/native-mutation-deadline-research/sources.json",
+      "encoding": "original-bytes",
+      "bytes": 935,
+      "sha256": "67ff5e879e7b7c1270394c4eb4c33fa49022005fc3e68e93683feb7c6d00351b",
+      "originalBytes": 935,
+      "originalSha256": "67ff5e879e7b7c1270394c4eb4c33fa49022005fc3e68e93683feb7c6d00351b"
+    },
+    {
+      "path": "research-metrics-sources.json",
+      "source": ".cache/native-mutation-deadline-research/metrics-sources.json",
+      "encoding": "original-bytes",
+      "bytes": 943,
+      "sha256": "f653fe57bd378d03c132c19151d3e198fd662ddaa45815df05cfbf4acc07fec4",
+      "originalBytes": 943,
+      "originalSha256": "f653fe57bd378d03c132c19151d3e198fd662ddaa45815df05cfbf4acc07fec4"
+    },
+    {
+      "path": "research-scheduler_state_machine.cc",
+      "source": ".cache/native-mutation-deadline-research/scheduler_state_machine.cc",
+      "encoding": "original-bytes",
+      "bytes": 65090,
+      "sha256": "2406d372c0a44201b51cef67f6dd6aff988e0e6b92deaa4bb7090f74e45840cc",
+      "originalBytes": 65090,
+      "originalSha256": "2406d372c0a44201b51cef67f6dd6aff988e0e6b92deaa4bb7090f74e45840cc"
+    },
+    {
+      "path": "research-layer_tree_host_impl.cc",
+      "source": ".cache/native-mutation-deadline-research/layer_tree_host_impl.cc",
+      "encoding": "original-bytes",
+      "bytes": 209895,
+      "sha256": "3b738f363af9b17bea5259554e00ebd796bfcf339d1e4a80ea6bcaf572ef3d7c",
+      "originalBytes": 209895,
+      "originalSha256": "3b738f363af9b17bea5259554e00ebd796bfcf339d1e4a80ea6bcaf572ef3d7c"
+    },
+    {
+      "path": "research-frame_sequence_tracker.cc",
+      "source": ".cache/native-mutation-deadline-research/frame_sequence_tracker.cc",
+      "encoding": "original-bytes",
+      "bytes": 25139,
+      "sha256": "8abe9cbb026befe18b814fa717453efd18836292426d5795c80b13bbdff15951",
+      "originalBytes": 25139,
+      "originalSha256": "8abe9cbb026befe18b814fa717453efd18836292426d5795c80b13bbdff15951"
+    },
+    {
+      "path": "research-frame_sequence_metrics.cc",
+      "source": ".cache/native-mutation-deadline-research/frame_sequence_metrics.cc",
+      "encoding": "original-bytes",
+      "bytes": 27669,
+      "sha256": "dc2ce8684ea7cd5b376bd9d8e24102f2e26a1f421beb71a1fd96cfbbc48aa596",
+      "originalBytes": 27669,
+      "originalSha256": "dc2ce8684ea7cd5b376bd9d8e24102f2e26a1f421beb71a1fd96cfbbc48aa596"
+    },
+    {
+      "path": "before.json.gz",
+      "source": ".cache/native-mutation-before.json",
+      "encoding": "gzip",
+      "bytes": 3089453,
+      "sha256": "246678cde61c11f61e0d70a297fa17dea92b6ef2c3d8fee19a0f8fe73c7c6240",
+      "originalBytes": 74217318,
+      "originalSha256": "3cea520d0d3c95eb23e56de97b22198520d4c19bfcd8d7c80232e0648ff3babd"
+    },
+    {
+      "path": "ready-only.json.gz",
+      "source": ".cache/native-mutation-after1.json",
+      "encoding": "gzip",
+      "bytes": 3114710,
+      "sha256": "b1a2c97b4b7f105c8eb8343f8c2202f425a26c2f35f8469383cb049c20622a4d",
+      "originalBytes": 74537659,
+      "originalSha256": "1d273b9100d83367b3cffa6730b6c36fbcb2abace65e57c775ad62c00d4b924d"
+    },
+    {
+      "path": "after2-frozen.json",
+      "source": ".cache/native-mutation-after2-frozen.json",
+      "encoding": "original-bytes",
+      "bytes": 1131537,
+      "sha256": "34da11ac8c745ed692011553f19c86358f2f1fcd25da0dd04181a5008d2bef5e",
+      "originalBytes": 1131537,
+      "originalSha256": "34da11ac8c745ed692011553f19c86358f2f1fcd25da0dd04181a5008d2bef5e"
+    },
+    {
+      "path": "after2-report.json",
+      "source": ".cache/native-mutation-after2-report.json",
+      "encoding": "original-bytes",
+      "bytes": 1922112,
+      "sha256": "508cf9d70f7e09034f2be6d70ae20a436cfae85f5c0d0e45c279f02b922e1872",
+      "originalBytes": 1922112,
+      "originalSha256": "508cf9d70f7e09034f2be6d70ae20a436cfae85f5c0d0e45c279f02b922e1872"
+    },
+    {
+      "path": "after2-trace-report.json",
+      "source": ".cache/native-mutation-after2-trace-report.json",
+      "encoding": "original-bytes",
+      "bytes": 128384,
+      "sha256": "5b7594d1f5024a821bb5406483dc371cb275627b390d5bbacebf0eeef30edb95",
+      "originalBytes": 128384,
+      "originalSha256": "5b7594d1f5024a821bb5406483dc371cb275627b390d5bbacebf0eeef30edb95"
+    },
+    {
+      "path": "after2.trace-complete.json",
+      "source": ".cache/native-mutation-after2.trace-complete.json",
+      "encoding": "original-bytes",
+      "bytes": 88,
+      "sha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89",
+      "originalBytes": 88,
+      "originalSha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89"
+    },
+    {
+      "path": "after2.json.gz",
+      "source": ".cache/native-mutation-after2.json",
+      "encoding": "gzip",
+      "bytes": 3105997,
+      "sha256": "d05dcedc33476bbac3c631e2b7a1510b63c5b1eafef8170bf653f907a2ae3228",
+      "originalBytes": 74351062,
+      "originalSha256": "8def98903a6ca4b7390d2b94cdf2dc019f4a6d5aedb1f3467e9905c5af6a39dc"
+    },
+    {
+      "path": "after2.trace.json.gz",
+      "source": ".cache/native-mutation-after2.trace.json",
+      "encoding": "gzip",
+      "bytes": 53848090,
+      "sha256": "cab341be3ba8af30b4ab8aca8fc11bfc69150dc2f471169e9566a68db709c331",
+      "originalBytes": 538749309,
+      "originalSha256": "c4763e3530812a157cdd9b5cce0486f703f2898a3f428a59a226ecd389c7dd34"
+    },
+    {
+      "path": "after3-frozen.json",
+      "source": ".cache/native-mutation-after3-frozen.json",
+      "encoding": "original-bytes",
+      "bytes": 1131537,
+      "sha256": "bb441ac55e470087fdb4d8f9002b9a1de0eb375e6eab398696c637e4df4bb393",
+      "originalBytes": 1131537,
+      "originalSha256": "bb441ac55e470087fdb4d8f9002b9a1de0eb375e6eab398696c637e4df4bb393"
+    },
+    {
+      "path": "after3-report.json",
+      "source": ".cache/native-mutation-after3-report.json",
+      "encoding": "original-bytes",
+      "bytes": 2098281,
+      "sha256": "a87f2bbe02b09b6f6ffdf72befc405e4d25d36ddfb8232a78297950b5bb606c7",
+      "originalBytes": 2098281,
+      "originalSha256": "a87f2bbe02b09b6f6ffdf72befc405e4d25d36ddfb8232a78297950b5bb606c7"
+    },
+    {
+      "path": "after3-trace-report.json",
+      "source": ".cache/native-mutation-after3-trace-report.json",
+      "encoding": "original-bytes",
+      "bytes": 156140,
+      "sha256": "ce858170a9e0453f1ab8b994f0cd032f5027521953dae8c4e8b528b940e038f4",
+      "originalBytes": 156140,
+      "originalSha256": "ce858170a9e0453f1ab8b994f0cd032f5027521953dae8c4e8b528b940e038f4"
+    },
+    {
+      "path": "after3.trace-complete.json",
+      "source": ".cache/native-mutation-after3.trace-complete.json",
+      "encoding": "original-bytes",
+      "bytes": 88,
+      "sha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89",
+      "originalBytes": 88,
+      "originalSha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89"
+    },
+    {
+      "path": "after3.json.gz",
+      "source": ".cache/native-mutation-after3.json",
+      "encoding": "gzip",
+      "bytes": 3188167,
+      "sha256": "2d9090461e40f99ab266892f50a797a850736a33d2c875a7ae252154269c53da",
+      "originalBytes": 75422050,
+      "originalSha256": "33b31790ee2f0f63a1a62c814841f3449ac5638ccca103a83f54ba1f9c5ea3bc"
+    },
+    {
+      "path": "after3.trace.json.gz",
+      "source": ".cache/native-mutation-after3.trace.json",
+      "encoding": "gzip",
+      "bytes": 54301090,
+      "sha256": "1acf7981dac826bb9e108fb2d78f3e2e46c01d69be461f7c9f2cc4f4b72e28dd",
+      "originalBytes": 540057447,
+      "originalSha256": "91b58d411c1aab1a770556596e056035609d7d574f5bd8de7ec1e461254973e8"
+    },
+    {
+      "path": "broad-validation.json",
+      "source": ".cache/native-opportunity-validation.json",
+      "encoding": "original-bytes",
+      "bytes": 1165480,
+      "sha256": "e1af617a05c8b015d65785bb66c8764b4dea59633dd23f208871393847c41f4b",
+      "originalBytes": 1165480,
+      "originalSha256": "e1af617a05c8b015d65785bb66c8764b4dea59633dd23f208871393847c41f4b"
+    },
+    {
+      "path": "broad-tests.log",
+      "source": ".cache/native-opportunity-tests.log",
+      "encoding": "original-bytes",
+      "bytes": 1359121,
+      "sha256": "23cdebeb6ce316a4d8e908473e31a33d688f0321f9ac634ccc9a0749e0d3d57f",
+      "originalBytes": 1359121,
+      "originalSha256": "23cdebeb6ce316a4d8e908473e31a33d688f0321f9ac634ccc9a0749e0d3d57f"
+    },
+    {
+      "path": "build.log",
+      "source": ".cache/native-opportunity-build.log",
+      "encoding": "original-bytes",
+      "bytes": 3938,
+      "sha256": "f9e404ea720537d236898b92388251282aba7e843e9cfe3930abab878f4f082b",
+      "originalBytes": 3938,
+      "originalSha256": "f9e404ea720537d236898b92388251282aba7e843e9cfe3930abab878f4f082b"
+    },
+    {
+      "path": "selected-validation.json",
+      "source": ".cache/native-opportunity-final-validation.json",
+      "encoding": "original-bytes",
+      "bytes": 5021,
+      "sha256": "8b38d39d40f52e0c43a4b806cf5c58ac9f1db078f068b86ab1b5af44ad2e501c",
+      "originalBytes": 5021,
+      "originalSha256": "8b38d39d40f52e0c43a4b806cf5c58ac9f1db078f068b86ab1b5af44ad2e501c"
+    },
+    {
+      "path": "selected-tests.log",
+      "source": ".cache/native-opportunity-final-tests.log",
+      "encoding": "original-bytes",
+      "bytes": 79088,
+      "sha256": "cca13b6876de2069d8ba61cbd2d166a997681d4eb10afbef9b06ea31e66be98e",
+      "originalBytes": 79088,
+      "originalSha256": "cca13b6876de2069d8ba61cbd2d166a997681d4eb10afbef9b06ea31e66be98e"
+    },
+    {
+      "path": "terminal-qa-tests.log",
+      "source": ".cache/native-opportunity-terminal-qa-tests.log",
+      "encoding": "original-bytes",
+      "bytes": 2607,
+      "sha256": "c74c754b9b20a9a332cfde38e51b86d726941eef1884a864b8070117f94bafd7",
+      "originalBytes": 2607,
+      "originalSha256": "c74c754b9b20a9a332cfde38e51b86d726941eef1884a864b8070117f94bafd7"
+    },
+    {
+      "path": "before-tail-attribution.json",
+      "source": ".cache/native-mutation-before-history-tail-attribution.json",
+      "encoding": "original-bytes",
+      "bytes": 6424,
+      "sha256": "dc9ef708e433518dda0ee9fb5daddbb5638188754ddb1a055992a2017d275bed",
+      "originalBytes": 6424,
+      "originalSha256": "dc9ef708e433518dda0ee9fb5daddbb5638188754ddb1a055992a2017d275bed"
+    },
+    {
+      "path": "after2-max-window.json",
+      "source": ".cache/native-mutation-after2-max-window.json",
+      "encoding": "original-bytes",
+      "bytes": 151447,
+      "sha256": "25249a821c7804a483aa2d751cc3d474b3e73a32a43f0b44d772f2f519f39265",
+      "originalBytes": 151447,
+      "originalSha256": "25249a821c7804a483aa2d751cc3d474b3e73a32a43f0b44d772f2f519f39265"
+    },
+    {
+      "path": "after2-report-before-count-check.json",
+      "source": ".cache/native-mutation-after2-report-before-count-check.json",
+      "encoding": "original-bytes",
+      "bytes": 1921999,
+      "sha256": "9700780f9f5cbaffa6398a18547cc6439dd3e785a0fb19d1f5b23173eced3d84",
+      "originalBytes": 1921999,
+      "originalSha256": "9700780f9f5cbaffa6398a18547cc6439dd3e785a0fb19d1f5b23173eced3d84"
+    },
+    {
+      "path": "gpu-runner.mjs",
+      "source": ".cache/native-mutation-run.mjs",
+      "encoding": "original-bytes",
+      "bytes": 2334,
+      "sha256": "aad489122614f3c694b99acc4a596c930851983655e5ddd95803bafc3e126dda",
+      "originalBytes": 2334,
+      "originalSha256": "aad489122614f3c694b99acc4a596c930851983655e5ddd95803bafc3e126dda"
+    },
+    {
+      "path": "before.trace-complete.json",
+      "source": ".cache/native-mutation-before.trace-complete.json",
+      "encoding": "original-bytes",
+      "bytes": 88,
+      "sha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89",
+      "originalBytes": 88,
+      "originalSha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89"
+    },
+    {
+      "path": "ready-only.trace-complete.json",
+      "source": ".cache/native-mutation-after1.trace-complete.json",
+      "encoding": "original-bytes",
+      "bytes": 88,
+      "sha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89",
+      "originalBytes": 88,
+      "originalSha256": "ee846a8c5c6b7d025171f22191542c42120f6811aad73ab8caf6957e312a3f89"
+    },
+    {
+      "path": "after3-max-window.json",
+      "source": ".cache/native-mutation-after3-max-window.json",
+      "encoding": "original-bytes",
+      "sha256": "1c1b919f17485d13558462be6faf783044947edbf24406623efb620105eeadb7",
+      "bytes": 287276,
+      "originalBytes": 287276,
+      "originalSha256": "1c1b919f17485d13558462be6faf783044947edbf24406623efb620105eeadb7"
+    },
+    {
+      "path": "window-inspect.mjs",
+      "source": ".cache/native-mutation-window-inspect2.mjs",
+      "encoding": "original-bytes",
+      "sha256": "8f4f3857f8ccc2898efc131fbdd6827d7a77ee553efea5331b050f6ec2e1e501",
+      "bytes": 2280,
+      "originalBytes": 2280,
+      "originalSha256": "8f4f3857f8ccc2898efc131fbdd6827d7a77ee553efea5331b050f6ec2e1e501"
+    },
+    {
+      "path": "selected-validation-runner.mjs",
+      "source": ".cache/native-opportunity-final-validate.mjs",
+      "encoding": "original-bytes",
+      "sha256": "8bf4bab3c2116633c36b30e0f62edd19d303a4dbb2975c64cc396359cc8162c9",
+      "bytes": 2760,
+      "originalBytes": 2760,
+      "originalSha256": "8bf4bab3c2116633c36b30e0f62edd19d303a4dbb2975c64cc396359cc8162c9"
+    }
+  ],
+  "archives": [],
+  "productionCommits": [
+    "77afcbbcf",
+    "3ce180f97"
+  ],
+  "broadSuite": {
+    "tests": 5091,
+    "pass": 5083,
+    "fail": 3,
+    "cancelled": 4,
+    "skipped": 1
+  },
+  "selectedRerun": {
+    "tests": 297,
+    "pass": 297
+  },
+  "terminalQa": {
+    "tests": 12,
+    "pass": 12
+  },
+  "gpuScope": "Same production in after2 and after3; after3 QA adds per-event ordinals and terminal counters. Headless, timing captures, trace instrumentation enabled; not uninstrumented physical-presentation acceptance.",
+  "productTarget": {
+    "fps": 60,
+    "intervalMs": 16.666666666666668,
+    "source": "Explicit user answer, 2026-11-20; declared after archived runs. Historical raw reports remain unchanged.",
+    "physicalPresentationAcceptance": "Not demonstrated by headless runs on the current 30 Hz display."
+  },
+  "archiveVerification": {
+    "artifacts": 52,
+    "sha256": true,
+    "gzipOriginalSha256": true
+  }
+}

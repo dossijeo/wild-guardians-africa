@@ -1,0 +1,1 @@
+import fs from'node:fs';const sources=JSON.parse(fs.readFileSync('.cache/native-opportunity-before-sources.json'));export async function load(url,context,next){for(const[p,source]of Object.entries(sources))if(url.endsWith('/'+p))return {format:'module',shortCircuit:true,source};return next(url,context);}
