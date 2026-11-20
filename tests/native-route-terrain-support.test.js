@@ -66,3 +66,30 @@ test('native world identity is copied and cannot be paired with another session'
 test('an already arrived native route retains its one terminal sample without inventing time or a segment',()=>{
  const f=fixture();try{const raw=f.point(-6,0),position={x:Math.fround(raw.x),z:Math.fround(raw.z)},handle=f.worker(1,position,position),packet=f.bridge.captureNativeRoutePresentation(handle);assert.equal(packet.rows.length,width);assert.equal(packet.startTime,packet.endTime);const result=f.support.prepareNativeRoute(packet,{terrainManifest:f.terrainManifest});assert(result?.valid());assert.equal(result.actor.startHeight,result.actor.endHeight);assert.deepEqual(result.actor.segments,[]);}finally{f.close();}
 });
+
+test('native corridor admission ignores an unmaterialized unrelated region but historical admission remains global',()=>{
+ const f=fixture();try{
+  const manifest=structuredClone(f.terrainManifest);manifest.chunks.push({cx:2,cz:1,revision:1});assert.equal(f.residency.matchesManifest(manifest),false);
+  const result=f.support.prepareNativeRoute(f.packet,{terrainManifest:manifest});verifyTriangles(f,result);
+  const p=f.packet,segments=[];for(let i=width;i<p.rows.length;i+=width)segments.push({t0:p.rows[i-width],t1:p.rows[i],x0:p.rows[i-width+1],z0:p.rows[i-width+2],x1:p.rows[i+1],z1:p.rows[i+2]});
+  const trace={start:p.startTime,end:p.endTime,terrainManifest:structuredClone(f.terrainManifest),actors:[{actorId:'a',continuous:true,timed:true,start:{at:p.startTime,x:p.rows[1],z:p.rows[2]},end:{at:p.endTime,x:p.rows.at(-width+1),z:p.rows.at(-width+2)},segments}]},preview={sequence:1,start:p.startTime,end:p.endTime,safeForAutonomousPlayback:false,reasons:['visual-time-and-support-unverified'],trace};
+  assert(f.support.prepare(preview)?.valid());trace.terrainManifest=manifest;assert.equal(f.support.prepare(preview),null);
+  f.session.core.selectChunk(2,1);f.residency.replace(f.session.core.chunkPayload(),1,'terrain');assert(result.valid());
+ }finally{f.close();}
+});
+test('new native corridor preparation permits an unrelated stale revision, not a stale used revision',()=>{
+ const f=fixture();try{f.session.core.selectChunk(1,1);f.residency.replace(f.session.core.chunkPayload(),2,'terrain');assert.equal(f.residency.matchesManifest(f.terrainManifest),false);verifyTriangles(f,f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}));
+  f.session.core.selectChunk(0,0);f.residency.replace(f.session.core.chunkPayload(),2,'terrain');assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}),null);
+ }finally{f.close();}
+});
+test('native subset never hides malformed declaration, duplicates or invalid epoch',()=>{
+ const f=fixture();try{for(const mutate of [m=>m.chunks.push({...m.chunks[0]}),m=>m.chunks.push({cx:2,cz:1,revision:0}),m=>m.chunks.push({cx:NaN,cz:1,revision:1}),m=>m.epoch='',m=>m.epoch='foreign',m=>m.chunks=[],m=>m.chunks=null]){const m=structuredClone(f.terrainManifest);mutate(m);assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:m}),null);}for(const m of [undefined,null,{}])assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:m}),null);}finally{f.close();}
+});
+test('native corridor still rejects used terrain absent from declaration, hidden or removed',()=>{
+ const f=fixture();try{const m=structuredClone(f.terrainManifest);m.chunks=m.chunks.filter(c=>c.cx!==0||c.cz!==0);assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:m}),null);
+  const mesh=f.residency.get(0,0);mesh.visible=false;assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}),null);mesh.visible=true;const result=f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest});assert(result?.valid());f.residency.remove(0,0,2);assert.equal(result.valid(),false);assert.equal(f.support.prepareNativeRoute(f.packet,{terrainManifest:f.terrainManifest}),null);
+ }finally{f.close();}
+});
+test('admitted native support snapshots its used declaration and expires on used geometry changes',()=>{
+ const f=fixture();try{const m=structuredClone(f.terrainManifest);m.chunks.push({cx:2,cz:1,revision:1});const result=f.support.prepareNativeRoute(f.packet,{terrainManifest:m});assert(result?.valid());m.epoch='mutated';m.chunks.length=0;assert(result.valid());f.residency.get(0,0).geometry.attributes.position.needsUpdate=true;assert.equal(result.valid(),false);}finally{f.close();}
+});
