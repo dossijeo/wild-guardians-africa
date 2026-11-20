@@ -966,6 +966,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     // One synchronous admission pass can share a lease for equal Host-owned
     // binding identities. This map never survives a yield or control event.
     const leases=new Map();
+    // References and keys were copied/validated by this Host. Reuse only the
+    // same predicate over the same key in this synchronous admission pass.
+    // Never retain these results across READY, a control event or a yield.
+    const checkedMotion=new Map();
+    const checkMotion=(binding,predicate,check)=>{
+      if(!binding.nativeClockKey)return check();
+      const key=predicate+':'+binding.nativeClockKey;
+      if(!checkedMotion.has(key))checkedMotion.set(key,check());
+      return checkedMotion.get(key);
+    };
     const admitMotion=(binding,method,reference)=>{
       const key=binding.nativeClockKey?method+':'+binding.nativeClockKey:null;
       if(key&&leases.has(key))return leases.get(key);
@@ -976,29 +986,29 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(binding.nativeInitialIdleBody){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,nativeWorldBoundary))throw Error('Native initial Idle body requires its applied world and causal clock');
         const motionRecord=admitMotion(original,'admitInitialIdleBody',binding.nativeInitialIdleBody);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeInitialIdleBodyReference(binding.nativeInitialIdleBody,packet.metadata.nativeInitialIdleBodyTemplate))throw Error('Pending settlement clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeInitialIdleBodyReference(binding.nativeInitialIdleBody,packet.metadata.nativeInitialIdleBodyTemplate)))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeInitialIdleBody.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native initial Idle body');
         return {...binding,motionRecord,initialIdleBodyRecord:motionRecord.initialIdleBodyRecord};
       }
       if(binding.nativeIdleCycle){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,binding.nativeIdleCycle)&&b.resourceEnd===undefined))throw Error('Native Idle cycle phase requires its submitted physical clock');
+        if(binding.semantic==='idle-offset'&&!checkMotion(original,'relative-clock',()=>preparedBindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,binding.nativeIdleCycle)&&b.resourceEnd===undefined)))throw Error('Native Idle cycle phase requires its submitted physical clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,nativeWorldBoundary))throw Error('Native Idle cycle requires its applied world and causal clock');
         const motionRecord=admitMotion(original,'admitIdleCycle',binding.nativeIdleCycle);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleCycleReference(binding.nativeIdleCycle,packet.metadata.nativeIdleCycleTemplate))throw Error('Pending settlement clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeIdleCycleReference(binding.nativeIdleCycle,packet.metadata.nativeIdleCycleTemplate)))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeIdleCycle.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Idle cycle');
         return {...binding,motionRecord,idleCycleRecord:motionRecord.idleCycleRecord,idleCycleWatchKnot:nativeIdleCycleWatchKnot(binding.nativeIdleCycle,motionRecord.executionEpoch??binding.epoch)};
       }
       if(binding.nativeSettlement){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskSettlementReferenceCovered(binding.nativeSettlement,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskSettlementReferenceCovered(binding.nativeSettlement,nativeWorldBoundary))throw Error('Native settlement requires its applied world and causal clock');
         const motionRecord=admitMotion(original,'admitSettlement',binding.nativeSettlement);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskSettlementReference(binding.nativeSettlement,packet.metadata.nativeTaskSettlementTemplate))throw Error('Pending settlement clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeTaskSettlementReference(binding.nativeSettlement,packet.metadata.nativeTaskSettlementTemplate)))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeSettlement.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native settlement');
         return {...binding,motionRecord,settlementRecord:motionRecord.settlementRecord};
       }
       if(binding.nativeAction){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskActionReferenceCovered(binding.nativeAction,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskActionReferenceCovered(binding.nativeAction,nativeWorldBoundary))throw Error('Native action requires its applied world and causal clock');
         const motionRecord=admitMotion(original,'admitAction',binding.nativeAction);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskActionReference(binding.nativeAction,packet.metadata.nativeTaskActionTemplate))throw Error('Pending action clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeTaskActionReference(binding.nativeAction,packet.metadata.nativeTaskActionTemplate)))throw Error('Pending action clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeAction.startTime)throw Error('Prepared clock does not cover native action');
         return {...binding,motionRecord,actionRecord:motionRecord.actionRecord};
       }
@@ -1011,40 +1021,40 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord};
       }
       if(binding.nativeStroll){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime)))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
+        if(binding.semantic==='idle-offset'&&!checkMotion(original,'relative-clock',()=>preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime))))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleStrollReferenceCovered(binding.nativeStroll,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleStrollReferenceCovered(binding.nativeStroll,nativeWorldBoundary))throw Error('Native Idle stroll requires its exact template and causal world');
         const motionRecord=admitMotion(original,'admitStroll',binding.nativeStroll);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleStrollReference(binding.nativeStroll,packet.metadata.nativeIdleStrollTemplate))throw Error('Pending Idle stroll clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeIdleStrollReference(binding.nativeStroll,packet.metadata.nativeIdleStrollTemplate)))throw Error('Pending Idle stroll clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeStroll.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Idle stroll');
         if(!preparing&&!motionRecord.isCurrent())throw Error('Native Idle stroll lacks its installed association');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord,executionEpoch:motionRecord.executionEpoch}:{})};
       }
       if(binding.nativeFarmArrival){
-        if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,binding.nativeFarmArrival)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)))throw Error('Native Farm Idle phase requires its terminal decoder clock');
+        if(binding.semantic==='idle-offset'&&!checkMotion(original,'relative-clock',()=>preparedBindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,binding.nativeFarmArrival)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime))))throw Error('Native Farm Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,nativeWorldBoundary))throw Error('Native farm arrival requires its exact template and causal world');
         const motionRecord=admitMotion(original,'admitFarmArrival',binding.nativeFarmArrival);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeFarmArrivalRouteReference(binding.nativeFarmArrival,packet.metadata.nativeFarmArrivalTemplate))throw Error('Pending farm arrival clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeFarmArrivalRouteReference(binding.nativeFarmArrival,packet.metadata.nativeFarmArrivalTemplate)))throw Error('Pending farm arrival clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeFarmArrival.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native farm arrival');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeHome){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeHomeRouteReferenceCovered(binding.nativeHome,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeHomeRouteReferenceCovered(binding.nativeHome,nativeWorldBoundary))throw Error('Native Home requires its exact template and causal world');
         const motionRecord=admitMotion(original,'admitHome',binding.nativeHome);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeHomeRouteReference(binding.nativeHome,packet.metadata.nativeHomeRouteTemplate))throw Error('Pending Home clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeHomeRouteReference(binding.nativeHome,packet.metadata.nativeHomeRouteTemplate)))throw Error('Pending Home clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeHome.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Home');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeConsequence){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,nativeWorldBoundary))throw Error('Native consequence requires its exact template and causal world');
         const motionRecord=admitMotion(original,'admitConsequence',binding.nativeConsequence);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskConsequenceReference(binding.nativeConsequence,packet.metadata.nativeTaskConsequenceTemplate))throw Error('Pending consequence clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeTaskConsequenceReference(binding.nativeConsequence,packet.metadata.nativeTaskConsequenceTemplate)))throw Error('Pending consequence clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeConsequence.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native consequence');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeStart){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskStartReferenceCovered(binding.nativeStart,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskStartReferenceCovered(binding.nativeStart,nativeWorldBoundary))throw Error('Native first task requires its exact prepared template and causal world');
         const motionRecord=admitMotion(original,'admitStart',binding.nativeStart);
-        if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskStartReference(binding.nativeStart,packet.metadata.nativeTaskStartTemplate))throw Error('Pending first-task clock differs from its retained template');
+        if(preparing&&!motionRecord.isCurrent()&&!checkMotion(original,'template',()=>sameNativeTaskStartReference(binding.nativeStart,packet.metadata.nativeTaskStartTemplate)))throw Error('Pending first-task clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeStart.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover first task');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
