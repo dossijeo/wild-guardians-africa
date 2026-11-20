@@ -20,7 +20,7 @@ if(Object.keys(roleUrls).some(role=>!roles.has(role)))throw Error('Trace does no
 const summarize=e=>({name:e.name,at:absolute(e),durationMs:(e.dur??0)/1000,...(Number.isFinite(e.tdur)?{threadDurationMs:e.tdur/1000}:{}),...(e.args?.data?.url?{url:e.args.data.url,line:e.args.data.lineNumber}:{}),...(e.args?.data?.functionName?{function:e.args.data.functionName}:{})});
 const overlap=(e,from,to)=>e.ph==='X'&&absolute(e)<to&&absolute(e)+(e.dur??0)/1000>from;
 const intervalStats=values=>{const gaps=values.slice(1).map((v,i)=>v-values[i]).sort((a,b)=>a-b);return {count:values.length,maxIntervalMs:gaps.at(-1)??null,over50:gaps.filter(v=>v>50).length};};
-const windows=[['preparationBlock',r.preparationBlock.start,r.preparationBlock.end],['birthThroughPreparedReady',r.publications.find(p=>p.born).at,r.block.start],['commitBlock',r.block.start,r.block.end]].map(([label,from,to])=>{
+const windows=[['preparationBlock',r.preparationBlock.start,r.preparationBlock.end],['birthThroughPreparedReady',r.publications.find(p=>p.born).at,r.block.start],['commitBlock',r.block.start,r.block.end],...(r.settlement?[['ordinaryBirthThroughSettlement',r.publications.find(p=>p.born).at,r.host.samples.at(-1).at],['settlementReadyBlock',r.settlement.readyBlock.start,r.settlement.readyBlock.end],['settlementCommitBlock',r.settlement.commitBlock.start,r.settlement.commitBlock.end]]:[])].map(([label,from,to])=>{
  if(!Number.isFinite(from)||!Number.isFinite(to)||to<=from)throw Error('Invalid window '+label);
  const samples=r.host.samples;
  if(samples[0].at>from||samples.at(-1).at<to)throw Error('Incomplete draw sample history for '+label);

@@ -1,5 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Continuación e-R3/f-R4: [entrega ordinaria Carry16 → liquidación17 → Idle](native-ordinary-delivery-settlement-20261120.md). Misma contratación/autoridad/cuerpo2/Surface/draw; READY real retenido, ingreso único y caja sin portador solo tras commit. Cuatro perfiles, control Carry y traza adicional; IDs/rigs/banco compartido conservados, picking/drain reales. Dawn/Flecs leídos en fuente; soloQA. 106 CPU y seis sintaxis frescas; suites/build heredados.695 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cadencia y caso global3.123 abiertos; máximo amplio264.325ms sin atribución causal. Siguiente tarea/continuidad/Home. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [productor ordinario Harvest15 → Carry16](native-ordinary-harvest-carry-20261120.md). Misma autoridad/cuerpo2/Surface/draw, READY real retenido, retirada atómica de cultivo/tarea y caja portada; sin cambios de producto. Cuatro perfiles conservan576/585 IDs y banco refs2, picking tras cosecha y drenaje reales; control Task14 válido.65 CPU y seis sintaxis nuevos; suites/build completos heredados.694 inputs/997 ejecución/64 nativos/16 ajenos/38 A5 exactos. Cero fábricas en bloqueo READY y17 posteriores, no mínimo exclusivo. Historial amplio182,920–334,100ms: cadencia y caso global3.123 abiertos. Siguiente: entrega17 y continuidad/Home. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

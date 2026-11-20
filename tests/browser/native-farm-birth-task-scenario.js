@@ -1,3 +1,4 @@
+import {auditOrdinaryTaskSettlement} from './native-ordinary-task-settlement-scenario.js';
 import {auditOrdinaryTaskConsequence} from './native-ordinary-task-consequence-scenario.js';
 import {auditOrdinaryTaskAction} from './native-ordinary-task-action-scenario.js';
 
@@ -22,6 +23,7 @@ export async function auditTaskSupersedesFarmBirth(c){
  if(scenario==='cancel-after-task')await forwardLate();
  const action=c.followAction?await auditOrdinaryTaskAction(c,acquired().binding):null;
  const consequence=c.followConsequence?await auditOrdinaryTaskConsequence(c,action):null;
+ const settlement=c.followSettlement?await auditOrdinaryTaskSettlement(c,consequence):null;
  await delay(250);await stopSource();await delay(80);
  const confirmed=getConfirmed(),after=await client.inspect(),consumer=after.drawExecution.consumer,committed=acquired(),samples=consumer.samples??[];
  if(consumer.failed||consumer.gpuErrors||c.errors.length||c.sourceMessages.length||publications.some(p=>p.born?.mode==='native-farm-arrival')||lifecycleMessages.some(v=>v.kind==='birth-resource-committed'&&v.family==='farm-arrival'&&v.binding.reference.actorId===actor))throw Error('Cancelled Farm obtained an executable source or a GPU failure');
@@ -46,5 +48,6 @@ export async function auditTaskSupersedesFarmBirth(c){
  const result={ordinaryFarmBirth:true,ordinaryAuthorityProduction:true,cancelledBeforeAcquisition:true,taskSupersedesFarm:true,scenario,scope:'Actual paid newborn Farm13 is superseded by a genuine harvest before23 acquisition; actual Task14 and shared-bank ownership. Not all tasks/cohorts/failures/recovery/cadence acceptance.',adapter:consumer.adapterInfo,reference,replacement:{ready:taskReady,committed,drawFrames:drawn.length,actualTask},source:{oldId,bornId,newbornProfile:born.profile,newbornCount:1,born,confirmed},inputPick,peerPick,resourceIdentity:{retainedGeometryAndBankIds:retained,oldGeometryBuffers:buffers,immutableTextures:textures,duplicateShaderModules:duplicates,retired:[]},sharedProfileBank:{before:bankBefore,ready:bankReady,after:bankAfter},resourceChanges:{prepared:ready.drawExecution.resourcesCreated-before.drawExecution.resourcesCreated,afterReady:after.drawExecution.resourcesCreated-ready.drawExecution.resourcesCreated,trace,scope:'Includes legitimate replacement Task preparation and concurrent effects; not exclusive cancelled Farm cost.'},preparationBlock,block,taskBlock,lifecycleMessages,publications,host:consumer,rigs:{ready:ready.qaBirthRigs,acquired:acquiredInspection.qaBirthRigs,after:after.qaBirthRigs,acquiredAt:acquiredConsumer.samples.at(-1).at},owners:{ready:ready.qaResidentOwners,after:after.qaResidentOwners},workers:after.workers,visualTransport:visual.status(),final:{gpuErrors:consumer.gpuErrors},errors:c.errors};
  if(action)result.action=action;
  if(consequence){result.consequence=consequence;result.scope='Ordinary paid hire → Task14 → Harvest15 → Carry16 with actual crop/crate result, shared bank and hardware picking after crop removal; not settlement or cadence acceptance.';}
+ if(settlement){result.settlement=settlement;result.scope='Ordinary paid hire → Task14 → Harvest15 → Carry16 → settlement17/Idle; same original owners and actual single income. Not next task/Home or cadence acceptance.';if(JSON.stringify(confirmed.ledger)!==JSON.stringify(settlement.sourceAfter.ledger)||!confirmed.crates.find(v=>v.id===settlement.economic.entryId.slice(8))?.delivered)throw Error('Delivery result changed again after settlement');}
  result.disposal=await closeGraphics();result.drained=true;return result;
 }
