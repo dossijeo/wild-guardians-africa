@@ -38,16 +38,24 @@ Dos recorridos completos no bloquean oportunidades por esa guarda; after3
 reconcilia todos sus ordinales hasta retired-drained. Es una mejora parcial,
 no aceptación del objetivo de 60 FPS.
 
-Permanecen abiertos dos casos bajo el agente de corrección: duración causal
-del primer hold de 20,145 / 19,835 ms, superior a 1000/60, y admisión ordinaria del
-Host asociada a intervalos de 38,750 / 40,885 ms. El
-[contraste de 60 FPS](performance/native-mutation-60fps-contrast-20261120.json)
-conserva los informes históricos y cuantifica las superaciones. La inspección
-de paquetes preparados ya cede; la ruta ordinaria aún recorre bytes,
-operaciones y referencias de forma síncrona pese al presupuesto de recursos.
-Falta aislar sus subfases y corregir ambos casos sin retirar guardas ni
-cachear permisos entre eventos; no clasificarlos como residuales de D sin
-comprobar conformidad con A.
+La [admisión ordinaria y selección coherente](native-ordinary-admission-pick-20261120.md)
+ya están publicadas como componentes: la inspección ordinaria usa el presupuesto
+y el FIFO existentes, y la consulta de selección revalida al propietario tras
+esperar la inspección remota. 1310/1310 pruebas en 98 archivos seleccionados y
+build; la suite conservadora de 1642 archivos no se ejecutó. AFTER2 completa el
+recorrido GPU, segunda tarea, selección y drenaje; 2467 draws / 2491 oportunidades
+contiguos hasta retired-drained, sin pérdida CDP ni stale-binding.
+
+Siguen abiertos los holds 1 de 23,720 ms y 3 de 18,180 ms y el intervalo máximo
+de 40,180 ms, medidos a 30 Hz frente al objetivo explícito 1000/60. No atribuir
+todos los intervalos a admisión sin contrastar su ventana. La captura separada
+temporal a 4K/60 Hz pasa funcionalmente, pero CDP pierde datos: no acredita la
+historia completa ni la presentación física. El modo 4K/30 Hz quedó restaurado
+sin persistir el registro. El agente de corrección conserva los casos de
+cadencia y el capturador; reducir su volumen y contrastar el coste del observador
+antes de repetir. Conservar guardas, fences e identidades, sin cachear permisos.
+Los [contrastes anteriores](performance/native-mutation-60fps-contrast-20261120.json)
+son históricos; no clasifican estos casos como residuales de D.
 
 El siguiente avance dependiente debe contrastar esa base corregida antes de
 integrar Idle desde 17 con interrupciones Task/Home y los cuerpos adquiridos.
