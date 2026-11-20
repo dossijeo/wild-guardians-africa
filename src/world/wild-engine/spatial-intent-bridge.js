@@ -31,7 +31,7 @@ import {nativeEntityNumericId as numericId} from '../native-entity-id.js';
 import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint,centerDeliveryPoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
-import {observeGameEvents,idleFarmAnchor,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution,projectNativeFarmArrivalRouteExecution} from '../../simulation/game.js';
+import {observeGameEvents,idleFarmAnchor,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareNativeWateringConsequence,projectNativeWateringConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution,projectNativeFarmArrivalRouteExecution} from '../../simulation/game.js';
 import {nativeIdleStrollLiveState,nativeIdleStrollSavedState} from '../native-idle-stroll-state.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
@@ -1420,24 +1420,34 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const nativeInitialIdleRequestReference=actorId=>readNativeInitialIdleReference(actorId,true);
   const nativeInitialIdleDeclarationReference=actorId=>readNativeInitialIdleReference(actorId,false);
-  const initialIdleBodyReference=(h,ticket,sourceRequest)=>{
+  const readWateringIdleSource=(actor,ticket)=>{
+    if(wasm.nav_initial_idle_body_watering_source_snapshot?.(actor,ticket)!==1)return null;
+    const readRestore=()=>taskActionRestoreSource(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_restore_source_ptr(),8)));
+    return readTaskActionBindings(1,readRestore)[0].binding;
+  };
+  const initialIdleBodyReference=(h,ticket,sourceRequest,wateringSource)=>{
     if(h.length!==8||h[0]!==1||!h.every(Number.isFinite)||h[3]!==sourceRequest?.requestSequence||h[4]!==sourceRequest.requestedAt)throw Error('Invalid native initial Idle body header');
-    return copyNativeInitialIdleBodyReference({kind:'native-initial-idle-body-reference',version:1,actorId:h[1],bodyId:h[2],profile:h[7],sourceControlSequence:h[6],sourceRequest,
+    return copyNativeInitialIdleBodyReference({kind:'native-initial-idle-body-reference',version:1,actorId:h[1],bodyId:h[2],profile:h[7],sourceControlSequence:h[6],sourceRequest,...(wateringSource?{wateringSource}:{}),
       worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),ticket,effectiveTime:h[5]}});
   };
   const captureNativeInitialIdleBodyProposal=ticket=>{
     if(ticket?.kind!=='native-initial-idle-body-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_initial_idle_body_proposal_snapshot?.(ticket.session,ticket.ticket)!==1)return null;
-    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_proposal_header_ptr(),8)),source=readNativeInitialIdleReference(h[1],true,ticket.ticket),nativeInitialIdleBody=initialIdleBodyReference(h,ticket.ticket,source);
+    const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_proposal_header_ptr(),8)),source=readNativeInitialIdleReference(h[1],true,ticket.ticket);
+    const nativeInitialIdleBody=initialIdleBodyReference(h,ticket.ticket,source,readWateringIdleSource(h[1],ticket.ticket));
     return copyNativeInitialIdleBodyProposal({kind:'native-initial-idle-body-proposal',version:1,ticket,worldBoundary:nativeInitialIdleBody.worldBoundary,nativeInitialIdleBody});
   };
-  const prepareNativeInitialIdleBodyProposal=value=>{
-    const r=copyNativeInitialIdleRequestReference(value),outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
-    if(r.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_initial_idle_body_proposal_version?.()!==1)throw Error('Rebuild native initial Idle body admission');
-    syncBoundaryTime();flushNativeIntentControl();if(JSON.stringify(nativeInitialIdleRequestReference(r.actorId))!==JSON.stringify(r))return outcome('stale');
-    const status=wasm.nav_initial_idle_body_proposal_stage(r.actorId,r.nativeSession,r.requestSequence);if(status!==1)return outcome(status===-4?'busy':status===-2?'unsupported':'stale');
+  const prepareInitialIdleBodyProposal=stage=>{
+    const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
+    if(wasm.nav_initial_idle_body_proposal_version?.()!==1)throw Error('Rebuild native initial Idle body admission');
+    syncBoundaryTime();flushNativeIntentControl();const status=stage();if(status!==1)return outcome(status===-4?'busy':status===-2?'unsupported':'stale');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native initial Idle body lost its ticket');
     const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-initial-idle-body-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]};
     try{return outcome('proposed',{proposal:captureNativeInitialIdleBodyProposal(ticket)});}catch(error){wasm.nav_initial_idle_body_proposal_cancel(t[0],t[1]);throw error;}
+  };
+  const prepareNativeInitialIdleBodyProposal=value=>{
+    const r=copyNativeInitialIdleRequestReference(value);
+    return prepareInitialIdleBodyProposal(()=>r.authorityEpoch===epoch()&&JSON.stringify(nativeInitialIdleRequestReference(r.actorId))===JSON.stringify(r)?
+      wasm.nav_initial_idle_body_proposal_stage(r.actorId,r.nativeSession,r.requestSequence):-1);
   };
   const cancelNativeInitialIdleBodyProposal=ticket=>ticket?.kind==='native-initial-idle-body-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_initial_idle_body_proposal_cancel(ticket.session,ticket.ticket)===1;
   const revalidateNativeInitialIdleBodyProposal=ticket=>{
@@ -1452,7 +1462,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const nativeInitialIdleBodyBinding=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_initial_idle_body_binding_snapshot?.(actor)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_binding_ptr(),20));if(a[0]!==1||!a.every(Number.isFinite))throw Error('Invalid native initial Idle body binding');
-    const source=readNativeInitialIdleReference(actor,true,0);return copyNativeInitialIdleBodyAttestation({kind:'native-initial-idle-body-attestation',version:1,projectionVersion:1,bodySequence:a[1],preparedReference:initialIdleBodyReference(a.slice(4,12),a[2],source),reference:initialIdleBodyReference(a.slice(12,20),a[3],source)});
+    const source=readNativeInitialIdleReference(actor,true,0),wateringSource=readWateringIdleSource(actor,0);
+    return copyNativeInitialIdleBodyAttestation({kind:'native-initial-idle-body-attestation',version:1,projectionVersion:1,bodySequence:a[1],preparedReference:initialIdleBodyReference(a.slice(4,12),a[2],source,wateringSource),reference:initialIdleBodyReference(a.slice(12,20),a[3],source,wateringSource)});
   };
   const nativeInitialIdleBodyBindings=()=>{
     if(wasm.nav_initial_idle_body_binding_actors===undefined)return Object.freeze([]);const count=wasm.nav_initial_idle_body_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native initial Idle body cohort');
@@ -2106,12 +2117,28 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       mark({resources,nativeIdleCycleBinding:binding});return {status:1,value:{resources,nativeIdleCycleBinding:binding}};
     },prepareResources,signal,protocol);
   };
-  const startNativeInitialIdleBodyAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
+  const startNativeInitialIdleBodyAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null,wateringNavigation=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native initial Idle body requires retained resource preparation');
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),source=nativeInitialIdleRequestReference(actor);
-    if(!source?.idleState||!worker)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),source=wateringNavigation?null:nativeInitialIdleRequestReference(actor);
+    const action=wateringNavigation?nativeTaskActionExecution(actor):null;
+    const watering=action?.completed?prepareNativeWateringConsequence(state,worker,action.binding,wateringNavigation):null;
+    if(!worker||(wateringNavigation?!watering:!source?.idleState))return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    let stage=()=>prepareNativeInitialIdleBodyProposal(source);
+    if(watering){
+      const idle=watering.idleState,anchorKind=idle.anchorId.startsWith('farm-plant-')?1:2;
+      if(!wasm.nav_initial_idle_body_proposal_stage_watering)throw Error('Rebuild native watering continuation');
+      stage=()=>prepareInitialIdleBodyProposal(()=>wasm.nav_initial_idle_body_proposal_stage_watering(actor,action.binding.reference.worldBoundary.nativeSession,action.binding.actionSequence,
+        PROFILES.findIndex(p=>p.id===worker.profile),anchorKind,numericId(idle.anchorId),idle.rng,idle.remaining));
+    }
     const current=()=>{
-      if(owningState!==state||!state.workers.includes(worker)||worker.nativeRouteAdmission!=='pending-idle-resources'||JSON.stringify(nativeInitialIdleRequestReference(actor))!==JSON.stringify(source))return false;
+      if(owningState!==state||!state.workers.includes(worker))return false;
+      if(watering){
+        const actual=nativeTaskActionExecution(actor);
+        if(!actual?.completed||actual.executedThrough!==state.elapsed||JSON.stringify(actual.binding)!==JSON.stringify(action.binding))return false;
+        const plan=prepareNativeWateringConsequence(state,worker,actual.binding,wateringNavigation);
+        return !!plan&&plan.task===watering.task&&plan.target===watering.target&&plan.due===watering.due&&plan.reachable===watering.reachable&&JSON.stringify(plan.idleState)===JSON.stringify(watering.idleState);
+      }
+      if(worker.nativeRouteAdmission!=='pending-idle-resources'||JSON.stringify(nativeInitialIdleRequestReference(actor))!==JSON.stringify(source))return false;
       try{const semantic=nativeInitialIdleDeclaration(state,worker,{canonical:true});return worker.profile===source.workerProfile&&numericId(worker.centerId)===source.centerId&&Object.entries(semantic.pose).every(([key,value])=>value===source.pose[key])&&JSON.stringify(semantic.idleState)===JSON.stringify(source.idleState);}catch{return false;}
     };
     let candidate=null,translation=null,preparedTicket=null;
@@ -2121,9 +2148,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
       snapshot:(session,ticket)=>wasm.nav_initial_idle_body_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_initial_idle_body_proposal_cancel(session,ticket),release(){},
       capture(boundary){candidate=captureNativeInitialIdleBodyProposal({kind:'native-initial-idle-body-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native initial Idle body resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
-    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeInitialIdleBodyProposal(source);return p.status==='proposed'?1:p.status==='busy'?-4:-2;},(mark,...boundary)=>{
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=stage();return p.status==='proposed'?1:p.status==='busy'?-4:-2;},(mark,...boundary)=>{
       if(!current())return {status:-2};const status=wasm.nav_initial_idle_body_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
-      worker.nativeRouteAdmission='native-idle';
+      if(watering)projectNativeWateringConsequence(state,worker,wateringNavigation,{nativeInitialIdleBodyBinding});
+      else worker.nativeRouteAdmission='native-idle';
       const binding=nativeInitialIdleBodyBinding(actor),resources=Object.freeze({version:1,kind:20,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeInitialIdleBodyBinding:binding});
       mark({resources,nativeInitialIdleBodyBinding:binding});return {status:1,value:{resources,nativeInitialIdleBodyBinding:binding}};
     },prepareResources,signal,protocol);

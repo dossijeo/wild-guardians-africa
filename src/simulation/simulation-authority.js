@@ -89,7 +89,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     if(!bindings.bindWorker(worker.id,body))throw Error('Native restored worker body binding rejected');
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
-   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,onError:error=>onNativeIntentControlError?.(error)});
+   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,wateringNavigation:nav,onError:error=>onNativeIntentControlError?.(error)});
   }
   function admitPendingNativeBirths({force=false}={}){
    if(!nativeBodies||!nativeBirthsPending)return;

@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Water y Plant ya aplican el riego y continúan a otra tarea conservando el cuerpo. En cada una de dos pruebas de GPU desde un guardado de la acción, el paquete Idle20 retenido dejó avanzar Game y el dibujo, y tras la adquisición se observó un único evento de riego. El build y las pruebas dirigidas pasaron. Queda el recorrido desde una orden Plant nueva y desde un checkpoint que vence durante Game. [Integración y evidencia](native-watering-idle-20261120.md).
+
 Farm, Harvest, Carry y Home ya tienen un recorrido ordinario demostrado en GPU física con los cuatro perfiles. Water y Plant completan Action15 en Game con WASM. Queda aplicar el riego y liberar el mismo cuerpo en una frontera preparada. El productor ya reserva Carry16 para Harvest. Pasaron 269 pruebas de la selección dirigida y el build. [Prueba y siguiente frontera](native-watering-action-dispatch-20261120.md).
 
 La prioridad operativa pasa a integración por familias. Primero se completa el ciclo ordinario Farm, Harvest, Carry y Home. Water y Plant pueden adaptarse reutilizando los contratos que ya se ejecutan en Game. Cada activación exige las guardas de autoridad, recursos y reloj que usa esa mecánica y mantiene sus excepciones reproducidas como dependencias. Los problemas transversales de C4 siguen abiertos y se contrastan en su propio recorrido.

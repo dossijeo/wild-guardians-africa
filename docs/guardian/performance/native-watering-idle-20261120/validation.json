@@ -1,0 +1,150 @@
+{
+  "baseHead": "a17a213b736fa991ec55fd4f75a41d410d1db00c",
+  "hardware": {
+    "water": {
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 130.37000000476837
+        }
+      },
+      "bodyId": 1,
+      "sameRootAndBones": true,
+      "retainedOriginalMeshesAndGeometry": 28,
+      "drawsDuringReadyHold": 22,
+      "idleDraws": 56,
+      "waterEvents": 1,
+      "nextTask": 1000001,
+      "drained": true
+    },
+    "initial": {
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 132.11500000953674
+        }
+      },
+      "bodyId": 1,
+      "sameRootAndBones": true,
+      "retainedOriginalMeshesAndGeometry": 28,
+      "drawsDuringReadyHold": 21,
+      "idleDraws": 63,
+      "waterEvents": 1,
+      "nextTask": 1000001,
+      "drained": true
+    }
+  },
+  "native": {
+    "exports": {
+      "standalone": {
+        "before": 753,
+        "after": 755,
+        "oldNamesAndKindsPreserved": true,
+        "importsUnchanged": true
+      },
+      "pthread": {
+        "before": 774,
+        "after": 776,
+        "publicBefore": 759,
+        "publicAfter": 761,
+        "publicNamesPreserved": true,
+        "pairedFactoryInstantiated": true
+      },
+      "additiveNames": [
+        "nav_initial_idle_body_proposal_stage_watering",
+        "nav_initial_idle_body_watering_source_snapshot"
+      ]
+    },
+    "outputs": {
+      "src/world/wild-engine/spatial-savanna.wasm": "8eff8bdfbde635afa02cbadae240519801bdc6ab8b8a58a5951822c5d2cc4dd8",
+      "public/wild-engine/spatial-threaded.mjs": "efc2e1c9938a94c7f2ecd44428d294c672135ddb790927d00c95f905fb82a1e2",
+      "public/wild-engine/spatial-threaded.wasm": "15c9a6ef1077534026bc0ad5bea28cceb48c10eef4c5590b0f1ba7c5dfb1c015"
+    },
+    "commands": [
+      {
+        "label": "standalone",
+        "exitCode": 0,
+        "seconds": 65.71421290002763,
+        "logSha256": "44be79450a87f700c771ca96837cd702f187fd9c8818d1908157d9e65630d6fa"
+      },
+      {
+        "label": "pthread",
+        "exitCode": 0,
+        "seconds": 68.17322949995287,
+        "logSha256": "1fc7d07d277d1e27a4c3587f319af433aa3999cd2f7a44103b205f7b5b2a698e"
+      }
+    ]
+  },
+  "build": {
+    "exitCode": 0,
+    "viteTime": "1m 57s"
+  },
+  "directed": {
+    "passed": 5,
+    "failed": 0,
+    "excludedByName": 26,
+    "description": "Both action kinds through the authority plus native source checks in standalone and pthread and the Harvest control"
+  },
+  "sourcesSha256": {
+    "src/rendering/native-route-control.js": "13649a84059e70c9430a2525f285bbbf72f932b2aa9dfcec01edd2cf0d7e9216",
+    "src/rendering/webgpu-worker-roster.js": "1520d4e226b56d622eb4d20809c8f1b0117460bd71957df3b20dfa8489c8ba74",
+    "src/simulation/game.js": "1ca945d37931169c8555c59a9f47d34868f540aeae604fa0e29a142bc514fc7b",
+    "src/simulation/native-intent-production.js": "ae0310cdbdab3cb3cea47f9faa53df1cb4561bfdf7ac3a5624d3d22c07ba1485",
+    "src/simulation/simulation-authority.js": "bedadc4d0951f42e5831c3020a682c7ee3019e515477c1767b119f31961252e9",
+    "src/world/native-initial-idle-body.js": "511ce4da3422eb98bf437a0dcf5e6a3fd3d8c67ba87b0c176d5558abca4d6916",
+    "src/world/wild-engine/spatial-initial-idle-body-proposal.inc": "1f63199422067a0ec6a1a32abc2cbdc513b01fe3f51811014564242b48030358",
+    "src/world/wild-engine/spatial-intent-state.cpp": "ddc6c0d335a1d71332719c4d5f1a218b8876857d212c9633f9079dabf1b08761",
+    "src/world/wild-engine/spatial-intent-bridge.js": "c7c14eae654680f01f98e2b8f5a5a6018f780f46a6603e8db234678648bba978",
+    "src/world/wild-engine/spatial-savanna.wasm": "8eff8bdfbde635afa02cbadae240519801bdc6ab8b8a58a5951822c5d2cc4dd8",
+    "public/wild-engine/spatial-threaded.mjs": "efc2e1c9938a94c7f2ecd44428d294c672135ddb790927d00c95f905fb82a1e2",
+    "public/wild-engine/spatial-threaded.wasm": "15c9a6ef1077534026bc0ad5bea28cceb48c10eef4c5590b0f1ba7c5dfb1c015",
+    "tests/native-intent-production-authority.test.js": "9e92dd0bcd12d2171c03f256090c84f60b8a0cde3ff291389351be3f2ba9533e",
+    "tests/native-task-action-proposal.test.js": "6201e915f7288f91ec51f1a661e30f1917027025fb2427eb875749a52ceaac92",
+    "tests/browser/fixtures/native-production-world-audit-worker.js": "65f8ba8b5627ec9bd1a5673aeaa4b894b5ecd5d11bf48c19430933ff1926b1e2",
+    "tests/browser/native-watering-idle-world-owner.js": "0340092a3f09d0fa34247afdae8b5e218609fbe31829019d3bec293b119aa19f",
+    "tools/build-spatial-savanna-wasm.sh": "d9acd28e0ca3f0197f1cf4d57450be46efecf9a58e717644a6805c3f5c5923eb",
+    "tools/guardian/audit_native_watering_idle_world_owner.mjs": "b9eadaa9875955d983ea6e53fc19bef3012820dad55995ad57913bf6c37a1236"
+  },
+  "preservedLocalFiles": 16,
+  "preservedA5Inputs": 38,
+  "archives": {
+    "water-hardware.json.gz": {
+      "sha256": "b354ea3be24eaf2895d9a51cd99671aa36512a6250d5636fe0c4a01c9e2ce6a7",
+      "originalSha256": "72fef71653ed823a598a2237b7084b06d7ead6e474290169d6d93672d34d1c3a",
+      "bytes": 42173
+    },
+    "initial-hardware.json.gz": {
+      "sha256": "73242f995954d16abb5009c124d2b1deecf251afa86bbd2fc7be933061cbf008",
+      "originalSha256": "7641547fa578c93d31eaabff3121f57d5d52ad1118d666d9bd0be994d1d81560",
+      "bytes": 42084
+    },
+    "core.tap.gz": {
+      "sha256": "8c7263ceb9ef6420399fa833e94b0ccedbb9002f74a78fb00ae20a17c2df5540",
+      "originalSha256": "8a2397f24cc456e9b7e510493e813bd47150ab7e0c7430170294f94c4e77bc14",
+      "bytes": 9805
+    },
+    "build.log.gz": {
+      "sha256": "bc65ca408d21945465e9468736ac3224e715ca653b8102c0ca6ac1e5eef4acdc",
+      "originalSha256": "58f879892143e547f0c367fc5fdd406c0fd563ca89f3b605ba9616848151da1e",
+      "bytes": 3995
+    }
+  }
+}

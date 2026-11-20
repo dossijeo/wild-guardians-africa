@@ -1,8 +1,10 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from './native-initial-idle-request-reference.js';
+import {copyNativeTaskActionAttestation} from './native-task-action-attestation.js';
+import {nativeTaskActionActor} from './native-task-action-presentation.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
-const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest'];
+const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest','wateringSource'];
 // Residency of the held, initialized Idle/Alert pose. There is no task, route,
 // action duration or authorization to run the remaining Idle policy here.
 export function copyNativeInitialIdleBodyReference(value){
@@ -10,12 +12,20 @@ export function copyNativeInitialIdleBodyReference(value){
  const sourceRequest=copyNativeInitialIdleRequestReference(value.sourceRequest),worldBoundary=copyNativeWorldBoundary(value.worldBoundary);
  if(!sourceRequest.idleState||value.actorId!==sourceRequest.actorId||value.bodyId!==sourceRequest.bodyId||value.profile!==sourceRequest.profile||!id(value.sourceControlSequence)||value.sourceControlSequence<sourceRequest.requestSequence||
   worldBoundary.authorityEpoch!==sourceRequest.authorityEpoch||worldBoundary.nativeSession!==sourceRequest.nativeSession||worldBoundary.effectiveTime<sourceRequest.requestedAt)throw TypeError('Native initial Idle body differs from its held source');
- return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceControlSequence:value.sourceControlSequence,worldBoundary,sourceRequest});
+ const wateringSource=value.wateringSource===undefined?null:copyNativeTaskActionAttestation(value.wateringSource);
+ if(wateringSource){
+  const action=wateringSource.reference,request=action.request,pose=sourceRequest.pose;
+  if(!['initial','water'].includes(request.actionKind)||nativeTaskActionActor(request)!==sourceRequest.actorId||request.bodyId!==sourceRequest.bodyId||
+     action.worldBoundary.authorityEpoch!==sourceRequest.authorityEpoch||action.worldBoundary.nativeSession!==sourceRequest.nativeSession||action.worldBoundary.ticket>=worldBoundary.ticket||
+     wateringSource.actionSequence!==sourceRequest.requestSequence||action.endTime!==sourceRequest.requestedAt||action.profile!==sourceRequest.profile||
+     pose.x!==action.origin.x||pose.z!==action.origin.z||pose.yaw!==request.heading||['radius','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==action[key]))throw TypeError('Native Idle body differs from its completed watering action');
+ }
+ return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceControlSequence:value.sourceControlSequence,worldBoundary,sourceRequest,...(wateringSource?{wateringSource}:{})});
 }
 export function sameNativeInitialIdleBodyReference(a,b){try{return JSON.stringify(copyNativeInitialIdleBodyReference(a))===JSON.stringify(copyNativeInitialIdleBodyReference(b));}catch{return false;}}
 export function nativeInitialIdleBodySuccessor(previous,next){
  const a=copyNativeInitialIdleBodyReference(previous),b=copyNativeInitialIdleBodyReference(next);
- return sameNativeInitialIdleRequestReference(a.sourceRequest,b.sourceRequest)&&b.sourceControlSequence>=a.sourceControlSequence&&
+ return sameNativeInitialIdleRequestReference(a.sourceRequest,b.sourceRequest)&&JSON.stringify(a.wateringSource)===JSON.stringify(b.wateringSource)&&b.sourceControlSequence>=a.sourceControlSequence&&
   a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&
   (b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeInitialIdleBodyReference(a,b));
 }

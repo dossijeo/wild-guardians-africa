@@ -59,7 +59,7 @@ test('restored harvest action produces Carry and genuine settlement through ordi
  }finally{await f.close();}
 });
 
-for(const kind of ['initial','water'])test(`completed ${kind} stays on its admitted body without dispatching a Harvest delivery`,async()=>{
+for(const kind of ['initial','water'])test(`completed ${kind} irrigates only when retained Idle adopts the same body`,async()=>{
  const {saved,oldBinding}=nativeActionSave({kind}),worker=saved.workers[0];
  saved.workers=[worker];saved.tasks=saved.tasks.filter(task=>task.workerId===worker.id);
  const plant=saved.plants.find(plant=>plant.id===saved.tasks[0].targetId);
@@ -67,24 +67,43 @@ for(const kind of ['initial','water'])test(`completed ${kind} stays on its admit
  if(kind==='water'){
   plant.water[0].status='manual';plant.water[1].status='due';plant.growth=plant.water[1].at;
  }
- saved.plants=[plant];
- const f=await nativeProductionAuthority(saved);try{
+ const next=createPlant(`plant-${saved.nextId++}`,'mijo',worker.x-4,worker.z,worker.centerId);
+ next.growth=999999;for(const slot of next.water)slot.status='manual';
+ saved.plants=[plant,next];
+ let release;const held=new Promise(resolve=>{release=resolve;});
+ const f=await nativeProductionAuthority(saved,{onPrepare(record){if(record.resources.nativeInitialIdleBody?.wateringSource)return held;}});try{
   await untilProduction(f,()=>f.records.some(record=>record.kind==='task-action'&&record.committed));
   const admitted=f.records[0],duration=oldBinding.reference.request.duration;
   for(let i=0;i<200&&f.snapshot().workers[0].nativeTaskAction.elapsed<duration;i++){
    f.advance();await f.present();
   }
-  await f.present();const state=f.snapshot(),current=state.workers[0];
+  const prepared=()=>f.records.find(record=>record.resources.nativeInitialIdleBody?.wateringSource);
+  await untilProduction(f,prepared);const state=f.snapshot(),current=state.workers[0];
   assert.equal(current.nativeTaskAction.elapsed,duration);
   assert.equal(current.nativeRouteAdmission,'native-action');
   assert.equal(current.taskId,saved.tasks[0].id);
   assert.deepEqual([current.x,current.z],[worker.x,worker.z]);
   assert.equal(state.plants[0].water[kind==='initial'?0:1].status,'due');
   assert.equal(state.crates.length,0);
-  assert.deepEqual(f.records,[admitted]);
-  assert.equal(f.authority.nativeIntentProductionStatus().last.kind,'task-action');
+  const idle=prepared();assert.equal(idle.committed,false);
+  assert.equal(idle.resources.nativeInitialIdleBody.bodyId,admitted.resources.request.bodyId);
+  assert.equal(idle.resources.nativeInitialIdleBody.wateringSource.reference.request.taskId,Number(saved.tasks[0].id.split('-').at(-1)));
+  release();await untilProduction(f,()=>idle.committed);const settled=f.snapshot(),available=settled.workers[0];
+  assert.equal(available.status,'idle');assert.equal(available.taskId,null);
+  assert.deepEqual([available.x,available.z],[worker.x,worker.z]);
+  assert.equal(settled.plants[0].water[kind==='initial'?0:1].status,'manual');
+  assert.equal(settled.tasks.some(task=>task.id===saved.tasks[0].id),false);
+  assert.equal(settled.crates.length,0);
+  assert.equal(settled.events.filter(event=>event.type==='WaterSatisfied'&&event.targetId===plant.id).length,1);
+  assert.equal(f.advance().events.filter(event=>event.type==='WaterSatisfied'&&event.targetId===plant.id).length,1);
+  assert.equal(f.command({kind:'harvest',id:`production-after-${kind}`,targetId:next.id}).value,true);
+  f.advance();await untilProduction(f,()=>f.records.some(record=>record.kind==='task-start'&&record.committed));
+  const task=f.records.find(record=>record.kind==='task-start');
+  assert.equal(task.resources.bodyId,idle.resources.nativeInitialIdleBody.bodyId);
+  assert.equal(task.resources.targetId,Number(next.id.split('-').at(-1)));
+  assert.equal(f.records.some(record=>record.kind==='task-consequence'),false);
   assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
- }finally{await f.close();}
+ }finally{release();await f.close();}
 });
 
 test('closing the authority aborts its one pending preparation without publishing a late WALK',async()=>{

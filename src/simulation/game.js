@@ -58,7 +58,8 @@ import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
 import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
-import {updateIdle,cancelIdle} from './idle.js';
+import {updateIdle,cancelIdle,createIdleState} from './idle.js';
+import {copyNativeInitialIdleState} from '../world/native-initial-idle-request-reference.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
 
 // A failed plan is a waiting state, not a request to repeat the same search
@@ -1398,6 +1399,30 @@ export function projectNativeHarvestConsequence(s,w,preview,native){
   if(loss)emit(s,'MicroeventHarvestLossApplied',loss);
   emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
   return crate;
+}
+export function prepareNativeWateringConsequence(s,w,source,nav){
+  const action=source?.reference,request=action?.request,id=nativeEntityNumericId;
+  if(!w||!nav||!request||!['initial','water'].includes(request.actionKind)||s.elapsed<action.endTime||
+    w.nativeRouteAdmission!=='native-action'||w.status!=='acting'||!w.taskId||w.crateId||w.incapacitated||w.recovery||w.raidReturn||
+    id(w.taskId)!==request.taskId||w.x!==action.origin.x||w.z!==action.origin.z||w.heading!==request.heading)return null;
+  const task=s.tasks.find(t=>t.id===w.taskId),target=s.plants.find(p=>p.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
+  if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target?.alive||target.blessing||id(target.id)!==request.targetId||!center||!operational(center))return null;
+  const idleState=copyNativeInitialIdleState({...createIdleState(w,idleFarmAnchor(s,w,center),s.seed),approachRetry:0});
+  return {task,target,idleState,reachable:canWaterFrom({...w,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
+}
+export function projectNativeWateringConsequence(s,w,nav,native){
+  const binding=native.nativeInitialIdleBodyBinding(w.id),reference=binding?.reference,source=reference?.wateringSource;
+  const plan=source&&prepareNativeWateringConsequence(s,w,source,nav);
+  if(!plan||s.elapsed!==reference.worldBoundary.effectiveTime||nativeEntityNumericId(w.id)!==reference.actorId||
+    JSON.stringify(plan.idleState)!==JSON.stringify(reference.sourceRequest.idleState))throw Error('Native watering consequence is not the committed game boundary');
+  const {task,target,reachable,idleState}=plan;
+  const watered=reachable&&waterPlant(target);
+  if(!reachable)releaseTask(s,w);
+  Object.assign(w,{status:'idle',path:null,taskId:null,taskApproach:null,destinationId:null,idleState:{...idleState},nativeRouteAdmission:'native-idle',actionRemaining:0});
+  delete w.nativeTaskAction;
+  if(reachable)replaceTasks(s,s.tasks.filter(candidate=>candidate!==task));
+  notifyWorkerPlanningChange(s,w);
+  if(watered)emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});
 }
 function completeTask(s,w,t,target,nav) {
   // Native arrival/action resources authorize their phase, not its effects.

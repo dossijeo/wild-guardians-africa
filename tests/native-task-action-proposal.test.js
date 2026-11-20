@@ -6,6 +6,7 @@ import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-threa
 import {copyNativeTaskActionRequest,copyNativeTaskActionProposal} from '../src/world/native-task-action-presentation.js';
 import {copyNativeRoutePresentation} from '../src/world/native-route-presentation.js';
 import {copyNativeTaskStartProposal} from '../src/world/native-task-start-presentation.js';
+import {copyNativeInitialIdleBodyReference} from '../src/world/native-initial-idle-body.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 
 function fixture(options){
@@ -16,6 +17,38 @@ function fixture(options){
 }
 function prepare(f){const result=f.planner.prepareNativeTaskActionProposal(f.request());assert.equal(result.status,'proposed',JSON.stringify(result));return result.proposal;}
 function ticket(f){assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));}
+
+for(const threaded of [false,true])test(`${threaded?'pthread':'standalone'} watering Idle reuses only the exact completed Action and cancels without applying anything`,async()=>{
+ let runtime,f;try{
+  if(threaded){const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs');runtime=await createThreadedSpatialWorld(factory);}
+  f=fixture({core:runtime?.core,taskKind:'water'});
+  const p=prepare(f);
+  assert.equal(f.w.nav_task_action_proposal_commit_bound(...ticket(f).slice(0,5),p.ticket.ticket),1);
+  assert.equal(f.planner.commitNativeCausalClock().status,'committed');
+  const proof=f.planner.nativeTaskActionBinding(f.actor),body=f.body(1),target=p.request.targetId;
+  const stage=(sequence=proof.actionSequence)=>f.w.nav_initial_idle_body_proposal_stage_watering(p.request.nativeRoute.actorId,p.ticket.session,sequence,2,1,target,123,7.6);
+  assert.equal(stage(),-2);
+  tick(f.state,p.request.duration+.2,f.nav);
+  assert(f.planner.nativeTaskActionExecution(f.actor).completed);
+  assert.equal(stage(proof.actionSequence+1),-2);
+  assert.equal(stage(),1);const t=ticket(f);
+  const request={kind:'native-initial-idle-body-proposal-ticket',authorityEpoch:f.planner.authorityEpoch,session:t[0],ticket:t[1]};
+  const idle=f.planner.captureNativeInitialIdleBodyProposal(request),reference=idle.nativeInitialIdleBody;
+  assert.deepEqual(reference.wateringSource,proof);
+  assert.equal(reference.bodyId,p.request.bodyId);
+  assert.equal(reference.sourceRequest.requestedAt,proof.reference.endTime);
+  assert.throws(()=>copyNativeInitialIdleBodyReference({...reference,sourceRequest:{...reference.sourceRequest,pose:{...reference.sourceRequest.pose,yaw:0}}}));
+  tick(f.state,.1,f.nav);
+  const refreshed=f.planner.revalidateNativeInitialIdleBodyProposal(request);
+  assert.equal(refreshed.status,'revalidated');assert.equal(refreshed.timeTranslation.compatible,true);
+  assert.deepEqual(refreshed.proposal.nativeInitialIdleBody.wateringSource,proof);
+  assert.equal(f.planner.cancelNativeInitialIdleBodyProposal(refreshed.proposal.ticket),true);
+  assert.equal(f.planner.nativeInitialIdleBodyBinding(f.actor),null);
+  assert.deepEqual(f.planner.nativeTaskActionBinding(f.actor),proof);
+  assert.deepEqual(f.body(1),body);
+  assert(!f.state.events.some(event=>event.type==='WaterSatisfied'));
+ }finally{f?.close();await runtime?.dispose();}
+});
 
 test('a real game arrival prepares an action from its executed body without issuing action permission or effects',()=>{
  const f=fixture();try{
