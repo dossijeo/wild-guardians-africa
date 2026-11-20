@@ -1,0 +1,8 @@
+import fs from 'node:fs';
+const prefix=process.argv[2],r=JSON.parse(fs.readFileSync(prefix+'.json')),c=JSON.parse(fs.readFileSync(prefix+'-cadence.json')),t=JSON.parse(fs.readFileSync(prefix+'.trace.json')).traceEvents;
+const images=new Map(),slow=new Map();let counts=null;
+function visit(o){if(!o||typeof o!=='object')return;if(o.qaImages)for(const e of o.qaImages)images.set(e.at,e);if(o.qaReceipts){counts=o.qaReceipts.counts;for(const e of o.qaReceipts.slow)slow.set(e.at,e);}for(const v of Object.values(o))if(v&&typeof v==='object')visit(v);}
+visit(r.result);const anchor=t.find(e=>e.name===r.traceClockAnchor.name&&e.cat?.includes('user_timing')),offset=r.traceClockAnchor.absoluteMs-anchor.ts/1000,at=e=>e.ts/1000+offset,owner=e=>e.pid===c.owner.pid&&e.tid===c.owner.tid;
+const top=rows=>rows.sort((a,b)=>b.durationMs-a.durationMs).slice(0,12),small=e=>({name:e.name,at:at(e),durationMs:e.dur/1000,cpuMs:e.tdur/1000,function:e.args?.data?.functionName,args:e.args});
+const result={counts,images:{count:images.size,maxMs:Math.max(0,...[...images.values()].map(e=>e.ms)),top:[...images.values()].sort((a,b)=>b.ms-a.ms).slice(0,12)},receipts:{slow:slow.size,top:[...slow.values()].sort((a,b)=>b.ms-a.ms).slice(0,12)},hostMicrotasks:top(t.filter(e=>owner(e)&&e.name==='RunMicrotasks'&&e.dur).map(small)),gpuLong:t.filter(e=>e.name==='Scheduler::RunTask'&&e.dur>50000).map(e=>({task:small(e),nested:top(t.filter(x=>x.pid===e.pid&&x.tid===e.tid&&x.ts>=e.ts&&x.ts<e.ts+e.dur&&x.dur).map(small))}))};
+fs.writeFileSync(prefix+'-resources.json',JSON.stringify(result,null,2));console.log(JSON.stringify({images:result.images,receipts:result.receipts,hostMicrotasks:result.hostMicrotasks.slice(0,4),gpuLong:result.gpuLong}));
