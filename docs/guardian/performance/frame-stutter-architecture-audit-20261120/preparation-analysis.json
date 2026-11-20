@@ -1,0 +1,2360 @@
+{
+  "version": 1,
+  "runOutcome": "failed",
+  "error": "page.evaluate: Error: Native Idle cycle has no submitted pick clock\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795171558690:29:4120)\n    at C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tools\\guardian\\audit_native_farm_birth_world_owner.mjs:50:26",
+  "sequences": [
+    {
+      "sequence": 29,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 29,
+          "stage": "start",
+          "at": 1795172626369.105,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "validate-operations",
+          "at": 1795172626371.45,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "references",
+          "at": 1795172626371.6448,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "dependencies-wait",
+          "at": 1795172626372.1648,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "dependencies-ready",
+          "at": 1795172626372.19,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "snapshot",
+          "at": 1795172626372.4048,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "classify-ownership",
+          "at": 1795172626375.535,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "replay-analysis",
+          "at": 1795172626375.7698,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "pipeline-identities",
+          "at": 1795172626376.615,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "initialize-uploads",
+          "at": 1795172626376.7148,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172626379.8398,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "first-use-encode",
+          "at": 1795172626379.91,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "first-use-submit",
+          "at": 1795172626381.63,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "first-use-wait",
+          "at": 1795172626381.7249,
+          "operations": 60
+        },
+        {
+          "sequence": 29,
+          "stage": "ready",
+          "at": 1795172626396.9048,
+          "operations": 60
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 2.344970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.19482421875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.52001953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.025146484375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.21484375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 3.130126953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.23486328125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.84521484375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.099853515625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 3.125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 1.719970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.094970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 15.179931640625,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 32,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 32,
+          "stage": "start",
+          "at": 1795172628941.835,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "validate-operations",
+          "at": 1795172628942.64,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "references",
+          "at": 1795172628942.7598,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "dependencies-wait",
+          "at": 1795172628943.1848,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "dependencies-ready",
+          "at": 1795172628943.1948,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "snapshot",
+          "at": 1795172628943.2148,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "classify-ownership",
+          "at": 1795172628948.98,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "replay-analysis",
+          "at": 1795172628949.1548,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "pipeline-identities",
+          "at": 1795172628949.88,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "initialize-uploads",
+          "at": 1795172628949.9448,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172628953.3398,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "first-use-encode",
+          "at": 1795172628953.4048,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "first-use-submit",
+          "at": 1795172628954.3948,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "first-use-wait",
+          "at": 1795172628954.49,
+          "operations": 82
+        },
+        {
+          "sequence": 32,
+          "stage": "ready",
+          "at": 1795172628962.48,
+          "operations": 82
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 0.804931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.119873046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.425048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.010009765625,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.02001953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 5.76513671875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.1748046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.72509765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.06494140625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 3.39501953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.06494140625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.989990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.09521484375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 7.989990234375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 34,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 34,
+          "stage": "start",
+          "at": 1795172632935.2449,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "validate-operations",
+          "at": 1795172632935.99,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "references",
+          "at": 1795172632936.105,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "dependencies-wait",
+          "at": 1795172632936.5198,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "dependencies-ready",
+          "at": 1795172632936.5298,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "snapshot",
+          "at": 1795172632936.565,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "classify-ownership",
+          "at": 1795172632939.375,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "replay-analysis",
+          "at": 1795172632939.49,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "pipeline-identities",
+          "at": 1795172632940.105,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "initialize-uploads",
+          "at": 1795172632940.17,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172632944.0298,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "first-use-encode",
+          "at": 1795172632944.0999,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "first-use-submit",
+          "at": 1795172632945.1548,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "first-use-wait",
+          "at": 1795172632945.265,
+          "operations": 82
+        },
+        {
+          "sequence": 34,
+          "stage": "ready",
+          "at": 1795172632953.49,
+          "operations": 82
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 0.7451171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.114990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.414794921875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.010009765625,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.03515625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 2.81005859375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.114990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.614990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.06494140625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 3.85986328125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 1.054931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.110107421875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 8.22509765625,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 106,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 106,
+          "stage": "start",
+          "at": 1795172642248.5698,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "validate-operations",
+          "at": 1795172642261.24,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "references",
+          "at": 1795172642261.4648,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "dependencies-wait",
+          "at": 1795172642262.4148,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "dependencies-ready",
+          "at": 1795172642262.4348,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "snapshot",
+          "at": 1795172642262.505,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "classify-ownership",
+          "at": 1795172642267.575,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "replay-analysis",
+          "at": 1795172642267.7998,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "pipeline-identities",
+          "at": 1795172642268.98,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "initialize-uploads",
+          "at": 1795172642269.115,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172642279.68,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "first-use-encode",
+          "at": 1795172642279.785,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "first-use-submit",
+          "at": 1795172642279.7998,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "first-use-wait",
+          "at": 1795172642279.8499,
+          "operations": 148
+        },
+        {
+          "sequence": 106,
+          "stage": "ready",
+          "at": 1795172642294.035,
+          "operations": 148
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 12.670166015625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.224853515625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.949951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.02001953125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 5.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.224853515625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 1.18017578125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.135009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 10.56494140625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.10498046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.014892578125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.050048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 14.18505859375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 214,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 214,
+          "stage": "start",
+          "at": 1795172650461.6648,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "validate-operations",
+          "at": 1795172650464.005,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "references",
+          "at": 1795172650464.125,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "dependencies-wait",
+          "at": 1795172650464.7,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "dependencies-ready",
+          "at": 1795172650464.7249,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "snapshot",
+          "at": 1795172650464.7449,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "classify-ownership",
+          "at": 1795172650475.49,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "replay-analysis",
+          "at": 1795172650475.6748,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "pipeline-identities",
+          "at": 1795172650476.765,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "initialize-uploads",
+          "at": 1795172650476.88,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172650485.3098,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "first-use-encode",
+          "at": 1795172650485.4949,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "first-use-submit",
+          "at": 1795172650488.5798,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "first-use-wait",
+          "at": 1795172650488.6748,
+          "operations": 120
+        },
+        {
+          "sequence": 214,
+          "stage": "ready",
+          "at": 1795172650502.5999,
+          "operations": 120
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 2.340087890625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.1201171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.574951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.02490234375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.02001953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 10.7451171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.184814453125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 1.090087890625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.114990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 8.429931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.18505859375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 3.0849609375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.094970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 13.925048828125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 234,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 234,
+          "stage": "start",
+          "at": 1795172652568.92,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "validate-operations",
+          "at": 1795172652570.325,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "references",
+          "at": 1795172652570.4348,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "dependencies-wait",
+          "at": 1795172652570.9849,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "dependencies-ready",
+          "at": 1795172652571.005,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "snapshot",
+          "at": 1795172652571.0298,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "classify-ownership",
+          "at": 1795172652572.9,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "replay-analysis",
+          "at": 1795172652573.085,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "pipeline-identities",
+          "at": 1795172652574.19,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "initialize-uploads",
+          "at": 1795172652574.315,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172652578.5898,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "first-use-encode",
+          "at": 1795172652578.66,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "first-use-submit",
+          "at": 1795172652579.8098,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "first-use-wait",
+          "at": 1795172652579.8948,
+          "operations": 84
+        },
+        {
+          "sequence": 234,
+          "stage": "ready",
+          "at": 1795172652588.0898,
+          "operations": 84
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 1.405029296875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.10986328125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.550048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.02001953125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.02490234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 1.8701171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.18505859375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 1.10498046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 4.27490234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 1.14990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.0849609375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 8.195068359375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 245,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 245,
+          "stage": "start",
+          "at": 1795172659418.22,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "validate-operations",
+          "at": 1795172659419.65,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "references",
+          "at": 1795172659419.7698,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "dependencies-wait",
+          "at": 1795172659420.3599,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "dependencies-ready",
+          "at": 1795172659420.375,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "snapshot",
+          "at": 1795172659420.4048,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "classify-ownership",
+          "at": 1795172659424.045,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "replay-analysis",
+          "at": 1795172659424.285,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "pipeline-identities",
+          "at": 1795172659425.7898,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "initialize-uploads",
+          "at": 1795172659425.9,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172659427.6448,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "first-use-encode",
+          "at": 1795172659427.7249,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "first-use-submit",
+          "at": 1795172659428.7998,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "first-use-wait",
+          "at": 1795172659428.89,
+          "operations": 91
+        },
+        {
+          "sequence": 245,
+          "stage": "ready",
+          "at": 1795172659443.7898,
+          "operations": 91
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 1.429931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.119873046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.590087890625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.01513671875,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.02978515625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 3.64013671875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.239990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 1.5048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.110107421875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 1.744873046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.080078125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 1.074951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.090087890625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 14.89990234375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 297,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 297,
+          "stage": "start",
+          "at": 1795172666885.21,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "validate-operations",
+          "at": 1795172666886.265,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "references",
+          "at": 1795172666886.3599,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "dependencies-wait",
+          "at": 1795172666886.93,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "dependencies-ready",
+          "at": 1795172666886.9448,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "snapshot",
+          "at": 1795172666886.9749,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "classify-ownership",
+          "at": 1795172666890.375,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "replay-analysis",
+          "at": 1795172666890.545,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "pipeline-identities",
+          "at": 1795172666891.42,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "initialize-uploads",
+          "at": 1795172666891.4749,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172666897.0098,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "first-use-encode",
+          "at": 1795172666897.0798,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "first-use-submit",
+          "at": 1795172666897.105,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "first-use-wait",
+          "at": 1795172666897.1548,
+          "operations": 117
+        },
+        {
+          "sequence": 297,
+          "stage": "ready",
+          "at": 1795172666901.47,
+          "operations": 117
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 1.054931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.094970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.570068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.014892578125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.030029296875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 3.400146484375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.169921875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.054931640625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 5.534912109375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.025146484375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.0498046875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 4.315185546875,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 299,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 299,
+          "stage": "start",
+          "at": 1795172667740.6848,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "validate-operations",
+          "at": 1795172667742.15,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "references",
+          "at": 1795172667742.2349,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "dependencies-wait",
+          "at": 1795172667742.68,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "dependencies-ready",
+          "at": 1795172667742.69,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "snapshot",
+          "at": 1795172667742.71,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "classify-ownership",
+          "at": 1795172667751.105,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "replay-analysis",
+          "at": 1795172667751.255,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "pipeline-identities",
+          "at": 1795172667752.045,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "initialize-uploads",
+          "at": 1795172667752.095,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172667755.605,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "first-use-encode",
+          "at": 1795172667755.6648,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "first-use-submit",
+          "at": 1795172667756.71,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "first-use-wait",
+          "at": 1795172667756.7698,
+          "operations": 70
+        },
+        {
+          "sequence": 299,
+          "stage": "ready",
+          "at": 1795172667763.21,
+          "operations": 70
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 1.465087890625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.0849609375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.445068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.010009765625,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.02001953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 8.39501953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.14990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.7900390625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.050048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 3.510009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.059814453125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 1.045166015625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.059814453125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 6.440185546875,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 531,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 531,
+          "stage": "start",
+          "at": 1795172687104.775,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "validate-operations",
+          "at": 1795172687105.47,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "references",
+          "at": 1795172687105.5398,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "dependencies-wait",
+          "at": 1795172687105.8848,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "dependencies-ready",
+          "at": 1795172687105.9,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "snapshot",
+          "at": 1795172687105.9348,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "classify-ownership",
+          "at": 1795172687113.13,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "replay-analysis",
+          "at": 1795172687113.265,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "pipeline-identities",
+          "at": 1795172687113.8298,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "initialize-uploads",
+          "at": 1795172687113.8699,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172687116.005,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "first-use-encode",
+          "at": 1795172687116.055,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "first-use-submit",
+          "at": 1795172687116.085,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "first-use-wait",
+          "at": 1795172687116.125,
+          "operations": 53
+        },
+        {
+          "sequence": 531,
+          "stage": "ready",
+          "at": 1795172687121.005,
+          "operations": 53
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 0.695068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.06982421875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.344970703125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.01513671875,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.034912109375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 7.195068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.135009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.56494140625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.0400390625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 2.135009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.050048828125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.030029296875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.0400390625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 4.8798828125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 670,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 670,
+          "stage": "start",
+          "at": 1795172696756.38,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "validate-operations",
+          "at": 1795172696757.5798,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "references",
+          "at": 1795172696757.7249,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "dependencies-wait",
+          "at": 1795172696758.39,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "dependencies-ready",
+          "at": 1795172696758.4148,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "snapshot",
+          "at": 1795172696758.4849,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "classify-ownership",
+          "at": 1795172696760.115,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "replay-analysis",
+          "at": 1795172696760.355,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "pipeline-identities",
+          "at": 1795172696761.3699,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "initialize-uploads",
+          "at": 1795172696761.4849,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172696764.19,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "first-use-encode",
+          "at": 1795172696764.2598,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "first-use-submit",
+          "at": 1795172696764.275,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "first-use-wait",
+          "at": 1795172696764.3098,
+          "operations": 65
+        },
+        {
+          "sequence": 670,
+          "stage": "ready",
+          "at": 1795172696768.4548,
+          "operations": 65
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 1.199951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.14501953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.6650390625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.02490234375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.070068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 1.630126953125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.239990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 1.014892578125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.114990234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 2.705078125,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.06982421875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.01513671875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.034912109375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 4.14501953125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    },
+    {
+      "sequence": 671,
+      "complete": true,
+      "marks": [
+        {
+          "sequence": 671,
+          "stage": "start",
+          "at": 1795172700609.815,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "validate-operations",
+          "at": 1795172700610.45,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "references",
+          "at": 1795172700610.525,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "dependencies-wait",
+          "at": 1795172700610.875,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "dependencies-ready",
+          "at": 1795172700610.89,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "snapshot",
+          "at": 1795172700610.9,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "classify-ownership",
+          "at": 1795172700612.8499,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "replay-analysis",
+          "at": 1795172700612.9348,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "pipeline-identities",
+          "at": 1795172700613.38,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "initialize-uploads",
+          "at": 1795172700613.4148,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "pin-and-publish-pending",
+          "at": 1795172700615.515,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "first-use-encode",
+          "at": 1795172700615.5598,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "first-use-submit",
+          "at": 1795172700615.575,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "first-use-wait",
+          "at": 1795172700615.5999,
+          "operations": 64
+        },
+        {
+          "sequence": 671,
+          "stage": "ready",
+          "at": 1795172700636.0598,
+          "operations": 64
+        }
+      ],
+      "spans": [
+        {
+          "stage": "start",
+          "through": "validate-operations",
+          "milliseconds": 0.635009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "validate-operations",
+          "through": "references",
+          "milliseconds": 0.074951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "references",
+          "through": "dependencies-wait",
+          "milliseconds": 0.35009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "dependencies-wait",
+          "through": "dependencies-ready",
+          "milliseconds": 0.014892578125,
+          "adjacent": true,
+          "includesAsyncWait": true
+        },
+        {
+          "stage": "dependencies-ready",
+          "through": "snapshot",
+          "milliseconds": 0.010009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "snapshot",
+          "through": "classify-ownership",
+          "milliseconds": 1.949951171875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "classify-ownership",
+          "through": "replay-analysis",
+          "milliseconds": 0.0849609375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "replay-analysis",
+          "through": "pipeline-identities",
+          "milliseconds": 0.445068359375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pipeline-identities",
+          "through": "initialize-uploads",
+          "milliseconds": 0.034912109375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "initialize-uploads",
+          "through": "pin-and-publish-pending",
+          "milliseconds": 2.10009765625,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "pin-and-publish-pending",
+          "through": "first-use-encode",
+          "milliseconds": 0.044921875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-encode",
+          "through": "first-use-submit",
+          "milliseconds": 0.01513671875,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-submit",
+          "through": "first-use-wait",
+          "milliseconds": 0.02490234375,
+          "adjacent": true,
+          "includesAsyncWait": false
+        },
+        {
+          "stage": "first-use-wait",
+          "through": "ready",
+          "milliseconds": 20.4599609375,
+          "adjacent": true,
+          "includesAsyncWait": true
+        }
+      ]
+    }
+  ],
+  "limitation": "Phase observations do not certify the functional run. Elapsed time is not CPU time; an incomplete sequence is not READY. Snapshot span also includes clock admission; upload span includes camera selection. No acceptance threshold is relaxed."
+}

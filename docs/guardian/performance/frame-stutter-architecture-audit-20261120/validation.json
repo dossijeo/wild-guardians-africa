@@ -1,0 +1,59 @@
+{
+  "base": "e7fb1d5fddfde620cf5b1861081db858e2995649",
+  "toolsCommit": "d59a94665",
+  "branch": "codex/guardian-3d-animation",
+  "environment": {
+    "node": "20.19.0",
+    "edgeFileVersion": "157.0.4341.60",
+    "adapter": "nvidia/turing",
+    "nominalHz": 30,
+    "os": "Windows",
+    "idleProducer": false
+  },
+  "directed": {
+    "tests": 12,
+    "passed": 12,
+    "log": "tests.log"
+  },
+  "gpu": {
+    "liveA": {
+      "outcome": "passed",
+      "instrumented": true,
+      "capture": "timing",
+      "drained": true
+    },
+    "livePhases": {
+      "outcome": "failed",
+      "instrumented": true,
+      "error": "Native Idle cycle has no submitted pick clock",
+      "phaseObservationsValidBeforeFailure": true,
+      "fullVerticalAndFinalDrainCertified": false
+    }
+  },
+  "evidence": {
+    "originalArtifactHashesVerified": true,
+    "testedSourceHashesVerified": true,
+    "traceReportsReproduced": true,
+    "cohortReceiptsMatchExistingArchives": true,
+    "cohort": {
+      "cases": 15,
+      "recordedCoverageMs": 1421966.8649902344,
+      "phaseExposureMs": 24000,
+      "longGaps": 66,
+      "inPhase": 59
+    }
+  },
+  "limitations": [
+    "No production change in this delivery",
+    "No new full suite or build",
+    "No uninstrumented or visual-equivalence claim",
+    "No wallpaper settings changed; causality experiment pending user authorization",
+    "Shared working tree includes Sol unpublished changes; see frozen manifests"
+  ],
+  "coordination": {
+    "solThread": "01a1d588-5060-7f50-9872-1623ecffdd8b",
+    "agreed": "Sol owns production correction; QA paths reserved to this audit",
+    "gpuWindow": "released",
+    "finalNotification": "Sent after publication; receipt must not be inferred from file existence"
+  }
+}

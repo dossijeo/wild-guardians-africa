@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: preparation annotations match the actual Host and reject changed seams
+ok 1 - preparation annotations match the actual Host and reject changed seams
+  ---
+  duration_ms: 13.4387
+  ...
+# Subtest: failed and incomplete runs keep their status and async waits
+ok 2 - failed and incomplete runs keep their status and async waits
+  ---
+  duration_ms: 0.9408
+  ...
+# Subtest: missing or contradictory marks cannot produce preparation claims
+ok 3 - missing or contradictory marks cannot produce preparation claims
+  ---
+  duration_ms: 0.374
+  ...
+# Subtest: phase audit counts full histories, exposure and non-phase controls without declaring cause
+ok 4 - phase audit counts full histories, exposure and non-phase controls without declaring cause
+  ---
+  duration_ms: 7.2817
+  ...
+# Subtest: phase audit merges later snapshots and deduplicates overlapping history
+ok 5 - phase audit merges later snapshots and deduplicates overlapping history
+  ---
+  duration_ms: 0.6816
+  ...
+# Subtest: phase audit retains capture overlap and intervals crossing the minute boundary
+ok 6 - phase audit retains capture overlap and intervals crossing the minute boundary
+  ---
+  duration_ms: 2.0942
+  ...
+# Subtest: phase audit rejects missing and contradictory interval histories
+ok 7 - phase audit rejects missing and contradictory interval histories
+  ---
+  duration_ms: 1.438
+  ...
+# Subtest: cadence separates a 30Hz callback schedule from skipped draw and CPU cost
+ok 8 - cadence separates a 30Hz callback schedule from skipped draw and CPU cost
+  ---
+  duration_ms: 3.7631
+  ...
+# Subtest: release draw is not used to estimate the browser refresh rate
+ok 9 - release draw is not used to estimate the browser refresh rate
+  ---
+  duration_ms: 1.0259
+  ...
+# Subtest: capture overlap and recorded guard outcomes remain separate evidence
+ok 10 - capture overlap and recorded guard outcomes remain separate evidence
+  ---
+  duration_ms: 1.0608
+  ...
+# Subtest: unmatched clocks and mixed Host owners cannot produce timing claims
+ok 11 - unmatched clocks and mixed Host owners cannot produce timing claims
+  ---
+  duration_ms: 0.6513
+  ...
+# Subtest: compositor wall time and thread CPU time are reported separately
+ok 12 - compositor wall time and thread CPU time are reported separately
+  ---
+  duration_ms: 1.2709
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 184.0196
