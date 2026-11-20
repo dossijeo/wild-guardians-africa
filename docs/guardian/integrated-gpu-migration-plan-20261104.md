@@ -1,5 +1,8 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Continuación A2/A4/e-R3/f-R4: [TaskStart conserva su publicación](native-task-start-publication-hold-20261120.md). Corrige fallo GPU real Farm READY → tarea: Task14 usa el hold existente hasta dibujo/adopción, sin eludir secuencia/paquete/frontera. Chromium/Detour/Three leídos en fuente; sin dependencia/dueño/cola/reloj/ABI nuevos. Dos GPU conservan585 IDs y banco compartido refs1→2→2; Farm obsoleta antes/después no se dibuja. Control Home575 IDs; tres bloqueos54 dibujos cada caso, picking/rig adquirido/drain reales.22+26 dirigidas, regresión4838/4839/365/una omisión y build nuevos; seis sintaxis,690 inputs/64 nativos/16 ajenos/38 A5 exactos. Costes/VFX/3.123/cohortes/fallos/cadencia pendientes;168ms/50.71ms abiertos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/e-R3/f-R4: [diagnóstico de huecos Farm](native-frame-gap-diagnostics-20261120.md). Fuente Chromium fijada y trazado CDP existente adaptado, solo QA: tres GPU funcionales conservan575 IDs y54 dibujos/RAF por bloqueo1.8s. Otra ventana registra50.710ms con copia de imagen17.067ms coincidente; no explica por sí sola el intervalo ni los168ms históricos. Dos capturas sin indicador de pérdida se preservan; la versión final guarda/valida dataLossOccurred=false. Dos sintaxis,689 inputs/64 nativos/16 ajenos/38 A5 exactos; suites/build heredados. Recuperación WALK retenida y main pausado ya comprobados, no repetirlos como pendientes; cobertura global3.123/cohortes/fallos/VFX/cadencia abiertos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 

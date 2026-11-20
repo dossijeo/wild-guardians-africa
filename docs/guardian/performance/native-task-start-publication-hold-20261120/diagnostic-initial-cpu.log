@@ -1,0 +1,64 @@
+TAP version 13
+# (node:14180) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:14180) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+not ok 1 - a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+  ---
+  duration_ms: 7657.8725
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-farm-birth-cancellation.test.js:21:59'
+  failureType: 'testCodeFailure'
+  error: '{"phase":"preparing","fault":null,"active":{"actorId":"worker-1000001","kind":"task-start"},"last":{"actorId":"worker-1000001","kind":"farm-arrival","status":"cancelled"},"publicationSequence":603}'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    preparedBirth (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:17:102)
+    async TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:22:37)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+not ok 2 - a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+  ---
+  duration_ms: 6446.3663
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-farm-birth-cancellation.test.js:21:59'
+  failureType: 'testCodeFailure'
+  error: '{"phase":"preparing","fault":null,"active":{"actorId":"worker-1000001","kind":"task-start"},"last":{"actorId":"worker-1000001","kind":"farm-arrival","status":"cancelled"},"publicationSequence":603}'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: ~
+  operator: '=='
+  stack: |-
+    preparedBirth (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:17:102)
+    async TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:22:37)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+ok 3 - actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2615.4191
+  ...
+# Subtest: actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+ok 4 - actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 3094.8998
+  ...
+# Subtest: closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+ok 5 - closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+  ---
+  duration_ms: 781.7413
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21228.9618

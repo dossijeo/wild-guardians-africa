@@ -1,0 +1,64 @@
+TAP version 13
+# (node:10992) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:10992) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+not ok 1 - a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+  ---
+  duration_ms: 3967.731
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-farm-birth-cancellation.test.js:22:59'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'actorId')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:115
+    Array.some (<anonymous>)
+    file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:60
+    untilProduction (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/helpers/native-production-authority.js:61:58)
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:28)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+not ok 2 - a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+  ---
+  duration_ms: 3342.7056
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-farm-birth-cancellation.test.js:22:59'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'actorId')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:115
+    Array.some (<anonymous>)
+    file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:60
+    untilProduction (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/helpers/native-production-authority.js:61:58)
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-farm-birth-cancellation.test.js:30:28)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+ok 3 - actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2578.2264
+  ...
+# Subtest: actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+ok 4 - actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2514.8251
+  ...
+# Subtest: closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+ok 5 - closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+  ---
+  duration_ms: 782.6829
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 3
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13679.8959
