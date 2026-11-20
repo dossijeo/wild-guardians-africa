@@ -1,4 +1,5 @@
 import {floorFloat32} from './float32-time.js';
+import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {nativeFarmIdlePhaseOffset,nativeIdleCyclePhaseOffset} from './native-farm-idle-phase.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {nativeStoppedClockKey,copyNativeStoppedBodySelector,copyNativeStoppedClock} from './native-stopped-clock.js';
@@ -30,6 +31,28 @@ const actionClockKey=(action,epoch)=>JSON.stringify(['action',copyNativeTaskActi
 const resumeClockKey=(resume,semantic,epoch)=>JSON.stringify(['resume',copyNativeResumeReference(resume),semantic,epoch]);
 const suspendedClockKey=(body,semantic,epoch)=>JSON.stringify(['suspended',copyNativeSuspendedBodyReference(body),semantic,epoch]);
 const gateClockKey=(gate,semantic,epoch)=>JSON.stringify(['gate',copyNativeGateReference(gate),semantic,epoch]);
+
+// Inspection crosses a Worker boundary; the scene may adopt another owner
+// before its reply arrives. Recapture only on an observed ownership change.
+// The caller runs its synchronous raycast in this same continuation, never
+// leaving a captured clock installed while another input is awaiting a reply.
+export async function withNativeRoutePickFrame({inspect,readOwner,isClosed},operation){
+ if(typeof operation!=='function')throw TypeError('Native pick requires an operation');
+ const open=()=>{if(isClosed())throw Error('Native consumer pick frame unavailable');};
+ for(;;){
+  open();const owner=readOwner();
+  if(owner.presented){await owner.presented;open();if(!owner.current())continue;}
+  let frame=null;
+  if(owner.native){
+   const value=await inspect();open();if(!owner.current())continue;
+   if(!sameNativeWorldBoundary(value.consumer?.nativeRouteFrame?.worldBoundary??null,owner.worldBoundary))throw Error('Native pick owner does not match the submitted world');
+   frame=captureNativeRoutePickFrame(value.consumer);
+  }
+  const result=operation(frame);
+  if(result&&typeof result.then==='function')throw Error('Native pick operation must be synchronous');
+  return result;
+ }
+}
 
 // Input consumes the last submitted image, including each assignment's own
 // revocation clamp. Neither a global frame time nor prepared resources prove it.
