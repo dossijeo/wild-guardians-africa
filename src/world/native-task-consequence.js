@@ -10,7 +10,9 @@ const id=n=>Number.isSafeInteger(n)&&n>0;
 const sameHandle=(a,b)=>!!a&&!!b&&['authorityEpoch','session','slot','generation'].every(k=>a[k]===b[k]);
 const sameAction=(a,b)=>!!a&&!!b&&a.actionSequence===b.actionSequence&&sameNativeTaskActionReference(a.reference,b.reference)&&sameNativeTaskActionReference(a.preparedReference,b.preparedReference);
 const sourceKeys=['actorId','bodyId','crateId','centerId'];
+const canonicalReferences=new WeakSet(); // Validated immutable values, never execution permissions.
 export function copyNativeTaskConsequenceReference(value){
+ if(canonicalReferences.has(value))return value;
  if(value?.kind!=='native-task-consequence-reference'||value.version!==1)throw TypeError('Invalid native task consequence reference');
  const sourceAction=copyNativeTaskActionAttestation(value.sourceAction),worldBoundary=copyNativeWorldBoundary(value.worldBoundary),h=value.expectedRouteHandle,q=sourceAction.reference.request;
  if(!worldBoundary||sourceKeys.some(k=>!id(value[k]))||value.actorId!==nativeTaskActionActor(q)||value.bodyId!==q.bodyId||q.actionKind!=='harvest'||
@@ -18,8 +20,9 @@ export function copyNativeTaskConsequenceReference(value){
     !id(value.sourceControlSequence)||value.sourceControlSequence<sourceAction.actionSequence||!Number.isFinite(value.endTime)||value.endTime<worldBoundary.effectiveTime||
     ![value.destination?.x,value.destination?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||
     h?.authorityEpoch!==worldBoundary.authorityEpoch||h.session!==worldBoundary.nativeSession||!Number.isSafeInteger(h.slot)||h.slot<0||h.slot>0xffffffff||!id(h.generation)||h.generation>0xffffffff)throw TypeError('Invalid native consequence source, destination or boundary');
- return Object.freeze({kind:value.kind,version:1,...Object.fromEntries(sourceKeys.map(k=>[k,value[k]])),sourceAction,destination:Object.freeze({x:value.destination.x,z:value.destination.z}),sourceControlSequence:value.sourceControlSequence,endTime:value.endTime,
+ const reference=Object.freeze({kind:value.kind,version:1,...Object.fromEntries(sourceKeys.map(k=>[k,value[k]])),sourceAction,destination:Object.freeze({x:value.destination.x,z:value.destination.z}),sourceControlSequence:value.sourceControlSequence,endTime:value.endTime,
   expectedRouteHandle:Object.freeze({authorityEpoch:h.authorityEpoch,session:h.session,slot:h.slot,generation:h.generation}),worldBoundary});
+ canonicalReferences.add(reference);return reference;
 }
 const sameSource=(a,b)=>!!a&&!!b&&sourceKeys.every(k=>a[k]===b[k])&&sameAction(a.sourceAction,b.sourceAction)&&a.destination.x===b.destination.x&&a.destination.z===b.destination.z&&sameHandle(a.expectedRouteHandle,b.expectedRouteHandle);
 export const sameNativeTaskConsequenceReference=(a,b)=>sameSource(a,b)&&a.sourceControlSequence===b.sourceControlSequence&&a.endTime===b.endTime&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary);

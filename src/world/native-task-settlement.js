@@ -3,8 +3,12 @@ import {copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference}
 
 const id=value=>Number.isSafeInteger(value)&&value>0;
 const poseKeys=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
+// Same provenance rule as Idle cycle: only our immutable validated outputs,
+// weakly held. No caller-owned objects, leases or authority decisions cached.
+const canonicalReferences=new WeakMap();
 const sameCarry=(a,b)=>a.assignmentSequence===b.assignmentSequence&&sameNativeTaskConsequenceReference(a.reference,b.reference)&&sameNativeTaskConsequenceReference(a.preparedReference,b.preparedReference)&&JSON.stringify(a.gateIds)===JSON.stringify(b.gateIds);
 export function copyNativeTaskSettlementReference(value){
+ if(canonicalReferences.has(value))return value;
  if(value?.kind!=='native-task-settlement-reference'||value.version!==1)throw TypeError('Invalid native task settlement reference');
  const home=value.home;if(home!==undefined&&(!home||!id(home.villageId)||!Number.isFinite(home.x)||!Number.isFinite(home.z)||Math.abs(home.x)>=2147483000||Math.abs(home.z)>=2147483000||Object.keys(home).some(k=>!['villageId','x','z'].includes(k))))throw TypeError('Invalid native settlement Home destination');
  const sourceCarry=copyNativeTaskConsequenceAttestation(value.sourceCarry),r=sourceCarry.reference,worldBoundary=copyNativeWorldBoundary(value.worldBoundary),pose=value.pose;
@@ -13,10 +17,12 @@ export function copyNativeTaskSettlementReference(value){
     !Number.isInteger(value.profile)||value.profile<0||value.profile>31||!pose||poseKeys.some(key=>!Number.isFinite(pose[key]))||Object.keys(pose).some(key=>!poseKeys.includes(key))||
     pose.radius<=0||pose.radius>2||['runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]<0)||pose.x!==Math.fround(r.destination.x)||pose.z!==Math.fround(r.destination.z)||pose.radius!==r.sourceAction.reference.radius)
   throw TypeError('Native task settlement differs from its arrived Carry body');
- return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,crateId:value.crateId,centerId:value.centerId,sourceControlSequence:value.sourceControlSequence,
+ const reference=Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,crateId:value.crateId,centerId:value.centerId,sourceControlSequence:value.sourceControlSequence,
   sourceCarry,worldBoundary,pose:Object.freeze(Object.fromEntries(poseKeys.map(key=>[key,pose[key]]))),profile:value.profile,...(home?{home:Object.freeze({villageId:home.villageId,x:home.x,z:home.z})}:{})});
+ canonicalReferences.set(reference,null);return reference;
 }
-export const sameNativeTaskSettlementReference=(a,b)=>{try{return JSON.stringify(copyNativeTaskSettlementReference(a))===JSON.stringify(copyNativeTaskSettlementReference(b));}catch{return false;}};
+function referenceKey(value){const reference=copyNativeTaskSettlementReference(value);let key=canonicalReferences.get(reference);if(key===null){key=JSON.stringify(reference);canonicalReferences.set(reference,key);}return key;}
+export const sameNativeTaskSettlementReference=(a,b)=>{try{return referenceKey(a)===referenceKey(b);}catch{return false;}};
 export function nativeTaskSettlementSuccessor(previous,next){
  const a=copyNativeTaskSettlementReference(previous),b=copyNativeTaskSettlementReference(next);
  return ['actorId','bodyId','crateId','centerId','profile'].every(key=>a[key]===b[key])&&JSON.stringify(a.home)===JSON.stringify(b.home)&&sameCarry(a.sourceCarry,b.sourceCarry)&&JSON.stringify(a.pose)===JSON.stringify(b.pose)&&

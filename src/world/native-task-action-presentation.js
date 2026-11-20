@@ -45,15 +45,19 @@ export function copyNativeTaskActionProposal(value){
 
 const referenceFields=['request','worldBoundary','sourceControlSequence','origin','radius','profile','motionFlags','startTime','endTime','runPhase','walkPhase','carryPhase','runRemaining'];
 const parameters=['radius','profile','motionFlags','runPhase','walkPhase','carryPhase','runRemaining'];
+// Only this validator's deeply immutable outputs carry local provenance.
+// A frozen input or a structured clone must still pass every validation.
+const canonicalReferences=new WeakSet();
 function actionReference(proposal){
  return Object.freeze({kind:'native-task-action-reference',version:1,...Object.fromEntries(referenceFields.map(k=>[k,proposal[k]]))});
 }
 export function nativeTaskActionReferenceFromProposal(value){return copyNativeTaskActionReference(actionReference(copyNativeTaskActionProposal(value)));}
 export function copyNativeTaskActionReference(value){
+ if(canonicalReferences.has(value))return value;
  if(value?.kind!=='native-task-action-reference'||value.version!==1||Object.keys(value).some(k=>!['kind','version',...referenceFields].includes(k)))throw TypeError('Invalid native task action reference');
  const b=value.worldBoundary,p=copyNativeTaskActionProposal({...Object.fromEntries(referenceFields.map(k=>[k,value[k]])),kind:'native-task-action-proposal',version:1,ticket:{kind:'native-task-action-proposal-ticket',authorityEpoch:b?.authorityEpoch,session:b?.nativeSession,ticket:b?.ticket},authorizedAutonomy:false,authorizedConsequences:false});
  if([p.request.duration,p.request.heading,p.origin.x,p.origin.z,p.radius,p.runPhase,p.walkPhase,p.carryPhase,p.runRemaining].some(n=>!Number.isFinite(Math.fround(n))))throw TypeError('Native action parameters are not representable');
- return actionReference(p);
+ const reference=actionReference(p);canonicalReferences.add(reference);return reference;
 }
 export function sameNativeTaskActionReference(a,b){
  return !!a&&!!b&&sameNativeTaskActionRequest(a.request,b.request)&&['version','authorityEpoch','nativeSession','ticket','effectiveTime'].every(k=>a.worldBoundary[k]===b.worldBoundary[k])&&['startTime','endTime','sourceControlSequence',...parameters].every(k=>a[k]===b[k])&&a.origin.x===b.origin.x&&a.origin.z===b.origin.z;
