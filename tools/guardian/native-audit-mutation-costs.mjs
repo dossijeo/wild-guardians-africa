@@ -36,6 +36,24 @@ export function rewriteMutationCosts(source,owner){
   replace("        answer=committed.status===1?outcome(","        qaMutation('after-retain',receipt);answer=committed.status===1?outcome(");
   replace('          flushNativeIntentControl();const latest=nativeCausalClock();',"          qaMutation('before-clock-flush',receipt);flushNativeIntentControl();const latest=nativeCausalClock();");
   replace('          flushNativeIntentControl();source.releaseGpuAfterMutation(receipt,',"          flushNativeIntentControl();qaMutation('before-release',receipt);source.releaseGpuAfterMutation(receipt,");
+ }else if(owner==='bridge'){
+  source=marker+'\n'+source;
+  replace('  const captureNativeRoutePresentation=handle=>{',"  const captureNativeRoutePresentation=handle=>{qaMutation('route-presentation-start');");
+  replace('    const worldBoundary=copyNativeWorldBoundary(nativeWorldResourceBoundary()),rows=',"    qaMutation('route-presentation-samples');const worldBoundary=copyNativeWorldBoundary(nativeWorldResourceBoundary()),rows=");
+  replace("    if(wasm.nav_gate_route_presentations_version?.()!==1)","    qaMutation('route-presentation-gates');if(wasm.nav_gate_route_presentations_version?.()!==1)");
+  replace("    return Object.freeze({kind:'native-route-presentation',version:NATIVE_ROUTE_PRESENTATION_VERSION", "    qaMutation('route-presentation-return');return Object.freeze({kind:'native-route-presentation',version:NATIVE_ROUTE_PRESENTATION_VERSION");
+  replace("    const status=call('_revalidate',ticket.session,ticket.ticket);", "    qaMutation('motion-revalidate-native');const status=call('_revalidate',ticket.session,ticket.ticket);qaMutation('motion-revalidate-native-return');");
+  replace('      const proposal=captureNativeMotionProposal(nextTicket,mode),pointer=',"      qaMutation('motion-revalidate-capture');const proposal=captureNativeMotionProposal(nextTicket,mode),pointer=");
+  replace("      return outcome('revalidated',{previousTicket,proposal,timeTranslation,requiresResourcePreparation:true});", "      qaMutation('motion-revalidate-return');return outcome('revalidated',{previousTicket,proposal,timeTranslation,requiresResourcePreparation:true});");
+  const commit="      if(!current())return {status:-2};const status=wasm.nav_farm_arrival_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(beginNativeRouteExecution().status!=='started')throw Error('Native farm arrival could not establish its execution boundary');projectNativeFarmArrivalRouteExecution(state,worker,{nativeFarmArrivalRouteExecution});";
+  replace(commit,`      qaMutation('farm-current');if(!current())return {status:-2};
+      qaMutation('farm-native-commit');const status=wasm.nav_farm_arrival_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};
+      qaMutation('farm-boundary');mark();qaMutation('farm-execution');if(beginNativeRouteExecution().status!=='started')throw Error('Native farm arrival could not establish its execution boundary');
+      qaMutation('farm-projection');projectNativeFarmArrivalRouteExecution(state,worker,{nativeFarmArrivalRouteExecution});qaMutation('farm-binding');`);
+  replace('),resources=copyNativeFarmArrivalRouteResources({version:1,kind:23,phase:',
+   ");qaMutation('farm-resource-copy');const resources=copyNativeFarmArrivalRouteResources({version:1,kind:23,phase:");
+  replace('});mark({resources,nativeRoute,nativeFarmArrivalBinding:binding});return',
+   "});qaMutation('farm-resources-ready');mark({resources,nativeRoute,nativeFarmArrivalBinding:binding});qaMutation('farm-commit-return');return");
  }else throw Error('Unknown mutation observation owner');
  return source;
 }

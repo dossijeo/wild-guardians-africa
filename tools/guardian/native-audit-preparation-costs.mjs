@@ -32,14 +32,14 @@ export function summarizePreparationCosts(receipt){
 
 // QA response annotations only. No yield, reordered operation, extra GPU call,
 // permission, resource alias, readiness acknowledgement or replacement owner.
-export function rewritePreparationCosts(source,{resources=false}={}){
+export function rewritePreparationCosts(source,{resources=false,ordinary=false}={}){
  const replace=(from,to)=>{if(source.split(from).length!==2)throw Error('Preparation observation seam changed: '+from);source=source.replace(from,to);};
  replace('  function resourceJob(type,stage,run){','  metrics.qaPreparationStages=[];\n  function resourceJob(type,stage,run){');
  replace("        const preparing=message.type==='prepare-world-frame';",`        const preparing=message.type==='prepare-world-frame';
         const qaStage=stage=>{if(!preparing)return;const at=absoluteNow();metrics.qaPreparationStages.push({sequence:message.packet.sequence,stage,at,operations:message.packet.operations?.length??null});performance.mark('native-preparation:'+message.packet.sequence+':'+stage);};qaStage('start');`);
  const before=[
-  ['        if(preparing)await inspect(operationValidationSteps(packet.operations));','validate-operations'],
-  ['        packet.references = preparing?await inspect(packetReferenceSteps(packet.operations)):references(packet.operations);','references'],
+  ['        await inspect(operationValidationSteps(packet.operations));','validate-operations'],
+  ['        packet.references = await inspect(packetReferenceSteps(packet.operations));','references'],
   ['        if (readiness) await Promise.race([readiness,cancelled]);','dependencies-wait'],
   ['        packet.transportTiming.resourcesReadyAt = absoluteNow();','dependencies-ready'],
   ['        packet.resourceSnapshot = snapshotResources(packet.references);','snapshot'],
@@ -54,6 +54,20 @@ export function rewritePreparationCosts(source,{resources=false}={}){
   ['          packet.preparedUploadsComplete=true;','ready'],
  ];
  for(const [anchor,stage]of before)replace(anchor,`        qaStage('${stage}');\n`+anchor);
+ if(ordinary){
+  replace('  metrics.qaPreparationStages=[];','  metrics.qaPreparationStages=[];metrics.qaOrdinaryFrameStages=[];');
+  replace('if(!preparing)return;const at=absoluteNow();metrics.qaPreparationStages.push({sequence:message.packet.sequence,stage,at,operations:message.packet.operations?.length??null});performance.mark(\'native-preparation:\'+message.packet.sequence+\':\'+stage);',"const at=absoluteNow(),row={sequence:message.packet.sequence,stage,at,operations:message.packet.operations?.length??null,activeSequence:active?.sequence??null,holdId:nativeMutationHold?.holdId??null};if(preparing){metrics.qaPreparationStages.push(row);performance.mark('native-preparation:'+message.packet.sequence+':'+stage);}else{metrics.qaOrdinaryFrameStages.push(row);performance.mark('native-ordinary-frame:'+stage,{detail:row});}");
+  for(const [anchor,stage] of [
+   ['        await inspect(packetByteSteps(message.packet));','packet-bytes'],
+   ['        const packet = { ...message.packet,','retained-preparations'],
+   ['        if(packet.operations.some(op=>!drawCommandsCurrent','draw-world-checks'],
+   ['        await inspect(packetByteSteps(packet));','combined-bytes'],
+   ['        if (packet.metadata?.clock) evaluateRemoteClock','clock-contract'],
+   ['        const nativeBindings=Array.from(clockBindings.values())','control-rendezvous'],
+   ['        try{packet.admittedClockBindings=admitClockBindings(packet,preparing);}','clock-admission'],
+  ])replace(anchor,`        if(!preparing)qaStage('${stage}');\n`+anchor);
+  replace('        packet.transportTiming.admittedAt = absoluteNow();',"        packet.transportTiming.admittedAt = absoluteNow();if(!preparing)qaStage('admitted');");
+ }
  if(resources){
   replace('  metrics.qaPreparationStages=[];',`  metrics.qaPreparationStages=[];metrics.qaReceipts={counts:{},slow:[]};metrics.qaImages=[];`);
   replace('    const message = event.data;',`    const qaReceiveAt=absoluteNow();const message = event.data;const qaReceiveMs=absoluteNow()-qaReceiveAt;
@@ -70,11 +84,11 @@ export async function observePreparationCosts(page,overrides){
  const sha=value=>createHash('sha256').update(value).digest('hex');
  const mutations=process.env.QA_NATIVE_MUTATION_TRACE==='true';
  await page.context().route('**/src/rendering/remote-webgpu-host.js*',async route=>{
-  const response=await route.fetch(),body=await response.text(),phases=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true'}),annotated=mutations?rewriteMutationCosts(phases,'host'):phases;
-  overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA preparation phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
+  const response=await route.fetch(),body=await response.text(),phases=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true',ordinary:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true'}),annotated=mutations?rewriteMutationCosts(phases,'host'):phases;
+  overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),ordinaryFrames:process.env.QA_NATIVE_ORDINARY_FRAME_TRACE==='true',scope:'Optional QA preparation and ordinary admission phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
   await route.fulfill({response,body:annotated});
  });
- if(mutations)for(const [owner,file]of [['publication','simulation/native-intent-control-publication.js'],['admission','world/native-resource-admission.js']])await page.context().route('**/src/'+file+'*',async route=>{
+ if(mutations)for(const [owner,file]of [['publication','simulation/native-intent-control-publication.js'],['admission','world/native-resource-admission.js'],...(process.env.QA_NATIVE_FARM_COMMIT_TRACE==='true'?[['bridge','world/wild-engine/spatial-intent-bridge.js']]:[])])await page.context().route('**/src/'+file+'*',async route=>{
   const response=await route.fetch(),body=await response.text(),annotated=rewriteMutationCosts(body,owner);
   overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA mutation phase marks only. Original protocol, validation, ordering, queue fences and publication are unchanged; wall spans include waiting.'});
   await route.fulfill({response,body:annotated});
