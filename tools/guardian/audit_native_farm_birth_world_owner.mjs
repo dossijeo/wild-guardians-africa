@@ -7,6 +7,7 @@ import {createPlant} from '../../src/simulation/crops.js';
 import {rational} from '../../src/simulation/money.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
 import {createNativeAuditCapture} from './native-audit-capture.mjs';
+import {startNativeAuditTrace} from './native-audit-trace.mjs';
 import {centerServicePoint} from '../../src/world/centers.js';
 import {cropSpec} from '../../src/simulation/rules.js';
 import {PROFILES} from '../../src/simulation/workforce.js';
@@ -26,16 +27,13 @@ const f=nativeFarmArrivalRouteFixture({peer:false,profile:existingProfile,config
 }});
 try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??(followAction?existingProfile:scenario==='birth'||scenario.endsWith('task')?'youngFemale':'olderMale'),newbornCount,scenario,...(followAction?{followAction:true}:{}),...(followConsequence?{followConsequence:true}:{}),...(followSettlement?{followSettlement:true}:{}),...(followHome?{followHome:true}:{}),...(followNextTask?{followNextTask:true}:{}),...(newbornCount===2||scenario!=='birth'?{hiringCenterId:targetCenter}:{})};}finally{f.close();}
 fs.writeFileSync(output.replace(/\.json$/,'.checkpoint.json'),JSON.stringify(input,null,2)+'\n');
-const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer,traceSession,traceComplete,traceClockAnchor;
+const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer,traceCapture,traceClockAnchor;
 try{
  timer=setTimeout(()=>browser.close(),followHome?300000:followNextTask?200000:150000);
  if(process.env.QA_NATIVE_PREPARATION_TRACE==='true'&&process.env.QA_NATIVE_PIPELINE_TRACE==='true')throw Error('Run phase and pipeline observers separately; their Host response annotations must not overwrite each other');
  if(process.env.QA_NATIVE_PREPARATION_TRACE==='true')await observePreparationCosts(page,overrides);
  if(process.env.QA_NATIVE_PIPELINE_TRACE==='true')await observeNativePipelineTimings(page,overrides);
- if(process.env.QA_NATIVE_TRACE==='true'){
-  traceSession=await browser.newBrowserCDPSession();traceComplete=new Promise(resolve=>traceSession.once('Tracing.tracingComplete',resolve));
-  await traceSession.send('Tracing.start',{categories:process.env.QA_NATIVE_TRACE_CATEGORIES??'toplevel,blink,blink.user_timing,devtools.timeline,v8.execute,gpu,viz,cc',transferMode:'ReturnAsStream'});
- }
+ if(process.env.QA_NATIVE_TRACE==='true')traceCapture=await startNativeAuditTrace(browser,{output});
  page.on('pageerror',e=>errors.push(String(e.stack??e)));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});page.on('response',r=>{if(r.status()>=400)httpFailures.push({url:r.url(),status:r.status()});});page.on('requestfailed',r=>requestFailures.push({url:r.url(),failure:r.failure()}));
  // QA metadata only on real, checksum-verified bank/route objects. Neither
  // geometry/data nor shader ownership is changed by these served annotations.
@@ -46,7 +44,7 @@ try{
  ])await page.context().route('**/src/rendering/'+file+'*',async route=>{const response=await route.fetch(),body=await response.text(),annotated=transform(body);overrides.push({file,url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'QA object name/origin only'});await route.fulfill({response,body:annotated});});
  const capture=createNativeAuditCapture(page,{output,mode:process.env.QA_NATIVE_CAPTURE_MODE??'visual'});await page.exposeFunction('captureNativeFarmBirth',label=>capture.checkpoint(label));
  await page.goto((process.env.QA_BASE_URL??'http://127.0.0.1:5218')+'/tests/browser/native-farm-birth-world-owner.html');await page.waitForFunction(()=>typeof window.runNativeFarmBirthWorldOwner==='function');
- if(traceSession)traceClockAnchor=await page.evaluate(()=>{const mark=performance.mark('native-farm-birth-trace-origin');return {name:mark.name,absoluteMs:performance.timeOrigin+mark.startTime};});
+ if(traceCapture)traceClockAnchor=await page.evaluate(()=>{const mark=performance.mark('native-farm-birth-trace-origin');return {name:mark.name,absoluteMs:performance.timeOrigin+mark.startTime};});
  const result=await page.evaluate(input=>window.runNativeFarmBirthWorldOwner(input),input);
  fs.writeFileSync(output,JSON.stringify({result,sourceCheckpoint:{sha256:sha(JSON.stringify(input)),path:output.replace(/\.json$/,'.checkpoint.json')},resourceOriginOverrides:overrides,capture:capture.evidence(),errors,consoleErrors,httpFailures,requestFailures,...(traceClockAnchor?{traceClockAnchor}: {})},null,2)+'\n');
  if(errors.length||consoleErrors.length||httpFailures.length||requestFailures.length||result.errors?.length||result.final.gpuErrors||!result.drained||result.disposal?.gpu?.disposed!==true||result.disposal?.sourceAliveUntilGraphicalClose!==true||/swiftshader|software/i.test(JSON.stringify(result.adapter))||!result.adapter.vendor)throw Error('Ordinary Farm birth hardware validation failed; see '+output);
@@ -56,6 +54,6 @@ try{
  fs.writeFileSync(output.replace(/\.json$/,'.failure.json'),JSON.stringify({error:String(error.stack??error),failure,resourceOriginOverrides:overrides,errors,consoleErrors,httpFailures,requestFailures,...(traceClockAnchor?{traceClockAnchor}: {})},null,2)+'\n');throw error;
 }finally{
  clearTimeout(timer);
- try{if(traceSession){await traceSession.send('Tracing.end');const {stream,...completion}=await traceComplete;if(!stream)throw Error('Native birth trace has no stream');const chunks=[];try{for(;;){const item=await traceSession.send('IO.read',{handle:stream});chunks.push(Buffer.from(item.data,item.base64Encoded?'base64':'utf8'));if(item.eof)break;}}finally{await traceSession.send('IO.close',{handle:stream});}fs.writeFileSync(output.replace(/\.json$/,'.trace.json'),Buffer.concat(chunks));fs.writeFileSync(output.replace(/\.json$/,'.trace-complete.json'),JSON.stringify(completion,null,2)+'\n');if(completion.dataLossOccurred!==false)throw Error('Native birth trace did not establish loss-free completion');}}
+ try{await traceCapture?.stop();}
  finally{await browser.close();}
 }
