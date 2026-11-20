@@ -1,0 +1,98 @@
+{
+  "scope": "Actual WASM authority and two ports with simulated draw host. Initial state authored from existing Idle20 fixture and moved zarzas wall. No game or worker source changes.",
+  "startingElapsed": 10,
+  "after": [
+    {
+      "starting": "intact",
+      "asked": true,
+      "elapsed": 21.999999999999957,
+      "wall": {
+        "id": "structure-749",
+        "kind": "wall",
+        "from": 50,
+        "to": 50,
+        "max": 100,
+        "status": "intact"
+      },
+      "worker": {
+        "kind": "acting",
+        "admission": "native-action",
+        "action": "repair",
+        "taskId": "task-1000000"
+      },
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "repair": false
+        },
+        {
+          "kind": "task-start",
+          "committed": true,
+          "repair": false
+        },
+        {
+          "kind": "task-action",
+          "committed": true,
+          "action": "repair",
+          "repair": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "RepairRequested",
+          "targetId": "structure-749",
+          "simulationTime": 10
+        }
+      ],
+      "faults": []
+    },
+    {
+      "starting": "ruined",
+      "asked": true,
+      "elapsed": 21.999999999999957,
+      "wall": {
+        "id": "structure-749",
+        "kind": "wall",
+        "from": 0,
+        "to": 0,
+        "max": 100,
+        "status": "ruined"
+      },
+      "worker": {
+        "kind": "acting",
+        "admission": "native-action",
+        "action": "repair",
+        "taskId": "task-1000000"
+      },
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "repair": false
+        },
+        {
+          "kind": "task-start",
+          "committed": true,
+          "repair": false
+        },
+        {
+          "kind": "task-action",
+          "committed": true,
+          "action": "repair",
+          "repair": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "RepairRequested",
+          "targetId": "structure-749",
+          "simulationTime": 10
+        }
+      ],
+      "faults": []
+    }
+  ]
+}
