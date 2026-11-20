@@ -1585,6 +1585,8 @@ function nativeReturnBoundarySupported(w,planner){
   const settled=planner.nativeSettledWorkerExecution?.(w.id);
   return w.status==='home'&&planner.nativeWorkerHomeInactive?.(w.id)||
     !!planner.nativeHomeRouteExecution?.(w.id)||
+    w.status==='acting'&&w.nativeRouteAdmission==='native-action'&&!!planner.nativeTaskActionExecution?.(w.id)||
+    w.status==='carrying'&&w.nativeRouteAdmission==='native-delivery'&&!!planner.nativeDeliveryExecution?.(w.id)||
     w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='pending-farm-arrival-resources'&&!!(planner.nativeFarmArrivalRequestReference?.(w.id)??planner.nativeFarmArrivalDeclarationReference?.(w.id))||
     w.nativeRouteAdmission==='native-farm-arrival-held'&&w.status==='arriving'&&!w.taskId&&!!planner.nativeFarmArrivalHeldExecution?.(w.id)||
     w.status==='arriving'&&!w.taskId&&w.nativeRouteAdmission==='native-farm-arrival'&&!!planner.nativeFarmArrivalRouteExecution?.(w.id)||
