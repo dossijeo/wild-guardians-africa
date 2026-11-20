@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuación parcial A4: [inspección incremental dentro del paquete](native-preparation-packet-slices-20261120.md). Babylon/Detour leídos en fuente; bytes, comandos y referencias ceden por el presupuesto/FIFO existentes, sin dependencia/ABI nuevos. Cancelación conserva uploads y no espera al scheduler;7 casos nuevos,43 dirigidos,5013/5014 en380 archivos/una omisión y build nuevos. GPU de referencia/posterior completan recorrido y drain, pero continúan microtareas19.650ms, handlers de control y gaps hasta93ms: no mejora global ni cadencia aceptada. Relojes/snapshots/uploads aún síncronos, siguiente pendiente antes de productorIdle; pérdida real de dispositivo abierta.719/998/64 entradas,16 ajenos/38 A5 exactos. A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/A7/e-R3/f-R4: [admisión y selección de Idle adquirido](native-post-settlement-idle-consumer-20261120.md). Conserva cuerpo/actor/geometría y reloj presentado17→21/22; prueba nativa exacta antes de dibujo, fase Idle retenida hasta WATCH y fuente Farm23 consultable durante candidata21.20 casos nuevos,44 dirigidos,5006/5007 en379 archivos/una omisión y build nuevos. Fuentes Godot/Detour/Three leídas; sin dependencia/ABI/Host nuevos. ProductorIdle aún desactivado. Integra commits externos de [recuperación automática](native-incremental-auto-recovery-handoff-20261120.md) y [auditoría](frame-stutter-architecture-audit-20261120.md). Siguiente acotar preparación CPU monolítica antes de ampliar productor; pérdida real de dispositivo pendiente. 718/998/64 entradas,16 ajenos/38 A5 exactos; A6/A/B/C/cadencia abiertos,D no iniciado,f-R3 seguro.
 
 

@@ -129,10 +129,24 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const started=absoluteNow();
     try{return run();}finally{const elapsed=absoluteNow()-started;if(elapsed>metrics.resourceJobMaxMs){metrics.resourceJobMaxMs=elapsed;metrics.resourceJobMaxType=type;metrics.resourceJobMaxStage=stage;metrics.resourceJobMaxAt=started;}}
   }
-  function resourceBudget(){
+  function resourceBudget(signal=null){
     if(absoluteNow()-resourceSliceStarted<resourceSliceMs)return null;
     metrics.resourceTaskYields++;
-    return Promise.resolve(yieldResourceTask()).then(()=>{resourceSliceStarted=absoluteNow();});
+    return Promise.resolve(yieldResourceTask()).then(()=>{if(!signal?.aborted)resourceSliceStarted=absoluteNow();});
+  }
+  // Preparation stays in the resource FIFO, but pure packet inspection can
+  // resume across tasks. No native generation, permission or upload is exposed
+  // by these steps. Close the continuation explicitly on abort or failure.
+  async function inspectPreparation(steps,current,interrupted,signal,cancelled){
+    try{
+      let count=0;
+      for(;;){
+        if(count%64===0&&!current())throw interrupted;
+        const step=steps.next();if(step.done)return step.value;
+        if(++count%64!==0)continue;
+        const yielding=resourceBudget(signal);if(yielding)await Promise.race([yielding,cancelled]);
+      }
+    }finally{steps.return();}
   }
   function settleNativeControl(error=null){
     const current=routeControl?.status();
@@ -736,10 +750,46 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if (!value || typeof value !== 'object') return 0;
     return Object.values(value).reduce((sum, child) => sum + packetBytes(child), 0);
   }
+  function* packetValues(value,stopAtReference=false){
+    const ancestors=new WeakSet(),stack=[{values:[value][Symbol.iterator](),owner:null}];
+    while(stack.length){
+      const frame=stack[stack.length-1],item=frame.values.next();
+      if(item.done){stack.pop();if(frame.owner)ancestors.delete(frame.owner);continue;}
+      const child=item.value;yield child;
+      if(!child||typeof child!=='object'||child instanceof ArrayBuffer||ArrayBuffer.isView(child)||
+        typeof ImageBitmap!=='undefined'&&child instanceof ImageBitmap||stopAtReference&&child[REF])continue;
+      if(ancestors.has(child))throw Error('Cyclic remote frame');
+      ancestors.add(child);
+      stack.push({values:(Array.isArray(child)?child:Object.values(child))[Symbol.iterator](),owner:child});
+    }
+  }
+  function* packetByteSteps(value){
+    let bytes=0;
+    for(const child of packetValues(value)){
+      if(typeof ImageBitmap!=='undefined'&&child instanceof ImageBitmap)bytes+=child.width*child.height*4;
+      else if(child instanceof ArrayBuffer||ArrayBuffer.isView(child))bytes+=child.byteLength;
+      if(bytes>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
+      yield;
+    }
+    return bytes;
+  }
+  function* packetReferenceSteps(value){
+    const result=new Set();
+    for(const child of packetValues(value,true)){
+      if(child&&typeof child==='object'&&!(child instanceof ArrayBuffer)&&!ArrayBuffer.isView(child)&&child[REF])result.add(child[REF]);
+      yield;
+    }
+    return result;
+  }
   function validateOperations(operations) {
+    const steps=operationValidationSteps(operations);
+    while(!steps.next().done){} // Same validation for ordinary and prepared packets.
+  }
+  function* operationValidationSteps(operations) {
     let count = 0;
     for (const op of operations) {
       if (!QUEUE.has(op.method) || !Array.isArray(op.args)) throw Error(`Invalid remote queue operation ${op.method}`);
+      yield;
       if (op.method !== 'submit') continue;
       if (!Array.isArray(op.args[0])) throw Error('Invalid remote submission');
       for (const buffer of op.args[0]) {
@@ -747,6 +797,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         for (const command of buffer.__remoteCommands) {
           if (++count > maxFrameOperations) throw Error('Remote command count exceeds safety limit');
           if (!Array.isArray(command.args)) throw Error('Invalid remote command arguments');
+          yield;
           if (command.method === 'beginRenderPass' || command.method === 'beginComputePass') {
             if (!Array.isArray(command.commands)) throw Error('Invalid remote pass');
             for (const item of command.commands) {
@@ -754,6 +805,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               const computeCommand = item.method.startsWith('dispatch');
               if (computeCommand && command.method !== 'beginComputePass') throw Error('Compute dispatch cannot execute in a render pass');
               if (command.method === 'beginComputePass' && !['setPipeline','setBindGroup','dispatchWorkgroups','dispatchWorkgroupsIndirect','insertDebugMarker','pushDebugGroup','popDebugGroup'].includes(item.method)) throw Error('Render command cannot execute in a compute pass');
+              yield;
             }
           } else if (!COMMANDS.has(command.method)) throw Error(`Invalid remote encoder command ${command.method}`);
         }
@@ -1080,14 +1132,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
         lastReceivedFrameSequence=message.packet.sequence;
         if(preparing&&cancelledWorldFrames.delete(message.packet.sequence)){rejectPreparedFrame(message.packet,'Prepared world frame cancelled');reply(message,null,Error('Prepared world frame cancelled'));break;}
-        if(!Array.isArray(message.packet.operations)||message.packet.operations.length>maxFrameOperations||packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
+        if(!Array.isArray(message.packet.operations)||message.packet.operations.length>maxFrameOperations)throw Error('Remote frame exceeds safety limit');
         if(preparationRecoveryRequired){rejectPreparedFrame(message.packet,'Rejected preparation requires a fresh surface');break;}
         let boundary=null;
         const controller=new AbortController();let cancel;const cancelled=new Promise(resolve=>{cancel=()=>{controller.abort();resolve();};});
         const admission={packet:message.packet,cancel,controller,prepared:preparing};admittingFrame=admission;
+        if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
+        const interrupted=Error('Native mutation invalidated the prepared frame');
         let preparedReady=false;
         const current=()=>!stopped&&!failed&&!nativeConsumerRetirement&&!controller.signal.aborted&&message.nativeMutationEpoch===nativeMutationEpoch&&(preparing||frameWorldCurrent(message.packet));
+        const inspect=steps=>inspectPreparation(steps,current,interrupted,controller.signal,cancelled);
         try{
+        if(preparing)await inspect(packetByteSteps(message.packet));
+        else if(packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
         if(preparing){
           try{boundary=validatePreparedWorldBoundary(message.packet);}catch(error){
             if(!NATIVE_ADMISSION_OBSOLETE.has(error?.code))throw error;
@@ -1100,7 +1157,6 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(!preparing&&!frameWorldCurrent(message.packet)){
           rejectPreparedFrame(message.packet,'Prepared resources do not match the committed native world');break;
         }
-        if(message.nativeMutationEpoch===undefined)message.nativeMutationEpoch=nativeMutationEpoch;
         if(message.nativeMutationEpoch!==nativeMutationEpoch){
           rejectPreparedFrame(message.packet,'Native mutation invalidated the prepared frame');break;
         }
@@ -1113,14 +1169,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.transportTiming = { ...message.packet.transportTiming, sequence: packet.sequence, workerReceivedAt: message.receivedAt ?? absoluteNow(), admissionStartedAt: absoluteNow() };
         packet.receivedAt = absoluteNow();
         if (!Number.isSafeInteger(packet.sequence) || packet.sequence <= (active?.sequence || 0)) throw Error('Stale remote frame');
-        if (!Array.isArray(packet.operations) || packet.operations.length > maxFrameOperations || packetBytes(packet) > maxFrameBytes) throw Error('Remote frame exceeds safety limit');
+        if (!Array.isArray(packet.operations) || packet.operations.length > maxFrameOperations) throw Error('Remote frame exceeds safety limit');
+        if(preparing)await inspect(packetByteSteps(packet));
+        else if(packetBytes(packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
         if (!packet.operations.some(op => op.method === 'submit')) throw Error('Remote frame contains no drawing submission');
-        validateOperations(packet.operations);
+        if(preparing)await inspect(operationValidationSteps(packet.operations));
+        else validateOperations(packet.operations);
         if (packet.metadata?.clock) evaluateRemoteClock(packet.metadata.clock, packet.metadata.clock.anchorAbsoluteMs);
         const hasCompute = packet.operations.some(op => op.method === 'submit' && op.args[0].some(buffer => buffer.__remoteCommands.some(command => command.method === 'beginComputePass')));
         packet.hasCompute=hasCompute;
         if (hasCompute && packet.metadata?.clock && !packet.metadata.clock.paused && packet.metadata.clock.safeUntil > packet.metadata.clock.elapsed) throw Error('An advancing remote clock cannot replay a frame containing one-shot compute; certify a repeatable compute contract first');
-        packet.references = references(packet.operations);
+        packet.references = preparing?await inspect(packetReferenceSteps(packet.operations)):references(packet.operations);
         const readiness = waitForResources(packet.references);
         packet.transportTiming.resourcesWaitStartedAt = absoluteNow();
         if (readiness) await Promise.race([readiness,cancelled]);
@@ -1221,7 +1280,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
         for (const entry of pendingRetirement) tryRetire(entry);
         metrics.packets++; break;
-        }catch(error){if(preparing){preparedReady=true;reply(message,null,error);}throw error;}
+        }catch(error){
+          if(error===interrupted){
+            if(!stopped&&!failed&&!nativeConsumerRetirement)rejectPreparedFrame(message.packet,error.message);
+            break;
+          }
+          if(preparing){preparedReady=true;reply(message,null,error);}throw error;
+        }
         finally{if(preparing&&!preparedReady)reply(message,null,Error('Prepared world frame unavailable'));controller.abort();if(admittingFrame===admission)admittingFrame=null;}
       }
       case 'destroy': {

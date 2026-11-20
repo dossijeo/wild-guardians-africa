@@ -37,8 +37,8 @@ export function rewritePreparationCosts(source){
  replace("        const preparing=message.type==='prepare-world-frame';",`        const preparing=message.type==='prepare-world-frame';
         const qaStage=stage=>{if(!preparing)return;const at=absoluteNow();metrics.qaPreparationStages.push({sequence:message.packet.sequence,stage,at,operations:message.packet.operations?.length??null});performance.mark('native-preparation:'+message.packet.sequence+':'+stage);};qaStage('start');`);
  const before=[
-  ['        validateOperations(packet.operations);','validate-operations'],
-  ['        packet.references = references(packet.operations);','references'],
+  ['        if(preparing)await inspect(operationValidationSteps(packet.operations));','validate-operations'],
+  ['        packet.references = preparing?await inspect(packetReferenceSteps(packet.operations)):references(packet.operations);','references'],
   ['        if (readiness) await Promise.race([readiness,cancelled]);','dependencies-wait'],
   ['        packet.transportTiming.resourcesReadyAt = absoluteNow();','dependencies-ready'],
   ['        packet.resourceSnapshot = snapshotResources(packet.references);','snapshot'],
