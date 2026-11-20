@@ -8,7 +8,7 @@ test('preparation annotations match the actual Host and reject changed seams',()
  const annotated=rewritePreparationCosts(source);
  assert.match(annotated,/qaStage\('initialize-uploads'\)/);
  assert.match(annotated,/qaStage\('first-use-wait'\)/);
- assert.throws(()=>rewritePreparationCosts(source.replace('initializePreparedWorldFrame(packet);','changed(packet);')),/seam changed/);
+ assert.throws(()=>rewritePreparationCosts(source.replace('initializePreparedWorldFrame(packet,checkpoint);','changed(packet);')),/seam changed/);
  assert.throws(()=>rewritePreparationCosts(source+source),/seam changed/);
 });
 test('failed and incomplete runs keep their status and async waits',()=>{

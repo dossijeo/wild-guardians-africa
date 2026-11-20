@@ -30,6 +30,7 @@ import { createNativeRouteControl } from './native-route-control.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
 import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
+import {externalImageUploadRegions} from './remote-resource-uploads.js';
 import {rejectedFramePreparations,closePreparationImages} from './remote-frame-preparations.js';
 import {remoteDrawPipelineEntries,prepareRemoteFirstUse} from './remote-prepared-first-use.js';
 const REF = '__remoteGpuId';
@@ -120,6 +121,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let nativeRouteFrame = null;
   let hidden = !!initiallyHidden, hiddenStartedAt = initiallyHidden ? absoluteNow() : null;
   let resourceSliceStarted = absoluteNow(), queuedMessages = 0;
+  let lastTransportSequence=0;
+  function acknowledgeDispatch(message){if(message.transportSequence!==undefined&&!stopped)port.postMessage({type:'resource-dispatched',transportSequence:message.transportSequence});}
   const samples = new Array(4096), errors = [];
   const frameTimings = [], fenceTimings = [];
   function recordTiming(ring, value, limit = 256) { ring.push(value); if (ring.length > limit) ring.shift(); return value; }
@@ -539,7 +542,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     return count ? encoder.finish() : null;
   }
   function nativeRetiringError(){const error=Error('Native GPU consumer is retiring');error.code='native-gpu-consumer-retiring';return error;}
-  function applyQueue(op, replay = false, initialized = false) {
+  function applyQueue(op, replay = false, initialized = false, closeImage = true) {
     if(nativeConsumerRetirement)throw nativeRetiringError();
     if (!QUEUE.has(op.method)) throw Error(`Unsupported remote queue method ${op.method}`);
     if (op.method === 'submit') {
@@ -552,8 +555,20 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const entry = resolutionResources?.get(op.args[0][REF]) || resources.get(op.args[0][REF]);
         if (entry?.uniformShadow) entry.uniformShadow.set(new Uint8Array(op.args[2].buffer || op.args[2], op.args[2].byteOffset || 0, op.args[2].byteLength), op.args[1]);
       }
-      if (op.method === 'copyExternalImageToTexture') op.args[0]?.source?.close?.();
+      if (closeImage && op.method === 'copyExternalImageToTexture') op.args[0]?.source?.close?.();
     }
+  }
+  async function uploadExternalImage(op,{checkpoint=null,closeImage=true}={}){
+    const snapshot=snapshotResources(references(op));pinSnapshot(snapshot);
+    try{
+      const texture=snapshot.get(op.args[1].texture[REF])?.value;
+      for(const region of externalImageUploadRegions(op,texture)){
+        if(stopped||failed)throw Error('Remote GPU upload cancelled');
+        const previous=resolutionResources;resolutionResources=snapshot;
+        try{resourceJob(op.method,'image-region',()=>applyQueue(region,false,false,false));}finally{resolutionResources=previous;}
+        const yielding=checkpoint?checkpoint():resourceBudget();if(yielding)await yielding;
+      }
+    }finally{if(closeImage)op.args[0]?.source?.close?.();releaseSnapshot(snapshot);}
   }
   function installStoppedValues() {
     const changed = new Set();
@@ -914,14 +929,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(packet.metadata.nativeIdleStrollStopTemplate){const ref=copyNativeIdleStrollStopReference(packet.metadata.nativeIdleStrollStopTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native moving stop template');routeControl.admitStrollStop(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeFarmArrivalStopTemplate){const ref=copyNativeFarmArrivalStopReference(packet.metadata.nativeFarmArrivalStopTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Farm stop template');routeControl.admitFarmArrivalStop(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeInitialIdleBodyTemplate){const ref=copyNativeInitialIdleBodyReference(packet.metadata.nativeInitialIdleBodyTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native initial Idle body template');routeControl.admitInitialIdleBody(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeIdleCycleTemplate){const ref=copyNativeIdleCycleReference(packet.metadata.nativeIdleCycleTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle cycle template');routeControl.admitIdleCycle(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeTaskSettlementTemplate){const ref=copyNativeTaskSettlementReference(packet.metadata.nativeTaskSettlementTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native settlement template');routeControl.admitSettlement(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeIdleCycleTemplate){const ref=packet.metadata.nativeIdleCycleTemplate=copyNativeIdleCycleReference(packet.metadata.nativeIdleCycleTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle cycle template');routeControl.admitIdleCycle(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeTaskSettlementTemplate){const ref=packet.metadata.nativeTaskSettlementTemplate=copyNativeTaskSettlementReference(packet.metadata.nativeTaskSettlementTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native settlement template');routeControl.admitSettlement(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeHomeArrivalTemplate){const ref=copyNativeHomeArrivalReference(packet.metadata.nativeHomeArrivalTemplate);if(ref.sourceHome.gateIds.length)throw Error('Native Home absence gate graphics are not prepared');if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home absence template');packet.preparedHomeArrivalLease=routeControl.admitHomeArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeIdleStrollTemplate){const ref=copyNativeIdleStrollReference(packet.metadata.nativeIdleStrollTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle stroll template');routeControl.admitStroll(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeFarmArrivalTemplate){const ref=copyNativeFarmArrivalRouteReference(packet.metadata.nativeFarmArrivalTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native farm arrival template');routeControl.admitFarmArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeHomeRouteTemplate){const ref=copyNativeHomeRouteReference(packet.metadata.nativeHomeRouteTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home template');routeControl.admitHome(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeTaskConsequenceTemplate){const ref=copyNativeTaskConsequenceReference(packet.metadata.nativeTaskConsequenceTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native consequence template');routeControl.admitConsequence(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeTaskActionTemplate){const ref=copyNativeTaskActionReference(packet.metadata.nativeTaskActionTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native action template');routeControl.admitAction(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeTaskConsequenceTemplate){const ref=packet.metadata.nativeTaskConsequenceTemplate=copyNativeTaskConsequenceReference(packet.metadata.nativeTaskConsequenceTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native consequence template');routeControl.admitConsequence(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeTaskActionTemplate){const ref=packet.metadata.nativeTaskActionTemplate=copyNativeTaskActionReference(packet.metadata.nativeTaskActionTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native action template');routeControl.admitAction(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeTaskStartTemplate){const ref=copyNativeTaskStartReference(packet.metadata.nativeTaskStartTemplate);if(packet.metadata.nativeResumeTemplate||!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid first-task template');}
     if(packet.metadata.nativeResumeTemplate){const ref=copyNativeResumeReference(packet.metadata.nativeResumeTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid deferred native resume template');}
     return boundary;
@@ -929,10 +944,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(preparing&&packet.metadata.nativeHomeArrivalTemplate){if(!packet.preparedHomeArrivalLease?.isPrepared())throw Error('Native Home absence lost its current source');const actor=packet.metadata.nativeHomeArrivalTemplate.actorId;if(preparedBindings.some(binding=>binding.nativeHome?.actorId===actor||binding.nativeRoute?.actorId===actor))throw Error('Native Home absence still includes its actor clock');}
+    // One synchronous admission pass can share a lease for equal Host-owned
+    // binding identities. This map never survives a yield or control event.
+    const leases=new Map();
+    const admitMotion=(binding,method,reference)=>{
+      const key=binding.nativeClockKey?method+':'+binding.nativeClockKey:null;
+      if(key&&leases.has(key))return leases.get(key);
+      const lease=routeControl[method](reference,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+      if(key)leases.set(key,lease);return lease;
+    };
     return preparedBindings.map(original=>{let binding=original;
       if(binding.nativeInitialIdleBody){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,nativeWorldBoundary))throw Error('Native initial Idle body requires its applied world and causal clock');
-        const motionRecord=routeControl.admitInitialIdleBody(binding.nativeInitialIdleBody,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitInitialIdleBody',binding.nativeInitialIdleBody);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeInitialIdleBodyReference(binding.nativeInitialIdleBody,packet.metadata.nativeInitialIdleBodyTemplate))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeInitialIdleBody.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native initial Idle body');
         return {...binding,motionRecord,initialIdleBodyRecord:motionRecord.initialIdleBodyRecord};
@@ -940,21 +964,21 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(binding.nativeIdleCycle){
         if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,binding.nativeIdleCycle)&&b.resourceEnd===undefined))throw Error('Native Idle cycle phase requires its submitted physical clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleCycleReferenceCovered(binding.nativeIdleCycle,nativeWorldBoundary))throw Error('Native Idle cycle requires its applied world and causal clock');
-        const motionRecord=routeControl.admitIdleCycle(binding.nativeIdleCycle,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitIdleCycle',binding.nativeIdleCycle);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleCycleReference(binding.nativeIdleCycle,packet.metadata.nativeIdleCycleTemplate))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeIdleCycle.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Idle cycle');
         return {...binding,motionRecord,idleCycleRecord:motionRecord.idleCycleRecord,idleCycleWatchKnot:nativeIdleCycleWatchKnot(binding.nativeIdleCycle,motionRecord.executionEpoch??binding.epoch)};
       }
       if(binding.nativeSettlement){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskSettlementReferenceCovered(binding.nativeSettlement,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskSettlementReferenceCovered(binding.nativeSettlement,nativeWorldBoundary))throw Error('Native settlement requires its applied world and causal clock');
-        const motionRecord=routeControl.admitSettlement(binding.nativeSettlement,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitSettlement',binding.nativeSettlement);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskSettlementReference(binding.nativeSettlement,packet.metadata.nativeTaskSettlementTemplate))throw Error('Pending settlement clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeSettlement.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native settlement');
         return {...binding,motionRecord,settlementRecord:motionRecord.settlementRecord};
       }
       if(binding.nativeAction){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskActionReferenceCovered(binding.nativeAction,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskActionReferenceCovered(binding.nativeAction,nativeWorldBoundary))throw Error('Native action requires its applied world and causal clock');
-        const motionRecord=routeControl.admitAction(binding.nativeAction,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitAction',binding.nativeAction);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskActionReference(binding.nativeAction,packet.metadata.nativeTaskActionTemplate))throw Error('Pending action clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeAction.startTime)throw Error('Prepared clock does not cover native action');
         return {...binding,motionRecord,actionRecord:motionRecord.actionRecord};
@@ -970,7 +994,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(binding.nativeStroll){
         if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,binding.nativeStroll)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeStroll.endTime)))throw Error('Native Stroll Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeIdleStrollReferenceCovered(binding.nativeStroll,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeIdleStrollReferenceCovered(binding.nativeStroll,nativeWorldBoundary))throw Error('Native Idle stroll requires its exact template and causal world');
-        const motionRecord=routeControl.admitStroll(binding.nativeStroll,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitStroll',binding.nativeStroll);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeIdleStrollReference(binding.nativeStroll,packet.metadata.nativeIdleStrollTemplate))throw Error('Pending Idle stroll clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeStroll.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Idle stroll');
         if(!preparing&&!motionRecord.isCurrent())throw Error('Native Idle stroll lacks its installed association');
@@ -979,41 +1003,41 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(binding.nativeFarmArrival){
         if(binding.semantic==='idle-offset'&&!preparedBindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,binding.nativeFarmArrival)&&b.resourceEnd===nativeClockResourceEnd(binding.epoch,binding.nativeFarmArrival.endTime)))throw Error('Native Farm Idle phase requires its terminal decoder clock');
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeFarmArrivalRouteReferenceCovered(binding.nativeFarmArrival,nativeWorldBoundary))throw Error('Native farm arrival requires its exact template and causal world');
-        const motionRecord=routeControl.admitFarmArrival(binding.nativeFarmArrival,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitFarmArrival',binding.nativeFarmArrival);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeFarmArrivalRouteReference(binding.nativeFarmArrival,packet.metadata.nativeFarmArrivalTemplate))throw Error('Pending farm arrival clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeFarmArrival.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native farm arrival');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeHome){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeHomeRouteReferenceCovered(binding.nativeHome,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeHomeRouteReferenceCovered(binding.nativeHome,nativeWorldBoundary))throw Error('Native Home requires its exact template and causal world');
-        const motionRecord=routeControl.admitHome(binding.nativeHome,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitHome',binding.nativeHome);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeHomeRouteReference(binding.nativeHome,packet.metadata.nativeHomeRouteTemplate))throw Error('Pending Home clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeHome.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native Home');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeConsequence){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskConsequenceReferenceCovered(binding.nativeConsequence,nativeWorldBoundary))throw Error('Native consequence requires its exact template and causal world');
-        const motionRecord=routeControl.admitConsequence(binding.nativeConsequence,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitConsequence',binding.nativeConsequence);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskConsequenceReference(binding.nativeConsequence,packet.metadata.nativeTaskConsequenceTemplate))throw Error('Pending consequence clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeConsequence.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native consequence');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeStart){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeTaskStartReferenceCovered(binding.nativeStart,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeTaskStartReferenceCovered(binding.nativeStart,nativeWorldBoundary))throw Error('Native first task requires its exact prepared template and causal world');
-        const motionRecord=routeControl.admitStart(binding.nativeStart,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitStart',binding.nativeStart);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeTaskStartReference(binding.nativeStart,packet.metadata.nativeTaskStartTemplate))throw Error('Pending first-task clock differs from its retained template');
         if(packet.metadata.clock.safeUntil<binding.nativeStart.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover first task');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeResume){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeResumeReferenceCovered(binding.nativeResume,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeResumeReferenceCovered(binding.nativeResume,nativeWorldBoundary))throw Error('Native resume requires its applied world and causal clock');
-        const motionRecord=routeControl.admitResume(binding.nativeResume,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const motionRecord=admitMotion(original,'admitResume',binding.nativeResume);
         if(packet.metadata.clock.safeUntil<binding.nativeResume.worldBoundary.effectiveTime)throw Error('Prepared clock does not cover native resume resources');
         return {...binding,motionRecord,...(!preparing?{routeRecord:motionRecord.routeRecord}:{})};
       }
       if(binding.nativeSuspended){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeSuspendedBodyReferenceCovered(binding.nativeSuspended,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeSuspendedBodyReferenceCovered(binding.nativeSuspended,nativeWorldBoundary))throw Error('Native suspension requires its applied world and causal clock');
-        const suspendedRecord=routeControl.admitSuspended(binding.nativeSuspended,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+        const suspendedRecord=admitMotion(original,'admitSuspended',binding.nativeSuspended);
         if(packet.metadata.clock.safeUntil<binding.nativeSuspended.suspendedAt)throw Error('Prepared clock does not cover native suspension');
         return {...binding,suspendedRecord};
       }
@@ -1031,9 +1055,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       return {...binding,routeRecord};
     });
   }
-  function initializePreparedWorldFrame(packet){
+  async function initializePreparedWorldFrame(packet,checkpoint){
+    // Keep the exact inspected generations alive while the resource FIFO
+    // yields. Control can revoke this candidate; it cannot publish it early.
+    let retained=packet.resourceSnapshot;pinSnapshot(retained);
+    try{
     const uploads=[],drawReferences=new Set();
     for(const op of packet.operations){
+      const pause=checkpoint();if(pause)await pause;
       if(op.method==='submit'){
         const buffers=op.args[0].filter(buffer=>buffer.texturePreparation);
         for(const key of references(buffers))if(resources.get(key)?.kind==='createTexture'&&drawReferences.has(key))throw Error('Prepared texture initialization depends on an earlier drawing pass');
@@ -1047,14 +1076,38 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     // Fork only changed buffers. Texture initialization must own an unpublished
     // target; drawing/attachments remain encoded and run only after commit.
     for(const op of uploads)for(const key of writtenResources(op)){
+      const pause=checkpoint();if(pause)await pause;
       const entry=resources.get(key);if(!entry||entry.pending)throw Error('Prepared upload resource unavailable');
       if(op.method!=='writeBuffer'&&(active?.resourceSnapshot.has(key)||pending?.resourceSnapshot.has(key)))throw Error('Prepared texture upload requires a separate resource generation');
     }
-    for(const op of uploads)if(op.method==='writeBuffer'&&!forkPublishedBuffer(op.args[0][REF]))throw Error('Prepared upload cannot fork a published writable resource');
-    packet.resourceSnapshot=snapshotResources(packet.references);
+    // Each COW buffer and its dependent bindings form an atomic transition.
+    // Before yielding, repin the inspected and retained preparation graphs so
+    // cancellation can retry without mixing old and new native generations.
+    const refreshOwnership=()=>{
+      packet.resourceSnapshot=snapshotResources(packet.references);
+      pinSnapshot(packet.resourceSnapshot);releaseSnapshot(retained);retained=packet.resourceSnapshot;
+      if(retainedPreparationSnapshot){
+        const updated=snapshotResources(references(stagedOperations),{allowPending:true});
+        pinSnapshot(updated);const previous=retainedPreparationSnapshot;retainedPreparationSnapshot=updated;releaseSnapshot(previous);
+      }
+    };
+    for(const op of uploads){
+      if(op.method==='writeBuffer'&&!forkPublishedBuffer(op.args[0][REF]))throw Error('Prepared upload cannot fork a published writable resource');
+      const pause=checkpoint();if(pause){refreshOwnership();await pause;}
+    }
+    refreshOwnership();
     packet.preparedBaselines=new Map([...packet.baselineBuffers].map(key=>[key,packet.resourceSnapshot.get(key).uniformShadow.slice()]));
-    for(const op of uploads)applyQueue(op);
+    for(const op of uploads){
+      const pause=checkpoint();if(pause)await pause;
+      // Do not close individual images until the complete initializer succeeds.
+      // An interrupted candidate retains its original CPU payloads for retry.
+      if(op.method==='copyExternalImageToTexture')await uploadExternalImage(op,{checkpoint,closeImage:false});
+      else applyQueue(op);
+    }
+    closePreparationImages(uploads);
     packet.initializedPreparation=true;
+    }catch(error){if(stopped||failed||nativeConsumerRetirement)closePreparationImages(packet.operations);throw error;}
+    finally{releaseSnapshot(retained);}
   }
   async function handle(message) {
     if(message.type==='dispose'){try{await api.dispose();reply(message,{disposed:true});}catch(error){reply(message,null,error);}return;}
@@ -1117,7 +1170,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // the next atomic generation, even if Three issued them before render.
           if (stagedOperations.length >= maxFrameOperations) throw Error('Remote preparation exceeds safety limit');
           stagedOperations.push(message.op);
-        } else resourceJob(message.op.method,'queue',()=>applyQueue(message.op));
+        } else if(message.op.method==='copyExternalImageToTexture')await uploadExternalImage(message.op);
+        else resourceJob(message.op.method,'queue',()=>applyQueue(message.op));
         break;
       }
       case 'configure':
@@ -1126,7 +1180,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'prepare-world-frame':
       case 'frame': {
-        if(['preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
+        if(['preparedClockBindings','preparedCameraBindings','preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
         const preparing=message.type==='prepare-world-frame';
         if(preparing&&message.version!==1)throw Error('Unsupported prepared world frame version');
         if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
@@ -1142,6 +1196,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         let preparedReady=false;
         const current=()=>!stopped&&!failed&&!nativeConsumerRetirement&&!controller.signal.aborted&&message.nativeMutationEpoch===nativeMutationEpoch&&(preparing||frameWorldCurrent(message.packet));
         const inspect=steps=>inspectPreparation(steps,current,interrupted,controller.signal,cancelled);
+        const checkpoint=()=>{
+          if(!current())throw interrupted;
+          const pause=resourceBudget(controller.signal);
+          return pause?Promise.race([pause,cancelled]).then(()=>{if(!current())throw interrupted;}):null;
+        };
         try{
         if(preparing)await inspect(packetByteSteps(message.packet));
         else if(packetBytes(message.packet)>maxFrameBytes)throw Error('Remote frame exceeds safety limit');
@@ -1191,6 +1250,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.receivedAt = absoluteNow();
         if(preparing&&!packet.operations.some(op=>op.method==='submit'&&op.args[0].some(buffer=>!buffer.texturePreparation&&buffer.__remoteCommands.some(command=>command.method==='beginRenderPass'&&(command.args[0]?.colorAttachments??[]).some(attachment=>[...references([attachment.view,attachment.resolveTarget])].some(key=>key===CURRENT||resources.get(key)?.currentView))))))throw Error('Prepared world frame contains no canvas presentation pass');
         packet.resourceSnapshot = snapshotResources(packet.references);
+        if(preparing){const pause=checkpoint();if(pause)await pause;}
         const nativeBindings=Array.from(clockBindings.values()).filter(binding=>
           packet.resourceSnapshot.has(binding.id)&&binding.nativeRoute);
         if(nativeBindings.length&&!preparing){
@@ -1213,6 +1273,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           rejectPreparedFrame({...packet,operations:message.packet.operations},error.message,false,'native-route');break;
         }
         classifyBufferOwnership(packet);
+        if(preparing){const pause=checkpoint();if(pause)await pause;}
 
         if(routeControl?.status().clock&&packet.admittedClockBindings.some(binding=>packet.gpuWrittenBuffers.has(binding.id)))throw Error('Native presentation clocks cannot be overwritten by GPU commands');
         const writeCounts = new Map();
@@ -1238,7 +1299,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.drawnPipelines=remoteDrawPipelineEntries(packet.operations,packet.resourceSnapshot,{strict:preparing});
         if(preparing){
           if(hasCompute)throw Error('Prepared native world frame cannot contain one-shot compute');
-          initializePreparedWorldFrame(packet);
+          await initializePreparedWorldFrame(packet,checkpoint);
+          if(!current()){port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason:'Prepared world frame cancelled',resourcePreparationsRetained:true});break;}
           packet.preparedClockBindings=packet.admittedClockBindings;
           packet.preparedCameraBindings=Array.from(cameraBindings.values()).filter(binding=>packet.resourceSnapshot.has(binding.id));
         }
@@ -1420,10 +1482,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   port.onmessage = event => {
     const message = event.data;
+    if(message.transportSequence!==undefined){
+      if(!Number.isSafeInteger(message.transportSequence)||message.transportSequence!==lastTransportSequence+1){fail(Error('Invalid remote resource transport sequence'));return;}
+      lastTransportSequence=message.transportSequence;
+    }
     if(message.type==='frame'||message.type==='prepare-world-frame'||message.type==='operation')message.nativeMutationEpoch=nativeMutationEpoch;
     if (message.type === 'frame' || message.type==='prepare-world-frame'||message.type === 'fence') message.receivedAt = absoluteNow();
     if(message.type==='cancel-world-frame'){try{if(message.version!==1)throw Error('Unsupported prepared world frame cancellation');cancelPreparedWorldFrame(message.sequence);}catch(error){fail(error);}return;}
-    if (message.type === 'inspect') { reply(message, {...api.inspect(),intentControl:routeControl?.status()??null}); return; }
+    if (message.type === 'inspect') { reply(message, {...api.inspect(),intentControl:routeControl?.status()??null}); acknowledgeDispatch(message);return; }
     if (message.type === 'device-destroy') { deviceDestroyRequested = true; device.destroy(); return; }
     if (++queuedMessages > maxFrameOperations) { fail(Error('Remote resource queue exceeds safety limit')); return; }
     chain = chain.then(async () => {
@@ -1442,7 +1508,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return;
       }
       reply(message,null,error);fail(error);
-    }).finally(() => { queuedMessages--; });
+    }).finally(() => { queuedMessages--;acknowledgeDispatch(message); });
   };
   port.start?.();
   if(intentControl){
@@ -1474,6 +1540,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            }).catch(error=>fail(error));return;
          }
          if(message?.type==='IntentMutationQuiesce'){
+           // Reuse only within this synchronous control event; never across an await or authority change.
+           let checkedBindings;const quiescenceBindings=()=>checkedBindings??=admitClockBindings(pending,true);
            const status=routeControl?.status();
            if(!status?.clock||status.closed||nativeMutationHold||message.protocolVersion!==2||message.fenceVersion!==1||
               message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
@@ -1488,29 +1556,29 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            }
            if(message.preparedIdleStrollStopTemplate)try{
              const ref=copyNativeIdleStrollStopReference(message.preparedIdleStrollStopTemplate);if(!sameNativeIdleStrollStopReference(ref,pending?.metadata?.nativeIdleStrollStopTemplate))throw Error('Native moving stop lacks its retained template');
-             const bindings=admitClockBindings(pending,true);
+             const bindings=quiescenceBindings();
              for(const owner of ref.routes){if(owner.state!==4)throw Error('Native moving stop has no suspended graphical owner');for(const field of ['age','x','z','yaw','phase','arrived','runPhase','walkPhase','carryPhase'])if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='stop-value'&&b.stopField===field&&sameNativeIdleStrollStopReference(b.nativeStopped.stop,ref)))throw Error('Native moving stop lacks its prepared final-value uniforms');}
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedFarmArrivalStopTemplate)try{
              const ref=copyNativeFarmArrivalStopReference(message.preparedFarmArrivalStopTemplate);if(!sameNativeFarmArrivalStopReference(ref,pending?.metadata?.nativeFarmArrivalStopTemplate))throw Error('Native Farm stop lacks its retained template');
-             const bindings=admitClockBindings(pending,true);
+             const bindings=quiescenceBindings();
              for(const owner of ref.routes){if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='relative'&&sameNativeFarmArrivalStopReference(b.nativeStopped.stop,ref)))throw Error('Native Farm stop lacks its prepared relative clock');if(owner.state!==4)throw Error('Native Farm stop has no suspended graphical owner');for(const field of ['age','x','z','yaw','phase','arrived','runPhase','walkPhase','carryPhase'])if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='stop-value'&&b.stopField===field&&sameNativeFarmArrivalStopReference(b.nativeStopped.stop,ref)))throw Error('Native Farm stop lacks its prepared final-value uniforms');}
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if([message.preparedFarmArrivalStopTemplate,message.preparedIdleStrollStopTemplate,message.preparedTaskActionTemplate,message.preparedTaskStartTemplate,message.preparedResumeTemplate,message.preparedTaskConsequenceTemplate,message.preparedTaskSettlementTemplate,message.preparedInitialIdleBodyTemplate,message.preparedIdleCycleTemplate,message.preparedIdleStrollTemplate,message.preparedFarmArrivalTemplate,message.preparedHomeRouteTemplate,message.preparedHomeArrivalTemplate].filter(Boolean).length>1)throw Error('Conflicting native quiescence templates');
-           if(message.preparedInitialIdleBodyTemplate)try{const ref=copyNativeInitialIdleBodyReference(message.preparedInitialIdleBodyTemplate);if(!sameNativeInitialIdleBodyReference(ref,pending?.metadata?.nativeInitialIdleBodyTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeInitialIdleBody&&sameNativeInitialIdleBodyReference(b.nativeInitialIdleBody,ref)))throw Error('Native initial Idle body has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedIdleCycleTemplate)try{const ref=copyNativeIdleCycleReference(message.preparedIdleCycleTemplate);if(!sameNativeIdleCycleReference(ref,pending?.metadata?.nativeIdleCycleTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,ref)))throw Error('Native Idle cycle has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedTaskSettlementTemplate)try{const ref=copyNativeTaskSettlementReference(message.preparedTaskSettlementTemplate);if(!sameNativeTaskSettlementReference(ref,pending?.metadata?.nativeTaskSettlementTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeSettlement&&sameNativeTaskSettlementReference(b.nativeSettlement,ref)))throw Error('Native settlement has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedInitialIdleBodyTemplate)try{const ref=copyNativeInitialIdleBodyReference(message.preparedInitialIdleBodyTemplate);if(!sameNativeInitialIdleBodyReference(ref,pending?.metadata?.nativeInitialIdleBodyTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeInitialIdleBody&&sameNativeInitialIdleBodyReference(b.nativeInitialIdleBody,ref)))throw Error('Native initial Idle body has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedIdleCycleTemplate)try{const ref=copyNativeIdleCycleReference(message.preparedIdleCycleTemplate);if(!sameNativeIdleCycleReference(ref,pending?.metadata?.nativeIdleCycleTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeIdleCycle&&sameNativeIdleCycleReference(b.nativeIdleCycle,ref)))throw Error('Native Idle cycle has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedTaskSettlementTemplate)try{const ref=copyNativeTaskSettlementReference(message.preparedTaskSettlementTemplate);if(!sameNativeTaskSettlementReference(ref,pending?.metadata?.nativeTaskSettlementTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeSettlement&&sameNativeTaskSettlementReference(b.nativeSettlement,ref)))throw Error('Native settlement has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedHomeArrivalTemplate)try{const ref=copyNativeHomeArrivalReference(message.preparedHomeArrivalTemplate);if(!sameNativeHomeArrivalReference(ref,pending?.metadata?.nativeHomeArrivalTemplate)||!pending?.preparedHomeArrivalLease?.isPrepared())throw Error('Native quiescence lacks its current Home absence template');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedIdleStrollTemplate)try{const ref=copyNativeIdleStrollReference(message.preparedIdleStrollTemplate);if(!sameNativeIdleStrollReference(ref,pending?.metadata?.nativeIdleStrollTemplate))throw Error('Native quiescence lacks its Idle stroll template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,ref)))throw Error('Native Idle stroll has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedFarmArrivalTemplate)try{const ref=copyNativeFarmArrivalRouteReference(message.preparedFarmArrivalTemplate);if(!sameNativeFarmArrivalRouteReference(ref,pending?.metadata?.nativeFarmArrivalTemplate))throw Error('Native quiescence lacks its farm arrival template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,ref)))throw Error('Native farm arrival has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedHomeRouteTemplate)try{const ref=copyNativeHomeRouteReference(message.preparedHomeRouteTemplate);if(!sameNativeHomeRouteReference(ref,pending?.metadata?.nativeHomeRouteTemplate))throw Error('Native quiescence lacks its Home template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.semantic==='relative'&&b.nativeHome&&sameNativeHomeRouteReference(b.nativeHome,ref)))throw Error('Native Home has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           if(message.preparedTaskConsequenceTemplate){const ref=copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate);if(!sameNativeTaskConsequenceReference(ref,pending?.metadata?.nativeTaskConsequenceTemplate))throw Error('Native quiescence lacks its consequence template');const bindings=admitClockBindings(pending,true);if(!bindings.some(b=>b.nativeConsequence&&sameNativeTaskConsequenceReference(b.nativeConsequence,ref)))throw Error('Native consequence has no prepared clock binding');}
+           if(message.preparedIdleStrollTemplate)try{const ref=copyNativeIdleStrollReference(message.preparedIdleStrollTemplate);if(!sameNativeIdleStrollReference(ref,pending?.metadata?.nativeIdleStrollTemplate))throw Error('Native quiescence lacks its Idle stroll template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,ref)))throw Error('Native Idle stroll has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedFarmArrivalTemplate)try{const ref=copyNativeFarmArrivalRouteReference(message.preparedFarmArrivalTemplate);if(!sameNativeFarmArrivalRouteReference(ref,pending?.metadata?.nativeFarmArrivalTemplate))throw Error('Native quiescence lacks its farm arrival template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeFarmArrival&&sameNativeFarmArrivalRouteReference(b.nativeFarmArrival,ref)))throw Error('Native farm arrival has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedHomeRouteTemplate)try{const ref=copyNativeHomeRouteReference(message.preparedHomeRouteTemplate);if(!sameNativeHomeRouteReference(ref,pending?.metadata?.nativeHomeRouteTemplate))throw Error('Native quiescence lacks its Home template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeHome&&sameNativeHomeRouteReference(b.nativeHome,ref)))throw Error('Native Home has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedTaskConsequenceTemplate){const ref=copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate);if(!sameNativeTaskConsequenceReference(ref,pending?.metadata?.nativeTaskConsequenceTemplate))throw Error('Native quiescence lacks its consequence template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.nativeConsequence&&sameNativeTaskConsequenceReference(b.nativeConsequence,ref)))throw Error('Native consequence has no prepared clock binding');}
            if(message.preparedTaskActionTemplate){const ref=copyNativeTaskActionReference(message.preparedTaskActionTemplate);if(!sameNativeTaskActionReference(ref,pending?.metadata?.nativeTaskActionTemplate)){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its action template');}routeControl.admitAction(ref,{preparingWorldBoundary:preparedWorldBoundary});}
            if(message.preparedTaskStartTemplate&&(message.preparedResumeTemplate||!sameNativeTaskStartReference(copyNativeTaskStartReference(message.preparedTaskStartTemplate),pending?.metadata?.nativeTaskStartTemplate))){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its first-task template');}
            if(message.preparedResumeTemplate&&!sameNativeResumeReference(copyNativeResumeReference(message.preparedResumeTemplate),pending?.metadata?.nativeResumeTemplate)){
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its deferred template');
            }
-           if(message.preparedFarmArrivalStopTemplate||message.preparedIdleStrollStopTemplate||message.preparedResumeTemplate||message.preparedTaskStartTemplate||message.preparedTaskActionTemplate||message.preparedTaskConsequenceTemplate||message.preparedTaskSettlementTemplate||message.preparedInitialIdleBodyTemplate||message.preparedIdleCycleTemplate||message.preparedFarmArrivalTemplate||message.preparedHomeRouteTemplate||message.preparedIdleStrollTemplate||message.preparedHomeArrivalTemplate)try{admitClockBindings(pending,true);}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           if(message.preparedFarmArrivalStopTemplate||message.preparedIdleStrollStopTemplate||message.preparedResumeTemplate||message.preparedTaskStartTemplate||message.preparedTaskActionTemplate||message.preparedTaskConsequenceTemplate||message.preparedTaskSettlementTemplate||message.preparedInitialIdleBodyTemplate||message.preparedIdleCycleTemplate||message.preparedFarmArrivalTemplate||message.preparedHomeRouteTemplate||message.preparedIdleStrollTemplate||message.preparedHomeArrivalTemplate)try{quiescenceBindings();}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            lastNativeMutationFence=message.holdId;nativeMutationHold={...message,quiesced:false};
            if(preparedWorldBoundary)nativeMutationHold.preparedFrameSequence=pending.sequence;
            Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{

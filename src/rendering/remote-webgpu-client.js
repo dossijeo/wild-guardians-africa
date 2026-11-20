@@ -36,6 +36,15 @@ function copyBytes(data, offset = 0, size) {
 export function createRemoteWebGpuClient({ port, capabilities, onError = () => {}, onPresented = () => {}, onNativeWorldBoundary = () => {}, terminate = () => {}, finalizationRegistryFactory = callback => typeof FinalizationRegistry === 'function' ? new FinalizationRegistry(callback) : null }) {
   let nextId = 0, sequence = 0, frame = null, pendingFrame = null, disposed = false, fatalError = null;
   let outbound = Promise.resolve(),disposalPromise=null;
+  // Bound structured-clone/dispatch work BEFORE it reaches the draw event loop.
+  // Credits acknowledge FIFO dispatch only, never GPU completion or ownership.
+  const transportEnabled=capabilities.resourceTransportVersion===1,transportWindow=8,transportPending=new Set();
+  let transportSequence=0,transportWake=null,transportPeak=0;
+  function stopTransport(error){const wake=transportWake;transportWake=null;transportPending.clear();wake?.reject(error);}
+  async function transportCapacity(){
+    if(transportPending.size>=transportWindow)await new Promise((resolve,reject)=>{transportWake={resolve,reject};});
+    if(disposed||fatalError)throw fatalError||Error('Remote GPU disposed');
+  }
   let requiredWorldBoundary=null, texturePreparation=null;
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
   const weakResources = new Map(), retainedCounts = new Map(), deferredFinalizations = new Set();
@@ -98,35 +107,58 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   }
   function fail(error) {
     const reason = error instanceof Error ? error : new Error(String(error));
-    if (fatalError) return;
+    if (fatalError || disposed) return;
     fatalError = reason;
+    stopTransport(reason);
     for (const entry of pending.values()) entry.reject(reason);
     pending.clear(); pendingFrame?.reject(reason);
     releaseReferences(pendingFrame?.retained); releaseReferences(frame?.retained);
-    pendingFrame = null; frame = null;
+    closeUnsentImages(frame);pendingFrame = null; frame = null;
     onError(reason);
+  }
+  function closeUnsentImages(packet){
+    for(const op of packet?.operations??[])if(op.prepareImage)Promise.resolve(op.prepareImage).then(bitmap=>bitmap.close()).catch(()=>{});
   }
   function send(message) {
     if (disposed) throw Error('Remote GPU is disposed');
     if (fatalError) throw fatalError;
+    // Cancellation must overtake a preparing packet which holds a transport
+    // credit while awaiting dependencies/first use. It grants no drawing right.
+    if(transportEnabled&&message.type==='cancel-world-frame'){port.postMessage(message);return;}
     const retained = retainReferences(collectReferences(message));
+    const capturedImages=(message.packet?.operations??(message.op?[message.op]:[])).map(op=>op.prepareImage).filter(Boolean);
     outbound = outbound.then(async () => {
+      if(disposed||fatalError)throw fatalError||Error('Remote GPU disposed');
+      if(transportEnabled)await transportCapacity();
       if (message.type === 'frame') message.packet.transportTiming.sendStartedAt = absoluteNow();
       // Conversion starts at queue call time to capture the correct canvas
       // version. Await it only in the sender, never in the draw loop.
       const ownedImages = [];
-      for (const op of message.type === 'frame' ? message.packet.operations : message.op ? [message.op] : []) {
+      const operations=message.packet?.operations??(message.op?[message.op]:[]);
+      for (const op of operations) {
         if (!op.prepareImage) continue;
         const bitmap = await op.prepareImage;
+        if(disposed||fatalError)throw fatalError||Error('Remote GPU disposed');
         op.args[0].source = bitmap;
         delete op.prepareImage;
         ownedImages.push(bitmap);
       }
       if (message.type === 'frame') message.packet.transportTiming.postedAt = absoluteNow();
-      port.postMessage(message);
+      if(transportEnabled){message.transportSequence=++transportSequence;transportPending.add(transportSequence);transportPeak=Math.max(transportPeak,transportPending.size);}
+      const transfers=new Set();
+      if(transportEnabled){
+        for(const op of operations){
+          if(op.method==='writeBuffer'||op.method==='writeTexture'){const bytes=op.args[op.method==='writeBuffer'?2:1];if(bytes?.buffer instanceof ArrayBuffer)transfers.add(bytes.buffer);}
+        }
+        if(message.type==='unmap'&&message.bytes instanceof ArrayBuffer)transfers.add(message.bytes);
+        for(const bitmap of ownedImages)if(typeof ImageBitmap!=='undefined'&&bitmap instanceof ImageBitmap)transfers.add(bitmap);
+      }
+      port.postMessage(message,[...transfers]);
       if (message.type === 'frame') message.packet.transportTiming.postCompletedAt = absoluteNow();
-      for (const bitmap of ownedImages) bitmap.close();
-    }).finally(() => releaseReferences(retained));
+    }).finally(() => {
+      for(const image of capturedImages)Promise.resolve(image).then(bitmap=>bitmap.close()).catch(()=>{});
+      releaseReferences(retained);
+    });
     outbound.catch(fail);
   }
   function request(message) {
@@ -233,8 +265,14 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     },
     copyExternalImageToTexture(source, destination, size) {
       const isCanvas = typeof OffscreenCanvas !== 'undefined' && source.source instanceof OffscreenCanvas;
-      const op = { method: 'copyExternalImageToTexture', args: [isCanvas ? { ...source, source: null } : encode(source), encode(destination), encode(size)] };
-      if (isCanvas) op.prepareImage = createImageBitmap(source.source);
+      // Never detach the asset owner's bitmap. Capture a private transport
+      // image at queue-call time, then transfer that ownership to the Host.
+      const capture=isCanvas||transportEnabled&&typeof ImageBitmap!=='undefined'&&source.source instanceof ImageBitmap;
+      const op = { method: 'copyExternalImageToTexture', args: [capture ? { ...source, source: null } : encode(source), encode(destination), encode(size)] };
+      // createImageBitmap(bitmap) may change alpha representation. Structured
+      // clone preserves exactly the representation used by the old wire copy;
+      // perform it at the producer, then transfer the private bitmap once.
+      if (capture){op.prepareImage = isCanvas?createImageBitmap(source.source):Promise.resolve(structuredClone(source.source));op.prepareImage.catch(()=>{});}
       queueOp(op);
     },
     submit(buffers) {
@@ -332,7 +370,10 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   };
   port.onmessage = event => {
     const message = event.data;
-    if (message.type === 'reply') {
+    if(message.type==='resource-dispatched'){
+      if(!transportEnabled||!transportPending.delete(message.transportSequence)){fail(Error('Invalid remote resource dispatch acknowledgement'));return;}
+      const wake=transportWake;transportWake=null;wake?.resolve();
+    } else if (message.type === 'reply') {
       const entry = pending.get(message.requestId);
       if (entry) { pending.delete(message.requestId); message.error ? entry.reject(Error(message.error)) : entry.resolve(message.result); }
     } else if (message.type === 'native-world-boundary') {
@@ -361,9 +402,10 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       resolveLost(message.info);
       if(disposalPromise)return; // The close RPC still requires its real queue-drain receipt.
       fatalError = Error(`WebGPU device lost: ${message.info?.reason || 'unknown'}: ${message.info?.message || ''}`);
+      stopTransport(fatalError);
       pendingFrame?.reject(fatalError);
       releaseReferences(pendingFrame?.retained); releaseReferences(frame?.retained);
-      pendingFrame = null; frame = null;
+      closeUnsentImages(frame);pendingFrame = null; frame = null;
       for (const entry of pending.values()) entry.reject(fatalError);
       pending.clear();
     }
@@ -497,7 +539,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     // Only the preparation owner knows when it has applied that native world.
     requiredNativeWorldBoundary:()=>requiredWorldBoundary,
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
-    inspect: () => ({ ...metrics, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
+    inspect: () => ({ ...metrics, transportInFlight:transportPending.size,transportPeak, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
     inspectAsync: () => request({ type: 'inspect' }).then(consumer => ({ ...api.inspect(), consumer })),
     // Stop/drain happens at the draw owner. A preparer closing its own port
     // cannot certify that the independent queue stopped submitting.
@@ -506,6 +548,8 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if (disposed) return;
       port.postMessage({ type: 'dispose' }); disposed = true;
       const error = Error('Remote GPU disposed');
+      stopTransport(error);
+      closeUnsentImages(frame);frame=null;
       pendingFrame?.reject(error); pendingFrame = null;
       retainedCounts.clear(); weakResources.clear(); deferredFinalizations.clear();
       for (const entry of pending.values()) entry.reject(error);

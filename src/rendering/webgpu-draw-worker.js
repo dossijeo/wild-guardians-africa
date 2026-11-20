@@ -1,5 +1,6 @@
 import { createRemoteWebGpuHost } from './remote-webgpu-host.js';
 import { createRemoteCameraState } from './remote-camera-state.js';
+import { prepareRemoteImageCopies } from './remote-image-copy-preparation.js';
 
 function numericProperties(object) {
   const result = {};
@@ -29,11 +30,13 @@ self.onmessage = async event => {
       if (Number.isFinite(adapter.limits[key])) requiredLimits[key] = adapter.limits[key];
     }
     const device = await adapter.requestDevice({ requiredFeatures: knownFeatures.filter(feature => adapter.features.has(feature)), requiredLimits });
+    let imageCopyPreparation;
+    try{imageCopyPreparation=await prepareRemoteImageCopies(device);}catch(error){device.destroy();throw error;}
     const context = canvas.getContext('webgpu');
     if (!context) throw Error('Native WebGPU canvas context unavailable');
     const info = adapter.info || {};
-    const adapterInfo = { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description };
+    const adapterInfo = { vendor: info.vendor, architecture: info.architecture, device: info.device, description: info.description, imageCopyPreparation };
     host = createRemoteWebGpuHost({ device, context, canvas, port, intentControl:event.data.intentControl??null, adapterInfo, hidden, cameraState: createRemoteCameraState({ mailbox: null }) });
-    port.postMessage({ type: 'ready', capabilities: { nativeSuspendedVersion:1, nativeResumeVersion:1, nativeDeferredResumeVersion:1, nativeTaskStartVersion:1, nativeTaskConsequenceVersion:1, nativeTaskSettlementVersion:1, nativeInitialIdleBodyVersion:1, nativeIdleCycleVersion:1, nativeIdleCycleIdlePhaseVersion:1, nativeFarmArrivalVersion:1, nativeFarmArrivalIdlePhaseVersion:1, nativeFarmArrivalStopVersion:1, nativeFarmArrivalStopClockVersion:1, nativeIdleStrollVersion:1, nativeIdleStrollIdlePhaseVersion:1, nativeIdleStrollStopVersion:1, nativeIdleStrollStopClockVersion:1, nativeHomeRouteVersion:1, nativeHomeArrivalVersion:1, nativeTaskActionClockVersion:1, nativeTaskActionVersion:1, nativeTaskActionRestoreVersion:1, features: Array.from(device.features), limits: numericProperties(device.limits), format: navigator.gpu.getPreferredCanvasFormat(), width: canvas.width, height: canvas.height, adapterInfo } });
+    port.postMessage({ type: 'ready', capabilities: { resourceTransportVersion:1, nativeSuspendedVersion:1, nativeResumeVersion:1, nativeDeferredResumeVersion:1, nativeTaskStartVersion:1, nativeTaskConsequenceVersion:1, nativeTaskSettlementVersion:1, nativeInitialIdleBodyVersion:1, nativeIdleCycleVersion:1, nativeIdleCycleIdlePhaseVersion:1, nativeFarmArrivalVersion:1, nativeFarmArrivalIdlePhaseVersion:1, nativeFarmArrivalStopVersion:1, nativeFarmArrivalStopClockVersion:1, nativeIdleStrollVersion:1, nativeIdleStrollIdlePhaseVersion:1, nativeIdleStrollStopVersion:1, nativeIdleStrollStopClockVersion:1, nativeHomeRouteVersion:1, nativeHomeArrivalVersion:1, nativeTaskActionClockVersion:1, nativeTaskActionVersion:1, nativeTaskActionRestoreVersion:1, features: Array.from(device.features), limits: numericProperties(device.limits), format: navigator.gpu.getPreferredCanvasFormat(), width: canvas.width, height: canvas.height, adapterInfo } });
   } catch (error) { port.postMessage({ type: 'error', error: error?.stack || String(error) }); }
 };

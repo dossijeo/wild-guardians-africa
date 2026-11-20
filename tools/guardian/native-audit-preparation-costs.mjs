@@ -31,7 +31,7 @@ export function summarizePreparationCosts(receipt){
 
 // QA response annotations only. No yield, reordered operation, extra GPU call,
 // permission, resource alias, readiness acknowledgement or replacement owner.
-export function rewritePreparationCosts(source){
+export function rewritePreparationCosts(source,{resources=false}={}){
  const replace=(from,to)=>{if(source.split(from).length!==2)throw Error('Preparation observation seam changed: '+from);source=source.replace(from,to);};
  replace('  function resourceJob(type,stage,run){','  metrics.qaPreparationStages=[];\n  function resourceJob(type,stage,run){');
  replace("        const preparing=message.type==='prepare-world-frame';",`        const preparing=message.type==='prepare-world-frame';
@@ -45,7 +45,7 @@ export function rewritePreparationCosts(source){
   ['        classifyBufferOwnership(packet);','classify-ownership'],
   ['        const writeCounts = new Map();','replay-analysis'],
   ['        packet.drawnPipelines=remoteDrawPipelineEntries(packet.operations,packet.resourceSnapshot,{strict:preparing});','pipeline-identities'],
-  ['          initializePreparedWorldFrame(packet);','initialize-uploads'],
+  ['          await initializePreparedWorldFrame(packet,checkpoint);','initialize-uploads'],
   ['        pinSnapshot(packet.resourceSnapshot);','pin-and-publish-pending'],
   ['            firstUse=prepareRemoteFirstUse({device,packet,canvasConfiguration,resolve});','first-use-encode'],
   ['            if(firstUse.buffers.length){device.queue.submit(firstUse.buffers);submitted=true;metrics.firstUseSubmissions++;}','first-use-submit'],
@@ -53,13 +53,22 @@ export function rewritePreparationCosts(source){
   ['          packet.preparedUploadsComplete=true;','ready'],
  ];
  for(const [anchor,stage]of before)replace(anchor,`        qaStage('${stage}');\n`+anchor);
+ if(resources){
+  replace('  metrics.qaPreparationStages=[];',`  metrics.qaPreparationStages=[];metrics.qaReceipts={counts:{},slow:[]};metrics.qaImages=[];`);
+  replace('    const message = event.data;',`    const qaReceiveAt=absoluteNow();const message = event.data;const qaReceiveMs=absoluteNow()-qaReceiveAt;
+    const qaKind=[message.type,message.method??message.op?.method??''].join(':');metrics.qaReceipts.counts[qaKind]=(metrics.qaReceipts.counts[qaKind]??0)+1;
+    if(qaReceiveMs>.5&&metrics.qaReceipts.slow.length<256)metrics.qaReceipts.slow.push({at:qaReceiveAt,ms:qaReceiveMs,kind:qaKind,id:message.id??null,label:message.descriptor?.label??null,image:message.op?.args?.[0]?.source?{width:message.op.args[0].source.width,height:message.op.args[0].source.height}:null});`);
+  replace('      device.queue[op.method](...resolve(op.args)); metrics.queueWrites++;',`      const qaImage=op.method==='copyExternalImageToTexture'?{at:absoluteNow(),width:op.args[0].source?.width,height:op.args[0].source?.height,sourceOrigin:op.args[0].origin??null,flipY:op.args[0].flipY??false,destination:op.args[1],extent:op.args[2],label:(resolutionResources??resources).get(op.args[1].texture?.[REF])?.descriptor?.label??null}:null;
+      device.queue[op.method](...resolve(op.args)); metrics.queueWrites++;
+      if(qaImage){qaImage.ms=absoluteNow()-qaImage.at;metrics.qaImages.push(qaImage);}`);
+ }
  return source;
 }
 
 export async function observePreparationCosts(page,overrides){
  const sha=value=>createHash('sha256').update(value).digest('hex');
  await page.context().route('**/src/rendering/remote-webgpu-host.js*',async route=>{
-  const response=await route.fetch(),body=await response.text(),annotated=rewritePreparationCosts(body);
+  const response=await route.fetch(),body=await response.text(),annotated=rewritePreparationCosts(body,{resources:process.env.QA_NATIVE_RESOURCE_TRACE==='true'});
   overrides.push({file:'remote-webgpu-host.js',url:route.request().url(),originalSha256:sha(body),annotatedSha256:sha(annotated),scope:'Optional QA preparation phase marks on existing Host; no scheduling or GPU changes. Dependency/fence spans include asynchronous waiting.'});
   await route.fulfill({response,body:annotated});
  });
