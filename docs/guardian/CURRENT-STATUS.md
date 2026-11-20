@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El contraste a 4K/60 Hz confirmó que limitar las fábricas explícitas reduce su concurrencia de seis a una. El intervalo de arranque persistió (177,275 y 183,575 ms) y la primera adquisición tardó más en el recorrido candidato. El límite queda como parche de investigación. Las dos historias se verificaron hasta el drenaje, sin pérdida de traza y con restauración de 4K/30 Hz. Los bloqueos causales y C4 siguen abiertos. [Contraste y recibos](native-pipeline-cadence-comparison-20261120.md).
+
 El cuerpo de una Task detenida ya da origen a una solicitud nativa de Home. Se libera la asignación anterior y Home18 adquiere el mismo cuerpo. La selección dirigida pasó 293 pruebas y la compilación aprobó. Quedan el disparo ordinario desde Game y el relevo por el canal real hasta GPU. [Transferencia nativa y validación](native-task-stopped-home-source-20261120.md).
 
 Continuación parcial A6 e-R3/f-R4. La parada nativa de Task en marcha reutiliza la preparación y el cierre de paradas existentes. Sus 18 casos pasan en standalone y pthread. La regresión seleccionada pasa 5.177 pruebas en 394 archivos con una omisión histórica y compilación aprobada. Quedan la proyección retenida, la liberación de la tarea y el relevo hacia Home por el canal real. [Fuente, referencias y pruebas](native-task-route-stop-source-20261120.md).

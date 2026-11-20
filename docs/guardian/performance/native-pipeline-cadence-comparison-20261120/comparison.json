@@ -1,0 +1,2247 @@
+{
+  "scope": "Matched exploratory 4K60 pair with exact frozen runtime/configuration apart from Host candidate. Visible presentation, GPU task attribution and universal cadence require additional evidence.",
+  "targetMs": 16.666666666666668,
+  "baseline": {
+    "prefix": ".cache/native-pipeline-60hz-baseline1",
+    "head": "436294ed34392838ce5e949a5e28cff84e79a54d",
+    "peakExplicitFactories": 6,
+    "factories": 107,
+    "scopeFactories": "Unique jobs with start/end observed in audit snapshots. Counts explicit Host factories only.",
+    "counts": {
+      "frames": 4925,
+      "opportunities": 4967,
+      "outcomes": {
+        "awaiting-prepared-frame": 30,
+        "submitted": 4921,
+        "mutation-hold": 4,
+        "hidden": 12
+      }
+    },
+    "coverage": {
+      "tracedLifetime": true,
+      "from": 1795203748029.135,
+      "to": 1795203831342.605,
+      "terminal": "retired-drained",
+      "terminalOpportunities": 4967,
+      "terminalSubmittedDraws": 4925,
+      "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+    },
+    "maxima": {
+      "submittedDrawStartIntervalMs": 177.275146484375,
+      "callbackIntervalMs": 177.275146484375,
+      "drawMs": 10.429931640625
+    },
+    "drawIntervalPercentilesMs": {
+      "p50": 16.6650390625,
+      "p95": 17.51513671875,
+      "p99": 18.98486328125
+    },
+    "targetExceedances": {
+      "submittedDrawStarts": 2456,
+      "callbacks": 2457,
+      "draws": 0
+    },
+    "intervalsAtLeastTwoPeriods": 5,
+    "ordinaryComplete": 1072,
+    "largestIntervalWindow": {
+      "at": 1795203750810.675,
+      "sequence": 4,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 177.275146484375,
+      "drawMs": 0.349853515625,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null,
+      "ordinal": 121
+    },
+    "explicitFactoriesOverlappingLargestInterval": [
+      "Pipeline:147",
+      "Pipeline:157"
+    ],
+    "holds": [
+      {
+        "holdId": 1,
+        "holdMs": 20.14990234375,
+        "drainMs": 1.71484375,
+        "missedOpportunities": [
+          {
+            "ordinal": 513,
+            "at": 1795203756983.545,
+            "intervalMs": 16.719970703125,
+            "outcome": "mutation-hold",
+            "holdId": 1,
+            "sequence": 55
+          }
+        ]
+      },
+      {
+        "holdId": 2,
+        "holdMs": 11.27490234375,
+        "drainMs": 4.219970703125,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 3,
+        "holdMs": 18.23486328125,
+        "drainMs": 5.070068359375,
+        "missedOpportunities": [
+          {
+            "ordinal": 1474,
+            "at": 1795203773000.56,
+            "intervalMs": 16.840087890625,
+            "outcome": "mutation-hold",
+            "holdId": 3,
+            "sequence": 163
+          }
+        ]
+      },
+      {
+        "holdId": 4,
+        "holdMs": 13.264892578125,
+        "drainMs": 4.85498046875,
+        "missedOpportunities": [
+          {
+            "ordinal": 1985,
+            "at": 1795203781517.855,
+            "intervalMs": 17.5849609375,
+            "outcome": "mutation-hold",
+            "holdId": 4,
+            "sequence": 298
+          }
+        ]
+      },
+      {
+        "holdId": 5,
+        "holdMs": 7,
+        "drainMs": 3.054931640625,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 6,
+        "holdMs": 13.71484375,
+        "drainMs": 5.33984375,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 7,
+        "holdMs": 10.659912109375,
+        "drainMs": 4.034912109375,
+        "missedOpportunities": [
+          {
+            "ordinal": 3105,
+            "at": 1795203800300.365,
+            "intervalMs": 16.6650390625,
+            "outcome": "mutation-hold",
+            "holdId": 7,
+            "sequence": 393
+          }
+        ]
+      },
+      {
+        "holdId": 8,
+        "holdMs": 8.099853515625,
+        "drainMs": 3.375,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 9,
+        "holdMs": 6.840087890625,
+        "drainMs": 3.695068359375,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 10,
+        "holdMs": 14.550048828125,
+        "drainMs": 6.739990234375,
+        "missedOpportunities": []
+      }
+    ],
+    "trace": {
+      "dataLossOccurred": false,
+      "collectionComplete": true,
+      "sha256": "b92ec8ca4ec4713ddd994f770bb6b66ba5be049caef1888700699410fb2a2837",
+      "exportedBytes": 82309633,
+      "peakBufferUsage": 0.38450920581817627,
+      "browserVersion": "157.0.4341.60"
+    },
+    "jobs": [
+      {
+        "id": "Pipeline:26",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203748179.61,
+        "startedAt": 1795203748179.625,
+        "returnedAt": 1795203748179.945,
+        "finishedAt": 1795203748257.225,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:49",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203748508.27,
+        "startedAt": 1795203748508.275,
+        "returnedAt": 1795203748508.385,
+        "finishedAt": 1795203748636.045,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:147",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203750721.095,
+        "startedAt": 1795203750721.1,
+        "returnedAt": 1795203750721.185,
+        "finishedAt": 1795203750965.3,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:157",
+        "method": "createRenderPipeline",
+        "receivedAt": 1795203750762.39,
+        "startedAt": 1795203750762.4,
+        "returnedAt": 1795203750762.47,
+        "finishedAt": 1795203751037.865,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:239",
+        "method": "createRenderPipeline",
+        "receivedAt": 1795203751106.015,
+        "startedAt": 1795203751106.02,
+        "returnedAt": 1795203751106.12,
+        "finishedAt": 1795203751120.175,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:319",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203751336.44,
+        "startedAt": 1795203751336.445,
+        "returnedAt": 1795203751336.515,
+        "finishedAt": 1795203751511.695,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:417",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203751519.2,
+        "startedAt": 1795203751519.21,
+        "returnedAt": 1795203751519.275,
+        "finishedAt": 1795203751551.055,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:501",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203751654.335,
+        "startedAt": 1795203751654.335,
+        "returnedAt": 1795203751654.415,
+        "finishedAt": 1795203751893.89,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:542",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203751900.26,
+        "startedAt": 1795203751900.265,
+        "returnedAt": 1795203751900.34,
+        "finishedAt": 1795203751952.065,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:565",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203751996.41,
+        "startedAt": 1795203751996.415,
+        "returnedAt": 1795203751996.495,
+        "finishedAt": 1795203752058.94,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:583",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752064.3,
+        "startedAt": 1795203752064.305,
+        "returnedAt": 1795203752064.375,
+        "finishedAt": 1795203752112.025,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:605",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752156.465,
+        "startedAt": 1795203752156.47,
+        "returnedAt": 1795203752156.55,
+        "finishedAt": 1795203752212.755,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:621",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752221.34,
+        "startedAt": 1795203752221.345,
+        "returnedAt": 1795203752221.425,
+        "finishedAt": 1795203752262.86,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:646",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752524.895,
+        "startedAt": 1795203752524.9,
+        "returnedAt": 1795203752525.01,
+        "finishedAt": 1795203752645.685,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:675",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752682.155,
+        "startedAt": 1795203752682.16,
+        "returnedAt": 1795203752682.235,
+        "finishedAt": 1795203752881.115,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:700",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203752889.165,
+        "startedAt": 1795203752889.165,
+        "returnedAt": 1795203752889.26,
+        "finishedAt": 1795203752890.915,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1864",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203753683.48,
+        "startedAt": 1795203753683.485,
+        "returnedAt": 1795203753683.595,
+        "finishedAt": 1795203754049.105,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1893",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203753688.945,
+        "startedAt": 1795203753688.945,
+        "returnedAt": 1795203753689.025,
+        "finishedAt": 1795203754068.755,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1919",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203753692.785,
+        "startedAt": 1795203753692.79,
+        "returnedAt": 1795203753692.89,
+        "finishedAt": 1795203754054.54,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1942",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203753696.4,
+        "startedAt": 1795203753696.4,
+        "returnedAt": 1795203753696.485,
+        "finishedAt": 1795203754060.485,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1978",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754116.025,
+        "startedAt": 1795203754116.03,
+        "returnedAt": 1795203754116.115,
+        "finishedAt": 1795203754230.9,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1991",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754118.895,
+        "startedAt": 1795203754118.9,
+        "returnedAt": 1795203754118.975,
+        "finishedAt": 1795203754229.41,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2004",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754120.72,
+        "startedAt": 1795203754120.725,
+        "returnedAt": 1795203754120.825,
+        "finishedAt": 1795203754232.92,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2017",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754122.335,
+        "startedAt": 1795203754122.335,
+        "returnedAt": 1795203754122.41,
+        "finishedAt": 1795203754225.49,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2045",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754588.595,
+        "startedAt": 1795203754588.6,
+        "returnedAt": 1795203754588.685,
+        "finishedAt": 1795203755097.44,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2059",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754595.255,
+        "startedAt": 1795203754595.255,
+        "returnedAt": 1795203754595.35,
+        "finishedAt": 1795203755085.55,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2073",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754603.72,
+        "startedAt": 1795203754603.725,
+        "returnedAt": 1795203754603.905,
+        "finishedAt": 1795203755123.8,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2087",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203754606.21,
+        "startedAt": 1795203754606.215,
+        "returnedAt": 1795203754606.295,
+        "finishedAt": 1795203755093.715,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2100",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755236.315,
+        "startedAt": 1795203755236.315,
+        "returnedAt": 1795203755236.385,
+        "finishedAt": 1795203755498.025,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2111",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755237.76,
+        "startedAt": 1795203755237.76,
+        "returnedAt": 1795203755237.83,
+        "finishedAt": 1795203755497.05,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2123",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755239.425,
+        "startedAt": 1795203755239.43,
+        "returnedAt": 1795203755239.49,
+        "finishedAt": 1795203755518.565,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2135",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755240.995,
+        "startedAt": 1795203755240.995,
+        "returnedAt": 1795203755241.055,
+        "finishedAt": 1795203755537.02,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2156",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755838.72,
+        "startedAt": 1795203755838.725,
+        "returnedAt": 1795203755838.805,
+        "finishedAt": 1795203756413.385,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2170",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755841.26,
+        "startedAt": 1795203755841.275,
+        "returnedAt": 1795203755841.385,
+        "finishedAt": 1795203756364.19,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2184",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755847.87,
+        "startedAt": 1795203755847.87,
+        "returnedAt": 1795203755847.96,
+        "finishedAt": 1795203756384.845,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2198",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203755852.665,
+        "startedAt": 1795203755852.67,
+        "returnedAt": 1795203755852.74,
+        "finishedAt": 1795203756422.8,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2211",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203756548.535,
+        "startedAt": 1795203756548.54,
+        "returnedAt": 1795203756548.655,
+        "finishedAt": 1795203756845.775,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2222",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203756550.48,
+        "startedAt": 1795203756550.485,
+        "returnedAt": 1795203756550.58,
+        "finishedAt": 1795203756848.36,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2234",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203756554.335,
+        "startedAt": 1795203756554.34,
+        "returnedAt": 1795203756554.415,
+        "finishedAt": 1795203756861.165,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2246",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203756556.17,
+        "startedAt": 1795203756556.175,
+        "returnedAt": 1795203756556.275,
+        "finishedAt": 1795203756890.985,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2267",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203757116.62,
+        "startedAt": 1795203757116.63,
+        "returnedAt": 1795203757116.76,
+        "finishedAt": 1795203757519.675,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2284",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203759053.85,
+        "startedAt": 1795203759053.85,
+        "returnedAt": 1795203759053.93,
+        "finishedAt": 1795203759152.245,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2448",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203762673.005,
+        "startedAt": 1795203762673.01,
+        "returnedAt": 1795203762673.11,
+        "finishedAt": 1795203762731.87,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2462",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203762743.11,
+        "startedAt": 1795203762743.11,
+        "returnedAt": 1795203762743.19,
+        "finishedAt": 1795203762781.955,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2570",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203767527.015,
+        "startedAt": 1795203767527.02,
+        "returnedAt": 1795203767527.16,
+        "finishedAt": 1795203767910.47,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2581",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203767538.18,
+        "startedAt": 1795203767538.18,
+        "returnedAt": 1795203767538.285,
+        "finishedAt": 1795203767910.575,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2634",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203767998.665,
+        "startedAt": 1795203767998.665,
+        "returnedAt": 1795203767998.745,
+        "finishedAt": 1795203768386.2,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2665",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203768411.71,
+        "startedAt": 1795203768411.715,
+        "returnedAt": 1795203768411.805,
+        "finishedAt": 1795203768531.87,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2737",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203768580.225,
+        "startedAt": 1795203768580.23,
+        "returnedAt": 1795203768580.32,
+        "finishedAt": 1795203768616.135,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3567",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203780363.79,
+        "startedAt": 1795203780363.79,
+        "returnedAt": 1795203780363.905,
+        "finishedAt": 1795203780843.74,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3581",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203780371.96,
+        "startedAt": 1795203780371.965,
+        "returnedAt": 1795203780372.045,
+        "finishedAt": 1795203780858.285,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3595",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203780374.515,
+        "startedAt": 1795203780374.52,
+        "returnedAt": 1795203780374.58,
+        "finishedAt": 1795203780891.915,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3609",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203780376.655,
+        "startedAt": 1795203780376.66,
+        "returnedAt": 1795203780376.715,
+        "finishedAt": 1795203780877.815,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3622",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203781030.28,
+        "startedAt": 1795203781030.285,
+        "returnedAt": 1795203781030.38,
+        "finishedAt": 1795203781308.71,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3633",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203781032.74,
+        "startedAt": 1795203781032.745,
+        "returnedAt": 1795203781032.85,
+        "finishedAt": 1795203781309.77,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3645",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203781041.475,
+        "startedAt": 1795203781041.475,
+        "returnedAt": 1795203781041.595,
+        "finishedAt": 1795203781348.025,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3657",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203781044.44,
+        "startedAt": 1795203781044.445,
+        "returnedAt": 1795203781044.555,
+        "finishedAt": 1795203781331.86,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3697",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782339.88,
+        "startedAt": 1795203782339.885,
+        "returnedAt": 1795203782339.965,
+        "finishedAt": 1795203782763.15,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3711",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782342.46,
+        "startedAt": 1795203782342.465,
+        "returnedAt": 1795203782342.535,
+        "finishedAt": 1795203782776.445,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3725",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782345.17,
+        "startedAt": 1795203782345.175,
+        "returnedAt": 1795203782345.265,
+        "finishedAt": 1795203782798.445,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3739",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782347.74,
+        "startedAt": 1795203782347.745,
+        "returnedAt": 1795203782347.835,
+        "finishedAt": 1795203782773.905,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3752",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782873.33,
+        "startedAt": 1795203782873.33,
+        "returnedAt": 1795203782873.45,
+        "finishedAt": 1795203783059.725,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3763",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782875.53,
+        "startedAt": 1795203782875.535,
+        "returnedAt": 1795203782875.635,
+        "finishedAt": 1795203783063.285,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3775",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782877.99,
+        "startedAt": 1795203782877.995,
+        "returnedAt": 1795203782878.11,
+        "finishedAt": 1795203783070.67,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3787",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203782880.315,
+        "startedAt": 1795203782880.32,
+        "returnedAt": 1795203782880.41,
+        "finishedAt": 1795203783070.715,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3810",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787005.515,
+        "startedAt": 1795203787005.515,
+        "returnedAt": 1795203787005.61,
+        "finishedAt": 1795203787111.06,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3827",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787155.765,
+        "startedAt": 1795203787155.77,
+        "returnedAt": 1795203787155.85,
+        "finishedAt": 1795203787249.465,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3845",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787279.71,
+        "startedAt": 1795203787279.71,
+        "returnedAt": 1795203787279.795,
+        "finishedAt": 1795203787372.125,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3856",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787281.615,
+        "startedAt": 1795203787281.62,
+        "returnedAt": 1795203787281.69,
+        "finishedAt": 1795203787371.27,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3874",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787440.215,
+        "startedAt": 1795203787440.215,
+        "returnedAt": 1795203787440.295,
+        "finishedAt": 1795203787680.195,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3893",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787687.045,
+        "startedAt": 1795203787687.05,
+        "returnedAt": 1795203787687.115,
+        "finishedAt": 1795203787727.275,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3911",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787781.17,
+        "startedAt": 1795203787781.17,
+        "returnedAt": 1795203787781.25,
+        "finishedAt": 1795203787880.84,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3923",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203787904.25,
+        "startedAt": 1795203787904.255,
+        "returnedAt": 1795203787904.325,
+        "finishedAt": 1795203787986.53,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3939",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788192.29,
+        "startedAt": 1795203788192.295,
+        "returnedAt": 1795203788192.365,
+        "finishedAt": 1795203788422.83,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4006",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788205.825,
+        "startedAt": 1795203788205.825,
+        "returnedAt": 1795203788205.915,
+        "finishedAt": 1795203788582.505,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4020",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788208.87,
+        "startedAt": 1795203788208.875,
+        "returnedAt": 1795203788208.995,
+        "finishedAt": 1795203788570.265,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4034",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788211.77,
+        "startedAt": 1795203788211.77,
+        "returnedAt": 1795203788211.855,
+        "finishedAt": 1795203788596.085,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4048",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788214.355,
+        "startedAt": 1795203788214.36,
+        "returnedAt": 1795203788214.455,
+        "finishedAt": 1795203788573.545,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4061",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788216.185,
+        "startedAt": 1795203788216.185,
+        "returnedAt": 1795203788216.245,
+        "finishedAt": 1795203788543.36,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4095",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788669.445,
+        "startedAt": 1795203788669.455,
+        "returnedAt": 1795203788669.525,
+        "finishedAt": 1795203788671.75,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4132",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788676.015,
+        "startedAt": 1795203788676.02,
+        "returnedAt": 1795203788676.09,
+        "finishedAt": 1795203788808.315,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4143",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788677.675,
+        "startedAt": 1795203788677.675,
+        "returnedAt": 1795203788677.73,
+        "finishedAt": 1795203788807.345,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4155",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788679.35,
+        "startedAt": 1795203788679.355,
+        "returnedAt": 1795203788679.41,
+        "finishedAt": 1795203788819.84,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4167",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788706.66,
+        "startedAt": 1795203788706.665,
+        "returnedAt": 1795203788706.815,
+        "finishedAt": 1795203788822.425,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4179",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203788708.26,
+        "startedAt": 1795203788708.265,
+        "returnedAt": 1795203788708.36,
+        "finishedAt": 1795203788787.485,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4220",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789292.84,
+        "startedAt": 1795203789292.845,
+        "returnedAt": 1795203789292.925,
+        "finishedAt": 1795203789755.55,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4234",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789294.92,
+        "startedAt": 1795203789294.92,
+        "returnedAt": 1795203789294.985,
+        "finishedAt": 1795203789744.22,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4248",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789297.215,
+        "startedAt": 1795203789297.22,
+        "returnedAt": 1795203789297.28,
+        "finishedAt": 1795203789764.925,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4262",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789299.3,
+        "startedAt": 1795203789299.305,
+        "returnedAt": 1795203789299.365,
+        "finishedAt": 1795203789783.015,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4275",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789300.915,
+        "startedAt": 1795203789300.915,
+        "returnedAt": 1795203789300.98,
+        "finishedAt": 1795203789709.935,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4352",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789955.895,
+        "startedAt": 1795203789955.9,
+        "returnedAt": 1795203789955.975,
+        "finishedAt": 1795203790197.49,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4363",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789957.185,
+        "startedAt": 1795203789957.185,
+        "returnedAt": 1795203789957.24,
+        "finishedAt": 1795203790166.235,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4375",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789959.1,
+        "startedAt": 1795203789959.1,
+        "returnedAt": 1795203789959.16,
+        "finishedAt": 1795203790210.065,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4387",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789960.355,
+        "startedAt": 1795203789960.355,
+        "returnedAt": 1795203789960.41,
+        "finishedAt": 1795203790196.02,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4399",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203789961.83,
+        "startedAt": 1795203789961.83,
+        "returnedAt": 1795203789961.895,
+        "finishedAt": 1795203790137.58,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4478",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203794030.585,
+        "startedAt": 1795203794030.585,
+        "returnedAt": 1795203794030.68,
+        "finishedAt": 1795203794111.05,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4498",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203794117.385,
+        "startedAt": 1795203794117.39,
+        "returnedAt": 1795203794117.47,
+        "finishedAt": 1795203794158.835,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4643",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203797612.02,
+        "startedAt": 1795203797612.025,
+        "returnedAt": 1795203797612.105,
+        "finishedAt": 1795203797959.64,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4657",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203797661.21,
+        "startedAt": 1795203797661.215,
+        "returnedAt": 1795203797661.3,
+        "finishedAt": 1795203798031.365,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4671",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203797664.6,
+        "startedAt": 1795203797664.6,
+        "returnedAt": 1795203797664.685,
+        "finishedAt": 1795203798041.665,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4685",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203797676.075,
+        "startedAt": 1795203797676.075,
+        "returnedAt": 1795203797676.16,
+        "finishedAt": 1795203798021.365,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4698",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203798106.96,
+        "startedAt": 1795203798106.96,
+        "returnedAt": 1795203798107.085,
+        "finishedAt": 1795203798256.125,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4709",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203798109.395,
+        "startedAt": 1795203798109.395,
+        "returnedAt": 1795203798109.465,
+        "finishedAt": 1795203798256.17,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4721",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203798112.88,
+        "startedAt": 1795203798112.88,
+        "returnedAt": 1795203798112.975,
+        "finishedAt": 1795203798272.72,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4733",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203798115.07,
+        "startedAt": 1795203798115.075,
+        "returnedAt": 1795203798115.18,
+        "finishedAt": 1795203798258.64,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5410",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203822843.89,
+        "startedAt": 1795203822843.895,
+        "returnedAt": 1795203822844.015,
+        "finishedAt": 1795203822962.35,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5425",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795203823004.615,
+        "startedAt": 1795203823004.615,
+        "returnedAt": 1795203823004.69,
+        "finishedAt": 1795203823103.585,
+        "status": "native-resolved"
+      }
+    ]
+  },
+  "candidate": {
+    "prefix": ".cache/native-pipeline-60hz-candidate1",
+    "head": "436294ed34392838ce5e949a5e28cff84e79a54d",
+    "peakExplicitFactories": 1,
+    "factories": 107,
+    "scopeFactories": "Unique jobs with start/end observed in audit snapshots. Counts explicit Host factories only.",
+    "counts": {
+      "frames": 5052,
+      "opportunities": 5099,
+      "outcomes": {
+        "awaiting-prepared-frame": 34,
+        "submitted": 5050,
+        "mutation-hold": 2,
+        "hidden": 13
+      }
+    },
+    "coverage": {
+      "tracedLifetime": true,
+      "from": 1795204081512.685,
+      "to": 1795204167006.435,
+      "terminal": "retired-drained",
+      "terminalOpportunities": 5099,
+      "terminalSubmittedDraws": 5052,
+      "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+    },
+    "maxima": {
+      "submittedDrawStartIntervalMs": 183.574951171875,
+      "callbackIntervalMs": 183.580078125,
+      "drawMs": 8.099853515625
+    },
+    "drawIntervalPercentilesMs": {
+      "p50": 16.6650390625,
+      "p95": 17.534912109375,
+      "p99": 18.925048828125
+    },
+    "targetExceedances": {
+      "submittedDrawStarts": 2462,
+      "callbacks": 2469,
+      "draws": 0
+    },
+    "intervalsAtLeastTwoPeriods": 6,
+    "ordinaryComplete": 928,
+    "largestIntervalWindow": {
+      "at": 1795204085634.91,
+      "sequence": 4,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 183.574951171875,
+      "drawMs": 0.195068359375,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null,
+      "ordinal": 198
+    },
+    "explicitFactoriesOverlappingLargestInterval": [
+      "Pipeline:237"
+    ],
+    "holds": [
+      {
+        "holdId": 1,
+        "holdMs": 24.094970703125,
+        "drainMs": 4.974853515625,
+        "missedOpportunities": [
+          {
+            "ordinal": 794,
+            "at": 1795204095168.14,
+            "intervalMs": 16.639892578125,
+            "outcome": "mutation-hold",
+            "holdId": 1,
+            "sequence": 82
+          }
+        ]
+      },
+      {
+        "holdId": 2,
+        "holdMs": 8.425048828125,
+        "drainMs": 0.360107421875,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 3,
+        "holdMs": 12.8349609375,
+        "drainMs": 2.659912109375,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 4,
+        "holdMs": 11.925048828125,
+        "drainMs": 3.68994140625,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 5,
+        "holdMs": 17.9150390625,
+        "drainMs": 11.56005859375,
+        "missedOpportunities": [
+          {
+            "ordinal": 2645,
+            "at": 1795204126101.4548,
+            "intervalMs": 16.6748046875,
+            "outcome": "mutation-hold",
+            "holdId": 5,
+            "sequence": 360
+          }
+        ]
+      },
+      {
+        "holdId": 6,
+        "holdMs": 12.68505859375,
+        "drainMs": 5.739990234375,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 7,
+        "holdMs": 8.8798828125,
+        "drainMs": 2.8798828125,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 8,
+        "holdMs": 7.760009765625,
+        "drainMs": 3.5048828125,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 9,
+        "holdMs": 6.469970703125,
+        "drainMs": 2.949951171875,
+        "missedOpportunities": []
+      },
+      {
+        "holdId": 10,
+        "holdMs": 13.0400390625,
+        "drainMs": 9.699951171875,
+        "missedOpportunities": []
+      }
+    ],
+    "trace": {
+      "dataLossOccurred": false,
+      "collectionComplete": true,
+      "sha256": "d43e746d9615b931cb1b1e674f9bd71f073746c5fd1f49bd6e1b0bcc5c4d033c",
+      "exportedBytes": 84052832,
+      "peakBufferUsage": 0.3912426829338074,
+      "browserVersion": "157.0.4341.60"
+    },
+    "jobs": [
+      {
+        "id": "Pipeline:26",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204081688.3499,
+        "startedAt": 1795204081688.3699,
+        "returnedAt": 1795204081688.65,
+        "finishedAt": 1795204081790.325,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:49",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204082039.43,
+        "startedAt": 1795204082039.44,
+        "returnedAt": 1795204082039.56,
+        "finishedAt": 1795204082171.06,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:147",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204084910.5898,
+        "startedAt": 1795204084910.595,
+        "returnedAt": 1795204084910.73,
+        "finishedAt": 1795204085170.575,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:158",
+        "method": "createRenderPipeline",
+        "receivedAt": 1795204084958.4548,
+        "startedAt": 1795204085170.8599,
+        "returnedAt": 1795204085170.9548,
+        "finishedAt": 1795204085207.63,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:237",
+        "method": "createRenderPipeline",
+        "receivedAt": 1795204085336.765,
+        "startedAt": 1795204085336.77,
+        "returnedAt": 1795204085336.825,
+        "finishedAt": 1795204085629.265,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:319",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204085655.9448,
+        "startedAt": 1795204085655.9448,
+        "returnedAt": 1795204085656.02,
+        "finishedAt": 1795204086022.18,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:425",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086033.005,
+        "startedAt": 1795204086033.005,
+        "returnedAt": 1795204086033.0999,
+        "finishedAt": 1795204086077.75,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:510",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086191.345,
+        "startedAt": 1795204086191.3499,
+        "returnedAt": 1795204086191.4749,
+        "finishedAt": 1795204086445.74,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:551",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086451.875,
+        "startedAt": 1795204086451.885,
+        "returnedAt": 1795204086451.96,
+        "finishedAt": 1795204086509.88,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:574",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086555.365,
+        "startedAt": 1795204086555.365,
+        "returnedAt": 1795204086555.515,
+        "finishedAt": 1795204086625.98,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:593",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086634.525,
+        "startedAt": 1795204086634.535,
+        "returnedAt": 1795204086634.63,
+        "finishedAt": 1795204086676.675,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:614",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086715.3599,
+        "startedAt": 1795204086715.365,
+        "returnedAt": 1795204086715.4448,
+        "finishedAt": 1795204086781.415,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:632",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204086789.13,
+        "startedAt": 1795204086789.135,
+        "returnedAt": 1795204086789.2349,
+        "finishedAt": 1795204086831.385,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:656",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204087092.295,
+        "startedAt": 1795204087092.295,
+        "returnedAt": 1795204087092.3699,
+        "finishedAt": 1795204087200.7349,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:684",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204087239.2249,
+        "startedAt": 1795204087239.2249,
+        "returnedAt": 1795204087239.3,
+        "finishedAt": 1795204087419.9849,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:708",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204087423.7148,
+        "startedAt": 1795204087423.7249,
+        "returnedAt": 1795204087423.79,
+        "finishedAt": 1795204087424.765,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1872",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204088348.9749,
+        "startedAt": 1795204088348.9749,
+        "returnedAt": 1795204088349.075,
+        "finishedAt": 1795204088653.69,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1901",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204088356.4548,
+        "startedAt": 1795204088654.29,
+        "returnedAt": 1795204088654.44,
+        "finishedAt": 1795204088960.75,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1927",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204088360.97,
+        "startedAt": 1795204088960.9,
+        "returnedAt": 1795204088961.035,
+        "finishedAt": 1795204089214.06,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:1950",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204088366.395,
+        "startedAt": 1795204089214.2048,
+        "returnedAt": 1795204089214.3198,
+        "finishedAt": 1795204089455.885,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2026",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204089497.645,
+        "startedAt": 1795204089497.65,
+        "returnedAt": 1795204089497.75,
+        "finishedAt": 1795204089616.41,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2039",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204089506.3,
+        "startedAt": 1795204089616.855,
+        "returnedAt": 1795204089616.9849,
+        "finishedAt": 1795204089696.035,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2052",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204089507.9749,
+        "startedAt": 1795204089696.1948,
+        "returnedAt": 1795204089696.285,
+        "finishedAt": 1795204089769.815,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2065",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204089511.385,
+        "startedAt": 1795204089769.98,
+        "returnedAt": 1795204089770.1199,
+        "finishedAt": 1795204089855.355,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2107",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204090197.7,
+        "startedAt": 1795204090197.7148,
+        "returnedAt": 1795204090197.8298,
+        "finishedAt": 1795204090666.775,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2121",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204090206.0898,
+        "startedAt": 1795204090666.95,
+        "returnedAt": 1795204090667.065,
+        "finishedAt": 1795204091107.41,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2135",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204090209.18,
+        "startedAt": 1795204091107.56,
+        "returnedAt": 1795204091107.665,
+        "finishedAt": 1795204091464.9448,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2149",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204090216.66,
+        "startedAt": 1795204091465.105,
+        "returnedAt": 1795204091465.1948,
+        "finishedAt": 1795204091808.14,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2162",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204091921.7,
+        "startedAt": 1795204091921.7048,
+        "returnedAt": 1795204091921.785,
+        "finishedAt": 1795204092121.165,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2173",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204091923.325,
+        "startedAt": 1795204092121.3699,
+        "returnedAt": 1795204092121.4648,
+        "finishedAt": 1795204092121.8198,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2185",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204091924.905,
+        "startedAt": 1795204092121.865,
+        "returnedAt": 1795204092121.93,
+        "finishedAt": 1795204092323.6099,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2197",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204091931.8599,
+        "startedAt": 1795204092323.76,
+        "returnedAt": 1795204092323.845,
+        "finishedAt": 1795204092500.125,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2218",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204092812.49,
+        "startedAt": 1795204092812.4949,
+        "returnedAt": 1795204092812.575,
+        "finishedAt": 1795204093206.385,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2232",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204092820.815,
+        "startedAt": 1795204093206.535,
+        "returnedAt": 1795204093206.645,
+        "finishedAt": 1795204093559.765,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2246",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204092823.0798,
+        "startedAt": 1795204093559.96,
+        "returnedAt": 1795204093560.065,
+        "finishedAt": 1795204093936.535,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2260",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204092828.085,
+        "startedAt": 1795204093936.645,
+        "returnedAt": 1795204093936.7349,
+        "finishedAt": 1795204094271.605,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2273",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204094406.3699,
+        "startedAt": 1795204094406.3699,
+        "returnedAt": 1795204094406.45,
+        "finishedAt": 1795204094641.7148,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2284",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204094414.51,
+        "startedAt": 1795204094641.8699,
+        "returnedAt": 1795204094641.9749,
+        "finishedAt": 1795204094642.325,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2296",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204094416.545,
+        "startedAt": 1795204094642.385,
+        "returnedAt": 1795204094642.4548,
+        "finishedAt": 1795204094855.185,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2308",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204094420.2249,
+        "startedAt": 1795204094855.345,
+        "returnedAt": 1795204094855.4648,
+        "finishedAt": 1795204095064.4548,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2329",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204095261.75,
+        "startedAt": 1795204095261.755,
+        "returnedAt": 1795204095261.8599,
+        "finishedAt": 1795204095339.015,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2343",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204097111.115,
+        "startedAt": 1795204097111.115,
+        "returnedAt": 1795204097111.19,
+        "finishedAt": 1795204097159.02,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2600",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204103065.285,
+        "startedAt": 1795204103065.29,
+        "returnedAt": 1795204103065.39,
+        "finishedAt": 1795204103399.2449,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2611",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204103073.085,
+        "startedAt": 1795204103399.395,
+        "returnedAt": 1795204103399.5,
+        "finishedAt": 1795204103404.0999,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2664",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204103512.7349,
+        "startedAt": 1795204103512.74,
+        "returnedAt": 1795204103512.855,
+        "finishedAt": 1795204103847.74,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2694",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204103874.14,
+        "startedAt": 1795204103874.145,
+        "returnedAt": 1795204103874.22,
+        "finishedAt": 1795204104005.4,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:2766",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204104054.5898,
+        "startedAt": 1795204104054.5999,
+        "returnedAt": 1795204104054.66,
+        "finishedAt": 1795204104089.3599,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3735",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204117748.99,
+        "startedAt": 1795204117748.9949,
+        "returnedAt": 1795204117749.075,
+        "finishedAt": 1795204118044.8398,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3749",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204117778.49,
+        "startedAt": 1795204118044.99,
+        "returnedAt": 1795204118045.095,
+        "finishedAt": 1795204118305.785,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3763",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204117781.22,
+        "startedAt": 1795204118305.93,
+        "returnedAt": 1795204118306.005,
+        "finishedAt": 1795204118562.545,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3777",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204117783.93,
+        "startedAt": 1795204118562.69,
+        "returnedAt": 1795204118562.785,
+        "finishedAt": 1795204118806.4548,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3790",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204118876.39,
+        "startedAt": 1795204118876.395,
+        "returnedAt": 1795204118876.4648,
+        "finishedAt": 1795204118992.645,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3801",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204118877.78,
+        "startedAt": 1795204118992.775,
+        "returnedAt": 1795204118992.8599,
+        "finishedAt": 1795204118993.135,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3813",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204118879.535,
+        "startedAt": 1795204118993.18,
+        "returnedAt": 1795204118993.24,
+        "finishedAt": 1795204119109.46,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3825",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204118881.0898,
+        "startedAt": 1795204119109.5898,
+        "returnedAt": 1795204119109.675,
+        "finishedAt": 1795204119223.615,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3849",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123142.625,
+        "startedAt": 1795204123142.63,
+        "returnedAt": 1795204123142.71,
+        "finishedAt": 1795204123421.825,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3866",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123442.01,
+        "startedAt": 1795204123442.02,
+        "returnedAt": 1795204123442.1099,
+        "finishedAt": 1795204123532.755,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3884",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123582.74,
+        "startedAt": 1795204123582.74,
+        "returnedAt": 1795204123582.8198,
+        "finishedAt": 1795204123688.23,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3896",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123710.145,
+        "startedAt": 1795204123710.155,
+        "returnedAt": 1795204123710.2349,
+        "finishedAt": 1795204123789.99,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3911",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123807.875,
+        "startedAt": 1795204123807.88,
+        "returnedAt": 1795204123807.9648,
+        "finishedAt": 1795204123889.015,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3922",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204123809.425,
+        "startedAt": 1795204123889.145,
+        "returnedAt": 1795204123889.2249,
+        "finishedAt": 1795204123891.315,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3937",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204124085.015,
+        "startedAt": 1795204124085.02,
+        "returnedAt": 1795204124085.105,
+        "finishedAt": 1795204124426.65,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3951",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204124100.49,
+        "startedAt": 1795204124426.78,
+        "returnedAt": 1795204124426.885,
+        "finishedAt": 1795204124728.92,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3965",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204124108.13,
+        "startedAt": 1795204124729.06,
+        "returnedAt": 1795204124729.14,
+        "finishedAt": 1795204125039.45,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3979",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204124111.045,
+        "startedAt": 1795204125039.625,
+        "returnedAt": 1795204125039.7048,
+        "finishedAt": 1795204125334.14,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:3992",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204125448.66,
+        "startedAt": 1795204125448.665,
+        "returnedAt": 1795204125448.74,
+        "finishedAt": 1795204125623.065,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4003",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204125450.315,
+        "startedAt": 1795204125623.2048,
+        "returnedAt": 1795204125623.305,
+        "finishedAt": 1795204125623.565,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4015",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204125455.4949,
+        "startedAt": 1795204125623.605,
+        "returnedAt": 1795204125623.66,
+        "finishedAt": 1795204125795.435,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4027",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204125457.595,
+        "startedAt": 1795204125795.5999,
+        "returnedAt": 1795204125795.7048,
+        "finishedAt": 1795204125944.285,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4044",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126084.05,
+        "startedAt": 1795204126084.055,
+        "returnedAt": 1795204126084.125,
+        "finishedAt": 1795204126304.785,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4060",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126309.265,
+        "startedAt": 1795204126309.265,
+        "returnedAt": 1795204126309.335,
+        "finishedAt": 1795204126349.4949,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4078",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126375.88,
+        "startedAt": 1795204126375.885,
+        "returnedAt": 1795204126375.9548,
+        "finishedAt": 1795204126430.0898,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4090",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126434.825,
+        "startedAt": 1795204126434.825,
+        "returnedAt": 1795204126434.915,
+        "finishedAt": 1795204126476,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4106",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126680.285,
+        "startedAt": 1795204126680.285,
+        "returnedAt": 1795204126680.3599,
+        "finishedAt": 1795204126837.41,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4173",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126693.39,
+        "startedAt": 1795204126837.535,
+        "returnedAt": 1795204126837.635,
+        "finishedAt": 1795204127072.77,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4187",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126695.605,
+        "startedAt": 1795204127072.915,
+        "returnedAt": 1795204127073.015,
+        "finishedAt": 1795204127290.42,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4201",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126713.49,
+        "startedAt": 1795204127290.5698,
+        "returnedAt": 1795204127290.66,
+        "finishedAt": 1795204127517.26,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4215",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126715.535,
+        "startedAt": 1795204127517.38,
+        "returnedAt": 1795204127517.47,
+        "finishedAt": 1795204127733.14,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4228",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204126717.355,
+        "startedAt": 1795204127733.295,
+        "returnedAt": 1795204127733.385,
+        "finishedAt": 1795204127896.275,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4262",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127972.0798,
+        "startedAt": 1795204127972.085,
+        "returnedAt": 1795204127972.155,
+        "finishedAt": 1795204127973.73,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4299",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127977.935,
+        "startedAt": 1795204127977.94,
+        "returnedAt": 1795204127978.005,
+        "finishedAt": 1795204128077.115,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4310",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127979.48,
+        "startedAt": 1795204128077.2449,
+        "returnedAt": 1795204128077.335,
+        "finishedAt": 1795204128077.7048,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4322",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127981.8499,
+        "startedAt": 1795204128077.74,
+        "returnedAt": 1795204128077.795,
+        "finishedAt": 1795204128171.265,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4334",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127983.565,
+        "startedAt": 1795204128171.3699,
+        "returnedAt": 1795204128171.4548,
+        "finishedAt": 1795204128257.7048,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4346",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204127985.075,
+        "startedAt": 1795204128257.895,
+        "returnedAt": 1795204128257.9849,
+        "finishedAt": 1795204128308.6099,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4387",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204128781.025,
+        "startedAt": 1795204128781.025,
+        "returnedAt": 1795204128781.0999,
+        "finishedAt": 1795204129104.18,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4401",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204128799.8,
+        "startedAt": 1795204129104.305,
+        "returnedAt": 1795204129104.395,
+        "finishedAt": 1795204129406.8298,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4415",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204128805.38,
+        "startedAt": 1795204129406.96,
+        "returnedAt": 1795204129407.04,
+        "finishedAt": 1795204129687.855,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4429",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204128807.4849,
+        "startedAt": 1795204129687.9849,
+        "returnedAt": 1795204129688.055,
+        "finishedAt": 1795204129974.23,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4442",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204128809.46,
+        "startedAt": 1795204129974.355,
+        "returnedAt": 1795204129974.43,
+        "finishedAt": 1795204130205.0698,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4519",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204130372.9648,
+        "startedAt": 1795204130372.9648,
+        "returnedAt": 1795204130373.04,
+        "finishedAt": 1795204130545.3499,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4530",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204130385.165,
+        "startedAt": 1795204130545.5,
+        "returnedAt": 1795204130545.5898,
+        "finishedAt": 1795204130545.94,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4542",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204130389.69,
+        "startedAt": 1795204130545.98,
+        "returnedAt": 1795204130546.04,
+        "finishedAt": 1795204130704.97,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4554",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204130391.255,
+        "startedAt": 1795204130705.0898,
+        "returnedAt": 1795204130705.17,
+        "finishedAt": 1795204130855.025,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4566",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204130392.565,
+        "startedAt": 1795204130855.14,
+        "returnedAt": 1795204130855.2148,
+        "finishedAt": 1795204130960.53,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4763",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204138358.3198,
+        "startedAt": 1795204138358.325,
+        "returnedAt": 1795204138358.42,
+        "finishedAt": 1795204138633.335,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4777",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204138360.905,
+        "startedAt": 1795204138633.49,
+        "returnedAt": 1795204138633.605,
+        "finishedAt": 1795204138884.055,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4791",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204138409.18,
+        "startedAt": 1795204138884.1948,
+        "returnedAt": 1795204138884.285,
+        "finishedAt": 1795204139141.015,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4805",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204138412.545,
+        "startedAt": 1795204139141.145,
+        "returnedAt": 1795204139141.2249,
+        "finishedAt": 1795204139374.81,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4818",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204139442.135,
+        "startedAt": 1795204139442.14,
+        "returnedAt": 1795204139442.2449,
+        "finishedAt": 1795204139556.97,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4829",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204139444.155,
+        "startedAt": 1795204139557.095,
+        "returnedAt": 1795204139557.175,
+        "finishedAt": 1795204139557.4849,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4841",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204139446.54,
+        "startedAt": 1795204139557.525,
+        "returnedAt": 1795204139557.5798,
+        "finishedAt": 1795204139664.025,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:4853",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204139448.73,
+        "startedAt": 1795204139664.175,
+        "returnedAt": 1795204139664.275,
+        "finishedAt": 1795204139761.8599,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5259",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204155151.045,
+        "startedAt": 1795204155151.05,
+        "returnedAt": 1795204155151.145,
+        "finishedAt": 1795204155255.7349,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5275",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204155282.74,
+        "startedAt": 1795204155282.7449,
+        "returnedAt": 1795204155282.8198,
+        "finishedAt": 1795204155373.99,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5380",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204158375.5798,
+        "startedAt": 1795204158375.5798,
+        "returnedAt": 1795204158375.665,
+        "finishedAt": 1795204158479.5898,
+        "status": "native-resolved"
+      },
+      {
+        "id": "Pipeline:5396",
+        "method": "createRenderPipelineAsync",
+        "receivedAt": 1795204158514.2048,
+        "startedAt": 1795204158514.2148,
+        "returnedAt": 1795204158514.29,
+        "finishedAt": 1795204158601.135,
+        "status": "native-resolved"
+      }
+    ]
+  }
+}
