@@ -2,7 +2,9 @@ import {createRequire} from 'node:module';
 import {writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 const recoveryMode=process.env.QA_RETAINED_RECOVERY;if(recoveryMode!==undefined&&!['false','true','fresh'].includes(recoveryMode))throw Error('Invalid ordinary recovery audit mode');
-if(recoveryMode==='true'||recoveryMode==='fresh')await auditRetainedMainRecovery(recoveryMode);else{
+const activeLoss=process.env.QA_ACTIVE_DEVICE_LOSS==='true';
+if(activeLoss&&recoveryMode!=='fresh')throw Error('Active device loss requires fresh recovery');
+if(recoveryMode==='true'||recoveryMode==='fresh')await auditRetainedMainRecovery(recoveryMode,{activeLoss});else{
 const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright'),base=process.env.QA_BASE_URL??'http://127.0.0.1:5194',browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-webgpu']});
 try{
  const page=await browser.newPage({viewport:{width:640,height:480},deviceScaleFactor:1,reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -21,9 +23,10 @@ try{
 }finally{await browser.close();}
 
 }
-async function auditRetainedMainRecovery(mode){
+async function auditRetainedMainRecovery(mode,{activeLoss}){
  const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright'),base=process.env.QA_BASE_URL??'http://127.0.0.1:5218',prefix=process.env.QA_ARTIFACT_PREFIX??'.cache/ordinary-retained-recovery',browser=await chromium.launch({channel:'msedge',headless:true,args:['--enable-unsafe-webgpu']});
- const report={mode,scope:'Actual Continue/main/authority-host/WorldWorker/client/UI;product Worker profile,paused two-chunk sabana save,time0. No native world mutation/locomotion/cadence/all-biomes acceptance.',errors:[],httpFailures:[],requestErrors:[],sources:[],stability:[],recoveries:[],expectedDeviceLossErrors:[],lossRequested:false};let page;
+ const scope=activeLoss?'Actual Continue/main/authority-host/WorldWorker/client/UI, active Game clock and one rostered worker in two-chunk Sabana, real device loss.':'Actual Continue/main/authority-host/WorldWorker/client/UI, paused two-chunk Sabana save at time 0.';
+ const report={mode,activeLoss,scope,errors:[],httpFailures:[],requestErrors:[],sources:[],stability:[],recoveries:[],expectedDeviceLossErrors:[],lossRequested:false};let page;
  const save=()=>writeFile(process.env.OUTPUT??prefix+'.json',JSON.stringify(report,null,2));
  function replace(source,anchor,body){if(source.split(anchor).length!==2)throw Error('Readonly QA anchor missing: '+anchor.slice(0,80));return source.replace(anchor,body);}
  try{
@@ -41,16 +44,16 @@ async function auditRetainedMainRecovery(mode){
   const meta=()=>page.evaluate(()=>({ui:globalThis.__retainedUiIds?.(),runtime:globalThis.wildGuardiansWorkerQa?.(),notices:globalThis.__retainedNotices??[],authorityFailures:globalThis.__retainedAuthorityFailures??[],frames:globalThis.__retainedFrameNotices??[],clients:globalThis.__retainedClientOwners,disposals:globalThis.__retainedDisposals??[]}));
   // Metadata and selection of the inspect target must share one browser turn.
   // A previous meta() result may refer to the owner removed by device loss.
-  const inspect=(stableOnly=false,excludedClient=null)=>page.evaluate(async ({stableOnly,excludedClient})=>{
+  const inspect=(stableOnly=false,excludedClient=null,requireQuietJournal=true)=>page.evaluate(async ({stableOnly,excludedClient,requireQuietJournal})=>{
    const ui=globalThis.__retainedUiIds?.(),runtime=globalThis.wildGuardiansWorkerQa?.();
-   const eligible=(u,r)=>u?.hasCurrent&&u.client!==excludedClient&&!u.pending&&r?.screen==='game'&&!r.status?.visualDispatchBlocked&&r.status?.recoveryBaseSequence&&r.status.recoveryJournal?.candidate===null;
+   const eligible=(u,r)=>u?.hasCurrent&&u.client!==excludedClient&&!u.pending&&r?.screen==='game'&&!r.status?.visualDispatchBlocked&&r.status?.recoveryBaseSequence&&(!requireQuietJournal||r.status.recoveryJournal?.candidate===null);
    if(stableOnly&&!eligible(ui,runtime))return null;
    let timer;let renderer;
    try{renderer=await Promise.race([globalThis.wildGuardiansWebGpuWorldQa(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('GPU inspection deadline')),5000);})]);}finally{clearTimeout(timer);}
    const afterUi=globalThis.__retainedUiIds?.(),afterRuntime=globalThis.wildGuardiansWorkerQa?.();
    if(stableOnly&&(!eligible(afterUi,afterRuntime)||afterUi.binding!==ui.binding||afterUi.client!==ui.client||afterUi.canvas!==ui.canvas))return null;
    return {ui:afterUi,renderer,runtime:afterRuntime,clients:globalThis.__retainedClientOwners,frames:globalThis.__retainedFrameNotices??[]};
-  },{stableOnly,excludedClient});
+  },{stableOnly,excludedClient,requireQuietJournal});
   async function waitStable(label,excludedClient=null){
    let signature=null,since=0,last;const deadline=Date.now()+180000;
    for(;;){
@@ -70,7 +73,36 @@ async function auditRetainedMainRecovery(mode){
    }
   }
   async function capture(label){const bytes=await page.locator('.qa-webgpu-world').screenshot({path:prefix+'-'+label+'.png'}),visual=await page.evaluate(async bytes=>{const bitmap=await createImageBitmap(new Blob([new Uint8Array(bytes)],{type:'image/png'})),canvas=new OffscreenCanvas(bitmap.width,bitmap.height),ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);bitmap.close();const minX=Math.floor(canvas.width*.25),maxX=Math.floor(canvas.width*.70),minY=Math.floor(canvas.height*.25),maxY=Math.floor(canvas.height*.68),pixels=ctx.getImageData(minX,minY,maxX-minX,maxY-minY).data;function count(data){let differing=0;for(let i=0;i<data.length;i+=4)if(Math.abs(data[i]-data[0])+Math.abs(data[i+1]-data[1])+Math.abs(data[i+2]-data[2])>30)differing++;return differing;}const differing=count(pixels);pixels.fill(0);return {width:canvas.width,height:canvas.height,region:{minX,maxX,minY,maxY},differingPixels:differing,minimum:500,ok:differing>=500,blankControlRejected:count(pixels)<500};},[...bytes]);if(!visual.ok||!visual.blankControlRejected)throw Error('Blank ordinary game region');return {...visual,sha256:createHash('sha256').update(bytes).digest('hex'),path:prefix+'-'+label+'.png'};}
-  report.before=await waitStable('before');report.beforeImage=await capture('before');const before=report.before;
+  async function waitActive(label,{sequence,elapsed},excludedClient=null){
+   let last;const deadline=Date.now()+80000;
+   for(;;){
+    const m=await meta();
+    if(m.authorityFailures.length||m.notices.some(n=>n.loadingFailure)||m.runtime?.status?.fault||m.runtime?.status?.recoveryFault)throw Error('Active source/UI failed: '+JSON.stringify(m));
+    if(m.runtime?.elapsed>elapsed&&m.runtime?.status?.confirmedSequence>sequence){
+     const sample=await inspect(true,excludedClient,false);
+     if(sample){
+      last=sample;
+      const renderer=sample.renderer,draw=renderer?.drawExecution?.consumer;
+      if(!sample.runtime.pauses.length&&sample.runtime.workers>0&&sample.ui.frame?.sequence>=sequence&&renderer?.state?.sequence>=sequence&&renderer.state.lastElapsed>0&&draw?.failed===false&&draw.gpuErrors===0&&draw.activeSequence>0)return sample;
+     }
+    }
+    if(Date.now()>deadline){report.activeTimeout={label,last,meta:m};throw Error('No new active authority and presented frame: '+label);}
+    await page.waitForTimeout(80);
+   }
+  }
+  const loaded=await waitStable('before');
+  if(activeLoss){
+   report.initial=loaded;
+   await page.evaluate(()=>globalThis.wildGuardiansWorkerStableQa());
+   const floor={sequence:loaded.runtime.status.confirmedSequence+2,elapsed:loaded.runtime.elapsed+.3};
+   await waitActive('unpaused before physical loss',floor);
+   report.beforeImage=await capture('before-active');
+   report.before=await waitActive('active loss source after image',floor);
+  }else{
+   report.before=loaded;
+   report.beforeImage=await capture('before');
+  }
+  const before=report.before;
   if(mode==='true'){
    for(let i=1;i<=2;i++){
     const prior=await inspect(),result=await page.evaluate(()=>Promise.race([globalThis.wildGuardiansReattachWebGpuQa(),new Promise((_,reject)=>setTimeout(()=>reject(Error('Ordinary recovery deadline')),90000))])),after=await inspect(),image=await capture('after'+i);report.recoveries.push({result,prior,after,image});const d=after.renderer.drawExecution,p=prior.renderer.drawExecution;
@@ -81,7 +113,14 @@ async function auditRetainedMainRecovery(mode){
   }else{
    // Device loss can reject an inspection that started on the old owner before
    // its failure reached main. This boundary only observes the replacement.
-   report.lossRequested=true;await page.evaluate(()=>globalThis.wildGuardiansWebGpuLoseDeviceQa());report.afterLoss=await waitStable('after-real-device-loss',before.ui.client);if(report.afterLoss.ui.client===before.ui.client||report.afterLoss.ui.canvas===before.ui.canvas||report.afterLoss.renderer.inspectionGeneration===before.renderer.inspectionGeneration||report.afterLoss.clients!==2)throw Error('Real device loss did not replace its unusable owner');report.afterLossImage=await capture('after-loss');
+   report.lossRequested=true;await page.evaluate(()=>globalThis.wildGuardiansWebGpuLoseDeviceQa());
+   report.afterLoss=activeLoss?await waitActive('after real device loss',{sequence:before.runtime.status.confirmedSequence+1,elapsed:before.runtime.elapsed},before.ui.client):await waitStable('after-real-device-loss',before.ui.client);
+   if(report.afterLoss.ui.client===before.ui.client||report.afterLoss.ui.canvas===before.ui.canvas||report.afterLoss.renderer.inspectionGeneration===before.renderer.inspectionGeneration||report.afterLoss.clients!==2)throw Error('Real device loss did not replace its unusable owner');
+   if(activeLoss){
+    for(const sample of [before,report.afterLoss]){const adapter=sample.renderer.device?.adapter;if(!adapter?.vendor||adapter.isFallbackAdapter||/swiftshader|software/i.test(JSON.stringify(adapter)))throw Error('Physical adapter unavailable');}
+    if(!report.expectedDeviceLossErrors.length||before.runtime.slotId!==report.afterLoss.runtime.slotId)throw Error('Active device loss lacked the original save or a physical loss receipt');
+   }
+   report.afterLossImage=await capture('after-loss');
   }
   await page.locator('#menuButton').click();await page.locator('#exit').click();const drainDeadline=Date.now()+25000;for(;;){report.disposal=await meta();const rows=report.disposal.disposals;if(rows.some(value=>value.drain?.disposed===true)&&report.disposal.runtime?.screen==='menu')break;if(Date.now()>drainDeadline)throw Error('Ordinary close lacked its actual successful GPU drain receipt');await page.waitForTimeout(100);}
   report.sources=[...served];if(report.errors.length||report.httpFailures.length||report.requestErrors.length)throw Error('Unexpected browser/GPU/network diagnostics');report.ok=true;await save();console.log('Ordinary recovery audit passed',mode);

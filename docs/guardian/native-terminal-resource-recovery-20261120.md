@@ -29,3 +29,17 @@ Al repetir la pérdida física, el auditor intentó inspeccionar al dueño anter
 El ensayo final volvió a pasar en NVIDIA Turing. El cliente y el Worker de reemplazo dibujaron la publicación 14 y confirmaron el drenaje al salir. Ambas imágenes conservaron los 59.257 píxeles útiles de la región central. La comparación de las imágenes completas encontró 741 píxeles distintos en un rectángulo de 32 × 32 fuera de esa región. [Resultado físico](performance/native-terminal-resource-recovery-20261120/protocol-fresh-final.json.gz) · [Comparación de píxeles](performance/native-terminal-resource-recovery-20261120/protocol-fresh-pixels.json) · [Antes](performance/native-terminal-resource-recovery-20261120/protocol-before.png) · [Después](performance/native-terminal-resource-recovery-20261120/protocol-after.png).
 
 La selección final pasó las 291 pruebas de los 18 archivos relacionados, incluidas ambas regresiones de sesión incorrecta y seis nuevos controles de cierre. El build y el empaquetado pasaron. Quedan registrados los siete fallos históricos de la selección amplia. [Regresión final](performance/native-terminal-resource-recovery-20261120/protocol-regression.log.gz) · [Build](performance/native-terminal-resource-recovery-20261120/protocol-build.log.gz).
+
+## Sabana con Game en marcha, 21 de noviembre
+
+En el modo `QA_ACTIVE_DEVICE_LOSS=true`, el auditor carga la partida de dos regiones, libera la pausa de arranque y exige avance real de Game y de la secuencia de dibujo. Al destruir el dispositivo en NVIDIA Turing, Game estaba en 4,70 s y la publicación 128. La vista había presentado la 58 y el diario preparaba el checkpoint 66. Después del reemplazo, Game llegó a 9,15 s y la publicación 177. La vista nueva presentó la 148 y conservó el mismo guardado y un trabajador. Se observaron dos clientes y un único recibo de drenaje de la vista nueva. El navegador registró la destrucción esperada del dispositivo y cero errores inesperados. La región central de cada captura conservó 59.257 píxeles útiles. [Recibo original](performance/native-terminal-resource-recovery-20261120/active-present-device-loss.json.gz).
+
+El auditor activo exige un checkpoint reconocido y una publicación dibujada. Permite que haya un candidato de checkpoint pendiente cuando el reloj sigue avanzando. Una primera variante esperaba que terminara ese candidato antes del disparo y agotó el plazo mientras Game seguía en marcha, con una diferencia de 125 publicaciones entre Game y la vista. La captura definitiva registró una diferencia de 70 antes de la pérdida y de 29 tras la primera observación del reemplazo. Los tres valores son puntos de muestreo, recogidos por separado de la evaluación de cadencia. Se comunicó la acumulación a Astra para contrastarla con la latencia de Build.
+
+Esta prueba verifica el reemplazo con la autoridad de Game activa y un trabajador en el roster. El reloj causal de una ruta nativa permaneció ausente en las dos inspecciones. La recuperación con una asignación de ruta nativa activa y la cadencia de C4 siguen pendientes.
+
+```powershell
+$env:QA_RETAINED_RECOVERY='fresh'
+$env:QA_ACTIVE_DEVICE_LOSS='true'
+node tools/experiments/audit_early_native_gpu_view.mjs
+```
