@@ -7,16 +7,18 @@ import {createPlant} from '../../src/simulation/crops.js';
 import {rational} from '../../src/simulation/money.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
 import {createNativeAuditCapture} from './native-audit-capture.mjs';
+import {centerServicePoint} from '../../src/world/centers.js';
 
 const output=process.env.OUTPUT??'.cache/native-farm-birth-gpu.json',sha=value=>createHash('sha256').update(value).digest('hex'),modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
-let input;
+let input;const newbornCount=Number(process.env.QA_NATIVE_BIRTH_COUNT??1),targetCenter='structure-900097';if(![1,2].includes(newbornCount))throw Error('Expected one or two births');
 // Source-only semantic checkpoint. Dispose its world before starting the actual
 // browser authority. No old permission/handle enters that authority.
 const f=nativeFarmArrivalRouteFixture({peer:false,profile:'youngFemale',configureState(s,c){
  const w=s.workers[0],crop=createPlant('plant-900098','mijo',c.target.x+5,c.target.z,w.centerId);for(const water of crop.water)water.status='manual';s.plants.push(crop);s.hiringPaidDay=s.day;s.hiringSelection={youngFemale:1};s.ledger.balance=rational(100000);s.villages.find(v=>v.id===w.villageId).entry={x:w.x,z:w.z+6};
+ if(newbornCount===2){const original=s.structures.find(v=>v.id===w.centerId),center={...original,id:targetCenter,z:original.z+16};s.structures.push(center);const point=centerServicePoint(center,s,.8),plant=createPlant('plant-900099','mijo',point.x+5,point.z,center.id);for(const water of plant.water)water.status='manual';s.plants.push(plant);}
 }});
-try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??'youngFemale'};}finally{f.close();}
+try{const center=f.point(0,0);input={saved:JSON.parse(serializeConfirmedState(f.state)),chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),center,ground:f.session.core.surface(center.x,center.z),oldAuthorityEpoch:f.planner.authorityEpoch,newbornProfile:process.env.QA_NATIVE_NEWBORN_PROFILE??'youngFemale',newbornCount,...(newbornCount===2?{hiringCenterId:targetCenter}:{})};}finally{f.close();}
 fs.writeFileSync(output.replace(/\.json$/,'.checkpoint.json'),JSON.stringify(input,null,2)+'\n');
 const browser=await chromium.launch({channel:'msedge',headless:true}),page=await browser.newPage(),errors=[],consoleErrors=[],httpFailures=[],requestFailures=[],overrides=[];let timer;
 try{

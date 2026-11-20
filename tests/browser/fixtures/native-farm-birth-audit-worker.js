@@ -30,6 +30,7 @@ self.onmessage=event=>{
  if(data?.kind==='attachNativeResourcePreparation'){
   const port=data.port,post=port.postMessage.bind(port);port.postMessage=(message,...args)=>{
    const reference=message?.result?.preparedFarmArrivalTemplate;
+   if(message.kind==='nativeGateResourcesResult'&&reference&&reference.actorId!==oldActor)diagnostic.postMessage({kind:'birth-resources-observed',at:performance.timeOrigin+performance.now(),reference});
    if(!heldOnce&&message.kind==='nativeGateResourcesResult'&&reference&&reference.actorId!==oldActor){heldOnce=true;held=()=>post(message,...args);diagnostic.postMessage({kind:'birth-resources-ready',at:performance.timeOrigin+performance.now(),reference});return;}
    return post(message,...args);
   };

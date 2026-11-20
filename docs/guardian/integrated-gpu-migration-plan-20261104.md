@@ -1,6 +1,9 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
 
+Continuación e-R3/f-R4: [Continuaciones de contratados nativos](native-farm-newborn-continuations-20261120.md). Roster acepta ausencia de caché JS de camino en23→21/22/Home/Task y conserva rechazo de conflictos/comprobantes físicos; sin campos ficticios/ABI/dependencias. Detour/Three leídos en fuente.26 casos nuevos,196 dirigidos, regresión4833/4834/364 con una omisión y build124.459s; seis sintaxis. Dos lotes GPU (mismo/perfil nuevo) adquieren cuerpos2/3 y primero22;575 IDs conservados, geometría0/18 buffers nuevos vivos,108 dibujos por bloqueo3.6s; control individual pasa. QA usa coalescencia ordinaria, cola máxima1; dos recursos tardíos sin atribución y costes/VFX pendientes, no cadencia.686 inputs/64 nativos/16 ajenos/38 A5 exactos. Destino ocupado, cancelación/fallos/recuperación3.123 y demás ciclo abiertos; A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación e-R3/f-R4: [Altas Farm Worker/Surface reales](native-farm-birth-worker-surface-20261120.md). Cuatro perfiles y una pasada sin capturas: autoridad Worker, contratación pagada, productor/puertos/Surface originales y GPU NVIDIA;575 IDs invariantes conservados, mismo perfil comparte26 buffers vivos, picking y drenaje reales. Dos bloqueos del preparador de1.8s mantienen54 dibujos cada uno; fuente sigue independiente. Tras READY quedan0/0/4/14/8 recursos de huellas, no cero asignaciones ni aceptación de cadencia (~33ms). Three r180 leído en fuente; solo cuatro QA, sin cambios de producto/dependencias. Tres sintaxis+inline propio y309 scripts rastreados;646 inputs previos/64 nativos/16 ajenos/38 A5 exactos, regresión/build heredados. Siguiente altas concurrentes/cancelación/fallos y demás ciclo; recuperación3.123 sigue abierta,A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
