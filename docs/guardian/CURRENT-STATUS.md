@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El arrastre de muralla ya espera el frame de la secuencia confirmada. Dos ensayos en GPU física compraron y mostraron tres módulos con una sola orden cada uno. La espera medida fue de 4,33 y 4,80 s y la latencia sigue abierta. El soporte de una ruta Farm comprueba todas las regiones del corredor utilizado. Queda publicar su parada gráfica para adquirir el relevo tras el muro. [Arrastre](native-build-stroke-readiness-20261120.md) · [Relevo Farm](native-build-active-farm-20261120.md).
+
 La vista de producto se recupera de la pérdida real del dispositivo en la partida pausada de Sabana probada en NVIDIA Turing. La retirada del preparador espera sus callbacks y la vista de reemplazo conserva la publicación 14, dibuja la misma imagen y confirma el drenaje al salir. Quedan el caso con productor activo y C4. [Contrato y evidencia](native-terminal-resource-recovery-20261120.md).
 
 Repair ya completa la orden ordinaria para un centro intacto en GPU física. Tras retener y adquirir Idle20, la partida pasó de 300 a 600 HP y cobró 400 monedas una sola vez sobre el mismo cuerpo. Pasaron el build y 417 pruebas de la selección, con nueve omisiones registradas. Quedan las reparaciones que restauran colisión y construcción con rutas activas. [Integración y evidencia](native-intact-center-repair-20261120.md).

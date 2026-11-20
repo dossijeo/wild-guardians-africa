@@ -6,7 +6,7 @@ La nueva prueba ejecuta un muro de dos módulos de zarzas en una partida con un 
 
 En [OpenRA, `PlaceBuilding.ResolveOrder`](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Traits/Player/PlaceBuilding.cs#L764-L997) tramita `PlaceBuilding` y `LineBuild` en la frontera `AddFrameEndTask`, consulta allí al productor y al mapa de ocupación y coloca las piezas por sus celdas. Wild Guardians ya reúne cotización, compra y cambio de los obstáculos en su orden de autoridad. `nav_intent_reconcile_topology` vuelve a comprobar los corredores afectados por los sectores modificados. La prueba verifica esa ruta sin incorporar otro mecanismo.
 
-La prueba de arrastre real con Worker y GPU NVIDIA Turing reprodujo tres rechazos antes de la orden. El cliente recibió secuencias 31, 192 y 286 frente a los mínimos 128, 258 y 388. La cámara siguió en versión 6 y el viewport en versión 1. Queda sincronizar el picking con la publicación requerida y verificar el arrastre, la admisión gráfica de la obra y el relevo de ruta en una misma partida. [Lecturas del arrastre](performance/native-build-active-farm-20261120/stroke-sequence.json).
+La prueba de arrastre real con Worker y GPU NVIDIA Turing reprodujo tres rechazos antes de la orden. El cliente recibió secuencias 31, 192 y 286 frente a los mínimos 128, 258 y 388. La cámara siguió en versión 6 y el viewport en versión 1. La espera de la publicación requerida recuperó el arrastre. Queda demostrar el relevo de la ruta en la misma partida. [Lecturas del arrastre](performance/native-build-active-farm-20261120/stroke-sequence.json) · [Corrección y latencia](native-build-stroke-readiness-20261120.md).
 
 ## Soporte de terreno de la nueva ruta
 
