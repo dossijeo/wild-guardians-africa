@@ -1,5 +1,4 @@
-import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopAttestation,sameNativeIdleStrollStopReference} from '../world/native-idle-stroll-stop.js';
-import {copyNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation,sameNativeFarmArrivalStopReference} from '../world/native-farm-arrival-stop.js';
+import {terrainStopWireProtocol} from '../simulation/terrain-stop-reservation.js';
 import {copyNativeFarmArrivalHeldExecution,nativeFarmArrivalContinuesHeld,nativeFarmArrivalSourcePose} from '../world/native-farm-arrival-route.js';
 import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
 import {nativeIdleCycleBodyState,nativeSettledIdleSourceMatches} from '../world/native-idle-cycle-body-source.js';
@@ -490,14 +489,22 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  }
  // The terrain transaction owns staging and capture. No root/rig/geometry is
  // rebuilt; the old binding stays live until all owners commit synchronously.
- async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate=null,nativeFarmArrivalStopTemplate=null,getStoppedProjection=null}={}){
-  if(nativeIdleStrollStopTemplate!==null&&nativeFarmArrivalStopTemplate!==null)throw Error('Native stop mixes source families');
-  const farm=nativeFarmArrivalStopTemplate!==null,template=farm?copyNativeFarmArrivalStopReference(nativeFarmArrivalStopTemplate):nativeIdleStrollStopTemplate===null?null:copyNativeIdleStrollStopReference(nativeIdleStrollStopTemplate);if(template?.gates.length)throw Error('Native moving stop gate projection requires its prepared motor uniforms');
+ async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate,nativeFarmArrivalStopTemplate,nativeTaskRouteStopTemplate,getStoppedProjection=null}={}){
+  const templates={nativeIdleStrollStopTemplate:nativeIdleStrollStopTemplate??undefined,nativeFarmArrivalStopTemplate:nativeFarmArrivalStopTemplate??undefined,nativeTaskRouteStopTemplate:nativeTaskRouteStopTemplate??undefined};
+  const stop=terrainStopWireProtocol(templates,'Native stop mixes source families'),codec=stop?.codec;
+  const template=codec?codec.copyReference(templates[stop.wireTemplateField]):null,farm=codec?.kind===24,task=codec?.kind===25;
+  if(template?.gates.length)throw Error('Native moving stop gate projection requires its prepared motor uniforms');
   if(template&&typeof getStoppedProjection!=='function')throw Error('Native moving stop requires its submitted projection reader');
   const effects=copyNativeWorldStopEffects(stopEffects,boundary),references=effects?nativeSuspendedBodiesFromProposal(effects,boundary):[],parts=[],gates=new Map(),exclude=new Set();
   if(!effects||effects.routeEffects.rows.length!==references.length*26||typeof prepareBodySupport!=='function'||typeof getPickTime!=='function')throw Error('Native stopped terrain requires pinned projected workers');
   for(const reference of references){const id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id);if(!entry?.nativeState||entry.nativeState.suspended||!sameNativeReference(entry.nativeState.nativeRoute,reference.nativeRoute))throw Error('Native stop has no matching admitted worker');exclude.add(id);}
   if(farm){const source=entries.get(`worker-${template.sourceRoute.actorId}`)?.nativeState;if(!source?.nativeFarmArrivalBinding||!sameNativeReference(source.nativeRoute,template.sourceRoute))throw Error('Native Farm stop lacks its original admitted source');}
+  if(task){
+   const entry=entries.get(`worker-${template.sourceRoute.actorId}`),source=entry?.nativeState;
+   const route=source?.nativeStart??source?.nativeResume,owner=template.routes.find(row=>row.nativeRoute.actorId===template.sourceRoute.actorId);
+   if(!route||entry.entity.nativeRouteAdmission!=='native-task'||entry.entity.status!=='walking'||!entry.entity.taskId||route.bodyId!==owner.bodyId||!sameNativeReference(source.nativeRoute,template.sourceRoute))
+    throw Error('Native Task stop lacks its original admitted source');
+  }
   try{
    for(let i=0;i<references.length;i++){
     const reference=references[i],id=`worker-${reference.nativeRoute.actorId}`,entry=entries.get(id),previous=entry.nativeState,entity=entry.entity,stamp=JSON.stringify(entity),row=effects.routeEffects.rows.subarray(i*26,(i+1)*26),pose=row.slice(8),foot=prepareBodySupport(reference,pose),carrying=!!previous.crateId;
@@ -508,6 +515,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     // private RNG, destination, contract and all other policy fields stay pinned.
     let finalFoot=null,finalAt=null;
     const executionFields=new Set(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']),strollSource=previous.nativeIdleStrollBinding?.reference,farmSource=previous.nativeFarmArrivalBinding?.reference;
+    if(task&&previous.nativeRoute.actorId===template.sourceRoute.actorId){executionFields.add('running');executionFields.add('gateWaiting');}
     let idlePolicy=null,validatingFarmSource=null;
     const policy=value=>{
      // Ordinary Task assignment cancels only these semantic fields. Both
@@ -542,7 +550,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     if(policyStamp!==null)idlePolicy=JSON.parse(policyStamp);
     const bodyOwnerCurrent=()=>!closed&&entries.get(id)===entry&&(template?policyStamp!==null&&policy(entry.entity)===policyStamp:JSON.stringify(entry.entity)===stamp)&&(finalFoot??foot).valid()&&(finalFoot??foot).unchangedBy(view)===true&&(!template||previous.support.valid()&&previous.support.unchangedBy(view)===true),ownerCurrent=()=>bodyOwnerCurrent()&&!entry.nativePending;
     if(!ownerCurrent()||entry.nativeState!==previous||!previous.motion.valid()||!previous.variant.current())throw Error('Native stopped worker changed during preparation');
-    const selector=template?{kind:farm?'native-farm-arrival-stopped-body':'native-idle-stroll-stopped-body',version:1,stop:template,actorId:reference.nativeRoute.actorId}:null;
+    const selector=template?{kind:codec.stoppedBodyKind,version:1,stop:template,actorId:reference.nativeRoute.actorId}:null;
     const motion=(template?previous.motion.prepareStopped:previous.motion.prepareSuspended)({reference:selector??reference,nativePose:pose,height:foot.point.height,isCurrent:()=>bodyOwnerCurrent()&&(entry.nativeState===previous||entry.nativeState===candidate||entry.nativeState===entry.nativePending?.candidate&&(nativeHomeRequestContinuesHeldWorker(entry.nativePending?.nativeHome?.sourceRequest,candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||taskStartContinuesHeldWorker(entry.nativePending?.candidate?.packet,candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||nativeFarmArrivalContinuesHeld(entry.nativePending?.nativeFarmArrival,candidate?.nativeHeldFarmArrival))),...(template?{getProjection:()=>getStoppedProjection(selector,previous.motion.clockEpoch)}:{})});let variant,binding;
     try{const pickTime=()=>template?getStoppedProjection(selector,motion.clockEpoch).at:getPickTime(reference,motion.clockEpoch),phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip:()=>carrying?'Carry_Crate':'Idle',sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration)};
      variant=entry.actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':entry.actor.isBakedIdle?.()?'Idle':null});binding=previous.binding.prepareReplacement({motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)});
@@ -558,8 +566,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      finalize(){check();if(!attached||finalized)throw Error('Native stop not attached');finalized=true;return {retire(){check();active=false;retireNative(previous);},notify(){onSelectableChange();}};},
      rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;if(finalized)throw Error('Native stopped worker already finalized');rollback();active=false;retireNative(candidate);return true;}};
     if(template)part.acceptNativeStopBinding=input=>{
-     if(!farm)check();const proof=(farm?copyNativeFarmArrivalStopAttestation:copyNativeIdleStrollStopAttestation)(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
-     if(!proof.projection||!(farm?sameNativeFarmArrivalStopReference:sameNativeIdleStrollStopReference)(proof.preparedReference,template)||!owner||owner.state!==4)throw Error('Native stopped worker lacks its final source');
+     if(!farm)check();const proof=codec.copyAttestation(input),r=proof.reference,owner=r.routes.find(v=>v.nativeRoute.actorId===reference.nativeRoute.actorId),index=r.routes.indexOf(owner);
+     if(!proof.projection||!codec.sameReference(proof.preparedReference,template)||!owner||owner.state!==4)throw Error('Native stopped worker lacks its final source');
      const actual={...reference,worldBoundary:r.worldBoundary,suspendedAt:r.worldBoundary.effectiveTime},actualPose=Float64Array.from(proof.projection.routeEffects.rows.slice(index*26+8,(index+1)*26)),support=prepareBodySupport(actual,actualPose);
      const farmHeld=farmSource?copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:farmSource.actorId,bodyId:farmSource.bodyId,sourceReference:farmSource,assignmentSequence:previous.nativeFarmArrivalBinding.assignmentSequence,resumeHandle:{...actual.nativeRoute.routeHandle,generation:actual.resumeGeneration},suspendedAt:actual.suspendedAt,executedThrough:actual.suspendedAt,pose:{x:actualPose[0],z:actualPose[1],yaw:actualPose[4],radius:farmSource.sourceRequest.pose.radius,runPhase:actualPose[9],walkPhase:actualPose[10],carryPhase:actualPose[11],runRemaining:actualPose[14]}}):null;
      // The confirmed state receiver applies its held mirror before this receipt.

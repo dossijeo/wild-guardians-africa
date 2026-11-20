@@ -19,9 +19,9 @@ export function terrainStopProposalProtocol(resources){
  return stop;
 }
 export const hasOtherTerrainStopField=(value,field,current=null)=>stops.some(stop=>stop!==current&&value?.[stop[field]]!==undefined);
-export function terrainStopWireProtocol(value){
+export function terrainStopWireProtocol(value,conflictMessage='Conflicting native terrain stop templates'){
  const stop=stops.find(item=>value[item.wireTemplateField]!==undefined)??null;
- if(hasOtherTerrainStopField(value,'wireTemplateField',stop))throw Error('Conflicting native terrain stop templates');
+ if(hasOtherTerrainStopField(value,'wireTemplateField',stop))throw Error(conflictMessage);
  return stop;
 }
 

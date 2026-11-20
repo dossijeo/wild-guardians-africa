@@ -1,0 +1,96 @@
+{
+  "base": "8ad6533e919285018b06cf319e8f79154d73c247",
+  "scope": "Task25 stopped graphical worker retains mesh and motion resource, neighboring stop, ports and graphics regressions. Production build. No physical GPU.",
+  "selection": [
+    "tests/native-farm-arrival-stop-clock.test.js",
+    "tests/native-farm-arrival-stop-control.test.js",
+    "tests/native-farm-arrival-stop-graphics.test.js",
+    "tests/native-farm-arrival-stop-ports.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-arrived-task-graphics.test.js",
+    "tests/native-idle-stroll-stop-control.test.js",
+    "tests/native-idle-stroll-stop-gpu-motion.test.js",
+    "tests/native-idle-stroll-stop-graphics.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-idle-stroll-stop-terrain.test.js",
+    "tests/native-resume-graphics.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-graphics.test.js",
+    "tests/native-task-route-stop-ports.test.js",
+    "tests/native-task-start-graphics.test.js",
+    "tests/native-terrain-presentation-support.test.js",
+    "tests/native-worker-roster.test.js"
+  ],
+  "tests": {
+    "exitCode": 0,
+    "tests": 243,
+    "pass": 243,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 2s"
+    ]
+  },
+  "inputCounts": {
+    "frozenInputs": 9057,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Bindings.js#L193-L255"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3602,
+      "payloadSha256": "21c35da1e3595b15684dc89abbe223eb7137cd75d23fa6ac6cc5730dd66877e5",
+      "gzipBytes": 1721,
+      "gzipSha256": "bda5a8616e5945319ee9e566834f6da4dbe4850df9af1e560e6f364f87acb406"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1181615,
+      "payloadSha256": "52fb9a57aff43b9c3c57a3a223ee6302ab6e8d9af94dc390212119d517400fd5",
+      "gzipBytes": 446050,
+      "gzipSha256": "9ea275c3624e17f48dcc7e0b53d56711ffce8fd9b67da68615b8cd184333c627"
+    },
+    "red.log.gz": {
+      "payloadBytes": 2297,
+      "payloadSha256": "18a6cd3b487facc106c4040fbc6969d997edbbafa33936ee63d46cdf3f11a6b8",
+      "gzipBytes": 852,
+      "gzipSha256": "a874a5ae9cbb716b009afb3739683c1db4e4c2360a94ed801667cc250dddcd70"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 923,
+      "payloadSha256": "175f49fa21138d1eaba3cab6649b62a0d1a33cf51bde56d30cc42393c913956c",
+      "gzipBytes": 422,
+      "gzipSha256": "ea6f204a4497809323fef58bb1a69b668f4e633bd8ed8ef583b694b97478be3e"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 65758,
+      "payloadSha256": "0c4cfbdc3407082128b51d8062376c4f99b336b9514aae7a6bb906cb49712faf",
+      "gzipBytes": 9224,
+      "gzipSha256": "e0182868e4f77704a5beb42747e766b50bd13f1b4265319bb8ccd36eef6632aa"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3937,
+      "payloadSha256": "c2aab3405e0d0c9923536e68856199c59c01651f341046a425ffd7d45d944566",
+      "gzipBytes": 1571,
+      "gzipSha256": "d87aba6b826b1f88db3dc3e5c74b49ff41561739b7313f514e32d7948d31f9bb"
+    }
+  }
+}
