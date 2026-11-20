@@ -1,3 +1,4 @@
+import {auditPostSettlementTask} from './native-post-settlement-task-scenario.js';
 import {auditPostSettlementHome} from './native-post-settlement-home-scenario.js';
 import {auditOrdinaryTaskSettlement} from './native-ordinary-task-settlement-scenario.js';
 import {auditOrdinaryTaskConsequence} from './native-ordinary-task-consequence-scenario.js';
@@ -25,7 +26,7 @@ export async function auditTaskSupersedesFarmBirth(c){
  const action=c.followAction?await auditOrdinaryTaskAction(c,acquired().binding):null;
  const consequence=c.followConsequence?await auditOrdinaryTaskConsequence(c,action):null;
  const settlement=c.followSettlement?await auditOrdinaryTaskSettlement(c,consequence):null;
- await delay(250);if(!c.followHome)await stopSource();await delay(80);
+ await delay(250);if(!c.followHome&&!c.followNextTask)await stopSource();await delay(80);
  const confirmed=getConfirmed(),after=await client.inspect(),consumer=after.drawExecution.consumer,committed=acquired(),samples=consumer.samples??[];
  if(consumer.failed||consumer.gpuErrors||c.errors.length||c.sourceMessages.length||publications.some(p=>p.born?.mode==='native-farm-arrival')||lifecycleMessages.some(v=>v.kind==='birth-resource-committed'&&v.family==='farm-arrival'&&v.binding.reference.actorId===actor))throw Error('Cancelled Farm obtained an executable source or a GPU failure');
  if(samples[0]?.at>birthAt||!samples.length||samples.some(v=>v.at>=birthAt&&v.nativeWorldBoundary?.ticket===reference.worldBoundary.ticket))throw Error('Cancelled Farm drew or its history is incomplete');
@@ -51,5 +52,6 @@ export async function auditTaskSupersedesFarmBirth(c){
  if(consequence){result.consequence=consequence;result.scope='Ordinary paid hire → Task14 → Harvest15 → Carry16 with actual crop/crate result, shared bank and hardware picking after crop removal; not settlement or cadence acceptance.';}
  if(settlement){result.settlement=settlement;result.scope='Ordinary paid hire → Task14 → Harvest15 → Carry16 → settlement17/Idle; same original owners and actual single income. Not next task/Home or cadence acceptance.';if(JSON.stringify(confirmed.ledger)!==JSON.stringify(settlement.sourceAfter.ledger)||!confirmed.crates.find(v=>v.id===settlement.economic.entryId.slice(8))?.delivered)throw Error('Delivery result changed again after settlement');}
  if(c.followHome){result.home=await auditPostSettlementHome(c,settlement,result);result.scope='Ordinary paid hire → Task14 → Harvest15 → Carry16 → settlement17/Idle → contract Home18 → absence20 on original owners. Not next task, all failures or cadence acceptance.';result.final.gpuErrors=result.home.after.drawExecution.consumer.gpuErrors;}
+ if(c.followNextTask){result.nextTask=await auditPostSettlementTask(c,settlement,result);result.scope='Ordinary paid hire through first delivery and subsequent genuine Task14 on the same body/authority/Surface. Not second action, Home or global cadence acceptance.';result.final.gpuErrors=result.nextTask.after.drawExecution.consumer.gpuErrors;}
  result.disposal=await closeGraphics();result.drained=true;return result;
 }

@@ -443,9 +443,20 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     if(!valid()||!activated||data.resources.kind!==(farm?23:stroll?22:home?18:consequence?16:starting?14:13)||data.resources.phase!=='committed'||route.actorId!==ref.actorId||route.assignmentSequence<=ref.sourceControlSequence||['authorityEpoch','session','slot','generation'].some(key=>route.routeHandle[key]!==ref.expectedRouteHandle[key])||!sameMotion||!farm&&!stroll&&!consequence&&!home&&!sameNativeGatePresentations(actual.gates,packet.gates))throw Error('Native resumed worker differs from its committed resources');
     return actual;
    }
-   pending.stage='preparing';pending.cancel=cancel;return {request:{object:actor.root,options},valid,validateCommit,
+   pending.stage='preparing';pending.cancel=cancel;const part={request:{object:actor.root,options},valid,validateCommit,
     rollback(){check();restore();},
     retarget(nextSupport,options){check();if(activated)throw Error('Native resume must be rolled back before replacing data');const next=copy(nextSupport?.presentation);const result=(farm?motion.retargetNativeFarmArrival:stroll?motion.retargetNativeIdleStroll:home?motion.retargetNativeHomeRoute:consequence?motion.retargetNativeTaskConsequence:starting?motion.retargetNativeTaskStart:motion.retargetNativeResume)(nextSupport,options);if(!result)return false;packet=next;ref=next[key];support=nextSupport;pending[key]=ref;candidate.packet=next;candidate[key]=ref;candidate.support=nextSupport;candidate.start=next.startTime;candidate.end=next.endTime;return true;},activate(){if(!valid()||activated)throw Error('Native resume activation unavailable');variant.activate();try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}entry.nativeState=candidate;entry.motion=motion;entry.motionBinding=binding;activated=true;},finalize(data){const actual=validateCommit(data);candidate.packet=actual;candidate.nativeRoute=actual.nativeRoute;if(farm)candidate.nativeFarmArrivalBinding=copyNativeFarmArrivalRouteAttestation(data[bindingKey]);if(stroll)candidate.nativeIdleStrollBinding=copyNativeIdleStrollAttestation(data[bindingKey]);if(home)candidate.nativeHomeRouteBinding=copyNativeHomeRouteAttestation(data[bindingKey]);if(consequence)candidate.nativeConsequenceBinding=copyNativeTaskConsequenceAttestation(data[bindingKey]);candidate.start=actual.startTime;candidate.end=actual.endTime;candidate.motion.setExecutionEpoch(actual.startTime);candidate.motion.seal();entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;finished=true;signal?.removeEventListener('abort',abort);if(previous)retireNative(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}onSelectableChange();},cancel};
+   // Three raycasting reads the live scene. Keep the already submitted Idle
+   // presentation available while this same actor stages its next Task packet.
+   if(starting&&previous?.nativeSettlementBinding){let pickingSource=false;
+    part.withSourcePresentation=operation=>{
+     if(typeof operation!=='function'||pickingSource||!valid())throw Error('Native source presentation unavailable');
+     const restoreCandidate=activated;pickingSource=true;
+     try{if(restoreCandidate)part.rollback();const result=operation();if(result&&typeof result.then==='function')throw Error('Native source presentation must be synchronous');return result;}
+     finally{try{if(restoreCandidate&&!activated)part.activate();}finally{pickingSource=false;}}
+    };
+   }
+   return part;
   }catch(error){if(entry.nativePending===pending)entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;controller.abort();signal?.removeEventListener('abort',abort);if(candidate)retireNative(candidate);throw error;}
  }
  function sameNativeReference(a,b){return !!a&&!!b&&a.actorId===b.actorId&&a.assignmentSequence===b.assignmentSequence&&['authorityEpoch','session','slot','generation'].every(key=>a.routeHandle?.[key]===b.routeHandle?.[key]);}

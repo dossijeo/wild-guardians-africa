@@ -1,5 +1,8 @@
 # Seguimiento de cierre de A6
 
+Continuación A2/A4/A7/e-R3/f-R4: [segunda tarea ordinaria y selección retenida](native-post-settlement-next-task-20261120.md). Detour/Three leídos en código; rollback/reactivación del participante adquirido para consultar su imagen anterior, sin reloj ficticio/dependencia/escena nueva.7 casos nuevos,37 dirigidos,4939/4940 en372 archivos/una omisión y build nuevos. Cuatro perfiles adquieren otra Task14 sobre cuerpo2, control liquidación, IDs/rig/banco/drenaje y9 imágenes; consulta conserva incomplete y no acepta acciones. Piloto reutilizado por hashes.705 inputs/998 ejecución/64 nativos intactos/16 ajenos/38 A5 exactos. Siguiente Idle autónomo desde liquidación y cobertura restante; cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
+
+
 Continuación A2/A4/e-R3/f-R4: [liquidación → Home → ausencia ordinarias](native-post-settlement-home-20261120.md). Godot/Detour/Comlink leídos en fuente; parada12 existente, Home desde WALK terminal sobre el mismo cuerpo y adopción del endpoint acreditado, sin dependencia/ABI/dueño/reloj nuevos.52 casos nuevos,275 dirigidos finales,4932/4933 en371 archivos/una omisión y build nuevos; standalone/pthread recompilados. Cuatro perfiles retiran ambos actores mediante Home20; control liquidación, IDs invariantes/picking/drain y13 capturas revisadas; intervalo amplio máximo469,900ms sin atribución.703 inputs/998 ejecución/64 nativos/16 ajenos/38 A5 exactos. Siguiente tarea/disponibilidad y cobertura global; cadencia/3.123/A6/A/B/C abiertos,D no iniciado,f-R3 seguro.
 
 
