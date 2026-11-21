@@ -275,5 +275,431 @@
         "sequence": 2
       }
     ]
+  },
+  "terrainAdmissionTrace": {
+    "commit": "2f99afcf160779a0c702c3b837fc95e3469ecff1",
+    "profile": "youngMale",
+    "runs": [
+      {
+        "timeline": [
+          {
+            "step": "terrain-head-start",
+            "milliseconds": -133.9,
+            "sequence": 0,
+            "regions": [
+              [
+                -1,
+                -1,
+                1
+              ],
+              [
+                0,
+                -1,
+                1
+              ],
+              [
+                1,
+                -1,
+                1
+              ],
+              [
+                -1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                -1,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                1,
+                1
+              ]
+            ]
+          },
+          {
+            "step": "terrain-before-biome-slots",
+            "milliseconds": -132.3,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-after-biome-slots",
+            "milliseconds": -126.3,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-geometry-ready",
+            "milliseconds": -94.3,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-dependents-ready",
+            "milliseconds": -94.3,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-head-ready",
+            "milliseconds": 6943.5,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-head-start",
+            "milliseconds": 7033.3,
+            "sequence": 1,
+            "regions": []
+          },
+          {
+            "step": "timeline-commit",
+            "milliseconds": 7083,
+            "sequence": 1
+          },
+          {
+            "step": "terrain-head-start",
+            "milliseconds": 7089.8,
+            "sequence": 2,
+            "regions": [
+              [
+                2,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "step": "terrain-before-biome-slots",
+            "milliseconds": 7119.8,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-after-biome-slots",
+            "milliseconds": 7119.9,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-geometry-ready",
+            "milliseconds": 7124.6,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-dependents-ready",
+            "milliseconds": 7124.6,
+            "sequence": 2
+          },
+          {
+            "step": "authority-client-fail",
+            "milliseconds": 10003,
+            "error": "Error: Native resource preparation timed out"
+          },
+          {
+            "step": "terrain-head-ready",
+            "milliseconds": 10806.6,
+            "sequence": 2
+          },
+          {
+            "step": "timeline-commit",
+            "milliseconds": 10809,
+            "sequence": 2
+          }
+        ]
+      },
+      {
+        "timeline": [
+          {
+            "step": "terrain-head-start",
+            "milliseconds": -105.1,
+            "sequence": 0,
+            "regions": [
+              [
+                -1,
+                -1,
+                1
+              ],
+              [
+                0,
+                -1,
+                1
+              ],
+              [
+                1,
+                -1,
+                1
+              ],
+              [
+                -1,
+                0,
+                1
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                -1,
+                1,
+                1
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                1,
+                1
+              ]
+            ]
+          },
+          {
+            "step": "terrain-before-biome-slots",
+            "milliseconds": -103.9,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-after-biome-slots",
+            "milliseconds": -103.3,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-geometry-ready",
+            "milliseconds": -81,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-dependents-ready",
+            "milliseconds": -81,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-head-ready",
+            "milliseconds": 6365.2,
+            "sequence": 0
+          },
+          {
+            "step": "terrain-head-start",
+            "milliseconds": 6467.7,
+            "sequence": 1,
+            "regions": []
+          },
+          {
+            "step": "timeline-commit",
+            "milliseconds": 6518.3,
+            "sequence": 1
+          },
+          {
+            "step": "terrain-head-start",
+            "milliseconds": 6527.8,
+            "sequence": 2,
+            "regions": [
+              [
+                2,
+                0,
+                1
+              ]
+            ]
+          },
+          {
+            "step": "terrain-before-biome-slots",
+            "milliseconds": 6563,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-after-biome-slots",
+            "milliseconds": 6563,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-geometry-ready",
+            "milliseconds": 6568.3,
+            "sequence": 2
+          },
+          {
+            "step": "terrain-dependents-ready",
+            "milliseconds": 6568.3,
+            "sequence": 2
+          },
+          {
+            "step": "authority-client-fail",
+            "milliseconds": 10002.2,
+            "error": "Error: Native resource preparation timed out"
+          },
+          {
+            "step": "terrain-head-ready",
+            "milliseconds": 10161.4,
+            "sequence": 2
+          },
+          {
+            "step": "timeline-commit",
+            "milliseconds": 10164.4,
+            "sequence": 2
+          }
+        ],
+        "tickets": [
+          {
+            "batch": 1,
+            "key": "-1,-1",
+            "side": "terrain",
+            "index": 0,
+            "waitMs": 2116.9
+          },
+          {
+            "batch": 1,
+            "key": "-1,-1",
+            "side": "biome",
+            "index": 1,
+            "waitMs": 1302.2
+          },
+          {
+            "batch": 1,
+            "key": "0,-1",
+            "side": "terrain",
+            "index": 2,
+            "waitMs": 1203.6
+          },
+          {
+            "batch": 1,
+            "key": "0,-1",
+            "side": "biome",
+            "index": 3,
+            "waitMs": 1762.7
+          },
+          {
+            "batch": 1,
+            "key": "1,-1",
+            "side": "terrain",
+            "index": 4,
+            "waitMs": 1.6
+          },
+          {
+            "batch": 1,
+            "key": "1,-1",
+            "side": "biome",
+            "index": 5,
+            "waitMs": 5.7
+          },
+          {
+            "batch": 1,
+            "key": "-1,0",
+            "side": "terrain",
+            "index": 6,
+            "waitMs": 1.6
+          },
+          {
+            "batch": 1,
+            "key": "-1,0",
+            "side": "biome",
+            "index": 7,
+            "waitMs": 9.4
+          },
+          {
+            "batch": 1,
+            "key": "0,0",
+            "side": "terrain",
+            "index": 8,
+            "waitMs": 1.5
+          },
+          {
+            "batch": 1,
+            "key": "0,0",
+            "side": "biome",
+            "index": 9,
+            "waitMs": 7.3
+          },
+          {
+            "batch": 1,
+            "key": "1,0",
+            "side": "terrain",
+            "index": 10,
+            "waitMs": 1.5
+          },
+          {
+            "batch": 1,
+            "key": "1,0",
+            "side": "biome",
+            "index": 11,
+            "waitMs": 0.3
+          },
+          {
+            "batch": 1,
+            "key": "-1,1",
+            "side": "terrain",
+            "index": 12,
+            "waitMs": 1.4
+          },
+          {
+            "batch": 1,
+            "key": "-1,1",
+            "side": "biome",
+            "index": 13,
+            "waitMs": 9.9
+          },
+          {
+            "batch": 1,
+            "key": "0,1",
+            "side": "terrain",
+            "index": 14,
+            "waitMs": 1.6
+          },
+          {
+            "batch": 1,
+            "key": "0,1",
+            "side": "biome",
+            "index": 15,
+            "waitMs": 7.4
+          },
+          {
+            "batch": 1,
+            "key": "1,1",
+            "side": "terrain",
+            "index": 16,
+            "waitMs": 1.6
+          },
+          {
+            "batch": 1,
+            "key": "1,1",
+            "side": "biome",
+            "index": 17,
+            "waitMs": 6.2
+          },
+          {
+            "batch": 2,
+            "key": "2,0",
+            "side": "terrain",
+            "index": 0,
+            "waitMs": 3589.5
+          },
+          {
+            "batch": 2,
+            "key": "2,0",
+            "side": "biome",
+            "index": 1,
+            "waitMs": 3
+          }
+        ]
+      }
+    ]
   }
 }
