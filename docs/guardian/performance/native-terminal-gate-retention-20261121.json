@@ -576,5 +576,180 @@
         "result": "pass"
       }
     ]
+  },
+  "homeOutsideCamera": {
+    "source": "dfee4153c8ba04ce5c2b6447645d19653e71c365",
+    "rawSha256": "842867a94c538f5a80758873118f099eccdcfa8aafb4361af595bbb340c674b9",
+    "camera": {
+      "x": -14,
+      "y": 17.657022285461426,
+      "z": 31,
+      "targetX": -14,
+      "targetY": 16.357022285461426,
+      "targetZ": 43
+    },
+    "firstCull": {
+      "gate": {
+        "entityId": "structure-1000000",
+        "mesh": 395,
+        "geometry": 151,
+        "positionVersion": 1,
+        "normalVersion": 1,
+        "positionHash": 603722329,
+        "opening": 1,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3204bdab-74c1-4f09-8647-08b5849732bb/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.299999999999928
+          }
+        }
+      },
+      "render": {
+        "eye": [
+          -14,
+          17.657022285461426,
+          31
+        ],
+        "draws": 0,
+        "passes": [],
+        "at": 1795271748338.7
+      },
+      "activeSequence": 59,
+      "position": {
+        "time": 255.15000000000117,
+        "elapsed": 15.449999999999818,
+        "x": -13.949600219726562,
+        "z": 8.561190688284299,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 292
+      }
+    },
+    "draft": {
+      "draft": {
+        "version": 1,
+        "authorityEpoch": "3204bdab-74c1-4f09-8647-08b5849732bb/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 18.449999999999843
+      },
+      "elapsedMs": 630.1000000238419,
+      "draws": 18,
+      "activeGate": [
+        {
+          "entityId": "structure-1000000",
+          "mesh": 395,
+          "geometry": 151,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "3204bdab-74c1-4f09-8647-08b5849732bb/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 10.299999999999928
+            }
+          }
+        }
+      ],
+      "position": {
+        "time": 258.8999999999987,
+        "elapsed": 19.199999999999854,
+        "x": -14,
+        "z": 11.800000190734863,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 367
+      }
+    },
+    "commit": {
+      "version": 1,
+      "authorityEpoch": "3204bdab-74c1-4f09-8647-08b5849732bb/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 19.249999999999854
+    },
+    "firstAbsence": {
+      "at": 1795271752185.0999,
+      "sequence": 106,
+      "ticket": 8,
+      "intervalMs": 33.39990234375,
+      "drawMs": 1.400146484375,
+      "trigger": "raf",
+      "replay": false
+    },
+    "retired": {
+      "actorCount": 0,
+      "render": {
+        "eye": [
+          -14,
+          17.657022285461426,
+          31
+        ],
+        "draws": 0,
+        "passes": [],
+        "at": 1795271752303.5999
+      },
+      "motor": [
+        {
+          "entityId": "structure-1000000",
+          "mesh": 395,
+          "geometry": 151,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "3204bdab-74c1-4f09-8647-08b5849732bb/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 10.299999999999928
+            }
+          }
+        }
+      ]
+    },
+    "retainedBuffers": {
+      "retainedGateBuffers": [
+        "Buffer:2451",
+        "Buffer:2450",
+        "Buffer:2449",
+        "Buffer:2448",
+        "Buffer:3396",
+        "Buffer:3395",
+        "Buffer:3394"
+      ],
+      "commonOwners": 795,
+      "replacedOwners": [],
+      "uniqueRetained": 707
+    },
+    "continued": {
+      "elapsedMs": 672,
+      "draws": 23,
+      "opportunities": 240,
+      "missedOpportunities": 0,
+      "maxInterval": {
+        "at": 1795271734756.3,
+        "sequence": 7,
+        "ticket": null,
+        "intervalMs": 38,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      }
+    },
+    "drained": true,
+    "gpuErrors": 0
   }
 }
