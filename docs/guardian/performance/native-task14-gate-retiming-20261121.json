@@ -467,7 +467,12 @@
           "startTraceUs": 679766293151,
           "durationMs": 190,
           "interface": "viz.mojom.CompositorFrameSinkClient",
-          "ipcHash": 2378294256
+          "ipcHash": 2378294256,
+          "method": "viz::mojom::CompositorFrameSinkClient::OnBeginFrame",
+          "hashHex": "8dc1e3f0",
+          "vizBeginFramesWhileOccupied": 12,
+          "additionalNestedDrawEvents": 0,
+          "detailsSha256": "1c223fcd0f391cacb6d0cfbd73656d6dec8c026789f05a11b4853b65cca7aaac"
         },
         {
           "name": "FunctionCall",
