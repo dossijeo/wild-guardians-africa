@@ -52,7 +52,7 @@ GateSweepAnswer gateSweepPair(IntentState& s,const NativeGate& gate,const Reserv
     return spatialNativePolygonDistance(leaf.data(),int(leaf.size()/2),point.first,point.second,point.first,point.second)-radius-error;
   });
 }
-bool gateSweepBodies(IntentState& s,const NativeGate& proposal,const RouteSlot* replacement=nullptr,uint64_t replacementBody=0){
+bool gateSweepBodies(IntentState& s,const NativeGate& proposal,const RouteSlot* replacement=nullptr,uint64_t replacementBody=0,const std::set<uint64_t>* inspectedStops=nullptr){
   std::set<uint64_t> bodies;
   if(replacement)bodies.insert(replacementBody);
   const auto& bounds=proposal.unsupported;
@@ -66,6 +66,10 @@ bool gateSweepBodies(IntentState& s,const NativeGate& proposal,const RouteSlot* 
     ReservationPath path{nullptr,body.x,body.z};const auto found=s.reservedBodies.find(id);
     if(found!=s.reservedBodies.end())path.route=&s.routeSlots[found->second];
     if(replacement&&id==replacementBody)path.route=replacement;
+    // Read-only construction impact inspection: the exact native stop set is
+    // tested at its current physical pose. Every other reservation retains its
+    // full trajectory. Actual admission never supplies this inspection set.
+    if(path.route&&inspectedStops&&inspectedStops->count(path.route->actor))path.route=nullptr;
     if(!path.route&&(std::abs(body.x-bounds.x)>bounds.circleRadius+body.r+1e-6||
        std::abs(body.z-bounds.z)>bounds.circleRadius+body.r+1e-6))continue;
     const double finish=std::max({s.effectiveTime,gateMotionEnd(proposal),

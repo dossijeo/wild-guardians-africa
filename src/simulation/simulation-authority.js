@@ -391,10 +391,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
         owner.rejection=quoted.rejection??'La construcción nativa necesita un muro sólido o una puerta compatible en regiones residentes';
         owner.ready=true;return {version:1};
       }
-      // The leaf and the affected routes belong to the same native proof.
-      // This placement class retains Farm's current assignment.
-      if(nativeQuote?.gate)return await prepareNativeBarrierCommit(owner);
-      const impact=inspectStructureStops(plan);
+      // A new gate changes the certified corridor even when its passage proxy
+      // permits workers. Query the native mechanism; reuse the existing Stop24
+      // handoff and kind2 acquisition, retaining the same body throughout.
+      const impact=nativeQuote?.gate?planner.inspectNativeGateAdditionStops(nativeQuote.gate):inspectStructureStops(plan);
       if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
       // Reject unsupported consumers before stopping any actor. No JS route
       // approximation may decide whether a native trajectory is affected.

@@ -63,7 +63,9 @@ La elección aplica el patrón de preparación/confirmación/cancelación de [Jo
 
 La autoridad aceptó la misma puerta legal de zarzas en x=-14, z=8,2 en el control sin trabajador. Con Farm adquirido por el cuerpo 1, la ruta directa cruzaba ese punto. La preparación devolvió -5 en WASM y la autoridad comunicó Native wall preparation invalid antes de enviar recursos. La puerta y el débito quedaron ausentes. El trabajador siguió moviéndose en el mismo corredor con el saldo de 100000. La compra dentro de la ruta exige resolver la frontera del relevo antes de adquirir la puerta. [Recibo del rechazo](performance/native-gate-buy-active-route-baseline-20261121.json).
 
-El mismo comando en NVIDIA Turing fue rechazado antes de READY. El trabajador seguía en el mismo ticket Farm y avanzó de z=11,638 a z=11,422 con la raíz y sus 32 geometrías. El saldo siguió en 100.000. El consumidor drenó sin errores. El máximo de 35,4 ms a 30 Hz ocurrió antes de la compra. [Recibo físico](performance/native-gate-buy-active-route-baseline-20261121.json).
+El mismo comando en NVIDIA Turing fue rechazado antes de READY en el control original. El trabajador seguía en el mismo ticket Farm y avanzó de z=11,638 a z=11,422 con la raíz y sus 32 geometrías. El saldo siguió en 100.000. El consumidor drenó sin errores. El máximo de 35,4 ms a 30 Hz ocurrió antes de la compra. [Recibo físico del control](performance/native-gate-buy-active-route-baseline-20261121.json).
+
+La implementación posterior reutiliza Stop24 para fijar la pose del cuerpo original antes de preparar kind2. La compra aprobada en NVIDIA cobró una vez y retomó Farm en el mismo cuerpo, que cruzó la puerta recién instalada. [Implementación y validación del relevo](native-gate-corridor-handoff-20261121.md).
 
 ## Compra con el banco del material en frío
 

@@ -1,5 +1,5 @@
 // Shared proof for bootstrap and prepared kind2 gate acquisition.
-int proveGateMechanismCandidate(IntentState& s,NativeGate& candidate){
+int proveGateMechanismCandidate(IntentState& s,NativeGate& candidate,std::set<uint64_t>* inspectedRoutes=nullptr){
   const auto& b=candidate.unsupported;double support[3];
   const int mounted=spatialGateMountSupport(candidate.x,candidate.z,b.minX,b.minZ,b.maxX,b.maxZ,support);
   if(mounted!=1)return mounted==0?-3:mounted;
@@ -12,11 +12,18 @@ int proveGateMechanismCandidate(IntentState& s,NativeGate& candidate){
     if(body.x+body.r<bounds.minX||body.x-body.r>bounds.maxX||body.z+body.r<bounds.minZ||body.z-body.r>bounds.maxZ)return;
     int mask;if(gateMechanismSegment(q.gate,body,body.x,body.z,body.x,body.z,mask)!=1)q.clear=false;
   },&bodies);
-  if(!bodies.clear||!gateSweepBodies(s,candidate))return -5;
+  if(!bodies.clear)return -5;
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
-  if(!mutationAffectedRoutes(s,&b,1,0,candidates,segments,affected,true)||!affected.empty())return -5;
+  if(!mutationAffectedRoutes(s,&b,1,0,candidates,segments,affected,true)||(!inspectedRoutes&&!affected.empty()))return -5;
+  // Inspect the held pose of precisely the routes that must be stopped, not
+  // their incompatible future passage through the candidate leaf. This is no
+  // acquisition proof: stage/revalidate still require no affected route.
+  if(!gateSweepBodies(s,candidate,nullptr,0,inspectedRoutes?&affected:nullptr))return -5;
   auto proposed=s.gates;proposed.insert_or_assign(candidate.id,candidate);
   const int objects=gateSweepStaticObjects(s,proposed,true);if(objects!=1)return objects==-6?-1:objects==-7?-2:-5;
+  // Inspection may report affected routes, but never admits their old motion.
+  // The committing caller still requires this set to be empty.
+  if(inspectedRoutes)*inspectedRoutes=std::move(affected);
   return 1;
 }
 // Included in the existing intent authority, after gate/static proof helpers.

@@ -863,6 +863,21 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     }finally{if(wasm.nav_intent_barrier_proposal_cancel(session,ticket)!==1)throw Error('Native structure preflight cancellation failed');}
   };
 
+  // Gate proxies deliberately permit passage. Impact must instead use the
+  // native mechanism's exact unsupported volume and its stop conflict closure.
+  const inspectNativeGateAdditionStops=gate=>{
+    const id=numericId(gate?.entityId);
+    if(!Number.isSafeInteger(id)||id<1||!Number.isInteger(gate?.modelId)||![gate?.x,gate?.z,gate?.yaw,gate?.sx,gate?.sz].every(Number.isFinite))throw TypeError('Invalid gate preflight');
+    if(wasm.nav_gate_addition_stop_query_version?.()!==1)throw Error('Rebuild native gate stop inspection');
+    syncBoundaryTime();flushNativeIntentControl();
+    const count=wasm.nav_gate_addition_inspect_stops(id,gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz);
+    if(!Number.isSafeInteger(count)||count>32768)throw Error('Invalid native gate stop count');
+    if(count<0)return {status:count===-4?'busy':count===-2?'stale':count===-5||count===-3?'blocked':'invalid',actors:[]};
+    const actors=count?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_addition_stop_actors_ptr(),count)):[];
+    if(actors.some(actor=>!Number.isSafeInteger(actor)||actor<1)||new Set(actors).size!==actors.length)throw Error('Invalid native gate stop actors');
+    return {status:'ready',actors};
+  };
+
   // Both addition classes use the existing world transaction. A gate keeps
   // its mechanism, three proxies and initial pose in a single native proposal.
   const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
@@ -2834,7 +2849,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -4127,7 +4142,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
-    inspectNativeStructureStops:bridge.inspectNativeStructureStops,addNativeBarriersAfterGpuQuiescence:bridge.addNativeBarriersAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
+    inspectNativeStructureStops:bridge.inspectNativeStructureStops,inspectNativeGateAdditionStops:bridge.inspectNativeGateAdditionStops,addNativeBarriersAfterGpuQuiescence:bridge.addNativeBarriersAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
