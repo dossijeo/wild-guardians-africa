@@ -9,12 +9,12 @@ Three registra la dependencia glTF antes de leerla y marca el recurso preparado 
 ## Pruebas dirigidas
 
 ```powershell
-.cache/tooling/node20.exe --test tests/native-idle-walk.test.js tests/native-initial-idle-body-graphics.test.js tests/webgpu-worker-roster.test.js
+.cache/tooling/node20.exe --test tests/native-idle-walk.test.js tests/native-initial-idle-body-graphics.test.js tests/webgpu-chunk-batch.test.js tests/webgpu-pipeline-admission.test.js tests/native-idle-home.test.js
 ```
 
 Las 11 nuevas pruebas cubren los cuatro perfiles en reposo y alerta, una instalación y una descarga de Walk, y la adquisición de Idle20 sobre el actor original. Cancelar, retirar el actor o cambiar su pose invalida una preparación pendiente. El contraste del código anterior falla en el caso frío de `youngMale` después de descargar Walk.
 
-Pasaron 171 pruebas de preparación de terreno, admisión, Idle y Home y la compilación Vite de producción. La comprobación aislada del horizonte histórico de Harvest ya devolvía `false` en `e1eb667d8`, antes de los dos cambios de arranque. [Prueba histórica de Harvest](../../tests/webgpu-worker-roster.test.js#L185).
+Pasaron 171 pruebas de preparación de terreno, admisión, Idle y Home y la compilación Vite de producción. La selección inicial obtuvo 1.799 de 1.801 pruebas. Dos aserciones anteriores a este cambio ya esperaban conductas sustituidas. La prueba de fin de turno se actualizó en `dae87116b`. El fixture histórico de Harvest exige ahora el certificado de sincronización del trabajo y comprueba que se rechaza el horizonte sin él. Después de ese ajuste pasaron las 52 pruebas del roster. [Prueba histórica de Harvest](../../tests/webgpu-worker-roster.test.js#L185).
 
 ## GPU física
 
