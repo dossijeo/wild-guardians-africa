@@ -216,7 +216,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    try{if(remoteGpu){
     const boundary=copyNativeWorldBoundary(proposedWorldBoundary);if(!boundary)throw Error('Native terrain frame requires a proposed boundary');
     nativeRoutePreparations++;blocked=true;
-    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete'].includes(error?.code))throw error;}
+    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete','remote-frame-native-clock-obsolete'].includes(error?.code))throw error;}
     if(!unchanged()||raw&&raw.valid()!==true)throw Error('Native terrain changed before recording');
     remoteGpu.beginFrame({nativeWorldBoundary:boundary});sun.shadow.needsUpdate=true;renderer.shadowMap.needsUpdate=true;
     try{
@@ -472,7 +472,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
      if(!current()||participants.some(participant=>!participant.valid()))throw new DOMException('Native gate resources changed','AbortError');
      if(tickets.every(ticket=>ticket.valid()))break;
     }
-    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete'].includes(error?.code))throw error;}
+    try{await remoteGpu.whenFrameSettled();}catch(error){if(!['remote-frame-native-route-obsolete','remote-frame-native-mutation-obsolete','remote-frame-native-clock-obsolete'].includes(error?.code))throw error;}
     if(!current()||participants.some(participant=>!participant.valid())||tickets.some(ticket=>!ticket.valid()))throw Error('Native gate changed before frame capture');
     for(const participant of participants)participant.activate();
     remoteGpu.beginFrame({nativeWorldBoundary:boundary});

@@ -737,6 +737,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       }
       const previous = active;
       if(next&&next.nativeMutationEpoch!==nativeMutationEpoch)next=null;
+      if(next&&!next.preparedWorldBoundary&&routeControl?.status().clock){
+        const presented=frameTime.status(),coverage=frameClock(next);
+        // Direct control may overtake an ordinary recording on the resource
+        // channel. Discard only the expired pending coverage, never rewind the
+        // active frame or widen this packet's lease to admit it.
+        if(presented.elapsed!==null&&coverage?.epoch===presented.epoch&&coverage.safeUntil<presented.elapsed){
+          const obsolete=pending;pending=null;next=null;
+          rejectPreparedFrame(obsolete,'Prepared clock coverage precedes the presented frame',true,'native-clock');
+          releaseSnapshot(obsolete.resourceSnapshot);
+        }
+      }
       if(next&&routeControl?.status().clock){
         const permit=routeControl.clockLease(frameClock(next).epoch,frameClock(next).safeUntil),at=evaluateRemoteClock(permit,startedAt);
         const bounded=Math.max(at,nativeMutationFloor??-Infinity);

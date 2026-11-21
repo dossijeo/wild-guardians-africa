@@ -4,7 +4,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-w
 // invalidation). Retained uploads still require a genuinely applied native
 // delta and freshly recorded passes, never a new tag on the rejected commands.
 export function isPreparedFrameInvalidation(error) {
-  return error?.code === 'historical-playback-invalidated' || error?.code === 'remote-frame-native-mutation-obsolete' || error?.code === 'remote-frame-native-route-obsolete';
+  return error?.code === 'remote-frame-native-clock-obsolete' || error?.code === 'historical-playback-invalidated' || error?.code === 'remote-frame-native-mutation-obsolete' || error?.code === 'remote-frame-native-route-obsolete';
 }
 
 function sameOwner(a,b){return !!a&&!!b&&a.authorityEpoch===b.authorityEpoch&&a.nativeSession===b.nativeSession;}
@@ -29,8 +29,12 @@ export function nativeFrameReadiness({prepared=null,required=null,proposal=null,
 }
 
 export function rejectedNativeFrameTarget(error,metadata,state={}){
- if(error?.code!=='remote-frame-native-mutation-obsolete'||error.resourcePreparationsRetained!==true||!metadata||metadata.preparedInterval!=null||state.closed)return null;
+ const clockObsolete=error?.code==='remote-frame-native-clock-obsolete';
+ if(!clockObsolete&&error?.code!=='remote-frame-native-mutation-obsolete'||error.resourcePreparationsRetained!==true||!metadata||metadata.preparedInterval!=null||state.closed)return null;
  const before=copyNativeWorldBoundary(metadata.nativeWorldBoundary??null),pending=pendingBoundary(state.proposal),required=state.required??null,applied=state.prepared??null;
+ // Clock obsolescence changes no world owner. Re-record only against the
+ // exact already-applied/directly-required world, never a pending mutation.
+ if(clockObsolete)return before&&sameNativeWorldBoundary(before,applied)&&sameNativeWorldBoundary(before,required)&&nativeFrameReadiness({...state,resumeTarget:before})!=='unavailable'?before:null;
  const candidate=required&&sameNativeWorldBoundary(applied,required)?applied:required&&sameNativeWorldBoundary(pending,required)?pending:pending??applied,
   target=copyNativeWorldBoundary(candidate);
  if(!target||before&&(!atLeast(target,before)||target.ticket===before.ticket))return null;
