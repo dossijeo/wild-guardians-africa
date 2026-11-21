@@ -781,5 +781,125 @@
     "passed": 569,
     "failed": 0,
     "build": "WebGPU Worker and remote drawing, Vite completed in 1m 13s"
+  },
+  "liveRetirement": {
+    "commit": "ebc81e9302a40820fa957e30608f595d85e30a89",
+    "instrumentation": "GPU with a test-only observer of the first Three render object and the geometry dispose callback.",
+    "rawSha256": "943ac60d003edb0659fa05029b994500328950e159d902aecb0c8248b9352d75",
+    "disposed": [
+      {
+        "geometry": 245,
+        "material": 167,
+        "initialAttributes": [
+          "color",
+          "uv",
+          "normal",
+          "position"
+        ],
+        "stage": "disposed",
+        "firstOwnerAttributesAtDispose": [
+          "color",
+          "uv",
+          "normal",
+          "position"
+        ],
+        "buffers": [
+          [
+            "wgMorphPosition",
+            "Buffer:3301"
+          ],
+          [
+            "wgMorphNormal",
+            "Buffer:3301"
+          ],
+          [
+            "wgMorphRoot",
+            "Buffer:3301"
+          ],
+          [
+            "wgMorphPeer",
+            "Buffer:3301"
+          ],
+          [
+            "wgMorphTarget",
+            "Buffer:3301"
+          ],
+          [
+            "wgMorphTargetNormal",
+            "Buffer:3301"
+          ]
+        ]
+      },
+      {
+        "geometry": 246,
+        "material": 168,
+        "initialAttributes": [
+          "color",
+          "uv",
+          "normal",
+          "position"
+        ],
+        "stage": "disposed",
+        "firstOwnerAttributesAtDispose": [
+          "color",
+          "uv",
+          "normal",
+          "position"
+        ],
+        "buffers": [
+          [
+            "wgMorphPosition",
+            "Buffer:3317"
+          ],
+          [
+            "wgMorphNormal",
+            "Buffer:3317"
+          ],
+          [
+            "wgMorphRoot",
+            "Buffer:3317"
+          ],
+          [
+            "wgMorphPeer",
+            "Buffer:3317"
+          ],
+          [
+            "wgMorphTarget",
+            "Buffer:3317"
+          ],
+          [
+            "wgMorphTargetNormal",
+            "Buffer:3317"
+          ]
+        ]
+      }
+    ],
+    "gameplayContinuedTo": 20.44999885559082,
+    "observedDestroyRequests": [],
+    "hostResourceCount": 3298,
+    "gpuErrors": 0,
+    "closeDrained": true,
+    "peaks": [
+      {
+        "at": 1795264941886.6,
+        "sequence": 37,
+        "ticket": 6,
+        "intervalMs": 43,
+        "drawMs": 3.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795264929316.2,
+        "sequence": 1,
+        "ticket": null,
+        "intervalMs": 39.2998046875,
+        "drawMs": 0.2001953125,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "threeR180": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Geometries.js#L154-L193",
+    "threeR187": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/common/Geometries.js#L187-L236"
   }
 }
