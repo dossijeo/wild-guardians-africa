@@ -111,5 +111,93 @@
     "remoteDraw": true,
     "reportedDuration": "1m52s",
     "sha256": "2c5bd3feac596b43c72a1f01d1f8e5ffb96b83e0c572c95f4a30c6b438f8e8d5"
+  },
+  "ordinaryRoundTrip": {
+    "base": "3319f09ef3f7ee584d0f2acca225be1a5f46f38c",
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "sha256": "2155e5a5e38890601d372bd272a505818009e4410367e3222ee454d496830924",
+    "tickets": {
+      "task": 6,
+      "action": 8,
+      "carry": 10
+    },
+    "body": 1,
+    "gateIds": [
+      1000000
+    ],
+    "gateRoot": 393,
+    "gateGeometry": 151,
+    "actorRoot": 695,
+    "actorMeshes": [
+      36,
+      49
+    ],
+    "newActorMeshes": 13,
+    "newGeometryIds": [],
+    "firstCrossing": {
+      "time": 155.55000000000126,
+      "elapsed": 15.549999999999882,
+      "x": -13.949600219726562,
+      "z": 8.237190688284306,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 296,
+      "opening": 1
+    },
+    "returnCrossing": {
+      "time": 168.10000000000412,
+      "elapsed": 28.100000000000044,
+      "x": -13.949600219726562,
+      "z": 8.182641535657085,
+      "admission": "native-delivery",
+      "status": "carrying",
+      "sequence": 547,
+      "opening": 1
+    },
+    "cropPicked": {
+      "id": "event-29209",
+      "type": "CropPicked",
+      "workerId": "worker-900011",
+      "targetId": "plant-1000001",
+      "crateId": "crate-1000003",
+      "simulationTime": 24.749999999999996,
+      "presentation": {
+        "x": -14,
+        "z": 11.8
+      }
+    },
+    "crateId": "crate-1000003",
+    "observedFirstCarryDraw": {
+      "at": 1795262458301.4,
+      "sequence": 126,
+      "ticket": 10,
+      "intervalMs": 33.39990234375,
+      "drawMs": 3.10009765625,
+      "trigger": "raf",
+      "replay": false
+    },
+    "twoLargestIntervals": [
+      {
+        "at": 1795262456241.0999,
+        "sequence": 125,
+        "ticket": 8,
+        "intervalMs": 39.7998046875,
+        "drawMs": 2.5,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795262447340.2,
+        "sequence": 40,
+        "ticket": 6,
+        "intervalMs": 39,
+        "drawMs": 3.5,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "displayHz": 30,
+    "gpuErrors": 0,
+    "drained": true
   }
 }

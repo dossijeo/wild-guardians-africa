@@ -4,7 +4,7 @@ Carry cruzó el mismo vano con su caja y llegó al centro en WebGPU físico. La 
 
 Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
 
-Harvest con una puerta sana ya admite Task14 cuando la preparación termina más tarde que el ticket original. El Worker valida la trayectoria y las filas relativas del motor con la atestación nativa. NVIDIA dibujó el cruce con el mismo cuerpo, portón y 36 geometrías. [Recibo](performance/native-task14-gate-retiming-20261121.json).
+Harvest con una puerta sana ya admite Task14 cuando la preparación termina más tarde que el ticket original. El Worker valida la trayectoria y las filas relativas del motor con la atestación nativa. NVIDIA dibujó el cruce con el mismo cuerpo, portón y 36 geometrías. [Recibo](performance/native-task14-gate-retiming-20261121.json). La cadena de ida y vuelta confirmó Harvest y Carry por el mismo vano con una sola caja y sin crear geometría adicional del trabajador.
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).
 

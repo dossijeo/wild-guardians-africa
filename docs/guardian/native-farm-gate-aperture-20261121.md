@@ -30,6 +30,8 @@ En NVIDIA, el ticket preparado 5 de tiempo 10,05 se adquirió como ticket 6 de t
 
 La prueba de regresión usa Game, WASM y los puertos reales con un Host determinista. Reproduce el rechazo anterior y comprueba que la atestación admite las filas relativas correctas. Rechaza una confirmación sin atestación y las alteraciones de tiempos, geometría o mecanismo. Pasaron 981 pruebas y la compilación de producto WebGPU Worker con dibujo remoto.
 
+La partida de ida y vuelta cruzó con Task14, cosechó con Action15 y regresó por la misma hoja con Carry16. NVIDIA dibujó los tickets 6, 8 y 10 sobre el cuerpo 1. El cultivo produjo una sola caja. Las 13 mallas añadidas al actor durante Carry usaron geometrías que ya estaban en el conjunto residente de 36 mallas. El portón conservó su raíz y geometría. El primer dibujo de Carry fue de 33,4 ms a 30 Hz y los máximos de la ventana anterior fueron 39,0 ms en Task y 39,8 ms en Action, ambos en dibujos de repetición, con causa pendiente. El ensayo terminó tras el cruce de regreso y drenó con cero errores. [Recibo de ida y vuelta](performance/native-task14-gate-retiming-20261121.json).
+
 ## Carry por el vano
 
 El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.
