@@ -6,6 +6,8 @@ Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir s
 
 Los cuatro perfiles completaron una segunda cosecha y entrega ordinarias sobre el mismo cuerpo. NVIDIA dibujó los cuatro tickets nativos de cada recorrido a 30 Hz. Cada caja se abonó una sola vez, 14 monedas en los dos perfiles masculinos y 11 en los femeninos. Quedan la cadena con puertas y tráfico, las adversidades de restauración y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 
+Al aplicar Despertar sobre el cultivo asignado, Game confirma la bendición y retira la tarea. El cuerpo aún tiene un propietario nativo y el siguiente avance falla antes de asignar el cultivo nuevo. La autoridad y WASM reprodujeron el fallo con Water antes de adquirir Task14, durante la marcha y durante Action15, y con Plant durante la marcha. El ensayo usa Host determinista. [Casos y pasos](performance/native-watering-idle-20261120/target-invalidation-baseline.json).
+
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
