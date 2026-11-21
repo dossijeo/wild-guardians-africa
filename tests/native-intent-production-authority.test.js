@@ -115,6 +115,12 @@ for(const kind of ['center','wall'])test(`repairing an intact ${kind} debits and
   const state=structuredClone(fixture.state),worker=state.workers[0],center=state.structures.find(item=>item.id===worker.centerId);
   const structure=kind==='center'?center:state.structures.find(item=>item.kind==='wall'&&item.status==='intact'&&!item.gate&&item.material==='zarzas');
   Object.assign(structure,fixture.point(kind==='center'?5:1,4));structure.hp=Math.floor(structure.maxHp/2);state.ledger.balance=rational(100000);
+  let next=null;
+  if(kind==='wall'){
+   const {x,z}=fixture.point(-4,6);
+   next=createPlant(`plant-${state.nextId++}`,'mijo',x,z,center.id);
+   next.growth=999999;for(const slot of next.water)slot.status='manual';state.plants.push(next);
+  }
   f=await nativeProductionAuthority(state,{onPrepare(record){
    if(record.kind==='initial-idle-body'&&f.records.some(item=>item.kind==='task-action'&&item.committed))return held;
   }});
@@ -145,6 +151,16 @@ for(const kind of ['center','wall'])test(`repairing an intact ${kind} debits and
   assert.equal(after.events.filter(event=>event.type==='RepairApplied'&&event.repair.paymentId===paymentId).length,1);
   assert.equal(Object.hasOwn(after.ledger.entries,paymentId),true);
   assert.equal(f.advance().events.filter(event=>event.type==='RepairApplied').length,1);
+  if(next){
+   const healthy=f.command({kind:'requestRepair',id:'repair-healthy-wall',targetId:structure.id});
+   assert.equal(healthy.value,false);assert.equal(Object.hasOwn(f.snapshot().ledger.entries,'repair-healthy-wall'),false);
+   const targetId=Number(next.id.split('-').at(-1));
+   assert.equal(f.command({kind:'harvest',id:'harvest-after-wall-repair',targetId:next.id}).value,true);
+   const nextTask=()=>f.records.find(record=>record.kind==='task-start'&&record.committed&&record.resources.targetId===targetId);
+   for(let i=0;i<120&&!nextTask();i++){f.advance();await f.present();}
+   assert.equal(nextTask()?.resources.bodyId,action.resources.request.bodyId);
+   assert.equal(f.snapshot().events.filter(event=>event.type==='RepairApplied').length,1);
+  }
   assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
  }finally{release();await f?.close();fixture.close();}
 });

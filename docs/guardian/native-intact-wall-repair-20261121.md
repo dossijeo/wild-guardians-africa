@@ -19,4 +19,6 @@ node tools/guardian/audit_native_watering_idle_world_owner.mjs
 
 La selección de 49 archivos pasó 441 pruebas, con nueve omisiones y cero fallos. Las dos variantes de WASM conservaron los exports previos y el build de producto completó el empaquetado. [Regresión](performance/native-intact-wall-repair-20261121/tests.log.gz) · [Build](performance/native-intact-wall-repair-20261121/build.log.gz).
 
+El control posterior de autoridad rechazó una segunda orden de Repair sobre el muro sano. A continuación, la orden de Harvest adquirió Task14 sobre el mismo cuerpo y mantuvo un único `RepairApplied`. Pasaron los tres controles dirigidos de centro intacto, muro intacto y ruina con WASM y el Host simulado.
+
 El caso de ruina necesita revalidar el acceso y adquirir las paradas de las rutas afectadas antes de restaurar la colisión. El rendimiento de C4 y la integración ordinaria de Build al cruzar Farm continúan abiertos.
