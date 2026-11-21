@@ -2,6 +2,12 @@
 
 La prioridad operativa pasa a integración por familias. Primero se completa el ciclo ordinario Farm, Harvest, Carry y Home. Water y Plant pueden adaptarse reutilizando los contratos que ya se ejecutan en Game. Cada activación exige las guardas de autoridad, recursos y reloj que usa esa mecánica y mantiene sus excepciones reproducidas como dependencias. Los problemas transversales de C4 siguen abiertos y se contrastan en su propio recorrido.
 
+La [matriz de verticales](MIGRATION-VERTICALS.md) recoge los recorridos y sus excepciones vigentes. [CURRENT-STATUS](CURRENT-STATUS.md) recoge los últimos resultados y enlaces a sus recibos.
+
+## Hitos del 20 de noviembre
+
+Cada entrada conserva el alcance y los pendientes que tenía en la fecha de su informe.
+
 El Host reutiliza comprobaciones de la misma identidad dentro de cada llamada. Las comprobaciones dirigidas pasaron de 72/72/24 a 3/3/1 y la regresión de 738 pruebas y la compilación aprobaron. C4 sigue abierto tras dos capturas a 60 Hz. El primer hold fue de 23,170 y 24,505 ms y el máximo de arranque fue de 188,545 y 206,190 ms. [Contraste y validación](native-binding-cadence-20261120.md).
 
 El roster conserva la pose y el actor durante el relevo Task25 a Home18. La prueba cubre los dos órdenes de llegada del estado de Game y del recibo. Pasaron 483 pruebas y la compilación. Quedan el disparo ordinario, los motores y la validación de cadencia en GPU física. [Adopción gráfica](native-task-stop-home-graphics-20261120.md).
@@ -49,7 +55,7 @@ las cuatro fuentes y cambios de código. No cuenta tests como porcentaje ni
 escribe en las fuentes. Ejecutar `git fetch origin codex/guardian-3d-animation`
 antes de integrar; el comando de contexto no hace red.
 
-## Siguiente entrega verificable
+## Punto de partida registrado el 20 de noviembre
 
 La vertical ordinaria Farm → Task → Harvest → Carry → Settlement → siguiente
 Task ya tiene evidencia Worker/Surface/GPU; consultar sus informes desde

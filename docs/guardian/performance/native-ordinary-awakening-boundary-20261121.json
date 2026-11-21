@@ -42,5 +42,86 @@
     "authorityFault": null,
     "diagnosticSha256": "538c1e4806f81c01f5064507ef284722dea736b839aece0fbed8e60daab53f8f"
   },
-  "selectedBaselineTestsPassed": 44
+  "selectedBaselineTestsPassed": 44,
+  "assignedCropCandidate": {
+    "profile": "olderFemale",
+    "action": {
+      "version": 1,
+      "kind": "water",
+      "duration": 3.4,
+      "elapsed": 0.05000000000000071
+    },
+    "oldTask": "task-1000001",
+    "target": 1000000,
+    "commandSequence": 340,
+    "branchForIntegration": "d28d291b224d3c3a7a2c506c9bb3360fda2e663f",
+    "privateWasmSha256": "bf0524ccac2fc1005a973bc09ba5ff97a9caa9560d23036f8a5b9a0420efaac9",
+    "preparedTicket": 10,
+    "bodyId": 1,
+    "actorRoot": 705,
+    "originalGeometriesRetained": 33,
+    "retiredWateringMeshes": [
+      {
+        "id": 765,
+        "geometry": 329
+      },
+      {
+        "id": 766,
+        "geometry": 330
+      },
+      {
+        "id": 767,
+        "geometry": 331
+      },
+      {
+        "id": 768,
+        "geometry": 332
+      },
+      {
+        "id": 769,
+        "geometry": 333
+      },
+      {
+        "id": 770,
+        "geometry": 334
+      }
+    ],
+    "afterNativeAcquisition": [
+      {
+        "at": 1795256441879.2,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.199951171875,
+        "drawMs": 2.39990234375,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795256441912.7,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.5,
+        "drawMs": 1.599853515625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795256441946,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.300048828125,
+        "drawMs": 1.89990234375,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "phaseAfterCommand": "native-idle",
+    "poolAtAction": 3238,
+    "poolAfterCommit": 3387,
+    "resultAfterResume": [
+      "{\"resource\":\"blessing-glow\",\"message\":\"Cannot order uncommitted remote frame resources\"}"
+    ],
+    "drawsAfterResuming": 67,
+    "rawReceiptSha256": "7c8143b39248321ca83aba19141f8c51ebc36e5f9fbdf3d183be1f38bed03580"
+  }
 }
