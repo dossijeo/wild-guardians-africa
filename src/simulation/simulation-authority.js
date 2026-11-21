@@ -183,6 +183,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   }
   let nativeStructurePreparation=null,nativeStructureFailure=null;
   const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:{kind:command.kind,id:command.id,structure:command.structure});
+  function nativeBlessingWorkers(targetId){
+    if(!nativeBodies)return [];
+    const tasks=new Set(game.tasks.filter(task=>task.targetId===targetId&&task.workerId).map(task=>task.id));
+    return game.workers.filter(worker=>tasks.has(worker.taskId)&&nativeBodies.id(worker.id)!==undefined&&
+      ['pending-resources','native-task','pending-action-resources','native-action'].includes(worker.nativeRouteAdmission));
+  }
   // Once a native world is acquired, ordinary eager loading cannot publish a
   // new region without its prepared resource receipt. Leave cold admission
   // pending, before either purchase or a terrain mutation, rather than stamp
@@ -551,6 +557,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
      if(!duplicate){if(!permission(game,'awakening'))rejection='Esta acción no está disponible ahora';else{const draft=previewBlessing(game,command.targetId);if(!draft.valid)rejection=draft.reason;else{const a=awakeningState(game);if(a.enabled===false||a.progress<AWAKENINGS.maximum)rejection='El Despertar todavía está recargando.';}}}
+     if(!rejection&&!duplicate&&nativeBlessingWorkers(command.targetId).length)rejection='El Despertar necesita preparar el relevo del trabajador asignado.';
      value=rejection?false:bless(game,command.id,command.targetId);
     }else if(command.kind==='harvest'||command.kind==='requestRepair'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid farm command');

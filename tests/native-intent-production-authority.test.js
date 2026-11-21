@@ -4,6 +4,7 @@ import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
 import {createPlant} from '../src/simulation/crops.js';
+import {awakeningState} from '../src/simulation/awakenings.js';
 import {rational} from '../src/simulation/money.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {PROFILES} from '../src/simulation/workforce.js';
@@ -113,6 +114,47 @@ test('ordinary Multiply follows the same crop through native Harvest, Carry and 
   assert.equal(after.workers[0].id,worker.id);
   assert.equal(committed('task-settlement').resources.nativeSettlement.bodyId,committed('task-start').resources.bodyId);
   assert.deepEqual(f.errors,[]);
+ }finally{await f?.close();fixture.close();}
+});
+
+test('an unprepared Awakening keeps an acquired watering task and its charge intact',async()=>{
+ const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
+ let f;
+ try{
+  const state=structuredClone(fixture.state),worker=state.workers[0];
+  const center=state.structures.find(structure=>structure.id===worker.centerId);
+  Object.assign(center,{x:worker.x-6,z:worker.z+6});
+  awakeningState(state).enabled=true;
+  awakeningState(state).progress=100;
+  const {x,z}=fixture.point(-4,6),plant=createPlant(`plant-${state.nextId++}`,'mijo',x,z,center.id);
+  plant.water[0].status='manual';
+  plant.growth=plant.water[1].at-.2;
+  state.plants.push(plant);
+  f=await nativeProductionAuthority(state);
+  await untilProduction(f,()=>f.records.some(r=>r.kind==='initial-idle-body'&&r.committed));
+  for(let i=0;i<15&&!f.records.some(r=>r.kind==='task-start'&&r.committed);i++){
+   f.advance();await f.present();
+  }
+  await untilProduction(f,()=>f.records.some(r=>r.kind==='task-start'&&r.committed));
+  const before=f.snapshot(),owner=before.workers[0];
+  assert.equal(owner.nativeRouteAdmission,'native-task');
+  assert.equal(before.tasks.find(task=>task.id===owner.taskId).targetId,plant.id);
+
+  const command={kind:'bless',id:'unprepared-awakening-of-assigned-crop',targetId:plant.id};
+  const result=f.command(command),after=JSON.parse(result.snapshot);
+  assert.equal(result.value,false);
+  assert.match(result.rejection,/prepara/);
+  assert(!after.commandIds.includes(command.id));
+  assert.equal(after.plants.find(p=>p.id===plant.id).blessing,undefined);
+  assert.deepEqual(after.awakenings,before.awakenings);
+  assert.deepEqual(after.tasks,before.tasks);
+
+  const next=f.advance(.1),continued=next.workers[0];
+  assert.equal(continued.id,owner.id);
+  assert.equal(continued.taskId,owner.taskId);
+  assert.equal(continued.nativeRouteAdmission,'native-task');
+  assert.notDeepEqual([continued.x,continued.z],[owner.x,owner.z]);
+  assert.deepEqual(f.faults,[]);
  }finally{await f?.close();fixture.close();}
 });
 
