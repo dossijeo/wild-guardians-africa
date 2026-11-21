@@ -20,7 +20,7 @@ En Edge con NVIDIA Turing, se retuvo la respuesta real de preparación de Stop24
 
 Stop24 adquirió el ticket 4, la compra el 6 y la nueva ruta Farm el 8. La puerta adquirió el mecanismo 1 y los proxies 116, 117 y 118. La ruta atravesó z=8,2 a x=-13,9496 con la apertura en 1. La raíz 616 y las 32 geometrías de Farm siguieron residentes. Se conservaron 760 identificadores de buffers entre 824 vínculos comparables, con cero sustituciones. WebGPU confirmó el drenaje sin errores.
 
-Los primeros dibujos de los tickets 4, 6 y 8 registraron 33,4, 33,3 y 33,2 ms a 30 Hz. Se enviaron las 240 oportunidades de la ventana y el mayor intervalo fue de 36,9 ms en un dibujo repetido del ticket 4. Sigue sin atribución y C4 queda abierto. La retirada preparada de una puerta y la cobertura de otras formas del corredor siguen pendientes. [Recibo](performance/native-gate-corridor-handoff-20261121.json).
+Los primeros dibujos de los tickets 4, 6 y 8 registraron 33,4, 33,3 y 33,2 ms a 30 Hz. Se enviaron las 240 oportunidades de la ventana. Las 240 superaron el presupuesto C4 de 16,67 ms. La mediana fue de 33,3 ms, el p95 de 34,1 ms y el p99 de 36,5 ms. El mayor intervalo fue de 36,9 ms en un dibujo repetido del ticket 4. Sigue sin atribución y C4 queda abierto. La retirada preparada de una puerta y la cobertura de otras formas del corredor siguen pendientes. [Recibo](performance/native-gate-corridor-handoff-20261121.json).
 
 ## Implementaciones consultadas
 
