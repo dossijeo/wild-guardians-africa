@@ -4,7 +4,7 @@ La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxie
 
 Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir su motor. NVIDIA dibujó la apertura y Farm reanudó el movimiento sobre el mismo cuerpo junto al marco. Quedan el paso por el vano, la compra y C4. [Admisión y recibo](native-gate-preparation-readiness-20261121.md).
 
-YoungMale y olderFemale completaron una segunda cosecha y entrega ordinarias sobre el mismo cuerpo después del primer abono. NVIDIA dibujó los cuatro tickets nativos. El segundo abono fue de 14 y 11 monedas respectivamente, con el primer abono conservado. Quedan los otros dos perfiles y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
+Los cuatro perfiles completaron una segunda cosecha y entrega ordinarias sobre el mismo cuerpo. NVIDIA dibujó los cuatro tickets nativos de cada recorrido a 30 Hz. Cada caja se abonó una sola vez, 14 monedas en los dos perfiles masculinos y 11 en los femeninos. Quedan la cadena con puertas y tráfico, las adversidades de restauración y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
