@@ -1,4 +1,5 @@
 import './native-worker-world-audit-worker.js';
+import {nativeInitialIdleActionSource} from '../../../src/world/native-initial-idle-body.js';
 
 // Observe the real preparation endpoint. Hold one genuine READY reply so the
 // page can inspect its resources, then forward it unchanged and block this
@@ -13,7 +14,7 @@ function block(stage,durationMs){
 }
 self.onmessage=event=>{
  const data=event.data;
- if(data?.kind==='configure-production-audit'){diagnostic=data.port;holdWatering=data.holdWatering===true;diagnostic.start();return;}
+ if(data?.kind==='configure-production-audit'){diagnostic=data.port;holdWatering=data.holdWatering===true;globalThis.__auditTrackedStructure=data.trackedStructure??null;diagnostic.start();return;}
  if(data?.kind==='block-production-preparation'){block('preparation',data.durationMs);return;}
  if(data?.kind==='release-production-ready'){
   if(!held)throw Error('No production READY reply retained');const forward=held;held=null;forward();block('commit',data.durationMs);return;
@@ -28,7 +29,7 @@ self.onmessage=event=>{
   });
   port.postMessage=(message,...args)=>{
    const initialBody=message?.result?.preparedInitialIdleBodyTemplate;
-   const reference=holdWatering?(initialBody?.wateringSource||initialBody?.centerRepairSource?initialBody:null):message?.result?.preparedIdleStrollTemplate;
+   const reference=holdWatering?(nativeInitialIdleActionSource(initialBody)?initialBody:null):message?.result?.preparedIdleStrollTemplate;
    if(!heldOnce&&message.kind==='nativeGateResourcesResult'&&reference){heldOnce=true;held=()=>post(message,...args);diagnostic.postMessage({kind:'production-resources-ready',at:performance.timeOrigin+performance.now(),reference});return;}
    return post(message,...args);
   };

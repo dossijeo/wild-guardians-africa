@@ -1421,10 +1421,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const nativeInitialIdleRequestReference=actorId=>readNativeInitialIdleReference(actorId,true);
   const nativeInitialIdleDeclarationReference=actorId=>readNativeInitialIdleReference(actorId,false);
   const readInitialIdleActionSource=(actor,ticket)=>{
-    const watering=wasm.nav_initial_idle_body_watering_source_snapshot?.(actor,ticket)===1;
-    if(!watering&&wasm.nav_initial_idle_body_center_repair_source_snapshot?.(actor,ticket)!==1)return {};
+    let field;
+    if(wasm.nav_initial_idle_body_watering_source_snapshot?.(actor,ticket)===1)field='wateringSource';
+    else if(wasm.nav_initial_idle_body_center_repair_source_snapshot?.(actor,ticket)===1)field='centerRepairSource';
+    else if(wasm.nav_initial_idle_body_wall_repair_source_snapshot?.(actor,ticket)===1)field='wallRepairSource';
+    else return {};
     const readRestore=()=>taskActionRestoreSource(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_restore_source_ptr(),8)));
-    return {[watering?'wateringSource':'centerRepairSource']:readTaskActionBindings(1,readRestore)[0].binding};
+    return {[field]:readTaskActionBindings(1,readRestore)[0].binding};
   };
   const initialIdleBodyReference=(h,ticket,sourceRequest,actionSource)=>{
     if(h.length!==8||h[0]!==1||!h.every(Number.isFinite)||h[3]!==sourceRequest?.requestSequence||h[4]!==sourceRequest.requestedAt)throw Error('Invalid native initial Idle body header');
@@ -2127,7 +2130,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     let stage=()=>prepareNativeInitialIdleBodyProposal(source);
     if(completion){
       const idle=completion.idleState,anchorKind=idle.anchorId.startsWith('farm-plant-')?1:2;
-      const stageAction=completion.task.kind==='repair'?wasm.nav_initial_idle_body_proposal_stage_center_repair:wasm.nav_initial_idle_body_proposal_stage_watering;
+      const stageAction=completion.task.kind!=='repair'?wasm.nav_initial_idle_body_proposal_stage_watering:
+        completion.target.kind==='wall'?wasm.nav_initial_idle_body_proposal_stage_wall_repair:wasm.nav_initial_idle_body_proposal_stage_center_repair;
       if(!stageAction)throw Error('Rebuild native stationary task continuation');
       stage=()=>prepareInitialIdleBodyProposal(()=>stageAction(actor,action.binding.reference.worldBoundary.nativeSession,action.binding.actionSequence,
         PROFILES.findIndex(p=>p.id===worker.profile),anchorKind,numericId(idle.anchorId),idle.rng,idle.remaining));

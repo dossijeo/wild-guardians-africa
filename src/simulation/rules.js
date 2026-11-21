@@ -12,6 +12,7 @@ export function villageCost(ordinal) {
   return expansionVillagePriceForRuntime(ordinal,B.postgame.additional_village_cost.variant);
 }
 export const operational = c => c.kind==='center' && c.status==='intact';
+export const isIntactRepairTarget = target => target?.status === 'intact' && (target.kind === 'center' || target.kind === 'wall' && target.hp > 0);
 export const spellUnlocked=(state,kind)=>['shield','attack'].includes(kind)?state.day>=1&&state.time>=300||state.day>1:['growth','multiply'].includes(kind)&&state.day>=1;
 export function permission(state,action) {
   if(state.result || state.pauses.some(reason=>reason!=='tutorial-action')) return false;

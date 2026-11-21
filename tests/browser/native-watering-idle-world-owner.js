@@ -2,6 +2,7 @@ import {createSimulationAuthorityClient} from '../../src/simulation/simulation-a
 import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
 import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
 import {openVisualStream} from '../../src/simulation/visual-publication-stream.js';
+import {nativeInitialIdleActionSource as actionSource} from '../../src/world/native-initial-idle-body.js';
 
 // Exercise a resumed action or a fresh agricultural task through the same authority and Surface.
 export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,ground,kind,origin,targetId,nextTargetId,placement}){
@@ -13,14 +14,13 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
  }});
  diagnostic.port1.onmessage=({data})=>messages.push(data);
  let client,visual,preparer,running=true,loop,confirmed,stage='initializing';
- const repair=kind==='repair';
+ const repair=kind==='repair',wallRepair=repair&&saved.structures.find(item=>item.id===targetId)?.kind==='wall';
  const current=()=>confirmed.workers.find(worker=>worker.id===workerId);
  const target=()=>repair?confirmed.structures.find(item=>item.id===targetId):confirmed.plants.find(plant=>plant.id===targetId);
  const waterStatus=()=>repair?null:target().water[kind==='initial'?0:1].status;
  const completed=()=>repair?target().hp===target().maxHp:waterStatus()==='manual';
  const events=()=>confirmed.events.filter(event=>event.type===(repair?'RepairApplied':'WaterSatisfied')&&event.targetId===targetId);
  const acquired=(key,match=()=>true)=>messages.find(message=>message.kind==='production-acquired'&&message.key===key&&match(message.binding.reference))?.binding;
- const actionSource=reference=>reference.wateringSource??reference.centerRepairSource;
  const acquiredIdle=()=>acquired('nativeInitialIdleBodyBinding',r=>actionSource(r));
  const wait=async(predicate,label,ms=40000)=>{
   const deadline=performance.now()+ms;
@@ -47,7 +47,7 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
    experimentalAllActors:true,experimentalMinimalWorld:true,presentationCapabilities:{bakedWorkerWalking:true,picking:true},quality:'muy_baja',
    onError:error=>errors.push(String(error.stack??error)),onResourceError:error=>errors.push(JSON.stringify(error)),workerFactory:()=>{
     preparer=new Worker(new URL('./fixtures/native-production-world-audit-worker.js',import.meta.url),{type:'module'});
-    preparer.postMessage({kind:'configure-production-audit',holdWatering:true,port:diagnostic.port2},[diagnostic.port2]);return preparer;
+    preparer.postMessage({kind:'configure-production-audit',holdWatering:true,trackedStructure:wallRepair?targetId:null,port:diagnostic.port2},[diagnostic.port2]);return preparer;
    }});
   visual=openVisualStream(client.presentationPort,session,()=>{},{incrementalTransport:true});
   await Promise.all([source.reattachTerrain(client.terrainPort,{bootstrap:true}),source.attachNativeIntentControl(control.port1),client.ready]);
@@ -118,6 +118,11 @@ export async function auditNativeWateringIdleWorldOwner({saved,chunkKeys,center,
    const event=sourceAfter.events[0].repair,payment=confirmed.ledger.entries[paymentId];
    if(event.previousHp!==beforeRepairHp||event.restoredHp!==target().maxHp||event.paymentId!==paymentId||!payment||event.paidCoins<=0)throw Error('Repair did not publish the original debit and HP change');
    sourceAfter.payment=payment;
+   if(wallRepair){
+    const prior=before.qaResidentOwners.structure,retained=after.qaResidentOwners.structure;
+    if(!ready.wallRepairSource||!idle.reference.wallRepairSource||!prior?.visible||!retained?.visible||prior.root!==retained.root)throw Error('Repair did not retain the original wall owner');
+    sourceAfter.wall={before:prior,after:retained};
+   }
   }
   stage='quiescing native production before GPU drain';
   running=false;await loop;

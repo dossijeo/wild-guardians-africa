@@ -190,6 +190,7 @@ struct NativeInitialIdleBodyBinding {
  NativeInitialIdleBodyOrigin prepared,actual;uint64_t bodySequence=0;
  std::shared_ptr<const NativeInitialIdleResourceRequest> source;
  std::shared_ptr<const NativeTaskActionBinding> actionSource;
+ int repairTargetKind=0;
 };
 // One finite original rest/watch cycle on the existing stationary body. Future
 // phase data is immutable; the stochastic next request is resolved once at its
@@ -412,6 +413,7 @@ struct PendingBarrierProposal {
   struct InitialIdleBodyDraft {
    std::array<double,8> header{};std::shared_ptr<const NativeInitialIdleResourceRequest> source;
    std::shared_ptr<const NativeTaskActionBinding> actionSource;
+   int repairTargetKind=0;
    std::optional<NativeInitialIdleBodyOrigin> previous;std::array<double,8> timeTranslation{};
   };
   std::optional<InitialIdleBodyDraft> initialIdleBody;

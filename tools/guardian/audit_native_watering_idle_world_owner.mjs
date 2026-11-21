@@ -8,11 +8,12 @@ import {rational} from '../../src/simulation/money.js';
 import {PROFILES} from '../../src/simulation/workforce.js';
 
 const kind=process.env.QA_NATIVE_WATERING_KIND??'water',origin=process.env.QA_NATIVE_WATERING_ORIGIN??'restored';
-const profile=process.env.QA_NATIVE_WORKER_PROFILE;
+const profile=process.env.QA_NATIVE_WORKER_PROFILE,repairTarget=process.env.QA_NATIVE_REPAIR_TARGET??'center';
 if(!['restored','fresh'].includes(origin))throw Error('Expected restored or fresh');
 if(!['initial','water','repair'].includes(kind)||kind==='repair'&&origin!=='fresh')throw Error('Expected initial, water, or fresh repair');
+if(!['center','wall'].includes(repairTarget)||repairTarget==='wall'&&kind!=='repair')throw Error('Unsupported repair target');
 if(profile!==undefined&&(origin!=='fresh'||!PROFILES.some(item=>item.id===profile)))throw Error('Expected a supported profile for a fresh command');
-const output=process.env.OUTPUT??`.cache/native-watering-${kind}-${origin}${profile?`-${profile}`:''}-hardware.json`;
+const output=process.env.OUTPUT??`.cache/native-watering-${kind}-${origin}${repairTarget==='wall'?'-wall':''}${profile?`-${profile}`:''}-hardware.json`;
 const modulePath=process.env.PLAYWRIGHT_MODULE??path.resolve('.cache/microevent-qa/node_modules/playwright-core');
 const {chromium}=createRequire(import.meta.url)(modulePath);
 function restoredInput(){
@@ -38,7 +39,10 @@ function freshInput(){
   saved.plants.push(anchor);
   let targetId=null;
   if(kind==='repair'){
-   const building=saved.structures.find(item=>item.id===worker.centerId);
+   const building=repairTarget==='wall'?
+    saved.structures.find(item=>item.kind==='wall'&&item.material==='zarzas'&&item.status==='intact'&&!item.gate):
+    saved.structures.find(item=>item.id===worker.centerId);
+   if(repairTarget==='wall')Object.assign(building,f.point(6,4));
    building.hp=Math.floor(building.maxHp/2);targetId=building.id;
   }
   if(kind==='water'){

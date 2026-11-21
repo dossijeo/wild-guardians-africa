@@ -39,7 +39,7 @@ import {BALANCE as B} from './balance.js';
 import {wallVisualAt,recordWallPresentation} from './structure-presentation.js';
 import {rational,rationalNumber,add,multiply,negate,transact,compare,numberOf} from './money.js';
 import {PROFILES,allocateWorkers,hiringCost,distributeProfiles,contractExpired} from './workforce.js';
-import {spellUnlocked,permission,operational,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
+import {spellUnlocked,permission,operational,isIntactRepairTarget,cropSpec,wallSpec,structureHealth,dawnMinimum,nextRandom,randomInt,villageCost,hitStructure} from './rules.js';
 import {createPlant,advancePlant,waterPlant,isMature,contiguousGroup} from './crops.js';
 import {activeCrops,cropBecameInactive} from './active-crops.js';
 import {activeCrates,crateBecameInactive} from './active-crates.js';
@@ -1409,7 +1409,7 @@ export function prepareNativeStationaryTaskConsequence(s,w,source,nav){
   const task=s.tasks.find(t=>t.id===w.taskId),repair=request.actionKind==='repair';
   const target=(repair?s.structures:s.plants).find(item=>item.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
   if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target||id(target.id)!==request.targetId||!center||!operational(center))return null;
-  if(repair?!operational(target):!target.alive||target.blessing)return null;
+  if(repair?!isIntactRepairTarget(target):!target.alive||target.blessing)return null;
   const idleState=copyNativeInitialIdleState({...createIdleState(w,idleFarmAnchor(s,w,center),s.seed),approachRetry:0});
   if(repair)return {task,target,idleState,reachable:true,hp:target.hp,maxHp:target.maxHp,cost:target.cost};
   return {task,target,idleState,reachable:canWaterFrom({x:w.x,z:w.z,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
@@ -1418,6 +1418,7 @@ export function projectNativeStationaryTaskConsequence(s,w,nav,native){
   const binding=native.nativeInitialIdleBodyBinding(w.id),reference=binding?.reference,source=nativeInitialIdleActionSource(reference);
   const plan=source&&prepareNativeStationaryTaskConsequence(s,w,source,nav);
   if(!plan||s.elapsed!==reference.worldBoundary.effectiveTime||nativeEntityNumericId(w.id)!==reference.actorId||
+    (plan.task.kind==='repair'&&(plan.target.kind==='wall')!==!!reference.wallRepairSource)||
     JSON.stringify(plan.idleState)!==JSON.stringify(reference.sourceRequest.idleState))throw Error('Native stationary task consequence is not the committed game boundary');
   const {task,target,reachable,idleState}=plan;
   const repair=task.kind==='repair',watered=!repair&&reachable&&waterPlant(target);
@@ -1429,7 +1430,7 @@ export function projectNativeStationaryTaskConsequence(s,w,nav,native){
   if(repair&&target.hp<target.maxHp)completeRepairTask(s,w,task,target,nav,true);
   if(watered)emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});
 }
-function completeRepairTask(s,w,t,target,nav,retainCenterGeometry=false){
+function completeRepairTask(s,w,t,target,nav,retainStructureGeometry=false){
   try {
     const access=planRepairAccess(s,target,nav);
     if(access.status!=='safe')throw new Error(access.status==='unknown'?
@@ -1445,9 +1446,9 @@ function completeRepairTask(s,w,t,target,nav,retainCenterGeometry=false){
         if(piece)Object.assign(piece,update);
       }
       if(visual!==null)recordWallPresentation(target,visual,s.elapsed);
-      if(!retainCenterGeometry){
-      if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
-    }
+      if(!retainStructureGeometry){
+        if(target.kind==='center'&&nav.syncCenterRepair)nav.syncCenterRepair(s,target,previousStatus);else nav.setState(s);
+      }
       // Read the settled ledger debit: proportional repair prices may be
       // fractional before transact rounds the actual payment to whole coins.
       emit(s,'RepairApplied',{workerId:w.id,targetId:target.id,

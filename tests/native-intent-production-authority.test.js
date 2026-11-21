@@ -8,6 +8,7 @@ import {rational} from '../src/simulation/money.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {nativeActionSave} from './helpers/native-task-action-restoration.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
+import {copyNativeInitialIdleBodyReference,nativeInitialIdleBodySuccessor} from '../src/world/native-initial-idle-body.js';
 
 for(const profile of PROFILES)test(`${profile.id} ordinary authority binds a restored22 once and admits it automatically through both existing ports`,async()=>{
  const saved=nativeIdleStrollGameSave({profile:profile.id}),old=structuredClone(saved.state.workers[0]);const f=await nativeProductionAuthority(saved.state,{attach:false});try{
@@ -107,36 +108,67 @@ for(const kind of ['initial','water'])test(`completed ${kind} irrigates only whe
  }finally{release();await f.close();}
 });
 
-test('repairing an intact center debits and restores HP only after the same body acquires its prepared Idle',async()=>{
+for(const kind of ['center','wall'])test(`repairing an intact ${kind} debits and restores HP only after the same body acquires its prepared Idle`,async()=>{
  const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
  let f,release;const held=new Promise(resolve=>{release=resolve;});
  try{
   const state=structuredClone(fixture.state),worker=state.workers[0],center=state.structures.find(item=>item.id===worker.centerId);
-  Object.assign(center,fixture.point(5,4));center.hp=Math.floor(center.maxHp/2);state.ledger.balance=rational(100000);
+  const structure=kind==='center'?center:state.structures.find(item=>item.kind==='wall'&&item.status==='intact'&&!item.gate&&item.material==='zarzas');
+  Object.assign(structure,fixture.point(kind==='center'?5:1,4));structure.hp=Math.floor(structure.maxHp/2);state.ledger.balance=rational(100000);
   f=await nativeProductionAuthority(state,{onPrepare(record){
    if(record.kind==='initial-idle-body'&&f.records.some(item=>item.kind==='task-action'&&item.committed))return held;
   }});
   await untilProduction(f,()=>f.records.some(record=>record.kind==='initial-idle-body'&&record.committed));
-  assert.equal(f.command({kind:'requestRepair',id:'repair-after-task',targetId:center.id}).value,true);
+  assert.equal(f.command({kind:'requestRepair',id:'repair-after-task',targetId:structure.id}).value,true);
   const expected=()=>f.records.find((record,index)=>record.kind==='initial-idle-body'&&index>0);
   for(let i=0;i<240&&!expected();i++){f.advance();await f.present();}
   const action=f.records.find(record=>record.kind==='task-action'&&record.committed),prepared=expected();
   assert.equal(action?.resources.request.actionKind,'repair');
   assert.ok(prepared,'the completed repair must request prepared stationary resources');
   const before=f.snapshot(),taskId=before.workers[0].taskId,paymentId=`repair:${taskId}`;
-  assert.equal(before.structures.find(item=>item.id===center.id).hp,center.hp);
+  assert.equal(before.structures.find(item=>item.id===structure.id).hp,structure.hp);
   assert.equal(Object.hasOwn(before.ledger.entries,paymentId),false);
   assert.equal(before.events.some(event=>event.type==='RepairApplied'),false);
   assert.equal(prepared.resources.nativeInitialIdleBody.bodyId,action.resources.request.bodyId);
+  const repairSource=prepared.resources.nativeInitialIdleBody[`${kind}RepairSource`];
+  assert.equal(repairSource.reference.request.targetId,Number(structure.id.split('-').at(-1)));
+  if(kind==='wall'){
+   const reference=prepared.resources.nativeInitialIdleBody,{wallRepairSource,...stationary}=reference;
+   assert.throws(()=>copyNativeInitialIdleBodyReference({...reference,centerRepairSource:wallRepairSource}),/Multiple native initial Idle action sources/);
+   assert.equal(nativeInitialIdleBodySuccessor(reference,{...stationary,centerRepairSource:wallRepairSource}),false);
+  }
   release();await untilProduction(f,()=>prepared.committed);
-  const after=f.snapshot(),target=after.structures.find(item=>item.id===center.id);
-  assert.equal(target.hp,center.maxHp);assert.equal(target.status,'intact');
+  const after=f.snapshot(),target=after.structures.find(item=>item.id===structure.id);
+  assert.equal(target.hp,structure.maxHp);assert.equal(target.status,'intact');
+  if(kind==='wall')for(const key of ['gate','autoGate','x','z','yaw','baseScaleX'])assert.equal(target[key],structure[key]);
   assert.equal(after.workers[0].taskId,null);assert.equal(after.workers[0].nativeRouteAdmission,'native-idle');
   assert.equal(after.events.filter(event=>event.type==='RepairApplied'&&event.repair.paymentId===paymentId).length,1);
   assert.equal(Object.hasOwn(after.ledger.entries,paymentId),true);
   assert.equal(f.advance().events.filter(event=>event.type==='RepairApplied').length,1);
   assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
  }finally{release();await f?.close();fixture.close();}
+});
+
+test('a ruined wall stays outside the stationary repair consequence',async()=>{
+ const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
+ let f;
+ try{
+  const state=structuredClone(fixture.state),wall=state.structures.find(item=>item.kind==='wall'&&item.status==='intact'&&!item.gate&&item.material==='zarzas');
+  Object.assign(wall,fixture.point(1,4),{hp:0,status:'ruined',collapseRemaining:0});state.ledger.balance=rational(100000);
+  f=await nativeProductionAuthority(state);
+  await untilProduction(f,()=>f.records.some(record=>record.kind==='initial-idle-body'&&record.committed));
+  assert.equal(f.command({kind:'requestRepair',id:'ruined-wall-repair',targetId:wall.id}).value,true);
+  const action=()=>f.records.find(record=>record.kind==='task-action'&&record.committed);
+  for(let i=0;i<240&&!action();i++){f.advance();await f.present();}
+  assert.equal(action()?.resources.request.actionKind,'repair');
+  const before=f.snapshot(),paymentId=`repair:${before.workers[0].taskId}`;
+  for(let i=0;i<15;i++){f.advance();await f.present();}
+  const after=f.snapshot(),target=after.structures.find(item=>item.id===wall.id);
+  assert.equal(target.hp,0);assert.equal(target.status,'ruined');assert.equal(Object.hasOwn(after.ledger.entries,paymentId),false);
+  assert.equal(f.records.filter(record=>record.kind==='initial-idle-body').length,1);
+  assert.equal(after.events.some(event=>event.type==='RepairApplied'&&event.targetId===wall.id),false);
+  assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{await f?.close();fixture.close();}
 });
 
 test('closing the authority aborts its one pending preparation without publishing a late WALK',async()=>{

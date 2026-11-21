@@ -25,7 +25,24 @@ function bufferOwners(){
 }
 function nativeGates(frame){const result=[];lastScene?.traverse(node=>{const binding=node.nativeGpuGate;if(!binding)return;const geometry=binding.mesh.geometry,bytes=new Uint8Array(geometry.attributes.position.array.buffer);let hash=2166136261;for(const value of bytes){hash^=value;hash=Math.imul(hash,16777619)>>>0;}const clock=frame?.bindings.find(clock=>clock.semantic==='relative'&&clock.epoch===binding.lease.start&&JSON.stringify(clock.nativeRoute)===JSON.stringify(binding.nativeRoute)&&JSON.stringify(clock.nativeGate??null)===JSON.stringify(binding.nativeGate??null));result.push({entityId:node.entityId,mesh:binding.mesh.id,geometry:geometry.id,positionVersion:geometry.attributes.position.version,normalVersion:geometry.attributes.normal.version,positionHash:hash,opening:clock?binding.sampleOpening(clock.elapsed):null,nativeRoute:binding.nativeRoute,nativeGate:binding.nativeGate});});return result;}
 function nativeRig(){const attachments=[],pose=[];lastScene?.traverse(node=>{if(node.isBone)pose.push(node.id,...node.position.toArray(),...node.quaternion.toArray(),...node.scale.toArray());if(node.isMesh&&node._wgWalkAttachmentIndex!==undefined){let visible=true;for(let item=node;item;item=item.parent)visible&&=item.visible;if(visible)attachments.push({id:node.id,geometry:node.geometry.id,index:node._wgWalkAttachmentIndex});}if(node.isMesh&&node._wgWalkDuration!==undefined)pose.push(node.id,...node.matrixWorld.elements);});let hash=2166136261;for(const value of JSON.stringify(pose)){hash^=value.charCodeAt(0);hash=Math.imul(hash,16777619)>>>0;}return {attachments,poseHash:hash};}
-function residentOwners(){const actors=[],instances=[];for(const root of lastScene?.children??[]){const bones=[],meshes=[];root.traverse(node=>{if(node.isBone)bones.push(node.id);if(node.isMesh){let effectiveVisible=true;for(let parent=node;parent;parent=parent.parent)effectiveVisible&&=parent.visible;meshes.push({id:node.id,geometry:node.geometry.id,material:[node.material].flat().map(m=>m.id),visible:node.visible,effectiveVisible});}});if(bones.length)actors.push({root:root.id,bones,meshes});}lastScene?.traverse(node=>{if(node.isInstancedMesh)instances.push({id:node.id,geometry:node.geometry.id,material:[node.material].flat().map(m=>m.id),count:node.count});});return {actors,instances};}
+function residentOwners(){
+ const actors=[],instances=[],target=globalThis.__auditTrackedStructure;
+ let structure=null;
+ for(const root of lastScene?.children??[]){
+  const bones=[],meshes=[];
+  root.traverse(node=>{
+   if(node.isBone)bones.push(node.id);
+   if(!node.isMesh)return;
+   let effectiveVisible=true;
+   for(let parent=node;parent;parent=parent.parent)effectiveVisible&&=parent.visible;
+   meshes.push({id:node.id,geometry:node.geometry.id,material:[node.material].flat().map(m=>m.id),visible:node.visible,effectiveVisible});
+  });
+  if(bones.length)actors.push({root:root.id,bones,meshes});
+  if(target&&root.userData.entityId===target)structure={root:root.id,visible:root.visible,meshes};
+ }
+ lastScene?.traverse(node=>{if(node.isInstancedMesh)instances.push({id:node.id,geometry:node.geometry.id,material:[node.material].flat().map(m=>m.id),count:node.count});});
+ return {actors,instances,...(target?{structure}:{})};
+}
 function counts(device){
  let result=devices.get(device);if(result)return result;result={};devices.set(device,result);
  for(const name of ['createBuffer','createTexture','createSampler','createBindGroup','createBindGroupLayout','createPipelineLayout','createShaderModule','createRenderPipeline','createRenderPipelineAsync','createComputePipeline','createComputePipelineAsync']){

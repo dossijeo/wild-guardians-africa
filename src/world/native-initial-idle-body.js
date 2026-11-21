@@ -4,8 +4,10 @@ import {copyNativeTaskActionAttestation} from './native-task-action-attestation.
 import {nativeTaskActionActor} from './native-task-action-presentation.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
-const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest','wateringSource','centerRepairSource'];
-export const nativeInitialIdleActionSource=value=>value?.wateringSource??value?.centerRepairSource??null;
+const actionSourceFields=['wateringSource','centerRepairSource','wallRepairSource'];
+const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest',...actionSourceFields];
+const actionSourceField=value=>actionSourceFields.find(field=>value[field]!==undefined);
+export const nativeInitialIdleActionSource=value=>value?.wateringSource??value?.centerRepairSource??value?.wallRepairSource??null;
 // Residency of the held, initialized Idle/Alert pose. There is no task, route,
 // action duration or authorization to run the remaining Idle policy here.
 export function copyNativeInitialIdleBodyReference(value){
@@ -13,12 +15,12 @@ export function copyNativeInitialIdleBodyReference(value){
  const sourceRequest=copyNativeInitialIdleRequestReference(value.sourceRequest),worldBoundary=copyNativeWorldBoundary(value.worldBoundary);
  if(!sourceRequest.idleState||value.actorId!==sourceRequest.actorId||value.bodyId!==sourceRequest.bodyId||value.profile!==sourceRequest.profile||!id(value.sourceControlSequence)||value.sourceControlSequence<sourceRequest.requestSequence||
   worldBoundary.authorityEpoch!==sourceRequest.authorityEpoch||worldBoundary.nativeSession!==sourceRequest.nativeSession||worldBoundary.effectiveTime<sourceRequest.requestedAt)throw TypeError('Native initial Idle body differs from its held source');
- if(value.wateringSource!==undefined&&value.centerRepairSource!==undefined)throw TypeError('Multiple native initial Idle action sources');
- const sourceField=value.wateringSource!==undefined?'wateringSource':value.centerRepairSource!==undefined?'centerRepairSource':null;
+ const sourceField=actionSourceField(value);
+ if(sourceField&&actionSourceFields.some(field=>field!==sourceField&&value[field]!==undefined))throw TypeError('Multiple native initial Idle action sources');
  const actionSource=sourceField?copyNativeTaskActionAttestation(value[sourceField]):null;
  if(actionSource){
   const action=actionSource.reference,request=action.request,pose=sourceRequest.pose;
-  const supported=sourceField==='centerRepairSource'?request.actionKind==='repair':['initial','water'].includes(request.actionKind);
+  const supported=sourceField==='wateringSource'?['initial','water'].includes(request.actionKind):request.actionKind==='repair';
   if(!supported||nativeTaskActionActor(request)!==sourceRequest.actorId||request.bodyId!==sourceRequest.bodyId||
      action.worldBoundary.authorityEpoch!==sourceRequest.authorityEpoch||action.worldBoundary.nativeSession!==sourceRequest.nativeSession||action.worldBoundary.ticket>=worldBoundary.ticket||
      actionSource.actionSequence!==sourceRequest.requestSequence||action.endTime!==sourceRequest.requestedAt||action.profile!==sourceRequest.profile||
@@ -29,7 +31,8 @@ export function copyNativeInitialIdleBodyReference(value){
 export function sameNativeInitialIdleBodyReference(a,b){try{return JSON.stringify(copyNativeInitialIdleBodyReference(a))===JSON.stringify(copyNativeInitialIdleBodyReference(b));}catch{return false;}}
 export function nativeInitialIdleBodySuccessor(previous,next){
  const a=copyNativeInitialIdleBodyReference(previous),b=copyNativeInitialIdleBodyReference(next);
- return sameNativeInitialIdleRequestReference(a.sourceRequest,b.sourceRequest)&&JSON.stringify(nativeInitialIdleActionSource(a))===JSON.stringify(nativeInitialIdleActionSource(b))&&b.sourceControlSequence>=a.sourceControlSequence&&
+ return sameNativeInitialIdleRequestReference(a.sourceRequest,b.sourceRequest)&&actionSourceField(a)===actionSourceField(b)&&
+  JSON.stringify(nativeInitialIdleActionSource(a))===JSON.stringify(nativeInitialIdleActionSource(b))&&b.sourceControlSequence>=a.sourceControlSequence&&
   a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&
   (b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeInitialIdleBodyReference(a,b));
 }

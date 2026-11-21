@@ -1,6 +1,7 @@
 import {WORKER_SPATIAL_PROFILE} from '../world/wild-engine/spatial-movement-profiles.js';
 import {urgentWork} from './locomotion.js';
 import {contractExpired,PROFILES} from './workforce.js';
+import {isIntactRepairTarget} from './rules.js';
 const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
@@ -50,8 +51,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if(action?.completed){
      const {actionKind:kind,targetId}=action.binding.reference.request;
      if(kind==='harvest')return {actorId,kind:'task-consequence',operation:'startNativeTaskConsequenceAfterGpuQuiescence',prepare:'prepareNativeTaskConsequenceResources'};
-     const centerRepair=kind==='repair'&&state.structures.some(target=>target.id===`structure-${targetId}`&&target.kind==='center'&&target.status==='intact');
-     if(stationaryTaskNavigation&&(centerRepair||['initial','water'].includes(kind)))return {actorId,kind:'stationary-task',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',stationaryTaskNavigation};
+     const intactRepair=kind==='repair'&&state.structures.some(target=>target.id===`structure-${targetId}`&&isIntactRepairTarget(target));
+     if(stationaryTaskNavigation&&(intactRepair||['initial','water'].includes(kind)))return {actorId,kind:'stationary-task',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',stationaryTaskNavigation};
     }
    }
    if(marker==='native-delivery'&&planner.nativeDeliveryExecution(actorId)?.arrived)return {actorId,kind:'task-settlement',operation:'startNativeTaskSettlementAfterGpuQuiescence',prepare:'prepareNativeTaskSettlementResources'};
