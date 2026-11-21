@@ -5,7 +5,7 @@ import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeWorldStopEffects} from '../world/native-suspended-body-reference.js';
 import {NativeWall} from './walls.js';
 import {createWebGpuReplacementSlot} from './webgpu-replacement-slot.js';
-import {createNativeGateGpuBinding} from './native-gate-gpu-binding.js';
+import {createNativeGateGpuBinding,bindRestoredGateRepair} from './native-gate-gpu-binding.js';
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
@@ -15,12 +15,19 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady:()=>{
   const binding=slot.active?.nativeGpuGate;if(binding&&inherited.has(binding)){binding.commit();inherited.delete(binding);}onReady();
  },onError,release:wall=>wall.dispose()});let closed=false,gatePreparation=null;
+ function makeWall(value,time,previous){
+  const p=value.wallPresentation,restore=!previous&&value.gate===true&&value.status==='intact'&&value.hp===value.maxHp&&p&&p.from>0&&p.from<1&&p.to===1&&Number.isFinite(time)&&time>=p.at&&time<p.at+.48;
+  const source=restore?{...value,hp:p.from*value.maxHp,wallPresentation:null}:value;
+  const wall=createWall(prototypes,source,time,{previous,renderer});
+  if(restore)try{bindRestoredGateRepair({wall,entity:value,elapsed:time,presentationClock,getPresentationTime});}catch(error){wall.dispose();throw error;}
+  return wall;
+ }
  function update(value,time){
   if(closed)return;
   const base=slot.active??slot.pending;let key=base?.nextConfirmedStageKey(value,time)??null,first=null;
-  if(key===null){first=createWall(prototypes,value,time,{previous:null,renderer});key=first.stageKey;}
+  if(key===null){first=makeWall(value,time,null);key=first.stageKey;}
   slot.request(key,previous=>{
-   const wall=first??createWall(prototypes,value,time,{previous,renderer});
+   const wall=first??makeWall(value,time,previous);
    try{
     setWallPresentation?.(wall,value);
     if(previous?.nativeGpuGate){
@@ -37,7 +44,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  }
  let initialParticipant=null;
  if(prepareInitial){
-  const wall=createWall(prototypes,entity,elapsed,{previous:null,renderer});let handed=false;
+  const wall=makeWall(entity,elapsed,null);let handed=false;
   try{
    setWallPresentation?.(wall,entity);
    initialParticipant=slot.prepareParticipant(wall.stageKey,()=>{handed=true;return wall;},{initial:true});
@@ -126,7 +133,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  function prepareNativeGate({presentation,motion,getPickTime,signal}){
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
   const resident=slot.active?.nativeGpuGate;if(motion.stoppedSelector){if(!resident)throw Error('Native stopped gate has no resident source');resident.captureRetention(presentation,presentation.worldBoundary);}
-  const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime,presentationClock,getPresentationTime});let previous=wall.nativeGpuGate??null;
+  const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime,presentationClock,getPresentationTime});let previous=wall.nativeGpuGate??wall.nativeGpuRepair??null;
   let finished=false,activated=false;
   const current=()=>!closed&&!finished&&!signal?.aborted&&gatePreparation===participant&&slot.upToDate&&slot.active===wall&&(activated?binding.current():binding.canActivate());
   const retire=value=>{if(!value)return;const release=()=>value.dispose();if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(wall,release);else release();};

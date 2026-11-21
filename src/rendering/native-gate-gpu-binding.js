@@ -17,7 +17,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  if(wall.stageKey!==stages.map(stage=>stage.key+'>'+stage.dest).join('|')||!parts[0]?.bridge.leafFlags||parts.slice(1).some(part=>part.bridge.leafFlags))throw Error('Native gate damage topology unavailable');
  const siblings=parts.slice(1).map(part=>({part,geometry:part.mesh.geometry,material:part.mesh.material}));
  const shapeCurrent=()=>wall.visual===visual&&wall.parts.length===parts.length&&parts.every((part,i)=>wall.parts[i]===part&&part.mesh.parent===wall)&&siblings.every(({part,geometry})=>part.mesh.geometry===geometry);
- const part=wall.parts[0],mesh=part.mesh,geometry=mesh.geometry;let previous=wall.nativeGpuGate??null;const original=previous?.originalMaterial??mesh.material,timeNode=motion.timeNode;
+ const part=wall.parts[0],mesh=part.mesh,geometry=mesh.geometry;let previous=wall.nativeGpuGate??wall.nativeGpuRepair??null;const previousRepair=previous!=null&&previous===wall.nativeGpuRepair;const original=previous?.originalMaterial??mesh.material,timeNode=motion.timeNode;
  if(!original?.isNodeMaterial||original.positionNode||original.normalNode||geometry.attributes.wgGatePosition?.count!==packet.leafFlags.length||geometry.attributes.wgGateNormal?.count!==packet.leafFlags.length||geometry.attributes.wgGateLeaf?.count!==packet.leafFlags.length||packet.modelId!==({zarzas:1,empalizada:2,reforzado:3}[wall.nativeGateMaterial]))throw Error('Native gate material or geometry unavailable');
  for(let i=0;i<packet.positions.length;i++)if(Math.abs(packet.positions[i]-part.bridge.pos[i])>1e-6)throw Error('Native gate rest geometry mismatch');
  for(let i=0;i<packet.leafFlags.length;i++)if(packet.leafFlags[i]!==geometry.attributes.wgGateLeaf.array[i])throw Error('Native gate leaf partition mismatch');
@@ -46,7 +46,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  function raycast(raycaster,hits){rotation.makeRotationY(-sample(getPickTime())*Math.PI/2);proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}}
  function rootCurrent(){wall.updateWorldMatrix(true,true);return mesh.matrixWorld.elements.every((value,i)=>Math.abs(value-root.elements[i])<=1e-5);}
  const binding={material,mesh,repairLayer,materialAlternatives:[{mesh,material},...(repairLayer?.records.slice(1).map(r=>({mesh:r.mesh,material:r.material}))??[])],originalMaterial:original,originalRaycast,originalBounds,originalSphere,lease:Object.freeze({start:packet.startTime,end:packet.worldBoundary?Number.MAX_SAFE_INTEGER:packet.endTime}),nativeRoute:packet.nativeRoute,nativeGate:installed.nativeGate??null,
-  canActivate:()=>!disposed&&!activated&&shapeCurrent()&&wall.parts[0]===part&&(wall.nativeGpuGate??null)===previous&&mesh.material===(previous?.material??original)&&siblings.every(({part,material})=>part.mesh.material===material)&&rootCurrent(),
+  canActivate:()=>!disposed&&!activated&&shapeCurrent()&&wall.parts[0]===part&&(wall.nativeGpuGate??wall.nativeGpuRepair??null)===previous&&mesh.material===(previous?.material??original)&&siblings.every(({part,material})=>part.mesh.material===material)&&rootCurrent(),
   current:()=>!disposed&&activated&&shapeCurrent()&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&(repairLayer?repairLayer.current():siblings.every(({part,material})=>part.mesh.material===material))&&rootCurrent(),
   checkEntity(entity,elapsed){if(entity.gate!==true||entity.status!=='intact'||!Number.isFinite(entity.hp)||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||entity.material!==wall.nativeGateMaterial||!binding.current()||!(repairLayer?repairLayer.accept(entity,elapsed):entity.hp/entity.maxHp===visual))throw Error('Native gate requires a prepared geometry or lifecycle transition');},
   sampleOpening:sample,
@@ -90,13 +90,42 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   },
   activate(){if(!binding.canActivate())throw Error('Native gate graphics changed during preparation');activated=true;wall.nativeGpuGate=binding;mesh.material=material;mesh.raycast=raycast;geometry.boundingBox=bounds;geometry.boundingSphere=sphere;repairLayer?.activate();},
   commit(){if(committed||!binding.current())throw Error('Native gate publication changed');committed=true;motion.seal?.();previous=null;},
-  rollback(){if(!activated)return;if(committed||wall.nativeGpuGate!==binding)throw Error('Native gate replacement ownership changed');repairLayer?.rollback();activated=false;wall.nativeGpuGate=previous;mesh.material=previous?.material??original;mesh.raycast=previous?.raycast??originalRaycast;geometry.boundingBox=previous?.bounds??originalBounds;geometry.boundingSphere=previous?.sphere??originalSphere;},
+  rollback(){if(!activated)return;if(committed||wall.nativeGpuGate!==binding)throw Error('Native gate replacement ownership changed');repairLayer?.rollback();activated=false;wall.nativeGpuGate=previousRepair?null:previous;mesh.material=previous?.material??original;mesh.raycast=previous?.raycast??originalRaycast;geometry.boundingBox=previous?.bounds??originalBounds;geometry.boundingSphere=previous?.sphere??originalSphere;},
   raycast,bounds,sphere,
   dispose(){if(disposed)return;disposed=true;if(wall.nativeGpuGate===binding){wall.nativeGpuGate=null;mesh.material=original;mesh.raycast=originalRaycast;geometry.boundingBox=originalBounds;geometry.boundingSphere=originalSphere;}repairLayer?.dispose();unregister?.();material.dispose();}
  };
  if(!binding.canActivate()){binding.dispose();throw Error('Native gate placement does not match its native mechanism');}
  return binding;
 }
+
+// A restored Repair is presentation state, not a native motor permission.
+// Install the existing morph layer before the slot's first admission. The saved
+// opening remains fixed until a real native gate binding acquires this owner.
+export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,getPresentationTime}={}){
+ const p=entity?.wallPresentation,parts=wall?.parts;
+ if(!wall?.isObject3D||wall.nativeGpuGate||wall.nativeGpuRepair||wall.nativeGateBinding||entity.id!==wall.entityId||entity.material!==wall.nativeGateMaterial||entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||!p||!Number.isFinite(p.from)||p.from<=0||p.from>=1||p.to!==1||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(elapsed)||elapsed<p.at||elapsed>=p.at+.48||wall.visual!==p.from||wall.target!==p.from||parts?.length!==2||!parts[0].bridge.leaf||!Number.isFinite(entity.gateOpen)||entity.gateOpen<0||entity.gateOpen>1)
+  throw Error('Restored gate Repair source unavailable');
+ const opening=entity.gateOpen,visual=wall.visual,[x,z]=parts[0].bridge.leaf.hinge,pivot=uniform(new Vector3(x,0,z));
+ const mesh=parts[0].mesh,geometry=mesh.geometry,originalMaterial=mesh.material,originalRaycast=mesh.raycast,originalBounds=geometry.boundingBox,originalSphere=geometry.boundingSphere;
+ const material=cloneWebGpuNodeMaterial(originalMaterial);material.userData=originalMaterial.userData;
+ let layer,unregister;
+ try{
+  unregister=parts[0].sourceMaterial?.[structureMaterialReplica]?.(material);
+  layer=createGateRepairLayer({parts,material,opening:float(opening),pivot,presentationClock,getPresentationTime,visual,previous:null});
+  if(!layer.accept(entity,elapsed))throw Error('Restored gate Repair curve unavailable');
+ }catch(error){layer?.dispose();unregister?.();material.dispose();throw error;}
+ const proxy=new Mesh(geometry,originalMaterial),rotation=new Matrix4().makeRotationY(-opening*Math.PI/2),hinge=pivot.value;
+ proxy.getVertexPosition=(index,out)=>{layer.position(0,index,out);if(parts[0].bridge.leafFlags[index])out.sub(hinge).applyMatrix4(rotation).add(hinge);return out;};
+ const raycast=(raycaster,hits)=>{proxy.matrixWorld.copy(mesh.matrixWorld);const found=[];Mesh.prototype.raycast.call(proxy,raycaster,found);for(const hit of found){hit.object=mesh;hits.push(hit);}};
+ let closed=false;
+ const binding={material,originalMaterial,originalRaycast,originalBounds,originalSphere,raycast,bounds:layer.records[0].bounds,sphere:layer.records[0].sphere,repairLayer:layer,
+  current:()=>!closed&&wall.nativeGpuRepair===binding&&!wall.nativeGpuGate&&wall.visual===visual&&wall.parts===parts&&parts.length===2&&layer.records.every((r,i)=>parts[i].mesh===r.mesh&&r.mesh.parent===wall)&&mesh.geometry===geometry&&mesh.material===material&&layer.current(),
+  checkEntity(value,at){if(!binding.current()||value.id!==entity.id||value.material!==entity.material||value.gate!==true||value.status!=='intact'||!Number.isFinite(value.hp)||value.maxHp!==entity.maxHp||value.gateOpen!==opening||!layer.accept(value,at))throw Error('Restored gate Repair requires a prepared geometry or motor transition');},
+  dispose(){if(closed)return;closed=true;if(wall.nativeGpuRepair===binding)wall.nativeGpuRepair=null;if(mesh.material===material){mesh.material=originalMaterial;mesh.raycast=originalRaycast;geometry.boundingBox=originalBounds;geometry.boundingSphere=originalSphere;}layer.dispose();unregister?.();material.dispose();}
+ };
+ wall.nativeGpuRepair=binding;mesh.material=material;mesh.raycast=raycast;geometry.boundingBox=binding.bounds;geometry.boundingSphere=binding.sphere;layer.activate();return binding;
+}
+
 
 // The confirmed visual clock drives the 480 ms Repair.
 // Successive bindings on the same wall retain this policy and the motor clock.

@@ -48,6 +48,7 @@ export class NativeWall extends THREE.Group {
       this.applyNativeGatePose(entity.nativeGatePose);return;
     }
     if(this.nativeGpuGate){this.nativeGpuGate.checkEntity(entity,elapsed);return;}
+    if(this.nativeGpuRepair){this.nativeGpuRepair.checkEntity(entity,elapsed);return;}
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -151,6 +152,6 @@ export class NativeWall extends THREE.Group {
     const ao=mesh.geometry.attributes.ambientVisibility;if(ao){for(let i=0;i<ao.count;i++)ao.array[i]=bridge.visibility[i]+(1-bridge.visibility[i])*(bridge.leafFlags[i]?pose.opening:0);ao.needsUpdate=true;}
     mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
   }
-  disposeParts(){this.nativeGpuGate?.dispose();for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();disposeWebGpuWallGeometry(mesh.geometry,this.webGpuRenderer);mesh.material.dispose();this.remove(mesh);}this.parts=[];}
+  disposeParts(){this.nativeGpuGate?.dispose();this.nativeGpuRepair?.dispose();for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();disposeWebGpuWallGeometry(mesh.geometry,this.webGpuRenderer);mesh.material.dispose();this.remove(mesh);}this.parts=[];}
   dispose(){this.disposeParts();}
 }

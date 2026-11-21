@@ -36,12 +36,12 @@ La misma orden pasó con los otros dos materiales alineados. En empalizada, Repa
 
 A 30 Hz, empalizada registró 56,3 ms en un dibujo al liberar la retención de un ticket posterior a Repair. La causa de la duración de esa retención sigue abierta. El máximo de reforzado fue 36,1 ms durante el arranque. [Recibos por material](performance/native-gate-repair-morph-20261121.json).
 
-La restauración iniciada a mitad de una reparación, la reconstrucción tras una ruina y los cierres de trayectos con motor activo siguen abiertos. La continuidad funcional y el límite de 16,67 ms de C4 se verifican por separado.
+[La restauración de Repair con la apertura estática](native-restored-gate-repair-handoff-20261121.md) pasó en GPU. Quedan una restauración con el motor en movimiento, la reconstrucción tras una ruina y los cierres de trayectos con motor activo. La continuidad funcional y el límite de 16,67 ms de C4 se verifican por separado.
 
 ## Control de guardado durante Repair
 
 El coordinador público guardó la partida en t=17,40, 150 ms después del inicio de la curva de una puerta de zarzas. El checkpoint conservó la puerta a 60 HP, la apertura en 1, las doce regiones y el único débito de cinco monedas. Una autoridad nueva verificó el checkpoint y NVIDIA dibujó las dos partes a partir del tiempo guardado.
 
-La restauración todavía usa el morph de CPU. La prueba encontró cero shaders de morph de puerta y ningún propietario de motor gráfico. Al reanudar, cuatro atributos de posición y normal aumentaron de versión 1 a 7 sobre las geometrías residentes tras restaurar. El conjunto de esos atributos ocupa 646.560 bytes. El recuento de versiones indica cambios de atributos. La traza carece del contador de bytes enviados para cada uno.
+El control anterior a la corrección usó el morph de CPU. La prueba encontró cero shaders de morph de puerta y ningún propietario de motor gráfico. Al reanudar, cuatro atributos de posición y normal aumentaron de versión 1 a 7 sobre las geometrías residentes tras restaurar. El conjunto de esos atributos ocupa 646.560 bytes. El recuento de versiones indica cambios de atributos. La traza carece del contador de bytes enviados para cada uno.
 
 La malla sana se observó por primera vez en t=19,20, después del final de la curva en t=17,73. En la comparación de propietarios antes y después se conservaron 790 buffers sin sustituciones. El débito y el evento de Repair conservaron una única aplicación. El consumidor drenó sin errores WebGPU. El máximo de 35,2 ms a 30 Hz sigue sin atribución. Queda preparar el morph de GPU desde el dato confirmado del checkpoint y validar sus escrituras y su primer dibujo. [Recibo del guardado y de la restauración](performance/native-gate-repair-active-restore-baseline-20261121.json).
