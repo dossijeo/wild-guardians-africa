@@ -1,0 +1,219 @@
+{
+  "source": "8aca22a14858fbe85688334f942862b8f48267c0",
+  "workingChanges": "Damaged-gate candidate present during hardware capture. The traffic gate was healthy throughout.",
+  "targetIntervalMs": 16.666666666666668,
+  "displayHz": 30,
+  "viewport": [
+    640,
+    480
+  ],
+  "quality": "muy_baja",
+  "controls": [
+    {
+      "sha256": "4c0acd773a456368293f353e6fef5676e09b30f264410581cd2b980092bf1bf6",
+      "gates": [
+        [
+          1000000
+        ],
+        [
+          1000000
+        ]
+      ],
+      "last": {
+        "elapsed": 23.199999999999974,
+        "opening": 1,
+        "workers": [
+          {
+            "id": "worker-900011",
+            "status": "acting",
+            "admission": "native-action",
+            "x": -10.600000381469727,
+            "z": 5.300000190734863
+          },
+          {
+            "id": "worker-900012",
+            "status": "arriving",
+            "admission": "native-farm-arrival",
+            "x": -13.949600219726562,
+            "z": 7.676354750249548
+          }
+        ]
+      },
+      "authority": {
+        "actorId": "worker-900011",
+        "kind": "task-consequence",
+        "status": "blocked"
+      }
+    },
+    {
+      "sha256": "d04dee12550455dcb7a422ece2a60206e339f4086a41853253b26605550934a9",
+      "gates": [
+        [],
+        []
+      ],
+      "last": {
+        "elapsed": 22.599999999999966,
+        "opening": null,
+        "workers": [
+          {
+            "id": "worker-900011",
+            "status": "acting",
+            "admission": "native-action",
+            "x": -10.600000381469727,
+            "z": 5.300000190734863
+          },
+          {
+            "id": "worker-900012",
+            "status": "arriving",
+            "admission": "native-farm-arrival",
+            "x": -14,
+            "z": 7.675999999999918
+          }
+        ]
+      },
+      "authority": {
+        "actorId": "worker-900011",
+        "kind": "task-consequence",
+        "status": "blocked"
+      }
+    }
+  ],
+  "hardware": {
+    "sha256": "d383b1c2f99f65bec552fb81570e4567fba4cffd8f0d6530451fb6021c0139b9",
+    "adapter": [
+      "nvidia",
+      "turing"
+    ],
+    "bootstrap": "Confirmed initial draw of both models and the gate, then attached native authority and enabled clock steps",
+    "windows": [
+      {
+        "body": 1,
+        "actor": 900011,
+        "gateIds": [
+          1000000
+        ],
+        "ticket": 2,
+        "root": 762,
+        "count": 32,
+        "retained": true,
+        "aperture": {
+          "elapsed": 19.849999999999927,
+          "opening": 1,
+          "workers": [
+            {
+              "x": -13.949600219726562,
+              "z": 8.182641344983978,
+              "status": "arriving",
+              "admission": "native-farm-arrival",
+              "profile": "youngMale"
+            },
+            {
+              "x": -14,
+              "z": 13.4,
+              "status": "arriving",
+              "admission": "pending-farm-arrival-resources",
+              "profile": "youngFemale"
+            }
+          ]
+        },
+        "observedDraws": 38,
+        "observedMaxIntervalMs": 35.099853515625
+      },
+      {
+        "body": 2,
+        "actor": 900012,
+        "gateIds": [
+          1000000
+        ],
+        "ticket": 6,
+        "root": 831,
+        "count": 32,
+        "retained": true,
+        "aperture": {
+          "elapsed": 29.500000000000064,
+          "opening": 1,
+          "workers": [
+            {
+              "x": -10.600000381469727,
+              "z": 5.300000190734863,
+              "status": "acting",
+              "admission": "native-action",
+              "profile": "youngMale"
+            },
+            {
+              "x": -13.949600219726562,
+              "z": 8.162354750249555,
+              "status": "arriving",
+              "admission": "native-farm-arrival",
+              "profile": "youngFemale"
+            }
+          ]
+        },
+        "observedDraws": 86,
+        "observedMaxIntervalMs": 35.60009765625
+      }
+    ],
+    "gateRoot": 515,
+    "gateMesh": 242,
+    "minimumDistanceObserved": 1.9779009892933999,
+    "retainedGeneration": true,
+    "after": {
+      "elapsed": 29.90000000000007,
+      "opening": 1,
+      "workers": [
+        {
+          "x": -10.600000381469727,
+          "z": 5.300000190734863,
+          "status": "acting",
+          "admission": "native-action",
+          "profile": "youngMale"
+        },
+        {
+          "x": -13.949600219726562,
+          "z": 7.730354750249549,
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "profile": "youngFemale"
+        }
+      ]
+    },
+    "gpuErrors": 0,
+    "drained": true,
+    "unattributedStartup": [
+      {
+        "at": 1795259989801.3,
+        "sequence": 25,
+        "trigger": "raf",
+        "intervalMs": 42.400146484375,
+        "drawMs": 1.2998046875,
+        "replay": true,
+        "clockElapsed": 10
+      },
+      {
+        "at": 1795259990906.5999,
+        "sequence": 25,
+        "trigger": "raf",
+        "intervalMs": 47.699951171875,
+        "drawMs": 1.5,
+        "replay": true,
+        "clockElapsed": 10
+      }
+    ]
+  },
+  "coldControl": {
+    "sha256": "cecf7a8b981d0b6ca7e4d959ba9c55f5de2ec7ab8a03c9e9c2e907466c28644d",
+    "stages": [
+      "entry",
+      "publication-ready",
+      "gates-ready",
+      "roster-ready",
+      "ready-to-compile",
+      "Error: Native resource preparation timed out"
+    ]
+  },
+  "earlyCropControl": {
+    "sha256": "80acbd848bd3da4043a934274ee0ce93eb265ed1a77635aec21fb5ec2f37da26",
+    "error": "Error: Native stopped gate lacks its projected physical pose",
+    "lastZ": 7.534641344983965
+  }
+}
