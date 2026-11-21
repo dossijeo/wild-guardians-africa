@@ -538,6 +538,221 @@
           "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
         }
       }
+    },
+    "trace60Warm": {
+      "base": "c98b2de59d0dcd0fb5c09c30aedda677934b775c",
+      "staging": "The confirmed visual bootstrap finished before the route phase.",
+      "rawSha256": "f21508a5a5643dda7b3bf0b965942a1c5d34074bea9c6edfcf10ba7206341548",
+      "traceSha256": "fa21bdb21a17f326a3da205ae80976a3d58abe4690406ab518ac03ab23b26a22",
+      "eventCount": 1524398,
+      "dataLossOccurred": false,
+      "stages": [
+        {
+          "stage": "task",
+          "ticket": 6,
+          "samples": 437,
+          "overBudget": 249,
+          "p95": 18,
+          "max": {
+            "at": 1795265890036.2,
+            "sequence": 44,
+            "ticket": 6,
+            "intervalMs": 22.199951171875,
+            "drawMs": 3.400146484375,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        },
+        {
+          "stage": "action",
+          "ticket": 8,
+          "samples": 317,
+          "overBudget": 179,
+          "p95": 17.199951171875,
+          "max": {
+            "at": 1795265900191,
+            "sequence": 171,
+            "ticket": 8,
+            "intervalMs": 26.800048828125,
+            "drawMs": 4.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "stage": "carry",
+          "ticket": 10,
+          "samples": 226,
+          "overBudget": 128,
+          "p95": 18.300048828125,
+          "max": {
+            "at": 1795265902603.6,
+            "sequence": 172,
+            "ticket": 10,
+            "intervalMs": 22.900146484375,
+            "drawMs": 4.5,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        }
+      ],
+      "total": {
+        "samples": 980,
+        "overBudget": 556
+      },
+      "action": {
+        "sample": {
+          "at": 1795265900191,
+          "sequence": 171,
+          "ticket": 8,
+          "intervalMs": 26.800048828125,
+          "drawMs": 4.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        "opportunities": [
+          {
+            "at": 1795265900164.2,
+            "intervalMs": 13,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 171
+          },
+          {
+            "at": 1795265900191,
+            "intervalMs": 26.800048828125,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 171
+          }
+        ],
+        "latestVizAt": 1795265900180.321,
+        "drawWatcherAt": 1795265900190.775,
+        "drawProviderAt": 1795265900190.793,
+        "drawRafAt": 1795265900190.815,
+        "vizToWatcherMs": 10.454,
+        "vizToProviderMs": 10.472,
+        "providerToCallbackMs": 0.022,
+        "drawThreadSpansBeforeProvider": [
+          {
+            "name": "ThreadControllerImpl::RunTask",
+            "at": 1795265900190.775,
+            "ms": 0.031
+          },
+          {
+            "name": "Edge_RunTask",
+            "at": 1795265900190.779,
+            "ms": 0.026
+          },
+          {
+            "name": "SimpleWatcher::OnHandleReady",
+            "at": 1795265900190.782,
+            "ms": 0.022
+          },
+          {
+            "name": "Receive mojo message",
+            "at": 1795265900190.788,
+            "ms": 0.013
+          }
+        ],
+        "overlappingMain": {
+          "name": "FunctionCall",
+          "phase": "X",
+          "key": "4532:25504",
+          "role": "CrRendererMain",
+          "category": "devtools.timeline",
+          "at": 1795265900179.306,
+          "ms": 10.715,
+          "args": {
+            "data": {
+              "columnNumber": 19,
+              "frame": "00BCA569B167ECB8A94ED9ACD352CA00",
+              "functionName": "worker.onmessage",
+              "isolate": "1162274372155572068",
+              "lineNumber": 30,
+              "sampleTraceId": 7173558716878568,
+              "scriptId": "15",
+              "url": "http://127.0.0.1:5218/src/simulation/worker-hosted-runtime.js"
+            }
+          }
+        },
+        "overlappingAuthority": {
+          "name": "FunctionCall",
+          "phase": "X",
+          "key": "4532:25556",
+          "role": "Authority",
+          "category": "devtools.timeline",
+          "at": 1795265900180.082,
+          "ms": 11.536,
+          "args": {
+            "data": {
+              "columnNumber": 16,
+              "functionName": "self.onmessage",
+              "isolate": "8253285948403766524",
+              "lineNumber": 31,
+              "sampleTraceId": 7173558716878567,
+              "scriptId": "3",
+              "url": "http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module"
+            }
+          }
+        }
+      },
+      "display": {
+        "apply": {
+          "atUnixMs": 1795265860866.1543,
+          "action": "apply",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        },
+        "restore": {
+          "atUnixMs": 1795265928399.0308,
+          "action": "restore",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        }
+      },
+      "bodyId": 1,
+      "crateId": "crate-1000003",
+      "gpuErrors": 0,
+      "drained": true
     }
   }
 }
