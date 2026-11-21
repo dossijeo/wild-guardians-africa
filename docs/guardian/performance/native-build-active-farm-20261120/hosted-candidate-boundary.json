@@ -1,0 +1,262 @@
+{
+  "testedBranch": "codex/guardian-3d-animation",
+  "validationCandidate": [
+    {
+      "path": "src/rendering/webgpu-world-surface.js",
+      "baselineSha256": "228c71f29ed3dabf8d81e6e5d2fac3f77aeb3a45f6c2c4f8725b6addc2c68588",
+      "candidateSha256": "a9e9d24d28ced2638d67abf643e790876dc24956e1c36b120702bb60067f252a"
+    },
+    {
+      "path": "src/simulation/worker-runtime-host.js",
+      "baselineSha256": "391d79931045ad4b88673f6b14235e43466fd73ddb0fa95d407c31e0877f5d7b",
+      "candidateSha256": "7b3440743595490165022291dc19a85a6f7fa8e0c7e4d58d79f67feaba6eabf5"
+    },
+    {
+      "path": "tests/native-build-surface-entry.test.js",
+      "baselineSha256": null,
+      "candidateSha256": "b0a23f55850c18a105a02deb3c2f994f56b77690ee67b93a9ddced4cc2b4e216"
+    },
+    {
+      "path": "tests/native-build-receipt-order.test.js",
+      "baselineSha256": null,
+      "candidateSha256": "ef75dfe74677261908bf6cf0c629ec8341a59a812eb176d66f8290e5ac12acdd"
+    },
+    {
+      "path": "docs/guardian/native-build-surface-receipt-20261121.md",
+      "baselineSha256": null,
+      "candidateSha256": "08d12b33bcc543b7e78f2e8a76214133003e5dd35bb685369f765390acfad21a"
+    }
+  ],
+  "logicalDevice": "WebGPU NVIDIA Turing",
+  "crossing": {
+    "stage": "Build commit",
+    "sourceFault": "Error: Error: Native world changed outside its committed resource boundary\n    at Object.nativeWorldResourceBoundary (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js?t=1795222242083:239:69)\n    at Object.execute (http://127.0.0.1:5218/src/simulation/simulation-authority.js?t=1795222241958:485:40)\n    at self.onmessage (http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module:106:1584)\n    at worker.onmessage (http://127.0.0.1:5218/src/simulation/worker-hosted-runtime.js:64:748)",
+    "surfaceFaults": [
+      "Error: Error: Native world lacks its prepared graphical delta\n    at draw (http://127.0.0.1:5218/src/rendering/webgpu-world-worker.js?t=1795222241880:43:656)\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js:29:760)"
+    ],
+    "sourceSequence": 243,
+    "sourceElapsed": 12.299999999999951,
+    "firstFarm": {
+      "version": 1,
+      "authorityEpoch": "0c374f81-5c1f-4cab-89b0-9e4931ad5b02/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "preparedStop": {
+      "version": 1,
+      "authorityEpoch": "0c374f81-5c1f-4cab-89b0-9e4931ad5b02/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10.199999999999996
+    },
+    "acquiredStop": {
+      "version": 1,
+      "authorityEpoch": "0c374f81-5c1f-4cab-89b0-9e4931ad5b02/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 11.749999999999963
+    },
+    "firstBuild": {
+      "sequence": 233,
+      "elapsed": 11.799999999999962,
+      "terrainChanged": false,
+      "nativeWorldResources": null,
+      "result": true,
+      "events": [
+        {
+          "type": "WallChainBuilt",
+          "commandId": "build-active-crossing",
+          "count": 2,
+          "gates": 0
+        }
+      ]
+    }
+  },
+  "away": {
+    "before": {
+      "elapsed": 10.149999999999997,
+      "position": [
+        -17.91455129855222,
+        0.08544870144778152
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 167
+    },
+    "final": {
+      "elapsed": 11.149999999999975,
+      "position": [
+        -17.040842712474646,
+        0
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 189
+    },
+    "rejection": null,
+    "wallDelta": 3,
+    "tickets": [
+      [
+        2
+      ],
+      [
+        2
+      ]
+    ],
+    "originalMeshCount": 32,
+    "finalMeshCount": 32,
+    "factoryDelta": 30,
+    "textureForkDelta": 0,
+    "events": [
+      "production-acquired",
+      "production-gpu-drained",
+      "production-disposed"
+    ],
+    "errors": []
+  },
+  "cold": {
+    "before": {
+      "elapsed": 10.149999999999997,
+      "position": [
+        -17.91455129855222,
+        0.08544870144778152
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 173
+    },
+    "final": {
+      "elapsed": 10.349999999999993,
+      "position": [
+        -17.904842712474625,
+        0
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 177
+    },
+    "rejection": "Native structure requires prepared regions: 2,-1;2,0;2,1",
+    "wallDelta": 0,
+    "tickets": [
+      [
+        2
+      ],
+      [
+        2
+      ]
+    ],
+    "originalMeshCount": 32,
+    "finalMeshCount": 32,
+    "factoryDelta": 1,
+    "textureForkDelta": 0,
+    "events": [
+      "production-acquired",
+      "production-gpu-drained",
+      "production-disposed"
+    ],
+    "errors": []
+  },
+  "ui": {
+    "backend": "WebGPU",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": null
+    },
+    "centers": 2,
+    "walls": 1,
+    "faviconReports": [
+      {
+        "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "location": {
+          "url": "http://127.0.0.1:5218/favicon.ico",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      },
+      {
+        "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "location": {
+          "url": "http://127.0.0.1:5218/favicon.ico",
+          "line": 0,
+          "column": 0,
+          "lineNumber": 0,
+          "columnNumber": 0
+        }
+      }
+    ],
+    "centerPreview": true,
+    "centerRejectedPreview": true,
+    "wallPreview": true,
+    "wallRejectedPreview": true,
+    "remainingPreview": 0,
+    "firstCounters": {
+      "gpuErrors": 0,
+      "failed": false,
+      "textureForks": 0,
+      "textureForkMipLevels": 0,
+      "uniformForks": 0,
+      "bindingForks": 0,
+      "resourcesCreated": 902
+    },
+    "lastCounters": {
+      "gpuErrors": 0,
+      "failed": false,
+      "textureForks": 0,
+      "textureForkMipLevels": 0,
+      "uniformForks": 0,
+      "bindingForks": 0,
+      "resourcesCreated": 45415
+    },
+    "forks": [],
+    "events": [
+      {
+        "type": "HiringConfirmed"
+      },
+      {
+        "type": "PlacementCommitted",
+        "commandId": "e86ee5b5-ddae-4418-afdd-6008ed489353"
+      },
+      {
+        "type": "WaterSatisfied"
+      },
+      {
+        "type": "PlacementCommitted",
+        "commandId": "75d86cf5-602b-4d70-b322-eb1e75e498e4"
+      },
+      {
+        "type": "WaterSatisfied"
+      }
+    ],
+    "scope": "Actual QA Continue, WebGPU terrain picker and single center/wall UI; partial world and 500ms QA delay, no wall strokes."
+  },
+  "tests": {
+    "selected": {
+      "passed": 475,
+      "skipped": 4,
+      "failed": 0
+    },
+    "explicitTerrainCheckpoint": {
+      "passed": 0,
+      "failed": 2,
+      "error": "Native world changed outside its committed resource boundary",
+      "cases": [
+        "crossing",
+        "away"
+      ]
+    }
+  }
+}
