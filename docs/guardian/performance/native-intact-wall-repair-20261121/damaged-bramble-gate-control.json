@@ -1,0 +1,278 @@
+{
+  "reference": "6cc498bb24077de15f83723743e5c3a32deee407",
+  "target": {
+    "id": "structure-1000000",
+    "created": 29207,
+    "kind": "wall",
+    "material": "zarzas",
+    "gate": true,
+    "x": -14,
+    "z": 8.2,
+    "yaw": 0,
+    "maxHp": 60,
+    "hp": 30,
+    "status": "intact",
+    "villageId": "village-1",
+    "cost": 10,
+    "collapseRemaining": 0
+  },
+  "originalAuthority": {
+    "sha256": "5d87cbe7752c728778e906c9369d5aa3ae46b8a017faa030d603a232daf96be3",
+    "stage": "bootstrap",
+    "failure": "Error: Native authority production did not reach boundary: {\"phase\":\"unsupported-cohort\",\"fault\":null,\"active\":null,\"last\":null}"
+  },
+  "healthyControl": {
+    "sha256": "7fbf7d4b9f563d12ef2a31b785ea2eb757b655f26c1fca0d20e2be55afefb58b",
+    "authority": "idle",
+    "repair": {
+      "value": false,
+      "rejection": "No necesita reparación"
+    }
+  },
+  "distantLegacyControl": {
+    "sha256": "88e919ac27574aadb637b7c26f1ec274df67e2b912d42364f3a21af8e2104392",
+    "repair": {
+      "value": true
+    },
+    "hp": 30,
+    "assigned": [
+      {
+        "id": "task-1000001",
+        "created": 29207,
+        "centerId": "structure-2",
+        "kind": "repair",
+        "targetId": "structure-1000000",
+        "workerId": null,
+        "blocked": false
+      }
+    ]
+  },
+  "nearbyDeterministicHost": {
+    "sha256": "14567d7aeb10f9eedc5f1c580046fb5d8d879777731b9ef0a7f4f59a27e76599",
+    "repair": {
+      "value": true
+    },
+    "goal": {
+      "x": -14,
+      "z": 7.599999904632568,
+      "gateOpen": 1
+    },
+    "hp": 60,
+    "coinBalance": {
+      "n": "99995",
+      "d": "1"
+    },
+    "events": [
+      {
+        "id": "event-29209",
+        "type": "RepairApplied",
+        "workerId": "worker-900011",
+        "targetId": "structure-1000000",
+        "repair": {
+          "taskId": "task-1000001",
+          "paymentId": "repair:task-1000001",
+          "paidCoins": 5,
+          "previousHp": 30,
+          "previousStatus": "intact",
+          "restoredHp": 60,
+          "maxHp": 60
+        },
+        "presentation": {
+          "elapsed": 13.699999999999921,
+          "x": -14,
+          "z": 7.599999904632568,
+          "yaw": 3.141592653589793,
+          "structure": {
+            "x": -14,
+            "z": 8.2
+          }
+        },
+        "simulationTime": 13.699999999999921
+      }
+    ],
+    "resources": [
+      {
+        "kind": "initial-idle-body",
+        "committed": true,
+        "body": 1,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "53e41e66-f99b-4dba-8f7e-f1012da230c0/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        }
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "body": 1,
+        "gates": [
+          1000000
+        ],
+        "target": 1000000,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "53e41e66-f99b-4dba-8f7e-f1012da230c0/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10.099999999999998
+        }
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "body": 1,
+        "target": 1000000,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "53e41e66-f99b-4dba-8f7e-f1012da230c0/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 13.399999999999928
+        }
+      },
+      {
+        "kind": "initial-idle-body",
+        "committed": true,
+        "body": 1,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "53e41e66-f99b-4dba-8f7e-f1012da230c0/1",
+          "nativeSession": 1,
+          "ticket": 8,
+          "effectiveTime": 13.599999999999923
+        }
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": false,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "53e41e66-f99b-4dba-8f7e-f1012da230c0/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 13.799999999999919
+        }
+      }
+    ]
+  },
+  "physical": [
+    {
+      "configuration": "health guards in authority only",
+      "sourceArchiveSha256": "4b538aa518451a92ceb883595983c3959929a6f5f46b18d80b27fb8c8eb890b3",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 122
+        }
+      },
+      "wallOwner": {
+        "root": 397,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 399,
+            "geometry": 143,
+            "material": [
+              149
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          },
+          {
+            "id": 400,
+            "geometry": 144,
+            "material": [
+              150
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "worldTickets": [
+        {
+          "family": "nativeInitialIdleBodyBinding",
+          "ticket": 2
+        },
+        {
+          "family": "nativeIdleCycleBinding",
+          "ticket": 4
+        }
+      ],
+      "surfaceFailure": {
+        "message": "Native gate preparation has no intact confirmed owner",
+        "requestId": 3,
+        "at": 1795257259457.9001
+      }
+    },
+    {
+      "configuration": "health guards in authority and settlement readiness",
+      "sourceArchiveSha256": "0b4bd459ac605cd9b9f8b3d63f60d81f339031e1660a6bc00a2cbbc467f5dea6",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 122.5
+        }
+      },
+      "wallOwner": {
+        "root": 522,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 524,
+            "geometry": 249,
+            "material": [
+              171
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          },
+          {
+            "id": 525,
+            "geometry": 250,
+            "material": [
+              172
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "worldTickets": [
+        {
+          "family": "nativeInitialIdleBodyBinding",
+          "ticket": 2
+        },
+        {
+          "family": "nativeIdleCycleBinding",
+          "ticket": 4
+        }
+      ],
+      "surfaceFailure": {
+        "message": "Native gate graphics unavailable",
+        "requestId": 3,
+        "at": 1795257329295.4001
+      }
+    }
+  ]
+}
