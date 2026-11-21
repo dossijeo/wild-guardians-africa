@@ -80,3 +80,28 @@ test('solid presentation rejects incomplete evidence and terrain changes despite
  const prepared=reference(),actual=reference(2,11),binding={kind:'native-barrier-addition-attestation',version:1,reference:actual,preparedReference:prepared,nativeIds:[8]},proposal=copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:prepared.worldBoundary,nativeBarrierAddition:prepared,authorizedAutonomy:false,authorizedConsequences:false}),resources={version:1,kind:2,phase:'committed',worldBoundary:actual.worldBoundary,nativeSession:1,ticket:2,effectiveTime:11,chunks:[],removed:[],nativeBarrierAdditionBinding:binding};
  assert(nativeBarrierAdditionPresentationMatches(proposal,resources,binding));assert.equal(nativeBarrierAdditionPresentationMatches(proposal,resources,null),false);assert.throws(()=>copyNativeBarrierAdditionResources({...resources,chunks:[{cx:0,cz:0}]}));assert.equal(nativeBarrierAdditionPresentationMatches(proposal,resources,{...binding,nativeIds:[9]}),false);
 });
+test('a gate reference keeps one placement, its initial pose and three ordered proxies through retiming',()=>{
+ const gateReference=(ticket=1,time=10)=>{
+  const {additions,...base}=reference(ticket,time),{entityId,...shape}=additions[0];
+  const matrix=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+  return {...base,version:2,gate:{entityId:'structure-1',modelId:1,x:0,z:0,yaw:0,sx:1,sz:1,mechanismId:2,opening:0,
+    rootMatrix:matrix,leafMatrix:[...matrix],proxies:[{...shape,x:-1},{...shape,x:1},{...shape,passMask:1}]}};
+ };
+ const binding=()=>({kind:'native-barrier-addition-attestation',version:1,reference:gateReference(2,11),preparedReference:gateReference(),nativeIds:[8,9,10]});
+ const copy=copyNativeBarrierAdditionAttestation(binding());
+ assert.equal(copy.reference.gate.entityId,'structure-1');
+ assert.deepEqual(copy.nativeIds,[8,9,10]);
+ for(const change of [
+  transfer=>{transfer.reference.gate.opening=.1;},
+  transfer=>{transfer.reference.gate.mechanismId++;},
+  transfer=>{transfer.reference.gate.yaw=.1;},
+  transfer=>{transfer.reference.gate.rootMatrix[12]=2;},
+  transfer=>{transfer.reference.gate.proxies[1].passMask=1;},
+  transfer=>{transfer.reference=reference(2,11);},
+  transfer=>{transfer.nativeIds=[8,9,9];}
+ ]){
+  const transfer=binding();
+  change(transfer);
+  assert.throws(()=>copyNativeBarrierAdditionAttestation(transfer));
+ }
+});

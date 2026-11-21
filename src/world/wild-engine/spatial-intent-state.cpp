@@ -436,7 +436,7 @@ struct PendingBarrierProposal {
     std::array<double,8> translation{};
   };
   std::optional<WorkerRouteStopDraft> workerRouteStop;
-  struct BarrierAdditionDraft {uint64_t preparedTicket=0;double preparedAt=0;std::array<double,8> translation{};};
+  struct BarrierAdditionDraft {uint64_t preparedTicket=0;double preparedAt=0;std::array<double,8> translation{};uint64_t gateId=0;std::map<uint64_t,NativeGate> gate;};
   std::optional<BarrierAdditionDraft> barrierAddition;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
@@ -1051,6 +1051,7 @@ bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
 #include "spatial-prop-mutation-state.h"
 #include "spatial-terrain-mutation-state.h"
 #include "spatial-gate-transactions.h"
+#include "spatial-gate-addition.h"
 #include "spatial-gate-crossings.h"
 #include "spatial-idle-stroll-source.h"
 void invalidateDependents(IntentState& s,const Change& change){
@@ -1565,17 +1566,18 @@ int spatialIntentRevalidateBarrierAddition(double session,double ticket,const Sp
     clearWorldMutationProposal(p);return -2;
   }
   auto origin=*p.barrierAddition;const auto input=std::move(p.worldInput);clearWorldMutationProposal(p);
+  if(origin.gateId){auto& gate=origin.gate.at(origin.gateId);gate.at=s.effectiveTime;const int proof=proveGateMechanismCandidate(s,gate);if(proof!=1)return proof;}
   const int result=spatialIntentStageWorld(input,shapes,count,true);if(result!=1)return result;
   origin.translation={1,double(origin.preparedTicket),double(p.ticket),origin.preparedAt,p.at,1,double(count),0};
   translation=origin.translation;p.barrierAddition=origin;return 1;
 }
-int spatialIntentTakeBarrierAddition(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,SpatialWorldProposalInput& out,std::array<double,5>& receipt){
+int spatialIntentTakeBarrierAddition(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,SpatialWorldProposalInput& out,std::array<double,5>& receipt,bool allowGate){
   const auto& p=state().barrierProposal;
   if(!integer(preparedTicket)||!p.pending||p.kind!=2||!p.barrierAddition||!p.retainsRoutes||!p.routeEffects.empty()||!p.gateEffects.empty())return -1;
-  const auto& origin=*p.barrierAddition;
+  const auto& origin=*p.barrierAddition;if(origin.gateId&&!allowGate)return -1;
   if(preparedTicket!=double(p.ticket)&&(preparedTicket!=double(origin.preparedTicket)||origin.translation[0]!=1||origin.translation[5]!=1))return -9;
   const std::array<double,5> proof{1,preparedTicket,preparedTicket==double(p.ticket)?p.at:origin.preparedAt,double(p.ticket),p.at};
-  const int result=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,out);if(result==1)receipt=proof;return result;
+  const int result=spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,out,allowGate);if(result==1)receipt=proof;return result;
 }
 extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_barrier_addition_proposal_translation_ptr(double session,double ticket){
   const auto& p=state().barrierProposal;return p.pending&&p.kind==2&&p.barrierAddition&&session==double(p.session)&&ticket==double(p.ticket)&&p.barrierAddition->translation[0]==1?p.barrierAddition->translation.data():nullptr;
@@ -1630,10 +1632,56 @@ extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_task_route_stop_proposal_trans
   const auto& p=state().barrierProposal;return p.pending&&p.kind==25&&p.workerRouteStop&&session==double(p.session)&&ticket==double(p.ticket)&&p.workerRouteStop->translation[0]==1?p.workerRouteStop->translation.data():nullptr;
 }
 
-int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out){
+int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out,bool allowGate){
+  const auto& draft=state().barrierProposal.barrierAddition;if(draft&&draft->gateId&&!allowGate)return -1;
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
   auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
+// Global C++ bridge: resource preview and canonical barriers remain in spatial-savanna.
+int spatialIntentStageGateAddition(const std::array<double,7>& value,int firstBarrier,std::vector<float>& proxies){
+ auto& s=state();if(s.barrierProposal.pending)return -4;
+ const double id=value[0],modelId=value[1],x=value[2],z=value[3],yaw=value[4],sx=value[5],sz=value[6];
+ if(!s.session||!integer(id)||!integer(modelId)||modelId>3||!coordinate(x)||!coordinate(z)||!std::isfinite(yaw)||!std::isfinite(sx)||!std::isfinite(sz)||sx<=0||sz<=0||sx>100||sz>100||s.gates.count(uint64_t(id))||s.nextGateMechanism>=uint64_t(maxId)||firstBarrier<1||firstBarrier>std::numeric_limits<int>::max()-3)return -1;
+ if(!gateStaticProofCurrent(s))return -2;
+ const auto* model=nativeGateMeshModel(int(modelId));if(!model)return -1;
+ NativeGate gate;gate.id=uint64_t(id);gate.x=x;gate.z=z;gate.yaw=yaw;gate.sx=sx;gate.sz=sz;gate.hx=model->hx;gate.hz=model->hz;gate.at=s.effectiveTime;gate.local.assign(model->policy,model->policy+model->policyCount*2);prepareGateGeometry(gate);
+ const auto facts=gateFacts(s,gate);if(!facts.complete)return -2;
+ gate.from=gate.target=facts.occupied?1:0;gate.defined=true;gate.occupied=facts.occupied;gate.requested=facts.requested;
+ if(!gateStaticRegistrationClear(s,gate)||!prepareGateMechanismGeometry(gate,model))return 0;
+ gate.navigationBarriers={firstBarrier,firstBarrier+1,firstBarrier+2};
+ const int proof=proveGateMechanismCandidate(s,gate);if(proof!=1)return proof;
+ gate.mechanism=s.nextGateMechanism+1;gate.bodySweepCertified=gate.staticSweepCertified=true;
+ proxies=gateAdditionProxies(gate);if(proxies.size()!=18)return -1;
+ auto shapes=gateAdditionShapes(proxies);const SpatialWorldProposalInput input{2,0,proxies,{}};
+ const int staged=spatialIntentStageWorld(input,shapes.data(),int(shapes.size()),true);if(staged!=1)return staged;
+ auto& draft=*s.barrierProposal.barrierAddition;draft.gateId=gate.id;draft.gate.emplace(gate.id,std::move(gate));return 1;
+}
+int spatialIntentCommitGateAddition(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,int firstBarrier,SpatialWorldProposalInput& input,std::array<double,5>& receipt,int(*apply)(const SpatialWorldProposalInput&)){
+ auto& s=state();auto& p=s.barrierProposal;
+ if(!p.pending||p.kind!=2||!p.barrierAddition||!p.barrierAddition->gateId||p.barrierAddition->gate.size()!=1||!apply)return -1;
+ const auto& draft=*p.barrierAddition;const auto& gate=draft.gate.begin()->second;
+ if(s.gates.count(gate.id)||gate.navigationBarriers[0]!=firstBarrier||gate.mechanism!=s.nextGateMechanism+1)return -2;
+ // Validate the receipt before transferring the prepared node. A foreign
+ // prepared ticket leaves the original proposal available, as for solid walls.
+ if(!integer(preparedTicket)||!p.retainsRoutes||!p.routeEffects.empty()||!p.gateEffects.empty())return -1;
+ if(preparedTicket!=double(p.ticket)&&(preparedTicket!=double(draft.preparedTicket)||draft.translation[0]!=1||draft.translation[5]!=1))return -9;
+ const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(valid!=1)return valid;
+ auto node=p.barrierAddition->gate.extract(gate.id);
+ const int taken=spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,receipt,true);if(taken!=1)return taken;
+ // apply is the original barrier batch. All expected geometric rejection and
+ // allocation of the gate node precede the first published mutation.
+ if(apply(input)!=1)return -6;
+ const auto before=executionWorldStamp();s.nextGateMechanism=node.mapped().mechanism;s.gates.insert(std::move(node));s.gateRevision++;
+ cancelGateMotionProposal(s);updateGateStaticDomain(s);acknowledgeGateSupport(s,before);return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double session,double ticket){
+ auto& s=state();s.gateMechanismPose.fill(0);std::array<double,6> boundary{};
+ if(spatialIntentWorldProposalSnapshot(boundary)!=1||boundary[0]!=session||boundary[1]!=ticket||!s.barrierProposal.barrierAddition||s.barrierProposal.barrierAddition->gate.size()!=1)return 0;
+ const auto& gate=s.barrierProposal.barrierAddition->gate.begin()->second;const auto root=gateRootMatrix(gate),leaf=gateLeafMatrix(gate,s.effectiveTime);auto& out=s.gateMechanismPose;
+ out[0]=double(gate.id);out[1]=gate.mesh->id;out[2]=double(gate.mechanism);out[3]=gate.baseY;out[4]=gate.supportMin;out[5]=gate.supportMax;out[6]=s.effectiveTime;out[7]=gateOpening(gate,s.effectiveTime);
+ std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);return 1;
+}
+
 int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
   auto& p=state().barrierProposal;if(!p.pending||p.kind<2)return 0;
   const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);

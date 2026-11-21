@@ -1,0 +1,269 @@
+{
+  "sourcePatch": {
+    "path": ".cache/native-gate-addition.patch",
+    "sha256": "b7f152c7b1d711ebc9fc166bef87ea5c9aab0d0dd5f56a53a5e55650389fa5d7"
+  },
+  "binary": {
+    "path": ".cache/native-gate-addition-b7f-binaries/standalone/spatial-savanna.wasm",
+    "sha256": "c6ce5c4838254fe24da0eed6608ba2500e56da20d352d1a90f7f5c9222880991",
+    "builder": "Sol"
+  },
+  "tests": [
+    {
+      "path": ".cache/native-gate-addition-b7f-directed-final.log",
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "runner": "Sol",
+      "sha256": "a596bc0895d474da216eb8a5742ce093eb01d385c74ab1985d7e60923108b5aa"
+    },
+    {
+      "path": ".cache/native-gate-addition-b7f-continuity.log",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 4,
+      "runner": "Astra",
+      "scope": "post-commit route continuity added after main directed run",
+      "sha256": "88779a5f6548d53a8e0902275489c25f0d7264ec93a7eb0c2e51dbbffcef760a"
+    },
+    {
+      "path": ".cache/native-gate-addition-b7f-regression.log",
+      "passed": 5,
+      "failed": 0,
+      "skipped": 14,
+      "runner": "Astra",
+      "scope": "selected existing solid addition and bootstrap tests",
+      "sha256": "f083a80f15517f79938a73e49241b3c6b0f493e4a476d445cdd806d040c048a6"
+    }
+  ],
+  "earlier": {
+    "path": ".cache/native-gate-addition-b7f-direct.log",
+    "sha256": "18c256bf6d112fece334860d3ed677ee56785d1c9fdac53a00b68711debf0b30",
+    "passed": 4,
+    "failed": 3,
+    "reason": "asserted -1 instead of existing -2 for already consumed resource snapshot; acquisition itself passed"
+  },
+  "limits": {
+    "nativeMechanismAndProxies": true,
+    "ordinaryPurchase": true,
+    "pthread": true,
+    "gpu": true,
+    "apertureCrossing": false,
+    "preparedRemoval": false,
+    "sixtyFps": false,
+    "A6Closed": false
+  },
+  "binaries": {
+    "standalone": {
+      "file": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "c6ce5c4838254fe24da0eed6608ba2500e56da20d352d1a90f7f5c9222880991",
+      "exports": [
+        766,
+        772
+      ]
+    },
+    "pthread": {
+      "file": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "ec6fbeacb0da6ec6a34080d6267213e684e8dfedefd3e0c43aa86be22c3a8b70",
+      "rawExports": [
+        787,
+        793
+      ],
+      "publicExports": [
+        772,
+        778
+      ],
+      "factorySha256": "0687e30ad7d36b4452ae8a0d0b0fd577b080c514c8a722288cc4f78608492c7b",
+      "workerBootstrapSha256": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+    },
+    "importsPreserved": true,
+    "workerBootstrapPreserved": true
+  },
+  "checkoutTests": {
+    "passed": 61,
+    "failed": 0,
+    "sha256": "f00ee5336738ca992d718a1cb1ca123c9b330879f8bfb25e39afb99c3ff243f9"
+  },
+  "pthreadTests": {
+    "passed": 7,
+    "failed": 0,
+    "sha256": "540073fada26e8380193a377ce6fffd6bdfaf3e6fca1f2430242a40fa40416e9"
+  },
+  "physical": {
+    "browser": "Edge",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "displayHz": 30,
+    "command": {
+      "id": "build-live-native-gate",
+      "entityId": "structure-1000000",
+      "structure": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": true,
+        "yaw": 0,
+        "x": -11.8,
+        "z": 8.2
+      }
+    },
+    "readyHeld": true,
+    "debited": "-10",
+    "duplicatesRejected": true,
+    "placementEvent": {
+      "id": "event-29208",
+      "type": "PlacementCommitted",
+      "commandId": "build-live-native-gate",
+      "kind": "wall",
+      "targetId": "structure-1000000",
+      "presentation": {
+        "x": -11.8,
+        "z": 8.2
+      },
+      "simulationTime": 11.149999999999975
+    },
+    "route": {
+      "ticket": 2,
+      "bodyId": 1,
+      "root": 620,
+      "retainedGeometryOwners": 32,
+      "before": {
+        "elapsed": 10.149999999999997,
+        "position": [
+          -17.91455129855222,
+          0.08544870144778152
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 162
+      },
+      "after": {
+        "elapsed": 11.449999999999969,
+        "position": [
+          -16.71684271247465,
+          0
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 190
+      }
+    },
+    "gate": {
+      "root": 638,
+      "meshes": [
+        {
+          "id": 640,
+          "geometry": 270,
+          "material": [
+            295
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ],
+      "entityId": "structure-1000000",
+      "mechanismId": 1,
+      "nativeIds": [
+        116,
+        117,
+        118
+      ],
+      "open": 0,
+      "proxyMasks": [
+        0,
+        0,
+        1
+      ],
+      "prepared": {
+        "version": 1,
+        "authorityEpoch": "9ad1a6af-41f4-4b21-b622-56a1b0276e7d/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 10.249999999999995
+      },
+      "committed": {
+        "version": 1,
+        "authorityEpoch": "9ad1a6af-41f4-4b21-b622-56a1b0276e7d/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 11.149999999999975
+      }
+    },
+    "frames": {
+      "count": 8,
+      "peak": {
+        "at": 1795250250597.5,
+        "sequence": 22,
+        "trigger": "mutation-release",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "9ad1a6af-41f4-4b21-b622-56a1b0276e7d/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 11.149999999999975
+        },
+        "intervalMs": 40.800048828125,
+        "drawMs": 1.900146484375,
+        "replay": false,
+        "clockElapsed": 11.149999999999975,
+        "safeUntil": 11.149999999999975,
+        "cameraVersion": null
+      },
+      "nearbyOpportunities": [
+        {
+          "at": 1795250250525.2,
+          "intervalMs": 31,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 21
+        },
+        {
+          "at": 1795250250556.7,
+          "intervalMs": 31.5,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 21
+        },
+        {
+          "at": 1795250250590.3,
+          "intervalMs": 33.60009765625,
+          "outcome": "mutation-hold",
+          "holdId": 2,
+          "sequence": 21
+        },
+        {
+          "at": 1795250250623.5,
+          "intervalMs": 33.199951171875,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        },
+        {
+          "at": 1795250250656.9001,
+          "intervalMs": 33.400146484375,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        }
+      ]
+    },
+    "drained": true,
+    "errors": 0,
+    "sha256": "8bbc5f4c2ccf3380bbc069c5c895cc98ee66c38f83ff5336d0121b1b4118b142"
+  },
+  "build": {
+    "presentationBackend": "webgpu-worker",
+    "remoteDraw": true,
+    "sha256": "a9bbdb425e5909a19e7837f2c4c285e257e27741e0eadb48a971bab9a8f2a347"
+  }
+}

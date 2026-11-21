@@ -41,23 +41,8 @@ static int installGateMechanism(double id,int modelId,const std::array<int,3>& p
   NativeGate candidate=s.gates.at(uint64_t(id));
   if(!prepareGateMechanismGeometry(candidate,nativeGateMeshModel(modelId)))return -4;
   if(proxies[0]&&(!gateNavigationProxiesMatch(s,candidate,proxies)||s.causalClock||s.barrierProposal.pending||s.worldMutationPreview||s.executionEnabled))return -4;
-  const auto& b=candidate.unsupported;double support[3];
-  const int mounted=spatialGateMountSupport(candidate.x,candidate.z,b.minX,b.minZ,b.maxX,b.maxZ,support);
-  if(mounted!=1)return mounted==0?-3:mounted;
-  candidate.baseY=support[0];candidate.supportMin=support[1];candidate.supportMax=support[2];
-  candidate.workerParts=gateMeshParts(candidate,(candidate.supportMin+.025-candidate.baseY-1e-5)/candidate.sz,
-    (candidate.supportMax+.025+candidate.mesh->height-candidate.baseY+1e-5)/candidate.sz);
-  struct Bodies {const NativeGate& gate;bool clear=true;};Bodies bodies{candidate};
-  spatialVisitBodiesBox(b.minX,b.minZ,b.maxX,b.maxZ,[](uint64_t,const SpatialBodyView& body,void* opaque){auto& q=*static_cast<Bodies*>(opaque);
-    if(!q.clear||!(body.flags&1))return;const auto& bounds=q.gate.unsupported;
-    if(body.x+body.r<bounds.minX||body.x-body.r>bounds.maxX||body.z+body.r<bounds.minZ||body.z-body.r>bounds.maxZ)return;
-    int mask;if(gateMechanismSegment(q.gate,body,body.x,body.z,body.x,body.z,mask)!=1)q.clear=false;
-  },&bodies);
-  if(!bodies.clear||!gateSweepBodies(s,candidate))return -5;
-  std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
-  if(!mutationAffectedRoutes(s,&b,1,0,candidates,segments,affected,true)||!affected.empty())return -5;
+  const int proof=proveGateMechanismCandidate(s,candidate);if(proof!=1)return proof;
   auto proposed=s.gates;proposed.at(uint64_t(id))=candidate;
-  const int objects=gateSweepStaticObjects(s,proposed,true);if(objects!=1)return objects==-6?-1:objects==-7?-2:-5;
   auto& installed=proposed.at(uint64_t(id));installed.mechanism=++s.nextGateMechanism;installed.bodySweepCertified=installed.staticSweepCertified=true;
   const auto before=executionWorldStamp();cancelGateMotionProposal(s);publishGateMotion(s,proposed);acknowledgeGateSupport(s,before);return 1;
 }

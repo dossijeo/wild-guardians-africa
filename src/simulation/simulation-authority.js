@@ -1,5 +1,6 @@
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {centerFootprint} from '../world/centers.js';
+import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
 import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
 import {createNativeResourcePreparationConnection} from './native-resource-preparation-connection.js';
@@ -16,7 +17,7 @@ import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,serializeConfirmedPresentationState,prepareConfirmedStateTransport,deserializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
 import {encodePhysicsCheckpoint} from './physics-checkpoint-codec.js';
 import {pausedAuthorityQuiescent} from './paused-authority-quiescence.js';
-import {advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
+import {advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,coincidentRuins,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
@@ -63,8 +64,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
-  const restoredGates=game.structures.filter(s=>s.gate&&s.status!=='ruined');
-  const nativeRosterSupported=nativeRestoration&&!game.raid&&restoredGates.every(s=>s.kind==='wall'&&s.status==='intact'&&s.hp===s.maxHp&&['zarzas','empalizada','reforzado'].includes(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
+  const nativeRosterSupported=nativeRestoration&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&s.hp===s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
@@ -88,27 +89,32 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
+  function projectNativeGateLeaves(){
+   const active=game.structures.filter(structure=>structure.gate&&structure.status!=='ruined');
+   if(active.length!==nativeGateOwners.length||active.some(gate=>!nativeGateOwners.includes(gate)))throw Error('Native gate projection has another structure owner');
+   for(const gate of nativeGateOwners){
+    const pose=planner.nativeGateMechanismPose(gate.id);
+    if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||gate.hp!==gate.maxHp)throw Error('Native gate projection lost its current mechanism');
+    gate.gateOpen=pose.opening;
+   }
+  }
   if(nativeBodies){
    const bindings=createSpatialGateIntents(session,game);
    for(const worker of game.workers)if(worker.status!=='home'){
     const body=nativeBodies.publish(worker.id,{x:worker.x,z:worker.z,radius:WORKER_SPATIAL_PROFILE.radius,kind:0,flags:1});
     if(!bindings.bindWorker(worker.id,body))throw Error('Native restored worker body binding rejected');
    }
-   if(restoredGates.length){
+   if(nativeGateOwners.length){
     // Bootstrap only: establish the original native mechanism before any GPU
     // consumer or causal clock. A saved absence of gateOpen is resolved by
     // native occupancy, never by assuming the gate is closed over a body.
-    for(const gate of restoredGates)if(!bindings.register(gate))throw Error('Native restored gate registration rejected');
+    for(const gate of nativeGateOwners)if(!bindings.register(gate))throw Error('Native restored gate registration rejected');
     if(bindings.reconcile({enabled:true}).status!=='updated'||bindings.reconcile({enabled:false}).status!=='updated')throw Error('Native restored gate occupancy unavailable');
-    for(const gate of restoredGates){
+    for(const gate of nativeGateOwners){
      const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id)});
      if(installed.status!=='installed')throw Error('Native restored gate mechanism rejected: '+installed.status);
     }
-    nav.projectNativeGateLeaves=()=>{
-     const active=game.structures.filter(s=>s.gate&&s.status!=='ruined');
-     if(active.length!==restoredGates.length||active.some(g=>!restoredGates.includes(g)))throw Error('Native gate projection has another structure owner');
-     for(const gate of restoredGates){const pose=planner.nativeGateMechanismPose(gate.id);if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||gate.hp!==gate.maxHp)throw Error('Native gate projection lost its current mechanism');gate.gateOpen=pose.opening;}
-    };
+    nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
@@ -212,13 +218,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const additions=plan.pieces.map(piece=>{const parts=spatialStructureBarriers(piece);if(parts.length!==1||(parts[0].passMask??0)!==0)throw Error('Native solid wall quote changed shape class');const p=parts[0];return {entityId:piece.id,x:Math.fround(p.x),z:Math.fround(p.z),halfX:Math.fround(p.halfX),halfZ:Math.fround(p.halfZ),yaw:Math.fround(p.yaw),passMask:0};});
     return {quoted,additions,signature:JSON.stringify({pieces:plan.pieces,cost:plan.cost,updates:plan.updates,suppressed:plan.suppressed,repairableRuins:plan.repairableRuins})};
   }
-  function prepareNativeSolidWallCommit(owner){
+  function nativeStructureQuote(quoted){
+    const plan=quoted.plan,entity=plan?.entity;
+    if(!entity?.gate)return nativeSolidWallQuote(quoted);
+    const modelId=nativeGateModelId(entity.material);
+    if(entity.kind!=='wall'||entity.status!=='intact'||!modelId||plan.suppression.some(key=>!game.suppressed.includes(key))||coincidentRuins(game,[entity]).length)return null;
+    const scale=gateScale(entity),gate={entityId:entity.id,modelId,x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale};
+    return {quoted,gate,signature:JSON.stringify({entity,gate,cost:plan.cost,suppression:plan.suppression})};
+  }
+  function prepareNativeBarrierCommit(owner){
     // The preceding stop projected a held Game owner and queued its existing
     // planning notice. Flush that consequence before capturing a new proposal;
     // the next ordinary tick must not discover an older semantic boundary.
     planner.flushTaskEvents();planner.flushNativeIntentControl();
-    const first=nativeSolidWallQuote(quoteStructureCommand(owner.command,[]));
-    if(!first)throw Error('Native construction requires an unchanged resident solid wall batch');
+    const first=nativeStructureQuote(quoteStructureCommand(owner.command,[]));
+    if(!first)throw Error('Native construction requires an unchanged resident addition quote');
     const resources=owner.resources,manifest=getTerrainManifest?.(),minSequence=sequence;
     if(!resources||!manifest)throw Error('Native solid wall preparation lacks its resource owner');
     const validOwner=()=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!owner.control.status().closed&&owner.resources.status().phase==='running';
@@ -226,7 +240,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const validate=()=>{
       if(!validOwner())return false;
       if(lastQuoteSequence!==sequence||lastQuoteTime!==game.elapsed){
-        const next=nativeSolidWallQuote(quoteStructureCommand(owner.command,[]));
+        const next=nativeStructureQuote(quoteStructureCommand(owner.command,[]));
         if(!next||next.signature!==first.signature)return false;
         current=next;lastQuoteSequence=sequence;lastQuoteTime=game.elapsed;
       }
@@ -234,9 +248,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     };
     return new Promise((ready,reject)=>{
       let commitReady;owner.commitReady=new Promise(resolve=>{commitReady=resolve;});
-      owner.completion=planner.addNativeBarriersAfterGpuQuiescence({additions:first.additions,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
+      owner.completion=planner.addNativeBarriersAfterGpuQuiescence({...(first.gate?{gate:first.gate}:{additions:first.additions}),getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
         prepareResources:async({resources:proposal,signal})=>{
-          const handle=await resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(first.quoted.plan.pieces)});
+          const plan=first.quoted.plan,gate=proposal.nativeBarrierAddition.gate;
+          if(gate&&Object.entries(first.gate).some(([key,value])=>gate[key]!==value))throw Error('Native gate preparation changed the placement quote');
+          const entities=gate?[{...plan.entity,gateOpen:gate.opening}]:plan.pieces;
+          const handle=await resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(entities)});
           try{
             // Graphics are ready, but the command has not reached the FIFO head.
             // Keep the existing resource transaction before GPU quiescence.
@@ -259,10 +276,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
         project:proof=>{
           // Check the native result before charging, but apply the mirror only
           // at Game's normal nav.setState seam, after quote validation.
-          const quoted=current.quoted,adopt=session.prepareNativeWallAdditionAdoption(quoted.plan.pieces,proof),original=nav.setState;let adopted=false;
-          nav.setState=next=>{if(next!==game||adopted)throw Error('Native wall Game projection changed owner');adopt();adopted=true;return original(next);};
-          try{return buildWallChain(game,owner.command.id,owner.command.material,owner.command.points,nav,{...quoted.options,preparedPlan:quoted.plan})===true&&adopted;}
-          finally{nav.setState=original;}
+          const quoted=current.quoted,plan=quoted.plan,gate=proof.nativeBarrierAdditionBinding.reference.gate,entity=gate?plan.entity:null;
+          if(gate)entity.gateOpen=gate.opening;
+          const adopt=session.prepareNativeWallAdditionAdoption(gate?[entity]:plan.pieces,proof),original=nav.setState;
+          let adopted=false;
+          nav.setState=next=>{
+            if(next!==game||adopted)throw Error('Native wall Game projection changed owner');
+            adopt();
+            adopted=true;
+            if(gate){nativeGateOwners.push(entity);nav.projectNativeGateLeaves=projectNativeGateLeaves;}
+            return original(next);
+          };
+          try{
+            const placed=gate?commitStructurePlacement(game,owner.command.id,plan,nav):
+              buildWallChain(game,owner.command.id,owner.command.material,owner.command.points,nav,{...quoted.options,preparedPlan:plan});
+            return placed===true&&adopted;
+          }finally{nav.setState=original;}
         }});
       owner.completion.then(result=>{
         if(result.status==='committed-control-failed'){nativeStructureFailure=Error('Native wall command '+result.status+': '+result.error);onNativeIntentControlError?.(nativeStructureFailure);}
@@ -282,7 +311,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
       const quoted=quoteStructureCommand(captured,[]),{plan,missingNativeChunks}=quoted;
       if(missingNativeChunks)throw Error('Native structure requires prepared regions: '+missingNativeChunks.map(p=>`${p.cx},${p.cz}`).join(';'));
-      if(nativeBodies&&(!plan||quoted.rejection||captured.kind!=='buildWallChain'||!nativeSolidWallQuote(quoted))){owner.rejection=quoted.rejection??'La construcción nativa admite por ahora solo muros sólidos nuevos en regiones residentes';owner.ready=true;return {version:1};}
+      const nativeQuote=nativeBodies?nativeStructureQuote(quoted):null;
+      if(nativeBodies&&(!plan||quoted.rejection||!nativeQuote)){
+        owner.rejection=quoted.rejection??'La construcción nativa necesita un muro sólido o una puerta compatible en regiones residentes';
+        owner.ready=true;return {version:1};
+      }
+      // The leaf and the affected routes belong to the same native proof.
+      // This placement class retains Farm's current assignment.
+      if(nativeQuote?.gate)return await prepareNativeBarrierCommit(owner);
       const impact=inspectStructureStops(plan);
       if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
       // Reject unsupported consumers before stopping any actor. No JS route
@@ -303,7 +339,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
         for(const worker of game.workers)if(planner.nativeFarmArrivalHeldExecution(worker.id))planner.projectNativeFarmArrivalExecution(game,worker);
       }
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
-      if(nativeBodies)return await prepareNativeSolidWallCommit(owner);
+      if(nativeBodies)return await prepareNativeBarrierCommit(owner);
       owner.ready=true;return {version:1};
     }catch(error){if(nativeStructurePreparation===owner)await releaseNativeStructureCommand(owner);throw error;}
   }
@@ -571,7 +607,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id),target=game.structures.find(s=>s.id===command.targetId&&s.kind==='wall');
      if(!duplicate&&!permission(game,'wall'))rejection='Esta acción no está disponible ahora';
      else if(!duplicate&&!target)rejection='No existe esa defensa';
-     else if(!duplicate&&nativeBodies&&restoredGates.includes(target))rejection='La retirada de la puerta necesita preparación nativa';
+     else if(!duplicate&&nativeBodies&&nativeGateOwners.includes(target))rejection='La retirada de la puerta necesita preparación nativa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
      admitPendingNativeBirths();planner.flushNativeIntentControl();

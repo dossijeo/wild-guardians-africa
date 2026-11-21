@@ -1,5 +1,6 @@
 import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
+import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {terrainStopProposalProtocol,terrainStopWireProtocol,hasOtherTerrainStopField} from '../simulation/terrain-stop-reservation.js';
 import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,nativeIdleCyclePresentationMatches,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
@@ -206,7 +207,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    let stoppedParts=[];let raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),prepareDependents:(view,options)=>prepareNativeTerrainDependents(view,{...options,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}}),...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
    if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate)){
     const view={get:(cx,cz)=>(residency.getVisible??residency.get).call(residency,cx,cz),changedKeys:new Set()};
-    const parts=barrierTemplate?settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal}):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
+    const parts=barrierTemplate?settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate}):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
     stoppedParts=parts;try{assertNativeTerrainPresentationSupport({state,residency,view,participants:parts});raw=await chunkCoordinator.prepareBatch([],{signal:proposalSignal,scene,dependents:parts});}
     catch(error){for(const part of parts.reverse())try{part.cancel();}catch{}throw error;}
    }
@@ -367,9 +368,17 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    const barrier=stop===null,proposal=barrier?copyNativeBarrierAdditionProposal(resources):stop.codec.copyProposal(resources),boundary=proposal.worldBoundary,template=barrier?proposal.nativeBarrierAddition:proposal.nativeStop;
    const preparedField=barrier?'preparedBarrierAdditionTemplate':stop.preparedTemplateField;
    if(barrier){
-    if(!Array.isArray(nativeBarrierWallEntities)||nativeBarrierWallEntities.length!==template.additions.length||nativeBarrierWallEntities.some((wall,index)=>{
-     const expected=template.additions[index];if(!wall||wall.id!==expected.entityId||wall.kind!=='wall'||wall.gate)return true;
-     const parts=spatialStructureBarriers(wall);return parts.length!==1||['x','z','halfX','halfZ','yaw'].some(key=>Math.fround(parts[0][key])!==expected[key])||(parts[0].passMask??0)!==expected.passMask;
+    const gate=template.gate,targets=gate?[gate]:template.additions;
+    if(!Array.isArray(nativeBarrierWallEntities)||nativeBarrierWallEntities.length!==targets.length||nativeBarrierWallEntities.some((wall,index)=>{
+     const expected=targets[index];
+     if(!wall||wall.id!==expected.entityId||wall.kind!=='wall'||Boolean(wall.gate)!==Boolean(gate))return true;
+     if(gate){
+      const scale=gateScale(wall);
+      return nativeGateModelId(wall.material)!==gate.modelId||wall.gateOpen!==gate.opening||wall.x!==gate.x||wall.z!==gate.z||
+       (wall.yaw??0)!==gate.yaw||scale!==gate.sz||scale*(wall.baseScaleX??1)!==gate.sx;
+     }
+     const parts=spatialStructureBarriers(wall);
+     return parts.length!==1||['x','z','halfX','halfZ','yaw'].some(key=>Math.fround(parts[0][key])!==expected[key])||(parts[0].passMask??0)!==expected.passMask;
     }))throw Error('Prepared walls differ from their native barriers');
    }
    if(closed||!remoteGpu||!stream||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Direct native resource surface unavailable');

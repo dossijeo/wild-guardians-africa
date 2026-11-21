@@ -1,4 +1,4 @@
-import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources} from '../native-barrier-addition.js';
+import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources,nativeBarrierAdditionSuccessor} from '../native-barrier-addition.js';
 import {copyNativeIdleStrollFailedRestReference} from '../native-idle-stroll-failed-rest-reference.js';
 import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
@@ -860,40 +860,75 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     }finally{if(wasm.nav_intent_barrier_proposal_cancel(session,ticket)!==1)throw Error('Native structure preflight cancellation failed');}
   };
 
-  // Solid additions use the ordinary resource transaction. Geometry remains
-  // owned by native preview; only its original identity may survive retiming.
-  const addNativeBarriersAfterGpuQuiescence=({additions,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
-    const shapes=copyNativeBarrierAdditions(additions);
+  // Both addition classes use the existing world transaction. A gate keeps
+  // its mechanism, three proxies and initial pose in a single native proposal.
+  const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
+    if(gate!==null&&additions!==undefined)throw TypeError('Native gate and solid additions require separate proposals');
+    const shapes=gate===null?copyNativeBarrierAdditions(additions):null,count=shapes?.length??3;
+    const gateId=gate&&numericId(gate.entityId);
+    if(gate!==null&&(!gateId||gate.entityId!==`structure-${gateId}`||![1,2,3].includes(gate.modelId)||![gate.x,gate.z,gate.yaw,gate.sx,gate.sz].every(Number.isFinite)||gate.sx<=0||gate.sz<=0))throw TypeError('Invalid native gate placement');
     if(typeof prepareResources!=='function'||typeof validate!=='function'||typeof project!=='function')throw TypeError('Native solid addition requires preparation and synchronous Game adoption');
     if(atCommitBoundary!==null&&typeof atCommitBoundary!=='function')throw TypeError('Invalid native command boundary');
     if(wasm.spatial_world_barrier_addition_version?.()!==1)throw Error('Rebuild native solid addition association');
+    if(gate&&wasm.spatial_world_gate_addition_version?.()!==1)throw Error('Rebuild native gate addition association');
     let candidate=null,preparedReference=null,translation=null,issued=null;
     const tuple=()=>{if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native solid addition lost its ticket');const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));if(row[5]!==2)throw Error('Native solid addition changed family');return row;};
     const capture=boundary=>{
       const resources=session.core.captureNativeWorldProposalResources(boundary),row=tuple();
       if(resources.kind!==2||resources.chunks.length||resources.removed.length||resources.retainsNativeAssignments!==true||resources.routeEffects.rows.length||resources.gateEffects.rows.length||row[0]!==boundary.nativeSession||row[1]!==boundary.ticket||row[3]!==boundary.effectiveTime)throw Error('Native solid addition lacks its unchanged-owner proof');
-      return copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:1,worldBoundary:boundary,sourceControlSequence:row[2],additions:shapes},authorizedAutonomy:false,authorizedConsequences:false});
+      let shape={additions:shapes};
+      if(gate){
+        const pointer=wasm.spatial_world_gate_addition_proxies_ptr(row[0],row[1]);
+        if(!pointer)throw Error('Native gate proposal lost its proxy geometry');
+        const proxies=Array.from(new Float32Array(wasm.memory.buffer,pointer,18));
+        if(wasm.nav_gate_addition_proposal_pose(row[0],row[1])!==1)throw Error('Native gate proposal lost its initial pose');
+        const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+        if(pose[0]!==gateId||pose[1]!==gate.modelId||pose[6]!==boundary.effectiveTime)throw Error('Native gate proposal changed its identity');
+        shape={gate:{entityId:gate.entityId,modelId:pose[1],x:gate.x,z:gate.z,yaw:gate.yaw,sx:gate.sx,sz:gate.sz,
+          mechanismId:pose[2],opening:pose[7],rootMatrix:pose.slice(8,24),leafMatrix:pose.slice(24,40),
+          proxies:Array.from({length:3},(_,index)=>{const [x,z,halfX,halfZ,yaw,passMask]=proxies.slice(index*6,index*6+6);return {x,z,halfX,halfZ,yaw,passMask};})}};
+      }
+      return copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,
+        nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:gate?2:1,worldBoundary:boundary,sourceControlSequence:row[2],...shape},
+        authorizedAutonomy:false,authorizedConsequences:false});
     };
     const protocol={motionKind:'barrier-addition',preparedFrameRequired:true,deferred:true,atCommitBoundary,
       ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
       capture(boundary){candidate=capture(boundary);preparedReference=candidate.nativeBarrierAddition;return candidate;},
       retained(session,ticket){if(validate()!==true||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const row=tuple();return row[0]===session&&row[1]===ticket;},
       revalidate(session,ticket){
-        if(validate()!==true)return {status:'stale'};const result=wasm.spatial_world_proposal_revalidate_barriers(session,ticket);if(result!==1)return {status:result===0?'blocked':'stale'};
-        const row=tuple(),boundary=copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:row[0],ticket:row[1],effectiveTime:row[3]}),pointer=wasm.nav_barrier_addition_proposal_translation_ptr(row[0],row[1]);
-        if(!pointer)throw Error('Native solid addition translation unavailable');const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,8)),origin=preparedReference.worldBoundary;
-        if(proof[0]!==1||proof[1]!==origin.ticket||proof[2]!==row[1]||proof[3]!==origin.effectiveTime||proof[4]!==row[3]||proof[5]!==1||proof[6]!==shapes.length||proof[7]!==0)throw Error('Native solid addition translation mismatch');
-        candidate=capture(boundary);translation=Object.freeze({version:1,sameResourceOwners:true,preparedTicket:proof[1],ticket:proof[2],preparedAt:proof[3],effectiveTime:proof[4]});return {status:'revalidated',proposal:candidate,timeTranslation:translation};
+        if(validate()!==true)return {status:'stale'};
+        const result=gate?wasm.spatial_world_gate_addition_revalidate(session,ticket):wasm.spatial_world_proposal_revalidate_barriers(session,ticket);
+        if(result!==1)return {status:result===0?'blocked':'stale'};
+        const row=tuple(),boundary=copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:row[0],ticket:row[1],effectiveTime:row[3]});
+        let retained=false;
+        try{
+          const pointer=wasm.nav_barrier_addition_proposal_translation_ptr(row[0],row[1]);
+          if(!pointer)throw Error('Native addition translation unavailable');
+          const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,8)),origin=preparedReference.worldBoundary;
+          if(proof[0]!==1||proof[1]!==origin.ticket||proof[2]!==row[1]||proof[3]!==origin.effectiveTime||proof[4]!==row[3]||proof[5]!==1||proof[6]!==count||proof[7]!==0)throw Error('Native addition translation mismatch');
+          candidate=capture(boundary);
+          if(!nativeBarrierAdditionSuccessor(preparedReference,candidate.nativeBarrierAddition))return {status:'stale'};
+          translation=Object.freeze({version:1,sameResourceOwners:true,preparedTicket:proof[1],ticket:proof[2],preparedAt:proof[3],effectiveTime:proof[4]});
+          retained=true;
+          return {status:'revalidated',proposal:candidate,timeTranslation:translation};
+        }finally{
+          if(!retained){protocol.release(row[0],row[1]);protocol.cancel(row[0],row[1]);}
+        }
       },
       timeTranslation:()=>translation,binding:()=>issued,
       release(session,ticket){wasm.spatial_world_proposal_resource_release(session,ticket);},cancel(session,ticket){wasm.nav_intent_barrier_proposal_cancel(session,ticket);}
     };
     return commitNativeWorldProposal(getPublication,()=>{
-      if(validate()!==true)return -2;const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);if(!pointer)throw Error('Native solid addition input allocation failed');
+      if(validate()!==true)return -2;
+      if(gate)return wasm.spatial_world_gate_addition_stage(gateId,gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz);
+      const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);if(!pointer)throw Error('Native solid addition input allocation failed');
       new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);wasm.spatial_world_proposal_int_ptr(0);return wasm.spatial_world_proposal_stage_resources(2,0,values.length,0);
     },(mark,...boundary)=>{
-      if(validate()!==true)return {status:-2};const status=wasm.spatial_world_proposal_barriers_commit_bound(...boundary,preparedReference.worldBoundary.ticket);if(status!==1)return {status};mark();
-      const pointer=wasm.spatial_world_barrier_binding_ptr(),count=wasm.spatial_world_proposal_result_count();if(!pointer||count!==shapes.length)throw Error('Native solid addition receipt unavailable');
+      if(validate()!==true)return {status:-2};
+      const commit=gate?wasm.spatial_world_gate_addition_commit_bound:wasm.spatial_world_proposal_barriers_commit_bound;
+      const status=commit(...boundary,preparedReference.worldBoundary.ticket);if(status!==1)return {status};mark();
+      const pointer=wasm.spatial_world_barrier_binding_ptr();if(!pointer||wasm.spatial_world_proposal_result_count()!==count)throw Error('Native addition receipt unavailable');
       const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,5)),expected=[1,preparedReference.worldBoundary.ticket,preparedReference.worldBoundary.effectiveTime,boundary[1],boundary[3]];
       if(!proof.every((value,index)=>value===expected[index]))throw Error('Native solid addition receipt mismatch');
       const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));

@@ -223,7 +223,7 @@ export function commitStructurePlacement(s,id,plan,nav) {
   });
 }
 export function wallCapacity(s,material){return Math.max(0,Math.floor((numberOf(s.ledger.balance)-HIRING_RESERVE)/wallSpec(material).cost));}
-function coincidentRuins(s,pieces){
+export function coincidentRuins(s,pieces){
   return s.structures.filter(old=>old.kind==='wall'&&old.status==='ruined'&&
     pieces.some(piece=>Math.hypot(old.x-piece.x,old.z-piece.z)<.35&&
       Math.abs(Math.sin((old.yaw??0)-(piece.yaw??0)))<.18));

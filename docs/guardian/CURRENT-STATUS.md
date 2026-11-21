@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxies en NVIDIA y cobró 10 monedas una sola vez. Farm conservó su cuerpo y 32 geometrías, y el consumidor confirmó el drenaje. El primer dibujo de la puerta registró 40,8 ms a 30 Hz tras una oportunidad retenida por la mutación. Quedan el paso por el vano, la retirada preparada y C4. [Compra y validación](native-gate-addition-20261121.md).
+
 Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir su motor. NVIDIA dibujó la apertura y Farm reanudó el movimiento sobre el mismo cuerpo junto al marco. Quedan el paso por el vano, la compra y C4. [Admisión y recibo](native-gate-preparation-readiness-20261121.md).
 
 YoungMale y olderFemale completaron una segunda cosecha y entrega ordinarias sobre el mismo cuerpo después del primer abono. NVIDIA dibujó los cuatro tickets nativos. El segundo abono fue de 14 y 11 monedas respectivamente, con el primer abono conservado. Quedan los otros dos perfiles y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
