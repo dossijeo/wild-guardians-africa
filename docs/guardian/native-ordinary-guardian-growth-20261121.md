@@ -1,0 +1,9 @@
+# Crecimiento ordinario con el Guardián preparado
+
+El cliente prepara el modelo y los efectos antes de emitir `castAgricultural`. La orden usa el adaptador de selección de producción con el identificador y el punto de contacto de un cultivo conocido. La autoridad confirma una sola aplicación. Al avanzar la misma partida, el cultivo seleccionado creció 0,254 s más que otro mijo que partía con el mismo progreso y estado de riego. Se conservó el importe de potencia de la regla existente, 180/13, ligado a plant-1000000.
+
+La Surface recibió el evento confirmado y mostró dos haces y el núcleo del efecto. El Host siguió dibujando la escena entre dos inspecciones en las que los haces ya estaban activos. Farm avanzó con el ticket 2, el cuerpo 1, la raíz 649 y sus 32 mallas con las geometrías originales. El recorrido terminó con drenaje y sin errores gráficos. Edge usó NVIDIA Turing, 640×480 y calidad `muy_baja`. Durante los 17 dibujos observados tras emitir la orden, el máximo intervalo del Host fue de 34,1 ms a 30 Hz. [Recibo](performance/native-ordinary-guardian-growth-20261121.json).
+
+La prueba reutiliza las rutinas de preparación, confirmación y publicación existentes. Three r180 prepara los pipelines de la lista de dibujo para el contexto destino y espera las promesas del backend antes de devolver `compileAsync`. La prueba espera también el acuse de preparación de la Surface antes de emitir la orden. [Código de Three](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L797-L909).
+
+Pasaron 53 pruebas dirigidas de agricultura, transporte HUD y presentación del Guardián. Las sondas iniciales compararon números de secuencia de la autoridad y del Host, que pertenecen a canales distintos. La comprobación final vincula el efecto al identificador de la orden y requiere que el Host avance entre observaciones con los haces activos. Siguen pendientes la selección desde la cámara, el fin del efecto, las demás magias y C4.
