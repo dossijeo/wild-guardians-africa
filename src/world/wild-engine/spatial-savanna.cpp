@@ -212,7 +212,7 @@ struct WorldResourcePublication {
   std::shared_ptr<WorldResourcePreview> prepared;
   bool valid=false;
   std::array<double,9> header{};
-  std::array<double,5> stopBinding{};
+  std::array<double,5> stopBinding{},barrierBinding{};
   std::array<double,6> stopSource{}; // version,session,actor,slot,generation,assignment
   std::vector<int32_t> changes;
 };
@@ -1248,6 +1248,7 @@ bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
 }
 struct TerrainProposal;
 struct WorldResourcePreview {
+  std::vector<float> barrierAdditions;
   std::array<double,9> header{};
   bool publishChunks=true;
   std::optional<PreparedChunkNavigation> addition;
@@ -1913,7 +1914,7 @@ void spatialRecordMotionResourceBoundary(double session,double ticket,double tim
   if(!worldResourcePublication)worldResourcePublication=new WorldResourcePublication();
   auto& publication=*worldResourcePublication;publication.changes.clear();publication.prepared.reset();
   publication.header={1,session,ticket,time,double(kind),0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
-  publication.stopBinding.fill(0);publication.stopSource.fill(0);publication.valid=true;
+  publication.stopBinding.fill(0);publication.barrierBinding.fill(0);publication.stopSource.fill(0);publication.valid=true;
 }
 extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
@@ -2964,7 +2965,10 @@ EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return 
 // 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
 // 12/24/25 explicitly stop a native Idle stroll/Farm arrival/Task route without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
-  if(captureResources&&kind<6)return -2;
+  if(captureResources&&kind<6&&kind!=2)return -2;
+  // First structure class: additions of intact, solid wall barriers only.
+  // No removals, gate masks, polygons, props or implicit route stops.
+  if(captureResources&&kind==2&&(mode||intCount||floatCount<6||floatCount>256*6))return -1;
   WorldResourcePreview candidate;
   struct CaptureGuard {WorldResourcePreview* previous;
     CaptureGuard(WorldResourcePreview* target):previous(worldResourcePreviewCapture){worldResourcePreviewCapture=target;}
@@ -2983,6 +2987,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
       if(!std::isfinite(f[i])||!std::isfinite(f[i+1])||!std::isfinite(f[i+2])||!std::isfinite(f[i+3])||
          !std::isfinite(f[i+4])||!std::isfinite(f[i+5])||f[i+2]<=0||f[i+3]<=0||f[i+2]>100||f[i+3]>100||
          f[i+5]<0||f[i+5]>3||std::floor(f[i+5])!=f[i+5])return -1;
+      if(captureResources&&f[i+5]!=0)return -1;
       const float yaw=f[i+4];const Barrier barrier={0,f[i],f[i+1],f[i+2],f[i+3],yaw,
         float(std::cos(yaw)),float(std::sin(yaw)),uint8_t(f[i+5])};shapes.push_back(barrierMutation(barrier));
     }
@@ -3033,12 +3038,13 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     const int result=applyWorldProposalInput(input);worldProposalResult.clear();
     if(result!=1)return 0;
   }
-  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1);
+  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind==2);
   if(staged==1&&captureResources){
     std::array<double,6> identity{};
     if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
     if(candidate.publishChunks)for(const auto& [point,data]:candidate.chunks)candidate.changes.insert(candidate.changes.end(),{1,point.first,point.second});
     for(const auto& point:candidate.removed)candidate.changes.insert(candidate.changes.end(),{2,point.first,point.second});
+    if(kind==2)candidate.barrierAdditions=f;
     candidate.header={1,identity[0],identity[1],identity[3],double(kind),double(candidate.changes.size()/3),
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
     worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(candidate));
@@ -3052,6 +3058,16 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mod
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_stop(double session,double ticket){
   if(!worldResourcePreview||(worldResourcePreview->header[4]!=12&&worldResourcePreview->header[4]!=24&&worldResourcePreview->header[4]!=25)||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
   std::array<double,8> translation{};const int result=spatialIntentRevalidateWorkerRouteStop(session,ticket,translation);
+  if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
+  std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
+  auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_barrier_addition_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_barriers(double session,double ticket){
+  if(!worldResourcePreview||worldResourcePreview->header[4]!=2||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket||worldResourcePreview->barrierAdditions.empty())return -1;
+  const auto& f=worldResourcePreview->barrierAdditions;std::vector<SpatialStaticMutation> shapes;
+  for(size_t i=0;i<f.size();i+=6){const float yaw=f[i+4];const Barrier b={0,f[i],f[i+1],f[i+2],f[i+3],yaw,float(std::cos(yaw)),float(std::sin(yaw)),0};shapes.push_back(barrierMutation(b));}
+  std::array<double,8> translation{};const int result=spatialIntentRevalidateBarrierAddition(session,ticket,shapes.data(),int(shapes.size()),translation);
   if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
   std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
   auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
@@ -3100,7 +3116,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session
 }
 EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
-int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket){
+int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket,bool barrierBound=false){
   const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
   if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
   struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
@@ -3108,7 +3124,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   // semantics. Keep its canonical path until that owner uses protected commits.
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
-  std::array<double,5> stopBinding{};SpatialWorldProposalInput input;const int valid=stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
   if(!stopBound&&(input.kind==12||input.kind==24||input.kind==25))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
@@ -3129,7 +3145,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
       double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
     publication.prepared.reset();
     if(hasPrepared&&(installingPrepared||input.kind==11)&&worldResourcePreview->changes==publication.changes)publication.prepared=worldResourcePreview;
-    publication.stopBinding=stopBinding;publication.stopSource.fill(0);
+    publication.stopBinding=stopBinding;publication.barrierBinding=barrierBinding;publication.stopSource.fill(0);
     if(input.kind==12||input.kind==24||input.kind==25){
       const auto& ids=input.integers;const auto id=[&](int offset){return uint64_t(uint32_t(ids[offset]))|(uint64_t(uint32_t(ids[offset+1]))<<32);};
       publication.stopSource={1,double(id(0)),double(id(2)),double(uint32_t(ids[4])),double(uint32_t(ids[5])),double(id(6))};
@@ -3140,6 +3156,11 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,0);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,true,preparedTicket);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_barriers_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,preparedTicket,true);}
+EMSCRIPTEN_KEEPALIVE const double* spatial_world_barrier_binding_ptr(){
+  if(spatial_world_resource_snapshot()!=1)return nullptr;const auto& p=*worldResourcePublication;
+  return p.header[4]==2&&p.header[5]==0&&p.barrierBinding[0]==1&&p.barrierBinding[3]==p.header[2]&&p.barrierBinding[4]==p.header[3]?p.barrierBinding.data():nullptr;
+}
 // One receipt on the existing last committed world publication, not a history
 // of permissions. The authority attests the prepared/current frontier pair.
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_stop_binding_ptr(){

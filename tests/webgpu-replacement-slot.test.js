@@ -21,6 +21,40 @@ test('late batch rollback restores the old replacement and releases only its can
  }finally{f.close();}
 });
 
+test('an initial batch keeps its first object hidden, then adopts it without another allocation',async()=>{
+ const object=new Group(),released=[],registry=createWebGpuResourceRegistry();
+ const slot=createWebGpuReplacementSlot({pipelineAdmission:{prepare:async()=>{}},resourceRegistry:registry,release:value=>released.push(value)});
+ try{
+  assert.throws(()=>slot.prepareParticipant('wall',()=>object),/unavailable/);
+  const part=slot.prepareParticipant('wall',()=>object,{initial:true});
+  assert.equal(slot.active,null);
+  assert.equal(object.visible,false);
+  assert.deepEqual(part.presentation(),{show:[object],hide:[]});
+  assert.deepEqual(part.eventRoots(),[object]);
+  part.activate();part.attach();const result=part.finalize();result.retire();result.notify();
+  assert.equal(slot.active,object);
+  assert.equal(object.visible,true);
+  slot.request('wall',()=>{throw Error('admitted object was rebuilt');});
+  assert.equal(slot.upToDate,true);
+  assert.deepEqual(released,[]);
+  assert.equal(registry.status().owned[0].state,'committed');
+ }finally{slot.dispose();registry.dispose();}
+ assert.deepEqual(released,[object]);
+});
+
+test('rolling back an initial batch restores the empty owner and releases the candidate once',()=>{
+ const released=[],object=new Group(),slot=createWebGpuReplacementSlot({pipelineAdmission:{prepare:async()=>{}},release:value=>released.push(value)});
+ try{
+  const part=slot.prepareParticipant('wall',()=>object,{initial:true});
+  part.activate();part.attach();const result=part.finalize();part.rollbackFinalized();part.rollback();part.cancel();part.cancel();
+  assert.equal(slot.active,null);
+  assert.equal(object.parent,null);
+  assert.equal(object.visible,false);
+  assert.deepEqual(released,[object]);
+  assert.throws(()=>result.retire(),/stale/);
+ }finally{slot.dispose();}
+});
+
 test('an ordinary changed request cancels only the staged proposal before replacing its visible owner',async()=>{
  const f=await preparedFixture();try{const next=new Group(),part=f.slot.prepareParticipant('next',()=>next),ordinary=new Group();f.slot.request('ordinary',()=>ordinary);assert.equal(part.signal.aborted,true);assert.equal(part.valid(),false);assert.equal(f.slot.active,f.old);assert.equal(next.parent,null);await new Promise(resolve=>setImmediate(resolve));assert.equal(f.slot.active,ordinary);assert.deepEqual(f.released,[next,f.old]);
  }finally{f.close();}

@@ -82,3 +82,23 @@ test('cancellation releases the native proposal even if preparation is unresolve
   for(let i=0;i<100&&!entered;i++)await delay(1);controller.abort();const result=await pending;assert.equal(result.status,'control-failed');assert.equal(f.w.nav_intent_barrier_proposal_ticket(),0);assert.equal(f.w.spatial_has_chunk(4,4),0);finish();await delay(0);assert.equal(aborted,1);assert.equal(f.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
  }finally{f.close();}
 });
+
+test('solid wall resource preview preserves routes and native topology until its exact commit',async()=>{
+ const f=await setup();try{const p=f.point(35,35),addition={x:p.x,z:p.z,halfX:1,halfZ:.3,yaw:.2,passMask:0},before=f.session.core.snapshot();let seen=0;
+  const result=await f.mutate({type:'barriers',additions:[addition]},{prepareResources:({resources})=>{seen++;assert.equal(resources.kind,2);assert.equal(resources.retainsNativeAssignments,true);assert.equal(resources.routeEffects.rows.length,0);assert.equal(resources.gateEffects.rows.length,0);assert.deepEqual(resources.chunks,[]);assert.deepEqual(resources.removed,[]);assert.deepEqual(f.session.core.snapshot(),before);return prepared();}});
+  assert.equal(result.status,'committed');assert.equal(seen,1);assert.equal(result.ids.length,1);assert.equal(f.session.core.snapshot().barriers.length,before.barriers.length+1);assert.equal(f.w.spatial_world_resource_snapshot(),1);assert.deepEqual(f.bridge.nativeWorldResourceBoundary(),result.worldBoundary);
+ }finally{f.close();}
+});
+test('solid wall resource preview refuses affected route owners and unsupported geometry before preparation',async()=>{
+ const f=await setup();try{let preparations=0;const before=f.session.core.snapshot(),cross=f.point(0,0),away=f.point(35,35),options={prepareResources:()=>{preparations++;return prepared();}};
+  const crossing=await f.mutate({type:'barriers',additions:[{x:cross.x,z:cross.z,halfX:.3,halfZ:2,yaw:0}]},options);assert.equal(crossing.status,'blocked');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
+  const masked=await f.mutate({type:'barriers',additions:[{x:away.x,z:away.z,halfX:1,halfZ:.3,yaw:0,passMask:1}]},options);assert.equal(masked.status,'invalid');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
+  const polygon=await f.mutate({type:'addPolygon',points:[away,{x:away.x+1,z:away.z},{x:away.x,z:away.z+1}]},options);assert.equal(polygon.status,'unsupported');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
+ }finally{f.close();}
+});
+test('solid wall preview still rejects clock advancement without a native deferred association',async()=>{
+ const f=await setup();try{let aborted=0;const before=f.session.core.snapshot(),p=f.point(35,35);
+  const result=await f.mutate({type:'barriers',additions:[{x:p.x,z:p.z,halfX:1,halfZ:.3,yaw:0}]},{prepareResources:()=>{f.state.elapsed+=.1;assert(f.w.nav_intent_execution_advance(f.state.elapsed)>=0);assert(f.w.nav_intent_clock_commit(1,0)>=0);return {...prepared(),abort(){aborted++;}};}});
+  assert.equal(result.status,'stale');assert.equal(aborted,1);assert.deepEqual(f.session.core.snapshot(),before);assert.equal(f.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
+ }finally{f.close();}
+});

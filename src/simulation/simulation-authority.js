@@ -1,3 +1,5 @@
+import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
+import {centerFootprint} from '../world/centers.js';
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
 import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
 import {createNativeResourcePreparationConnection} from './native-resource-preparation-connection.js';
@@ -75,9 +77,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
   const planner=createEventDrivenTaskPlanner(session,{onNativeWorldResources:resources=>{
-    if(!resources.chunks.length)terrainGeneration++;
+    if(resources.kind!==2&&!resources.chunks.length)terrainGeneration++;
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
-      chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point}))});
+      chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{})});
   }});planner.resetFromState(game);
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
@@ -152,6 +154,132 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     reachCost:(start,end)=>{const result=routes.reachCost(start,end);if(result?.status==='unknown'){const missing=missingCenterRouteChunks(start,end);if(missing.length)throw new SpatialChunkUnavailable(start,end,missing);}return result;}}));
    try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
+  let nativeStructurePreparation=null,nativeStructureFailure=null;
+  const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:{kind:command.kind,id:command.id,structure:command.structure});
+  // Once a native world is acquired, ordinary eager loading cannot publish a
+  // new region without its prepared resource receipt. Leave cold admission
+  // pending, before either purchase or a terrain mutation, rather than stamp
+  // these unrelated chunks with the actor's stop24 boundary.
+  const withStructureChunks=(operation,chunks)=>nativeBodies?operation():withResidentChunks(operation,chunks);
+  const coldStructureRejection=error=>({rejection:'La construcción necesita preparar las regiones de terreno',missingNativeChunks:error.missing});
+  function quoteStructureCommand(command,chunks){
+    if(command.kind==='buildWallChain'){
+      if(typeof command.id!=='string'||!command.id||typeof command.material!=='string'||!command.material||!Array.isArray(command.points)||command.capacityLimit!==undefined&&typeof command.capacityLimit!=='boolean'||command.options!==undefined&&(!command.options||typeof command.options!=='object'||Array.isArray(command.options)||Object.hasOwn(command.options,'preparedPlan')||command.capacityLimit&&Object.hasOwn(command.options,'maxPieces')))throw TypeError('Invalid wall chain command');
+      if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return {plan:null};
+      let options=command.options??{},plan;
+      try{if(command.capacityLimit){const maxPieces=wallCapacity(game,command.material);if(!maxPieces)throw Error(RESERVE_MESSAGE);options={...options,maxPieces};}plan=withStructureChunks(()=>previewWallChain(game,command.material,command.points,nav,options),chunks);if(plan.pieces.length)ensurePurchaseBudget(game,plan.cost);}
+      catch(error){if(error instanceof SpatialChunkUnavailable&&nativeBodies)return coldStructureRejection(error);if(error?.code!=='hiring-reserve'&&error?.message!==RESERVE_MESSAGE&&!['Esta acción no está disponible ahora','No hay monedas suficientes para todo el trazado','Trazado de muralla inválido','Material desconocido'].includes(error?.message))throw error;return {rejection:error.message};}
+      return {plan:plan.pieces.length?plan:null,options};
+    }
+    if(command.kind!=='placeStructure'||typeof command.id!=='string'||!command.id||!command.structure||typeof command.structure!=='object'||Array.isArray(command.structure)||!Number.isFinite(command.structure.x)||!Number.isFinite(command.structure.z))throw TypeError('Invalid structure command');
+    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return {plan:null};
+    let plan;try{plan=withStructureChunks(()=>prepareResidentStructure(command.structure),chunks);if(plan&&!permission(game,plan.kind==='center'?'center':'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');if(plan)ensurePurchaseBudget(game,plan.cost);}
+    catch(error){if(error instanceof SpatialChunkUnavailable&&nativeBodies)return coldStructureRejection(error);if(!(error instanceof StructurePlacementError)&&error?.code!=='hiring-reserve'&&error?.message!=='Material desconocido')throw error;return {rejection:error.message};}
+    return {plan};
+  }
+  function inspectStructureStops(plan){
+    if(!nativeBodies||!plan)return {status:'ready',actors:[]};
+    if(plan.kind==='center')return planner.inspectNativeStructureStops(3,centerFootprint(plan.entity,game).footprint.flatMap(p=>[p.x,p.z]));
+    const pieces=plan.pieces??[plan.entity],barriers=pieces.flatMap(spatialStructureBarriers);
+    return planner.inspectNativeStructureStops(2,barriers.flatMap(b=>[b.x,b.z,b.halfX,b.halfZ,b.yaw,b.passMask??0]));
+  }
+  // Initial native scope: an ordinary, resident batch of new solid walls.
+  // Preview remains Game's existing quote; no placement rules are reimplemented.
+  function nativeSolidWallQuote(quoted){
+    const plan=quoted.plan;
+    if(!plan||!Array.isArray(plan.pieces)||!plan.pieces.length||plan.pieces.length>256||plan.pieces.some(p=>p.kind!=='wall'||p.gate||p.status!=='intact')||plan.updates.length||plan.gates||plan.repairableRuins.length||plan.suppressed.some(key=>!game.suppressed.includes(key)))return null;
+    const additions=plan.pieces.map(piece=>{const parts=spatialStructureBarriers(piece);if(parts.length!==1||(parts[0].passMask??0)!==0)throw Error('Native solid wall quote changed shape class');const p=parts[0];return {entityId:piece.id,x:Math.fround(p.x),z:Math.fround(p.z),halfX:Math.fround(p.halfX),halfZ:Math.fround(p.halfZ),yaw:Math.fround(p.yaw),passMask:0};});
+    return {quoted,additions,signature:JSON.stringify({pieces:plan.pieces,cost:plan.cost,updates:plan.updates,suppressed:plan.suppressed,repairableRuins:plan.repairableRuins})};
+  }
+  function prepareNativeSolidWallCommit(owner){
+    // The preceding stop projected a held Game owner and queued its existing
+    // planning notice. Flush that consequence before capturing a new proposal;
+    // the next ordinary tick must not discover an older semantic boundary.
+    planner.flushTaskEvents();planner.flushNativeIntentControl();
+    const first=nativeSolidWallQuote(quoteStructureCommand(owner.command,[]));
+    if(!first)throw Error('Native construction requires an unchanged resident solid wall batch');
+    const resources=owner.resources,manifest=getTerrainManifest?.(),minSequence=sequence;
+    if(!resources||!manifest)throw Error('Native solid wall preparation lacks its resource owner');
+    const validOwner=()=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!owner.control.status().closed&&owner.resources.status().phase==='running';
+    let current=first,lastQuoteSequence=sequence,lastQuoteTime=game.elapsed;
+    const validate=()=>{
+      if(!validOwner())return false;
+      if(lastQuoteSequence!==sequence||lastQuoteTime!==game.elapsed){
+        const next=nativeSolidWallQuote(quoteStructureCommand(owner.command,[]));
+        if(!next||next.signature!==first.signature)return false;
+        current=next;lastQuoteSequence=sequence;lastQuoteTime=game.elapsed;
+      }
+      return true;
+    };
+    return new Promise((ready,reject)=>{
+      owner.completion=planner.addNativeBarriersAfterGpuQuiescence({additions:first.additions,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
+        prepareResources:({resources:proposal,signal})=>resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(first.quoted.plan.pieces)}),
+        atCommitBoundary:consume=>new Promise(resolve=>{
+          if(!validOwner()){reject(Error('Native wall command owner retired'));return;}
+          owner.consume=()=>{const run=owner.consume;if(!run)throw Error('Native wall command already consumed');owner.consume=null;owner.consumed=true;try{return consume();}finally{resolve();}};
+          owner.ready=true;ready({version:1});
+        }),
+        project:proof=>{
+          // Check the native result before charging, but apply the mirror only
+          // at Game's normal nav.setState seam, after quote validation.
+          const quoted=current.quoted,adopt=session.prepareNativeWallAdditionAdoption(quoted.plan.pieces,proof),original=nav.setState;let adopted=false;
+          nav.setState=next=>{if(next!==game||adopted)throw Error('Native wall Game projection changed owner');adopt();adopted=true;return original(next);};
+          try{return buildWallChain(game,owner.command.id,owner.command.material,owner.command.points,nav,{...quoted.options,preparedPlan:quoted.plan})===true&&adopted;}
+          finally{nav.setState=original;}
+        }});
+      owner.completion.then(result=>{
+        if(result.status==='committed-control-failed'){nativeStructureFailure=Error('Native wall command '+result.status+': '+result.error);onNativeIntentControlError?.(nativeStructureFailure);}
+        if(!owner.ready)reject(Error('Native wall preparation '+result.status+(result.error?': '+result.error:'')));
+      },reject);
+    });
+  }
+
+  async function prepareNativeStructureCommand(command){
+    if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
+    const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
+    try{
+      // Dispatch is held; authority commands and native execution keep running.
+      owner.receipt=await nativeProduction?.quiesce()??null;
+      if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
+      const quoted=quoteStructureCommand(captured,[]),{plan,missingNativeChunks}=quoted;
+      if(missingNativeChunks)throw Error('Native structure requires prepared regions: '+missingNativeChunks.map(p=>`${p.cx},${p.cz}`).join(';'));
+      if(nativeBodies&&(!plan||quoted.rejection||captured.kind!=='buildWallChain'||!nativeSolidWallQuote(quoted))){owner.rejection=quoted.rejection??'La construcción nativa admite por ahora solo muros sólidos nuevos en regiones residentes';owner.ready=true;return {version:1};}
+      const impact=inspectStructureStops(plan);
+      if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
+      // Reject unsupported consumers before stopping any actor. No JS route
+      // approximation may decide whether a native trajectory is affected.
+      for(const actor of impact.actors)if(!planner.nativeFarmArrivalRouteBinding(actor))throw Error('Native structure preflight requires an unsupported route stop');
+      for(const actor of impact.actors){
+        if(planner.nativeFarmArrivalHeldExecution(actor))continue;
+        if(!planner.nativeFarmArrivalRouteBinding(actor))throw Error('Native structure route source changed');
+        const resources=nativeResourcePreparation,manifest=getTerrainManifest?.(),minSequence=sequence;
+        if(!resources||!manifest)throw Error('Native structure preparation lacks its resource owner');
+        const stopped=await planner.stopNativeFarmArrivalAfterGpuQuiescence({actorId:actor,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
+          prepareResources:({resources:proposal,signal})=>resources.prepareNativeGateResources(proposal,{signal,minSequence,terrainManifest:manifest})});
+        if(stopped.status!=='committed'){
+          const error=Error('Native structure stop '+stopped.status+(stopped.error?': '+stopped.error:''));
+          if(stopped.status==='committed-control-failed'){nativeStructureFailure=error;onNativeIntentControlError?.(error);}
+          throw error;
+        }
+        for(const worker of game.workers)if(planner.nativeFarmArrivalHeldExecution(worker.id))planner.projectNativeFarmArrivalExecution(game,worker);
+      }
+      if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
+      if(nativeBodies)return await prepareNativeSolidWallCommit(owner);
+      owner.ready=true;return {version:1};
+    }catch(error){if(nativeStructurePreparation===owner)await releaseNativeStructureCommand(owner);throw error;}
+  }
+  async function releaseNativeStructureCommand(owner){
+    if(!owner.consumed)owner.controller.abort();
+    try{await owner.completion;}finally{owner.controller.abort();if(nativeStructurePreparation===owner)nativeStructurePreparation=null;}
+    if(!closed&&!nativeStructureFailure&&nativeProduction&&owner.receipt!==null)nativeProduction.resume(owner.receipt);
+    return {version:1};
+  }
+  function finishNativeStructureCommand(command){
+    const owner=nativeStructurePreparation;
+    if(!owner?.ready||owner.identity!==structureIdentity(command))throw Error('Native structure release identity mismatch');
+    return releaseNativeStructureCommand(owner);
+  }
+
   // Initial chunks are published separately at sequence zero. Later callback
   // deliveries, including those during asynchronous preparation or failed
   // commands, belong to the next successful authority publication.
@@ -162,6 +290,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
+    prepareNativeStructureCommand,finishNativeStructureCommand,
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
       nativeResourcePreparation?.dispose();
@@ -177,6 +306,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction(){
+      if(nativeStructurePreparation)return Promise.reject(Error('Native production is held by a structure command'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce()??Promise.resolve(null);
     },
@@ -348,21 +478,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       if(newborns.length)nativeBirthsPending=true;
       planner.flushTaskEvents();admitPendingNativeBirths({force:newborns.length>0});
      }
-    }else if(command.kind==='buildWallChain'){
-     if(typeof command.id!=='string'||!command.id||typeof command.material!=='string'||!command.material||!Array.isArray(command.points)||command.capacityLimit!==undefined&&typeof command.capacityLimit!=='boolean'||command.options!==undefined&&(!command.options||typeof command.options!=='object'||Array.isArray(command.options)||Object.hasOwn(command.options,'preparedPlan')||command.capacityLimit&&Object.hasOwn(command.options,'maxPieces')))throw TypeError('Invalid wall chain command');
-     if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
-     else{
-      let options=command.options??{},plan;
-      try{if(command.capacityLimit){const maxPieces=wallCapacity(game,command.material);if(!maxPieces)throw Error(RESERVE_MESSAGE);options={...options,maxPieces};}plan=withResidentChunks(()=>previewWallChain(game,command.material,command.points,nav,options),commandLoadedChunks);if(plan.pieces.length)ensurePurchaseBudget(game,plan.cost);}
-      catch(error){if(error?.code!=='hiring-reserve'&&error?.message!==RESERVE_MESSAGE&&!['Esta acción no está disponible ahora','No hay monedas suficientes para todo el trazado','Trazado de muralla inválido','Material desconocido'].includes(error?.message))throw error;rejection=error.message;}
-      value=rejection?false:plan.pieces.length?buildWallChain(game,command.id,command.material,command.points,nav,{...options,preparedPlan:plan}):false;
+    }else if(command.kind==='buildWallChain'||command.kind==='placeStructure'){
+     if(nativeBodies){
+      const owner=nativeStructurePreparation;
+      if(nativeStructureFailure)throw nativeStructureFailure;
+      if(!owner?.ready||owner.identity!==structureIdentity(command)||owner.control!==nativeIntentControl||owner.resources!==nativeResourcePreparation||owner.control.status().closed||owner.resources?.status().phase!=='running'){value=false;rejection='La construcción necesita su preparación nativa';}
+      else if(owner.rejection||!owner.consume){value=false;rejection=owner.rejection??'La construcción ya no tiene una preparación vigente';}
+      else{const result=owner.consume();if(result.status==='committed-control-failed')throw Error(result.error);value=result.status==='committed';if(!value)rejection='La construcción cambió durante su preparación: '+result.status;}
+     }else{
+     const prepared=quoteStructureCommand(command,commandLoadedChunks);rejection=prepared.rejection??null;
+     if(prepared.plan&&!rejection){
+      const owner=nativeStructurePreparation;
+      if(nativeStructureFailure)throw nativeStructureFailure;
+      if(owner&&nativeBodies&&(!owner.ready||owner.identity!==structureIdentity(command)||owner.control!==nativeIntentControl||owner.resources!==nativeResourcePreparation||owner.control.status().closed||owner.resources?.status().phase!=='running'))rejection='La construcción tiene otra preparación pendiente';
+      else{const impact=inspectStructureStops(prepared.plan);if(impact.status!=='ready'||impact.actors.length)rejection='La construcción necesita preparar la parada de las rutas afectadas';}
      }
-    }else if(command.kind==='placeStructure'){
-     if(typeof command.id!=='string'||!command.id||!command.structure||typeof command.structure!=='object'||Array.isArray(command.structure)||!Number.isFinite(command.structure.x)||!Number.isFinite(command.structure.z))throw TypeError('Invalid structure command');
-     if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))value=false;
-     else{let plan;try{plan=withResidentChunks(()=>prepareResidentStructure(command.structure),commandLoadedChunks);if(plan&&!permission(game,plan.kind==='center'?'center':'wall'))throw new StructurePlacementError('Esta acción no está disponible ahora');if(plan)ensurePurchaseBudget(game,plan.cost);}
-      catch(error){if(!(error instanceof StructurePlacementError)&&error?.code!=='hiring-reserve'&&error?.message!=='Material desconocido')throw error;rejection=error.message;}
-      value=rejection||!plan?false:placeStructure(game,command.id,command.structure,nav);
+     value=rejection||!prepared.plan?false:command.kind==='buildWallChain'?buildWallChain(game,command.id,command.material,command.points,nav,{...prepared.options,preparedPlan:prepared.plan}):placeStructure(game,command.id,command.structure,nav);
      }
     }else if(command.kind==='previewVillage'){
      if(typeof command.culture!=='string'||!Number.isFinite(command.x)||!Number.isFinite(command.z)||!command.payload||typeof command.payload!=='object'||!Array.isArray(command.payload.units))throw TypeError('Invalid village preview');
@@ -423,7 +554,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(game,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(game):serializeConfirmedState(game)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;nativeProduction?.wake();return result;
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
 }

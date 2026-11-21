@@ -4,8 +4,8 @@ import {createNativeGateGpuBinding} from './native-gate-gpu-binding.js';
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
-export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
- if(!prototypes||!entity||typeof createWall!=='function'||setWallPresentation!==null&&typeof setWallPresentation!=='function')throw TypeError('Invalid admitted wall');
+export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
+ if(!prototypes||!entity||typeof prepareInitial!=='boolean'||typeof createWall!=='function'||setWallPresentation!==null&&typeof setWallPresentation!=='function')throw TypeError('Invalid admitted wall');
  const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady,onError,release:wall=>wall.dispose()});let closed=false,gatePreparation=null;
  function update(value,time){
   if(closed)return;
@@ -15,7 +15,14 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   const selected=slot.active?.stageKey===key?slot.active:slot.pending;
   if(selected!==first)selected?.update(value,undefined,time);if(selected)setWallPresentation?.(selected,value);if(slot.active&&slot.active!==selected)setWallPresentation?.(slot.active,value);
  }
- update(entity,elapsed);
+ let initialParticipant=null;
+ if(prepareInitial){
+  const wall=createWall(prototypes,entity,elapsed,{previous:null});let handed=false;
+  try{
+   setWallPresentation?.(wall,entity);
+   initialParticipant=slot.prepareParticipant(wall.stageKey,()=>{handed=true;return wall;},{initial:true});
+  }catch(error){if(!handed)wall.dispose();throw error;}
+ }else update(entity,elapsed);
  function prepareNativeGate({presentation,motion,getPickTime,signal}){
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
   const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime});let previous=wall.nativeGpuGate??null;
@@ -37,5 +44,5 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
- return {group:slot.group,update,prepareNativeGate,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
+ return {group:slot.group,initialParticipant,update,prepareNativeGate,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
 }

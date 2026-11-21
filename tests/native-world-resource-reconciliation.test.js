@@ -48,9 +48,20 @@ test('ACK-like, old, incomplete or masked resource proofs cannot grant a native 
 });
 
 test('unsupported native visuals and conflicting or future metadata are explicit failures',()=>{
- for(const kind of [2,3,4,5,...Array.from({length:11},(_,i)=>13+i)]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
+ for(const kind of [3,4,5,...Array.from({length:11},(_,i)=>13+i)]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
  for(const change of [{version:2},{future:true},{chunks:null},{removed:[{cx:0,cz:0}]}]){const f=fixture();Object.assign(f.publication.nativeWorldResources[0],change);assert.throws(()=>reconcileNativeWorldResources(f));}
  const f=fixture();f.publication.nativeWorldResources[0].chunks.push({cx:0,cz:0});assert.throws(()=>reconcileNativeWorldResources(f),/Conflicting/);
+});
+
+test('solid addition history requires the exact committed attestation and an empty terrain batch',()=>{
+ const f=fixture(),record=f.publication.nativeWorldResources[0];
+ record.kind=2;record.chunks=[];f.admitted={...f.admitted,changes:[],empty:true};
+ const reference={kind:'native-barrier-addition-reference',version:1,worldBoundary:record.worldBoundary,sourceControlSequence:1,additions:[{entityId:'wall-1',x:30,z:40,halfX:1,halfZ:.5,yaw:0,passMask:0}]};
+ assert.throws(()=>reconcileNativeWorldResources(f),/attestation/);
+ record.nativeBarrierAdditionBinding={kind:'native-barrier-addition-attestation',version:1,reference,preparedReference:reference,nativeIds:[7]};
+ assert.deepEqual(reconcileNativeWorldResources(f),record.worldBoundary);
+ record.chunks=[{cx:0,cz:0}];assert.throws(()=>reconcileNativeWorldResources(f),/solid addition/);record.chunks=[];
+ record.worldBoundary={...record.worldBoundary,ticket:9};assert.throws(()=>reconcileNativeWorldResources(f),/committed boundary/);
 });
 
 

@@ -1,3 +1,4 @@
+import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources} from '../native-barrier-addition.js';
 import {copyNativeIdleStrollFailedRestReference} from '../native-idle-stroll-failed-rest-reference.js';
 import {copyNativeIdleStrollRequestReference,copyNativeIdleStrollDeclarationReference,sameNativeIdleStrollRequestReference} from '../native-idle-stroll-request-reference.js';
 import {copyNativeFarmArrivalRequestReference,copyNativeFarmArrivalDeclarationReference} from '../native-farm-arrival-request-reference.js';
@@ -838,6 +839,75 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeSuspendedGateRoute:actorId=>nativeSuspendedGateRoute(actorId),nativeRouteTiming,nativeTaskStartBinding,
     nativeTaskActionBinding:actorId=>nativeTaskActionBinding(actorId),nativeTaskConsequenceBinding:actorId=>nativeTaskConsequenceBinding(actorId),nativeTaskSettlementBinding:actorId=>nativeTaskSettlementBinding(actorId),nativeHomeRouteBinding:actorId=>nativeHomeRouteBinding(actorId),nativeFarmArrivalRouteBinding:actorId=>nativeFarmArrivalRouteBinding(actorId),nativeInitialIdleBodyBinding:actorId=>nativeInitialIdleBodyBinding(actorId),nativeIdleCycleBinding:actorId=>nativeIdleCycleBinding(actorId),nativeIdleStrollBinding:actorId=>nativeIdleStrollBinding(actorId)
   });
+  // Query the existing native mutation proposal and discard its ticket. This
+  // grants no motion/graphics permission and publishes no geometry or clock.
+  const inspectNativeStructureStops=(kind,values)=>{
+    if(![2,3].includes(kind)||!Array.isArray(values)||!values.length||!values.every(Number.isFinite))throw TypeError('Invalid structure preflight');
+    syncBoundaryTime();flushNativeIntentControl();
+    const pointer=wasm.spatial_world_proposal_float_ptr(values.length);
+    if(!pointer)throw Error('Native structure preflight allocation failed');
+    new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);
+    wasm.spatial_world_proposal_int_ptr(0);
+    const result=wasm.spatial_world_proposal_stage(kind,0,values.length,0);
+    if(result!==1)return {status:result===0?'blocked':result===-4?'busy':result===-2?'stale':'invalid',actors:[]};
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native structure preflight lost its ticket');
+    const [session,ticket]=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);
+    try{
+      const count=wasm.nav_intent_world_proposal_route_effects(session,ticket);
+      if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native structure preflight effects unavailable');
+      const rows=new Float64Array(wasm.memory.buffer,wasm.nav_intent_world_proposal_route_effects_ptr(),count*26);
+      return {status:'ready',actors:Array.from({length:count},(_,i)=>rows[i*26])};
+    }finally{if(wasm.nav_intent_barrier_proposal_cancel(session,ticket)!==1)throw Error('Native structure preflight cancellation failed');}
+  };
+
+  // Solid additions use the ordinary resource transaction. Geometry remains
+  // owned by native preview; only its original identity may survive retiming.
+  const addNativeBarriersAfterGpuQuiescence=({additions,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
+    const shapes=copyNativeBarrierAdditions(additions);
+    if(typeof prepareResources!=='function'||typeof validate!=='function'||typeof project!=='function')throw TypeError('Native solid addition requires preparation and synchronous Game adoption');
+    if(atCommitBoundary!==null&&typeof atCommitBoundary!=='function')throw TypeError('Invalid native command boundary');
+    if(wasm.spatial_world_barrier_addition_version?.()!==1)throw Error('Rebuild native solid addition association');
+    let candidate=null,preparedReference=null,translation=null,issued=null;
+    const tuple=()=>{if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native solid addition lost its ticket');const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));if(row[5]!==2)throw Error('Native solid addition changed family');return row;};
+    const capture=boundary=>{
+      const resources=session.core.captureNativeWorldProposalResources(boundary),row=tuple();
+      if(resources.kind!==2||resources.chunks.length||resources.removed.length||resources.retainsNativeAssignments!==true||resources.routeEffects.rows.length||resources.gateEffects.rows.length||row[0]!==boundary.nativeSession||row[1]!==boundary.ticket||row[3]!==boundary.effectiveTime)throw Error('Native solid addition lacks its unchanged-owner proof');
+      return copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:1,worldBoundary:boundary,sourceControlSequence:row[2],additions:shapes},authorizedAutonomy:false,authorizedConsequences:false});
+    };
+    const protocol={motionKind:'barrier-addition',preparedFrameRequired:true,deferred:true,atCommitBoundary,
+      ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+      capture(boundary){candidate=capture(boundary);preparedReference=candidate.nativeBarrierAddition;return candidate;},
+      retained(session,ticket){if(validate()!==true||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const row=tuple();return row[0]===session&&row[1]===ticket;},
+      revalidate(session,ticket){
+        if(validate()!==true)return {status:'stale'};const result=wasm.spatial_world_proposal_revalidate_barriers(session,ticket);if(result!==1)return {status:result===0?'blocked':'stale'};
+        const row=tuple(),boundary=copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:row[0],ticket:row[1],effectiveTime:row[3]}),pointer=wasm.nav_barrier_addition_proposal_translation_ptr(row[0],row[1]);
+        if(!pointer)throw Error('Native solid addition translation unavailable');const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,8)),origin=preparedReference.worldBoundary;
+        if(proof[0]!==1||proof[1]!==origin.ticket||proof[2]!==row[1]||proof[3]!==origin.effectiveTime||proof[4]!==row[3]||proof[5]!==1||proof[6]!==shapes.length||proof[7]!==0)throw Error('Native solid addition translation mismatch');
+        candidate=capture(boundary);translation=Object.freeze({version:1,sameResourceOwners:true,preparedTicket:proof[1],ticket:proof[2],preparedAt:proof[3],effectiveTime:proof[4]});return {status:'revalidated',proposal:candidate,timeTranslation:translation};
+      },
+      timeTranslation:()=>translation,binding:()=>issued,
+      release(session,ticket){wasm.spatial_world_proposal_resource_release(session,ticket);},cancel(session,ticket){wasm.nav_intent_barrier_proposal_cancel(session,ticket);}
+    };
+    return commitNativeWorldProposal(getPublication,()=>{
+      if(validate()!==true)return -2;const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);if(!pointer)throw Error('Native solid addition input allocation failed');
+      new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);wasm.spatial_world_proposal_int_ptr(0);return wasm.spatial_world_proposal_stage_resources(2,0,values.length,0);
+    },(mark,...boundary)=>{
+      if(validate()!==true)return {status:-2};const status=wasm.spatial_world_proposal_barriers_commit_bound(...boundary,preparedReference.worldBoundary.ticket);if(status!==1)return {status};mark();
+      const pointer=wasm.spatial_world_barrier_binding_ptr(),count=wasm.spatial_world_proposal_result_count();if(!pointer||count!==shapes.length)throw Error('Native solid addition receipt unavailable');
+      const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,5)),expected=[1,preparedReference.worldBoundary.ticket,preparedReference.worldBoundary.effectiveTime,boundary[1],boundary[3]];
+      if(!proof.every((value,index)=>value===expected[index]))throw Error('Native solid addition receipt mismatch');
+      const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));
+      issued=copyNativeBarrierAdditionAttestation({kind:'native-barrier-addition-attestation',version:1,reference:candidate.nativeBarrierAddition,preparedReference,nativeIds:ids});
+      // Native commit is irreversible. Expected Game rejection must happen in
+      // validate, and project must adopt these exact IDs synchronously.
+      const projection=project({ids:issued.nativeIds,worldBoundary:nativeWorldBoundary(),nativeBarrierAdditionBinding:issued});
+      if(projection!==true)throw Error('Native solid addition Game projection was not synchronous and successful');
+      const published=session.publishNativeWorldResources(committedWorldBoundary),resources=copyNativeBarrierAdditionResources({...published,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeBarrierAdditionBinding:issued});
+      if(onNativeWorldResources)onNativeWorldResources({...published,worldBoundary:nativeWorldBoundary(),nativeBarrierAdditionBinding:issued});
+      mark({ids,resources,nativeBarrierAdditionBinding:issued});return {status:1,value:{ids,resources,nativeBarrierAdditionBinding:issued}};
+    },prepareResources,signal,protocol);
+  };
+
   const addNativeBarrierAfterGpuQuiescence=({getPublication,x,z,halfX,halfZ,yaw=0,passMask=0}={})=>{
     if(![x,z,halfX,halfZ,yaw].every(Number.isFinite)||halfX<=0||halfZ<=0||halfX>100||halfZ>100||
        !Number.isInteger(passMask)||passMask<0||passMask>3)throw TypeError('Expected a native barrier proposal');
@@ -2671,7 +2741,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -3875,7 +3945,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
-    mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
+    inspectNativeStructureStops:bridge.inspectNativeStructureStops,addNativeBarriersAfterGpuQuiescence:bridge.addNativeBarriersAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,

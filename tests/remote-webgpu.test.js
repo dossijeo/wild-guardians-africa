@@ -1,6 +1,7 @@
 import {pair,fakeGpu,flush,fixture,preparedWorldDraw} from './helpers/remote-webgpu-fixture.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
 import { createRemoteWebGpuHost } from '../src/rendering/remote-webgpu-host.js';
 import {nativeGateCrossingFixture} from './helpers/native-gate-crossings.js';
@@ -17,6 +18,7 @@ import {tick} from '../src/simulation/game.js';
 import {nativeTaskActionReferenceFromProposal} from '../src/world/native-task-action-presentation.js';
 import {copyNativeTaskActionResources} from '../src/world/native-task-action-attestation.js';
 import {floorFloat32} from '../src/float32-time.js';
+import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 
 // The conditioned action ABI is exercised as a native component here. The
 // ordinary action resource coordinator is deliberately not enabled by this test.
@@ -111,14 +113,49 @@ test('native boundary observers wake only after the validated direct requirement
  client=createRemoteWebGpuClient({port,capabilities:{width:20,height:10,format:'rgba8unorm'},onError:error=>errors.push(error),onNativeWorldBoundary:value=>seen.push([value,client.requiredNativeWorldBoundary()])});
  try{port.onmessage({data:{type:'native-world-boundary',worldBoundary:boundary}});assert.deepEqual(seen,[[boundary,boundary]]);port.onmessage({data:{type:'native-world-boundary',worldBoundary:{...boundary,ticket:1}}});assert.equal(seen.length,1);assert.match(errors[0].message,/regressed/);assert.deepEqual(client.requiredNativeWorldBoundary(),boundary);}finally{client.dispose();}
 });
-async function nativePreparationFixture(hostOptions={}){
- const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source;
- const f=await fixture({}, {intentControl:{port:drawPort,session:'retained-preparation'},...hostOptions});
+async function nativePreparationFixture(hostOptions={}, {core,capabilities}={}){
+ const native=createNativeRouteExecutionFixture({core}),[sourcePort,drawPort]=pair();let source;
+ const f=await fixture(capabilities?{capabilities:{width:20,height:10,format:'rgba8unorm',...capabilities}}:{}, {intentControl:{port:drawPort,session:'retained-preparation'},...hostOptions});
  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
  source=createNativeIntentControlPublication({port:sourcePort,session:'retained-preparation',observe:native.bridge.observeNativeIntentControl});await source.ready;
  const clock={version:1,epoch:0,elapsed:10,safeUntil:20,anchorAbsoluteMs:0,paused:false,segments:[{start:10,end:20,rate:1,realDuration:10}]};
  return {...f,native,source,clock,commit:()=>native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>source,mutation:{type:'addChunk',cx:4,cz:4}}),close(){source.dispose();f.host.dispose();native.session.dispose();}};
 }
+
+test('a solid addition uses the retained packet with its effective ticket and leaves the moving body intact',async()=>{
+ const module=new WebAssembly.Module(readFileSync(process.env.QA_BARRIER_WASM??new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+ const f=await nativePreparationFixture({}, {core:createSpatialWorld(module),capabilities:{nativeBarrierAdditionVersion:1}});
+ let prepared,template,projection;
+ try{
+  const first=f.frame(1,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const oldBody=f.native.body(1),point=f.native.point(35,35);
+  const result=await f.native.bridge.addNativeBarriersAfterGpuQuiescence({
+   additions:[{entityId:'wall-1',x:Math.fround(point.x),z:Math.fround(point.z),halfX:1,halfZ:.5,yaw:0,passMask:0}],
+   getPublication:()=>f.source,validate:()=>true,project(data){projection=data;return true;},
+   async prepareResources({proposedWorldBoundary,resources,signal}){
+    template=resources.nativeBarrierAddition;
+    prepared=await preparedWorldDraw(f,proposedWorldBoundary,77,signal,{nativeBarrierAdditionTemplate:template});
+    f.native.state.elapsed+=.1;
+    assert.equal(f.native.bridge.advanceNativeRouteExecution(f.native.state.elapsed).status,'advanced');
+    f.native.bridge.commitNativeCausalClock();
+    assert.equal(f.host.inspect().activeSequence,1);
+    return {preparedWorldBoundary:prepared.preparedWorldBoundary,preparedBarrierAdditionTemplate:template,valid:prepared.valid,abort:prepared.abort,commit(data){
+     assert.equal(prepared.commit(data.worldBoundary),false);
+     return prepared.commit(data.worldBoundary,data.nativeBarrierAdditionBinding);
+    }};
+   }
+  });
+  assert.equal(result.status,'committed',result.error);
+  assert.deepEqual(projection.ids,result.nativeBarrierAdditionBinding.nativeIds);
+  assert.equal(result.worldBoundary.ticket>template.worldBoundary.ticket,true);
+  await flush();f.host.present();await prepared.presented;
+  assert.equal(f.host.inspect().activeSequence,prepared.sequence);
+  assert.deepEqual(f.client.requiredNativeWorldBoundary(),result.worldBoundary);
+  assert.equal(f.native.body(1)[0],oldBody[0]);
+  assert.notDeepEqual(f.native.body(1),oldBody);
+  assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
 function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  f.client.beginFrame(metadata);if(upload!==null)f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([upload]));
  const group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]}),encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});

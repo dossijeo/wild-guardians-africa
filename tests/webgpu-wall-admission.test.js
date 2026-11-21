@@ -4,7 +4,7 @@ import {Group} from 'three';
 import {createWebGpuAdmittedWall} from '../src/rendering/webgpu-wall-admission.js';
 
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
-function fixture(){
+function fixture({prepareInitial=false}={}){
  const requests=[],walls=[],errors=[];let ready=0;
  class Wall extends Group{
   constructor(value){super();this.stageKey=value.stage;this.parts=[{stage:value.stage}];this.disposed=false;walls.push(this);}
@@ -13,9 +13,25 @@ function fixture(){
   dispose(){this.disposed=true;}
  }
  const pipelineAdmission={prepare(wall,{signal}){return new Promise((resolve,reject)=>{requests.push({wall,signal,resolve,reject});signal.addEventListener('abort',()=>reject(new DOMException('cancelled','AbortError')),{once:true});});}};
- const view=createWebGpuAdmittedWall({prototypes:{},entity:{stage:'intact'},elapsed:0,pipelineAdmission,createWall:(_,entity)=>new Wall(entity),onReady:()=>ready++,onError:error=>errors.push(error.message)});
+ const view=createWebGpuAdmittedWall({prototypes:{},entity:{stage:'intact'},elapsed:0,pipelineAdmission,prepareInitial,createWall:(_,entity)=>new Wall(entity),onReady:()=>ready++,onError:error=>errors.push(error.message)});
  return {view,requests,walls,errors,get ready(){return ready;}};
 }
+test('the prepared initial wall is the same instance used by confirmed updates',async()=>{
+ const f=fixture({prepareInitial:true});
+ try{
+  const part=f.view.initialParticipant;
+  assert.equal(f.view.ready,false);
+  assert.equal(part.object,f.walls[0]);
+  assert.equal(part.object.visible,false);
+  assert.deepEqual(f.requests,[]);
+  part.activate();part.attach();const result=part.finalize();result.retire();result.notify();
+  f.view.update({stage:'intact',value:2},1);await turn();
+  assert.equal(f.view.ready,true);
+  assert.equal(f.walls.length,1);
+  assert.equal(part.object.value,2);
+  assert.deepEqual(f.requests,[]);
+ }finally{f.view.dispose();}
+});
 test('keeps the current wall while the next confirmed phase is prepared',async()=>{
  const f=fixture();await turn();assert.equal(f.view.ready,false);f.requests[0].resolve();await turn();assert.equal(f.view.ready,true);assert.equal(f.view.parts[0].stage,'intact');
  f.view.update({stage:'damaged',value:1},1);await turn();assert.equal(f.view.parts[0].stage,'intact');assert.equal(f.walls[0].disposed,false);

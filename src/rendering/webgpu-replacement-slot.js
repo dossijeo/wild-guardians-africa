@@ -23,24 +23,25 @@ export function createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry=
   };
   Promise.resolve().then(()=>typeof pipelineAdmission.prepareAndPublish==='function'?pipelineAdmission.prepareAndPublish(object,{signal:controller.signal},publish):Promise.resolve(pipelineAdmission.prepare(object,{signal:controller.signal})).then(publish)).catch(error=>{if(closed||pending!==item||controller.signal.aborted)return;pending=null;releaseObject(object);onError(error);});
  }
- // A native-world proposal is still ineffective. Stage its actual replacement
- // in this owner, and let the existing graphical batch admit and publish it.
- function prepareParticipant(key,build){
-  if(closed||pending||prepared||!active||active.key!==desiredKey)throw Error('Replacement slot unavailable for a batch');
-  if(typeof key!=='string'||typeof build!=='function'||key===active.key)throw TypeError('Invalid prepared replacement');
-  const previous=active,priorKey=desiredKey,object=build();if(!object?.isObject3D||object===previous.object||object.parent!==null)throw TypeError('Prepared replacement must be a new detached object');
+ // A native-world proposal stages its first object or its replacement in the
+ // same slot. The graphical batch controls when it becomes visible.
+ function prepareParticipant(key,build,{initial=false}={}){
+  if(typeof initial!=='boolean')throw TypeError('Invalid prepared replacement mode');
+  if(closed||pending||prepared||(initial?active!==null||desiredKey!==null:!active||active.key!==desiredKey))throw Error('Replacement slot unavailable for a batch');
+  if(typeof key!=='string'||typeof build!=='function'||key===active?.key)throw TypeError('Invalid prepared replacement');
+  const previous=active,priorKey=desiredKey,object=build();if(!object?.isObject3D||object===previous?.object||object.parent!==null)throw TypeError('Prepared replacement must be a new detached object');
   if(resourceRegistry)try{leases.set(object,resourceRegistry.adopt({namespace:'structure-candidate',key:`${slotId}:${++revision}:${key}`,dispose:()=>release(object)}));}catch(error){release(object);throw error;}
   const controller=new AbortController(),item={key,object,controller};let activated=false,attached=false,finalized=false,finished=false;
   object.visible=false;try{group.add(object);}catch(error){releaseObject(object);throw error;}prepared=item;
-  const valid=()=>!closed&&!finished&&!controller.signal.aborted&&prepared===item&&!pending&&active===(finalized?item:previous)&&desiredKey===(finalized?key:priorKey)&&object.parent===group&&object.visible===attached&&previous.object.parent===group;
+  const valid=()=>!closed&&!finished&&!controller.signal.aborted&&prepared===item&&!pending&&active===(finalized?item:previous)&&desiredKey===(finalized?key:priorKey)&&object.parent===group&&object.visible===attached&&(!previous||previous.object.parent===group);
   const check=()=>{if(!valid())throw Error('Prepared replacement became stale');};
-  const participant={object,include:[object],signal:controller.signal,valid,eventRoots:()=>[object,previous.object],
-   presentation:()=>({show:[object],hide:[previous.object]}),
+  const participant={object,include:[object],signal:controller.signal,valid,eventRoots:()=>previous?[object,previous.object]:[object],
+   presentation:()=>({show:[object],hide:previous?[previous.object]:[]}),
    activate(){check();if(activated)throw Error('Prepared replacement already activated');activated=true;return true;},
    attach(){check();if(!activated||attached)throw Error('Prepared replacement not activated');object.visible=true;attached=true;},
    rollback(){object.visible=false;attached=false;},
    finalize(){check();if(!attached||finalized)throw Error('Prepared replacement not attached');active=item;desiredKey=key;finalized=true;return {
-    retire(){check();leases.get(object)?.commit();prepared=null;delete item.participant;finished=true;releaseObject(previous.object);},
+    retire(){check();leases.get(object)?.commit();prepared=null;delete item.participant;finished=true;if(previous)releaseObject(previous.object);},
     notify(){try{onReady();}catch(error){onError(error);}}
    };},
    rollbackFinalized(){if(!finalized)return;if(active!==item)throw Error('Prepared replacement ownership changed');active=previous;desiredKey=priorKey;finalized=false;},

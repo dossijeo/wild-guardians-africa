@@ -74,6 +74,40 @@ export function createSpatialWallMirror(core){
     }
     return {count:installed.size,added:additions.length};
   }
+  // Called synchronously after the existing native kind2 commit, before the
+  // Game mirror is published. This adopts physical IDs; it never creates them.
+  function prepareNativeAdditionAdoption(structures,{worldBoundary,ids}={}){
+    if(!Array.isArray(structures)||!structures.length||structures.length>256||
+       structures.some(w=>!w||w.kind!=='wall'||w.gate||w.status==='ruined'||typeof w.id!=='string'||!w.id||installed.has(w.id))||
+       new Set(structures.map(w=>w.id)).size!==structures.length||!Array.isArray(ids)||ids.length!==structures.length||
+       ids.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(ids).size!==ids.length)throw TypeError('Invalid native wall additions');
+    const resources=core.captureNativeWorldResources(worldBoundary);
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length)throw Error('Native wall adoption requires its empty terrain commit');
+    const wasm=core.wasm,count=wasm.spatial_world_proposal_result_count();
+    if(count!==ids.length)throw Error('Native wall result differs from its committed IDs');
+    const actualIds=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));
+    if(ids.some((id,i)=>id!==actualIds[i])||[...installed.values()].some(record=>record.ids.some(id=>ids.includes(id))))throw Error('Native wall result differs from its committed IDs');
+    // Read only the existing barrier ABI, not a full world/prop snapshot.
+    const wanted=new Set(ids),physical=new Map(),barrierCount=wasm.spatial_barrier_state_count();
+    if(!Number.isSafeInteger(barrierCount)||barrierCount<ids.length)throw Error('Native wall registry unavailable');
+    const pointer=wasm.spatial_barrier_state_ptr(),view=new DataView(wasm.memory.buffer,pointer,barrierCount*28);
+    for(let i=0;i<barrierCount;i++){const at=i*28,id=view.getInt32(at,true);if(wanted.has(id))physical.set(id,{x:view.getFloat32(at+4,true),z:view.getFloat32(at+8,true),halfX:view.getFloat32(at+12,true),halfZ:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),passMask:view.getInt32(at+24,true)});}
+    const records=[];
+    for(let i=0;i<structures.length;i++){
+      const wall=structures[i],parts=spatialStructureBarriers(wall),actual=physical.get(ids[i]);
+      if(parts.length!==1||!actual||['x','z','halfX','halfZ','yaw'].some(key=>!Number.isFinite(parts[0][key])||Math.fround(parts[0][key])!==actual[key])||(parts[0].passMask??0)!==actual.passMask)throw Error('Native wall footprint differs from its committed ID');
+      records.push([wall.id,{signature:signature(wall),bounds:boundsForNativeBarriers(parts),ids:[ids[i]]}]);
+    }
+    const priorRevision=revision;let consumed=false;
+    return ()=>{
+    if(consumed||revision!==priorRevision)throw Error('Native wall mirror adoption is stale');consumed=true;
+    // All checks precede the first mirror write; observers cannot see a prefix.
+    for(const [id,record] of records)installed.set(id,record);
+    const bounds=[Infinity,Infinity,-Infinity,-Infinity];for(const [,record] of records){const box=record.bounds;bounds[0]=Math.min(bounds[0],box[0]);bounds[1]=Math.min(bounds[1],box[1]);bounds[2]=Math.max(bounds[2],box[2]);bounds[3]=Math.max(bounds[3],box[3]);}
+    changes.push({from:revision++,bounds});if(changes.length>64)changes.shift();return true;
+    };
+  }
+  const adoptNativeAdditions=(structures,receipt)=>prepareNativeAdditionAdoption(structures,receipt)();
   function routeUnaffectedSince(from,points,radius){
     if(!Number.isInteger(from)||from<0||from>revision||
       !Array.isArray(points)||points.length<2||!Number.isFinite(radius))return false;
@@ -100,6 +134,6 @@ export function createSpatialWallMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,routeUnaffectedSince,
+  return {sync,adoptNativeAdditions,prepareNativeAdditionAdoption,clear,revision:()=>revision,routeUnaffectedSince,
     barrierIds:id=>installed.get(id)?.ids.slice()??[]};
 }

@@ -1,3 +1,4 @@
+import {nativeBarrierAdditionReferenceFromProposal,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from './native-barrier-addition.js';
 import {nativeFarmArrivalStopCodec,nativeIdleStrollStopCodec,nativeTaskRouteStopCodec} from './native-worker-route-stop-codec.js';
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {nativeIdleStrollReferenceFromProposal,sameNativeIdleStrollReference} from './native-idle-stroll.js';
@@ -28,6 +29,12 @@ function projectedStopProfile(codec,name,{templateField,bindingField,releaseFiel
   });
 }
 const profiles=Object.freeze({
+  'barrier-addition':Object.freeze({
+    proposalKind:'native-barrier-addition-proposal',templateField:'preparedBarrierAdditionTemplate',bindingField:'nativeBarrierAdditionBinding',releaseField:'nativeBarrierAdditions',
+    reference:nativeBarrierAdditionReferenceFromProposal,sameReference:sameNativeBarrierAdditionReference,compatible:translation=>translation.sameResourceOwners===true,
+    receiptCompatible:(receipt,prepared)=>receipt.nativeBarrierAdditionVersion===1&&sameNativeBarrierAdditionReference(receipt.preparedBarrierAdditionTemplate,prepared),
+    attest(native,reference,preparedReference,protocol){const fact=copyNativeBarrierAdditionAttestation(protocol.binding());if(!sameNativeBarrierAdditionReference(fact.reference,reference)||!sameNativeBarrierAdditionReference(fact.preparedReference,preparedReference))throw Error('Native solid addition final association unavailable');return fact;}
+  }),
   'task-route-stop':projectedStopProfile(nativeTaskRouteStopCodec,'task route',{
     templateField:'preparedTaskRouteStopTemplate',bindingField:'nativeTaskRouteStopBinding',releaseField:'nativeTaskRouteStops',versionField:'nativeTaskRouteStopVersion'
   }),

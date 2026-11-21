@@ -11,7 +11,7 @@ let authority=null,initializing=false,session=null,dynamicPhysics=false,diagnost
 let publishedFarRevision=null;
 // The receipt never crosses a structured-clone boundary. Only the existing
 // caller RPC identity names this one local producer suspension.
-let nativeProductionHold=null,lastNativeProductionRequestId=0;
+let nativeProductionHold=null,lastNativeProductionRequestId=0,lastNativeStructureRequestId=0;
 // Publish a compact derived read view only when its native inputs change.
 // Commands are acknowledged one at a time; the receiving replica coalesces
 // revisions while busy. No simulation state is advanced by the read worker.
@@ -45,6 +45,18 @@ self.onmessage=async ({data})=>{
   if(data?.kind==='dispose'){nativeProductionHold=null;terrainPublication?.dispose();authority?.dispose();authority=null;close();return;}
   if(fatalTerrainError&&data.kind!=='inspectTerrainRecoveryHandoff'&&!(data.kind==='reattachTerrain'&&data.historicalHandoff!==undefined))throw Error('Terrain history session failed: '+String(fatalTerrainError.message??fatalTerrainError));
    if(!authority)throw Error('Simulation authority is not ready');
+   if(data.kind==='prepareNativeStructureCommand'||data.kind==='finishNativeStructureCommand'){
+    const source=authority;
+    try{
+     if(!Number.isSafeInteger(data.id)||data.id<=lastNativeStructureRequestId)throw Error('Invalid native structure request identity');
+     lastNativeStructureRequestId=data.id;
+     if(data.kind==='prepareNativeStructureCommand'&&nativeProductionHold)throw Error('Native production is held by another owner');
+     const result=await (data.kind==='prepareNativeStructureCommand'?source.prepareNativeStructureCommand(data.command):source.finishNativeStructureCommand(data.command));
+     if(authority===source)postMessage({kind:data.kind==='prepareNativeStructureCommand'?'nativeStructurePrepared':'nativeStructureFinished',session,id:data.id,...result});
+    }catch(error){if(authority===source)postMessage({kind:'nativeStructureError',session,id:data.id,message:String(error?.message??error)});}
+    return;
+   }
+
    if(data.kind==='quiesceNativeIntentProduction'||data.kind==='resumeNativeIntentProduction'){
     const source=authority;let createdHold=null;
     try{

@@ -24,7 +24,7 @@ function terrainHistorySignature(value){if(value===undefined||value===null)retur
 const inputRouter=createPresentationInputRouter({isAllowed:command=>qaPresentationInputs||isPresentationInputCommand(command),submit:(command,id)=>runtime.submit(command,{presentationInput:id})});
 function recordTerrainJournal(sequence,chunks,terrainManifest){if(!recoveryJournal)throw Error('Terrain journal before recovery initialization');recoveryJournal.appendTerrain(sequence,chunks,terrainManifest);recoveryReplay?.wake();}
 let journalClockSuspended=false;
-let nativeResourceAttached=false,nativeRecoveryHold=null;
+let nativeResourceAttached=false,nativeRecoveryHold=null,nativeStructureRelease=null;
 function reportFailedNativeAuthority(error){if(authorityClient.status().state!=='failed')return false;visualStream?.fail(error);postMessage({kind:'failure',session,message:String(error?.stack??error)});return true;}
 function resumeHostedDispatch(){considerNativeRecoveryCheckpoint();visualStream?.reconsiderBackpressure();const status=recoveryJournal?.status();if(journalClockSuspended&&(!status?.saturated||status?.checkpointRetry)){journalClockSuspended=false;if(!recoveryClockSuspended)runtime?.resumeClockCapture();}runtime?.resumeDispatch();}
 function exhaustJournalReserve(){if(journalClockSuspended)return;if(runtime?.status().running){runtime.suspendClockCapture();journalClockSuspended=true;}postMessage({kind:'viewFailure',session,message:'Presentation recovery journal reserve exhausted; simulation is paused until a checkpoint becomes available.'});}
@@ -162,8 +162,21 @@ self.onmessage=async({data})=>{
   if(data.kind==='view'){if(!outbox||data.command?.kind!=='setNavigationView')throw Error('Invalid background view');try{if(recoveryFault)throw Error(recoveryFault);await runtime.submit(data.command,{backgroundView:true});}catch(error){postMessage({kind:'viewFailure',session,message:String(error?.message??error)});}return;}
   if(data.kind==='command'){
    if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid host command id');
-   try{if(recoveryFault)throw Error(recoveryFault);const result=await runtime.submit(data.command),receipt=foldedViews.get(result.sequence);if(receipt)foldedViews.delete(result.sequence);if(outbox)outbox.message({kind:'commandResult',id:data.id,sequence:result.sequence,...(receipt?{receipt}:{})});else postMessage({kind:'commandResult',session,id:data.id,sequence:result.sequence});}
-   catch(error){const message={kind:'commandFailure',id:data.id,message:String(error?.message??error)};if(outbox)outbox.message(message);else postMessage({...message,session});}return;
+   let receiptSent=false;try{if(recoveryFault)throw Error(recoveryFault);let structurePrepared=false,result;
+    try{
+     // Preparation is not a command admission. The ordinary FIFO and Game
+     // clock continue; purchase/placement are revalidated at the later command.
+     if(nativeResourceAttached&&['buildWallChain','placeStructure'].includes(data.command?.kind)){
+      if(nativeRecoveryHold||recoveryFrozen)throw Error('Native structure preparation unavailable during recovery');
+      if(nativeStructureRelease)await nativeStructureRelease;
+      await authorityClient.prepareNativeStructureCommand(data.command);structurePrepared=true;
+     }
+     if(recoveryFault||recoveryFrozen&&structurePrepared)throw Error(recoveryFault||'Native structure preparation interrupted by recovery');
+     result=await runtime.submit(data.command);
+    const receipt=foldedViews.get(result.sequence);if(receipt)foldedViews.delete(result.sequence);if(outbox)outbox.message({kind:'commandResult',id:data.id,sequence:result.sequence,...(receipt?{receipt}:{})});else postMessage({kind:'commandResult',session,id:data.id,sequence:result.sequence});receiptSent=true;
+    }finally{if(structurePrepared){const releasing=authorityClient.finishNativeStructureCommand(data.command);nativeStructureRelease=releasing;try{await releasing;}finally{if(nativeStructureRelease===releasing)nativeStructureRelease=null;}}}
+   }
+   catch(error){if(receiptSent)throw error;const message={kind:'commandFailure',id:data.id,message:String(error?.message??error)};if(outbox)outbox.message(message);else postMessage({...message,session});}return;
   }
   throw Error('Unknown runtime host message');
  }catch(error){visualStream?.fail(error);postMessage({kind:'failure',session:data?.session??session,message:String(error?.stack??error)});}

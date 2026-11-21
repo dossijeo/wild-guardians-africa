@@ -6,7 +6,7 @@ La nueva prueba ejecuta un muro de dos módulos de zarzas en una partida con un 
 
 El control de tres módulos fuera del corredor también aprueba. Farm conserva su recibo y su cuerpo preparado en el Host simulado. La autoridad sigue moviendo al trabajador y termina los siete avances sin solicitar otro paquete del actor. [Control del corredor no afectado](../../tests/native-build-active-farm.test.js).
 
-En [OpenRA, `PlaceBuilding.ResolveOrder`](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Traits/Player/PlaceBuilding.cs#L764-L997) tramita `PlaceBuilding` y `LineBuild` en la frontera `AddFrameEndTask`, consulta allí al productor y al mapa de ocupación y coloca las piezas por sus celdas. Wild Guardians ya reúne cotización, compra y cambio de los obstáculos en su orden de autoridad. `nav_intent_reconcile_topology` vuelve a comprobar los corredores afectados por los sectores modificados. La prueba verifica esa ruta sin incorporar otro mecanismo.
+En OpenRA, `PlaceBuilding.ResolveOrder` tramita `PlaceBuilding` y `LineBuild` en `AddFrameEndTask`, consulta allí al productor y al mapa de ocupación y coloca las piezas por sus celdas. Wild Guardians reúne cotización, compra y cambio de los obstáculos en su orden de autoridad. `nav_intent_reconcile_topology` vuelve a comprobar los corredores afectados por los sectores modificados. [Código de OpenRA](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Traits/Player/PlaceBuilding.cs#L57-L202).
 
 La prueba de arrastre real con Worker y GPU NVIDIA Turing reprodujo tres rechazos antes de la orden. El cliente recibió secuencias 31, 192 y 286 frente a los mínimos 128, 258 y 388. La cámara siguió en versión 6 y el viewport en versión 1. La espera de la publicación requerida recuperó el arrastre. Queda demostrar el relevo de la ruta en la misma partida. [Lecturas del arrastre](performance/native-build-active-farm-20261120/stroke-sequence.json) · [Corrección y latencia](native-build-stroke-readiness-20261120.md).
 
@@ -39,6 +39,8 @@ La prueba explícita `snapshot` con `visualTerrain:true` reproduce en WASM el re
 Se entregaron a Astra el checkpoint reproducible y los tickets efectivo y preparado. La frontera causal del cambio de obstáculos y la transición gráfica permanecen pendientes de integración.
 
 Una repetición en NVIDIA usó el ticket efectivo de la parada para esperar los recursos durante la adopción. La prueba de Surface pasó sus dos casos y el Worker dejó de emitir el rechazo de delta gráfico durante el cruce. La compra se confirmó en la secuencia 202, pero la autoridad volvió a rechazar el checkpoint de la frontera nativa después. El candidato permanece en validación. [Resultado con el ticket efectivo](performance/native-build-active-farm-20261120/hosted-candidate-boundary.json).
+
+La integración posterior incorporó el muro sólido residente en la misma frontera que adquiere sus barreras y su paquete gráfico. En NVIDIA, el checkpoint inmediato conservó el recibo del muro y Farm retomó el movimiento con el mismo cuerpo y las 32 mallas en el cruce. Fuera del corredor siguió ejecutando la ruta original. [Frontera causal, comprobaciones y alcance pendiente](native-wall-causal-adapter-20261121.md).
 
 ## Recursos creados y retenidos en la UI
 

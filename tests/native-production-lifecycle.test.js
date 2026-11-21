@@ -235,3 +235,45 @@ test('a failed real preparation cannot produce a Worker suspension witness or be
   await sendSource(f,{kind:'resumeNativeIntentProduction',id:31,holdId:30});assert.equal(f.source.messages.at(-1).kind,'nativeIntentProductionControlError');await sendSource(f,{kind:'quiesceNativeIntentProduction',id:32});assert.equal(f.source.messages.at(-1).kind,'nativeIntentProductionControlError');assert.equal(f.native.authority.nativeIntentProductionStatus().phase,'failed');assert.equal(f.native.records.some(r=>r.committed),false);
  }finally{release();await f.close();}
 });
+
+// Reuse the existing source Worker, runtime host, actual authority and retained
+// draw fixture. No second runtime/renderer or direct-ABI command shortcut.
+import {nativeFarmArrivalRouteFixture as buildFarmFixture} from './helpers/native-farm-arrival-route.js';
+import {rational as buildRational} from '../src/simulation/money.js';
+
+test('Build stop RPC remains outside the command FIFO and cannot accept a foreign response',async()=>{
+ const f=clientFixture(),command={kind:'buildWallChain',id:'build',material:'zarzas',points:[[0,0],[0,2]]};
+ try{
+  const first=f.client.submit({kind:'snapshot'}),preparing=f.client.prepareNativeStructureCommand(command);preparing.catch(()=>{});
+  assert.equal(f.sent.at(-1).kind,'prepareNativeStructureCommand');assert.equal(f.client.status().next,2);
+  const request=f.sent.at(-1);f.receive({kind:'result',sequence:1});await first.result;
+  const tick=f.client.submit({kind:'advance',seconds:.05,nightFastForward:false});assert.equal(f.sent.at(-1).command.sequence,2);f.receive({kind:'result',sequence:2});await tick.result;
+  f.receive({kind:'nativeStructurePrepared',id:request.id,version:1});assert.deepEqual(await preparing,{version:1});
+  await assert.rejects(f.client.prepareNativeStructureCommand(command),/unavailable/);
+  const finished=f.client.finishNativeStructureCommand(command),end=f.sent.at(-1);f.receive({kind:'nativeStructurePrepared',id:request.id,version:1});f.receive({kind:'nativeStructureFinished',id:end.id,version:1});await finished;assert.equal(f.client.status().next,3);
+ }finally{f.dispose();}
+});
+test('Build stop RPC rejects closure and an invalid result instead of retaining a false preparation',async()=>{
+ const command={kind:'placeStructure',id:'build',structure:{kind:'wall',x:0,z:0}};
+ for(const malformed of [false,true]){const f=clientFixture();try{const pending=f.client.prepareNativeStructureCommand(command),rejected=assert.rejects(pending,/disposed|response/);if(malformed)f.receive({kind:'nativeStructurePrepared',id:f.sent.at(-1).id,version:2});else f.dispose();await rejected;}finally{f.dispose();}}
+});
+test('ordinary hosted Build waits for its stopped Farm packet while Game ticks, then purchases once and resumes',async()=>{
+ const origin=buildFarmFixture({peer:false}),state=structuredClone(origin.state),a=origin.point(0,-3),b=origin.point(0,3);state.ledger.balance=buildRational(100000);
+ let release;const gate=new Promise(resolve=>{release=resolve;});let f;
+ try{
+  f=await fullFixture({state,chunkKeys:[...Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),'2,-1','2,0','2,1'],onPrepare:r=>r.kind==='farm-arrival-stop'?gate:undefined});
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  await until(()=>f.native.records.some(r=>r.kind==='farm-arrival'&&r.committed),()=>f.native.present());await f.runtime.submit({kind:'snapshot'});await f.runtime.activateClock();
+  await until(()=>f.state.elapsed>=state.elapsed+.1,()=>f.native.present());
+  const command={kind:'buildWallChain',id:'hosted-build-farm',material:'zarzas',points:[[a.x,a.z],[b.x,b.z]],options:{smooth:false,snap:false}},before=f.state.elapsed;
+  let settled=false;const placing=f.runtime.submit(command).then(r=>{settled=true;return r;},e=>{settled=true;throw e;});placing.catch(()=>{});
+  await until(()=>f.native.records.some(r=>r.kind==='farm-arrival-stop'),()=>f.native.present());
+  const tickCount=()=>f.sourceWorker.sent.filter(m=>m.data.kind==='command'&&m.data.command.kind==='advance').length,start=tickCount();
+  await until(()=>tickCount()>=start+3&&f.state.elapsed>before,()=>f.native.present());
+  assert.equal(settled,false);assert.equal(f.state.ledger.entries[command.id],undefined);assert.equal(f.sourceWorker.sent.some(m=>m.data.kind==='command'&&m.data.command.kind==='buildWallChain'),false);
+  release();await until(()=>settled,()=>f.native.present());const result=await placing;assert.equal(result.value,true);assert.equal(result.events.filter(e=>e.type==='WallChainBuilt').length,1);
+  await until(()=>f.native.records.filter(r=>r.kind==='farm-arrival'&&r.committed).length===2,()=>f.native.present());
+  const duplicate=f.runtime.submit(command);let duplicated=false;duplicate.then(()=>{duplicated=true;});await until(()=>duplicated,()=>f.native.present());assert.equal((await duplicate).value,false);
+  assert.equal(f.created(),1);assert.deepEqual(f.native.faults,[]);const commands=f.sourceWorker.sent.filter(m=>m.data.kind==='command').map(m=>m.data.command.sequence);assert.deepEqual(commands,commands.map((_,i)=>i+1));
+ }finally{release();try{await f?.close();}finally{origin.close();}}
+});

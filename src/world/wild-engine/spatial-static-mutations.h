@@ -29,8 +29,10 @@ int spatialIntentStageBarrier(const SpatialBarrierProposalInput&,const SpatialSt
 int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput&);
 // Bounded, immutable transaction input; transient proposal, not a second world.
 struct SpatialWorldProposalInput {int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;};
-int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count);
+int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count,bool requireRetained=false);
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&);
+int spatialIntentRevalidateBarrierAddition(double,double,const SpatialStaticMutation*,int,std::array<double,8>&);
+int spatialIntentTakeBarrierAddition(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&);
 int spatialIntentBeginWorldPreview();
 void spatialIntentEndWorldPreview();
 // Explicit Idle-stroll12/Farm24 stop on the same prepared world transaction; no fake geometry.

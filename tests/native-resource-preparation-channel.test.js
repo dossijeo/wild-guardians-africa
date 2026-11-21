@@ -38,6 +38,32 @@ test('a genuine first-task declaration crosses the retained endpoint while indep
  }finally{finish.resolve();f.close();native.close();}
 });
 
+test('solid additions carry the wall projection and consume only their retained native association',async()=>{
+ const additions=[{entityId:'wall-1',x:4,z:8,halfX:1,halfZ:.25,yaw:0,passMask:0}];
+ const prepared={kind:'native-barrier-addition-reference',version:1,worldBoundary:boundary,sourceControlSequence:19,additions};
+ const proposal={kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,nativeBarrierAddition:prepared,authorizedAutonomy:false,authorizedConsequences:false};
+ const walls=[{id:'wall-1',type:'wall',x:4,z:8}];let committed;
+ const f=setup({prepare:async(kind,resources,options)=>{
+  assert.equal(kind,'prepareNativeBarrierAdditionResources');assert.equal(options.deferredStart,true);assert.deepEqual(options.nativeBarrierWallEntities,walls);
+  return {preparedWorldBoundary:resources.worldBoundary,preparedBarrierAdditionTemplate:resources.nativeBarrierAddition,valid:()=>true,commit:data=>{committed=data;return true;},abort(){}};
+ }});
+ try{
+  await f.connection.ready;
+  await assert.rejects(f.connection.prepareNativeBarrierAdditionResources(proposal),/presentation declaration/);
+  await assert.rejects(f.connection.prepareNativeGateResources(proposal),/resource request class mismatch/);
+  const handle=await f.connection.prepareNativeBarrierAdditionResources(proposal,{nativeBarrierWallEntities:walls});
+  assert.deepEqual(handle.preparedBarrierAdditionTemplate,prepared);assert.equal(handle.refresh,undefined);
+  const effective={...boundary,ticket:4,effectiveTime:11};
+  const bind=preparedReference=>({kind:'native-barrier-addition-attestation',version:1,reference:{...preparedReference,worldBoundary:effective},preparedReference,nativeIds:[17]});
+  assert.throws(()=>handle.commit({worldBoundary:effective}),/another family/);
+  assert.throws(()=>handle.commit({worldBoundary:effective,nativeBarrierAdditionBinding:bind({...prepared,sourceControlSequence:20})}),/differs from retained template/);
+  assert(handle.valid());
+  const data={worldBoundary:effective,nativeBarrierAdditionBinding:bind(prepared)};
+  assert(handle.commit(data));assert.equal(handle.commit(data),false);await flush();
+  assert.deepEqual(committed,data);assert.deepEqual(f.errors,[]);assert.equal(f.connection.status().retained,0);
+ }finally{f.close();}
+});
+
 test('an actual arrived action declaration retains its own resource class through the existing port and refresh',async()=>{
  const native=createNativeTaskGameFixture();tick(native.state,native.proposals[0].endTime-native.state.elapsed+.05,native.nav);const actor=native.state.workers[0].id,proposal=native.planner.prepareNativeTaskActionProposal(native.planner.nativeTaskActionRequest(actor)).proposal;let current=proposal,prepared=0,invalidated=0,committed;
  const f=setup({prepare:async(kind,resources,options)=>{assert.equal(kind,'prepareNativeTaskActionResources');assert.equal(options.deferredStart,true);assert.equal(resources.kind,'native-task-action-proposal');prepared++;return {get preparedWorldBoundary(){return current.worldBoundary;},get preparedTaskActionTemplate(){return nativeTaskActionReferenceFromProposal(current);},valid:()=>true,invalidate(){invalidated++;return true;},refresh(next){current=next;return true;},commit(data){committed=data;return true;},abort(){}};}});

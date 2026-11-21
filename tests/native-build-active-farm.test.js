@@ -5,6 +5,14 @@ import {wallSpec} from '../src/simulation/rules.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 
+async function completePreparation(f,command){
+ let settled=false,error;
+ const prep=f.authority.prepareNativeStructureCommand(command).then(()=>{settled=true;},cause=>{settled=true;error=cause;});
+ await untilProduction(f,()=>settled);
+ await prep;
+ if(error)throw error;
+}
+
 test('a paid wall holds an affected native Farm body while its replacement route prepares',async()=>{
  const source=nativeFarmArrivalRouteFixture({peer:false});
  const saved=structuredClone(source.state),from=source.point(0,-3),to=source.point(0,3);
@@ -13,7 +21,7 @@ test('a paid wall holds an affected native Farm body while its replacement route
  let f,release,farmPreparations=0;
  const preparing=new Promise(resolve=>{release=resolve;});
  try{
-  f=await nativeProductionAuthority(saved,{onPrepare(record){
+  f=await nativeProductionAuthority(saved,{chunkKeys:[...Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),'2,-1','2,0','2,1'],onPrepare(record){
    if(record.kind==='farm-arrival'&&++farmPreparations===2)return preparing;
   }});
   await untilProduction(f,()=>f.records.some(record=>record.kind==='farm-arrival'&&record.committed));
@@ -27,7 +35,8 @@ test('a paid wall holds an affected native Farm body while its replacement route
   assert.notDeepEqual(position,initial);
 
   const build={kind:'buildWallChain',id:commandId,material:'zarzas',points,options:{smooth:false,snap:false}};
-  const placed=f.command(build),snapshot=JSON.parse(placed.snapshot);
+  await completePreparation(f,build);
+  const placed=f.command(build),finishing=f.authority.finishNativeStructureCommand(build),snapshot=JSON.parse(placed.snapshot);
   const event=placed.events.find(item=>item.type==='WallChainBuilt');
   assert.equal(placed.value,true);
   assert.equal(event.commandId,commandId);
@@ -41,6 +50,7 @@ test('a paid wall holds an affected native Farm body while its replacement route
   const duplicate=f.command(build);
   assert.equal(duplicate.value,false);
   assert.deepEqual(duplicate.events,[]);
+  await finishing;
 
   let elapsed=snapshot.elapsed;
   for(let i=0;i<7;i++){
@@ -54,7 +64,7 @@ test('a paid wall holds an affected native Farm body while its replacement route
   assert(replacement,'the authority must request a replacement preparation');
   assert.equal(replacement.resources.nativeFarmArrival.bodyId,original.bodyId);
   assert.equal(replacement.resources.nativeFarmArrival.actorId,original.actorId);
-  assert.equal(f.records.filter(record=>record.committed).length,1);
+  assert.deepEqual(f.records.filter(record=>record.committed).map(record=>record.kind),['farm-arrival','farm-arrival-stop','barrier-addition']);
   assert.deepEqual(f.faults,[]);
  }finally{
   const closing=f?.close();release();
@@ -68,7 +78,7 @@ test('a paid wall outside the Farm corridor keeps the acquired route and its pre
  saved.ledger.balance=rational(100000);
  let f;
  try{
-  f=await nativeProductionAuthority(saved);
+  f=await nativeProductionAuthority(saved,{chunkKeys:[...Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),'2,-1','2,0','2,1']});
   await untilProduction(f,()=>f.records.some(record=>record.kind==='farm-arrival'&&record.committed));
   for(let i=0;i<2;i++){f.advance();await f.present();}
   const before=f.snapshot().workers[0],frame=f.host.inspect().nativeRouteFrame;
@@ -76,8 +86,11 @@ test('a paid wall outside the Farm corridor keeps the acquired route and its pre
   assert(binding);
   assert.equal(before.nativeRouteAdmission,'native-farm-arrival');
 
-  const placed=f.command({kind:'buildWallChain',id:'build-away-from-native-farm',material:'zarzas',
-   points:[[from.x,from.z],[to.x,to.z]],options:{smooth:false,snap:false}});
+  const command={kind:'buildWallChain',id:'build-away-from-native-farm',material:'zarzas',
+   points:[[from.x,from.z],[to.x,to.z]],options:{smooth:false,snap:false}};
+  await completePreparation(f,command);
+  const placed=f.command(command);
+  await f.authority.finishNativeStructureCommand(command);
   assert.equal(placed.value,true);
   const event=placed.events.find(item=>item.type==='WallChainBuilt');
   assert.equal(event.count,3);
@@ -88,9 +101,9 @@ test('a paid wall outside the Farm corridor keeps the acquired route and its pre
    assert.equal(after.nativeRouteAdmission,'native-farm-arrival');
   }
   assert.notDeepEqual([after.x,after.z],[before.x,before.z]);
-  assert.equal(f.records.length,1,'a wall outside the route must not request another body preparation');
+  assert.deepEqual(f.records.map(record=>record.kind),['farm-arrival','barrier-addition'],'a wall outside the route must not request another body preparation');
   const current=f.host.inspect().nativeRouteFrame;
-  assert.deepEqual(current.worldBoundary,frame.worldBoundary);
+  assert.deepEqual(current.worldBoundary,placed.nativeWorldResources[0].worldBoundary);
   assert.deepEqual(current.bindings.find(item=>item.nativeFarmArrival)?.nativeFarmArrival,binding.nativeFarmArrival);
   assert.deepEqual(f.faults,[]);
  }finally{
