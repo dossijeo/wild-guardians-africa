@@ -1,3 +1,4 @@
+import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {Box3,Matrix4,Mesh,Sphere,Vector2,Vector3} from 'three';
 import {Fn,If,Loop,attribute,clamp,float,int,mix,normalLocal,rotate,uniform,uniformArray,vec3} from 'three/tsl';
 import {copyNativeGatePresentation} from '../world/native-gate-presentation.js';
@@ -48,6 +49,20 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   current:()=>!disposed&&activated&&shapeCurrent()&&wall.nativeGpuGate===binding&&wall.parts[0]===part&&mesh.material===material&&(repairLayer?repairLayer.current():siblings.every(({part,material})=>part.mesh.material===material))&&rootCurrent(),
   checkEntity(entity,elapsed){if(entity.gate!==true||entity.status!=='intact'||!Number.isFinite(entity.hp)||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||entity.material!==wall.nativeGateMaterial||!binding.current()||!(repairLayer?repairLayer.accept(entity,elapsed):entity.hp/entity.maxHp===visual))throw Error('Native gate requires a prepared geometry or lifecycle transition');},
   sampleOpening:sample,
+  // A stopped actor can leave a historical crossing without changing its motor.
+  // Retain only the independent, committed world clock on this exact owner.
+  captureRetention(presentation,proposedBoundary){
+   // The caller supplies an already-copied route packet. Compare its shape
+   // against our private validated packet without copying the vertex arrays.
+   // Its historical curve and route clock grant no retention permission.
+   const expected=presentation,next=copyNativeWorldBoundary(proposedBoundary),source=packet.worldBoundary;
+   if(!committed||!binding.current()||!source||!next||!expected||!(expected.positions instanceof Float32Array)||!(expected.leafFlags instanceof Uint8Array)||source.authorityEpoch!==next.authorityEpoch||source.nativeSession!==next.nativeSession||source.ticket>=next.ticket||source.effectiveTime>next.effectiveTime||
+      ['gateId','entityId','mechanism','modelId'].some(key=>packet[key]!==expected[key])||
+      ['rootMatrix','hinge','positions','leafFlags'].some(key=>packet[key].length!==expected[key]?.length||packet[key].some((v,i)=>!Object.is(v,expected[key][i]))))
+    throw Error('Native stopped gate has no matching independent resident motor');
+   const retainedPacket=packet,clock=motion.status().installed;
+   return ()=>committed&&packet===retainedPacket&&binding.current()&&motion.status().installed.nativeGate===clock.nativeGate&&motion.status().installed.start===clock.start&&motion.status().installed.end===clock.end;
+  },
   // A visual Repair replacement borrows this already-published clock. It
   // changes no motor, route, epoch, time interval or logical gate identity.
   prepareReplacement(nextWall){

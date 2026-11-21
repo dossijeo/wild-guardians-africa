@@ -12,7 +12,9 @@ Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).
 
-Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpos distintos y sus geometrías residentes. Una prueba en frío agotó el plazo de preparación y una parada después de cruzar rechazó la pose del motor. Dos intervalos de arranque de 42,4 y 47,7 ms siguen sin atribución. [Prueba de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
+Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpos distintos y sus geometrías residentes. Una prueba en frío agotó el plazo de preparación. Dos intervalos de arranque de 42,4 y 47,7 ms siguen sin atribución. [Prueba de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
+
+Stop24 detiene al trabajador después del vano de zarzas cuando el diario nativo de motores está vacío. En NVIDIA conservó el cuerpo 1, ambos trabajadores, el reloj del portón y 798 referencias de buffer residentes. El ticket definitivo se dibujó y el consumidor drenó con cero errores. La oportunidad registrada como `stale-binding` dejó un intervalo de 66,6 ms a 30 Hz y C4 sigue abierto. [Validación de Stop24](native-farm-stop-historical-gate-retention-20261121.md).
 
 Al prolongar la prueba de tráfico en WASM, el primer trabajador se quedó en Action15 y el segundo en el extremo de Farm. El productor alternó dos intentos bloqueados. El mismo cultivo se cosechó y se entregó con un solo trabajador. [Control de la cohorte](performance/native-ordinary-farm-gate-traffic-20261121.json).
 
