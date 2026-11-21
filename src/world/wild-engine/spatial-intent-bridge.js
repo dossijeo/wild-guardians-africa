@@ -1841,7 +1841,10 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       }
       const q=nativeIdleCycleBodyState(body);
       if(worker.profile!==q.workerProfile||numericId(worker.centerId)!==q.centerId||Object.entries(semantic.pose).some(([k,v])=>v!==q.pose[k]))return null;
-      const center=state.structures.find(c=>c.id===worker.centerId),anchor=sourceFailed?{id:initial.anchorId,x:sourceFailed.anchor.x,z:sourceFailed.anchor.z,idleRadius:sourceFailed.anchor.radius}:idleFarmAnchor(state,worker,center),match=/^(farm-plant|farm-structure|village)-(\d+)$/.exec(anchor.id),calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
+      // Complete the acquired WALK against its own anchor. A newly nearer crop
+      // is a future policy choice, not a change to the source of REST21.
+      const retainedAnchor=sourceFailed?.anchor??sourceStroll?.reference.anchor;
+      const center=state.structures.find(c=>c.id===worker.centerId),anchor=retainedAnchor?{id:initial.anchorId,x:retainedAnchor.x,z:retainedAnchor.z,idleRadius:retainedAnchor.radius}:idleFarmAnchor(state,worker,center),match=/^(farm-plant|farm-structure|village)-(\d+)$/.exec(anchor.id),calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
       if(!match||anchor.id!==initial.anchorId||!calibration||![anchor.x,anchor.z,anchor.idleRadius].every(Number.isFinite)||allowStroll&&(sourceFarm||sourceSettlement)&&Math.hypot(q.pose.x-anchor.x,q.pose.z-anchor.z)<=anchor.idleRadius)return null;
       return {state,worker,body,next,sourceStroll,sourceFarm,sourceFailed,sourceSettlement,anchor:{kind:['','farm-plant','farm-structure','village'].indexOf(match[1]),id:Number(match[2]),x:anchor.x,z:anchor.z,radius:anchor.idleRadius},sequence,calibration};
     }catch{return null;}
@@ -3111,7 +3114,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const tasksByNumericId=new Map(state.tasks.map(task=>[numericId(task.id),task]));
     const workersByNumericId=new Map(state.workers.map(worker=>[numericId(worker.id),worker]));
     const targetFor=taskTargetLookup(state);
-    const assignments=[];let awaitingFarmStop=false;
+    const assignments=[];let awaitingSourceTransfer=false;
     for(const row of plan){
       if(row.status!==1)continue;
       const task=tasksByNumericId.get(row.taskId),worker=workersByNumericId.get(row.workerId);
@@ -3120,8 +3123,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
         'delivered' in target&&target.delivered||
         task.kind==='repair'&&target.hp>=target.maxHp)
         throw Error('Native proposal target changed before commit');
-      const farm=pendingResources&&worker.nativeRouteAdmission==='native-farm-arrival'?bridge.nativeFarmArrivalRouteExecution(worker.id):null,stopping=!!farm&&!(farm.arrived&&farm.running===false&&farm.currentSpeed===0&&farm.executedThrough>=farm.binding.reference.endTime);
-      if(stopping)awaitingFarmStop=true;
+      const farm=pendingResources&&worker.nativeRouteAdmission==='native-farm-arrival'?bridge.nativeFarmArrivalRouteExecution(worker.id):null,stroll=pendingResources&&worker.nativeRouteAdmission==='native-idle-stroll'?bridge.nativeIdleStrollExecution(worker.id):null,stopping=!!stroll||!!farm&&!(farm.arrived&&farm.running===false&&farm.currentSpeed===0&&farm.executedThrough>=farm.binding.reference.endTime);
+      if(stopping)awaitingSourceTransfer=true;
       const fact=lastPlanFacts.get(task.id);
       if(!fact||fact.workerId!==worker.id||fact.targetId!==task.targetId||
         fact.centerId!==task.centerId||fact.kind!==task.kind||
@@ -3129,6 +3132,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
         fact.targetX!==target.x||fact.targetZ!==target.z||
         workerRow(worker,state)[6]!==1&&!stopping)
         throw Error('Native proposal inputs changed before commit');
+      if(stroll)fact.awaitingIdleStrollTransfer=true;
       const path=bridge.proposalRoute(row);
       const interaction=['repair','initial','water'].includes(task.kind);
       const destination=interaction?{
@@ -3136,10 +3140,17 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       assignments.push({taskId:task.id,workerId:worker.id,path,destination});
     }
     if(!pendingResources&&assignments.some(a=>bridge.nativeTaskSettlementBinding(a.workerId)))throw Error('Native stationary ownership requires prepared task resources');
-    // The existing native batch owns the choice while stop24 prepares. Do not
-    // exclude a moving Farm candidate, claim its task early or copy a queue.
-    // Its real stop notification invalidates this proposal and wakes replanning.
-    if(awaitingFarmStop)return 0;
+    // The existing batch owns the choice until prepared stop12/24 transfers
+    // the body. If WALK finishes first, its ordinary REST21 successor owns
+    // the transfer instead. The actual native event wakes replanning.
+    // Never attempt a Task commit against a still-owned22 and clear its choice.
+    if(awaitingSourceTransfer){
+      // This proposal cannot commit before ownership changes. Retain its JS
+      // choice for stop12, but release the native draft so terminal WALK can
+      // prepare REST21 if it arrives before the stop is ready.
+      if([...lastPlanFacts.values()].some(f=>f.awaitingIdleStrollTransfer))bridge.discard();
+      return 0;
+    }
     // Validate the JS side before committing WASM. A stale native revision
     // rejects the whole lease; no JS task or worker has changed yet.
     applyConfirmedTaskAssignments(state,assignments,navVersion,{validateOnly:true,pendingResources});
@@ -3398,6 +3409,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     }
     projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return view;
   };
+  // Reconsider a deferred batch only after its actual source owner changes.
+  // The wait belongs to existing proposal facts, not a timer or second queue.
+  const wakeDeferredIdleTask=actor=>{
+    if(!lastPlanFacts||![...lastPlanFacts.values()].some(f=>numericId(f.workerId)===actor&&f.awaitingIdleStrollTransfer))return;
+    lastPlan=null;lastPlanFacts=null;dirty=true;pendingNativeChanges=true;
+  };
   const projectNativeIdleCycle=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Idle cycle belongs to another game');
     const view=bridge.nativeIdleCycleExecution(worker.id);if(!view)return null;const q=nativeIdleCycleBodyState(view.binding.reference.sourceBody);
@@ -3428,6 +3445,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
       }
       if(JSON.stringify(worker.idleState)!==JSON.stringify(view.idleState))worker.idleState={...view.idleState};
     }
+    if(q.kind==='native-idle-stroll-arrival-source')wakeDeferredIdleTask(numericId(worker.id));
     projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return view;
   };
   const projectNativeIdleStroll=(state,worker)=>{
@@ -3456,6 +3474,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const idleState={anchorId,mode:'walk',elapsed:0,remaining:nativeIdleStrollWalkRemaining(r),rng:view.walkState.rng,approachRetry:view.walkState.approachRetry,destination},values={x:p.x,z:p.z,heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,runRemaining:p.runRemaining,nativeRouteAdmission:'native-idle-stroll',destinationId:destination.id};
     for(const [key,value] of Object.entries(values))if(worker[key]!==value)worker[key]=value;
     const old=worker.idleState;if(['anchorId','mode','elapsed','remaining','rng','approachRetry'].some(k=>old?.[k]!==idleState[k])||['id','x','z'].some(k=>old?.destination?.[k]!==destination[k]))worker.idleState=idleState;
+    if(view.kind==='native-idle-stroll-held-execution')wakeDeferredIdleTask(actor);
     projectedPositions.set(actor,[worker.x,worker.z]);return view;
   };
   const projectNativeSettledWorkerExecution=(state,worker)=>{
@@ -3479,15 +3498,25 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});
     notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };
+  // Both existing moving families retain the planner's choice, not a copied
+  // queue. Motion can advance; target, worker policy and proposal must remain current.
+  const plannedTaskStopChoice=(actor,worker,state)=>{
+    if(dirty||pendingTaskEvents.length||pendingWorldEvents.length||!lastPlan)return null;
+    const row=lastPlan.find(r=>r.status===1&&r.workerId===actor),task=row&&state.tasks.find(t=>numericId(t.id)===row.taskId),fact=task&&lastPlanFacts?.get(task.id),target=task&&taskTargetLookup(state)(task.targetId);
+    if(!task||task.workerId||!fact||!target||'alive' in target&&!target.alive||'delivered' in target&&target.delivered||task.kind==='repair'&&target.hp>=target.maxHp||workerRow(worker,state)[6]!==1||fact.workerId!==worker.id||fact.targetId!==task.targetId||fact.centerId!==task.centerId||fact.kind!==task.kind||fact.targetX!==target.x||fact.targetZ!==target.z)return null;
+    return task.id;
+  };
   const nativeIdleStrollStopRequest=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
-    if(!worker||worker.nativeRouteAdmission!=='native-idle-stroll'||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))return null;
+    if(!worker||worker.nativeRouteAdmission!=='native-idle-stroll')return null;
     const execution=bridge.nativeIdleStrollExecution(actor);if(!execution||execution.arrived)return null;
     const {pose,idleState:idle}=nativeIdleStrollLiveState(state,worker),r=execution.binding.reference,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`;
     if(execution.actorId!==actor||execution.executedThrough!==state.elapsed||r.workerProfile!==worker.profile||r.centerId!==numericId(worker.centerId)||worker.radius!==undefined&&worker.radius!==r.pose.radius||Object.keys(pose).some(k=>pose[k]!==execution.pose[k])||idle.anchorId!==anchorId||idle.rng!==r.walkRng||idle.remaining!==nativeIdleStrollWalkRemaining(r)||['x','z'].some(k=>idle.destination[k]!==r.destination[k]))throw Error('Idle stroll stop request differs from its executed Game source');
     // Godot pauses its existing agent independently of the world. Our existing
     // family12 additionally waits for prepared graphics before retaining it.
-    return Object.freeze({reason:'home',binding:execution.binding});
+    if(contractExpired(worker,state)||state.time>=(profileEnd.get(worker.profile)??0))return Object.freeze({reason:'home',binding:execution.binding});
+    const taskId=plannedTaskStopChoice(actor,worker,state);
+    return taskId?Object.freeze({reason:'task',taskId,binding:execution.binding}):null;
   };
   const nativeFarmArrivalStopRequest=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
@@ -3498,10 +3527,8 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(execution.actorId!==numericId(worker.id)||execution.centerId!==semantic.centerId||q.centerId!==semantic.centerId||q.workerProfile!==worker.profile||execution.executedThrough!==state.elapsed||Object.keys(semantic.pose).some(k=>semantic.pose[k]!==execution[k])||Object.keys(semantic.goal).some(k=>semantic.goal[k]!==q.goal[k]))throw Error('Farm stop request differs from its executed Game source');
     const binding=execution.binding;
     if(contractExpired(worker,state)||state.time>=(profileEnd.get(worker.profile)??0))return Object.freeze({reason:'home',taskId:null,binding});
-    if(dirty||pendingTaskEvents.length||pendingWorldEvents.length||!lastPlan)return null;
-    const row=lastPlan.find(r=>r.status===1&&r.workerId===actor),task=row&&state.tasks.find(t=>numericId(t.id)===row.taskId),fact=task&&lastPlanFacts?.get(task.id),target=task&&taskTargetLookup(state)(task.targetId);
-    if(!task||task.workerId||!fact||!target||'alive' in target&&!target.alive||'delivered' in target&&target.delivered||task.kind==='repair'&&target.hp>=target.maxHp||workerRow(worker,state)[6]!==1||fact.workerId!==worker.id||fact.targetId!==task.targetId||fact.centerId!==task.centerId||fact.kind!==task.kind||fact.targetX!==target.x||fact.targetZ!==target.z)return null;
-    return Object.freeze({reason:'task',taskId:task.id,binding});
+    const taskId=plannedTaskStopChoice(actor,worker,state);
+    return taskId?Object.freeze({reason:'task',taskId,binding}):null;
   };
   const nativeFarmArrivalContinuationSource=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
