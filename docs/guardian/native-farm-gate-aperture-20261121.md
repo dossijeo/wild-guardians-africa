@@ -22,6 +22,14 @@ La pausa ordinaria durante Farm congeló el cuerpo y el motor en el segundo 10,5
 
 El coordinador de guardado rechazó escribir durante Farm en marcha, incluso con la partida pausada y la hoja fija en apertura 0,216. Tras cruzar y adquirir Idle, escribió un checkpoint de 12 regiones. Una nueva autoridad verificó la reconstrucción de la topología y adquirió Idle20 con la misma posición y fases del trabajador y el mismo portón abierto a 60/60 HP. El control usa WASM, el Host determinista y un repositorio en memoria. [Recibo del guardado](performance/native-farm-gate-aperture-20261121.json).
 
+## Una primera tarea con el motor preparado
+
+Harvest hacia un cultivo al otro lado de una puerta sana reproducía el rechazo de Task14 después de confirmar sus recursos. La comprobación de la ruta ya verificaba el cuerpo, la asignación, la geometría y los tiempos relativos de la hoja. Una segunda comparación exigía las marcas absolutas originales del motor. Task14 usa ahora la comprobación de su atestación con ambas fronteras y rechaza una confirmación sin atestación, incluso con marcas absolutas idénticas. El Host conserva su ajuste de reloj existente para el dueño preparado. [Contrato de Task14](../../src/world/native-task-start-attestation.js), [ajuste del reloj](../../src/rendering/native-route-control.js#L682).
+
+En NVIDIA, el ticket preparado 5 de tiempo 10,05 se adquirió como ticket 6 de tiempo 12,25. Mientras la prueba retuvo READY, el trabajador y la hoja se quedaron en su pose de espera. Tras la adquisición, el trabajador cruzó por x=-13,9496 con la hoja abierta. Conservó el cuerpo 1, su raíz y las 36 geometrías y el portón mantuvo raíz y geometría. El primer dibujo fue de 33,4 ms y el máximo observado de 37,9 ms a 30 Hz. El consumidor drenó con cero errores. Quedan la transición visual de Repair y la cadencia a 60 Hz. [Recibos y regresión](performance/native-task14-gate-retiming-20261121.json).
+
+La prueba de regresión usa Game, WASM y los puertos reales con un Host determinista. Reproduce el rechazo anterior y comprueba que la atestación admite las filas relativas correctas. Rechaza una confirmación sin atestación y las alteraciones de tiempos, geometría o mecanismo. Pasaron 981 pruebas y la compilación de producto WebGPU Worker con dibujo remoto.
+
 ## Carry por el vano
 
 El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.

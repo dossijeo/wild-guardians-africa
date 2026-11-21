@@ -1,0 +1,115 @@
+{
+  "base": "498d7f4eb567470944ca0f551d5ff747bc4b9e95",
+  "workingChanges": "Damaged-gate candidate present. The gate remained healthy.",
+  "baseline": {
+    "sha256": "829d690f53c25e3d0f3f08e25ddc8332e3639d43801df9a170662813b823a7a7",
+    "error": "Error: Error: Native resumed worker differs from its committed resources"
+  },
+  "checkout": {
+    "sha256": "a333c5ba6379de24c48e0046c441311b680602f891db1fc50536db192a55b434",
+    "adapter": [
+      "nvidia",
+      "turing"
+    ],
+    "displayHz": 30,
+    "targetIntervalMs": 16.666666666666668,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "body": 1,
+    "actorRoot": 696,
+    "actorMeshes": 36,
+    "actorMeshesRetained": true,
+    "gateIds": [
+      1000000
+    ],
+    "gateRoot": 518,
+    "gateMesh": 246,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "6ad4d3a9-7157-48fd-99fe-6eedab509e4b/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 10.049999999999999
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "6ad4d3a9-7157-48fd-99fe-6eedab509e4b/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 12.249999999999952
+    },
+    "held": {
+      "pose": {
+        "time": 151.7500000000004,
+        "elapsed": 11.749999999999963,
+        "x": -14,
+        "z": 5.7,
+        "admission": "pending-resources",
+        "status": "waiting-task",
+        "sequence": 258
+      },
+      "at": 11.749999999999963,
+      "minimumSimulatedHold": 0.45
+    },
+    "crossing": {
+      "time": 155.20000000000118,
+      "elapsed": 15.19999999999989,
+      "x": -13.949600219726562,
+      "z": 8.237190688284306,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 327,
+      "opening": 1
+    },
+    "final": {
+      "time": 155.7000000000013,
+      "elapsed": 15.699999999999878,
+      "x": -13.949600219726562,
+      "z": 8.777190688284294,
+      "admission": "native-task",
+      "status": "walking",
+      "sequence": 337
+    },
+    "firstTicketDraw": {
+      "at": 1795261706531.8,
+      "sequence": 31,
+      "ticket": 6,
+      "intervalMs": 33.39990234375,
+      "drawMs": 2.60009765625,
+      "trigger": "raf",
+      "replay": false
+    },
+    "peakInterval": {
+      "at": 1795261707736.6,
+      "sequence": 41,
+      "ticket": 6,
+      "intervalMs": 37.900146484375,
+      "drawMs": 1.800048828125,
+      "trigger": "raf",
+      "replay": true
+    },
+    "gpuErrors": 0,
+    "drained": true
+  },
+  "targeted": {
+    "previousGuardFails": true,
+    "acquiredRelativeProjectionPasses": true,
+    "exactAbsoluteBypassWithoutProofRejected": true,
+    "gateTimingGeometryAndIdentityChangesRejected": true
+  },
+  "regression": {
+    "passed": 981,
+    "total": 981,
+    "sha256": "8931ade885b3f2fabd135b6e94f45664ff09f50884d6228eac84af2b5048bfd8",
+    "previousTestExpectationsFixedIn": "f54c80dde6ad573795e9e8ae3c99a720f2cd45f3"
+  },
+  "build": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "reportedDuration": "1m52s",
+    "sha256": "2c5bd3feac596b43c72a1f01d1f8e5ffb96b83e0c572c95f4a30c6b438f8e8d5"
+  }
+}
