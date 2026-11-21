@@ -1,0 +1,62 @@
+{
+  "basedOn": "5261de67f39896fd593b09a6bceafeab1ed4c564",
+  "command": {
+    "kind": "placeStructure",
+    "id": "buy-in-active-aperture",
+    "structure": {
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": true,
+      "x": -14,
+      "z": 8.2,
+      "yaw": 0
+    }
+  },
+  "nativeStage": -5,
+  "scope": "WASM and production authority with deterministic Host",
+  "legal": {
+    "value": true
+  },
+  "error": "Native wall preparation invalid",
+  "source": {
+    "body": 1,
+    "path": [
+      -14,
+      11,
+      -14,
+      5.199999809265137
+    ],
+    "gateIds": []
+  },
+  "before": {
+    "x": -14,
+    "z": 11.454400000000007,
+    "status": "arriving",
+    "admission": "native-farm-arrival"
+  },
+  "after": {
+    "x": -14,
+    "z": 11.30320000000001,
+    "status": "arriving",
+    "admission": "native-farm-arrival"
+  },
+  "ledgerBefore": {
+    "n": "100000",
+    "d": "1"
+  },
+  "ledgerAfter": {
+    "n": "100000",
+    "d": "1"
+  },
+  "gate": null,
+  "records": [
+    {
+      "kind": "farm-arrival",
+      "committed": true,
+      "aborted": false
+    }
+  ],
+  "errors": [],
+  "placementEvents": [],
+  "diagnosticSha256": "87df4dd21b008a5eedba06855e8545f5b6417ab585789a92113a8117474d64df"
+}
