@@ -568,9 +568,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      value=addResidentChunk(command.key);
     }else if(command.kind==='removeWall'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
-     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
+     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id),target=game.structures.find(s=>s.id===command.targetId&&s.kind==='wall');
      if(!duplicate&&!permission(game,'wall'))rejection='Esta acción no está disponible ahora';
-     else if(!duplicate&&!game.structures.some(s=>s.id===command.targetId&&s.kind==='wall'))rejection='No existe esa defensa';
+     else if(!duplicate&&!target)rejection='No existe esa defensa';
+     else if(!duplicate&&nativeBodies&&restoredGates.includes(target))rejection='La retirada de la puerta necesita preparación nativa';
      value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
      admitPendingNativeBirths();planner.flushNativeIntentControl();

@@ -28,3 +28,7 @@ Remove-Item Env:QA_GATE_PTHREAD
 Los controles cubren una apertura ausente y otra guardada en 0,4, tres materiales con dos orientaciones, colisión con un obstáculo vecino, IDs sustituidos y retirada atómica. Se reconstruyeron standalone y pthread con Emscripten 3.1.64. La interfaz pública añade `nav_gate_mechanism_install_owned`. Se comprobaron los imports existentes y el sidecar pthread byte por byte. [Hashes y ABI](performance/native-farm-restored-gate-20261121.json).
 
 Pasaron 76 pruebas del checkout que cubren las fronteras de puerta, barreras y asignación durante Idle22. Las 13 comprobaciones de propiedad también pasaron con pthread. La compilación Vite de producción completó el empaquetado.
+
+## Retirada del propietario
+
+La orden de retirar una puerta registrada borraba primero la entidad en Game. WASM conservaba sus proxies y el siguiente avance fallaba al proyectar la hoja. La autoridad ahora rechaza esa orden antes de borrar la entidad o cambiar el saldo. En los controles con apertura inicial cerrada y parcial, Farm siguió avanzando con el mismo actor y el mismo mecanismo. Pasaron 33 pruebas dirigidas. La retirada ordinaria de una puerta registrada queda pendiente de confirmar el mecanismo y los tres proxies en una sola transacción. [Recibo antes y después](performance/native-restored-gate-removal-20261121.json).

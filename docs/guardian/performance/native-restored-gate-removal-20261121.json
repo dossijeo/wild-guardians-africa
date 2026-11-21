@@ -1,0 +1,45 @@
+{
+  "parent": "234f17161d04c38ed369257537508e9072c07a73",
+  "gateId": "structure-1000000",
+  "command": "removeWall",
+  "initial": {
+    "gate": true,
+    "balance": {
+      "n": "163",
+      "d": "1"
+    },
+    "entry": null
+  },
+  "prior": {
+    "error": "Error: Invalid spatial topology transaction; no barrier was changed",
+    "afterFailedCommand": {
+      "gate": false,
+      "balance": {
+        "n": "163",
+        "d": "1"
+      },
+      "entry": null
+    },
+    "nextStepError": "Error: Native gate projection has another structure owner",
+    "diagnosticSha256": "cc103c1f4cb735fe2e4258cf3fbdfb639349578b46dc18d03cb32dbf25f96c3b"
+  },
+  "current": {
+    "command": {
+      "value": false,
+      "rejection": "La retirada de la puerta necesita preparación nativa",
+      "events": []
+    },
+    "afterRejectedCommand": {
+      "gate": true,
+      "balance": {
+        "n": "163",
+        "d": "1"
+      },
+      "entry": null
+    },
+    "nextStep": "advanced",
+    "nativeFarmReceiptRetained": true,
+    "diagnosticSha256": "2fd50851d1155ef2b98975759f02f8a802d4ea8c757f33d487cd001c5e9eef3b"
+  },
+  "testsPassed": 33
+}
