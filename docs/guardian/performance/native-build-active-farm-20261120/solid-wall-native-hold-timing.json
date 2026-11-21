@@ -1,0 +1,255 @@
+{
+  "commit": "53ca24120d8c158be0d4ddae053c6141ba15fbd5",
+  "environment": {
+    "date": "2026-11-21",
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "scope": "Worker draw submissions during the resident solid wall crossing; neither physical display refresh nor a 60 Hz acceptance"
+  },
+  "runs": {
+    "cadence1": {
+      "transitionWindow": {
+        "milliseconds": 1897.6,
+        "submissions": 57,
+        "replays": 47,
+        "medianSubmissionIntervalMs": 33.3,
+        "maxSubmissionIntervalMs": 61.8,
+        "longestSubmissionCpuMs": 3.5,
+        "longestSubmissionTicket": 7,
+        "maxIntervalAtMs": 1259.5
+      },
+      "skippedOpportunities": [
+        {
+          "atMs": 1230.9,
+          "offsetFrom": "transition window",
+          "intervalMs": 33.2,
+          "outcome": "mutation-hold",
+          "holdId": 3,
+          "sequence": 47
+        }
+      ]
+    },
+    "holdtrace1": {
+      "transitionWindow": {
+        "milliseconds": 1799.8,
+        "submissions": 54,
+        "replays": 46,
+        "medianSubmissionIntervalMs": 33.3,
+        "maxSubmissionIntervalMs": 45.5,
+        "longestSubmissionCpuMs": 4.2,
+        "longestSubmissionTicket": 7,
+        "maxIntervalAtMs": 1112.1
+      },
+      "skippedOpportunities": [
+        {
+          "atMs": 31.1,
+          "offsetFrom": "quiescence request",
+          "intervalMs": 33.4,
+          "outcome": "mutation-hold",
+          "holdId": 3,
+          "sequence": 43
+        }
+      ],
+      "instrumentedHold": {
+        "id": 3,
+        "durationMs": 43.1,
+        "milestones": [
+          {
+            "step": "authority-quiesce-sent",
+            "atMs": 0,
+            "ticket": 6
+          },
+          {
+            "step": "draw-quiesce-received",
+            "atMs": 0.4,
+            "ticket": 6
+          },
+          {
+            "step": "draw-fence-start",
+            "atMs": 0.7
+          },
+          {
+            "step": "draw-fence-ack",
+            "atMs": 7.6
+          },
+          {
+            "step": "authority-fence-received",
+            "atMs": 7.7
+          },
+          {
+            "step": "authority-wall-ready",
+            "atMs": 8.1
+          },
+          {
+            "step": "runtime-wall-ready",
+            "atMs": 8.3
+          },
+          {
+            "step": "runtime-build-dispatch",
+            "atMs": 8.4
+          },
+          {
+            "step": "authority-build-consume",
+            "atMs": 21.5,
+            "ticket": 6
+          },
+          {
+            "step": "authority-build-committed",
+            "atMs": 37.9,
+            "ticket": 7
+          },
+          {
+            "step": "authority-release-sent",
+            "atMs": 40,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-received",
+            "atMs": 40.2,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-installed",
+            "atMs": 43.1,
+            "ticket": 7
+          }
+        ]
+      }
+    },
+    "holdtrace2": {
+      "transitionWindow": {
+        "milliseconds": 1799.9,
+        "submissions": 54,
+        "replays": 45,
+        "medianSubmissionIntervalMs": 33.3,
+        "maxSubmissionIntervalMs": 47.7,
+        "longestSubmissionCpuMs": 4.1,
+        "longestSubmissionTicket": 7,
+        "maxIntervalAtMs": 1114.3
+      },
+      "skippedOpportunities": [
+        {
+          "atMs": 31.1,
+          "offsetFrom": "quiescence request",
+          "intervalMs": 33.4,
+          "outcome": "mutation-hold",
+          "holdId": 3,
+          "sequence": 47
+        }
+      ],
+      "instrumentedHold": {
+        "id": 3,
+        "durationMs": 45.5,
+        "milestones": [
+          {
+            "step": "authority-quiesce-sent",
+            "atMs": 0,
+            "ticket": 6
+          },
+          {
+            "step": "draw-quiesce-received",
+            "atMs": 0.4,
+            "ticket": 6
+          },
+          {
+            "step": "draw-fence-start",
+            "atMs": 0.6
+          },
+          {
+            "step": "draw-fence-ack",
+            "atMs": 7.4
+          },
+          {
+            "step": "authority-fence-received",
+            "atMs": 7.6
+          },
+          {
+            "step": "authority-wall-ready",
+            "atMs": 8
+          },
+          {
+            "step": "runtime-wall-ready",
+            "atMs": 8.2
+          },
+          {
+            "step": "runtime-build-dispatch",
+            "atMs": 8.3
+          },
+          {
+            "step": "runtime-build-sent",
+            "atMs": 21,
+            "sequence": 27
+          },
+          {
+            "step": "authority-build-consume",
+            "atMs": 21.2,
+            "ticket": 6
+          },
+          {
+            "step": "authority-wall-requote-start",
+            "atMs": 21.7
+          },
+          {
+            "step": "authority-wall-requote-ready",
+            "atMs": 31.1
+          },
+          {
+            "step": "native-revalidation-start",
+            "atMs": 31.2,
+            "ticket": 6
+          },
+          {
+            "step": "native-revalidation-end",
+            "atMs": 31.5,
+            "ticket": 6
+          },
+          {
+            "step": "native-physical-commit-start",
+            "atMs": 32,
+            "ticket": 7
+          },
+          {
+            "step": "native-physical-commit-end",
+            "atMs": 36.8,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-start",
+            "atMs": 37.3,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-end",
+            "atMs": 39.8,
+            "ticket": 7
+          },
+          {
+            "step": "authority-build-committed",
+            "atMs": 40.4,
+            "ticket": 7
+          },
+          {
+            "step": "authority-release-sent",
+            "atMs": 42.4,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-received",
+            "atMs": 42.6,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-installed",
+            "atMs": 45.5,
+            "ticket": 7
+          }
+        ]
+      }
+    }
+  }
+}
