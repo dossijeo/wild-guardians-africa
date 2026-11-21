@@ -1,0 +1,15 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {nativeFarmArrivalGraphicsFixture as fixture} from './helpers/native-farm-arrival-route-graphics.js';
+import {PROFILES} from '../src/simulation/workforce.js';
+
+// Original authored rig/banks/terrain and actual native13/19/18. Renderer,
+// pipeline admission and submitted picking are doubles, not hardware proof.
+for(const profile of PROFILES)for(const preparing of [false,true])test(`${profile.id} pending Farm→Home retains actor/geometry while original Farm graph preparation=${preparing}`,async()=>{
+ const f=await fixture({profile:profile.id});let farm,home;try{
+  const actor=f.roster.get(f.actor),body=f.body(1),meshes=[];actor.root.traverse(m=>{if(m.isMesh&&!m.userData.wgCpuPickProxy)meshes.push({mesh:m,geometry:m.geometry,index:m.geometry.index});});
+  if(preparing){farm=await f.roster.prepareNativeFarmArrivalProposal(f.support,{getPickTime:f.getPickTime});assert(farm.valid());}
+  f.worker.contractDay--;const request=f.planner.requestNativeFarmHome(f.nativeState,f.worker);assert.equal(f.planner.commitNativeCausalClock().status,'committed');f.sync();if(farm){assert.equal(farm.valid(),false);assert(farm.cancel());f.flush();}
+  assert.equal(f.worker.nativeRouteAdmission,'pending-home-resources');assert.equal(f.planner.nativeFarmArrivalRouteBinding(f.nativeActor),null);assert.deepEqual(f.body(1),body);const p=f.planner.prepareNativeHomeRouteProposal(request);assert.equal(p.status,'proposed');const support=f.terrain.prepareNativeHomeRouteProposal(p.proposal,{terrainManifest:f.manifest});assert(support.valid());home=await f.roster.prepareNativeHomeRouteProposal(support,{getPickTime:f.getPickTime});assert(home.valid());home.activate();home.rollback();assert(home.valid());home.activate();
+  assert.equal(f.w.nav_home_route_proposal_commit_bound(...f.tuple().slice(0,5),p.proposal.ticket.ticket),1);assert.equal(f.planner.beginNativeRouteExecution().status,'started');assert.equal(f.planner.commitNativeCausalClock().status,'committed');const binding=f.planner.nativeHomeRouteBinding(f.nativeActor),nativeRoute={actorId:f.nativeActor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence};home.finalize({nativeHomeRouteBinding:binding,resources:{version:1,kind:18,phase:'committed',worldBoundary:binding.reference.worldBoundary,nativeRoute,presentation:{...f.planner.captureNativeRoutePresentation(nativeRoute.routeHandle),worldBoundary:binding.reference.worldBoundary}}});assert(f.planner.projectNativeHomeExecution(f.nativeState,f.worker));f.sync();f.flush();f.setPickTime(binding.reference.worldBoundary.effectiveTime);let restore=actor.preparePick();restore();assert.deepEqual(f.body(1),body);assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);for(const item of meshes){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.mesh.geometry.index,item.index);}assert.equal(f.registry.status().owned.filter(r=>r.namespace==='native-gpu-motion').length,1);assert.deepEqual(f.errors,[]);
+ }finally{home?.cancel();farm?.cancel();f.close();}
+});

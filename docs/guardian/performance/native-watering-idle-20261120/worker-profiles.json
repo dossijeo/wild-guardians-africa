@@ -1,0 +1,93 @@
+{
+  "scope": "Plant from a fresh command, Water at the due slot. Stationary worker after an ordinary Farm approach with the production authority Worker and physical NVIDIA Turing.",
+  "rows": [
+    {
+      "kind": "initial",
+      "profile": "youngMale",
+      "witness": "initial-ordinary-fresh.json.gz",
+      "bodyId": 1,
+      "meshes": 28,
+      "heldDraws": 22,
+      "idleDraws": 32,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "initial",
+      "profile": "olderMale",
+      "witness": "initial-ordinary-fresh-olderMale.json.gz",
+      "bodyId": 1,
+      "meshes": 27,
+      "heldDraws": 22,
+      "idleDraws": 28,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "initial",
+      "profile": "olderFemale",
+      "witness": "initial-ordinary-fresh-olderFemale.json.gz",
+      "bodyId": 1,
+      "meshes": 27,
+      "heldDraws": 21,
+      "idleDraws": 27,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "initial",
+      "profile": "youngFemale",
+      "witness": "initial-ordinary-fresh-youngFemale.json.gz",
+      "bodyId": 1,
+      "meshes": 28,
+      "heldDraws": 23,
+      "idleDraws": 30,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "water",
+      "profile": "youngMale",
+      "witness": "water-ordinary-fresh.json.gz",
+      "bodyId": 1,
+      "meshes": 28,
+      "heldDraws": 22,
+      "idleDraws": 30,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "water",
+      "profile": "olderMale",
+      "witness": "water-ordinary-fresh-olderMale.json.gz",
+      "bodyId": 1,
+      "meshes": 27,
+      "heldDraws": 22,
+      "idleDraws": 27,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "water",
+      "profile": "olderFemale",
+      "witness": "water-ordinary-fresh-olderFemale.json.gz",
+      "bodyId": 1,
+      "meshes": 27,
+      "heldDraws": 22,
+      "idleDraws": 27,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    },
+    {
+      "kind": "water",
+      "profile": "youngFemale",
+      "witness": "water-ordinary-fresh-youngFemale.json.gz",
+      "bodyId": 1,
+      "meshes": 28,
+      "heldDraws": 22,
+      "idleDraws": 29,
+      "consequence": "WaterSatisfied",
+      "drained": true
+    }
+  ]
+}

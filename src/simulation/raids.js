@@ -1,3 +1,4 @@
+import {publishAnimalGone} from './presentation-lifecycle.js';
 import {canyonRaidFormation} from './canyon-raid-formation.js';
 import {agriculturalRayClear,resolveAgriculturalImpact,validDamageProfile} from './raid-agricultural-impact.js';
 import {liveWaitQueue,occupiedEligibleGroup,enqueueWait,leaveWait,observeWaitProgress,waitEpoch,RAID_WAIT_SECONDS} from './raid-contention.js';
@@ -407,7 +408,7 @@ function finishUnknownRetreat(s,a,nav,reason){
   emit(s,'AnimalRetreatExitAbandoned',{actorId:a.id,x:a.x,z:a.z,
     elapsed:s.elapsed,reason,hitsRemaining:a.hitsRemaining??0,
     seconds:s.elapsed-(a.retreatRouteUnknown?.since??s.elapsed)});
-  a.status='gone';a.path=null;
+  a.status='gone';publishAnimalGone(s,a.id);a.path=null;
   delete a.retreatRouteUnknown;delete a.exitConnectorSearch;
   nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
 }
@@ -758,6 +759,18 @@ export function warmRaidApproaches(state,specs,entry,nav){
     }
   }finally{nav.state=originalState;}
 }
+// Interrupt both authoritative intent ownership and the JS approach reservation.
+// Recovery must select a fresh route from the displaced physical position.
+export function interruptAnimalAttack(s,a,nav) {
+ // Native cancellation deliberately refuses a committed strike. Finish its
+ // ownership first; damage is emitted by updateRaid, not by this operation.
+ if(a.status==='attacking')nav?.intentTaskPlanner?.finishAttackIntent(a.id);
+ release(s,a,nav);a.destinationId=null;a.hitApplied=true;a.attackRemaining=0;
+ if(a.status==='attacking')a.status='walking';
+}
+export function retreatAnimal(s,a,reason='magic',nav={}) {
+ release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
+}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   // Resolve confirmed crop and barrier changes before the next attack
@@ -770,9 +783,13 @@ export function updateRaid(s,dt,nav) {
       release(s,animal,nav);
   reconcileRaidReservationsOnChange(s,nav);
   updateWorkerEncounters(s,nav);
+  nav.dynamicBodies?.sync(s);
   observeWaitProgress(s);liveWaitQueue(s.raid);
   for(const a of s.raid.animals) {
+    try {
     if(a.status==='gone')continue;
+    if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
+    if((a.magicStunUntil??0)>s.elapsed)continue;
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
       a.attackRemaining=Math.max(0,a.attackRemaining-dt);
@@ -792,24 +809,24 @@ export function updateRaid(s,dt,nav) {
           if(!shield){
             if('alive' in target){
               if(agriculturalImpact){
-                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
+                for(const hit of agriculturalImpact.hits){emit(s,'CropHit',{...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed){emit(s,'CropDestroyed',{targetId:hit.targetId,attackId:a.attackId,animalId:a.id});}}
               }else if(!legacyCropOccluded){
                 const hit=applyCropImpact(s,target,1);
-                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
+                if(hit){emit(s,'CropHit',{targetId:target.id,...hit,hits:hit.after,presentation:{elapsed:s.elapsed}});if(hit.destroyed)emit(s,'CropDestroyed',{targetId:target.id});}
               }
             }
             else {
               const previousHp=target.hp;hitStructure(target,validDamageProfile(a.damageProfile)?a.damageProfile.structureDamage:animalSpec(a.species).structure_hit_damage,s.elapsed,s);
               const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
               if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
-              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,structureHit:{kind:target.kind,x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
+              emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:a.x,z:a.z},structureHit:{kind:target.kind,...(target.kind==='wall'?{material:target.material}:{}),x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
                 criticalThreshold:collapseThreshold(target)*2,firstHitThisRaid}});
             }
           }
           // A presentation snapshot is a fact about this completed hit, never
           // another damage command. It survives target movement, raid end/save.
-          emit(s,(agriculturalImpact?.blocked||legacyCropOccluded)&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(legacyCropOccluded?{reason:'occluded'}:{}),...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
-            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
+          emit(s,(agriculturalImpact?.blocked||legacyCropOccluded)&&!shield?'AnimalLogicalMiss':'AnimalLogicalHit',{attackId:a.attackId,targetId:target.id,species:a.species,...(legacyCropOccluded?{reason:'occluded'}:{}),...(agriculturalImpact?{agriculturalImpact}:{}),presentation:{version:1,elapsed:s.elapsed,...(agriculturalImpact?{agriculturalImpact}:{}),
+            animal:{x:a.x,z:a.z,heading:a.heading},target:{x:target.x,z:target.z,kind:target.kind,...(target.kind==='center'?{culture:centerCulture(target,s),yaw:target.yaw??0}:{}),...(target.kind==='wall'?{material:target.material,gate:target.gate,yaw:target.yaw,baseScaleX:target.baseScaleX}:{})},
             shield:shield?{id:shield.id,x:shield.x,z:shield.z,radius:shield.radius}:null}});
         }else emit(s,'AnimalLogicalMiss',{attackId:a.attackId,targetId:a.targetId,species:a.species,...(expiredBorder?{reason:'shield-expired'}:{})});
       }
@@ -858,7 +875,7 @@ export function updateRaid(s,dt,nav) {
         if(walkTo(s,a,exit,dt,nav,
           {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
             externallyPlanned:native})){
-          a.status='gone';nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
+          a.status='gone';publishAnimalGone(s,a.id);nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         delete a.retreatRouteUnknown;
       }catch(error){
@@ -985,6 +1002,7 @@ export function updateRaid(s,dt,nav) {
       }
       else if(dist(a,s.structures.find(operational)??target)<25)a.status='walking';
     }
+    } finally {nav.dynamicBodies?.update(a,1);}
   }
   if(s.raid.animals.every(a=>a.status==='gone')) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);

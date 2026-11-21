@@ -1,0 +1,157 @@
+{
+  "scope": "One real cold Game.tick including a scripted impact and Rapier plus one experimental pose application and full state serialization, in main thread or Worker. Converted mangrove islands, 24 synthetic chunks and test rig, while a separate static real model follows synthetic GPU motion. No gameplay presentation, input, world ownership bridge or production performance claim.",
+  "runs": [
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 82,
+        "p95": 33.38500000000022,
+        "p99": 300.0600000000004,
+        "max": 300.0600000000004
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 300.0600000000004,
+        "p99": 300.0600000000004,
+        "max": 300.0600000000004
+      },
+      "renderMs": {
+        "count": 83,
+        "p95": 0.6649999916553497,
+        "p99": 0.9849999994039536,
+        "max": 0.9849999994039536
+      },
+      "gpu": {
+        "reason": null,
+        "count": 83,
+        "p95": 0.509248,
+        "p99": 2.586592,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "tickMs": 311.7399999946356,
+      "totalComputeMs": 320.8999999910593,
+      "responseMs": 320.9150000065565,
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.36499999999978,
+        "p99": 33.3799999999992,
+        "max": 33.3799999999992
+      },
+      "overlap": {
+        "count": 10,
+        "p95": 33.36500000000024,
+        "p99": 33.36500000000024,
+        "max": 33.36500000000024
+      },
+      "renderMs": {
+        "count": 91,
+        "p95": 0.6049999892711639,
+        "p99": 0.9050000011920929,
+        "max": 0.9050000011920929
+      },
+      "gpu": {
+        "reason": null,
+        "count": 91,
+        "p95": 1.86832,
+        "p99": 3.54304,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "tickMs": 316.16499999165535,
+      "totalComputeMs": 325.78999999165535,
+      "responseMs": 326.9649999886751,
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "worker",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 90,
+        "p95": 33.42500000000018,
+        "p99": 33.48499999999967,
+        "max": 33.48499999999967
+      },
+      "overlap": {
+        "count": 10,
+        "p95": 33.45499999999993,
+        "p99": 33.45499999999993,
+        "max": 33.45499999999993
+      },
+      "renderMs": {
+        "count": 91,
+        "p95": 0.7750000059604645,
+        "p99": 5.1099999994039536,
+        "max": 5.1099999994039536
+      },
+      "gpu": {
+        "reason": null,
+        "count": 91,
+        "p95": 0.593536,
+        "p99": 5.523776,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "tickMs": 315.6050000041723,
+      "totalComputeMs": 328.5300000011921,
+      "responseMs": 330.10999999940395,
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "main",
+      "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "frames": {
+        "count": 82,
+        "p95": 33.38499999999931,
+        "p99": 300.0250000000001,
+        "max": 300.0250000000001
+      },
+      "overlap": {
+        "count": 2,
+        "p95": 300.0250000000001,
+        "p99": 300.0250000000001,
+        "max": 300.0250000000001
+      },
+      "renderMs": {
+        "count": 83,
+        "p95": 0.7150000035762787,
+        "p99": 0.9050000011920929,
+        "max": 0.9050000011920929
+      },
+      "gpu": {
+        "reason": null,
+        "count": 83,
+        "p95": 0.483552,
+        "p99": 0.690624,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "tickMs": 293.02500000596046,
+      "totalComputeMs": 303,
+      "responseMs": 303.00999999046326,
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "responseMs": 191.42000000178814,
+      "firstTickMs": 182.73000000417233,
+      "totalComputeMs": 191.41499999165535,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 14.176256,
+        "p99": 14.962272,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.400000000001455,
+        "p99": 33.44000000000233,
+        "max": 200.02500000000146
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 25.810000002384186,
+        "p99": 28.640000000596046,
+        "max": 30.930000007152557
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "worker",
+      "responseMs": 228.65999999642372,
+      "firstTickMs": 209.2099999934435,
+      "totalComputeMs": 217.73000000417233,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 10.907104,
+        "p99": 11.473376,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.404999999998836,
+        "p99": 33.45999999999913,
+        "max": 33.47500000000582
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 28.79500000178814,
+        "p99": 30.200000002980232,
+        "max": 30.455000013113022
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "worker",
+      "responseMs": 225.1850000023842,
+      "firstTickMs": 212.87000000476837,
+      "totalComputeMs": 221.4150000065565,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 23.268352,
+        "p99": 24.80208,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.400000000001455,
+        "p99": 33.419999999998254,
+        "max": 33.42500000000291
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 26.62000000476837,
+        "p99": 31.844999998807907,
+        "max": 36.36999998986721
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    },
+    {
+      "mode": "main",
+      "responseMs": 188.375,
+      "firstTickMs": 180.3500000089407,
+      "totalComputeMs": 188.35999999940395,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 14.661408,
+        "p99": 14.936512,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.41000000000349,
+        "p99": 33.424999999995634,
+        "max": 200.01000000000204
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 27.105000004172325,
+        "p99": 31.194999992847443,
+        "max": 38.625
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "e5a8443646965ce1a97528266e958f9428f2cf0d2f891a346d8efd2433b0641e"
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "One real cold Game.tick with scripted impact and Rapier in main or Worker, converted mangrove island snapshot and 24 synthetic chunks, test rig and full state serialization. Separate frozen real WorldScene with 20 test animals; no shared simulation or pose, input, HUD, physics parity beyond this step, or gameplay integration. Initialization excluded."
+}

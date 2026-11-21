@@ -1,0 +1,156 @@
+{
+  "ready": true,
+  "campaign": false,
+  "paused": true,
+  "faceCandidate": true,
+  "faceCandidateSpecies": "warthog",
+  "expressions": [
+    {
+      "id": "qa-beast-0",
+      "weights": [
+        0.7944155092598699,
+        0.7944155092598699,
+        0.6847414701314002
+      ],
+      "bindings": 11
+    }
+  ],
+  "entityCounts": {
+    "workers": 1,
+    "structures": 1,
+    "crops": 12,
+    "animals": 1
+  },
+  "gpu": "ANGLE (Intel, Intel(R) UHD Graphics (0x00009A60) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "pixelRatio": 1,
+  "renderSize": [
+    1600,
+    900
+  ],
+  "visibleGuardians": 1,
+  "maxVisibleGuardians": 1,
+  "elapsed": 3006.993814999988,
+  "simulate": true,
+  "clockMode": "Game.tick",
+  "shields": [],
+  "active": 1,
+  "origins": [
+    {
+      "origin": {
+        "x": 90.27763690427379,
+        "y": 14.464573247715217,
+        "z": -2.8120668530558444
+      },
+      "opacity": 1
+    }
+  ],
+  "retainedAttacks": [],
+  "retainedDraws": 0,
+  "attackVisual": [
+    {
+      "age": 0.49999999999954525,
+      "beam": true,
+      "impact": true,
+      "core": [
+        90,
+        13.327137001683544,
+        -6
+      ]
+    }
+  ],
+  "reused": 0,
+  "health": 56,
+  "animalState": "walking",
+  "animalPosition": [
+    89.96760597186575,
+    -6.52906483296838
+  ],
+  "draws": 66,
+  "audioVoices": 0,
+  "audioTrace": [
+    {
+      "id": "spirit_appear",
+      "at": 3006.4938149999884,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "spirit_power_activate",
+      "at": 3006.733814999988,
+      "emitter": "guardian-world",
+      "played": false
+    },
+    {
+      "id": "warthog_hurt",
+      "at": 3006.733814999988,
+      "emitter": "qa-beast-0",
+      "phase": "falling",
+      "played": false
+    },
+    {
+      "id": "beast_take_damage",
+      "at": 3006.733814999988,
+      "emitter": "impact:qa-beast-0",
+      "played": false
+    }
+  ],
+  "combatPhysics": {
+    "active": 1,
+    "physicsMs": 0.26499998569488525,
+    "recoveryMs": 0,
+    "rejected": 0,
+    "startMs": 11.245000004768372,
+    "maxStepMs": 11.629999995231628,
+    "solverMs": 0.20000004768371582,
+    "solverSteps": 1,
+    "bindingMs": 0.04499995708465576,
+    "recoverySetupMs": 0,
+    "creationMs": 0,
+    "lastCreation": {
+      "species": "warthog",
+      "captureMs": 0.4500000476837158,
+      "colliderFitMs": 4.809999942779541,
+      "environmentMs": 3.8000000715255737,
+      "bodiesMs": 2.1100000143051147
+    },
+    "recoveryFollowMs": 0.004999995231628418,
+    "bakedActive": 0,
+    "kinematic": 0
+  },
+  "physicsWorlds": 1,
+  "physicalBodies": 14,
+  "down": {
+    "phase": "falling",
+    "since": 3006.733814999988,
+    "until": 3015.733814999988
+  },
+  "allDown": [
+    {
+      "id": "qa-beast-0",
+      "phase": "falling",
+      "x": 89.96760597186575,
+      "z": -6.52906483296838
+    }
+  ],
+  "errors": [],
+  "report": null,
+  "commandCosts": [
+    {
+      "kind": "attack",
+      "targetId": "qa-beast-0",
+      "position": {
+        "x": 90,
+        "z": -6
+      },
+      "origin": {
+        "x": 90.27763690427379,
+        "y": 14.464573247715217,
+        "z": -2.8120668530558444
+      },
+      "plan": 1.815000057220459,
+      "logic": 0.2749999761581421,
+      "render": 8.394999980926514,
+      "total": 10.490000009536743
+    }
+  ]
+}

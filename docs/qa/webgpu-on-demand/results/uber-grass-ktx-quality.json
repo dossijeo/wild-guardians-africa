@@ -1,0 +1,99 @@
+{
+  "comparisons": [
+    {
+      "biome": "sabana",
+      "frame": 0,
+      "night": 0,
+      "foregroundPixels": 44507,
+      "fullImageMeanAbsoluteRgb": 0.3272236689814815,
+      "foregroundMeanAbsoluteRgb": 1.6939432748406618,
+      "foregroundPixelsOver10": 189,
+      "foregroundFractionOver10": 0.004246523018850967,
+      "maxChannelDifference": 21
+    },
+    {
+      "biome": "gran-rio",
+      "frame": 0,
+      "night": 0,
+      "foregroundPixels": 79703,
+      "fullImageMeanAbsoluteRgb": 0.31418258101851854,
+      "foregroundMeanAbsoluteRgb": 0.9082175911404422,
+      "foregroundPixelsOver10": 84,
+      "foregroundFractionOver10": 0.0010539126507157824,
+      "maxChannelDifference": 19
+    },
+    {
+      "biome": "sabana",
+      "frame": 1,
+      "night": 0,
+      "foregroundPixels": 45038,
+      "fullImageMeanAbsoluteRgb": 0.3360083912037037,
+      "foregroundMeanAbsoluteRgb": 1.718911437748864,
+      "foregroundPixelsOver10": 210,
+      "foregroundFractionOver10": 0.0046627292508548334,
+      "maxChannelDifference": 22
+    },
+    {
+      "biome": "gran-rio",
+      "frame": 1,
+      "night": 0,
+      "foregroundPixels": 79726,
+      "fullImageMeanAbsoluteRgb": 0.3339858217592593,
+      "foregroundMeanAbsoluteRgb": 0.9651849250349113,
+      "foregroundPixelsOver10": 133,
+      "foregroundFractionOver10": 0.0016682136316885333,
+      "maxChannelDifference": 20
+    },
+    {
+      "biome": "sabana",
+      "frame": 2,
+      "night": 1,
+      "foregroundPixels": 45038,
+      "fullImageMeanAbsoluteRgb": 0.2012037037037037,
+      "foregroundMeanAbsoluteRgb": 1.0292937815474341,
+      "foregroundPixelsOver10": 6,
+      "foregroundFractionOver10": 0.00013322083573870952,
+      "maxChannelDifference": 14
+    },
+    {
+      "biome": "gran-rio",
+      "frame": 2,
+      "night": 1,
+      "foregroundPixels": 79726,
+      "fullImageMeanAbsoluteRgb": 0.13227430555555555,
+      "foregroundMeanAbsoluteRgb": 0.38225923788977245,
+      "foregroundPixelsOver10": 0,
+      "foregroundFractionOver10": 0,
+      "maxChannelDifference": 10
+    },
+    {
+      "biome": "sabana",
+      "frame": 3,
+      "night": 1,
+      "foregroundPixels": 43659,
+      "fullImageMeanAbsoluteRgb": 0.19759403935185185,
+      "foregroundMeanAbsoluteRgb": 1.0427555983111538,
+      "foregroundPixelsOver10": 5,
+      "foregroundFractionOver10": 0.00011452392404773357,
+      "maxChannelDifference": 12
+    },
+    {
+      "biome": "gran-rio",
+      "frame": 3,
+      "night": 1,
+      "foregroundPixels": 78377,
+      "fullImageMeanAbsoluteRgb": 0.13457609953703703,
+      "foregroundMeanAbsoluteRgb": 0.39560500316844655,
+      "foregroundPixelsOver10": 0,
+      "foregroundFractionOver10": 0,
+      "maxChannelDifference": 9
+    }
+  ],
+  "mixedPipelineCount": 2,
+  "limitations": [
+    "Foreground mask uses the first reference pixel as background and is approximate.",
+    "Pixel differences are not a perceptual quality guarantee.",
+    "Lossy native BC7 uses precomputed mipmaps and visual orientation compensation.",
+    "These are isolated frozen grass fixtures, not game scenes."
+  ]
+}

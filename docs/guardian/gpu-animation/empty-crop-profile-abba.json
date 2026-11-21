@@ -1,0 +1,207 @@
+{
+  "runs": [
+    {
+      "mode": "baseline",
+      "ms": 506.68500000052154,
+      "groups": [],
+      "calls": [
+        {
+          "species": "warthog",
+          "ms": 0.009999999776482582
+        },
+        {
+          "species": "hyena",
+          "ms": 0.005000000819563866
+        },
+        {
+          "species": "buffalo",
+          "ms": 0
+        },
+        {
+          "species": "lion",
+          "ms": 277.945000000298
+        },
+        {
+          "species": "rhino",
+          "ms": 227.8449999988079
+        }
+      ],
+      "laterMs": 0.054999999701976776,
+      "laterCalls": [
+        {
+          "species": "warthog",
+          "ms": 0.004999998956918716
+        },
+        {
+          "species": "hyena",
+          "ms": 0
+        },
+        {
+          "species": "buffalo",
+          "ms": 0
+        },
+        {
+          "species": "lion",
+          "ms": 0
+        },
+        {
+          "species": "rhino",
+          "ms": 0.009999999776482582
+        }
+      ],
+      "before": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "after": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "chunks": 25
+    },
+    {
+      "mode": "candidate",
+      "ms": 0.24000000022351742,
+      "groups": [],
+      "calls": [],
+      "laterMs": 519.0499999988824,
+      "laterCalls": [
+        {
+          "species": "warthog",
+          "ms": 0.004999998956918716
+        },
+        {
+          "species": "hyena",
+          "ms": 0.005000000819563866
+        },
+        {
+          "species": "buffalo",
+          "ms": 0
+        },
+        {
+          "species": "lion",
+          "ms": 287.25
+        },
+        {
+          "species": "rhino",
+          "ms": 231.73000000044703
+        }
+      ],
+      "before": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "after": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "chunks": 25
+    },
+    {
+      "mode": "candidate",
+      "ms": 0.2599999997764826,
+      "groups": [],
+      "calls": [],
+      "laterMs": 509.3649999983609,
+      "laterCalls": [
+        {
+          "species": "warthog",
+          "ms": 0.009999999776482582
+        },
+        {
+          "species": "hyena",
+          "ms": 0.004999998956918716
+        },
+        {
+          "species": "buffalo",
+          "ms": 0.005000000819563866
+        },
+        {
+          "species": "lion",
+          "ms": 278.98499999940395
+        },
+        {
+          "species": "rhino",
+          "ms": 230.2949999999255
+        }
+      ],
+      "before": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "after": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "chunks": 25
+    },
+    {
+      "mode": "baseline",
+      "ms": 530.9449999984354,
+      "groups": [],
+      "calls": [
+        {
+          "species": "warthog",
+          "ms": 0.014999998733401299
+        },
+        {
+          "species": "hyena",
+          "ms": 0
+        },
+        {
+          "species": "buffalo",
+          "ms": 0
+        },
+        {
+          "species": "lion",
+          "ms": 295.22499999962747
+        },
+        {
+          "species": "rhino",
+          "ms": 234.8300000000745
+        }
+      ],
+      "laterMs": 0.05000000074505806,
+      "laterCalls": [
+        {
+          "species": "warthog",
+          "ms": 0.009999999776482582
+        },
+        {
+          "species": "hyena",
+          "ms": 0
+        },
+        {
+          "species": "buffalo",
+          "ms": 0
+        },
+        {
+          "species": "lion",
+          "ms": 0
+        },
+        {
+          "species": "rhino",
+          "ms": 0.010000001639127731
+        }
+      ],
+      "before": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "after": {
+        "sectors": 400,
+        "revision": 560,
+        "routes": 563
+      },
+      "chunks": 25
+    }
+  ],
+  "scope": "QA-only isolated reconstructed mangrove state with all crops removed; 25 chunks, one direct crop-group query. Candidate short-circuits empty JS crop index through browser module injection. No raid, main application frame, event sequence, rendering, physics, or campaign."
+}

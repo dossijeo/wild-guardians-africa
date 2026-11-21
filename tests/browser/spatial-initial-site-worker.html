@@ -1,0 +1,6 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';
+import {findSpatialStart} from '../../src/world/wild-engine/spatial-initial-site.js';
+import {findSpatialStartInWorker} from '../../src/world/wild-engine/spatial-initial-site-client.js';
+window.runSiteComparison=async()=>{const wasm=await WebAssembly.compile(await (await fetch('/src/world/wild-engine/spatial-savanna.wasm')).arrayBuffer()),villages=await (await fetch('/content/villages.json')).json(),results=[];for(const biome of ['sabana','gran-rio','manglares','volcanes','gran-canon','desierto']){const state=newGame({seed:712,biome,culture:'suajili',slotId:'site-test'});if(biome==='manglares'){state.mangroveNetwork=true;state.mangroveSettlementVersion=2;}const payload=villages.find(item=>item.id==='suajili'),before=JSON.stringify(state),reference=await findSpatialStart(wasm,state,payload),worker=await findSpatialStartInWorker(wasm,state,payload);if(JSON.stringify(worker)!==JSON.stringify(reference)||JSON.stringify(state)!==before)throw Error('Initial site mismatch: '+biome);results.push({biome,attempts:worker.attempts,site:worker.site});}return results;};window.ready=true;
+</script>

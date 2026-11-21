@@ -1,0 +1,69 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
+import {createPresentationRecoveryReplay} from '../src/simulation/presentation-recovery-replay.js';
+
+test('incremental journal replay reconstructs snapshots across folded views and terrain',()=>{
+ const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({incrementalSnapshots:true}),snapshot=n=>JSON.stringify({elapsed:n,workers:Array.from({length:15},(_,i)=>({id:`w${i}`,x:i===0?n:i,data:'x'.repeat(100)}))}),checkpoint={sequence:1,snapshot:snapshot(1)};
+ journal.begin(1,checkpoint);journal.confirm(1);const view=n=>({sequence:n,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true,terrainChanged:false});journal.append(view(2),false,{backgroundView:true});journal.append(view(3),false,{backgroundView:true});journal.appendTerrain(4,[{cx:1}]);journal.append({sequence:4,snapshot:snapshot(4),events:[{id:'e4'}],physicsPose:null},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal,onCaughtUp:value=>caught.push(value),onError:error=>errors.push(error)}),ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}});};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);ack();assert.equal(sent.at(-1).kind,'recoveryTerrain');ack();assert.equal(sent.at(-1).publication.snapshot,snapshot(4));assert.deepEqual(sent.at(-1).publication.events,[{id:'e4'}]);ack();assert.equal(caught.at(-1).sequence,4);assert.deepEqual(errors,[]);replay.dispose();journal.dispose();
+});
+
+test('replay transmits a compacted background view range before later events',()=>{
+ const sent=[],errors=[],port={postMessage:m=>sent.push(m),start(){}};
+ const journal=createPresentationRecoveryJournal();journal.begin(1);journal.confirm(1);
+ const view=n=>({sequence:n,unchanged:true,slotId:'slot',stateSequence:7,elapsed:1,pauses:[],events:[],saveAvailable:true,terrainChanged:false});
+ journal.append(view(2),false,{backgroundView:true});journal.append(view(3),false,{backgroundView:true});journal.append({sequence:4,events:[{id:'event-4'}],snapshot:'s4',physicsPose:null},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint:{sequence:1},journal,onError:e=>errors.push(e)});
+ const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}});};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);assert.equal(sent.at(-1).tick,true);assert.equal(sent.at(-1).options.backgroundView,true);
+ ack();assert.equal(sent.at(-1).sequence,4);assert.equal(sent.at(-1).publication.events[0].id,'event-4');assert.deepEqual(errors,[]);replay.dispose();
+});
+const publication=(sequence,events=[])=>({sequence,events,snapshot:'s'+sequence,physicsPose:{actorId:'a',active:true},presentationJournal:events.map(e=>({kind:'event',eventId:e.id}))});
+function fixture(){const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({capacity:20,highWatermark:10}),checkpoint=publication(1,[{id:'old'}]);journal.begin(1);journal.confirm(1);const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal,onCaughtUp:x=>caught.push(x),onError:e=>errors.push(e.message)});const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}})};return {sent,errors,caught,port,journal,replay,ack};}
+test('recovery sends checkpoint once then terrain, events and poses in order with strict ACKs',()=>{
+ const f=fixture();f.journal.appendTerrain(2,[{cx:1,bytes:new Uint8Array([7])}]);f.journal.appendTerrain(2,[{cx:2}]);f.journal.append(publication(2,[{id:'new'}]),true);assert.equal(f.sent[0].kind,'recoveryCheckpoint');f.ack();assert.equal(f.sent[1].kind,'recoveryTerrain');f.ack();assert.equal(f.sent[2].kind,'recoveryTerrain');assert.notEqual(f.sent[1].id,f.sent[2].id);f.ack();assert.equal(f.sent[3].kind,'recoveryPublication');assert.equal(f.sent[3].publication.events[0].id,'new');f.ack();assert.deepEqual(f.caught,[{sequence:2,entries:3}]);assert.deepEqual(f.errors,[]);f.replay.dispose();
+});
+test('a recovery-only base is still sent as a full reconstruction checkpoint',()=>{
+ const sent=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal(),checkpoint={...publication(1),terrainCheckpoint:{sequence:1,chunks:[{cx:0,cz:0}],recoveryOnly:true}};
+ journal.begin(1);journal.confirm(1);const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint,journal});
+ assert.equal(sent[0].kind,'recoveryCheckpoint');assert.equal(sent[0].checkpoint.terrainCheckpoint.recoveryOnly,true);assert.deepEqual(sent[0].checkpoint.terrainCheckpoint.chunks,[{cx:0,cz:0}]);replay.dispose();
+});
+test('in-flight recovery captures new entries and never signals caught-up between terrain and its publication',()=>{
+ const f=fixture();f.journal.appendTerrain(2,[{cx:0}]);f.ack();f.ack();assert.equal(f.caught.length,0);f.journal.append(publication(2),true);f.replay.wake();assert.equal(f.sent.at(-1).kind,'recoveryPublication');f.journal.append(publication(3,[{id:'last'}]),true);f.ack();assert.equal(f.sent.at(-1).publication.events[0].id,'last');f.ack();assert.equal(f.caught.at(-1).sequence,3);
+});
+test('wrong, duplicate or out-of-session ACK fails closed without advancing cursor',()=>{
+ const f=fixture(),m=f.sent[0];f.port.onmessage({data:{kind:'recoveryAck',session:'wrong',id:m.id,phase:'checkpoint',sequence:1}});assert.match(f.errors[0],/acknowledgement/);assert.equal(f.replay.status().cursor,1);assert.equal(f.sent.length,1);
+ const g=fixture();g.journal.appendTerrain(2,[{cx:0}]);g.journal.appendTerrain(2,[{cx:1}]);g.ack();const old=g.sent.at(-1);g.ack();g.port.onmessage({data:{kind:'recoveryAck',session:'s',id:old.id,phase:'terrain',sequence:2}});assert.match(g.errors[0],/acknowledgement/);assert.equal(g.replay.status().cursor,1);
+});
+test('base promotion during replay is rejected instead of replaying a truncated history',()=>{
+ const f=fixture();f.journal.append(publication(2),true);f.journal.begin(2);f.ack();f.journal.confirm(2);f.ack();assert.match(f.errors[0],/base changed/);
+});
+
+test('a publication appended after a provisional catch-up is delivered before the next catch-up',()=>{
+ const f=fixture();f.ack();assert.deepEqual(f.caught,[{sequence:1,entries:0}]);f.journal.append(publication(2,[{id:'late'}]),true);f.replay.wake();assert.equal(f.sent.at(-1).publication.events[0].id,'late');f.ack();assert.deepEqual(f.caught.at(-1),{sequence:2,entries:1});
+});
+
+test('compacted quiet range replays with the original first sequence and endpoint ACK',()=>{
+ const sent=[],errors=[],caught=[],port={postMessage:m=>sent.push(structuredClone(m)),start(){}},journal=createPresentationRecoveryJournal({compactTicks:true});journal.begin(1);journal.confirm(1);
+ const q=n=>({sequence:n,snapshot:'s'+n,events:[],physicsPose:null,pauses:[]});journal.append(q(2),true);journal.append(q(3),true);journal.append({...q(4),events:[{id:'event-4'}]},true);
+ const replay=createPresentationRecoveryReplay({port,session:'s',checkpoint:publication(1),journal,onCaughtUp:x=>caught.push(x),onError:e=>errors.push(e.message)});
+ const ack=()=>{const m=sent.at(-1);port.onmessage({data:{kind:'recoveryAck',session:'s',id:m.id,phase:m.kind.slice(8).toLowerCase(),sequence:m.sequence}})};
+ ack();assert.equal(sent.at(-1).firstSequence,2);assert.equal(sent.at(-1).sequence,3);assert.equal(sent.at(-1).publication.snapshot,'s3');ack();assert.equal(sent.at(-1).firstSequence,4);assert.equal(sent.at(-1).publication.events[0].id,'event-4');ack();assert.equal(caught.at(-1).sequence,4);assert.deepEqual(errors,[]);replay.dispose();
+});
+
+test('concurrent replay waits for a faster producer, preserves terrain and catches up when it slows',()=>{
+ const f=fixture();f.ack();assert.equal(f.caught.at(-1).sequence,1);f.journal.appendTerrain(2,[{cx:1}]);f.replay.wake();assert.equal(f.sent.at(-1).kind,'recoveryTerrain');f.journal.append(publication(2,[{id:'e2'}]),true);f.journal.append(publication(3,[{id:'e3'}]),true);f.ack();assert.equal(f.sent.at(-1).publication.sequence,2);f.ack();assert.equal(f.sent.at(-1).publication.sequence,3);assert.equal(f.caught.length,1);f.ack();assert.equal(f.caught.at(-1).sequence,3);assert.deepEqual(f.errors,[]);
+});
+test('cancelled concurrent replay does not consume or acknowledge further entries',()=>{
+ const f=fixture();f.journal.append(publication(2),true);f.ack();assert.equal(f.sent.at(-1).sequence,2);const pending=f.sent.at(-1);f.replay.dispose();assert.equal(f.port.onmessage,null);f.journal.append(publication(3),true);f.replay.wake();assert.equal(f.sent.at(-1),pending);assert.equal(f.journal.status().through,3);assert.equal(f.replay.status().closed,true);
+});
+test('replay failure preserves journal and stops without hiding later events',()=>{
+ const f=fixture();f.journal.append(publication(2,[{id:'e2'}]),true);const m=f.sent[0];f.port.onmessage({data:{kind:'recoveryAck',session:'bad',id:m.id,phase:'checkpoint',sequence:1}});f.journal.append(publication(3,[{id:'e3'}]),true);f.replay.wake();assert.equal(f.replay.status().failed,true);assert.deepEqual(f.journal.snapshot().entries.map(e=>e.publication.events[0].id),['e2','e3']);assert.match(f.errors[0],/acknowledgement/);
+});
+test('terrain recovery journal preserves identity and revisions through replay',()=>{const f=fixture(),manifest={epoch:'same-epoch',chunks:[{cx:1,cz:0,revision:7}]};f.journal.appendTerrain(2,[{cx:1,cz:0}],manifest);f.journal.append(publication(2),true);manifest.chunks[0].revision=99;f.ack();assert.deepEqual(f.sent.at(-1).terrainManifest,{epoch:'same-epoch',chunks:[{cx:1,cz:0,revision:7}]});f.ack();assert.equal(f.sent.at(-1).kind,'recoveryPublication');f.ack();assert.deepEqual(f.errors,[]);f.replay.dispose();});
+
+test('presentation recovery propagates a worker failure without acknowledging or discarding the journal',()=>{
+ const f=fixture();try{f.journal.append(publication(2,[{id:'retained'}]),true);f.port.onmessage({data:{kind:'recoveryFailure',session:'s',message:'Watering assets unavailable'}});assert.deepEqual(f.errors,['Watering assets unavailable']);assert.equal(f.replay.status().failed,true);assert.equal(f.replay.status().cursor,1);assert.equal(f.journal.snapshot().entries[0].publication.events[0].id,'retained');}finally{f.replay.dispose();f.journal.dispose();}
+});

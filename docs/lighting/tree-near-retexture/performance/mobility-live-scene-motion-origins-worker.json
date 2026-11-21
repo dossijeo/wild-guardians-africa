@@ -1,0 +1,94 @@
+{
+  "biome": "manglares",
+  "mangroveNetwork": true,
+  "animals": 20,
+  "chunks": 25,
+  "snapshotBytes": 29370,
+  "captureMs": 2.0550000071525574,
+  "mainInitMs": 841.9050000011921,
+  "workerInitMs": 887.3799999952316,
+  "workerInitResponseMs": 1112.7950000017881,
+  "rows": [
+    {
+      "steps": 1,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        955.5749999880791
+      ],
+      "workerTickMs": [
+        961.3949999958277
+      ],
+      "responseMs": 962.640000000596,
+      "elapsed": 3000.366550000001,
+      "coordinatePairs": 6,
+      "movingPairs": 6,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1,
+      "origins": {
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:30:17) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 5,
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:29:31) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 1
+      }
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        13.950000002980232,
+        5.045000001788139,
+        3.679999992251396,
+        6.540000006556511,
+        2.8299999982118607
+      ],
+      "workerTickMs": [
+        16.525000005960464,
+        12.724999994039536,
+        7.725000008940697,
+        6.064999997615814,
+        5.25
+      ],
+      "responseMs": 49.24499998986721,
+      "elapsed": 3000.616550000002,
+      "coordinatePairs": 66,
+      "movingPairs": 65,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1,
+      "origins": {
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:30:17) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 62,
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:29:31) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 3
+      }
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        2.719999998807907,
+        2.4750000089406967,
+        2.0599999874830246,
+        2.6599999964237213,
+        1.9950000047683716
+      ],
+      "workerTickMs": [
+        5.284999996423721,
+        5.145000010728836,
+        4.75,
+        5.165000006556511,
+        5.315000012516975
+      ],
+      "responseMs": 26.649999991059303,
+      "elapsed": 3000.866550000003,
+      "coordinatePairs": 80,
+      "movingPairs": 80,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 4,
+      "origins": {
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:30:17) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 76,
+        "at movePath (http://127.0.0.1:5175/src/simulation/locomotion.js:29:31) | at walkTo (http://127.0.0.1:5175/src/simulation/game.js:1023:74)": 4
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Snapshot captured from live mangrove-islands QA scene with 20 test animals; QA ID qa-beast-0 is renamed in the copy because native intent IDs require a positive numeric suffix. Both main and Worker restore independent game and spatial sessions from the same adapted serialized state and visible chunk keys. Worker coordinate assignments are intercepted diagnostically; paired axes are not authoritative paths. No comparison against the original scene native state, physics manager, GPU, inputs, render, full residency or production migration."
+}

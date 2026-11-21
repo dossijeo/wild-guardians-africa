@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-15",
+  "scope": "Graphical cancellation/actor removal for the shared native motion proposal. This does not implement new logical Idle/Home transitions or change native authority.",
+  "problem": [
+    "An activated first-task graphical binding without an old motion binding used replacement-only rollback and threw.",
+    "Removing an actor with an activated unpublished next-task candidate retired the candidate but left the prior Idle owner retained."
+  ],
+  "fix": "Reuse the existing stationary-candidate restore pattern: detach when there is no old binding, otherwise roll back the replacement; register pending.cancel before actor removal so both owners retire through the common deferred release.",
+  "research": "Existing Three r180 AnimationMixer._deactivateAction restores bindings at the last use; the same reversible owner pattern was already applied to the action and settlement candidates. No new dependency, owner, queue or renderer.",
+  "parentControl": {
+    "commit": "28868af07",
+    "module": "src/rendering/webgpu-worker-roster.js",
+    "moduleSha256": "2d48f7e8cea9692380bad351ede9f87301084b57ae431c494b3d7059e6c8f394",
+    "method": "Read-only Node loader returns the parent module at its original import URL; current files are not reverted or rewritten.",
+    "fail": 2,
+    "skip": 8,
+    "observations": [
+      "Motion activation cannot be rolled back",
+      "8 owned resources remain after removal, expected 0"
+    ],
+    "log": ".cache/native-first-task-cancellation-parent-control.log"
+  },
+  "regression": {
+    "files": [
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-worker-roster.test.js",
+      "tests/native-task-action-graphics.test.js",
+      "tests/native-task-consequence-graphics.test.js"
+    ],
+    "pass": 63,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 33.191,
+    "log": ".cache/native-first-task-cancellation-regression.log"
+  },
+  "finalAssertions": {
+    "file": "tests/native-task-settlement-graphics.test.js",
+    "pass": 10,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 11.051,
+    "log": ".cache/native-first-task-cancellation-final.log",
+    "checks": [
+      "Rollback/cancel restores original materials, visibility and geometry without changing the physical body or issuing a native route.",
+      "Removing the actor cancels its activated candidate first and leaves zero owned graphical resources after deferred release."
+    ]
+  },
+  "build": {
+    "status": "pass",
+    "seconds": 45.09,
+    "log": ".cache/native-first-task-cancellation-product-build.log",
+    "warnings": "Existing build warnings."
+  },
+  "hardware": "The successful replay path and shaders are unchanged from 28868af07. No new GPU run for this cancellation-only follow-up; the existing live consumer evidence keeps its original scope.",
+  "remaining": "All main A6 and A/B/C gates remain open. Genuine Home, initial Idle, gated settlement, other task-completion/cancellation availability, ordinary feed and full recovery remain pending."
+}

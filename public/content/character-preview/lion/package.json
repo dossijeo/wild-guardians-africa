@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "id": "lion",
+  "sourceModel": "assets/web/12d919219b27d40f50957bd1e7e239187fb9c0dd44d821a642f540f1e55e4a55.glb",
+  "preview": {
+    "path": "preview.glb",
+    "bytes": 2422296,
+    "sha256": "bb325efe71d7a134957a4c3f1aa7560279dc1debed835c14391cd7b712586fbd",
+    "requires": [
+      "EXT_meshopt_compression"
+    ]
+  },
+  "variants": {
+    "webp": {
+      "requires": [],
+      "files": [
+        {
+          "path": "webp/08ccd30cdaad9dbc8d283ec02a48dfae409278b9bfe8073a67bbaed2b709abd3.webp",
+          "bytes": 138002,
+          "sha256": "08ccd30cdaad9dbc8d283ec02a48dfae409278b9bfe8073a67bbaed2b709abd3"
+        },
+        {
+          "path": "webp/0bd5deee8e340a4ab9f15d589e3d7c21579bb16123d1db19f0227ee6b0d33c46.webp",
+          "bytes": 3639526,
+          "sha256": "0bd5deee8e340a4ab9f15d589e3d7c21579bb16123d1db19f0227ee6b0d33c46"
+        },
+        {
+          "path": "webp/cda173447a9cb46f82b8a2944b4b5479b07bdd31c1f39b3b5171fcd6b80369ad.webp",
+          "bytes": 1203836,
+          "sha256": "cda173447a9cb46f82b8a2944b4b5479b07bdd31c1f39b3b5171fcd6b80369ad"
+        },
+        {
+          "path": "webp/mapping.json",
+          "bytes": 403,
+          "sha256": "0aba9d4fc145cd72ee6fa08a9c7b31e64c03244246c0ee5e45d9b8f11f776d1e"
+        },
+        {
+          "path": "webp/materials.gltf",
+          "bytes": 1894,
+          "sha256": "af88299bea872cfe3343ad749ea66213606cde0cf9b44c0973885cccdefda987"
+        }
+      ]
+    },
+    "bc7": {
+      "requires": [
+        "texture-compression-bc"
+      ],
+      "files": [
+        {
+          "path": "bc7/08ccd30cdaad9dbc8d283ec02a48dfae409278b9bfe8073a67bbaed2b709abd3-color-uastc2-bc7.ktx2",
+          "bytes": 1398560,
+          "sha256": "054f23c96685040a56618fc957e983e1fe7f67acbe18607e31147374b97e621b"
+        },
+        {
+          "path": "bc7/0bd5deee8e340a4ab9f15d589e3d7c21579bb16123d1db19f0227ee6b0d33c46-normal-uastc2-bc7.ktx2",
+          "bytes": 5592880,
+          "sha256": "44d747f400cd16c4997b33df96d0d19dd3728498030ed98f07304682d93aba74"
+        },
+        {
+          "path": "bc7/cda173447a9cb46f82b8a2944b4b5479b07bdd31c1f39b3b5171fcd6b80369ad-color-uastc2-bc7.ktx2",
+          "bytes": 5592880,
+          "sha256": "6a81fae92d70aaee8dd13bdc19b494e4f8776c56c01b518388e106136d0bdf6b"
+        },
+        {
+          "path": "bc7/mapping.json",
+          "bytes": 403,
+          "sha256": "0aba9d4fc145cd72ee6fa08a9c7b31e64c03244246c0ee5e45d9b8f11f776d1e"
+        },
+        {
+          "path": "bc7/materials.gltf",
+          "bytes": 2173,
+          "sha256": "f53c34fc8d6cbb14d5cb59b327b31f276a12090583dd6961f1d88d732f91499c"
+        }
+      ]
+    }
+  }
+}

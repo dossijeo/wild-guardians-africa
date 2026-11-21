@@ -1,0 +1,38 @@
+{
+  "command": [
+    ".cache/tooling/node20.exe",
+    "--test",
+    "tests/native-task-settlement-game.test.js",
+    "tests/native-task-settlement-proposal.test.js",
+    "tests/native-task-settlement-graphics.test.js",
+    "tests/native-task-settlement-gpu-motion.test.js",
+    "tests/native-task-settlement-control.test.js",
+    "tests/native-task-settlement-clock.test.js",
+    "tests/native-task-settlement-remote.test.js",
+    "tests/native-task-settlement-publication.test.js",
+    "tests/native-resource-preparation-channel.test.js",
+    "tests/native-intent-production-authority.test.js",
+    "tests/settlement-notification.test.js",
+    "tests/webgpu-picker.test.js"
+  ],
+  "log": ".cache/native-ordinary-settlement-directed.log",
+  "sha256": "e03771d588ff655ebbf95a53d4ee9085707f1a580ba42e82184dab1ad44ee0e5",
+  "startedAt": "2026-11-20T04:58:24.657Z",
+  "finishedAt": "2026-11-20T04:58:49.799Z",
+  "seconds": 25.142,
+  "exitCode": 0,
+  "tests": 106,
+  "pass": 106,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0,
+  "syntax": [
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs",
+    "tests/browser/native-farm-birth-world-owner.js",
+    "tests/browser/native-farm-birth-task-scenario.js",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js",
+    "tests/browser/native-ordinary-task-settlement-scenario.js",
+    "tools/guardian/analyze_native_farm_birth_trace.mjs"
+  ],
+  "scope": "Fresh directed source/graphics/clock/control contracts after every hardware case was terminal. Existing tests; no new unit cases and no product changes. Full suite/build inherited."
+}

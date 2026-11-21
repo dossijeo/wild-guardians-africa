@@ -7,5 +7,11 @@ export const LOADING_STAGES=Object.freeze([
  {id:'gpu',weight:15},{id:'far-assets',weight:25},{id:'visible-ready',weight:6}
 ]);
 
+// The Worker renderer does not run the legacy asset and far-world preload.
+// Its milestones reflect only work that is actually awaited by that profile.
+export const WORKER_LOADING_STAGES=Object.freeze([
+ {id:'configuration',weight:20},{id:'gpu',weight:35},{id:'chunks',weight:35},{id:'visible-ready',weight:10}
+]);
+
 const STAGE_LABELS={configuration:['world configuration','configuración del mundo'],sky:['sky','cielo'],biome:['landscape','paisaje'],buildings:['buildings','construcciones'],animals:['animals','animales'],crops:['crops','cultivos'],walls:['walls','murallas'],vfx:['effects','efectos'],chunks:['terrain','terreno'],gpu:['rendering resources','recursos gráficos'],'far-assets':['distant landscape','paisaje lejano'],'visible-ready':['opening view','vista inicial']};
 export function loadingWaitMessage(snapshot,locale='en-US'){const spanish=locale.startsWith('es'),label=STAGE_LABELS[snapshot.pending[0]]?.[spanish?1:0]??(spanish?'el mundo':'the world');return (spanish?'Preparando ':'Preparing ')+label+' · '+Math.floor(snapshot.progress*100)+' %';}

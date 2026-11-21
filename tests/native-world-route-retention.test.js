@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
+
+function stage(f,kind,mode,floats=[],integers=[]){new Float32Array(f.w.memory.buffer,f.w.spatial_world_proposal_float_ptr(floats.length),floats.length).set(floats);new Int32Array(f.w.memory.buffer,f.w.spatial_world_proposal_int_ptr(integers.length),integers.length).set(integers);assert.equal(f.w.spatial_world_proposal_stage_resources(kind,mode,floats.length,integers.length),1);assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));}
+const boundary=t=>({nativeSession:t[0],ticket:t[1],effectiveTime:t[3]});
+
+test('distant world proposals prove native assignment retention without issuing route or clock events',()=>{
+ const f=createNativeRouteExecutionFixture();try{const route=f.worker(1,f.point(-6,0),f.point(6,0));assert.equal(f.bridge.beginNativeRouteExecution().status,'started');f.bridge.commitNativeCausalClock();const plan=f.bridge.nativeRouteTiming(route),sequence=f.w.nav_intent_transition_sequence(),body=f.body(1);for(const [kind,mode,floats,ints]of [[6,0,[],[4,4]],[10,0,[1000,1000,1,1,3],[]]]){const t=stage(f,kind,mode,floats,ints),resources=f.session.core.captureNativeWorldProposalResources(boundary(t));assert.equal(resources.retainsNativeAssignments,true);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]+1),-1);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]),1);assert.equal(f.w.nav_intent_transition_sequence(),sequence);assert.deepEqual(f.body(1),body);assert.deepEqual(f.bridge.nativeRouteTiming(route),plan);assert.equal(f.w.spatial_world_proposal_commit(...t.slice(0,5)),1);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]),-1);f.bridge.commitNativeCausalClock();}assert.equal(f.advance(10.2).status,'advanced');assert(f.bridge.nativeRouteExecution(route));}finally{f.session.dispose();}
+});
+
+test('a future support change reports affected assignments without revoking them during preparation',()=>{
+ const f=createNativeRouteExecutionFixture();try{f.session.actorSectorRevision({worker:true});let a,b;for(let z=-16;z<=16;z+=2)if(f.w.spatial_execution_segment_clear(17.2,z+.2,32.2,z+.2,.28)===1){a={x:17.2,z:z+.2};b={x:32.2,z:z+.2};break;}assert(a);const route=f.worker(1,a,b);assert.equal(f.bridge.beginNativeRouteExecution().status,'started');f.bridge.commitNativeCausalClock();const before=f.body(1),sequence=f.w.nav_intent_transition_sequence(),t=stage(f,10,0,[b.x,b.z,1,1,3]);assert.equal(f.session.core.captureNativeWorldProposalResources(boundary(t)).retainsNativeAssignments,false);assert.equal(f.w.nav_intent_transition_sequence(),sequence);assert.deepEqual(f.body(1),before);assert(f.bridge.nativeRouteExecution(route));assert.equal(f.w.spatial_world_proposal_commit(...t.slice(0,5)),1);assert.equal(f.bridge.nativeRouteTiming(route),null);assert(f.w.nav_intent_transition_sequence()>sequence);}finally{f.session.dispose();}
+});
+
+test('native route retention expires when the exact proposal read set changes',()=>{
+ const f=createNativeRouteExecutionFixture();try{f.worker(1,f.point(-6,0),f.point(6,0));f.bridge.beginNativeRouteExecution();f.bridge.commitNativeCausalClock();const t=stage(f,6,0,[],[4,4]);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]),1);const p=f.point(35,35);assert.equal(f.w.spatial_body_upsert(77,p.x,p.z,.2,0,1),1);assert.equal(f.w.nav_intent_world_proposal_retains_routes(t[0],t[1]),-2);assert.equal(f.w.spatial_has_chunk(4,4),0);}finally{f.session.dispose();}
+});

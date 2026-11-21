@@ -1,0 +1,1700 @@
+{
+  "date": "2026-11-15",
+  "parent": "50857f7499f83f7e0a62f192e72d7cb7498c308c",
+  "scope": "Conditioned native Carry arrival settlement, coherent Game effects, stationary body ownership and transfer to a subsequent genuine task. Graphical settlement successor is unimplemented and gated.",
+  "closuresChanged": false,
+  "research": [
+    {
+      "url": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L609",
+      "implementation": "resetMoveTarget retains the active agent when removing its move target",
+      "adaptation": "Stationary body association on the same ActiveIntent after actual Carry arrival; no fake route or task."
+    },
+    {
+      "url": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L749",
+      "implementation": "updateMoveRequest checks a delayed path result against its current corridor",
+      "adaptation": "Discard an obsolete unpublished batch and replan, preserving the live native cohort instead of resetting the world."
+    },
+    {
+      "url": "https://github.com/SanderMertens/flecs/blob/v4.0.4/src/stage.c#L69",
+      "implementation": "flecs_stage_merge applies deferred operations before evaluating monitors",
+      "adaptation": "Use the existing settlement notifier after the complete synchronous Game result, capturing one local notification without another queue."
+    }
+  ],
+  "nativeBuild": {
+    "standalone": "passed",
+    "pthread": "passed",
+    "canonicalExports": [
+      "nav_task_settlement_proposal_version",
+      "nav_task_settlement_proposal_stage",
+      "nav_task_settlement_proposal_snapshot",
+      "nav_task_settlement_proposal_header_ptr",
+      "nav_task_settlement_proposal_cancel",
+      "nav_task_settlement_proposal_revalidate",
+      "nav_task_settlement_proposal_time_translation_ptr",
+      "nav_task_settlement_proposal_commit_bound",
+      "nav_task_settlement_binding_snapshot",
+      "nav_task_settlement_binding_ptr",
+      "nav_task_settlement_source_snapshot",
+      "nav_task_settlement_action_source_snapshot",
+      "nav_task_settlement_action_source_restore",
+      "nav_task_settlement_binding_actors"
+    ],
+    "log": ".cache/native-settlement-binding-final-build.log"
+  },
+  "directed": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "skip": 0,
+    "log": ".cache/native-settlement-directed-batch-final.log",
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js"
+    ]
+  },
+  "regression": {
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js"
+    ],
+    "tests": 502,
+    "pass": 502,
+    "fail": 0,
+    "skip": 0,
+    "seconds": 84.270899,
+    "log": ".cache/native-settlement-regression.log"
+  },
+  "negativeControls": [
+    {
+      "case": "A stationary worker must reject rebinding to another body",
+      "beforeGuardWasmSha256": "9c45c5e20699e3d7ecc9bb46b6df8502bb295fcac6cc499726071b9a48147c65",
+      "beforeGuardResult": "One failure: rebinding returned 1 instead of 0. Six unmatched tests skipped.",
+      "log": ".cache/native-settlement-binding-negative.log",
+      "corrected": "Rejected while preserving the exact native association."
+    },
+    {
+      "case": "Discarding an unpublished batch must not reset the live native world",
+      "beforeGuardBridgeSha256": "a1e9ce836ba9afbfe6345f705f3a67a6c0cd92303e2c591d2d3f9502fe36377f",
+      "loader": "read-only original module URL",
+      "beforeGuardResult": "One failure: native session changed from 1 to 2. Nine unmatched tests skipped.",
+      "log": ".cache/native-settlement-stale-batch-negative.log",
+      "corrected": "Session, both bodies and stationary association preserved, then a new valid batch commits."
+    }
+  ],
+  "productBuild": {
+    "status": "passed",
+    "seconds": 47.91,
+    "log": ".cache/native-settlement-final-product-build.log"
+  },
+  "existingCarryHardware": {
+    "scope": "Regression of the already implemented first-task/Harvest/Carry presentation, NOT graphical delivery settlement.",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794753007350.5852,
+      "end": 1794753009150.6,
+      "committedAt": 1794753007362.1602,
+      "drawFrames": 53
+    },
+    "resourcesPrepared": 536,
+    "resourcesAfterReady": 0,
+    "inputPick": {
+      "entityId": "worker-900011",
+      "hitPoint": {
+        "x": -7.01636947212895,
+        "y": 17.211877421134027,
+        "z": -5.376257965752142
+      },
+      "point": {
+        "x": -6.726829268292733,
+        "z": -6.863792318473621
+      },
+      "sequence": 4
+    },
+    "before": {
+      "resources": 2157,
+      "generation": "adbb6e55-50dd-4136-ba3c-9dbeedad8423",
+      "rig": {
+        "attachments": [],
+        "poseHash": 1538431432
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 2,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 2,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "owners": {
+        "actors": [
+          {
+            "root": 680,
+            "bones": [
+              584,
+              585,
+              586,
+              587,
+              588,
+              589,
+              590,
+              591,
+              592,
+              593,
+              594,
+              595,
+              596,
+              597,
+              598,
+              599,
+              600,
+              601,
+              602,
+              603,
+              604,
+              605,
+              606,
+              607,
+              608,
+              609,
+              610,
+              611
+            ],
+            "meshes": [
+              {
+                "id": 548,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 549,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 550,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 551,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 552,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 553,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 554,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 555,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 556,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 558,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 559,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 560,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 561,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 562,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 564,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 565,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 566,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 567,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 570,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 571,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 573,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 574,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 575,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 576,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 578,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 581,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 582,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 685,
+                "geometry": 216,
+                "material": [
+                  321
+                ]
+              },
+              {
+                "id": 686,
+                "geometry": 217,
+                "material": [
+                  322
+                ]
+              },
+              {
+                "id": 693,
+                "geometry": 277,
+                "material": [
+                  313
+                ]
+              },
+              {
+                "id": 694,
+                "geometry": 278,
+                "material": [
+                  314
+                ]
+              },
+              {
+                "id": 583,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 684,
+                "geometry": 215,
+                "material": [
+                  323
+                ]
+              },
+              {
+                "id": 687,
+                "geometry": 218,
+                "material": [
+                  324
+                ]
+              },
+              {
+                "id": 692,
+                "geometry": 276,
+                "material": [
+                  315
+                ]
+              },
+              {
+                "id": 695,
+                "geometry": 279,
+                "material": [
+                  316
+                ]
+              }
+            ]
+          },
+          {
+            "root": 681,
+            "bones": [
+              652,
+              653,
+              654,
+              655,
+              656,
+              657,
+              658,
+              659,
+              660,
+              661,
+              662,
+              663,
+              664,
+              665,
+              666,
+              667,
+              668,
+              669,
+              670,
+              671,
+              672,
+              673,
+              674,
+              675,
+              676,
+              677,
+              678,
+              679
+            ],
+            "meshes": [
+              {
+                "id": 616,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 617,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 618,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 619,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 620,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 621,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 622,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 623,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 624,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 626,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 627,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 628,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 629,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 630,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 632,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 633,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 634,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 635,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 638,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 639,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 641,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 642,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 643,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 644,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 646,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 649,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 650,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 689,
+                "geometry": 216,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 690,
+                "geometry": 217,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 697,
+                "geometry": 281,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 698,
+                "geometry": 282,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 651,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 688,
+                "geometry": 215,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 691,
+                "geometry": 218,
+                "material": [
+                  308
+                ]
+              },
+              {
+                "id": 696,
+                "geometry": 280,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 699,
+                "geometry": 283,
+                "material": [
+                  308
+                ]
+              }
+            ]
+          }
+        ],
+        "instances": [
+          {
+            "id": 31,
+            "geometry": 3,
+            "material": [
+              21
+            ],
+            "count": 0
+          },
+          {
+            "id": 58,
+            "geometry": 14,
+            "material": [
+              24
+            ],
+            "count": 8
+          },
+          {
+            "id": 463,
+            "geometry": 180,
+            "material": [
+              153
+            ],
+            "count": 2
+          }
+        ]
+      },
+      "factories": {
+        "createBuffer": 1340,
+        "createTexture": 31,
+        "createSampler": 32,
+        "createBindGroup": 429,
+        "createBindGroupLayout": 100,
+        "createPipelineLayout": 50,
+        "createShaderModule": 78,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 50,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "ready": {
+      "resources": 2693,
+      "rig": {
+        "attachments": [
+          {
+            "id": 704,
+            "geometry": 191,
+            "index": 0
+          },
+          {
+            "id": 705,
+            "geometry": 192,
+            "index": 1
+          },
+          {
+            "id": 706,
+            "geometry": 193,
+            "index": 2
+          },
+          {
+            "id": 707,
+            "geometry": 194,
+            "index": 3
+          },
+          {
+            "id": 708,
+            "geometry": 195,
+            "index": 4
+          },
+          {
+            "id": 709,
+            "geometry": 196,
+            "index": 5
+          },
+          {
+            "id": 710,
+            "geometry": 197,
+            "index": 6
+          },
+          {
+            "id": 711,
+            "geometry": 198,
+            "index": 7
+          },
+          {
+            "id": 712,
+            "geometry": 199,
+            "index": 8
+          }
+        ],
+        "poseHash": 1971537962
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "factories": {
+        "createBuffer": 1591,
+        "createTexture": 34,
+        "createSampler": 35,
+        "createBindGroup": 542,
+        "createBindGroupLayout": 182,
+        "createPipelineLayout": 74,
+        "createShaderModule": 114,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 74,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "after": {
+      "resources": 2693,
+      "generation": "adbb6e55-50dd-4136-ba3c-9dbeedad8423",
+      "rig": {
+        "attachments": [
+          {
+            "id": 704,
+            "geometry": 191,
+            "index": 0
+          },
+          {
+            "id": 705,
+            "geometry": 192,
+            "index": 1
+          },
+          {
+            "id": 706,
+            "geometry": 193,
+            "index": 2
+          },
+          {
+            "id": 707,
+            "geometry": 194,
+            "index": 3
+          },
+          {
+            "id": 708,
+            "geometry": 195,
+            "index": 4
+          },
+          {
+            "id": 709,
+            "geometry": 196,
+            "index": 5
+          },
+          {
+            "id": 710,
+            "geometry": 197,
+            "index": 6
+          },
+          {
+            "id": 711,
+            "geometry": 198,
+            "index": 7
+          },
+          {
+            "id": 712,
+            "geometry": 199,
+            "index": 8
+          }
+        ],
+        "poseHash": 1971537962
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "owners": {
+        "actors": [
+          {
+            "root": 680,
+            "bones": [
+              584,
+              585,
+              586,
+              587,
+              588,
+              589,
+              590,
+              591,
+              592,
+              593,
+              594,
+              595,
+              596,
+              597,
+              598,
+              599,
+              600,
+              601,
+              602,
+              603,
+              604,
+              605,
+              606,
+              607,
+              608,
+              609,
+              610,
+              611
+            ],
+            "meshes": [
+              {
+                "id": 548,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 549,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 550,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 551,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 552,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 553,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 554,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 555,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 556,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 558,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 559,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 560,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 561,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 562,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 564,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 565,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 566,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 567,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 570,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 571,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 573,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 574,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 575,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 576,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 578,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 581,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 582,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 685,
+                "geometry": 216,
+                "material": [
+                  298
+                ]
+              },
+              {
+                "id": 686,
+                "geometry": 217,
+                "material": [
+                  299
+                ]
+              },
+              {
+                "id": 693,
+                "geometry": 277,
+                "material": [
+                  313
+                ]
+              },
+              {
+                "id": 694,
+                "geometry": 278,
+                "material": [
+                  314
+                ]
+              },
+              {
+                "id": 701,
+                "geometry": 216,
+                "material": [
+                  353
+                ]
+              },
+              {
+                "id": 702,
+                "geometry": 217,
+                "material": [
+                  354
+                ]
+              },
+              {
+                "id": 583,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 684,
+                "geometry": 215,
+                "material": [
+                  297
+                ]
+              },
+              {
+                "id": 687,
+                "geometry": 218,
+                "material": [
+                  300
+                ]
+              },
+              {
+                "id": 692,
+                "geometry": 276,
+                "material": [
+                  315
+                ]
+              },
+              {
+                "id": 695,
+                "geometry": 279,
+                "material": [
+                  316
+                ]
+              },
+              {
+                "id": 700,
+                "geometry": 215,
+                "material": [
+                  355
+                ]
+              },
+              {
+                "id": 703,
+                "geometry": 218,
+                "material": [
+                  356
+                ]
+              },
+              {
+                "id": 704,
+                "geometry": 191,
+                "material": [
+                  357
+                ]
+              },
+              {
+                "id": 705,
+                "geometry": 192,
+                "material": [
+                  358
+                ]
+              },
+              {
+                "id": 706,
+                "geometry": 193,
+                "material": [
+                  359
+                ]
+              },
+              {
+                "id": 707,
+                "geometry": 194,
+                "material": [
+                  360
+                ]
+              },
+              {
+                "id": 708,
+                "geometry": 195,
+                "material": [
+                  361
+                ]
+              },
+              {
+                "id": 709,
+                "geometry": 196,
+                "material": [
+                  362
+                ]
+              },
+              {
+                "id": 710,
+                "geometry": 197,
+                "material": [
+                  363
+                ]
+              },
+              {
+                "id": 711,
+                "geometry": 198,
+                "material": [
+                  364
+                ]
+              },
+              {
+                "id": 712,
+                "geometry": 199,
+                "material": [
+                  365
+                ]
+              }
+            ]
+          },
+          {
+            "root": 681,
+            "bones": [
+              652,
+              653,
+              654,
+              655,
+              656,
+              657,
+              658,
+              659,
+              660,
+              661,
+              662,
+              663,
+              664,
+              665,
+              666,
+              667,
+              668,
+              669,
+              670,
+              671,
+              672,
+              673,
+              674,
+              675,
+              676,
+              677,
+              678,
+              679
+            ],
+            "meshes": [
+              {
+                "id": 616,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 617,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 618,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 619,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 620,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 621,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 622,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 623,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 624,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 626,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 627,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 628,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 629,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 630,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 632,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 633,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 634,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 635,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 638,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 639,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 641,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 642,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 643,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 644,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 646,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 649,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 650,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 689,
+                "geometry": 216,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 690,
+                "geometry": 217,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 697,
+                "geometry": 281,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 698,
+                "geometry": 282,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 651,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 688,
+                "geometry": 215,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 691,
+                "geometry": 218,
+                "material": [
+                  308
+                ]
+              },
+              {
+                "id": 696,
+                "geometry": 280,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 699,
+                "geometry": 283,
+                "material": [
+                  308
+                ]
+              }
+            ]
+          }
+        ],
+        "instances": [
+          {
+            "id": 31,
+            "geometry": 3,
+            "material": [
+              21
+            ],
+            "count": 0
+          },
+          {
+            "id": 58,
+            "geometry": 14,
+            "material": [
+              24
+            ],
+            "count": 8
+          },
+          {
+            "id": 463,
+            "geometry": 180,
+            "material": [
+              153
+            ],
+            "count": 1
+          }
+        ]
+      },
+      "factories": {
+        "createBuffer": 1591,
+        "createTexture": 34,
+        "createSampler": 35,
+        "createBindGroup": 542,
+        "createBindGroupLayout": 182,
+        "createPipelineLayout": 74,
+        "createShaderModule": 114,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 74,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "gpuErrors": 0,
+    "drained": true,
+    "errors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "rawSha256": "0b5c103eca90298c48dbeaa84e44c8be27ec49b75870cdee0450484b8c8d9231",
+    "log": ".cache/native-settlement-existing-carry-gpu.log"
+  },
+  "safety": [
+    "A prepared data object or JSON proof cannot grant settlement without the current native fact.",
+    "Missing version or exact prepared template in the consumer receipt rejects before native commit or credit.",
+    "Old graphical consumer explicitly rejects a stationary baseline until its successor is prepared.",
+    "Idle body changes and rebinding remain protected; legacy unprepared task assignment cannot drop the stationary owner.",
+    "Return by expired contract is not substituted with Idle; the existing Game return boundary remains guarded."
+  ],
+  "pending": [
+    "Prepared original Idle presentation and its real consumer transport/clock/picking proof.",
+    "Graphical transfer from that Idle actor to the next genuine task.",
+    "Genuine Home admission and other intention classes; initial Idle without a task.",
+    "All-class restoration, ordinary Worker producer, full resource recovery and integrated A/B/C acceptance."
+  ],
+  "sourceHashes": {
+    "src/rendering/remote-webgpu-host.js": "9ac9ceddb5fa913e848956c85a14091dbab6100be435026a9cd66f7a5c6958f5",
+    "src/simulation/game.js": "1ecf371004d5499283dfa4516cd21f02202cc202014317c750b11d59cf66bfb3",
+    "src/world/native-resource-admission.js": "ccc5cde93ed0592b2faf16c589d0ae92ccf0cdbb465770607d1810353dba2d36",
+    "src/world/native-resource-admission-profiles.js": "db98a9a07c45e50accb8b08572c11ee24b5ac572ac98537a2d4a7a858ec66c4c",
+    "src/world/native-task-settlement.js": "9c450429f3d28daf042dfa2eb90342eb63bd94e5db46b164a3aca808f727b6a0",
+    "src/world/wild-engine/spatial-gate-api.inc": "da982965b04d7955c205faa06867ed2d40ae058bd361606b47374b535d6af37b",
+    "src/world/wild-engine/spatial-gate-crossings.h": "7ed5140a43f1464c08498822f27a530b7ba9af302153ad7689ac06cdd8056054",
+    "src/world/wild-engine/spatial-intent-bridge.js": "0ffe90170f73368d7f987ef4dff3a44a5e43268d6d87759a1bd7af8dbae61d9f",
+    "src/world/wild-engine/spatial-intent-state.cpp": "73d3618271ada82b2b9b8cafc6ab8f2039a63fcce2d06d5baf5f8700126ea002",
+    "src/world/wild-engine/spatial-route-reservations.h": "5b960b1ef6fdb0718ccdbc70f3bc2d9f479d2cd8a1e912481511aea32f46e6d6",
+    "src/world/wild-engine/spatial-task-execution.inc": "64bfab5882f4445601437bf1b802a2a041d1150b3ede672941bdeeb3ce0b7c7a",
+    "src/world/wild-engine/spatial-task-start-proposal.inc": "26a675ca4a5c808a21f9bfbfc54d7253da65882106d7820f91d425083a7eb38e",
+    "src/world/wild-engine/spatial-task-settlement-proposal.inc": "e726da5bf14cd128a48c53c308f4027f16bd818b70fcf77bc143f289eb1905da",
+    "src/world/wild-engine/spatial-savanna.wasm": "8f67f773be29744b40b46117bbffea689e3300485f2f8451a9b167cd4c2d8a51",
+    "public/wild-engine/spatial-threaded.mjs": "3a1ac2f088fbf83e1274627e1ca2e2d7661bf8c3f9f4ee04107c94469aaf6530",
+    "public/wild-engine/spatial-threaded.wasm": "ff0872a89a8f29e4071b64394459170f6c940f5cb6fda9106814976798ac1c94",
+    "tools/build-spatial-savanna-wasm.sh": "06e18d5673719889796e716ca9fdaca477720c4c3e12d8efc9d2c3879d851fd5",
+    "tests/helpers/native-task-settlement.js": "fedcfb68a9f1d309ca2d53cd815cc55ffe5e5fec87ef3091812043e95cd5810a",
+    "tests/native-task-settlement-proposal.test.js": "d628df647e36e85000309f298a3cfbf0442d59c85da5d4602a18cf637fc1877e",
+    "tests/native-task-settlement-game.test.js": "0547d06df70194415f51bc16ee62250ea227b87ef60bcf2ad5e0e585846aa9b4"
+  }
+}

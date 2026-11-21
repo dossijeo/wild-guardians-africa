@@ -1,0 +1,38 @@
+# Productor ordinario: llegada Carry16 → liquidación17 → Idle
+
+Continúa [Harvest → Carry](native-ordinary-harvest-carry-20261120.md) sobre la misma contratación pagada, madurez real, autoridad Worker, puertos de recursos/control, Surface y draw en hardware. Los componentes de liquidación ya existían; faltaba comprobar esta continuidad en el productor ordinario. No se modifica código de producto, ABI, física, mecánica económica, arquitectura ni dependencias.
+
+## Referencias y decisión
+
+Antes de extender el ensayo se volvió a consultar código fuente real: [Dawn, ServerQueue.cpp, revisión922930e3193753e58591f14a96ab116e5d630964](https://github.com/google/dawn/blob/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ServerQueue.cpp#L35), mantiene instancia/futuro en la respuesta de finalización; [Flecs v4.0.4, flecs_stage_merge](https://github.com/SanderMertens/flecs/blob/v4.0.4/src/stage.c#L69), aplica cambios diferidos antes de evaluar monitores. Las fuentes y SHA quedan archivadas. La adaptación conserva las respuestas y asociaciones originales y comprueba el resultado completo después del commit. No introduce un transactor, transporte o registro nuevo.
+
+Se contrastaron native-intent-production, el perfil task-settlement, native-task-settlement, prepareCrateDeliveryConsequence/projectNativeCrateDeliveryConsequence y la preparación de variantes del roster. El flag QA_NATIVE_BIRTH_FOLLOW_SETTLEMENT requiere el recorrido previo Action/Carry. La fixture retiene una única respuesta genuina preparedTaskSettlementTemplate, bloquea el preparador1,8s, reenvía la respuesta sin cambiarla y bloquea otros1,8s mientras fuente y draw avanzan por sus puertos originales. No crea tareas, cuerpos, recibos, pagos ni reloj de prueba.
+
+Antes de adquirir17, la caja permanece sin entregar, con el mismo portador, el ledger intacto y el cuerpo en la llegada real de Carry. Después se exige nativeTaskSettlementBinding emitido, ticket dibujado, origen temporal efectivo correcto, un único asiento deliver, ingreso entero ordinario exacto, caja sin portador, trabajador Idle/disponible y tutorial coherente. El estado se vuelve a comprobar después de otro intervalo de fuente; no puede cobrar dos veces. No cubre aún la tarea siguiente ni Home tras contrato vencido.
+
+## Hardware y reutilización
+
+Cuatro perfiles pasan en Edge headless/NVIDIA Turing, secuencialmente y sin suites/build concurrentes; se reutiliza el piloto exitoso de fuente idéntica. Pasa también el control que termina en Carry con el nuevo flag desactivado. Se inspeccionaron las capturas originales. El escenario mínimo muestra los modelos y sombras existentes sin caja portada después de entregar; no sustituye la paridad C2 completa.
+
+| Perfil | IDs invariantes conservados | Fábricas antes/tras bloqueo READY/tras commit17 | Dibujos READY/commit | Hueco máximo amplio ms |
+|---|---:|---|---:|---:|
+| olderMale | 579 | 3564 → 3564 → 3564 | 54/54 | 178.440 |
+| olderFemale | 576 | 3534 → 3534 → 3534 | 54/54 | 264.325 |
+| youngFemale | 585 | 3764 → 3764 → 3832 | 54/54 | 172.555 |
+| youngMale | 585 | 3807 → 3807 → 3807 | 54/54 | 71.175 |
+
+Se conservan los IDs comprobados de geometría/banco, raíces, huesos, mallas anteriores y rigs CPU tras la adquisición Task; banco compartido refs1→2→2, pending0, ambos actores nativos. Se mantienen las guardas existentes para la copia GPU del cuerpo y las nueve geometrías de caja ya residentes. No se cambia el selector ni su política compartida de volúmenes de cultivo: la cosecha ya retiró el objetivo. Picking de ambos trabajadores y drenaje GPU real pasan sin errores de página, red, fuente o GPU. Los contadores incluyen efectos/mantenimiento del intervalo; no se atribuyen todas las fábricas a la liquidación ni se afirma mínima asignación.
+
+En youngFemale se observan 68 fábricas posteriores: 36 buffers, 16 bind group layouts y 16 bind groups, además de una destrucción. En esa ventana no hay fábricas de shader, pipeline o textura. La traza de operaciones queda archivada; no identifica todavía todos sus propietarios ni acredita que esas asignaciones sean mínimas. Los otros tres perfiles no registran fábricas en la misma ventana de liquidación.
+
+## Validación y alcance abierto
+
+106/106 pruebas CPU dirigidas existentes en 12 archivos, sin fallos/omisiones/cancelaciones, 25.142 s, después de terminar todas las GPU; seis sintaxis frescas. No se añaden casos unitarios que dupliquen el código. La selección completa de 4839 tests/4838 pases/una omisión en 365 archivos y el build siguen HEREDADOS de755812f61 por la cadena de recibos; no se vuelven a ejecutar para este cambio solo QA. No equivalen a todos los tests del repositorio; las tres exclusiones históricas siguen abiertas.
+
+695 inputs probados, 997 archivos de ejecución (fuentes rastreadas y package/lock), 64 nativos, 16 archivos ajenos y 38 A5 externos se verifican por bytes. Cambian cuatro QA de hardware existentes, se añade el helper de liquidación y se amplía condicionalmente el analizador existente a las ventanas de liquidación y al recorrido completo. El analizador se editó después de terminar todas las pasadas GPU; no es un módulo importado por ellas. Documentos primarios reciben únicamente una entrada después de su primera línea, conservando bytes anteriores incluso donde hay codificación histórica no válida.
+
+El máximo observado amplio sin trazado llega a 264.325 ms. La pasada adicional con trazado usa la capacidad CDP ya existente, sin capturas, y exige dataLossOccurred=false; el archivo y su ancla temporal se conservan separados. El analizador común identifica los cuatro propietarios originales y registra en la ventana amplia un máximo de 340.235 ms; guarda los scopes que solapan el intervalo por hilo. Las duraciones son tiempo de pared y los scopes anidados no se suman. Su instrumentación no se usa para declarar rendimiento ni atribuir automáticamente una pausa al producto, ni explica retrospectivamente el intervalo anterior de 334,100 ms. Las ventanas deliberadas que siguen dibujando no descartan huecos fuera de ellas; la cadencia global sigue abierta. No se demuestra todavía la reutilización completa del caso histórico 3.123, ni se aceptan cargas/efectos/fallos/device loss/cohortes/restauración globales. A6/A/B/C abiertos, D no iniciado, f-R3 sigue como modo seguro.
+
+La consulta de contexto de esa misma traza encuentra una coincidencia más concreta: CrGpuMain/SwapBuffers dura 372,674 ms de pared y 0,849 ms de hilo; su EndAccessImages dura 372,443 ms y 0,661 ms respectivamente. En paralelo hay cuatro DawnPlatformImpl::RunWorkerTask de 359,786/343,698/322,652/272,128 ms de pared y 355,749/341,454/321,512/271,174 ms de hilo. Son scopes anidados en tareas del proceso GPU y no se suman. Los callbacks RAF de los dos Workers gráficos muestran el hueco, mientras los scopes observados de autoridad siguen siendo cortos. El intervalo ocurre fuera de los bloqueos deliberados, unos 1,969 s antes de Carry READY. Esto orienta la siguiente atribución a trabajo en proceso GPU/driver y a sus descriptores de preparación; no demuestra aún qué pipeline, operación o recurso causa la espera. Se preservan la consulta, el contexto, el trace completo de 358.555.839 bytes y sus hashes. No se cambia arquitectura ni se eluden guards a partir de esta coincidencia.
+
+Siguiente pendiente: atribuir el trabajo GPU/driver a los descriptores y recursos de preparación existentes antes de diseñar su corrección, y continuar disponibilidad/tarea siguiente o Home genuinos después de esta misma liquidación. Se mantienen los propietarios actuales. [Recibo y artefactos](performance/native-ordinary-delivery-settlement-20261120-validation.json).

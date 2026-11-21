@@ -1,0 +1,46 @@
+{
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "isFallbackAdapter": null
+  },
+  "baseline": {
+    "trigger": {
+      "sequence": 538,
+      "terrainChanged": false,
+      "structuresChanged": true,
+      "suppressedChanged": false,
+      "revision": 3
+    },
+    "swapsInvalidated": 173,
+    "regionsReoffered": 90,
+    "partsReadmitted": 312,
+    "equalFullInstanceArrays": true,
+    "windowMs": 12274,
+    "clientFactories": 13328,
+    "newAttributeObjects": 8024
+  },
+  "retained": {
+    "trigger": {
+      "sequence": 554,
+      "terrainChanged": false,
+      "structuresChanged": true,
+      "suppressedChanged": false,
+      "revision": 3
+    },
+    "fromSequence": 264,
+    "throughSequence": 697,
+    "swapsBefore": 173,
+    "swapsAfter": 173,
+    "retainedPairs": 582,
+    "retainedOwnerTableSha256": "c729be0fa9409016400677183a0b61342524f44567f82e5cb19be4594e8bcee3",
+    "offersAfterSettled": 0,
+    "globalInvalidationsAfterSettled": 0,
+    "newFarVegetationAttributeObjects": 0,
+    "windowMs": 12257,
+    "clientFactories": 174,
+    "newAttributeObjects": 16
+  }
+}

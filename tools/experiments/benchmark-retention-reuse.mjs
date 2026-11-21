@@ -1,0 +1,19 @@
+import {readFileSync} from 'node:fs';
+import {gunzipSync} from 'node:zlib';
+import {execFileSync} from 'node:child_process';
+import {pathToFileURL} from 'node:url';
+import {resolve} from 'node:path';
+import {performance} from 'node:perf_hooks';
+import assert from 'node:assert/strict';
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthority} from '../../src/simulation/simulation-authority.js';
+import {handoffConfirmedSnapshot} from '../../src/simulation/confirmed-snapshot-handoff.js';
+const revision=process.env.QA_RETENTION_BASELINE??'796060d14',base=pathToFileURL(resolve('src/simulation')+'/').href;
+async function previous(name){const source=execFileSync('git',['show',`${revision}:src/simulation/${name}`],{encoding:'utf8'}).replaceAll("from './",`from '${base}`);return import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));}
+const {createSnapshotPreparationCache:oldCache}=await previous('main-thread-snapshot-transport.js'),{createHostPublicationQueue:oldQueue}=await previous('host-publication-queue.js');
+async function candidate(name){const source=readFileSync(`tools/experiments/retention-reuse/${name.replace(/\.js$/,'.txt')}`,'utf8').replaceAll("from './",`from '${base}`);return import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));}
+const {createSnapshotPreparationCache:newCache}=await candidate('main-thread-snapshot-transport.js'),{createHostPublicationQueue:newQueue}=await candidate('host-publication-queue.js');
+const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm')),snapshot=serialize(deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d6-native-multi-reservation.json.gz')).toString())),keys=[];for(let z=-1;z<=2;z++)for(let x=1;x<=3;x++)keys.push(`${x},${z}`);const authority=createSimulationAuthority(module,snapshot,keys),states=[];try{for(let sequence=1;sequence<=31;sequence++){const publication=authority.execute(sequence===1?{kind:'snapshot',sequence}:{kind:'advance',sequence,seconds:.05,steps:1,nightFastForward:false});states.push(JSON.parse(publication.snapshot));}}finally{authority.dispose();}
+function run(current,record=false){const cache=(current?newCache:oldCache)(),sent=[],queue=(current?newQueue:oldQueue)({session:'s',coalesce:false,receiptAcknowledgements:true,prepareState:cache.prepareState,...(current?{sourceRetainedBytes:cache.sourceRetainedBytes}:{}),send:item=>sent.push(item.publication.sequence)}),times=[],weights=[];for(let i=0;i<states.length;i++){const state=states[i],sequence=i+1,publication={sequence,events:[],physicsPose:null};Object.defineProperty(publication,'snapshot',{enumerable:true,get:()=>JSON.stringify(state)});handoffConfirmedSnapshot(publication,state);const at=performance.now();queue.publication(publication,true);if(record)weights.push(queue.status().retained);queue.receipt(sequence);queue.ack(sequence);times.push(performance.now()-at);}return {times,weights,sent};}
+const before=run(false,true),after=run(true,true);assert.deepEqual(before.weights,after.weights);assert.deepEqual(before.sent,after.sent);const data={old:[],current:[]};for(const order of [['old','current'],['current','old'],['current','old'],['old','current']])for(const key of order){globalThis.gc?.();data[key].push(...run(key==='current').times.slice(1));}
+const stats=values=>{const a=[...values].sort((x,y)=>x-y);return {count:a.length,mean:a.reduce((x,y)=>x+y,0)/a.length,p95:a[Math.floor((a.length-1)*.95)],p99:a[Math.floor((a.length-1)*.99)],max:a.at(-1)};};console.log(JSON.stringify({baselineRevision:revision,fixture:'sabana712-d6-native-multi-reservation',publications:states.length,passes:4,old:stats(data.old),current:stats(data.current),scope:'Node queue publication+receipt+ack on identical real WASM states; no renderer or GPU, retained sizes and delivered sequence asserted equal'},null,2));

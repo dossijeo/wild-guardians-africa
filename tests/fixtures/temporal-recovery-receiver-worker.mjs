@@ -1,0 +1,15 @@
+import {parentPort,workerData} from 'node:worker_threads';
+import {deserializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {createConfirmedPresentationClock} from '../../src/rendering/confirmed-presentation-clock.js';
+import {createConfirmedPresentationStream} from '../../src/rendering/confirmed-presentation-stream.js';
+import {createConfirmedTerrainReceiver} from '../../src/rendering/confirmed-terrain-receiver.js';
+import {createTemporalSurfaceRecovery} from '../../src/rendering/temporal-surface-recovery.js';
+import {createTemporalRecoveryReceiver} from '../../src/rendering/temporal-recovery-receiver.js';
+const {base,port}=workerData,state=deserializeConfirmedState(base.snapshot),clock=createConfirmedPresentationClock(state.elapsed),dummy=()=>({postMessage(){},start(){},close(){}});let stream;
+const fail=error=>parentPort.postMessage({kind:'error',message:String(error?.stack??error)});
+const terrain=createConfirmedTerrainReceiver({port:dummy(),session:'s',confirmedSequence:base.sequence,confirmedElapsed:state.elapsed,retainRevisions:true,allowReplay:true,validateRevision(){},residency:{replace(){throw Error('unexpected terrain path');}},prepareGraphicalBatch:async entries=>{await stream.waitForTerrainSuppression(entries[0].sequence);return {commit(){return true;},abort(){}};},onError:fail});
+stream=createConfirmedPresentationStream({port:dummy(),session:'s',state,terrain,initialSequence:base.sequence,presentationClock:clock,timeline:{maxPublications:8,maxBytes:100000000,manualBoundaries:true,replay:true},onError:fail});
+const surface=createTemporalSurfaceRecovery({stream,terrain,validateCheckpoint(value){if(value.sequence!==base.sequence)throw Error('Unexpected checkpoint');},prepareCheckpoint:async value=>({sequence:value.sequence,epoch:'e',commit:()=>true,abort(){}}),onError:fail});
+const receiver=createTemporalRecoveryReceiver({port,session:'s',restoreCheckpoint:surface.restoreTimelineCheckpoint,applyBoundary:surface.applyTimelineRecoveryBoundary,onBoundary:(events,sequence)=>parentPort.postMessage({kind:'boundary',sequence,events,paused:state.pauses.includes('test'),stateSequence:stream.status().sequence}),onError:fail});
+parentPort.on('message',message=>{if(message.kind==='finish'){try{parentPort.postMessage({kind:'finished',value:surface.finishTimelineRecovery(),cursor:receiver.status().cursor});}catch(error){fail(error);}}});
+parentPort.postMessage({kind:'ready'});

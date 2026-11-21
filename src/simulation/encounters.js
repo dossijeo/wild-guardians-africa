@@ -34,7 +34,7 @@ export function updateWorkerEncounters(state,nav){
   const raid=state.raid;if(!raid)return;
   const previous=raid.encounterPositions??{},contacts=new Set(raid.encounterContacts??raid.encounters??[]),hits=new Set(raid.encounterHits??[]),active=new Set();
   for(const animal of raid.animals){
-    if(['gone','retreating'].includes(animal.status)||animal.hitsRemaining<=0)continue;
+    if(animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||['gone','retreating'].includes(animal.status)||animal.hitsRemaining<=0)continue;
     for(const worker of state.workers){
       if(worker.status==='home'||worker.incapacitated)continue;
       const pair=`${animal.id}:${worker.id}`,range=animal.radius+1.1;
@@ -52,17 +52,20 @@ export function updateWorkerEncounters(state,nav){
       hits.add(pair);
       const presentation={elapsed:state.elapsed,x:worker.x,z:worker.z};
       let pushed=0;
-      if(collision){
+      if(collision&&!worker.fallRemaining&&!worker.recovery){
         const [min,max]=B.raids.worker_collision_knockback_m;
         pushed=pushWorker(animal,worker,min+nextRandom(state)*(max-min),nav);
       }
       if(worker.hits>=2){
-        worker.incapacitated=true;worker.status='incapacitated';worker.fallRemaining=0;
+        worker.incapacitated=true;worker.status='incapacitated';
+        if(!worker.fallRemaining&&!worker.recovery){worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;worker.downHeading=worker.heading??0;}
         notifyWorkerPlanningChange(state,worker);
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
         emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }else{
         worker.fallRemaining=L.sources.find(s=>s.profile===worker.profile).fallSeconds;
+        worker.downHeading=worker.heading??0;
+        notifyWorkerPlanningChange(state,worker);
         emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
       }
       if(distance(animal,worker)>=range)active.delete(pair);

@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><title>Worker command window</title><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {createCommandWindow} from '/tools/trees/prototype_worker_command_window.mjs';
+window.audit=async()=>{
+ const worker=new Worker(new URL('./mobility-worker-cooperative.js',import.meta.url),{type:'module'});let timer,fail,ready,first,paused,resumed,last,pauseAt,completedAt,sent=0,remaining;
+ const failure=new Promise((_,reject)=>fail=reject),wait=p=>Promise.race([p,failure]);
+ const readyP=new Promise(r=>ready=r),firstP=new Promise(r=>first=r),pausedP=new Promise(r=>paused=r),resumeP=new Promise(r=>resumed=r),lastP=new Promise(r=>last=r);
+ const commands=createCommandWindow('cooperative-test',command=>{sent++;worker.postMessage(command)});
+ timer=setTimeout(()=>fail(Error('Timeout')),120000);worker.onerror=e=>fail(Error(e.message));
+ worker.onmessage=({data:d})=>{try{
+  if(d.kind==='ready')ready();
+  else if(d.kind==='started'&&d.sequence===1){pauseAt=performance.now();if(!commands.pause().accepted)throw Error('Pause rejected');}
+  else if(d.kind==='advance-result'){const ack=commands.ack(d);if(!ack.accepted)throw Error('Invalid advance ACK');if(d.sequence===1){remaining=ack.remaining;completedAt=performance.now();first(d);}else last(d);}
+  else if(d.kind==='pause-result'){if(!commands.ack(d).accepted)throw Error('Invalid pause ACK');paused(d);}
+  else if(d.kind==='resume-result'){if(!commands.ack(d).accepted)throw Error('Invalid resume ACK');resumed(d);}
+  else if(d.kind==='error')throw Error(d.error);
+ }catch(e){fail(e);}};
+ try{
+  await wait(readyP);const start=performance.now();if(commands.advance(40).sequence!==1)throw Error('Advance rejected');
+  for(let i=0;i<5000;i++)if(commands.advance(1).reason!=='busy')throw Error('Unbounded admission');
+  const a=await wait(firstP),p=await wait(pausedP),pauseLatency=performance.now()-pauseAt;if(sent!==2||commands.advance(1).reason!=='paused')throw Error('Window failed');
+  if(commands.resume().sequence!==3)throw Error('Resume rejected');const r=await wait(resumeP);let final=r;
+  if(remaining){if(commands.advance(remaining).sequence!==4)throw Error('Retry rejected');final=await wait(lastP);}
+  const reference=await createSimulation({mangrove:true});try{for(let i=0;i<40;i++)reference.advanceTick(.05);if(reference.state().snapshot!==final.state.snapshot)throw Error('Snapshot mismatch');}finally{reference.dispose();}
+  return {performedBeforePause:a.performed,remaining,total:a.performed+(remaining||0),rejected:5000,sent,pauseLatencyMs:pauseLatency,firstResponseMs:completedAt-start,totalResponseMs:performance.now()-start,snapshotEqual:true};
+ }finally{clearTimeout(timer);worker.terminate();}
+};window.ready=true;
+</script>

@@ -1,0 +1,3083 @@
+{
+  "date": "2026-11-15",
+  "parent": "560604b686809b57d6a5f7f079e1ea6a6dbd0ee8",
+  "scope": "Harvest to Carry on actual Surface/resource/direct consumer ports with original resident actors and crop batch. A stale semantic publication is drained before confirmed crop/crate state; source owner is in-page and independent B remains the explicit Home fixture. This does not close ordinary producer, settlement, recovery or whole-game acceptance.",
+  "closuresChanged": false,
+  "research": {
+    "revision": "922930e3193753e58591f14a96ab116e5d630964",
+    "files": {
+      "src/dawn/wire/server/ObjectStorage.h": {
+        "url": "https://raw.githubusercontent.com/google/dawn/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ObjectStorage.h",
+        "sha256": "d9d556e640a0b410ec12976393f16f28e3297b8844703ea69aaa205b6b94ace0"
+      },
+      "src/dawn/wire/server/ServerDevice.cpp": {
+        "url": "https://raw.githubusercontent.com/google/dawn/922930e3193753e58591f14a96ab116e5d630964/src/dawn/wire/server/ServerDevice.cpp",
+        "sha256": "3e2aa1fbac3a12691068f09fcc72ff0eade3a7373970f96017a1b7e7d3d37c3d"
+      }
+    }
+  },
+  "regression": {
+    "files": [
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/confirmed-presentation-native-hold.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-gpu-motion.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-action-graphics.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-worker-action-variant.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/webgpu-crop-terrain.test.js",
+      "tests/webgpu-crop-roster.test.js",
+      "tests/confirmed-presentation-stream.test.js",
+      "tests/confirmed-presentation-timeline.test.js",
+      "tests/confirmed-presentation-clock.test.js",
+      "tests/webgpu-native-world-admission.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js"
+    ],
+    "tests": 478,
+    "pass": 477,
+    "fail": 1,
+    "skip": 0,
+    "log": ".cache/native-consequence-consumer-regression.log",
+    "historicalFailure": {
+      "test": "real visual ports negotiate and exert bounded backpressure until state is applied",
+      "error": "Visual handshake timed out",
+      "parentReproduced": "71c85e11b",
+      "parentStreamSha256": "e3cb92313a4f62e413050a32575cfb37ea182324bdae29c46d8a5e600025f680",
+      "loader": "read-only original module URL",
+      "log": ".cache/native-consequence-timeline-parent.log"
+    }
+  },
+  "components": {
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "log": ".cache/native-consequence-surface-components.log"
+  },
+  "timelineFinal": {
+    "tests": 23,
+    "pass": 22,
+    "fail": 1,
+    "sameHistoricalFailure": true,
+    "log": ".cache/native-consequence-timeline-isolated.log"
+  },
+  "picker": {
+    "tests": 12,
+    "pass": 12,
+    "fail": 0,
+    "negativeControl": {
+      "parent": "02df8f730",
+      "newTestFails": true,
+      "error": "Retired native action has no submitted clock"
+    },
+    "log": ".cache/native-consequence-visible-picking.log"
+  },
+  "build": {
+    "status": "passed",
+    "seconds": 43.75,
+    "log": ".cache/native-consequence-consumer-picking-final-build.log"
+  },
+  "hardware": {
+    "command": "QA_NATIVE_CONSEQUENCE=true QA_BASE_URL=http://127.0.0.1:5181 node tools/guardian/audit_native_first_task_world_owner.mjs",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "rawSha256": "4c93c0d95f9e3e5fcf6d41a701b99c09e8843d8df1d6537d2e6f11819d21e957",
+    "rawBytes": 626763,
+    "drained": true,
+    "errors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "reference": {
+      "kind": "native-task-consequence-reference",
+      "version": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "crateId": 1000000,
+      "centerId": 2,
+      "sourceAction": {
+        "kind": "native-task-action-attestation",
+        "version": 1,
+        "projectionVersion": 1,
+        "actionSequence": 5,
+        "reference": {
+          "kind": "native-task-action-reference",
+          "version": 1,
+          "request": {
+            "kind": "native-task-action-resource-request",
+            "version": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 4,
+              "routeHandle": {
+                "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 3
+              }
+            },
+            "taskId": 920001,
+            "targetId": 900099,
+            "bodyId": 1,
+            "requestedAt": 22.250501770922238,
+            "actionKind": "harvest",
+            "duration": 2.4,
+            "heading": 1.8157749899217608,
+            "executedThrough": 24.95050177092218,
+            "authorizedAutonomy": false
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+            "nativeSession": 1,
+            "ticket": 4,
+            "effectiveTime": 24.95050177092218
+          },
+          "sourceControlSequence": 4,
+          "origin": {
+            "x": -5.800000190734863,
+            "z": -3.799999952316284
+          },
+          "radius": 0.28,
+          "profile": 1,
+          "motionFlags": 1,
+          "startTime": 24.95050177092218,
+          "endTime": 27.35050177092218,
+          "runPhase": 24.791666666666668,
+          "walkPhase": 52.87075265638345,
+          "carryPhase": 9.5,
+          "runRemaining": 0
+        },
+        "preparedReference": {
+          "kind": "native-task-action-reference",
+          "version": 1,
+          "request": {
+            "kind": "native-task-action-resource-request",
+            "version": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 4,
+              "routeHandle": {
+                "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                "session": 1,
+                "slot": 1,
+                "generation": 3
+              }
+            },
+            "taskId": 920001,
+            "targetId": 900099,
+            "bodyId": 1,
+            "requestedAt": 22.250501770922238,
+            "actionKind": "harvest",
+            "duration": 2.4,
+            "heading": 1.8157749899217608,
+            "executedThrough": 22.250501770922238,
+            "authorizedAutonomy": false
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+            "nativeSession": 1,
+            "ticket": 3,
+            "effectiveTime": 22.250501770922238
+          },
+          "sourceControlSequence": 4,
+          "origin": {
+            "x": -5.800000190734863,
+            "z": -3.799999952316284
+          },
+          "radius": 0.28,
+          "profile": 1,
+          "motionFlags": 1,
+          "startTime": 22.250501770922238,
+          "endTime": 24.650501770922236,
+          "runPhase": 24.791666666666668,
+          "walkPhase": 52.87075265638345,
+          "carryPhase": 9.5,
+          "runRemaining": 0
+        }
+      },
+      "destination": {
+        "x": -7.451831334085969,
+        "z": -7.578400541112388
+      },
+      "sourceControlSequence": 5,
+      "endTime": 32.864225155588535,
+      "expectedRouteHandle": {
+        "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 6
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 27.40050177092218
+      }
+    },
+    "binding": {
+      "kind": "native-task-consequence-attestation",
+      "version": 1,
+      "projectionVersion": 1,
+      "reference": {
+        "kind": "native-task-consequence-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "crateId": 1000000,
+        "centerId": 2,
+        "sourceAction": {
+          "kind": "native-task-action-attestation",
+          "version": 1,
+          "projectionVersion": 1,
+          "actionSequence": 5,
+          "reference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 24.95050177092218,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 24.95050177092218
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 24.95050177092218,
+            "endTime": 27.35050177092218,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          },
+          "preparedReference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 22.250501770922238,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 22.250501770922238
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 22.250501770922238,
+            "endTime": 24.650501770922236,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          }
+        },
+        "destination": {
+          "x": -7.451831334085969,
+          "z": -7.578400541112388
+        },
+        "sourceControlSequence": 5,
+        "endTime": 37.44422515558844,
+        "expectedRouteHandle": {
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 6
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      "preparedReference": {
+        "kind": "native-task-consequence-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "crateId": 1000000,
+        "centerId": 2,
+        "sourceAction": {
+          "kind": "native-task-action-attestation",
+          "version": 1,
+          "projectionVersion": 1,
+          "actionSequence": 5,
+          "reference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 24.95050177092218,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 24.95050177092218
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 24.95050177092218,
+            "endTime": 27.35050177092218,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          },
+          "preparedReference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 22.250501770922238,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 22.250501770922238
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 22.250501770922238,
+            "endTime": 24.650501770922236,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          }
+        },
+        "destination": {
+          "x": -7.451831334085969,
+          "z": -7.578400541112388
+        },
+        "sourceControlSequence": 5,
+        "endTime": 32.864225155588535,
+        "expectedRouteHandle": {
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 6
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 27.40050177092218
+        }
+      },
+      "assignmentSequence": 6,
+      "gateIds": []
+    },
+    "receipt": {
+      "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+      "session": "first-task-2ef4ea8b-e5c2-42a7-a278-3840cbbb46df",
+      "holdId": 3,
+      "sequence": 5,
+      "effectiveTime": 31.980501770922082,
+      "clockSequence": 694,
+      "nativeTaskConsequenceVersion": 1,
+      "preparedTaskConsequenceTemplate": {
+        "kind": "native-task-consequence-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "crateId": 1000000,
+        "centerId": 2,
+        "sourceAction": {
+          "kind": "native-task-action-attestation",
+          "version": 1,
+          "projectionVersion": 1,
+          "actionSequence": 5,
+          "reference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 24.95050177092218,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 4,
+              "effectiveTime": 24.95050177092218
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 24.95050177092218,
+            "endTime": 27.35050177092218,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          },
+          "preparedReference": {
+            "kind": "native-task-action-reference",
+            "version": 1,
+            "request": {
+              "kind": "native-task-action-resource-request",
+              "version": 1,
+              "nativeRoute": {
+                "actorId": 900011,
+                "assignmentSequence": 4,
+                "routeHandle": {
+                  "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                  "session": 1,
+                  "slot": 1,
+                  "generation": 3
+                }
+              },
+              "taskId": 920001,
+              "targetId": 900099,
+              "bodyId": 1,
+              "requestedAt": 22.250501770922238,
+              "actionKind": "harvest",
+              "duration": 2.4,
+              "heading": 1.8157749899217608,
+              "executedThrough": 22.250501770922238,
+              "authorizedAutonomy": false
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+              "nativeSession": 1,
+              "ticket": 3,
+              "effectiveTime": 22.250501770922238
+            },
+            "sourceControlSequence": 4,
+            "origin": {
+              "x": -5.800000190734863,
+              "z": -3.799999952316284
+            },
+            "radius": 0.28,
+            "profile": 1,
+            "motionFlags": 1,
+            "startTime": 22.250501770922238,
+            "endTime": 24.650501770922236,
+            "runPhase": 24.791666666666668,
+            "walkPhase": 52.87075265638345,
+            "carryPhase": 9.5,
+            "runRemaining": 0
+          }
+        },
+        "destination": {
+          "x": -7.451831334085969,
+          "z": -7.578400541112388
+        },
+        "sourceControlSequence": 5,
+        "endTime": 32.864225155588535,
+        "expectedRouteHandle": {
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 6
+        },
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 27.40050177092218
+        }
+      },
+      "preparedWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 27.40050177092218
+      },
+      "preparedFrameSequence": 65
+    },
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 31.980501770922082
+    },
+    "stalePublicationAcknowledged": true,
+    "pose": {
+      "x": -7,
+      "z": -5.8059572753812585,
+      "distance": 3.0887998867034914,
+      "phase": 2.859999895095825,
+      "yaw": 3.141592653589793,
+      "firstRemainingPoint": 3,
+      "arrived": false,
+      "at": 34.84050166601791,
+      "duration": 5.463723384666359,
+      "runPhase": 24.791666666666668,
+      "walkPhase": 52.87075265638345,
+      "carryPhase": 13.789999842643738,
+      "runDistance": 0,
+      "walkDistance": 3.0887998867034914,
+      "runRemaining": 0,
+      "running": false,
+      "currentSpeed": 1.08
+    },
+    "time": 34.84050166601791,
+    "inputPick": {
+      "entityId": "worker-900011",
+      "hitPoint": {
+        "x": -7.0098655041557585,
+        "y": 17.19521100320294,
+        "z": -5.754562197169189
+      },
+      "point": {
+        "x": -6.726829268292645,
+        "z": -7.229060534956247
+      },
+      "sequence": 4
+    },
+    "independent": {
+      "before": {
+        "x": -12.59254229406568,
+        "z": 2.200000047683716,
+        "distance": 18.792541912595954,
+        "phase": 17.40050177092218,
+        "yaw": -1.5707963267948966,
+        "firstRemainingPoint": 1,
+        "arrived": false,
+        "at": 27.40050177092218,
+        "duration": 55.5555518468221,
+        "runPhase": 0,
+        "walkPhase": 26.10075265638327,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 18.792541912595954,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "after": {
+        "x": -14.972258224487305,
+        "z": 2.200000047683716,
+        "distance": 26.827739868164063,
+        "phase": 24.840499877929688,
+        "yaw": 1.5707963267948966,
+        "firstRemainingPoint": 2,
+        "arrived": false,
+        "at": 34.84049987792969,
+        "duration": 55.5555518468221,
+        "runPhase": 0,
+        "walkPhase": 37.26074981689453,
+        "carryPhase": 0,
+        "runDistance": 0,
+        "walkDistance": 26.827739868164063,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      }
+    },
+    "before": {
+      "resources": 2158,
+      "generation": "4c0abd5a-e604-4ac8-a31e-eae981bc133c",
+      "rig": {
+        "attachments": [],
+        "poseHash": 957260586
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 2,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 2,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "owners": {
+        "actors": [
+          {
+            "root": 681,
+            "bones": [
+              585,
+              586,
+              587,
+              588,
+              589,
+              590,
+              591,
+              592,
+              593,
+              594,
+              595,
+              596,
+              597,
+              598,
+              599,
+              600,
+              601,
+              602,
+              603,
+              604,
+              605,
+              606,
+              607,
+              608,
+              609,
+              610,
+              611,
+              612
+            ],
+            "meshes": [
+              {
+                "id": 549,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 550,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 551,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 552,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 553,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 554,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 555,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 556,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 557,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 559,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 560,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 561,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 562,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 563,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 565,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 566,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 567,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 568,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 571,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 572,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 574,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 575,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 576,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 577,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 579,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 582,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 583,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 686,
+                "geometry": 216,
+                "material": [
+                  321
+                ]
+              },
+              {
+                "id": 687,
+                "geometry": 217,
+                "material": [
+                  322
+                ]
+              },
+              {
+                "id": 694,
+                "geometry": 277,
+                "material": [
+                  313
+                ]
+              },
+              {
+                "id": 695,
+                "geometry": 278,
+                "material": [
+                  314
+                ]
+              },
+              {
+                "id": 584,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 685,
+                "geometry": 215,
+                "material": [
+                  323
+                ]
+              },
+              {
+                "id": 688,
+                "geometry": 218,
+                "material": [
+                  324
+                ]
+              },
+              {
+                "id": 693,
+                "geometry": 276,
+                "material": [
+                  315
+                ]
+              },
+              {
+                "id": 696,
+                "geometry": 279,
+                "material": [
+                  316
+                ]
+              }
+            ]
+          },
+          {
+            "root": 682,
+            "bones": [
+              653,
+              654,
+              655,
+              656,
+              657,
+              658,
+              659,
+              660,
+              661,
+              662,
+              663,
+              664,
+              665,
+              666,
+              667,
+              668,
+              669,
+              670,
+              671,
+              672,
+              673,
+              674,
+              675,
+              676,
+              677,
+              678,
+              679,
+              680
+            ],
+            "meshes": [
+              {
+                "id": 617,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 618,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 619,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 620,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 621,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 622,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 623,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 624,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 625,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 627,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 628,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 629,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 630,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 631,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 633,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 634,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 635,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 636,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 639,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 640,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 642,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 643,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 644,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 645,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 647,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 650,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 651,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 690,
+                "geometry": 216,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 691,
+                "geometry": 217,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 698,
+                "geometry": 281,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 699,
+                "geometry": 282,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 652,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 689,
+                "geometry": 215,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 692,
+                "geometry": 218,
+                "material": [
+                  308
+                ]
+              },
+              {
+                "id": 697,
+                "geometry": 280,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 700,
+                "geometry": 283,
+                "material": [
+                  308
+                ]
+              }
+            ]
+          }
+        ],
+        "instances": [
+          {
+            "id": 31,
+            "geometry": 3,
+            "material": [
+              21
+            ],
+            "count": 0
+          },
+          {
+            "id": 58,
+            "geometry": 14,
+            "material": [
+              24
+            ],
+            "count": 8
+          },
+          {
+            "id": 115,
+            "geometry": 68,
+            "material": [
+              32
+            ],
+            "count": 2
+          }
+        ]
+      },
+      "factories": {
+        "createBuffer": 1340,
+        "createTexture": 31,
+        "createSampler": 32,
+        "createBindGroup": 430,
+        "createBindGroupLayout": 100,
+        "createPipelineLayout": 50,
+        "createShaderModule": 78,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 50,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "ready": {
+      "resources": 2694,
+      "rig": {
+        "attachments": [
+          {
+            "id": 705,
+            "geometry": 191,
+            "index": 0
+          },
+          {
+            "id": 706,
+            "geometry": 192,
+            "index": 1
+          },
+          {
+            "id": 707,
+            "geometry": 193,
+            "index": 2
+          },
+          {
+            "id": 708,
+            "geometry": 194,
+            "index": 3
+          },
+          {
+            "id": 709,
+            "geometry": 195,
+            "index": 4
+          },
+          {
+            "id": 710,
+            "geometry": 196,
+            "index": 5
+          },
+          {
+            "id": 711,
+            "geometry": 197,
+            "index": 6
+          },
+          {
+            "id": 712,
+            "geometry": 198,
+            "index": 7
+          },
+          {
+            "id": 713,
+            "geometry": 199,
+            "index": 8
+          }
+        ],
+        "poseHash": 3400272952
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "factories": {
+        "createBuffer": 1591,
+        "createTexture": 34,
+        "createSampler": 35,
+        "createBindGroup": 543,
+        "createBindGroupLayout": 182,
+        "createPipelineLayout": 74,
+        "createShaderModule": 114,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 74,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "after": {
+      "resources": 2694,
+      "generation": "4c0abd5a-e604-4ac8-a31e-eae981bc133c",
+      "rig": {
+        "attachments": [
+          {
+            "id": 705,
+            "geometry": 191,
+            "index": 0
+          },
+          {
+            "id": 706,
+            "geometry": 192,
+            "index": 1
+          },
+          {
+            "id": 707,
+            "geometry": 193,
+            "index": 2
+          },
+          {
+            "id": 708,
+            "geometry": 194,
+            "index": 3
+          },
+          {
+            "id": 709,
+            "geometry": 195,
+            "index": 4
+          },
+          {
+            "id": 710,
+            "geometry": 196,
+            "index": 5
+          },
+          {
+            "id": 711,
+            "geometry": 197,
+            "index": 6
+          },
+          {
+            "id": 712,
+            "geometry": 198,
+            "index": 7
+          },
+          {
+            "id": 713,
+            "geometry": 199,
+            "index": 8
+          }
+        ],
+        "poseHash": 3400272952
+      },
+      "crops": {
+        "closed": false,
+        "ready": true,
+        "bridgeReady": false,
+        "confirmedPlants": 1,
+        "provisional": 0,
+        "provisionalHistorySaturated": false,
+        "plants": 1,
+        "batches": 1,
+        "activeStages": [
+          29
+        ],
+        "activeBridges": [],
+        "failure": null
+      },
+      "owners": {
+        "actors": [
+          {
+            "root": 681,
+            "bones": [
+              585,
+              586,
+              587,
+              588,
+              589,
+              590,
+              591,
+              592,
+              593,
+              594,
+              595,
+              596,
+              597,
+              598,
+              599,
+              600,
+              601,
+              602,
+              603,
+              604,
+              605,
+              606,
+              607,
+              608,
+              609,
+              610,
+              611,
+              612
+            ],
+            "meshes": [
+              {
+                "id": 549,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 550,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 551,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 552,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 553,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 554,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 555,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 556,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 557,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 559,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 560,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 561,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 562,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 563,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 565,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 566,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 567,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 568,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 571,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 572,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 574,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 575,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 576,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 577,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 579,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 582,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 583,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 686,
+                "geometry": 216,
+                "material": [
+                  298
+                ]
+              },
+              {
+                "id": 687,
+                "geometry": 217,
+                "material": [
+                  299
+                ]
+              },
+              {
+                "id": 694,
+                "geometry": 277,
+                "material": [
+                  313
+                ]
+              },
+              {
+                "id": 695,
+                "geometry": 278,
+                "material": [
+                  314
+                ]
+              },
+              {
+                "id": 702,
+                "geometry": 216,
+                "material": [
+                  353
+                ]
+              },
+              {
+                "id": 703,
+                "geometry": 217,
+                "material": [
+                  354
+                ]
+              },
+              {
+                "id": 584,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 685,
+                "geometry": 215,
+                "material": [
+                  297
+                ]
+              },
+              {
+                "id": 688,
+                "geometry": 218,
+                "material": [
+                  300
+                ]
+              },
+              {
+                "id": 693,
+                "geometry": 276,
+                "material": [
+                  315
+                ]
+              },
+              {
+                "id": 696,
+                "geometry": 279,
+                "material": [
+                  316
+                ]
+              },
+              {
+                "id": 701,
+                "geometry": 215,
+                "material": [
+                  355
+                ]
+              },
+              {
+                "id": 704,
+                "geometry": 218,
+                "material": [
+                  356
+                ]
+              },
+              {
+                "id": 705,
+                "geometry": 191,
+                "material": [
+                  357
+                ]
+              },
+              {
+                "id": 706,
+                "geometry": 192,
+                "material": [
+                  358
+                ]
+              },
+              {
+                "id": 707,
+                "geometry": 193,
+                "material": [
+                  359
+                ]
+              },
+              {
+                "id": 708,
+                "geometry": 194,
+                "material": [
+                  360
+                ]
+              },
+              {
+                "id": 709,
+                "geometry": 195,
+                "material": [
+                  361
+                ]
+              },
+              {
+                "id": 710,
+                "geometry": 196,
+                "material": [
+                  362
+                ]
+              },
+              {
+                "id": 711,
+                "geometry": 197,
+                "material": [
+                  363
+                ]
+              },
+              {
+                "id": 712,
+                "geometry": 198,
+                "material": [
+                  364
+                ]
+              },
+              {
+                "id": 713,
+                "geometry": 199,
+                "material": [
+                  365
+                ]
+              }
+            ]
+          },
+          {
+            "root": 682,
+            "bones": [
+              653,
+              654,
+              655,
+              656,
+              657,
+              658,
+              659,
+              660,
+              661,
+              662,
+              663,
+              664,
+              665,
+              666,
+              667,
+              668,
+              669,
+              670,
+              671,
+              672,
+              673,
+              674,
+              675,
+              676,
+              677,
+              678,
+              679,
+              680
+            ],
+            "meshes": [
+              {
+                "id": 617,
+                "geometry": 191,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 618,
+                "geometry": 192,
+                "material": [
+                  207
+                ]
+              },
+              {
+                "id": 619,
+                "geometry": 193,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 620,
+                "geometry": 194,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 621,
+                "geometry": 195,
+                "material": [
+                  210
+                ]
+              },
+              {
+                "id": 622,
+                "geometry": 196,
+                "material": [
+                  211
+                ]
+              },
+              {
+                "id": 623,
+                "geometry": 197,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 624,
+                "geometry": 198,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 625,
+                "geometry": 199,
+                "material": [
+                  214
+                ]
+              },
+              {
+                "id": 627,
+                "geometry": 200,
+                "material": [
+                  215
+                ]
+              },
+              {
+                "id": 628,
+                "geometry": 201,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 629,
+                "geometry": 202,
+                "material": [
+                  216
+                ]
+              },
+              {
+                "id": 630,
+                "geometry": 203,
+                "material": [
+                  212
+                ]
+              },
+              {
+                "id": 631,
+                "geometry": 204,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 633,
+                "geometry": 205,
+                "material": [
+                  213
+                ]
+              },
+              {
+                "id": 634,
+                "geometry": 206,
+                "material": [
+                  208
+                ]
+              },
+              {
+                "id": 635,
+                "geometry": 207,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 636,
+                "geometry": 208,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 639,
+                "geometry": 209,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 640,
+                "geometry": 210,
+                "material": [
+                  209
+                ]
+              },
+              {
+                "id": 642,
+                "geometry": 211,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 643,
+                "geometry": 212,
+                "material": [
+                  206
+                ]
+              },
+              {
+                "id": 644,
+                "geometry": 213,
+                "material": [
+                  218
+                ]
+              },
+              {
+                "id": 645,
+                "geometry": 214,
+                "material": [
+                  217
+                ]
+              },
+              {
+                "id": 647,
+                "geometry": 215,
+                "material": [
+                  219
+                ]
+              },
+              {
+                "id": 650,
+                "geometry": 216,
+                "material": [
+                  220
+                ]
+              },
+              {
+                "id": 651,
+                "geometry": 217,
+                "material": [
+                  221
+                ]
+              },
+              {
+                "id": 690,
+                "geometry": 216,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 691,
+                "geometry": 217,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 698,
+                "geometry": 281,
+                "material": [
+                  305
+                ]
+              },
+              {
+                "id": 699,
+                "geometry": 282,
+                "material": [
+                  306
+                ]
+              },
+              {
+                "id": 652,
+                "geometry": 218,
+                "material": [
+                  222
+                ]
+              },
+              {
+                "id": 689,
+                "geometry": 215,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 692,
+                "geometry": 218,
+                "material": [
+                  308
+                ]
+              },
+              {
+                "id": 697,
+                "geometry": 280,
+                "material": [
+                  307
+                ]
+              },
+              {
+                "id": 700,
+                "geometry": 283,
+                "material": [
+                  308
+                ]
+              }
+            ]
+          }
+        ],
+        "instances": [
+          {
+            "id": 31,
+            "geometry": 3,
+            "material": [
+              21
+            ],
+            "count": 0
+          },
+          {
+            "id": 58,
+            "geometry": 14,
+            "material": [
+              24
+            ],
+            "count": 8
+          },
+          {
+            "id": 115,
+            "geometry": 68,
+            "material": [
+              32
+            ],
+            "count": 1
+          }
+        ]
+      },
+      "factories": {
+        "createBuffer": 1591,
+        "createTexture": 34,
+        "createSampler": 35,
+        "createBindGroup": 543,
+        "createBindGroupLayout": 182,
+        "createPipelineLayout": 74,
+        "createShaderModule": 114,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 74,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "resourcesPrepared": 536,
+    "resourcesAfterReady": 0,
+    "factoryDelta": {
+      "createBuffer": 251,
+      "createTexture": 3,
+      "createSampler": 3,
+      "createBindGroup": 113,
+      "createBindGroupLayout": 82,
+      "createPipelineLayout": 24,
+      "createShaderModule": 36,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 24,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "consumer": {
+      "nativeFrames": 803,
+      "replayFrames": 719,
+      "packets": 85,
+      "computePackets": 0,
+      "commands": 418420,
+      "queueWrites": 24852,
+      "gpuErrors": 0,
+      "cameraUpdatesRejected": 0,
+      "uniformForks": 113,
+      "uniformForkBytes": 58256,
+      "bindingForks": 113,
+      "resourceRetirements": 490,
+      "dependencyVisits": 157279,
+      "retirementChecks": 46970,
+      "producerReleases": 174,
+      "hiddenMs": 0,
+      "visibilityTransitions": 0,
+      "resourceTaskYields": 367,
+      "resourceJobMaxMs": 29.989990234375,
+      "resourceJobMaxType": "operation",
+      "nativeIntentControlAppliedAt": 1794749207230.685,
+      "nativeIntentControlAppliedSequence": 6,
+      "orderedSubmissions": 10,
+      "uniformForkLastAt": 1794749207198.04,
+      "bindingForkLastAt": 1794749207198.07,
+      "nativeCausalClockAppliedAt": 1794749210317.9548,
+      "nativeCausalClockAppliedSequence": 839,
+      "nativeMutationQuiescedAt": 1794749207224.16,
+      "nativeMutationReleasedAt": 1794749207235.54,
+      "nativeIntentGpuFencedAt": 1794749202564.72,
+      "nativeIntentGpuFencedSequence": 5,
+      "bufferForks": 2,
+      "bufferForkBytes": 256,
+      "bufferForkLastAt": 1794749207198.1199,
+      "hidden": false,
+      "resources": 2671,
+      "pendingResources": 0,
+      "activeSequence": 84,
+      "pendingSequence": 85,
+      "queuedMessages": 0,
+      "stagedOperations": 0,
+      "retainedPreparationResources": 0,
+      "retainedPreparationBytes": 0,
+      "preparationRecoveryRequired": false,
+      "obsoleteVersions": 0,
+      "failed": false,
+      "backend": "webgpu",
+      "rafIndependent": true,
+      "nativeMutationHold": null,
+      "nativeMutationFloor": 31.980501770922082,
+      "nativeMutationEpoch": 3,
+      "cameraSafe": true,
+      "clockBindings": 37,
+      "cameraBindings": 158,
+      "clockAtHorizon": false
+    },
+    "consequenceClockBindings": [
+      {
+        "nativeConsequence": {
+          "kind": "native-task-consequence-reference",
+          "version": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "crateId": 1000000,
+          "centerId": 2,
+          "sourceAction": {
+            "kind": "native-task-action-attestation",
+            "version": 1,
+            "projectionVersion": 1,
+            "actionSequence": 5,
+            "reference": {
+              "kind": "native-task-action-reference",
+              "version": 1,
+              "request": {
+                "kind": "native-task-action-resource-request",
+                "version": 1,
+                "nativeRoute": {
+                  "actorId": 900011,
+                  "assignmentSequence": 4,
+                  "routeHandle": {
+                    "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 3
+                  }
+                },
+                "taskId": 920001,
+                "targetId": 900099,
+                "bodyId": 1,
+                "requestedAt": 22.250501770922238,
+                "actionKind": "harvest",
+                "duration": 2.4,
+                "heading": 1.8157749899217608,
+                "executedThrough": 24.95050177092218,
+                "authorizedAutonomy": false
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                "nativeSession": 1,
+                "ticket": 4,
+                "effectiveTime": 24.95050177092218
+              },
+              "sourceControlSequence": 4,
+              "origin": {
+                "x": -5.800000190734863,
+                "z": -3.799999952316284
+              },
+              "radius": 0.28,
+              "profile": 1,
+              "motionFlags": 1,
+              "startTime": 24.95050177092218,
+              "endTime": 27.35050177092218,
+              "runPhase": 24.791666666666668,
+              "walkPhase": 52.87075265638345,
+              "carryPhase": 9.5,
+              "runRemaining": 0
+            },
+            "preparedReference": {
+              "kind": "native-task-action-reference",
+              "version": 1,
+              "request": {
+                "kind": "native-task-action-resource-request",
+                "version": 1,
+                "nativeRoute": {
+                  "actorId": 900011,
+                  "assignmentSequence": 4,
+                  "routeHandle": {
+                    "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                    "session": 1,
+                    "slot": 1,
+                    "generation": 3
+                  }
+                },
+                "taskId": 920001,
+                "targetId": 900099,
+                "bodyId": 1,
+                "requestedAt": 22.250501770922238,
+                "actionKind": "harvest",
+                "duration": 2.4,
+                "heading": 1.8157749899217608,
+                "executedThrough": 22.250501770922238,
+                "authorizedAutonomy": false
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+                "nativeSession": 1,
+                "ticket": 3,
+                "effectiveTime": 22.250501770922238
+              },
+              "sourceControlSequence": 4,
+              "origin": {
+                "x": -5.800000190734863,
+                "z": -3.799999952316284
+              },
+              "radius": 0.28,
+              "profile": 1,
+              "motionFlags": 1,
+              "startTime": 22.250501770922238,
+              "endTime": 24.650501770922236,
+              "runPhase": 24.791666666666668,
+              "walkPhase": 52.87075265638345,
+              "carryPhase": 9.5,
+              "runRemaining": 0
+            }
+          },
+          "destination": {
+            "x": -7.451831334085969,
+            "z": -7.578400541112388
+          },
+          "sourceControlSequence": 5,
+          "endTime": 32.864225155588535,
+          "expectedRouteHandle": {
+            "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+            "session": 1,
+            "slot": 1,
+            "generation": 6
+          },
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 27.40050177092218
+          }
+        },
+        "semantic": "relative",
+        "epoch": 27.40050177092218,
+        "executionEpoch": 31.980501770922082,
+        "elapsed": 30.260501666018005
+      }
+    ],
+    "block": {
+      "start": 1794749207218.9001,
+      "end": 1794749209018.9402,
+      "committedAt": 1794749207230.2651,
+      "drawFrames": 54
+    },
+    "frames": [
+      {
+        "at": 1794749207245.655,
+        "clockElapsed": 32.000501770922085,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207279.005,
+        "clockElapsed": 32.04050177092209,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207312.285,
+        "clockElapsed": 32.060501770922095,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207345.575,
+        "clockElapsed": 32.1005017709221,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207379.005,
+        "clockElapsed": 32.14050177092211,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207412.31,
+        "clockElapsed": 32.16050177092211,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207445.655,
+        "clockElapsed": 32.200501770922116,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207478.96,
+        "clockElapsed": 32.24050177092212,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207512.315,
+        "clockElapsed": 32.260501770922126,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207545.535,
+        "clockElapsed": 32.30050177092213,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207578.9548,
+        "clockElapsed": 32.34050177092214,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207612.305,
+        "clockElapsed": 32.36050177092214,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207645.66,
+        "clockElapsed": 32.40050177092215,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207678.9548,
+        "clockElapsed": 32.440501770922154,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207712.31,
+        "clockElapsed": 32.46050177092216,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207745.645,
+        "clockElapsed": 32.50050177092216,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207778.99,
+        "clockElapsed": 32.54050177092217,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207812.3499,
+        "clockElapsed": 32.56050177092217,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207845.65,
+        "clockElapsed": 32.60050177092218,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207878.9849,
+        "clockElapsed": 32.640501770922185,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207912.3398,
+        "clockElapsed": 32.66050177092219,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207945.655,
+        "clockElapsed": 32.700501770922195,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749207978.9648,
+        "clockElapsed": 32.7405017709222,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208012.88,
+        "clockElapsed": 32.760501770922204,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208045.65,
+        "clockElapsed": 32.80050177092221,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208079.015,
+        "clockElapsed": 32.84050177092222,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208112.38,
+        "clockElapsed": 32.86050177092222,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208145.655,
+        "clockElapsed": 32.900501770922226,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208179.05,
+        "clockElapsed": 32.94050177092223,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208212.345,
+        "clockElapsed": 32.960501770922235,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208245.64,
+        "clockElapsed": 33.00050177092224,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208278.9648,
+        "clockElapsed": 33.04050177092225,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208312.44,
+        "clockElapsed": 33.06050177092225,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208345.675,
+        "clockElapsed": 33.10050177092226,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208378.945,
+        "clockElapsed": 33.14050177092226,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208412.3298,
+        "clockElapsed": 33.16050177092227,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208445.65,
+        "clockElapsed": 33.20050177092227,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208478.945,
+        "clockElapsed": 33.24050177092228,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208512.315,
+        "clockElapsed": 33.26050177092228,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208545.65,
+        "clockElapsed": 33.30050177092229,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208578.94,
+        "clockElapsed": 33.340501770922295,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208612.31,
+        "clockElapsed": 33.3605017709223,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208645.65,
+        "clockElapsed": 33.400501770922304,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208678.94,
+        "clockElapsed": 33.44050177092231,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208712.335,
+        "clockElapsed": 33.46050177092231,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208745.675,
+        "clockElapsed": 33.50050177092232,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208778.9749,
+        "clockElapsed": 33.540501770922326,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208812.315,
+        "clockElapsed": 33.56050177092233,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208845.65,
+        "clockElapsed": 33.600501770922335,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208878.96,
+        "clockElapsed": 33.64050177092234,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208912.385,
+        "clockElapsed": 33.660501770922345,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208945.685,
+        "clockElapsed": 33.70050177092235,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749208978.9648,
+        "clockElapsed": 33.74050177092236,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      },
+      {
+        "at": 1794749209012.335,
+        "clockElapsed": 33.76050177092236,
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "f16fde5d-7329-44c2-bd0b-6eb483470e9a/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 31.980501770922082
+        }
+      }
+    ],
+    "preliminaryFailures": [
+      "Audit assumed one instanced batch; the scene has three. All three identities were actually preserved. Assertion now verifies every existing batch and exactly one removed instance.",
+      "First picking probe sampled an undefined handle in the audit; corrected to reference.expectedRouteHandle and made non-null pose mandatory.",
+      "Actual Carry picking then failed on a retired invisible Harvest CPU proxy. Fixed before-raycast visibility filtering with a negative unit control."
+    ]
+  },
+  "sourceHashes": {
+    "src/rendering/confirmed-terrain-support.js": "b9395ebd026e2dd160ac0d1f660fee8c9f7ecedd176e7494ed781ac87a781385",
+    "src/rendering/native-gpu-motion.js": "9a8567f259b1cf9d2edae60d47ae94ed9223b5fbeea3df341e215cbd4b07f829",
+    "src/rendering/native-resource-preparation-receiver.js": "a0ab1efe4875f901c8370508203d8e3abb8f84cd076342e1ea6b0877ba5dd44c",
+    "src/rendering/native-route-control.js": "e320249f3d39b9f8571c2f5a8fc28e12609bd7447999cc3886df15defdc1bb61",
+    "src/rendering/native-route-gpu-table.js": "53470011ddac306b582c4369beebcb4e058e0d4eda3fddf98c514eefc9a8e03e",
+    "src/rendering/native-route-pick-frame.js": "0edbb40b525a1da4ab723c74c600d1120938f05006f5cdc6261a1e83b909f159",
+    "src/rendering/remote-clock-bindings.js": "be2c4afc96fa3afeffde2fb6f1b8088bf0fd40cbefbc041a87006b6c05d986be",
+    "src/rendering/remote-webgpu-client.js": "0bf0aa95228415e9415677b4c2dd3cb94a9af6a4601fa4c179bca30c78e37c19",
+    "src/rendering/remote-webgpu-host.js": "f675ab28ea73a41ceda5804e40cc1a1a667d4fd443849789046f0408de1e2613",
+    "src/rendering/webgpu-crop-roster.js": "1f5580435f5ccc2be12f013e70645bc591b9fbc9122729c43a8dd81e1456594a",
+    "src/rendering/webgpu-draw-worker.js": "37d29f54030a8c32f8401d3c198aacfe9b95d0288c6031f5edad8cc7e16203ee",
+    "src/rendering/webgpu-worker-roster.js": "33e7593660fd3889d21ae785f6e06ecd00ff66e5c00c6515b8e8be8c4e483330",
+    "src/rendering/webgpu-world-client.js": "81994145da9c17a310b43f76cb3faaf7a2818334a8dd3f642de1923356f9fb9f",
+    "src/rendering/webgpu-world-surface.js": "6cfaa2e092fa0a317eb6c9b6ae1f5f44b9dc23288b49744d6290d0a3a435d398",
+    "src/simulation/native-intent-control-publication.js": "903f8ea7989f799ca8717c68abec3962951687b1d80e048af77f5a5181afa712",
+    "src/simulation/native-resource-preparation-client.js": "9a93032a5027d891302c87e76cdf53c046ecde39fea8399535872c42c6d1a338",
+    "src/simulation/native-resource-preparation-connection.js": "d1243712b314b6a5ac07029796f5d65f6b1bbaec6c16b8940f37e8f9f59345b8",
+    "src/world/wild-engine/spatial-intent-bridge.js": "eda01ebeafba0e7b865baaea94b1eda03fc189fcd48290052366a75c47629a4c",
+    "tests/helpers/native-admission-vertical.js": "2c123ff371a4b588bf708d39277c20637a7a97c64b6aec3253d484c1a2033ba2",
+    "tests/helpers/remote-webgpu-fixture.js": "add954c6111e451eda32f2f6ebfadc3bbaab58cd8ea463e44fa17a1c26dc4efd",
+    "tests/helpers/native-task-consequence-graphics.js": "849bf8d04ef1128baa43329e18f7330e157b22acb7f06a59d8ef4004eea25c8f",
+    "tests/native-task-consequence-control.test.js": "cef32c3c1c416bd160d244b18f18c7020177d5ef8276f80a97718d6df081094f",
+    "tests/native-task-consequence-admission.test.js": "01293867c0ad38c10d6ed4cb931e879e20e1cc1b23d5433bc60c806bd291af7b",
+    "tests/native-task-consequence-graphics.test.js": "1d9ee020dae2f4b3bd67b8a1ad4f72b3f39506fe13fdbf6b0e358231555bf16a",
+    "tests/native-task-consequence-crops.test.js": "063e6b17d2510db67e0481af39807a16c65e3a3c0cf05e30330693076ce54ee4",
+    "tests/browser/native-first-task-world-owner.js": "0a02597d56abb3ae840fdd0f2d2157d57b6709ccc10fd7357c7cb758d4a75357",
+    "tests/browser/fixtures/native-worker-world-audit-worker.js": "05d418f58964767c1cc8ab8cd568c241a91d00348e8443a3ffc78e03be878c03",
+    "tools/guardian/audit_native_first_task_world_owner.mjs": "4ed464bf771f913e3cb6082a4f11d6b9efd73617a26e6b6485a8f5612d866040"
+  },
+  "limits": [
+    "Source SpatialGameSession is in page; B uses the explicit independent Home fixture. Ordinary all-intention Game/Worker producer is pending.",
+    "Prepared delivery settlement, fresh Carry restoration and full context recovery remain pending.",
+    "536 factory creations during preparation are counted explicitly; no assertion that every preparation allocation is minimal.",
+    "No whole-game frame-tail benchmark or incremental recovery acceptance for the historical 3123 resources."
+  ]
+}

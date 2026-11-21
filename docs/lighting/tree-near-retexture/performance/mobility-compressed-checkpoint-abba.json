@@ -1,0 +1,54 @@
+{
+  "chunks": 9,
+  "runs": [
+    {
+      "compressed": false,
+      "bytes": 958982,
+      "captureSerializeMs": 7.719999998807907,
+      "captureCompressMs": 0,
+      "captureResponseMs": 8.379999995231628,
+      "decompressMs": 0,
+      "restoreWorkerMs": 687.3799999952316,
+      "restoreResponseMs": 875.184999987483,
+      "initialEqual": true,
+      "finalEqual": true
+    },
+    {
+      "compressed": true,
+      "bytes": 70184,
+      "captureSerializeMs": 6.795000001788139,
+      "captureCompressMs": 13.310000002384186,
+      "captureResponseMs": 20.510000005364418,
+      "decompressMs": 3.405000001192093,
+      "restoreWorkerMs": 691.5250000059605,
+      "restoreResponseMs": 891.609999999404,
+      "initialEqual": true,
+      "finalEqual": true
+    },
+    {
+      "compressed": true,
+      "bytes": 70184,
+      "captureSerializeMs": 7.169999986886978,
+      "captureCompressMs": 12.83500000834465,
+      "captureResponseMs": 20.230000004172325,
+      "decompressMs": 3.2449999898672104,
+      "restoreWorkerMs": 692.2549999952316,
+      "restoreResponseMs": 882.1950000077486,
+      "initialEqual": true,
+      "finalEqual": true
+    },
+    {
+      "compressed": false,
+      "bytes": 958982,
+      "captureSerializeMs": 6.329999998211861,
+      "captureCompressMs": 0,
+      "captureResponseMs": 7.344999998807907,
+      "decompressMs": 0,
+      "restoreWorkerMs": 687.8649999946356,
+      "restoreResponseMs": 875.2199999988079,
+      "initialEqual": true,
+      "finalEqual": true
+    }
+  ],
+  "scope": "One Edge headless session; converted mangrove islands fixture, nine synthetic chunks. Raw/gzip/gzip/raw capture and recovery from same 10-tick checkpoint, each continuation compared to original after 20 more ticks. Compression and decompression in Workers; compressed copy and transferable handoff included in restore response. No actual durable storage, render, physics manager, crash or full gameplay. Raw bytes count UTF-8, transport is structured clone string."
+}

@@ -1,0 +1,78 @@
+TAP version 13
+# (node:13952) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:13952) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+ok 1 - actor picking excludes retired invisible variants and their old clock callbacks before raycasting
+  ---
+  duration_ms: 14.6546
+  ...
+# Subtest: grouped terrain remains selectable and occludes entities behind it
+ok 2 - grouped terrain remains selectable and occludes entities behind it
+  ---
+  duration_ms: 6.0503
+  ...
+# Subtest: empty-ground spell selection carries the visible terrain height without changing placement coordinates
+ok 3 - empty-ground spell selection carries the visible terrain height without changing placement coordinates
+  ---
+  duration_ms: 3.9513
+  ...
+# Subtest: grouped biome props still occlude selectable objects
+ok 4 - grouped biome props still occlude selectable objects
+  ---
+  duration_ms: 1.813
+  ...
+# Subtest: prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+ok 5 - prepares a confirmed animal pose only for the pick and restores it even on raycast failure
+  ---
+  duration_ms: 1.8633
+  ...
+# Subtest: picks confirmed animal, nearest crop, and terrain without the old scene
+ok 6 - picks confirmed animal, nearest crop, and terrain without the old scene
+  ---
+  duration_ms: 2.5734
+  ...
+# Subtest: terrain and confirmed world geometry occlude candidates
+ok 7 - terrain and confirmed world geometry occlude candidates
+  ---
+  duration_ms: 1.611
+  ...
+# Subtest: ignores transparent foliage texels and retains opaque or unavailable data
+ok 8 - ignores transparent foliage texels and retains opaque or unavailable data
+  ---
+  duration_ms: 1.5507
+  ...
+# Subtest: selects the nearest visible worker or structure while respecting terrain and props
+ok 9 - selects the nearest visible worker or structure while respecting terrain and props
+  ---
+  duration_ms: 4.1184
+  ...
+# Subtest: transparent cutout does not occlude a selectable structure
+ok 10 - transparent cutout does not occlude a selectable structure
+  ---
+  duration_ms: 1.4813
+  ...
+# Subtest: reports an incomplete visual scene until all confirmed selectable objects are resident
+ok 11 - reports an incomplete visual scene until all confirmed selectable objects are resident
+  ---
+  duration_ms: 1.6869
+  ...
+# Subtest: geometry outside the chunk clip cannot hide a selectable target
+ok 12 - geometry outside the chunk clip cannot hide a selectable target
+  ---
+  duration_ms: 2.1396
+  ...
+# Subtest: crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+ok 13 - crop volumes preserve legacy overlap priority until removal and retain nearer opaque occlusion
+  ---
+  duration_ms: 1.4445
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 532.7684

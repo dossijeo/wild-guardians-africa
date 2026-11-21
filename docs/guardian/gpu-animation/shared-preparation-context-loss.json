@@ -1,0 +1,35 @@
+{
+  "scope": "Isolated WebGL scene, two same-turn subscribers. QA holds the first preparation after its upload draw and before the fence, then loses/restores the real context. Not a full game, tree visual parity or performance test.",
+  "result": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "before": {
+      "calls": 1,
+      "epoch": 0,
+      "lost": false
+    },
+    "lostEpoch": 1,
+    "restoredEpoch": 2,
+    "calls": 2,
+    "interrupted": [
+      {
+        "status": "rejected",
+        "name": "AbortError"
+      },
+      {
+        "status": "rejected",
+        "name": "AbortError"
+      }
+    ],
+    "recovery": [
+      {
+        "status": "fulfilled",
+        "name": null
+      },
+      {
+        "status": "fulfilled",
+        "name": null
+      }
+    ],
+    "contextLost": false
+  }
+}

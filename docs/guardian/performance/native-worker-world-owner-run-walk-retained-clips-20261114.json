@@ -1,0 +1,428 @@
+{
+  "result": {
+    "scope": "Production WorldClient -> WorldWorker -> WorldSurface -> existing worker roster, real original worker and real C++/draw control. Explicit native resource input, not ordinary gameplay producer or full all-intent acceptance.",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "gateWait": false,
+    "gateHolds": null,
+    "carrying": false,
+    "rig": null,
+    "runningTransition": true,
+    "transition": {
+      "at": 10.416666666666666,
+      "before": {
+        "x": 7.175999999999999,
+        "z": -11.800000015513103,
+        "distance": 0.9759999999999992,
+        "phase": 0.4066666666666663,
+        "yaw": 1.5707963426894676,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 10.406666666666666,
+        "duration": 10.601852558277272,
+        "runPhase": 0.4066666666666663,
+        "walkPhase": 0,
+        "carryPhase": 0,
+        "runDistance": 0.9759999999999992,
+        "walkDistance": 0,
+        "runRemaining": 0.0240000000000008,
+        "running": true,
+        "currentSpeed": 2.4000000000000004
+      },
+      "after": {
+        "x": 7.210799999999999,
+        "z": -11.800000016066233,
+        "distance": 1.0107999999999993,
+        "phase": 0.4266666666666659,
+        "yaw": 1.5707963426894676,
+        "firstRemainingPoint": 0,
+        "arrived": false,
+        "at": 10.426666666666666,
+        "duration": 10.601852558277272,
+        "runPhase": 0.41666666666666663,
+        "walkPhase": 0.014999999999998966,
+        "carryPhase": 0,
+        "runDistance": 1,
+        "walkDistance": 0.010799999999999255,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 1.08
+      },
+      "drawsBefore": 3,
+      "drawsAfter": 12
+    },
+    "prepared": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 2,
+        "routeHandle": {
+          "authorityEpoch": "9ff5ced8-7eee-48d4-af60-38269e99d614/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 3
+        }
+      },
+      "start": 10,
+      "end": 20.601852558277272,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1159,
+        "createTexture": 25,
+        "createSampler": 26,
+        "createBindGroup": 354,
+        "createBindGroupLayout": 48,
+        "createPipelineLayout": 24,
+        "createShaderModule": 43,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 24,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "reused": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 2,
+        "routeHandle": {
+          "authorityEpoch": "9ff5ced8-7eee-48d4-af60-38269e99d614/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 3
+        }
+      },
+      "start": 10,
+      "end": 20.601852558277272,
+      "reused": true,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1159,
+        "createTexture": 25,
+        "createSampler": 26,
+        "createBindGroup": 354,
+        "createBindGroupLayout": 48,
+        "createPipelineLayout": 24,
+        "createShaderModule": 43,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 24,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "replacement": {
+      "actorId": "worker-900011",
+      "nativeRoute": {
+        "actorId": 900011,
+        "assignmentSequence": 5,
+        "routeHandle": {
+          "authorityEpoch": "9ff5ced8-7eee-48d4-af60-38269e99d614/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 7
+        }
+      },
+      "start": 11.9996396484375,
+      "end": 14.508538732740616,
+      "qaLastRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "qaCumulativeFactories": {
+        "createBuffer": 1186,
+        "createTexture": 26,
+        "createSampler": 27,
+        "createBindGroup": 366,
+        "createBindGroupLayout": 60,
+        "createPipelineLayout": 24,
+        "createShaderModule": 43,
+        "createRenderPipeline": 2,
+        "createRenderPipelineAsync": 24,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      }
+    },
+    "oldRelease": false,
+    "released": true,
+    "before": {
+      "generation": "f03efd95-041f-4bc2-ba1b-56844ab46d44",
+      "resourcesCreated": 1750,
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 1,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      }
+    },
+    "afterReuse": {
+      "resourcesCreated": 1750
+    },
+    "after": {
+      "generation": "f03efd95-041f-4bc2-ba1b-56844ab46d44",
+      "resourcesCreated": 1750,
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 1,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      }
+    },
+    "final": {
+      "generation": "f03efd95-041f-4bc2-ba1b-56844ab46d44",
+      "workers": {
+        "closed": false,
+        "count": 1,
+        "ready": 1,
+        "pending": 0,
+        "native": 0,
+        "nativePreparing": 0,
+        "assets": {
+          "closed": false,
+          "idle": {
+            "idle": 0,
+            "estimatedBytes": 0,
+            "maxBytes": 100663296
+          },
+          "textureFailure": null,
+          "profiles": [
+            {
+              "profile": "olderFemale",
+              "ready": true,
+              "textured": true,
+              "refs": 1,
+              "pending": 0
+            }
+          ]
+        }
+      },
+      "gpuErrors": 0
+    },
+    "block": {
+      "start": 1794646368527.02,
+      "end": 1794646369027.1,
+      "blockedMs": 500.080078125,
+      "drawFrames": 15,
+      "minClock": 10.0839599609375,
+      "maxClock": 11.9231796875
+    },
+    "frames": [
+      {
+        "at": 1794646368556.83,
+        "intervalMs": 33.22998046875,
+        "drawMs": 1.544921875,
+        "replay": true,
+        "clockElapsed": 10.0839599609375,
+        "safeUntil": 10.0839599609375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368590.16,
+        "intervalMs": 33.329833984375,
+        "drawMs": 1.35498046875,
+        "replay": true,
+        "clockElapsed": 10.2436796875,
+        "safeUntil": 10.2436796875,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368623.4949,
+        "intervalMs": 33.3349609375,
+        "drawMs": 1.230224609375,
+        "replay": true,
+        "clockElapsed": 10.323759765625,
+        "safeUntil": 10.323759765625,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368656.825,
+        "intervalMs": 33.330078125,
+        "drawMs": 1.219970703125,
+        "replay": true,
+        "clockElapsed": 10.4838193359375,
+        "safeUntil": 10.4838193359375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368690.18,
+        "intervalMs": 33.35498046875,
+        "drawMs": 1.1201171875,
+        "replay": true,
+        "clockElapsed": 10.64351953125,
+        "safeUntil": 10.64351953125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368723.47,
+        "intervalMs": 33.2900390625,
+        "drawMs": 1.054931640625,
+        "replay": true,
+        "clockElapsed": 10.7236201171875,
+        "safeUntil": 10.7236201171875,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368756.85,
+        "intervalMs": 33.380126953125,
+        "drawMs": 1.184814453125,
+        "replay": true,
+        "clockElapsed": 10.883439453125,
+        "safeUntil": 10.883439453125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368790.05,
+        "intervalMs": 33.199951171875,
+        "drawMs": 1.224853515625,
+        "replay": true,
+        "clockElapsed": 11.0433798828125,
+        "safeUntil": 11.0433798828125,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368823.49,
+        "intervalMs": 33.43994140625,
+        "drawMs": 1.35009765625,
+        "replay": true,
+        "clockElapsed": 11.1274599609375,
+        "safeUntil": 11.1274599609375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368856.82,
+        "intervalMs": 33.330078125,
+        "drawMs": 1.08984375,
+        "replay": true,
+        "clockElapsed": 11.28333984375,
+        "safeUntil": 11.28333984375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368890.195,
+        "intervalMs": 33.375,
+        "drawMs": 1.1298828125,
+        "replay": true,
+        "clockElapsed": 11.4432802734375,
+        "safeUntil": 11.4432802734375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368923.565,
+        "intervalMs": 33.369873046875,
+        "drawMs": 1.195068359375,
+        "replay": true,
+        "clockElapsed": 11.52333984375,
+        "safeUntil": 11.52333984375,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368956.83,
+        "intervalMs": 33.26513671875,
+        "drawMs": 1.31982421875,
+        "replay": true,
+        "clockElapsed": 11.683240234374999,
+        "safeUntil": 11.683240234374999,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646368990.165,
+        "intervalMs": 33.3349609375,
+        "drawMs": 1.114990234375,
+        "replay": true,
+        "clockElapsed": 11.843019531249999,
+        "safeUntil": 11.843019531249999,
+        "cameraVersion": null
+      },
+      {
+        "at": 1794646369023.615,
+        "intervalMs": 33.449951171875,
+        "drawMs": 1.3349609375,
+        "replay": true,
+        "clockElapsed": 11.9231796875,
+        "safeUntil": 11.9231796875,
+        "cameraVersion": null
+      }
+    ],
+    "errors": [],
+    "drained": true
+  },
+  "errors": [],
+  "consoleErrors": [],
+  "httpFailures": []
+}

@@ -1,0 +1,68 @@
+{
+  "scope": "One sequential reference/Guardian pair, current branch, same night31 snapshot; not a causal performance acceptance",
+  "outcomeExact": true,
+  "framesEach": 400,
+  "actors": 4,
+  "hiddenFrames": [
+    0,
+    0
+  ],
+  "metrics": {
+    "averageFps": {
+      "reference": 10.495242965530606,
+      "guardian": 9.3636454825502
+    },
+    "frameP95": {
+      "reference": 149.6750000000029,
+      "guardian": 199.44499999999243
+    },
+    "frameP99": {
+      "reference": 149.8299999999872,
+      "guardian": 282.6849999999977
+    },
+    "frameMax": {
+      "reference": 798.010000000002,
+      "guardian": 748.2300000000032
+    },
+    "framesOver50ms": {
+      "reference": 324,
+      "guardian": 342
+    },
+    "framesOver100ms": {
+      "reference": 91,
+      "guardian": 129
+    },
+    "simulationP95": {
+      "reference": 11.175000071525574,
+      "guardian": 10.5
+    },
+    "renderP95": {
+      "reference": 33.24500000476837,
+      "guardian": 37.044999957084656
+    },
+    "animationP95": {
+      "reference": 0,
+      "guardian": 0.2849999666213989
+    },
+    "vfxP95": {
+      "reference": 0.004999995231628418,
+      "guardian": 1.6749999523162842
+    },
+    "drawP95": {
+      "reference": 180,
+      "guardian": 189
+    },
+    "physicsP95": {
+      "reference": 3.884999990463257,
+      "guardian": 4.080000042915344
+    },
+    "heapStart": {
+      "reference": 604834377,
+      "guardian": 603082685
+    },
+    "heapEnd": {
+      "reference": 628224650,
+      "guardian": 636381751
+    }
+  }
+}

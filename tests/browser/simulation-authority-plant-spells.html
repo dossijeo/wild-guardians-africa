@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {serializeConfirmedState} from '../../src/simulation/confirmed-live-state.js';
+import {plant,cast,previewSpell,observeGameEvents} from '../../src/simulation/game.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),{game,nav}=fixture.diagnosticWorld();game.raid=null;game.time=100;game.pauses=[];nav.setState(game);
+ const existing=game.plants.find(p=>p.alive),center=game.structures.find(s=>s.kind==='center'&&s.status==='intact');if(!existing||!center)throw Error('Missing farm fixture');let site=null;
+ for(let dz=-20;dz<=20&&!site;dz++)for(let dx=-20;dx<=20&&!site;dx++){const x=center.x+dx,z=center.z+dz;let check;try{check=nav.placement(x,z,.4);}catch(error){if(error.name==='SpatialChunkUnavailable')continue;throw error;}if(check.valid&&!game.plants.some(p=>p.alive&&Math.hypot(p.x-x,p.z-z)<1.1))site={x,z};}if(!site)throw Error('No planting site');
+ const source=serialize(game),client=createSimulationAuthorityClient({snapshot:source,chunkKeys:chunks,session:'plant-spells'}),events=[],stop=observeGameEvents(game,e=>events.push(structuredClone(e)));let sequence=0;
+ try{
+  await client.ready;
+  async function compare(command,fn){let value=null,rejection=null;try{value=fn();}catch(error){rejection=error.message;}const expectedEvents=events.splice(0),request=client.submit(command);if(!request.accepted)throw Error('Command not admitted');const result=await request.result;if(result.sequence!==++sequence||result.value!==(rejection?false:value)||(result.rejection??null)!==rejection||result.snapshot!==serializeConfirmedState(game)||JSON.stringify(result.events)!==JSON.stringify(expectedEvents))throw Error('Command divergence at '+sequence+': '+JSON.stringify({rejection,remote:result.rejection,value,remoteValue:result.value}));return result;}
+  const bad=await compare({kind:'plant',id:'bad-plant',species:existing.species,x:existing.x,z:existing.z},()=>plant(game,'bad-plant',existing.species,existing.x,existing.z,nav));
+  const good=await compare({kind:'plant',id:'new-plant',species:existing.species,...site},()=>plant(game,'new-plant',existing.species,site.x,site.z,nav));
+  const added=game.plants.at(-1),selection={targetId:added.id};
+  const growth=await compare({kind:'castAgricultural',spell:'growth',id:'growth-1',x:added.x,z:added.z,selection},()=>cast(game,'growth-1','growth',added.x,added.z,nav,selection));
+  const conflict=await compare({kind:'castAgricultural',spell:'multiply',id:'multiply-conflict',x:added.x,z:added.z,selection},()=>cast(game,'multiply-conflict','multiply',added.x,added.z,nav,selection));
+  const duplicate=await compare({kind:'castAgricultural',spell:'growth',id:'growth-1',x:added.x,z:added.z,selection},()=>cast(game,'growth-1','growth',added.x,added.z,nav,selection));
+  const other=game.plants.find(p=>p.alive&&p.id!==added.id&&previewSpell(game,'multiply',p.x,p.z,nav,p.id).valid);if(!other)throw Error('No target for multiply spell');const multiplySelection={targetId:other.id};
+  const multiply=await compare({kind:'castAgricultural',spell:'multiply',id:'multiply-1',x:other.x,z:other.z,selection:multiplySelection},()=>cast(game,'multiply-1','multiply',other.x,other.z,nav,multiplySelection));
+  if(!bad.rejection||!good.value||!growth.value||!conflict.rejection||duplicate.value!==false||!multiply.value||client.status().state!=='ready')throw Error('Incomplete planting/spell coverage');
+  return {sequence,site,plantEvents:good.events.map(e=>e.type),growthEvents:growth.events.map(e=>e.type),multiplyEvents:multiply.events.map(e=>e.type),invalidPlant:bad.rejection,conflict:conflict.rejection,duplicate:duplicate.value,scope:'Programmatic commands on a modified peaceful island-mangrove capture, compared against direct Game functions. No player UI, save/restore, campaign or production integration.'};
+ }finally{stop();client.dispose();fixture.dispose();}
+};window.ready=true;
+</script>

@@ -1,0 +1,145 @@
+{
+  "runs": [
+    {
+      "mode": "reference",
+      "skippedCalls": 0,
+      "imageHash": 1068685800,
+      "renderMs": {
+        "count": 75,
+        "p50": 24.24500000476837,
+        "p95": 26.42000000178814,
+        "p99": 33.28499999642372,
+        "max": 34.3500000089407
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33999999999651,
+        "p95": 33.400000000001455,
+        "p99": 33.424999999995634,
+        "max": 33.455000000001746
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 13.090176,
+        "p95": 15.2664,
+        "p99": 15.897824,
+        "max": 16.536512
+      }
+    },
+    {
+      "mode": "skip",
+      "skippedCalls": 1500,
+      "imageHash": 1068685800,
+      "renderMs": {
+        "count": 75,
+        "p50": 16.734999999403954,
+        "p95": 17.694999992847443,
+        "p99": 18.74499998986721,
+        "max": 18.79500000178814
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.40500000000611,
+        "p99": 33.450000000004366,
+        "max": 33.46500000000378
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 9.52208,
+        "p95": 20.799712,
+        "p99": 21.634784,
+        "max": 23.451648
+      }
+    },
+    {
+      "mode": "skip",
+      "skippedCalls": 1500,
+      "imageHash": 3305954374,
+      "renderMs": {
+        "count": 75,
+        "p50": 17.150000005960464,
+        "p95": 28.900000005960464,
+        "p99": 30.524999991059303,
+        "max": 31.109999999403954
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.395000000004075,
+        "p99": 33.41000000000349,
+        "max": 33.4149999999936
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 4.532352,
+        "p95": 9.883968,
+        "p99": 10.358784,
+        "max": 10.592256
+      }
+    },
+    {
+      "mode": "reference",
+      "skippedCalls": 0,
+      "imageHash": 3045345257,
+      "renderMs": {
+        "count": 75,
+        "p50": 23.45499999821186,
+        "p95": 24.864999994635582,
+        "p99": 26.649999991059303,
+        "max": 29.19999998807907
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.3350000000064,
+        "p95": 33.38500000000204,
+        "p99": 33.41000000000349,
+        "max": 33.419999999998254
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 9.484096,
+        "p95": 10.994208,
+        "p99": 11.899168,
+        "max": 12.616896
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "a": 0,
+      "b": 1,
+      "changedPixels": 0,
+      "totalPixels": 921600,
+      "maxChannel": 0,
+      "meanChannelDifference": 0,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "changedPixels": 60,
+      "totalPixels": 921600,
+      "maxChannel": 8,
+      "meanChannelDifference": 0.000048828125,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "changedPixels": 21,
+      "totalPixels": 921600,
+      "maxChannel": 8,
+      "meanChannelDifference": 0.000014377170138888888,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    }
+  ],
+  "pixelsEqual": false,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "animals": 20,
+  "sceneErrors": [],
+  "scope": "Single headless Edge session; frozen mangrove scene, camera and elapsed time with 20 animals. Unsafe experimental unconditional ground-sample skip; pixel readback after each block only, no production integration, moving camera, animation, interactions or simulation."
+}

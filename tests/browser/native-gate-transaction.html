@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Native gate transaction audit</title>
+<h1>Native gate transaction audit</h1>
+<p>Pending native motor + direct GPU drain receipt. No gate collider, character locomotion or world-mutation admission.</p>
+<pre id="result">Ready</pre>
+<script type="module">
+import {auditNativeRouteControl} from './native-route-control.js';
+window.runNativeGateTransactionAudit=async()=>{
+ const results=[];
+ try{
+  for(let i=0;i<4;i++){
+   document.querySelector('#result').textContent=`Running ${i+1}/4`;
+   results.push(await auditNativeRouteControl({gpuFence:true,gateTransaction:true,invalidateGateProposal:i===3}));
+  }
+  window.nativeGateTransactionAudit=results;
+  document.querySelector('#result').textContent=JSON.stringify(results,null,2);
+  return results;
+ }catch(error){document.querySelector('#result').textContent=String(error.stack??error);throw error;}
+};
+</script>

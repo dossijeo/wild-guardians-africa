@@ -1,0 +1,300 @@
+{
+  "date": "2026-11-09",
+  "reproduce": "node --test tests/spatial-native-gate-route-acceptance.test.js",
+  "result": {
+    "checklistId": "A6-04.e-R2",
+    "backend": "native-wasm",
+    "scope": "Native opt-in gate/route authority on validated intact flat Desert mechanisms. No gameplay activation, real-character/WebGPU or causal-presentation acceptance.",
+    "initial": {
+      "sequence": 1,
+      "points": [
+        -11.75,
+        -2.799999952316284,
+        -11.75,
+        3.200000047683716,
+        -11.75,
+        9.199999809265137
+      ],
+      "clocks": [
+        {
+          "opening": 0,
+          "target": 0,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 0,
+          "sampledAt": 10,
+          "authorizedPassage": false
+        },
+        {
+          "opening": 0,
+          "target": 0,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.353393424842597,
+          "defined": true,
+          "from": 0,
+          "sampledAt": 10,
+          "authorizedPassage": false
+        }
+      ]
+    },
+    "admission": {
+      "route": [
+        1,
+        0,
+        3
+      ],
+      "clocks": [
+        {
+          "opening": 0,
+          "target": 1,
+          "at": 11.166829432851987,
+          "endsAt": 11.766829432851987,
+          "requested": true,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 0,
+          "sampledAt": 10,
+          "authorizedPassage": false
+        },
+        {
+          "opening": 0,
+          "target": 1,
+          "at": 15.932851243163771,
+          "endsAt": 16.532851243163773,
+          "requested": true,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.353393424842597,
+          "defined": true,
+          "from": 0,
+          "sampledAt": 10,
+          "authorizedPassage": false
+        }
+      ],
+      "holds": [
+        {
+          "gateId": 990001,
+          "distance": 2.8003906388447697,
+          "from": 11.166829432851987,
+          "until": 11.766829432851987
+        },
+        {
+          "gateId": 990002,
+          "distance": 8.646979342616874,
+          "from": 15.932851243163771,
+          "until": 16.532851243163773
+        }
+      ],
+      "promises": [
+        [
+          {
+            "bodyId": 1,
+            "actorId": 900011,
+            "route": [
+              1,
+              0,
+              3
+            ],
+            "from": 11.766829432851987,
+            "until": 15.392998551664075
+          }
+        ],
+        [
+          {
+            "bodyId": 1,
+            "actorId": 900011,
+            "route": [
+              1,
+              0,
+              3
+            ],
+            "from": 16.532851243163773,
+            "until": 21.476286561331243
+          }
+        ]
+      ]
+    },
+    "suspension": {
+      "at": 16.13285124316377,
+      "resume": [
+        1,
+        0,
+        4
+      ],
+      "remainingPoints": [
+        -11.75,
+        3.200000047683716,
+        -11.75,
+        9.199999809265137
+      ],
+      "pose": {
+        "x": -11.75,
+        "z": -0.1530206573831272,
+        "distance": 8.646979342616874,
+        "phase": 5.332851243163772,
+        "yaw": 0,
+        "firstRemainingPoint": 1,
+        "arrived": false,
+        "at": 16.13285124316377,
+        "duration": 15.193055378949204,
+        "runPhase": 2.1874999999999996,
+        "walkPhase": 4.718026864745658,
+        "carryPhase": 0,
+        "runDistance": 5.25,
+        "walkDistance": 3.3969793426168735,
+        "runRemaining": 0,
+        "running": false,
+        "currentSpeed": 0
+      }
+    },
+    "rejectedResume": {
+      "at": 30,
+      "status": "blocked",
+      "sequence": 3
+    },
+    "resumed": {
+      "route": [
+        1,
+        0,
+        6
+      ],
+      "startTime": 30,
+      "endTime": 39.060204135785426,
+      "points": [
+        -11.75,
+        3.200000047683716,
+        -11.75,
+        9.199999809265137
+      ],
+      "motionOffset": {
+        "distance": 8.646979342616874,
+        "phase": 5.332851243163772,
+        "runPhase": 2.1874999999999996,
+        "walkPhase": 4.718026864745658,
+        "carryPhase": 0,
+        "runDistance": 5.25,
+        "walkDistance": 3.3969793426168735
+      }
+    },
+    "ordinaryExecution": {
+      "steps": 300,
+      "before": {
+        "nav_gate_wait_segments": 16,
+        "nav_gate_prefix_segments": 0,
+        "nav_gate_worker_checks": 0,
+        "nav_gate_sweep_evaluations": 605,
+        "nav_gate_static_evaluations": 0,
+        "spatial_execution_clearance_checks": 92,
+        "nav_intent_route_queries": 0
+      },
+      "after": {
+        "nav_gate_wait_segments": 16,
+        "nav_gate_prefix_segments": 0,
+        "nav_gate_worker_checks": 0,
+        "nav_gate_sweep_evaluations": 605,
+        "nav_gate_static_evaluations": 0,
+        "spatial_execution_clearance_checks": 92,
+        "nav_intent_route_queries": 0
+      }
+    },
+    "final": {
+      "x": -11.75,
+      "z": 9.199999809265137,
+      "distance": 17.999999809265137,
+      "phase": 13.993055378949201,
+      "yaw": 0,
+      "firstRemainingPoint": 2,
+      "arrived": true,
+      "at": 39.060204135785426,
+      "duration": 9.060204135785426,
+      "runPhase": 2.1874999999999996,
+      "walkPhase": 17.708333068423805,
+      "carryPhase": 0,
+      "runDistance": 5.25,
+      "walkDistance": 12.749999809265137,
+      "runRemaining": 0,
+      "running": false,
+      "currentSpeed": 0,
+      "executedThrough": 39.060204135785426
+    },
+    "changes": [
+      {
+        "type": "RouteReplaced",
+        "state": 1,
+        "actorId": 900011,
+        "taskId": null,
+        "targetId": null,
+        "sequence": 2,
+        "effectiveTime": 10,
+        "route": [
+          1,
+          0,
+          3
+        ],
+        "revoked": [
+          1,
+          0,
+          1
+        ]
+      },
+      {
+        "type": "RouteInvalidated",
+        "state": 4,
+        "actorId": 900011,
+        "taskId": null,
+        "targetId": null,
+        "sequence": 3,
+        "effectiveTime": 16.13285124316377,
+        "route": null,
+        "revoked": [
+          1,
+          0,
+          3
+        ]
+      },
+      {
+        "type": "RouteAssigned",
+        "state": 1,
+        "actorId": 900011,
+        "taskId": null,
+        "targetId": null,
+        "sequence": 4,
+        "effectiveTime": 30,
+        "route": [
+          1,
+          0,
+          6
+        ],
+        "revoked": null
+      },
+      {
+        "type": "RouteCompleted",
+        "state": 2,
+        "actorId": 900011,
+        "taskId": null,
+        "targetId": null,
+        "sequence": 5,
+        "effectiveTime": 39.060204135785426,
+        "route": null,
+        "revoked": [
+          1,
+          0,
+          6
+        ]
+      }
+    ],
+    "authorizedAutonomy": false,
+    "authorizedPassage": false
+  }
+}

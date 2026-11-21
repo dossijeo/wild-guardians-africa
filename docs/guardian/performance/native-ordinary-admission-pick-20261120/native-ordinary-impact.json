@@ -1,0 +1,348 @@
+{
+  "tier": "integration",
+  "changed": [
+    "src/rendering/remote-webgpu-host.js"
+  ],
+  "tests": [
+    "tests/harvest-consequence.test.js",
+    "tests/native-admission-motion-boundary.test.js",
+    "tests/native-admission-vertical.test.js",
+    "tests/native-barrier-quiescence.test.js",
+    "tests/native-failed-consumer-drain.test.js",
+    "tests/native-farm-arrival-control.test.js",
+    "tests/native-farm-arrival-route-clock.test.js",
+    "tests/native-farm-arrival-route-control.test.js",
+    "tests/native-farm-arrival-route-ports.test.js",
+    "tests/native-farm-arrival-route-remote.test.js",
+    "tests/native-farm-arrival-stop-clock.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-birth-admission.test.js",
+    "tests/native-farm-birth-cancellation.test.js",
+    "tests/native-farm-birth-concurrency.test.js",
+    "tests/native-farm-idle-phase.test.js",
+    "tests/native-farm-restored-authority.test.js",
+    "tests/native-home-arrival-game.test.js",
+    "tests/native-home-arrival-remote.test.js",
+    "tests/native-home-inactive-restoration.test.js",
+    "tests/native-home-restoration.test.js",
+    "tests/native-home-route-proposal.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-actual-boundary-floor.test.js",
+    "tests/native-idle-clock-family-filter.test.js",
+    "tests/native-idle-completed-home-remote.test.js",
+    "tests/native-idle-cycle-control.test.js",
+    "tests/native-idle-cycle-phase-continuity.test.js",
+    "tests/native-idle-cycle-phase.test.js",
+    "tests/native-idle-cycle-remote.test.js",
+    "tests/native-idle-failed-cycle-control.test.js",
+    "tests/native-idle-home.test.js",
+    "tests/native-idle-reference-canonical-reuse.test.js",
+    "tests/native-idle-stroll-idle-phase.test.js",
+    "tests/native-idle-stroll-remote.test.js",
+    "tests/native-idle-stroll-restoration-publication.test.js",
+    "tests/native-idle-stroll-stop-publication.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-initial-idle-body-control.test.js",
+    "tests/native-initial-idle-body-remote.test.js",
+    "tests/native-initial-idle-clock.test.js",
+    "tests/native-initial-idle-control.test.js",
+    "tests/native-initial-idle-initialization.test.js",
+    "tests/native-intent-control-cohort.test.js",
+    "tests/native-intent-production-authority.test.js",
+    "tests/native-mutation-release-presentation.test.js",
+    "tests/native-paused-publication.test.js",
+    "tests/native-prepared-ready-opportunity.test.js",
+    "tests/native-presentation-opportunities.test.js",
+    "tests/native-production-lifecycle.test.js",
+    "tests/native-production-quiescence.test.js",
+    "tests/native-recovery-checkpoint.test.js",
+    "tests/native-resource-preparation-channel.test.js",
+    "tests/native-route-control.test.js",
+    "tests/native-settled-idle-phase.test.js",
+    "tests/native-task-action-binding.test.js",
+    "tests/native-task-action-game-execution.test.js",
+    "tests/native-task-action-graphics.test.js",
+    "tests/native-task-action-restoration.test.js",
+    "tests/native-task-consequence-admission.test.js",
+    "tests/native-task-game-execution.test.js",
+    "tests/native-task-resource-requests.test.js",
+    "tests/native-task-settlement-proposal.test.js",
+    "tests/native-task-settlement-remote.test.js",
+    "tests/native-task-start-graphics.test.js",
+    "tests/native-world-boundary.test.js",
+    "tests/remote-ordinary-admission-slices.test.js",
+    "tests/remote-preparation-slices.test.js",
+    "tests/remote-prepared-first-use.test.js",
+    "tests/remote-resource-transport.test.js",
+    "tests/remote-resource-uploads.test.js",
+    "tests/remote-uniform-retention.test.js",
+    "tests/remote-webgpu-resource-timing.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/spatial-intent-transition-protocol.test.js",
+    "tests/spatial-native-causal-clock.test.js",
+    "tests/spatial-native-gate-crossings.test.js",
+    "tests/spatial-native-gate-route-acceptance.test.js",
+    "tests/spatial-native-prop-mutations.test.js",
+    "tests/spatial-native-route-reservations.test.js",
+    "tests/spatial-native-static-mutations.test.js",
+    "tests/webgpu-resource-registry.test.js"
+  ],
+  "reasons": {
+    "tests/harvest-consequence.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-admission-motion-boundary.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-admission-vertical.test.js": [
+      "modified or transitive local import",
+      "mandatory authority/causality/resource safety",
+      "integration boundary"
+    ],
+    "tests/native-failed-consumer-drain.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-route-clock.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-route-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-route-ports.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-route-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-stop-clock.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-arrival-stop-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-birth-admission.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-birth-cancellation.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-birth-concurrency.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-idle-phase.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-farm-restored-authority.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-arrival-game.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-arrival-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-inactive-restoration.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-restoration.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-route-proposal.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-home-route-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-actual-boundary-floor.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-clock-family-filter.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-completed-home-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-cycle-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-cycle-phase-continuity.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-cycle-phase.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-cycle-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-failed-cycle-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-home.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-reference-canonical-reuse.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-stroll-idle-phase.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-stroll-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-stroll-restoration-publication.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-stroll-stop-publication.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-idle-stroll-stop-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-initial-idle-body-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-initial-idle-body-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-initial-idle-clock.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-initial-idle-control.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-initial-idle-initialization.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-intent-production-authority.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-mutation-release-presentation.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-paused-publication.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-prepared-ready-opportunity.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-presentation-opportunities.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-production-lifecycle.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-production-quiescence.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-recovery-checkpoint.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-settled-idle-phase.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-task-action-restoration.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-task-consequence-admission.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-task-settlement-proposal.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/native-task-settlement-remote.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-ordinary-admission-slices.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-preparation-slices.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-prepared-first-use.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-resource-transport.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-resource-uploads.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-uniform-retention.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-webgpu-resource-timing.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/remote-webgpu.test.js": [
+      "modified or transitive local import"
+    ],
+    "tests/spatial-intent-transition-protocol.test.js": [
+      "mandatory authority/causality/resource safety"
+    ],
+    "tests/spatial-native-route-reservations.test.js": [
+      "mandatory authority/causality/resource safety",
+      "integration boundary"
+    ],
+    "tests/spatial-native-causal-clock.test.js": [
+      "mandatory authority/causality/resource safety",
+      "integration boundary"
+    ],
+    "tests/native-intent-control-cohort.test.js": [
+      "mandatory authority/causality/resource safety",
+      "integration boundary"
+    ],
+    "tests/native-barrier-quiescence.test.js": [
+      "mandatory authority/causality/resource safety"
+    ],
+    "tests/native-world-boundary.test.js": [
+      "mandatory authority/causality/resource safety"
+    ],
+    "tests/native-route-control.test.js": [
+      "mandatory authority/causality/resource safety",
+      "integration boundary"
+    ],
+    "tests/webgpu-resource-registry.test.js": [
+      "mandatory authority/causality/resource safety"
+    ],
+    "tests/native-task-resource-requests.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-task-start-graphics.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-task-game-execution.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-task-action-graphics.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-task-action-game-execution.test.js": [
+      "integration boundary"
+    ],
+    "tests/spatial-native-static-mutations.test.js": [
+      "integration boundary"
+    ],
+    "tests/spatial-native-prop-mutations.test.js": [
+      "integration boundary"
+    ],
+    "tests/spatial-native-gate-route-acceptance.test.js": [
+      "integration boundary"
+    ],
+    "tests/spatial-native-gate-crossings.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-task-action-binding.test.js": [
+      "integration boundary"
+    ],
+    "tests/native-resource-preparation-channel.test.js": [
+      "integration boundary"
+    ]
+  },
+  "conservativeFallback": [],
+  "browserRequired": true,
+  "buildRequired": true,
+  "limitation": "Import selection is advisory; focused tests never close an A6 vertical. Unknown inputs expand coverage."
+}

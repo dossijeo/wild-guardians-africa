@@ -1,8 +1,10 @@
+import {microeventCommandCount} from './confirmed-view.js';
 import {Vector3} from 'three';
 import {AttentionDirector} from './director.js';
 import {InteractiveParticles} from './particles.js';
 import {PointerTrace} from './pointer-trace.js';
 import {MicroeventBillboards} from './billboards.js';
+import {createRemoteMicroeventBillboards} from './webgpu-remote-billboards.js';
 import {MicroeventSpace} from './space.js';
 import {EVENTS,compatible,FREQUENCIES,MICROEVENT_CONFIG,eligibleAnchor} from './definitions.js';
 import {microState,trackIncome,reserveEvent,settleEvent,disableMicroEconomy} from './economy.js';
@@ -10,11 +12,11 @@ const cameraPose=camera=>[...camera.position.toArray(),...camera.quaternion.toAr
 const poseChanged=(current,previous)=>current.some((n,i)=>Math.abs(n-(previous[i]??n))>1e-5);
 
 export class Microevents {
-  constructor({state,world,stage,save,sound,context,settings,debug=false,clock=()=>performance.now()}){
-    Object.assign(this,{state,world,stage,save,sound,context,settings,debug,clock});this.abort=new AbortController();this.records=[];this.learned=new Set();this.frameSamples=[];this.frameIntervals=[];this.metrics={spawns:0,completed:0,ignored:0,rescued:0,misses:0,frameMs:0};
+  constructor({state,world,stage,save,sound,context,settings,workerEconomy=null,debug=false,clock=()=>performance.now()}){
+    Object.assign(this,{state,world,stage,save,sound,context,settings,workerEconomy,debug,clock});this.abort=new AbortController();this.records=[];this.learned=new Set();this.frameSamples=[];this.frameIntervals=[];this.metrics={spawns:0,completed:0,ignored:0,rescued:0,misses:0,frameMs:0};
     this.motionQuery=matchMedia('(prefers-reduced-motion: reduce)');this.reducedMotion=this.motionQuery.matches;this.motionQuery.addEventListener('change',e=>{this.reducedMotion=e.matches;},{signal:this.abort.signal});
-    this.director=new AttentionDirector(microState(state),{telemetry:(type,detail)=>this.log(type,detail)});this.particles=new InteractiveParticles(MICROEVENT_CONFIG.maxParticles);this.space=new MicroeventSpace();this.billboards=new MicroeventBillboards(world);this.billboards.ready.catch(e=>{this.failed=true;this.log('asset-error',{message:e.message});});this.pointer={present:false,owned:false,x:0,y:0,vx:0,vy:0,hold:0};this.owned=new Set();this.cameraPointers=new Set();this.last=clock();this.commandCount=state.commandIds.length;this.eventTail=state.events.at(-1)?.id;this.anchorTimer=0;this.anchors=[];this.point=new Vector3();this.cameraPose=[];this.disposed=false;
-    this.trace=new PointerTrace();this.beforeSimulation();const signal=this.abort.signal;for(const name of ['pointerdown','pointermove','pointerup','pointercancel','lostpointercapture'])stage.addEventListener(name,e=>this.input(name,e),{capture:true,signal});
+    const directorMemory=workerEconomy?structuredClone(state.microevents??microState({seed:state.seed,day:state.day})):microState(state);this.director=new AttentionDirector(directorMemory,{telemetry:(type,detail)=>this.log(type,detail)});this.particles=new InteractiveParticles(MICROEVENT_CONFIG.maxParticles);this.space=new MicroeventSpace();this.billboards=world.workerGpuOnly?createRemoteMicroeventBillboards(world,world.webGpuWorld?.client?.microevents):new MicroeventBillboards(world);if(!world.workerGpuOnly)this.billboards.ready.catch(e=>{this.failed=true;this.log('asset-error',{message:e.message});});this.pointer={present:false,owned:false,x:0,y:0,vx:0,vy:0,hold:0};this.owned=new Set();this.cameraPointers=new Set();this.last=clock();this.commandCount=microeventCommandCount(state);this.eventTail=state.events.at(-1)?.id;this.anchorTimer=0;this.anchors=[];this.point=new Vector3();this.cameraPose=[];this.disposed=false;
+    this.presentationGeneration=0;this.presentationUnavailable=false;this.trace=new PointerTrace();this.beforeSimulation();const signal=this.abort.signal;for(const name of ['pointerdown','pointermove','pointerup','pointercancel','lostpointercapture'])stage.addEventListener(name,e=>this.input(name,e),{capture:true,signal});
     stage.addEventListener('wheel',()=>{this.wheelUntil=this.clock()+250;this.director.cameraStable=0;},{capture:true,passive:true,signal});
     document.addEventListener('visibilitychange',()=>{if(document.hidden)this.cancel('hidden');this.last=this.clock();},{signal});
     if(debug){this.diagnostic=document.createElement('output');this.diagnostic.dataset.presentation='world-billboards';this.diagnostic.style.cssText='position:absolute;left:12px;top:100px;z-index:50;background:#10251bdd;color:#e5f5cf;padding:8px;font:12px monospace;pointer-events:none;white-space:pre';stage.append(this.diagnostic);}
@@ -26,36 +28,49 @@ export class Microevents {
   }
   log(type,detail={}){this.records.push({type,at:this.clock(),day:this.state.day,...detail});if(this.records.length>256)this.records.shift();if(type==='spawn')this.metrics.spawns++;if(type==='completed')this.metrics.completed++;if(type==='ignored')this.metrics.ignored++;if(type==='idle-rescue')this.metrics.rescued++;}
   get holdsNightSpeed(){return !!(this.pending||this.active);}
-  blocked(){const c=this.context();return [...this.state.pauses,...(this.state.raid?['raid']:[]),...(this.state.result?['result']:[]),...(document.hidden?['hidden']:[]),...(c.surface?['ui']:[]),...(c.tool?['tool']:[]),...(c.tutorial?['tutorial']:[]),...(c.cinematic||this.world.cinematic?['cinematic']:[]),...(c.notification?['notification']:[]),...(this.failed?['assets']:[])];}
+  blocked(){const c=this.context();return [...this.state.pauses,...(this.state.raid?['raid']:[]),...(this.state.result?['result']:[]),...(document.hidden?['hidden']:[]),...(c.surface?['ui']:[]),...(c.tool?['tool']:[]),...(c.tutorial?['tutorial']:[]),...(c.cinematic||this.world.cinematic?['cinematic']:[]),...(c.notification?['notification']:[]),...(this.failed?['assets']:[]),...(this.presentationUnavailable?['presentation']:[])];}
   project(anchor){this.world.camera.updateMatrixWorld();this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0)).project(this.world.camera);const r=this.world.canvas.getBoundingClientRect(),x=(this.point.x+1)*r.width/2,y=(1-this.point.y)*r.height/2;
     if(this.point.z< -1||this.point.z>1||x<100||y<105||x>r.width-100||y>r.height-95)return null;
     // The HUD is sparse. Test actual hit surfaces, not a guessed rectangular safe area.
     const hit=document.elementFromPoint(r.left+x,r.top+y);if(hit&&hit!==this.world.canvas)return null;return {x,y,left:r.left,top:r.top};
   }
-  updateAnchors(){const visible=[...(this.world.microeventVisiblePlants??[]),...(this.world.microeventVisibleWood??[])];this.anchors.length=0;if(!visible.length)return;const offset=Math.floor(this.director.random()*visible.length);
-    for(let i=0;i<Math.min(24,visible.length);i++){const entity=visible[(offset+i)%visible.length];if(!entity.alive&&!eligibleAnchor({anchor:'wood'},entity))continue;const groundY=this.world.nav.field.surface(entity.x,entity.z),anchor={entity,groundY,y:groundY+1.3};if(this.project(anchor))this.anchors.push(anchor);}
+  updateAnchors(){const worker=this.world.workerGpuOnly,visible=worker?[...(this.state.plants??[]).filter(p=>p.alive),...(this.state.structures??[]).filter(e=>e.kind==='wall'&&e.material==='empalizada'&&e.status==='intact')]:[...(this.world.microeventVisiblePlants??[]),...(this.world.microeventVisibleWood??[])];this.anchors.length=0;const audit=this.debug&&worker?{candidates:visible.length,scanned:0,terrainUnavailable:0,projectionRejected:0,accepted:0}:null;if(audit)this.anchorAudit=audit;if(!visible.length)return;const offset=Math.floor(this.director.random()*visible.length),limit=worker?visible.length:Math.min(24,visible.length);let field;try{field=worker?this.world.cameraField():this.world.nav.field;}catch{}
+    for(let i=0;i<limit&&this.anchors.length<24;i++){if(audit)audit.scanned++;const entity=visible[(offset+i)%visible.length];if(!entity.alive&&!eligibleAnchor({anchor:'wood'},entity))continue;let groundY;try{groundY=field?.surface(entity.x,entity.z);}catch{if(audit)audit.terrainUnavailable++;continue;}if(!Number.isFinite(groundY)){if(audit)audit.terrainUnavailable++;continue;}const anchor={entity,groundY,y:groundY+1.3};if(this.project(anchor))this.anchors.push(anchor);else if(audit)audit.projectionRejected++;}if(audit)audit.accepted=this.anchors.length;
   }
+  occluded(point){if(!this.world.workerGpuOnly)return this.space.occluded(point,this.world.camera,this.world);return this.world.webGpuWorld.client.microeventVisible({x:point.x,y:point.y,z:point.z}).then(visible=>!visible,()=>true);}
+  validAnchor(def,anchor){if(this.world.workerGpuOnly){const source=def.anchor==='wood'?this.state.structures:this.state.plants,current=source?.find(entity=>entity.id===anchor?.entity?.id);if(!current)return false;anchor.entity=current;}return eligibleAnchor(def,anchor?.entity);}
   async spawn(def,anchor,{force=false,economy=true}={}){
-    if(this.active||this.pending||this.disposed||!eligibleAnchor(def,anchor?.entity)||!this.project(anchor)||this.blocked().length||!compatible(def,this.state)||!force&&def.category==='nuisance'&&this.director.m.negativeTimes.length>=2||!force&&this.director.m.eventCooldowns[def.id]>0)return false;
-    if(this.space){this.space.begin(def,anchor,this.world.camera);this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0));if(this.space.occluded(this.point,this.world.camera,this.world))return false;}
-    this.pending=true;const ticket=reserveEvent(this.state,def.id,anchor.entity.id);if(!ticket){this.pending=false;return false;}
-    this.director.m.cooldown=MICROEVENT_CONFIG.cooldown;this.director.reserve(def);const commandCount=this.state.commandIds.length,pose=cameraPose(this.world.camera);
+    if(this.active||this.pending||this.disposed||!this.validAnchor(def,anchor)||!this.project(anchor)||this.blocked().length||!compatible(def,this.state)||!force&&def.category==='nuisance'&&this.director.m.negativeTimes.length>=2||!force&&this.director.m.eventCooldowns[def.id]>0)return false;
+    this.pending=true;let ticket=null;const commandCount=microeventCommandCount(this.state),pose=cameraPose(this.world.camera),generation=this.presentationGeneration,stale=()=>this.presentationGeneration!==generation||this.presentationUnavailable;
     try{
+      if(this.space){this.space.begin(def,anchor,this.world.camera);this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0));const check=this.occluded(this.point);if((this.world.workerGpuOnly?await check:check)||this.disposed||poseChanged(cameraPose(this.world.camera),pose))return false;}
+      // A Worker visibility reply can arrive after a game action or UI change.
+      // Recheck before reserving so a stale candidate cannot consume director
+      // history/cooldown or request an authoritative ticket.
+      if(this.disposed||stale()||this.blocked().length||microeventCommandCount(this.state)!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor))return false;
+      ticket=this.workerEconomy?await this.workerEconomy.reserve(def.id,anchor.entity.id):reserveEvent(this.state,def.id,anchor.entity.id);if(!ticket)return false;
+      this.director.m.cooldown=MICROEVENT_CONFIG.cooldown;this.director.reserve(def);
+      if(this.workerEconomy)await this.workerEconomy.schedule(this.director.m);
       await this.billboards.ready;const saved=await this.save();
-      const cameraUnsafe=this.cameraPointers.size>0||this.owned.size>0||this.clock()<(this.wheelUntil??0)||poseChanged(cameraPose(this.world.camera),pose)||!force&&this.director.cameraStable<MICROEVENT_CONFIG.stable;
-      if(!saved||this.disposed||this.blocked().length||cameraUnsafe||this.state.commandIds.length!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!eligibleAnchor(def,anchor.entity)||!this.project(anchor)){settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
+      const check=this.space&&this.occluded(this.point.set(anchor.entity.x+(anchor.offsetX??0),anchor.y,anchor.entity.z+(anchor.offsetZ??0))),obstructed=this.world.workerGpuOnly?await check:check,cameraUnsafe=this.cameraPointers.size>0||this.owned.size>0||this.clock()<(this.wheelUntil??0)||poseChanged(cameraPose(this.world.camera),pose)||!force&&this.director.cameraStable<MICROEVENT_CONFIG.stable;
+      if(!saved||this.disposed||stale()||this.blocked().length||cameraUnsafe||microeventCommandCount(this.state)!==commandCount||this.settings.microevents==='off'||!compatible(def,this.state)||!this.validAnchor(def,anchor)||!this.project(anchor)||obstructed){if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});return false;}
       this.active={def,anchor,ticket,economy,ending:0,outcome:null};this.director.begin(def,{reserved:true});this.particles.start(def,()=>this.director.random());this.particles.learned=this.learned?.has(def.primary.mode)??false;this.space?.begin(def,anchor,this.world.camera);return true;
-    }catch(e){settleEvent(this.state,ticket,'cancelled',{enabled:false});this.failed=true;this.log('error',{message:e.message});return false;}
+    }catch(e){if(ticket)try{if(this.workerEconomy)await this.workerEconomy.settle(ticket,'cancelled',{enabled:false});else settleEvent(this.state,ticket,'cancelled',{enabled:false});}catch{}if(!stale()){this.failed=true;this.log('error',{message:e.message});}return false;}
     finally{this.pending=false;}
   }
   finish(outcome){const a=this.active;if(!a||a.outcome)return;a.outcome=outcome;a.ending=.001;
-    const result=settleEvent(this.state,a.ticket,outcome,{enabled:a.economy&&this.settings.microeventEconomy!==false&&this.settings.microevents!=='off',losses:this.settings.microeventLosses!==false});
-    this.director.finish(outcome);this.log('economy',{eventId:a.ticket.id,eventType:a.def.id,targetId:a.ticket.targetId,...result,dailyCredit:this.director.m.rewards,dailyReservedLoss:this.director.m.losses});
+    const options={enabled:a.economy&&this.settings.microeventEconomy!==false&&this.settings.microevents!=='off',losses:this.settings.microeventLosses!==false};
+    const complete=result=>{this.log('economy',{eventId:a.ticket.id,eventType:a.def.id,targetId:a.ticket.targetId,...result,dailyCredit:(this.workerEconomy?this.state.microevents:this.director.m)?.rewards,dailyReservedLoss:(this.workerEconomy?this.state.microevents:this.director.m)?.losses});if(outcome==='completed'&&a.def.sound&&(a.def.sound!=='eco_gain'||result.delta>0)){try{Promise.resolve(this.sound(a.def.sound)).catch(()=>{});}catch{}}void this.save();};
+    this.director.finish(outcome);
+    if(this.workerEconomy)this.workerEconomy.settle(a.ticket,outcome,options).then(async result=>{await this.workerEconomy.schedule(this.director.m);complete(result);}).catch(e=>{this.failed=true;this.log('error',{message:e.message});});else complete(settleEvent(this.state,a.ticket,outcome,options));
     if(outcome==='completed'){this.learned?.add(a.def.primary.mode);this.log('completion-gesture',{eventType:a.def.id,method:this.particles?.usedFallback?'accessible-hold':a.def.primary.mode});}
-    if(outcome==='completed'&&a.def.sound&&(a.def.sound!=='eco_gain'||result.delta>0)){try{Promise.resolve(this.sound(a.def.sound)).catch(()=>{});}catch{}}
-    void this.save();
   }
-  cancel(reason){if(this.active&&!this.active.outcome){this.log('cancel',{reason});this.finish('cancelled');}this.active=null;this.pointer.owned=false;this.billboards.clear();}
+  cancel(reason){if(this.active&&!this.active.outcome){this.log('cancel',{reason});this.finish('cancelled');}this.active=null;if(this.pendingGesture){const id=this.pendingGesture.id;this.pendingGesture=null;this.owned.delete(id);try{this.world.canvas.releasePointerCapture?.(id);}catch{}}this.pointer.owned=false;this.billboards.clear();}
+  presentationLost(){if(this.disposed||!this.world.workerGpuOnly||this.presentationUnavailable)return;this.presentationGeneration++;this.presentationUnavailable=true;this.cancel('presentation-lost');this.billboards.dispose();}
+  presentationReady(client){if(this.disposed||!this.world.workerGpuOnly||!this.presentationUnavailable)return;if(!client?.microevents)throw TypeError('Microevent presentation unavailable');this.billboards=createRemoteMicroeventBillboards(this.world,client.microevents);this.presentationUnavailable=false;}
+  beginWorkerGesture(e,a,target,x,y,now){const particle=this.particles.pool[target],worldPoint=this.space.worldPosition(particle).clone(),pose=cameraPose(this.world.camera),gesture={id:e.pointerId,clientX:e.clientX,clientY:e.clientY,moved:false};this.pendingGesture=gesture;this.owned.add(e.pointerId);try{this.world.canvas.setPointerCapture?.(e.pointerId);}catch{}this.pointer.id=e.pointerId;this.pointer.owned=false;this.pointer.present=false;e.preventDefault();e.stopImmediatePropagation();
+    void this.world.webGpuWorld.client.microeventVisible({x:worldPoint.x,y:worldPoint.y,z:worldPoint.z}).then(visible=>{if(this.disposed||this.pendingGesture!==gesture)return;this.pendingGesture=null;const current=this.space.worldPosition(particle);if(!visible||gesture.moved||this.active!==a||a.outcome||this.blocked().length||poseChanged(cameraPose(this.world.camera),pose)||current.distanceTo(worldPoint)>.08||particle.progress>=.95||particle.reveal<=.2){this.owned.delete(gesture.id);try{this.world.canvas.releasePointerCapture?.(gesture.id);}catch{}return;}Object.assign(this.pointer,{owned:true,hold:0,x,y,vx:0,vy:0,present:true});this.trace.reset(gesture.clientX,gesture.clientY,now);this.particles.claim?.(target,x,y);this.particles.poke?.(particle.x??x,particle.y??y);this.director.interaction();this.metrics.claims=(this.metrics.claims??0)+1;const contact=a.def.feedback?.contactSound;if(contact&&!a.contactPlayed){a.contactPlayed=true;try{Promise.resolve(this.sound(contact)).catch(()=>{});}catch{}}}).catch(()=>{if(this.pendingGesture!==gesture)return;this.pendingGesture=null;this.owned.delete(gesture.id);try{this.world.canvas.releasePointerCapture?.(gesture.id);}catch{}});
+  }
   refreshQaHit(){
     if(!this.debug||!this.active)return;this.qaTarget=-1;const r=this.world.canvas.getBoundingClientRect();
     for(let i=0;i<this.particles.count;i++){const p=this.particles.pool[i];if(p.progress>=.95||p.reveal<=.2)continue;const projected=this.space.project(p,this.world.camera,r);if(document.elementFromPoint(projected.x,projected.y)===this.world.canvas&&this.space.hit(this.particles,projected.x,projected.y,this.world.camera,r,this.world)>=0){this.qaTarget=i;break;}}
@@ -63,12 +78,14 @@ export class Microevents {
   localPointer(clientX,clientY,rect,screen){return this.space?.anchor?this.space.toLocal(clientX,clientY,rect,this.world.camera)??this.pointer:{x:clientX-rect.left-(screen?.x??0),y:clientY-rect.top-(screen?.y??0)};}
   pointerMotion(clientX,clientY,rect,screen){const local=this.localPointer(clientX,clientY,rect,screen),x=local.x,y=local.y;let vx=this.trace.vx,vy=this.trace.vy;if(this.space?.anchor){const next=this.space.toLocal(clientX+vx*.016,clientY+vy*.016,rect,this.world.camera);if(next){vx=(next.x-x)/.016;vy=(next.y-y)/.016;}}return {x,y,vx,vy};}
   input(name,e){
+    if(this.pendingGesture?.id===e.pointerId&&this.owned.has(e.pointerId)){e.preventDefault();e.stopImmediatePropagation();if(name==='pointermove'&&Math.hypot(e.clientX-this.pendingGesture.clientX,e.clientY-this.pendingGesture.clientY)>5)this.pendingGesture.moved=true;if(['pointerup','pointercancel','lostpointercapture'].includes(name)){this.pendingGesture=null;this.owned.delete(e.pointerId);try{this.world.canvas.releasePointerCapture?.(e.pointerId);}catch{}}return;}
     const wasOwned=this.owned.has(e.pointerId),onWorld=e.target===this.world.canvas;
     if(['pointerup','pointercancel','lostpointercapture'].includes(name))this.cameraPointers.delete(e.pointerId);
     if(name==='pointerdown'&&this.owned.size&&!wasOwned){this.cancel('multitouch');if(onWorld)this.owned.add(e.pointerId);}
     const a=this.active,screen=a&&this.project(a.anchor),r=this.world.canvas.getBoundingClientRect(),local=this.localPointer(e.clientX,e.clientY,r,screen),x=local.x,y=local.y,now=this.clock();
-    const target=name==='pointerdown'&&a&&!a.outcome&&onWorld&&!this.owned.size&&!this.cameraPointers.size?(this.space?.anchor?this.space.hit(this.particles,e.clientX,e.clientY,this.world.camera,r,this.world):(this.particles.hit(x,y)?0:-1)):-1;
+    const target=name==='pointerdown'&&a&&!a.outcome&&onWorld&&!this.owned.size&&!this.cameraPointers.size?(this.space?.anchor?(this.world.workerGpuOnly?this.space.hitCandidate(this.particles,e.clientX,e.clientY,this.world.camera,r):this.space.hit(this.particles,e.clientX,e.clientY,this.world.camera,r,this.world)):(this.particles.hit(x,y)?0:-1)):-1;
     if(name==='pointerdown'&&!this.owned.size&&!this.cameraPointers.size&&a&&!a.outcome&&onWorld&&e.button===0&&!e.shiftKey&&!this.blocked().length&&target>=0){
+      if(this.world.workerGpuOnly){this.beginWorkerGesture(e,a,target,x,y,now);return;}
       this.owned.add(e.pointerId);try{this.world.canvas.setPointerCapture?.(e.pointerId);}catch{}Object.assign(this.pointer,{id:e.pointerId,owned:true,hold:0,x,y,vx:0,vy:0,present:true});this.trace.reset(e.clientX,e.clientY,now);const hit=this.particles.pool?.[target];this.particles.claim?.(target,x,y);this.particles.poke?.(hit?.x??x,hit?.y??y);this.director.interaction();this.metrics.claims=(this.metrics.claims??0)+1;
       const contact=a.def.feedback?.contactSound;if(contact&&!a.contactPlayed){a.contactPlayed=true;try{Promise.resolve(this.sound(contact)).catch(()=>{});}catch{}}
     }else if(name==='pointerdown'&&onWorld&&a&&Math.hypot(x,y)<150){this.metrics.misses++;this.log('gesture-miss',{eventType:a.def.id});}
@@ -82,6 +99,7 @@ export class Microevents {
     if(name==='pointermove'&&e.pointerType==='mouse'&&!e.buttons&&onWorld){this.trace.add(e.clientX,e.clientY,now);Object.assign(this.pointer,this.pointerMotion(e.clientX,e.clientY,r,screen),{present:true});}else if(!this.pointer.owned)this.pointer.present=false;
   }
   beforeSimulation(){
+    if(this.workerEconomy)return;
     if(this.settings.microevents==='off'||this.settings.microeventEconomy===false)disableMicroEconomy(this.state);
     else if(this.settings.microeventLosses===false)this.director.m.pendingLosses={};
   }
@@ -89,15 +107,15 @@ export class Microevents {
     const start=this.clock(),dt=this.debug&&this.qaFrozen?0:Math.max(0,(start-this.last)/1000);this.last=start;if(this.disposed)return;
     const events=this.state.events,index=events.findIndex(e=>e.id===this.eventTail),fresh=events.slice(index+1);
     if(fresh.some(e=>e.type==='Dawn'))this.log('economy-day',{economicDay:this.director.m.day,credit:this.director.m.rewards,reservedLoss:this.director.m.losses,settledLoss:this.director.m.settledDay===this.director.m.day?this.director.m.settledLoss:0});
-    trackIncome(this.state,fresh);for(const e of fresh)if(e.type==='MicroeventHarvestLossApplied')this.log('harvest-loss',{targetId:e.targetId,delta:e.delta,economicDay:this.director.m.settledDay,dailySettledLoss:this.director.m.settledLoss});this.eventTail=events.at(-1)?.id;
-    if(this.commandCount!==this.state.commandIds.length){this.commandCount=this.state.commandIds.length;this.director.coreAction();this.cancel('core-action');}
+    if(!this.workerEconomy)trackIncome(this.state,fresh);for(const e of fresh)if(e.type==='MicroeventHarvestLossApplied')this.log('harvest-loss',{targetId:e.targetId,delta:e.delta,economicDay:this.director.m.settledDay,dailySettledLoss:this.director.m.settledLoss});this.eventTail=events.at(-1)?.id;
+    if(this.commandCount!==microeventCommandCount(this.state)){this.commandCount=microeventCommandCount(this.state);this.director.coreAction();this.cancel('core-action');}
     this.beforeSimulation();
     const pose=cameraPose(this.world.camera),moving=this.cameraPointers.size>0||this.owned.size>0||poseChanged(pose,this.cameraPose)||start<(this.wheelUntil??0);this.cameraPose=pose;
     const blocked=this.blocked();if(this.pending)blocked.push('saving');if(dt>1)blocked.push('frame-gap');
     this.anchorTimer-=dt;if(this.anchorTimer<=0&&!this.active&&!this.pending&&!blocked.length&&FREQUENCIES[this.settings.microevents]&&this.director.coreIdleTime>=7){this.updateAnchors();this.anchorTimer=.75;}
     const opportunity=this.director.step(dt,{frequency:this.settings.microevents,blocked,cameraMoving:moving,state:this.state,anchors:this.anchors});
     if(opportunity?.cancel)this.cancel(opportunity.reason);else if(opportunity&&!this.pending&&!this.active)void this.spawn(opportunity.def,opportunity.anchor);
-    const a=this.active;if(a){const reducedMotion=this.reducedMotion??matchMedia('(prefers-reduced-motion: reduce)').matches;const anchor=eligibleAnchor(a.def,a.anchor.entity)&&this.project(a.anchor);if(!anchor){this.cancel('invalid-anchor');return;}
+    const a=this.active;if(a){const reducedMotion=this.reducedMotion??matchMedia('(prefers-reduced-motion: reduce)').matches;const anchor=this.validAnchor(a.def,a.anchor)&&this.project(a.anchor);if(!anchor){this.cancel('invalid-anchor');return;}
       const sample=this.trace.latest();if(this.pointer.present&&sample){if(this.space?.anchor){const r=this.world.canvas.getBoundingClientRect(),point=this.space.toLocal(sample.x,sample.y,r,this.world.camera);if(point){this.pointer.x=point.x;this.pointer.y=point.y;}}else{this.pointer.x=sample.x-anchor.left-anchor.x;this.pointer.y=sample.y-anchor.top-anchor.y;}}
       if(a.outcome){a.ending+=dt;if(a.ending>.55){this.active=null;this.billboards.clear();return;}}
       else {if(this.pointer.owned){this.pointer.hold+=dt;this.director.interaction();}const completed=this.particles.step(dt,this.pointer,{reducedMotion,allowHold:!this.qaPrimaryOnly||a.def.primary.mode==='hold'});this.pointer.vx*=Math.exp(-10*dt);this.pointer.vy*=Math.exp(-10*dt);if(completed)this.finish('completed');else if(this.particles.time>=a.def.lifetime)this.finish('ignored');}

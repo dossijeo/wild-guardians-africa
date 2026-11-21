@@ -4,6 +4,7 @@ import {MovementAudio,movementSound} from '../src/audio/movement-audio.js';
 import {FOOTSTEPS} from '../src/rendering/footsteps-data.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import * as Game from '../src/simulation/game.js';
+import {createConfirmedCameraTerrain} from '../src/app/confirmed-camera-terrain.js';
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 function fixture(actor){const calls=[],stopped=[],state={elapsed:0,biome:'sabana',pauses:[],workers:actor.profile?[actor]:[],raid:actor.profile?null:{animals:[actor]}};let clock=0;
  const audio=new MovementAudio((id,options)=>{const source={onended(){}};calls.push({id,options,source});return Promise.resolve(source);},source=>stopped.push(source),()=>clock);
@@ -31,6 +32,12 @@ test('pause, actor removal, reload and an unobserved gap cancel active or pendin
 test('surface override, running selection and distance attenuation do not invent clip variants',()=>{
  const actor={profile:'olderMale'};for(const surface of ['soil','grass','mud','sand','stone','wood'])assert.equal(movementSound(actor,{name:'Walk_Skip'},'sabana',surface),'step_'+(surface==='soil'?'dry_soil':surface));
  assert.equal(movementSound(actor,{name:'Run'},'desierto','sand'),'run_surface_set');assert.equal(movementSound(actor,{name:'Walk_Skip'},'desierto'),'step_sand');
+});
+test('confirmed visible mangrove contours select mud sounds at real foot contacts',async()=>{
+ const cameraTerrain=createConfirmedCameraTerrain(),outline=Array.from({length:12},(_,i)=>[Math.cos(i*Math.PI/6)*10,Math.sin(i*Math.PI/6)*10]);cameraTerrain.ingest({cx:0,cz:0,epoch:'e',sequence:1,revision:1,heights:new Float32Array(49*49),mud:{mudCenters:[{x:0,z:0,radius:11}],mudOutlines:[outline]}});cameraTerrain.confirm(1);
+ const actor={id:'worker',profile:'olderMale',x:0,z:0,status:'walking',walkPhase:0},f=fixture(actor);f.state.biome='manglares';const surfaceAt=(x,z)=>cameraTerrain.movementSurfaceAt(x,z);f.audio.update(f.state,{surfaceAt});
+ for(let i=0;i<30;i++){actor.walkPhase+=.05;actor.x+=.05;f.state.elapsed+=.05;f.audio.update(f.state,{surfaceAt});await settle();}
+ assert.ok(f.calls.length>0);assert.ok(f.calls.every(item=>item.id==='step_mud'));f.audio.dispose();cameraTerrain.dispose();
 });
 test('paid native walking and cadence changes never mutate simulation or replay historical contacts',async()=>{
  const nav={placement:()=>({valid:true}),setState(){},terrainValid:()=>true,walkable:()=>true,path:(_a,b)=>[{x:b.x,z:b.z}]},state=Game.newGame({slotId:'movement-audio',seed:712});

@@ -1,0 +1,3 @@
+import fs from 'node:fs';import path from 'node:path';import {pathToFileURL} from 'node:url';
+const file=path.resolve('tests/helpers/native-admission-vertical.js'),target=pathToFileURL(file).href;
+export async function load(url,context,next){if(url!==target)return next(url,context);let source=fs.readFileSync(file,'utf8');source=source.replace('await source.ready;',"try{await source.ready;}catch(error){const inspect=await graphics.host.inspect();console.error('PHASE_BOOTSTRAP',JSON.stringify({errors:graphics.errors.map(String),inspect}));throw error;}");return {format:'module',source,shortCircuit:true};}

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "986b5eb8ad54f0a1017f77146e22cf70190275af",
+  "scope": "Real Game.tick consumes an already natively admitted task cohort. New arrival resource requests retain the reservation without authorizing action or effects. Ordinary producer, action admission, other classes and integrated A/B/C acceptance remain pending.",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-intent-state.cpp": "55509948cf3353d5974eb21fed4471056be3fe55ef771514e15cc6fae745b251",
+    "src/world/wild-engine/spatial-task-execution.inc": "c2d36e854bf1b69c5810bdc021b6a49d0750ccfb873361949480c8b4d32e061f",
+    "src/world/wild-engine/spatial-intent-bridge.js": "fc30a51b765e84b77f803eb17be5e93db427099bb0c8d7e25e37af9be126dd74",
+    "src/simulation/game.js": "744e505ce303e1ebaddd18ba3579a194ac8c82f06261ab9e161c942afc8c72e4",
+    "src/persistence/snapshots.js": "3999a8b30c21bf3a5c617610cc0b9d107ccda7a1ac9e814d22fe44f94cf1ea6a",
+    "src/world/wild-engine/spatial-savanna.wasm": "153b57c6d3d55ef80869a6bb992ab3a173f49f1358d4489fa627b970409383fa",
+    "public/wild-engine/spatial-threaded.mjs": "2ceebd666c3f3105319ac3dbf979b0d412126369071e2d3475319ec1982c21f9",
+    "public/wild-engine/spatial-threaded.wasm": "bde12e6e21b508f95ca62dfe70bd9ae410fc613c9dd14581c40b8172d9cb3c2c",
+    "tests/helpers/native-route-execution.js": "5cad9cb3760d243499efdfd5fa291db88e4bd2733ebacac93292a6d7ccae39e2",
+    "tests/helpers/native-task-resource-requests.js": "fdf60fe1d662574f3d4c2b82cd4090c3f3b2058da95a882f00235aa899c1b2e1",
+    "tests/native-task-game-execution.test.js": "51040dbb01837e6544117f4d200704311fd157a29259d4ff1798a7eac2540c91"
+  },
+  "workerHarnessContextHashes": {
+    "tests/native-frame-continuation.test.js": "7e0d6b81f72347049361205df262788b6171c12091175124632e68449439d2f5",
+    "tests/webgpu-guardian-worker-boundary.test.js": "91db1da2dce63c3d7c1818f565f1d038ec84a0362be2bbd1ae80ffd6b05aab0c"
+  },
+  "directed": {
+    "tests": 70,
+    "pass": 70,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 1902,
+    "pass": 1897,
+    "fail": 5,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "wideSelectionFiles": 175,
+  "knownFailures": [
+    "the intent bridge projects a scaled gate using the physical wall frame",
+    "loading during a committed strike applies its damage frame exactly once",
+    "event-fed native intent bridge replays live state and only changes on explicit deltas",
+    "late crate admission is rejected after drop and retries a later pickup",
+    "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+  ],
+  "newGameCases": 10,
+  "functionalEvidence": "Real standalone/pthread WASM with real Game.tick and advanceReal; manually admitted native task cohort, not ordinary producer activation. Includes cancellation before advancement, native phase/body equality, A held at destination while B advances, and strict save/restore with fresh pending admission.",
+  "build": {
+    "nativeStandaloneAndPthread": true,
+    "productSeconds": 43.37,
+    "warnings": "Existing chunk size/mixed imports and pthread memory growth warnings"
+  },
+  "browserSyntax": {
+    "files": 367,
+    "scripts": 309,
+    "failures": []
+  },
+  "gpu": {
+    "record": "native-task-game-execution-gpu-regression-20261115.json",
+    "source": "SpatialGameSession in page with real product preparation/draw workers; regression, not new ordinary Game producer integration",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794717595841.31,
+      "end": 1794717597641.38,
+      "committedAt": 1794717595846.145,
+      "drawFrames": 54,
+      "minClock": 13.139999999999933,
+      "maxClock": 14.759999999999899,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "resumeGpu": {
+    "record": "native-task-game-execution-resume-gpu-20261115.json",
+    "block": {
+      "start": 1794717616027.8098,
+      "end": 1794717617827.8599,
+      "committedAt": 1794717616045.235,
+      "drawFrames": 54,
+      "minClock": 60.75629700272216,
+      "maxClock": 62.3162970027224,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "visualInspection": {
+    "image": "native-task-game-execution-blocked-20261115.png",
+    "observation": "Two workers and the task target remain visible in the blocked preparation frame on desert terrain."
+  },
+  "research": [
+    {
+      "project": "Godot",
+      "revision": "4.4-stable",
+      "source": "https://github.com/godotengine/godot/blob/4.4-stable/scene/3d/physics/rigid_body_3d.cpp",
+      "functions": [
+        "_sync_body_state",
+        "_body_state_changed"
+      ],
+      "lines": "134-166",
+      "decision": "Project physical state into the existing entity while avoiding transform feedback to the native owner. No dependency."
+    }
+  ],
+  "checks": [
+    "Owned JS syntax and diff whitespace checked",
+    "11 source hashes and two committed Worker harness hashes unchanged through tests/build/GPU regressions"
+  ],
+  "acceptanceClosed": []
+}

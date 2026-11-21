@@ -1,0 +1,353 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "ece22260b",
+  "scope": "Retain native worker assignments and identical terrain support across prepared native world changes. Affected assignments remain guarded; no A6 parent or e-R3/e-R4/f-R4 closure.",
+  "tests": {
+    "directed": {
+      "cases": 69,
+      "passed": 69,
+      "selection": [
+        "tests/webgpu-crop-terrain.test.js",
+        "tests/native-route-terrain-support.test.js",
+        "tests/native-worker-roster.test.js",
+        "tests/terrain-native-proposal.test.js",
+        "tests/native-world-route-retention.test.js",
+        "tests/native-world-resource-preview.test.js"
+      ]
+    },
+    "regression": {
+      "files": 145,
+      "cases": 1630,
+      "passed": 1628,
+      "knownFailures": [
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target",
+        "late crate admission is rejected after drop and retries a later pickup"
+      ],
+      "selection": [
+        "tests/admission-scene-reference.test.js",
+        "tests/authority-compact-paused.test.js",
+        "tests/authority-visual-terrain-checkpoint.test.js",
+        "tests/baked-walk-catalog.test.js",
+        "tests/baked-worker-walk-catalog.test.js",
+        "tests/camera-terrain-exclusion.test.js",
+        "tests/confirmed-camera-terrain.test.js",
+        "tests/confirmed-terrain-receiver.test.js",
+        "tests/confirmed-terrain-retirement.test.js",
+        "tests/continuous-grass-mangrove-water.test.js",
+        "tests/continuous-grass-river.test.js",
+        "tests/continuous-grass.test.js",
+        "tests/grass-chunk-data.test.js",
+        "tests/grass-generation-queue.test.js",
+        "tests/grass-obstacles.test.js",
+        "tests/grass-terrain-sampling.test.js",
+        "tests/grass-tile-generation.test.js",
+        "tests/grass-transfer-instrumentation.test.js",
+        "tests/grass-water.test.js",
+        "tests/historical-event-auto-recovery-integration.test.js",
+        "tests/historical-terrain-recovery.test.js",
+        "tests/host-publication-queue.test.js",
+        "tests/live-terrain-checkpoint.test.js",
+        "tests/native-biome-retention.test.js",
+        "tests/native-frame-continuation.test.js",
+        "tests/native-gate-causal-transaction.test.js",
+        "tests/native-gate-gpu-binding.test.js",
+        "tests/native-gpu-motion.test.js",
+        "tests/native-intent-control-authority.test.js",
+        "tests/native-intent-control-cohort.test.js",
+        "tests/native-intent-control-publication.test.js",
+        "tests/native-route-pick-frame.test.js",
+        "tests/native-route-presentation.test.js",
+        "tests/native-route-terrain-support.test.js",
+        "tests/native-terrain-presentation-support.test.js",
+        "tests/native-terrain-retention.test.js",
+        "tests/native-worker-roster.test.js",
+        "tests/native-world-checkpoint.test.js",
+        "tests/native-world-prepared-commit.test.js",
+        "tests/native-world-prepared-props.test.js",
+        "tests/native-world-prepared-terrain.test.js",
+        "tests/native-world-resource-preview.test.js",
+        "tests/native-world-resource-projection.test.js",
+        "tests/native-world-resource-reconciliation.test.js",
+        "tests/native-world-route-retention.test.js",
+        "tests/presentation-recovery-journal.test.js",
+        "tests/presentation-recovery-replay.test.js",
+        "tests/raid-camera-terrain.test.js",
+        "tests/remote-frame-preparations.test.js",
+        "tests/remote-texture-preparation.test.js",
+        "tests/remote-webgpu.test.js",
+        "tests/simulation-authority-chunks.test.js",
+        "tests/simulation-authority-client.test.js",
+        "tests/simulation-terrain-history-worker.test.js",
+        "tests/spatial-native-barrier-proposal.test.js",
+        "tests/spatial-native-gate-crossings.test.js",
+        "tests/spatial-native-gate-multiwaits.test.js",
+        "tests/spatial-native-gate-resume.test.js",
+        "tests/spatial-native-overlay-proposal.test.js",
+        "tests/spatial-native-prop-mutations.test.js",
+        "tests/spatial-native-residency.test.js",
+        "tests/spatial-native-route-execution.test.js",
+        "tests/spatial-native-terrain-mutations.test.js",
+        "tests/temporal-recovery-pipeline.test.js",
+        "tests/temporal-recovery-receiver.test.js",
+        "tests/temporal-surface-recovery.test.js",
+        "tests/terrain-bootstrap-publication.test.js",
+        "tests/terrain-camera.test.js",
+        "tests/terrain-history-cancellation.test.js",
+        "tests/terrain-history-detached.test.js",
+        "tests/terrain-history-replay.test.js",
+        "tests/terrain-history.test.js",
+        "tests/terrain-native-proposal.test.js",
+        "tests/terrain-publication.test.js",
+        "tests/terrain-resource-payload.test.js",
+        "tests/terrain-resource-removal.test.js",
+        "tests/three-webgpu-pipeline-patch.test.js",
+        "tests/three-webgpu-shadow-compile.test.js",
+        "tests/three-webgpu-source-material.test.js",
+        "tests/visible-camera-terrain.test.js",
+        "tests/webgpu-actor-motion-binding.test.js",
+        "tests/webgpu-admission-scene.test.js",
+        "tests/webgpu-auto-recovery-qa.test.js",
+        "tests/webgpu-baked-walk.test.js",
+        "tests/webgpu-biome-props.test.js",
+        "tests/webgpu-chunk-batch.test.js",
+        "tests/webgpu-chunk-publication.test.js",
+        "tests/webgpu-confirmed-worker-clock.test.js",
+        "tests/webgpu-crate-roster.test.js",
+        "tests/webgpu-crop-blessing.test.js",
+        "tests/webgpu-crop-frame-tracker.test.js",
+        "tests/webgpu-crop-roster.test.js",
+        "tests/webgpu-crop-terrain.test.js",
+        "tests/webgpu-graphical-chunk-batch.test.js",
+        "tests/webgpu-grass-bootstrap-zero.test.js",
+        "tests/webgpu-grass-hidden-fluid.test.js",
+        "tests/webgpu-grass-local-eviction.test.js",
+        "tests/webgpu-grass-local-readmission-integration.test.js",
+        "tests/webgpu-grass-material.test.js",
+        "tests/webgpu-grass-owner.test.js",
+        "tests/webgpu-grass-temporal-recovery.test.js",
+        "tests/webgpu-guardian-worker-boundary.test.js",
+        "tests/webgpu-hidden-actor-motion.test.js",
+        "tests/webgpu-native-world-admission.test.js",
+        "tests/webgpu-pipeline-admission.test.js",
+        "tests/webgpu-prepared-terrain-removal.test.js",
+        "tests/webgpu-provisional-crops.test.js",
+        "tests/webgpu-recovery-failure.test.js",
+        "tests/webgpu-replacement-slot.test.js",
+        "tests/webgpu-resource-registry.test.js",
+        "tests/webgpu-settlement-height.test.js",
+        "tests/webgpu-settlement-terrain-retention.test.js",
+        "tests/webgpu-shared-shadow.test.js",
+        "tests/webgpu-surface-handoff.test.js",
+        "tests/webgpu-surface-owner.test.js",
+        "tests/webgpu-temporal-checkpoint.test.js",
+        "tests/webgpu-temporal-recovery-worker.test.js",
+        "tests/webgpu-temporal-terrain.test.js",
+        "tests/webgpu-terrain-motion-invalidation.test.js",
+        "tests/webgpu-terrain-placement.test.js",
+        "tests/webgpu-terrain-residency.test.js",
+        "tests/webgpu-village-admission.test.js",
+        "tests/webgpu-village-preview.test.js",
+        "tests/webgpu-worker-action-retry.test.js",
+        "tests/webgpu-worker-baked-alert.test.js",
+        "tests/webgpu-worker-baked-carry.test.js",
+        "tests/webgpu-worker-baked-fall.test.js",
+        "tests/webgpu-worker-baked-getup.test.js",
+        "tests/webgpu-worker-baked-harvest.test.js",
+        "tests/webgpu-worker-baked-idle.test.js",
+        "tests/webgpu-worker-baked-plant.test.js",
+        "tests/webgpu-worker-baked-run.test.js",
+        "tests/webgpu-worker-baked-walk.test.js",
+        "tests/webgpu-worker-baked-water.test.js",
+        "tests/webgpu-worker-carry-roster.test.js",
+        "tests/webgpu-worker-carry-tool.test.js",
+        "tests/webgpu-worker-fall-roster.test.js",
+        "tests/webgpu-worker-getup-roster.test.js",
+        "tests/webgpu-worker-harvest-roster.test.js",
+        "tests/webgpu-worker-recovery-exit-motion.test.js",
+        "tests/webgpu-worker-roster.test.js",
+        "tests/webgpu-worker-run-roster.test.js",
+        "tests/webgpu-worker-water-tools.test.js",
+        "tests/webgpu-world-client-temporal-profile.test.js",
+        "tests/webgpu-world-client.test.js"
+      ]
+    },
+    "command": ".cache/tooling/node20.exe --test --test-concurrency=2 <selection>"
+  },
+  "build": {
+    "result": "passed",
+    "duration": "42.38s"
+  },
+  "syntax": {
+    "htmlFiles": 366,
+    "inlineScripts": 308,
+    "modulesParsed": 18,
+    "failures": 0
+  },
+  "wasm": {
+    "standalone": "passed",
+    "pthread": "passed",
+    "flags": "std=c++17 -O3 ALLOW_MEMORY_GROWTH=1 INITIAL_MEMORY=16777216; standalone STANDALONE_WASM=1; pthread flags from tools/build-spatial-savanna-wasm.sh",
+    "newExport": "nav_intent_world_proposal_retains_routes(session,ticket): 1 retained, 0 affected, negative invalid/stale",
+    "hashes": {
+      "src/world/wild-engine/spatial-savanna.wasm": "c7f66caaae1ddc092b3f0ed5ac6ebf11f54bc8fd66f1bc18cd33867fdd108a62",
+      "public/wild-engine/spatial-threaded.wasm": "5f00a1a5b268b3a6b82b4cda24d4c2077ab3cc9ce19404edfd98115d5ae0039b",
+      "public/wild-engine/spatial-threaded.mjs": "cba771b7eade67b58120ca8b35a9a76ea5518b651243ed8540efeab276c3cb31"
+    }
+  },
+  "gpu": {
+    "receipt": "native-retained-route-terrain-20261114.json",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "mutations": 8,
+    "blockedPreparerMs": 1500,
+    "advancingObservationMs": 220,
+    "nativeTickMs": 20,
+    "framesWhileBlocked": [
+      6,
+      7,
+      7,
+      7,
+      7,
+      7,
+      7,
+      6
+    ],
+    "nativeEndPositions": [
+      [
+        20.049999979400635,
+        24.323999999999995,
+        10.299999999999995
+      ],
+      [
+        20.04999995880127,
+        24.64799999999999,
+        10.59999999999999
+      ],
+      [
+        20.049999938201903,
+        24.971999999999984,
+        10.899999999999986
+      ],
+      [
+        20.04999991760254,
+        25.295999999999978,
+        11.199999999999982
+      ],
+      [
+        20.049999897003175,
+        25.619999999999973,
+        11.499999999999977
+      ],
+      [
+        20.04999987640381,
+        25.943999999999967,
+        11.799999999999972
+      ],
+      [
+        20.049999855804444,
+        26.26799999999996,
+        12.099999999999968
+      ],
+      [
+        20.04999983795166,
+        26.548799999999957,
+        12.359999999999964
+      ]
+    ],
+    "clockRanges": [
+      [
+        10.1,
+        10.259999999999996
+      ],
+      [
+        10.379999999999995,
+        10.579999999999991
+      ],
+      [
+        10.67999999999999,
+        10.859999999999987
+      ],
+      [
+        10.979999999999986,
+        11.179999999999982
+      ],
+      [
+        11.279999999999982,
+        11.479999999999977
+      ],
+      [
+        11.579999999999977,
+        11.759999999999973
+      ],
+      [
+        11.879999999999972,
+        12.079999999999968
+      ],
+      [
+        12.199999999999967,
+        12.319999999999965
+      ]
+    ],
+    "originalRig": {
+      "meshes": [
+        {
+          "mesh": 405,
+          "geometry": 117,
+          "material": 194
+        },
+        {
+          "mesh": 406,
+          "geometry": 118,
+          "material": 195
+        },
+        {
+          "mesh": 407,
+          "geometry": 119,
+          "material": 196
+        }
+      ],
+      "poseHash": 2237899991
+    },
+    "newResourcesAfterReady": 0,
+    "newConsumerForksAfterReady": 0,
+    "gpuErrors": 0,
+    "drained": true,
+    "limits": "Native cohort retention only. Rig IDs/CPU pose and actual packet/clock observed; no new actor vertex readback, ordinary native feed or no-stutter product acceptance."
+  },
+  "gpuCommand": "QA_BASE_URL=http://127.0.0.1:5181 PLAYWRIGHT_MODULE=<playwright> QA_NATIVE_COMMANDS=true QA_NATIVE_ECONOMY=true QA_NATIVE_STRUCTURES_DAMAGED=true QA_NATIVE_TERRAIN_ROUTE=true OUTPUT=<receipt> .cache/tooling/node20.exe tools/experiments/audit_webgpu_temporal_ground.mjs",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-intent-state.cpp": "dbe6a17677fb8600aba3208a5bd87b238b526a30ea2973f5cc9377fe26866b62",
+    "src/world/wild-engine/spatial-prop-mutation-state.h": "ba35858c978ec16da0aa77bc0f42508825a3716a1e9a193bb256be8af6b16f66",
+    "src/world/wild-engine/spatial-residency-mutation-state.h": "af281269617e41a6da9d9eff6659a59957684cf60c2ae31197be2df8274f03c1",
+    "src/world/wild-engine/spatial-terrain-mutation-state.h": "84a2fb3703d12f12d5491176032343ac21fc69ad9f0ac9ec0b721d65afb73b00",
+    "src/world/wild-engine/spatial-world.js": "472fb08cee21881a07495f69e7033a4f8118f7728874fbf1e8ca05085adb37c5",
+    "src/rendering/confirmed-terrain-support.js": "d98b1b6224f564e1ed322c374ee96f8bd09e5ea9ddffcde619f32a4a15e28c4d",
+    "src/rendering/terrain-proposal-receiver.js": "ab9595a63429b43f02cd13e73b38480e701692aa4658fcc5d0ec9492f36ecce6",
+    "src/rendering/webgpu-crop-roster.js": "ed53ae88a080ad0c0ec16d210b5a9f0e707290a96af8dbe7ef5511241f8d5bef",
+    "src/rendering/webgpu-worker-roster.js": "142e9a52c64de3906cbfb083bafdb5ecf339e11eca47aed0eb41a2882057a959",
+    "src/rendering/webgpu-world-surface.js": "9455b5d37638277961dce6befb190e2f64185eca36e519a2d775cab0621cff6d",
+    "src/simulation/terrain-proposal-publication.js": "b7a6f871d9f4678103d566dfc82173dab986a7adbd56bfcebf07bfffc1896b29",
+    "tests/native-world-route-retention.test.js": "b9d8ff67e603415101558900c3611dbecf81eb3074f8826aa30487daf891124f",
+    "tests/native-world-resource-preview.test.js": "bc0e89de9cad7af669cf1e35804a9b395503f5be33a18cc672b47b0354249fb6",
+    "tests/native-route-terrain-support.test.js": "3b1349ac42941324372492e1af877c04d25508f014abed1c7d878fa29f029a52",
+    "tests/native-worker-roster.test.js": "dfe3ae04d68ddc1fb2c9f6b43c188b26a35cfdc127851ca87a6f784a364097cf",
+    "tests/terrain-native-proposal.test.js": "50718c29a13e146cd8c425853d8a16df6fe8fa903bc947928541e988bf616cb8",
+    "tests/webgpu-crop-terrain.test.js": "b3f2d29143ca7777ae17dfafdb5863a8e8f6809fd93edb95b9683219c361a190",
+    "tests/browser/fixtures/webgpu-placement-audit-worker.js": "47fbe80aef525076a66a7f8146928557ed5300811cb6b39d6482ef15c06e52ea",
+    "tests/browser/native-prepared-terrain-cutover.js": "911dee0e48e7aa471d9cfcf0bf6eacf18418caedd061b4b285dc0190acd6af14",
+    "tests/browser/webgpu-temporal-ground-worker.js": "39dfc85e05fa26962e0b9ced5861dde3041e0722b13de5459c12c9b1c819d556",
+    "tools/experiments/audit_webgpu_temporal_ground.mjs": "ec36ed330660c6e990d12176be88630684df852772bcf92bf7fd86a091937fe6",
+    "src/world/wild-engine/spatial-savanna.wasm": "c7f66caaae1ddc092b3f0ed5ac6ebf11f54bc8fd66f1bc18cd33867fdd108a62",
+    "public/wild-engine/spatial-threaded.wasm": "5f00a1a5b268b3a6b82b4cda24d4c2077ab3cc9ce19404edfd98115d5ae0039b",
+    "public/wild-engine/spatial-threaded.mjs": "cba771b7eade67b58120ca8b35a9a76ea5518b651243ed8540efeab276c3cb31"
+  },
+  "sourceProof": "Frozen before the final GPU launch and checked afterwards; unrelated prior changes preserved.",
+  "research": [
+    "https://github.com/godotengine/godot/blob/4.5.1-stable/modules/navigation_3d/nav_map_3d.cpp",
+    "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp"
+  ]
+}

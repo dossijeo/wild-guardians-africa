@@ -1,0 +1,230 @@
+{
+  "runs": [
+    {
+      "mode": "source",
+      "pose": {
+        "count": 120,
+        "mean": 0.3386666667958101,
+        "p95": 0.4749999940395355,
+        "p99": 0.5949999988079071,
+        "max": 0.625
+      },
+      "render": {
+        "count": 120,
+        "mean": 0.8004583328962326,
+        "p95": 1,
+        "p99": 1.0899999886751175,
+        "max": 1.4299999922513962
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33365546216985,
+        "p95": 33.45999999344349,
+        "p99": 33.51500000059605,
+        "max": 33.63000001013279
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 1.4829682666666668,
+          "p95": 1.528288,
+          "p99": 1.554784,
+          "max": 1.582272
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 5,
+        "p95": 5,
+        "p99": 5,
+        "max": 5
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 20183,
+        "p95": 20183,
+        "p99": 20183,
+        "max": 20183
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 11
+      }
+    },
+    {
+      "mode": "baked",
+      "pose": {
+        "count": 120,
+        "mean": 0.043999999885757764,
+        "p95": 0.06999999284744263,
+        "p99": 0.07500000298023224,
+        "max": 0.08000001311302185
+      },
+      "render": {
+        "count": 120,
+        "mean": 0.7581249998261531,
+        "p95": 0.9299999922513962,
+        "p99": 1.0450000017881393,
+        "max": 1.2049999982118607
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33382352936167,
+        "p95": 33.439999997615814,
+        "p99": 33.49000000953674,
+        "max": 33.58000001311302
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 0.8274501333333333,
+          "p95": 1.396768,
+          "p99": 1.406432,
+          "max": 1.413824
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 5,
+        "p95": 5,
+        "p99": 5,
+        "max": 5
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 20183,
+        "p95": 20183,
+        "p99": 20183,
+        "max": 20183
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 11
+      }
+    },
+    {
+      "mode": "baked",
+      "pose": {
+        "count": 120,
+        "mean": 0.03862500041723251,
+        "p95": 0.05500000715255737,
+        "p99": 0.05500000715255737,
+        "max": 0.06000000238418579
+      },
+      "render": {
+        "count": 120,
+        "mean": 0.6727083337803682,
+        "p95": 0.7800000011920929,
+        "p99": 0.8149999976158142,
+        "max": 0.8849999904632568
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33420168063721,
+        "p95": 33.44499999284744,
+        "p99": 33.46999999880791,
+        "max": 33.50999999046326
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 1.5148543999999997,
+          "p95": 1.585216,
+          "p99": 1.598592,
+          "max": 1.639776
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 5,
+        "p95": 5,
+        "p99": 5,
+        "max": 5
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 20183,
+        "p95": 20183,
+        "p99": 20183,
+        "max": 20183
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 11
+      }
+    },
+    {
+      "mode": "source",
+      "pose": {
+        "count": 120,
+        "mean": 0.2742916667213043,
+        "p95": 0.33500000834465027,
+        "p99": 0.4450000077486038,
+        "max": 0.4700000137090683
+      },
+      "render": {
+        "count": 120,
+        "mean": 0.6527916661153237,
+        "p95": 0.7849999964237213,
+        "p99": 0.8349999934434891,
+        "max": 0.8449999988079071
+      },
+      "interval": {
+        "count": 119,
+        "mean": 33.33315126046914,
+        "p95": 33.41499999165535,
+        "p99": 33.45000000298023,
+        "max": 33.480000004172325
+      },
+      "gpu": {
+        "samples": 120,
+        "disjoint": 0,
+        "discarded": 0,
+        "skipped": 0,
+        "pending": 0,
+        "elapsed": {
+          "count": 120,
+          "mean": 1.5285042666666662,
+          "p95": 1.588224,
+          "p99": 1.60768,
+          "max": 1.614464
+        }
+      },
+      "calls": {
+        "count": 120,
+        "mean": 5,
+        "p95": 5,
+        "p99": 5,
+        "max": 5
+      },
+      "triangles": {
+        "count": 120,
+        "mean": 20183,
+        "p95": 20183,
+        "p99": 20183,
+        "max": 20183
+      },
+      "memory": {
+        "geometries": 5,
+        "textures": 11
+      }
+    }
+  ],
+  "bakeBytes": 44484,
+  "scope": "Single hyena isolated lab on flat floor with shadows; 30 warm frames and 120 fixed presentation phases per block, ABBA. Baked path uploads matrices from CPU; no simulation, transfer of asset to GPU library, startup, multiple instances, production scene, hardware comparison, exact visual verification during timed frames, or gameplay. Frame intervals and GPU timer queries include browser/GPU scheduling noise."
+}

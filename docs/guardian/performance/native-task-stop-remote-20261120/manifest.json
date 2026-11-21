@@ -1,0 +1,171 @@
+{
+  "base": "03291f0e52177f9983b54b6395b99f9326eed1d1",
+  "scope": "Task25 original WebGPU client/Host prepared/release/first draw with queue double, Surface opt-in and close remote regressions. Production build. No physical GPU.",
+  "selection": [
+    "tests/native-control-lifecycle-evidence.test.js",
+    "tests/native-farm-arrival-control.test.js",
+    "tests/native-farm-arrival-route-control.test.js",
+    "tests/native-farm-arrival-route-remote.test.js",
+    "tests/native-farm-arrival-stop-control.test.js",
+    "tests/native-farm-arrival-stop-remote.test.js",
+    "tests/native-farm-arrived-home-control.test.js",
+    "tests/native-farm-arrived-idle-cycle-control.test.js",
+    "tests/native-farm-arrived-task-control.test.js",
+    "tests/native-farm-arrived-task-late-control.test.js",
+    "tests/native-farm-held-continuation-control.test.js",
+    "tests/native-farm-idle-approach-control.test.js",
+    "tests/native-farm-moving-home-control.test.js",
+    "tests/native-farm-moving-task-control.test.js",
+    "tests/native-farm-pending-home-control.test.js",
+    "tests/native-home-arrival-control.test.js",
+    "tests/native-home-arrival-remote.test.js",
+    "tests/native-home-route-control.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/native-idle-approach-restoration-control.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-completed-home-remote.test.js",
+    "tests/native-idle-cycle-control.test.js",
+    "tests/native-idle-cycle-remote.test.js",
+    "tests/native-idle-failed-cycle-control.test.js",
+    "tests/native-idle-selected-approach-control.test.js",
+    "tests/native-idle-stroll-control.test.js",
+    "tests/native-idle-stroll-remote.test.js",
+    "tests/native-idle-stroll-restoration-control.test.js",
+    "tests/native-idle-stroll-stop-control.test.js",
+    "tests/native-idle-stroll-stop-remote.test.js",
+    "tests/native-initial-idle-body-control.test.js",
+    "tests/native-initial-idle-body-remote.test.js",
+    "tests/native-initial-idle-control.test.js",
+    "tests/native-initial-idle-outside-control.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-intent-control-cohort.test.js",
+    "tests/native-intent-control-publication.test.js",
+    "tests/native-resume-control.test.js",
+    "tests/native-route-control.test.js",
+    "tests/native-settled-idle-control.test.js",
+    "tests/native-suspended-body-control.test.js",
+    "tests/native-task-consequence-control.test.js",
+    "tests/native-task-route-stop-control.test.js",
+    "tests/native-task-route-stop-remote.test.js",
+    "tests/native-task-settlement-control.test.js",
+    "tests/native-terrain-presentation-support.test.js",
+    "tests/remote-webgpu-resource-timing.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/webgpu-retained-worker.test.js",
+    "tests/webgpu-temporal-recovery-worker.test.js",
+    "tests/webgpu-world-held-frame.test.js"
+  ],
+  "tests": {
+    "exitCode": 1,
+    "tests": 726,
+    "pass": 724,
+    "fail": 2,
+    "cancelled": 0,
+    "skipped": 0
+  },
+  "build": {
+    "exitCode": 0,
+    "vitePhaseText": [
+      "1m 7s"
+    ]
+  },
+  "focusedPass": 41,
+  "differential": {
+    "beforePass": 2,
+    "candidatePass": 2,
+    "sameFailures": [
+      "picking with an older camera restores the newest shared camera even on failure",
+      "world worker does not acknowledge a held frame and resumes without failing"
+    ],
+    "source": "Original repo test compiled against git HEAD and candidate JS. Surface was virtual in both."
+  },
+  "inputCounts": {
+    "frozenInputs": 9059,
+    "nativeBuiltInputs": 64,
+    "preservedFiles": 16,
+    "externalCommittedInputs": 38
+  },
+  "changed": {
+    "frozenInputs": [],
+    "nativeBuiltInputs": [],
+    "preservedFiles": [],
+    "externalCommittedInputs": []
+  },
+  "nativeOutputs": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2f3a850ea0e459cade584febb34d11cdb05622f5fa26b11edf4f112856cf5464",
+    "public/wild-engine/spatial-threaded.mjs": "3e49ae9e327afaf1c4b6ea289cff04747277e7f9ea0576487ae1369675a9771b",
+    "public/wild-engine/spatial-threaded.wasm": "28b190233a9e80246883c1d5e64d45854abbb7ee691f1617cd6e846d278b23d1"
+  },
+  "sources": [
+    "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Bindings.js#L193-L255",
+    "https://github.com/chromium/chromium/blob/128.0.6613.119/gpu/command_buffer/service/sync_point_manager.cc#L407-L428"
+  ],
+  "artifacts": {
+    "validate.py.gz": {
+      "payloadBytes": 3603,
+      "payloadSha256": "0e6ba9b479c1bdc44197ec1ab7032f493921c1119e1e19b1086a24160c96a6b7",
+      "gzipBytes": 1766,
+      "gzipSha256": "3d236ad9c21de8fcd72d37f8ed1ebcd6ff511aacafa6cd977bb540a9aea9d423"
+    },
+    "validation.json.gz": {
+      "payloadBytes": 1185599,
+      "payloadSha256": "dc9110d09cf6592ccc09fcb495cd1e923fe9ce1ef2a642f26f01db8225f0ec80",
+      "gzipBytes": 446509,
+      "gzipSha256": "e32adbb024f20caedced2cece1bbd3782c07d99470920b1a5fdcec35233bd486"
+    },
+    "red.log.gz": {
+      "payloadBytes": 2636,
+      "payloadSha256": "20e700f7bbe08269397d69e900f892f3f4a62f707b59ed02eb4e02a95102f46b",
+      "gzipBytes": 935,
+      "gzipSha256": "96c8fc12d00623fc462c82542a1d5b2ac9f5ff6d0bba46e833068c93c8f95f61"
+    },
+    "directed.log.gz": {
+      "payloadBytes": 1300,
+      "payloadSha256": "12e845175c875bc2af9c8d6f3ffdaa6d342b2025b0cd6a95a6056845c172ddb5",
+      "gzipBytes": 514,
+      "gzipSha256": "41ae312f0851121bd78cd2f0b22a34eb0eebed32d7f0705473cf7c96f95c6be0"
+    },
+    "tests.log.gz": {
+      "payloadBytes": 199164,
+      "payloadSha256": "52df07038b266d4e095298c43538597dc0edadb4aaf38a0939099895194ca683",
+      "gzipBytes": 27936,
+      "gzipSha256": "54b643b23c5a52399c8b6e9130d109792c000e9450127521049093f0688de3be"
+    },
+    "build.log.gz": {
+      "payloadBytes": 3937,
+      "payloadSha256": "2ad6f9f2182edea358ee59908938493e77fe670e655c648a46d336522866c17f",
+      "gzipBytes": 1567,
+      "gzipSha256": "4fad99aadea3596e9e7054a8ddfd1d3e2cde9197573108c1cf5f7a6a931e0db0"
+    },
+    "focused.log.gz": {
+      "payloadBytes": 11120,
+      "payloadSha256": "1f8d00867d05196c6bde4d12575217d91263f1434b9ce25e2f0cd3b9d8878fcc",
+      "gzipBytes": 1930,
+      "gzipSha256": "8182049a272327be6a5f7ce5aa6c850ffbd187303e0695e5fa0467cfd65bf6c1"
+    },
+    "differential-0.log.gz": {
+      "payloadBytes": 3400,
+      "payloadSha256": "b9383ec06503cac646c29c6a782fb7f628372626b4f621e34d3a018ab492ffef",
+      "gzipBytes": 973,
+      "gzipSha256": "9af59c30e224560add48eb740b63f0cfdc809529c4a95beebc53d929c6b19bcf"
+    },
+    "differential-1.log.gz": {
+      "payloadBytes": 3401,
+      "payloadSha256": "9ab0d1aa357fbe51cda3ea0ccf5a09d1d53407e7621e66fc0d969299c78128b9",
+      "gzipBytes": 973,
+      "gzipSha256": "8bbe6e4c5604f5b2ef7a86ce3aa50c19b43b62b6a3e5b18e74bb84aa4de80fb3"
+    },
+    "held-frame-differential.mjs.gz": {
+      "payloadBytes": 10289,
+      "payloadSha256": "709d44aeeb476f4343d0fef8b4cd22698a49d494f96196d71b2d018b74bbfd32",
+      "gzipBytes": 2086,
+      "gzipSha256": "da98d1e76b128dae40db5118f725ce6bb1f08317635b0d1bfc3e1a5472a69ab4"
+    },
+    "differential-provenance.json.gz": {
+      "payloadBytes": 973,
+      "payloadSha256": "252ae7eef8b8af45382c1491744a13ce080d4ecdc68c287383c61d41bc7d298c",
+      "gzipBytes": 493,
+      "gzipSha256": "6639cd7a3029392c88caa2fbecde2a22557117bd54375f18d7ef135430268531"
+    }
+  }
+}

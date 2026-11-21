@@ -1,0 +1,1287 @@
+{
+  "files": {
+    "tools/guardian/audit_native_farm_birth_world_owner.mjs": "1026080eabc40f27859eaa6bcde6ecd7568156887b03448abe7f3ef13c4fc3b8",
+    "tests/browser/native-farm-birth-world-owner.js": "0f4857dd65f2ae256ce41bdfb0937a27cd59e18b018a7aaa1927ff78d3b71106",
+    "tests/browser/native-farm-birth-task-scenario.js": "198685f7107aa0bf56f94ac04e219de9477240b30b98f84db498d81a15f05f15",
+    "tests/browser/fixtures/native-farm-birth-audit-worker.js": "54d8d5f4e1358a92967e48751be5ae417ab2d658f5b077c1608688a02397167b",
+    "src/rendering/webgpu-worker-roster.js": "42a77f77e9c7e747e5869ec24ca9e89596c96dc7109361f97ba7d4d50451611c",
+    "src/rendering/webgpu-world-surface.js": "02b8b0f2f1370cc795bbae3037651f6ef052171977ac5a62be9de9278c9405c5",
+    "tests/browser/native-post-settlement-task-scenario.js": "4779ec583ead09fb0e7ddc8cd54d3e78321aea009177d3189ac607413a1835f4",
+    "tests/native-task-pending-source-pick.test.js": "dff9ee53d49cd0f62318544d75a1473ba38158dff5dbf9525c28b79dcf8c4917"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "output": ".cache/native-next-task-reviewed-pilot-olderMale.json",
+      "log": ".cache/native-next-task-reviewed-pilot-olderMale.log",
+      "startedAt": "2026-11-20T09:14:16.668Z",
+      "finishedAt": "2026-11-20T09:16:08.638Z",
+      "wallMs": 111968,
+      "exitCode": 0,
+      "followNextTask": true,
+      "reusedFrom": ".cache/native-next-task-reviewed-pilot-frozen.json",
+      "scope": "Native actual second Task and resource identity. Pick identities preserve existing incomplete readiness; not gameplay input acceptance, next action/Home or global cadence.",
+      "receiptSha256": "e03ca00e20c464abec7111429d329dd7317ac816d792fd4cc54ce8a2be09b014",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "retained": 581,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "nextTask": {
+        "ready": {
+          "kind": "birth-next-task-ready",
+          "id": 11,
+          "at": 1795166145953.4302,
+          "reference": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          }
+        },
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 11,
+          "at": 1795166149682.26,
+          "family": "task-start",
+          "binding": {
+            "reference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 18,
+              "endTime": 90.28659663097905,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "nativeSession": 1,
+                "ticket": 21,
+                "effectiveTime": 82.16000000000092
+              }
+            },
+            "preparedReference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 88.12659663097948,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+                "nativeSession": 1,
+                "ticket": 20,
+                "effectiveTime": 80.00000000000135
+              }
+            },
+            "assignmentSequence": 19,
+            "projectionVersion": 1,
+            "gateIds": []
+          }
+        },
+        "actual": {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "1157c6a1-8808-422b-8690-67496bf1a544/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          },
+          "semantic": "relative",
+          "epoch": 80.00000000000135,
+          "executionEpoch": 82.16000000000092,
+          "elapsed": 81.7599999904646
+        },
+        "drawFrames": 57,
+        "readyBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-ready",
+          "start": 1795166146001.5652,
+          "end": 1795166147801.575,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999996578,
+          "maxGapMs": 33.455078125
+        },
+        "commitBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-commit",
+          "start": 1795166147882.03,
+          "end": 1795166149682.04,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999996618,
+          "maxGapMs": 33.454833984375
+        },
+        "picks": {
+          "held": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -6.041929763667035,
+              "y": 17.143119527340787,
+              "z": 16.296633608378272
+            },
+            "point": {
+              "x": -5.82095843505449,
+              "z": 15.456071445363321
+            },
+            "sequence": 3503,
+            "incomplete": true
+          },
+          "actual": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -4.265096336791437,
+              "y": 17.157491198875423,
+              "z": 16.94078659452974
+            },
+            "point": {
+              "x": -3.9705483824423187,
+              "z": 16.109739762407912
+            },
+            "sequence": 3699,
+            "incomplete": true
+          },
+          "peer": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.8660453121428873,
+              "y": 17.64627206060316,
+              "z": 0.4281564948861621
+            },
+            "point": {
+              "x": -0.16609939347336677,
+              "z": -1.9898384993120075
+            },
+            "sequence": 3699,
+            "incomplete": true
+          }
+        },
+        "surfaceUnchanged": true
+      },
+      "broadGaps": [
+        {
+          "from": 1795166100260.74,
+          "through": 1795166100433.135,
+          "ms": 172.39501953125
+        },
+        {
+          "from": 1795166100460.69,
+          "through": 1795166100615.275,
+          "ms": 154.5849609375
+        },
+        {
+          "from": 1795166100660.655,
+          "through": 1795166100760.905,
+          "ms": 100.25
+        },
+        {
+          "from": 1795166119027.425,
+          "through": 1795166119085.59,
+          "ms": 58.1650390625
+        },
+        {
+          "from": 1795166085960.79,
+          "through": 1795166086007.385,
+          "ms": 46.594970703125
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795166121655.9949,
+            "image": ".cache/native-next-task-reviewed-pilot-olderMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795166121855.29
+          },
+          {
+            "label": "ordinary-post-settlement-next-task",
+            "mode": "visual",
+            "startedAt": 1795166149989.74,
+            "image": ".cache/native-next-task-reviewed-pilot-olderMale-ordinary-post-settlement-next-task.png",
+            "finishedAt": 1795166150132.02
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100003"
+      }
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-olderFemale.json",
+      "log": ".cache/native-next-task-final-olderFemale.log",
+      "startedAt": "2026-11-20T09:18:08.124Z",
+      "finishedAt": "2026-11-20T09:19:58.795Z",
+      "wallMs": 110670,
+      "exitCode": 0,
+      "receiptSha256": "c14f91b4e265ec71ab3ecb71abf23e785da2bbc6a18cc30635539a4eaceb7000",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "retained": 581,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "nextTask": {
+        "ready": {
+          "kind": "birth-next-task-ready",
+          "id": 11,
+          "at": 1795166376131.115,
+          "reference": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000000,
+            "bodyId": 2,
+            "taskId": 1000003,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          }
+        },
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 11,
+          "at": 1795166379864.405,
+          "family": "task-start",
+          "binding": {
+            "reference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "taskId": 1000003,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 18,
+              "endTime": 90.30659663097904,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "nativeSession": 1,
+                "ticket": 21,
+                "effectiveTime": 82.18000000000092
+              }
+            },
+            "preparedReference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000000,
+              "bodyId": 2,
+              "taskId": 1000003,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 88.12659663097948,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+                "nativeSession": 1,
+                "ticket": 20,
+                "effectiveTime": 80.00000000000135
+              }
+            },
+            "assignmentSequence": 19,
+            "projectionVersion": 1,
+            "gateIds": []
+          }
+        },
+        "actual": {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000000,
+            "bodyId": 2,
+            "taskId": 1000003,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "8ff411a9-7fb0-458d-ac7a-33e77bf8b65a/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          },
+          "semantic": "relative",
+          "epoch": 80.00000000000135,
+          "executionEpoch": 82.18000000000092,
+          "elapsed": 81.7599999904646
+        },
+        "drawFrames": 56,
+        "readyBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-ready",
+          "start": 1795166376172.365,
+          "end": 1795166377972.3801,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999996578,
+          "maxGapMs": 33.434814453125
+        },
+        "commitBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-commit",
+          "start": 1795166378064.18,
+          "end": 1795166379864.2,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999996578,
+          "maxGapMs": 33.489990234375
+        },
+        "picks": {
+          "held": {
+            "entityId": "worker-1000000",
+            "hitPoint": {
+              "x": -6.053078369804467,
+              "y": 17.183546900736157,
+              "z": 16.339042261791914
+            },
+            "point": {
+              "x": -5.82095843505449,
+              "z": 15.456071445363321
+            },
+            "sequence": 3503,
+            "incomplete": true
+          },
+          "actual": {
+            "entityId": "worker-1000000",
+            "hitPoint": {
+              "x": -4.2634468701169475,
+              "y": 17.152923486738203,
+              "z": 16.936132737545556
+            },
+            "point": {
+              "x": -3.9705483824423187,
+              "z": 16.109739762407912
+            },
+            "sequence": 3700
+          },
+          "peer": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.8701048524099733,
+              "y": 17.65383756747275,
+              "z": 0.4421803612774722
+            },
+            "point": {
+              "x": -0.16609939347336677,
+              "z": -1.9898384993120075
+            },
+            "sequence": 3700
+          }
+        },
+        "surfaceUnchanged": true
+      },
+      "broadGaps": [
+        {
+          "from": 1795166340194.85,
+          "through": 1795166340444.3901,
+          "ms": 249.5400390625
+        },
+        {
+          "from": 1795166340461.5452,
+          "through": 1795166340600.1802,
+          "ms": 138.635009765625
+        },
+        {
+          "from": 1795166340661.635,
+          "through": 1795166340780.75,
+          "ms": 119.114990234375
+        },
+        {
+          "from": 1795166349194.905,
+          "through": 1795166349274.405,
+          "ms": 79.5
+        },
+        {
+          "from": 1795166341395.675,
+          "through": 1795166341442.24,
+          "ms": 46.56494140625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795166351965.475,
+            "image": ".cache/native-next-task-final-olderFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795166352154.87
+          },
+          {
+            "label": "ordinary-post-settlement-next-task",
+            "mode": "visual",
+            "startedAt": 1795166380217.33,
+            "image": ".cache/native-next-task-final-olderFemale-ordinary-post-settlement-next-task.png",
+            "finishedAt": 1795166380380.1
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000002",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99997"
+      },
+      "scope": "Native actual second Task and resource identity. Pick identities preserve existing incomplete readiness; not gameplay input acceptance, next action/Home or global cadence."
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-youngMale.json",
+      "log": ".cache/native-next-task-final-youngMale.log",
+      "startedAt": "2026-11-20T09:19:58.802Z",
+      "finishedAt": "2026-11-20T09:21:51.780Z",
+      "wallMs": 112977,
+      "exitCode": 0,
+      "receiptSha256": "f4ef0dd905618675703c6817f1624305290f849e2a442d76fe6c8486ea543ac4",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "retained": 590,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "nextTask": {
+        "ready": {
+          "kind": "birth-next-task-ready",
+          "id": 11,
+          "at": 1795166487931.19,
+          "reference": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          }
+        },
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 11,
+          "at": 1795166491670.6948,
+          "family": "task-start",
+          "binding": {
+            "reference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 90.38659663097903,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "nativeSession": 1,
+                "ticket": 21,
+                "effectiveTime": 82.2600000000009
+              }
+            },
+            "preparedReference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 88.12659663097948,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+                "nativeSession": 1,
+                "ticket": 20,
+                "effectiveTime": 80.00000000000135
+              }
+            },
+            "assignmentSequence": 18,
+            "projectionVersion": 1,
+            "gateIds": []
+          }
+        },
+        "actual": {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "aae3981f-9ba3-4f66-a289-88115e38f032/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          },
+          "semantic": "relative",
+          "epoch": 80.00000000000135,
+          "executionEpoch": 82.2600000000009,
+          "elapsed": 81.7599999904646
+        },
+        "drawFrames": 57,
+        "readyBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-ready",
+          "start": 1795166487974.275,
+          "end": 1795166489774.2898,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999996578,
+          "maxGapMs": 33.534912109375
+        },
+        "commitBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-commit",
+          "start": 1795166489870.46,
+          "end": 1795166491670.4749,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999996618,
+          "maxGapMs": 33.39990234375
+        },
+        "picks": {
+          "held": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -6.043474998210279,
+              "y": 17.148722898120322,
+              "z": 16.302511591274005
+            },
+            "point": {
+              "x": -5.82095843505449,
+              "z": 15.456071445363321
+            },
+            "sequence": 3503,
+            "incomplete": true
+          },
+          "actual": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -4.257754217756734,
+              "y": 17.137159362684717,
+              "z": 16.9200713097187
+            },
+            "point": {
+              "x": -3.9705483824423187,
+              "z": 16.109739762407912
+            },
+            "sequence": 3704
+          },
+          "peer": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.9163380662178433,
+              "y": 17.739999466026248,
+              "z": 0.6018951000470381
+            },
+            "point": {
+              "x": -0.16609939347336677,
+              "z": -1.9898384993120075
+            },
+            "sequence": 3704
+          }
+        },
+        "surfaceUnchanged": true
+      },
+      "broadGaps": [
+        {
+          "from": 1795166460228.695,
+          "through": 1795166460653.09,
+          "ms": 424.39501953125
+        },
+        {
+          "from": 1795166460728.7551,
+          "through": 1795166460804.01,
+          "ms": 75.2548828125
+        },
+        {
+          "from": 1795166441695.365,
+          "through": 1795166441753.21,
+          "ms": 57.844970703125
+        },
+        {
+          "from": 1795166462528.99,
+          "through": 1795166462581.53,
+          "ms": 52.5400390625
+        },
+        {
+          "from": 1795166482762.1501,
+          "through": 1795166482812.6,
+          "ms": 50.449951171875
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795166463284.885,
+            "image": ".cache/native-next-task-final-youngMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795166463475.665
+          },
+          {
+            "label": "ordinary-post-settlement-next-task",
+            "mode": "visual",
+            "startedAt": 1795166491986.28,
+            "image": ".cache/native-next-task-final-youngMale-ordinary-post-settlement-next-task.png",
+            "finishedAt": 1795166492135.74
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "99999"
+      },
+      "scope": "Native actual second Task and resource identity. Pick identities preserve existing incomplete readiness; not gameplay input acceptance, next action/Home or global cadence."
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followNextTask": true,
+      "output": ".cache/native-next-task-final-youngFemale.json",
+      "log": ".cache/native-next-task-final-youngFemale.log",
+      "startedAt": "2026-11-20T09:21:51.785Z",
+      "finishedAt": "2026-11-20T09:23:43.944Z",
+      "wallMs": 112159,
+      "exitCode": 0,
+      "receiptSha256": "98450019c48b18ecfb5acb1a2d30d75b332f625edd869ac5cfa4c42080630dba",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "retained": 590,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "nextTask": {
+        "ready": {
+          "kind": "birth-next-task-ready",
+          "id": 11,
+          "at": 1795166600946.04,
+          "reference": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          }
+        },
+        "commit": {
+          "kind": "birth-resource-committed",
+          "id": 11,
+          "at": 1795166604670.84,
+          "family": "task-start",
+          "binding": {
+            "reference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 90.36659663097903,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "nativeSession": 1,
+                "ticket": 21,
+                "effectiveTime": 82.2400000000009
+              }
+            },
+            "preparedReference": {
+              "kind": "native-task-start-reference",
+              "version": 1,
+              "actorId": 1000001,
+              "bodyId": 2,
+              "taskId": 1000004,
+              "targetId": 900100,
+              "requestSequence": 17,
+              "requestedAt": 80.00000000000135,
+              "sourceControlSequence": 17,
+              "endTime": 88.12659663097948,
+              "sourceRequestHandle": {
+                "kind": "native-task-route-request-handle",
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              },
+              "expectedRouteHandle": {
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 9
+              },
+              "worldBoundary": {
+                "version": 1,
+                "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+                "nativeSession": 1,
+                "ticket": 20,
+                "effectiveTime": 80.00000000000135
+              }
+            },
+            "assignmentSequence": 18,
+            "projectionVersion": 1,
+            "gateIds": []
+          }
+        },
+        "actual": {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 1000001,
+            "bodyId": 2,
+            "taskId": 1000004,
+            "targetId": 900100,
+            "requestSequence": 17,
+            "requestedAt": 80.00000000000135,
+            "sourceControlSequence": 17,
+            "endTime": 88.12659663097948,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 7
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 9
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "da119ac7-4227-4ba7-868e-502bff39e498/1",
+              "nativeSession": 1,
+              "ticket": 20,
+              "effectiveTime": 80.00000000000135
+            }
+          },
+          "semantic": "relative",
+          "epoch": 80.00000000000135,
+          "executionEpoch": 82.2400000000009,
+          "elapsed": 81.7599999904646
+        },
+        "drawFrames": 57,
+        "readyBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-ready",
+          "start": 1795166600990.75,
+          "end": 1795166602790.765,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999996618,
+          "maxGapMs": 33.409912109375
+        },
+        "commitBlock": {
+          "kind": "birth-block-end",
+          "stage": "next-task-commit",
+          "start": 1795166602870.625,
+          "end": 1795166604670.635,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999996578,
+          "maxGapMs": 33.43505859375
+        },
+        "picks": {
+          "held": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -6.0543892909838135,
+              "y": 17.188300598136184,
+              "z": 16.34402893019353
+            },
+            "point": {
+              "x": -5.82095843505449,
+              "z": 15.456071445363321
+            },
+            "sequence": 3503,
+            "incomplete": true
+          },
+          "actual": {
+            "entityId": "worker-1000001",
+            "hitPoint": {
+              "x": -4.2657602997689175,
+              "y": 17.1593298487844,
+              "z": 16.942659920488843
+            },
+            "point": {
+              "x": -3.9705483824423187,
+              "z": 16.109739762407912
+            },
+            "sequence": 3703
+          },
+          "peer": {
+            "entityId": "worker-900011",
+            "hitPoint": {
+              "x": -0.8681091344946452,
+              "y": 17.65011827499015,
+              "z": 0.4352860630175828
+            },
+            "point": {
+              "x": -0.16609939347336677,
+              "z": -1.9898384993120075
+            },
+            "sequence": 3703
+          }
+        },
+        "surfaceUnchanged": true
+      },
+      "broadGaps": [
+        {
+          "from": 1795166580195.855,
+          "through": 1795166580444.47,
+          "ms": 248.614990234375
+        },
+        {
+          "from": 1795166580462.43,
+          "through": 1795166580653.345,
+          "ms": 190.9150390625
+        },
+        {
+          "from": 1795166580662.295,
+          "through": 1795166580841.88,
+          "ms": 179.5849609375
+        },
+        {
+          "from": 1795166591402.895,
+          "through": 1795166591458.645,
+          "ms": 55.75
+        },
+        {
+          "from": 1795166546528.99,
+          "through": 1795166546576.68,
+          "ms": 47.68994140625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795166576528.34,
+            "image": ".cache/native-next-task-final-youngFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795166576710.1602
+          },
+          {
+            "label": "ordinary-post-settlement-next-task",
+            "mode": "visual",
+            "startedAt": 1795166605003.7651,
+            "image": ".cache/native-next-task-final-youngFemale-ordinary-post-settlement-next-task.png",
+            "finishedAt": 1795166605139.7202
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99992"
+      },
+      "scope": "Native actual second Task and resource identity. Pick identities preserve existing incomplete readiness; not gameplay input acceptance, next action/Home or global cadence."
+    },
+    {
+      "label": "settlement-control",
+      "profile": "olderMale",
+      "followNextTask": false,
+      "output": ".cache/native-next-task-final-settlement-control.json",
+      "log": ".cache/native-next-task-final-settlement-control.log",
+      "startedAt": "2026-11-20T09:23:43.950Z",
+      "finishedAt": "2026-11-20T09:25:00.999Z",
+      "wallMs": 77049,
+      "exitCode": 0,
+      "receiptSha256": "c6e2285ce99a06cea035ff9c7402b196a814fb08129aa171c911f240601726b4",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "nextTask": null,
+      "broadGaps": [
+        {
+          "from": 1795166657762.7551,
+          "through": 1795166657814.79,
+          "ms": 52.034912109375
+        },
+        {
+          "from": 1795166685062.745,
+          "through": 1795166685108.915,
+          "ms": 46.169921875
+        },
+        {
+          "from": 1795166652229.4001,
+          "through": 1795166652274.7852,
+          "ms": 45.385009765625
+        },
+        {
+          "from": 1795166683129.5051,
+          "through": 1795166683171.97,
+          "ms": 42.46484375
+        },
+        {
+          "from": 1795166665796.125,
+          "through": 1795166665837.665,
+          "ms": 41.5400390625
+        }
+      ],
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795166687605.305,
+            "image": ".cache/native-next-task-final-settlement-control-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795166687775.68
+          }
+        ]
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100003"
+      },
+      "scope": "Native actual second Task and resource identity. Pick identities preserve existing incomplete readiness; not gameplay input acceptance, next action/Home or global cadence."
+    }
+  ],
+  "cadenceAccepted": false,
+  "fullMigrationComplete": false
+}

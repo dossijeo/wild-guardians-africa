@@ -1,0 +1,28 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {newGame} from '../../src/simulation/game.js';
+import {villageLayout} from '../../src/world/villages.js';
+import {serialize,deserialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function until(predicate,label){for(let i=0;i<200;i++){if(predicate())return;await sleep(25);}throw Error('Timed out: '+label);}
+window.audit=async()=>{
+ const payload=(await (await fetch('/content/villages.json')).json()).find(item=>item.id==='mapungubwe'),initial=newGame({seed:712,biome:'sabana',culture:'mapungubwe',slotId:'webgpu-device-loss'});initial.villages[0].buildings=villageLayout(payload,0,0).filter(building=>building.kind!=='Zona común'&&building.footprint?.length).slice(0,1);initial.time=299.95;initial.elapsed=299.95;initial.pauses=['fixture'];
+ const source=serialize(initial),state=deserialize(source),session='webgpu-device-loss',camera={x:20,y:30,z:30,targetX:0,targetY:0,targetZ:0},events=[],errors=[],canvas=()=>{const c=document.createElement('canvas');c.width=c.height=32;document.body.append(c);return c;},firstCanvas=canvas();
+ const first=createWebGpuWorldClient({canvas:firstCanvas,session,snapshot:source,camera,width:32,height:32,experimentalWorkRecovery:true,onError:e=>errors.push(String(e?.message??e))});let runtime=null,second=null,secondCanvas=null;
+ try{
+  await first.ready;if(first.status().backend!=='WebGPU')throw Error('Expected WebGPU');
+  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session,clientOptions:{snapshot:source,chunkKeys:['0,0']},terrainPort:first.terrainPort,presentationPort:first.presentationPort,runtimeOptions:{stepSeconds:.05,maxBatchSteps:2,diagnostics:true,coalescePublications:true,qaVisualRecovery:true,qaVisualWorkRecovery:true},onConfirmedEvents:items=>events.push(...items),onError:e=>errors.push(String(e?.message??e))});
+  await runtime.start();await runtime.submit({kind:'snapshot',visualTerrain:true});await until(()=>runtime.status().recoveryBaseSequence,'checkpoint');const base=runtime.status().recoveryBaseSequence;
+  first.loseDeviceForQa();await until(()=>first.status().phase==='failed','device loss notification');if(!/device lost/i.test(first.status().failure))throw Error('Expected device loss notification');
+  const lost=await runtime.markVisualLostForQa();first.dispose();await runtime.submit({kind:'resume',reason:'fixture'});await until(()=>events.some(e=>e.type==='NightStarted'),'night event');await runtime.submit({kind:'pause',reason:'fixture'});
+  const prepared=await runtime.prepareVisualRecoveryForQa(),checkpoint=prepared.checkpoint;if(checkpoint.sequence!==base||checkpoint.workCheckpoint?.sequence!==base)throw Error('Wrong recovery checkpoint');
+  const channel=new MessageChannel();secondCanvas=canvas();second=createWebGpuWorldClient({canvas:secondCanvas,session,snapshot:checkpoint.snapshot,camera,width:32,height:32,initialSequence:checkpoint.sequence,recoveryPort:channel.port1,experimentalWorkRecovery:true,onError:e=>errors.push(String(e?.message??e))});await second.ready;
+  const attached=await runtime.attachVisualRecoveryForQa({terrainPort:second.terrainPort,presentationPort:second.presentationPort,recoveryPort:channel.port2}),inspection=await second.inspect();
+  if(inspection.backend!=='WebGPU'||inspection.state.sequence!==attached.sequence||inspection.recoveryEvents.filter(e=>e.type==='NightStarted').length!==1)throw Error('Recovery sequence or event mismatch');
+  second.finishRecoveryForQa();runtime.finishVisualRecoveryForQa();await runtime.submit({kind:'snapshot'});if(errors.length!==1||!/device lost/i.test(errors[0]))throw Error('Unexpected recovery errors: '+errors.join('; '));
+  return {base,lost:lost.sequence,attached:attached.sequence,backend:inspection.backend,recoveryEvents:inspection.recoveryEvents,deviceLoss:errors[0],scope:'Actual Three.js WebGPU device destroyed and replaced; real host and authority, one chunk, one building, and no characters or active work effects. Manual QA recovery; not a full game or performance test.'};
+ }finally{second?.dispose();runtime?.dispose();first.dispose();secondCanvas?.remove();firstCanvas.remove();}
+};window.ready=true;
+</script>

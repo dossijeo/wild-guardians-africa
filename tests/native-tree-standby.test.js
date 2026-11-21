@@ -226,3 +226,18 @@ test('angular preparation evicts retained history instead of overflowing its fix
  assert.deepEqual([...f.owner.active.entries.keys()].sort(),['keep','new']);assert.equal(f.owner.stats.trees,2);assert.deepEqual(f.owner.stats.errors,[]);
  const revision=f.owner.revision;f.owner.request([descriptor(tree('new',3)),descriptor(tree('keep',2))],{x:0,z:0});await settled(f.owner);assert.equal(f.owner.revision,revision);f.close();
 });
+
+// A logical preload must not erase queued physical trees while a GPU fence waits.
+test('coalesces physical and logical requests pending behind a fence',async()=>{
+ let finish;const f=fixture(()=>new Promise(resolve=>finish=resolve));
+ const a=tree('initial',1),b=tree('physical',2),c=tree('logical',3);
+ f.owner.request([descriptor(a)],{x:0,z:0});
+ f.owner.request([descriptor(b)],{x:0,z:0});
+ f.owner.request([descriptor(c),descriptor(b,1)],{x:0,z:0});
+ assert.equal(f.owner.has(b.id,b),false);
+ assert.equal(f.owner.pending.entries.length,2);
+ f.owner.prepare=async()=>{};finish();await settled(f.owner);
+ for(const t of [a,b,c])assert.equal(f.owner.has(t.id,t),true);
+ assert.equal(f.owner.active.entries.get(b.id).level,1);
+ assert.equal(f.owner.stats.errors.length,0);f.close();
+});

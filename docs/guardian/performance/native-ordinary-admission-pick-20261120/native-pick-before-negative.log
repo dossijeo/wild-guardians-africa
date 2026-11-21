@@ -1,0 +1,21 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Got unwanted exception: capture plus picking must use a coherent submitted owner after concurrent adoption
+Actual message: "Native assignment has no submitted pick clock"
+    at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/native-pick-before-negative.mjs:8:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: Error: Native assignment has no submitted pick clock
+      at Object.getTime (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/rendering/native-route-pick-frame.js:109:28)
+      at Object.pick (eval at <anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/native-pick-before-negative.mjs:4:11), <anonymous>:9:54)
+      at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/native-pick-before-negative.mjs:8:29
+      at getActual (node:assert:498:5)
+      at Function.doesNotThrow (node:assert:664:32)
+      at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/native-pick-before-negative.mjs:8:8,
+  expected: undefined,
+  operator: 'doesNotThrow'
+}
+
+Node.js v20.19.0

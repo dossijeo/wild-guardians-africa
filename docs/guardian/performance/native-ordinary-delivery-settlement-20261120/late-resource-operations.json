@@ -1,0 +1,1677 @@
+{
+  "before": 3764,
+  "held": 3764,
+  "after": 3832,
+  "traceEntries": 69,
+  "counts": {
+    "destroy": 1,
+    "createBindGroupLayout": 16,
+    "createBuffer": 36,
+    "createBindGroup": 16
+  },
+  "trace": [
+    {
+      "index": 3842,
+      "kind": "destroy",
+      "reference": "Texture:4104",
+      "source": 3415
+    },
+    {
+      "index": 3843,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4615",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3844,
+      "kind": "createBuffer",
+      "size": 448,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4616",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3845,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4617",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3846,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4618",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3847,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4619",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3848,
+      "kind": "createBuffer",
+      "size": 304,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4620",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3849,
+      "kind": "createBuffer",
+      "size": 400,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4621",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3850,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_242",
+      "reference": "Buffer:4622",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3851,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4623",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 406,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3852,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4624",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3853,
+      "kind": "createBuffer",
+      "size": 448,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4625",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3854,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4626",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3855,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4627",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3856,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4628",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3857,
+      "kind": "createBuffer",
+      "size": 112,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4629",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3858,
+      "kind": "createBuffer",
+      "size": 400,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4630",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3859,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_244",
+      "reference": "Buffer:4631",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3860,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4632",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 407,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3861,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4633",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3862,
+      "kind": "createBuffer",
+      "size": 448,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4634",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3863,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4635",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3864,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4636",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3865,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4637",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3866,
+      "kind": "createBuffer",
+      "size": 48,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4638",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3867,
+      "kind": "createBuffer",
+      "size": 400,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4639",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3868,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_246",
+      "reference": "Buffer:4640",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3869,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4641",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 408,
+        "materialType": "MeshStandardNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3870,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4642",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3871,
+      "kind": "createBuffer",
+      "size": 448,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4643",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3872,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4644",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3873,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4645",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3874,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4646",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3875,
+      "kind": "createBuffer",
+      "size": 64,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4647",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3876,
+      "kind": "createBuffer",
+      "size": 400,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4648",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3877,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_248",
+      "reference": "Buffer:4649",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3878,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4650",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 409,
+        "materialType": "MeshPhysicalNodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": null,
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3879,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4651",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3880,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4652",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3881,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4653",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3882,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4654",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3883,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4655",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3884,
+      "kind": "createBuffer",
+      "size": 352,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4656",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3885,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_250",
+      "reference": "Buffer:4657",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3886,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4658",
+      "scope": {
+        "kind": "compile-object",
+        "object": 647,
+        "geometry": 247,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3887,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4659",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3888,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4660",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3889,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4661",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3890,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4662",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3891,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4663",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3892,
+      "kind": "createBuffer",
+      "size": 352,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4664",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3893,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_252",
+      "reference": "Buffer:4665",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3894,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4666",
+      "scope": {
+        "kind": "compile-object",
+        "object": 648,
+        "geometry": 248,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3895,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4667",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3896,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4668",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3897,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4669",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3898,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4670",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3899,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4671",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3900,
+      "kind": "createBuffer",
+      "size": 352,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4672",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3901,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_254",
+      "reference": "Buffer:4673",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3902,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4674",
+      "scope": {
+        "kind": "compile-object",
+        "object": 649,
+        "geometry": 249,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3903,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4675",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3904,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_render",
+      "reference": "Buffer:4676",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3905,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_render",
+      "reference": "BindGroup:4677",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3906,
+      "kind": "createBindGroupLayout",
+      "size": null,
+      "usage": null,
+      "label": null,
+      "reference": "BindGroupLayout:4678",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3907,
+      "kind": "createBuffer",
+      "size": 16,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4679",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3908,
+      "kind": "createBuffer",
+      "size": 352,
+      "usage": 72,
+      "label": "bindingBuffer_object",
+      "reference": "Buffer:4680",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3909,
+      "kind": "createBuffer",
+      "size": 128,
+      "usage": 72,
+      "label": "bindingBuffer_UniformBuffer_256",
+      "reference": "Buffer:4681",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    },
+    {
+      "index": 3910,
+      "kind": "createBindGroup",
+      "size": null,
+      "usage": null,
+      "label": "bindGroup_object",
+      "reference": "BindGroup:4682",
+      "scope": {
+        "kind": "compile-object",
+        "object": 650,
+        "geometry": 250,
+        "material": 148,
+        "materialType": "NodeMaterial",
+        "origin": null,
+        "footstepTexture": null,
+        "footstepOrigin": null,
+        "target": {
+          "uuid": "b2a29e60-2d04-4d20-9ca9-dca5d69042ab",
+          "width": 1024,
+          "height": 1024,
+          "origin": null
+        },
+        "pass": null,
+        "parent": null
+      },
+      "stages": []
+    }
+  ],
+  "scope": "All observed operations between settlement READY inspection and the post-commit inspection, including concurrent effects/maintenance. Not all attributable to settlement; no minimum-allocation claim."
+}

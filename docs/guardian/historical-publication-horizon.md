@@ -1,0 +1,9 @@
+# Horizonte de publicación histórica recuperable
+
+El perfil histórico recuperable limita cada orden interna `advance` a un horizonte de 100 ms de tiempo real de simulación. Con el paso habitual de 50 ms conserva la consolidación de dos pasos; un paso mayor de 100 ms se rechaza. El límite se aplica en el host tanto al arranque directo como al preparado anticipadamente; otros perfiles conservan su configuración. La ventana de agrupación se reduce si es necesario. Los pasos aceptados permanecen en cola y las órdenes intercaladas conservan su posición.
+
+Esta es una restricción causal para el relevo de cuerpos y entradas, no un límite de CPU ni de FPS. `advanceReal` registra la duración real de cada segmento con independencia de su velocidad de simulación: la noche acelerada puede recorrer más tiempo de juego, pero no consume más horizonte real por cada paso. Pausas y final de partida pueden reducir el tiempo efectivamente registrado.
+
+Se compararon tres opciones: dividir solo la reproducción gráfica, incorporar checkpoints autoritativos interiores con entrada causal, o limitar las publicaciones de origen. La primera no proporciona estados intermedios ni permite liberar entradas de forma segura; la segunda requiere extender el protocolo. La tercera conserva los límites autoritativos y el ACK existente. El canal visual histórico no agrupa las publicaciones con confirmación de recepción.
+
+El límite no garantiza una latencia total de 100 ms: una cola, ejecución costosa, espera de recursos o recuperación pueden añadir demora. Publicar más frecuentemente aumenta potencialmente el coste de mensajes y de mantenimiento; ese coste aún no se ha medido. Las pruebas CPU comprueban la agrupación, el orden de eventos y órdenes, y el rechazo del límite; falta validación integrada con GPU y cargas reales.

@@ -1,0 +1,7 @@
+import {readFile,writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {authoredCenterTemplate} from './authored-center-template.mjs';
+const files=['src/rendering/buildings.js','src/rendering/destruction-native.js','src/rendering/destruction-effects-native.js','src/rendering/building-effects.js','src/simulation/worker-structure-geometry.js'];
+const sources={};for(const file of files)sources[file]=createHash('sha256').update(await readFile(file)).digest('hex');
+const descriptors=JSON.parse(await readFile('public/content/destruction.json','utf8')).buildings,web=JSON.parse(await readFile('content/manifests/web-assets.json','utf8')),templates={};for(const descriptor of descriptors){if(templates[descriptor.culture])throw Error('Duplicate culture');const item=web.records.find(record=>record.source===descriptor.url.replace(/^\//,''));if(!item)throw Error('Missing runtime model mapping: '+descriptor.culture);const source=await authoredCenterTemplate(descriptor),runtime=await authoredCenterTemplate(descriptor,{assetPath:'public/'+item.runtime});if(JSON.stringify(source.template)!==JSON.stringify(runtime.template)||runtime.modelSha256!==item.runtimeSha256)throw Error('Runtime geometry differs: '+descriptor.culture);templates[descriptor.culture]={...source,runtimeUrl:item.runtime,runtimeSha256:runtime.modelSha256};}
+await writeFile('public/content/worker-center-templates.json',JSON.stringify({version:1,sources,templates})+'\n');console.log(`Wrote ${Object.keys(templates).length} exact center templates`);

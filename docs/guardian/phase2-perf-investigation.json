@@ -1,0 +1,64 @@
+{
+  "ready": true,
+  "elapsed": 3167.8699999999003,
+  "simulate": false,
+  "active": 0,
+  "origins": [],
+  "reused": 5,
+  "draws": 60,
+  "audioVoices": 0,
+  "errors": [],
+  "report": [
+    {
+      "mode": "baseline",
+      "frames": 258,
+      "frameMedian": 33.19999999999709,
+      "frameP95": 33.60000000000582,
+      "frameP99": 49.89999999999418,
+      "frameMax": 66.39999999999418,
+      "averageFps": 32.255644737829094,
+      "animationP95": 0,
+      "vfxP95": 0,
+      "drawP95": 60,
+      "memory": {
+        "geometries": 215,
+        "textures": 80
+      },
+      "heap": 435365673
+    },
+    {
+      "mode": "single",
+      "frames": 202,
+      "frameMedian": 33.30000000000291,
+      "frameP95": 50.10000000000582,
+      "frameP99": 66.59999999999127,
+      "frameMax": 83.10000000000582,
+      "averageFps": 24.995669067240843,
+      "animationP95": 0.20000004768371582,
+      "vfxP95": 0.09999990463256836,
+      "drawP95": 80,
+      "memory": {
+        "geometries": 218,
+        "textures": 80
+      },
+      "heap": 451002769
+    },
+    {
+      "mode": "consecutive",
+      "frames": 54,
+      "frameMedian": 49.89999999999418,
+      "frameP95": 117,
+      "frameP99": 4290,
+      "frameMax": 4290,
+      "averageFps": 5.105996709468786,
+      "animationP95": 0.3999999761581421,
+      "vfxP95": 0.10000002384185791,
+      "drawP95": 97,
+      "memory": {
+        "geometries": 218,
+        "textures": 80
+      },
+      "heap": 449958985
+    }
+  ]
+}

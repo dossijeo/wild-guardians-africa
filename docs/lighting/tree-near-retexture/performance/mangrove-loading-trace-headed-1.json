@@ -1,0 +1,7002 @@
+{
+  "note": "Chrome tracing; event durations can overlap and do not prove actual display scanout. perf.mark aligns trace and callback timestamps. Event categories may omit GPU and presentation details.",
+  "headed": true,
+  "visibility": [
+    {
+      "event": "record-start",
+      "at": 1848.609999999404,
+      "visibility": "visible",
+      "focused": true
+    },
+    {
+      "event": "record-end",
+      "at": 84768.68500000238,
+      "visibility": "visible",
+      "focused": true
+    }
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "frames": {
+    "count": 1873,
+    "p95": 33.42000000000007,
+    "p99": 99.98999999999978,
+    "max": 1266.7799999999988
+  },
+  "wallFrames": {
+    "count": 1873,
+    "p95": 38.150000005960464,
+    "p99": 107.46500000357628,
+    "max": 1283.2950000017881
+  },
+  "eventCount": 823028,
+  "dataLossOccurred": false,
+  "frameEventCounts": {
+    "DroppedFrame": 139,
+    "RequestMainThreadFrame": 1875,
+    "ActivateLayerTree": 1857,
+    "DrawFrame": 1886,
+    "BeginMainThreadFrame": 1875,
+    "BeginFrame": 2022,
+    "NeedsBeginFrameChanged": 12,
+    "PipelineReporter": 7864,
+    "BeginImplFrameToSendBeginMainFrame": 7864,
+    "SendBeginMainFrameToCommit": 3832,
+    "EndActivateToSubmitCompositorFrame": 7564,
+    "SubmitCompositorFrameToPresentationCompositorFrame": 7560,
+    "SubmitToReceiveCompositorFrame": 7560,
+    "ReceiveCompositorFrameToStartDraw": 7560,
+    "StartDrawToSwapStart": 7560,
+    "Swap": 7560,
+    "SwapEndToPresentationCompositorFrame": 7560,
+    "Commit": 3794,
+    "EndCommitToActivation": 3794,
+    "Activation": 3794
+  },
+  "spikes": [
+    {
+      "at": 38363.03000000119,
+      "wallInterval": 1283.2950000017881,
+      "rafInterval": 1266.7799999999988,
+      "frameCounts": {
+        "DrawFrame": 2,
+        "BeginFrame": 39,
+        "DroppedFrame": 38,
+        "ActivateLayerTree": 1,
+        "NeedsBeginFrameChanged": 1,
+        "RequestMainThreadFrame": 1,
+        "BeginMainThreadFrame": 1,
+        "SubmitToReceiveCompositorFrame": 6,
+        "ReceiveCompositorFrameToStartDraw": 6,
+        "PipelineReporter": 78,
+        "BeginImplFrameToSendBeginMainFrame": 81,
+        "SendBeginMainFrameToCommit": 4,
+        "Commit": 4,
+        "EndCommitToActivation": 4,
+        "Activation": 4,
+        "EndActivateToSubmitCompositorFrame": 6,
+        "StartDrawToSwapStart": 5,
+        "Swap": 4,
+        "SwapEndToPresentationCompositorFrame": 2,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 3
+      },
+      "frameEvents": [
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 37079.77600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37112.77000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37112.77000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 37126.25900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "NeedsBeginFrameChanged",
+          "phase": "I",
+          "at": 37254.08000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37312.76800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37312.76800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37346.10100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37346.10100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37379.43400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37379.43400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37412.76700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37412.76700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37446.10000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37446.10000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37479.43300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37479.43300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37512.76600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37512.76600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37546.09900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37546.09900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37579.432000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37579.432000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37612.76500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37612.76500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37646.09800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37646.09800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37679.43100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37679.43100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37712.76400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37712.76400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37746.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37746.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37779.43000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37779.43000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37812.76300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37812.76300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37846.09600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37846.09600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37879.42900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37879.42900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37912.76200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37912.76200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37946.09500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37946.09500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 37979.42800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 37979.42800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38012.76100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38012.76100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38046.09400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38046.09400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38079.42700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38079.42700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38112.76000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38112.76000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38146.09300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38146.09300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38179.42600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38179.42600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38212.75900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38212.75900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38246.09200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38246.09200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38279.42500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38279.42500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38312.75800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38312.75800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38346.09100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38346.09100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38346.21600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 38362.85900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 38362.89200000298,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 38362.98100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 37079.83200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 37079.83200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 37079.83200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 37079.83200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37112.77000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37112.77000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 37126.13700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 37126.13700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 37126.17500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 37126.17500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 37126.24700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 37126.24700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 37126.26600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 37126.26600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37146.10300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37179.43600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37212.76900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37246.10200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 37279.43500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 37312.76800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 37312.76800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 37312.76800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 348.5,
+          "start": 37125.52500000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 348.483,
+          "start": 37125.52600000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 329.696,
+          "start": 37490.05200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 329.686,
+          "start": 37490.06000000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 239.62,
+          "start": 37905.00900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 239.615,
+          "start": 37905.01100000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 213.162,
+          "start": 38144.63600000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 213.147,
+          "start": 38144.63900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "duration": 110.856,
+          "start": 37446.41900000298,
+          "thread": "ThreadPoolSingleThreadCOMSTASharedBackgroundBlocking"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 110.628,
+          "start": 37446.64400000298,
+          "thread": "ThreadPoolSingleThreadCOMSTASharedBackgroundBlocking"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 51.992,
+          "start": 37071.44200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 51.988,
+          "start": 37071.44400000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 46.55,
+          "start": 37079.58500000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 46.543,
+          "start": 37079.59100000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 41.877,
+          "start": 37822.86900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 41.859,
+          "start": 37822.87200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "duration": 37.436,
+          "start": 37088.37100000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 35.32,
+          "start": 37869.68300000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 35.315,
+          "start": 37869.68500000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.536,
+          "start": 37412.771000002984,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.531,
+          "start": 37412.77400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.38,
+          "start": 37579.51400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.374,
+          "start": 37579.51600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.362,
+          "start": 38312.87600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.36,
+          "start": 37279.45400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.357,
+          "start": 38146.18800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.353,
+          "start": 38212.88800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.352,
+          "start": 37279.45800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.352,
+          "start": 37812.860000002984,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.348,
+          "start": 37079.45200000298,
+          "thread": "GpuVSyncThread"
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 17543.204999998212,
+          "end": 38882.37999999523,
+          "duration": 21339.17499999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 36314.50999999046,
+          "end": 38738.034999996424,
+          "duration": 2423.5250000059605,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 37125.75999999046,
+          "end": 38371.965000003576,
+          "duration": 1246.205000013113,
+          "budgetElapsed": 37.35999999940395,
+          "budgetCpu": 35.629999965429306,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 37064.67999999225,
+          "end": 37088.39999999106,
+          "duration": 23.719999998807907,
+          "budgetElapsed": 17.269999995827675,
+          "budgetCpu": 16.325000017881393,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 37105.164999991655,
+          "end": 37125.614999994636,
+          "duration": 20.450000002980232,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "presentation-overlay-refresh",
+          "start": 37080.62999999523,
+          "end": 37088.25999999046,
+          "duration": 7.629999995231628,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 37080.67499999702,
+          "end": 37088.17999999225,
+          "duration": 7.504999995231628,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 37638.239999994636,
+          "end": 37644.82500000298,
+          "duration": 6.58500000834465,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        }
+      ]
+    },
+    {
+      "at": 3574.5,
+      "wallInterval": 394.6000000089407,
+      "rafInterval": 366.7550000000001,
+      "frameCounts": {
+        "ActivateLayerTree": 1,
+        "DrawFrame": 1,
+        "BeginFrame": 20,
+        "DroppedFrame": 12,
+        "NeedsBeginFrameChanged": 2,
+        "RequestMainThreadFrame": 1,
+        "BeginMainThreadFrame": 1,
+        "SendBeginMainFrameToCommit": 6,
+        "Commit": 6,
+        "EndCommitToActivation": 6,
+        "Activation": 6,
+        "EndActivateToSubmitCompositorFrame": 6,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 3,
+        "SubmitToReceiveCompositorFrame": 6,
+        "ReceiveCompositorFrameToStartDraw": 5,
+        "PipelineReporter": 42,
+        "BeginImplFrameToSendBeginMainFrame": 45,
+        "StartDrawToSwapStart": 6,
+        "Swap": 8,
+        "SwapEndToPresentationCompositorFrame": 4
+      },
+      "frameEvents": [
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 3181.91300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 3182.44000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3212.60800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3212.60800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "NeedsBeginFrameChanged",
+          "phase": "I",
+          "at": 3212.9150000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3245.94100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3245.94100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "NeedsBeginFrameChanged",
+          "phase": "I",
+          "at": 3259.4770000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3479.2720000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3479.2720000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3479.2720000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3512.60500000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3512.60500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3512.60500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3545.9380000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3545.9380000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 3546.0240000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 3546.0240000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 3566.3220000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 3574.28000000298,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 3181.21200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 3181.21200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 3181.3250000029802,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 3181.3250000029802,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 3181.8570000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 3181.8570000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 3181.92300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 3181.92300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 3182.28900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 3182.28900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 3182.28900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 3182.5910000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 3182.5910000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3212.60800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3212.77100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3212.9110000029805,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3212.9110000029805,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3245.94100000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3245.94100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3245.94100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3245.9480000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3245.9480000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3260.46100000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3260.4880000029802,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "b",
+          "at": 3260.4880000029802,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 3262.37700000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 3262.37700000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 3262.65000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 3262.65000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 3262.87300000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 3262.87300000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 3262.8880000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 3262.8880000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 3263.40900000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 3263.40900000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 3263.40900000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 3263.5940000029805,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 3263.5940000029805,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3279.2740000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3312.6070000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3345.94000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3379.2730000029806,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3412.60600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 3445.9390000029803,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 316.722,
+          "start": 3257.49400000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 316.715,
+          "start": 3257.5000000029804,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "HandlePostMessage",
+          "category": "devtools.timeline",
+          "duration": 316.7,
+          "start": 3257.51200000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 221.465,
+          "start": 3263.8140000029803,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 221.442,
+          "start": 3263.81500000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 72.19,
+          "start": 3493.8350000029805,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 72.187,
+          "start": 3493.83700000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "SkiaOutputSurfaceImplOnGpu::FinishPaintRenderPass",
+          "category": "viz",
+          "duration": 71.877,
+          "start": 3493.8400000029806,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 65.791,
+          "start": 3197.94500000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 65.788,
+          "start": 3197.9460000029803,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 42.925,
+          "start": 3150.01900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 42.917,
+          "start": 3150.0230000029806,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.406,
+          "start": 3512.6300000029805,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.399,
+          "start": 3512.63300000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.36,
+          "start": 3279.2760000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.357,
+          "start": 3412.59600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.353,
+          "start": 3279.28000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.353,
+          "start": 3445.9590000029802,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.352,
+          "start": 3412.59900000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.346,
+          "start": 3445.96100000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.336,
+          "start": 3212.6220000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.333,
+          "start": 3345.9690000029805,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.332,
+          "start": 3212.62400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.322,
+          "start": 3345.97400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.319,
+          "start": 3312.6430000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.309,
+          "start": 3245.96300000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.306,
+          "start": 3479.31800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.302,
+          "start": 3312.64600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.298,
+          "start": 3479.3220000029805,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.289,
+          "start": 3245.9650000029806,
+          "thread": "GpuVSyncThread"
+        }
+      ],
+      "spans": [
+        {
+          "label": "diorama-prepare-maize-batch",
+          "start": 3260.5199999958277,
+          "end": 3613.8349999934435,
+          "duration": 353.3149999976158,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-prepare-mountain-atlas",
+          "start": 3212.9899999946356,
+          "end": 3257.7000000029802,
+          "duration": 44.71000000834465,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-prepare-soil-texture",
+          "start": 3167.704999998212,
+          "end": 3212.045000001788,
+          "duration": 44.34000000357628,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    },
+    {
+      "at": 36814.92999999225,
+      "wallInterval": 381.84999999403954,
+      "rafInterval": 399.9600000000064,
+      "frameCounts": {
+        "DrawFrame": 2,
+        "BeginFrame": 12,
+        "DroppedFrame": 11,
+        "RequestMainThreadFrame": 1,
+        "ActivateLayerTree": 1,
+        "BeginMainThreadFrame": 1,
+        "EndActivateToSubmitCompositorFrame": 6,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 8,
+        "SubmitToReceiveCompositorFrame": 6,
+        "ReceiveCompositorFrameToStartDraw": 4,
+        "BeginImplFrameToSendBeginMainFrame": 27,
+        "PipelineReporter": 29,
+        "StartDrawToSwapStart": 6,
+        "Swap": 8,
+        "SwapEndToPresentationCompositorFrame": 8,
+        "SendBeginMainFrameToCommit": 2,
+        "Commit": 2,
+        "EndCommitToActivation": 2,
+        "Activation": 2
+      },
+      "frameEvents": [
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 36433.33500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36446.15300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36446.15300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36746.11500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36746.11500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 36812.77700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 36814.64400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 36814.77800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 36814.860000002984,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 36814.91300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 36433.23200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 36433.40600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 36433.40600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 36433.40600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 36433.40600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36446.10000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36446.10000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36446.15300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36446.15300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36479.48600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36512.81900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36546.15200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36579.485000002984,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36612.81800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36646.15100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36679.48400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36712.81700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36746.11500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36746.15000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36746.15000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 36771.05800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 36771.05800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 36771.05800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 36771.05800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 36771.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 36771.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36771.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36771.09700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36771.38800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 36771.39700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 36771.39700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 36771.39700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 36771.39700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 36777.92000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 36777.92000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 36777.92000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 36777.92000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 36777.93800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 36777.93800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36777.93800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 36777.93800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36779.39100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36779.56100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36779.56100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36779.64500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36812.77700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 36812.77700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 36813.04600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 36813.04600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36813.07100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 36813.07100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 381.631,
+          "start": 36432.98900000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 381.628,
+          "start": 36432.99100000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "duration": 380.232,
+          "start": 36433.98800000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 183.343,
+          "start": 36407.85900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 183.338,
+          "start": 36407.86200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 89.382,
+          "start": 36592.25300000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 89.37,
+          "start": 36592.26300000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 88.98,
+          "start": 36681.67000000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 88.975,
+          "start": 36681.67200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 74.156,
+          "start": 36814.85300000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 74.154,
+          "start": 36814.85400000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.384,
+          "start": 36779.40200000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.377,
+          "start": 36779.40500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.343,
+          "start": 36512.79500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.34,
+          "start": 36812.79000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.339,
+          "start": 36712.78800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.337,
+          "start": 36512.79800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.336,
+          "start": 36612.80500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.333,
+          "start": 36712.79000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.328,
+          "start": 36579.47200000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.328,
+          "start": 36612.80800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.327,
+          "start": 36812.79300000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.326,
+          "start": 36479.46400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.324,
+          "start": 36446.13500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.324,
+          "start": 36546.14400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.322,
+          "start": 36646.14700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.319,
+          "start": 36479.46600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.318,
+          "start": 36446.13800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.318,
+          "start": 36579.47600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.315,
+          "start": 36546.14700000298,
+          "thread": "GpuVSyncThread"
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 17543.204999998212,
+          "end": 38882.37999999523,
+          "duration": 21339.17499999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 36314.50999999046,
+          "end": 38738.034999996424,
+          "duration": 2423.5250000059605,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 36435.52499999106,
+          "end": 36813.534999996424,
+          "duration": 378.0100000053644,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+          "batchIndex": 18,
+          "programsBefore": 80,
+          "programsAfter": 80,
+          "addedPrograms": [],
+          "objects": [
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 6037,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 6442,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 2048,
+                  "height": 2048
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 36814.159999996424,
+          "end": 36822.284999996424,
+          "duration": 8.125,
+          "budgetElapsed": 380.15000000596046,
+          "budgetCpu": 379.88499999046326,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 36432.39999999106,
+          "end": 36434.00999999046,
+          "duration": 1.6099999994039536,
+          "budgetElapsed": 17.839999988675117,
+          "budgetCpu": 16.019999995827675,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 36434.10500000417,
+          "end": 36435.314999997616,
+          "duration": 1.209999993443489,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "presentation-diorama-render",
+          "start": 36433.20499999821,
+          "end": 36433.90500000119,
+          "duration": 0.7000000029802322,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        },
+        {
+          "label": "diorama-scene-render",
+          "start": 36433.51999999583,
+          "end": 36433.89499999583,
+          "duration": 0.375,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ]
+    },
+    {
+      "at": 2709.375,
+      "wallInterval": 312.0199999958277,
+      "rafInterval": 33.33999999999969,
+      "frameCounts": {
+        "ActivateLayerTree": 1,
+        "DrawFrame": 6,
+        "BeginFrame": 9,
+        "DroppedFrame": 8,
+        "NeedsBeginFrameChanged": 1,
+        "RequestMainThreadFrame": 1,
+        "BeginMainThreadFrame": 1,
+        "SendBeginMainFrameToCommit": 2,
+        "Commit": 2,
+        "EndCommitToActivation": 2,
+        "Activation": 2,
+        "EndActivateToSubmitCompositorFrame": 12,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 13,
+        "SubmitToReceiveCompositorFrame": 12,
+        "ReceiveCompositorFrameToStartDraw": 12,
+        "SwapEndToPresentationCompositorFrame": 13,
+        "PipelineReporter": 22,
+        "BeginImplFrameToSendBeginMainFrame": 21,
+        "StartDrawToSwapStart": 12,
+        "Swap": 12
+      },
+      "frameEvents": [
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 2398.37600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2398.78000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "NeedsBeginFrameChanged",
+          "phase": "I",
+          "at": 2412.94500000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 2413.2000000029802,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2445.7900000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2479.2770000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2479.2770000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2479.73000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2512.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2512.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2579.27100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2579.27100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2611.7860000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2645.5630000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2645.9510000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 2645.9510000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 2679.29300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 2679.6580000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 2709.28400000298,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 2397.92500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 2397.92500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 2397.9730000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 2397.9730000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 2398.34600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 2398.34600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 2398.38500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 2398.38500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 2398.66300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2398.66300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 2398.66300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 2398.87300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 2398.87300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2412.59600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2412.78400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2412.78400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2412.9420000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2412.9420000029804,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 2413.1890000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 2413.1890000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2413.19100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "b",
+          "at": 2413.19100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 2417.08800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 2417.08800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 2417.10800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2417.10800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2445.48500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 2445.48500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 2445.6430000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2445.6430000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 2445.6430000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2445.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 2446.0930000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 2446.0930000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2446.2760000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 2446.5150000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 2446.5150000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2479.2770000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2479.4500000029802,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 2479.4500000029802,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 2479.60100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2479.60100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 2479.60100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 2479.8120000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 2479.8120000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2479.81600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2512.5000000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2512.5000000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2512.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2512.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2545.94300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2579.27100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2579.2760000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2579.2760000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 2596.4660000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 2596.4660000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 2596.48300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2596.48300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2596.65700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 2596.7320000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 2596.7320000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 2597.8950000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 2597.8950000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 2597.90700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2597.90700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 2611.5090000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 2611.5090000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 2611.61500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 2611.61500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 2611.61500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 2611.84700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 2611.84700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 2612.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 2612.70600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 301.033,
+          "start": 2408.0400000029804,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 301.029,
+          "start": 2408.04300000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "TimerFire",
+          "category": "devtools.timeline",
+          "duration": 301.023,
+          "start": 2408.0460000029802,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 178.415,
+          "start": 2417.21700000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 178.412,
+          "start": 2417.2180000029803,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "duration": 177.011,
+          "start": 2417.5330000029803,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 177.007,
+          "start": 2417.5360000029805,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ANGLEPlatformImpl::RunWorkerTask",
+          "category": "toplevel",
+          "duration": 177.003,
+          "start": 2417.53800000298,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.352,
+          "start": 2512.5780000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.346,
+          "start": 2512.58100000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.344,
+          "start": 2579.28800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.338,
+          "start": 2579.2900000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.337,
+          "start": 2445.9550000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.337,
+          "start": 2645.9690000029805,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.334,
+          "start": 2412.61700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.331,
+          "start": 2545.9530000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.33,
+          "start": 2445.95800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.33,
+          "start": 2645.97200000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.328,
+          "start": 2612.63500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.327,
+          "start": 2412.6210000029805,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.325,
+          "start": 2545.95600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.321,
+          "start": 2612.6380000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.313,
+          "start": 2379.29700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.309,
+          "start": 2679.3120000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.304,
+          "start": 2679.31500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.302,
+          "start": 2379.3030000029803,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.278,
+          "start": 2479.2960000029802,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.272,
+          "start": 2479.2990000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 27.351,
+          "start": 2641.41800000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 27.344,
+          "start": 2641.42200000298,
+          "thread": "CrGpuMain"
+        }
+      ],
+      "spans": [
+        {
+          "label": "diorama-prepare-maize-model",
+          "start": 2404.064999997616,
+          "end": 3167.689999997616,
+          "duration": 763.625,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-prepare-maize-bridges",
+          "start": 2407.280000001192,
+          "end": 3045.0199999958277,
+          "duration": 637.7399999946356,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-prepare-catalogues",
+          "start": 2207.314999997616,
+          "end": 2404.0199999958277,
+          "duration": 196.70499999821186,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    },
+    {
+      "at": 38666.22499999404,
+      "wallInterval": 303.19499999284744,
+      "rafInterval": 300,
+      "frameCounts": {
+        "BeginFrame": 9,
+        "DroppedFrame": 8,
+        "ActivateLayerTree": 1,
+        "NeedsBeginFrameChanged": 1,
+        "RequestMainThreadFrame": 1,
+        "BeginMainThreadFrame": 1,
+        "SubmitToReceiveCompositorFrame": 4,
+        "ReceiveCompositorFrameToStartDraw": 4,
+        "BeginImplFrameToSendBeginMainFrame": 21,
+        "PipelineReporter": 21,
+        "SwapEndToPresentationCompositorFrame": 5,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 4,
+        "SendBeginMainFrameToCommit": 2,
+        "Commit": 2,
+        "EndCommitToActivation": 2,
+        "Activation": 2,
+        "EndActivateToSubmitCompositorFrame": 4,
+        "StartDrawToSwapStart": 5,
+        "Swap": 6
+      },
+      "frameEvents": [
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 38389.90500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38412.82800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38412.82800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "NeedsBeginFrameChanged",
+          "phase": "I",
+          "at": 38414.21600000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 38646.21600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 38666.03800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 38666.07100000298,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 38363.12400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 38363.12400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 38363.12400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 38363.12400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38379.42400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38379.42400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38379.49500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38379.62400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 38389.75600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 38389.75600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 38389.78500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 38389.78500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 38389.88200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 38389.88200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 38389.92500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 38389.92500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38412.13000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38412.13000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38412.82800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38412.82800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38446.16100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38479.49400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38512.82700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38546.16000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38579.49300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38612.82600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38646.15900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 38646.15900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38646.21600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 38646.21600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 38665.66000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "CrBrowserMain"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 38665.67800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38665.93500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 38665.93500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 38665.95700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 38665.95700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 38665.95700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 38665.95700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38666.02900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "b",
+          "at": 38666.02900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 38666.06400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 38666.06400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 38666.12300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 87.506,
+          "start": 38511.79200000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 87.502,
+          "start": 38511.79300000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 84.855,
+          "start": 38426.76700000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 84.851,
+          "start": 38426.76800000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 63.21,
+          "start": 38599.41700000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 63.206,
+          "start": 38599.41800000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 48.474,
+          "start": 38376.71300000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 48.469,
+          "start": 38376.71500000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.384,
+          "start": 38379.50800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.379,
+          "start": 38379.51000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.346,
+          "start": 38546.23000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.344,
+          "start": 38612.88700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.339,
+          "start": 38479.54700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.339,
+          "start": 38546.23300000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.336,
+          "start": 38612.89000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.335,
+          "start": 38512.89100000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.331,
+          "start": 38479.55000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.329,
+          "start": 38512.89400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.322,
+          "start": 38446.22000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.318,
+          "start": 38412.89700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.313,
+          "start": 38446.22400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.309,
+          "start": 38412.90100000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.299,
+          "start": 38579.58200000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.29,
+          "start": 38579.58600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.271,
+          "start": 38646.23600000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.265,
+          "start": 38646.24000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.26,
+          "start": 38346.24400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.252,
+          "start": 38346.25000000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 26.924,
+          "start": 38362.87500000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 26.917,
+          "start": 38362.88100000298,
+          "thread": "CrRendererMain"
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 17543.204999998212,
+          "end": 38882.37999999523,
+          "duration": 21339.17499999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 36314.50999999046,
+          "end": 38738.034999996424,
+          "duration": 2423.5250000059605,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 37125.75999999046,
+          "end": 38371.965000003576,
+          "duration": 1246.205000013113,
+          "budgetElapsed": 37.35999999940395,
+          "budgetCpu": 35.629999965429306,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 38389.29500000179,
+          "end": 38667.614999994636,
+          "duration": 278.31999999284744,
+          "budgetElapsed": 17.325000002980232,
+          "budgetCpu": 16.075000032782555,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "presentation-overlay-refresh",
+          "start": 38363.92000000179,
+          "end": 38371.814999997616,
+          "duration": 7.894999995827675,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 38363.965000003576,
+          "end": 38371.734999999404,
+          "duration": 7.769999995827675,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 38633.17000000179,
+          "end": 38639.689999997616,
+          "duration": 6.519999995827675,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 38379.515000000596,
+          "end": 38381.82999999821,
+          "duration": 2.314999997615814,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ]
+    },
+    {
+      "at": 4328.004999995232,
+      "wallInterval": 248.0549999922514,
+      "rafInterval": 33.34999999999991,
+      "frameCounts": {
+        "ActivateLayerTree": 1,
+        "BeginFrame": 7,
+        "RequestMainThreadFrame": 1,
+        "DrawFrame": 5,
+        "DroppedFrame": 5,
+        "BeginMainThreadFrame": 1,
+        "SubmitToReceiveCompositorFrame": 14,
+        "ReceiveCompositorFrameToStartDraw": 16,
+        "SendBeginMainFrameToCommit": 2,
+        "Commit": 2,
+        "EndCommitToActivation": 2,
+        "Activation": 2,
+        "EndActivateToSubmitCompositorFrame": 12,
+        "StartDrawToSwapStart": 18,
+        "Swap": 20,
+        "SwapEndToPresentationCompositorFrame": 19,
+        "SubmitCompositorFrameToPresentationCompositorFrame": 15,
+        "PipelineReporter": 19,
+        "BeginImplFrameToSendBeginMainFrame": 16
+      },
+      "frameEvents": [
+        {
+          "name": "ActivateLayerTree",
+          "phase": "I",
+          "at": 4081.7390000029804,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "RequestMainThreadFrame",
+          "phase": "I",
+          "at": 4112.864000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 4113.24100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 4180.75000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4212.61800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 4212.61800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 4212.84000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4245.94500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 4245.94500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 4278.864000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4279.28400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DroppedFrame",
+          "phase": "I",
+          "at": 4279.28400000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginFrame",
+          "phase": "I",
+          "at": 4312.60100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "DrawFrame",
+          "phase": "I",
+          "at": 4312.83500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginMainThreadFrame",
+          "phase": "I",
+          "at": 4327.783000002981,
+          "duration": 0,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 4081.4100000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 4081.4100000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 4081.4100000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 4081.4100000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "e",
+          "at": 4081.5150000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "b",
+          "at": 4081.5150000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Commit",
+          "phase": "e",
+          "at": 4081.5710000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "b",
+          "at": 4081.5710000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndCommitToActivation",
+          "phase": "e",
+          "at": 4081.7160000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "b",
+          "at": 4081.7160000029803,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Activation",
+          "phase": "e",
+          "at": 4081.74800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 4081.74800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4082.90900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4082.90900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4082.90900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4082.90900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4082.92700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4082.92700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4082.92700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4082.92700000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 4112.61000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 4112.72200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 4112.72200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 4112.85800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SendBeginMainFrameToCommit",
+          "phase": "b",
+          "at": 4112.85800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 4112.86500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 4112.86500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 4112.86500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 4112.86500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 4112.89100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 4112.89100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 4113.08200000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 4114.523000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 4114.523000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 4114.523000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 4114.523000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4138.015000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4138.015000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4138.015000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4138.015000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4138.03800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4138.03800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4138.03800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4138.03800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 4145.96000000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 4146.11100000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 4146.2550000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 4146.2550000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 4146.2550000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 4146.2550000029805,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4148.94800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "e",
+          "at": 4148.94800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4148.94800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "b",
+          "at": 4148.94800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4148.96600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "Swap",
+          "phase": "e",
+          "at": 4148.96600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4148.96600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4148.96600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SwapEndToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "e",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 4179.283000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 4179.435000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 4179.435000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 4179.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4179.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 4179.62300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "e",
+          "at": 4179.898000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "b",
+          "at": 4179.898000002981,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "ReceiveCompositorFrameToStartDraw",
+          "phase": "e",
+          "at": 4180.10900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "StartDrawToSwapStart",
+          "phase": "b",
+          "at": 4180.10900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 4180.85600000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "e",
+          "at": 4212.58300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "b",
+          "at": 4212.58300000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "PipelineReporter",
+          "phase": "b",
+          "at": 4212.61800000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "EndActivateToSubmitCompositorFrame",
+          "phase": "e",
+          "at": 4212.74900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitCompositorFrameToPresentationCompositorFrame",
+          "phase": "b",
+          "at": 4212.74900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "SubmitToReceiveCompositorFrame",
+          "phase": "b",
+          "at": 4212.74900000298,
+          "duration": 0,
+          "thread": "Compositor"
+        },
+        {
+          "name": "BeginImplFrameToSendBeginMainFrame",
+          "phase": "b",
+          "at": 4212.91500000298,
+          "duration": 0,
+          "thread": "Compositor"
+        }
+      ],
+      "longest": [
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "duration": 423.323,
+          "start": 3664.78700000298,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 423.318,
+          "start": 3664.7920000029803,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ANGLEPlatformImpl::RunWorkerTask",
+          "category": "toplevel",
+          "duration": 423.304,
+          "start": 3664.7940000029803,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 230.004,
+          "start": 4097.69800000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 229.998,
+          "start": 4097.70400000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "TimerFire",
+          "category": "devtools.timeline",
+          "duration": 229.992,
+          "start": 4097.70800000298,
+          "thread": "CrRendererMain"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 96.141,
+          "start": 4174.24900000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 96.139,
+          "start": 4174.25000000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "duration": 92.432,
+          "start": 4177.36500000298,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 92.428,
+          "start": 4177.36800000298,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ANGLEPlatformImpl::RunWorkerTask",
+          "category": "toplevel",
+          "duration": 92.423,
+          "start": 4177.37000000298,
+          "thread": "ThreadPoolForegroundWorker"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.401,
+          "start": 4112.622000002981,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.396,
+          "start": 4112.62400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.339,
+          "start": 4079.2790000029804,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.337,
+          "start": 4312.63300000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.336,
+          "start": 4245.961000002981,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.334,
+          "start": 4079.28200000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.331,
+          "start": 4245.96400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.326,
+          "start": 4279.301000002981,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.324,
+          "start": 4312.63500000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.321,
+          "start": 4179.310000002981,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.321,
+          "start": 4279.30400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.319,
+          "start": 4212.63700000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.314,
+          "start": 4179.31400000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.313,
+          "start": 4212.640000002981,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 33.267,
+          "start": 4146.02800000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 33.262,
+          "start": 4146.03100000298,
+          "thread": "GpuVSyncThread"
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "duration": 24.976,
+          "start": 4111.77000000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "duration": 24.974,
+          "start": 4111.77100000298,
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "duration": 21.213,
+          "start": 4115.17400000298,
+          "thread": "ThreadPoolForegroundWorker"
+        }
+      ],
+      "spans": [
+        {
+          "label": "diorama-compile-maize",
+          "start": 3616.155000001192,
+          "end": 4097.92499999702,
+          "duration": 481.7699999958277,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-upload-maize-soil",
+          "start": 4098.024999991059,
+          "end": 4327.134999990463,
+          "duration": 229.10999999940395,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "diorama-compile-sky",
+          "start": 4327.159999996424,
+          "end": 4459.605000004172,
+          "duration": 132.4450000077486,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

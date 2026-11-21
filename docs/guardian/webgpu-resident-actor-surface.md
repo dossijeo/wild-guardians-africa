@@ -1,0 +1,172 @@
+# Resident ground samples for WebGPU actors
+
+The WebGPU animal and worker presentation already owns the Wild Engine
+chunk payloads. `WebGpuTerrainResidency` exposes their `SpatialSurfaceView`,
+which evaluates the same two ground triangles as the mesh. Actor placement
+now uses that resident view instead of raycasting the same ground mesh. The
+existing raycast remains the fallback if the view has no finite sample and at
+cell edges, diagonals and chunk seams. The cache still follows mesh identity,
+so replacement invalidates the prior result.
+
+The edge fallback preserves a real behavior of the previous raycaster: at an
+exact mangrove chunk corner the ray can miss and return zero even though the
+resident surface is about 3.32 m. This change deliberately retains that
+behavior instead of silently changing placement. It samples the same **ground**
+as the old WebGPU path. It does not implement `nav.actorSurface` water support:
+the authority may raise actors above water in mangroves and canyons.
+
+`tests/webgpu-actor-terrain.test.js` compares the view against the actual
+rendered Wild Engine geometry in six biomes, across two resident chunks and
+five seam points per biome; the tolerance is 0.00005 m. It also checks fallback
+and caching. The existing animal, worker and terrain residency tests pass.
+This is geometric CPU validation, not a visual comparison of a running game.
+
+Two alternating-order Node CPU runs on a real seed-712 mangrove chunk sampled
+256 varied non-edge coordinates per batch, with four warm-up batches and 16
+measured batches. Raycast mean/p95/p99 were 144.16/253.02/253.02 ms and
+131.56/188.07/188.07 ms per batch; the resident view was
+0.101/0.156/0.156 ms and 0.099/0.163/0.163 ms. All 256 values matched in those
+runs. These are repeated CPU samples, not a frame, a GPU measurement or a
+gameplay FPS claim. With 16 batches, p95 and p99 are the maximum and do not
+characterize a reliable tail. Results are retained in
+`gpu-animation/actor-surface-sampling-ab-20261105.json`; reproduce with
+`node tools/experiments/audit_actor_surface_sampling.mjs` from the repository.
+
+For eventual GPU trajectory support, a packed R32F grid needs 9,604 bytes per
+49×49 chunk. The existing Three.js position buffer is created for vertex use;
+sharing it directly as storage is not established, and Three's storage path
+pads vec3 attributes to vec4 and changes their layout. A separate packed
+buffer costs a copy and upload on chunk changes but avoids per-segment WASM
+queries. Neither that GPU grid nor its per-revision lifetime has been
+implemented. The terrain channel can arrive independently of state; old
+residency versions are currently discarded. A causal chunk-revision manifest,
+retention until a window finishes, water coverage and edge validation remain
+necessary before this data can support an autonomous global timeline.
+
+## Water triangle index: not integrated
+
+A diagnostic index reused the positions already present in the rendered water
+mesh, with per-cell lists of triangle offsets. It evaluated the visible water
+height without calling Wild Engine for each actor. A 5 cm ambiguity margin
+fell back to the existing ground-only placement when water could not be
+confirmed. This is **not** an authoritative fluid query: the mangrove mesh
+clips a nonlinear `wetlandMask` using vertex and centroid samples, and canyon
+water geometry also approximates its continuous shoreline.
+
+In two identical seeded canyon fixtures, 200,000 deterministic points were
+compared with native ground and `fluidLevelAnywhere`. With only the central
+chunk available, seeds 28 and 712 had respectively 181 and 105 points with
+over 5 cm error, up to **0.82 m**, where the ambiguity margin reached a
+missing neighbouring chunk. With all 3×3 neighbours available, neither seed
+had an error over 5 cm in these samples. This is finite evidence, not a proof
+of shoreline equality or a guarantee that a neighbour is resident. The
+candidate was therefore **not connected or enabled**, even behind QA.
+
+Across two runs, building the nine indexes took 2.38/3.48 ms for seed 28 and
+0.29/0.44 ms for seed 712. For 10,000 points, ground-only sampling took
+3.14/3.34 ms and 2.64/1.43 ms respectively; adding the diagnostic water index
+took 6.88/6.03 ms and 12.80/11.27 ms. These are Node CPU observations, not
+frame, GPU, memory-residency or gameplay measurements. Inputs and results are
+in `gpu-animation/resident-water-index-20261105.json`; reproduce with
+`node tools/experiments/audit_resident_water_index.mjs`.
+
+Wild Engine already builds 48×48 water flags and levels at **cell centres**,
+but the current chunk payload transfers neither array. Centre samples alone
+cannot certify the continuous water boundary. A possible next native
+contract is a conservative per-cell classification (water, ground, ambiguous)
+generated alongside existing chunk data, with the chunk's authoritative
+revision and explicit fallback for ambiguous or missing cells. It requires a
+proof against the native continuous predicates, versioned transport and tests
+at shoreline/settlement boundaries before use. It has not been implemented,
+and neither the rendered water nor game physics has been changed.
+
+### Manifiesto causal de terreno para capturas de movimiento (QA, 2026-11-05)
+
+El publicador de terreno ya asigna revisiones por chunk. Cuando se solicita la captura experimental de movimiento mundial, el Worker añade el mapa de revisiones comprometidas y una época exclusiva del canal. La residencia solo acepta una coincidencia exacta de época y revisión para todos los chunks, después de confirmar el estado; chunks pendientes, reemplazados o restaurados mediante checkpoint sintético hacen que la coincidencia falle. Un canal no admite dos épocas. El mapa se reutiliza mientras no cambia el terreno; no se añaden consultas WASM. Una reconexión comienza otra época y falla de forma conservadora hasta reconstruir un estado verificable. La captura sigue siendo histórica y `safeForAutonomousPlayback` permanece en `false`: este contrato no certifica alturas sobre agua, historia del terreno, física, ni horizonte de ejecución.
+
+Pruebas dirigidas: 39/39. La fixture `tests/browser/authority-terrain-manifest.html`, ejecutada con `tools/experiments/audit_terrain_manifest_worker.mjs`, compara dos Workers reales y Wild Engine, ambos con canal de terreno. Dos pasadas independientes dieron 24 chunks, manifiesto de 761 bytes, 42 actores y 3652 segmentos, con estados y eventos idénticos en 20 lotes. Sobre 16 muestras por pasada, el tiempo de ida y vuelta más validación fue 29,56/30,63 ms y 22,58/23,33 ms (base/captura); p95/p99 37,90/40,35 ms y 31,52/32,94 ms. La variante observada además construye y valida trazas y actualiza su feed; por tanto no son una medida aislada del coste del manifiesto. No se usa render, GPU, FPS ni física Rapier y la muestra es pequeña; no demuestra mejora de rendimiento. En esas dos pasadas el feed no recibía `terrainReady`, por lo que las 20 capturas quedaban no representables. Tras conectar la coincidencia real del canal en una tercera pasada, 20/20 manifiestos coincidieron y 17/20 capturas fueron representables con física explícitamente desactivada en la fixture; las tres restantes se invalidaron por cambios o eventos. Los tiempos base/captura fueron 21,54/22,22 ms de media y 27,15/27,04 ms p95/p99. Que sean representables no autoriza reproducirlas autónomamente. Para reproducir, servir Vite en 5175 y configurar `NODE_PATH` o `PLAYWRIGHT_MODULE` hacia Playwright.
+
+### Fases observadas por tick interno (QA, 2026-11-05)
+
+La captura mundial opt-in observa para las hienas, al inicio y después de cada tick de `advanceReal`, la fase `motionPhase` cruda, tiempo, estado, presencia de ruta y condiciones de caída, recuperación e impacto. El Worker gráfico valida los valores finales contra el estado confirmado y rechaza secuencias de tiempo o valores inválidos. Cambios de identidad o roster, valores incompletos, alteraciones después de la última muestra o fallos de instrumentación descalifican la captura. Son muestras en fronteras de tick: no demuestran qué ocurrió dentro de un tick ni constituyen una interpolación, una pose validada, un historial de física o un horizonte seguro. El callback solo se instala con el observador QA; si falla, la simulación continúa y la captura se marca incompleta. No se ha activado reproducción GPU a partir de estos datos.
+
+La fixture real `tests/browser/authority-terrain-manifest.html`, ejecutada dos veces con `tools/experiments/audit_terrain_manifest_worker.mjs`, mantuvo idénticos el estado y los eventos de control durante 20 lotes; observó 42 actores, una hiena y 140 muestras (siete por lote), con 24 chunks coincidentes. En 16 muestras por pasada, el coste completo de ida y vuelta más validación fue 22,12/22,23 y 24,57/26,07 ms de media y 32,31/27,27 y 32,43/37,74 ms p95/p99 (base/observación). La ruta observada incluye toda la captura global, manifiesto y feed, por lo que estos tiempos no aíslan el coste de las fases. No se midieron FPS, GPU ni Rapier; la muestra es pequeña y no demuestra mejora de rendimiento.
+
+### Ventanas reales en sabana y selección de superficie GPU (QA, 2026-11-05)
+
+La fixture `tests/browser/authority-terrain-manifest-savanna.html`, reproducible con `tools/experiments/audit_savanna_world_motion.mjs`, observó 20 lotes de una captura determinista de sabana: 25 actores, 995 segmentos, tres chunks con actores y dos cruces de chunk. Coincidieron los 12 chunks del manifiesto y los 20 lotes fueron representables por el feed con física desactivada; ninguno tenía el mundo entero inmóvil ni todos sus actores en un único chunk. Esto no constituye una certificación de reproducción. La media base/observación fue 8,79/9,53 ms, p95/p99 10,20/13,13 ms en 16 muestras; se trata del coste de captura y validación, sin render, GPU ni Rapier.
+
+Se descarta activar una ruta limitada a un solo chunk porque no aparece en estos lotes. Compartir el atributo de posiciones como `StorageBufferAttribute` parece evitar otro buffer, pero Three.js cambia en CPU un atributo vec3 a vec4 y sustituye su array al crear el buffer WebGPU; aún no se han validado sus efectos en sombreado, raycast o consumidores que dependen de esa identidad. Un atlas GPU de alturas por chunk conservaría la geometría y permitiría selección por actor, a costa de otra copia de aproximadamente 9,6 KB por chunk de 49×49 floats y su transferencia. Ambas opciones necesitan manejar versiones históricas, selección segura en cruces, sombras y ventanas globales; no se ha habilitado ninguna ni se ha aproximado el agua.
+
+No se construyó un atlas aislado: hoy el actor confirmado coloca su raíz con altura muestreada en CPU y el picker realiza raycasts sobre esa raíz. Hacer que un shader repita la altura no retiraría ese trabajo ni permitiría desplazar una trayectoria en GPU. Su integración útil requiere reproducir una ventana global coherente, componer el desplazamiento con skinning y sombras, y hacer que el picker consulte la posición temporal; además faltan orientación y estados intermedios de todos los trabajadores y el hold actual conserva el ACK pendiente. Una opción es evaluar posiciones para picking solo ante interacción, pero no se ha implementado ni validado.
+
+Una pasada adicional examinó el apoyo inicial de cada actor frente a los puntos donde cada segmento cruza una línea de cuadrícula o una diagonal de triángulo. En esta superficie seca lineal por triángulos, esos puntos y los extremos acotan la variación de altura a lo largo de cada segmento. Ninguno de los 20 lotes quedó por debajo de 1 o 2 cm para todos sus actores; los 20 quedaron por debajo de 5 cm y el máximo fue 4,253 cm. Una tolerancia de 5 cm podría justificar una prueba visual, pero esta medición no demuestra que el efecto sea imperceptible, no evalúa agua, obstáculos o física, y no habilita playback. Esta pasada incluye cálculos adicionales en la medición observada, por lo que sus tiempos no son comparables con el A/B anterior.
+
+La observación QA se amplió a los estados y dirección calculable de todos los actores en cada tick. En la misma incursión de sabana, 8/20 lotes conservaron estado y orientación estables bajo el filtro experimental y cumplieron la cota de 5 cm; eso es solo elegibilidad preliminar. La traza completa creció de aproximadamente 15,2 KB a 72 KB por lote, y la prueba no demuestra una mejora de rendimiento. Un enlace QA reversible compone el desplazamiento con `positionNode` existente usando copias de materiales por actor, conserva los materiales compartidos originales y rechaza overrides de sombra incompatibles. La prueba dirigida cubre rigs y restauración en CPU; todavía no valida visualmente sombras, picking ni una ventana de mundo completa, y no activa ninguna trayectoria.
+
+La composición QA de trayectoria ahora conserva y restaura el `positionNode` previo y utiliza copias de materiales por actor para no desplazar a otros rigs que comparten recursos. Se rechazan propietarios concurrentes y overrides personalizados de posición/sombra incompatibles; las copias se liberan al retirar el actor o la vinculación. Las pruebas Node cubren `SkinnedMesh`, compartición, restauración y rollback. Una fixture WebGPU mínima de 256×256 confirmó composición, límite temporal y restauración sobre una caja; el adaptador reportó NVIDIA, arquitectura Turing. No se verificaron en esa fixture las sombras, el picking ni la apariencia de un rig real, y la vinculación no se activa por sí sola ni certifica una ruta segura.
+
+El roster de trabajadores y el de animales exponen `bindMotion` únicamente en desarrollo, cuando el actor está cargado y se proporciona una trayectoria ya instalada. El enlace clona materiales por actor y restaura materiales y raycasts al retirarse. Una sesión de picking QA congela un único tiempo durante la consulta completa, evalúa bajo demanda el desplazamiento de la misma trayectoria y revoca después incluso si el raycast falla. La sesión cubre los raycasts internos de `createWebGpuPicker.pick`, incluidos terreno y oclusores, pero no cancela por sí sola otros tipos de interacción: el futuro coordinador debe hacerlo. El estado de pose sigue en CPU y no se ha validado visualmente con sombras ni con una ventana global; no hay ningún llamador de producción y el movimiento permanece desactivado.
+
+En el modo QA de reloj confirmado, las partículas de bendición comparten ahora directamente el mismo nodo TSL utilizado por la animación baked de la hiena. El modo normal conserva su fuente anterior. El reloj solo cambia al aplicar una publicación confirmada: la prueba de un Worker WebGPU con un efecto mínimo comprobó que modificar únicamente el estado no confirmado no cambia la imagen, mientras que confirmar el reloj sí anima las partículas (3392 componentes de píxel diferentes). Se trata de una prueba aislada, no de paridad de partida ni de avance autónomo entre publicaciones. Las capas de luz, cielo, trabajadores, guardián y otros efectos todavía no comparten este reloj; las acciones y pausas siguen requiriendo una cancelación coordinada antes de habilitar una ventana global.
+
+El guardián confirmado también consume el reloj compartido QA para edad del gesto, reconciliación, clips secundarios y cara. Los eventos siguen procesándose con el estado confirmado y el feedback provisional conserva su reloj real para responder inmediatamente. Las pruebas dirigidas cubren pausa, avance no confirmado, reconciliación y activación del haz; el reloj sigue avanzando exclusivamente al confirmar publicaciones. Esto no sincroniza todavía la iluminación, las poses de trabajadores ni los demás efectos durante una ventana interpolada.
+
+Los efectos confirmados de agricultura, trabajo, combate, escudo e impactos de muralla también toman del reloj compartido QA el tiempo usado para retener eventos y construir planes. No se adelantan entre publicaciones: sus duraciones, posiciones y demás datos siguen procediendo del estado confirmado. El modo ordinario conserva su reloj previo; las pruebas comprueban que un cambio de tiempo no confirmado no expire un impacto y que el commit sí lo haga. Quedan pendientes la sincronización temporal de las poses y de todos los parámetros del efecto durante una futura ventana.
+
+Las poses y expresiones de trabajadores WebGPU aceptan el reloj confirmado compartido en el modo QA; el roster lo transmite a cada rig y el modo ordinario conserva `state.elapsed`. Una prueba con un rig mínimo comprueba que cambios de estado no confirmados no adelantan la pose, y otra conserva el fallback. Las raíces siguen actualizándose desde publicaciones; todavía no existe reproducción de trayectorias ni actualización autónoma de la pose entre ellas.
+
+La pose normal no baked de animales WebGPU consume también el reloj confirmado compartido QA. Las fases explícitas y los temporizadores de ataque mantienen prioridad, el muestreo provisional sigue usando su tiempo autoritativo y las poses físicas conservan prioridad. Las pruebas cubren esos caminos y el fallback; no se evalúa la pose en GPU ni se ha habilitado una ventana de movimiento.
+
+Se evaluó una cerca de interacción por el mismo puerto ordenado de publicaciones para revocar una ventana antes de aplicar estados posteriores a una orden. El experimento se retiró: las interacciones provisionales y el picking llegan por otro canal, mientras que los cambios de velocidad y el reenganche no disponen todavía de una frontera correlacionada que permita reabrir ventanas sin riesgo ni esperas indefinidas. Para continuar hace falta correlacionar todas esas entradas con versiones de presentación y confirmar sus fronteras sin bloquear render ni autoridad; una notificación independiente no garantiza ese orden. No se ha activado reproducción de trayectorias.
+
+Se valoró enviar un cierre causal adicional para Attack mediante el outbox visual, reutilizando el identificador del comando y ordenándolo después de su publicación. Se descartó la implementación experimental porque el journal de recuperación actual no conserva esos cierres: un mensaje provisional enviado al Worker perdido no garantiza reconstruir aceptación o rechazo al reenganchar. Para integrarlo hay que incorporar la identidad y el cierre al checkpoint/replay, deduplicarlos frente al canal actual y verificar orden y fallos en partida; el mecanismo existente de confirmación permanece vigente y no se han habilitado ventanas GPU.
+
+Para que los cierres de interacción sobrevivan a la recuperación sin conservar todos los ataques históricos, el protocolo necesita un ACK por interacción y un checkpoint gráfico que identifique tanto los previews aún activos como los cierres aplicados. Solo un checkpoint confirmado que demuestre la resolución permite liberar esos IDs; el replay debe conservar el orden entre publicación y cierre y no declarar que alcanzó el estado vivo entre ambos. El checkpoint actual no contiene esos datos, así que no se ha incorporado un ledger parcial ni se ha activado esta ruta.
+
+La validación del enlace de trayectoria GPU también comprueba que los extremos temporales absolutos de la ventana y de cada segmento sigan distinguiéndose en float32: el shader resta relojes absolutos con esa precisión. Si un intervalo colapsa por redondeo, se rechaza sin reemplazar buffers ni versión anteriores. La comprobación evita reproducir segmentos temporalmente indistinguibles, pero no elimina toda cuantización del reloj absoluto. La ruta sigue siendo experimental y no se ha activado ninguna ventana.
+
+El reloj confirmado expone ahora, además de su nodo absoluto existente, un nodo de movimiento relativo a la época de inicio de la sesión. El enlace GPU acepta el propio reloj y transforma sus marcas al mismo dominio; las llamadas antiguas con un nodo absoluto siguen admitidas y comprobadas. Si también colapsan los intervalos relativos, se rechaza la trayectoria sin reemplazar la anterior. En una fixture WebGPU mínima sobre NVIDIA/Turing, una sesión restaurada en 16.777.216 segundos movió el objeto desde x=31,5 a x=39,5 píxeles en medio segundo y lo mantuvo en x=39,5 al limitar el horizonte. Las pruebas cubren pausa, versiones, picker y fallback. La época es fija durante la sesión: para sesiones extremadamente largas aún hay que renovar época con seguridad. Las demás capas que usan el nodo absoluto no obtienen automáticamente esta precisión, y la ventana GPU sigue sin activarse en partida.
+
+La ruta experimental cuantiza hacia abajo el reloj relativo y los límites de duración y horizonte, y hacia arriba el inicio y las marcas internas de segmento. Shader y picker aplican un margen temporal conservador; las trayectorias que no pueden progresar con ese margen se rechazan. El límite no puede ampliarse mediante sucesivos `hold`. La prueba WebGPU mínima sigue mostrando el movimiento y la retención, y pruebas CPU cubren límites no representables y trayectorias lineales. Esto reduce el riesgo de adelanto temporal, pero el redondeo espacial de vértices, interpolación y skinning no está acotado frente a obstáculos: no certifica colisiones ni autoriza playback en partida.
+
+El enlace QA de trayectoria comprueba ahora, antes de modificar materiales o raycasts, que la raíz visible del actor coincide en coordenadas globales X/Z con el ancla inicial confirmada. Rechaza raíces ocultas y discrepancias, conserva inmutable el ancla publicada; no impide sustituir una trayectoria vinculada. El reemplazo QA valida de forma transaccional que el reloj y el inicio coincidan con la posición muestreada, conservando el ancla y los materiales; el picking usa la misma muestra. Aún no certifica igualdad subpíxel GPU/CPU ni colisiones y no autoriza playback en partida. Las pruebas cubren transformaciones de padres, rollback y versiones. Es una barrera necesaria, no una prueba de suelo, cuerpos, sincronización global ni autorización de playback.
+
+El enlace experimental permite interrumpir una trayectoria incluso durante movimiento y sustituirla sin recrear materiales o textura cuando el reloj y la posición inicial coinciden con la muestra anterior. Rechazos preservan los datos previos. Una fixture WebGPU de 64×64 midió la misma posición antes y después del reemplazo (39,5 píxeles), movimiento inverso posterior y retención en el horizonte; no comprueba error subpíxel, sombras ni colisiones. La coincidencia del muestreo CPU no sustituye la validación de un corredor físico y del estado global.
+
+Cuando una revisión de terreno se aplica en la residencia WebGPU, el feed experimental revoca inmediatamente las trazas individuales y mundiales. El manifiesto no es un índice de dependencias espaciales, por lo que incluso un chunk ajeno podría introducir obstáculos relevantes; también se invalida al cambiar de época o al restaurar. Una revisión duplicada rechazada no emite invalidación. La misma barrera cubre sustitución, retirada y restauración. Es una corrección conservadora de validez, no una optimización ni una certificación de playback; las trazas individuales aún carecen de dependencias espaciales precisas.
+
+La validación de la traza mundial comprueba ahora, antes de modificar la presentación, que el roster, posición, estado y primera muestra de tick coinciden con el estado previo realmente mostrado. El stream solo marca listo el terreno si el manifiesto coincide en ambos extremos y la generación de revisiones no cambia durante la retención; faltas de datos, épocas distintas y revisiones intercaladas conservan el fallback. Una captura determinista real de 20 lotes de sabana con 25 actores y 995 segmentos superó la comprobación; no incluyó renderer ni física. Estas condiciones siguen siendo necesarias pero insuficientes para autorizar reproducción GPU o certificar colisiones.
+
+El corte QA de movimiento mundial ya crea el reloj confirmado compartido sin exigir la hiena baked; esa exigencia impedía disponer simultáneamente del reloj y de la interfaz de picking. Una fixture de Worker gráfico WebGPU real, de 16×16 y sin renderizar escena, comprobó que ambos se crean, que el reloj sigue la publicación confirmada y que permanece fijo en pausa. Pasaron también 71 pruebas dirigidas de reloj, stream, rigs y VFX. Todavía no se ha reproducido ninguna trayectoria y la fixture no valida picking completo, actores ni apariencia en partida.
+# Actividad física observada durante el lote QA
+
+La captura opcional consulta los registros existentes de Rapier al comienzo, tras cada tick y al final del lote. El feed descarta como representable un lote si detecta física activa en cualquiera de esas muestras, si la lectura falla o si faltan muestras completas de los actores. No vuelve a evaluar las poses ni modifica la simulación. Las muestras no descartan una activación y finalización dentro de un mismo tick: no certifican seguridad, colisiones ni autorización de reproducción. El playback autónomo continúa desactivado. Falta además una frontera causal entre interacciones y publicaciones de todos los Workers y una ventana compartida de mundo, terreno, poses y efectos.
+
+# Picking de la hiena con animación GPU en QA
+
+El picker puede seleccionar una hiena que reproduce Walking con matrices baked en el Worker gráfico. Solo durante una interacción genera en CPU vértices de picking a partir de las mismas matrices interpoladas, pesos de skinning, transformaciones y morph targets; al terminar restaura las mallas visibles incluso si falla el raycast. La simulación conserva la validación de la acción y se mantiene el requisito de que la escena seleccionable esté completa. La geometría auxiliar se reutiliza y no se dibuja durante el juego.
+
+Una comparación WebGPU de siluetas a 800×600 en NVIDIA Turing observó cero píxeles distintos entre presentación y geometría auxiliar en las fases 0,13, 0,25 y 0,71; cubre un modelo y cámara, sin sombras. `tools/experiments/audit_webgpu_baked_pick_raid.mjs` ejercitó dos Workers en una incursión de manglar pausada: 16 animales cargados, una hiena baked seleccionada sin marcar la escena incompleta y animación baked activa antes y después del picking. Pasaron también las pruebas `webgpu-picker.test.js` y `webgpu-baked-walk.test.js`. No se ha medido el coste de selección en multitudes ni comprobado un ataque iniciado desde este clic; las trayectorias autónomas y su coherencia global siguen pendientes.
+
+# Canal causal experimental de interacciones
+
+La comprobación experimental de cámara rechaza ahora la respuesta si la cámara cambia otra vez mientras la verificación está en vuelo; antes podía aceptar una comparación válida para una cámara que ya no era la actual. `tools/experiments/audit_webgpu_camera_verification_race.mjs` prueba el módulo cliente real en navegador con respuestas de Worker simuladas, tanto la verificación estable como el segundo cambio. No usa renderizador ni demuestra que Attack desde la interfaz funcione o que haya mejorado la latencia.
+
+Se probó un reintento QA limitado a un primer ID confirmado, con caducidad y revalidación de cámaras y oclusión. En la incursión medida no se obtuvo ese primer ID: el frame era secuencia 512/generación 879 y al procesar el clic la escena era 516/generación 883; el rechazo llegó a los 127,86 ms. Por ello no se llegó a medir la segunda ronda ni su efecto sobre el Worker gráfico y se retiró esa rama experimental. La traza se conserva en `gpu-animation/camera-pick-causal-qa.json`.
+
+Se evaluó y retiró un consumidor QA de picking histórico que retenía hasta ocho referencias a publicaciones y reconstruía rigs auxiliares en el Worker gráfico. Una prueba rechazó el clic por divergencia de objetivo u oclusión tras 651,91 ms de latencia total del pick. Ese trabajo síncrono podía bloquear la presentación, por lo que no se conserva como solución. Una prueba anterior confirmó un Attack desde clic en una incursión de 13 bestias, pero no registró si usó el histórico ni la latencia; no demuestra una mejora de fluidez. Llevar la reconstrucción a un Worker auxiliar requeriría gestionar geometría, alpha, poses y versiones sin duplicar indebidamente los recursos; no se ha demostrado su viabilidad ni se ha integrado.
+
+
+En otra reproducción con diagnóstico QA, el descarte fue específicamente por cambio de versión de cámara, a los 69,25 ms; no fue un pick supersedido ni una secuencia insuficiente. La simulación estaba en 83,65 s y la presentación en 77,80 s al inspeccionar la cola llena. En las últimas 512 publicaciones, el Worker gráfico midió 4,71 ms de media y 8,11 ms p95 para decodificar, reconciliar y ejecutar hooks; el hook de animales midió 1,55 ms de media y 4,38 ms p95. Son métricas CPU parciales y no explican por sí solas los ACK ni incluyen el coste completo del render. No se relajó el rechazo por cámara obsoleta.
+
+Una reproducción instrumentada posterior identificó el descarte del clic: se solicitó el pick WebGPU y se rechazó por obsoleto tras 110,85 ms, por lo que nunca se emitió el input causal. El error agrupa cambios de cámara, picks supersedidos y secuencia insuficiente; no se ha distinguido cuál ocurrió. En el muestreo anterior al clic la cola visual estaba vacía; alcanzó 128 posteriormente. No hay evidencia de que la saturación causara este descarte.
+
+Con `qa-webgpu-causal-input`, Attack puede enviarse desde el Worker gráfico por el puerto visual dúplex al host. El ID numérico acompaña a la publicación autoritativa correspondiente y se conserva en el journal; el receptor resuelve la solicitud después de aplicar dicha publicación. El host rechaza IDs repetidos y la vía ordinaria permanece sin cambios. Al recuperar el Worker gráfico se reconstruyen las publicaciones; las promesas de una instancia gráfica perdida no sobreviven y sus previews deben descartarse. Esto no proporciona todavía una frontera causal para todas las interacciones ni habilita trayectorias GPU.
+
+Una incursión QA real WebGPU con Rapier confirmó Attack por este canal, mostró la pose física, regresó a la animación baked y rechazó un ID duplicado. Una prueba de recuperación con Workers reales y consumidor visual simulado verificó que el recibo causal, eventos y terreno reaparecen en orden, exactamente una vez. La batería Node cubre el orden en MessageChannel y errores.
+
+La validación de clic en UI no pasó: el primer escaneo obtuvo `Stale WebGPU pick` al cambiar la cámara; en el segundo se pulsó un animal localizado con el selector de referencia pero no llegó ningún Attack (`causalInputs=0`). Al finalizar, el flujo visual mostraba 128 publicaciones pendientes y 23.712.996 caracteres de snapshots; no se ha determinado si esa cola explica el clic no entregado. No se deshabilitó la protección de cámara obsoleta ni se acredita interacción UI funcional mediante este canal.
+
+
+El corte QA mantiene una generación común de contenido seleccionable para las publicaciones de frame; terreno, props, altas y bajas de actores/cajas, estructuras, cultivos y transiciones de textura notifican cambios. Algunas invalidaciones son conservadoras en cada reconciliación. La generación aún no cubre exhaustivamente poses, destrucción y recortes alpha, por lo que no autoriza reconstrucción histórica ni reproducción autónoma. El origen provisional del guardián se limita a presentación; la orden autoritativa conserva su propio origen y la caída/gesto se retiran al rechazar.

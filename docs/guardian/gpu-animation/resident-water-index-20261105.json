@@ -1,0 +1,99 @@
+{
+  "date": "2026-11-05",
+  "runs": [
+    {
+      "runs": [
+        {
+          "seed": 28,
+          "chunks": 9,
+          "points": 200000,
+          "buildMs": 2.3786999999999807,
+          "singleErrors": 181,
+          "singleMax": 0.8200000762939452,
+          "neighbourErrors": 0,
+          "neighbourMax": 0,
+          "regressions": 0,
+          "improved": 18549,
+          "queryPoints": 10000,
+          "groundMs": 3.136700000000019,
+          "groundAndWaterMs": 6.881899999999973,
+          "checksum": 333786.0099483951,
+          "indexes": {
+            "triangles": 368,
+            "cells": 2087,
+            "references": 8240
+          }
+        },
+        {
+          "seed": 712,
+          "chunks": 9,
+          "points": 200000,
+          "buildMs": 0.2937000000000012,
+          "singleErrors": 105,
+          "singleMax": 0.8200000762939452,
+          "neighbourErrors": 0,
+          "neighbourMax": 0,
+          "regressions": 0,
+          "improved": 44435,
+          "queryPoints": 10000,
+          "groundMs": 2.6370000000000573,
+          "groundAndWaterMs": 12.804300000000012,
+          "checksum": 238811.47585751474,
+          "indexes": {
+            "triangles": 421,
+            "cells": 1939,
+            "references": 8447
+          }
+        }
+      ],
+      "scope": "Node/WASM diagnostic of rendered water triangles against native canyon surface; no GPU, game frame or exhaustive shoreline proof. Single-chunk fallback lacks neighbours; the 3x3 case uses only resident triangles."
+    },
+    {
+      "runs": [
+        {
+          "seed": 28,
+          "chunks": 9,
+          "points": 200000,
+          "buildMs": 3.4782000000000153,
+          "singleErrors": 181,
+          "singleMax": 0.8200000762939452,
+          "neighbourErrors": 0,
+          "neighbourMax": 0,
+          "regressions": 0,
+          "improved": 18549,
+          "queryPoints": 10000,
+          "groundMs": 3.341799999999978,
+          "groundAndWaterMs": 6.0277000000000385,
+          "checksum": 333786.0099483951,
+          "indexes": {
+            "triangles": 368,
+            "cells": 2087,
+            "references": 8240
+          }
+        },
+        {
+          "seed": 712,
+          "chunks": 9,
+          "points": 200000,
+          "buildMs": 0.4415000000000191,
+          "singleErrors": 105,
+          "singleMax": 0.8200000762939452,
+          "neighbourErrors": 0,
+          "neighbourMax": 0,
+          "regressions": 0,
+          "improved": 44435,
+          "queryPoints": 10000,
+          "groundMs": 1.4284999999999854,
+          "groundAndWaterMs": 11.267099999999914,
+          "checksum": 238811.47585751474,
+          "indexes": {
+            "triangles": 421,
+            "cells": 1939,
+            "references": 8447
+          }
+        }
+      ],
+      "scope": "Node/WASM diagnostic of rendered water triangles against native canyon surface; no GPU, game frame or exhaustive shoreline proof. Single-chunk fallback lacks neighbours; the 3x3 case uses only resident triangles."
+    }
+  ]
+}

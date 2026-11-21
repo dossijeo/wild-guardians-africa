@@ -1,0 +1,127 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "1e92955d2",
+  "scope": "Fresh declaration of semantic Home absence on the existing native Worker, only with an empty physical registry and before clock/execution admission. Includes mixed and entirely inactive Game cohorts. Moving native-home restoration, ordinary product producer and full incremental GPU recovery remain pending.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L482-L635",
+      "read": [
+        "addAgent initialization and target NONE",
+        "removeAgent inactive participation",
+        "getActiveAgents skips inactive records"
+      ],
+      "decision": "Keep participation metadata in the existing owner. Initial absence creates no executable corridor, body or previous permission. Preserve the exact saved village-entry coordinates; do not adopt Detour position snapping or introduce a dependency."
+    }
+  ],
+  "nativeBuild": {
+    "command": "$env:PYTHONUTF8='1'; .cache/emsdk/python/3.13.3_64bit/python.exe .cache/build-native-gate-presentation.py",
+    "log": ".cache/native-home-inactive-build.log",
+    "standalone": "pass",
+    "threaded": "pass",
+    "exports": [
+      "nav_home_inactive_restore_version",
+      "nav_intent_restore_home_inactive"
+    ],
+    "warning": "Existing pthread + ALLOW_MEMORY_GROWTH warning"
+  },
+  "directed": {
+    "command": ".cache/tooling/node20.exe --test tests/native-home-inactive-restoration.test.js",
+    "log": ".cache/native-home-inactive-directed-final.log",
+    "tests": 6,
+    "pass": 6,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 3965.4988
+  },
+  "regression": {
+    "fileList": ".cache/native-home-inactive-regression-files.json",
+    "log": ".cache/native-home-inactive-regression.log",
+    "command": ".cache/tooling/node20.exe --test --test-concurrency=1 <64 paths in fileList>",
+    "status": "passed",
+    "tests": 673,
+    "pass": 673,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 376252.4463,
+    "files": 64
+  },
+  "parentControl": {
+    "moduleLoadedReadOnly": "src/world/wild-engine/spatial-intent-bridge.js at 1e92955d2, at its original URL; all other modules and current WASM unchanged",
+    "loader": ".cache/native-home-inactive-parent-loader.mjs",
+    "command": ".cache/tooling/node20.exe --loader ./.cache/native-home-inactive-parent-loader.mjs --test --test-name-pattern='a completed Home save declares fresh absence' tests/native-home-inactive-restoration.test.js",
+    "log": ".cache/native-home-inactive-parent-control.log",
+    "expectedFailure": "Restored completed Home has no native inactive declaration (false !== true)",
+    "tests": 6,
+    "pass": 0,
+    "fail": 1,
+    "skipped": 5,
+    "duration_ms": 2769.1166
+  },
+  "additionalIntentRegression": {
+    "files": [
+      "tests/spatial-native-intent-bridge.test.js",
+      "tests/spatial-intent-transition-protocol.test.js"
+    ],
+    "log": ".cache/native-home-inactive-intent-regression.log",
+    "tests": 36,
+    "pass": 33,
+    "fail": 3,
+    "skipped": 0,
+    "duration_ms": 32734.9537,
+    "knownFailures": [
+      {
+        "test": "the intent bridge projects a scaled gate using the physical wall frame",
+        "error": "Unsupported native motion layout; rebuild Wild Engine"
+      },
+      {
+        "test": "loading during a committed strike applies its damage frame exactly once",
+        "error": "deep-equal mismatch in historical attack event/state comparison"
+      },
+      {
+        "test": "event-fed native intent bridge replays live state and only changes on explicit deltas",
+        "error": "Contador de entidad incoherente"
+      }
+    ],
+    "readOnlyParentTriage": {
+      "log": ".cache/native-home-inactive-parent-intent-triage.log",
+      "sameBridgeLoader": true,
+      "sameThreeFailuresReproduced": true,
+      "tests": 20,
+      "pass": 0,
+      "fail": 3,
+      "skipped": 17,
+      "duration_ms": 4239.763
+    },
+    "limit": "This is not a green full-suite or whole-parent comparison. No unrelated production changes were made to hide these failures."
+  },
+  "checks": [
+    "Actual completed native Home save through existing resource/direct-control ports and deterministic GPU double; new authority has no old Home permission/body and no duplicate ledger credit",
+    "Restored peer advances while inactive Home worker remains exact",
+    "Entirely inactive cohort advances using existing empty causal clock, with zero bodies and no dummy route",
+    "Body retained across nav_intent_reset cannot be certified inactive and Game rejects it without physical mutation",
+    "New physical binding revokes inactivity; removing it cannot restore the previous mark; clock admission forbids declaration",
+    "Wrong entry, task ownership, running, gate waiting, recovery and incapacitation cannot pass the semantic inactive query",
+    "Threaded native runtime passes the same Home and empty-clock path"
+  ],
+  "limits": [
+    "No Surface/roster/resource-factory code changed; no new hardware GPU resource-reuse measurement",
+    "No saved executable Home permission, action, task, settlement or resume history is fabricated",
+    "Initial absence does not certify retirement of a still-presented actor; that continues to require prepared arrival and actual GPU drain",
+    "Moving Home restoration and full 3123-resource incremental recovery remain open",
+    "A6/e-R3/e-R4/f-R4/A/B/C remain open"
+  ],
+  "productBuild": {
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "log": ".cache/native-home-inactive-product-build.log",
+    "status": "passed",
+    "seconds": 44.77,
+    "warnings": "Existing dynamic/static imports and large bundle warning"
+  },
+  "protectedOriginalFiles": {
+    "count": 16,
+    "exactAfterFinalProductBuild": true,
+    "manifest": ".cache/native-action-restore-preserved-hashes.json",
+    "exclusion": "confirmed-presentation-stream.js was intentionally committed earlier in this goal and unchanged by this component"
+  }
+}

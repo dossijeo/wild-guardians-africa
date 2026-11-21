@@ -1,0 +1,58 @@
+{
+  "date": "2026-11-15",
+  "parent": "26ce6e1111d4a99385cc45eac54dd1a443d21c84",
+  "scope": "Read-only prepared delivery data and a shared ordinary agricultural-power settlement calculation. Native settlement and graphical successor remain unimplemented.",
+  "research": [
+    {
+      "source": "https://github.com/SanderMertens/flecs/blob/v4.0.4/src/stage.c#L297",
+      "implementation": "flecs_defer_set owns temporary values without adding the component during deferral",
+      "adaptation": "Small immutable semantic values over the existing owners; no added queue or ECS."
+    },
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L609",
+      "implementation": "resetMoveTarget clears target and desired velocity without removeAgent",
+      "status": "Read for the next body-preserving settlement step; not implemented here."
+    }
+  ],
+  "tests": {
+    "files": [
+      "tests/delivery-consequence-data.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/harvest-consequence.test.js"
+    ],
+    "tests": 50,
+    "pass": 50,
+    "fail": 0,
+    "skipped": 0,
+    "log": ".cache/delivery-consequence-data-game-tests.log",
+    "checks": [
+      "No live writes, entitlement consumption or account creation during preview, including invalid power.",
+      "Current fractional account is rechecked even when rounded coins are unchanged.",
+      "200 ordinary settlements preserve the exact 124-coin result and idempotence.",
+      "Game previews include contract, center, crate ownership, income and tutorial; unrelated movement, IDs and ledger entries do not invalidate them.",
+      "Actual WASM Carry arrival remains carrying and uncredited after preparing consequence data."
+    ],
+    "preliminaryFailure": "One new assertion wrongly expected peer delivery to change whole coins. The fractional account changed while coins stayed equal; test now explicitly requires detecting the changed account even with equal coins."
+  },
+  "build": {
+    "status": "passed",
+    "seconds": 44.83,
+    "log": ".cache/native-delivery-consequence-data-final-build.log"
+  },
+  "syntaxFiles": 3,
+  "closuresChanged": false,
+  "newHardwareValidation": false,
+  "pending": [
+    "Native arrival settlement with exact resource admission and preserved body ownership.",
+    "Prepared Idle/next task or genuine return according to the contract.",
+    "Coherent credit, account, crate and tutorial state before observers are notified.",
+    "Ordinary producer, fresh Carry load, full recovery, all A6 and integrated A/B/C."
+  ],
+  "sourceHashes": {
+    "src/simulation/agricultural-power.js": "c92e2aeee1c9bc0ea413c715dbe76a131fa04b046c2a6773ed27937de3ba0d5d",
+    "src/simulation/game.js": "5d785c010f41b23ce3ce33f01359b618232068df9b6da29d818b57ab388c56c1",
+    "tests/delivery-consequence-data.test.js": "144a6a1f025f76376ffc280c71dda14b77807b62599b6271ddc8026d0ff4d764"
+  }
+}

@@ -1,0 +1,588 @@
+{
+  "gap": {
+    "from": 1795151460206.165,
+    "through": 1795151460399.505,
+    "milliseconds": 193.33984375
+  },
+  "nearestPipelines": [
+    {
+      "id": "Pipeline:4118",
+      "startedAt": 1795151461959.3098,
+      "finishedAt": 1795151462017.38,
+      "nativePromiseMs": 58.070068359375,
+      "distance": 1753.144775390625,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 771,
+          "geometry": 334,
+          "material": 32,
+          "materialType": "MeshStandardNodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": null,
+          "pass": null,
+          "parent": null
+        },
+        "actors": []
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "6e1361e6af06a7f52773eb29c373616bbf5703cfb3cd4038eb313bc13548a911",
+          "bytes": 4920
+        },
+        {
+          "stage": "fragment",
+          "sha256": "dcb79ccaa56a4aec467fc67d5ad4a2e594e26af184beef1d5e7a794cd63a4f5f",
+          "bytes": 28446
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:4137",
+      "startedAt": 1795151462031.43,
+      "finishedAt": 1795151462069.9548,
+      "nativePromiseMs": 38.52490234375,
+      "distance": 1825.264892578125,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 771,
+          "geometry": 334,
+          "material": 33,
+          "materialType": "NodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": {
+            "uuid": "86a83aa0-7101-4836-bd56-deda9c5055db",
+            "width": 1024,
+            "height": 1024,
+            "origin": null
+          },
+          "pass": null,
+          "parent": null
+        },
+        "actors": []
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "8785256625228cf04b219d5c8781576f1238bab489d9b59508b329d03984c039",
+          "bytes": 3918
+        },
+        {
+          "stage": "fragment",
+          "sha256": "b61ace56a02ebc35b648d3a1f27d32067d8f6aeec0630a888f1721ead1f4fded",
+          "bytes": 774
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:4027",
+      "startedAt": 1795151457959.335,
+      "finishedAt": 1795151458174.77,
+      "nativePromiseMs": 215.43505859375,
+      "distance": 2031.39501953125,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 761,
+          "geometry": 217,
+          "material": 33,
+          "materialType": "NodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": {
+            "uuid": "86a83aa0-7101-4836-bd56-deda9c5055db",
+            "width": 1024,
+            "height": 1024,
+            "origin": null
+          },
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 761,
+            "geometry": 217
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "359e786efc89ebbd5af33df2cfd6c49c0953a91a940495895c9516fda184453a",
+          "bytes": 16179
+        },
+        {
+          "stage": "fragment",
+          "sha256": "f45db9e3bdffb2540782214377159e4cc3bcd5acd1a8ea64560147249cdde76d",
+          "bytes": 780
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:4003",
+      "startedAt": 1795151457957.885,
+      "finishedAt": 1795151458167.66,
+      "nativePromiseMs": 209.77490234375,
+      "distance": 2038.505126953125,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 759,
+          "geometry": 215,
+          "material": 33,
+          "materialType": "NodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": {
+            "uuid": "86a83aa0-7101-4836-bd56-deda9c5055db",
+            "width": 1024,
+            "height": 1024,
+            "origin": null
+          },
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 759,
+            "geometry": 215
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "ddbb39749eb9a526630a908c70d29e3cfb813da35438cdf777ee04b11e1d97e3",
+          "bytes": 16179
+        },
+        {
+          "stage": "fragment",
+          "sha256": "f45db9e3bdffb2540782214377159e4cc3bcd5acd1a8ea64560147249cdde76d",
+          "bytes": 780
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:4015",
+      "startedAt": 1795151457958.5698,
+      "finishedAt": 1795151458162.075,
+      "nativePromiseMs": 203.505126953125,
+      "distance": 2044.090087890625,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 760,
+          "geometry": 216,
+          "material": 33,
+          "materialType": "NodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": {
+            "uuid": "86a83aa0-7101-4836-bd56-deda9c5055db",
+            "width": 1024,
+            "height": 1024,
+            "origin": null
+          },
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 760,
+            "geometry": 216
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "ccb382ac017467c947ab23dd801ad0ea0434d6c0dd1253bc5332db85fda33ac7",
+          "bytes": 16179
+        },
+        {
+          "stage": "fragment",
+          "sha256": "f45db9e3bdffb2540782214377159e4cc3bcd5acd1a8ea64560147249cdde76d",
+          "bytes": 780
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:4039",
+      "startedAt": 1795151457959.91,
+      "finishedAt": 1795151458093.9749,
+      "nativePromiseMs": 134.06494140625,
+      "distance": 2112.190185546875,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 762,
+          "geometry": 191,
+          "material": 33,
+          "materialType": "NodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": {
+            "uuid": "86a83aa0-7101-4836-bd56-deda9c5055db",
+            "width": 1024,
+            "height": 1024,
+            "origin": null
+          },
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 762,
+            "geometry": 191
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "505a8fcba681ee7106df61bd78356fea6c8dc7878d32058b988758c7b2f89522",
+          "bytes": 9932
+        },
+        {
+          "stage": "fragment",
+          "sha256": "697d2712263483c18529f5aa2b8904cb2edcd04f02d8a043b8586b3b59153b61",
+          "bytes": 780
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:3885",
+      "startedAt": 1795151457412.665,
+      "finishedAt": 1795151457820.825,
+      "nativePromiseMs": 408.159912109375,
+      "distance": 2385.340087890625,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 759,
+          "geometry": 215,
+          "material": 359,
+          "materialType": "MeshPhysicalNodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": null,
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 759,
+            "geometry": 215
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "c227096be2f1d73038c1d42b326992c99e44459fd05e3b3aa2162c41cba5078a",
+          "bytes": 17032
+        },
+        {
+          "stage": "fragment",
+          "sha256": "78abef24ade4b2eb8b4a0db34719cb98773f25eb0b7b20a279e26e86f93c65dc",
+          "bytes": 30040
+        }
+      ]
+    },
+    {
+      "id": "Pipeline:3913",
+      "startedAt": 1795151457414.795,
+      "finishedAt": 1795151457803.9,
+      "nativePromiseMs": 389.10498046875,
+      "distance": 2402.26513671875,
+      "owner": {
+        "scope": {
+          "kind": "compile-object",
+          "object": 761,
+          "geometry": 217,
+          "material": 361,
+          "materialType": "MeshPhysicalNodeMaterial",
+          "origin": null,
+          "footstepTexture": null,
+          "footstepOrigin": null,
+          "target": null,
+          "pass": null,
+          "parent": null
+        },
+        "actors": [
+          {
+            "root": 713,
+            "mesh": 761,
+            "geometry": 217
+          }
+        ]
+      },
+      "stages": [
+        {
+          "stage": "vertex",
+          "sha256": "e5dc143e8422acc6a15c2c31a392ae977b24ae15e762196046188dbac1bd22b1",
+          "bytes": 16686
+        },
+        {
+          "stage": "fragment",
+          "sha256": "ffa136e545e51a903bd542955aeb5389af418dda29743c19429a383baddf528a",
+          "bytes": 26761
+        }
+      ]
+    }
+  ],
+  "nearestLifecycle": [
+    {
+      "kind": "birth-resource-committed",
+      "family": "task-consequence",
+      "at": 1795151461916.6748,
+      "relativeToGap": 1710.509765625
+    },
+    {
+      "kind": "birth-consequence-ready",
+      "at": 1795151458229.63,
+      "relativeToGap": -1976.53515625
+    },
+    {
+      "kind": "birth-settlement-ready",
+      "at": 1795151466031.375,
+      "relativeToGap": 5825.2099609375
+    },
+    {
+      "kind": "birth-resource-committed",
+      "family": "task-action",
+      "at": 1795151454323.6099,
+      "relativeToGap": -5882.55517578125
+    },
+    {
+      "kind": "birth-resource-committed",
+      "family": "task-settlement",
+      "at": 1795151469726.9548,
+      "relativeToGap": 9520.789794921875
+    },
+    {
+      "kind": "birth-action-ready",
+      "at": 1795151450647.1948,
+      "relativeToGap": -9558.97021484375
+    }
+  ],
+  "scopes": [
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795151460116.215,
+      "durationMs": 1800.229,
+      "threadDurationMs": 1791.588,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "src_file": "third_party/blink/renderer/core/workers/dedicated_worker_messaging_proxy.cc",
+        "src_func": "PostMessageToWorkerGlobalScope",
+        "src_line": 170
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795151460116.222,
+      "durationMs": 1800.221,
+      "threadDurationMs": 1791.584,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "Callback Location": "PostMessageToWorkerGlobalScope@third_party\\blink\\renderer\\core\\workers\\dedicated_worker_messaging_proxy.cc:170",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "HandlePostMessage",
+      "at": 1795151460116.231,
+      "durationMs": 1800.21,
+      "threadDurationMs": 1791.574,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "data": {
+          "traceId": "2860298605361971361"
+        }
+      }
+    },
+    {
+      "name": "FunctionCall",
+      "at": 1795151460116.246,
+      "durationMs": 1800.192,
+      "threadDurationMs": 1791.558,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "data": {
+          "columnNumber": 16,
+          "functionName": "self.onmessage",
+          "isolate": "4217550239815819739",
+          "lineNumber": 28,
+          "sampleTraceId": 5016441609076896,
+          "scriptId": "3",
+          "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module"
+        }
+      }
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795151458277.007,
+      "durationMs": 1800.154,
+      "threadDurationMs": 1797.499,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "src_file": "third_party/blink/renderer/core/workers/dedicated_worker_messaging_proxy.cc",
+        "src_func": "PostMessageToWorkerGlobalScope",
+        "src_line": 170
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795151458277.011,
+      "durationMs": 1800.149,
+      "threadDurationMs": 1797.496,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "Callback Location": "PostMessageToWorkerGlobalScope@third_party\\blink\\renderer\\core\\workers\\dedicated_worker_messaging_proxy.cc:170",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "HandlePostMessage",
+      "at": 1795151458277.019,
+      "durationMs": 1800.137,
+      "threadDurationMs": 1797.486,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "data": {
+          "traceId": "2860298605361973916"
+        }
+      }
+    },
+    {
+      "name": "FunctionCall",
+      "at": 1795151458277.031,
+      "durationMs": 1800.119,
+      "threadDurationMs": 1797.47,
+      "thread": "DedicatedWorker thread",
+      "args": {
+        "data": {
+          "columnNumber": 16,
+          "functionName": "self.onmessage",
+          "isolate": "4217550239815819739",
+          "lineNumber": 28,
+          "sampleTraceId": 5016441609079455,
+          "scriptId": "3",
+          "url": "http://127.0.0.1:5218/tests/browser/fixtures/native-farm-birth-audit-worker.js?worker_file&type=module"
+        }
+      }
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795151460178.889,
+      "durationMs": 220.417,
+      "threadDurationMs": 0.448,
+      "thread": "CrGpuMain",
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795151460178.891,
+      "durationMs": 220.414,
+      "threadDurationMs": 0.447,
+      "thread": "CrGpuMain",
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "at": 1795151460178.893,
+      "durationMs": 220.409,
+      "threadDurationMs": 0.442,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "at": 1795151460179.122,
+      "durationMs": 220.174,
+      "threadDurationMs": 0.214,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+      "at": 1795151460179.126,
+      "durationMs": 220.011,
+      "threadDurationMs": 0.061,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795151460402.502,
+      "durationMs": 150.145,
+      "threadDurationMs": 0.954,
+      "thread": "CrGpuMain",
+      "args": {
+        "src_file": "gpu/command_buffer/service/scheduler.cc",
+        "src_func": "RunNextTask",
+        "src_line": 654
+      }
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795151460402.503,
+      "durationMs": 150.143,
+      "threadDurationMs": 0.953,
+      "thread": "CrGpuMain",
+      "args": {
+        "Callback Location": "RunNextTask@gpu\\command_buffer\\service\\scheduler.cc:654",
+        "Event Name": "ThreadControllerImpl::RunTask"
+      }
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "at": 1795151460402.505,
+      "durationMs": 150.137,
+      "threadDurationMs": 0.948,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "at": 1795151460402.711,
+      "durationMs": 149.922,
+      "threadDurationMs": 0.741,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+      "at": 1795151460402.715,
+      "durationMs": 149.698,
+      "threadDurationMs": 0.541,
+      "thread": "CrGpuMain",
+      "args": {}
+    }
+  ],
+  "limit": "Actual native pipeline promise timings are not GPU duration or proof of driver completion. Overlap/proximity is evidence, not a causal assignment; this trace does not retroactively explain historical gaps."
+}

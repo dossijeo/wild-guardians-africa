@@ -1,0 +1,11 @@
+# Warthog jaw motion candidate, not installed
+
+Removing the three independently connected tusks in a disposable inspection copy revealed a large pre-existing lateral mouth opening, upper/lower lips and an incomplete interior. original-with-teeth-hidden.png is diagnostic only; no teeth were removed from the candidate. This evidence supersedes the assumption that a full new lip incision was required.
+
+The fourth (large left) tusk belongs to the head's welded connected component, but joins at one articulation vertex. Biconnected decomposition identifies its 165-vertex region independently from the 2614-vertex head region. actor_components.py performs this classification on a disposable BMesh; the original split vertices and UVs are retained. The other three dental regions contain 163, 111 and 113 welded vertices. None is a necklace tusk.
+
+prototype_warthog_jaw.py adds mouthOpen to the v12 eyelid source, preserving topology. It rotates the four complete dental regions rigidly and applies a local weighted rotation to the lower lip/beard behind the snout. v1 incorrectly pulled the snout down (rejection image retained). v2 narrows the depth mask so the snout overhang stays fixed. Front, quarter and both side views of v2 were rendered and inspected in Blender. Collar regions are excluded by connectivity, not merely by bounding-box proximity.
+
+This is not a finished oral cavity or an accepted runtime model. The original inner mouth remains incomplete and needs gum/tongue lining and a review of dental attachment in motion. The allocation of all four tusks to the moving region is provisional and must be judged against the visible root attachments, not assumed from this first pose. No flat black mouth plug has been added. Active catalog is unchanged.
+
+Reproduce with Blender --background --python-exit-code 1 --python tools/guardian/prototype_warthog_jaw.py -- --input C:/tmp/guardian-faces/warthog-lids-v12.blend --output candidate.blend --source-glb public/assets/6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275.glb. The optional source argument exports GLB and restores original animation channels. The exported v2 passed 21-bone, seven-clip, 287-pose comparison with zero position difference and 6.664e-8 rad maximum quaternion difference. That audit does not certify mouth appearance or skinning in motion.

@@ -1,0 +1,68 @@
+TAP version 13
+# (node:13360) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:13360) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: task-start: one preparation survives advancing simulation and drains before native commit
+ok 1 - task-start: one preparation survives advancing simulation and drains before native commit
+  ---
+  duration_ms: 537.0235
+  ...
+# Subtest: task-start: cancellation during preparation cannot issue an assignment
+ok 2 - task-start: cancellation during preparation cannot issue an assignment
+  ---
+  duration_ms: 447.2909
+  ...
+# Subtest: task-start: changed native intention during drain rejects prepared resources
+ok 3 - task-start: changed native intention during drain rejects prepared resources
+  ---
+  duration_ms: 364.0516
+  ...
+# Subtest: task-start: preparation failure leaves the native source uncommitted
+ok 4 - task-start: preparation failure leaves the native source uncommitted
+  ---
+  duration_ms: 366.0436
+  ...
+# Subtest: task-start: release failure after physical commit never reports a rollback
+ok 5 - task-start: release failure after physical commit never reports a rollback
+  ---
+  duration_ms: 360.361
+  ...
+# Subtest: task-action: one preparation survives advancing simulation and drains before native commit
+ok 6 - task-action: one preparation survives advancing simulation and drains before native commit
+  ---
+  duration_ms: 390.5408
+  ...
+# Subtest: task-action: cancellation during preparation cannot issue an assignment
+ok 7 - task-action: cancellation during preparation cannot issue an assignment
+  ---
+  duration_ms: 357.6514
+  ...
+# Subtest: task-action: changed native intention during drain rejects prepared resources
+ok 8 - task-action: changed native intention during drain rejects prepared resources
+  ---
+  duration_ms: 360.7055
+  ...
+# Subtest: task-action: preparation failure leaves the native source uncommitted
+ok 9 - task-action: preparation failure leaves the native source uncommitted
+  ---
+  duration_ms: 352.715
+  ...
+# Subtest: task-action: release failure after physical commit never reports a rollback
+ok 10 - task-action: release failure after physical commit never reports a rollback
+  ---
+  duration_ms: 370.698
+  ...
+# Subtest: one resident vertical admits a real route, its arrival and its action without replacing owners
+ok 11 - one resident vertical admits a real route, its arrival and its action without replacing owners
+  ---
+  duration_ms: 366.3703
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4599.0014

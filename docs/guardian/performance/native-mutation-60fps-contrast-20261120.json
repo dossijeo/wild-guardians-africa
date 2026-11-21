@@ -1,0 +1,91 @@
+{
+  "scope": "Contraste retrospectivo de evidencia publicada con el objetivo explícito de 60 FPS. Los callbacks y los inicios de draws enviados no son presentación física. Los ensayos a 30 Hz no acreditan 60 FPS; tampoco cero mutation-hold acredita el presupuesto causal.",
+  "targetFps": 60,
+  "targetMs": 16.666666666666668,
+  "targetSource": "Respuesta explícita del usuario: Exigir 60 fps (16,67 ms), 20 de noviembre de 2026, con la configuración actual de pantalla a 30 Hz indicada en la pregunta.",
+  "deliveryCommit": "1c11ed0ad807852610c207c969d85f6283e22ebe",
+  "manifest": "native-mutation-opportunity-20261120/manifest.json",
+  "runs": {
+    "after2": {
+      "source": "native-mutation-opportunity-20261120/after2-report.json",
+      "sha256": "508cf9d70f7e09034f2be6d70ae20a436cfae85f5c0d0e45c279f02b922e1872",
+      "historicalTargetMs": null,
+      "overTargetCounts": {
+        "submittedDrawStartIntervals": 2457,
+        "callbackIntervals": 2477,
+        "drawCost": 0
+      },
+      "overTargetCallbacksByOutcome": {
+        "awaiting-prepared-frame": 13,
+        "hidden": 6,
+        "submitted": 2458
+      },
+      "holdsOverBudget": [
+        {
+          "holdId": 1,
+          "session": "farm-birth-e198872d-850c-41df-9d99-480d6a504f05",
+          "authorityEpoch": "401b5bd1-0f0a-4d5c-ae86-149500b810df/1",
+          "holdMs": 20.14501953125,
+          "drainMs": 4.820068359375
+        }
+      ],
+      "completeHolds": 10,
+      "guardBlockedOpportunities": 0,
+      "maxima": {
+        "submittedDrawStartIntervalMs": 38.75,
+        "callbackIntervalMs": 38.7548828125,
+        "drawMs": 7.5849609375
+      },
+      "coverage": {
+        "tracedLifetime": false,
+        "from": 1795190740756.7551,
+        "to": 1795190823320.76,
+        "terminal": "retired-drained",
+        "terminalOpportunities": null,
+        "terminalSubmittedDraws": null,
+        "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+      }
+    },
+    "after3": {
+      "source": "native-mutation-opportunity-20261120/after3-report.json",
+      "sha256": "a87f2bbe02b09b6f6ffdf72befc405e4d25d36ddfb8232a78297950b5bb606c7",
+      "historicalTargetMs": null,
+      "overTargetCounts": {
+        "submittedDrawStartIntervals": 2462,
+        "callbackIntervals": 2483,
+        "drawCost": 0
+      },
+      "overTargetCallbacksByOutcome": {
+        "awaiting-prepared-frame": 13,
+        "hidden": 7,
+        "submitted": 2463
+      },
+      "holdsOverBudget": [
+        {
+          "holdId": 1,
+          "session": "farm-birth-0a7ea0f6-6248-449c-ad95-76f20e4dff5f",
+          "authorityEpoch": "f8050ee3-9069-4ff7-8d82-e0c4c18004a5/1",
+          "holdMs": 19.8349609375,
+          "drainMs": 4.330078125
+        }
+      ],
+      "completeHolds": 11,
+      "guardBlockedOpportunities": 0,
+      "maxima": {
+        "submittedDrawStartIntervalMs": 40.885009765625,
+        "callbackIntervalMs": 40.880126953125,
+        "drawMs": 7.81494140625
+      },
+      "coverage": {
+        "tracedLifetime": true,
+        "from": 1795191581259.265,
+        "to": 1795191664023.64,
+        "terminal": "retired-drained",
+        "terminalOpportunities": 2484,
+        "terminalSubmittedDraws": 2463,
+        "note": "Complete lifetime requires observation-start, contiguous callback/submitted-draw ordinals and matching terminal counters, plus verified observer provenance and CDP dataLossOccurred:false. Snapshot arrays alone are not terminal evidence."
+      }
+    }
+  },
+  "next": "Investigar y corregir tanto la duración del hold como la admisión ordinaria del Host antes de ampliar el productor Idle dependiente. A4/C4 y la aceptación de 60 FPS siguen abiertos."
+}

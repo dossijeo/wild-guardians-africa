@@ -1,0 +1,9 @@
+# Buffalo graphical check after terrain-contact correction
+
+Revision 1990136cf. Actual WorldScene/Game.tick with production buffalo model, daytime close camera and sound enabled: `tests/browser/guardian-combat.html?recoveryDay=1&recoveryClose=1`. Recorded Grabar ciclo seleccionado first with automatic impact direction, then with lateral direction. Each run uses the QA cooldown reset and follows the beast with the inspection camera; no production camera behavior is inferred.
+
+Both runs complete twelve simulated seconds, clear magicDown and release all physical bodies/worlds. No runtime errors, rollFailures=0, maximum one visible Guardian. Recovery traces identify AuthoredBeastRecovery, not the procedural fallback. Automatic roll: .383333 s, error .126061 rad, speed .057140 rad/s. Lateral roll: .15 s, error .147503 rad, speed .442635 rad/s. These cases do not exercise the longer buffalo progress grace seen in the flat-terrain regression test.
+
+Inspected both 2 fps contact sheets: impact, backward/lateral fall, supine rest, torso rise and standing/movement are visible. The beast remains low during supine rest; no gross separation from the ground is apparent in these samples. During the sampled automatic rise, support minima settle near .01 m; feet are not expected to be planted throughout the supine phase. These diagnostics inspect selected skin support vertices, not every vertex, and sparse images do not establish continuous collision-free animation or subjective full-speed quality. Face detail is dark from this rear view; it is not facial/material acceptance.
+
+Evidence: cycle.webm/contact.jpg/status.json and side-cycle.webm/side-contact.jpg/side-status.json. Audio is included but no perceptual mixing pass is claimed. Timing metrics include recording, contact sampling and a moving close-up camera, so this is not an added-cost performance benchmark. Full obstacle/slope/concurrency matrix remains pending.

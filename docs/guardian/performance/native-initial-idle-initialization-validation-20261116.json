@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "8ff8ce2cc",
+  "scope": "Opt-in initialization of a fresh stationary initial Idle declaration at its real farm anchor; original zero-step birth state, exact native acceptance before mutating Game. Not the timed Idle policy or native approach.",
+  "research": [
+    {
+      "source": "https://github.com/Unity-Technologies/Unity.Mathematics/blob/f53664de3dad88869a91ef8ebdbecf356e1312d5/src/Unity.Mathematics/random.cs",
+      "implementationRead": "Actual uint32 per-component state, NextState shifts13/17/5, old-state return and constructor advance.",
+      "decision": "Keep Wild Guardians FNV identity seed, original no-extra-advance initialization and new-state output convention. Share the original initializer rather than adding a generator or copying the Unity constructor."
+    },
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp",
+      "implementationRead": "requestMoveTarget/resetMoveTarget/updateMoveRequest retain the existing agent and distinguish requesting, queued, waiting and valid movement.",
+      "decision": "Do not turn an actor needing approach into stationary rest or replace an existing pending source. Prepare semantic birth data first; native acceptance precedes Game publication."
+    }
+  ],
+  "validation": {
+    "tests": 142,
+    "pass": 142,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 52772.3076,
+    "files": [
+      "tests/native-initial-idle-initialization.test.js",
+      "tests/idle.test.js",
+      "tests/idle-anchor-history.test.js",
+      "tests/native-initial-idle-request.test.js",
+      "tests/native-initial-idle-game.test.js",
+      "tests/native-initial-idle-clock.test.js",
+      "tests/native-initial-idle-control.test.js",
+      "tests/native-initial-idle-body.test.js",
+      "tests/native-initial-idle-body-control.test.js",
+      "tests/native-initial-idle-body-remote.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js"
+    ]
+  },
+  "newCases": 9,
+  "nativeBuild": {
+    "status": "Unchanged; both modules previously compiled",
+    "sourceAndBinaryHashes": {
+      "src/world/wild-engine/spatial-intent-state.cpp": "ed638cc3e2a08b8ab36837b802568d90afa827fa009ff6e719d659252a95e6d2",
+      "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "26a79b1351e8b10fe2549adc825a5b125066ab103b6eeb486b336becb75f23d0",
+      "src/world/wild-engine/spatial-home-resource-request.inc": "6ce8124d4fe1974ce2bd68d80e8924d98e09bd94595b53dff03b789f8acc380f",
+      "src/world/wild-engine/spatial-task-execution.inc": "6ba26b2da5cde56148aeda16b0fa06f1d5e144216df847e9e2095e7eb6547004",
+      "tools/build-spatial-savanna-wasm.sh": "01011a84c6771e7106d1f6665c1667812dce8d7797e5a2c91c3eab1a515f38c8",
+      "src/world/wild-engine/spatial-savanna.wasm": "af445f91aa315dc20b62bb71e86887d391aaf0ba9db8b5030715da0ae8e1eeb9",
+      "public/wild-engine/spatial-threaded.wasm": "898974f549c2eddf1cbf24548df3d1dc899dff26fda21ef6a4d49658fcf16942",
+      "public/wild-engine/spatial-threaded.mjs": "b5d7f925f7ce9d6490ba22ded969233a888ae335ab0fb59afdf8a2ee931957a0",
+      "src/world/wild-engine/spatial-gate-api.inc": "b5c1a8acbf755d6aa4821109ffaee1c43cf2401bf52541a785c988263ccc6fc3",
+      "src/world/wild-engine/spatial-initial-idle-body-proposal.inc": "0fc78ef54991761a25e5df1be4735291c4b25c6caf8886113e9bd20aaf648597",
+      "src/world/wild-engine/spatial-route-reservations.h": "bc65fde2ddb7453a820a7ab973bf11b65f442bdc7608e68af1509bb5dd806da3",
+      "src/world/wild-engine/spatial-gate-crossings.h": "16b7f339226cb66a7b95548f9bda6f6fc77a00477840bec5613ecd1818a136cd",
+      "src/world/wild-engine/spatial-task-start-proposal.inc": "af0de5fc1bdbb8f245661d027ec3e3029cd44459a65a4948689763d6b6418bb1"
+    }
+  },
+  "productBuild": {
+    "passed": true,
+    "seconds": 44.0
+  },
+  "preservation": {
+    "priorUnrelatedFiles": 16,
+    "byteHashesUnchanged": true
+  },
+  "hardware": "No new hardware campaign: consumer shaders, prepared graph and ports unchanged; new initialization reaches the existing consumer through real ports/WASM/Host with simulated GPU queue. Hardware98/0 evidence belongs to8ff8ce2cc only.",
+  "limits": [
+    "Opt-in initialize:true on a fresh initial declaration; no upgrade of an already pending null declaration.",
+    "Original actual living-crop/center anchor and stationary radius required; native approach remains pending.",
+    "Private elapsed remains held after body20 admission. Rest/watch timing, choices, stroll, ordinary producer, live world replacement and healthy3123 recovery remain pending."
+  ]
+}

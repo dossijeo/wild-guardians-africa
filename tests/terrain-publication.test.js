@@ -1,0 +1,57 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createTerrainPublication} from '../src/simulation/terrain-publication.js';
+
+function fixture(){const sent=[],port={postMessage(message,transfer){sent.push({message,transfer});},close(){this.closed=true;},start(){}},publisher=createTerrainPublication({port,session:'session',maxPending:3});return {sent,port,publisher,ack:id=>port.onmessage({data:{kind:'terrainAck',session:'session',id}})};}
+function chunk(cx,height){return {authority:'spatial-wasm',cx,cz:0,terrain:{positions:new Float32Array([height,0,0]),colors:new Float32Array([1,1,1]),indices:new Uint16Array([0])}};}
+test('terrain capture time follows the latest coalesced payload and recovery journal',()=>{
+ const sent=[],journal=[],port={postMessage:message=>sent.push(message),close(){},start(){}},publisher=createTerrainPublication({port,session:'s',epoch:'e',onCommitted:(sequence,chunks)=>journal.push({sequence,chunks:structuredClone(chunks)})});
+ publisher.stage(chunk(0,1),2);publisher.commit(1);publisher.stage(chunk(0,2),2.1);publisher.commit(2);publisher.stage(chunk(0,3),2.2);publisher.commit(3);
+ assert.equal(sent[0].payload.capturedAt,2);assert.equal(journal[1].chunks[0].capturedAt,2.1);assert.equal(journal[2].chunks[0].capturedAt,2.2);
+ const handoff=publisher.handoff();assert.deepEqual(handoff.chunks,[{cx:0,cz:0,revision:3,capturedAt:2.2}]);const nextPort={postMessage(){},close(){},start(){}},replacement=createTerrainPublication({port:nextPort,session:'s',epoch:'e',initialState:handoff});assert.deepEqual(replacement.handoff(),handoff);replacement.dispose();port.onmessage({data:{kind:'terrainAck',session:'s',id:1}});assert.equal(sent[1].payload.capturedAt,2.2);assert.equal(sent[1].revision,3);
+ assert.throws(()=>publisher.stage(chunk(1,0),Infinity),/capture time/);publisher.dispose();
+});
+test('publishes only committed data and bounds in-flight work while coalescing',()=>{
+ const {sent,publisher,ack}=fixture(),first=chunk(1,2);publisher.stage(first);first.terrain.positions[0]=99;assert.equal(sent.length,0);publisher.commit(4);assert.equal(sent[0].message.payload.terrain.positions[0],2);assert.equal(sent[0].message.sequence,4);assert.equal(sent[0].transfer.length,3);
+ publisher.stage(chunk(1,3));publisher.commit(5);publisher.stage(chunk(1,4));publisher.commit(6);publisher.stage(chunk(2,5));publisher.commit(7);assert.equal(sent.length,1);assert.equal(publisher.status().pending,2);
+ ack(1);assert.equal(sent[1].message.payload.terrain.positions[0],4);assert.equal(sent[1].message.sequence,6);assert.equal(sent[1].message.revision,3);ack(2);assert.equal(sent[2].message.sequence,7);ack(3);assert.deepEqual(publisher.status(),{closed:false,failure:null,inflight:false,pending:0,staged:0});publisher.dispose();
+});
+test('discarded command does not publish or consume a revision',()=>{const {sent,publisher}=fixture();publisher.stage(chunk(0,1));publisher.discard();publisher.commit(2);assert.equal(sent.length,0);publisher.stage(chunk(0,2));publisher.commit(3);assert.equal(sent[0].message.revision,1);publisher.dispose();});
+test('invalid acknowledgement shuts down publication only',()=>{const {port,publisher}=fixture();publisher.stage(chunk(0,1));publisher.commit(1);port.onmessage({data:{kind:'terrainAck',session:'session',id:2}});assert.match(publisher.status().failure,/acknowledgement/);assert.equal(port.closed,true);});
+test('capacity overflow closes the visual channel without accepting more terrain',()=>{const sent=[],port={postMessage:m=>sent.push(m),close(){this.closed=true;},start(){}},publisher=createTerrainPublication({port,session:'s',maxPending:1});publisher.stage(chunk(0,1));assert.equal(publisher.stage(chunk(1,2)),false);assert.equal(port.closed,true);assert.equal(publisher.status().closed,true);assert.equal(sent[0].kind,'terrainFailure');assert.equal(publisher.commit(0),false);});
+test('publishes a detached copy of the authoritative water together with its terrain revision',()=>{
+ const {sent,publisher}=fixture(),data=chunk(1,2);data.water=new Float32Array([0,1,2,3,4,5,6,7,8]);publisher.stage(data);data.water[0]=99;publisher.commit(1);assert.equal(sent[0].message.payload.water[0],0);assert.equal(sent[0].transfer.length,4);assert.equal(sent[0].transfer[3],sent[0].message.payload.water.buffer);publisher.dispose();
+});
+test('retains prepared shore data with the same confirmed revision and owned transfer buffers',()=>{
+ const {sent,publisher,ack}=fixture(),data=chunk(1,2);data.waterBed={nx:2,nz:2,minX:-1,minZ:-1,width:2,height:2,lo:-3,span:5,bytes:new Uint8Array(16).fill(7)};data.waterShore=new Float32Array([1.5]);publisher.stage(data);data.waterBed.bytes[0]=99;data.waterShore[0]=99;publisher.commit(1);const first=sent[0];assert.equal(first.message.payload.waterBed.bytes[0],7);assert.equal(first.message.payload.waterShore[0],1.5);assert.ok(first.transfer.includes(first.message.payload.waterBed.bytes.buffer));assert.ok(first.transfer.includes(first.message.payload.waterShore.buffer));assert.notEqual(first.message.payload.waterBed.bytes.buffer,data.waterBed.bytes.buffer);
+ const bad=chunk(2,0);bad.waterBed={...data.waterBed,bytes:new Uint8Array(3)};assert.throws(()=>publisher.stage(bad),/water bed/);bad.waterBed=undefined;bad.waterShore=new Float32Array([1,2]);assert.throws(()=>publisher.stage(bad),/water shore/);publisher.stage(chunk(1,3));publisher.commit(2);ack(1);assert.equal(sent[1].message.payload.waterBed,undefined);assert.equal(sent[1].message.payload.waterShore,undefined);publisher.dispose();
+});
+test('recovery receives shore data before transferred buffers are detached',()=>{
+ let saved,delivered;const port={postMessage(message,transfer){delivered=structuredClone(message,{transfer});},start(){},close(){}},publisher=createTerrainPublication({port,session:'s',onCommitted:(_sequence,chunks)=>{saved=structuredClone(chunks);}}),data=chunk(0,0);data.waterBed={nx:2,nz:2,minX:0,minZ:0,width:2,height:2,lo:0,span:1,bytes:new Uint8Array(16).fill(23)};data.waterShore=new Float32Array([4]);publisher.stage(data);publisher.commit(1);assert.equal(saved[0].waterBed.bytes[0],23);assert.equal(saved[0].waterShore[0],4);assert.equal(delivered.payload.waterBed.bytes[0],23);assert.equal(data.waterBed.bytes[0],23);publisher.dispose();
+});
+test('stages detached authoritative prop instances with their committed terrain',()=>{
+ const {sent,publisher}=fixture(),data=chunk(0,0);data.instances=Array.from({length:20},()=>[]);data.instances[0].push({id:'spatial:0:0:0',slot:0,x:1,y:2,z:3,yaw:0,sx:1,sy:1,sz:1});publisher.stage(data);data.instances[0][0].x=99;publisher.commit(1);assert.equal(sent[0].message.payload.instances[0][0].x,1);publisher.dispose();
+});
+test('publishes an owned, validated ground mask with its confirmed revision',()=>{
+ const {sent,publisher,ack}=fixture(),data=chunk(1,2);data.groundMask=new Uint8Array(35*35*4);data.groundMask[0]=19;publisher.stage(data);data.groundMask[0]=99;publisher.commit(1);assert.equal(sent[0].message.payload.groundMask[0],19);assert.equal(sent[0].transfer[3],sent[0].message.payload.groundMask.buffer);assert.notEqual(sent[0].transfer[3],data.groundMask.buffer);const invalid=chunk(2,0);invalid.groundMask=new Uint8Array(2);assert.throws(()=>publisher.stage(invalid),/ground mask/);publisher.stage(chunk(2,0));publisher.commit(2);ack(1);assert.equal(sent[1].message.sequence,2);assert.equal(sent[1].message.payload.groundMask,undefined);publisher.dispose();
+});
+test('journal observes each committed terrain batch before publication',()=>{
+ const order=[],port={postMessage:m=>order.push(['send',m.sequence]),start(){},close(){}},publisher=createTerrainPublication({port,session:'s',onCommitted:(sequence,chunks)=>{order.push(['journal',sequence,chunks[0].terrain.positions[0]]);}});
+ publisher.stage(chunk(0,7));publisher.commit(2);assert.deepEqual(order,[['journal',2,7],['send',2]]);publisher.dispose();
+});
+
+test('manifest tracks committed coalesced revisions including payloads in transit',()=>{
+ const sent=[],port={postMessage:m=>sent.push(m),close(){},start(){}},publisher=createTerrainPublication({port,session:'s',epoch:'epoch-a'});assert.equal(publisher.manifest(),null);publisher.stage(chunk(0,1));publisher.commit(1);assert.deepEqual(publisher.manifest(),{epoch:'epoch-a',chunks:[{cx:0,cz:0,revision:1}]});assert.equal(sent[0].epoch,'epoch-a');publisher.stage(chunk(0,2));publisher.commit(2);publisher.stage(chunk(0,3));publisher.commit(3);assert.equal(publisher.manifest().chunks[0].revision,3);publisher.dispose();assert.equal(publisher.manifest(),null);
+});
+test('handoff preserves epoch and revisions with an ACK pending and rejects stale sequence',()=>{const sent=[],port=()=>({postMessage:m=>sent.push(m),close(){},start(){}}),batches=[],first=createTerrainPublication({port:port(),session:'s',epoch:'e',onCommitted:(seq,chunks,manifest)=>batches.push({seq,manifest})});first.stage(chunk(1,2));first.commit(3);first.stage(chunk(1,3));first.commit(4);first.stage(chunk(2,4));first.commit(5);assert.equal(first.status().inflight,true);const state=first.handoff();assert.deepEqual(state,{epoch:'e',lastSequence:5,chunks:[{cx:1,cz:0,revision:2},{cx:2,cz:0,revision:1}]});assert.deepEqual(batches.map(b=>b.manifest),[{epoch:'e',chunks:[{cx:1,cz:0,revision:1}]},{epoch:'e',chunks:[{cx:1,cz:0,revision:2}]},{epoch:'e',chunks:[{cx:2,cz:0,revision:1}]}]);first.dispose();const next=createTerrainPublication({port:port(),session:'s',epoch:'e',initialState:state});assert.throws(()=>next.commit(5),/sequence/);next.stage(chunk(1,5));next.commit(6);assert.equal(sent.at(-1).revision,3);assert.equal(sent.at(-1).epoch,'e');next.dispose();assert.throws(()=>createTerrainPublication({port:port(),session:'s',epoch:'different',initialState:state}),/handoff/);});
+test('closing a handed-off terrain channel releases pending state and ignores late acknowledgements',()=>{
+ const messages=[],port={postMessage(message){messages.push(message);},close(){this.closed=true;},start(){}},first=createTerrainPublication({port,session:'s',epoch:'e'});
+ first.stage(chunk(0,1));first.commit(1);first.stage(chunk(1,2));first.commit(2);const handoff=first.handoff(),late=port.onmessage;
+ first.dispose();assert.deepEqual(first.status(),{closed:true,failure:null,inflight:false,pending:0,staged:0});assert.equal(port.onmessage,null);assert.equal(port.onmessageerror,null);
+ late({data:{kind:'terrainAck',session:'s',id:1}});assert.equal(messages.length,1);assert.equal(first.manifest(),null);assert.throws(()=>first.handoff(),/hand off/);
+ const replacementPort={postMessage(message){messages.push(message);},close(){},start(){}},replacement=createTerrainPublication({port:replacementPort,session:'s',epoch:'e',initialState:handoff});replacement.stage(chunk(0,3));replacement.commit(3);assert.equal(messages.at(-1).revision,2);replacement.dispose();
+});
+test('terrain publication failure releases the in-flight marker and port callbacks',()=>{
+ const {port,publisher}=fixture();publisher.stage(chunk(0,1));publisher.commit(1);const late=port.onmessage;late({data:{kind:'terrainAck',session:'session',id:2}});
+ assert.equal(publisher.status().inflight,false);assert.equal(port.onmessage,null);assert.equal(port.onmessageerror,null);assert.match(publisher.status().failure,/acknowledgement/);late({data:{kind:'terrainAck',session:'session',id:1}});assert.equal(publisher.status().closed,true);
+});

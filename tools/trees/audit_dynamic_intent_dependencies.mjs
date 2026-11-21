@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+
+const file=process.env.DYNAMIC_REPLAY_CAPTURE;if(!file)throw Error('Set DYNAMIC_REPLAY_CAPTURE');
+const capture=JSON.parse(fs.readFileSync(file,'utf8')),bodies=new Map(),last=new Map();
+const participates=(a,b,mask)=>mask>=0?!!(b.flags&mask):!!(b.flags&1)&&!(a.kind===0&&b.kind===1&&!(a.flags&2)&&!(b.flags&4)&&(b.flags&8))&&!(a.kind===1&&b.kind===0&&!(b.flags&2)&&!(a.flags&4)&&(a.flags&8));
+const result={scope:'Offline exact comparison of all participating bodies and conservative graph-box participants, actor, target, mask and profile between consecutive queries per actor. No timing and no cache is used; unchanged start/end topology alone cannot prove that no intermediate topology event occurred.',requests:0,repeated:0,unchangedParticipants:0,unchangedParticipantsFailed:0,unchangedParticipantsChangedResult:0,changedParticipants:0,unchangedLocal:0,unchangedLocalFailed:0,unchangedLocalChangedResult:0};
+for(const event of capture.log){
+ if(event.op==='publish'){bodies.set(event.args[0],event.args[1]);continue;}if(event.op==='remove'){bodies.delete(event.args[0]);continue;}if(event.op!=='detour')continue;
+ const [key,goal,mask]=event.args,actor=bodies.get(key);if(!actor)throw Error('Missing actor '+key);const eligible=[...bodies].filter(([id,b])=>id!==key&&participates(actor,b,mask)).sort(([a],[b])=>a<b?-1:a>b?1:0),largest=eligible.reduce((m,[,b])=>Math.max(m,b.radius),0),reach=actor.radius+largest,margin=reach+.1+(reach+.02)/Math.cos(Math.PI/16)+reach,minX=Math.min(actor.x,goal.x)-margin,maxX=Math.max(actor.x,goal.x)+margin,minZ=Math.min(actor.z,goal.z)-margin,maxZ=Math.max(actor.z,goal.z)+margin,local=JSON.stringify(eligible.filter(([,b])=>b.x>=minX&&b.x<=maxX&&b.z>=minZ&&b.z<=maxZ)),signature=JSON.stringify([actor,goal,mask,event.profile]),participants=JSON.stringify(eligible),previous=last.get(key),found=event.result!==null;
+ result.requests++;if(previous?.signature===signature){result.repeated++;if(previous.participants===participants){result.unchangedParticipants++;if(!found)result.unchangedParticipantsFailed++;if(found!==previous.found)result.unchangedParticipantsChangedResult++;}else result.changedParticipants++;if(previous.local===local){result.unchangedLocal++;if(!found)result.unchangedLocalFailed++;if(found!==previous.found)result.unchangedLocalChangedResult++;}}last.set(key,{signature,participants,local,found});
+}
+if(process.env.OUTPUT)fs.writeFileSync(process.env.OUTPUT,JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

@@ -1,0 +1,7 @@
+# Fuentes 3D para cobertura lejana no residente
+
+El propietario de biomas puede preparar de forma cancelable un lote 3D real para un chunk no residente a partir de las instancias consultadas a Wild Engine. Usa las geometrías, materiales y niveles de detalle existentes y lo admite oculto antes de entregarlo mediante un lease. El consumidor decide cuándo mostrarlo y debe conservarlo hasta que otro lote visible lo sustituya o la región salga de uso; no se añaden cuerpos ni residencia a la simulación.
+
+El lease deja de ser válido cuando el chunk pasa a residente, cambia una supresión que le afecta, se cancela o la comprobación externa de revisión falla. La fuente residente acepta opcionalmente la misma comprobación de revisión; sin ella conserva el requisito de secuencia exacta anterior.
+
+La cobertura experimental usa el lease al no haber fuente residente y publica el par únicamente tras admitirlo. Si empieza a llegar el chunk, conserva el respaldo 3D visible hasta que el propietario de bioma confirma que la cobertura residente completa ya está publicada; entonces retira el lease. Las supresiones también se aplican al respaldo mientras espera. Las pruebas cubren ambos contratos, cancelación, admisión y traspaso con recursos gráficos simulados, y consultas WASM y geometrías de autoría reales de sabana y manglar sin añadir residencia. No se ha probado en GPU real ni medido su coste o equivalencia visual.

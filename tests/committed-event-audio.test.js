@@ -12,7 +12,7 @@ function flat(state){const nav=new Navigation(712,'sabana',{});nav.field={blocke
 for(const culture of Game.CULTURES)test(culture+' paid center emits one placement and one completion with a stable captured position',()=>{
   const state=Game.newGame({culture,seed:712,slotId:'audio-center-'+culture}),nav=flat(state),{audio,calls}=audioFixture();
   assert.equal(Game.placeStructure(state,'center',{x:-10,z:-10},nav),true);assert.equal(state.ledger.balance.n,'700');
-  const fact=state.events.find(e=>e.type==='PlacementCommitted');assert.equal(fact.targetId,state.structures[0].id);assert.deepEqual(fact.presentation,{x:-10,z:-10});
+  const fact=state.events.find(e=>e.type==='PlacementCommitted');assert.equal(fact.commandId,'center');assert.equal(fact.targetId,state.structures[0].id);assert.deepEqual(fact.presentation,{x:-10,z:-10});
   // Dispatch later, after the live structure has changed position or gone.
   state.structures=[];const before=serialize(state);audio.process(state.events,{state,listener:{x:-10,z:-10}});audio.process(state.events,{state});assert.equal(serialize(state),before);
   assert.deepEqual(calls.map(c=>c.id),['build_place','build_complete']);assert.ok(calls.every(c=>c.options.emitter===fact.targetId&&c.options.gain===1));
@@ -22,7 +22,7 @@ for(const culture of Game.CULTURES)test(culture+' paid center emits one placemen
 test('a paid wall chain completes once for the entire command rather than per segment or automatic gate',()=>{
   const state=Game.newGame({seed:712,slotId:'audio-chain'}),nav=flat(state),{audio,calls}=audioFixture();Game.placeStructure(state,'center',{x:-10,z:-10},nav);audio.remember(state.events);
   assert.equal(Game.buildWallChain(state,'chain','zarzas',[[0,0],[18,0]],nav,{smooth:false,snap:false}),true);
-  const fact=state.events.find(e=>e.type==='WallChainBuilt');assert.ok(fact.count>1);assert.equal(fact.targetId,state.structures[1].id);assert.deepEqual(fact.presentation,{x:state.structures[1].x,z:state.structures[1].z});
+  const fact=state.events.find(e=>e.type==='WallChainBuilt');assert.ok(fact.count>1);assert.equal(fact.commandId,'chain');assert.equal(fact.targetId,state.structures[1].id);assert.equal(fact.presentation.x,state.structures[1].x);assert.equal(fact.presentation.z,state.structures[1].z);assert.equal(fact.presentation.points.length,fact.count);
   const before=serialize(state);audio.process(state.events,{state});for(let i=0;i<100;i++)audio.process(state.events,{state});assert.equal(serialize(state),before);
   assert.deepEqual(calls.map(c=>c.id),['build_place','build_complete']);assert.equal(Game.buildWallChain(state,'chain','zarzas',[[0,0],[18,0]],nav),false);audio.process(state.events,{state});assert.equal(calls.length,2);
 });
@@ -44,3 +44,4 @@ for(const species of ['lion','hyena','buffalo','rhino','warthog'])for(const prof
   const second=serialize(state);audio.process(state.events,{state});audio.process(state.events,{state});assert.equal(serialize(state),second);assert.deepEqual(calls.map(c=>c.id),['npc_hit','beast_hit_character','npc_fall','game_farmer_hurt','beast_hit_character']);
   const fresh=audioFixture(),restored=deserialize(second);fresh.audio.remember(restored.events);fresh.audio.process(restored.events,{state:restored});assert.equal(fresh.calls.length,0);
 });
+test('legacy wall placement allows coincident independent commands',()=>{const state=Game.newGame({seed:712,slotId:'legacy-wall-overlap'}),nav=flat(state);assert.equal(Game.placeStructure(state,'center',{x:-10,z:-10},nav),true);const wall={kind:'wall',material:'zarzas',x:10,z:0,yaw:0};assert.equal(Game.placeStructure(state,'wall-a',wall,nav),true);assert.equal(Game.placeStructure(state,'wall-b',wall,nav),true);assert.equal(state.structures.filter(s=>s.kind==='wall'&&s.x===10&&s.z===0).length,2);});

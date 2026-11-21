@@ -1,0 +1,9 @@
+# Current native night sequence
+
+Recorded 2026-10-30 on spatial-wasm using guardian-combat.html?lightingReview=1&recordPort=5217&settledCast=1. The QA receiver can now use port 5217 without overwriting earlier captures on 5197; other values retain the default 5197. No production game code changed.
+
+The 31.17-second recording includes Attack on hyena, Shield, Attack on rhino, camera angle/zoom changes, then repeated attacks on a new hyena and its recovery. This fixture resets cooldowns and replaces the earlier animals; it is not a natural raid or balance acceptance test. The last recovery is allowed to complete before capture stops. Receipt: native-night-current.json. Maximum visible Guardians: one; no recorded runtime errors.
+
+Inspected the 2-second interval overview sheet and the 8 fps first-impact crop (1.5-3.5 seconds). The Guardian and vortex are visible beside the target; the bright hand-region discharge connects toward the hyena, and the mantle silhouette changes through the cast. Later overview frames show both species falling and the final hyena upright again. These sampled frames do not certify every contact, exact palm origin, continuous cloth quality or full articulated recovery. The wide framing is inadequate for fine foot/face acceptance. The large blank cells at the end of the sheet are unused montage cells, not black frames in the video.
+
+The MP4 uses 30 fps H.264/AAC, converted from the original variable-rate 1600x900 VP8/Opus canvas capture. The audio track is non-silent: mean -28.4 dB, peak -8.6 dB. This measurement does not replace listening-based mix acceptance. Recording overhead means this is not a performance benchmark. The source is the actual rendered world canvas; HUD is not included. The scenario sets the game night clock; no separate cinematic lighting or global camera change was added.

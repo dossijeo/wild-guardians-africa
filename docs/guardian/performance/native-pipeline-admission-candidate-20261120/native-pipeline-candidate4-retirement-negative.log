@@ -1,0 +1,61 @@
+TAP version 13
+# (node:9720) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/native-pipeline-candidate4-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:9720) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:9720) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: pending native compilation bounds native starts while dispatch, resident draws and inspection continue
+ok 1 - pending native compilation bounds native starts while dispatch, resident draws and inspection continue
+  ---
+  duration_ms: 44.6842
+  ...
+# Subtest: render and compute compilation share admission and retain the original layout dependency
+ok 2 - render and compute compilation share admission and retain the original layout dependency
+  ---
+  duration_ms: 6.0847
+  ...
+# Subtest: disposal rejects queued compilation and does not wait for or start the next native factory
+ok 3 - disposal rejects queued compilation and does not wait for or start the next native factory
+  ---
+  duration_ms: 6.3014
+  ...
+# Subtest: a rejected compilation fails admission without starting the queued pipeline
+ok 4 - a rejected compilation fails admission without starting the queued pipeline
+  ---
+  duration_ms: 5.1941
+  ...
+# Subtest: retirement during the existing budget yield cannot restart a queued pipeline factory
+ok 5 - retirement during the existing budget yield cannot restart a queued pipeline factory
+  ---
+  duration_ms: 4.7428
+  ...
+# Subtest: a drained native consumer does not start queued factories when an earlier compiler finishes late
+not ok 6 - a drained native consumer does not start queued factories when an earlier compiler finishes late
+  ---
+  duration_ms: 1036.8486
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\remote-pipeline-admission.test.js:71:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    native completion after retirement must not open another compiler job
+    
+    2 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 2
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/remote-pipeline-admission.test.js:79:52)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 5
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2448.0784

@@ -1,0 +1,22 @@
+{
+  "scope": "Offline candidate transfer audit; not visual acceptance",
+  "acceptedForQA": [
+    "hyena",
+    "lion",
+    "buffalo",
+    "rhino"
+  ],
+  "rejected": {
+    "warthog": {
+      "reason": "Excess body lift and failed supine-foot clearance; arm continuity also exceeded 20-degree bound",
+      "maxGroundCorrection": 1.121738241202681,
+      "sourceFrame": 100,
+      "sourceSeconds": 1.6666666666666667,
+      "initialLimitingBone": "RightHand",
+      "supineFootClearance": 0.11412850539856863,
+      "maxArmStepRadians": 0.3891901248201335,
+      "targetSha256": "6d41a31b6bc7ac4163f8e484f001c7a4b7debac0fc6c93fefd3ff4a9a9fec275",
+      "sourceSha256": "bcaad393b7be81159ac7ee6162ee19d9434c409959a0c8a33eaabca1d39ac78e"
+    }
+  }
+}

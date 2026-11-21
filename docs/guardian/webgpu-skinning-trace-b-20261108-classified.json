@@ -1,0 +1,2322 @@
+{
+  "worker": {
+    "pid": 21440,
+    "tid": 256
+  },
+  "windowMs": 12031.963,
+  "tasks": [
+    {
+      "startMs": 2653.687,
+      "durationMs": 1905.769,
+      "sampledMs": 1905.3839999999966,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 16.337000000000003,
+        "draw": 1826.472999999996,
+        "other": 62.57399999999999
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3600,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 843.265
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 426.2739999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 95.28900000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 10,
+            "functionName": "generate",
+            "lineNumber": 3053,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 66.77699999999999
+        },
+        {
+          "leaf": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "ms": 54.239999999999995
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getNodeProperties",
+            "lineNumber": 22916,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 46.46399999999998
+        }
+      ]
+    },
+    {
+      "startMs": 10385.822,
+      "durationMs": 1029.235,
+      "sampledMs": 1029.224,
+      "categoriesMs": {
+        "grass": 687.0279999999997,
+        "admission": 284.3539999999999,
+        "timeline": 0,
+        "draw": 0,
+        "other": 57.84199999999998
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 296.0599999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 180.65400000000014
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 78.04400000000003
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 69.64099999999998
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 14723,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 55.201000000000015
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 1621,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 39.08299999999999
+        }
+      ]
+    },
+    {
+      "startMs": 5194.732,
+      "durationMs": 680.063,
+      "sampledMs": 680.1129999999998,
+      "categoriesMs": {
+        "grass": 464.95600000000024,
+        "admission": 183.7430000000001,
+        "timeline": 0,
+        "draw": 0,
+        "other": 31.41400000000001
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 208.46199999999985
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 118.63800000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 45.397
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 38.70500000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 34.536
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "nearWaterChunk",
+            "lineNumber": 2,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 30.023999999999997
+        }
+      ]
+    },
+    {
+      "startMs": 9591.877,
+      "durationMs": 600.463,
+      "sampledMs": 600.4529999999987,
+      "categoriesMs": {
+        "grass": 341.60899999999975,
+        "admission": 235.22199999999998,
+        "timeline": 0,
+        "draw": 0,
+        "other": 23.622000000000003
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 152.38600000000022
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 92.01100000000011
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 49.04999999999998
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3284,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 46.393999999999984
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 33.785999999999994
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 31.485
+        }
+      ]
+    },
+    {
+      "startMs": 8117.056,
+      "durationMs": 547.069,
+      "sampledMs": 547.0580000000004,
+      "categoriesMs": {
+        "grass": 306.1469999999999,
+        "admission": 221.30799999999988,
+        "timeline": 0,
+        "draw": 0,
+        "other": 19.603
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 132.07100000000008
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 76.23800000000006
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 43.752999999999986
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3284,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 43.480999999999995
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 41.41799999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 28.188000000000002
+        }
+      ]
+    },
+    {
+      "startMs": 8860.494,
+      "durationMs": 533.235,
+      "sampledMs": 533.2629999999996,
+      "categoriesMs": {
+        "grass": 332.31399999999985,
+        "admission": 182.0129999999999,
+        "timeline": 0,
+        "draw": 0,
+        "other": 18.93600000000001
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 148.67000000000004
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 88.68499999999996
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1497,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 32.08
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3284,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 31.91600000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 28.904999999999994
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 27.737
+        }
+      ]
+    },
+    {
+      "startMs": 7373.265,
+      "durationMs": 525.544,
+      "sampledMs": 525.5329999999991,
+      "categoriesMs": {
+        "grass": 307.97200000000043,
+        "admission": 158.31200000000018,
+        "timeline": 0,
+        "draw": 0,
+        "other": 59.24899999999998
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 149.89200000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 77.88499999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 30.030000000000012
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 27.879000000000005
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 2099,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 25.482
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 20.596000000000004
+        }
+      ]
+    },
+    {
+      "startMs": 6657.215,
+      "durationMs": 511.176,
+      "sampledMs": 511.16199999999964,
+      "categoriesMs": {
+        "grass": 340.0090000000001,
+        "admission": 152.02399999999997,
+        "timeline": 0,
+        "draw": 0,
+        "other": 19.128999999999994
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 146.14600000000013
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 96.95700000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 35.006
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 29.35599999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 29.179000000000013
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3014,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 25.153000000000006
+        }
+      ]
+    },
+    {
+      "startMs": 6034.114,
+      "durationMs": 481.597,
+      "sampledMs": 481.60099999999966,
+      "categoriesMs": {
+        "grass": 319.51700000000005,
+        "admission": 139.97100000000017,
+        "timeline": 0,
+        "draw": 0,
+        "other": 22.112999999999992
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 140.17100000000005
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 85.40400000000007
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 38.20000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 32.31499999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 28.500999999999994
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3014,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 23.173999999999992
+        }
+      ]
+    },
+    {
+      "startMs": 11556.764,
+      "durationMs": 276.477,
+      "sampledMs": 276.1639999999998,
+      "categoriesMs": {
+        "grass": 174.10300000000024,
+        "admission": 90.378,
+        "timeline": 0,
+        "draw": 0,
+        "other": 11.683000000000002
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 80.616
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 45.45600000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 19.015000000000004
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 5860,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 15.151000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 14.717000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 12.491000000000003
+        }
+      ]
+    },
+    {
+      "startMs": 4714.272,
+      "durationMs": 262.522,
+      "sampledMs": 262.5039999999999,
+      "categoriesMs": {
+        "grass": 161.55600000000015,
+        "admission": 94.534,
+        "timeline": 0,
+        "draw": 0,
+        "other": 6.414
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "sampleGrassTerrain",
+            "lineNumber": 2,
+            "scriptId": 104,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-terrain-sampling.js"
+          },
+          "ms": 70.63499999999998
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 33,
+            "functionName": "generateGrassTile",
+            "lineNumber": 6,
+            "scriptId": 105,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-tile-generation.js"
+          },
+          "ms": 44.539000000000016
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 22.621000000000006
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3014,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 22.445000000000007
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 711,
+            "functionName": "",
+            "lineNumber": 34,
+            "scriptId": 13,
+            "url": "http://127.0.0.1:5175/src/rendering/webgpu-grass-owner.js"
+          },
+          "ms": 15.812000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 31,
+            "functionName": "nearGrassWater",
+            "lineNumber": 9,
+            "scriptId": 106,
+            "url": "http://127.0.0.1:5175/src/rendering/grass-water.js"
+          },
+          "ms": 14.651000000000007
+        }
+      ]
+    },
+    {
+      "startMs": 6520.516,
+      "durationMs": 136.184,
+      "sampledMs": 136.02100000000004,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 51.13300000000001,
+        "draw": 80.31000000000002,
+        "other": 4.578000000000001
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 16.362999999999996
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 11.983000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3014,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 8.679000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.157
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.284000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "functionName": "setVertexBuffer",
+            "scriptId": 0
+          },
+          "ms": 4.257000000000001
+        }
+      ]
+    },
+    {
+      "startMs": 11421.885,
+      "durationMs": 128.593,
+      "sampledMs": 128.5880000000001,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 61.83599999999997,
+        "draw": 65.519,
+        "other": 1.233
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 12.455000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "checkGeometryIntersection",
+            "lineNumber": 11887,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 8.278
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "createBindings",
+            "lineNumber": 37267,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 5.988
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.882000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "_computeIntersections",
+            "lineNumber": 11789,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.483
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getCacheKey",
+            "lineNumber": 12936,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.901
+        }
+      ]
+    },
+    {
+      "startMs": 5886.965,
+      "durationMs": 119.54,
+      "sampledMs": 119.44200000000008,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 69.85000000000004,
+        "draw": 48.878,
+        "other": 0.714
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 15.210999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 9.743
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 9.43
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.952999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 6.452
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "_computeIntersections",
+            "lineNumber": 11789,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.022
+        }
+      ]
+    },
+    {
+      "startMs": 4589.106,
+      "durationMs": 119.338,
+      "sampledMs": 119.28300000000013,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 63.22600000000001,
+        "draw": 55.41199999999996,
+        "other": 0.645
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 17.725
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 10.695000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.595000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 6,
+            "functionName": "sort",
+            "lineNumber": 14074,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.501
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 23,
+            "functionName": "_computeIntersections",
+            "lineNumber": 11789,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 4.856000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 4.761
+        }
+      ]
+    },
+    {
+      "startMs": 9420.241,
+      "durationMs": 116.206,
+      "sampledMs": 115.95500000000014,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 58.88000000000001,
+        "draw": 55.868999999999986,
+        "other": 1.206
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 14.459
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "checkGeometryIntersection",
+            "lineNumber": 11887,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 7.508000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.157000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 5.341
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 4.861
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.845000000000001
+        }
+      ]
+    },
+    {
+      "startMs": 7926.834,
+      "durationMs": 115.9,
+      "sampledMs": 115.89000000000003,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0.534,
+        "timeline": 50.714,
+        "draw": 50.40599999999998,
+        "other": 14.236
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 19.052999999999997
+        },
+        {
+          "leaf": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "ms": 13.983
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 12.472000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.907
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.23
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 143,
+            "functionName": "get",
+            "lineNumber": 95,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 2.689
+        }
+      ]
+    },
+    {
+      "startMs": 10220.227,
+      "durationMs": 111.023,
+      "sampledMs": 110.93400000000015,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 19.09,
+        "draw": 89.33700000000003,
+        "other": 2.507
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 10.760000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.385000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3014,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.508
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.484000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.203
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13764,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.749
+        }
+      ]
+    },
+    {
+      "startMs": 7262.515,
+      "durationMs": 110.744,
+      "sampledMs": 110.71300000000011,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 61.081,
+        "draw": 49.032,
+        "other": 0.6000000000000001
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 14.690999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 11.73
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "checkGeometryIntersection",
+            "lineNumber": 11887,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 7.625
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 6.472000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 4.304
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.7940000000000005
+        }
+      ]
+    },
+    {
+      "startMs": 5086.31,
+      "durationMs": 108.415,
+      "sampledMs": 108.30400000000004,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 61.097999999999985,
+        "draw": 45.57100000000002,
+        "other": 1.6349999999999998
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "decode",
+            "lineNumber": 71,
+            "scriptId": 125,
+            "url": "http://127.0.0.1:5175/src/simulation/main-thread-snapshot-transport.js"
+          },
+          "ms": 13.221
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 10.898
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "getVertexPosition",
+            "lineNumber": 11739,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 7.2280000000000015
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 19,
+            "functionName": "intersectTriangle",
+            "lineNumber": 6153,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.371000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 34,
+            "functionName": "checkGeometryIntersection",
+            "lineNumber": 11887,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 5.002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 3.3289999999999997
+        }
+      ]
+    },
+    {
+      "startMs": 8686.916,
+      "durationMs": 106.899,
+      "sampledMs": 106.53200000000001,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 8.841999999999999,
+        "draw": 96.80199999999998,
+        "other": 0.888
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3284,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 14.726
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 11.540999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 9.023
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 8.76
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.865
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 10,
+            "functionName": "generate",
+            "lineNumber": 3053,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.246
+        }
+      ]
+    },
+    {
+      "startMs": 4977.895,
+      "durationMs": 99.295,
+      "sampledMs": 97.80000000000004,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 19.074000000000005,
+        "draw": 78.10900000000001,
+        "other": 0.617
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 13.875
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 7,
+            "functionName": "build",
+            "lineNumber": 1214,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.654999999999999
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 13,
+            "functionName": "getNodeType",
+            "lineNumber": 3284,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.0889999999999995
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.009
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 3.83
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 5,
+            "functionName": "get",
+            "lineNumber": 12982,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.309
+        }
+      ]
+    },
+    {
+      "startMs": 11853.649,
+      "durationMs": 86.041,
+      "sampledMs": 86.02500000000002,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 22.502999999999997,
+        "draw": 62.25899999999997,
+        "other": 1.2630000000000001
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 15.803
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 18,
+            "functionName": "multiplyMatrices",
+            "lineNumber": 6651,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 6.736
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.558000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 3.7190000000000003
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.2650000000000006
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "toArray",
+            "lineNumber": 7290,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 2.716
+        }
+      ]
+    },
+    {
+      "startMs": 11942.091,
+      "durationMs": 72.402,
+      "sampledMs": 71.976,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 15.903999999999998,
+        "draw": 53.929,
+        "other": 2.143
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "cyrb53",
+            "lineNumber": 592,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 9.863
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 8.853000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "updateMatrix3",
+            "lineNumber": 28085,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 7.941
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.898
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 5.596
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.039000000000001
+        }
+      ]
+    },
+    {
+      "startMs": 7191.164,
+      "durationMs": 70.067,
+      "sampledMs": 69.99999999999997,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 10.645000000000001,
+        "draw": 56.41300000000001,
+        "other": 2.9419999999999997
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 14.365999999999998
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 5,
+            "functionName": "get",
+            "lineNumber": 12982,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.561
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.391
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 3.806
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.261
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 24815,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.2300000000000004
+        }
+      ]
+    },
+    {
+      "startMs": 8047.095,
+      "durationMs": 69.858,
+      "sampledMs": 69.84900000000007,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 28.762,
+        "draw": 39.665,
+        "other": 1.422
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getMaterialCacheKey",
+            "lineNumber": 12819,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 13.876000000000001
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 9,
+            "functionName": "toArray",
+            "lineNumber": 7290,
+            "scriptId": 73,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-GHUIN7QU.js?v=f7c02f89"
+          },
+          "ms": 9.127
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.2359999999999998
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "mergeTracked",
+            "lineNumber": 22,
+            "scriptId": 122,
+            "url": "http://127.0.0.1:5175/src/simulation/confirmed-state-receiver.js"
+          },
+          "ms": 2.258
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 24815,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 1.7200000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "getAttributes",
+            "lineNumber": 12698,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 1.7089999999999996
+        }
+      ]
+    },
+    {
+      "startMs": 8795.79,
+      "durationMs": 64.553,
+      "sampledMs": 64.14200000000001,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 11.104000000000001,
+        "draw": 49.318000000000005,
+        "other": 3.72
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.962
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 6.563
+        },
+        {
+          "leaf": {
+            "codeType": "other",
+            "functionName": "(garbage collector)",
+            "scriptId": 0
+          },
+          "ms": 3.636
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.0779999999999994
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 5,
+            "functionName": "get",
+            "lineNumber": 12982,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.769
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getGeometryCacheKey",
+            "lineNumber": 12788,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.69
+        }
+      ]
+    },
+    {
+      "startMs": 9536.835,
+      "durationMs": 55.036,
+      "sampledMs": 55.022,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0.534,
+        "timeline": 0.918,
+        "draw": 53.419999999999995,
+        "other": 0.15
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 5.024
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.848
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.833
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "cyrb53",
+            "lineNumber": 592,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.258
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "_renderObjectDirect",
+            "lineNumber": 27695,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.1790000000000003
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 24815,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.1750000000000003
+        }
+      ]
+    },
+    {
+      "startMs": 10333.548,
+      "durationMs": 52.269,
+      "sampledMs": 52.242,
+      "categoriesMs": {
+        "grass": 0,
+        "admission": 0,
+        "timeline": 0,
+        "draw": 51.614,
+        "other": 0.628
+      },
+      "top": [
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 16,
+            "functionName": "getKeys",
+            "lineNumber": 12520,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 9.298
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 15,
+            "functionName": "cyrb53",
+            "lineNumber": 592,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 4.298
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 14,
+            "functionName": "getForRender",
+            "lineNumber": 13541,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.7890000000000006
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 21,
+            "functionName": "getGeometryCacheKey",
+            "lineNumber": 12788,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 3.7800000000000002
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 25,
+            "functionName": "getNodeChildren",
+            "lineNumber": 626,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 2.293
+        },
+        {
+          "leaf": {
+            "codeType": "JS",
+            "columnNumber": 17,
+            "functionName": "updateForRender",
+            "lineNumber": 24815,
+            "scriptId": 88,
+            "url": "http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/chunk-O4E3NOSX.js?v=f7c02f89"
+          },
+          "ms": 1.6640000000000001
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Only complete RunTask intervals of at least 50 ms are included.",
+    "Sampled stacks are classified with grass before admission before timeline before drawing; nested work is not summed twice.",
+    "Sample deltas approximate attribution and do not measure GPU time or prove causality."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "missingBuildingRejected": true,
+  "actorId": "animal-7749",
+  "compared": 401,
+  "activeSteps": 216,
+  "saveBlocked": 221,
+  "lastPhase": "released",
+  "lastActive": false,
+  "phases": [
+    "released",
+    "falling",
+    "rolling",
+    "recovering"
+  ],
+  "events": [
+    "GuardianMagicHit",
+    "SpellActivated",
+    "AnimalRetreating",
+    "AnimalRetreatExitAbandoned",
+    "ActorMobileCollisionRecovery"
+  ],
+  "scope": "One real hyena rig and original clips with Rapier in a simulation Worker, compared to the same worker-physics driver on the main thread from the same restored island-mangrove snapshot; 400 intervals. No WorldScene reference, UI, multi-actor physics, buildings, render synchronization or active-physics save/restore."
+}

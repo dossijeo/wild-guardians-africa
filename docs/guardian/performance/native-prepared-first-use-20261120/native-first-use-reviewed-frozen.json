@@ -1,0 +1,71 @@
+{
+  "baseCommit": "c0b796b026e0363fe0f1901ee9111360afc65de7",
+  "files": {
+    "src/rendering/remote-webgpu-host.js": "050ea43cabb5214794d83b0e02b29363cb988ce880f8b3aa2bbacd8d52f3c199",
+    "src/rendering/remote-webgpu-client.js": "d93997b0cf39f2177db21b3c71a437463c61ef316a99a05209e451c25626f34a",
+    "tests/helpers/remote-webgpu-fixture.js": "c5e2f860c91fcd016cb617f209daa4da9af68d1d96a37f1c0fb5426baad00262",
+    "tests/remote-webgpu.test.js": "107da87f58feee5c67201eb02d29c1b5b054305f8d9b7f40ba8c04b8322cb019",
+    "tests/native-task-settlement-remote.test.js": "f66df447d4a2d45cc546ae9041d68ceed87a3cb230224a98e8874f8926c4ef05",
+    "src/rendering/remote-prepared-first-use.js": "95a17748392b3b1a8efd23aca161f82ecf154ecd8da0ce33f24a5be8fff030cd",
+    "tests/remote-prepared-first-use.test.js": "2e902a22f30575b219f09c84594fa5db2a07d861f767993a70b0716b396d5e01"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-olderMale.json",
+      "log": ".cache/native-first-use-reviewed-olderMale.log",
+      "startedAt": "2026-11-20T06:22:37.626Z",
+      "finishedAt": "2026-11-20T06:23:55.069Z",
+      "wallMs": 77443,
+      "exitCode": 0
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-olderFemale.json",
+      "log": ".cache/native-first-use-reviewed-olderFemale.log",
+      "startedAt": "2026-11-20T06:23:55.077Z",
+      "finishedAt": "2026-11-20T06:25:12.828Z",
+      "wallMs": 77751,
+      "exitCode": 0
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-youngFemale.json",
+      "log": ".cache/native-first-use-reviewed-youngFemale.log",
+      "startedAt": "2026-11-20T06:25:12.834Z",
+      "finishedAt": "2026-11-20T06:26:30.125Z",
+      "wallMs": 77291,
+      "exitCode": 0
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-youngMale.json",
+      "log": ".cache/native-first-use-reviewed-youngMale.log",
+      "startedAt": "2026-11-20T06:26:30.131Z",
+      "finishedAt": "2026-11-20T06:27:47.641Z",
+      "wallMs": 77510,
+      "exitCode": 0
+    },
+    {
+      "label": "task-control",
+      "profile": "youngFemale",
+      "followSettlement": false,
+      "output": ".cache/native-first-use-reviewed-task-control.json",
+      "log": ".cache/native-first-use-reviewed-task-control.log",
+      "startedAt": "2026-11-20T06:27:47.645Z",
+      "finishedAt": "2026-11-20T06:28:17.997Z",
+      "wallMs": 30352,
+      "exitCode": 0
+    }
+  ],
+  "candidate": 3,
+  "scope": "Final reviewed product: private first-use draws only, per-draw read-only checks, cold bundle expansion, host-owned readiness fields."
+}

@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {ShadowCache,shadowSnapshot} from '../src/rendering/shadow-cache.js';import {createShadowScratch} from './browser/shadow-scratch-lifecycle.js';
+test('scratch invalidates cache and clears both buffers for unsupported inputs, reset and dispose',()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),light=new THREE.DirectionalLight(),mesh=new THREE.Mesh(new THREE.BoxGeometry(),new THREE.MeshStandardMaterial()),renderer={shadowMap:{type:THREE.PCFSoftShadowMap},localClippingEnabled:false},cache=new ShadowCache(),scratch=createShadowScratch(cache);light.castShadow=true;scene.add(light,light.target);mesh.castShadow=true;scene.add(mesh);scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
+ const capture=()=>scratch.capture(renderer,light,scene,camera),equal=(a,b)=>a.length===b.length&&a.every((v,i)=>Object.is(v,b[i]));
+ try{let candidate=capture();assert.ok(equal(candidate,shadowSnapshot(renderer,light,scene,camera)));cache.commit(candidate);candidate=capture();assert.ok(cache.matches(candidate));assert.ok(scratch.retained().every(n=>n>0));
+ const depth=new THREE.MeshDepthMaterial();mesh.customDepthMaterial=depth;assert.equal(capture(),null);assert.equal(cache.snapshot,null);assert.deepEqual(scratch.retained(),[0,0]);delete mesh.customDepthMaterial;depth.dispose();
+ candidate=capture();cache.commit(candidate);candidate=capture();assert.ok(cache.matches(candidate));scratch.reset();assert.equal(cache.snapshot,null);assert.deepEqual(scratch.retained(),[0,0]);
+ candidate=capture();cache.commit(candidate);const map=renderer.shadowMap;Object.defineProperty(renderer,'shadowMap',{configurable:true,get(){throw Error('capture failure');}});assert.throws(capture,/capture failure/);assert.equal(cache.snapshot,null);assert.deepEqual(scratch.retained(),[0,0]);Object.defineProperty(renderer,'shadowMap',{configurable:true,writable:true,value:map});
+ candidate=capture();cache.commit(candidate);scratch.dispose();assert.equal(cache.snapshot,null);assert.deepEqual(scratch.retained(),[0,0]);scratch.dispose();assert.throws(capture,/disposed/);
+ }finally{mesh.geometry.dispose();mesh.material.dispose();}
+});

@@ -1,0 +1,456 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-gate-transaction.html",
+  "scope": "Diagnostic only: native pending gate motor, direct GPU receipt and conditional native commit/rejection. No physical gate collider/resources, characters or causal clock acceptance.",
+  "runs": [
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "blockedMs": 500.074951171875,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.385009765625,
+      "gpuRouteTimes": [
+        10.157349586486816,
+        10.505244255065918
+      ],
+      "revokedAt": 10.157349853515626,
+      "packets": 1,
+      "replayFrames": 15,
+      "nativeControl": {
+        "authorityEpoch": "e04c5101-1117-43da-ba44-07ccc8f9b6ab/1",
+        "sequence": 3,
+        "effectiveTime": 10.157349853515626,
+        "active": 1,
+        "closed": false,
+        "accepted": 1,
+        "revoked": 1,
+        "oldEpoch": 0,
+        "admissions": 2
+      },
+      "gpuFence": {
+        "type": "intent-control-fenced",
+        "fenceVersion": 1,
+        "session": "native-gate-transaction-d1c81410-af2e-4c20-9979-ab5d1ee19bf2",
+        "authorityEpoch": "e04c5101-1117-43da-ba44-07ccc8f9b6ab/1",
+        "sequence": 3,
+        "effectiveTime": 10.157349853515626,
+        "fenceId": 1,
+        "accepted": true,
+        "receivedAt": 1794227712160.935
+      },
+      "gpuFencedAt": 1794227712160.8,
+      "gateTransaction": {
+        "result": {
+          "status": "committed",
+          "authorizedAutonomy": false,
+          "authorizedPassage": false,
+          "receipt": {
+            "authorityEpoch": "e04c5101-1117-43da-ba44-07ccc8f9b6ab/1",
+            "sequence": 3,
+            "effectiveTime": 10.157349853515626,
+            "fenceId": 1
+          },
+          "ticket": {
+            "authorityEpoch": "e04c5101-1117-43da-ba44-07ccc8f9b6ab/1",
+            "session": 1,
+            "ticket": 1
+          }
+        },
+        "before": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.157349853515626,
+          "authorizedPassage": false
+        },
+        "staged": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.157349853515626,
+          "authorizedPassage": false
+        },
+        "after": {
+          "opening": 1,
+          "target": 0,
+          "at": 10.157349853515626,
+          "endsAt": 10.757349853515626,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.157349853515626,
+          "authorizedPassage": false
+        },
+        "checks": [
+          0,
+          5,
+          0
+        ],
+        "committedChecks": [
+          0,
+          5,
+          0
+        ],
+        "bodyChangedWhilePending": false
+      },
+      "scope": "Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F."
+    },
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "blockedMs": 500.059814453125,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.3701171875,
+      "gpuRouteTimes": [
+        10.183114051818848,
+        10.531044960021973
+      ],
+      "revokedAt": 10.183114990234376,
+      "packets": 1,
+      "replayFrames": 15,
+      "nativeControl": {
+        "authorityEpoch": "d327657e-1c3f-4895-9a48-9e2c74f917ea/1",
+        "sequence": 3,
+        "effectiveTime": 10.183114990234376,
+        "active": 1,
+        "closed": false,
+        "accepted": 1,
+        "revoked": 1,
+        "oldEpoch": 0,
+        "admissions": 2
+      },
+      "gpuFence": {
+        "type": "intent-control-fenced",
+        "fenceVersion": 1,
+        "session": "native-gate-transaction-73a3da65-5757-43a2-8328-6afc929599b1",
+        "authorityEpoch": "d327657e-1c3f-4895-9a48-9e2c74f917ea/1",
+        "sequence": 3,
+        "effectiveTime": 10.183114990234376,
+        "fenceId": 1,
+        "accepted": true,
+        "receivedAt": 1794227713394.185
+      },
+      "gpuFencedAt": 1794227713394.06,
+      "gateTransaction": {
+        "result": {
+          "status": "committed",
+          "authorizedAutonomy": false,
+          "authorizedPassage": false,
+          "receipt": {
+            "authorityEpoch": "d327657e-1c3f-4895-9a48-9e2c74f917ea/1",
+            "sequence": 3,
+            "effectiveTime": 10.183114990234376,
+            "fenceId": 1
+          },
+          "ticket": {
+            "authorityEpoch": "d327657e-1c3f-4895-9a48-9e2c74f917ea/1",
+            "session": 1,
+            "ticket": 1
+          }
+        },
+        "before": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.183114990234376,
+          "authorizedPassage": false
+        },
+        "staged": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.183114990234376,
+          "authorizedPassage": false
+        },
+        "after": {
+          "opening": 1,
+          "target": 0,
+          "at": 10.183114990234376,
+          "endsAt": 10.783114990234376,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.183114990234376,
+          "authorizedPassage": false
+        },
+        "checks": [
+          0,
+          5,
+          0
+        ],
+        "committedChecks": [
+          0,
+          5,
+          0
+        ],
+        "bodyChangedWhilePending": false
+      },
+      "scope": "Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F."
+    },
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "blockedMs": 500.10498046875,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.40478515625,
+      "gpuRouteTimes": [
+        10.18144416809082,
+        10.529589653015137
+      ],
+      "revokedAt": 10.181445068359375,
+      "packets": 1,
+      "replayFrames": 15,
+      "nativeControl": {
+        "authorityEpoch": "72328147-8b59-43ca-bad9-ac15265f0377/1",
+        "sequence": 3,
+        "effectiveTime": 10.181445068359375,
+        "active": 1,
+        "closed": false,
+        "accepted": 1,
+        "revoked": 1,
+        "oldEpoch": 0,
+        "admissions": 2
+      },
+      "gpuFence": {
+        "type": "intent-control-fenced",
+        "fenceVersion": 1,
+        "session": "native-gate-transaction-e29ae708-cf9a-4551-a1c1-7df8c779cb3f",
+        "authorityEpoch": "72328147-8b59-43ca-bad9-ac15265f0377/1",
+        "sequence": 3,
+        "effectiveTime": 10.181445068359375,
+        "fenceId": 1,
+        "accepted": true,
+        "receivedAt": 1794227714560.74
+      },
+      "gpuFencedAt": 1794227714560.6,
+      "gateTransaction": {
+        "result": {
+          "status": "committed",
+          "authorizedAutonomy": false,
+          "authorizedPassage": false,
+          "receipt": {
+            "authorityEpoch": "72328147-8b59-43ca-bad9-ac15265f0377/1",
+            "sequence": 3,
+            "effectiveTime": 10.181445068359375,
+            "fenceId": 1
+          },
+          "ticket": {
+            "authorityEpoch": "72328147-8b59-43ca-bad9-ac15265f0377/1",
+            "session": 1,
+            "ticket": 1
+          }
+        },
+        "before": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.181445068359375,
+          "authorizedPassage": false
+        },
+        "staged": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.181445068359375,
+          "authorizedPassage": false
+        },
+        "after": {
+          "opening": 1,
+          "target": 0,
+          "at": 10.181445068359375,
+          "endsAt": 10.781445068359375,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.181445068359375,
+          "authorizedPassage": false
+        },
+        "checks": [
+          0,
+          5,
+          0
+        ],
+        "committedChecks": [
+          0,
+          5,
+          0
+        ],
+        "bodyChangedWhilePending": false
+      },
+      "scope": "Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F."
+    },
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "blockedMs": 500.0849609375,
+      "controlAppliedDuringBlock": true,
+      "drawFramesDuringBlock": 15,
+      "maxIntervalMs": 33.35986328125,
+      "gpuRouteTimes": [
+        10.182663917541504,
+        10.531034469604492
+      ],
+      "revokedAt": 10.182664794921875,
+      "packets": 1,
+      "replayFrames": 15,
+      "nativeControl": {
+        "authorityEpoch": "403fcce5-8d28-46ae-8404-cd9c8574db85/1",
+        "sequence": 3,
+        "effectiveTime": 10.182664794921875,
+        "active": 1,
+        "closed": false,
+        "accepted": 1,
+        "revoked": 1,
+        "oldEpoch": 0,
+        "admissions": 2
+      },
+      "gpuFence": {
+        "type": "intent-control-fenced",
+        "fenceVersion": 1,
+        "session": "native-gate-transaction-3879da98-f044-4667-97d9-3261ab1824c3",
+        "authorityEpoch": "403fcce5-8d28-46ae-8404-cd9c8574db85/1",
+        "sequence": 3,
+        "effectiveTime": 10.182664794921875,
+        "fenceId": 1,
+        "accepted": true,
+        "receivedAt": 1794227715727.77
+      },
+      "gpuFencedAt": 1794227715727.625,
+      "gateTransaction": {
+        "result": {
+          "status": "stale",
+          "authorizedAutonomy": false,
+          "authorizedPassage": false
+        },
+        "before": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.182664794921875,
+          "authorizedPassage": false
+        },
+        "staged": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.182664794921875,
+          "authorizedPassage": false
+        },
+        "after": {
+          "opening": 1,
+          "target": 1,
+          "at": 10,
+          "endsAt": 10,
+          "requested": false,
+          "occupied": false,
+          "status": 0,
+          "triggerRadius": 3.2,
+          "defined": true,
+          "from": 1,
+          "sampledAt": 10.182664794921875,
+          "authorizedPassage": false
+        },
+        "checks": [
+          0,
+          5,
+          0
+        ],
+        "committedChecks": [
+          0,
+          5,
+          0
+        ],
+        "bodyChangedWhilePending": true
+      },
+      "scope": "Real WASM pending gate motor, live publication, GPU drain and conditional native commit/rejection during preparation stall. Triangle/readback only; no physical gate collider or resources, character animation or causal simulation/draw clock. Not closure of A6-04.e/f or acceptance A-F."
+    }
+  ]
+}

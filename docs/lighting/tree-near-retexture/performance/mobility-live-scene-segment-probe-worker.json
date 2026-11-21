@@ -1,0 +1,97 @@
+{
+  "biome": "manglares",
+  "mangroveNetwork": true,
+  "animals": 20,
+  "chunks": 25,
+  "snapshotBytes": 29370,
+  "captureMs": 2.4100000113248825,
+  "mainInitMs": 837.0949999988079,
+  "workerInitMs": 847.7849999964237,
+  "workerInitResponseMs": 1057.9399999976158,
+  "rows": [
+    {
+      "steps": 1,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        957.1599999964237
+      ],
+      "workerTickMs": [
+        961.6200000047684
+      ],
+      "responseMs": 962.9549999982119,
+      "elapsed": 3000.416665000001,
+      "coordinatePairs": 6,
+      "movingPairs": 6,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1,
+      "segmentComparison": {
+        "matched": 6,
+        "missing": 0,
+        "extra": 0
+      }
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        13.519999995827675,
+        5.094999998807907,
+        3.5899999886751175,
+        3.405000001192093,
+        3.074999988079071
+      ],
+      "workerTickMs": [
+        15.174999997019768,
+        8.03999999165535,
+        7.444999992847443,
+        5.804999992251396,
+        4.185000002384186
+      ],
+      "responseMs": 42.75,
+      "elapsed": 3000.666665000002,
+      "coordinatePairs": 66,
+      "movingPairs": 65,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 1,
+      "segmentComparison": {
+        "matched": 65,
+        "missing": 0,
+        "extra": 0
+      }
+    },
+    {
+      "steps": 5,
+      "snapshotEqual": true,
+      "projectionEqual": true,
+      "mainTickMs": [
+        3.2999999970197678,
+        3.1099999994039536,
+        2.5049999952316284,
+        2.9700000137090683,
+        2.269999995827675
+      ],
+      "workerTickMs": [
+        4.58500000834465,
+        4.600000008940697,
+        3.8599999994039536,
+        5.2149999886751175,
+        3.269999995827675
+      ],
+      "responseMs": 22.719999998807907,
+      "elapsed": 3000.916665000003,
+      "coordinatePairs": 80,
+      "movingPairs": 80,
+      "incompleteAxes": 0,
+      "actorsWithMultiplePairsPerTick": 4,
+      "segmentComparison": {
+        "matched": 80,
+        "missing": 0,
+        "extra": 0
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Snapshot captured from live mangrove-islands QA scene with 20 test animals; QA ID qa-beast-0 is renamed in the copy because native intent IDs require a positive numeric suffix. Both main and Worker restore independent game and spatial sessions from the same adapted serialized state and visible chunk keys. Worker coordinate assignments are intercepted diagnostically; paired axes are not authoritative paths. No comparison against the original scene native state, physics manager, GPU, inputs, render, full residency or production migration."
+}

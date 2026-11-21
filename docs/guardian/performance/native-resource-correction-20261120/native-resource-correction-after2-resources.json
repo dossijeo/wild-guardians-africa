@@ -1,0 +1,1073 @@
+{
+  "counts": {
+    "camera-mailbox:": 1,
+    "configure:": 1,
+    "create:createTexture": 109,
+    "destroy:": 80,
+    "create:createSampler": 108,
+    "operation:writeTexture": 164,
+    "ordered-submission:": 70,
+    "view:": 844,
+    "operation:submit": 6,
+    "create:createBuffer": 2064,
+    "unmap:": 666,
+    "create:createBindGroupLayout": 324,
+    "create:createBindGroup": 997,
+    "camera-binding:": 280,
+    "operation:writeBuffer": 1620,
+    "create:createShaderModule": 160,
+    "create:createPipelineLayout": 105,
+    "create:createRenderPipelineAsync": 105,
+    "frame:": 669,
+    "release:": 1302,
+    "inspect:": 96,
+    "operation:copyExternalImageToTexture": 4,
+    "create:createRenderPipeline": 2,
+    "pipeline-layout:": 5,
+    "bundle:": 49,
+    "fence:": 81,
+    "clock-binding:": 450,
+    "prepare-world-frame:": 11,
+    "cancel-world-frame:": 1
+  },
+  "images": {
+    "count": 20,
+    "maxMs": 10.175048828125,
+    "top": [
+      {
+        "at": 1795180305786.305,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 0,
+          "y": 1024
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 10.175048828125
+      },
+      {
+        "at": 1795180305830.145,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 0
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 1024,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 10.14990234375
+      },
+      {
+        "at": 1795180305843.095,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 3072,
+          "y": 0
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 3072,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 9.31005859375
+      },
+      {
+        "at": 1795180305807.905,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 2048,
+          "y": 1024
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 2048,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 8.955078125
+      },
+      {
+        "at": 1795180305819.315,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 3072,
+          "y": 1024
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 3072,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 8.905029296875
+      },
+      {
+        "at": 1795180305799.115,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 1024
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 1024,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 8.695068359375
+      },
+      {
+        "at": 1795180289416.87,
+        "width": 2048,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 0,
+          "y": 1024
+        },
+        "flipY": false,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:63"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 0,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 5.294921875
+      },
+      {
+        "at": 1795180289411.44,
+        "width": 2048,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 0
+        },
+        "flipY": false,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:63"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 1024,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 4.675048828125
+      },
+      {
+        "at": 1795180289606.44,
+        "width": 2048,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 1024
+        },
+        "flipY": false,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:107"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 1024,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 4.489990234375
+      },
+      {
+        "at": 1795180289407,
+        "width": 2048,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 0,
+          "y": 0
+        },
+        "flipY": false,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:63"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 4.280029296875
+      },
+      {
+        "at": 1795180305840.58,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 2048,
+          "y": 0
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 2048,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 2.369873046875
+      },
+      {
+        "at": 1795180305828.325,
+        "width": 4096,
+        "height": 2048,
+        "sourceOrigin": {
+          "x": 0,
+          "y": 0
+        },
+        "flipY": true,
+        "destination": {
+          "texture": {
+            "__remoteGpuId": "Texture:2509"
+          },
+          "mipLevel": 0,
+          "origin": {
+            "x": 0,
+            "y": 1024,
+            "z": 0
+          },
+          "premultipliedAlpha": false
+        },
+        "extent": {
+          "width": 1024,
+          "height": 1024,
+          "depthOrArrayLayers": 1
+        },
+        "label": "",
+        "ms": 1.800048828125
+      }
+    ]
+  },
+  "receipts": {
+    "slow": 256,
+    "top": [
+      {
+        "at": 1795180307502.645,
+        "ms": 2.905029296875,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180318426.7852,
+        "ms": 2.889892578125,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180333193.33,
+        "ms": 2.81494140625,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180332624.725,
+        "ms": 2.744873046875,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180320522.86,
+        "ms": 2.5048828125,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180306258.87,
+        "ms": 2.364990234375,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180305689.9102,
+        "ms": 2.2998046875,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180306068.2551,
+        "ms": 2.2548828125,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180305796.855,
+        "ms": 2.170166015625,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180325344.985,
+        "ms": 2.159912109375,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180306771.885,
+        "ms": 2.150146484375,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      },
+      {
+        "at": 1795180320059.29,
+        "ms": 1.989990234375,
+        "kind": "frame:",
+        "id": null,
+        "label": null,
+        "image": null
+      }
+    ]
+  },
+  "hostMicrotasks": [
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180319698.2622,
+      "durationMs": 12.959,
+      "cpuMs": 12.737,
+      "args": {
+        "microtask_count": 4
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180305828.308,
+      "durationMs": 12.05,
+      "cpuMs": 11.979,
+      "args": {
+        "microtask_count": 2
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180316501.964,
+      "durationMs": 11.799,
+      "cpuMs": 11.625,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180317969.5671,
+      "durationMs": 10.554,
+      "cpuMs": 10.428,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180305786.081,
+      "durationMs": 10.462,
+      "cpuMs": 10.381,
+      "args": {
+        "microtask_count": 22
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180317235.9502,
+      "durationMs": 10.216,
+      "cpuMs": 10.043,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180314295.642,
+      "durationMs": 9.991,
+      "cpuMs": 9.879,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180307832.497,
+      "durationMs": 9.802,
+      "cpuMs": 9.723,
+      "args": {
+        "microtask_count": 11
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180312635.488,
+      "durationMs": 9.774,
+      "cpuMs": 9.606,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180305843.071,
+      "durationMs": 9.383,
+      "cpuMs": 9.363,
+      "args": {
+        "microtask_count": 2
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180306777.465,
+      "durationMs": 9.368,
+      "cpuMs": 8.846,
+      "args": {
+        "microtask_count": 9
+      }
+    },
+    {
+      "name": "RunMicrotasks",
+      "at": 1795180311549.0862,
+      "durationMs": 9.237,
+      "cpuMs": 8.475,
+      "args": {
+        "microtask_count": 2
+      }
+    }
+  ],
+  "gpuLong": [
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180283928.459,
+        "durationMs": 300.923,
+        "cpuMs": 0.548,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180283928.459,
+          "durationMs": 300.923,
+          "cpuMs": 0.548,
+          "args": {}
+        },
+        {
+          "name": "SkiaOutputSurfaceImplOnGpu::Create",
+          "at": 1795180283928.464,
+          "durationMs": 300.89,
+          "cpuMs": 0.518,
+          "args": {}
+        },
+        {
+          "name": "SkiaOutputSurfaceImplOnGpu::Initialize",
+          "at": 1795180283928.529,
+          "durationMs": 300.805,
+          "cpuMs": 0.458,
+          "args": {
+            "is_using_vulkan": false
+          }
+        },
+        {
+          "name": "Scheduler::FinishTask",
+          "at": 1795180284229.3762,
+          "durationMs": 0.005,
+          "cpuMs": 0.004,
+          "args": {}
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180283928.5032,
+          "durationMs": 0.004,
+          "cpuMs": 0.004,
+          "args": {}
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180284229.3562,
+          "durationMs": 0.004,
+          "cpuMs": 0.004,
+          "args": {}
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180283928.509,
+          "durationMs": 0.001,
+          "cpuMs": null,
+          "args": {}
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180283928.511,
+          "durationMs": 0.001,
+          "cpuMs": null,
+          "args": {}
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180284229.3662,
+          "durationMs": 0.001,
+          "cpuMs": null,
+          "args": {}
+        }
+      ]
+    },
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180284272.2002,
+        "durationMs": 110.036,
+        "cpuMs": 11.563,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180284272.2002,
+          "durationMs": 110.036,
+          "cpuMs": 11.563,
+          "args": {}
+        },
+        {
+          "name": "GpuChannel::ExecuteDeferredRequest",
+          "at": 1795180284272.2021,
+          "durationMs": 110.031,
+          "cpuMs": 11.56,
+          "args": {}
+        },
+        {
+          "name": "BrowserRasterWorker",
+          "at": 1795180284272.207,
+          "durationMs": 110.024,
+          "cpuMs": 11.554,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::Flush",
+          "at": 1795180284272.208,
+          "durationMs": 110.023,
+          "cpuMs": 11.553,
+          "args": {}
+        },
+        {
+          "name": "CommandBufferStub::OnAsyncFlush",
+          "at": 1795180284272.2102,
+          "durationMs": 110.02,
+          "cpuMs": 11.552,
+          "args": {
+            "put_offset": 958
+          }
+        },
+        {
+          "name": "CommandBufferService:PutChanged",
+          "at": 1795180284272.214,
+          "durationMs": 110.012,
+          "cpuMs": 11.545,
+          "args": {
+            "handler": ".BrowserRasterWorker-0xa64012d9700",
+            "put_offset": 958
+          }
+        },
+        {
+          "name": "RasterDecoderImpl::DoEndRasterCHROMIUM",
+          "at": 1795180284273.154,
+          "durationMs": 109.062,
+          "cpuMs": 10.612,
+          "args": {}
+        },
+        {
+          "name": "RasterDecoderImpl::DoEndRasterCHROMIUM::Flush",
+          "at": 1795180284273.156,
+          "durationMs": 109.052,
+          "cpuMs": 10.605,
+          "args": {}
+        },
+        {
+          "name": "RasterDecoderImpl::DoRasterCHROMIUM",
+          "at": 1795180284272.27,
+          "durationMs": 0.882,
+          "cpuMs": 0.866,
+          "args": {
+            "raster_id": 33
+          }
+        },
+        {
+          "name": "RasterDecoderImpl::DoRasterCHROMIUM::Deserializing",
+          "at": 1795180284272.2732,
+          "durationMs": 0.876,
+          "cpuMs": 0.863,
+          "args": {}
+        },
+        {
+          "name": "RasterDecoderImpl::DoBeginRasterCHROMIUM",
+          "at": 1795180284272.217,
+          "durationMs": 0.051,
+          "cpuMs": 0.051,
+          "args": {}
+        },
+        {
+          "name": "GrShaderCache::store",
+          "at": 1795180284355.9941,
+          "durationMs": 0.051,
+          "cpuMs": 0.049,
+          "args": {}
+        }
+      ]
+    },
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180286731.672,
+        "durationMs": 180.064,
+        "cpuMs": 126.85,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180286731.672,
+          "durationMs": 180.064,
+          "cpuMs": 126.85,
+          "args": {}
+        },
+        {
+          "name": "GpuChannel::ExecuteDeferredRequest",
+          "at": 1795180286731.674,
+          "durationMs": 180.057,
+          "cpuMs": 126.846,
+          "args": {}
+        },
+        {
+          "name": "WebGPU",
+          "at": 1795180286731.678,
+          "durationMs": 180.042,
+          "cpuMs": 126.831,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::Flush",
+          "at": 1795180286731.6792,
+          "durationMs": 180.04,
+          "cpuMs": 126.83,
+          "args": {}
+        },
+        {
+          "name": "CommandBufferStub::OnAsyncFlush",
+          "at": 1795180286731.6812,
+          "durationMs": 180.037,
+          "cpuMs": 126.829,
+          "args": {
+            "put_offset": 14
+          }
+        },
+        {
+          "name": "CommandBufferService:PutChanged",
+          "at": 1795180286731.686,
+          "durationMs": 180.025,
+          "cpuMs": 126.819,
+          "args": {
+            "handler": "WebGPUDecoderImpl",
+            "put_offset": 14
+          }
+        },
+        {
+          "name": "QueryDeviceObjectFromANGLE",
+          "at": 1795180286731.7622,
+          "durationMs": 0.006,
+          "cpuMs": 0.005,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::FlushComplete",
+          "at": 1795180286911.714,
+          "durationMs": 0.003,
+          "cpuMs": 0.002,
+          "args": {}
+        },
+        {
+          "name": "Scheduler::FinishTask",
+          "at": 1795180286911.7341,
+          "durationMs": 0.002,
+          "cpuMs": 0.001,
+          "args": {}
+        }
+      ]
+    },
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180286913.006,
+        "durationMs": 51.686,
+        "cpuMs": 37.314,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180286913.006,
+          "durationMs": 51.686,
+          "cpuMs": 37.314,
+          "args": {}
+        },
+        {
+          "name": "GpuChannel::ExecuteDeferredRequest",
+          "at": 1795180286913.009,
+          "durationMs": 51.678,
+          "cpuMs": 37.309,
+          "args": {}
+        },
+        {
+          "name": "WebGPU",
+          "at": 1795180286913.0132,
+          "durationMs": 51.672,
+          "cpuMs": 37.303,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::Flush",
+          "at": 1795180286913.0151,
+          "durationMs": 51.669,
+          "cpuMs": 37.302,
+          "args": {}
+        },
+        {
+          "name": "CommandBufferStub::OnAsyncFlush",
+          "at": 1795180286913.016,
+          "durationMs": 51.668,
+          "cpuMs": 37.302,
+          "args": {
+            "put_offset": 22
+          }
+        },
+        {
+          "name": "CommandBufferService:PutChanged",
+          "at": 1795180286913.018,
+          "durationMs": 51.658,
+          "cpuMs": 37.295,
+          "args": {
+            "handler": "WebGPUDecoderImpl",
+            "put_offset": 22
+          }
+        },
+        {
+          "name": "CommandBuffer::FlushComplete",
+          "at": 1795180286964.6812,
+          "durationMs": 0.002,
+          "cpuMs": 0.002,
+          "args": {}
+        },
+        {
+          "name": "Scheduler::FinishTask",
+          "at": 1795180286964.6902,
+          "durationMs": 0.001,
+          "cpuMs": null,
+          "args": {}
+        }
+      ]
+    },
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180289422.198,
+        "durationMs": 68.689,
+        "cpuMs": 67.168,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180289422.198,
+          "durationMs": 68.689,
+          "cpuMs": 67.168,
+          "args": {}
+        },
+        {
+          "name": "GpuChannel::ExecuteDeferredRequest",
+          "at": 1795180289422.1992,
+          "durationMs": 68.684,
+          "cpuMs": 67.165,
+          "args": {}
+        },
+        {
+          "name": "WebGPU",
+          "at": 1795180289422.2012,
+          "durationMs": 68.676,
+          "cpuMs": 67.157,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::Flush",
+          "at": 1795180289422.2031,
+          "durationMs": 68.673,
+          "cpuMs": 67.156,
+          "args": {}
+        },
+        {
+          "name": "CommandBufferStub::OnAsyncFlush",
+          "at": 1795180289422.204,
+          "durationMs": 68.672,
+          "cpuMs": 67.156,
+          "args": {
+            "put_offset": 2402
+          }
+        },
+        {
+          "name": "CommandBufferService:PutChanged",
+          "at": 1795180289422.206,
+          "durationMs": 68.663,
+          "cpuMs": 67.151,
+          "args": {
+            "handler": "WebGPUDecoderImpl",
+            "put_offset": 2402
+          }
+        },
+        {
+          "name": "CommandBuffer::FlushComplete",
+          "at": 1795180289490.873,
+          "durationMs": 0.002,
+          "cpuMs": 0.001,
+          "args": {}
+        },
+        {
+          "name": "Scheduler::FinishTask",
+          "at": 1795180289490.885,
+          "durationMs": 0.001,
+          "cpuMs": null,
+          "args": {}
+        }
+      ]
+    },
+    {
+      "task": {
+        "name": "Scheduler::RunTask",
+        "at": 1795180370024.05,
+        "durationMs": 52.638,
+        "cpuMs": 32.315,
+        "args": {}
+      },
+      "nested": [
+        {
+          "name": "Scheduler::RunTask",
+          "at": 1795180370024.05,
+          "durationMs": 52.638,
+          "cpuMs": 32.315,
+          "args": {}
+        },
+        {
+          "name": "GpuChannel::ExecuteDeferredRequest",
+          "at": 1795180370024.052,
+          "durationMs": 52.631,
+          "cpuMs": 32.31,
+          "args": {}
+        },
+        {
+          "name": "WebGPU",
+          "at": 1795180370024.053,
+          "durationMs": 52.628,
+          "cpuMs": 32.308,
+          "args": {}
+        },
+        {
+          "name": "CommandBuffer::Flush",
+          "at": 1795180370024.0542,
+          "durationMs": 52.626,
+          "cpuMs": 32.308,
+          "args": {}
+        },
+        {
+          "name": "CommandBufferStub::OnAsyncFlush",
+          "at": 1795180370024.0552,
+          "durationMs": 52.625,
+          "cpuMs": 32.308,
+          "args": {
+            "put_offset": 2840
+          }
+        },
+        {
+          "name": "CommandBufferService:PutChanged",
+          "at": 1795180370024.0562,
+          "durationMs": 52.593,
+          "cpuMs": 32.302,
+          "args": {
+            "handler": "WebGPUDecoderImpl",
+            "put_offset": 2840
+          }
+        },
+        {
+          "name": "CommandBuffer::FlushComplete",
+          "at": 1795180370076.677,
+          "durationMs": 0.002,
+          "cpuMs": 0.002,
+          "args": {}
+        },
+        {
+          "name": "Scheduler::FinishTask",
+          "at": 1795180370076.686,
+          "durationMs": 0.001,
+          "cpuMs": 0.001,
+          "args": {}
+        }
+      ]
+    }
+  ]
+}

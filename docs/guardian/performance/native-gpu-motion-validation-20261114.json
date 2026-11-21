@@ -1,0 +1,194 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "750d4c98f",
+  "branch": "codex/guardian-3d-animation",
+  "scope": "Native complete GPU route and named locomotion phases on the original worker through production material/bake owners, admission and independent native draw/control. Component evidence; ordinary route feed and full acceptance remain open.",
+  "tests": {
+    "directed": {
+      "log": ".cache/native-gpu-motion-directed.tap",
+      "tests": 60,
+      "pass": 60,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "expanded": {
+      "log": ".cache/native-gpu-motion-regression.tap",
+      "tests": 374,
+      "pass": 348,
+      "fail": 3,
+      "skipped": 23,
+      "failures": [
+        "not ok 118 - the intent bridge projects a scaled gate using the physical wall frame",
+        "not ok 292 - late crate admission is rejected after drop and retries a later pickup",
+        "not ok 347 - confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "baseline": {
+      "log": ".cache/native-gpu-motion-baseline.tap",
+      "tests": 74,
+      "pass": 52,
+      "fail": 3,
+      "skipped": 19,
+      "failures": [
+        "not ok 2 - the intent bridge projects a scaled gate using the physical wall frame",
+        "not ok 22 - late crate admission is rejected after drop and retries a later pickup",
+        "not ok 55 - confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "selectedNativeWasm": {
+      "log": ".cache/native-gpu-motion-intent-wasm.tap",
+      "tests": 23,
+      "pass": 20,
+      "fail": 3,
+      "skipped": 0,
+      "failures": [
+        "not ok 2 - the intent bridge projects a scaled gate using the physical wall frame",
+        "not ok 10 - loading during a committed strike applies its damage frame exactly once",
+        "not ok 14 - event-fed native intent bridge replays live state and only changes on explicit deltas"
+      ]
+    },
+    "selectedNativeWasmBaseline": {
+      "log": ".cache/native-gpu-motion-intent-wasm-baseline.tap",
+      "tests": 23,
+      "pass": 20,
+      "fail": 3,
+      "skipped": 0,
+      "failures": [
+        "not ok 2 - the intent bridge projects a scaled gate using the physical wall frame",
+        "not ok 10 - loading during a committed strike applies its damage frame exactly once",
+        "not ok 14 - event-fed native intent bridge replays live state and only changes on explicit deltas"
+      ]
+    }
+  },
+  "expandedTestFiles": 45,
+  "baselineComparison": {
+    "sameThreeExpandedFailures": true,
+    "sameThreeSelectedWasmFailures": true,
+    "baselineRestoredAfterEachComparison": true,
+    "unchangedRemainderOfCheckout": true
+  },
+  "hardware": {
+    "short": {
+      "receipt": "native-gpu-character-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "rows": 26,
+      "bytes": 2080,
+      "profile": "olderFemale",
+      "textured": true,
+      "firstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "block": {
+        "start": 1794631986088.065,
+        "end": 1794631986588.12,
+        "blockedMs": 500.05517578125,
+        "drawFrames": 15,
+        "minClock": 10,
+        "maxClock": 11.925279296875
+      },
+      "rigUnchanged": true,
+      "preparingClock": 0,
+      "packets": 2,
+      "drained": {
+        "authorityEpoch": "8502054f-02be-4b31-bf68-61313b3b0805/1",
+        "session": "native-character-b07805fc-def7-4584-a67d-c9cb07e3d3d3",
+        "retirementId": "c0b10157-a4be-4d7e-a439-37aac22a0913",
+        "sequence": 3,
+        "effectiveTime": 11.999719726562502,
+        "clockSequence": 29
+      },
+      "errors": [],
+      "httpFailures": [],
+      "consoleErrors": []
+    },
+    "long": {
+      "receipt": "native-gpu-character-long-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "rows": 2971,
+      "bytes": 245760,
+      "profile": "olderFemale",
+      "textured": true,
+      "firstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "block": {
+        "start": 1794631992822.4849,
+        "end": 1794631993322.535,
+        "blockedMs": 500.050048828125,
+        "drawFrames": 15,
+        "minClock": 1088.1482414104319,
+        "maxClock": 1090.0709816448073
+      },
+      "rigUnchanged": true,
+      "preparingClock": 0,
+      "packets": 2,
+      "drained": {
+        "authorityEpoch": "cc849782-60bf-40df-be3c-d1849002ea60/1",
+        "session": "native-character-9bd16560-9480-4630-9a72-804993ba6fcd",
+        "retirementId": "511bf52d-b5d9-4a2d-b45a-f4322c6c41c0",
+        "sequence": 3,
+        "effectiveTime": 1090.1482013713699,
+        "clockSequence": 31
+      },
+      "errors": [],
+      "httpFailures": [],
+      "consoleErrors": []
+    }
+  },
+  "sharedMaterialRegression": "native-gpu-shared-material-regression-20261114.json",
+  "build": {
+    "command": "VITE_WEBGPU_REMOTE_DRAW=true .cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "exitCode": 0,
+    "seconds": 44.89,
+    "log": ".cache/native-gpu-motion-build.log",
+    "existingWarnings": [
+      "mixed static/dynamic imports",
+      "large chunks"
+    ]
+  },
+  "notClaimed": [
+    "ordinary WorldSurface/roster assignment feed",
+    "automatic transitions between movement/action clips",
+    "all original characters or all intents",
+    "native gate or moving-conflict character acceptance",
+    "live actor dependent terrain replacement and device loss recovery",
+    "closure of f-R4, e-R3/e-R4, the eleven A6 parents or A/B/C acceptance"
+  ],
+  "research": [
+    "https://github.com/godotengine/godot/blob/4.5.1-stable/scene/resources/curve.cpp",
+    "https://github.com/mrdoob/three.js/blob/r180/src/nodes/core/StructNode.js",
+    "https://github.com/mrdoob/three.js/blob/r180/src/nodes/accessors/TextureNode.js",
+    "https://github.com/mrdoob/three.js/blob/r180/src/renderers/webgpu/utils/WebGPUAttributeUtils.js"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "commit": "0660d5af4f33a4b6c37dadb894248d903548b1ee",
+  "tree": "8f1442b0094221a94f512a9f86fe18d2a2ae2ef6",
+  "parents": [
+    "10e83d18af94506fc1790cc01a87d56fd0daad3e"
+  ],
+  "author": {
+    "name": "chromium-autoroll@skia-public.iam.gserviceaccount.com",
+    "email": "chromium-autoroll@skia-public.iam.gserviceaccount.com",
+    "time": "Fri Nov 20 05:03:53 2026"
+  },
+  "committer": {
+    "name": "Chromium LUCI CQ",
+    "email": "chromium-scoped@luci-project-accounts.iam.gserviceaccount.com",
+    "time": "Fri Nov 20 05:03:53 2026"
+  },
+  "message": "Roll FuzzTest from bb0a74518c6d to 1fb82d5aca41 (1 revision)\n\nhttps://chromium.googlesource.com/external/github.com/google/fuzztest.git/+log/bb0a74518c6d..1fb82d5aca41\n\n2026-11-19 yamilmorales@google.com Forward #[ignore] attributes to #[gtest] in Rust #[fuzztest] macro.\n\nIf this roll has caused a breakage, revert this CL and set the roller\nto dry run mode using the controls here:\nhttps://autoroll.skia.org/r/fuzztest-chromium\nPlease CC chrome-fuzzing-core@google.com on the revert to ensure that a human\nis aware of the problem.\n\nTo file a bug in Chromium: https://bugs.chromium.org/p/chromium/issues/entry\n\nTo report a problem with the AutoRoller itself, please file a bug:\nhttps://issues.skia.org/issues/new?component=1389291&template=1850622\n\nDocumentation for the AutoRoller is here:\nhttps://skia.googlesource.com/buildbot/+doc/main/autoroll/README.md\n\nCq-Include-Trybots: luci.chromium.try:linux-centipede-asan-rel;luci.chromium.try:linux-libfuzzer-asan-rel;luci.chromium.try:win-libfuzzer-asan-rel\nBug: None\nChange-Id: I7f26836d85952e87a8b88daf04fe9c02663dddda\nReviewed-on: https://chromium-review.googlesource.com/c/chromium/src/+/8839395\nCommit-Queue: chromium-autoroll@skia-public.iam.gserviceaccount.com <chromium-autoroll@skia-public.iam.gserviceaccount.com>\nBot-Commit: chromium-autoroll@skia-public.iam.gserviceaccount.com <chromium-autoroll@skia-public.iam.gserviceaccount.com>\nCr-Commit-Position: refs/heads/main@{#1750129}\n",
+  "tree_diff": [
+    {
+      "type": "modify",
+      "old_id": "a935ee0be7af71fe782eb3037ae2807e66356cca",
+      "old_mode": 33188,
+      "old_path": "DEPS",
+      "new_id": "136b39a889156c2e93ce91dd9f59114f70f5cb27",
+      "new_mode": 33188,
+      "new_path": "DEPS"
+    },
+    {
+      "type": "modify",
+      "old_id": "2d31c5d526ca699b3b82244d4ab7bb38d7e10ac1",
+      "old_mode": 33188,
+      "old_path": "third_party/fuzztest/README.chromium",
+      "new_id": "e0cb67f12ba25c3eedd3a115dba37eb0d244b5a8",
+      "new_mode": 33188,
+      "new_path": "third_party/fuzztest/README.chromium"
+    },
+    {
+      "type": "modify",
+      "old_id": "bb0a74518c6da5e0d943c7b5b01342102a22b25d",
+      "old_mode": 57344,
+      "old_path": "third_party/fuzztest/src",
+      "new_id": "1fb82d5aca419357d6efc6fef913cb92f0c3183e",
+      "new_mode": 57344,
+      "new_path": "third_party/fuzztest/src"
+    }
+  ]
+}

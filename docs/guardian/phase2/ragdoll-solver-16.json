@@ -1,0 +1,299 @@
+{
+  "scope": "Actual rest-pose rigs and fitted colliders on flat ground, 360 steps at 60 Hz. Mass-weighted rigid-body world centers. Not animated game poses, obstacle or graphical acceptance; CPU timings are Node-only.",
+  "config": {
+    "capacity": 3,
+    "step": 0.016666666666666666,
+    "launchSpeed": 2.25,
+    "liftSpeed": 1.65,
+    "settleSpeed": 0.28,
+    "settleSeconds": 0.25,
+    "solverIterations": 16
+  },
+  "rows": [
+    {
+      "species": "hyena",
+      "mass": 0.7,
+      "direction": "horizontal",
+      "centerTravel": 1.8547448413173298,
+      "alongImpact": 1.813585805380717,
+      "pelvisTravel": 1.9107353156379834,
+      "peakRise": 0.13530753962695607,
+      "peakDistance": 1.861074153207519,
+      "settledAt": 2.4833333333333334,
+      "lateMotionPeak": {
+        "part": 0,
+        "speed": 0.04913734880975066,
+        "linear": 0.015174818005789079,
+        "angular": 0.2830210900330132
+      },
+      "lateMotionMean": 0.02682541566653916,
+      "stepP95": 2.8923999999999523
+    },
+    {
+      "species": "hyena",
+      "mass": 0.7,
+      "direction": "descending",
+      "centerTravel": 1.929935814778908,
+      "alongImpact": 1.8642226631287486,
+      "pelvisTravel": 2.0032528058886943,
+      "peakRise": 0.07238459773361683,
+      "peakDistance": 1.9449244248237711,
+      "settledAt": 3.1333333333333333,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 1.6940999999999349
+    },
+    {
+      "species": "hyena",
+      "mass": 0.7,
+      "direction": "lateral",
+      "centerTravel": 1.5060056901416121,
+      "alongImpact": 1.4954430595040322,
+      "pelvisTravel": 1.548297792305797,
+      "peakRise": 0.13535351641476168,
+      "peakDistance": 1.5060056901416121,
+      "settledAt": null,
+      "lateMotionPeak": {
+        "part": 13,
+        "speed": 1.5161840770284045,
+        "linear": 0.612051075593066,
+        "angular": 7.534441678627822
+      },
+      "lateMotionMean": 0.48963518913760296,
+      "stepP95": 1.072400000000016
+    },
+    {
+      "species": "warthog",
+      "mass": 1,
+      "direction": "horizontal",
+      "centerTravel": 1.1315591445347974,
+      "alongImpact": 1.1306980565190314,
+      "pelvisTravel": 1.1494110148249075,
+      "peakRise": 0.13530740588903423,
+      "peakDistance": 1.1872881960777713,
+      "settledAt": 3.0833333333333335,
+      "lateMotionPeak": {
+        "part": 3,
+        "speed": 0.2254947392749841,
+        "linear": 0.19853894447126522,
+        "angular": 0.2246316233643239
+      },
+      "lateMotionMean": 0.1345782805588852,
+      "stepP95": 0.881800000000112
+    },
+    {
+      "species": "warthog",
+      "mass": 1,
+      "direction": "descending",
+      "centerTravel": 1.0709770756000685,
+      "alongImpact": 0.9931502014398575,
+      "pelvisTravel": 1.057212259503749,
+      "peakRise": 0.03610813766717902,
+      "peakDistance": 1.0743764218249963,
+      "settledAt": 1.9666666666666666,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.7877999999998337
+    },
+    {
+      "species": "warthog",
+      "mass": 1,
+      "direction": "lateral",
+      "centerTravel": 0.9482858572176538,
+      "alongImpact": 0.9443912949413061,
+      "pelvisTravel": 0.8970007486081969,
+      "peakRise": 0.13530734032392489,
+      "peakDistance": 1.099029348161497,
+      "settledAt": 2.6666666666666665,
+      "lateMotionPeak": {
+        "part": 0,
+        "speed": 0.13643712975724848,
+        "linear": 0.08817683903824988,
+        "angular": 0.40216908932498824
+      },
+      "lateMotionMean": 0.06918946395035143,
+      "stepP95": 0.7746000000001914
+    },
+    {
+      "species": "lion",
+      "mass": 1.5,
+      "direction": "horizontal",
+      "centerTravel": 0.746487006902454,
+      "alongImpact": 0.6604041681159287,
+      "pelvisTravel": 0.7044214439118243,
+      "peakRise": 0.09042982384562503,
+      "peakDistance": 0.8258377177106294,
+      "settledAt": 2.716666666666667,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.6020000000003165
+    },
+    {
+      "species": "lion",
+      "mass": 1.5,
+      "direction": "descending",
+      "centerTravel": 1.377750433673623,
+      "alongImpact": 0.7919072412420064,
+      "pelvisTravel": 1.4731209138888517,
+      "peakRise": 0.02326853573322296,
+      "peakDistance": 1.4506240413247065,
+      "settledAt": 4.316666666666666,
+      "lateMotionPeak": {
+        "part": 5,
+        "speed": 0.30385781751461305,
+        "linear": 0.2526279205847167,
+        "angular": 0.426915807749136
+      },
+      "lateMotionMean": 0.2658587711180995,
+      "stepP95": 0.8739999999997963
+    },
+    {
+      "species": "lion",
+      "mass": 1.5,
+      "direction": "lateral",
+      "centerTravel": 1.8617626249964725,
+      "alongImpact": 1.859534286428243,
+      "pelvisTravel": 1.9279932779464284,
+      "peakRise": 0.0904298044741153,
+      "peakDistance": 1.9115216923762075,
+      "settledAt": 2.7666666666666666,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.6203999999997905
+    },
+    {
+      "species": "buffalo",
+      "mass": 3,
+      "direction": "horizontal",
+      "centerTravel": 0.6908260672767492,
+      "alongImpact": 0.673767339065671,
+      "pelvisTravel": 0.7306139233850977,
+      "peakRise": 0.0454270161688326,
+      "peakDistance": 0.942451788419065,
+      "settledAt": 2.2,
+      "lateMotionPeak": {
+        "part": 3,
+        "speed": 0.25567267430905255,
+        "linear": 0.23185088846118698,
+        "angular": 0.19851488206554632
+      },
+      "lateMotionMean": 0.035668825261204566,
+      "stepP95": 0.8933000000001812
+    },
+    {
+      "species": "buffalo",
+      "mass": 3,
+      "direction": "descending",
+      "centerTravel": 1.7857768205162965,
+      "alongImpact": 1.603907808288932,
+      "pelvisTravel": 1.851833665602599,
+      "peakRise": 0.04179530143737775,
+      "peakDistance": 1.788428270616827,
+      "settledAt": 3.7,
+      "lateMotionPeak": {
+        "part": 3,
+        "speed": 0.14894554930809936,
+        "linear": 0.10364856134874975,
+        "angular": 0.37747489966124675
+      },
+      "lateMotionMean": 0.07978302299790631,
+      "stepP95": 0.7853000000000065
+    },
+    {
+      "species": "buffalo",
+      "mass": 3,
+      "direction": "lateral",
+      "centerTravel": 1.1363569444986537,
+      "alongImpact": 1.136280455812812,
+      "pelvisTravel": 0.9762863746353831,
+      "peakRise": 0.045462013036012605,
+      "peakDistance": 1.1366207564365869,
+      "settledAt": 2.283333333333333,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.658100000000104
+    },
+    {
+      "species": "rhino",
+      "mass": 5,
+      "direction": "horizontal",
+      "centerTravel": 1.1100573420568334,
+      "alongImpact": 1.0500664062798024,
+      "pelvisTravel": 1.2117077211927838,
+      "peakRise": 0.04523288980126394,
+      "peakDistance": 1.1136344224734447,
+      "settledAt": 2.1,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.7108000000002903
+    },
+    {
+      "species": "rhino",
+      "mass": 5,
+      "direction": "descending",
+      "centerTravel": 0.9463043426809808,
+      "alongImpact": 0.8904514648020267,
+      "pelvisTravel": 1.0295527612283415,
+      "peakRise": 0.04042249917984009,
+      "peakDistance": 0.9589016912689925,
+      "settledAt": 1.85,
+      "lateMotionPeak": {
+        "part": -1,
+        "speed": 0,
+        "linear": 0,
+        "angular": 0
+      },
+      "lateMotionMean": 0,
+      "stepP95": 0.6828999999997905
+    },
+    {
+      "species": "rhino",
+      "mass": 5,
+      "direction": "lateral",
+      "centerTravel": 0.32493948088214686,
+      "alongImpact": 0.3247967266011983,
+      "pelvisTravel": 0.46491910015824633,
+      "peakRise": 0.0340646013617516,
+      "peakDistance": 1.0961899457888575,
+      "settledAt": 4.266666666666667,
+      "lateMotionPeak": {
+        "part": 5,
+        "speed": 0.05022001064059021,
+        "linear": 0.045577623941465674,
+        "angular": 0.038686555826037805
+      },
+      "lateMotionMean": 0.006091512040701988,
+      "stepP95": 0.6770000000001346
+    }
+  ]
+}

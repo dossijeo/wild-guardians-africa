@@ -1,0 +1,130 @@
+{
+  "reports": [
+    {
+      "restored": false,
+      "backend": "WebGPU",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "mangroveNetwork": true,
+      "keys": [
+        "1,0",
+        "2,0",
+        "1,1",
+        "2,1"
+      ],
+      "initial": {
+        "closed": false,
+        "suspended": false,
+        "generation": 4,
+        "chunks": 4,
+        "visible": 4,
+        "retained": 4,
+        "pending": 0
+      },
+      "low": {
+        "closed": false,
+        "suspended": false,
+        "generation": 20,
+        "chunks": 4,
+        "visible": 0,
+        "retained": 0,
+        "pending": 0
+      },
+      "high": {
+        "closed": false,
+        "suspended": false,
+        "generation": 24,
+        "chunks": 4,
+        "visible": 4,
+        "retained": 4,
+        "pending": 0
+      },
+      "final": {
+        "closed": false,
+        "suspended": false,
+        "generation": 71,
+        "chunks": 6,
+        "visible": 4,
+        "retained": 4,
+        "pending": 0
+      },
+      "sequence": 694,
+      "elapsed": 6106.050000004642,
+      "saveSequence": 808,
+      "wallRemoved": true,
+      "wallRebuilt": true,
+      "errors": []
+    },
+    {
+      "restored": true,
+      "backend": "WebGPU",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "mangroveNetwork": true,
+      "keys": [
+        "1,0",
+        "2,0",
+        "1,1",
+        "2,1"
+      ],
+      "initial": {
+        "closed": false,
+        "suspended": false,
+        "generation": 4,
+        "chunks": 4,
+        "visible": 4,
+        "retained": 4,
+        "pending": 0
+      },
+      "low": {
+        "closed": false,
+        "suspended": false,
+        "generation": 36,
+        "chunks": 6,
+        "visible": 0,
+        "retained": 0,
+        "pending": 0
+      },
+      "high": {
+        "closed": false,
+        "suspended": false,
+        "generation": 42,
+        "chunks": 6,
+        "visible": 6,
+        "retained": 6,
+        "pending": 0
+      },
+      "final": {
+        "closed": false,
+        "suspended": false,
+        "generation": 78,
+        "chunks": 6,
+        "visible": 4,
+        "retained": 4,
+        "pending": 0
+      },
+      "sequence": 726,
+      "elapsed": 6149.850000005598,
+      "saveSequence": 804,
+      "wallRemoved": true,
+      "wallRebuilt": true,
+      "errors": []
+    }
+  ],
+  "warnings": [
+    {
+      "message": "THREE.TSL: Vertex attribute \"normal\" not found on geometry.",
+      "count": 2178
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "environment": {
+    "browser": "Edge",
+    "hardware": "NVIDIA Turing",
+    "displayHz": 30,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "bootstrap": "cold",
+    "runtime": "WorkerHostedRuntime",
+    "measurement": "remote Host draw intervals"
+  },
+  "cases": [
+    {
+      "bridgeSha256": "f7f69cdb72b91632ee4e032ff854883e7de75017814aac4e76ef12b296ce3fc7",
+      "profile": "youngMale",
+      "action": "initial",
+      "trigger": {
+        "kind": "CropPlaced",
+        "targetId": "plant-1000001",
+        "sequence": 226,
+        "position": {
+          "time": 152.2500000000005,
+          "elapsed": 12.249999999999952,
+          "x": -17.95273506473629,
+          "z": 0.0472649352637087,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 226
+        }
+      },
+      "receiptSha256": "171369e11a0ff88cac39c0fb029f40b26fcfc74705c1c091489bee84b7821271",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 671,
+      "retainedGeometryOwners": 36,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        3049,
+        3099,
+        3760
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795239378750.7002,
+          "sequence": 33,
+          "ticket": 8,
+          "intervalMs": 33.5,
+          "drawMs": 4,
+          "trigger": "raf",
+          "replay": false
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795239375986.1,
+          "sequence": 25,
+          "ticket": 4,
+          "intervalMs": 35.5,
+          "drawMs": 1.89990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239375852.3,
+          "sequence": 24,
+          "ticket": 4,
+          "intervalMs": 35.099853515625,
+          "drawMs": 1.900146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239375452.3,
+          "sequence": 21,
+          "ticket": 2,
+          "intervalMs": 35,
+          "drawMs": 1.10009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239373352.2002,
+          "sequence": 20,
+          "ticket": null,
+          "intervalMs": 34.900146484375,
+          "drawMs": 1.599853515625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239376418.9001,
+          "sequence": 29,
+          "ticket": 4,
+          "intervalMs": 34.900146484375,
+          "drawMs": 3.599853515625,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795239378585.5,
+          "sequence": 31,
+          "ticket": 6,
+          "intervalMs": 34.89990234375,
+          "drawMs": 1.400146484375,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000001",
+        "type": "WaterSatisfied"
+      },
+      "drained": true,
+      "submittedTickets": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16
+      ],
+      "gpuErrors": 0
+    },
+    {
+      "bridgeSha256": "3300f2c9987a881e9fcdf4b9daec01609192993df9348fa69e0f4918c1c5ffbf",
+      "profile": "youngMale",
+      "action": "water",
+      "trigger": {
+        "waterSlot": "future"
+      },
+      "receiptSha256": "fc529f012e7843275c96536e4bd470b5eb14114c4dd5824287988a548b16df7e",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "REST21",
+          "ticket": 9,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 11,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 13,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 15,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 708,
+      "retainedGeometryOwners": 36,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "terminalArrival": {
+        "endElapsed": 14.325635183469245,
+        "stopRequestTicket": 7,
+        "stopAbortedAfterMs": 204.900146484375,
+        "anchor": {
+          "id": "farm-plant-900098",
+          "x": -17.8,
+          "z": 0.2,
+          "radius": 3
+        }
+      },
+      "consumerResourceCounts": [
+        3195,
+        3418,
+        3820
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795239970152.9001,
+          "sequence": 43,
+          "ticket": 9,
+          "intervalMs": 33.400146484375,
+          "drawMs": 5.5,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795239970186.1,
+          "sequence": 43,
+          "ticket": 9,
+          "intervalMs": 33.199951171875,
+          "drawMs": 2.39990234375,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795239958058.1,
+          "sequence": 11,
+          "ticket": null,
+          "intervalMs": 38.800048828125,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239967624.3,
+          "sequence": 27,
+          "ticket": 6,
+          "intervalMs": 36.39990234375,
+          "drawMs": 3.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239970088.5,
+          "sequence": 42,
+          "ticket": 6,
+          "intervalMs": 35.599853515625,
+          "drawMs": 2.400146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239957988.2002,
+          "sequence": 11,
+          "ticket": null,
+          "intervalMs": 35.5,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239966888.3,
+          "sequence": 23,
+          "ticket": 4,
+          "intervalMs": 35.5,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795239956821.4001,
+          "sequence": 8,
+          "ticket": null,
+          "intervalMs": 35.400146484375,
+          "drawMs": 0.099853515625,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000000",
+        "type": "WaterSatisfied"
+      },
+      "drained": true,
+      "submittedTickets": [
+        2,
+        4,
+        6,
+        9,
+        11,
+        13,
+        15,
+        17
+      ],
+      "gpuErrors": 0
+    }
+  ]
+}

@@ -45,8 +45,9 @@ export function negate(a) {
 }
 export function multiply(a,n,d=1) { return rational(BigInt(a.n)*BigInt(n),BigInt(a.d)*BigInt(d)); }
 export function compare(a,b) { const diff=BigInt(a.n)*BigInt(b.d)-BigInt(b.n)*BigInt(a.d); return diff<0n?-1:diff>0n?1:0; }
-export function transact(ledger,id,delta) {
+export function transact(ledger,id,delta,{notify=notifySettlement}={}) {
   if(!id || typeof id!=='string') throw new Error('Transacción sin identidad');
+  if(typeof notify!=='function')throw TypeError('Invalid settlement notification');
   if(Object.hasOwn(ledger.entries,id)) return false;
   // Fractions exist only while calculating an operation, never in the ledger.
   const negative=BigInt(delta.n)<0n;
@@ -57,7 +58,7 @@ export function transact(ledger,id,delta) {
   if(compare(next,rational(0))<0) throw new Error('Fondos insuficientes');
   ledger.balance=next;
   ledger.entries[id]=delta;
-  notifySettlement(ledger,id,delta);
+  notify(ledger,id,delta);
   return true;
 }
 export function formatMoney(value,locale='es-ES') {

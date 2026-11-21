@@ -1,0 +1,49 @@
+{
+  "commit": "70b34222e34507a253871b888f29f0f578264700",
+  "profile": "olderFemale",
+  "shiftEnd": 300,
+  "adapter": "nvidia turing",
+  "viewport": [
+    640,
+    480
+  ],
+  "acquired": [
+    {
+      "key": "nativeInitialIdleBodyBinding",
+      "actorId": 900011,
+      "bodyId": 1,
+      "ticket": 2
+    },
+    {
+      "key": "nativeTaskStartBinding",
+      "actorId": 900011,
+      "bodyId": 1,
+      "ticket": 5
+    }
+  ],
+  "actualDrawTickets": [
+    2,
+    5
+  ],
+  "before": {
+    "time": 299.9499999999955,
+    "elapsed": 14.949999999999894,
+    "x": -21,
+    "z": 0.1191572875253093,
+    "admission": "native-task",
+    "status": "walking",
+    "sequence": 112
+  },
+  "nominalStep": 0.05,
+  "unroundedTime": 299.9999999999955,
+  "next": {
+    "time": 300,
+    "elapsed": 14.999999999999893,
+    "x": -21,
+    "z": 0.16235728752530854,
+    "status": "returning",
+    "sequence": 113
+  },
+  "authorityFault": "Error: Error: Native intent delta was rejected; rebuild from a saved state",
+  "drawFault": "Error: Error: Error: Native intent control failed: native-reset"
+}

@@ -1,0 +1,158 @@
+{
+  "runs": [
+    {
+      "mode": "reference",
+      "imageHash": 2613681605,
+      "poseHash": 1041974353,
+      "reuse": {
+        "hits": 0,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 39.689999997615814,
+        "p99": 48.78500001132488,
+        "max": 69.0700000077486
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.43000000000029,
+        "p99": 66.67499999999563,
+        "max": 66.76000000000204
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 14.98144,
+        "p99": 15.883584,
+        "max": 15.925344
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "candidate",
+      "imageHash": 2613681605,
+      "poseHash": 1041974353,
+      "reuse": {
+        "hits": 1480,
+        "misses": 20,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 19.61999998986721,
+        "p99": 20.21000000834465,
+        "max": 27.975000008940697
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.41500000000087,
+        "p99": 33.44499999999971,
+        "max": 33.450000000004366
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 21.404736,
+        "p99": 22.858944,
+        "max": 23.259904
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "candidate",
+      "imageHash": 2613681605,
+      "poseHash": 1041974353,
+      "reuse": {
+        "hits": 1500,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 19.450000002980232,
+        "p99": 22.99499998986721,
+        "max": 27.21500000357628
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.38999999999942,
+        "p99": 33.450000000004366,
+        "max": 33.4600000000064
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 9.914592,
+        "p99": 10.529152,
+        "max": 11.018496
+      },
+      "disjoint": 0,
+      "discarded": 0
+    },
+    {
+      "mode": "reference",
+      "imageHash": 2613681605,
+      "poseHash": 1041974353,
+      "reuse": {
+        "hits": 0,
+        "misses": 0,
+        "unsupported": 0,
+        "checks": 0,
+        "maxDifference": 0
+      },
+      "render": {
+        "count": 75,
+        "p95": 24.700000002980232,
+        "p99": 26.099999994039536,
+        "max": 32.554999992251396
+      },
+      "frames": {
+        "count": 74,
+        "p95": 33.375,
+        "p99": 33.43000000000029,
+        "max": 33.44499999999971
+      },
+      "gpu": {
+        "count": 75,
+        "p95": 22.124384,
+        "p99": 23.52128,
+        "max": 23.57328
+      },
+      "disjoint": 0,
+      "discarded": 0
+    }
+  ],
+  "active": {
+    "hits": 368,
+    "misses": 2032,
+    "unsupported": 0,
+    "checks": 368,
+    "maxDifference": 0
+  },
+  "impact": {
+    "hits": 734,
+    "misses": 4468,
+    "unsupported": 0,
+    "checks": 734,
+    "maxDifference": 0
+  },
+  "phases": {
+    "falling": 68,
+    "rolling": 27,
+    "recovering": 82,
+    "recoveryExit": 6,
+    "upright": 77
+  },
+  "animals": 20,
+  "sceneErrors": [],
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "One Edge headless mangrove-islands QA scene, 20 synthetic animals. Frozen-scene ABBA compares reference and experimental pose-signature cache; then verification mode computes both candidates during 120 active and 260 impact/recovery ticks. No gameplay parity in ABBA; image and pose hashes cover only the final frame of each block. Raw buffer writes without version increments, sample-array mutation, context lifecycle and integrated GPU not covered. Signature test is a diagnostic, not production.",
+  "imageAuditInvalidReason": "All image hashes match a 1280x720 all-zero RGBA buffer; framebuffer was read after yielding. They do not establish visual equivalence."
+}

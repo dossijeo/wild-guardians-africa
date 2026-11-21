@@ -1,0 +1,534 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "scope": "Support tooling validation only; no A6/ABC closure. Production and existing assertions unchanged by this mission.",
+  "runs": [
+    {
+      "report": ".cache/migration-support/2026-11-15T10-13-16.518Z-impact-focused-19220/report.json",
+      "reportSha256": "335eb3d1597d71a50f68ed0430b1570862bf9cf0df2f98b1da2cd28506667cb8",
+      "kind": "impact-focused",
+      "head": "44b6d40dd9f128fb710659b78791eb103b1bb2e9",
+      "launcherNode": "v24.22.1",
+      "sourceDigest": "1fe08cd3494bbb09c339c479b206f5ef6dcc128ef02c4d47d28f698154cee265",
+      "sourceHashes": {
+        "tests/migration-support.test.js": "6360a2bb5eb0b89849b95aa480c174b5b746bcd4fe5c521afb7df61c54c67a7d",
+        "src/world/wild-engine/spatial-savanna.wasm": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+        "public/wild-engine/spatial-threaded.wasm": "4149db50ed0aebdd45274c495993a83ef5b6dfc4fc488f9760190a141aeb74ca",
+        "src/world/wild-engine/spatial-intent-bridge.js": "2ff124a751f387cc50b822d9cef01d0567a96106c73f86bb7a1853a26ab60c20",
+        "src/world/wild-engine/spatial-task-execution.inc": "e5b0a52479274de1ba52a199125eebd33f3d9011e743bf4cfd9a734a716d2970",
+        "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+        "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+        "src/persistence/snapshots.js": "ac550b36cfcc10e3b6a82d60135160267fd90c0fbe6301337f8e9dbcdf145806",
+        "tests/browser/native-first-task-world-owner.js": "33b389b20d494d15b90acdb2ee388b0f70c3362679493f313f51726a743d92bd",
+        "src/rendering/remote-webgpu-host.js": "e53bdf9585a5798d91fdf39a0b87663b188117ab75d0a36fa74e20abbaf49526",
+        "tools/guardian/migration-support/core.mjs": "b0d05e3d769a06a8eb545f314e32df1ba191ec8c9687194a5c8f60ff3856c184",
+        "tools/guardian/migration-support/cli.mjs": "d85d5df78a21d10ada7b434a0d01908cbf167d9df441aefb03e99b252f5854d0"
+      },
+      "stable": true,
+      "changedDuringRun": {},
+      "results": [
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "--test",
+            "--test-concurrency=2",
+            "--test-reporter=tap",
+            "tests/migration-support.test.js"
+          ],
+          "runtimeVersion": "v20.19.0",
+          "nativeBinarySha256": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+          },
+          "startedAt": "2026-11-15T10:13:17.180Z",
+          "finishedAt": "2026-11-15T10:13:18.194Z",
+          "code": 0,
+          "timedOut": false,
+          "error": null,
+          "counts": {
+            "tests": 7,
+            "pass": 7,
+            "fail": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "log": ".cache/migration-support/2026-11-15T10-13-16.518Z-impact-focused-19220/node.log",
+          "logSha256": "7a00c540d3ca035435135c8f886969f962cead536b886ddb6990b97c81216c1d",
+          "status": "passed"
+        }
+      ],
+      "pending": [],
+      "verticalComplete": false
+    },
+    {
+      "report": ".cache/migration-support/2026-11-15T10-07-23.663Z-lab-9380/report.json",
+      "reportSha256": "e09711b66f1aa6f8351a3bf1a7d546718549059b322eac112edc2f25c73e1b45",
+      "kind": "lab",
+      "head": "44b6d40dd9f128fb710659b78791eb103b1bb2e9",
+      "launcherNode": "v20.19.0",
+      "sourceDigest": "0d6566968c8ed815da349678e7801a4387030be1b8a7a59479e90537bdab5f3b",
+      "sourceHashes": {
+        "tests/native-admission-vertical.test.js": "5ba4e928802240665be9c0a5426217deaf3173c00072b9fcd933372698320816",
+        "tests/native-barrier-quiescence.test.js": "8ab26b5d2e5fef4e2370271ae5ef4b6a1eee9abd86decc04925f6814aac9a2d6",
+        "tests/native-intent-control-cohort.test.js": "35970016b8f470d518554321baa2286a5de461fc6e574fb76e124a8645d7080e",
+        "tests/native-resource-preparation-channel.test.js": "9f473691e5db953c1376fbf71e48135f9ca2eb2f75017d01e134b7ec21bce6d9",
+        "tests/native-route-control.test.js": "5c94e19563525134efeac4f588110292e3ebe549d2da66d35507b066c132ba22",
+        "tests/native-task-action-binding.test.js": "7b6b578b758bd992bb09e815ce15dc029c20dc0ff63320532a76e5dbe0470f9b",
+        "tests/native-task-action-game-execution.test.js": "e6e8944242930d7727c66378be56608849a2cd4fff6f63f08b784432dc4fba0c",
+        "tests/native-task-action-graphics.test.js": "6d7cc26d04b62567a8dd688d809036c7bf48197c72ae3c226d07bcd00adaffd0",
+        "tests/native-task-game-execution.test.js": "91e313e0e30557c4826128cc5fdae2601a7e52ecce7f1691cf0bada505f66beb",
+        "tests/native-task-resource-requests.test.js": "8408162df727dfaf7e4820b613fc44df1e51b24a64359568aef1e7a251ab593e",
+        "tests/native-task-start-graphics.test.js": "3331b6be4af0e11ab41c261c8623fcb56aa2ac0bfbe0081f1bbbb2bf93f3a4e5",
+        "tests/native-world-boundary.test.js": "4f4356889f6f1796049d0406227dd3278fff212c1a5432dc8e48bc73e8c3c9ef",
+        "tests/spatial-intent-transition-protocol.test.js": "c5c561b7af44f9a72de4733894efa1b3702cc3969415a43557e80ca1296531a5",
+        "tests/spatial-native-causal-clock.test.js": "a9bd5997dded5c36738d1a7fcdb192b3db60495a640413dff56c06b48047dcbd",
+        "tests/spatial-native-gate-crossings.test.js": "838096929fdc9f31e957a60cbc3eecae5722eccb9c501929c525b9ce4b92a84c",
+        "tests/spatial-native-gate-route-acceptance.test.js": "4c730885fec21c3e06c0e13a2d5731b6535d4bd3dea44b962ba1bdab874bc300",
+        "tests/spatial-native-prop-mutations.test.js": "2a56c3aca641eb350360dce6f03e03e2fd01aa2fe7e6d0ae10cd7e875a05d9d0",
+        "tests/spatial-native-route-reservations.test.js": "43ac5079d7fc9e0e59fa29f3db15261c54739413b34154e20524274c65504df3",
+        "tests/spatial-native-static-mutations.test.js": "75f536beb7e62f941364895f6af4e8b98d10cc17e586d6d831df794e807e88ad",
+        "tests/webgpu-resource-registry.test.js": "2124acbaabfa4223fe41749bbd5ccc0c33f3be5765008507820e6579b00b40b0",
+        "src/world/wild-engine/spatial-savanna.wasm": "73c27e056d948edcb9bbb0fae84063db0c876401611776b732a2288a4b5457c6",
+        "public/wild-engine/spatial-threaded.wasm": "94389bb44d9935dd30cc6b0ba72db04c130c4b438652890ed136d2b33132f7a7",
+        "src/world/wild-engine/spatial-intent-bridge.js": "2ff124a751f387cc50b822d9cef01d0567a96106c73f86bb7a1853a26ab60c20",
+        "src/world/wild-engine/spatial-task-execution.inc": "e5b0a52479274de1ba52a199125eebd33f3d9011e743bf4cfd9a734a716d2970",
+        "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+        "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+        "src/persistence/snapshots.js": "ac550b36cfcc10e3b6a82d60135160267fd90c0fbe6301337f8e9dbcdf145806",
+        "tests/browser/native-first-task-world-owner.js": "33b389b20d494d15b90acdb2ee388b0f70c3362679493f313f51726a743d92bd",
+        "src/rendering/remote-webgpu-host.js": "e53bdf9585a5798d91fdf39a0b87663b188117ab75d0a36fa74e20abbaf49526",
+        "tools/guardian/migration-support/core.mjs": "8284ece35d0c6020f7177ad7fa97b1f5e7c1c691f864762d888c32cc525fc1dc",
+        "tools/guardian/migration-support/cli.mjs": "d85d5df78a21d10ada7b434a0d01908cbf167d9df441aefb03e99b252f5854d0"
+      },
+      "stable": false,
+      "changedDuringRun": "Earlier report format: see afterDigest; later comparison found spatial-gate-api.inc and native-task-action-restoration helper changed.",
+      "results": [
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "--test",
+            "--test-concurrency=2",
+            "--test-reporter=tap",
+            "tests/native-admission-vertical.test.js",
+            "tests/native-barrier-quiescence.test.js",
+            "tests/native-intent-control-cohort.test.js",
+            "tests/native-resource-preparation-channel.test.js",
+            "tests/native-route-control.test.js",
+            "tests/native-task-action-binding.test.js",
+            "tests/native-task-action-game-execution.test.js",
+            "tests/native-task-action-graphics.test.js",
+            "tests/native-task-game-execution.test.js",
+            "tests/native-task-resource-requests.test.js",
+            "tests/native-task-start-graphics.test.js",
+            "tests/native-world-boundary.test.js",
+            "tests/spatial-intent-transition-protocol.test.js",
+            "tests/spatial-native-causal-clock.test.js",
+            "tests/spatial-native-gate-crossings.test.js",
+            "tests/spatial-native-gate-route-acceptance.test.js",
+            "tests/spatial-native-prop-mutations.test.js",
+            "tests/spatial-native-route-reservations.test.js",
+            "tests/spatial-native-static-mutations.test.js",
+            "tests/webgpu-resource-registry.test.js"
+          ],
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+          },
+          "startedAt": "2026-11-15T10:07:24.465Z",
+          "finishedAt": "2026-11-15T10:08:35.729Z",
+          "code": 1,
+          "timedOut": false,
+          "error": null,
+          "counts": {
+            "tests": 222,
+            "pass": 221,
+            "fail": 1,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "log": ".cache/migration-support/2026-11-15T10-07-23.663Z-lab-9380/node.log",
+          "logSha256": "099a29a7e0fbf8d0c4f2fb9ed7e61469cb9d1deb08cca5f1aeac475f9d405f9a",
+          "status": "failed"
+        },
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "tools/guardian/audit_native_first_task_world_owner.mjs"
+          ],
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+            "QA_NATIVE_ACTION": "true",
+            "OUTPUT": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-07-23.663Z-lab-9380\\harvest.json",
+            "QA_BASE_URL": "http://127.0.0.1:5181"
+          },
+          "startedAt": "2026-11-15T10:08:35.731Z",
+          "finishedAt": "2026-11-15T10:08:58.598Z",
+          "code": 0,
+          "timedOut": false,
+          "error": null,
+          "counts": {},
+          "log": ".cache/migration-support/2026-11-15T10-07-23.663Z-lab-9380/harvest.log",
+          "logSha256": "595dc803f31bc7882f7b3b2b661396074884b4cb0284f40cac244014b7928141",
+          "status": "passed",
+          "receipt": {
+            "path": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-07-23.663Z-lab-9380\\harvest.json",
+            "sha256": "7fca7a54991e2187cb0dbe7cc290e02d6dca94df7935e31ee0b954bd9304a74d"
+          }
+        },
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "tools/guardian/audit_native_worker_world_owner.mjs"
+          ],
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+            "QA_GATE_WAIT": "true",
+            "QA_GATE_MOTOR": "true",
+            "OUTPUT": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-07-23.663Z-lab-9380\\gates.json",
+            "QA_BASE_URL": "http://127.0.0.1:5181"
+          },
+          "startedAt": "2026-11-15T10:08:58.600Z",
+          "finishedAt": "2026-11-15T10:09:15.283Z",
+          "code": 0,
+          "timedOut": false,
+          "error": null,
+          "counts": {},
+          "log": ".cache/migration-support/2026-11-15T10-07-23.663Z-lab-9380/gates.log",
+          "logSha256": "fe1b4e2d102525d33ad1fe90b5850ab11a9fef5581e207169c157df1761ac4bc",
+          "status": "passed",
+          "receipt": {
+            "path": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-07-23.663Z-lab-9380\\gates.json",
+            "sha256": "536730b92c5ded1287d154c16bf0610df038a172317207681c56b3caaabed9da"
+          }
+        },
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "tools/guardian/audit_native_control_lifecycle.mjs"
+          ],
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+            "OUTPUT": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-07-23.663Z-lab-9380\\recovery.json",
+            "QA_BASE_URL": "http://127.0.0.1:5181"
+          },
+          "startedAt": "2026-11-15T10:09:15.285Z",
+          "finishedAt": "2026-11-15T10:09:22.837Z",
+          "code": 0,
+          "timedOut": false,
+          "error": null,
+          "counts": {},
+          "log": ".cache/migration-support/2026-11-15T10-07-23.663Z-lab-9380/recovery.log",
+          "logSha256": "62b51f14edc20fd00ed846d46394baf58aa94910f15a1d322c302bca5e8213ea",
+          "status": "failed",
+          "receiptError": "Error: Browser receipt contains errors or lacks result"
+        }
+      ],
+      "pending": [
+        {
+          "scenario": "harvest",
+          "reason": "Productor ordinario de partida"
+        },
+        {
+          "scenario": "harvest",
+          "reason": "Consecuencia preparada real exactamente una vez"
+        },
+        {
+          "scenario": "harvest",
+          "reason": "Siguiente tarea admitida desde esa consecuencia"
+        },
+        {
+          "scenario": "obstacles",
+          "reason": "Combinar obstáculo con el ciclo Harvest completo"
+        },
+        {
+          "scenario": "gates",
+          "reason": "Puertas dentro de la misma partida Harvest ordinaria"
+        },
+        {
+          "scenario": "concurrent",
+          "reason": "Tráfico resuelto entre tareas ordinarias completas"
+        },
+        {
+          "scenario": "pause",
+          "reason": "Pausa/tasa durante consecuencia y siguiente tarea integradas"
+        },
+        {
+          "scenario": "invalidation",
+          "reason": "Invalidación en todas las fases de la vertical completa"
+        },
+        {
+          "scenario": "preparation",
+          "reason": "Consecuencia preparada con bloqueo en partida ordinaria"
+        },
+        {
+          "scenario": "recovery",
+          "reason": "Save/restore y recuperación a lo largo del ciclo Harvest completo; consultar cambios de Sol en restauración"
+        }
+      ],
+      "verticalComplete": false
+    },
+    {
+      "report": ".cache/migration-support/2026-11-15T10-11-14.380Z-lab-3268/report.json",
+      "reportSha256": "2a18d9f018fd73a0646fccec38896a7a0af3ab49bd3d6438d749277428ce5a89",
+      "kind": "lab",
+      "head": "44b6d40dd9f128fb710659b78791eb103b1bb2e9",
+      "launcherNode": "v24.22.1",
+      "sourceDigest": "36b6327b5a18cbfda4b491c7331e0bcc37ffc5fc41553d13009a06b8cadbba2d",
+      "sourceHashes": {
+        "tests/native-admission-vertical.test.js": "5ba4e928802240665be9c0a5426217deaf3173c00072b9fcd933372698320816",
+        "tests/native-barrier-quiescence.test.js": "8ab26b5d2e5fef4e2370271ae5ef4b6a1eee9abd86decc04925f6814aac9a2d6",
+        "tests/native-intent-control-cohort.test.js": "35970016b8f470d518554321baa2286a5de461fc6e574fb76e124a8645d7080e",
+        "tests/native-route-control.test.js": "5c94e19563525134efeac4f588110292e3ebe549d2da66d35507b066c132ba22",
+        "tests/native-task-action-game-execution.test.js": "e6e8944242930d7727c66378be56608849a2cd4fff6f63f08b784432dc4fba0c",
+        "tests/native-task-action-graphics.test.js": "6d7cc26d04b62567a8dd688d809036c7bf48197c72ae3c226d07bcd00adaffd0",
+        "tests/native-task-game-execution.test.js": "91e313e0e30557c4826128cc5fdae2601a7e52ecce7f1691cf0bada505f66beb",
+        "tests/native-task-resource-requests.test.js": "8408162df727dfaf7e4820b613fc44df1e51b24a64359568aef1e7a251ab593e",
+        "tests/native-task-start-graphics.test.js": "3331b6be4af0e11ab41c261c8623fcb56aa2ac0bfbe0081f1bbbb2bf93f3a4e5",
+        "tests/native-world-boundary.test.js": "4f4356889f6f1796049d0406227dd3278fff212c1a5432dc8e48bc73e8c3c9ef",
+        "tests/spatial-intent-transition-protocol.test.js": "c5c561b7af44f9a72de4733894efa1b3702cc3969415a43557e80ca1296531a5",
+        "tests/spatial-native-causal-clock.test.js": "a9bd5997dded5c36738d1a7fcdb192b3db60495a640413dff56c06b48047dcbd",
+        "tests/spatial-native-route-reservations.test.js": "43ac5079d7fc9e0e59fa29f3db15261c54739413b34154e20524274c65504df3",
+        "tests/webgpu-resource-registry.test.js": "2124acbaabfa4223fe41749bbd5ccc0c33f3be5765008507820e6579b00b40b0",
+        "public/wild-engine/spatial-threaded.wasm": "1408600bd584741a1a26b22667ee13652932de84ce3685bea75a9e2699b09346",
+        "src/world/wild-engine/spatial-savanna.wasm": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+        "src/world/wild-engine/spatial-intent-bridge.js": "2ff124a751f387cc50b822d9cef01d0567a96106c73f86bb7a1853a26ab60c20",
+        "src/world/wild-engine/spatial-task-execution.inc": "e5b0a52479274de1ba52a199125eebd33f3d9011e743bf4cfd9a734a716d2970",
+        "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+        "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+        "src/persistence/snapshots.js": "ac550b36cfcc10e3b6a82d60135160267fd90c0fbe6301337f8e9dbcdf145806",
+        "tests/browser/native-first-task-world-owner.js": "33b389b20d494d15b90acdb2ee388b0f70c3362679493f313f51726a743d92bd",
+        "src/rendering/remote-webgpu-host.js": "e53bdf9585a5798d91fdf39a0b87663b188117ab75d0a36fa74e20abbaf49526",
+        "tools/guardian/migration-support/core.mjs": "de89cf57acd98067d1d9700ffaec080e5f7de25c9b8ec03edff38bf78e80a095",
+        "tools/guardian/migration-support/cli.mjs": "d85d5df78a21d10ada7b434a0d01908cbf167d9df441aefb03e99b252f5854d0"
+      },
+      "stable": false,
+      "changedDuringRun": {
+        "public/wild-engine/spatial-threaded.wasm": {
+          "before": "1408600bd584741a1a26b22667ee13652932de84ce3685bea75a9e2699b09346",
+          "after": "4149db50ed0aebdd45274c495993a83ef5b6dfc4fc488f9760190a141aeb74ca"
+        }
+      },
+      "results": [
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "--test",
+            "--test-concurrency=2",
+            "--test-reporter=tap",
+            "tests/native-admission-vertical.test.js",
+            "tests/native-barrier-quiescence.test.js",
+            "tests/native-intent-control-cohort.test.js",
+            "tests/native-route-control.test.js",
+            "tests/native-task-action-game-execution.test.js",
+            "tests/native-task-action-graphics.test.js",
+            "tests/native-task-game-execution.test.js",
+            "tests/native-task-resource-requests.test.js",
+            "tests/native-task-start-graphics.test.js",
+            "tests/native-world-boundary.test.js",
+            "tests/spatial-intent-transition-protocol.test.js",
+            "tests/spatial-native-causal-clock.test.js",
+            "tests/spatial-native-route-reservations.test.js",
+            "tests/webgpu-resource-registry.test.js"
+          ],
+          "runtimeVersion": "v20.19.0",
+          "nativeBinarySha256": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+          },
+          "startedAt": "2026-11-15T10:11:15.213Z",
+          "finishedAt": "2026-11-15T10:11:51.878Z",
+          "code": 1,
+          "timedOut": false,
+          "error": null,
+          "counts": {
+            "tests": 141,
+            "pass": 140,
+            "fail": 1,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "log": ".cache/migration-support/2026-11-15T10-11-14.380Z-lab-3268/node.log",
+          "logSha256": "c8dde6bca18091d673734a9b3ee4155a821bec63ad45c5e36108d45f2e8c8000",
+          "status": "failed"
+        },
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "tools/guardian/audit_native_first_task_world_owner.mjs"
+          ],
+          "runtimeVersion": "v20.19.0",
+          "nativeBinarySha256": "3bc1765ff4d5de53516273afd38a8b1618874f5a94dbcc8ae7f609c90f022b31",
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+            "QA_NATIVE_ACTION": "true",
+            "OUTPUT": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-11-14.380Z-lab-3268\\harvest.json",
+            "QA_BASE_URL": "http://127.0.0.1:5181"
+          },
+          "startedAt": "2026-11-15T10:11:51.879Z",
+          "finishedAt": "2026-11-15T10:12:15.122Z",
+          "code": 0,
+          "timedOut": false,
+          "error": null,
+          "counts": {},
+          "log": ".cache/migration-support/2026-11-15T10-11-14.380Z-lab-3268/harvest.log",
+          "logSha256": "423838b2fabc8856d63c3f4d650259fd19a12d480c0dca80b407659b79ab6602",
+          "status": "passed",
+          "receipt": {
+            "path": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\migration-support\\2026-11-15T10-11-14.380Z-lab-3268\\harvest.json",
+            "sha256": "d080efaacfb368d42fa39c938b6b2f8dc49d76fd795e2312e2629b3345687660"
+          }
+        }
+      ],
+      "pending": [
+        {
+          "scenario": "harvest",
+          "reason": "Productor ordinario de partida"
+        },
+        {
+          "scenario": "harvest",
+          "reason": "Consecuencia preparada real exactamente una vez"
+        },
+        {
+          "scenario": "harvest",
+          "reason": "Siguiente tarea admitida desde esa consecuencia"
+        }
+      ],
+      "verticalComplete": false
+    },
+    {
+      "report": ".cache/migration-support/2026-11-15T10-07-43.378Z-impact-focused-7812/report.json",
+      "reportSha256": "6f5b1e4558150840782e5865b7473e2bfdf01a9e31c460a7ec59bac9ee86737c",
+      "kind": "impact-focused",
+      "head": "44b6d40dd9f128fb710659b78791eb103b1bb2e9",
+      "launcherNode": "v20.19.0",
+      "sourceDigest": "0d6566968c8ed815da349678e7801a4387030be1b8a7a59479e90537bdab5f3b",
+      "sourceHashes": {
+        "tests/spatial-native-intent-bridge.test.js": "940fa04cadb0d09c95908df2def42cc3d25d50a1d92e7b0c854fa270ec8ba7f7",
+        "src/world/wild-engine/spatial-savanna.wasm": "73c27e056d948edcb9bbb0fae84063db0c876401611776b732a2288a4b5457c6",
+        "public/wild-engine/spatial-threaded.wasm": "94389bb44d9935dd30cc6b0ba72db04c130c4b438652890ed136d2b33132f7a7",
+        "src/world/wild-engine/spatial-intent-bridge.js": "2ff124a751f387cc50b822d9cef01d0567a96106c73f86bb7a1853a26ab60c20",
+        "src/world/wild-engine/spatial-task-execution.inc": "e5b0a52479274de1ba52a199125eebd33f3d9011e743bf4cfd9a734a716d2970",
+        "src/simulation/game.js": "5705853b7df2bbd2e4fa66901b583e2c58e13782a891719eb4d967ee863cdc49",
+        "src/simulation/tasks.js": "fe76a4e59a2678eaa40fcd5c3a9f01d342e82b0d3f38e47ae78712cf1ddda414",
+        "src/persistence/snapshots.js": "ac550b36cfcc10e3b6a82d60135160267fd90c0fbe6301337f8e9dbcdf145806",
+        "tests/browser/native-first-task-world-owner.js": "33b389b20d494d15b90acdb2ee388b0f70c3362679493f313f51726a743d92bd",
+        "src/rendering/remote-webgpu-host.js": "e53bdf9585a5798d91fdf39a0b87663b188117ab75d0a36fa74e20abbaf49526",
+        "tools/guardian/migration-support/core.mjs": "8284ece35d0c6020f7177ad7fa97b1f5e7c1c691f864762d888c32cc525fc1dc",
+        "tools/guardian/migration-support/cli.mjs": "d85d5df78a21d10ada7b434a0d01908cbf167d9df441aefb03e99b252f5854d0"
+      },
+      "stable": true,
+      "changedDuringRun": {},
+      "results": [
+        {
+          "command": [
+            "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\tooling\\node20.exe",
+            "--test",
+            "--test-concurrency=2",
+            "--test-reporter=tap",
+            "tests/spatial-native-intent-bridge.test.js"
+          ],
+          "environment": {
+            "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+          },
+          "startedAt": "2026-11-15T10:07:44.117Z",
+          "finishedAt": "2026-11-15T10:08:20.468Z",
+          "code": 1,
+          "timedOut": false,
+          "error": null,
+          "counts": {
+            "tests": 20,
+            "pass": 17,
+            "fail": 3,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0
+          },
+          "log": ".cache/migration-support/2026-11-15T10-07-43.378Z-impact-focused-7812/node.log",
+          "logSha256": "5227eff52a5555a53298b1d1d6777bf549320a649143d1bf6639a1cb046b3395",
+          "status": "failed"
+        }
+      ],
+      "pending": [],
+      "verticalComplete": false
+    }
+  ],
+  "browserObservations": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "harvest": {
+      "block": {
+        "start": 1794737330222.07,
+        "end": 1794737332022.145,
+        "committedAt": 1794737330227.1,
+        "drawFrames": 54,
+        "minClock": 13.139999999999933,
+        "maxClock": 14.779999999999898,
+        "resourcesAfterReady": 0
+      },
+      "action": {
+        "age": 1.619999885559082,
+        "resourcesAfterReady": 0,
+        "block": {
+          "start": 1794737335640.925,
+          "end": 1794737337440.935,
+          "committedAt": 1794737335646.8901,
+          "drawFrames": 54,
+          "minClock": 24.87050177092218,
+          "maxClock": 26.470501770922144
+        }
+      },
+      "drained": true
+    },
+    "gates": {
+      "block": {
+        "start": 1794737350675.28,
+        "end": 1794737351175.36,
+        "blockedMs": 500.080078125,
+        "drawFrames": 15,
+        "minClock": 10.0851201171875,
+        "maxClock": 11.92416015625
+      },
+      "drained": true
+    },
+    "recovery": {
+      "deviceLoss": {
+        "drained": true,
+        "authorityEpoch": "25347307-0fdd-43b1-8714-a004444f1b05/1"
+      },
+      "silentChannel": {
+        "mutation": "control-failed",
+        "worldUnchanged": true,
+        "closed": true,
+        "presentedThrough": 10.25,
+        "committedThrough": 10.25
+      },
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ],
+      "acceptedBySupport": false
+    }
+  },
+  "directReproductions": [
+    {
+      "log": ".cache/migration-support/causal-clock-direct.log",
+      "sha256": "db39c1f81733297848905b68258cb2de7c73db6eb7969d09866ce0b786986918"
+    },
+    {
+      "log": ".cache/migration-support/bridge-direct.log",
+      "sha256": "e0f43a8ca777ec73b371de698610c52d38fac2998f37d4fae35343c971a9fe33"
+    }
+  ],
+  "initialAttempt": {
+    "status": "interrupted; not accepted evidence",
+    "node": "v24.22.1",
+    "log": ".cache/migration-support/2026-11-15T10-05-10.812Z-lab-21520/node.log",
+    "reason": "Existing JSON import assertions rejected by Node 24; subsequent executions reuse existing Node 20.19.0."
+  },
+  "closure": "Open; TODOs and failures are not passes"
+}

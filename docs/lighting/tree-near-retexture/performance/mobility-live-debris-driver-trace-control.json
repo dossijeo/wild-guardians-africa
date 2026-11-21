@@ -1,0 +1,249 @@
+{
+  "livePreparation": {
+    "duration": 391.6899999976158,
+    "frameIntervals": 4,
+    "maxIntervalMs": 166.57999999999447,
+    "spans": [],
+    "intervals": [
+      {
+        "end": 41525.09,
+        "ms": 166.57999999999447
+      },
+      {
+        "end": 41658.545,
+        "ms": 133.45500000000175
+      },
+      {
+        "end": 41725.18,
+        "ms": 66.63500000000204
+      },
+      {
+        "end": 41791.75,
+        "ms": 66.56999999999971
+      }
+    ],
+    "longTasks": [
+      {
+        "start": 41269.515000000596,
+        "duration": 108
+      },
+      {
+        "start": 41381.69499999285,
+        "duration": 77
+      },
+      {
+        "start": 41459.01999999583,
+        "duration": 90
+      },
+      {
+        "start": 41555.95999999344,
+        "duration": 101
+      },
+      {
+        "start": 41816.45000000298,
+        "duration": 101
+      }
+    ]
+  },
+  "trace": [
+    {
+      "frame": 46,
+      "at": 50091.835,
+      "drawMs": 244.70000000298023,
+      "afterApply": true,
+      "spans": [
+        {
+          "label": "world-frame-stage:1",
+          "duration": 10.910000011324883
+        },
+        {
+          "label": "renderer.render",
+          "duration": 202.18000000715256,
+          "programsBefore": 88,
+          "programsAfter": 89,
+          "caller": "Error\n    at object.<computed> [as render] (eval at evaluate (:311:30), <anonymous>:9:904)\n    at http://127.0.0.1:5175/src/rendering/scene.js:938:82\n    at withRenderOrigin (http://127.0.0.1:5175/src/rendering/render-origin.js:20:34)\n    at WorldScene.drawWorldFrame (http://127.0.0.1:5175/src/rendering/scene.js:936:28)\n    at object.<computed> [as drawWorldFrame] (eval at evaluate (:311:30), <anonymous>:9:660)\n    at draw (http://127.0.0.1:5175/src/rendering/scene.js:935:86)\n    at WorldScene.drawRenderFrame (http://127.0.0.1:5175/src/rendering/scene.js:935:293)\n    at http://127.0.0.1:5175/src/rendering/scene.js:933:268\n    at loadingSyncWitness (http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:5:13)\n    at WorldScene.render (http://127.0.0.1:5175/src/rendering/scene.js:933:202)",
+          "newPrograms": [
+            {
+              "id": 92,
+              "usedTimes": 1,
+              "cacheKey": "39,40,onBeforeCompile() {\n  }"
+            }
+          ],
+          "materials": [
+            {
+              "object": "",
+              "type": "Mesh",
+              "material": "",
+              "materialType": "RawShaderMaterial",
+              "uniforms": [
+                "uFineNoise",
+                "uWorldOrigin",
+                "uVP",
+                "uLightVP",
+                "uDamage",
+                "uInner",
+                "uMode",
+                "uHoles",
+                "uNoise",
+                "uEye",
+                "uSun",
+                "uAlbedo",
+                "uNormalMap",
+                "uMR",
+                "uShadow",
+                "uIntactDepth",
+                "uOpeningMask",
+                "uResolution",
+                "uAshAge",
+                "uRepair",
+                "uTime",
+                "uShadowSize",
+                "uShadows",
+                "uEmbers",
+                "uQuality",
+                "uCinemaGround",
+                "uBuildingAO",
+                "uBuildingAOOn",
+                "uWorldFogColor",
+                "uWorldFogRange",
+                "uWorldScale",
+                "uWorldSun",
+                "uWorldAmbient",
+                "uToonModel",
+                "uNight",
+                "uNightLight",
+                "uExposure",
+                "uKind",
+                "uSurfaceType",
+                "uEnvEndpoints",
+                "uNativeEnvEnabled",
+                "uEnvDay",
+                "uEnvNight",
+                "uEnvYaw"
+              ],
+              "vertexPrefix": "precision highp float;precision highp int;layout(location=0)in vec3 aPos;layout(location=1)in vec3 aNormal;layout(location=2)in vec3 aOffset;layout(location=3)in vec3 aRotation;layout(location=4)in vec3 aScale;layout(location=5)in vec3 aColor;\nout vec3 vDebrisPosition,vDebrisNormal,vDebrisBase;unifo",
+              "parent": "",
+              "geometryType": "InstancedBufferGeometry",
+              "transparent": false
+            }
+          ]
+        },
+        {
+          "label": "renderer.render",
+          "duration": 4.0899999886751175,
+          "programsBefore": 89,
+          "programsAfter": 89,
+          "caller": null
+        },
+        {
+          "label": "renderer.render",
+          "duration": 22.5,
+          "programsBefore": 89,
+          "programsAfter": 90,
+          "caller": null
+        },
+        {
+          "label": "drawWorldFrame",
+          "duration": 231.6899999976158
+        },
+        {
+          "label": "world-frame-draw",
+          "duration": 231.70000000298023
+        }
+      ]
+    }
+  ],
+  "applicationAt": 50094.42000000179,
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 854.4350000023842,
+  "tickMs": 1012.4499999880791,
+  "responseMs": 1192,
+  "applyDelayMs": 10.520000010728836,
+  "applyMs": 2.4000000059604645,
+  "projectionBytes": 7163,
+  "snapshotBytes": 54119,
+  "actorsApplied": 21,
+  "actorsChanged": 20,
+  "eventsReceived": 41,
+  "eventTypes": [
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "StructureRuined",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "CropHit",
+    "CropDestroyed",
+    "AnimalLogicalHit",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable",
+    "AnimalTargetUnavailable"
+  ],
+  "localCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 0
+  },
+  "workerCenter": {
+    "status": "ruined",
+    "hp": 0,
+    "collapseRemaining": 3.1780134079895106e-15
+  },
+  "observerCount": 41,
+  "simulationObserverCount": 0,
+  "fenceState": {
+    "received": 1,
+    "nextEvent": 41,
+    "displayed": 1,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false
+  },
+  "frames": {
+    "count": 149,
+    "p95": 33.400000000001455,
+    "p99": 33.44000000000233,
+    "max": 233.2850000000035
+  },
+  "renderMs": {
+    "count": 150,
+    "p95": 32.53999999165535,
+    "p99": 34.810000002384186,
+    "max": 244.70000000298023
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "scope": "One 70-step publication from a Worker-owned clone into a frozen mangrove-islands QA scene after a diagnostic center-damage action. Structure status and HP, actor x/z/heading and events are applied under a diagnostic fence; all events are classified as structural. Scene and simulation have separate native worlds. A snapshot is requested separately for validation. No full collapse transition, physics manager, input, reliable event delivery, collision validation, GPU timing, visual interpolation or production authority is demonstrated."
+}

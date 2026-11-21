@@ -1,0 +1,149 @@
+{
+  "runs": [
+    {
+      "mode": "reference",
+      "candidateCalls": 0,
+      "skippedVertices": 0,
+      "imageHash": 3284376701,
+      "renderMs": {
+        "count": 75,
+        "p50": 37.59499999880791,
+        "p95": 54.61499999463558,
+        "p99": 72.13500000536442,
+        "max": 75.11500000953674
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.34000000000378,
+        "p95": 66.69999999999709,
+        "p99": 66.78499999999622,
+        "max": 99.99000000000524
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 19.460384,
+        "p95": 25.414464,
+        "p99": 27.676864,
+        "max": 30.473664
+      }
+    },
+    {
+      "mode": "skip",
+      "candidateCalls": 1500,
+      "skippedVertices": 515432,
+      "imageHash": 3284376701,
+      "renderMs": {
+        "count": 75,
+        "p50": 34.48499999940395,
+        "p95": 42.75999999046326,
+        "p99": 44.36500000953674,
+        "max": 47.814999997615814
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 66.65499999999884,
+        "p99": 66.71499999999651,
+        "max": 66.73999999999796
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 17.403936,
+        "p95": 23.92944,
+        "p99": 26.923008,
+        "max": 29.386656
+      }
+    },
+    {
+      "mode": "skip",
+      "candidateCalls": 1500,
+      "skippedVertices": 515432,
+      "imageHash": 3284376701,
+      "renderMs": {
+        "count": 75,
+        "p50": 34.46999999880791,
+        "p95": 41.62999999523163,
+        "p99": 42.53000000119209,
+        "max": 47.36500000953674
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 66.62000000000262,
+        "p99": 66.67999999999302,
+        "max": 66.77499999999418
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 16.09408,
+        "p95": 23.634496,
+        "p99": 27.395136,
+        "max": 28.22544
+      }
+    },
+    {
+      "mode": "reference",
+      "candidateCalls": 0,
+      "skippedVertices": 0,
+      "imageHash": 3284376701,
+      "renderMs": {
+        "count": 75,
+        "p50": 35.445000007748604,
+        "p95": 42.554999992251396,
+        "p99": 48.86999998986721,
+        "max": 49.769999995827675
+      },
+      "frameMs": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 66.66500000000087,
+        "p99": 66.77500000000146,
+        "max": 66.80500000000029
+      },
+      "gpuMs": {
+        "count": 75,
+        "p50": 18.081376,
+        "p95": 24.851424,
+        "p99": 25.908576,
+        "max": 26.356576
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "a": 0,
+      "b": 1,
+      "changedPixels": 0,
+      "totalPixels": 921600,
+      "maxChannel": 0,
+      "meanChannelDifference": 0,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "changedPixels": 0,
+      "totalPixels": 921600,
+      "maxChannel": 0,
+      "meanChannelDifference": 0,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "changedPixels": 0,
+      "totalPixels": 921600,
+      "maxChannel": 0,
+      "meanChannelDifference": 0,
+      "changedPoseValues": 0,
+      "maxPoseMatrixDifference": 0
+    }
+  ],
+  "pixelsEqual": true,
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "animals": 20,
+  "sceneErrors": [],
+  "scope": "Single Edge headless mangrove-islands scene with 20 animals replaying identical synthetic walking phases in each block. Research adapter around experimental bounds. No Game.tick, geometry mutation, physics, input or gameplay; not production."
+}

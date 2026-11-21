@@ -1,6 +1,6 @@
 import {SaveRepository,serialize,deserialize} from './snapshots.js';
 import {decodeSnapshotAsync} from './snapshot-decoder.js';
-import {waitGpuPreparation} from '../../tools/experiments/wait-gpu-preparation.js';
+import {waitGpuPreparation} from '../rendering/wait-gpu-preparation.js';
 
 const interrupted=error=>['AbortError','TimeoutError','SnapshotWorkerError'].includes(error?.name);
 
@@ -94,6 +94,21 @@ export class BrowserSaveRepository {
       try{this.legacy.delete(slotId);}catch{/* The committed IndexedDB copy has priority. */}
     });
   }
+  // Run checkpoint validation, backup validation and IndexedDB writes in a
+  // Worker. The queue is shared with regular saves and deletes in this tab.
+  saveWorkerCheckpoint(checkpoint,{slotId,policy,savedAt,timeout=30000,workerFactory=()=>new Worker(new URL('./worker-checkpoint-store.js',import.meta.url),{type:'module'})}={}){
+    if(!this.database||typeof slotId!=='string'||!slotId||!policy||typeof workerFactory!=='function'||!Number.isFinite(timeout)||timeout<=0)return Promise.reject(TypeError('Invalid worker checkpoint persistence'));
+    return this.enqueue(async()=>{
+      const key=this.legacy.key(slotId);let legacyPrimary=null,legacyBackup=null;try{legacyPrimary=this.legacy.storage.getItem(key);legacyBackup=this.legacy.storage.getItem(key+':backup');}catch{/* IndexedDB remains usable if legacy storage is unavailable. */}
+      const {sequence,saveAvailable,snapshot,physicsCheckpoint,raidWaitBindings,nativeAuthorityCheckpoint}=checkpoint??{};
+      const result=await new Promise((resolve,reject)=>{
+        let worker,timer,settled=false;const finish=(failure,value)=>{if(settled)return;settled=true;clearTimeout(timer);if(worker){worker.onmessage=worker.onerror=worker.onmessageerror=null;try{worker.terminate();}catch(error){failure??=error;}}failure?reject(failure):resolve(value);};
+        try{worker=workerFactory();worker.onmessage=({data})=>{const value=data?.result;if(data?.kind==='error')return finish(Error(data.message||'Worker checkpoint failed'));if(data?.kind!=='result'||typeof value?.saved!=='boolean'||value.sequence!==sequence||value.saved&&(!Number.isFinite(value.elapsed)||value.elapsed<0)||!value.saved&&value.reason!=='physics-active')return finish(Error('Invalid worker checkpoint response'));finish(null,value);};worker.onerror=event=>{event.preventDefault?.();finish(Error(event.message||'Worker checkpoint failed'));};worker.onmessageerror=()=>finish(Error('Worker checkpoint transfer failed'));timer=setTimeout(()=>finish(new DOMException('El guardado no ha respondido a tiempo.','TimeoutError')),timeout);worker.postMessage({kind:'save',databaseName:this.name,slotId,policy,savedAt,checkpoint:{sequence,saveAvailable,snapshot,physicsCheckpoint,raidWaitBindings,nativeAuthorityCheckpoint},legacyPrimary,legacyBackup});}catch(error){finish(error);}
+      });
+      if(result.saved){this.lastCommitted=null;try{this.legacy.delete(slotId);}catch{/* IndexedDB already committed. */}}
+      return result;
+    });
+  }
   async load(slotId) {
     if(!this.database)return this.legacy.load(slotId);
     const record=await this.records(slotId);
@@ -101,8 +116,9 @@ export class BrowserSaveRepository {
   }
   // Loading-screen path. Ordinary save/list/load contracts stay synchronous at
   // their validation points; this explicitly moves loading validation off-thread.
-  async loadPrepared(slotId,{signal,decode=decodeSnapshotAsync,timeout=30000,onDiagnostic=()=>{}}={}) {
+  async loadPrepared(slotId,{signal,decode=decodeSnapshotAsync,timeout=30000,onDiagnostic=()=>{},withSource=false}={}) {
     if(!Number.isFinite(timeout)||timeout<=0)throw new RangeError('Invalid snapshot loading timeout');
+    if(typeof withSource!=='boolean')throw TypeError('Invalid snapshot source option');
     const owner=new AbortController(),abort=()=>owner.abort(signal?.reason?.name==='TimeoutError'?signal.reason:new DOMException('Snapshot loading cancelled','AbortError'));
     signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
     const started=performance.now(),check=()=>{
@@ -121,7 +137,9 @@ export class BrowserSaveRepository {
         try{
           const state=await awaitOwned(decode(text,{signal:owner.signal,timeout:Math.max(1,timeout-(performance.now()-started)),onDiagnostic}));check();
           if(state.slotId!==slotId)throw Error('La partida guardada pertenece a otra ranura.');
-          return state;
+          // Keep the exact copy that passed validation, including a recovered
+          // backup. The Worker can consume it without reserializing in the UI.
+          return withSource?{state,source:text}:state;
         }catch(error){if(interrupted(error))throw error;failure=error;}
       }
       throw failure;

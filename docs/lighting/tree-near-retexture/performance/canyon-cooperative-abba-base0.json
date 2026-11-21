@@ -1,0 +1,469 @@
+{
+  "scope": "Saved canyon raid using production WASM; discrete end-of-tick body overlaps under current participation rules, not continuous swept-collision proof. Timings measure instrumented updateRaid only in Node, excluding rendering, GPU, collision audit and setup.",
+  "phaseDisabled": false,
+  "coordination": false,
+  "authority": "spatial-wasm",
+  "intentPlanner": false,
+  "steps": 1298,
+  "completed": true,
+  "animals": 10,
+  "initialOverlapSamples": 0,
+  "overlapSamples": 104,
+  "phasedSamples": 103,
+  "distinctPairs": 9,
+  "maxPenetration": 2.030283754178538,
+  "staticViolations": 0,
+  "recoveries": 8,
+  "coordinations": 0,
+  "coordinationExamples": [],
+  "recoveryExamples": [
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3054",
+      "status": "walking",
+      "elapsed": 6325.700000004935,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 0,
+      "blockingIds": [
+        "animal-3059"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3055",
+      "status": "retreating",
+      "elapsed": 6325.700000004935,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 0,
+      "blockingIds": [
+        "animal-3053"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3056",
+      "status": "walking",
+      "elapsed": 6325.700000004935,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 0,
+      "blockingIds": [
+        "animal-3053"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3058",
+      "status": "walking",
+      "elapsed": 6325.700000004935,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 0,
+      "blockingIds": [
+        "animal-3054"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3059",
+      "status": "walking",
+      "elapsed": 6340.100000004987,
+      "trigger": "destination-stall",
+      "stationarySeconds": 0,
+      "destinationStallSeconds": 14.400000000052387,
+      "blockingIds": [
+        "animal-3058"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3056",
+      "status": "retreating",
+      "elapsed": 6366.400000005083,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 5.300000000019281,
+      "blockingIds": [
+        "animal-3058"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3058",
+      "status": "walking",
+      "elapsed": 6367.300000005086,
+      "trigger": "stationary",
+      "stationarySeconds": 3,
+      "destinationStallSeconds": 0,
+      "blockingIds": [
+        "animal-3056"
+      ]
+    },
+    {
+      "kind": "mobileCollisionRecovery",
+      "actorId": "animal-3059",
+      "status": "walking",
+      "elapsed": 6373.90000000511,
+      "trigger": "destination-stall",
+      "stationarySeconds": 0,
+      "destinationStallSeconds": 12.90000000004693,
+      "blockingIds": [
+        "animal-3057"
+      ]
+    }
+  ],
+  "eventCounts": {
+    "ActorMobileCollisionRecovery": 8,
+    "AnimalRouteUnavailable": 20,
+    "CropHit": 15,
+    "CropDestroyed": 15,
+    "AnimalLogicalHit": 15,
+    "AnimalRetreating": 6,
+    "RaidEnded": 1
+  },
+  "importantEvents": [
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2846",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2852",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2936",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2855",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2964",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2898",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-3004",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2989",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-3007",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2557",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2921",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2773",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2570",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2515",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2977",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "RaidEnded",
+      "targetId": null,
+      "actorId": null,
+      "species": null,
+      "reason": null
+    }
+  ],
+  "stateHash": "9bbddc35fbc48f749b99582f1c73e26e5247e5f28dcb3ff12dc94016674a2602",
+  "cpu": {
+    "mean": 0.40734730354391224,
+    "p95": 1.397899999999936,
+    "p99": 2.5257000000001426,
+    "max": 25.506200000000035
+  },
+  "samples": [
+    {
+      "step": 1,
+      "time": 0,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.01525055236755879,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 2,
+      "time": 0.1,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 0.25331535027510466,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 2,
+      "time": 0.1,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.07934005645029973,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 2,
+      "time": 0.1,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.023541626000731952,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 3,
+      "time": 0.2,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 0.5676317363102643,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 3,
+      "time": 0.2,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.21035816159727827,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 3,
+      "time": 0.2,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.002696428676482565,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 4,
+      "time": 0.30000000000000004,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 0.847790263632024,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 4,
+      "time": 0.30000000000000004,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.3385084759610357,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 4,
+      "time": 0.30000000000000004,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.10566323637393493,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 5,
+      "time": 0.4,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 1.068135964898936,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 5,
+      "time": 0.4,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.4631560971073856,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 5,
+      "time": 0.4,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.17432626219448544,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 5,
+      "time": 0.4,
+      "kind": "animal-animal",
+      "a": "animal-3055",
+      "b": "animal-3056",
+      "depth": 0.24971624582145768,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 6,
+      "time": 0.5,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 1.1887823098945614,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 6,
+      "time": 0.5,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.58349055308619,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 6,
+      "time": 0.5,
+      "kind": "animal-animal",
+      "a": "animal-3054",
+      "b": "animal-3058",
+      "depth": 0.1998845771820501,
+      "phased": true,
+      "aStatus": "walking",
+      "bStatus": "walking"
+    },
+    {
+      "step": 6,
+      "time": 0.5,
+      "kind": "animal-animal",
+      "a": "animal-3055",
+      "b": "animal-3056",
+      "depth": 0.7797162458214588,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    },
+    {
+      "step": 7,
+      "time": 0.6,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3055",
+      "depth": 1.173936532367954,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "retreating"
+    },
+    {
+      "step": 7,
+      "time": 0.6,
+      "kind": "animal-animal",
+      "a": "animal-3053",
+      "b": "animal-3056",
+      "depth": 0.6984744954187647,
+      "phased": true,
+      "aStatus": "retreating",
+      "bStatus": "walking"
+    }
+  ]
+}

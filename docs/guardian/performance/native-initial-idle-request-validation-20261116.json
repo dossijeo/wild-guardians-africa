@@ -1,0 +1,185 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "1b462fd08",
+  "scope": "Current native semantic request for a task-free initial Idle, on the existing ActiveIntent and body registry. It retains uninitialized/rest/watch data and supports pending TaskStart preemption; it does not execute the full Idle/Alert/ambient-walk policy, authorize a route or advertise graphical admission. Game projection, stationary admission, renderer and ordinary producer remain pending.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L482-L635",
+      "read": [
+        "addAgent: active pooled agent with target NONE and zero initial velocity",
+        "removeAgent/getActiveAgents: participation remains in the existing record"
+      ],
+      "decision": "Separate physical participation and executable goals. Use the existing ActiveIntent/body association; preserve exact position rather than importing nearest-navmesh snapping. No fabricated zero route, previous Carry or settlement and no new controller/registry/dependency."
+    },
+    {
+      "source": [
+        "src/simulation/idle.js",
+        "src/simulation/game.js:idleFarmAnchor",
+        "src/rendering/worker-actions.js:workerPose",
+        "src/rendering/baked-worker-walk-catalog.js"
+      ],
+      "read": [
+        "private persisted xorshift32 stream with FNV seed",
+        "rest/watch/ambient-walk policy and leash/local-avoidance rules",
+        "Idle and Alert use idleState.elapsed; ambient walking uses accumulated Walk phase",
+        "existing original Idle/Alert clip banks"
+      ],
+      "decision": "Keep semantic profile, phase, remaining time, RNG, anchor and approach retry. Do not claim the policy migrated before its native execution and original clips are integrated."
+    }
+  ],
+  "nativeBuild": {
+    "standalone": "passed",
+    "threaded": "passed",
+    "log": ".cache/native-initial-idle-request-first-build.log",
+    "command": "$env:PYTHONUTF8='1'; .cache/emsdk/python/3.13.3_64bit/python.exe .cache/build-native-gate-presentation.py",
+    "sourceAndBinaryHashes": {
+      "src/world/wild-engine/spatial-intent-state.cpp": "f33e76a762e8c8c186d4f39c3e77bb1a46b5527561a2455a33110d6497d25639",
+      "src/world/wild-engine/spatial-gate-api.inc": "59c12369f3a8d9b328ae2eb53c02a9d3c3dfcb76664287bbb5d0ccec4095244c",
+      "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "d940aba37501af48f7d52e7986b5e5025bd8003f61714fd717a6418374adcfe5",
+      "tools/build-spatial-savanna-wasm.sh": "0f9cc40618d026b104fa53f44a649837700dfdc32d1374ed6e59512e61fc6cda",
+      "src/world/wild-engine/spatial-savanna.wasm": "bc3d3457d71912636005b72d17bc443209ea641c40d6c4fd22bb006464b6ecd7",
+      "public/wild-engine/spatial-threaded.wasm": "2b92a1064ce00579536c7c9e426a102f877ce9bb4e72e9e8630e75f401332b0e",
+      "public/wild-engine/spatial-threaded.mjs": "175671b891b3430e1fda7a2da6e162f24d9db24299198fd4fc799ac45282548e"
+    },
+    "exports": [
+      "nav_initial_idle_request_version",
+      "nav_intent_request_initial_idle",
+      "nav_initial_idle_request_snapshot",
+      "nav_initial_idle_request_ptr",
+      "nav_initial_idle_requests_snapshot",
+      "nav_initial_idle_requests_ptr"
+    ]
+  },
+  "requestSnapshot": {
+    "version": 1,
+    "width": 25,
+    "fields": [
+      "version",
+      "actor",
+      "nativeSession",
+      "requestSequence",
+      "requestedAt",
+      "center",
+      "body",
+      "navigationProfile",
+      "bodyFlags",
+      "x",
+      "z",
+      "yaw",
+      "radius",
+      "runPhase",
+      "walkPhase",
+      "carryPhase",
+      "runRemaining",
+      "workerProfileIndex",
+      "idleMode",
+      "idleElapsed",
+      "idleRemaining",
+      "rng",
+      "anchorKind",
+      "anchorId",
+      "approachRetry"
+    ],
+    "modeCodes": {
+      "0": "uninitialized semantic state",
+      "1": "rest",
+      "2": "watch"
+    },
+    "anchorCodes": {
+      "0": "none for uninitialized state",
+      "1": "farm-plant",
+      "2": "farm-structure",
+      "3": "village"
+    },
+    "permission": "No route, settlement or graphical authorization."
+  },
+  "regression": {
+    "files": 68,
+    "tests": 732,
+    "passed": 732,
+    "failed": 0,
+    "skipped": 0,
+    "newCases": 15,
+    "durationMs": 408107.7355,
+    "log": ".cache/native-initial-idle-request-regression-final.log",
+    "fileList": ".cache/native-initial-idle-request-regression-files.json",
+    "coverage": [
+      "null/rest/watch with exact semantic values and no fabricated preceding owner",
+      "all four original worker profiles and private RNG data",
+      "actual legacy rest-to-watch phase before source declaration",
+      "unbound declaration publishes no usable reference; exact first binding establishes new birth",
+      "invalid pose/flags/radius/rebind rejected; body fence, removal/reset and no Home inactivity",
+      "standalone/pthread real TaskStart peer advances while the new source stays held",
+      "another prepared TaskStart remains revalidatable after the new causal watermark",
+      "unprepared legacy task commit rejects before assignment; real pending-resource task preempts without body movement",
+      "existing Home restoration/admission/body binding, native motions and legacy Idle regression"
+    ],
+    "limits": "Selected regression, not a claim that all repository tests are green. Full native Idle execution and hardware admission are not implemented by this request component."
+  },
+  "productBuild": {
+    "status": "passed",
+    "durationSeconds": 45.64,
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "log": ".cache/native-initial-idle-request-product-build.log",
+    "warnings": "Existing import and large-chunk warnings."
+  },
+  "preservation": {
+    "checkedAfterProductBuild": true,
+    "unchangedOriginalPathCount": 16,
+    "paths": [
+      "docs/guardian/gpu-animation/eyelid-shadow-animal-buffalo-settled/openOriginal.png",
+      "docs/guardian/webgpu-stable-raid-qa.md",
+      "docs/lighting/tree-near-retexture/performance/mobility-guarded-world-stop.json",
+      "src/rendering/character-preload.js",
+      "src/rendering/destruction-effects-native.js",
+      "src/rendering/destruction-native.js",
+      "src/rendering/scene.js",
+      "src/simulation/worker-game-runtime.js",
+      "tests/browser/mobility-worker-latency.js",
+      "tests/character-preload.test.js",
+      "tests/historical-event-boundaries.test.js",
+      "tests/worker-game-runtime.test.js",
+      "tools/experiments/audit-character-primer-coverage.mjs",
+      "tools/experiments/audit_worker_attack_gl.mjs",
+      "tools/guardian/audit_pending_worker_game_wall.mjs",
+      "public/wild-engine/spatial-threaded.worker.mjs"
+    ]
+  },
+  "hardware": {
+    "tested": false,
+    "reason": "This source-only class has no graphical admission yet; repeating previous hardware scenarios would not validate it."
+  },
+  "developmentFailures": [
+    {
+      "log": ".cache/native-initial-idle-request-first-test.log",
+      "passed": 0,
+      "failed": 9,
+      "cause": "New fixtures and DTO used a guessed farm-center prefix; actual center identifiers are farm-structure. One new assertion also expected 0 instead of the existing -1 no-route code."
+    },
+    {
+      "log": ".cache/native-initial-idle-request-directed-final.log",
+      "passed": 13,
+      "failed": 1,
+      "cause": "The direct-ABI fixture had not committed the new intent watermark before attempting another candidate revalidation."
+    },
+    {
+      "log": ".cache/native-initial-idle-request-directed-second.log",
+      "passed": 14,
+      "failed": 0,
+      "note": "The actual legacy phase case was added afterward and is covered by the final 732-case run."
+    }
+  ],
+  "open": [
+    "Game source declaration/loading and pending Idle projection",
+    "common prepared initial stationary admission and original GPU consumer",
+    "task/Home/cancellation/restoration transitions including before initial READY",
+    "native rest/watch/ambient-walk policy and moving Idle preemption with original RNG/rules",
+    "other intention finals and gates",
+    "ordinary producer",
+    "live-world replacement",
+    "full healthy3123 incremental recovery",
+    "remaining A/B/C acceptance before D"
+  ],
+  "closureChanges": []
+}

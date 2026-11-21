@@ -1,0 +1,3805 @@
+{
+  "schema": 1,
+  "fixture": "tests/fixtures/sabana712-d6-native-multi-reservation.json.gz",
+  "scope": "Normal Edge, GTX 1660, WebGPU; diagnostic wall timings, not GPU execution times. Audit excluded from timing comparison.",
+  "audit": {
+    "valid": true,
+    "headless": false,
+    "device": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "samples": [
+      {
+        "materials": 94,
+        "builds": 452,
+        "hits": 42080,
+        "fallbacks": 110,
+        "discoveries": 547
+      },
+      {
+        "materials": 97,
+        "builds": 502,
+        "hits": 60122,
+        "fallbacks": 111,
+        "discoveries": 596
+      },
+      {
+        "materials": 103,
+        "builds": 544,
+        "hits": 78208,
+        "fallbacks": 111,
+        "discoveries": 629
+      }
+    ]
+  },
+  "runs": [
+    {
+      "id": "a1",
+      "baseline": true,
+      "headless": false,
+      "valid": true,
+      "hardware": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "backend": "WebGPU",
+      "readyMs": 26106.4047,
+      "requestedWindowMs": 10000,
+      "actualWindowMs": 10569.458999999995,
+      "pausedElapsed": 3429.9999999975803,
+      "pausedScreenshotState": {
+        "sequence": 78,
+        "lastElapsed": 3429.9999999975803,
+        "resident": 25
+      },
+      "mainThreadRaf": {
+        "count": 315,
+        "mean": 33.545206349206346,
+        "p95": 33.375,
+        "p99": 33.3949999999968,
+        "max": 100.02999999999884
+      },
+      "renderCallMs": {
+        "count": 106,
+        "mean": 43.195518867868294,
+        "p95": 53.625,
+        "p99": 64.73499999940395,
+        "max": 93.76500000059605
+      },
+      "timelinePumpMs": {
+        "count": 106,
+        "mean": 22.611273584641374,
+        "p95": 50.25,
+        "p99": 61.75,
+        "max": 66.31000000238419
+      },
+      "workerDrawIntervalsMs": {
+        "count": 105,
+        "mean": 94.04438244047618,
+        "p95": 148.710205078125,
+        "p99": 197.64501953125,
+        "max": 392.655029296875
+      },
+      "samples": [
+        {
+          "atMs": 55.227899999998044,
+          "inspectionMs": 55.026700000002165,
+          "simLag": 0,
+          "sequenceLag": 0,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 79,
+            "decode": {
+              "mean": 1.3099999997434737,
+              "p95": 5.254999995231628,
+              "max": 11.005000002682209
+            },
+            "reconcile": {
+              "mean": 5.65962025296839,
+              "p95": 10.050000004470348,
+              "max": 24.285000003874302
+            },
+            "hooks": {
+              "mean": 1.4412658228715765,
+              "p95": 2.2100000008940697,
+              "max": 21.37000000476837
+            },
+            "total": {
+              "mean": 8.41088607558344,
+              "p95": 17.799999997019768,
+              "max": 51.645000003278255
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 5092.427599999995,
+          "inspectionMs": 89.39689999999973,
+          "simLag": 3.550000000012915,
+          "sequenceLag": 49,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 118,
+            "decode": {
+              "mean": 1.2723728812347024,
+              "p95": 4.759999997913837,
+              "max": 11.005000002682209
+            },
+            "reconcile": {
+              "mean": 4.998093219947512,
+              "p95": 9.369999997317791,
+              "max": 24.285000003874302
+            },
+            "hooks": {
+              "mean": 1.7216101697314594,
+              "p95": 4.625,
+              "max": 21.37000000476837
+            },
+            "total": {
+              "mean": 7.992076270913674,
+              "p95": 15.550000004470348,
+              "max": 51.645000003278255
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 10278.1316,
+          "inspectionMs": 265.71250000000146,
+          "simLag": 5.950000000021646,
+          "sequenceLag": 95,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 154,
+            "decode": {
+              "mean": 1.1764285713918023,
+              "p95": 4.685000002384186,
+              "max": 11.005000002682209
+            },
+            "reconcile": {
+              "mean": 4.8723376622157435,
+              "p95": 9.314999997615814,
+              "max": 24.285000003874302
+            },
+            "hooks": {
+              "mean": 2.319902597551609,
+              "p95": 6.16499999910593,
+              "max": 21.37000000476837
+            },
+            "total": {
+              "mean": 8.368668831159155,
+              "p95": 15.550000004470348,
+              "max": 51.645000003278255
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        }
+      ],
+      "measuredWorkerDrawSamples": [
+        {
+          "at": 1794129372865.5698,
+          "pumpMs": 0.015000000596046448,
+          "renderMs": 45.08500000089407,
+          "totalMs": 45.100000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129372916.77,
+          "pumpMs": 28.890000000596046,
+          "renderMs": 34.685000002384186,
+          "totalMs": 63.57500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129372982.415,
+          "pumpMs": 0.8599999994039536,
+          "renderMs": 41.32999999821186,
+          "totalMs": 42.189999997615814,
+          "rendered": true
+        },
+        {
+          "at": 1794129373055.0898,
+          "pumpMs": 10.625,
+          "renderMs": 39.230000004172325,
+          "totalMs": 49.855000004172325,
+          "rendered": true
+        },
+        {
+          "at": 1794129373110.69,
+          "pumpMs": 7.5150000005960464,
+          "renderMs": 34.83500000089407,
+          "totalMs": 42.350000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129373354.6199,
+          "pumpMs": 49.41499999910593,
+          "renderMs": 64.73499999940395,
+          "totalMs": 114.14999999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129373478.065,
+          "pumpMs": 1.4750000014901161,
+          "renderMs": 46.49499999731779,
+          "totalMs": 47.96999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129373532.2249,
+          "pumpMs": 14.989999994635582,
+          "renderMs": 35.85999999940395,
+          "totalMs": 50.849999994039536,
+          "rendered": true
+        },
+        {
+          "at": 1794129373664.4548,
+          "pumpMs": 0.9050000011920929,
+          "renderMs": 53.625,
+          "totalMs": 54.53000000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129373727.085,
+          "pumpMs": 47.79499999433756,
+          "renderMs": 39.75,
+          "totalMs": 87.54499999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129373825.65,
+          "pumpMs": 8.725000001490116,
+          "renderMs": 41.03499999642372,
+          "totalMs": 49.75999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129373907.67,
+          "pumpMs": 27.91999999433756,
+          "renderMs": 51,
+          "totalMs": 78.91999999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129373991.76,
+          "pumpMs": 8.67000000178814,
+          "renderMs": 34.07000000029802,
+          "totalMs": 42.74000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129374116.25,
+          "pumpMs": 0.3799999952316284,
+          "renderMs": 48.2850000038743,
+          "totalMs": 48.66499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129374166.8599,
+          "pumpMs": 25.615000002086163,
+          "renderMs": 38.36499999463558,
+          "totalMs": 63.979999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129374231.76,
+          "pumpMs": 0.30000000447034836,
+          "renderMs": 35.07499999552965,
+          "totalMs": 35.375,
+          "rendered": true
+        },
+        {
+          "at": 1794129374325.4248,
+          "pumpMs": 61.75,
+          "renderMs": 75.99500000476837,
+          "totalMs": 137.74500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129374474.135,
+          "pumpMs": 38.54500000178814,
+          "renderMs": 36.979999996721745,
+          "totalMs": 75.52499999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129374638.94,
+          "pumpMs": 1.0099999979138374,
+          "renderMs": 93.76500000059605,
+          "totalMs": 94.77499999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129374741.9849,
+          "pumpMs": 32.689999997615814,
+          "renderMs": 39.78999999910593,
+          "totalMs": 72.47999999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129375134.64,
+          "pumpMs": 13.975000001490116,
+          "renderMs": 55.55499999970198,
+          "totalMs": 69.5300000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129375206.315,
+          "pumpMs": 8.700000002980232,
+          "renderMs": 38.32499999552965,
+          "totalMs": 47.024999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129375337.795,
+          "pumpMs": 11.195000000298023,
+          "renderMs": 60.77999999374151,
+          "totalMs": 71.97499999403954,
+          "rendered": true
+        },
+        {
+          "at": 1794129375413.895,
+          "pumpMs": 0.4299999997019768,
+          "renderMs": 39.25500000268221,
+          "totalMs": 39.685000002384186,
+          "rendered": true
+        },
+        {
+          "at": 1794129375465.5498,
+          "pumpMs": 38.649999998509884,
+          "renderMs": 46.46500000357628,
+          "totalMs": 85.11500000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129375557.795,
+          "pumpMs": 0.7650000005960464,
+          "renderMs": 44.434999994933605,
+          "totalMs": 45.19999999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129375605.875,
+          "pumpMs": 19.83500000089407,
+          "renderMs": 39.644999995827675,
+          "totalMs": 59.479999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129375670.385,
+          "pumpMs": 31.61999999731779,
+          "renderMs": 47.855000004172325,
+          "totalMs": 79.47500000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129375809.4348,
+          "pumpMs": 0.369999997317791,
+          "renderMs": 43.524999998509884,
+          "totalMs": 43.894999995827675,
+          "rendered": true
+        },
+        {
+          "at": 1794129375854.78,
+          "pumpMs": 34.80499999970198,
+          "renderMs": 42.149999998509884,
+          "totalMs": 76.95499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129375942.39,
+          "pumpMs": 0.7049999982118607,
+          "renderMs": 42.810000002384186,
+          "totalMs": 43.51500000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129376049.97,
+          "pumpMs": 12.700000002980232,
+          "renderMs": 46.16499999910593,
+          "totalMs": 58.86500000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129376110.785,
+          "pumpMs": 44.10999999940395,
+          "renderMs": 41.78000000119209,
+          "totalMs": 85.89000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129376201.4849,
+          "pumpMs": 0.5850000008940697,
+          "renderMs": 43.08500000089407,
+          "totalMs": 43.67000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129376249.24,
+          "pumpMs": 7.909999996423721,
+          "renderMs": 37.57000000029802,
+          "totalMs": 45.479999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129376344.4,
+          "pumpMs": 35.00999999791384,
+          "renderMs": 47.83000000566244,
+          "totalMs": 82.84000000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129376427.8298,
+          "pumpMs": 0.7250000014901161,
+          "renderMs": 44.774999998509884,
+          "totalMs": 45.5,
+          "rendered": true
+        },
+        {
+          "at": 1794129376478.16,
+          "pumpMs": 17.594999998807907,
+          "renderMs": 42.95500000566244,
+          "totalMs": 60.55000000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129376588.5698,
+          "pumpMs": 7.534999996423721,
+          "renderMs": 49.7850000038743,
+          "totalMs": 57.32000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129376649.285,
+          "pumpMs": 7.5,
+          "renderMs": 37.525000005960464,
+          "totalMs": 45.025000005960464,
+          "rendered": true
+        },
+        {
+          "at": 1794129376698.88,
+          "pumpMs": 8.75,
+          "renderMs": 44.71000000089407,
+          "totalMs": 53.46000000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129376752.885,
+          "pumpMs": 29.634999997913837,
+          "renderMs": 41.17999999970198,
+          "totalMs": 70.81499999761581,
+          "rendered": true
+        },
+        {
+          "at": 1794129376874.6948,
+          "pumpMs": 13.469999998807907,
+          "renderMs": 41.7149999961257,
+          "totalMs": 55.184999994933605,
+          "rendered": true
+        },
+        {
+          "at": 1794129376931.75,
+          "pumpMs": 38.03000000119209,
+          "renderMs": 38.46000000089407,
+          "totalMs": 76.49000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129377010.38,
+          "pumpMs": 0.38500000536441803,
+          "renderMs": 43.23999999463558,
+          "totalMs": 43.625,
+          "rendered": true
+        },
+        {
+          "at": 1794129377065.6848,
+          "pumpMs": 44.49499999731779,
+          "renderMs": 41.350000001490116,
+          "totalMs": 85.8449999988079,
+          "rendered": true
+        },
+        {
+          "at": 1794129377206.165,
+          "pumpMs": 27.38000000268221,
+          "renderMs": 46.78999999910593,
+          "totalMs": 74.17000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129377306.2,
+          "pumpMs": 0.5950000062584877,
+          "renderMs": 43.10999999940395,
+          "totalMs": 43.70500000566244,
+          "rendered": true
+        },
+        {
+          "at": 1794129377351.8599,
+          "pumpMs": 37.17000000178814,
+          "renderMs": 40.399999998509884,
+          "totalMs": 77.57000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129377484.78,
+          "pumpMs": 22.854999996721745,
+          "renderMs": 38.730000004172325,
+          "totalMs": 61.58500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129377550.2148,
+          "pumpMs": 31.71000000089407,
+          "renderMs": 39.024999998509884,
+          "totalMs": 70.73499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129377625.8298,
+          "pumpMs": 9.520000003278255,
+          "renderMs": 43.0899999961257,
+          "totalMs": 52.60999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129377725.6748,
+          "pumpMs": 34.84499999880791,
+          "renderMs": 44.605000004172325,
+          "totalMs": 79.45000000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129377807.04,
+          "pumpMs": 0.6700000017881393,
+          "renderMs": 49.44500000029802,
+          "totalMs": 50.11500000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129377865.5498,
+          "pumpMs": 18.5,
+          "renderMs": 48.850000001490116,
+          "totalMs": 67.35000000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129377989.04,
+          "pumpMs": 66.31000000238419,
+          "renderMs": 37.17499999701977,
+          "totalMs": 103.48499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129378094.4448,
+          "pumpMs": 47.689999997615814,
+          "renderMs": 45.600000001490116,
+          "totalMs": 93.28999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129378194.02,
+          "pumpMs": 41.24500000476837,
+          "renderMs": 46.0899999961257,
+          "totalMs": 87.33500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129378332.105,
+          "pumpMs": 21.109999999403954,
+          "renderMs": 43.25,
+          "totalMs": 64.35999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129378397.8398,
+          "pumpMs": 0.5549999997019768,
+          "renderMs": 38.69500000029802,
+          "totalMs": 39.25,
+          "rendered": true
+        },
+        {
+          "at": 1794129378441.815,
+          "pumpMs": 11.390000000596046,
+          "renderMs": 36.44500000029802,
+          "totalMs": 47.83500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129378539.9749,
+          "pumpMs": 12.46000000089407,
+          "renderMs": 45.269999995827675,
+          "totalMs": 57.729999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129378598.3098,
+          "pumpMs": 29.214999996125698,
+          "renderMs": 43.185000002384186,
+          "totalMs": 72.39999999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129378672.5999,
+          "pumpMs": 0.6549999937415123,
+          "renderMs": 46.975000001490116,
+          "totalMs": 47.62999999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129378732.2349,
+          "pumpMs": 24.144999995827675,
+          "renderMs": 38.645000003278255,
+          "totalMs": 62.78999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129378853.9348,
+          "pumpMs": 56.189999997615814,
+          "renderMs": 36.41499999910593,
+          "totalMs": 92.60499999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129378952.45,
+          "pumpMs": 47.45500000566244,
+          "renderMs": 35.74499999731779,
+          "totalMs": 83.20000000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129379085.67,
+          "pumpMs": 46.25,
+          "renderMs": 36.83499999344349,
+          "totalMs": 83.08499999344349,
+          "rendered": true
+        },
+        {
+          "at": 1794129379171.0698,
+          "pumpMs": 8.945000000298023,
+          "renderMs": 41.03000000119209,
+          "totalMs": 49.975000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129379232.29,
+          "pumpMs": 34.24499999731779,
+          "renderMs": 39.75,
+          "totalMs": 73.99499999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129379363.4849,
+          "pumpMs": 22.839999996125698,
+          "renderMs": 43.30499999970198,
+          "totalMs": 66.14499999582767,
+          "rendered": true
+        },
+        {
+          "at": 1794129379430.545,
+          "pumpMs": 31.429999999701977,
+          "renderMs": 37.125,
+          "totalMs": 68.55499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129379628.19,
+          "pumpMs": 12.130000002682209,
+          "renderMs": 35.684999994933605,
+          "totalMs": 47.814999997615814,
+          "rendered": true
+        },
+        {
+          "at": 1794129379681.115,
+          "pumpMs": 57.184999994933605,
+          "renderMs": 54.74000000208616,
+          "totalMs": 111.92499999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129379854.54,
+          "pumpMs": 34.604999996721745,
+          "renderMs": 37.04000000655651,
+          "totalMs": 71.64500000327826,
+          "rendered": true
+        },
+        {
+          "at": 1794129379978.9248,
+          "pumpMs": 41.310000002384186,
+          "renderMs": 40.25999999791384,
+          "totalMs": 81.57000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129380076.3198,
+          "pumpMs": 1.1000000014901161,
+          "renderMs": 47.394999995827675,
+          "totalMs": 48.49499999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129380125.315,
+          "pumpMs": 16.075000002980232,
+          "renderMs": 39.60999999940395,
+          "totalMs": 55.685000002384186,
+          "rendered": true
+        },
+        {
+          "at": 1794129380232.6848,
+          "pumpMs": 64.09999999403954,
+          "renderMs": 42.020000003278255,
+          "totalMs": 106.11999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129380341.16,
+          "pumpMs": 39.75,
+          "renderMs": 39.525000005960464,
+          "totalMs": 79.27500000596046,
+          "rendered": true
+        },
+        {
+          "at": 1794129380478.115,
+          "pumpMs": 17.424999997019768,
+          "renderMs": 52.73499999940395,
+          "totalMs": 70.15999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129380549.88,
+          "pumpMs": 13.005000002682209,
+          "renderMs": 36.50500000268221,
+          "totalMs": 49.51000000536442,
+          "rendered": true
+        },
+        {
+          "at": 1794129380604.65,
+          "pumpMs": 7.7299999967217445,
+          "renderMs": 38.94500000029802,
+          "totalMs": 46.67499999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129380653.575,
+          "pumpMs": 30.16500000655651,
+          "renderMs": 46.684999994933605,
+          "totalMs": 76.85000000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129380796.5,
+          "pumpMs": 21.530000001192093,
+          "renderMs": 36.899999998509884,
+          "totalMs": 58.42999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129380858.5598,
+          "pumpMs": 56.63499999791384,
+          "renderMs": 45.03000000119209,
+          "totalMs": 101.66499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129381019.4949,
+          "pumpMs": 47.0350000038743,
+          "renderMs": 38.519999995827675,
+          "totalMs": 85.55499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129381107.7,
+          "pumpMs": 40.67000000178814,
+          "renderMs": 41.09499999880791,
+          "totalMs": 81.76500000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129381249.02,
+          "pumpMs": 50.25,
+          "renderMs": 37.84000000357628,
+          "totalMs": 88.09000000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129381339.0698,
+          "pumpMs": 36.11999999731779,
+          "renderMs": 36.11500000208616,
+          "totalMs": 72.23499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129381463.43,
+          "pumpMs": 8.58500000089407,
+          "renderMs": 42.28499999642372,
+          "totalMs": 50.86999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129381515.02,
+          "pumpMs": 31.445000000298023,
+          "renderMs": 39.82500000298023,
+          "totalMs": 71.27000000327826,
+          "rendered": true
+        },
+        {
+          "at": 1794129381593.6099,
+          "pumpMs": 0.6649999991059303,
+          "renderMs": 41.67499999701977,
+          "totalMs": 42.3399999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129381636.74,
+          "pumpMs": 0.6349999979138374,
+          "renderMs": 38.28499999642372,
+          "totalMs": 38.91999999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129381722.45,
+          "pumpMs": 16.29500000178814,
+          "renderMs": 40.190000005066395,
+          "totalMs": 56.485000006854534,
+          "rendered": true
+        },
+        {
+          "at": 1794129381839.7349,
+          "pumpMs": 38.269999995827675,
+          "renderMs": 42.20500000566244,
+          "totalMs": 80.47500000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129381927.3699,
+          "pumpMs": 47.53999999910593,
+          "renderMs": 41.49000000208616,
+          "totalMs": 89.0300000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129382066.21,
+          "pumpMs": 48.11999999731779,
+          "renderMs": 46.25,
+          "totalMs": 94.36999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129382162.8599,
+          "pumpMs": 8.435000002384186,
+          "renderMs": 40.94999999552965,
+          "totalMs": 49.38499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129382261.1848,
+          "pumpMs": 34.65999999642372,
+          "renderMs": 36.78999999910593,
+          "totalMs": 71.44999999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129382335.815,
+          "pumpMs": 22.679999999701977,
+          "renderMs": 42.71000000089407,
+          "totalMs": 65.39000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129382456.0898,
+          "pumpMs": 22.155000001192093,
+          "renderMs": 41.96999999880791,
+          "totalMs": 64.125,
+          "rendered": true
+        },
+        {
+          "at": 1794129382522.2,
+          "pumpMs": 7.670000001788139,
+          "renderMs": 41.42999999970198,
+          "totalMs": 49.100000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129382615.635,
+          "pumpMs": 27.570000000298023,
+          "renderMs": 49.32000000029802,
+          "totalMs": 76.89000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129382693.15,
+          "pumpMs": 0.6349999979138374,
+          "renderMs": 42.83500000089407,
+          "totalMs": 43.46999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129382740.23,
+          "pumpMs": 11.66499999910593,
+          "renderMs": 45.375,
+          "totalMs": 57.03999999910593,
+          "rendered": true
+        }
+      ]
+    },
+    {
+      "id": "b1",
+      "baseline": false,
+      "headless": false,
+      "valid": true,
+      "hardware": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "backend": "WebGPU",
+      "readyMs": 28754.055,
+      "requestedWindowMs": 10000,
+      "actualWindowMs": 10393.4087,
+      "pausedElapsed": 3429.9999999975803,
+      "pausedScreenshotState": {
+        "sequence": 72,
+        "lastElapsed": 3429.9999999975803,
+        "resident": 25
+      },
+      "mainThreadRaf": {
+        "count": 310,
+        "mean": 33.548564516129034,
+        "p95": 33.375,
+        "p99": 33.38500000000204,
+        "max": 99.9800000000032
+      },
+      "renderCallMs": {
+        "count": 108,
+        "mean": 37.71768518516587,
+        "p95": 50.29500000178814,
+        "p99": 53.935000002384186,
+        "max": 69.07000000029802
+      },
+      "timelinePumpMs": {
+        "count": 108,
+        "mean": 23.774490740840083,
+        "p95": 55.33500000089407,
+        "p99": 61.375,
+        "max": 93.19999999552965
+      },
+      "workerDrawIntervalsMs": {
+        "count": 107,
+        "mean": 92.47144923700351,
+        "p95": 156.244873046875,
+        "p99": 211.260009765625,
+        "max": 559.695068359375
+      },
+      "samples": [
+        {
+          "atMs": 132.43710000000283,
+          "inspectionMs": 132.21809999999823,
+          "simLag": 0.1000000000003638,
+          "sequenceLag": 2,
+          "materialKeys": {
+            "materials": 95,
+            "builds": 462,
+            "hits": 54536,
+            "fallbacks": 110,
+            "discoveries": 557
+          },
+          "visualTiming": {
+            "samples": 72,
+            "decode": {
+              "mean": 1.3654166668032606,
+              "p95": 5.320000000298023,
+              "max": 11.269999995827675
+            },
+            "reconcile": {
+              "mean": 5.301180555485189,
+              "p95": 10.67000000178814,
+              "max": 24.820000000298023
+            },
+            "hooks": {
+              "mean": 1.4599305556880102,
+              "p95": 2.4149999991059303,
+              "max": 19.600000001490116
+            },
+            "total": {
+              "mean": 8.12652777797646,
+              "p95": 16.724999994039536,
+              "max": 46.6600000038743
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 5077.197399999997,
+          "inspectionMs": 64.9346000000005,
+          "simLag": 3.500000000012733,
+          "sequenceLag": 51,
+          "materialKeys": {
+            "materials": 105,
+            "builds": 514,
+            "hits": 74866,
+            "fallbacks": 111,
+            "discoveries": 607
+          },
+          "visualTiming": {
+            "samples": 109,
+            "decode": {
+              "mean": 1.4065596334841273,
+              "p95": 5.299999997019768,
+              "max": 11.269999995827675
+            },
+            "reconcile": {
+              "mean": 4.757155963313689,
+              "p95": 9.644999995827675,
+              "max": 24.820000000298023
+            },
+            "hooks": {
+              "mean": 1.8618348624318017,
+              "p95": 4.399999998509884,
+              "max": 19.600000001490116
+            },
+            "total": {
+              "mean": 8.025550459229619,
+              "p95": 16.060000002384186,
+              "max": 46.6600000038743
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 10084.1826,
+          "inspectionMs": 79.09410000000207,
+          "simLag": 5.650000000020555,
+          "sequenceLag": 80,
+          "materialKeys": {
+            "materials": 113,
+            "builds": 567,
+            "hits": 96037,
+            "fallbacks": 111,
+            "discoveries": 648
+          },
+          "visualTiming": {
+            "samples": 146,
+            "decode": {
+              "mean": 1.3209589044116947,
+              "p95": 4.975000001490116,
+              "max": 11.269999995827675
+            },
+            "reconcile": {
+              "mean": 4.702500000187795,
+              "p95": 9.219999998807907,
+              "max": 24.820000000298023
+            },
+            "hooks": {
+              "mean": 2.572123287577335,
+              "p95": 6.6099999994039536,
+              "max": 19.600000001490116
+            },
+            "total": {
+              "mean": 8.595582192176826,
+              "p95": 16.445000007748604,
+              "max": 46.6600000038743
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        }
+      ],
+      "measuredWorkerDrawSamples": [
+        {
+          "at": 1794129425288,
+          "pumpMs": 14.495000004768372,
+          "renderMs": 50.29500000178814,
+          "totalMs": 64.79000000655651,
+          "rendered": true
+        },
+        {
+          "at": 1794129425362.705,
+          "pumpMs": 0.125,
+          "renderMs": 45.58500000089407,
+          "totalMs": 45.71000000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129425516.41,
+          "pumpMs": 52.96999999880791,
+          "renderMs": 40.689999997615814,
+          "totalMs": 93.65999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129425743.025,
+          "pumpMs": 14.929999999701977,
+          "renderMs": 37.894999995827675,
+          "totalMs": 52.82499999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129425796.4749,
+          "pumpMs": 11.130000002682209,
+          "renderMs": 29.549999997019768,
+          "totalMs": 40.67999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129425855.8499,
+          "pumpMs": 46.57500000298023,
+          "renderMs": 34.84499999880791,
+          "totalMs": 81.42000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129426059.89,
+          "pumpMs": 34.08500000089407,
+          "renderMs": 38.149999998509884,
+          "totalMs": 72.23499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129426134.03,
+          "pumpMs": 0.4750000014901161,
+          "renderMs": 31.145000003278255,
+          "totalMs": 31.62000000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129426255.15,
+          "pumpMs": 12.390000000596046,
+          "renderMs": 32.149999998509884,
+          "totalMs": 44.53999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129426302.915,
+          "pumpMs": 40.91999999433756,
+          "renderMs": 28.385000005364418,
+          "totalMs": 69.30499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129426459.16,
+          "pumpMs": 57.84499999880791,
+          "renderMs": 35.38499999791384,
+          "totalMs": 93.22999999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129427018.855,
+          "pumpMs": 16.53999999910593,
+          "renderMs": 69.07000000029802,
+          "totalMs": 85.60999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129427109.465,
+          "pumpMs": 0.4050000011920929,
+          "renderMs": 35.01500000059605,
+          "totalMs": 35.42000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129427272.91,
+          "pumpMs": 33.185000002384186,
+          "renderMs": 53.71999999880791,
+          "totalMs": 86.9050000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129427371.765,
+          "pumpMs": 29.285000003874302,
+          "renderMs": 38.604999996721745,
+          "totalMs": 67.89000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129427440.6199,
+          "pumpMs": 60.61500000208616,
+          "renderMs": 42.58499999344349,
+          "totalMs": 103.19999999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129427545.21,
+          "pumpMs": 42.6600000038743,
+          "renderMs": 37.28999999910593,
+          "totalMs": 79.95000000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129427636.59,
+          "pumpMs": 0.4699999988079071,
+          "renderMs": 35.45000000298023,
+          "totalMs": 35.92000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129427674.215,
+          "pumpMs": 41.46000000089407,
+          "renderMs": 32.5899999961257,
+          "totalMs": 74.04999999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129427812.9749,
+          "pumpMs": 16.08500000089407,
+          "renderMs": 44.55499999970198,
+          "totalMs": 60.64000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129427874.27,
+          "pumpMs": 7.299999997019768,
+          "renderMs": 40.275000005960464,
+          "totalMs": 47.57500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129427932.545,
+          "pumpMs": 0.510000005364418,
+          "renderMs": 38.814999997615814,
+          "totalMs": 39.32500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129427999.22,
+          "pumpMs": 26.66499999910593,
+          "renderMs": 39.35999999940395,
+          "totalMs": 66.02499999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129428077.91,
+          "pumpMs": 11.649999998509884,
+          "renderMs": 35.899999998509884,
+          "totalMs": 47.54999999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129428129.445,
+          "pumpMs": 0.3200000002980232,
+          "renderMs": 33.6600000038743,
+          "totalMs": 33.980000004172325,
+          "rendered": true
+        },
+        {
+          "at": 1794129428165.885,
+          "pumpMs": 42.73999999463558,
+          "renderMs": 34.20000000298023,
+          "totalMs": 76.93999999761581,
+          "rendered": true
+        },
+        {
+          "at": 1794129428294.57,
+          "pumpMs": 1.1700000017881393,
+          "renderMs": 62.21000000089407,
+          "totalMs": 63.38000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129428358.935,
+          "pumpMs": 13.70499999821186,
+          "renderMs": 32.05000000447035,
+          "totalMs": 45.75500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129428409.2,
+          "pumpMs": 0.5549999997019768,
+          "renderMs": 41.05000000447035,
+          "totalMs": 41.605000004172325,
+          "rendered": true
+        },
+        {
+          "at": 1794129428515.075,
+          "pumpMs": 23.509999997913837,
+          "renderMs": 36.07500000298023,
+          "totalMs": 59.58500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129428583.105,
+          "pumpMs": 0.6649999991059303,
+          "renderMs": 41.71999999880791,
+          "totalMs": 42.38499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129428632.565,
+          "pumpMs": 17.234999999403954,
+          "renderMs": 33,
+          "totalMs": 50.23499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129428741.555,
+          "pumpMs": 0.32499999552965164,
+          "renderMs": 33.145000003278255,
+          "totalMs": 33.46999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129428775.47,
+          "pumpMs": 41.189999997615814,
+          "renderMs": 35.07500000298023,
+          "totalMs": 76.26500000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129428858.5999,
+          "pumpMs": 7.575000002980232,
+          "renderMs": 43.9649999961257,
+          "totalMs": 51.53999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129428965.1199,
+          "pumpMs": 9.939999997615814,
+          "renderMs": 35.74500000476837,
+          "totalMs": 45.685000002384186,
+          "rendered": true
+        },
+        {
+          "at": 1794129429011.33,
+          "pumpMs": 7.850000001490116,
+          "renderMs": 31.90999999642372,
+          "totalMs": 39.75999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129429065.875,
+          "pumpMs": 46.59000000357628,
+          "renderMs": 37.15999999642372,
+          "totalMs": 83.75,
+          "rendered": true
+        },
+        {
+          "at": 1794129429206.665,
+          "pumpMs": 43.66999999433756,
+          "renderMs": 41.24500000476837,
+          "totalMs": 84.91499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129429293.465,
+          "pumpMs": 0.755000002682209,
+          "renderMs": 35.15999999642372,
+          "totalMs": 35.91499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129429336.65,
+          "pumpMs": 1.2049999982118607,
+          "renderMs": 53.935000002384186,
+          "totalMs": 55.14000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129429443.34,
+          "pumpMs": 12.060000002384186,
+          "renderMs": 35.809999994933605,
+          "totalMs": 47.86999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129429491.685,
+          "pumpMs": 51.24000000208616,
+          "renderMs": 35.33500000089407,
+          "totalMs": 86.57500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129429583.255,
+          "pumpMs": 12.090000003576279,
+          "renderMs": 52.16499999910593,
+          "totalMs": 64.25500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129429706.2,
+          "pumpMs": 8.04500000178814,
+          "renderMs": 38.20499999821186,
+          "totalMs": 46.25,
+          "rendered": true
+        },
+        {
+          "at": 1794129429752.9,
+          "pumpMs": 7.71000000089407,
+          "renderMs": 36.70999999344349,
+          "totalMs": 44.41999999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129429802.6199,
+          "pumpMs": 7.949999995529652,
+          "renderMs": 38.19500000029802,
+          "totalMs": 46.144999995827675,
+          "rendered": true
+        },
+        {
+          "at": 1794129429849.345,
+          "pumpMs": 34.32000000029802,
+          "renderMs": 36.91499999910593,
+          "totalMs": 71.23499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129429927.395,
+          "pumpMs": 0.7400000020861626,
+          "renderMs": 40.39000000059605,
+          "totalMs": 41.13000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129430029.0999,
+          "pumpMs": 18.695000000298023,
+          "renderMs": 36.020000003278255,
+          "totalMs": 54.71500000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129430087.705,
+          "pumpMs": 10.059999994933605,
+          "renderMs": 38.30499999970198,
+          "totalMs": 48.36499999463558,
+          "rendered": true
+        },
+        {
+          "at": 1794129430141.855,
+          "pumpMs": 52.15500000119209,
+          "renderMs": 45.229999996721745,
+          "totalMs": 97.38499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129430295.92,
+          "pumpMs": 24.895000003278255,
+          "renderMs": 42.35999999940395,
+          "totalMs": 67.25500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129430384.93,
+          "pumpMs": 54.809999994933605,
+          "renderMs": 37.315000005066395,
+          "totalMs": 92.125,
+          "rendered": true
+        },
+        {
+          "at": 1794129430529.23,
+          "pumpMs": 59.76500000059605,
+          "renderMs": 32.86500000208616,
+          "totalMs": 92.63000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129430623.89,
+          "pumpMs": 8.17000000178814,
+          "renderMs": 37.24000000208616,
+          "totalMs": 45.4100000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129430674.54,
+          "pumpMs": 14.234999999403954,
+          "renderMs": 37.67999999970198,
+          "totalMs": 51.91499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129430789.27,
+          "pumpMs": 11.229999996721745,
+          "renderMs": 37.07500000298023,
+          "totalMs": 48.30499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129430840.765,
+          "pumpMs": 35.04500000178814,
+          "renderMs": 33.435000002384186,
+          "totalMs": 68.48000000417233,
+          "rendered": true
+        },
+        {
+          "at": 1794129430913.775,
+          "pumpMs": 0.6550000011920929,
+          "renderMs": 39.86999999731779,
+          "totalMs": 40.524999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129430954.94,
+          "pumpMs": 1.119999997317791,
+          "renderMs": 46.475000001490116,
+          "totalMs": 47.59499999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129431057.3599,
+          "pumpMs": 22.16499999910593,
+          "renderMs": 40.78999999910593,
+          "totalMs": 62.95499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129431122.185,
+          "pumpMs": 53.98499999940395,
+          "renderMs": 32.74000000208616,
+          "totalMs": 86.72500000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129431214.21,
+          "pumpMs": 55.33500000089407,
+          "renderMs": 31.91499999910593,
+          "totalMs": 87.25,
+          "rendered": true
+        },
+        {
+          "at": 1794129431304.04,
+          "pumpMs": 7.259999997913837,
+          "renderMs": 31.064999997615814,
+          "totalMs": 38.32499999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129431391.355,
+          "pumpMs": 46.55499999970198,
+          "renderMs": 39.149999998509884,
+          "totalMs": 85.70499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129431481.195,
+          "pumpMs": 33.41500000655651,
+          "renderMs": 40.42499999701977,
+          "totalMs": 73.84000000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129431608.615,
+          "pumpMs": 0.6700000017881393,
+          "renderMs": 39.49000000208616,
+          "totalMs": 40.1600000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129431649.48,
+          "pumpMs": 13.634999997913837,
+          "renderMs": 37.060000002384186,
+          "totalMs": 50.69500000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129431762.7349,
+          "pumpMs": 61.375,
+          "renderMs": 32.144999995827675,
+          "totalMs": 93.51999999582767,
+          "rendered": true
+        },
+        {
+          "at": 1794129431861.19,
+          "pumpMs": 53.67499999701977,
+          "renderMs": 33.11500000208616,
+          "totalMs": 86.78999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129431997.0999,
+          "pumpMs": 8.380000002682209,
+          "renderMs": 35.80499999970198,
+          "totalMs": 44.185000002384186,
+          "rendered": true
+        },
+        {
+          "at": 1794129432042.73,
+          "pumpMs": 40.32500000298023,
+          "renderMs": 30.37999999523163,
+          "totalMs": 70.70499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129432253.99,
+          "pumpMs": 34.605000004172325,
+          "renderMs": 32.37999999523163,
+          "totalMs": 66.98499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129432323.02,
+          "pumpMs": 0.6550000011920929,
+          "renderMs": 31.984999999403954,
+          "totalMs": 32.64000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129432416.3,
+          "pumpMs": 14.324999995529652,
+          "renderMs": 35.91500000655651,
+          "totalMs": 50.24000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129432472.99,
+          "pumpMs": 7.175000004470348,
+          "renderMs": 31.32999999821186,
+          "totalMs": 38.50500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129432532.5999,
+          "pumpMs": 31.375,
+          "renderMs": 32.87000000476837,
+          "totalMs": 64.24500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129432642.26,
+          "pumpMs": 0.7149999961256981,
+          "renderMs": 40.310000002384186,
+          "totalMs": 41.024999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129432683.845,
+          "pumpMs": 12.384999997913837,
+          "renderMs": 30.615000002086163,
+          "totalMs": 43,
+          "rendered": true
+        },
+        {
+          "at": 1794129432775.9849,
+          "pumpMs": 51.375,
+          "renderMs": 30.53499999642372,
+          "totalMs": 81.90999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129432861.78,
+          "pumpMs": 38.100000001490116,
+          "renderMs": 31.33500000089407,
+          "totalMs": 69.43500000238419,
+          "rendered": true
+        },
+        {
+          "at": 1794129432979.035,
+          "pumpMs": 21.32999999821186,
+          "renderMs": 33.20000000298023,
+          "totalMs": 54.53000000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129433036.66,
+          "pumpMs": 0.5700000002980232,
+          "renderMs": 32.564999997615814,
+          "totalMs": 33.13499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129433099.2349,
+          "pumpMs": 14.734999999403954,
+          "renderMs": 30.854999996721745,
+          "totalMs": 45.5899999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129433196.805,
+          "pumpMs": 15.074999995529652,
+          "renderMs": 37.01500000059605,
+          "totalMs": 52.0899999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129433249.64,
+          "pumpMs": 45.04000000655651,
+          "renderMs": 34.78999999910593,
+          "totalMs": 79.83000000566244,
+          "rendered": true
+        },
+        {
+          "at": 1794129433334.885,
+          "pumpMs": 1.114999994635582,
+          "renderMs": 37.22000000625849,
+          "totalMs": 38.33500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129433373.7349,
+          "pumpMs": 0.625,
+          "renderMs": 36.639999993145466,
+          "totalMs": 37.264999993145466,
+          "rendered": true
+        },
+        {
+          "at": 1794129433466.82,
+          "pumpMs": 17.310000002384186,
+          "renderMs": 42.4100000038743,
+          "totalMs": 59.72000000625849,
+          "rendered": true
+        },
+        {
+          "at": 1794129433527.345,
+          "pumpMs": 93.19999999552965,
+          "renderMs": 42.350000001490116,
+          "totalMs": 135.54999999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129433722.395,
+          "pumpMs": 53.7850000038743,
+          "renderMs": 38,
+          "totalMs": 91.7850000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129433814.9849,
+          "pumpMs": 48.70999999344349,
+          "renderMs": 34.39000000059605,
+          "totalMs": 83.09999999403954,
+          "rendered": true
+        },
+        {
+          "at": 1794129433957.2,
+          "pumpMs": 74.99000000208616,
+          "renderMs": 37.86999999731779,
+          "totalMs": 112.85999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129434072.75,
+          "pumpMs": 41.105000004172325,
+          "renderMs": 36.42000000178814,
+          "totalMs": 77.52500000596046,
+          "rendered": true
+        },
+        {
+          "at": 1794129434211.885,
+          "pumpMs": 10.994999997317791,
+          "renderMs": 32.61999999731779,
+          "totalMs": 43.61499999463558,
+          "rendered": true
+        },
+        {
+          "at": 1794129434257.3499,
+          "pumpMs": 33.23499999940395,
+          "renderMs": 33.26500000059605,
+          "totalMs": 66.5,
+          "rendered": true
+        },
+        {
+          "at": 1794129434327.76,
+          "pumpMs": 0.8299999982118607,
+          "renderMs": 34.71999999880791,
+          "totalMs": 35.54999999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129434366.33,
+          "pumpMs": 1.2049999982118607,
+          "renderMs": 38.2149999961257,
+          "totalMs": 39.41999999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129434406.425,
+          "pumpMs": 13.21000000089407,
+          "renderMs": 38.57999999821186,
+          "totalMs": 51.78999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129434508.49,
+          "pumpMs": 48.62000000476837,
+          "renderMs": 31.769999995827675,
+          "totalMs": 80.39000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129434592.685,
+          "pumpMs": 55.105000004172325,
+          "renderMs": 33.375,
+          "totalMs": 88.48000000417233,
+          "rendered": true
+        },
+        {
+          "at": 1794129434734.47,
+          "pumpMs": 45.644999995827675,
+          "renderMs": 32.480000004172325,
+          "totalMs": 78.125,
+          "rendered": true
+        },
+        {
+          "at": 1794129434813.77,
+          "pumpMs": 9.299999997019768,
+          "renderMs": 32.0350000038743,
+          "totalMs": 41.33500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129434914.685,
+          "pumpMs": 20.689999997615814,
+          "renderMs": 52.22000000625849,
+          "totalMs": 72.9100000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129434990.015,
+          "pumpMs": 12.770000003278255,
+          "renderMs": 40.60999999940395,
+          "totalMs": 53.38000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129435047.13,
+          "pumpMs": 30.810000002384186,
+          "renderMs": 46.69999999552965,
+          "totalMs": 77.50999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129435182.445,
+          "pumpMs": 13.395000003278255,
+          "renderMs": 45.63499999791384,
+          "totalMs": 59.03000000119209,
+          "rendered": true
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "baseline": false,
+      "headless": false,
+      "valid": true,
+      "hardware": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "backend": "WebGPU",
+      "readyMs": 31217.685100000002,
+      "requestedWindowMs": 10000,
+      "actualWindowMs": 10621.159199999995,
+      "pausedElapsed": 3429.9999999975803,
+      "pausedScreenshotState": {
+        "sequence": 69,
+        "lastElapsed": 3429.9999999975803,
+        "resident": 25
+      },
+      "mainThreadRaf": {
+        "count": 297,
+        "mean": 35.80276094276093,
+        "p95": 33.38999999999942,
+        "p99": 100.14999999999418,
+        "max": 199.9800000000032
+      },
+      "renderCallMs": {
+        "count": 116,
+        "mean": 38.23681034475308,
+        "p95": 47.85999999940395,
+        "p99": 55.19500000029802,
+        "max": 73.81000000238419
+      },
+      "timelinePumpMs": {
+        "count": 116,
+        "mean": 22.33137930981044,
+        "p95": 56.66499999910593,
+        "p99": 59.69500000029802,
+        "max": 71.03999999910593
+      },
+      "workerDrawIntervalsMs": {
+        "count": 115,
+        "mean": 86.05756623641304,
+        "p95": 151.2900390625,
+        "p99": 229.0048828125,
+        "max": 318.135009765625
+      },
+      "samples": [
+        {
+          "atMs": 131.93559999999707,
+          "inspectionMs": 131.81259999999747,
+          "simLag": 0.1000000000003638,
+          "sequenceLag": 2,
+          "materialKeys": {
+            "materials": 97,
+            "builds": 468,
+            "hits": 53050,
+            "fallbacks": 110,
+            "discoveries": 563
+          },
+          "visualTiming": {
+            "samples": 70,
+            "decode": {
+              "mean": 1.551357143585171,
+              "p95": 5.620000004768372,
+              "max": 15.965000003576279
+            },
+            "reconcile": {
+              "mean": 5.823714285450322,
+              "p95": 16.185000002384186,
+              "max": 26.270000003278255
+            },
+            "hooks": {
+              "mean": 3.1538571426911015,
+              "p95": 2.219999998807907,
+              "max": 139.9349999949336
+            },
+            "total": {
+              "mean": 10.528928571726595,
+              "p95": 22.469999998807907,
+              "max": 182.17000000178814
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 5117.1134999999995,
+          "inspectionMs": 109.77649999999994,
+          "simLag": 3.6000000000130967,
+          "sequenceLag": 47,
+          "materialKeys": {
+            "materials": 104,
+            "builds": 530,
+            "hits": 74326,
+            "fallbacks": 111,
+            "discoveries": 623
+          },
+          "visualTiming": {
+            "samples": 108,
+            "decode": {
+              "mean": 1.3955555560964126,
+              "p95": 5.365000002086163,
+              "max": 15.965000003576279
+            },
+            "reconcile": {
+              "mean": 4.9816203703758895,
+              "p95": 11.894999995827675,
+              "max": 26.270000003278255
+            },
+            "hooks": {
+              "mean": 3.0366666664679847,
+              "p95": 5.965000003576279,
+              "max": 139.9349999949336
+            },
+            "total": {
+              "mean": 9.413842592940286,
+              "p95": 20.37999999523163,
+              "max": 182.17000000178814
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 10192.583199999994,
+          "inspectionMs": 186.69380000000092,
+          "simLag": 5.900000000021464,
+          "sequenceLag": 83,
+          "materialKeys": {
+            "materials": 113,
+            "builds": 575,
+            "hits": 97388,
+            "fallbacks": 111,
+            "discoveries": 658
+          },
+          "visualTiming": {
+            "samples": 147,
+            "decode": {
+              "mean": 1.2559523813071705,
+              "p95": 5.090000003576279,
+              "max": 15.965000003576279
+            },
+            "reconcile": {
+              "mean": 4.78414965968351,
+              "p95": 10.699999995529652,
+              "max": 26.270000003278255
+            },
+            "hooks": {
+              "mean": 3.5398299318491198,
+              "p95": 7.785000003874302,
+              "max": 139.9349999949336
+            },
+            "total": {
+              "mean": 9.5799319728398,
+              "p95": 19.49499999731779,
+              "max": 182.17000000178814
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        }
+      ],
+      "measuredWorkerDrawSamples": [
+        {
+          "at": 1794129479824.51,
+          "pumpMs": 1.1850000023841858,
+          "renderMs": 32.854999996721745,
+          "totalMs": 34.03999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129479859.1052,
+          "pumpMs": 14.020000003278255,
+          "renderMs": 35.01500000059605,
+          "totalMs": 49.0350000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129479912.1,
+          "pumpMs": 35.41499999910593,
+          "renderMs": 31.934999994933605,
+          "totalMs": 67.34999999403954,
+          "rendered": true
+        },
+        {
+          "at": 1794129480013.1902,
+          "pumpMs": 13.535000003874302,
+          "renderMs": 37.2149999961257,
+          "totalMs": 50.75,
+          "rendered": true
+        },
+        {
+          "at": 1794129480064.3901,
+          "pumpMs": 9.28999999910593,
+          "renderMs": 34.375,
+          "totalMs": 43.66499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129480176.0852,
+          "pumpMs": 32.644999995827675,
+          "renderMs": 38.875,
+          "totalMs": 71.51999999582767,
+          "rendered": true
+        },
+        {
+          "at": 1794129480335.2852,
+          "pumpMs": 11.804999999701977,
+          "renderMs": 41.84000000357628,
+          "totalMs": 53.645000003278255,
+          "rendered": true
+        },
+        {
+          "at": 1794129480391.03,
+          "pumpMs": 0.3449999988079071,
+          "renderMs": 47.85999999940395,
+          "totalMs": 48.20499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129480506.7102,
+          "pumpMs": 56.09499999880791,
+          "renderMs": 35.28000000119209,
+          "totalMs": 91.375,
+          "rendered": true
+        },
+        {
+          "at": 1794129480633.8352,
+          "pumpMs": 46.16999999433756,
+          "renderMs": 29.780000001192093,
+          "totalMs": 75.94999999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129480890.8052,
+          "pumpMs": 0.44999999552965164,
+          "renderMs": 37.53000000119209,
+          "totalMs": 37.979999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129481033.51,
+          "pumpMs": 38.149999998509884,
+          "renderMs": 44.25500000268221,
+          "totalMs": 82.4050000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129481117.6401,
+          "pumpMs": 7.254999995231628,
+          "renderMs": 36.65500000119209,
+          "totalMs": 43.90999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129481275.07,
+          "pumpMs": 0.4649999961256981,
+          "renderMs": 38.01500000059605,
+          "totalMs": 38.479999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129481333.9802,
+          "pumpMs": 26.905000001192093,
+          "renderMs": 39.810000002384186,
+          "totalMs": 66.71500000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129481499.8052,
+          "pumpMs": 19.774999998509884,
+          "renderMs": 36.33500000089407,
+          "totalMs": 56.10999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129481556.465,
+          "pumpMs": 0.42000000178813934,
+          "renderMs": 32.649999998509884,
+          "totalMs": 33.07000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129481664.125,
+          "pumpMs": 57.84499999880791,
+          "renderMs": 37.185000002384186,
+          "totalMs": 95.0300000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129481759.8901,
+          "pumpMs": 0.6700000017881393,
+          "renderMs": 45.854999996721745,
+          "totalMs": 46.524999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129482078.0251,
+          "pumpMs": 15.29500000178814,
+          "renderMs": 54.44500000029802,
+          "totalMs": 69.74000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129482155.54,
+          "pumpMs": 0.6099999994039536,
+          "renderMs": 64.42999999970198,
+          "totalMs": 65.03999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129482223.9702,
+          "pumpMs": 39.850000001490116,
+          "renderMs": 41.100000001490116,
+          "totalMs": 80.95000000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129482305.74,
+          "pumpMs": 0.9749999940395355,
+          "renderMs": 38.25,
+          "totalMs": 39.224999994039536,
+          "rendered": true
+        },
+        {
+          "at": 1794129482345.5151,
+          "pumpMs": 10.32999999821186,
+          "renderMs": 31.95499999821186,
+          "totalMs": 42.28499999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129482399.57,
+          "pumpMs": 0.5150000005960464,
+          "renderMs": 30.479999996721745,
+          "totalMs": 30.99499999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129482455.3052,
+          "pumpMs": 50.71000000089407,
+          "renderMs": 46.15999999642372,
+          "totalMs": 96.86999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129482554.2102,
+          "pumpMs": 0.6649999991059303,
+          "renderMs": 36.625,
+          "totalMs": 37.28999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129482650.635,
+          "pumpMs": 14.344999998807907,
+          "renderMs": 47.83000000566244,
+          "totalMs": 62.17500000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129482717.5352,
+          "pumpMs": 39.65500000119209,
+          "renderMs": 37.00999999791384,
+          "totalMs": 76.66499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129482797.475,
+          "pumpMs": 9.479999996721745,
+          "renderMs": 41.92000000178814,
+          "totalMs": 51.399999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129482866.31,
+          "pumpMs": 0.6099999994039536,
+          "renderMs": 41.41999999433756,
+          "totalMs": 42.02999999374151,
+          "rendered": true
+        },
+        {
+          "at": 1794129482933.02,
+          "pumpMs": 40.850000001490116,
+          "renderMs": 36.774999998509884,
+          "totalMs": 77.625,
+          "rendered": true
+        },
+        {
+          "at": 1794129483055.5852,
+          "pumpMs": 1.1749999970197678,
+          "renderMs": 50.36999999731779,
+          "totalMs": 51.54499999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129483112.87,
+          "pumpMs": 12.33500000089407,
+          "renderMs": 32.32500000298023,
+          "totalMs": 44.6600000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129483158.05,
+          "pumpMs": 8.550000004470348,
+          "renderMs": 32.92999999970198,
+          "totalMs": 41.480000004172325,
+          "rendered": true
+        },
+        {
+          "at": 1794129483232.9202,
+          "pumpMs": 8.609999999403954,
+          "renderMs": 33.57999999821186,
+          "totalMs": 42.189999997615814,
+          "rendered": true
+        },
+        {
+          "at": 1794129483277.04,
+          "pumpMs": 0.33500000089406967,
+          "renderMs": 32.82499999552965,
+          "totalMs": 33.15999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129483362.3,
+          "pumpMs": 36.71500000357628,
+          "renderMs": 55.19500000029802,
+          "totalMs": 91.9100000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129483463.375,
+          "pumpMs": 1.3049999997019768,
+          "renderMs": 48.45499999821186,
+          "totalMs": 49.75999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129483517.8801,
+          "pumpMs": 14.660000003874302,
+          "renderMs": 44.564999997615814,
+          "totalMs": 59.225000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129483580.385,
+          "pumpMs": 0.5350000038743019,
+          "renderMs": 37.17999999970198,
+          "totalMs": 37.71500000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129483699.31,
+          "pumpMs": 53.399999998509884,
+          "renderMs": 40.17499999701977,
+          "totalMs": 93.57499999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129483796.35,
+          "pumpMs": 59.69500000029802,
+          "renderMs": 39.85999999940395,
+          "totalMs": 99.55499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129483902.3052,
+          "pumpMs": 9.354999996721745,
+          "renderMs": 34.025000005960464,
+          "totalMs": 43.38000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129483946.1401,
+          "pumpMs": 0.32999999821186066,
+          "renderMs": 44.21000000089407,
+          "totalMs": 44.53999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129483999.6602,
+          "pumpMs": 23.125,
+          "renderMs": 39.62000000476837,
+          "totalMs": 62.74500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129484133.6702,
+          "pumpMs": 14.719999998807907,
+          "renderMs": 46.814999997615814,
+          "totalMs": 61.53499999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129484195.635,
+          "pumpMs": 8.804999999701977,
+          "renderMs": 32.16499999910593,
+          "totalMs": 40.96999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129484238.675,
+          "pumpMs": 7.740000002086163,
+          "renderMs": 34.07500000298023,
+          "totalMs": 41.815000005066395,
+          "rendered": true
+        },
+        {
+          "at": 1794129484299.5952,
+          "pumpMs": 11.859999999403954,
+          "renderMs": 43.32999999821186,
+          "totalMs": 55.189999997615814,
+          "rendered": true
+        },
+        {
+          "at": 1794129484355.3,
+          "pumpMs": 39.15500000119209,
+          "renderMs": 35.64000000059605,
+          "totalMs": 74.79500000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129484482.875,
+          "pumpMs": 0.6550000011920929,
+          "renderMs": 45.724999994039536,
+          "totalMs": 46.37999999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129484529.7852,
+          "pumpMs": 14.304999999701977,
+          "renderMs": 37.42000000178814,
+          "totalMs": 51.725000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129484582.9302,
+          "pumpMs": 7.949999995529652,
+          "renderMs": 34.57000000029802,
+          "totalMs": 42.519999995827675,
+          "rendered": true
+        },
+        {
+          "at": 1794129484657.915,
+          "pumpMs": 39.600000001490116,
+          "renderMs": 41.07999999821186,
+          "totalMs": 80.67999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129484791.2651,
+          "pumpMs": 0.614999994635582,
+          "renderMs": 46.875,
+          "totalMs": 47.48999999463558,
+          "rendered": true
+        },
+        {
+          "at": 1794129484842.655,
+          "pumpMs": 12.945000000298023,
+          "renderMs": 35.939999997615814,
+          "totalMs": 48.88499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129484893.3801,
+          "pumpMs": 63.100000001490116,
+          "renderMs": 34.82500000298023,
+          "totalMs": 97.92500000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129484996.125,
+          "pumpMs": 43.65500000119209,
+          "renderMs": 34.684999994933605,
+          "totalMs": 78.3399999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129485080.0552,
+          "pumpMs": 7.7299999967217445,
+          "renderMs": 32.100000001490116,
+          "totalMs": 39.82999999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129485167.4402,
+          "pumpMs": 8.185000002384186,
+          "renderMs": 36.59499999880791,
+          "totalMs": 44.78000000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129485215.32,
+          "pumpMs": 38.144999995827675,
+          "renderMs": 35.105000004172325,
+          "totalMs": 73.25,
+          "rendered": true
+        },
+        {
+          "at": 1794129485301.9202,
+          "pumpMs": 1.5299999937415123,
+          "renderMs": 73.81000000238419,
+          "totalMs": 75.3399999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129485385.0452,
+          "pumpMs": 20.894999995827675,
+          "renderMs": 35.73499999940395,
+          "totalMs": 56.62999999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129485450.8801,
+          "pumpMs": 12.04500000178814,
+          "renderMs": 34.270000003278255,
+          "totalMs": 46.315000005066395,
+          "rendered": true
+        },
+        {
+          "at": 1794129485566.225,
+          "pumpMs": 71.03999999910593,
+          "renderMs": 40.7149999961257,
+          "totalMs": 111.75499999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129485680.27,
+          "pumpMs": 39.42999999970198,
+          "renderMs": 33.46000000089407,
+          "totalMs": 72.89000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129485757.985,
+          "pumpMs": 0.6850000023841858,
+          "renderMs": 44.37999999523163,
+          "totalMs": 45.064999997615814,
+          "rendered": true
+        },
+        {
+          "at": 1794129485803.685,
+          "pumpMs": 0.7149999961256981,
+          "renderMs": 44.94500000029802,
+          "totalMs": 45.65999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129485901.3052,
+          "pumpMs": 12.774999998509884,
+          "renderMs": 34.63499999791384,
+          "totalMs": 47.40999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129485949.3,
+          "pumpMs": 56.66499999910593,
+          "renderMs": 32.55499999970198,
+          "totalMs": 89.2199999988079,
+          "rendered": true
+        },
+        {
+          "at": 1794129486042.31,
+          "pumpMs": 33.264999993145466,
+          "renderMs": 32.94500000029802,
+          "totalMs": 66.20999999344349,
+          "rendered": true
+        },
+        {
+          "at": 1794129486113.4402,
+          "pumpMs": 7.695000000298023,
+          "renderMs": 31.535000003874302,
+          "totalMs": 39.230000004172325,
+          "rendered": true
+        },
+        {
+          "at": 1794129486166.2952,
+          "pumpMs": 39.07999999821186,
+          "renderMs": 41.4649999961257,
+          "totalMs": 80.54499999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129486302.9702,
+          "pumpMs": 15.020000003278255,
+          "renderMs": 33.42499999701977,
+          "totalMs": 48.44500000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129486352.0652,
+          "pumpMs": 47.105000004172325,
+          "renderMs": 32.979999996721745,
+          "totalMs": 80.08500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129486485.9602,
+          "pumpMs": 42.16999999433756,
+          "renderMs": 33.97000000625849,
+          "totalMs": 76.14000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129486564.0952,
+          "pumpMs": 0.6349999979138374,
+          "renderMs": 37.58000000566244,
+          "totalMs": 38.21500000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129486604.3801,
+          "pumpMs": 0.6900000050663948,
+          "renderMs": 36.604999996721745,
+          "totalMs": 37.29500000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129486666.31,
+          "pumpMs": 13.319999992847443,
+          "renderMs": 35.05000000447035,
+          "totalMs": 48.36999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129486717.5652,
+          "pumpMs": 49.82000000029802,
+          "renderMs": 35.21999999880791,
+          "totalMs": 85.03999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129486806.905,
+          "pumpMs": 54.5,
+          "renderMs": 32.54499999433756,
+          "totalMs": 87.04499999433756,
+          "rendered": true
+        },
+        {
+          "at": 1794129486896.0652,
+          "pumpMs": 46.74500000476837,
+          "renderMs": 34.88499999791384,
+          "totalMs": 81.63000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129487125.07,
+          "pumpMs": 7.350000001490116,
+          "renderMs": 32.11999999731779,
+          "totalMs": 39.46999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129487165.195,
+          "pumpMs": 31.390000000596046,
+          "renderMs": 32.979999996721745,
+          "totalMs": 64.36999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129487231.58,
+          "pumpMs": 0.625,
+          "renderMs": 35.86999999731779,
+          "totalMs": 36.49499999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129487330.7202,
+          "pumpMs": 13.869999997317791,
+          "renderMs": 31.910000003874302,
+          "totalMs": 45.78000000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129487378.2551,
+          "pumpMs": 51.435000002384186,
+          "renderMs": 31.844999998807907,
+          "totalMs": 83.2800000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129487515.5352,
+          "pumpMs": 38.935000002384186,
+          "renderMs": 32.61500000208616,
+          "totalMs": 71.55000000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129487590.6602,
+          "pumpMs": 7.240000002086163,
+          "renderMs": 31.149999998509884,
+          "totalMs": 38.39000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129487679.365,
+          "pumpMs": 47.25499999523163,
+          "renderMs": 42,
+          "totalMs": 89.25499999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129487772.01,
+          "pumpMs": 34.564999997615814,
+          "renderMs": 33.520000003278255,
+          "totalMs": 68.08500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129487892.885,
+          "pumpMs": 0.7000000029802322,
+          "renderMs": 38.975000001490116,
+          "totalMs": 39.67500000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129487933.79,
+          "pumpMs": 19.03999999910593,
+          "renderMs": 44.57000000029802,
+          "totalMs": 63.60999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129487997.9802,
+          "pumpMs": 57.21000000089407,
+          "renderMs": 34.74500000476837,
+          "totalMs": 91.95500000566244,
+          "rendered": true
+        },
+        {
+          "at": 1794129488148.3,
+          "pumpMs": 55.62000000476837,
+          "renderMs": 43.23999999463558,
+          "totalMs": 98.85999999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129488248.0352,
+          "pumpMs": 50.480000004172325,
+          "renderMs": 39.69500000029802,
+          "totalMs": 90.17500000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129488394.1802,
+          "pumpMs": 9.185000002384186,
+          "renderMs": 35.07000000029802,
+          "totalMs": 44.25500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129488440.3901,
+          "pumpMs": 38.934999994933605,
+          "renderMs": 33.45500000566244,
+          "totalMs": 72.39000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129488514.76,
+          "pumpMs": 0.6550000011920929,
+          "renderMs": 35.21999999880791,
+          "totalMs": 35.875,
+          "rendered": true
+        },
+        {
+          "at": 1794129488554.0852,
+          "pumpMs": 0.6899999976158142,
+          "renderMs": 39.00500000268221,
+          "totalMs": 39.69500000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129488599.635,
+          "pumpMs": 21.189999997615814,
+          "renderMs": 38.560000002384186,
+          "totalMs": 59.75,
+          "rendered": true
+        },
+        {
+          "at": 1794129488659.935,
+          "pumpMs": 58.56999999284744,
+          "renderMs": 35.36500000208616,
+          "totalMs": 93.9349999949336,
+          "rendered": true
+        },
+        {
+          "at": 1794129488811.225,
+          "pumpMs": 53.73999999463558,
+          "renderMs": 33.55000000447035,
+          "totalMs": 87.28999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129488904.8901,
+          "pumpMs": 48.189999997615814,
+          "renderMs": 33.76500000059605,
+          "totalMs": 81.95499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129488988.9602,
+          "pumpMs": 54.99499999731779,
+          "renderMs": 32.11999999731779,
+          "totalMs": 87.11499999463558,
+          "rendered": true
+        },
+        {
+          "at": 1794129489081.4202,
+          "pumpMs": 39.82499999552965,
+          "renderMs": 39.67999999970198,
+          "totalMs": 79.50499999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129489231.5352,
+          "pumpMs": 28.78999999910593,
+          "renderMs": 37.62000000476837,
+          "totalMs": 66.4100000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129489305.1802,
+          "pumpMs": 1.1099999994039536,
+          "renderMs": 39.00999999791384,
+          "totalMs": 40.11999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129489348.655,
+          "pumpMs": 0.6950000002980232,
+          "renderMs": 41.809999994933605,
+          "totalMs": 42.50499999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129489399.6902,
+          "pumpMs": 11.755000002682209,
+          "renderMs": 36.96999999880791,
+          "totalMs": 48.725000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129489449.0652,
+          "pumpMs": 7.954999998211861,
+          "renderMs": 32.2850000038743,
+          "totalMs": 40.24000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129489537.9702,
+          "pumpMs": 28.424999997019768,
+          "renderMs": 46.75500000268221,
+          "totalMs": 75.17999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129489613.7202,
+          "pumpMs": 0.625,
+          "renderMs": 38.89000000059605,
+          "totalMs": 39.51500000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129489666.33,
+          "pumpMs": 13.600000001490116,
+          "renderMs": 40.57499999552965,
+          "totalMs": 54.17499999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129489721.1301,
+          "pumpMs": 44.350000001490116,
+          "renderMs": 33.84000000357628,
+          "totalMs": 78.1900000050664,
+          "rendered": true
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "baseline": true,
+      "headless": false,
+      "valid": true,
+      "hardware": [
+        {
+          "vendorId": 4318,
+          "deviceId": 8580,
+          "subSysId": 291977282,
+          "revision": 161,
+          "vendorString": "",
+          "deviceString": "NVIDIA GeForce GTX 1660",
+          "driverVendor": "NVIDIA",
+          "driverVersion": "32.0.15.8129"
+        },
+        {
+          "vendorId": 5140,
+          "deviceId": 140,
+          "subSysId": 0,
+          "revision": 0,
+          "vendorString": "",
+          "deviceString": "Microsoft Basic Render Driver",
+          "driverVendor": "",
+          "driverVersion": "10.0.19041.5794"
+        }
+      ],
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": false
+      },
+      "backend": "WebGPU",
+      "readyMs": 27369.0145,
+      "requestedWindowMs": 10000,
+      "actualWindowMs": 10492.3298,
+      "pausedElapsed": 3429.9999999975803,
+      "pausedScreenshotState": {
+        "sequence": 69,
+        "lastElapsed": 3429.9999999975803,
+        "resident": 25
+      },
+      "mainThreadRaf": {
+        "count": 313,
+        "mean": 33.33383386581469,
+        "p95": 33.36999999999534,
+        "p99": 33.38000000000466,
+        "max": 33.479999999995925
+      },
+      "renderCallMs": {
+        "count": 90,
+        "mean": 47.952444444348416,
+        "p95": 61.47000000625849,
+        "p99": 74.08500000089407,
+        "max": 122.54500000178814
+      },
+      "timelinePumpMs": {
+        "count": 90,
+        "mean": 25.96727777827117,
+        "p95": 55.125,
+        "p99": 63.57000000029802,
+        "max": 72.87000000476837
+      },
+      "workerDrawIntervalsMs": {
+        "count": 89,
+        "mean": 108.18325908532303,
+        "p95": 234.81494140625,
+        "p99": 294.969970703125,
+        "max": 396.010009765625
+      },
+      "samples": [
+        {
+          "atMs": 266.1535999999978,
+          "inspectionMs": 265.9520000000048,
+          "simLag": 0.1000000000003638,
+          "sequenceLag": 3,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 70,
+            "decode": {
+              "mean": 1.5546428566532475,
+              "p95": 6.094999998807907,
+              "max": 12.634999997913837
+            },
+            "reconcile": {
+              "mean": 6.17307142828192,
+              "p95": 11.994999997317791,
+              "max": 19.83500000089407
+            },
+            "hooks": {
+              "mean": 1.4710000003022807,
+              "p95": 2.1400000005960464,
+              "max": 17.649999998509884
+            },
+            "total": {
+              "mean": 9.198714285237449,
+              "p95": 20.07999999076128,
+              "max": 50.11999999731779
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 5080.105600000003,
+          "inspectionMs": 73.41659999999683,
+          "simLag": 3.450000000012551,
+          "sequenceLag": 44,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 101,
+            "decode": {
+              "mean": 1.4913366332945257,
+              "p95": 5.970000006258488,
+              "max": 12.634999997913837
+            },
+            "reconcile": {
+              "mean": 5.641485148137159,
+              "p95": 11.344999998807907,
+              "max": 19.83500000089407
+            },
+            "hooks": {
+              "mean": 1.9155940597157668,
+              "p95": 5.490000002086163,
+              "max": 17.649999998509884
+            },
+            "total": {
+              "mean": 9.04841584114745,
+              "p95": 19.16999999433756,
+              "max": 50.11999999731779
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        },
+        {
+          "atMs": 10100.6702,
+          "inspectionMs": 91.61280000000261,
+          "simLag": 5.250000000019099,
+          "sequenceLag": 67,
+          "materialKeys": null,
+          "visualTiming": {
+            "samples": 135,
+            "decode": {
+              "mean": 1.3553333328277977,
+              "p95": 5.034999996423721,
+              "max": 12.634999997913837
+            },
+            "reconcile": {
+              "mean": 5.366555555164814,
+              "p95": 10.509999997913837,
+              "max": 19.83500000089407
+            },
+            "hooks": {
+              "mean": 2.486407407676732,
+              "p95": 6.285000003874302,
+              "max": 17.649999998509884
+            },
+            "total": {
+              "mean": 9.208296295669344,
+              "p95": 17.089999996125698,
+              "max": 50.11999999731779
+            }
+          },
+          "deviceAdapter": {
+            "vendor": "nvidia",
+            "architecture": "turing",
+            "device": "",
+            "description": "",
+            "isFallbackAdapter": false
+          }
+        }
+      ],
+      "measuredWorkerDrawSamples": [
+        {
+          "at": 1794129531218.755,
+          "pumpMs": 46.92000000178814,
+          "renderMs": 51.375,
+          "totalMs": 98.29500000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129531459.375,
+          "pumpMs": 20.280000001192093,
+          "renderMs": 36.04999999701977,
+          "totalMs": 56.32999999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129531625.76,
+          "pumpMs": 12.240000002086163,
+          "renderMs": 50.560000002384186,
+          "totalMs": 62.80000000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129531689.21,
+          "pumpMs": 20.96000000089407,
+          "renderMs": 47.854999996721745,
+          "totalMs": 68.81499999761581,
+          "rendered": true
+        },
+        {
+          "at": 1794129531848.795,
+          "pumpMs": 13.784999996423721,
+          "renderMs": 56.50500000268221,
+          "totalMs": 70.28999999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129531923.115,
+          "pumpMs": 58.014999993145466,
+          "renderMs": 44.21500000357628,
+          "totalMs": 102.22999999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129532204.03,
+          "pumpMs": 14.104999996721745,
+          "renderMs": 62.17999999970198,
+          "totalMs": 76.28499999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129532281.6099,
+          "pumpMs": 0.47999999672174454,
+          "renderMs": 58.6600000038743,
+          "totalMs": 59.14000000059605,
+          "rendered": true
+        },
+        {
+          "at": 1794129532428.005,
+          "pumpMs": 54.09000000357628,
+          "renderMs": 54.100000001490116,
+          "totalMs": 108.1900000050664,
+          "rendered": true
+        },
+        {
+          "at": 1794129532539.01,
+          "pumpMs": 38.4100000038743,
+          "renderMs": 46.45999999344349,
+          "totalMs": 84.86999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129532773.825,
+          "pumpMs": 13.265000000596046,
+          "renderMs": 74.08500000089407,
+          "totalMs": 87.35000000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129532863.4949,
+          "pumpMs": 47.20499999821186,
+          "renderMs": 57.39000000059605,
+          "totalMs": 104.5949999988079,
+          "rendered": true
+        },
+        {
+          "at": 1794129532970.565,
+          "pumpMs": 0.48000000417232513,
+          "renderMs": 49.76500000059605,
+          "totalMs": 50.24500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129533366.575,
+          "pumpMs": 54.29500000178814,
+          "renderMs": 49.92500000447035,
+          "totalMs": 104.22000000625849,
+          "rendered": true
+        },
+        {
+          "at": 1794129533553.24,
+          "pumpMs": 48.57999999821186,
+          "renderMs": 122.54500000178814,
+          "totalMs": 171.125,
+          "rendered": true
+        },
+        {
+          "at": 1794129533848.21,
+          "pumpMs": 19.16999999433756,
+          "renderMs": 57.08500000089407,
+          "totalMs": 76.25499999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129533925.9,
+          "pumpMs": 0.35499999672174454,
+          "renderMs": 56.38000000268221,
+          "totalMs": 56.73499999940395,
+          "rendered": true
+        },
+        {
+          "at": 1794129533984.88,
+          "pumpMs": 26.480000004172325,
+          "renderMs": 54.96999999880791,
+          "totalMs": 81.45000000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129534070.015,
+          "pumpMs": 16.140000000596046,
+          "renderMs": 52.67999999970198,
+          "totalMs": 68.82000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129534139.47,
+          "pumpMs": 0.2849999964237213,
+          "renderMs": 41.59500000625849,
+          "totalMs": 41.88000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129534199.875,
+          "pumpMs": 25.32499999552965,
+          "renderMs": 49.99500000476837,
+          "totalMs": 75.32000000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129534326.565,
+          "pumpMs": 20.719999998807907,
+          "renderMs": 51.62000000476837,
+          "totalMs": 72.34000000357628,
+          "rendered": true
+        },
+        {
+          "at": 1794129534403.15,
+          "pumpMs": 8.445000000298023,
+          "renderMs": 47.79999999701977,
+          "totalMs": 56.24499999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129534462.73,
+          "pumpMs": 10.950000002980232,
+          "renderMs": 45.04999999701977,
+          "totalMs": 56,
+          "rendered": true
+        },
+        {
+          "at": 1794129534572.7349,
+          "pumpMs": 8.214999996125698,
+          "renderMs": 47.25500000268221,
+          "totalMs": 55.46999999880791,
+          "rendered": true
+        },
+        {
+          "at": 1794129534628.605,
+          "pumpMs": 35.45000000298023,
+          "renderMs": 42.78000000119209,
+          "totalMs": 78.23000000417233,
+          "rendered": true
+        },
+        {
+          "at": 1794129534712.05,
+          "pumpMs": 0.7100000008940697,
+          "renderMs": 54.76500000059605,
+          "totalMs": 55.475000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129534819.38,
+          "pumpMs": 17.655000001192093,
+          "renderMs": 42.6600000038743,
+          "totalMs": 60.315000005066395,
+          "rendered": true
+        },
+        {
+          "at": 1794129534880.26,
+          "pumpMs": 0.29500000178813934,
+          "renderMs": 46.88000000268221,
+          "totalMs": 47.17500000447035,
+          "rendered": true
+        },
+        {
+          "at": 1794129534933.96,
+          "pumpMs": 28.019999995827675,
+          "renderMs": 40.480000004172325,
+          "totalMs": 68.5,
+          "rendered": true
+        },
+        {
+          "at": 1794129535056.68,
+          "pumpMs": 20.115000002086163,
+          "renderMs": 44.94500000029802,
+          "totalMs": 65.06000000238419,
+          "rendered": true
+        },
+        {
+          "at": 1794129535122.285,
+          "pumpMs": 0.30000000447034836,
+          "renderMs": 49.604999996721745,
+          "totalMs": 49.90500000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129535177.025,
+          "pumpMs": 39.350000001490116,
+          "renderMs": 42.57999999821186,
+          "totalMs": 81.92999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129535314.6948,
+          "pumpMs": 39.375,
+          "renderMs": 60.21000000089407,
+          "totalMs": 99.58500000089407,
+          "rendered": true
+        },
+        {
+          "at": 1794129535418.5898,
+          "pumpMs": 0.5150000005960464,
+          "renderMs": 43.00500000268221,
+          "totalMs": 43.520000003278255,
+          "rendered": true
+        },
+        {
+          "at": 1794129535467.21,
+          "pumpMs": 45.90500000119209,
+          "renderMs": 69.2149999961257,
+          "totalMs": 115.11999999731779,
+          "rendered": true
+        },
+        {
+          "at": 1794129535669.505,
+          "pumpMs": 0.510000005364418,
+          "renderMs": 54.98499999940395,
+          "totalMs": 55.49500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129535728.01,
+          "pumpMs": 45.645000003278255,
+          "renderMs": 47.96999999880791,
+          "totalMs": 93.61500000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129535829.775,
+          "pumpMs": 14.45499999821186,
+          "renderMs": 53.475000001490116,
+          "totalMs": 67.92999999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129535961.25,
+          "pumpMs": 9.339999996125698,
+          "renderMs": 48.73499999940395,
+          "totalMs": 58.07499999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129536024.4949,
+          "pumpMs": 13.990000002086163,
+          "renderMs": 62.92000000178814,
+          "totalMs": 76.9100000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129536106.5698,
+          "pumpMs": 62.92999999970198,
+          "renderMs": 48.54500000178814,
+          "totalMs": 111.47500000149012,
+          "rendered": true
+        },
+        {
+          "at": 1794129536281.68,
+          "pumpMs": 13.339999996125698,
+          "renderMs": 61.47000000625849,
+          "totalMs": 74.81000000238419,
+          "rendered": true
+        },
+        {
+          "at": 1794129536357.255,
+          "pumpMs": 31.375,
+          "renderMs": 50.12000000476837,
+          "totalMs": 81.49500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129536447.005,
+          "pumpMs": 14.235000006854534,
+          "renderMs": 53.16499999910593,
+          "totalMs": 67.40000000596046,
+          "rendered": true
+        },
+        {
+          "at": 1794129536567.355,
+          "pumpMs": 13.990000002086163,
+          "renderMs": 50.88499999791384,
+          "totalMs": 64.875,
+          "rendered": true
+        },
+        {
+          "at": 1794129536634.665,
+          "pumpMs": 27.429999999701977,
+          "renderMs": 55.07999999821186,
+          "totalMs": 82.50999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129536727.415,
+          "pumpMs": 19.054999999701977,
+          "renderMs": 52.03499999642372,
+          "totalMs": 71.0899999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129536872.98,
+          "pumpMs": 0.3700000047683716,
+          "renderMs": 45.37999999523163,
+          "totalMs": 45.75,
+          "rendered": true
+        },
+        {
+          "at": 1794129536919.3,
+          "pumpMs": 39.63500000536442,
+          "renderMs": 41.189999997615814,
+          "totalMs": 80.82500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129537007.635,
+          "pumpMs": 0.6400000005960464,
+          "renderMs": 58.74000000208616,
+          "totalMs": 59.38000000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129537115.95,
+          "pumpMs": 12.370000004768372,
+          "renderMs": 54.125,
+          "totalMs": 66.49500000476837,
+          "rendered": true
+        },
+        {
+          "at": 1794129537185.255,
+          "pumpMs": 49.105000004172325,
+          "renderMs": 48.61500000208616,
+          "totalMs": 97.72000000625849,
+          "rendered": true
+        },
+        {
+          "at": 1794129537311.2,
+          "pumpMs": 63.57000000029802,
+          "renderMs": 43.62000000476837,
+          "totalMs": 107.1900000050664,
+          "rendered": true
+        },
+        {
+          "at": 1794129537420.29,
+          "pumpMs": 55.125,
+          "renderMs": 42.70000000298023,
+          "totalMs": 97.82500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129537578.015,
+          "pumpMs": 48.04500000178814,
+          "renderMs": 36.83499999344349,
+          "totalMs": 84.87999999523163,
+          "rendered": true
+        },
+        {
+          "at": 1794129537666.03,
+          "pumpMs": 32.87999999523163,
+          "renderMs": 41.32000000029802,
+          "totalMs": 74.19999999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129537747.085,
+          "pumpMs": 0.6699999943375587,
+          "renderMs": 45.435000002384186,
+          "totalMs": 46.104999996721745,
+          "rendered": true
+        },
+        {
+          "at": 1794129537853.46,
+          "pumpMs": 24.71000000089407,
+          "renderMs": 43.92499999701977,
+          "totalMs": 68.63499999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129537924.0798,
+          "pumpMs": 56.41499999910593,
+          "renderMs": 45.03000000119209,
+          "totalMs": 101.44500000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129538033.035,
+          "pumpMs": 53.60999999940395,
+          "renderMs": 37.92000000178814,
+          "totalMs": 91.5300000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129538270.64,
+          "pumpMs": 42.725000001490116,
+          "renderMs": 42.809999994933605,
+          "totalMs": 85.53499999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129538372.375,
+          "pumpMs": 12.865000002086163,
+          "renderMs": 50.44500000029802,
+          "totalMs": 63.310000002384186,
+          "rendered": true
+        },
+        {
+          "at": 1794129538486.4,
+          "pumpMs": 43.96000000089407,
+          "renderMs": 45.314999997615814,
+          "totalMs": 89.27499999850988,
+          "rendered": true
+        },
+        {
+          "at": 1794129538593.1099,
+          "pumpMs": 1.0499999970197678,
+          "renderMs": 47.21000000089407,
+          "totalMs": 48.25999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129538703.7349,
+          "pumpMs": 11.700000002980232,
+          "renderMs": 38.125,
+          "totalMs": 49.82500000298023,
+          "rendered": true
+        },
+        {
+          "at": 1794129538754.055,
+          "pumpMs": 7.570000000298023,
+          "renderMs": 36.17000000178814,
+          "totalMs": 43.74000000208616,
+          "rendered": true
+        },
+        {
+          "at": 1794129538804.2349,
+          "pumpMs": 40.225000001490116,
+          "renderMs": 44.184999994933605,
+          "totalMs": 84.40999999642372,
+          "rendered": true
+        },
+        {
+          "at": 1794129538936.005,
+          "pumpMs": 1.0650000050663948,
+          "renderMs": 44.09499999880791,
+          "totalMs": 45.1600000038743,
+          "rendered": true
+        },
+        {
+          "at": 1794129538982.8198,
+          "pumpMs": 11.29500000178814,
+          "renderMs": 36.10999999940395,
+          "totalMs": 47.40500000119209,
+          "rendered": true
+        },
+        {
+          "at": 1794129539034.3699,
+          "pumpMs": 44.20000000298023,
+          "renderMs": 36.00499999523163,
+          "totalMs": 80.20499999821186,
+          "rendered": true
+        },
+        {
+          "at": 1794129539166.0999,
+          "pumpMs": 46.979999996721745,
+          "renderMs": 37,
+          "totalMs": 83.97999999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129539252.095,
+          "pumpMs": 32.54500000178814,
+          "renderMs": 36.10999999940395,
+          "totalMs": 68.6550000011921,
+          "rendered": true
+        },
+        {
+          "at": 1794129539371.76,
+          "pumpMs": 0.6550000011920929,
+          "renderMs": 39.53999999910593,
+          "totalMs": 40.19500000029802,
+          "rendered": true
+        },
+        {
+          "at": 1794129539413.925,
+          "pumpMs": 10.865000002086163,
+          "renderMs": 37.20000000298023,
+          "totalMs": 48.065000005066395,
+          "rendered": true
+        },
+        {
+          "at": 1794129539467.42,
+          "pumpMs": 45.07000000029802,
+          "renderMs": 35.78499999642372,
+          "totalMs": 80.85499999672174,
+          "rendered": true
+        },
+        {
+          "at": 1794129539594.935,
+          "pumpMs": 53.49499999731779,
+          "renderMs": 34.894999995827675,
+          "totalMs": 88.38999999314547,
+          "rendered": true
+        },
+        {
+          "at": 1794129539728.1948,
+          "pumpMs": 35.19999999552965,
+          "renderMs": 35.855000004172325,
+          "totalMs": 71.05499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129539845.8,
+          "pumpMs": 32.65500000119209,
+          "renderMs": 37.399999998509884,
+          "totalMs": 70.05499999970198,
+          "rendered": true
+        },
+        {
+          "at": 1794129539919.675,
+          "pumpMs": 0.6150000020861626,
+          "renderMs": 40.90999999642372,
+          "totalMs": 41.524999998509884,
+          "rendered": true
+        },
+        {
+          "at": 1794129540009.385,
+          "pumpMs": 18.274999998509884,
+          "renderMs": 38.48499999940395,
+          "totalMs": 56.75999999791384,
+          "rendered": true
+        },
+        {
+          "at": 1794129540068.375,
+          "pumpMs": 50.82499999552965,
+          "renderMs": 39.5,
+          "totalMs": 90.32499999552965,
+          "rendered": true
+        },
+        {
+          "at": 1794129540210.9648,
+          "pumpMs": 40.58000000566244,
+          "renderMs": 38.17499999701977,
+          "totalMs": 78.75500000268221,
+          "rendered": true
+        },
+        {
+          "at": 1794129540293.4,
+          "pumpMs": 8.395000003278255,
+          "renderMs": 39.07999999821186,
+          "totalMs": 47.475000001490116,
+          "rendered": true
+        },
+        {
+          "at": 1794129540348.79,
+          "pumpMs": 47.16499999910593,
+          "renderMs": 48.75500000268221,
+          "totalMs": 95.92000000178814,
+          "rendered": true
+        },
+        {
+          "at": 1794129540491.55,
+          "pumpMs": 15.440000005066395,
+          "renderMs": 40.474999994039536,
+          "totalMs": 55.91499999910593,
+          "rendered": true
+        },
+        {
+          "at": 1794129540549.93,
+          "pumpMs": 30.79500000178814,
+          "renderMs": 43.12999999523163,
+          "totalMs": 73.92499999701977,
+          "rendered": true
+        },
+        {
+          "at": 1794129540625.92,
+          "pumpMs": 13.679999999701977,
+          "renderMs": 38.28499999642372,
+          "totalMs": 51.9649999961257,
+          "rendered": true
+        },
+        {
+          "at": 1794129540740.31,
+          "pumpMs": 53.96999999880791,
+          "renderMs": 51.4649999961257,
+          "totalMs": 105.4349999949336,
+          "rendered": true
+        },
+        {
+          "at": 1794129540847.065,
+          "pumpMs": 72.87000000476837,
+          "renderMs": 55.75999999791384,
+          "totalMs": 128.6300000026822,
+          "rendered": true
+        }
+      ]
+    }
+  ],
+  "finalAudit": {
+    "commit": "82a5d63fe",
+    "valid": true,
+    "headless": false,
+    "device": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": false
+    },
+    "samples": [
+      {
+        "materials": 94,
+        "builds": 452,
+        "hits": 42056,
+        "fallbacks": 110,
+        "discoveries": 547
+      },
+      {
+        "materials": 99,
+        "builds": 497,
+        "hits": 59321,
+        "fallbacks": 111,
+        "discoveries": 590
+      },
+      {
+        "materials": 103,
+        "builds": 527,
+        "hits": 79391,
+        "fallbacks": 111,
+        "discoveries": 614
+      }
+    ]
+  },
+  "revisionNote": "A/B/B/A measured incremental identity before two conservative edge-case fixes: sticky fallback for custom root keys and null/undefined sampler token distinction. Final committed code subsequently passed the reference-key live audit; audit timings are excluded."
+}

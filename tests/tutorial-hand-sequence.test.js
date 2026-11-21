@@ -1,13 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import * as Game from '../src/simulation/game.js';
-import {tutorialHandTarget} from '../src/rendering/tutorial-hand-target.js';
+import {tutorialHandTarget} from '../src/tutorial/tutorial-hand-target.js';
+import {tutorialHandTarget as legacyTutorialHandTarget} from '../src/rendering/tutorial-hand-target.js';
 import {tutorialHudHandTarget} from '../src/ui/tutorial-hud-hand.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {deserialize} from '../src/persistence/snapshots.js';
 import {TutorialController} from '../src/tutorial/controller.js';
 import {WorldScene} from '../src/rendering/scene.js';
 const nav={field:{surface:()=>0},placement:()=>({valid:true,suppress:[]}),setState(){},path:(_a,b)=>[{x:b.x,z:b.z}]};
+test('legacy rendering uses the same tutorial target service',()=>assert.equal(legacyTutorialHandTarget,tutorialHandTarget));
 function fixture(){const s=Game.newGame({seed:712});s.tutorial.step='center';s.villages[0].center={x:10,z:0};return s;}
 test('the first center and first seed follow HUD selection, legal 3D placement, then remove both hints',()=>{
  const s=fixture(),before=serialize(s),centerMessage={id:'basic.center',reading:true};

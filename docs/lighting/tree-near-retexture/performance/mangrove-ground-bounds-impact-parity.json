@@ -1,0 +1,26 @@
+{
+  "ticks": 260,
+  "phases": {
+    "falling": 76,
+    "rolling": 15,
+    "recovering": 82,
+    "recoveryExit": 6,
+    "upright": 81
+  },
+  "elapsed": 13.000000000047294,
+  "animals": 20,
+  "checks": 5202,
+  "skipped": 1667395,
+  "maxError": 0,
+  "phaseCounts": {
+    "falling": 77,
+    "walking": 3164,
+    "waiting": 1162,
+    "attacking": 701,
+    "rolling": 16,
+    "recovering": 82
+  },
+  "network": true,
+  "sceneErrors": [],
+  "scope": "One active mangrove-islands QA simulation with 20 synthetic animals and two direct physics impacts on one animal; compares full and candidate minima in the same render pose. Physics manager is real but impacts are injected directly, no full gameplay or pixel parity, no performance measurement."
+}

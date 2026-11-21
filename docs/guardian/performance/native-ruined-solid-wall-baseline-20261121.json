@@ -1,0 +1,150 @@
+{
+  "parent": "632d4ba13294fb043a97469bf2c8225345d87a67",
+  "captureSha256": "6b56abfc2448bdc579e0bc5463921a121c592836ce038160d6fdedf523eea981",
+  "environment": {
+    "browser": "Microsoft Edge",
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "canvas": [
+      640,
+      360
+    ],
+    "pageViewport": [
+      640,
+      480
+    ],
+    "displayRefreshHz": 30,
+    "quality": "muy_baja"
+  },
+  "command": "requestRepair",
+  "fixture": {
+    "profile": "youngMale",
+    "targetId": "structure-749",
+    "chunkCount": 9,
+    "targetStart": {
+      "hp": 0,
+      "maxHp": 100,
+      "status": "ruined"
+    }
+  },
+  "task": {
+    "bodyId": 1,
+    "ticket": 6,
+    "effectiveTime": 28.979999999999595
+  },
+  "action": {
+    "bodyId": 1,
+    "ticket": 8,
+    "effectiveTime": 31.239999999999547,
+    "duration": 0
+  },
+  "observation": {
+    "elapsed": 32.73999999999965,
+    "worker": {
+      "id": "worker-900011",
+      "actionElapsed": 0,
+      "admission": "native-action"
+    },
+    "target": {
+      "hp": 0,
+      "maxHp": 100,
+      "status": "ruined"
+    },
+    "balance": {
+      "n": "100000",
+      "d": "1"
+    },
+    "payment": null,
+    "repairApplied": 0,
+    "preparedOrAcquiredBarrier": 0
+  },
+  "graphics": {
+    "before": {
+      "root": 125,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 127,
+          "geometry": 74,
+          "material": [
+            38
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "after": {
+      "root": 125,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 127,
+          "geometry": 74,
+          "material": [
+            38
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "actorRoots": [
+      607
+    ],
+    "retainedOwnerKeys": 680,
+    "retainedReferences": 570,
+    "displaced": [],
+    "drawTickets": [
+      2,
+      4,
+      6,
+      8
+    ]
+  },
+  "drained": true,
+  "errors": [],
+  "cadence": {
+    "targetMs": 16.666666666666668,
+    "c4Accepted": false,
+    "drawIntervals": 848,
+    "peaks": [
+      {
+        "at": 1795277853510.9,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 36.2998046875,
+        "drawMs": 0.2001953125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795277859443.6,
+        "sequence": 34,
+        "ticket": 2,
+        "intervalMs": 36.2001953125,
+        "drawMs": 1.2998046875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795277858743.2,
+        "sequence": 25,
+        "ticket": null,
+        "intervalMs": 35.89990234375,
+        "drawMs": 0.699951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795277858841.7,
+        "sequence": 26,
+        "ticket": 2,
+        "intervalMs": 34.300048828125,
+        "drawMs": 2.5,
+        "trigger": "raf",
+        "replay": true
+      }
+    ]
+  }
+}

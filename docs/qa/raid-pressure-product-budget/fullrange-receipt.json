@@ -1,0 +1,56 @@
+{
+  "previousSource": "74c7bb69",
+  "scope": "Composition-before-RNG full-H-range revision; no integration/campaign/GPU/CI",
+  "sources": {
+    "src/simulation/raid-pressure-budget.js": "1c37dc29fa5970964eb99606fc7fd78501a15715cb43dc0ac03e567d48bd7a39",
+    "content/balance/raid_pressure_candidate.json": "ddcd62a2d126b165eb5f196095f3bc7d14ef589ed92781226ccb4632e9e54c45",
+    "tests/raid-pressure-budget.test.js": "26895fcacb450374e0747e530d4c6ea38fc0cf37c712a6158c70ca41468a67d5",
+    "tools/screen-raid-pressure-product.mjs": "262ea0bcbcdc82a8c0a6c4be974b4c1d167157ec8a2b1285841f44038af40d9d"
+  },
+  "evidence": {
+    "full-range-revision.md": "4d61e44ae378e8f96bd11f377f6140405cc5fbc6ded564847514999013c4a10b",
+    "fullrange-tests.tap": "dbbe3cac04ef94d9113c8a0d8dfe8b6b99b9167407a2f5fc7587e4fb90289abc",
+    "reference-envelopes-fullrange.json": "959863964a4103342645daa67b16057f95e660864f63561f76e6e17dae15fb3c"
+  },
+  "tests": {
+    "command": "node --test tests/raid-pressure-budget.test.js",
+    "exit": 0,
+    "pass": 16,
+    "fail": 0,
+    "suiteMs": 241.7043
+  },
+  "syntaxExit": 0,
+  "protectedUnchanged": {
+    "src/simulation/raids.js": {
+      "baseBlob": "d30cdb9c059de56d2a374d437aca0c27b08f74fd",
+      "workingTreeSha256": "5c88e8fcd5b703a23e3fbabe5f7b60d356eaae6375d7cdc28f169f6f7e82ba0f"
+    },
+    "src/simulation/game.js": {
+      "baseBlob": "37d577e098dcb0a00b27b56a21830ea23c5ddc4e",
+      "workingTreeSha256": "56694bf7ef370436156ea626891ea5e57abc6af2b7f42c3174f3a5d476677cec"
+    },
+    "src/persistence/snapshots.js": {
+      "baseBlob": "5d132ebf0ffbfb89e4b7f28eef77ee6cc27d22ea",
+      "workingTreeSha256": "992c9bb29d83f844eabd4a8a6963722ef4f418f62b3531f99e782397aaae9806"
+    },
+    "src/simulation/balance.js": {
+      "baseBlob": "a8614796decf7e869ff32c0fab1ea3a6601b0109",
+      "workingTreeSha256": "0317d5d23326eb0035c8a59e87eae91b80544328e1d647a530188490c556b637"
+    },
+    "content/balance/player_revisions.json": {
+      "baseBlob": "fb036c6c165a51ed370c6445e887600439d272fa",
+      "workingTreeSha256": "4750784bfa92bfb803be67ee084dce6bbada50954f2afa92e06b59b2d35e31fd"
+    },
+    "tools/generate_balance.py": {
+      "baseBlob": "1bf674db9482fcb5f26549c9ff00a955941f7f36",
+      "workingTreeSha256": "5e26157584cd55a3fe4a32f22a7007c75faf20acee067c9c5f0c613dc1b9faf9"
+    }
+  },
+  "candidateDecisions": [
+    "default Q feasibility floor visibly raises impossible mean budgets, explicitQ never raised",
+    "bounded cheaper-species composition adjustment within ceil normalized caps before RNG",
+    "native full min/max hit roll never truncated",
+    "round structural damage",
+    "exact config/runtime/source validation; JSON validation must be explicitly called by integration"
+  ]
+}

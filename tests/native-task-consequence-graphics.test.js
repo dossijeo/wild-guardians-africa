@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {nativeTaskConsequenceGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
+
+test('the native consequence prepares original Carry and nine crate pieces on its resident action actor, and can roll back before commit',async()=>{
+ const f=await nativeTaskConsequenceGraphicsFixture();let part;try{const actor=f.roster.get(f.actor),root=actor.root,oldRootMeshes=[];root.traverse(mesh=>{if(mesh.isMesh)oldRootMeshes.push({mesh,geometry:mesh.geometry,material:mesh.material,visible:mesh.visible});});assert.equal(f.carries,0);assert.equal(actor.hasBakedCarrying(),false);part=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});assert.equal(f.carries,1);assert.equal(f.acquires,1);assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.root,root);assert.equal(f.state.crates.length,0);assert(part.valid());
+  const pieces=part.request.options.include.filter(mesh=>mesh._wgWalkAttachmentIndex!==undefined);assert.equal(pieces.length,9);assert(pieces.every(mesh=>!mesh.visible));part.activate();assert(actor.isBakedCarrying());assert(pieces.every(mesh=>mesh.visible));part.rollback();assert(part.valid());assert.equal(actor.isBakedCarrying(),false);assert(pieces.every(mesh=>!mesh.visible));for(const item of oldRootMeshes){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.mesh.material,item.material);assert.equal(item.mesh.visible,item.visible);}part.activate();const data=f.commit();part.finalize(data);f.flush();assert(actor.isBakedCarrying());assert.equal(f.roster.get(f.actor),actor);assert.equal(f.roster.status().nativePreparing,0);assert.deepEqual(f.errors,[]);
+ }finally{part?.cancel();f.close();}
+});
+
+test('a foreign consequence proof cannot finalize the Carry candidate and cancelling preserves its native action actor',async()=>{
+ const f=await nativeTaskConsequenceGraphicsFixture();let part;try{const actor=f.roster.get(f.actor);part=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});part.activate();const data=f.commit(),foreign=structuredClone(data);foreign.nativeTaskConsequenceBinding.reference.crateId++;foreign.nativeTaskConsequenceBinding.preparedReference.crateId++;assert.throws(()=>part.validateCommit(foreign),/committed resources/);assert(part.valid());part.rollback();assert(part.cancel());f.flush();assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.isBakedCarrying(),false);assert.equal(f.roster.status().native,1);assert.deepEqual(f.errors,[]);}finally{part?.cancel();f.close();}
+});

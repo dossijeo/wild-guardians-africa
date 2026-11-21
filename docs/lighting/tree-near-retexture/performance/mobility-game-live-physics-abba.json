@@ -1,0 +1,325 @@
+{
+  "scope": "120 acknowledged simulation ticks with scripted impacts, real textured hyena rendering and one request in flight. Worker presentation copies root and bones after each response; no interpolation, autonomous GPU trajectories, WorldScene, HUD, input, contact publication or gameplay integration. Frozen presentation while Worker busy, full final snapshot only. JSON byte count is estimate, not measured transfer.",
+  "runs": [
+    {
+      "mode": "main",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "frames": {
+        "count": 135,
+        "p95": 33.405000000000655,
+        "p99": 33.42500000000018,
+        "max": 266.6149999999998
+      },
+      "overlap": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "renderMs": {
+        "count": 136,
+        "p95": 0.5550000071525574,
+        "p99": 0.6200000047683716,
+        "max": 1.0050000101327896
+      },
+      "responseMs": {
+        "count": 120,
+        "p95": 6.725000008940697,
+        "p99": 8.96000000834465,
+        "max": 298.06999999284744
+      },
+      "deliveryMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "presentationDelayMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "tickMs": {
+        "count": 120,
+        "p95": 6.3499999940395355,
+        "p99": 7.594999998807907,
+        "max": 297.4099999964237
+      },
+      "workerComputeMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "poseApplyMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "poseJsonBytes": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 136,
+        "p95": 2.844128,
+        "p99": 3.594816,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "elapsedMs": 4210.635000005364,
+      "framesDuringWork": 135,
+      "steps": 120,
+      "stateHash": "2dbce6780821ca92939e3ccf9682e25c16bd428fb67b4388f1d28044d8a9a847"
+    },
+    {
+      "mode": "worker",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "frames": {
+        "count": 143,
+        "p95": 33.36500000000024,
+        "p99": 33.38500000000022,
+        "max": 33.39499999999953
+      },
+      "overlap": {
+        "count": 128,
+        "p95": 33.36500000000024,
+        "p99": 33.38500000000022,
+        "max": 33.39499999999953
+      },
+      "renderMs": {
+        "count": 144,
+        "p95": 0.635000005364418,
+        "p99": 0.8349999934434891,
+        "max": 7.550000011920929
+      },
+      "responseMs": {
+        "count": 120,
+        "p95": 33.2749999910593,
+        "p99": 33.28499999642372,
+        "max": 299.9099999964237
+      },
+      "deliveryMs": {
+        "count": 120,
+        "p95": 6.560000002384186,
+        "p99": 10.219999998807907,
+        "max": 299.2449999898672
+      },
+      "presentationDelayMs": {
+        "count": 120,
+        "p95": 30.609999999403954,
+        "p99": 30.694999992847443,
+        "max": 30.944999992847443
+      },
+      "tickMs": {
+        "count": 120,
+        "p95": 5.810000002384186,
+        "p99": 7.480000004172325,
+        "max": 297.9750000089407
+      },
+      "workerComputeMs": {
+        "count": 120,
+        "p95": 6.2349999994039536,
+        "p99": 10.015000000596046,
+        "max": 298.6050000041723
+      },
+      "poseApplyMs": {
+        "count": 120,
+        "p95": 0.12000000476837158,
+        "p99": 0.13499999046325684,
+        "max": 0.23000000417232513
+      },
+      "poseJsonBytes": {
+        "count": 120,
+        "p95": 4835,
+        "p99": 4837,
+        "max": 4842
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 144,
+        "p95": 3.49184,
+        "p99": 4.438464,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "elapsedMs": 4266.754999995232,
+      "framesDuringWork": 143,
+      "steps": 120,
+      "stateHash": "2dbce6780821ca92939e3ccf9682e25c16bd428fb67b4388f1d28044d8a9a847"
+    },
+    {
+      "mode": "worker",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "frames": {
+        "count": 143,
+        "p95": 33.36500000000024,
+        "p99": 33.45499999999993,
+        "max": 33.470000000000255
+      },
+      "overlap": {
+        "count": 128,
+        "p95": 33.36500000000024,
+        "p99": 33.43000000000029,
+        "max": 33.470000000000255
+      },
+      "renderMs": {
+        "count": 144,
+        "p95": 0.6500000059604645,
+        "p99": 0.7899999916553497,
+        "max": 4.915000006556511
+      },
+      "responseMs": {
+        "count": 120,
+        "p95": 33.28999999165535,
+        "p99": 33.435000002384186,
+        "max": 299.99000000953674
+      },
+      "deliveryMs": {
+        "count": 120,
+        "p95": 7.034999996423721,
+        "p99": 10.11999998986721,
+        "max": 296.67500001192093
+      },
+      "presentationDelayMs": {
+        "count": 120,
+        "p95": 30.594999998807907,
+        "p99": 30.714999988675117,
+        "max": 30.810000002384186
+      },
+      "tickMs": {
+        "count": 120,
+        "p95": 6.004999995231628,
+        "p99": 7.659999996423721,
+        "max": 295.32999999821186
+      },
+      "workerComputeMs": {
+        "count": 120,
+        "p95": 6.739999994635582,
+        "p99": 9.890000000596046,
+        "max": 296.04999999701977
+      },
+      "poseApplyMs": {
+        "count": 120,
+        "p95": 0.125,
+        "p99": 0.14499999582767487,
+        "max": 0.26500000059604645
+      },
+      "poseJsonBytes": {
+        "count": 120,
+        "p95": 4835,
+        "p99": 4837,
+        "max": 4842
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 144,
+        "p95": 3.467008,
+        "p99": 4.517408,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "elapsedMs": 4266.740000009537,
+      "framesDuringWork": 143,
+      "steps": 120,
+      "stateHash": "2dbce6780821ca92939e3ccf9682e25c16bd428fb67b4388f1d28044d8a9a847"
+    },
+    {
+      "mode": "main",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "phases": [
+        "falling"
+      ],
+      "network": true,
+      "frames": {
+        "count": 135,
+        "p95": 33.39000000000033,
+        "p99": 33.460000000000036,
+        "max": 299.94000000000005
+      },
+      "overlap": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "renderMs": {
+        "count": 136,
+        "p95": 0.5349999964237213,
+        "p99": 0.6150000095367432,
+        "max": 0.7299999892711639
+      },
+      "responseMs": {
+        "count": 120,
+        "p95": 6.449999988079071,
+        "p99": 7.864999994635582,
+        "max": 301.7800000011921
+      },
+      "deliveryMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "presentationDelayMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "tickMs": {
+        "count": 120,
+        "p95": 6.125,
+        "p99": 7.425000011920929,
+        "max": 301.0049999952316
+      },
+      "workerComputeMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "poseApplyMs": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "poseJsonBytes": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "gpu": {
+        "reason": null,
+        "samples": 136,
+        "p95": 3.62912,
+        "p99": 3.795488,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "elapsedMs": 4244.535000011325,
+      "framesDuringWork": 135,
+      "steps": 120,
+      "stateHash": "2dbce6780821ca92939e3ccf9682e25c16bd428fb67b4388f1d28044d8a9a847"
+    }
+  ]
+}

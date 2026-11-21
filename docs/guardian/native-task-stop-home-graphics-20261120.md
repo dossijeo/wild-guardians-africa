@@ -1,0 +1,21 @@
+# Adopción gráfica de Home desde Task25
+
+El roster conserva la pose de Task25 sobre el actor detenido hasta que Home18 adquiere el cuerpo. Verifica que Home use la misma autoridad, sesión, cuerpo, perfil, radio y pose. Sólo admite los cambios de estado y asignación que produce el relevo de Game. Si el estado de Game llega primero, la pose queda pendiente hasta recibir la atestación de la parada.
+
+La transición utiliza la preparación de variantes y el reemplazo de asignación existentes. Las pruebas conservan la geometría, el índice y el atributo de posición durante la parada. Home conserva el actor original y retira la asignación de movimiento anterior al finalizar la nueva. Se verifica una sola adquisición del personaje.
+
+DetourCrowd 1.6.0 sustituye la meta sobre el agente existente. Three.js r180 actualiza valores sobre las asignaciones de recursos que siguen vigentes y vuelve a enlazar cuando cambia la identidad subyacente. Wild Guardians reutiliza el actor y sus buffers de geometría, y cambia la trayectoria sólo al adquirir Home18. [Código de DetourCrowd](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L607-L662) · [Código de Three.js](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Bindings.js#L193-L255).
+
+Las dos pruebas usan WASM, la geometría y las animaciones del proyecto, y una señal de dibujo simulada. Ejercitan el estado de retorno de Game antes y después del recibo, conservan el cuerpo y comprueban la adquisición de Home18 sin reposicionar el actor.
+
+Quedan conectar el disparo al fin de turno ordinario, cubrir el relevo con motores de puerta y validar el recorrido y su cadencia en GPU física. A6, la integración y C4 siguen abiertos.
+
+En el original, Home rechazaba el trabajador detenido por falta de una fuente gráfica de Task25. La selección final pasó 483 pruebas en 36 archivos y la compilación de producto terminó correctamente. [Evidencia de validación](performance/native-task-stop-home-graphics-20261120/manifest.json).
+
+El 21 de noviembre se reprodujo el disparo pendiente desde una orden ordinaria de Harvest. La autoridad WASM, con los puertos reales y un Host simulado, adquirió Task14 a la hora de juego 249,60 sobre el cuerpo 1. El trabajador avanzó siete pasos hasta 249,95. El siguiente avance, al vencer el turno a 250, rechazó `unsupported return boundary`. El registro solo contiene Idle20 y Task14 adquiridos. Esta captura fija el caso de partida para conectar Task25 y después Home18 y se remitió a Astra. [Reproducción de autoridad](performance/native-task-stop-home-graphics-20261120/ordinary-shift-expiry.json).
+
+La repetición con los Workers de producto y NVIDIA Turing adquirió Idle20 y Task14 con los tickets 2 y 5. El actor 900011 mantuvo el cuerpo 1 y ambos tickets llegaron al Host de dibujo sin errores de GPU. El auditor pausó por un instante para comprobar el frame y reanudó el reloj de Game. Observó 41 publicaciones desde 247,95 hasta 249,95 con el trabajador caminando. El tick siguiente volvió a rechazar la frontera de retorno. Astra recibió este control físico para validar el disparo cuando esté conectado. [Recibo del camino Hosted](performance/native-task-stop-home-graphics-20261120/ordinary-shift-expiry-hosted.json.gz).
+
+En el perfil `olderFemale`, el paso desde 299,9499999999955 s sumó 0,05 s y quedó por debajo de 300 en la guarda. Game ajustó el tiempo publicado a 300 y ejecutó el retorno heredado en esa misma publicación. El actor pasó de `native-task` a `returning` sin un recibo Task25. El siguiente paso rechazó el delta de intención y el Host cerró el control por `native-reset`. Astra recibió el valor exacto y la secuencia para que la comprobación y el retorno usen el mismo borde de turno. [Recibo del turno de 300 s](performance/native-task-stop-home-graphics-20261120/ordinary-shift-fractional-300.json).
+
+La integración posterior conectó el turno ordinario a Task25 y usó el tiempo canónico en ambas comprobaciones. En los casos físicos completados, la tarea siguió moviendo su cuerpo durante la preparación, Home conservó sus mallas y la llegada retiró el mismo cuerpo. [Adaptación, perfiles y límites de la prueba](native-task-return-adapter-20261121.md).

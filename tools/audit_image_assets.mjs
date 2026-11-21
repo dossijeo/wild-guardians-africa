@@ -83,7 +83,8 @@ export function farAtlasImageReferences(manifest,consumerText){
    if(!Number.isSafeInteger(entry.slot)||entry.slot<0||slots.has(entry.slot))throw Error('Far atlas slot requires review');slots.add(entry.slot);
    for(const phase of ['day','night']){
     const path=entry[phase]?.replace(/^\.\//,'');
-    if(path!==`assets/far-vegetation/${biome}-${entry.slot}-${phase}.webp`)throw Error('Far atlas path requires review');
+    const cleaned=(biome==='savanna'&&entry.slot===1||biome==='grand_river'&&[1,3].includes(entry.slot))&&path===`assets/far-vegetation/cleaned-20261101/${biome}-${entry.slot}-${phase}.webp`;
+    if(path!==`assets/far-vegetation/${biome}-${entry.slot}-${phase}.webp`&&!cleaned)throw Error('Far atlas path requires review');
     refs.push({path,reference:{catalog:'content/far-vegetation.json',field:`biomes.${biome}[${entry.slot}].${phase}`,consumer:'src/rendering/far-vegetation.js',role:'color-atlas',requiresAtlasExport:true}});
    }
   }

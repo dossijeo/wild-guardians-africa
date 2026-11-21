@@ -1,0 +1,173 @@
+{
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 850.4399999976158,
+  "publications": [
+    {
+      "sequence": 1,
+      "elapsed": 3000.433375000001,
+      "tickMs": 1014.1150000095367,
+      "responseMs": 1036.7699999958277,
+      "applyDelayMs": 4.704999998211861,
+      "applyMs": 257.330000013113,
+      "events": 12,
+      "actorsApplied": 21,
+      "actorsChanged": 5
+    },
+    {
+      "sequence": 2,
+      "elapsed": 3000.483375000001,
+      "tickMs": 16.180000007152557,
+      "responseMs": 46.730000004172325,
+      "applyDelayMs": 0.1599999964237213,
+      "applyMs": 42.939999997615814,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 11
+    },
+    {
+      "sequence": 3,
+      "elapsed": 3000.5333750000013,
+      "tickMs": 6.680000007152557,
+      "responseMs": 39.019999995827675,
+      "applyDelayMs": 0.0949999988079071,
+      "applyMs": 37.59499999880791,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 4,
+      "elapsed": 3000.5833750000015,
+      "tickMs": 3.3499999940395355,
+      "responseMs": 34.50499999523163,
+      "applyDelayMs": 0.0949999988079071,
+      "applyMs": 34.270000010728836,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 5,
+      "elapsed": 3000.6333750000017,
+      "tickMs": 4.125,
+      "responseMs": 36.09499999880791,
+      "applyDelayMs": 0.11500000953674316,
+      "applyMs": 35.189999997615814,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 13
+    },
+    {
+      "sequence": 6,
+      "elapsed": 3000.683375000002,
+      "tickMs": 3.2999999970197678,
+      "responseMs": 35.064999997615814,
+      "applyDelayMs": 0.11499999463558197,
+      "applyMs": 42.54999999701977,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 14
+    },
+    {
+      "sequence": 7,
+      "elapsed": 3000.733375000002,
+      "tickMs": 2.9449999928474426,
+      "responseMs": 36.98499999940395,
+      "applyDelayMs": 0.1300000101327896,
+      "applyMs": 35.429999992251396,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 14
+    },
+    {
+      "sequence": 8,
+      "elapsed": 3000.7833750000023,
+      "tickMs": 2.989999994635582,
+      "responseMs": 32.58499999344349,
+      "applyDelayMs": 0.0949999988079071,
+      "applyMs": 33.894999995827675,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 15
+    },
+    {
+      "sequence": 9,
+      "elapsed": 3000.8333750000024,
+      "tickMs": 2.5899999886751175,
+      "responseMs": 33.21999999880791,
+      "applyDelayMs": 0.10000000894069672,
+      "applyMs": 37.429999992251396,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 15
+    },
+    {
+      "sequence": 10,
+      "elapsed": 3000.8833750000026,
+      "tickMs": 3.4449999928474426,
+      "responseMs": 33.63499999046326,
+      "applyDelayMs": 0.10000000894069672,
+      "applyMs": 34.95000000298023,
+      "events": 0,
+      "actorsApplied": 21,
+      "actorsChanged": 16
+    }
+  ],
+  "eventsReceived": 12,
+  "observerCount": 12,
+  "simulationObserverCount": 0,
+  "visibility": [
+    {
+      "visible": false,
+      "at": 49409.30500000715
+    },
+    {
+      "visible": true,
+      "at": 49601.57500000298
+    }
+  ],
+  "fenceState": {
+    "received": 10,
+    "nextEvent": 12,
+    "displayed": 10,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false,
+    "visible": true
+  },
+  "frames": {
+    "count": 209,
+    "p95": 35.76500000059605,
+    "p99": 42.855000004172325,
+    "max": 266.67500001192093
+  },
+  "renderMs": {
+    "count": 210,
+    "p95": 35.28499999642372,
+    "p99": 38.41500000655651,
+    "max": 42.78499999642372
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "captures": [
+    {
+      "label": "before",
+      "path": ".cache/visible-fence/before.png",
+      "sha256": "ec3e879448532eaf9ccf668603a63b92e8c2a61f938c27abc72fb724a4087ca7"
+    },
+    {
+      "label": "hidden",
+      "path": ".cache/visible-fence/hidden.png",
+      "sha256": "0023074427ac900fa8408ca3c8c02e8c3588b3df82d93c50592936f95f6a1daf"
+    },
+    {
+      "label": "after",
+      "path": ".cache/visible-fence/after.png",
+      "sha256": "ec3e879448532eaf9ccf668603a63b92e8c2a61f938c27abc72fb724a4087ca7"
+    }
+  ],
+  "scope": "Ten sequential Worker-owned clone ticks and confirmed projection/event publications into a frozen real mangrove-islands QA scene. At most one request in flight. QA animal ID 0 renamed, 25 chunk keys, no physics manager; only positions and heading copied. All events classified structural; canvas CSS visibility is hidden on receipt of Worker message and held for two RAFs on invalidation and restored after synchronous application and draw. Screenshots when enabled are diagnostic and perturb scheduling; no pixel classifier, gameplay input, interpolation, synchronized animations, continuous collision, transaction rollback or production authority. The final Worker snapshot alone is checked against a reference."
+}

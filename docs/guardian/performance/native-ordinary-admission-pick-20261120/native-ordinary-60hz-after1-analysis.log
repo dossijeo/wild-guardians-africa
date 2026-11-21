@@ -1,0 +1,125 @@
+{
+  traceLossFree: false,
+  functionalOutcome: 'receipt-present-not-revalidated',
+  counts: {
+    frames: 4970,
+    opportunities: 5032,
+    outcomes: {
+      'awaiting-prepared-frame': 50,
+      submitted: 4966,
+      'mutation-hold': 4,
+      hidden: 12
+    }
+  },
+  maxima: {
+    submittedDrawStartIntervalMs: 90.824951171875,
+    callbackIntervalMs: 90.824951171875,
+    drawMs: 11.864990234375
+  },
+  ordinary: 1090,
+  incomplete: [],
+  stages: [
+    {
+      stage: 'start',
+      medianMs: 0.05517578125,
+      maxMs: 2.405029296875,
+      sequence: 1
+    },
+    {
+      stage: 'packet-bytes',
+      medianMs: 1.27001953125,
+      maxMs: 28.224853515625,
+      sequence: 319
+    },
+    {
+      stage: 'retained-preparations',
+      medianMs: 0.02978515625,
+      maxMs: 0.27490234375,
+      sequence: 161
+    },
+    {
+      stage: 'draw-world-checks',
+      medianMs: 0.02490234375,
+      maxMs: 1.570068359375,
+      sequence: 745
+    },
+    {
+      stage: 'combined-bytes',
+      medianMs: 1.239990234375,
+      maxMs: 30.849853515625,
+      sequence: 65
+    },
+    {
+      stage: 'validate-operations',
+      medianMs: 0.18505859375,
+      maxMs: 54.56005859375,
+      sequence: 673
+    },
+    {
+      stage: 'clock-contract',
+      medianMs: 0.02490234375,
+      maxMs: 0.264892578125,
+      sequence: 343
+    },
+    {
+      stage: 'references',
+      medianMs: 1.135009765625,
+      maxMs: 53.60498046875,
+      sequence: 414
+    },
+    {
+      stage: 'dependencies-wait',
+      medianMs: 0.02490234375,
+      maxMs: 0.544921875,
+      sequence: 1076
+    },
+    {
+      stage: 'dependencies-ready',
+      medianMs: 0.02001953125,
+      maxMs: 6.7451171875,
+      sequence: 909
+    },
+    {
+      stage: 'snapshot',
+      medianMs: 0.26513671875,
+      maxMs: 4.85498046875,
+      sequence: 337
+    },
+    {
+      stage: 'control-rendezvous',
+      medianMs: 0.0751953125,
+      maxMs: 0.324951171875,
+      sequence: 367
+    },
+    {
+      stage: 'clock-admission',
+      medianMs: 0.280029296875,
+      maxMs: 8.934814453125,
+      sequence: 909
+    },
+    {
+      stage: 'classify-ownership',
+      medianMs: 0.1298828125,
+      maxMs: 66.080078125,
+      sequence: 947
+    },
+    {
+      stage: 'replay-analysis',
+      medianMs: 0.52001953125,
+      maxMs: 32.9599609375,
+      sequence: 405
+    },
+    {
+      stage: 'pipeline-identities',
+      medianMs: 0.050048828125,
+      maxMs: 0.3798828125,
+      sequence: 152
+    },
+    {
+      stage: 'pin-and-publish-pending',
+      medianMs: 0.10498046875,
+      maxMs: 0.385009765625,
+      sequence: 899
+    }
+  ]
+}

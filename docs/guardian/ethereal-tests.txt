@@ -1,0 +1,180 @@
+TAP version 13
+# Subtest: original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 1 - original normal lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 11.4461
+  ...
+# Subtest: original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+ok 2 - original reduced lifecycle emits entry/exit once and keeps the approved full exit tail
+  ---
+  duration_ms: 1.091
+  ...
+# Subtest: late portrait asset load still has one genuine entry when first rendered during reading
+ok 3 - late portrait asset load still has one genuine entry when first rendered during reading
+  ---
+  duration_ms: 0.8542
+  ...
+# Subtest: reopening during farewell or outro supersedes the old withdrawal
+ok 4 - reopening during farewell or outro supersedes the old withdrawal
+  ---
+  duration_ms: 0.964
+  ...
+# Subtest: immediate hiding from intro cancels every owned source and pending request
+ok 5 - immediate hiding from intro cancels every owned source and pending request
+  ---
+  duration_ms: 0.8814
+  ...
+# Subtest: immediate hiding from reading cancels every owned source and pending request
+ok 6 - immediate hiding from reading cancels every owned source and pending request
+  ---
+  duration_ms: 0.5402
+  ...
+# Subtest: immediate hiding from outro cancels every owned source and pending request
+ok 7 - immediate hiding from outro cancels every owned source and pending request
+  ---
+  duration_ms: 0.4614
+  ...
+# Subtest: immediate hiding from closed cancels every owned source and pending request
+ok 8 - immediate hiding from closed cancels every owned source and pending request
+  ---
+  duration_ms: 0.5771
+  ...
+# Subtest: hidden invalidates a pending withdrawal decode
+ok 9 - hidden invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.6706
+  ...
+# Subtest: disposed invalidates a pending withdrawal decode
+ok 10 - disposed invalidates a pending withdrawal decode
+  ---
+  duration_ms: 0.9137
+  ...
+# Subtest: reentry invalidates a pending withdrawal decode
+ok 11 - reentry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 1.0308
+  ...
+# Subtest: expiry invalidates a pending withdrawal decode
+ok 12 - expiry invalidates a pending withdrawal decode
+  ---
+  duration_ms: 1.1778
+  ...
+# Subtest: suspend invalidates a pending withdrawal decode
+ok 13 - suspend invalidates a pending withdrawal decode
+  ---
+  duration_ms: 2.2932
+  ...
+# Subtest: a normal closed portrait still accepts its timely pending exit tail
+ok 14 - a normal closed portrait still accepts its timely pending exit tail
+  ---
+  duration_ms: 1.0573
+  ...
+# Subtest: suspension cancels voices and silently seeds the unchanged portrait on resume
+ok 15 - suspension cancels voices and silently seeds the unchanged portrait on resume
+  ---
+  duration_ms: 1.0224
+  ...
+# Subtest: presentation callback failures do not form a per-frame retry loop
+ok 16 - presentation callback failures do not form a per-frame retry loop
+  ---
+  duration_ms: 0.7826
+  ...
+# Subtest: portrait cues use the UI bus and avatar emitter without a fictitious world position
+ok 17 - portrait cues use the UI bus and avatar emitter without a fictitious world position
+  ---
+  duration_ms: 1.2752
+  ...
+# Subtest: audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+ok 18 - audio-clock sampling is normalized and continuous across cues, seeks and low FPS
+  ---
+  duration_ms: 12.0421
+  ...
+# Subtest: short, repeated and missing cues remain finite
+ok 19 - short, repeated and missing cues remain finite
+  ---
+  duration_ms: 0.5421
+  ...
+# Subtest: a late language response cannot animate the newer recording; pausing preserves the pose
+ok 20 - a late language response cannot animate the newer recording; pausing preserves the pose
+  ---
+  duration_ms: 1.6229
+  ...
+# Subtest: all 54 real recordings have bounded Rhubarb cues and matching source identities
+ok 21 - all 54 real recordings have bounded Rhubarb cues and matching source identities
+  ---
+  duration_ms: 85.347
+  ...
+# Subtest: blink closes fully and returns to rest
+ok 22 - blink closes fully and returns to rest
+  ---
+  duration_ms: 0.3981
+  ...
+# Subtest: Lifecycle preserves original transition timings in both motion modes
+ok 23 - Lifecycle preserves original transition timings in both motion modes
+  ---
+  duration_ms: 4.8424
+  ...
+# Subtest: Entrance leads to reading and rest without closing or advancing text
+ok 24 - Entrance leads to reading and rest without closing or advancing text
+  ---
+  duration_ms: 0.4345
+  ...
+# Subtest: Closing performs farewell and native exit, repeated hide calls do not restart it
+ok 25 - Closing performs farewell and native exit, repeated hide calls do not restart it
+  ---
+  duration_ms: 0.2726
+  ...
+# Subtest: New message cancels withdrawal and cannot be closed by a stale transition
+ok 26 - New message cancels withdrawal and cannot be closed by a stale transition
+  ---
+  duration_ms: 0.2098
+  ...
+# Subtest: Reduced motion still has explicit entry and exit and native neutral poses
+ok 27 - Reduced motion still has explicit entry and exit and native neutral poses
+  ---
+  duration_ms: 0.7415
+  ...
+# Subtest: shipping rig is floating, bounded, and has all facial controls
+ok 28 - shipping rig is floating, bounded, and has all facial controls
+  ---
+  duration_ms: 1.6141
+  ...
+# Subtest: cloth and body clips have disjoint properties and eyes are free for gaze
+ok 29 - cloth and body clips have disjoint properties and eyes are free for gaze
+  ---
+  duration_ms: 0.5543
+  ...
+# Subtest: float is independent of dialogue and secondary motion is explicitly rigged
+ok 30 - float is independent of dialogue and secondary motion is explicitly rigged
+  ---
+  duration_ms: 0.3313
+  ...
+# Subtest: continuous wind and float loops have matching endpoints and bounded speed at the seam
+ok 31 - continuous wind and float loops have matching endpoints and bounded speed at the seam
+  ---
+  duration_ms: 66.0171
+  ...
+# Subtest: closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+ok 32 - closeAfter cannot retire loading or playing voice on a caption timer; real ended closes once
+  ---
+  duration_ms: 6.1461
+  ...
+# Subtest: a superseded ended callback cannot close the next presentation
+ok 33 - a superseded ended callback cannot close the next presentation
+  ---
+  duration_ms: 0.8958
+  ...
+# Subtest: closeAfter retains timed fallback when media is unavailable or no voice exists
+ok 34 - closeAfter retains timed fallback when media is unavailable or no voice exists
+  ---
+  duration_ms: 1.2518
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 458.2597

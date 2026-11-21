@@ -1,0 +1,53 @@
+{
+  "network": true,
+  "animals": 20,
+  "comparisons": 200,
+  "runs": [
+    {
+      "mode": "fresh",
+      "values": 178533,
+      "captureMs": {
+        "count": 50,
+        "p50": 4.532000002264977,
+        "p95": 6.556000000238418,
+        "p99": 6.703999999165535,
+        "max": 7.025
+      }
+    },
+    {
+      "mode": "reuse",
+      "values": 178533,
+      "captureMs": {
+        "count": 50,
+        "p50": 2.912000000476837,
+        "p95": 4.637999999523163,
+        "p99": 4.800999999046326,
+        "max": 8.68299999833107
+      }
+    },
+    {
+      "mode": "reuse",
+      "values": 178533,
+      "captureMs": {
+        "count": 50,
+        "p50": 2.9219999998807906,
+        "p95": 4.75,
+        "p99": 5.710999998450279,
+        "max": 6.190000000596046
+      }
+    },
+    {
+      "mode": "fresh",
+      "values": 178533,
+      "captureMs": {
+        "count": 50,
+        "p50": 4.66700000166893,
+        "p95": 6.593999999761581,
+        "p99": 7.240000000596046,
+        "max": 9.36899999976158
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "One Edge headless scene with synthetic walking 20 animals in mangrove islands; direct diagnostic shadowSnapshot calls after render do not include temporary asset-shadow proxies. Exact snapshot equality in 200 poses, five captures per timing sample. No production integration, full shadow render timings, GPU, simulation, camera motion or memory/GC measurement."
+}

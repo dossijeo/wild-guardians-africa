@@ -1,0 +1,175 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "b20d6490e",
+  "scope": "Resident two-clip Idle/Alert palette preparation and reversible takeover from an active Alert on original geometry. No native initial Idle permission, policy or full consumer activation.",
+  "research": [
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/animation/AnimationMixer.js#L123-L163",
+      "readBeforeDesign": "Installed 0.180.0 _activateAction reuses and references bindings.",
+      "decision": "Reuse the existing multi-clip graph/material/rig; vary selection and local phase as data."
+    },
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/animation/AnimationAction.js#L553-L778",
+      "readBeforeDesign": "Scheduled origin, local time and finite endpoint clamp.",
+      "decision": "Keep resource construction separate from phase authority; this preparation adds no timer or policy execution."
+    },
+    {
+      "source": "src/rendering/webgpu-baked-walk.js:nativeActionBakes/bakedActionGraph",
+      "readBeforeDesign": "Existing bounded Plant/Water resident selector",
+      "decision": "Extend allowed original clips with Alert; preserve limit, rig/source validation and shared graph. No new engine/dependency."
+    }
+  ],
+  "directed": {
+    "tests": 21,
+    "pass": 7,
+    "fail": 0,
+    "skipped": 14,
+    "cancelled": 0,
+    "durationMs": 3351.6776,
+    "log": ".cache/native-idle-alert-variant-directed-final.log"
+  },
+  "regression": {
+    "tests": 807,
+    "pass": 807,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 458752.4221,
+    "log": ".cache/native-idle-alert-variant-regression-final.log",
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/spatial-native-worker-home.test.js",
+      "tests/native-home-route-proposal.test.js",
+      "tests/native-home-route-game.test.js",
+      "tests/acceptance-workforce.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js",
+      "tests/crop-task-queue.test.js",
+      "tests/native-home-route-graphics.test.js",
+      "tests/native-home-route-control.test.js",
+      "tests/native-home-route-remote.test.js",
+      "tests/native-home-route-clock.test.js",
+      "tests/native-home-arrival-proposal.test.js",
+      "tests/native-home-arrival-game.test.js",
+      "tests/native-home-arrival-graphics.test.js",
+      "tests/native-home-arrival-control.test.js",
+      "tests/native-home-arrival-remote.test.js",
+      "tests/native-home-inactive-restoration.test.js",
+      "tests/native-home-restoration.test.js",
+      "tests/native-idle-home.test.js",
+      "tests/native-initial-idle-request.test.js",
+      "tests/idle.test.js",
+      "tests/native-initial-idle-game.test.js",
+      "tests/native-initial-idle-clock.test.js",
+      "tests/native-initial-idle-control.test.js",
+      "tests/native-worker-action-variant.test.js",
+      "tests/webgpu-worker-baked-alert.test.js",
+      "tests/webgpu-worker-baked-idle.test.js"
+    ]
+  },
+  "counterexample": {
+    "tests": 21,
+    "pass": 1,
+    "fail": 6,
+    "skipped": 14,
+    "cancelled": 0,
+    "durationMs": 2697.2676,
+    "log": ".cache/native-idle-alert-variant-parent.log",
+    "parentCommit": "b20d6490e",
+    "mechanism": "Read-only ESM loader substitutes only the two parent rendering modules. Six new positive cases fail, one negative case passes, 14 unrelated cases skipped. Product files untouched.",
+    "loader": ".cache/native-idle-alert-parent-loader.mjs"
+  },
+  "structuralChecks": [
+    "Four original worker profiles; sampled picking vertices within 0.02 map units of original CPU poses",
+    "Same actor, bones, geometry and indices",
+    "Same material objects and customProgramCacheKey across Idle/Alert switches",
+    "No additional material conversions or scene nodes after preparation/first pick",
+    "Rollback restores active Alert and original materials/visibility",
+    "Actual Three color/shadow node builders compile both resident textures",
+    "Incomplete/duplicate/foreign clip banks reject before actor changes"
+  ],
+  "nativeBuild": {
+    "status": "unchanged; reused from 4e76dab2b",
+    "sourceAndBinaryHashes": {
+      "src/world/wild-engine/spatial-intent-state.cpp": "f97cd29a98dba7bac111ccb495f902e387b8694c7ac6d430feb7f183e19d9eb4",
+      "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "26a79b1351e8b10fe2549adc825a5b125066ab103b6eeb486b336becb75f23d0",
+      "src/world/wild-engine/spatial-home-resource-request.inc": "c97ffb2b7157c3b047993a4172bbaf4e0be96ab5a7e66972ed18f04202844ade",
+      "src/world/wild-engine/spatial-task-execution.inc": "a770e50ad4eb660d762101f06e5bf62f18f1767a63c643af2a5c7e0bd0bd1baf",
+      "tools/build-spatial-savanna-wasm.sh": "764ed4bdeae941fb70d4f3ecab3c744586315e4ac4c1d1a74be50dea9c883e6a",
+      "src/world/wild-engine/spatial-savanna.wasm": "e6d26aee2445ae3b992830e84635693588a1f0896d51bd27b634b73ecb7228a1",
+      "public/wild-engine/spatial-threaded.wasm": "5e5f082f5aa62f0e0ba7dbeb294defa56f3fd05427a43b18f103dc6bec20550e",
+      "public/wild-engine/spatial-threaded.mjs": "89aea9ba97e5f8c3b6de75ee65d5a510625f394f663491d0977329a063d05f5a",
+      "src/world/wild-engine/spatial-gate-api.inc": "59c12369f3a8d9b328ae2eb53c02a9d3c3dfcb76664287bbb5d0ccec4095244c"
+    }
+  },
+  "productBuild": {
+    "passed": true,
+    "seconds": 45.71,
+    "log": ".cache/native-idle-alert-variant-product-build.log"
+  },
+  "preservation": {
+    "priorUnrelatedFiles": 16,
+    "byteHashesUnchanged": true
+  },
+  "gpu": {
+    "run": false,
+    "reason": "Primitive preparation tests and actual shader builders; no real initial Idle binding, admission protocol, hardware resource-allocation or frame-pacing claim."
+  },
+  "finalSourceHashes": {
+    "src/rendering/webgpu-baked-walk.js": "958526c641a3f5f487b4cbe5159a23722335244e0815aad3bddf05a5038bcfe8",
+    "src/rendering/webgpu-confirmed-worker.js": "c65515a38620eba5802e8cee8d63e388a50ad3057f4b947684a55d2b9b3df67f",
+    "tests/native-worker-action-variant.test.js": "a4ecfca49d74a7e92dfa7ac04061812030750408c6d371eaaec15d61eb6418e1"
+  },
+  "pending": [
+    "Genuine native stationary initial Idle binding and common transactor/consumer with original phase continuity",
+    "Full rest/watch/ambient policy with original private RNG and anchors",
+    "Other finals/gates, ordinary producer, live birth/world replacement, healthy incremental3123 recovery and A/B/C before D"
+  ]
+}

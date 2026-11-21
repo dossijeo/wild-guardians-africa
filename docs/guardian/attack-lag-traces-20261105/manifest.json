@@ -1,0 +1,32 @@
+{
+  "baseCommit": "9fb27ae47e71b521b4ae858f41cf59707870c750",
+  "branch": "codex/guardian-3d-animation",
+  "worktreeWasDirty": true,
+  "sourceHashes": {
+    "src/rendering/scene.js": "1cfefd4f86dee90af82300fe6762a29408d798dbb852605f5b30a45493c198da",
+    "src/rendering/webgpu-world-surface.js": "c556e2768bf619379cce508f1fbc9415196d16a36100acff3ea65c6c9659dfb1",
+    "src/rendering/webgpu-world-worker.js": "9a047dcb266820148a4ad6288f00dc287cc62fe6b38da0f7796b208996e9f823",
+    "src/simulation/simulation-authority-worker.js": "df7481aad60a5c112ccb495030af626bdd2776b19e54b7dea050c8f580ad7b07",
+    "src/app/main.js": "050820eb58a972d4b88975900f9fc9820898abfd75f73fc9be8237ddaa40f439",
+    "tools/experiments/audit_worker_ui_causal_attack.mjs": "159efd5bf2749c146262f0eca1d4a6f94b449058ddf1e6a467d9674b6e2eacec",
+    "tools/experiments/raid-stall-trace.mjs": "8ce622eb573901e04a0add732ff9e4a3a1b4a48536e50255eb0c4219220869bc",
+    "tools/experiments/analyze-raid-stall-trace.mjs": "c609e957c0cbf067fb7d19fdc854105db4861d514ade25c4390fc6877a43a533"
+  },
+  "entries": [
+    {
+      "variant": "bounded",
+      "rawBytes": 132206217,
+      "gzipBytes": 8950439,
+      "rawSha256": "2988600710ee0f073d22af7dea233bffc72a4a59cba564f0bdf6ecbba10ebc6c",
+      "gzipSha256": "38ab14c4ad1bfb930e712a9c7faee1133a020c1269ceba2d9d5d465de62a2177"
+    },
+    {
+      "variant": "no-legacy",
+      "rawBytes": 67446129,
+      "gzipBytes": 5567627,
+      "rawSha256": "0bb869e9444bf49a61d5faf015b70836d782840cee4a64d83e3aefbd4c367038",
+      "gzipSha256": "46e59795dc46e0404a9d35d98aec9aebda4a1df9de262b7d729caeb8e8232b68"
+    }
+  ],
+  "note": "Diagnostic captures from the existing dirty integration checkout; not a clean release benchmark. Two different cache histories, not an A/B performance claim."
+}

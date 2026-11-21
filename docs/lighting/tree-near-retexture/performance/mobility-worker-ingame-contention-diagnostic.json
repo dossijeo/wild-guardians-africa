@@ -1,0 +1,226 @@
+{
+  "scope": "Manual diagnostic ticks and real WorldScene rendering, with synthetic independent navigation load. Not an integrated worker simulation or a gameplay equivalence proof.",
+  "results": [
+    {
+      "mode": "idle",
+      "authority": "spatial-wasm",
+      "mangroveNetwork": true,
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "animalCount": 20,
+      "simulationTime": 3008.133350000029,
+      "frames": {
+        "count": 149,
+        "p95": 66.79000000000087,
+        "p99": 233.30999999999767,
+        "max": 966.6549999999988
+      },
+      "overlapFrames": {
+        "count": 0,
+        "p95": null,
+        "p99": null,
+        "max": null
+      },
+      "simulationMs": {
+        "count": 149,
+        "p95": 5.350000001490116,
+        "p99": 9.634999997913837,
+        "max": 16.12999999523163
+      },
+      "renderMs": {
+        "count": 149,
+        "p95": 54.61500000208616,
+        "p99": 81.37999999523163,
+        "max": 227.67999999970198
+      },
+      "longFrames": [
+        {
+          "index": 1,
+          "start": 48168.64,
+          "end": 49135.295,
+          "dt": 966.6549999999988,
+          "previous": {
+            "simulationMs": 930.859999999404,
+            "renderMs": 50.87000000476837,
+            "tickProfile": {
+              "intents": 0.034999996423721313,
+              "physics": 0.6000000014901161,
+              "raid": 927.1700000017881,
+              "workers": 1.1599999964237213,
+              "reservations": 0.1849999949336052,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 7.685000017285347,
+              "moveMotion": 0.9949999824166298,
+              "byStatus": {
+                "arriving": 0.2749999985098839
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 16.12999999523163,
+          "renderMs": 50.26500000059605
+        },
+        {
+          "index": 92,
+          "start": 53402.055,
+          "end": 53635.365,
+          "dt": 233.30999999999767,
+          "previous": {
+            "simulationMs": 2.8900000005960464,
+            "renderMs": 227.67999999970198,
+            "tickProfile": {
+              "intents": 0,
+              "physics": 0.01000000536441803,
+              "raid": 2.809999994933605,
+              "workers": 0.015000000596046448,
+              "reservations": 0,
+              "arrivalPoint": 0,
+              "arrivalWalk": 0,
+              "arrivalEntrance": 0,
+              "prepareMotion": 2.0499999672174454,
+              "moveMotion": 0.20000001043081284,
+              "byStatus": {
+                "home": 0
+              }
+            }
+          },
+          "hidden": false,
+          "simulationMs": 3.8400000035762787,
+          "renderMs": 46.229999996721745
+        }
+      ],
+      "hiddenFrames": 0,
+      "gpu": {
+        "reason": null,
+        "samples": 150,
+        "p95": 32.803456,
+        "p99": 45.787104
+      },
+      "jobs": [],
+      "actors": [
+        {
+          "id": "qa-beast-0",
+          "x": 95.46054529837984,
+          "z": -4.533146747871586,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-1",
+          "x": 96,
+          "z": -7.8994654528100865,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-2",
+          "x": 100.42552966286385,
+          "z": -7.524202703340917,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-3",
+          "x": 103.09619942294205,
+          "z": -8.600278867737632,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-4",
+          "x": 114.03934606486646,
+          "z": -2.9542976565553474,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-5",
+          "x": 96.77812491699993,
+          "z": -0.08658154213391533,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-6",
+          "x": 98.76229389873652,
+          "z": -5.401510589019259,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-7",
+          "x": 101.24836165611585,
+          "z": -5,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-8",
+          "x": 103.40500396004542,
+          "z": -1.8517160099427243,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-9",
+          "x": 110.48684045702248,
+          "z": -2.4882527221321453,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-10",
+          "x": 100.06451851478313,
+          "z": 1.1606328446630787,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-11",
+          "x": 101.88962954339624,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-12",
+          "x": 100.20962544388225,
+          "z": -0.8700777321274276,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-13",
+          "x": 108.66044007163286,
+          "z": 4.51127560294667,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-14",
+          "x": 105.1287811510268,
+          "z": 0,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-15",
+          "x": 100,
+          "z": 3,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-16",
+          "x": 98.39347138220431,
+          "z": 5.9543060127883765,
+          "status": "attacking"
+        },
+        {
+          "id": "qa-beast-17",
+          "x": 101.39956042799218,
+          "z": 6,
+          "status": "walking"
+        },
+        {
+          "id": "qa-beast-18",
+          "x": 105.22522030410695,
+          "z": 3,
+          "status": "waiting"
+        },
+        {
+          "id": "qa-beast-19",
+          "x": 113.73500785396493,
+          "z": 0.17899985406877328,
+          "status": "waiting"
+        }
+      ],
+      "fixtureErrors": []
+    }
+  ]
+}

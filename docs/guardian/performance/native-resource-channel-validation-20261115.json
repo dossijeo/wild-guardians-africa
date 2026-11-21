@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "f5980d8f16125da657140a0e21b03de085fe92ee",
+  "scope": "Existing authority/host/graphical owners can attach an independent retained-resource endpoint; the common resource protocol is used by both graphical entry points. Ordinary source task coordinator/executor/actions and A/B/C acceptance remain pending.",
+  "sourceHashes": {
+    "src/simulation/native-resource-preparation-client.js": "67b10fdb04fdc30a5c0b8c6d4d3c00dce2b63dd61b610ca5e14980cb3bb8e8fe",
+    "src/simulation/native-resource-preparation-connection.js": "db95e0284cb5d1d8d821dc154b09f5c5330aa7b746f097a9b560684577c40992",
+    "src/rendering/native-resource-preparation-receiver.js": "2c3c0005901a2f49b96a0754d5183da33622302156ea83a7d057f12b4b376634",
+    "src/rendering/webgpu-world-client.js": "49b74d237626df45419ef8969c05873844b0614f6add9114c169ea382a71bfa1",
+    "src/rendering/webgpu-world-worker.js": "a3b40431189df6feca3b981b25a7d62d36050408b32573c73ac1cf52e7cf4f7e",
+    "src/simulation/simulation-authority.js": "cd13ba50fb66490a27f2432249b460f15bee4aaee1251ac82cf4c7f0880d7ece",
+    "src/simulation/simulation-authority-client.js": "040dc78622d88d939a1a940e1bebda8da05b8564cc1c73537b8117f50f31918c",
+    "src/simulation/simulation-authority-worker.js": "9448209fe2c72b5ec7226363a829c1386bfe0b0ee27e17b9fce9950525c2faa5",
+    "src/simulation/worker-hosted-runtime.js": "e53ee9335d291718648a21528a0adf6922fca4aff78ab29f9dd1d6d931c7cbde",
+    "src/simulation/worker-runtime-host.js": "685db83a9356ea80f629cfd736a2ea3148805631d8d88e5ead56bed78b748c5e",
+    "tests/native-resource-preparation-channel.test.js": "94bd7f66c4e4a899112fe7a30e10aa43f05f17c60902aa95ec0c9f690c5434d2",
+    "tests/native-intent-control-authority.test.js": "845b7f7cf94df9c82521b8945bb9c16b881490d67dc97e7fba94422157652ece",
+    "tests/simulation-authority-client.test.js": "741ff8a649afb47f260eb3ca1a0ace746d8b4cb4025bd448929db61d020abfd4",
+    "tests/webgpu-world-client.test.js": "46053fb4640691d04a6569c2708bfa1546e648d0aace4acd6baa4cb0ab128af6",
+    "tests/worker-hosted-runtime.test.js": "3fdbe627fa2fd7a9f05815afe71622b37acd74e2fce82ff21fa3520520ca7d5b",
+    "tests/browser/native-first-task-world-owner.js": "831d6328e65491be6022979af26970da780a51fc3ac8db0cbb303ad41fc406ea"
+  },
+  "directed": {
+    "tests": 148,
+    "pass": 148,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "regression": {
+    "tests": 167,
+    "pass": 167,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "build": {
+    "productSeconds": 44.7,
+    "nativeRebuilt": false,
+    "nativeWasmSha256": "8ef667badd62bb2f2ad91574d421bc68c628f0cea4f1ba50d683a87d9d3339e4",
+    "warnings": "Existing chunk size and mixed import warnings"
+  },
+  "checks": [
+    "node --check all 16 owned code files",
+    "git diff --check owned files",
+    "source hashes unchanged during checks/build/two GPU runs"
+  ],
+  "gpu": {
+    "record": "native-resource-channel-gpu-20261115.json",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794713451365.325,
+      "end": 1794713453165.4,
+      "committedAt": 1794713451370.1702,
+      "drawFrames": 54,
+      "minClock": 13.159999999999933,
+      "maxClock": 14.779999999999898,
+      "resourcesAfterReady": 0
+    },
+    "resourceConnection": {
+      "transport": "dedicated-native-resource-port",
+      "phase": "running",
+      "fault": null,
+      "pending": 0,
+      "retained": 0
+    },
+    "drained": true,
+    "source": "SpatialGameSession in page; real product preparation/draw workers"
+  },
+  "resumeGpu": {
+    "record": "native-resource-channel-resume-gpu-20261115.json",
+    "block": {
+      "start": 1794713471637.63,
+      "end": 1794713473437.68,
+      "committedAt": 1794713471648.49,
+      "drawFrames": 53,
+      "minClock": 60.83629700272217,
+      "maxClock": 62.35629700272241,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "authorityEvidence": "Actual createSimulationAuthority runs three advance commands while a controlled preparer is awaiting completion. Snapshots/events match an independent reference; this does not prove a task coordinated by ordinary gameplay.",
+  "research": [
+    {
+      "project": "Comlink",
+      "revision": "v4.4.2",
+      "source": "src/comlink.ts",
+      "functions": [
+        "expose",
+        "wrap",
+        "releaseEndpoint",
+        "requestResponseMessage"
+      ],
+      "decision": "Adapt identifier correlation, asynchronous completion and explicit release to existing bounded resource messages. No generic proxy or dependency."
+    },
+    {
+      "project": "Godot",
+      "revision": "4.4-stable",
+      "source": "core/io/resource_loader.cpp",
+      "functions": [
+        "load_threaded_request",
+        "_load_threaded_request_reuse_user_token",
+        "_load_threaded_request_setup_user_token"
+      ],
+      "decision": "Return control after dispatch and retain a preparation reference; keep existing asset banks/cache owners."
+    }
+  ],
+  "acceptanceClosed": [],
+  "knownWideSelectionFailures": "Five previously documented failures from the wider c605 selection remain unresolved; this increment runs a relevant selection and does not claim a full-suite pass."
+}

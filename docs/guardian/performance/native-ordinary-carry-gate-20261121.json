@@ -1,0 +1,236 @@
+{
+  "source": "a4a4a8959aa8e0ad630a4156177ebcdaee1ec8ae",
+  "gate": "structure-1000000",
+  "authority": {
+    "destination": {
+      "x": -14,
+      "z": 4.639076566696167
+    },
+    "target": "plant-1000001",
+    "movement": [
+      {
+        "elapsed": 17.799999999999898,
+        "x": -13.998042345098519,
+        "z": 12.49201812557883,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 0,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.09999999999996,
+        "x": -13.949600219726562,
+        "z": 8.496457203149195,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.19999999999996,
+        "x": -13.949600219726562,
+        "z": 8.388457203149194,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.29999999999996,
+        "x": -13.949600219726562,
+        "z": 8.280457203149192,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.399999999999963,
+        "x": -13.949600219726562,
+        "z": 8.17245720314919,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.499999999999964,
+        "x": -13.949600219726562,
+        "z": 8.064457203149189,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.599999999999966,
+        "x": -13.949600219726562,
+        "z": 7.956457203149188,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      },
+      {
+        "elapsed": 22.699999999999967,
+        "x": -13.949600219726562,
+        "z": 7.848457203149186,
+        "status": "carrying",
+        "admission": "native-delivery",
+        "opening": 1,
+        "taskId": null
+      }
+    ],
+    "preparations": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 1,
+        "gates": [],
+        "points": [
+          -10,
+          5,
+          -9.6516695022583,
+          3.905768394470215
+        ]
+      },
+      {
+        "kind": "farm-arrival-stop",
+        "committed": true,
+        "gates": null,
+        "points": null
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "body": 1,
+        "gates": [],
+        "points": [
+          -13,
+          10,
+          -14,
+          12.600000381469727
+        ]
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "gates": null,
+        "points": null
+      },
+      {
+        "kind": "task-consequence",
+        "committed": true,
+        "body": 1,
+        "gates": [
+          1000000
+        ],
+        "points": [
+          -13.949600219726562,
+          9.819999694824219,
+          -13.949600219726562,
+          7.268915176391602,
+          -14,
+          4.6390767097473145
+        ]
+      },
+      {
+        "kind": "task-settlement",
+        "committed": false,
+        "body": 1,
+        "gates": null,
+        "points": null
+      }
+    ],
+    "delivery": {
+      "crate": {
+        "id": "crate-1000003",
+        "sourcePlantId": "plant-1000001",
+        "species": "mijo",
+        "x": -14,
+        "z": 4.6390767097473145,
+        "value": {
+          "n": "66",
+          "d": "5"
+        },
+        "multiplyPower": null,
+        "profile": "youngMale",
+        "carrierId": null,
+        "delivered": true,
+        "centerId": "structure-2",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        }
+      },
+      "balance": {
+        "n": "100014",
+        "d": "1"
+      }
+    },
+    "events": [
+      {
+        "id": "event-29207",
+        "type": "CropMatured",
+        "targetId": "plant-1000001",
+        "simulationTime": 11.999999999999957
+      },
+      {
+        "id": "event-29210",
+        "type": "CropPicked",
+        "workerId": "worker-900011",
+        "targetId": "plant-1000001",
+        "crateId": "crate-1000003",
+        "simulationTime": 17.699999999999896,
+        "presentation": {
+          "x": -14,
+          "z": 12.6
+        }
+      },
+      {
+        "id": "event-29211",
+        "type": "CrateDelivered",
+        "workerId": "worker-900011",
+        "targetId": "crate-1000003",
+        "species": "mijo",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 25.80000000000001
+      }
+    ],
+    "diagnosticSha256": "e78ec1d49164eecea6f8bc4d8d7e9a04fc2f88b929977f23782de0683aa8d312"
+  },
+  "physical": {
+    "mode": "Edge hosted WebGPU Worker and remote draw, physical GPU, 640x480, muy_baja",
+    "phase": "ordinary delivery after passing the gate",
+    "carry": {
+      "bodyId": 1,
+      "crateId": 1000003,
+      "destination": {
+        "x": -14,
+        "z": 4.639076566696167
+      },
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "10d2cac4-659f-44b7-9567-56f032eed1c2/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 22.649999999999967
+      },
+      "gateIds": [
+        1000000
+      ]
+    },
+    "lastConfirmed": {
+      "x": -14,
+      "z": 4.6390767097473145,
+      "admission": "native-delivery",
+      "sequence": 561,
+      "elapsed": 30.75000000000008
+    },
+    "error": "Native settlement gate graphics are not prepared",
+    "diagnosticSha256": "f71e3ffa6e5510242128630a11dc601a20a53ec8037573635d11f28ba9fa8c56"
+  }
+}

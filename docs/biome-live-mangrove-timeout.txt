@@ -1,0 +1,12 @@
+QA stage: boot
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.waitForFunction: Timeout 45000ms exceeded.
+    at C:\Users\Gabriel\source\repos\wild-guardians-africa\tools\experiments\audit_live_webgpu_world.mjs:12:13 {
+  log: [],
+  name: 'TimeoutError'
+}
+
+Node.js v20.19.0

@@ -1,0 +1,102 @@
+{
+  "network": true,
+  "rows": [
+    {
+      "species": "warthog",
+      "prepareMs": 0.6650000065565109,
+      "samples": 599,
+      "poses": 24,
+      "skipped": 640,
+      "total": 14376,
+      "skippedFraction": 0.044518642181413465,
+      "skippedGroups": 12,
+      "maxError": 0,
+      "referenceMs": {
+        "p50": 0.09800000190734863,
+        "p95": 0.19399999976158142
+      },
+      "candidateMs": {
+        "p50": 0.09500000178813935,
+        "p95": 0.1780000001192093
+      }
+    },
+    {
+      "species": "hyena",
+      "prepareMs": 0.39499999582767487,
+      "samples": 996,
+      "poses": 24,
+      "skipped": 4772,
+      "total": 23904,
+      "skippedFraction": 0.1996318607764391,
+      "skippedGroups": 69,
+      "maxError": 0,
+      "referenceMs": {
+        "p50": 0.15999999940395354,
+        "p95": 0.2280000001192093
+      },
+      "candidateMs": {
+        "p50": 0.12699999809265136,
+        "p95": 0.2449999988079071
+      }
+    },
+    {
+      "species": "buffalo",
+      "prepareMs": 1.770000010728836,
+      "samples": 2671,
+      "poses": 24,
+      "skipped": 23696,
+      "total": 64104,
+      "skippedFraction": 0.36964931985523525,
+      "skippedGroups": 29,
+      "maxError": 0,
+      "referenceMs": {
+        "p50": 0.38700000047683714,
+        "p95": 0.46299999952316284
+      },
+      "candidateMs": {
+        "p50": 0.26800000071525576,
+        "p95": 0.2990000009536743
+      }
+    },
+    {
+      "species": "lion",
+      "prepareMs": 0.6000000089406967,
+      "samples": 1332,
+      "poses": 24,
+      "skipped": 4152,
+      "total": 31968,
+      "skippedFraction": 0.12987987987987987,
+      "skippedGroups": 18,
+      "maxError": 0,
+      "referenceMs": {
+        "p50": 0.2020000010728836,
+        "p95": 0.2770000010728836
+      },
+      "candidateMs": {
+        "p50": 0.1729999989271164,
+        "p95": 0.20699999928474427
+      }
+    },
+    {
+      "species": "rhino",
+      "prepareMs": 1.4650000035762787,
+      "samples": 4413,
+      "poses": 24,
+      "skipped": 10608,
+      "total": 105912,
+      "skippedFraction": 0.10015862225243599,
+      "skippedGroups": 18,
+      "maxError": 0,
+      "referenceMs": {
+        "p50": 0.6580000013113022,
+        "p95": 0.7310000002384186
+      },
+      "candidateMs": {
+        "p50": 0.5909999996423722,
+        "p95": 0.675
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "Exploratory isolated per-rig benchmark in Edge headless using 24 moving/entering clip poses per species and immutable geometry; compares exact minima of current height sampler with single-bone AABB pruning. Timings exclude world matrix updates and pose sampling but include bind and bounds; no live scene performance, GPU, terrain, impacts, recovery, animated morphs or rigorous floating-point proof. Each pose measured reference/candidate/candidate/reference with five repetitions."
+}

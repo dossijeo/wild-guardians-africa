@@ -1,0 +1,274 @@
+{
+  "source": "1464c89797dae913d50338409a083648f40055d2",
+  "scenario": "A camera-selected unassigned millet receives a prepared Awakening ritual during native Farm",
+  "renderer": "Edge physical WebGPU Worker with remote draws",
+  "initial": {
+    "stage": "Awakening shows the confirmed permanent source",
+    "error": "page.evaluate: Error: Awakening presentation incomplete {\"guardian\":{\"closed\":false,\"began\":1,\"confirmed\":1,\"rejected\":0,\"provisionalFrames\":0,\"lastCommand\":\"ordinary-guardian-awakening\",\"active\":{\"id\":\"ordinary-guardian-awakening\",\"targetId\":\"plant-1000000\",\"provisional\":false,\"kind\":\"awakening\"},\"ritualPreview\":false,\"ritualReady\":true,\"cropBeams\":0,\"modelReady\":true,\"effectsReady\":true,\"beamVisible\":false,\"coreVisible\":false},\"blessing\":{\"closed\":false,\"sources\":1,\"sourceIds\":[\"plant-1000000\"],\"particles\":19,\"pending\":0,\"admitted\":false,\"admissionError\":null,\"motion\":false},\"seenRitual\":{\"id\":\"ordinary-guardian-awakening\",\"targetId\":\"plant-1000000\",\"provisional\":false,\"kind\":\"awakening\"},\"target\":{\"version\":1,\"ordinal\":1,\"day\":15,\"at\":10.299999999999994},\"elapsed\":12.499999999999947}\n    at auditBuildFarm (http://127.0.0.1:5218/tests/browser/native-build-active-farm-hosted-private.js:204:57)\n    at async <anonymous>:381:23",
+    "errors": [
+      "{\"resource\":\"blessing-glow\",\"message\":\"Cannot order uncommitted remote frame resources\"}"
+    ],
+    "worker": {
+      "id": "worker-900011",
+      "status": "arriving",
+      "nativeRouteAdmission": "native-farm-arrival",
+      "x": -16,
+      "z": 0.417157287525324
+    },
+    "confirmedElapsed": 12.499999999999947,
+    "confirmedSequence": 210,
+    "authorityFault": null,
+    "diagnosticSha256": "78977ca9eebf6fba3b0417de7f479e4e6164170b104d2d2fd5509147e07a3a09"
+  },
+  "candidate": {
+    "patchSha256": "b176135a0bfb7a3ef503e4c9ab7485f2125c75553707db06e0e70c65889f023c",
+    "phase": "Texture upload begins after the synchronous frame packet closes",
+    "selectedTestsPassed": 86,
+    "published": false,
+    "stage": "Awakening shows the confirmed permanent source",
+    "error": "page.evaluate: Error: Error: Error: Destroyed texture [Texture \"D3DImageBacking_D3DSharedImage_WebGPUSwapBufferProvider_Pid:13616\"] used in a submit.\n - While calling [Queue].Submit([[CommandBuffer from CommandEncoder \"copyFramebufferToTexture_97\"]])\n",
+    "errors": [
+      "Error: Error: Error: Destroyed texture [Texture \"D3DImageBacking_D3DSharedImage_WebGPUSwapBufferProvider_Pid:13616\"] used in a submit.\n - While calling [Queue].Submit([[CommandBuffer from CommandEncoder \"copyFramebufferToTexture_97\"]])\n\n    at GPUDevice.<anonymous> (http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795249829108:1969:85)\n    at port.onmessage (http://127.0.0.1:5218/src/rendering/remote-webgpu-client.js?t=1795249829108:414:45)\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js:29:760)"
+    ],
+    "worker": {
+      "id": "worker-900011",
+      "status": "arriving",
+      "nativeRouteAdmission": "native-farm-arrival",
+      "x": -16,
+      "z": 0.5251572875253219
+    },
+    "confirmedElapsed": 12.599999999999945,
+    "confirmedSequence": 243,
+    "authorityFault": null,
+    "diagnosticSha256": "538c1e4806f81c01f5064507ef284722dea736b839aece0fbed8e60daab53f8f"
+  },
+  "selectedBaselineTestsPassed": 44,
+  "assignedCropCandidate": {
+    "profile": "olderFemale",
+    "action": {
+      "version": 1,
+      "kind": "water",
+      "duration": 3.4,
+      "elapsed": 0.05000000000000071
+    },
+    "oldTask": "task-1000001",
+    "target": 1000000,
+    "commandSequence": 340,
+    "branchForIntegration": "d28d291b224d3c3a7a2c506c9bb3360fda2e663f",
+    "privateWasmSha256": "bf0524ccac2fc1005a973bc09ba5ff97a9caa9560d23036f8a5b9a0420efaac9",
+    "preparedTicket": 10,
+    "bodyId": 1,
+    "actorRoot": 705,
+    "originalGeometriesRetained": 33,
+    "retiredWateringMeshes": [
+      {
+        "id": 765,
+        "geometry": 329
+      },
+      {
+        "id": 766,
+        "geometry": 330
+      },
+      {
+        "id": 767,
+        "geometry": 331
+      },
+      {
+        "id": 768,
+        "geometry": 332
+      },
+      {
+        "id": 769,
+        "geometry": 333
+      },
+      {
+        "id": 770,
+        "geometry": 334
+      }
+    ],
+    "afterNativeAcquisition": [
+      {
+        "at": 1795256441879.2,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.199951171875,
+        "drawMs": 2.39990234375,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795256441912.7,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.5,
+        "drawMs": 1.599853515625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795256441946,
+        "sequence": 60,
+        "ticket": 10,
+        "intervalMs": 33.300048828125,
+        "drawMs": 1.89990234375,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "phaseAfterCommand": "native-idle",
+    "poolAtAction": 3238,
+    "poolAfterCommit": 3387,
+    "resultAfterResume": [
+      "{\"resource\":\"blessing-glow\",\"message\":\"Cannot order uncommitted remote frame resources\"}"
+    ],
+    "drawsAfterResuming": 67,
+    "rawReceiptSha256": "7c8143b39248321ca83aba19141f8c51ebc36e5f9fbdf3d183be1f38bed03580"
+  },
+  "drawOwnerValidation": {
+    "unassigned": {
+      "receiptSha256": "10ee9d6e40c9c9a3420c9a224ae0972ee08ce20e7f20cb6975c9f5fa1813ee56",
+      "snapshotSha256": "4615066eadc959e8bb001f2b2eb7673545ae161395f266587c7da37f5d73c0ea",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 126.39999997615814
+        }
+      },
+      "picked": {
+        "coordinate": {
+          "x": 0.5776036645548688,
+          "y": -0.2362100296433569
+        },
+        "candidate": {
+          "entityId": "plant-1000000",
+          "hitPoint": {
+            "x": -11.968750000000124,
+            "y": 16.58240756511699,
+            "z": 4.650000000000002
+          },
+          "point": {
+            "x": -11.764555735911998,
+            "z": 4.105481962431654
+          },
+          "sequence": 27
+        }
+      },
+      "event": {
+        "id": "event-29207",
+        "type": "BlessingApplied",
+        "commandId": "ordinary-guardian-awakening",
+        "targetId": "plant-1000000",
+        "kind": "plant",
+        "blessing": {
+          "version": 1,
+          "ordinal": 1,
+          "day": 15,
+          "at": 10.299999999999994
+        },
+        "presentation": {
+          "x": -11.8,
+          "z": 4.2,
+          "elapsed": 10.299999999999994,
+          "source": {
+            "id": "plant-1000000",
+            "kind": "plant",
+            "x": -11.8,
+            "z": 4.2,
+            "species": "mijo",
+            "growth": 10.299999999999994
+          }
+        },
+        "simulationTime": 10.299999999999994
+      },
+      "bodyId": 1,
+      "actorRoot": 682,
+      "workerGeometryCount": 32,
+      "farmTicket": 2,
+      "ritual": {
+        "id": "ordinary-guardian-awakening",
+        "targetId": "plant-1000000",
+        "provisional": false,
+        "kind": "awakening"
+      },
+      "glow": {
+        "closed": false,
+        "ready": true,
+        "pending": false,
+        "width": 640,
+        "height": 480
+      },
+      "vfx": {
+        "closed": false,
+        "sources": 1,
+        "sourceIds": [
+          "plant-1000000"
+        ],
+        "particles": 19,
+        "pending": 0,
+        "admitted": true,
+        "admissionError": null,
+        "motion": false
+      },
+      "nearGrowthSurplus": 0.5199999999999889,
+      "duplicate": false,
+      "sampleCount": 40,
+      "peakIntervalMs": 34.599853515625,
+      "drained": true
+    },
+    "assignedWater": {
+      "receiptSha256": "7fd4d4cdcb4e54dc3eedd6f11fe1aa602bd60c46e4dd33612fbf5ffed4affd64",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 129.60000002384186
+        }
+      },
+      "bodyId": 1,
+      "actorRoot": 704,
+      "workerGeometryCount": 33,
+      "ticket": 10,
+      "actionAge": 0.09999999999999787,
+      "retiredWateringMeshes": 6,
+      "drawAfterCommit": {
+        "at": 1795257543083.4,
+        "sequence": 56,
+        "ticket": 10,
+        "intervalMs": 33.300048828125,
+        "drawMs": 1.800048828125,
+        "trigger": "raf",
+        "replay": false
+      },
+      "copyObservationsInDraw": [
+        {
+          "type": "blessing-glow-copy-in-draw",
+          "count": 1,
+          "at": 1795257545972.2,
+          "width": 640,
+          "height": 480
+        }
+      ],
+      "subsequentDraws": 77,
+      "peakIntervalMs": 36.60009765625,
+      "gpuErrors": 0,
+      "drained": true
+    }
+  }
+}

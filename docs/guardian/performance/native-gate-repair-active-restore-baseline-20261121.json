@@ -1,0 +1,184 @@
+{
+  "parent": "f3f4458551d9e7b96f9c826ca40b0bb5221e1350",
+  "source": {
+    "saveSha256": "bb41bf3f2f9618eb22805f38c566ead77e14c172829976e710971138aca0cced",
+    "checkpoint": {
+      "saved": true,
+      "sequence": 347,
+      "elapsed": 17.399999999999892
+    },
+    "wallPresentation": {
+      "from": 0.5,
+      "to": 1,
+      "at": 17.24999999999989
+    },
+    "hp": 60,
+    "gateOpening": 1,
+    "material": "zarzas",
+    "chunkCount": 12,
+    "paidCoins": 5,
+    "repairEvents": 1,
+    "balance": {
+      "n": "99995",
+      "d": "1"
+    },
+    "peakIntervals": [
+      {
+        "at": 1795276725407.0999,
+        "sequence": 36,
+        "ticket": 6,
+        "intervalMs": 37.2998046875,
+        "drawMs": 1.400146484375,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795276714940.0999,
+        "sequence": 13,
+        "ticket": null,
+        "intervalMs": 36.89990234375,
+        "drawMs": 1.2001953125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795276711939.7,
+        "sequence": 1,
+        "ticket": null,
+        "intervalMs": 36.5,
+        "drawMs": 0.10009765625,
+        "trigger": "raf",
+        "replay": true
+      }
+    ]
+  },
+  "before": {
+    "gpuAssertionWitnessSha256": "fa48f0e0b9a9548acd2aa3cf0c442449e1e22afc3e492d4fe260e50cd78ac250",
+    "legacyDiagnosticSha256": "8c93180f8a3efda6af346d0868ad26702c8b1fef559209b59b95be88586e5e6c",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 130.39999997615814
+      }
+    },
+    "quality": "muy_baja",
+    "viewport": [
+      640,
+      480
+    ],
+    "displayHz": 30,
+    "budgetMs": 16.666666666666668,
+    "initialPresentationElapsed": 17.399999618530273,
+    "morphShaderCount": 0,
+    "nativeGateGpuOwners": 0,
+    "gateRoot": 518,
+    "positionAndNormalChanges": [
+      {
+        "geometry": 250,
+        "attribute": "position",
+        "initialVersion": 1,
+        "finalVersion": 7,
+        "bytes": 208980
+      },
+      {
+        "geometry": 250,
+        "attribute": "normal",
+        "initialVersion": 1,
+        "finalVersion": 7,
+        "bytes": 208980
+      },
+      {
+        "geometry": 251,
+        "attribute": "position",
+        "initialVersion": 1,
+        "finalVersion": 7,
+        "bytes": 114300
+      },
+      {
+        "geometry": 251,
+        "attribute": "normal",
+        "initialVersion": 1,
+        "finalVersion": 7,
+        "bytes": 114300
+      }
+    ],
+    "attributeBytes": 646560,
+    "firstObservedVersionChange": {
+      "authorityElapsed": 18.849999999999913,
+      "presentationElapsed": 18.799999237060547,
+      "geometries": [
+        250,
+        251
+      ],
+      "attributeVersions": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    "firstObservedIntactMesh": {
+      "authorityElapsed": 19.199999999999918,
+      "presentationElapsed": 19.19999885559082,
+      "geometries": [
+        351
+      ],
+      "attributeVersions": [
+        1,
+        1
+      ]
+    },
+    "contourExpectedEnd": 17.72999999999989,
+    "retainedComparableBuffers": 790,
+    "substitutedComparableBuffers": 0,
+    "peakIntervals": [
+      {
+        "at": 1795276870239,
+        "sequence": 18,
+        "ticket": 4,
+        "intervalMs": 35.199951171875,
+        "drawMs": 2.699951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795276870505.5999,
+        "sequence": 20,
+        "ticket": 4,
+        "intervalMs": 35.199951171875,
+        "drawMs": 1.60009765625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795276863905.0999,
+        "sequence": 13,
+        "ticket": null,
+        "intervalMs": 34.699951171875,
+        "drawMs": 1.5,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795276865438.5,
+        "sequence": 13,
+        "ticket": null,
+        "intervalMs": 34.699951171875,
+        "drawMs": 0.89990234375,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "gpuErrors": 0,
+    "drained": true
+  }
+}

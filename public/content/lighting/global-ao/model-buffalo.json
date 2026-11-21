@@ -1,0 +1,55 @@
+{
+  "profile": "buffalo",
+  "source": "/assets/d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e.glb",
+  "sourceSHA256": "d9a945fd2c707943741b110aa6a8c30fe02d85c1a14dca0c673edfe32bb9fe6e",
+  "binary": "/content/lighting/global-ao/model-buffalo.bin",
+  "outputSHA256": "187dd0816ab0fac22ee2dea1ada5e83d5487aa1ba327af4ceb6e24eea8d93939",
+  "byteLength": 51598,
+  "samples": 32,
+  "records": [
+    {
+      "mesh": 0,
+      "primitive": 0,
+      "name": "BuffaloOralAnatomy",
+      "offset": 0,
+      "count": 1502,
+      "radius": 0.01,
+      "mean": 239.60386151797604,
+      "minimum": 0,
+      "excludedMorphVertices": 820,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 1,
+      "primitive": 0,
+      "name": "Mesh_0",
+      "offset": 1502,
+      "count": 47886,
+      "radius": 0.13727084875106813,
+      "mean": 216.56465355218646,
+      "minimum": 0,
+      "excludedMorphVertices": 1278,
+      "dominantJointFiltered": true,
+      "traversalLimit": 0,
+      "invalidNormals": 0
+    },
+    {
+      "mesh": 2,
+      "primitive": 0,
+      "name": "Actor eyelid surfaces",
+      "offset": 49388,
+      "count": 2210,
+      "radius": 0,
+      "mean": 255.0,
+      "minimum": 255,
+      "excludedMorphVertices": 2080,
+      "dominantJointFiltered": true,
+      "invalidNormals": 0,
+      "traversalLimit": 0
+    }
+  ],
+  "seconds": 14.289439999964088,
+  "scope": "Local cavity candidate; excludes moving morph surfaces and cross-joint occlusion. No dynamic AO claim."
+}

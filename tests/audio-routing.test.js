@@ -14,7 +14,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {MOVEMENT_SOUND_IDS} from '../src/audio/movement-audio.js';
-import {AudioSystem,eventSound,eventExtraSound,eventAlertSound,eventRefundSound,eventSpendSound,SFX_LIMITS} from '../src/audio/audio.js';
+import {AudioSystem,eventAudioOptions,eventSound,eventExtraSound,eventAlertSound,eventRefundSound,eventSpendSound,SFX_LIMITS} from '../src/audio/audio.js';
 import {simulateOpening} from '../tools/check_opening.mjs';
 import {serialize} from '../src/persistence/snapshots.js';
 const bank=JSON.parse(readFileSync(new URL('../public/content/sfx.json',import.meta.url),'utf8'));
@@ -103,7 +103,7 @@ for(const species of ['warthog','hyena','buffalo','lion','rhino'])test(`QA-153 $
  Game.placeStructure(state,'qa-paid-center',{x:-12,z:0},nav);state.day=3;state.completedNights=2;state.initialPreparation=false;state.tutorial.step='done';state.time=400;state.dayPlan={done:true};state.nightPlan={done:true};
  spawnRaid(state,{group:[species]},nav);assert.ok(state.raid);
  for(let i=0;i<3000&&!state.events.some(e=>e.type==='StructureHit');i++)Game.tick(state,.05,nav);
- const hits=state.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.ok(state.structures[0].hp<600);
+ const hits=state.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.ok(state.structures[0].hp<600);const hit=hits[0];assert.ok([hit.simulationTime,hit.presentation.x,hit.presentation.z].every(Number.isFinite));const listener={x:hit.presentation.x+24,z:hit.presentation.z},originalGain=eventAudioOptions(hit,'beast_hit_structure',state,listener).gain;assert.equal(originalGain,.5);assert.equal(eventAudioOptions(hit,'beast_hit_structure',{workers:[],structures:[],plants:[],crates:[],raid:null},listener).gain,originalGain);
  const before=serialize(state),{audio,sources}=fixture();audio.process(state.events);audio.process(state.events);await new Promise(resolve=>setImmediate(resolve));
  const hitClip=bank.items.find(i=>i.id==='beast_hit_structure').audio.url;assert.equal(sources.filter(s=>s.buffer.url===hitClip).length,1);assert.equal(serialize(state),before);
 });

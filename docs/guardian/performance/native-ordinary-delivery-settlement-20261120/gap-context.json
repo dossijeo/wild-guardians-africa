@@ -1,0 +1,459 @@
+{
+  "gap": {
+    "from": 1795150620269.72,
+    "through": 1795150620609.955,
+    "milliseconds": 340.235107421875
+  },
+  "protocolDataLossOccurred": false,
+  "traceSha256": "c28ad53c34dbfb5b180f4b28526c90fe959d50f21458f4561f393f9ae608fe89",
+  "receiptSha256": "3547822e5966592d3c552a54a4c4507be16ce0a44f2b8f71c34d0318b8dc0484",
+  "blocks": [
+    {
+      "kind": "birth-block-end",
+      "stage": "preparation",
+      "start": 1795150587902.8198,
+      "end": 1795150589702.9148,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.6999999999999638,
+      "peerProgress": 1.5996725671930259,
+      "cadence": {
+        "frames": 54,
+        "maxGapMs": 33.48486328125,
+        "p95GapMs": 33.47021484375,
+        "over50": 0
+      },
+      "startRelativeToGap": -32366.900146484375,
+      "endRelativeToGap": -30566.80517578125
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "late-ready",
+      "start": 1795150596380.135,
+      "end": 1795150598180.1648,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.6999999999999638,
+      "peerProgress": 1.8575999999999606,
+      "cadence": {
+        "frames": 54,
+        "maxGapMs": 33.47998046875,
+        "p95GapMs": 33.405029296875,
+        "over50": 0
+      },
+      "startRelativeToGap": -23889.5849609375,
+      "endRelativeToGap": -22089.55517578125
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "task-commit",
+      "start": 1795150594540.835,
+      "end": 1795150596340.88,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.6999999999999638,
+      "peerProgress": 1.8575999999999606,
+      "cadence": {
+        "frames": 54,
+        "maxGapMs": 33.449951171875,
+        "p95GapMs": 33.380126953125,
+        "over50": 0
+      },
+      "startRelativeToGap": -25728.885009765625,
+      "endRelativeToGap": -23928.840087890625
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "action-ready",
+      "start": 1795150614142.13,
+      "end": 1795150615942.155,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.6800000000002626,
+      "peerProgress": 0,
+      "maxGapMs": 33.5849609375,
+      "startRelativeToGap": -6127.590087890625,
+      "endRelativeToGap": -4327.56494140625
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "action-commit",
+      "start": 1795150615984.0498,
+      "end": 1795150617784.0598,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.7200000000002689,
+      "peerProgress": 0,
+      "maxGapMs": 33.47998046875,
+      "startRelativeToGap": -4285.670166015625,
+      "endRelativeToGap": -2485.66015625
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "consequence-ready",
+      "start": 1795150622282.365,
+      "end": 1795150624082.385,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.7200000000002689,
+      "bornProgress": 0,
+      "maxGapMs": 33.530029296875,
+      "startRelativeToGap": 2012.64501953125,
+      "endRelativeToGap": 3812.6650390625
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "consequence-commit",
+      "start": 1795150624116.655,
+      "end": 1795150625916.67,
+      "drawFrames": 54,
+      "confirmedPublications": 88,
+      "clockAdvance": 1.7200000000002689,
+      "bornProgress": 1.8074561844981845,
+      "maxGapMs": 33.43017578125,
+      "startRelativeToGap": 3846.93505859375,
+      "endRelativeToGap": 5646.949951171875
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "settlement-ready",
+      "start": 1795150630077.005,
+      "end": 1795150631877.025,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.7000000000002657,
+      "maxGapMs": 33.43994140625,
+      "startRelativeToGap": 9807.284912109375,
+      "endRelativeToGap": 11607.304931640625
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "settlement-commit",
+      "start": 1795150631916.595,
+      "end": 1795150633716.6099,
+      "drawFrames": 54,
+      "confirmedPublications": 88,
+      "clockAdvance": 1.7000000000002657,
+      "maxGapMs": 33.48486328125,
+      "startRelativeToGap": 11646.875,
+      "endRelativeToGap": 13446.889892578125
+    }
+  ],
+  "nearestLifecycle": [
+    {
+      "kind": "birth-consequence-ready",
+      "at": 1795150622238.4648,
+      "ticket": 12,
+      "relativeToGap": 1968.744873046875
+    },
+    {
+      "kind": "birth-resource-committed",
+      "family": "task-action",
+      "at": 1795150617784.3298,
+      "ticket": 11,
+      "relativeToGap": -2485.39013671875
+    },
+    {
+      "kind": "birth-resource-committed",
+      "family": "task-consequence",
+      "at": 1795150625916.9348,
+      "ticket": 13,
+      "relativeToGap": 5647.21484375
+    },
+    {
+      "kind": "birth-action-ready",
+      "at": 1795150614109.115,
+      "ticket": 10,
+      "relativeToGap": -6160.60498046875
+    },
+    {
+      "kind": "birth-settlement-ready",
+      "at": 1795150630032.89,
+      "ticket": 16,
+      "relativeToGap": 9763.169921875
+    }
+  ],
+  "longestOverlappingScopes": [
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620236.661,
+      "durationMs": 372.954,
+      "threadDurationMs": 1.119,
+      "pid": 23676,
+      "tid": 1476,
+      "thread": "CrGpuMain",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620236.664,
+      "durationMs": 372.951,
+      "threadDurationMs": 1.117,
+      "pid": 23676,
+      "tid": 1476,
+      "thread": "CrGpuMain",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Scheduler::RunTask",
+      "at": 1795150620236.669,
+      "durationMs": 372.943,
+      "threadDurationMs": 1.11,
+      "pid": 23676,
+      "tid": 1476,
+      "thread": "CrGpuMain",
+      "process": "GPU Process"
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+      "at": 1795150620236.932,
+      "durationMs": 372.674,
+      "threadDurationMs": 0.849,
+      "pid": 23676,
+      "tid": 1476,
+      "thread": "CrGpuMain",
+      "process": "GPU Process"
+    },
+    {
+      "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+      "at": 1795150620236.937,
+      "durationMs": 372.443,
+      "threadDurationMs": 0.661,
+      "pid": 23676,
+      "tid": 1476,
+      "thread": "CrGpuMain",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadPool_RunTask",
+      "at": 1795150619975.79,
+      "durationMs": 359.837,
+      "threadDurationMs": 355.764,
+      "pid": 23676,
+      "tid": 19196,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150619975.806,
+      "durationMs": 359.82,
+      "threadDurationMs": 355.76,
+      "pid": 23676,
+      "tid": 19196,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "DawnPlatformImpl::RunWorkerTask",
+      "at": 1795150619975.81,
+      "durationMs": 359.786,
+      "threadDurationMs": 355.749,
+      "pid": 23676,
+      "tid": 19196,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadPool_RunTask",
+      "at": 1795150619996.877,
+      "durationMs": 343.744,
+      "threadDurationMs": 341.468,
+      "pid": 23676,
+      "tid": 6760,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150619996.897,
+      "durationMs": 343.723,
+      "threadDurationMs": 341.463,
+      "pid": 23676,
+      "tid": 6760,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "DawnPlatformImpl::RunWorkerTask",
+      "at": 1795150619996.901,
+      "durationMs": 343.698,
+      "threadDurationMs": 341.454,
+      "pid": 23676,
+      "tid": 6760,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadPool_RunTask",
+      "at": 1795150619986.31,
+      "durationMs": 322.706,
+      "threadDurationMs": 321.528,
+      "pid": 23676,
+      "tid": 14024,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150619986.329,
+      "durationMs": 322.686,
+      "threadDurationMs": 321.523,
+      "pid": 23676,
+      "tid": 14024,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "DawnPlatformImpl::RunWorkerTask",
+      "at": 1795150619986.333,
+      "durationMs": 322.652,
+      "threadDurationMs": 321.512,
+      "pid": 23676,
+      "tid": 14024,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadPool_RunTask",
+      "at": 1795150620010.361,
+      "durationMs": 272.177,
+      "threadDurationMs": 271.192,
+      "pid": 23676,
+      "tid": 10716,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620010.381,
+      "durationMs": 272.156,
+      "threadDurationMs": 271.187,
+      "pid": 23676,
+      "tid": 10716,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "DawnPlatformImpl::RunWorkerTask",
+      "at": 1795150620010.385,
+      "durationMs": 272.128,
+      "threadDurationMs": 271.174,
+      "pid": 23676,
+      "tid": 10716,
+      "thread": "ThreadPoolForegroundWorker",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620369.523,
+      "durationMs": 33.356,
+      "threadDurationMs": 0.046,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620502.872,
+      "durationMs": 33.353,
+      "threadDurationMs": 0.124,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620369.525,
+      "durationMs": 33.351,
+      "threadDurationMs": 0.044,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620302.868,
+      "durationMs": 33.35,
+      "threadDurationMs": 0.048,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620302.871,
+      "durationMs": 33.342,
+      "threadDurationMs": 0.044,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620569.558,
+      "durationMs": 33.339,
+      "threadDurationMs": 0.063,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620436.221,
+      "durationMs": 33.336,
+      "threadDurationMs": 0.048,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620502.875,
+      "durationMs": 33.334,
+      "threadDurationMs": 0.121,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "ThreadControllerImpl::RunTask",
+      "at": 1795150620402.885,
+      "durationMs": 33.332,
+      "threadDurationMs": 0.055,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620569.56,
+      "durationMs": 33.332,
+      "threadDurationMs": 0.06,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    },
+    {
+      "name": "Edge_RunTask",
+      "at": 1795150620436.224,
+      "durationMs": 33.327,
+      "threadDurationMs": 0.045,
+      "pid": 23676,
+      "tid": 23336,
+      "thread": "GpuVSyncThread",
+      "process": "GPU Process"
+    }
+  ],
+  "limit": "Observed scope overlap only. Nested scopes must not be summed and wall time is not CPU time. No automatic causal attribution; this instrumented case cannot explain another historical untraced gap."
+}

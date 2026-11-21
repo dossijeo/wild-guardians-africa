@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "id": "sahelianaCenter",
+  "sourceModel": "assets/web/007b4158ed340f9f382920fc5512c74522ff93a2539aba693a350843b7eae644.glb",
+  "preview": {
+    "path": "preview.glb",
+    "bytes": 1466472,
+    "sha256": "4bdafbfb5aefe6aa11dccd4672a14b73711d89319cda0bc331787c871956e3fd",
+    "requires": []
+  },
+  "variants": {
+    "webp": {
+      "requires": [],
+      "files": [
+        {
+          "path": "webp/283d30a2be70ddf3a05824ae1d9e672debbe8c2e3213db3cbb0b4d223a5eb610.webp",
+          "bytes": 18836,
+          "sha256": "283d30a2be70ddf3a05824ae1d9e672debbe8c2e3213db3cbb0b4d223a5eb610"
+        },
+        {
+          "path": "webp/420c8717922dda7070a1da12c64936ffa6766e3852bdcfc764463350b2b61c92.webp",
+          "bytes": 163070,
+          "sha256": "420c8717922dda7070a1da12c64936ffa6766e3852bdcfc764463350b2b61c92"
+        },
+        {
+          "path": "webp/4ec21c928feed78c4393905cbe42e7f3c979e707244a0edf4c9705b6b915a1c6.webp",
+          "bytes": 120326,
+          "sha256": "4ec21c928feed78c4393905cbe42e7f3c979e707244a0edf4c9705b6b915a1c6"
+        },
+        {
+          "path": "webp/mapping.json",
+          "bytes": 181,
+          "sha256": "9c55d9f18d268f2fa78d5a661feda3ddf528cea2ea64933ff10dc5a555c1e758"
+        },
+        {
+          "path": "webp/materials.gltf",
+          "bytes": 923,
+          "sha256": "ac6752b53d9a283f7310af3ca2faeb43cd974e9dee68de463c1c670a8027ad16"
+        }
+      ]
+    },
+    "bc7": {
+      "requires": [
+        "texture-compression-bc"
+      ],
+      "files": [
+        {
+          "path": "bc7/283d30a2be70ddf3a05824ae1d9e672debbe8c2e3213db3cbb0b4d223a5eb610-data-uastc2-bc7.ktx2",
+          "bytes": 1398560,
+          "sha256": "e2ab261a958b872ff28c7917fa8e2ce647a1ab1ac008d7aafb83271f26f5cc56"
+        },
+        {
+          "path": "bc7/420c8717922dda7070a1da12c64936ffa6766e3852bdcfc764463350b2b61c92-color-uastc2-bc7.ktx2",
+          "bytes": 1398560,
+          "sha256": "5285f2441a5f782de3d105cd1f05afeb0027651f7761effcd604c617939af0a4"
+        },
+        {
+          "path": "bc7/4ec21c928feed78c4393905cbe42e7f3c979e707244a0edf4c9705b6b915a1c6-normal-uastc2-bc7.ktx2",
+          "bytes": 1398560,
+          "sha256": "c96147d9a94b1a7c166e8edb9c8d41fc40ddb2ac4380d5ec4aed34394c559f99"
+        },
+        {
+          "path": "bc7/mapping.json",
+          "bytes": 181,
+          "sha256": "9c55d9f18d268f2fa78d5a661feda3ddf528cea2ea64933ff10dc5a555c1e758"
+        },
+        {
+          "path": "bc7/materials.gltf",
+          "bytes": 964,
+          "sha256": "71d1daff26804f6640fff28b030cf85c16a8953f4ed2d1460bf08c5a4d357585"
+        }
+      ]
+    }
+  }
+}

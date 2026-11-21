@@ -1,0 +1,27 @@
+{
+  "scope": "Independent real new-game loads, same seed and fixed state time after loading, then 60 manual visual frames. Synchronous canvas readback; loading, camera/actor phases and asynchronous streaming are not proven identical. Control variability is a bound on this comparison, not proof of exact equivalence.",
+  "runs": [
+    {
+      "candidate": "ground-visual-control-b",
+      "width": 1280,
+      "height": 720,
+      "changed": 591,
+      "over8": 2,
+      "max": 12,
+      "sum": 644,
+      "referenceSha256": "7353b5c90b687e5bd77808114c543c074e101d43dc6efcc6ea053d4aabb44477",
+      "candidateSha256": "04e89db64a1df14993a321f0e42a6e33425ca5d2e8acf90893b8bf2cea16712b"
+    },
+    {
+      "candidate": "ground-visual-warm",
+      "width": 1280,
+      "height": 720,
+      "changed": 456,
+      "over8": 1,
+      "max": 12,
+      "sum": 481,
+      "referenceSha256": "7353b5c90b687e5bd77808114c543c074e101d43dc6efcc6ea053d4aabb44477",
+      "candidateSha256": "6c7ae14c197eb63a8da3052ae357a76a631dd25cc5583f79ca898a90f59cff59"
+    }
+  ]
+}

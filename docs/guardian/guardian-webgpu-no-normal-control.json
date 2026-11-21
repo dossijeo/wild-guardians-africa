@@ -1,0 +1,180 @@
+{
+  "backend": "WebGPU",
+  "nativeOutput": false,
+  "unlit": false,
+  "meshInfo": [
+    {
+      "name": "Guardian",
+      "tangent": true,
+      "normal": true,
+      "normalMap": false,
+      "morphNormals": 5
+    },
+    {
+      "name": "GuardianEyelidsStudy",
+      "tangent": false,
+      "normal": true,
+      "normalMap": false,
+      "morphNormals": 8
+    },
+    {
+      "name": "Localized_face_topology",
+      "tangent": true,
+      "normal": true,
+      "normalMap": false,
+      "morphNormals": 11
+    },
+    {
+      "name": "Localized_face_topology_1",
+      "tangent": true,
+      "normal": true,
+      "normalMap": false,
+      "morphNormals": 11
+    }
+  ],
+  "samples": [
+    {
+      "frame": {
+        "time": 3.1,
+        "audio": {
+          "currentTime": 1,
+          "ended": false
+        },
+        "gesture": "speak"
+      },
+      "mean": 0.3777683333333333,
+      "max": 116,
+      "changedPixels": 2606,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 1,
+        "audio": null,
+        "gesture": "idle"
+      },
+      "mean": 0.4150916666666667,
+      "max": 138,
+      "changedPixels": 2801,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 7.8,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": false
+      },
+      "mean": 0.38370166666666666,
+      "max": 97,
+      "changedPixels": 2671,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 1,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": true
+      },
+      "mean": 0.41316166666666665,
+      "max": 128,
+      "changedPixels": 2739,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    },
+    {
+      "frame": {
+        "time": 7.8,
+        "audio": null,
+        "gesture": "warning",
+        "reduced": true
+      },
+      "mean": 0.41316,
+      "max": 128,
+      "changedPixels": 2739,
+      "weightMax": 0,
+      "boneMax": 0,
+      "invalidBones": 0,
+      "boneLengths": [
+        [
+          1024,
+          1024,
+          1024,
+          1024
+        ],
+        [
+          592,
+          592,
+          592,
+          592
+        ]
+      ]
+    }
+  ],
+  "visualParityPassed": true,
+  "scope": "Full model and translated vortex; WebGL and WebGPU side by side with simulated audio, static poses including reduced motion, no game or performance comparison. Mean threshold is only a diagnostic gate, not perceptual approval."
+}

@@ -1,0 +1,254 @@
+{
+  "cases": [
+    {
+      "kind": "sample",
+      "time": 0,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 4,
+        "max": 2,
+        "mean": 0.000004444444444444444
+      }
+    },
+    {
+      "kind": "midpoint",
+      "time": 0.016666666666666666,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 4154,
+        "max": 179,
+        "mean": 0.02644074074074074
+      }
+    },
+    {
+      "kind": "sample",
+      "time": 0.13333333333333333,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 12,
+        "max": 47,
+        "mean": 0.00007481481481481481
+      }
+    },
+    {
+      "kind": "midpoint",
+      "time": 0.15,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 4399,
+        "max": 179,
+        "mean": 0.020494074074074074
+      }
+    },
+    {
+      "kind": "sample",
+      "time": 0.36666666666666664,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 26,
+        "max": 31,
+        "mean": 0.00004962962962962963
+      }
+    },
+    {
+      "kind": "midpoint",
+      "time": 0.3833333333333333,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 5889,
+        "max": 179,
+        "mean": 0.034623703703703705
+      }
+    },
+    {
+      "kind": "sample",
+      "time": 0.6666666666666666,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 309,
+        "max": 179,
+        "mean": 0.0009866666666666667
+      }
+    },
+    {
+      "kind": "midpoint",
+      "time": 0.6833333333333333,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 6085,
+        "max": 179,
+        "mean": 0.043467407407407406
+      }
+    },
+    {
+      "kind": "sample",
+      "time": 1.0333333333333334,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 2245,
+        "max": 178,
+        "mean": 0.008912592592592592
+      }
+    },
+    {
+      "kind": "midpoint",
+      "time": 1.0374999692473332,
+      "sourceRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "gpuRepeat": {
+        "changed": 0,
+        "max": 0,
+        "mean": 0
+      },
+      "sourceToGpu": {
+        "changed": 1713,
+        "max": 178,
+        "mean": 0.006220740740740741
+      }
+    }
+  ],
+  "negative": {
+    "changed": 14344,
+    "max": 214,
+    "mean": 1.868702962962963
+  },
+  "staleShadow": {
+    "changed": 6240,
+    "max": 105,
+    "mean": 0.33418888888888887
+  },
+  "noMotion": {
+    "changed": 16676,
+    "max": 217,
+    "mean": 2.527105925925926
+  },
+  "autonomous": {
+    "steps": 30,
+    "animationEvaluations": 0,
+    "skeletonNoopCalls": 372,
+    "textureUploads": 0,
+    "rootTransformsStable": true,
+    "visibleChange": {
+      "changed": 16114,
+      "max": 211,
+      "mean": 2.3729674074074074
+    }
+  },
+  "compiledColor": 24,
+  "compiledDepth": 12,
+  "actorCount": 3,
+  "meshCount": 12,
+  "textureBytes": 44352,
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "Three hyena rigs, synthetic shader-driven trajectories, one shared GPU float texture and global simulation-phase uniform plus static offsets. Original GLB, AfricanToon, flat floor and explicitly invalidated native directional shadow. Candidate disables Skeleton.update and actor animation between draws; no main-thread per-actor updates while time advances. Canonical mesh inverse and CPU root transforms stay fixed while synthetic translation and yaw are evaluated in shader. Source and candidate are rendered sequentially in the same scene with synchronous readbacks; no timings, actual game simulation, walking terrain support, physical contacts, authoritative trajectories, morph animation, interactions, context recovery, production integration or hardware comparison.",
+  "videos": [
+    {
+      "mode": "source",
+      "frames": 96,
+      "nominalFps": 30,
+      "type": "video/webm;codecs=vp9",
+      "bytes": 528238,
+      "decoded": {
+        "width": 900,
+        "height": 500,
+        "advanced": true
+      }
+    },
+    {
+      "mode": "gpu",
+      "frames": 96,
+      "nominalFps": 30,
+      "type": "video/webm;codecs=vp9",
+      "bytes": 537106,
+      "decoded": {
+        "width": 900,
+        "height": 500,
+        "advanced": true
+      }
+    }
+  ]
+}

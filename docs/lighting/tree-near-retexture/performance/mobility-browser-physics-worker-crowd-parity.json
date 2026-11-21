@@ -1,0 +1,80 @@
+{
+  "runs": [
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 42,
+      "peerContacts": 3081,
+      "barrierContacts": 58,
+      "main": {
+        "initializationMs": 275.45500000566244,
+        "runMs": 1515.0149999931455
+      },
+      "worker": {
+        "initializationMs": 277.3149999976158,
+        "runMs": 1252.4900000020862,
+        "wallMs": 1880.9900000020862
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 42,
+      "peerContacts": 3081,
+      "barrierContacts": 58,
+      "main": {
+        "initializationMs": 274.7749999985099,
+        "runMs": 1590.655000001192
+      },
+      "worker": {
+        "initializationMs": 285.29499999433756,
+        "runMs": 1262.0649999976158,
+        "wallMs": 1929.0499999970198
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 42,
+      "peerContacts": 3081,
+      "barrierContacts": 58,
+      "main": {
+        "initializationMs": 263.21000000089407,
+        "runMs": 1554.3650000020862
+      },
+      "worker": {
+        "initializationMs": 268.9949999973178,
+        "runMs": 1267.9949999973178,
+        "wallMs": 1880.0900000035763
+      }
+    }
+  ],
+  "scope": "Edge headless, real Rapier, authored recovery clip and geometry-only rigs independently loaded in main thread and browser Worker, flat terrain and repeated hit. Two actors and one prop. Selected logical fields, physical pose and all bone world matrices compared every step; no Game.tick, WebGL pixels, live GLTF materials or FPS measurement. Timings not comparable as a performance benchmark."
+}

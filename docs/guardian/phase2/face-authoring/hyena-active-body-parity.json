@@ -1,0 +1,67 @@
+{
+  "source": "public/assets/e45d7ac086ba07a8c3948fa0695fc41267914a95e1ab243cee608aa7ca4ec472.glb",
+  "edited": "content/source/actors/hyena/expressive-candidate.glb",
+  "bones": 21,
+  "samples": 246,
+  "maxPosition": 0.000001598292427521198,
+  "maxAngle": 0.0000015963031936696095,
+  "clips": [
+    "Running",
+    "Walking",
+    "Charged_Upward_Slash",
+    "Right_Hand_Sword_Slash",
+    "Weapon_Combo",
+    "Weapon_Combo_2"
+  ],
+  "lowerBody": {
+    "vertices": 4880,
+    "maxPosition": 4.852272518603424e-7,
+    "maxWeight": 5.960464477539063e-8,
+    "scope": "World Y below 1.1m excluding intentionally restored rigid Neck collar components; source skin positions and named weights"
+  },
+  "muzzle": {
+    "vertices": 1011,
+    "maxHeadRelativeError": 1.3507158977068525e-15,
+    "scope": "neutral core muzzle skin through all native clips",
+    "worst": {
+      "mesh": "Mesh_0_1",
+      "index": 9741,
+      "rest": [
+        -0.02671980252684018,
+        1.5354283814730616,
+        0.6770860558462986
+      ],
+      "weights": [
+        [
+          "Head",
+          1
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ],
+        [
+          "Hips",
+          0
+        ]
+      ],
+      "clip": "Running",
+      "time": 0.3541666567325592,
+      "expected": [
+        -0.06283568024617267,
+        1.5060594926202926,
+        0.8782392196242776
+      ],
+      "actual": [
+        -0.06283568024617266,
+        1.5060594926202913,
+        0.8782392196242779
+      ]
+    }
+  },
+  "pass": true
+}

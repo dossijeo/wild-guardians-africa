@@ -1,0 +1,61 @@
+{
+  "pipelineCreations": 82,
+  "vertexCodeIds": 81,
+  "fragmentCodeIds": 20,
+  "shaderPairs": 81,
+  "vertexLayouts": 13,
+  "pipelineLayoutsByObjectIdentity": 81,
+  "descriptorWithoutLayout": 82,
+  "targetFormats": [
+    {
+      "value": {
+        "color": [
+          "rgba8unorm"
+        ],
+        "depth": "depth24plus"
+      },
+      "count": 40
+    },
+    {
+      "value": {
+        "color": [
+          "rgba16float"
+        ],
+        "depth": "depth24plus"
+      },
+      "count": 40
+    },
+    {
+      "value": {
+        "color": [
+          "rgba8unorm-srgb"
+        ],
+        "depth": null
+      },
+      "count": 1
+    },
+    {
+      "value": {
+        "color": [
+          "rgba8unorm"
+        ],
+        "depth": null
+      },
+      "count": 1
+    }
+  ],
+  "capturedVertexCodes": 80,
+  "vertexCodesMissingFromSample": [
+    3
+  ],
+  "capturedVertexCodesWithNodeBuffers": 78,
+  "capturedVertexCodesWithSkinIndex": 78,
+  "capturedVertexCodesWithArrayTexture": 74,
+  "distinctCapturedVertexAfterRenaming": 66,
+  "limitations": [
+    "Code IDs identify exact WGSL strings within this run; they are not cross-run identifiers.",
+    "Layout IDs are object identities, not a proof of structural incompatibility.",
+    "Shader normalization is an experimental syntactic comparison, not proof that pipeline layouts or bindings are interchangeable.",
+    "Modules created before the measured sample can be missing from the captured shader source."
+  ]
+}

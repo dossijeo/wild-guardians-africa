@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: an image capture completing after terminal close cannot post more resource work
+not ok 1 - an image capture completing after terminal close cannot post more resource work
+  ---
+  duration_ms: 33.4442
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\.cache\\transport-after-close.test.mjs:2:1'
+  failureType: 'testCodeFailure'
+  error: 'terminal transport must not post a late bitmap'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/transport-after-close.test.mjs:6:321)
+    async Test.run (node:internal/test_runner/test:797:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1231.94

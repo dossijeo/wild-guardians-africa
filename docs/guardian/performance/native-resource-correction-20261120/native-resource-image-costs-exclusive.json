@@ -1,0 +1,110 @@
+{
+  "head": "bac8fe87605d013cbf3bff9b74e613d38bb8b3ec",
+  "mode": "native-upload-cost",
+  "browser": "157.0.4341.60",
+  "at": "2026-11-20T13:09:51.664Z",
+  "result": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "results": [
+      {
+        "edge": 4096,
+        "sample": 0,
+        "calls": 1,
+        "totalCallMs": 16.5349999666214,
+        "maxCallMs": 16.5349999666214,
+        "elapsedMs": 140.36000001430511
+      },
+      {
+        "edge": 4096,
+        "sample": 1,
+        "calls": 1,
+        "totalCallMs": 3.7300000190734863,
+        "maxCallMs": 3.7300000190734863,
+        "elapsedMs": 27.22000002861023
+      },
+      {
+        "edge": 4096,
+        "sample": 2,
+        "calls": 1,
+        "totalCallMs": 7.559999942779541,
+        "maxCallMs": 7.559999942779541,
+        "elapsedMs": 19.884999990463257
+      },
+      {
+        "edge": 1024,
+        "sample": 0,
+        "calls": 8,
+        "totalCallMs": 49.049999952316284,
+        "maxCallMs": 7.725000023841858,
+        "elapsedMs": 86.87999999523163
+      },
+      {
+        "edge": 1024,
+        "sample": 1,
+        "calls": 8,
+        "totalCallMs": 14.989999890327454,
+        "maxCallMs": 2.2699999809265137,
+        "elapsedMs": 27.950000047683716
+      },
+      {
+        "edge": 1024,
+        "sample": 2,
+        "calls": 8,
+        "totalCallMs": 13.524999856948853,
+        "maxCallMs": 1.809999942779541,
+        "elapsedMs": 30.955000042915344
+      },
+      {
+        "edge": 512,
+        "sample": 0,
+        "calls": 32,
+        "totalCallMs": 32.084999799728394,
+        "maxCallMs": 1.59499990940094,
+        "elapsedMs": 47.90499997138977
+      },
+      {
+        "edge": 512,
+        "sample": 1,
+        "calls": 32,
+        "totalCallMs": 29.66499972343445,
+        "maxCallMs": 1.0950000286102295,
+        "elapsedMs": 44.18999993801117
+      },
+      {
+        "edge": 512,
+        "sample": 2,
+        "calls": 32,
+        "totalCallMs": 29.290000200271606,
+        "maxCallMs": 1.0700000524520874,
+        "elapsedMs": 44.4650000333786
+      },
+      {
+        "edge": 256,
+        "sample": 0,
+        "calls": 128,
+        "totalCallMs": 58.96499967575073,
+        "maxCallMs": 2.0850000381469727,
+        "elapsedMs": 83.4799998998642
+      },
+      {
+        "edge": 256,
+        "sample": 1,
+        "calls": 128,
+        "totalCallMs": 67.29999923706055,
+        "maxCallMs": 0.7549999952316284,
+        "elapsedMs": 90.28500008583069
+      },
+      {
+        "edge": 256,
+        "sample": 2,
+        "calls": 128,
+        "totalCallMs": 62.24000036716461,
+        "maxCallMs": 2.009999990463257,
+        "elapsedMs": 85.67500007152557
+      }
+    ]
+  }
+}

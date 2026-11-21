@@ -12,6 +12,8 @@ balance['raids']['crop_hit_points']=crop_hit_points
 for spell in balance['spells']:
     if spell['id'] in revisions.get('agricultural_magic', {}):
         spell.update(revisions['agricultural_magic'][spell['id']])
+    if spell['id'] == 'attack':
+        spell.update(revisions.get('attack_magic', {}))
 additional_village_cost=revisions['additional_village_cost']
 if not isinstance(additional_village_cost,dict) or set(additional_village_cost)!={'variant'} or additional_village_cost['variant'] not in ['moderate','proposed','demanding']:
     raise SystemExit('Additional villages require a declared exponential candidate')

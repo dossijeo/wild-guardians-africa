@@ -1,0 +1,13 @@
+import {StorageBufferAttribute} from 'three/webgpu';
+import {Fn,If,Loop,clamp,float,mix,reference,storage} from 'three/tsl';
+
+// The renderer owns one bounded buffer; each actor owns its slot until all
+// in-flight GPU work has released the corresponding presentation resources.
+export function createConfirmedGpuPhasePool({renderer,clock,maxSegments=64,capacity=64}={}){
+ if(!renderer?.backend?.isWebGPUBackend||typeof renderer?._attributes?.delete!=='function'||!clock?.motionNode?.isNode||!Number.isInteger(maxSegments)||maxSegments<1||maxSegments>256||!Number.isInteger(capacity)||capacity<1||capacity>1024)throw TypeError('Invalid phase pool');
+ const buffer=new StorageBufferAttribute(capacity*maxSegments,4),samples=storage(buffer,'vec4',buffer.count).toReadOnly(),free=Array.from({length:capacity},(_,i)=>capacity-i-1),live=new Set();let closed=false,disposed=false;
+ const field=(name,type)=>reference('_wgPhase.'+name,type),slot=field('slot','int'),count=field('count','int'),start=field('start','float'),duration=field('duration','float'),initial=field('initial','float'),active=field('active','bool'),exitEnabled=field('exitEnabled','bool'),exitInitial=field('exitInitial','float'),exitHeld=field('exitHeld','float'),exitHolding=field('exitHolding','bool');
+ const conservative=clock.motionNode.sub(clock.motionNode.abs().max(1).mul(.000000476837158203125)),time=clamp(conservative.sub(start),float(0),duration),node=Fn(()=>{const phase=initial.toVar();Loop(maxSegments,({i})=>{If(i.lessThan(count),()=>{const s=samples.element(slot.mul(maxSegments).add(i));If(time.greaterThanEqual(s.x),()=>{phase.assign(mix(s.z,s.w,clamp(time.sub(s.x).div(s.y.sub(s.x)),float(0),float(1))));});});});return phase.max(0);})(),exitNode=exitHolding.select(exitHeld,exitInitial.sub(time).max(0));
+ function destroy(){if(disposed)return;disposed=true;renderer._attributes.delete(buffer);}
+ return {clock,maxSegments,node,resolve:fallback=>active.select(node,fallback),resolveExit:(fallback,seconds)=>active.and(exitEnabled).select(exitNode.div(seconds).clamp(0,1),fallback),acquire(){if(closed)throw Error('Phase pool disposed');if(!free.length)return null;const index=free.pop(),offset=index*maxSegments*4,data=buffer.array.subarray(offset,offset+maxSegments*4);live.add(index);let released=false;return {index,data,dirty(){if(released||closed)throw Error('Phase slot unavailable');buffer.addUpdateRange(offset,data.length);buffer.needsUpdate=true;},release(){if(released)return;released=true;live.delete(index);data.fill(0);if(!closed)free.push(index);else if(!live.size)destroy();}};},status(){return {closed,active:live.size,capacity};},dispose(){if(closed)return;closed=true;if(!live.size)destroy();}};
+}

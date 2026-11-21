@@ -9,6 +9,17 @@ function fixture(){
   return {audio,calls};
 }
 
+test('explicit confirmed publications deliver events beyond the state ring without frame duplicates',()=>{
+ const {audio,calls}=fixture(),events=Array.from({length:205},(_,i)=>({id:`event-${i+1}`,type:'CropPlaced'}));
+ audio.remember([]);audio.process(events);audio.process([]);audio.process(events.slice(-200));assert.equal(calls.length,205);
+ const next={id:'event-206',type:'CropPlaced'};audio.process([next]);audio.process([]);assert.equal(calls.length,206);
+});
+test('deduplication compaction retains the state ring after short Worker publications',()=>{
+ const {audio,calls}=fixture(),state=newGame({seed:123,slotId:'direct-audio'});
+ for(let i=0;i<2001;i++){emit(state,'CropPlaced');audio.process([state.events.at(-1)],{state});}
+ assert.equal(calls.length,2001);audio.process(state.events,{state});assert.equal(calls.length,2001);
+});
+
 test('quiet frames do not revisit IDs or allocate a replacement deduplication set',()=>{
   const {audio,calls}=fixture();let reads=0;
   const history=Array.from({length:200},(_,i)=>({get id(){reads++;return `event-${i}`;},type:'CropPlaced'}));

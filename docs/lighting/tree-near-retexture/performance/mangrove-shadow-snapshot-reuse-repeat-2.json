@@ -1,0 +1,160 @@
+{
+  "network": true,
+  "animals": 20,
+  "runs": [
+    {
+      "mode": "fresh",
+      "reuseCalls": 0,
+      "shadowDraws": 75,
+      "shadowHits": 0,
+      "cpu": {
+        "count": 75,
+        "p50": 34.8500000089407,
+        "p95": 43.25,
+        "p99": 50.46000000834465,
+        "max": 50.49000000953674
+      },
+      "frames": {
+        "count": 74,
+        "p50": 33.3350000000064,
+        "p95": 66.65499999999884,
+        "p99": 66.7650000000067,
+        "max": 66.80999999999767
+      },
+      "gpu": {
+        "count": 75,
+        "p50": 20.615328,
+        "p95": 25.517152,
+        "p99": 26.582848,
+        "max": 28.834112
+      }
+    },
+    {
+      "mode": "reuse",
+      "reuseCalls": 75,
+      "shadowDraws": 75,
+      "shadowHits": 0,
+      "cpu": {
+        "count": 75,
+        "p50": 33.68000000715256,
+        "p95": 37.310000002384186,
+        "p99": 39.44999998807907,
+        "max": 40.09499999880791
+      },
+      "frames": {
+        "count": 74,
+        "p50": 33.3350000000064,
+        "p95": 33.419999999998254,
+        "p99": 66.69499999999971,
+        "max": 66.77999999999884
+      },
+      "gpu": {
+        "count": 75,
+        "p50": 16.528096,
+        "p95": 23.242976,
+        "p99": 24.027872,
+        "max": 25.031008
+      }
+    },
+    {
+      "mode": "reuse",
+      "reuseCalls": 75,
+      "shadowDraws": 75,
+      "shadowHits": 0,
+      "cpu": {
+        "count": 75,
+        "p50": 33.37000000476837,
+        "p95": 37.5,
+        "p99": 39.76500000059605,
+        "max": 44.53000000119209
+      },
+      "frames": {
+        "count": 74,
+        "p50": 33.330000000001746,
+        "p95": 33.40999999999622,
+        "p99": 33.45999999999913,
+        "max": 66.70500000000175
+      },
+      "gpu": {
+        "count": 75,
+        "p50": 19.679104,
+        "p95": 23.2656,
+        "p99": 24.88576,
+        "max": 25.798688
+      }
+    },
+    {
+      "mode": "fresh",
+      "reuseCalls": 0,
+      "shadowDraws": 75,
+      "shadowHits": 0,
+      "cpu": {
+        "count": 75,
+        "p50": 34.54999999701977,
+        "p95": 40.67499999701977,
+        "p99": 44.05500000715256,
+        "max": 55.03499999642372
+      },
+      "frames": {
+        "count": 74,
+        "p50": 33.33499999999913,
+        "p95": 33.51499999999942,
+        "p99": 66.68000000000029,
+        "max": 66.68500000000495
+      },
+      "gpu": {
+        "count": 75,
+        "p50": 15.12064,
+        "p95": 24.066048,
+        "p99": 25.270432,
+        "max": 26.515456
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "a": 0,
+      "b": 1,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    },
+    {
+      "a": 1,
+      "b": 2,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    },
+    {
+      "a": 0,
+      "b": 3,
+      "shadow": {
+        "changed": 0,
+        "total": 4194304,
+        "max": 0
+      },
+      "color": {
+        "changed": 0,
+        "total": 921600,
+        "max": 0
+      }
+    }
+  ],
+  "sceneErrors": [],
+  "scope": "One Edge headless session with URL-intercepted scratch-buffer experiment in actual shadow traversal, mangrove-islands scene, 20 synthetic walking animals. Same sequence per block; packed color shadow target and final color compared at block end. Full render CPU/GPU and intervals, no Game.tick, camera motion, memory/GC, context loss, other biomes or integrated GPU; no production source changed."
+}

@@ -1,0 +1,22 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createWebGpuWorldClient} from '../../src/rendering/webgpu-world-client.js';
+window.audit=async()=>{
+ const worker={messages:[],postMessage(message){this.messages.push(message);},terminate(){}},client=createWebGpuWorldClient({canvas:{transferControlToOffscreen:()=>({})},session:'camera-race',snapshot:'{}',experimentalPresentationInputs:true,workerFactory:()=>worker,channelFactory:()=>({port1:{close(){}},port2:{close(){}}})});
+ const receive=data=>worker.onmessage({data});
+ try{
+  receive({kind:'ready',backend:'WebGPU'});await client.ready;
+  receive({kind:'qa-rendered-frame',sequence:1,terrainGeneration:1,selectableGeneration:1});
+  async function run(moveDuringVerification){
+   client.setCamera({x:1});const request=client.pick({x:0,y:0},{allowStableCamera:true}),id=worker.messages.at(-1).id;
+   client.setCamera({x:2});receive({kind:'pickResult',id,result:{sequence:1,entityId:'animal'}});
+   if(worker.messages.at(-1).kind!=='qa-verify-pick')throw Error('Verification was not requested');
+   if(moveDuringVerification)client.setCamera({x:3});
+   receive({kind:'pickResult',id,result:{sequence:1,entityId:'animal',cameraVerified:true}});
+   try{return {result:await request};}catch(error){return {error:error.message,reason:error.reason};}
+  }
+  const stable=await run(false),changed=await run(true);
+  if(stable.result?.entityId!=='animal'||changed.error!=='Stale WebGPU pick'||changed.reason!=='camera')throw Error(JSON.stringify({stable,changed}));
+  return {stable,changed,scope:'Actual WebGPU client module with simulated Worker replies; no renderer'};
+ }finally{client.dispose();}
+};window.ready=true;
+</script>

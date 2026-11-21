@@ -1,0 +1,83 @@
+{
+  "scope": "Experimental main-thread pacer and one Worker owning an adapted mangrove game with real Rapier and test rig. Pause requested during first tick and ordered into Worker game state, reject a paused step, resume at 2x and compare 30 steps to an independent reference. No rendering, live user input, worker recovery or safe visual horizon.",
+  "results": [
+    {
+      "steps": 30,
+      "pauseTargetSteps": 1.4733000004291534,
+      "pauseRequestToTickMs": 301.2199999988079,
+      "pauseRequestToGameAckMs": 301.25999999046326,
+      "pausedTime": 6069.0166666705,
+      "probeRejected": true,
+      "confirmedPause": true,
+      "resumed": true,
+      "rateAfterResume": 2,
+      "simulationEqual": true,
+      "totalWallMs": 708.9500000029802,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 31.646699999570846,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 1,
+        "overloaded": false,
+        "nextDelayMs": 0
+      },
+      "commands": 33
+    },
+    {
+      "steps": 30,
+      "pauseTargetSteps": 1.403100000321865,
+      "pauseRequestToTickMs": 293.3899999856949,
+      "pauseRequestToGameAckMs": 293.4299999922514,
+      "pausedTime": 6069.0166666705,
+      "probeRejected": true,
+      "confirmedPause": true,
+      "resumed": true,
+      "rateAfterResume": 2,
+      "simulationEqual": true,
+      "totalWallMs": 700.3400000035763,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 31.602900001108644,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 1,
+        "overloaded": false,
+        "nextDelayMs": 0
+      },
+      "commands": 33
+    },
+    {
+      "steps": 30,
+      "pauseTargetSteps": 1.4973000007867812,
+      "pauseRequestToTickMs": 288.7449999898672,
+      "pauseRequestToGameAckMs": 288.7849999964237,
+      "pausedTime": 6069.0166666705,
+      "probeRejected": true,
+      "confirmedPause": true,
+      "resumed": true,
+      "rateAfterResume": 2,
+      "simulationEqual": true,
+      "totalWallMs": 707.9200000017881,
+      "finalPacer": {
+        "session": "pacer-test",
+        "targetSteps": 32.534700000286094,
+        "completed": 30,
+        "confirmedTime": 6069.500000003826,
+        "inflight": null,
+        "paused": false,
+        "rate": 2,
+        "backlogSteps": 2,
+        "overloaded": false,
+        "nextDelayMs": 0
+      },
+      "commands": 33
+    }
+  ]
+}

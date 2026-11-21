@@ -1,0 +1,336 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "9a7df2d37",
+  "scope": "Native Carry graphics, confirmed crate ownership, staged Walk/Carry replacement and uniform route parameters. Ordinary pickup/delivery producer/execution and A/B/C acceptance remain pending.",
+  "tests": {
+    "directed": {
+      "log": ".cache/native-carry-final-directed.tap",
+      "tests": 61,
+      "pass": 61,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "regression": {
+      "log": ".cache/native-carry-regression.tap",
+      "tests": 561,
+      "pass": 539,
+      "fail": 3,
+      "skipped": 19,
+      "failures": [
+        "the intent bridge projects a scaled gate using the physical wall frame",
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    },
+    "baseline": {
+      "log": ".cache/native-carry-baseline.tap",
+      "tests": 74,
+      "pass": 52,
+      "fail": 3,
+      "skipped": 19,
+      "failures": [
+        "the intent bridge projects a scaled gate using the physical wall frame",
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ]
+    }
+  },
+  "expandedTestFiles": [
+    "tests/baked-walk-catalog.test.js",
+    "tests/baked-worker-walk-catalog.test.js",
+    "tests/native-frame-continuation.test.js",
+    "tests/native-gpu-motion.test.js",
+    "tests/native-route-terrain-support.test.js",
+    "tests/native-worker-roster.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/webgpu-actor-motion-binding.test.js",
+    "tests/webgpu-baked-walk.test.js",
+    "tests/webgpu-confirmed-worker-clock.test.js",
+    "tests/webgpu-hidden-actor-motion.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/webgpu-resource-registry.test.js",
+    "tests/webgpu-shared-shadow.test.js",
+    "tests/webgpu-worker-action-retry.test.js",
+    "tests/webgpu-worker-baked-alert.test.js",
+    "tests/webgpu-worker-baked-carry.test.js",
+    "tests/webgpu-worker-baked-fall.test.js",
+    "tests/webgpu-worker-baked-getup.test.js",
+    "tests/webgpu-worker-baked-harvest.test.js",
+    "tests/webgpu-worker-baked-idle.test.js",
+    "tests/webgpu-worker-baked-plant.test.js",
+    "tests/webgpu-worker-baked-run.test.js",
+    "tests/webgpu-worker-baked-walk.test.js",
+    "tests/webgpu-worker-baked-water.test.js",
+    "tests/webgpu-worker-carry-roster.test.js",
+    "tests/webgpu-worker-carry-tool.test.js",
+    "tests/webgpu-worker-fall-roster.test.js",
+    "tests/webgpu-worker-getup-roster.test.js",
+    "tests/webgpu-worker-harvest-roster.test.js",
+    "tests/webgpu-worker-recovery-exit-motion.test.js",
+    "tests/webgpu-worker-roster.test.js",
+    "tests/webgpu-worker-run-roster.test.js",
+    "tests/webgpu-worker-water-tools.test.js",
+    "tests/webgpu-world-client-temporal-profile.test.js",
+    "tests/webgpu-world-client.test.js",
+    "tests/native-route-presentation.test.js",
+    "tests/spatial-native-worker-motion.test.js",
+    "tests/spatial-native-route-execution.test.js",
+    "tests/spatial-native-intent-bridge.test.js"
+  ],
+  "baselineComparison": {
+    "base": "9a7df2d37",
+    "loader": ".cache/native-carry-baseline-loader.mjs",
+    "method": "Six changed production modules read by git-show at HEAD and loaded at original module URLs; no checkout changes.",
+    "sameFailures": true,
+    "skips": "19 existing native intent bridge cases require WILD_ENGINE_NATIVE_ROUTE_WASM; not selected in this run. The bridge mock itself fails unchanged ABI layout validation.",
+    "diagnosis": [
+      "Preexisting carry admission expects 1 but gets 0.",
+      "Preexisting harvest horizon expects true but gets false.",
+      "Preexisting legacy gate projection mock reports unsupported native motion layout."
+    ]
+  },
+  "hardware": {
+    "receipt": "native-worker-world-owner-carry-parameters-20261114.json",
+    "intermediateBeforeUniformParameters": "native-worker-world-owner-carry-20261114.json",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794642686580.975,
+      "end": 1794642687081.1052,
+      "blockedMs": 500.130126953125,
+      "drawFrames": 15,
+      "minClock": 10.0840400390625,
+      "maxClock": 11.923360351562502
+    },
+    "resourcesBeforeReuse": 2429,
+    "resourcesAfterReuse": 2429,
+    "rig": {
+      "before": {
+        "attachments": [
+          {
+            "id": 573,
+            "geometry": 150,
+            "index": 0
+          },
+          {
+            "id": 574,
+            "geometry": 151,
+            "index": 1
+          },
+          {
+            "id": 575,
+            "geometry": 152,
+            "index": 2
+          },
+          {
+            "id": 576,
+            "geometry": 153,
+            "index": 3
+          },
+          {
+            "id": 577,
+            "geometry": 154,
+            "index": 4
+          },
+          {
+            "id": 578,
+            "geometry": 155,
+            "index": 5
+          },
+          {
+            "id": 579,
+            "geometry": 156,
+            "index": 6
+          },
+          {
+            "id": 580,
+            "geometry": 157,
+            "index": 7
+          },
+          {
+            "id": 581,
+            "geometry": 158,
+            "index": 8
+          }
+        ],
+        "poseHash": 2842450917
+      },
+      "after": {
+        "attachments": [
+          {
+            "id": 573,
+            "geometry": 150,
+            "index": 0
+          },
+          {
+            "id": 574,
+            "geometry": 151,
+            "index": 1
+          },
+          {
+            "id": 575,
+            "geometry": 152,
+            "index": 2
+          },
+          {
+            "id": 576,
+            "geometry": 153,
+            "index": 3
+          },
+          {
+            "id": 577,
+            "geometry": 154,
+            "index": 4
+          },
+          {
+            "id": 578,
+            "geometry": 155,
+            "index": 5
+          },
+          {
+            "id": 579,
+            "geometry": 156,
+            "index": 6
+          },
+          {
+            "id": 580,
+            "geometry": 157,
+            "index": 7
+          },
+          {
+            "id": 581,
+            "geometry": 158,
+            "index": 8
+          }
+        ],
+        "poseHash": 2842450917
+      },
+      "replaced": {
+        "attachments": [
+          {
+            "id": 573,
+            "geometry": 150,
+            "index": 0
+          },
+          {
+            "id": 574,
+            "geometry": 151,
+            "index": 1
+          },
+          {
+            "id": 575,
+            "geometry": 152,
+            "index": 2
+          },
+          {
+            "id": 576,
+            "geometry": 153,
+            "index": 3
+          },
+          {
+            "id": 577,
+            "geometry": 154,
+            "index": 4
+          },
+          {
+            "id": 578,
+            "geometry": 155,
+            "index": 5
+          },
+          {
+            "id": 579,
+            "geometry": 156,
+            "index": 6
+          },
+          {
+            "id": 580,
+            "geometry": 157,
+            "index": 7
+          },
+          {
+            "id": 581,
+            "geometry": 158,
+            "index": 8
+          }
+        ],
+        "poseHash": 2842450917
+      }
+    },
+    "initialRenderFactories": {
+      "createBuffer": 0,
+      "createTexture": 0,
+      "createSampler": 0,
+      "createBindGroup": 0,
+      "createBindGroupLayout": 0,
+      "createPipelineLayout": 0,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 0,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "replacementRenderFactories": {
+      "createBuffer": 0,
+      "createTexture": 0,
+      "createSampler": 0,
+      "createBindGroup": 0,
+      "createBindGroupLayout": 0,
+      "createPipelineLayout": 0,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 0,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "preparationDeltaBeforeUniformParameters": {
+      "createBuffer": 213,
+      "createTexture": 1,
+      "createSampler": 1,
+      "createBindGroup": 108,
+      "createBindGroupLayout": 108,
+      "createPipelineLayout": 22,
+      "createShaderModule": 22,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 22,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "preparationDeltaAfterUniformParameters": {
+      "createBuffer": 213,
+      "createTexture": 1,
+      "createSampler": 1,
+      "createBindGroup": 108,
+      "createBindGroupLayout": 108,
+      "createPipelineLayout": 12,
+      "createShaderModule": 12,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 12,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "drainedBeforeAuthorityDisposal": true,
+    "gpuErrors": 0
+  },
+  "build": {
+    "command": "VITE_WEBGPU_REMOTE_DRAW=true .cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "status": "passed",
+    "log": ".cache/native-carry-build.log",
+    "seconds": 45.43,
+    "warnings": [
+      "Existing Vite chunk size advice."
+    ]
+  },
+  "browserSyntax": {
+    "command": ".cache/tooling/node20.exe tools/check_browser_script_syntax.mjs",
+    "status": "passed",
+    "log": ".cache/native-carry-syntax.log"
+  },
+  "completeMigration": false,
+  "allIntentsAccepted": false,
+  "ordinaryNativeAutonomyEnabled": false
+}

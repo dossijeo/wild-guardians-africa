@@ -1,0 +1,208 @@
+{
+  "mode": "async",
+  "backend": "WebGPU real",
+  "frameIntervals": {
+    "count": 204,
+    "meanMs": 55.7188725490196,
+    "p95Ms": 233.3150000000005,
+    "p99Ms": 400,
+    "maxMs": 566.6849999999995,
+    "over50": 28
+  },
+  "rendererThread": {
+    "count": 3949,
+    "over50ms": 20,
+    "longTaskWallTotalMs": 1789.001,
+    "maxWallMs": 198.061,
+    "maxThreadCpuMs": 197.073,
+    "top": [
+      {
+        "offsetMs": 4291.204,
+        "wallMs": 198.061,
+        "threadCpuMs": 197.073,
+        "source": "DOMTimer"
+      },
+      {
+        "offsetMs": 3166.942,
+        "wallMs": 193.3,
+        "threadCpuMs": 188.303,
+        "source": "DOMTimer"
+      },
+      {
+        "offsetMs": 62.46,
+        "wallMs": 127.289,
+        "threadCpuMs": 114.908,
+        "source": "PostTaskToMainThread"
+      },
+      {
+        "offsetMs": 6594.918,
+        "wallMs": 89.86,
+        "threadCpuMs": 89.095,
+        "source": "DOMTimer"
+      },
+      {
+        "offsetMs": 2174.686,
+        "wallMs": 89.703,
+        "threadCpuMs": 87.302,
+        "source": "DOMTimer"
+      },
+      {
+        "offsetMs": 2521.434,
+        "wallMs": 88.548,
+        "threadCpuMs": 88.09,
+        "source": "ScheduledActionSendBeginMainFrame"
+      },
+      {
+        "offsetMs": 8560.852,
+        "wallMs": 88.34,
+        "threadCpuMs": 87.427,
+        "source": "DOMTimer"
+      },
+      {
+        "offsetMs": 5552.481,
+        "wallMs": 84.727,
+        "threadCpuMs": 83.302,
+        "source": "DOMTimer"
+      }
+    ]
+  },
+  "gpuProcessThread": {
+    "count": 2736,
+    "over50ms": 19,
+    "longTaskWallTotalMs": 4773.274,
+    "maxWallMs": 604.44,
+    "maxThreadCpuMs": 579.104,
+    "top": [
+      {
+        "offsetMs": 2608.84,
+        "wallMs": 604.44,
+        "threadCpuMs": 579.104,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 1591.221,
+        "wallMs": 429.681,
+        "threadCpuMs": 429.799,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 8918.534,
+        "wallMs": 418.571,
+        "threadCpuMs": 417.543,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 819.901,
+        "wallMs": 417.561,
+        "threadCpuMs": 416.67,
+        "source": "RunNextTask"
+      },
+      {
+        "offsetMs": 7029.074,
+        "wallMs": 343.735,
+        "threadCpuMs": 343.187,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 6014.505,
+        "wallMs": 343.47,
+        "threadCpuMs": 343.568,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 9789.242,
+        "wallMs": 342.693,
+        "threadCpuMs": 341.791,
+        "source": "TryScheduleSequence"
+      },
+      {
+        "offsetMs": 3791.257,
+        "wallMs": 331.038,
+        "threadCpuMs": 330.408,
+        "source": "RunNextTask"
+      }
+    ],
+    "longTasksWithNestedWebGPU": 15,
+    "maxNestedWebGPUWallMs": 604.401
+  },
+  "appearances": [
+    {
+      "name": "guardian",
+      "requestedOffsetMs": 63.435000002384186,
+      "firstDrawDelayMs": 526.25,
+      "maxRendererTaskWallMs": 127.289,
+      "maxGpuProcessTaskWallMs": 417.561
+    },
+    {
+      "name": "hyena",
+      "requestedOffsetMs": 1211.125,
+      "firstDrawDelayMs": 312.48499999940395,
+      "maxRendererTaskWallMs": 89.703,
+      "maxGpuProcessTaskWallMs": 429.681
+    },
+    {
+      "name": "lion",
+      "requestedOffsetMs": 2174.75,
+      "firstDrawDelayMs": 348.1899999976158,
+      "maxRendererTaskWallMs": 193.3,
+      "maxGpuProcessTaskWallMs": 604.44
+    },
+    {
+      "name": "rhino",
+      "requestedOffsetMs": 3166.9500000029802,
+      "firstDrawDelayMs": 488.559999987483,
+      "maxRendererTaskWallMs": 193.3,
+      "maxGpuProcessTaskWallMs": 604.44
+    },
+    {
+      "name": "buffalo",
+      "requestedOffsetMs": 4291.155000001192,
+      "firstDrawDelayMs": 598.2549999952316,
+      "maxRendererTaskWallMs": 198.061,
+      "maxGpuProcessTaskWallMs": 265.888
+    },
+    {
+      "name": "warthog",
+      "requestedOffsetMs": 5552.429999992251,
+      "firstDrawDelayMs": 403.27000001072884,
+      "maxRendererTaskWallMs": 84.727,
+      "maxGpuProcessTaskWallMs": 343.47
+    },
+    {
+      "name": "olderMale",
+      "requestedOffsetMs": 6594.854999989271,
+      "firstDrawDelayMs": 361.40000000596046,
+      "maxRendererTaskWallMs": 89.86,
+      "maxGpuProcessTaskWallMs": 343.735
+    },
+    {
+      "name": "olderFemale",
+      "requestedOffsetMs": 7592.854999989271,
+      "firstDrawDelayMs": 330.22000001370907,
+      "maxRendererTaskWallMs": 76.441,
+      "maxGpuProcessTaskWallMs": 292.583
+    },
+    {
+      "name": "youngMale",
+      "requestedOffsetMs": 8560.77499999106,
+      "firstDrawDelayMs": 294.8850000053644,
+      "maxRendererTaskWallMs": 88.34,
+      "maxGpuProcessTaskWallMs": 418.571
+    },
+    {
+      "name": "youngFemale",
+      "requestedOffsetMs": 9512.064999997616,
+      "firstDrawDelayMs": 210.5649999976158,
+      "maxRendererTaskWallMs": 80.601,
+      "maxGpuProcessTaskWallMs": 342.693
+    }
+  ],
+  "limitations": [
+    "Browser tracing perturbs timings; do not use this trace as an uninstrumented benchmark.",
+    "GPU process thread wall/CPU time is not GPU execution time and may include work from other contexts.",
+    "Task durations may include nested events and cannot be added across threads.",
+    "Appearance windows reflect temporal overlap, not causal attribution.",
+    "Trace/performance clock alignment uses a user timing mark and is approximate.",
+    "New browser context is not proof of a cold driver cache."
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "order": "original",
+  "fetch": {
+    "original": {
+      "bytes": 706864,
+      "ms": 65.40000000596046
+    },
+    "native": {
+      "bytes": 647420,
+      "ms": 12.655000001192093
+    }
+  },
+  "samples": [
+    {
+      "mode": "original",
+      "parseMs": 32.78500001132488,
+      "submitMs": 3.0699999928474426,
+      "fenceMs": 17.484999999403954,
+      "gpuMs": 2.401888,
+      "disjoint": false,
+      "firstDrawSubmitMs": 482.375,
+      "firstDrawFenceMs": 69.3049999922514,
+      "firstDrawGpuMs": 0.164352,
+      "drawDisjoint": false,
+      "programsBefore": 0,
+      "programsAfter": 4,
+      "textureCount": 3,
+      "estimatedGpuBytes": 1048578
+    },
+    {
+      "mode": "native",
+      "parseMs": 13.165000006556511,
+      "submitMs": 0.5199999958276749,
+      "fenceMs": 6.25,
+      "gpuMs": 0.074368,
+      "disjoint": false,
+      "firstDrawSubmitMs": 42.47000001370907,
+      "firstDrawFenceMs": 9.570000007748604,
+      "firstDrawGpuMs": 0.17408,
+      "drawDisjoint": false,
+      "programsBefore": 0,
+      "programsAfter": 4,
+      "textureCount": 3,
+      "estimatedGpuBytes": 262224
+    },
+    {
+      "mode": "native",
+      "parseMs": 8.864999994635582,
+      "submitMs": 0.3400000035762787,
+      "fenceMs": 6.5999999940395355,
+      "gpuMs": 0.074368,
+      "disjoint": false,
+      "firstDrawSubmitMs": 40.42499999701977,
+      "firstDrawFenceMs": 9.120000004768372,
+      "firstDrawGpuMs": 0.167936,
+      "drawDisjoint": false,
+      "programsBefore": 0,
+      "programsAfter": 4,
+      "textureCount": 3,
+      "estimatedGpuBytes": 262224
+    },
+    {
+      "mode": "original",
+      "parseMs": 9.734999999403954,
+      "submitMs": 0.4050000011920929,
+      "fenceMs": 6.200000002980232,
+      "gpuMs": 0.460864,
+      "disjoint": false,
+      "firstDrawSubmitMs": 38.20999999344349,
+      "firstDrawFenceMs": 5.799999997019768,
+      "firstDrawGpuMs": 0.169952,
+      "drawDisjoint": false,
+      "programsBefore": 0,
+      "programsAfter": 4,
+      "textureCount": 3,
+      "estimatedGpuBytes": 1048578
+    }
+  ],
+  "scope": "Isolated same-page counterbalanced GLB parse, initTexture and first draw; downloads happen once before sampling. Materials are disposed after each draw; browser and driver caches may affect subsequent shader compilation. File sizes include all model data; texture memory is estimated. Fence latency includes scheduling. No cold-cache simulation, real game frame time or global performance.",
+  "transcoderRequests": []
+}

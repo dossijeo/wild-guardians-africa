@@ -1,0 +1,18 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game,animals=game.raid.animals.filter(a=>a.species==='warthog'&&!['gone','retreating'].includes(a.status)).slice(0,2);if(animals.length!==2)throw Error('Missing two warthogs');const source=serialize(game),targets=animals.map(({id,x,z})=>({id,x,z}));fixture.dispose();
+ const options={snapshot:source,chunkKeys:chunks,physicsActorIds:targets.map(a=>a.id),dynamicPhysics:true,compactPhysicsPoses:true},a=createSimulationAuthorityClient({...options,shareSpeciesRigs:true,session:'shared-rigs'}),b=createSimulationAuthorityClient({...options,session:'individual-rigs'}),send=async(client,command)=>{const req=client.submit(command);if(!req.accepted)throw Error(req.reason);return req.result;};
+ function equal(x,y,stage){if(x.snapshot!==y.snapshot||JSON.stringify(x.events)!==JSON.stringify(y.events)||JSON.stringify(x.physicsPose)!==JSON.stringify(y.physicsPose)||JSON.stringify(x.physicsPoses)!==JSON.stringify(y.physicsPoses))throw Error('Simulation diverged: '+stage);}
+ try{await Promise.all([a.ready,b.ready]);let active=0,hits=0,latest=JSON.parse(source);
+  for(let i=0;i<180;i++){
+   if(i===0||i===70){const target=latest.raid.animals.find(animal=>animal.id===targets[i===0?0:1].id),command={kind:'castAttack',id:`shared-rig-hit-${i}`,targetId:target.id,x:target.x,z:target.z},[x,y]=await Promise.all([send(a,command),send(b,command)]);equal(x,y,'attack '+i);if(!x.value)throw Error('Attack rejected: '+i);hits++;}
+   const command={kind:'advance',seconds:.05,nightFastForward:true},[x,y]=await Promise.all([send(a,command),send(b,command)]);equal(x,y,'step '+i);latest=JSON.parse(x.snapshot);if(x.physicsPose?.active)active++;
+  }
+  if(!active||hits!==2)throw Error('Impact was not exercised');return {actors:targets.map(a=>a.id),species:'warthog',steps:180,hits,active,scope:'Two real authority Workers, comparison of full snapshots, ordered events and physical poses with and without shared rigs. Does not measure visual rendering.'};
+ }finally{a.dispose();b.dispose();}
+};window.ready=true;
+</script>

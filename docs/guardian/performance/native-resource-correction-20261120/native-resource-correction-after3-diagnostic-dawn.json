@@ -1,0 +1,424 @@
+{
+  "scanned": 2586182,
+  "kept": 672832,
+  "counts": {
+    "DawnClientSerializer::GetCommandSpace": 17648,
+    "DawnClientSerializer::Flush": 17647,
+    "DawnCommands": 70588,
+    "WebGPUDecoderImpl::HandleDawnCommands": 17647,
+    "WebGPUDecoderImpl::PerformPollingWork": 29416,
+    "DawnServiceSerializer::Flush": 8824,
+    "DawnReturnCommands": 35293,
+    "WebGPUImplementation::OnGpuControlReturnData": 8823
+  },
+  "top": [
+    {
+      "name": "DawnCommands",
+      "ms": 173.181,
+      "cpu": 125.029,
+      "ts": 596973020325,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 173.177,
+      "cpu": 125.027,
+      "ts": 596973020328,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 56
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 79.299,
+      "cpu": 76.977,
+      "ts": 596977201246,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 79.296,
+      "cpu": 76.975,
+      "ts": 596977201249,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 104
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 56.632,
+      "cpu": 28.086,
+      "ts": 597056390697,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 56.631,
+      "cpu": 28.086,
+      "ts": 597056390698,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 12416
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 41.5,
+      "cpu": 29.527,
+      "ts": 596973194560,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 41.498,
+      "cpu": 29.527,
+      "ts": 596973194561,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 352
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 19.689,
+      "cpu": 19.633,
+      "ts": 597005936042,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 19.688,
+      "cpu": 19.633,
+      "ts": 597005936043,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 50600
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 18.851,
+      "cpu": 18.817,
+      "ts": 596980688159,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 18.85,
+      "cpu": 18.817,
+      "ts": 596980688160,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 65520
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 17.017,
+      "cpu": 16.62,
+      "ts": 596981926269,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 17.015,
+      "cpu": 16.62,
+      "ts": 596981926270,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 54888
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 16.762,
+      "cpu": 16.735,
+      "ts": 596993886530,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 16.762,
+      "cpu": 16.735,
+      "ts": 596993886530,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 43000
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 16.494,
+      "cpu": 16.466,
+      "ts": 597014932421,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 16.493,
+      "cpu": 16.465,
+      "ts": 597014932422,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 48000
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 16.347,
+      "cpu": 16.291,
+      "ts": 597005986254,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 16.345,
+      "cpu": 16.291,
+      "ts": 597005986255,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 46584
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 15.762,
+      "cpu": 15.722,
+      "ts": 596980741796,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 15.761,
+      "cpu": 15.721,
+      "ts": 596980741797,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 52504
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 15.71,
+      "cpu": 15.109,
+      "ts": 596981944155,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 15.709,
+      "cpu": 15.109,
+      "ts": 596981944156,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 52288
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 15.508,
+      "cpu": 15.404,
+      "ts": 596980709556,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 15.507,
+      "cpu": 15.404,
+      "ts": 596980709557,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 53904
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 15.076,
+      "cpu": 15.043,
+      "ts": 596983153042,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 15.074,
+      "cpu": 15.042,
+      "ts": 596983153043,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 49400
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 15.011,
+      "cpu": 14.939,
+      "ts": 597005956726,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 15.011,
+      "cpu": 14.939,
+      "ts": 597005956726,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 47992
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 14.775,
+      "cpu": 14.587,
+      "ts": 596981961492,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 14.773,
+      "cpu": 14.587,
+      "ts": 596981961493,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 51144
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 14.7,
+      "cpu": 14.655,
+      "ts": 596981976978,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    },
+    {
+      "name": "WebGPUDecoderImpl::HandleDawnCommands",
+      "ms": 14.698,
+      "cpu": 14.655,
+      "ts": 596981976979,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {
+        "bytes": 50880
+      }
+    },
+    {
+      "name": "DawnCommands",
+      "ms": 14.66,
+      "cpu": 14.632,
+      "ts": 596993407734,
+      "pid": 14460,
+      "tid": 14200,
+      "thread": "CrGpuMain",
+      "args": {}
+    }
+  ],
+  "profiles": [
+    {
+      "args": "{\"data\":{\"source\":\"Internal\",\"startTime\":596968763349}}",
+      "cat": "disabled-by-default-v8.cpu_profiler",
+      "id": "0x1",
+      "name": "Profile",
+      "ph": "P",
+      "pid": 14844,
+      "tid": 12716,
+      "ts": 596968763370,
+      "tts": 78643
+    },
+    {
+      "args": "{\"data\":{\"columns\":[0,84,0,0,0,0,0,0,54,30,1],\"cpuProfile\":{\"nodes\":[{\"callFrame\":{\"codeType\":\"other\",\"functionName\":\"(root)\",\"scriptId\":0},\"id\":1},{\"callFrame\":{\"codeType\":\"other\",\"functionName\":\"(program)\",\"scriptId\":0},\"id\":2,\"parent\":1},{\"callFrame\":{\"codeType\":\"JS\",\"functionName\":\"\",\"scriptId\":3},\"id\":3,\"parent\":1},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":7,\"functionName\":\"\",\"lineNumber\":1,\"scriptId\":3},\"id\":4,\"parent\":3},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":13,\"functionName\":\"UtilityScript\",\"lineNumber\":337,\"scriptId\":3},\"id\":5,\"parent\":4},{\"callFrame\":{\"codeType\":\"other\",\"functionName\":\"(idle)\",\"scriptId\":0},\"id\":6,\"parent\":1},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":1,\"functionName\":\"\",\"lineNumber\":0,\"scriptId\":9},\"id\":7,\"parent\":1},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":10,\"functionName\":\"evaluate\",\"lineNumber\":363,\"scriptId\":3},\"id\":8,\"parent\":7},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":0,\"functionName\":\"\",\"lineNumber\":0,\"scriptId\":10},\"id\":9,\"parent\":8},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":1,\"functionName\":\"\",\"lineNumber\":0,\"scriptId\":10},\"id\":10,\"parent\":9},{\"callFrame\":{\"codeType\":\"JS\",\"columnNumber\":7,\"functionName\":\"\",\"lineNumber\":2,\"scriptId\":10},\"id\":11,\"parent\":10}],\"samples\":[2,5,2,6,6,6,6,2,8,8,11]},\"lines\":[0,353,0,0,0,0,0,0,369,370,28],\"source\":\"Internal\",\"timeDeltas\":[4199,723,556,540,545,534,542,540,545,548,564]}}",
+      "cat": "disabled-by-default-v8.cpu_profiler",
+      "id": "0x1",
+      "name": "ProfileChunk",
+      "ph": "P",
+      "pid": 14844,
+      "tid": 3984,
+      "ts": 596968773287,
+      "tts": 529
+    }
+  ]
+}

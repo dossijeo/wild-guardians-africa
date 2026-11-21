@@ -3,6 +3,8 @@
 #include <cstdint>
 #include <cstdlib>
 #include <limits>
+#include <set>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
@@ -17,6 +19,8 @@ extern "C" float spatial_wetland_mask_resident(float,float);
 extern "C" float spatial_wetland_mask_lipschitz();
 extern "C" int spatial_canyon_river_face(int,int,int,int);
 extern "C" int spatial_canyon_cliff_face(int,int,int,int);
+// Optional native intent owner. Standalone graph laboratories do not link it.
+extern "C" void nav_intent_sector_changed(int,int,int,int) __attribute__((weak));
 
 // Sparse sector/route proof. Unknown sectors are never classified as blocked.
 // The movement engine remains responsible for physical motion.
@@ -43,6 +47,11 @@ struct Sector {
   std::vector<uint8_t> unknown,weakUnknown;
   std::vector<std::vector<std::pair<int,int>>> frontiers;
 };
+#ifdef WILD_ROUTE_TRACE
+std::vector<int32_t> routeTrace;
+std::vector<int32_t> localRouteTrace;
+std::vector<int32_t> localSearchTrace;
+#endif
 struct Context {
   int sectorSize=0,updates=0;
   uint32_t routeRevision=1;
@@ -62,6 +71,7 @@ struct Context {
   int cutFlow=0,cutCells=0;
   std::vector<Arc> previousArc,arcChain;
   std::vector<Portal> portals;
+  std::vector<Portal> committedPortals;
   std::unordered_set<RejectedEdge,RejectedEdgeHash> rejectedRouteEdges;
   std::vector<int32_t> weakHead,weakTo,weakNext;
   std::vector<uint8_t> weakOpen;
@@ -74,10 +84,23 @@ struct Context {
 constexpr int navigationProfiles=6;
 Context* contexts[navigationProfiles]={};
 int selectedContext=0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+// Diagnostic only: capture changes across all navigation profiles. A global
+// record means that sector-local dependency information is insufficient.
+std::vector<int32_t>* sectorChangeTrace=nullptr;
+void traceSectorChange(int kind,int x=0,int z=0){
+  if(!sectorChangeTrace)sectorChangeTrace=new std::vector<int32_t>();
+  sectorChangeTrace->insert(sectorChangeTrace->end(),{selectedContext,kind,x,z});
+}
+#endif
 Context& active(){
   Context*& context=contexts[selectedContext];
   if(!context)context=new Context();
   return *context;
+}
+void notifyIntentSector(int sx,int sz,bool global=false){
+  if(nav_intent_sector_changed)
+    nav_intent_sector_changed(selectedContext,sx,sz,global?1:0);
 }
 // Keep the existing sector algorithm scoped to the selected movement profile.
 #define sectorSize (active().sectorSize)
@@ -268,12 +291,20 @@ void appendPoint(const Sector& sector,int cell){
   routePoints.push_back(sector.sz*sectorSize+cell/sectorSize);
 }
 bool localPath(const Sector& sector,int from,int to){
+#ifdef WILD_ROUTE_TRACE
+  localSearchTrace.insert(localSearchTrace.end(),{sector.sx,sector.sz,from,to,int32_t(localRouteTrace.size()/2)});
+#endif
   if(from==to)return true;
   if(from<0||to<0||sector.component[from]<0||sector.component[from]!=sector.component[to])return false;
   localParent.assign(sectorSize*sectorSize,-1);
   queueBuffer.clear();queueBuffer.push_back(from);localParent[from]=from;
   for(size_t q=0;q<queueBuffer.size();q++){
-    const int at=queueBuffer[q];if(at==to)break;
+    const int at=queueBuffer[q];
+#ifdef WILD_ROUTE_TRACE
+    localRouteTrace.push_back(sector.sx*sectorSize+at%sectorSize);
+    localRouteTrace.push_back(sector.sz*sectorSize+at/sectorSize);
+#endif
+    if(at==to)break;
     const int x=at%sectorSize,z=at/sectorSize;
     for(int d=0;d<4;d++){
       if(!(sector.steps[at]&(1<<d)))continue;
@@ -294,12 +325,30 @@ bool localPath(const Sector& sector,int from,int to){
 }
 
 extern "C" {
+#ifdef WILD_SECTOR_CHANGE_TRACE
+void lazy_sector_change_trace_clear(){
+  if(!sectorChangeTrace)sectorChangeTrace=new std::vector<int32_t>();
+  sectorChangeTrace->clear();
+}
+int lazy_sector_change_trace_count(){return sectorChangeTrace?int(sectorChangeTrace->size()/4):0;}
+const int32_t* lazy_sector_change_trace_ptr(){return sectorChangeTrace?sectorChangeTrace->data():nullptr;}
+#endif
 int lazy_select_context(int profile){
   if(profile<0||profile>=navigationProfiles)return 0;
   selectedContext=profile;return 1;
 }
 int lazy_selected_context(){return selectedContext;}
+int lazy_sector_size(){return sectorSize;}
 uint32_t lazy_route_revision(){return active().routeRevision;}
+#ifdef WILD_PROFILE_TWO_PASS_COMPAT_REVISION
+// Experimental compatibility counter for omitted border recommits. This does
+// not claim those commits occurred; it preserves the existing revision tokens.
+void lazy_profile_compat_revisions(uint32_t count){
+  active().routeRevision+=count;
+  if(count)notifyIntentSector(0,0,true);
+  updates+=static_cast<int>(count);
+}
+#endif
 // A physical movement rejection is a route-search overlay, not a change to
 // confirmed world topology. It is scoped to the current movement profile and
 // cleared when that profile's graph changes. A cached route cannot hide it.
@@ -307,19 +356,29 @@ int lazy_reject_route_edge(int x,int z,int nx,int nz){
   if(std::abs(x-nx)+std::abs(z-nz)!=1||!sectorSize)return -1;
   if(rejectedRouteEdges.size()>=256)return -2;
   if(!rejectedRouteEdges.insert({x,z,nx,nz}).second)return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   active().routeRevision++;
+  notifyIntentSector(floorDiv(x,sectorSize),floorDiv(z,sectorSize));
+  notifyIntentSector(floorDiv(nx,sectorSize),floorDiv(nz,sectorSize));
   return 1;
 }
 int lazy_init(int size){
   if(size<2||size>32)return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   sectorSize=size;updates=0;
   active().routeRevision++;
+  notifyIntentSector(0,0,true);
   rejectedRouteEdges.clear();
   if(!sectors)sectors=new std::unordered_map<uint64_t,Sector>();else sectors->clear();
   byId.clear();freeIds.clear();
   stagedPass.assign(size*size,0);stagedSteps.assign(size*size,0);
   stagedInbound.assign(size*size,0);weakDirty=true;
   portals.clear();
+  active().committedPortals.clear();
   queueBuffer.reserve(size*size);return 1;
 }
 uint8_t* lazy_pass_ptr(){return stagedPass.data();}
@@ -335,6 +394,9 @@ int lazy_stage_sector(int sx,int sz){
 }
 int lazy_commit_sector(int sx,int sz){
   if(!sectorSize)return -1;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(1,sx,sz);
+#endif
   auto [it,inserted]=sectors->try_emplace(key(sx,sz));
   Sector& sector=it->second;
   if(inserted){
@@ -345,6 +407,7 @@ int lazy_commit_sector(int sx,int sz){
   sector.pass=stagedPass;sector.steps=stagedSteps;sector.inbound=stagedInbound;
   flood(sector);updates++;
   active().routeRevision++;
+  notifyIntentSector(sx,sz);
   clearRejectedInSector(sx,sz);
   rebuildEdges(sector);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
@@ -361,6 +424,9 @@ int lazy_remove_sector(int sx,int sz){
   if(!sectorSize)return 0;
   const auto it=sectors->find(key(sx,sz));
   if(it==sectors->end())return 0;
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(2,sx,sz);
+#endif
   const int id=it->second.id;
   byId[id]=nullptr;freeIds.push_back(id);sectors->erase(it);
   for(int d=0;d<4;d++)if(Sector* neighbor=get(sx+dx[d],sz+dz[d]))rebuildEdges(*neighbor);
@@ -372,6 +438,7 @@ int lazy_remove_sector(int sx,int sz){
   }
   weakDirty=true;updates++;
   active().routeRevision++;
+  notifyIntentSector(sx,sz);
   clearRejectedInSector(sx,sz);
   return 1;
 }
@@ -417,9 +484,28 @@ int lazy_grid_edge(int x,int z,int nx,int nz){
     (from->steps[first]&(1<<direction))?1:0;
 }
 int lazy_commit_portals(){
+#ifdef WILD_SECTOR_CHANGE_TRACE
+  traceSectorChange(0);
+#endif
   for(Sector* sector:byId)if(sector)rebuildEdges(*sector);
   weakDirty=true;
   active().routeRevision++;
+  // A portal recommit is often a no-op. Only changed crossings can affect an
+  // existing route; waking blocked intentions remains an event-level concern.
+  const auto signature=[](const Portal& p){return std::make_tuple(p.fromX,p.fromZ,
+    p.toX,p.toZ,p.fromWorldX,p.fromWorldZ,p.toWorldX,p.toWorldZ);};
+  auto& previous=active().committedPortals;
+  std::set<decltype(signature(Portal{}))> before,after;
+  for(const auto& p:previous)before.insert(signature(p));
+  for(const auto& p:portals)after.insert(signature(p));
+  const auto changed=[&](const Portal& p){
+    if(!sectorSize)return;
+    notifyIntentSector(floorDiv(p.fromX,sectorSize),floorDiv(p.fromZ,sectorSize));
+    notifyIntentSector(floorDiv(p.toX,sectorSize),floorDiv(p.toZ,sectorSize));
+  };
+  for(const auto& p:previous)if(!after.count(signature(p)))changed(p);
+  for(const auto& p:portals)if(!before.count(signature(p)))changed(p);
+  previous=portals;
   rejectedRouteEdges.clear();
   return static_cast<int>(portals.size());
 }
@@ -765,6 +851,9 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   const int firstCell=cellIndex(fromX-first.sx*sectorSize,fromZ-first.sz*sectorSize);
   const int lastCell=cellIndex(toX-last.sx*sectorSize,toZ-last.sz*sectorSize);
   if(source==target){
+#ifdef WILD_ROUTE_TRACE
+    routeTrace.insert(routeTrace.end(),{first.sx,first.sz,source%stride});
+#endif
     const bool found=localPath(first,firstCell,lastCell);
     connectivityReason=found?4:9;
     return found?static_cast<int>(routePoints.size()/2):-1;
@@ -777,6 +866,9 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   for(size_t q=0;q<queueBuffer.size()&&visited[target]!=generation;q++){
     const int32_t node=queueBuffer[q],sectorId=node/stride,local=node%stride;
     const Sector& sector=*byId[sectorId];
+#ifdef WILD_ROUTE_TRACE
+    routeTrace.insert(routeTrace.end(),{sector.sx,sector.sz,local});
+#endif
     if(sector.unknown[local])unknown=true;
     for(const Arc& arc:sector.edges[local]){
       if(arc.portal<0){
@@ -815,6 +907,15 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ){
   return static_cast<int>(routePoints.size()/2);
 }
 int32_t* lazy_route_ptr(){return routePoints.data();}
+#ifdef WILD_ROUTE_TRACE
+void lazy_route_trace_clear(){routeTrace.clear();localRouteTrace.clear();localSearchTrace.clear();}
+int lazy_route_trace_count(){return int(routeTrace.size()/3);}
+const int32_t* lazy_route_trace_ptr(){return routeTrace.data();}
+int lazy_local_route_trace_count(){return int(localRouteTrace.size()/2);}
+const int32_t* lazy_local_route_trace_ptr(){return localRouteTrace.data();}
+int lazy_local_search_trace_count(){return int(localSearchTrace.size()/5);}
+const int32_t* lazy_local_search_trace_ptr(){return localSearchTrace.data();}
+#endif
 int lazy_loaded_sectors(){return sectors?static_cast<int>(sectors->size()):0;}
 int lazy_sector_slots(){return static_cast<int>(byId.size());}
 int lazy_sector_updates(){return updates;}

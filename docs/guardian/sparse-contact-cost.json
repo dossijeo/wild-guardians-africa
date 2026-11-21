@@ -1,0 +1,65 @@
+{
+  "scope": "Node CPU microbenchmark; static pose, alternating order, 50 warmups and 100 samples each. Not browser frame performance.",
+  "rows": [
+    {
+      "species": "hyena",
+      "samples": 1245,
+      "reference": {
+        "medianMs": 0.2237999999999829,
+        "p95Ms": 0.362700000000018
+      },
+      "prepared": {
+        "medianMs": 0.13419999999996435,
+        "p95Ms": 0.19439999999997326
+      }
+    },
+    {
+      "species": "lion",
+      "samples": 1582,
+      "reference": {
+        "medianMs": 0.33579999999994925,
+        "p95Ms": 0.615500000000111
+      },
+      "prepared": {
+        "medianMs": 0.20920000000000982,
+        "p95Ms": 0.3790000000000191
+      }
+    },
+    {
+      "species": "warthog",
+      "samples": 1058,
+      "reference": {
+        "medianMs": 0.18309999999996762,
+        "p95Ms": 0.21240000000000236
+      },
+      "prepared": {
+        "medianMs": 0.11159999999995307,
+        "p95Ms": 0.1334999999999127
+      }
+    },
+    {
+      "species": "buffalo",
+      "samples": 1393,
+      "reference": {
+        "medianMs": 0.3632000000000062,
+        "p95Ms": 0.6087999999999738
+      },
+      "prepared": {
+        "medianMs": 0.2555999999999585,
+        "p95Ms": 0.46550000000002
+      }
+    },
+    {
+      "species": "rhino",
+      "samples": 1830,
+      "reference": {
+        "medianMs": 0.5092999999999392,
+        "p95Ms": 1.1610000000000582
+      },
+      "prepared": {
+        "medianMs": 0.3528999999998632,
+        "p95Ms": 0.7153000000000702
+      }
+    }
+  ]
+}

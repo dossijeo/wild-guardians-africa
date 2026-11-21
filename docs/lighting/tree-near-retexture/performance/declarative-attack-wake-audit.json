@@ -1,0 +1,217 @@
+{
+  "scope": "Controlled barrier around one restored crop approach in a saved eight-animal raid; test-only adapter. No GPU or performance measurement.",
+  "untilEnd": true,
+  "adoptAll": true,
+  "equal": true,
+  "firstDifference": null,
+  "reference": {
+    "steps": 956,
+    "completed": true,
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "wakeStats": {
+      "events": 14,
+      "visits": 0,
+      "withoutActive": 0,
+      "newlyDirty": 0
+    },
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false
+        }
+      },
+      {
+        "step": 275,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4758",
+          "waiting": false
+        }
+      },
+      {
+        "step": 291,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 292,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4434",
+          "waiting": false
+        }
+      },
+      {
+        "step": 325,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 326,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4449",
+          "waiting": false
+        }
+      },
+      {
+        "step": 372,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 373,
+        "state": {
+          "status": "retreating",
+          "targetId": null,
+          "waiting": false
+        }
+      },
+      {
+        "step": 551,
+        "state": {
+          "status": "gone",
+          "targetId": null,
+          "waiting": false
+        }
+      }
+    ]
+  },
+  "candidate": {
+    "steps": 956,
+    "completed": true,
+    "restored": 8,
+    "invalidated": 6,
+    "events": 200,
+    "wakeStats": {
+      "events": 14,
+      "visits": 88,
+      "withoutActive": 9,
+      "newlyDirty": 0
+    },
+    "counts": {
+      "replan": 15,
+      "blocked": 1,
+      "release": 1,
+      "reselect": 10,
+      "selectionCalls": 10,
+      "missingDeclaration": 0,
+      "cancellations": 28,
+      "resets": 1
+    },
+    "timeline": [
+      {
+        "step": 0,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 1,
+        "state": {
+          "status": "walking",
+          "targetId": "plant-4758",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 275,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4758",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 291,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 292,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4434",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 325,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 326,
+        "state": {
+          "status": "attacking",
+          "targetId": "plant-4449",
+          "waiting": false,
+          "declaration": 1
+        }
+      },
+      {
+        "step": 372,
+        "state": {
+          "status": "walking",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      },
+      {
+        "step": 373,
+        "state": {
+          "status": "retreating",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      },
+      {
+        "step": 551,
+        "state": {
+          "status": "gone",
+          "targetId": null,
+          "waiting": false,
+          "declaration": 0
+        }
+      }
+    ]
+  }
+}

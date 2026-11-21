@@ -1,0 +1,27 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {createSimulation} from './mobility-worker-simulation-core.js';
+import {serialize} from '../../src/persistence/snapshots.js';
+import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
+// Diagnostic only: the second authority receives no advance while paused.
+// No runtime scheduling is changed by this fixture.
+window.audit=async()=>{
+ const chunks=[];for(let z=-1;z<=2;z++)for(let x=0;x<=5;x++)chunks.push(`${x},${z}`);
+ const fixture=await createSimulation({mangrove:true,chunkKeys:chunks}),game=fixture.diagnosticWorld().game,animal=game.raid.animals.find(a=>a.species==='hyena'&&!['gone','retreating'].includes(a.status));if(!animal)throw Error('No active hyena');const snapshot=serialize(game),target={id:animal.id,x:animal.x,z:animal.z};fixture.dispose();
+ const a=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,dynamicPhysics:true,compactPhysicsPoses:true,session:'paused-ticks'}),b=createSimulationAuthorityClient({snapshot,chunkKeys:chunks,dynamicPhysics:true,compactPhysicsPoses:true,session:'compact-paused',compactPausedAcks:true});
+ const send=async(client,command)=>{const request=client.submit(command);if(!request.accepted)throw Error(request.reason);return request.result;};
+ const active=p=>(p.physicsPoses??(p.physicsPose?[p.physicsPose]:[])).filter(p=>p.active);
+ const equal=(x,y,stage)=>{for(const key of ['snapshot','events','residency','commandLoadedChunks'])if(JSON.stringify(x[key]??null)!==JSON.stringify(y[key]??null))throw Error(`${key} diverged at ${stage}`);if(JSON.stringify(active(x))!==JSON.stringify(active(y)))throw Error(`Active physics pose diverged at ${stage}`);};
+ try{
+  await Promise.all([a.ready,b.ready]);let left,right;
+  [left,right]=await Promise.all([send(a,{kind:'microIncome',enabled:true}),send(b,{kind:'microIncome',enabled:true})]);equal(left,right,'economy enabled');
+  [left,right]=await Promise.all([send(a,{kind:'pause',reason:'empty-registry'}),send(b,{kind:'pause',reason:'empty-registry'})]);equal(left,right,'empty-registry pause');[left,right]=await Promise.all([send(a,{kind:'advance',seconds:.05,nightFastForward:true}),send(b,{kind:'advance',seconds:.05,nightFastForward:true})]);if(right.unchanged!==true||right.pausedAdvance!==true||left.snapshot===undefined)throw Error('Empty registry did not compact');[left,right]=await Promise.all([send(a,{kind:'resume',reason:'empty-registry'}),send(b,{kind:'resume',reason:'empty-registry'})]);equal(left,right,'empty-registry resume');
+  const hit={kind:'castAttack',id:'paused-parity-hit',targetId:target.id,x:target.x,z:target.z};[left,right]=await Promise.all([send(a,hit),send(b,hit)]);if(!left.value||!right.value)throw Error('Attack rejected');equal(left,right,'attack');
+  for(let i=0;i<150;i++){[left,right]=await Promise.all([send(a,{kind:'advance',seconds:.05,nightFastForward:true}),send(b,{kind:'advance',seconds:.05,nightFastForward:true})]);equal(left,right,`before pause ${i}`);if(active(left).length)break;}if(!active(left).length)throw Error('No active Rapier pose');
+  [left,right]=await Promise.all([send(a,{kind:'pause',reason:'paused-parity'}),send(b,{kind:'pause',reason:'paused-parity'})]);equal(left,right,'pause');const paused=right;
+  for(let i=0;i<40;i++){[left,right]=await Promise.all([send(a,{kind:'advance',seconds:.05,nightFastForward:true}),send(b,{kind:'advance',seconds:.05,nightFastForward:true})]);if(right.unchanged===true)throw Error('Active physics must retain snapshot');equal(left,right,`paused tick ${i}`);}
+  [left,right]=await Promise.all([send(a,{kind:'resume',reason:'paused-parity'}),send(b,{kind:'resume',reason:'paused-parity'})]);equal(left,right,'resume');
+  let activeSteps=0;for(let i=0;i<120;i++){[left,right]=await Promise.all([send(a,{kind:'advance',seconds:.05,nightFastForward:true}),send(b,{kind:'advance',seconds:.05,nightFastForward:true})]);equal(left,right,`after resume ${i}`);if(active(left).length)activeSteps++;}
+  return {target:target.id,comparedPausedTicks:40,comparedAfterResume:120,activeSteps,scope:'Two simulation Workers and one hyena impact, paused with active Rapier and micro-income enabled; compares confirmed snapshot, events, residency and active poses, not all terrain mutations or gameplay scenarios.'};
+ }finally{a.dispose();b.dispose();}
+};window.ready=true;
+</script>

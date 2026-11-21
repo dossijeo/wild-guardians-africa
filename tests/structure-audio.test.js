@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {AudioSystem} from '../src/audio/audio.js';
-import {WALL_HIT_SOUNDS,structureHitSound,STRUCTURE_CONTACT_FAMILY} from '../src/audio/structure-audio.js';
+import {WALL_HIT_SOUNDS,structureHitSound,structureDetailSound,STRUCTURE_CONTACT_FAMILY} from '../src/audio/structure-audio.js';
 import * as Game from '../src/simulation/game.js';
 import {spawnRaid,updateRaid} from '../src/simulation/raids.js';
 import {rational} from '../src/simulation/money.js';
@@ -17,12 +17,17 @@ for(const [material,id] of Object.entries(WALL_HIT_SOUNDS))for(const gate of [fa
  spawnRaid(s,{group:['warthog']},nav);const animal=s.raid.animals[0];
  // Directed setup at the committed attack boundary; updateRaid owns damage/events.
  Object.assign(animal,{status:'attacking',animation:'Right_Hand_Sword_Slash',targetId:wall.id,attackRemaining:.01,hitsRemaining:2,hitApplied:false,approachShieldId:null});const hp=wall.hp;updateRaid(s,.02,nav);
- const hits=s.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.equal(wall.hp,hp-20);assert.equal(structureHitSound(hits[0],s),id);
+ const hits=s.events.filter(e=>e.type==='StructureHit');assert.equal(hits.length,1);assert.equal(wall.hp,hp-20);assert.equal(hits[0].structureHit.material,material);assert.equal(structureHitSound(hits[0],s),id);assert.equal(structureHitSound(hits[0],{structures:[]}),id);
  const before=serialize(s),audio=fixture();audio.process(hits,{state:s});audio.process(hits,{state:s});await new Promise(done=>setImmediate(done));
  const contacts=audio.active.filter(source=>audio.voices.get(source).family===STRUCTURE_CONTACT_FAMILY);assert.equal(contacts.length,1);assert.equal(audio.active.length,['piedra','adobe','reforzado'].includes(material)?2:1);assert.equal(contacts[0].buffer.url,bank.items.find(i=>i.id===id).audio.url);assert.equal(audio.active[0].playbackRate.value,1);assert.equal(audio.voices.get(audio.active[0]).family,STRUCTURE_CONTACT_FAMILY);assert.equal(serialize(s),before);audio.stop();
 });
 test('centers, missing state/target and unknown wall material keep the original generic contact',()=>{
  for(const target of [undefined,{kind:'center',material:'piedra'},{kind:'wall',material:'unknown'}])assert.equal(structureHitSound({targetId:'target'},{structures:target?[{id:'target',...target}]:[]}),'beast_hit_structure');assert.equal(structureHitSound({targetId:'target'}),'beast_hit_structure');
+});
+test('a confirmed wall hit keeps its material sound after the target changes or disappears',()=>{
+ const event={type:'StructureHit',targetId:'wall',structureHit:{kind:'wall',material:'piedra',previousHp:100,hp:80,maxHp:100,criticalThreshold:10}},later={structures:[{id:'wall',kind:'wall',material:'empalizada'}]};
+ assert.equal(structureHitSound(event,later),'wall_hit_stone');assert.equal(structureDetailSound(event,later),'wall_crack_small');assert.equal(structureDetailSound(event,{structures:[]}),'wall_crack_small');
+ const legacy={...event,structureHit:{...event.structureHit}};delete legacy.structureHit.material;assert.equal(structureHitSound(legacy,later),'wall_hit_wood');assert.equal(structureDetailSound(legacy,later),null);
 });
 test('all material variants and generic impacts share four family slots after concurrent decode',async()=>{
  const audio=fixture();let release;

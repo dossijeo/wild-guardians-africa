@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><script type="module">
+import {deserialize,serialize} from '../../src/persistence/snapshots.js';
+import {createConfirmedStateReceiver} from '../../src/simulation/confirmed-state-receiver.js';
+import {createConfirmedPresentationStream} from '../../src/rendering/confirmed-presentation-stream.js';
+import {createWorkerHostedRuntime} from '../../src/simulation/worker-hosted-runtime.js';
+window.audit=async()=>{
+ const source=await (await fetch('/tests/fixtures/manglares-123-d10-raid-state.json.gz')).text(),state=deserialize(source),visual=deserialize(source),session='guardian-host-failure',terrain=new MessageChannel(),presentation=new MessageChannel(),errors=[];
+ terrain.port1.onmessage=({data})=>{if(data.kind==='terrain')terrain.port1.postMessage({kind:'terrainAck',session,id:data.id});};terrain.port1.start();
+ const stream=createConfirmedPresentationStream({port:presentation.port1,session,state:visual,terrain:{confirm(){}},allowPresentationInputs:true,onError:error=>errors.push(error.message)});
+ const runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:id=>createConfirmedStateReceiver(state,id)},session,clientOptions:{snapshot:source,chunkKeys:['2,0']},terrainPort:terrain.port2,presentationPort:presentation.port2,runtimeOptions:{stepSeconds:.05,maxBatchSteps:1,qaPresentationInputs:true},onError:error=>errors.push(error.message)});
+ try{await runtime.start();const paused=await runtime.submit({kind:'pause',reason:'host-failure-fixture'});for(let i=0;stream.status().sequence<paused.sequence&&i<200;i++)await new Promise(resolve=>setTimeout(resolve,10));if(stream.status().sequence!==paused.sequence)throw Error('Visual pause not confirmed');const before=serialize(visual),pending=stream.submitInputForQa(1,{kind:'castAttack',id:null,targetId:'missing',x:0,z:0});let rejection;try{await pending;}catch(error){rejection=error.message;}if(!rejection||!stream.status().closed||serialize(visual)!==before||!errors.length)throw Error('Pending input was not failed without changing state: '+JSON.stringify({rejection,errors,status:stream.status()}));return {rejection,signals:errors,scope:'Real hosted and authoritative Workers with real MessagePorts; malformed command; no WebGPU renderer'};
+ }finally{stream.dispose();runtime.dispose();terrain.port1.close();}
+};window.ready=true;
+</script>

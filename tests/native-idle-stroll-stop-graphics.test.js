@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {nativeIdleStrollGraphicsFixture} from './helpers/native-idle-stroll-graphics.js';
+import {floorFloat32} from '../src/float32-time.js';
+import {NATIVE_STOP_POSE_FIELDS} from '../src/world/native-idle-stroll-stop.js';
+
+// Original GLB, clip banks, roster, source and terrain. Renderer/admission are
+// doubles; the real Scene/Host/hardware path is measured by the browser audit.
+for(const viewMode of ['current','detached','inplace'])test(`stopped original actor accepts native retry decay with ${viewMode} logical entity during adoption`,async()=>{
+ const f=await nativeIdleStrollGraphicsFixture();let walk,parts=[];
+ try{
+  walk=await f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime});walk.activate();const data=f.commitStroll();walk.finalize(data);f.planner.projectNativeIdleStroll(f.nativeState,f.worker);f.sync();f.flush();const actor=f.roster.get(f.actor),before=[];actor.root.traverse(object=>{if(object.isMesh)before.push([object,object.geometry,object.geometry.index]);});
+  const prepared=f.planner.prepareNativeIdleStrollStopProposal(f.nativeActor);assert.equal(prepared.status,'proposed');const p=prepared.proposal,view={get:(cx,cz)=>(f.residency.getVisible??f.residency.get).call(f.residency,cx,cz),changedKeys:new Set()};let submitted;
+  const result=await f.roster.prepareNativeTerrainStops(view,{stopEffects:p,boundary:p.worldBoundary,nativeIdleStrollStopTemplate:p.nativeStop,prepareBodySupport:(reference,pose)=>f.terrain.prepareNativeBody(reference,pose),getPickTime:()=>{throw Error('Deferred stop cannot borrow a captured body clock');},getStoppedProjection:()=>submitted});parts=result.parts;assert.equal(parts.length,1);const part=parts[0];assert(part.valid());const oldRetry=f.state.workers[0].idleState.approachRetry;
+  f.advance(.2);f.planner.projectNativeIdleStroll(f.nativeState,f.worker);assert(f.worker.idleState.approachRetry<oldRetry);
+  if(viewMode==='current')f.sync();else{if(viewMode==='inplace')Object.assign(f.state.workers[0],structuredClone(f.worker));else f.state.workers=[structuredClone(f.worker)];f.state.elapsed=f.nativeState.elapsed;}assert(part.valid(),'canonical projection must keep preparation valid');
+  if(viewMode==='current'){f.state.workers[0].idleState.rng^=1;f.roster.sync();assert.equal(part.valid(),false,'changing native policy must still revoke preparation');f.sync();assert(part.valid());f.state.workers[0].idleState.approachRetry+=.1;f.roster.sync();assert.equal(part.valid(),false,'a fabricated retry must still revoke preparation');f.sync();assert(part.valid());}
+  part.capturePresentation(()=>{});assert(part.valid());const fresh=f.planner.revalidateNativeIdleStrollStopProposal(prepared.ticket);assert.equal(fresh.status,'revalidated');assert.equal(f.w.spatial_world_proposal_stop_commit_bound(...f.tuple().slice(0,5),prepared.ticket.ticket),1);assert.equal(f.planner.commitNativeCausalClock().status,'committed');const projection={version:1,routeEffects:fresh.proposal.routeEffects,gateEffects:fresh.proposal.gateEffects},proof=f.planner.nativeIdleStrollStopBinding(fresh.proposal.nativeStop,p.nativeStop,{projection});assert(proof);assert(part.acceptNativeStopBinding(proof));part.activate();part.attach();const retirement=part.finalize();retirement.retire();retirement.notify();f.sync();f.flush();assert.equal(f.roster.get(f.actor),actor);for(const [mesh,geometry,index] of before){assert.equal(mesh.geometry,geometry);assert.equal(mesh.geometry.index,index);}
+  const row=proof.projection.routeEffects.rows.slice(8,26);submitted={at:f.nativeState.elapsed,relativeTime:floorFloat32(f.nativeState.elapsed-f.proposal.startTime),age:floorFloat32(f.nativeState.elapsed-data.nativeIdleStrollBinding.reference.worldBoundary.effectiveTime),...Object.fromEntries(Object.entries(NATIVE_STOP_POSE_FIELDS).map(([field,index])=>[field,Math.fround(row[index])]))};const restore=actor.preparePick();restore();assert(f.roster.nativeRouteLease());f.advance(.2);f.sync();assert(f.roster.nativeRouteLease(),'a held source keeps its retry at the acquired stop');assert.deepEqual(f.errors,[]);
+ }finally{for(const part of parts.reverse())part.cancel();walk?.cancel();f.close();}
+});

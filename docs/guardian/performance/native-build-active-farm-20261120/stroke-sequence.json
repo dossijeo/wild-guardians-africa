@@ -1,0 +1,68 @@
+{
+  "backend": "WebGPU",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "isFallbackAdapter": null
+  },
+  "walls": 0,
+  "errors": [],
+  "provisionalSeen": false,
+  "failed": false,
+  "ui": "08:50\n2K\nDía 1\nVolver\nConstruir\nCultivar\nMagia\nDespertar\n0 / 100\nLa cámara o el terreno cambiaron; vuelve a trazar la muralla.\nCerrar",
+  "strokeFailures": [
+    {
+      "reason": "sequence",
+      "stack": "Error: Stale WebGPU pick\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795212064882:29:5479)",
+      "details": {
+        "minSequence": 128,
+        "resultSequence": 31,
+        "viewport": [
+          1,
+          1
+        ],
+        "camera": [
+          6,
+          6
+        ]
+      },
+      "at": 15247.850000023842
+    },
+    {
+      "reason": "sequence",
+      "stack": "Error: Stale WebGPU pick\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795212064882:29:5479)",
+      "details": {
+        "minSequence": 258,
+        "resultSequence": 192,
+        "viewport": [
+          1,
+          1
+        ],
+        "camera": [
+          6,
+          6
+        ]
+      },
+      "at": 26531.18500006199
+    },
+    {
+      "reason": "sequence",
+      "stack": "Error: Stale WebGPU pick\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js?t=1795212064882:29:5479)",
+      "details": {
+        "minSequence": 388,
+        "resultSequence": 286,
+        "viewport": [
+          1,
+          1
+        ],
+        "camera": [
+          6,
+          6
+        ]
+      },
+      "at": 42665.59000003338
+    }
+  ]
+}

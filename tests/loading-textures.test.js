@@ -31,3 +31,8 @@ test('native upload that aborts its owner stops before progress callback and sub
  const f=fixture(),owner=new AbortController();f.renderer.initTexture=texture=>{f.calls.push(texture);owner.abort();};
  await assert.rejects(initializeLoadingTextures(f.renderer,f.scene,{signal:owner.signal,onTexture:()=>assert.fail('Late progress')}),/cancelled/);assert.deepEqual(f.calls,[f.shared]);
 });
+test('slow native uploads identify their texture while observer failures do not interrupt loading',async()=>{
+ const f=fixture(),spans=[];let clock=0;f.shared.name='large';f.shared.image={width:8192,height:8192};
+ await initializeLoadingTextures(f.renderer,f.scene,{now:()=>clock+=60,onSubmit:span=>{spans.push(span);throw Error('observer');},nextFrame:async()=>{}});
+ const uploads=spans.filter(s=>s.label==='loading-texture-upload-submit');assert.equal(uploads.length,2);assert.equal(uploads[0].name,'large');assert.equal(uploads[0].width,8192);assert.equal(uploads[0].duration,60);assert.deepEqual(f.calls,[f.shared,f.shaderOnly]);
+});

@@ -1,0 +1,775 @@
+TAP version 13
+# (node:24412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24412) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a native hold keeps the manual timeline immutable, preserves its bounded queue and drains every publication/event in order
+ok 1 - a native hold keeps the manual timeline immutable, preserves its bounded queue and drains every publication/event in order
+  ---
+  duration_ms: 297.6099
+  ...
+# Subtest: native hold input policy false sends commands without losing the held publication
+ok 2 - native hold input policy false sends commands without losing the held publication
+  ---
+  duration_ms: 162.4335
+  ...
+# Subtest: native hold input policy true sends commands without losing the held publication
+ok 3 - native hold input policy true sends commands without losing the held publication
+  ---
+  duration_ms: 116.5102
+  ...
+# (node:13576) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:13576) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+ok 4 - a real task supersedes prepared newborn Farm late-before-task without moving or rebinding its body
+  ---
+  duration_ms: 4041.979
+  ...
+# Subtest: a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+ok 5 - a real task supersedes prepared newborn Farm late-after-task without moving or rebinding its body
+  ---
+  duration_ms: 3335.0357
+  ...
+# Subtest: actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+ok 6 - actual newborn READY expiry late-before-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2601.5042
+  ...
+# Subtest: actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+ok 7 - actual newborn READY expiry late-after-home cannot acquire the cancelled Farm or consume Home's response
+  ---
+  duration_ms: 2632.2646
+  ...
+# Subtest: closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+ok 8 - closing the authority after genuine newborn READY aborts its packet and cannot acquire its late reply
+  ---
+  duration_ms: 789.1057
+  ...
+# (node:18592) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:18592) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 9 - olderMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 1053.0885
+  ...
+# Subtest: olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 10 - olderFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 899.2216
+  ...
+# Subtest: youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 11 - youngMale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 781.0824
+  ...
+# Subtest: youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+ok 12 - youngFemale ordinary authority binds a restored22 once and admits it automatically through both existing ports
+  ---
+  duration_ms: 787.628
+  ...
+# Subtest: authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+ok 13 - authority produces restored20, watch21, WALK22 and arrival REST21 without direct commits
+  ---
+  duration_ms: 1671.3497
+  ...
+# Subtest: a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+ok 14 - a genuine harvest command replaces a pending restored WALK and production uses the new Task request
+  ---
+  duration_ms: 767.7287
+  ...
+# Subtest: authority automatically acquires fresh Home and its prepared absence at the real endpoint
+ok 15 - authority automatically acquires fresh Home and its prepared absence at the real endpoint
+  ---
+  duration_ms: 1853.9619
+  ...
+# Subtest: restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+ok 16 - restored harvest action produces Carry and genuine settlement through ordinary authority boundaries
+  ---
+  duration_ms: 2022.2957
+  ...
+# Subtest: closing the authority aborts its one pending preparation without publishing a late WALK
+ok 17 - closing the authority aborts its one pending preparation without publishing a late WALK
+  ---
+  duration_ms: 727.4905
+  ...
+# Subtest: a preparation failure is observable and cannot turn into a repeated failed production loop
+ok 18 - a preparation failure is observable and cannot turn into a repeated failed production loop
+  ---
+  duration_ms: 717.4412
+  ...
+# Subtest: a mixed legacy roster keeps native activation closed until every mover has a source projection
+ok 19 - a mixed legacy roster keeps native activation closed until every mover has a source projection
+  ---
+  duration_ms: 731.6107
+  ...
+# Subtest: real authority Home peer advances while restored WALK waits for resource preparation
+ok 20 - real authority Home peer advances while restored WALK waits for resource preparation
+  ---
+  duration_ms: 793.1975
+  ...
+# Subtest: a Home missing resident data does not starve the next ready restored stroll
+ok 21 - a Home missing resident data does not starve the next ready restored stroll
+  ---
+  duration_ms: 758.0363
+  ...
+# Subtest: changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+ok 22 - changed ordinary run urgency cancels a pending Task14 even when its request handle is unchanged
+  ---
+  duration_ms: 710.2424
+  ...
+# Subtest: ordinary native production waits for the terrain publisher and forwards its exact current manifest
+ok 23 - ordinary native production waits for the terrain publisher and forwards its exact current manifest
+  ---
+  duration_ms: 768.9982
+  ...
+# (node:24364) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24364) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+ok 24 - a genuine first-task declaration crosses the retained endpoint while independent native execution advances
+  ---
+  duration_ms: 525.3165
+  ...
+# Subtest: an actual arrived action declaration retains its own resource class through the existing port and refresh
+ok 25 - an actual arrived action declaration retains its own resource class through the existing port and refresh
+  ---
+  duration_ms: 412.3704
+  ...
+# Subtest: the action resource port rejects a template from another declaration
+ok 26 - the action resource port rejects a template from another declaration
+  ---
+  duration_ms: 370.3043
+  ...
+# Subtest: the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+ok 27 - the same retained port carries stationary preparation, invalidation, refresh and its exact issued association
+  ---
+  duration_ms: 793.4101
+  ...
+# Subtest: a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+ok 28 - a stationary port receipt cannot name another prepared body pose or opt out of deferred admission
+  ---
+  duration_ms: 750.3717
+  ...
+# Subtest: abort during preparation disposes a handle that arrives late and permits a later request
+ok 29 - abort during preparation disposes a handle that arrives late and permits a later request
+  ---
+  duration_ms: 45.34
+  ...
+# Subtest: abort after ready retires its proxy and releases capacity for the next request
+ok 30 - abort after ready retires its proxy and releases capacity for the next request
+  ---
+  duration_ms: 16.1186
+  ...
+# Subtest: the retained endpoint supports invalidate and refresh without a new preparation
+ok 31 - the retained endpoint supports invalidate and refresh without a new preparation
+  ---
+  duration_ms: 2.4042
+  ...
+# Subtest: incompatible refresh and failed refresh both release the retained proxy
+ok 32 - incompatible refresh and failed refresh both release the retained proxy
+  ---
+  duration_ms: 4.1385
+  ...
+# Subtest: a duplicate refresh cannot release the first refresh or its retained reservation
+ok 33 - a duplicate refresh cannot release the first refresh or its retained reservation
+  ---
+  duration_ms: 2.6909
+  ...
+# Subtest: connection disposal invalidates ready proxies and rejects a pending preparation
+ok 34 - connection disposal invalidates ready proxies and rejects a pending preparation
+  ---
+  duration_ms: 6.648
+  ...
+# Subtest: preparation timeout cancels the existing retained handle without closing the healthy endpoint
+ok 35 - preparation timeout cancels the existing retained handle without closing the healthy endpoint
+  ---
+  duration_ms: 47.239
+  ...
+# Subtest: wrong-session and unsolicited responses close the connection and invalidate retained handles
+ok 36 - wrong-session and unsolicited responses close the connection and invalidate retained handles
+  ---
+  duration_ms: 31.8102
+  ...
+# Subtest: aborting before the handshake does not dispatch a resource request
+ok 37 - aborting before the handshake does not dispatch a resource request
+  ---
+  duration_ms: 0.956
+  ...
+# Subtest: genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+ok 38 - genuine Home preparation, invalidation and refresh retain their typed template on the existing direct endpoint
+  ---
+  duration_ms: 812.3122
+  ...
+# Subtest: Home absence preparation and refresh use the same retained direct resource endpoint
+ok 39 - Home absence preparation and refresh use the same retained direct resource endpoint
+  ---
+  duration_ms: 943.0614
+  ...
+# (node:3616) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:3616) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: only an exact native action commit issues its action identity and releases the completed route
+ok 40 - only an exact native action commit issues its action identity and releases the completed route
+  ---
+  duration_ms: 534.3469
+  ...
+# Subtest: late preparation binds the exact retained source while action time starts at the revalidated frontier
+ok 41 - late preparation binds the exact retained source while action time starts at the revalidated frontier
+  ---
+  duration_ms: 372.859
+  ...
+# Subtest: wrong receipts or unrelated retained tickets cannot enter an action
+ok 42 - wrong receipts or unrelated retained tickets cannot enter an action
+  ---
+  duration_ms: 1557.7625
+  ...
+# Subtest: a prepared action reference is never current before its issued native transition and direct attestation
+ok 43 - a prepared action reference is never current before its issued native transition and direct attestation
+  ---
+  duration_ms: 359.2136
+  ...
+# Subtest: native action age follows the one executed clock while its body stays held and the second task moves
+ok 44 - native action age follows the one executed clock while its body stays held and the second task moves
+  ---
+  duration_ms: 365.8303
+  ...
+# Subtest: completion keeps the action body and permission until a prepared consequence replaces it
+ok 45 - completion keeps the action body and permission until a prepared consequence replaces it
+  ---
+  duration_ms: 357.2498
+  ...
+# Subtest: native action ownership rejects physical pose, radius, kind and flag changes or a worker rebind
+ok 46 - native action ownership rejects physical pose, radius, kind and flag changes or a worker rebind
+  ---
+  duration_ms: 369.2431
+  ...
+# Subtest: removing the physical action body revokes its source and direct permission without applying effects
+ok 47 - removing the physical action body revokes its source and direct permission without applying effects
+  ---
+  duration_ms: 358.5557
+  ...
+# Subtest: a new consumer bootstraps genuine live actions separately from route handles
+ok 48 - a new consumer bootstraps genuine live actions separately from route handles
+  ---
+  duration_ms: 360.3226
+  ...
+# Subtest: a stationary action can keep its causal clock after the remaining route is retired
+ok 49 - a stationary action can keep its causal clock after the remaining route is retired
+  ---
+  duration_ms: 355.2103
+  ...
+# Subtest: the source game projects an issued action without legacy movement or task consequences
+ok 50 - the source game projects an issued action without legacy movement or task consequences
+  ---
+  duration_ms: 361.4932
+  ...
+# Subtest: action attestation validation rejects a changed source, projection, or guessed early action sequence
+ok 51 - action attestation validation rejects a changed source, projection, or guessed early action sequence
+  ---
+  duration_ms: 368.3007
+  ...
+# Subtest: pthread issues and reads an actual native action identity through the shared clock and body owner
+ok 52 - pthread issues and reads an actual native action identity through the shared clock and body owner
+  ---
+  duration_ms: 554.8114
+  ...
+# Subtest: pause and rate changes use the existing causal clock without a second action timer
+ok 53 - pause and rate changes use the existing causal clock without a second action timer
+  ---
+  duration_ms: 356.5889
+  ...
+# Subtest: a rejected action bootstrap batch cannot partially install an earlier valid action
+ok 54 - a rejected action bootstrap batch cannot partially install an earlier valid action
+  ---
+  duration_ms: 361.0138
+  ...
+# Subtest: the real direct publication transfers a native action baseline and its ordered cancellation
+ok 55 - the real direct publication transfers a native action baseline and its ordered cancellation
+  ---
+  duration_ms: 369.2351
+  ...
+# Subtest: action clock metadata stays immutable and retargets its existing physical uniform without rebuilding or uploading
+ok 56 - action clock metadata stays immutable and retargets its existing physical uniform without rebuilding or uploading
+  ---
+  duration_ms: 9.3581
+  ...
+# Subtest: action phase tagging refuses wrong origins, resource extensions, other semantics and conflicting authority
+ok 57 - action phase tagging refuses wrong origins, resource extensions, other semantics and conflicting authority
+  ---
+  duration_ms: 1.2933
+  ...
+# Subtest: action pick age retains the submitted float at large epochs without absolute-time cancellation
+ok 58 - action pick age retains the submitted float at large epochs without absolute-time cancellation
+  ---
+  duration_ms: 3.6164
+  ...
+# (node:23764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23764) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: Game projects an actually issued stationary action and lets the other native task advance
+ok 59 - Game projects an actually issued stationary action and lets the other native task advance
+  ---
+  duration_ms: 536.6395
+  ...
+# Subtest: native completion retains task and body until consequence resources are admitted
+ok 60 - native completion retains task and body until consequence resources are admitted
+  ---
+  duration_ms: 455.5917
+  ...
+# Subtest: the common native game clock advances actions after the last route relinquishes its body
+ok 61 - the common native game clock advances actions after the last route relinquishes its body
+  ---
+  duration_ms: 495.9223
+  ...
+# Subtest: a JS countdown cannot finish or speed up a native action
+ok 62 - a JS countdown cannot finish or speed up a native action
+  ---
+  duration_ms: 360.5682
+  ...
+# Subtest: pause and clock-rate changes retain the same native action frontier without a JS timer
+ok 63 - pause and clock-rate changes retain the same native action frontier without a JS timer
+  ---
+  duration_ms: 360.047
+  ...
+# Subtest: an action projection validates source ownership, task identity and executed time before writes
+ok 64 - an action projection validates source ownership, task identity and executed time before writes
+  ---
+  duration_ms: 375.849
+  ...
+# Subtest: action snapshots retain only semantic progress and loading cannot reuse or restart its native permit
+ok 65 - action snapshots retain only semantic progress and loading cannot reuse or restart its native permit
+  ---
+  duration_ms: 501.166
+  ...
+# Subtest: cancelling an action removes its semantic progress and revokes before another native interval
+ok 66 - cancelling an action removes its semantic progress and revokes before another native interval
+  ---
+  duration_ms: 359.9747
+  ...
+# Subtest: an acting marker cannot grant an action to a native route before time advances
+ok 67 - an acting marker cannot grant an action to a native route before time advances
+  ---
+  duration_ms: 346.6153
+  ...
+# Subtest: pthread projects the same native action through the real Game loop and retains completed effects
+ok 68 - pthread projects the same native action through the real Game loop and retains completed effects
+  ---
+  duration_ms: 559.9984
+  ...
+# (node:24008) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:24008) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: the existing roster prepares and adopts the real arrived action on its original body (exact source)
+ok 69 - the existing roster prepares and adopts the real arrived action on its original body (exact source)
+  ---
+  duration_ms: 1085.5151
+  ...
+# Subtest: the existing roster prepares and adopts the real arrived action on its original body (late source)
+ok 70 - the existing roster prepares and adopts the real arrived action on its original body (late source)
+  ---
+  duration_ms: 682.4534
+  ...
+# Subtest: an action candidate rolls back and cancels without replacing the original actor or route data
+ok 71 - an action candidate rolls back and cancels without replacing the original actor or route data
+  ---
+  duration_ms: 555.3369
+  ...
+# Subtest: a new consumer prepares a current native action from its real binding without fabricating a route
+ok 72 - a new consumer prepares a current native action from its real binding without fabricating a route
+  ---
+  duration_ms: 618.1033
+  ...
+# Subtest: removing an actor with an activated unpublished action retires both candidate and source owners
+ok 73 - removing an actor with an activated unpublished action retires both candidate and source owners
+  ---
+  duration_ms: 536.8087
+  ...
+# Subtest: a fresh action consumer can roll back to its original materials before admitting the action
+ok 74 - a fresh action consumer can roll back to its original materials before admitting the action
+  ---
+  duration_ms: 531.4567
+  ...
+# Subtest: a changed task or unrelated action receipt cannot finalize a graphical candidate
+ok 75 - a changed task or unrelated action receipt cannot finalize a graphical candidate
+  ---
+  duration_ms: 507.4962
+  ...
+# Subtest: normal on-demand picking follows the stationary action transform and animated body at submitted ages
+ok 76 - normal on-demand picking follows the stationary action transform and animated body at submitted ages
+  ---
+  duration_ms: 772.0792
+  ...
+# Subtest: an instantaneous graphical declaration keeps its typed physical clock in the actual shader binding
+ok 77 - an instantaneous graphical declaration keeps its typed physical clock in the actual shader binding
+  ---
+  duration_ms: 599.6442
+  ...
+# Subtest: stationary action terrain depends on its current foot and rejects changed triangles
+ok 78 - stationary action terrain depends on its current foot and rejects changed triangles
+  ---
+  duration_ms: 551.7239
+  ...
+# Subtest: an unpublished action retargets the same graph and clock without allocating a texture or material
+ok 79 - an unpublished action retargets the same graph and clock without allocating a texture or material
+  ---
+  duration_ms: 535.0005
+  ...
+# Subtest: initial: finite graphical phases follow the authored worker timing without a JS timer
+ok 80 - initial: finite graphical phases follow the authored worker timing without a JS timer
+  ---
+  duration_ms: 500.7214
+  ...
+# Subtest: water: finite graphical phases follow the authored worker timing without a JS timer
+ok 81 - water: finite graphical phases follow the authored worker timing without a JS timer
+  ---
+  duration_ms: 495.4569
+  ...
+# Subtest: harvest: finite graphical phases follow the authored worker timing without a JS timer
+ok 82 - harvest: finite graphical phases follow the authored worker timing without a JS timer
+  ---
+  duration_ms: 512.839
+  ...
+# Subtest: crate: finite graphical phases follow the authored worker timing without a JS timer
+ok 83 - crate: finite graphical phases follow the authored worker timing without a JS timer
+  ---
+  duration_ms: 488.6685
+  ...
+# Subtest: repair: finite graphical phases follow the authored worker timing without a JS timer
+ok 84 - repair: finite graphical phases follow the authored worker timing without a JS timer
+  ---
+  duration_ms: 511.9971
+  ...
+# Subtest: a genuinely restored Initial action samples saved Water progress in its compiled actor graph
+ok 85 - a genuinely restored Initial action samples saved Water progress in its compiled actor graph
+  ---
+  duration_ms: 1461.7549
+  ...
+# Subtest: the real action binding compiles its typed clock and fixed transform for color and original shadow
+ok 86 - the real action binding compiles its typed clock and fixed transform for color and original shadow
+  ---
+  duration_ms: 685.734
+  ...
+# Subtest: olderMale: relative action phases select original Plant/Water poses and tools on the resident body
+ok 87 - olderMale: relative action phases select original Plant/Water poses and tools on the resident body
+  ---
+  duration_ms: 866.1539
+  ...
+# Subtest: olderFemale: relative action phases select original Plant/Water poses and tools on the resident body
+ok 88 - olderFemale: relative action phases select original Plant/Water poses and tools on the resident body
+  ---
+  duration_ms: 772.5599
+  ...
+# Subtest: youngMale: relative action phases select original Plant/Water poses and tools on the resident body
+ok 89 - youngMale: relative action phases select original Plant/Water poses and tools on the resident body
+  ---
+  duration_ms: 714.738
+  ...
+# Subtest: youngFemale: relative action phases select original Plant/Water poses and tools on the resident body
+ok 90 - youngFemale: relative action phases select original Plant/Water poses and tools on the resident body
+  ---
+  duration_ms: 716.9742
+  ...
+# (node:18720) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:18720) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: a real game arrival prepares an action from its executed body without issuing action permission or effects
+ok 91 - a real game arrival prepares an action from its executed body without issuing action permission or effects
+  ---
+  duration_ms: 531.0774
+  ...
+# Subtest: slow action preparation moves the other genuine task and revalidates the same source at the current frontier
+ok 92 - slow action preparation moves the other genuine task and revalidates the same source at the current frontier
+  ---
+  duration_ms: 376.5545
+  ...
+# Subtest: action cancellation and exclusivity preserve the original arrival request and occupied body
+ok 93 - action cancellation and exclusivity preserve the original arrival request and occupied body
+  ---
+  duration_ms: 360.916
+  ...
+# Subtest: a cancelled, replaced or removed source cannot be silently adopted by action revalidation
+ok 94 - a cancelled, replaced or removed source cannot be silently adopted by action revalidation
+  ---
+  duration_ms: 1070.9807
+  ...
+# Subtest: the existing body owner rejects rebinding an arrived task during action preparation
+ok 95 - the existing body owner rejects rebinding an arrived task during action preparation
+  ---
+  duration_ms: 357.2137
+  ...
+# Subtest: other proposal protocols cannot inspect, cancel or commit an action candidate
+ok 96 - other proposal protocols cannot inspect, cancel or commit an action candidate
+  ---
+  duration_ms: 354.1227
+  ...
+# Subtest: an obsolete exact action snapshot fails closed without entering an action
+ok 97 - an obsolete exact action snapshot fails closed without entering an action
+  ---
+  duration_ms: 365.5516
+  ...
+# Subtest: action proposal validation rejects forged permission, predicted identity and altered source declarations
+ok 98 - action proposal validation rejects forged permission, predicted identity and altered source declarations
+  ---
+  duration_ms: 354.0598
+  ...
+# Subtest: native action drafts are not persisted or reusable after restoring a confirmed arrival
+ok 99 - native action drafts are not persisted or reusable after restoring a confirmed arrival
+  ---
+  duration_ms: 368.1505
+  ...
+# Subtest: request and proposal copies have no mutable alias to the native arrival
+ok 100 - request and proposal copies have no mutable alias to the native arrival
+  ---
+  duration_ms: 355.2431
+  ...
+# Subtest: a forged declaration cannot prepare an action before the native task has arrived
+ok 101 - a forged declaration cannot prepare an action before the native task has arrived
+  ---
+  duration_ms: 351.3913
+  ...
+# Subtest: pthread retains and revalidates the same real Game arrival declaration while the second task executes
+ok 102 - pthread retains and revalidates the same real Game arrival declaration while the second task executes
+  ---
+  duration_ms: 536.244
+  ...
+# (node:5112) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:5112) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: loading declares a fresh stationary action source without restoring an executable route
+ok 103 - loading declares a fresh stationary action source without restoring an executable route
+  ---
+  duration_ms: 888.4703
+  ...
+# Subtest: restored action candidates retain saved progress across native revalidation without issuing permission
+ok 104 - restored action candidates retain saved progress across native revalidation without issuing permission
+  ---
+  duration_ms: 706.1907
+  ...
+# Subtest: task-action-restore: one preparation survives advancing simulation and drains before native commit
+ok 105 - task-action-restore: one preparation survives advancing simulation and drains before native commit
+  ---
+  duration_ms: 820.7075
+  ...
+# Subtest: task-action-restore: cancellation during preparation cannot issue an assignment
+ok 106 - task-action-restore: cancellation during preparation cannot issue an assignment
+  ---
+  duration_ms: 751.7822
+  ...
+# Subtest: task-action-restore: changed native intention during drain rejects prepared resources
+ok 107 - task-action-restore: changed native intention during drain rejects prepared resources
+  ---
+  duration_ms: 711.2429
+  ...
+# Subtest: task-action-restore: preparation failure leaves the native source uncommitted
+ok 108 - task-action-restore: preparation failure leaves the native source uncommitted
+  ---
+  duration_ms: 706.1728
+  ...
+# Subtest: task-action-restore: release failure after physical commit never reports a rollback
+ok 109 - task-action-restore: release failure after physical commit never reports a rollback
+  ---
+  duration_ms: 713.6019
+  ...
+# Subtest: restored action admission resumes the saved phase and only its remaining native duration
+ok 110 - restored action admission resumes the saved phase and only its remaining native duration
+  ---
+  duration_ms: 727.9457
+  ...
+# Subtest: a genuinely saved water action reenters the same native clock with its original duration
+ok 111 - a genuinely saved water action reenters the same native clock with its original duration
+  ---
+  duration_ms: 705.3469
+  ...
+# Subtest: a genuinely saved initial action reenters the same native clock with its original duration
+ok 112 - a genuinely saved initial action reenters the same native clock with its original duration
+  ---
+  duration_ms: 723.2038
+  ...
+# Subtest: a saved action at its beginning still needs a fresh native grant
+ok 113 - a saved action at its beginning still needs a fresh native grant
+  ---
+  duration_ms: 703.1345
+  ...
+# Subtest: a saved action at its completed boundary still needs a fresh native grant
+ok 114 - a saved action at its completed boundary still needs a fresh native grant
+  ---
+  duration_ms: 722.0841
+  ...
+# Subtest: a second save/load retains accumulated progress and replaces the previous native action identity
+ok 115 - a second save/load retains accumulated progress and replaces the previous native action identity
+  ---
+  duration_ms: 1026.9301
+  ...
+# Subtest: long preparation at a large logical epoch does not consume or round away restored work
+ok 116 - long preparation at a large logical epoch does not consume or round away restored work
+  ---
+  duration_ms: 715.3451
+  ...
+# Subtest: a restored source protects its pending body and body removal revokes the declaration
+ok 117 - a restored source protects its pending body and body removal revokes the declaration
+  ---
+  duration_ms: 689.5785
+  ...
+# Subtest: a consumer without restored-phase support rejects preparation before a native action is issued
+ok 118 - a consumer without restored-phase support rejects preparation before a native action is issued
+  ---
+  duration_ms: 691.5719
+  ...
+# Subtest: pthread restores semantic action progress without an old route handle
+ok 119 - pthread restores semantic action progress without an old route handle
+  ---
+  duration_ms: 846.4546
+  ...
+# (node:23112) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:23112) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: retained first-task GPU samples preserve nonzero source phases without allocating a second texture
+ok 120 - retained first-task GPU samples preserve nonzero source phases without allocating a second texture
+  ---
+  duration_ms: 563.0739
+  ...
+# Subtest: first-task resources use the same terrain, packed data and GPU motion as the actually issued route
+ok 121 - first-task resources use the same terrain, packed data and GPU motion as the actually issued route
+  ---
+  duration_ms: 399.9936
+  ...
+# Subtest: an unpublished first-task texture, node and graph survive retargeting with no upload when packed data are unchanged
+ok 122 - an unpublished first-task texture, node and graph survive retargeting with no upload when packed data are unchanged
+  ---
+  duration_ms: 390.5271
+  ...
+# Subtest: a changed first-task terrain sample updates only its existing unpublished data texture
+ok 123 - a changed first-task terrain sample updates only its existing unpublished data texture
+  ---
+  duration_ms: 378.0649
+  ...
+# Subtest: first task and actual assignment compile the same existing WGSL program
+ok 124 - first task and actual assignment compile the same existing WGSL program
+  ---
+  duration_ms: 489.6324
+  ...
+# Subtest: the first issued route samples its exact pinned vertices and budget knot without snapping interior times
+ok 125 - the first issued route samples its exact pinned vertices and budget knot without snapping interior times
+  ---
+  duration_ms: 374.2018
+  ...
+# Subtest: a first-task GPU table remains resident when its real assignment is later suspended
+ok 126 - a first-task GPU table remains resident when its real assignment is later suspended
+  ---
+  duration_ms: 403.972
+  ...
+# Subtest: youngMale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+ok 127 - youngMale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+  ---
+  duration_ms: 619.7134
+  ...
+# Subtest: olderMale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+ok 128 - olderMale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+  ---
+  duration_ms: 321.36
+  ...
+# Subtest: olderFemale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+ok 129 - olderFemale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+  ---
+  duration_ms: 307.5623
+  ...
+# Subtest: youngFemale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+ok 130 - youngFemale: one prepared Idle/Alert selector reuses the resident watch actor and both original poses
+  ---
+  duration_ms: 323.5456
+  ...
+# Subtest: an active watch presentation can prepare and roll back a native walking replacement on its existing geometry
+ok 131 - an active watch presentation can prepare and roll back a native walking replacement on its existing geometry
+  ---
+  duration_ms: 178.7353
+  ...
+# Subtest: Idle/Alert selection compiles both resident clip textures for the actual Three color and shadow builders
+ok 132 - Idle/Alert selection compiles both resident clip textures for the actual Three color and shadow builders
+  ---
+  duration_ms: 322.8382
+  ...
+# Subtest: incomplete, duplicate or incompatible Idle/Alert banks leave the original watch untouched
+ok 133 - incomplete, duplicate or incompatible Idle/Alert banks leave the original watch untouched
+  ---
+  duration_ms: 203.8883
+  ...
+# Subtest: youngMale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+ok 134 - youngMale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+  ---
+  duration_ms: 434.6306
+  ...
+# Subtest: olderMale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+ok 135 - olderMale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+  ---
+  duration_ms: 214.4917
+  ...
+# Subtest: olderFemale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+ok 136 - olderFemale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+  ---
+  duration_ms: 327.401
+  ...
+# Subtest: youngFemale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+ok 137 - youngFemale: prepared actions reuse admitted body geometry and select original Plant/Water tools for picking
+  ---
+  duration_ms: 397.1418
+  ...
+# Subtest: a Harvest variant samples its resident bake on the existing body and leaves no tool meshes
+ok 138 - a Harvest variant samples its resident bake on the existing body and leaves no tool meshes
+  ---
+  duration_ms: 266.0462
+  ...
+# Subtest: action variants compile body and conditional tools for both color and original shadow passes
+ok 139 - action variants compile body and conditional tools for both color and original shadow passes
+  ---
+  duration_ms: 286.582
+  ...
+# Subtest: a cancelled action replacement hides its new tools and restores the previous prepared selection
+ok 140 - a cancelled action replacement hides its new tools and restores the previous prepared selection
+  ---
+  duration_ms: 267.9024
+  ...
+# Subtest: incomplete or incompatible action catalogs fail before changing the admitted presentation
+ok 141 - incomplete or incompatible action catalogs fail before changing the admitted presentation
+  ---
+  duration_ms: 158.3282
+  ...
+# Subtest: discarding a prepared tool variant removes only its candidate meshes and keeps the body available
+ok 142 - discarding a prepared tool variant removes only its candidate meshes and keeps the body available
+  ---
+  duration_ms: 174.7678
+  ...
+# Subtest: retiring the active action restores original tool visibility for subsequent ordinary presentation
+ok 143 - retiring the active action restores original tool visibility for subsequent ordinary presentation
+  ---
+  duration_ms: 166.9436
+  ...
+# Subtest: mutating a candidate tool mesh prevents its variant from being activated
+ok 144 - mutating a candidate tool mesh prevents its variant from being activated
+  ---
+  duration_ms: 213.9697
+  ...
+# Subtest: the existing scoped motion binding atomically installs and rolls back body plus action tools
+ok 145 - the existing scoped motion binding atomically installs and rolls back body plus action tools
+  ---
+  duration_ms: 278.5904
+  ...
+# Subtest: retiring an older tool variant preserves its successor and the successor can restore the original tools
+ok 146 - retiring an older tool variant preserves its successor and the successor can restore the original tools
+  ---
+  duration_ms: 163.25
+  ...
+# Subtest: a Carry candidate can restore the previous action, native binding and authored box visibility without replacing its actor
+ok 147 - a Carry candidate can restore the previous action, native binding and authored box visibility without replacing its actor
+  ---
+  duration_ms: 213.0391
+  ...
+1..147
+# tests 147
+# suites 0
+# pass 147
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 93556.3286

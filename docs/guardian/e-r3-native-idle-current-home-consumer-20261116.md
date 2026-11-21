@@ -1,0 +1,31 @@
+# Home desde el ciclo actual en Game y el consumidor original
+
+Continúa [la fuente Home actual](e-r3-native-idle-current-home-source-20261116.md). La asociación 21, incluida su fuente 22 posterior al paseo, ya atraviesa el control tipado, Game, puertos, roster y Surface originales para adquirir/ejecutar Home. La prueba usa el Game API real y un pump controlado; el productor ordinario de Idle movido y los cierres A6/e-R3/e-R4/f-R4/A/B/C siguen pendientes.
+
+## Referencias y decisiones
+
+Se leyó código real de [RigidBodySet::get](https://github.com/dimforge/rapier/blob/v0.22.0/src/dynamics/rigid_body_set.rs) y [Arena::get](https://github.com/dimforge/rapier/blob/v0.22.0/src/data/arena.rs) en Rapier v0.22.0: la consulta exige el handle vigente y compara la generación ocupada. Se adapta esa comprobación a nuestra época/sesión/cuerpo y secuencia 21 existente, sin añadir otro contador o registro. La separación entre objetivo y cuerpo de Detour aplicada en el incremento nativo se mantiene.
+
+Para la residencia compilada se consultaron [Pipelines](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Pipelines.js) y [RenderObjects](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/RenderObjects.js) de Three r180. Comparten programas por código WGSL exacto y los retiran cuando desaparece el último render object. La medición real encontró 12 shaders idénticos a los del paseo y 8 pipelines reconstruidos al preparar Home. El propietario de materiales ya existente del actor se amplía a **dos familias fijas**: Idle y movimiento finito compartido por paseo/Home. Guarda sólo el último conjunto retirado de cada familia; lo sustituido y el actor retirado se liberan. El binding y la autoridad previos se cierran, y los datos de movimiento se retiran tras el fence. No se comparte un permiso por compartir código, ni se conserva la textura 22 obsoleta. No se añade un motor, dependencia, caché global o parche de Three.
+
+## Identidad actual y Game
+
+La continuación compara la petición Home con el ciclo adquirido actual: época/sesión, actor/cuerpo, flags/perfil, pose/fases y secuencia/tiempo posteriores a esa asociación 21. El control directo conserva su contexto de cuerpo mientras espera los recursos y mantiene las comprobaciones de watermark y adquisición exacta. La coincidencia de un descriptor, una pose o una antigua secuencia 22 no concede dibujo.
+
+El adaptador invoca la ABI nativa del ciclo actual, sin pasar la fuente 22 al copiador inicial 20. Game consulta también la asociación nativa antes de clasificar el cuerpo: dentro del callback del commit de 21 puede seguir mostrando el marcador WALK anterior. En ese caso proyecta la fase 21 realmente adquirida antes de solicitar Home; no escribe el REST deseado por adelantado. Sin esa adquisición, el paseo móvil o sólo llegado sigue rechazado. Sólo una petición nativa correcta permite cancelar Idle y marcar Home pendiente.
+
+Los mismos dos puertos preparan una vez, drenan, revalidan y ligan el commit a la frontera real. El roster prepara sobre el actor, rig, geometrías y bancos existentes; cancelar restaura el material visible. Surface mantiene el programa 21 al adoptar la publicación con Home pendiente y adopta el programa 18 después de su adquisición. La restauración semántica de Home pendiente crea cuerpo/petición nuevos en otro mundo y no carga permisos o corredores viejos.
+
+## Validación
+
+**1417/1417 pruebas en 123 archivos**, 745565.1383 ms. Los 18 casos nuevos cubren cuatro perfiles en ambos módulos, control/Game, reloj atrasado, campos alterados, barrera, los dos transportes, aborto/fallo semántico/recibo y carga nueva, incluido Home antes de proyectar el marcador WALK del commit de 21. Los 8 gráficos usan GLB/bancos/roster reales con renderer simulado: revalidación, cancelación, retirada, fuentes cambiadas y tres repeticiones paseo/descanso con materiales acotados y liberación de los datos cambiados. Build de producto correcto en **49.41 s**. No se reconstruye WASM: los 18 inputs/artefactos nativos del commit `14a9d5eba`, los 16 archivos locales protegidos y el helper pthread original permanecen exactos. [Comandos, conjunto y hashes](performance/native-idle-current-home-consumer-validation-20261116.json).
+
+La [prueba GPU](performance/native-idle-current-home-consumer-gpu-20261116.json), NVIDIA/Turing, 640x360, muy_baja, nueve chunks y dos actores originales, pasa 20→21→22→21→18. Home se solicita desde el callback del nuevo descanso, antes de que Game haya proyectado su marcador. Conserva los **577 IDs únicos de geometría/texturas de este recibo** y ambos actores/rigs; picking devuelve los dos IDs y cada publicación nueva llega a READY. La textura 22 anterior se destruye tras el fence. Volver a descanso y preparar Home crean **cero shaders, pipelines o layouts de pipeline**, sin fuentes compiladas duplicadas. Tras READY no hay creaciones ni nuevas copias COW; el reloj actualiza sus buffers existentes. El bloque final de 1800 ms mantiene 54 dibujos y el compañero avanza independientemente; el consumidor drena antes de retirar la autoridad.
+
+Preparar Home aún crea **36 buffers de uniformes** (uso 72, UNIFORM|COPY_DST), 16 bind groups, 16 layouts de grupo, una textura de datos Home nueva y un sampler. Además, el Host realiza 18 copias de uniformes (4512 bytes) y 18 de bindings; no copia buffers estáticos ni texturas. Estas copias nativas se contabilizan aparte de los 70 IDs de protocolo preparados. No equivale a ausencia absoluta de tirones en el juego completo.
+
+Se revisaron las capturas del [descanso con Home pendiente](performance/native-idle-current-home-consumer-rest-20261116.png) y [Home en ejecución](performance/native-idle-current-home-consumer-home-20261116.png). Esta entrega no mide de nuevo la ausencia final Home desde este origen; las pruebas genéricas existentes de llegada/retirada permanecen en la regresión.
+
+## Continuación
+
+Completar TaskStart desde el ciclo/pose actuales y tarea/Home desde un paseo 22 todavía móvil, restauración móvil y cohort/producer ordinarios; después aproximación/anclas/bloqueos, restantes clases/finales/puertas, nacimiento/sustitución en vivo y recuperación incremental integral de 3123 recursos. Los costes de preparación anteriores siguen declarados. A6/A/B/C permanecen abiertos y no se inicia D.

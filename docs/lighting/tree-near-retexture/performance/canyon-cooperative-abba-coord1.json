@@ -1,0 +1,223 @@
+{
+  "scope": "Saved canyon raid using production WASM; discrete end-of-tick body overlaps under current participation rules, not continuous swept-collision proof. Timings measure instrumented updateRaid only in Node, excluding rendering, GPU, collision audit and setup.",
+  "phaseDisabled": true,
+  "coordination": true,
+  "authority": "spatial-wasm",
+  "intentPlanner": false,
+  "steps": 1300,
+  "completed": true,
+  "animals": 10,
+  "initialOverlapSamples": 0,
+  "overlapSamples": 0,
+  "phasedSamples": 0,
+  "distinctPairs": 0,
+  "maxPenetration": 0,
+  "staticViolations": 0,
+  "recoveries": 0,
+  "coordinations": 32,
+  "coordinationExamples": [
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3057",
+      "forActor": "animal-3054",
+      "elapsed": 6325.700000004935
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3058",
+      "forActor": "animal-3054",
+      "elapsed": 6325.800000004935
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3056",
+      "forActor": "animal-3053",
+      "elapsed": 6326.000000004936
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3060",
+      "forActor": "animal-3057",
+      "elapsed": 6326.000000004936
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3057",
+      "forActor": "animal-3054",
+      "elapsed": 6326.200000004937
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3056",
+      "forActor": "animal-3053",
+      "elapsed": 6327.10000000494
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3058",
+      "forActor": "animal-3053",
+      "elapsed": 6327.700000004942
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3060",
+      "forActor": "animal-3057",
+      "elapsed": 6328.000000004943
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3056",
+      "forActor": "animal-3053",
+      "elapsed": 6328.200000004944
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3058",
+      "forActor": "animal-3057",
+      "elapsed": 6328.500000004945
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3060",
+      "forActor": "animal-3057",
+      "elapsed": 6328.700000004946
+    },
+    {
+      "kind": "coordinatedYield",
+      "actorId": "animal-3060",
+      "forActor": "animal-3057",
+      "elapsed": 6329.100000004947
+    }
+  ],
+  "recoveryExamples": [],
+  "eventCounts": {
+    "AnimalRouteUnavailable": 19,
+    "CropHit": 15,
+    "CropDestroyed": 15,
+    "AnimalLogicalHit": 15,
+    "AnimalRetreating": 6,
+    "RaidEnded": 1
+  },
+  "importantEvents": [
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2852",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2964",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-3004",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2846",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2849",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2776",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2821",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2755",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2989",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2936",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2921",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2977",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2968",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2509",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "AnimalLogicalHit",
+      "targetId": "plant-2530",
+      "actorId": null,
+      "species": "warthog",
+      "reason": null
+    },
+    {
+      "type": "RaidEnded",
+      "targetId": null,
+      "actorId": null,
+      "species": null,
+      "reason": null
+    }
+  ],
+  "stateHash": "9dedf79c332de3fce8429275ff8e38079dcd010a053523c3eea0d3f62e41d4b5",
+  "cpu": {
+    "mean": 0.452423000000006,
+    "p95": 1.7095000000003893,
+    "p99": 3.566599999999653,
+    "max": 34.89290000000028
+  },
+  "samples": []
+}

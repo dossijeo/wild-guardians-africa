@@ -1,0 +1,57 @@
+import {validateConfirmedClockSegments} from '../simulation/confirmed-clock-segments.js';
+import {certifyHistoricalPhysicsIsolation,historicalPhysicalActorIds} from '../simulation/worker-historical-physics-isolation.js';
+import {HISTORICAL_MAX_REAL_DURATION} from '../simulation/historical-publication-limits.js';
+// These synchronous operations must run in one turn, before the clock advances.
+// A failed second roster must not leave the first roster installed.
+export function createConfirmedHistoricalMotionGroup({animals,workers=null,effects=null,otherEffectsQuiet=null,getSupport,inputPolicy=null,maxRealDuration=HISTORICAL_MAX_REAL_DURATION,diagnostics=false}={}){
+ if(!animals||typeof getSupport!=='function'||effects!==null&&['prepareHistoricalMotion','startHistoricalMotion','historicalMotionCurrent','finishHistoricalMotion','abortHistoricalMotion','cancelHistoricalMotion'].some(key=>typeof effects[key]!=='function')||otherEffectsQuiet!==null&&typeof otherEffectsQuiet!=='function')throw TypeError('Invalid historical motion group');
+ if(inputPolicy!==null&&inputPolicy!=='ordered-boundary'||!Number.isFinite(maxRealDuration)||maxRealDuration<=0||typeof diagnostics!=='boolean')throw TypeError('Invalid historical input policy');
+ const prepared=new WeakMap();let lastRejection=null,remoteActive=null;const reject=(reason,actorId=null,preparationPending=false)=>{if(diagnostics||preparationPending)lastRejection={reason:typeof reason==='string'?reason.slice(0,100):'unknown',actorId:typeof actorId==='string'?actorId.slice(0,100):null,...(preparationPending?{preparationPending:true}:{})};return null;};
+ function completeRoster(preview){if(typeof animals.historicalActorIds!=='function'||workers&&typeof workers.historicalActorIds!=='function'||!Array.isArray(preview?.trace?.actors))return false;const ids=[...animals.historicalActorIds(),...(workers?workers.historicalActorIds():[])],trace=preview.trace.actors.map(actor=>actor?.actorId);if(ids.some(id=>typeof id!=='string'||!id)||trace.some(id=>typeof id!=='string'||!id)||new Set(ids).size!==ids.length||new Set(trace).size!==trace.length||ids.length!==trace.length)return false;const selected=new Set(ids);return trace.every(id=>selected.has(id));}
+ const isCurrent=preview=>completeRoster(preview)&&animals.historicalMotionCurrent(preview)===true&&(!workers||workers.historicalMotionCurrent(preview)===true)&&(!effects||effects.historicalMotionCurrent(preview)===true)&&(!(preview.certificates?.workSynchronized||preview.certificates?.combatSynchronized||preview.certificates?.footstepsSynchronized)||otherEffectsQuiet?.(preview)===true);
+ return {
+  // The stream has validated the authority evidence and exact state endpoints.
+  // This closes the remaining presentation proof: common clock, resident
+  // support, complete participants, admitted rigs and ordered pose handoff.
+  // The duration cap bounds provisional-body handoff latency, not Worker CPU.
+  certify(preview,current){
+   lastRejection=null;if(inputPolicy!=='ordered-boundary'||current?.closed||preview?.sequence!==current?.sequence+1||preview.start!==current.lastElapsed||preview.end<=preview.start||preview.safeForAutonomousPlayback!==false||preview.reasons?.length!==1||preview.reasons[0]!=='visual-time-and-support-unverified')return reject('boundary');if(!completeRoster(preview))return reject('roster');
+   const trace=preview.trace,clock=preview.clockSegments,support=getSupport(preview);
+   const physicalIds=historicalPhysicalActorIds(trace),physical=trace.physicsActivity?.observed===true&&physicalIds.length>0&&certifyHistoricalPhysicsIsolation(trace.actors,trace.physicsPoseSamples,preview.start,preview.end);if(!trace.spatialEvidence||!trace.separationEvidence)return reject('spatial-or-separation');if(trace.physicsActivity?.samplesComplete!==true||trace.physicsActivity.observed!==false&&!physical||physical&&trace.separationEvidence.physicalGateBoundsChecked!==true)return reject('physics');if(trace.actorTickStates?.complete!==true)return reject('actor-ticks');if(!clock?.complete||clock.start!==preview.start||clock.end!==preview.end||clock.startPauses?.length||clock.endPauses?.length||!Array.isArray(clock.segments)||!clock.segments.length||clock.segments.some(segment=>!Number.isFinite(segment.realDuration)||segment.realDuration<=0))return reject('clock');if(clock.segments.reduce((sum,segment)=>sum+segment.realDuration,0)>maxRealDuration+1e-9)return reject('duration');if(!support||support.sequence!==preview.sequence||support.start!==preview.start||support.end!==preview.end||support.valid()!==true)return reject('terrain-support');
+   try{validateConfirmedClockSegments(clock,{start:preview.start,end:preview.end,startPauses:[],endPauses:[]});}catch{return reject('clock');}
+   const result={...preview,reasons:[],safeForAutonomousPlayback:true,certificates:{sequence:preview.sequence,actorIds:trace.actors.map(actor=>actor.actorId),animationSynchronized:true,otherActorsSynchronized:true,effectsSynchronized:true,continuousCollision:true,inputSynchronized:true,...(physical?{physicalActorIds:physicalIds,...(physicalIds.length===1?{physicalActorId:physicalIds[0]}:{})}:{})}};
+   const e=effects?.prepareHistoricalMotion(result,support);if(effects&&e?.ok!==true)return reject(e?.reason??'effects',e?.actorId,e?.preparationPending===true);if((e?.working===true||e?.watering===true||e?.combat===true||e?.footsteps===true)&&(otherEffectsQuiet?.(result)!==true))return reject('other-effects');if(e?.footsteps===true)result.certificates.footstepsSynchronized=true;if(e?.combat===true)result.certificates.combatSynchronized=true;if(e?.watering===true)result.certificates.wateringSynchronized=true;if(e?.working===true||e?.watering===true)result.certificates.workSynchronized=true;
+   const a=animals.prepareHistoricalMotion?.(result,support),w=workers?.prepareHistoricalMotion?.(result,support);
+   if(a?.ok!==true)return reject(a?.reason??'animals',a?.actorId);if(workers&&w?.ok!==true)return reject(w?.reason??'workers',w?.actorId);
+   prepared.set(result,{support,a,w,e});return result;
+  },
+  lastRejection(){return lastRejection?{...lastRejection}:null;},
+  canStart(preview){const value=prepared.get(preview);return !!value&&completeRoster(preview)&&value.support===getSupport(preview)&&value.support.valid()===true;},
+  start(preview){remoteActive=null;lastRejection=null;const fail=(reason,actorId=null)=>{reject(reason,actorId);return false;};if(!completeRoster(preview))return fail('start-roster');const cached=prepared.get(preview);prepared.delete(preview);const support=getSupport(preview);if(cached&&cached.support!==support)return fail('start-support-changed');const animalPrepared=cached?.a??animals.prepareHistoricalMotion?.(preview,support),workerPrepared=cached?.w??workers?.prepareHistoricalMotion?.(preview,support),effectPrepared=cached?.e??effects?.prepareHistoricalMotion(preview,support);if(animalPrepared&&!animalPrepared.ok)return fail(animalPrepared.reason??'start-animal-prepare',animalPrepared.actorId);if(workerPrepared&&!workerPrepared.ok)return fail(workerPrepared.reason??'start-worker-prepare',workerPrepared.actorId);if(effectPrepared&&!effectPrepared.ok)return fail(effectPrepared.reason??'start-effect-prepare',effectPrepared.actorId);if((effectPrepared?.working===true||effectPrepared?.watering===true||effectPrepared?.combat===true||effectPrepared?.footsteps===true)&&otherEffectsQuiet?.(preview)!==true)return fail('start-other-effects');if(animals.startHistoricalMotion(preview,support,animalPrepared?.token??null)!==true)return fail('start-animals');try{if(workers&&workers.startHistoricalMotion(preview,support,workerPrepared?.token??null)!==true){animals.cancelHistoricalMotion();return fail('start-workers');}if(effects&&effects.startHistoricalMotion(preview,support,effectPrepared?.token??null)!==true){animals.cancelHistoricalMotion();workers?.cancelHistoricalMotion();return fail('start-effects');}remoteActive={preview,animals:animalPrepared?.remoteAutonomous===true,workers:!workers||workerPrepared?.remoteAutonomous===true,effects:!effects||effectPrepared?.remoteAutonomous===true};return true;}catch(error){animals.cancelHistoricalMotion();workers?.cancelHistoricalMotion();effects?.cancelHistoricalMotion();throw error;}},
+  isCurrent,
+  // The preparer calls this after encoding a frame. Historical certification
+  // alone does not prove independence from CPU pose and native VFX updates.
+  remoteLease(clock,{blockers=[]}={}){
+   if(typeof clock?.remoteLease!=='function'||!Array.isArray(blockers)||blockers.some(reason=>typeof reason!=='string'||!reason))throw TypeError('Invalid remote historical lease request');
+   const reasons=[...blockers],run=remoteActive;
+   if(!run)reasons.push('no-active-historical-interval');
+   else{
+    if(!run.animals)reasons.push('animal-cpu-presentation');
+    if(!run.workers)reasons.push('worker-cpu-presentation');
+    if(!run.effects)reasons.push('native-vfx-presentation');
+    if(otherEffectsQuiet&&otherEffectsQuiet(run.preview)!==true)reasons.push('other-effects-active');
+    if(!isCurrent(run.preview))reasons.push('historical-participants-stale');
+   }
+   const lease=clock.remoteLease({allowAdvance:reasons.length===0});
+   if(run&&(lease.sequence!==run.preview.sequence||lease.elapsed<run.preview.start||lease.safeUntil>run.preview.end)){
+    reasons.push('historical-clock-interval-mismatch');
+    return {...clock.remoteLease(),remoteBlockers:reasons};
+   }
+   return {...lease,remoteBlockers:reasons};
+  },
+  finish(preview,{continuation=false}={}){if(!isCurrent(preview)||animals.canFinishHistoricalMotion?.(preview,{continuation})===false||workers?.canFinishHistoricalMotion?.(preview,{continuation})===false)return false;if(effects?.finishHistoricalMotion(preview)===false)return false;animals.finishHistoricalMotion(preview,{continuation,deferHandoff:true});workers?.finishHistoricalMotion(preview,{continuation});remoteActive=null;return true;},
+  afterCommit(preview,{continuation=false}={}){animals.historicalBoundaryCommitted?.(preview,{continuation});},
+  cancel(){remoteActive=null;effects?.cancelHistoricalMotion();animals.cancelHistoricalMotion();workers?.cancelHistoricalMotion();},
+  abort(){remoteActive=null;effects?.abortHistoricalMotion();animals.abortHistoricalMotion();workers?.abortHistoricalMotion();}
+ };
+}

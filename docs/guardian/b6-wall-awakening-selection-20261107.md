@@ -1,0 +1,5 @@
+# Resaltado de murallas para Despertar en WebGPU
+
+La selección de Despertar se transmite al Worker gráfico como estado visual, sin esperar a la simulación y sin modificar sus datos. Las murallas intactas y sin bendecir reciben el mismo modo de elegibilidad que la ruta anterior; la muralla elegida usa el modo de selección y las demás conservan el modo elegible. El contorno se calcula en el grafo TSL compartido mediante un parámetro por material, sin crear otro pipeline al seleccionar. La preselección se muestra al pulsar y se sustituye por la confirmación o se retira ante rechazo; una respuesta antigua no borra una selección posterior.
+
+El estado se conserva si cambia durante la preparación del Worker y se vuelve a enviar al reemplazar la presentación. Las pruebas cubren murallas reales, identidad de material, elegibilidad, deduplicación, cambio de estado durante inicialización y generación WGSL. La validación visual, las interacciones completas en partida y las mediciones de coste quedan para la fase C; la autoridad mantiene la validación del objetivo y de la bendición.

@@ -1,0 +1,137 @@
+{
+  "hyena": {
+    "backend": "WebGL2 vs WebGPU",
+    "id": "hyena",
+    "candidate": true,
+    "cases": [
+      {
+        "style": "standard-control",
+        "foreground": 14924,
+        "meanAbsoluteRgb": 0.11911462521218619,
+        "fractionOver20": 0.0013401232913428035
+      },
+      {
+        "style": "toon-day",
+        "foreground": 14924,
+        "meanAbsoluteRgb": 0.20606629143214508,
+        "fractionOver20": 0.0038863575448941303
+      },
+      {
+        "style": "toon-night",
+        "foreground": 14924,
+        "meanAbsoluteRgb": 0.1676940945233628,
+        "fractionOver20": 0.003015277405521308
+      }
+    ],
+    "failures": [],
+    "glError": 0
+  },
+  "rhino": {
+    "backend": "WebGL2 vs WebGPU",
+    "id": "rhino",
+    "candidate": true,
+    "cases": [
+      {
+        "style": "standard-control",
+        "foreground": 11347,
+        "meanAbsoluteRgb": 0.201786081489968,
+        "fractionOver20": 0.003789547898122852
+      },
+      {
+        "style": "toon-day",
+        "foreground": 11347,
+        "meanAbsoluteRgb": 0.3605945771275815,
+        "fractionOver20": 0.00731470873358597
+      },
+      {
+        "style": "toon-night",
+        "foreground": 11347,
+        "meanAbsoluteRgb": 0.30345759525278343,
+        "fractionOver20": 0.006080902441173879
+      }
+    ],
+    "failures": [],
+    "glError": 0
+  },
+  "buffalo": {
+    "backend": "WebGL2 vs WebGPU",
+    "id": "buffalo",
+    "candidate": true,
+    "cases": [
+      {
+        "style": "standard-control",
+        "foreground": 12913,
+        "meanAbsoluteRgb": 0.028240274658612768,
+        "fractionOver20": 0.0003097653527452954
+      },
+      {
+        "style": "toon-day",
+        "foreground": 12913,
+        "meanAbsoluteRgb": 0.08626965073956477,
+        "fractionOver20": 0.00046464802911794315
+      },
+      {
+        "style": "toon-night",
+        "foreground": 12913,
+        "meanAbsoluteRgb": 0.06930999767675985,
+        "fractionOver20": 0.0003872066909316193
+      }
+    ],
+    "failures": [],
+    "glError": 0
+  },
+  "warthog": {
+    "backend": "WebGL2 vs WebGPU",
+    "id": "warthog",
+    "candidate": true,
+    "cases": [
+      {
+        "style": "standard-control",
+        "foreground": 23070,
+        "meanAbsoluteRgb": 0.07113133940182055,
+        "fractionOver20": 8.669267446900737E-05
+      },
+      {
+        "style": "toon-day",
+        "foreground": 23070,
+        "meanAbsoluteRgb": 0.10453691663054472,
+        "fractionOver20": 0.0010403120936280884
+      },
+      {
+        "style": "toon-night",
+        "foreground": 23070,
+        "meanAbsoluteRgb": 0.0869960988296489,
+        "fractionOver20": 0.0007802340702210664
+      }
+    ],
+    "failures": [],
+    "glError": 0
+  },
+  "lion": {
+    "backend": "WebGL2 vs WebGPU",
+    "id": "lion",
+    "candidate": true,
+    "cases": [
+      {
+        "style": "standard-control",
+        "foreground": 13955,
+        "meanAbsoluteRgb": 0.10240057327122895,
+        "fractionOver20": 0.0008599068434252956
+      },
+      {
+        "style": "toon-day",
+        "foreground": 13955,
+        "meanAbsoluteRgb": 0.2221187149169951,
+        "fractionOver20": 0.0032963095664636332
+      },
+      {
+        "style": "toon-night",
+        "foreground": 13955,
+        "meanAbsoluteRgb": 0.17926669055296787,
+        "fractionOver20": 0.002723038337513436
+      }
+    ],
+    "failures": [],
+    "glError": 0
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "actor": "animal-5062",
+  "versions": [
+    1,
+    2
+  ],
+  "duration": 0.09999999999990905,
+  "delta": [
+    -0.16159836689951135,
+    -0.3439272711132553
+  ],
+  "comparisons": [
+    {
+      "fraction": 0,
+      "changed": 0,
+      "max": 0,
+      "mean": 0
+    },
+    {
+      "fraction": 0.5,
+      "changed": 14,
+      "max": 11,
+      "mean": 0.00002296296296296296
+    },
+    {
+      "fraction": 1,
+      "changed": 8,
+      "max": 5,
+      "mean": 0.000013333333333333333
+    }
+  ],
+  "movementControl": {
+    "changed": 13920,
+    "max": 213,
+    "mean": 1.7502955555555555
+  },
+  "endClamp": {
+    "changed": 0,
+    "max": 0,
+    "mean": 0
+  },
+  "workerResponseMs": 965.0250000003725,
+  "workerBatchResponseMs": [
+    103.91000000014901,
+    118.10999999940395,
+    89.8099999986589,
+    109.47500000149012,
+    93.21499999985099,
+    132.18500000052154,
+    107.7949999999255,
+    86.8099999986589,
+    77.5449999999255,
+    37.524999998509884
+  ],
+  "workerSteps": 50.000000001091394,
+  "renderMs": [
+    2.475000001490116,
+    1.75,
+    2.099999999627471,
+    1.9800000004470348,
+    1.7050000000745058,
+    3.705000000074506,
+    1.6850000005215406,
+    1.6050000004470348,
+    1.8350000008940697,
+    1.7899999991059303,
+    1.6200000010430813,
+    1.7899999991059303,
+    1.8700000010430813,
+    1.905000001192093,
+    1.344999998807907,
+    1.5249999985098839,
+    1.3950000014156103,
+    1.7850000001490116,
+    1.4949999991804361,
+    1.6899999994784594,
+    1.4700000006705523,
+    1.4900000002235174,
+    1.5599999986588955,
+    1.7299999985843897,
+    1.4800000004470348,
+    1.4399999994784594,
+    1.2899999991059303,
+    1.4149999991059303
+  ],
+  "gpu": {
+    "samples": 28,
+    "disjoint": 0,
+    "discarded": 0,
+    "pending": 0,
+    "elapsed": [
+      2.879488,
+      2.916352,
+      4.329472,
+      2.821632,
+      2.56768,
+      4.042208,
+      2.894368,
+      2.579968,
+      4.038112,
+      4.20656,
+      4.251296,
+      4.900064,
+      4.928224,
+      2.842816,
+      4.573184,
+      2.573152,
+      4.023232,
+      2.618912,
+      2.566208,
+      4.663552,
+      2.576256,
+      2.598912,
+      2.617344,
+      4.068224,
+      4.235264,
+      2.581312,
+      2.642144,
+      2.535552
+    ]
+  },
+  "frames": {
+    "count": 27,
+    "p95": 33.415000000968575,
+    "p99": 33.42999999970198,
+    "max": 33.434999998658895
+  },
+  "animationEvaluations": 0,
+  "textureUploads": 0,
+  "rootTransformsStable": true,
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "Three hyena surrogate rigs use one observed Worker displacement, not necessarily hyena identity. Baked poses and root displacement run in GPU; time is synthetic. CPU comparison uses same baked pose. Endpoint interpolation is not collision-certified. Worker advances separate 500-step batches during rendering; visual segment time is synthetic and clamped after 0.1 seconds. No game scene, terrain, input, authority, actual animation transitions, comprehensive GPU workload, safe horizon or production integration."
+}

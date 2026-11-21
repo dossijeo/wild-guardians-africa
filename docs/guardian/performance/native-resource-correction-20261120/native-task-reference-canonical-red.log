@@ -1,0 +1,1094 @@
+TAP version 13
+# (node:9028) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("./.cache/resource-correction-baseline-loader.mjs", pathToFileURL("./"));'
+# (Use `node20 --trace-warnings ...` to show where the warning was created)
+# (node:9028) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# (node:9028) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+# Subtest: action reuses only its own deeply immutable validated output
+not ok 1 - action reuses only its own deeply immutable validated output
+  ---
+  duration_ms: 1112.2591
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-task-reference-canonical-reuse.test.js:13:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    Values have same structure but are not reference-equal:
+    
+    {
+      carryPhase: 9.5,
+      endTime: 22.647856752024804,
+      kind: 'native-task-action-reference',
+      motionFlags: 1,
+      origin: {
+        x: -5.800000190734863,
+        z: 0.20000000298023224
+      },
+      profile: 1,
+      radius: 0.28,
+      request: {
+        actionKind: 'harvest',
+        authorizedAutonomy: false,
+        bodyId: 1,
+        duration: 2.4,
+        executedThrough: 22.647856752024804,
+        heading: 0.7853976791094822,
+        initialElapsed: 2.4,
+        kind: 'native-task-action-resource-request',
+        requestedAt: 22.647856752024804,
+        sourceRequest: {
+          actorId: 900011,
+          authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1',
+          kind: 'native-task-action-restore-reference',
+          nativeSession: 1,
+          requestSequence: 1,
+          requestedAt: 22.647856752024804,
+          targetId: 900099,
+          taskId: 920001,
+          version: 1
+        },
+        targetId: 900099,
+        taskId: 920001,
+        version: 1
+      },
+      runPhase: 24.791666666666668,
+      runRemaining: 0,
+      sourceControlSequence: 3,
+      startTime: 22.647856752024804,
+      version: 1,
+      walkPhase: 53.64678512803708,
+      worldBoundary: {
+        authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1',
+        effectiveTime: 22.647856752024804,
+        nativeSession: 1,
+        ticket: 2,
+        version: 1
+      }
+    }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'native-task-action-reference'
+    version: 1
+    request:
+      kind: 'native-task-action-resource-request'
+      version: 1
+      sourceRequest:
+        kind: 'native-task-action-restore-reference'
+        version: 1
+        actorId: 900011
+        taskId: 920001
+        targetId: 900099
+        authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1'
+        nativeSession: 1
+        requestSequence: 1
+        requestedAt: 22.647856752024804
+      initialElapsed: 2.4
+      taskId: 920001
+      targetId: 900099
+      bodyId: 1
+      requestedAt: 22.647856752024804
+      actionKind: 'harvest'
+      duration: 2.4
+      heading: 0.7853976791094822
+      executedThrough: 22.647856752024804
+      authorizedAutonomy: false
+    worldBoundary:
+      version: 1
+      authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1'
+      nativeSession: 1
+      ticket: 2
+      effectiveTime: 22.647856752024804
+    sourceControlSequence: 3
+    origin:
+      x: -5.800000190734863
+      z: 0.20000000298023224
+    radius: 0.28
+    profile: 1
+    motionFlags: 1
+    startTime: 22.647856752024804
+    endTime: 22.647856752024804
+    runPhase: 24.791666666666668
+    walkPhase: 53.64678512803708
+    carryPhase: 9.5
+    runRemaining: 0
+  actual:
+    kind: 'native-task-action-reference'
+    version: 1
+    request:
+      kind: 'native-task-action-resource-request'
+      version: 1
+      sourceRequest:
+        kind: 'native-task-action-restore-reference'
+        version: 1
+        actorId: 900011
+        taskId: 920001
+        targetId: 900099
+        authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1'
+        nativeSession: 1
+        requestSequence: 1
+        requestedAt: 22.647856752024804
+      initialElapsed: 2.4
+      taskId: 920001
+      targetId: 900099
+      bodyId: 1
+      requestedAt: 22.647856752024804
+      actionKind: 'harvest'
+      duration: 2.4
+      heading: 0.7853976791094822
+      executedThrough: 22.647856752024804
+      authorizedAutonomy: false
+    worldBoundary:
+      version: 1
+      authorityEpoch: 'c1363b33-85d6-49b9-9d92-1815a16b1d00/1'
+      nativeSession: 1
+      ticket: 2
+      effectiveTime: 22.647856752024804
+    sourceControlSequence: 3
+    origin:
+      x: -5.800000190734863
+      z: 0.20000000298023224
+    radius: 0.28
+    profile: 1
+    motionFlags: 1
+    startTime: 22.647856752024804
+    endTime: 22.647856752024804
+    runPhase: 24.791666666666668
+    walkPhase: 53.64678512803708
+    carryPhase: 9.5
+    runRemaining: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-task-reference-canonical-reuse.test.js:14:57)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    node:internal/test_runner/harness:255:12
+    node:internal/process/task_queues:140:7
+    AsyncResource.runInAsyncScope (node:async_hooks:206:9)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:137:8)
+  ...
+# Subtest: consequence reuses only its own deeply immutable validated output
+not ok 2 - consequence reuses only its own deeply immutable validated output
+  ---
+  duration_ms: 808.5264
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-task-reference-canonical-reuse.test.js:13:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    Values have same structure but are not reference-equal:
+    
+    {
+      actorId: 900011,
+      bodyId: 1,
+      centerId: 2,
+      crateId: 1000000,
+      destination: {
+        x: -7.436453234521486,
+        z: 3.673434714307188
+      },
+      endTime: 28.044101905186533,
+      expectedRouteHandle: {
+        authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1',
+        generation: 2,
+        session: 1,
+        slot: 1
+      },
+      kind: 'native-task-consequence-reference',
+      sourceAction: {
+        actionSequence: 4,
+        kind: 'native-task-action-attestation',
+        preparedReference: {
+          carryPhase: 9.5,
+          endTime: 22.647856752024804,
+          kind: 'native-task-action-reference',
+          motionFlags: 1,
+          origin: {
+            x: -5.800000190734863,
+            z: 0.20000000298023224
+          },
+          profile: 1,
+          radius: 0.28,
+          request: {
+            actionKind: 'harvest',
+            authorizedAutonomy: false,
+            bodyId: 1,
+            duration: 2.4,
+            executedThrough: 22.647856752024804,
+            heading: 0.7853976791094822,
+            initialElapsed: 2.4,
+            kind: 'native-task-action-resource-request',
+            requestedAt: 22.647856752024804,
+            sourceRequest: {
+              actorId: 900011,
+              authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1',
+              kind: 'native-task-action-restore-reference',
+              nativeSession: 1,
+    ...
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'native-task-consequence-reference'
+    version: 1
+    actorId: 900011
+    bodyId: 1
+    crateId: 1000000
+    centerId: 2
+    sourceAction:
+      kind: 'native-task-action-attestation'
+      version: 1
+      projectionVersion: 1
+      actionSequence: 4
+      reference:
+        kind: 'native-task-action-reference'
+        version: 1
+        request:
+          kind: 'native-task-action-resource-request'
+          version: 1
+          sourceRequest:
+            kind: 'native-task-action-restore-reference'
+            version: 1
+            actorId: 900011
+            taskId: 920001
+            targetId: 900099
+            authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+            nativeSession: 1
+            requestSequence: 1
+            requestedAt: 22.647856752024804
+          initialElapsed: 2.4
+          taskId: 920001
+          targetId: 900099
+          bodyId: 1
+          requestedAt: 22.647856752024804
+          actionKind: 'harvest'
+          duration: 2.4
+          heading: 0.7853976791094822
+          executedThrough: 22.647856752024804
+          authorizedAutonomy: false
+        worldBoundary:
+          version: 1
+          authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+          nativeSession: 1
+          ticket: 2
+          effectiveTime: 22.647856752024804
+        sourceControlSequence: 3
+        origin:
+          x: -5.800000190734863
+          z: 0.20000000298023224
+        radius: 0.28
+        profile: 1
+        motionFlags: 1
+        startTime: 22.647856752024804
+        endTime: 22.647856752024804
+        runPhase: 24.791666666666668
+        walkPhase: 53.64678512803708
+        carryPhase: 9.5
+        runRemaining: 0
+      preparedReference:
+        kind: 'native-task-action-reference'
+        version: 1
+        request:
+          kind: 'native-task-action-resource-request'
+          version: 1
+          sourceRequest:
+            kind: 'native-task-action-restore-reference'
+            version: 1
+            actorId: 900011
+            taskId: 920001
+            targetId: 900099
+            authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+            nativeSession: 1
+            requestSequence: 1
+            requestedAt: 22.647856752024804
+          initialElapsed: 2.4
+          taskId: 920001
+          targetId: 900099
+          bodyId: 1
+          requestedAt: 22.647856752024804
+          actionKind: 'harvest'
+          duration: 2.4
+          heading: 0.7853976791094822
+          executedThrough: 22.647856752024804
+          authorizedAutonomy: false
+        worldBoundary:
+          version: 1
+          authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+          nativeSession: 1
+          ticket: 2
+          effectiveTime: 22.647856752024804
+        sourceControlSequence: 3
+        origin:
+          x: -5.800000190734863
+          z: 0.20000000298023224
+        radius: 0.28
+        profile: 1
+        motionFlags: 1
+        startTime: 22.647856752024804
+        endTime: 22.647856752024804
+        runPhase: 24.791666666666668
+        walkPhase: 53.64678512803708
+        carryPhase: 9.5
+        runRemaining: 0
+    destination:
+      x: -7.436453234521486
+      z: 3.673434714307188
+    sourceControlSequence: 4
+    endTime: 28.044101905186533
+    expectedRouteHandle:
+      authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+      session: 1
+      slot: 1
+      generation: 2
+    worldBoundary:
+      version: 1
+      authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+      nativeSession: 1
+      ticket: 3
+      effectiveTime: 22.647856752024804
+  actual:
+    kind: 'native-task-consequence-reference'
+    version: 1
+    actorId: 900011
+    bodyId: 1
+    crateId: 1000000
+    centerId: 2
+    sourceAction:
+      kind: 'native-task-action-attestation'
+      version: 1
+      projectionVersion: 1
+      actionSequence: 4
+      reference:
+        kind: 'native-task-action-reference'
+        version: 1
+        request:
+          kind: 'native-task-action-resource-request'
+          version: 1
+          sourceRequest:
+            kind: 'native-task-action-restore-reference'
+            version: 1
+            actorId: 900011
+            taskId: 920001
+            targetId: 900099
+            authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+            nativeSession: 1
+            requestSequence: 1
+            requestedAt: 22.647856752024804
+          initialElapsed: 2.4
+          taskId: 920001
+          targetId: 900099
+          bodyId: 1
+          requestedAt: 22.647856752024804
+          actionKind: 'harvest'
+          duration: 2.4
+          heading: 0.7853976791094822
+          executedThrough: 22.647856752024804
+          authorizedAutonomy: false
+        worldBoundary:
+          version: 1
+          authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+          nativeSession: 1
+          ticket: 2
+          effectiveTime: 22.647856752024804
+        sourceControlSequence: 3
+        origin:
+          x: -5.800000190734863
+          z: 0.20000000298023224
+        radius: 0.28
+        profile: 1
+        motionFlags: 1
+        startTime: 22.647856752024804
+        endTime: 22.647856752024804
+        runPhase: 24.791666666666668
+        walkPhase: 53.64678512803708
+        carryPhase: 9.5
+        runRemaining: 0
+      preparedReference:
+        kind: 'native-task-action-reference'
+        version: 1
+        request:
+          kind: 'native-task-action-resource-request'
+          version: 1
+          sourceRequest:
+            kind: 'native-task-action-restore-reference'
+            version: 1
+            actorId: 900011
+            taskId: 920001
+            targetId: 900099
+            authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+            nativeSession: 1
+            requestSequence: 1
+            requestedAt: 22.647856752024804
+          initialElapsed: 2.4
+          taskId: 920001
+          targetId: 900099
+          bodyId: 1
+          requestedAt: 22.647856752024804
+          actionKind: 'harvest'
+          duration: 2.4
+          heading: 0.7853976791094822
+          executedThrough: 22.647856752024804
+          authorizedAutonomy: false
+        worldBoundary:
+          version: 1
+          authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+          nativeSession: 1
+          ticket: 2
+          effectiveTime: 22.647856752024804
+        sourceControlSequence: 3
+        origin:
+          x: -5.800000190734863
+          z: 0.20000000298023224
+        radius: 0.28
+        profile: 1
+        motionFlags: 1
+        startTime: 22.647856752024804
+        endTime: 22.647856752024804
+        runPhase: 24.791666666666668
+        walkPhase: 53.64678512803708
+        carryPhase: 9.5
+        runRemaining: 0
+    destination:
+      x: -7.436453234521486
+      z: 3.673434714307188
+    sourceControlSequence: 4
+    endTime: 28.044101905186533
+    expectedRouteHandle:
+      authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+      session: 1
+      slot: 1
+      generation: 2
+    worldBoundary:
+      version: 1
+      authorityEpoch: '4f904a68-24cb-4f82-8827-14d1febbf5e2/1'
+      nativeSession: 1
+      ticket: 3
+      effectiveTime: 22.647856752024804
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-task-reference-canonical-reuse.test.js:14:57)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: settlement reuses only its own deeply immutable validated output
+not ok 3 - settlement reuses only its own deeply immutable validated output
+  ---
+  duration_ms: 871.753
+  location: 'C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\tests\\native-task-reference-canonical-reuse.test.js:13:2'
+  failureType: 'testCodeFailure'
+  error: |-
+    Values have same structure but are not reference-equal:
+    
+    {
+      actorId: 900011,
+      bodyId: 1,
+      centerId: 2,
+      crateId: 1000000,
+      kind: 'native-task-settlement-reference',
+      pose: {
+        carryPhase: 17.594367729742594,
+        radius: 0.28,
+        runPhase: 24.791666666666668,
+        runRemaining: 0,
+        walkPhase: 53.64678512803708,
+        x: -7.436453342437744,
+        yaw: -2.21316041378193,
+        z: 3.6734347343444824
+      },
+      profile: 1,
+      sourceCarry: {
+        assignmentSequence: 5,
+        gateIds: [],
+        kind: 'native-task-consequence-attestation',
+        preparedReference: {
+          actorId: 900011,
+          bodyId: 1,
+          centerId: 2,
+          crateId: 1000000,
+          destination: {
+            x: -7.436453234521486,
+            z: 3.673434714307188
+          },
+          endTime: 28.044101905186533,
+          expectedRouteHandle: {
+            authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1',
+            generation: 2,
+            session: 1,
+            slot: 1
+          },
+          kind: 'native-task-consequence-reference',
+          sourceAction: {
+            actionSequence: 4,
+            kind: 'native-task-action-attestation',
+            preparedReference: {
+              carryPhase: 9.5,
+              endTime: 22.647856752024804,
+              kind: 'native-task-action-reference',
+              motionFlags: 1,
+    ...
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    kind: 'native-task-settlement-reference'
+    version: 1
+    actorId: 900011
+    bodyId: 1
+    crateId: 1000000
+    centerId: 2
+    sourceControlSequence: 5
+    sourceCarry:
+      kind: 'native-task-consequence-attestation'
+      version: 1
+      projectionVersion: 1
+      reference:
+        kind: 'native-task-consequence-reference'
+        version: 1
+        actorId: 900011
+        bodyId: 1
+        crateId: 1000000
+        centerId: 2
+        sourceAction:
+          kind: 'native-task-action-attestation'
+          version: 1
+          projectionVersion: 1
+          actionSequence: 4
+          reference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+          preparedReference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+        destination:
+          x: -7.436453234521486
+          z: 3.673434714307188
+        sourceControlSequence: 4
+        endTime: 28.044101905186533
+        expectedRouteHandle:
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          session: 1
+          slot: 1
+          generation: 2
+        worldBoundary:
+          version: 1
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          nativeSession: 1
+          ticket: 3
+          effectiveTime: 22.647856752024804
+      preparedReference:
+        kind: 'native-task-consequence-reference'
+        version: 1
+        actorId: 900011
+        bodyId: 1
+        crateId: 1000000
+        centerId: 2
+        sourceAction:
+          kind: 'native-task-action-attestation'
+          version: 1
+          projectionVersion: 1
+          actionSequence: 4
+          reference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+          preparedReference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+        destination:
+          x: -7.436453234521486
+          z: 3.673434714307188
+        sourceControlSequence: 4
+        endTime: 28.044101905186533
+        expectedRouteHandle:
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          session: 1
+          slot: 1
+          generation: 2
+        worldBoundary:
+          version: 1
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          nativeSession: 1
+          ticket: 3
+          effectiveTime: 22.647856752024804
+      assignmentSequence: 5
+      gateIds:
+    worldBoundary:
+      version: 1
+      authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+      nativeSession: 1
+      ticket: 4
+      effectiveTime: 28.094101905186534
+    pose:
+      x: -7.436453342437744
+      z: 3.6734347343444824
+      yaw: -2.21316041378193
+      radius: 0.28
+      runPhase: 24.791666666666668
+      walkPhase: 53.64678512803708
+      carryPhase: 17.594367729742594
+      runRemaining: 0
+    profile: 1
+  actual:
+    kind: 'native-task-settlement-reference'
+    version: 1
+    actorId: 900011
+    bodyId: 1
+    crateId: 1000000
+    centerId: 2
+    sourceControlSequence: 5
+    sourceCarry:
+      kind: 'native-task-consequence-attestation'
+      version: 1
+      projectionVersion: 1
+      reference:
+        kind: 'native-task-consequence-reference'
+        version: 1
+        actorId: 900011
+        bodyId: 1
+        crateId: 1000000
+        centerId: 2
+        sourceAction:
+          kind: 'native-task-action-attestation'
+          version: 1
+          projectionVersion: 1
+          actionSequence: 4
+          reference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+          preparedReference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+        destination:
+          x: -7.436453234521486
+          z: 3.673434714307188
+        sourceControlSequence: 4
+        endTime: 28.044101905186533
+        expectedRouteHandle:
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          session: 1
+          slot: 1
+          generation: 2
+        worldBoundary:
+          version: 1
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          nativeSession: 1
+          ticket: 3
+          effectiveTime: 22.647856752024804
+      preparedReference:
+        kind: 'native-task-consequence-reference'
+        version: 1
+        actorId: 900011
+        bodyId: 1
+        crateId: 1000000
+        centerId: 2
+        sourceAction:
+          kind: 'native-task-action-attestation'
+          version: 1
+          projectionVersion: 1
+          actionSequence: 4
+          reference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+          preparedReference:
+            kind: 'native-task-action-reference'
+            version: 1
+            request:
+              kind: 'native-task-action-resource-request'
+              version: 1
+              sourceRequest:
+                kind: 'native-task-action-restore-reference'
+                version: 1
+                actorId: 900011
+                taskId: 920001
+                targetId: 900099
+                authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+                nativeSession: 1
+                requestSequence: 1
+                requestedAt: 22.647856752024804
+              initialElapsed: 2.4
+              taskId: 920001
+              targetId: 900099
+              bodyId: 1
+              requestedAt: 22.647856752024804
+              actionKind: 'harvest'
+              duration: 2.4
+              heading: 0.7853976791094822
+              executedThrough: 22.647856752024804
+              authorizedAutonomy: false
+            worldBoundary:
+              version: 1
+              authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+              nativeSession: 1
+              ticket: 2
+              effectiveTime: 22.647856752024804
+            sourceControlSequence: 3
+            origin:
+              x: -5.800000190734863
+              z: 0.20000000298023224
+            radius: 0.28
+            profile: 1
+            motionFlags: 1
+            startTime: 22.647856752024804
+            endTime: 22.647856752024804
+            runPhase: 24.791666666666668
+            walkPhase: 53.64678512803708
+            carryPhase: 9.5
+            runRemaining: 0
+        destination:
+          x: -7.436453234521486
+          z: 3.673434714307188
+        sourceControlSequence: 4
+        endTime: 28.044101905186533
+        expectedRouteHandle:
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          session: 1
+          slot: 1
+          generation: 2
+        worldBoundary:
+          version: 1
+          authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+          nativeSession: 1
+          ticket: 3
+          effectiveTime: 22.647856752024804
+      assignmentSequence: 5
+      gateIds:
+    worldBoundary:
+      version: 1
+      authorityEpoch: '2f9bc9da-d74d-4c75-9da8-62b9152acb2f/1'
+      nativeSession: 1
+      ticket: 4
+      effectiveTime: 28.094101905186534
+    pose:
+      x: -7.436453342437744
+      z: 3.6734347343444824
+      yaw: -2.21316041378193
+      radius: 0.28
+      runPhase: 24.791666666666668
+      walkPhase: 53.64678512803708
+      carryPhase: 17.594367729742594
+      runRemaining: 0
+    profile: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/native-task-reference-canonical-reuse.test.js:14:57)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: settlement canonical equality still validates clones and compares the complete source
+ok 4 - settlement canonical equality still validates clones and compares the complete source
+  ---
+  duration_ms: 919.4601
+  ...
+# Subtest: action proposal intermediate cannot bypass float32 representability validation
+ok 5 - action proposal intermediate cannot bypass float32 representability validation
+  ---
+  duration_ms: 912.4935
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 2
+# fail 3
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5287.9645

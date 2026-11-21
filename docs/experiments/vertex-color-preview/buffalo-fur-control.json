@@ -1,0 +1,29 @@
+{
+  "backend": "WebGL2 vs WebGPU",
+  "id": "buffalo",
+  "candidate": true,
+  "animated": true,
+  "disableFur": true,
+  "cases": [
+    {
+      "style": "standard-control",
+      "foreground": 18276,
+      "meanAbsoluteRgb": 0.017399868680236377,
+      "fractionOver20": 0.0001094331363536879
+    },
+    {
+      "style": "toon-day",
+      "foreground": 18276,
+      "meanAbsoluteRgb": 0.9439702341869118,
+      "fractionOver20": 0.02161304442985336
+    },
+    {
+      "style": "toon-night",
+      "foreground": 18276,
+      "meanAbsoluteRgb": 0.9252754067264901,
+      "fractionOver20": 0.020956445611731232
+    }
+  ],
+  "failures": [],
+  "glError": 0
+}

@@ -1,0 +1,346 @@
+{
+  "sourceBase": "5d43ffc2be2ee713ca7adecebf30e35071c46102",
+  "nativeAbi": {
+    "added": "nav_intent_completed_task_home_request",
+    "standaloneExports": [
+      764,
+      765
+    ],
+    "pthreadPublicExports": [
+      770,
+      771
+    ],
+    "pthreadSidecarUnchanged": true
+  },
+  "environment": {
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "desktopRefreshHz": 30
+  },
+  "physicalRuns": [
+    {
+      "profile": "olderFemale",
+      "run": "integrated1",
+      "integrated": true,
+      "warmVisualBootstrap": true,
+      "shiftLeadSeconds": 5,
+      "outcome": "Task completed while READY25 was held, same body Home arrived and retired",
+      "routeEndElapsed": 20.507116508851617,
+      "retainedStop25": {
+        "id": 4,
+        "ticket": 6,
+        "atElapsed": 17.499999999999915,
+        "abortedBeforeHomePreparation": true,
+        "replyForwardedAfterHomeCommit": true
+      },
+      "terminal": {
+        "time": 306.00000000000136,
+        "elapsed": 20.999999999999964,
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "admission": "pending-home-resources",
+        "status": "returning",
+        "sequence": 364
+      },
+      "homeSourcePose": {
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "yaw": 0.7854005475798287,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 20.410674763277484,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "acquisitions": [
+        {
+          "key": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeTaskStartBinding",
+          "ticket": 5,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeRouteBinding",
+          "ticket": 8,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeArrivalBinding",
+          "ticket": 10,
+          "actorId": 900011,
+          "bodyId": 1
+        }
+      ],
+      "retiredDrawTickets": [
+        2,
+        5,
+        8,
+        10
+      ],
+      "sameActorRoot": 704,
+      "sameGeometryOwners": 33,
+      "harvestEffect": false,
+      "actorRetired": true,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "profile": "olderMale",
+      "run": "integrated1",
+      "integrated": true,
+      "warmVisualBootstrap": true,
+      "shiftLeadSeconds": 8,
+      "outcome": "Home arrival retires its GPU body",
+      "error": "Error: Error: Error: Remote frame would rewind presented time from 41.949999999999115 to 41.89999999999911",
+      "last": {
+        "time": 253.65000000000083,
+        "elapsed": 21.649999999998123,
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "admission": "pending-home-resources",
+        "status": "returning",
+        "sequence": 463
+      },
+      "confirmedElapsed": 41.949999999999115,
+      "confirmedSequence": 869,
+      "acquisitions": [
+        {
+          "key": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "effectiveTime": 10,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeTaskStartBinding",
+          "ticket": 5,
+          "effectiveTime": 11.549999999999967,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeRouteBinding",
+          "ticket": 8,
+          "effectiveTime": 21.649999999998123,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeArrivalBinding",
+          "ticket": 10,
+          "effectiveTime": 41.849999999999106,
+          "actorId": 900011,
+          "bodyId": 1
+        }
+      ]
+    },
+    {
+      "profile": "youngFemale",
+      "run": "integrated1",
+      "integrated": true,
+      "warmVisualBootstrap": true,
+      "shiftLeadSeconds": 5,
+      "outcome": "Task completed while READY25 was held, same body Home arrived and retired",
+      "routeEndElapsed": 21.157116508851605,
+      "retainedStop25": {
+        "id": 4,
+        "ticket": 6,
+        "atElapsed": 17.999999999999922,
+        "abortedBeforeHomePreparation": true,
+        "replyForwardedAfterHomeCommit": true
+      },
+      "terminal": {
+        "time": 306.5000000000015,
+        "elapsed": 21.49999999999997,
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "admission": "pending-home-resources",
+        "status": "returning",
+        "sequence": 422
+      },
+      "homeSourcePose": {
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "yaw": 0.7854005475798287,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 20.410674763277484,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "acquisitions": [
+        {
+          "key": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeTaskStartBinding",
+          "ticket": 5,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeRouteBinding",
+          "ticket": 8,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeArrivalBinding",
+          "ticket": 10,
+          "actorId": 900011,
+          "bodyId": 1
+        }
+      ],
+      "retiredDrawTickets": [
+        2,
+        5,
+        8,
+        10
+      ],
+      "sameActorRoot": 709,
+      "sameGeometryOwners": 36,
+      "harvestEffect": false,
+      "actorRetired": true,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "profile": "youngMale",
+      "run": "integrated1",
+      "integrated": true,
+      "warmVisualBootstrap": true,
+      "shiftLeadSeconds": 8,
+      "outcome": "Home arrival retires its GPU body",
+      "error": "Error: Error: Error: Remote frame would rewind presented time from 43.39999999999924 to 43.349999999999234",
+      "last": {
+        "time": 255.05000000000115,
+        "elapsed": 23.049999999998143,
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "admission": "pending-home-resources",
+        "status": "returning",
+        "sequence": 559
+      },
+      "confirmedElapsed": 43.39999999999924,
+      "confirmedSequence": 966,
+      "acquisitions": [
+        {
+          "key": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "effectiveTime": 10,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeTaskStartBinding",
+          "ticket": 5,
+          "effectiveTime": 12.34999999999995,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeRouteBinding",
+          "ticket": 8,
+          "effectiveTime": 23.099999999998143,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeArrivalBinding",
+          "ticket": 10,
+          "effectiveTime": 43.29999999999923,
+          "actorId": 900011,
+          "bodyId": 1
+        }
+      ]
+    },
+    {
+      "profile": "olderMale",
+      "run": "integrated-rewind1",
+      "integrated": true,
+      "warmVisualBootstrap": true,
+      "shiftLeadSeconds": 8,
+      "outcome": "Task completed while READY25 was held, same body Home arrived and retired",
+      "routeEndElapsed": 21.257116508851603,
+      "retainedStop25": {
+        "id": 4,
+        "ticket": 6,
+        "atElapsed": 18.449999999998077,
+        "abortedBeforeHomePreparation": true,
+        "replyForwardedAfterHomeCommit": true
+      },
+      "terminal": {
+        "time": 253.35000000000076,
+        "elapsed": 21.34999999999812,
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "admission": "pending-home-resources",
+        "status": "returning",
+        "sequence": 507
+      },
+      "homeSourcePose": {
+        "x": -19.799999237060547,
+        "z": 7.199999809265137,
+        "yaw": 0.7854005475798287,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 20.410674763277484,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "acquisitions": [
+        {
+          "key": "nativeInitialIdleBodyBinding",
+          "ticket": 2,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeTaskStartBinding",
+          "ticket": 5,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeRouteBinding",
+          "ticket": 8,
+          "actorId": 900011,
+          "bodyId": 1
+        },
+        {
+          "key": "nativeHomeArrivalBinding",
+          "ticket": 10,
+          "actorId": 900011,
+          "bodyId": 1
+        }
+      ],
+      "retiredDrawTickets": [
+        2,
+        5,
+        8,
+        10
+      ],
+      "sameActorRoot": 671,
+      "sameGeometryOwners": 33,
+      "harvestEffect": false,
+      "actorRetired": true,
+      "gpuErrors": 0,
+      "drained": true
+    }
+  ]
+}

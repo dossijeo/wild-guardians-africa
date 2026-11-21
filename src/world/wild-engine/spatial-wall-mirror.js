@@ -1,4 +1,7 @@
 import {spatialStructureBarriers,removeSpatialStructure} from './spatial-wall-bridge.js';
+import {gateScale,nativeGateModelId} from '../gate-passages.js';
+import {copyNativeBarrierAdditionAttestation} from '../native-barrier-addition.js';
+import {sameNativeWorldBoundary} from '../native-world-boundary.js';
 
 function boundsForNativeBarriers(barriers){
   const bounds=[Infinity,Infinity,-Infinity,-Infinity];
@@ -74,6 +77,69 @@ export function createSpatialWallMirror(core){
     }
     return {count:installed.size,added:additions.length};
   }
+  // Called synchronously after the existing native kind2 commit, before the
+  // Game mirror is published. This adopts physical IDs; it never creates them.
+  function prepareNativeAdditionAdoption(structures,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
+    const binding=nativeBarrierAdditionBinding?copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding):null,gate=binding?.reference.gate??null;
+    if(gate&&(!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary)||!Array.isArray(ids)||ids.length!==binding.nativeIds.length||ids.some((id,index)=>id!==binding.nativeIds[index])))throw Error('Native gate adoption receipt differs from its acquired boundary');
+    if(!Array.isArray(structures)||!structures.length||structures.length>256||
+       structures.some(w=>!w||w.kind!=='wall'||w.status==='ruined'||typeof w.id!=='string'||!w.id||installed.has(w.id)||
+         (gate?structures.length!==1||w.gate!==true||w.id!==gate.entityId:Boolean(w.gate)))||
+       new Set(structures.map(w=>w.id)).size!==structures.length||!Array.isArray(ids)||ids.length!==(gate?3:structures.length)||
+       ids.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(ids).size!==ids.length)throw TypeError('Invalid native wall additions');
+    const resources=core.captureNativeWorldResources(worldBoundary);
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length)throw Error('Native wall adoption requires its empty terrain commit');
+    const wasm=core.wasm,count=wasm.spatial_world_proposal_result_count();
+    if(count!==ids.length)throw Error('Native wall result differs from its committed IDs');
+    const actualIds=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));
+    if(ids.some((id,i)=>id!==actualIds[i])||[...installed.values()].some(record=>record.ids.some(id=>ids.includes(id))))throw Error('Native wall result differs from its committed IDs');
+    // Read only the existing barrier ABI, not a full world/prop snapshot.
+    const wanted=new Set(ids),physical=new Map(),barrierCount=wasm.spatial_barrier_state_count();
+    if(!Number.isSafeInteger(barrierCount)||barrierCount<ids.length)throw Error('Native wall registry unavailable');
+    const pointer=wasm.spatial_barrier_state_ptr(),view=new DataView(wasm.memory.buffer,pointer,barrierCount*28);
+    for(let i=0;i<barrierCount;i++){const at=i*28,id=view.getInt32(at,true);if(wanted.has(id))physical.set(id,{x:view.getFloat32(at+4,true),z:view.getFloat32(at+8,true),halfX:view.getFloat32(at+12,true),halfZ:view.getFloat32(at+16,true),yaw:view.getFloat32(at+20,true),passMask:view.getInt32(at+24,true)});}
+    if(gate){
+      const wall=structures[0],scale=gateScale(wall),numeric=Number(gate.entityId.slice('structure-'.length));
+      if(wall.status!=='intact'||wall.hp!==wall.maxHp||nativeGateModelId(wall.material)!==gate.modelId||wall.x!==gate.x||wall.z!==gate.z||(wall.yaw??0)!==gate.yaw||scale*(wall.baseScaleX??1)!==gate.sx||scale!==gate.sz)throw Error('Native gate adoption differs from its quoted placement');
+      if(wasm.nav_gate_mechanism_pose(numeric)!==1)throw Error('Native gate adoption lost its acquired mechanism');
+      const pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+      if(pose[0]!==numeric||pose[1]!==gate.modelId||pose[2]!==gate.mechanismId||pose[6]!==worldBoundary.effectiveTime||pose[7]!==gate.opening||!pose.slice(8,24).every((value,index)=>value===gate.rootMatrix[index])||!pose.slice(24,40).every((value,index)=>value===gate.leafMatrix[index]))throw Error('Native gate adoption pose differs from its prepared mechanism');
+    }
+    const records=[];
+    for(let i=0;i<structures.length;i++){
+      // Gate geometry is prepared by WASM. Reprojecting the legacy JS
+      // footprint here can differ by one float32 ULP after world/local transforms.
+      // Adopt the exact prepared triplet; solid walls retain their original check.
+      const wall=structures[i],parts=gate?gate.proxies:spatialStructureBarriers(wall),partIds=gate?[...ids]:[ids[i]];
+      const sameShape=(expected,actual)=>actual&&['x','z','halfX','halfZ','yaw'].every(key=>Number.isFinite(expected[key])&&Math.fround(expected[key])===actual[key])&&(expected.passMask??0)===actual.passMask;
+      if(parts.length!==partIds.length||parts.some((part,index)=>{
+        const actual=physical.get(partIds[index]);
+        return !sameShape(part,actual);
+      }))throw Error('Native wall footprint differs from its committed ID');
+      records.push([wall.id,{signature:signature(wall),bounds:boundsForNativeBarriers(parts),ids:partIds}]);
+    }
+    const priorRevision=revision;let consumed=false;
+    return ()=>{
+    if(consumed||revision!==priorRevision)throw Error('Native wall mirror adoption is stale');consumed=true;
+    // All checks precede the first mirror write; observers cannot see a prefix.
+    for(const [id,record] of records)installed.set(id,record);
+    const bounds=[Infinity,Infinity,-Infinity,-Infinity];for(const [,record] of records){const box=record.bounds;bounds[0]=Math.min(bounds[0],box[0]);bounds[1]=Math.min(bounds[1],box[1]);bounds[2]=Math.max(bounds[2],box[2]);bounds[3]=Math.max(bounds[3],box[3]);}
+    changes.push({from:revision++,bounds});if(changes.length>64)changes.shift();return true;
+    };
+  }
+  function prepareNativeRemovalAdoption(structure,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
+    const proof=copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding),r=proof.reference.removal;
+    if(!r||structure.id!==r.entityId||!sameNativeWorldBoundary(worldBoundary,proof.reference.worldBoundary)||JSON.stringify(ids)!==JSON.stringify(r.nativeIds))throw Error('Native wall removal receipt mismatch');
+    const record=installed.get(structure.id),prior=revision;
+    const wasm=core.wasm,resources=core.captureNativeWorldResources(worldBoundary),count=wasm.spatial_barrier_state_count();
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length||!Number.isSafeInteger(count)||count<0)throw Error('Native wall removal has no world receipt');
+    if(wasm.spatial_world_proposal_result_count()!==3||Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),3)).some((id,i)=>id!==ids[i]))throw Error('Native wall removal has another committed triplet');
+    const view=new DataView(wasm.memory.buffer,wasm.spatial_barrier_state_ptr(),count*28);
+    for(let i=0;i<count;i++)if(ids.includes(view.getInt32(i*28,true)))throw Error('Native removed proxy is still live');
+    if(!record||record.signature!==signature(structure)||JSON.stringify(record.ids)!==JSON.stringify(ids)||wasm.nav_gate_mechanism_pose(Number(r.entityId.slice(10)))!==0)throw Error('Native wall removal has not retired its exact owner');
+    let used=false;return ()=>{if(used||revision!==prior||installed.get(structure.id)!==record)throw Error('Native wall removal adoption is stale');used=true;installed.delete(structure.id);changes.push({from:revision++,bounds:record.bounds});if(changes.length>64)changes.shift();return true;};
+  }
+  const adoptNativeAdditions=(structures,receipt)=>prepareNativeAdditionAdoption(structures,receipt)();
   function routeUnaffectedSince(from,points,radius){
     if(!Number.isInteger(from)||from<0||from>revision||
       !Array.isArray(points)||points.length<2||!Number.isFinite(radius))return false;
@@ -100,6 +166,6 @@ export function createSpatialWallMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,routeUnaffectedSince,
+  return {sync,adoptNativeAdditions,prepareNativeAdditionAdoption,prepareNativeRemovalAdoption,clear,revision:()=>revision,routeUnaffectedSince,
     barrierIds:id=>installed.get(id)?.ids.slice()??[]};
 }

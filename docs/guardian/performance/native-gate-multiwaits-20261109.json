@@ -1,0 +1,385 @@
+{
+  "date": "2026-11-09",
+  "audit": "/tests/browser/native-gate-multiwaits.html",
+  "scope": "Diagnostic replay of one complete native worker timetable, including departure/intermediate holds and run-budget exhaustion. Separate private GPU readback resources preserve production guards. No character meshes, native execution, future opening lease, crossing admission or causal clock acceptance.",
+  "runs": [
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "drawStats": {
+        "packets": 1,
+        "computePackets": 0,
+        "nativeFrames": 31,
+        "replayFrames": 30,
+        "gpuErrors": 0,
+        "uniformForks": 0,
+        "stagedOperations": 0
+      },
+      "holds": [
+        {
+          "gateId": 990001,
+          "distance": 0,
+          "from": 10,
+          "until": 10.15
+        },
+        {
+          "gateId": 990002,
+          "distance": 0.09999998999999965,
+          "from": 10.21712962037037,
+          "until": 10.6
+        }
+      ],
+      "knots": [
+        10,
+        10.15,
+        10.170833333333334,
+        10.21712962037037,
+        10.6,
+        18.840740573393646
+      ],
+      "blocks": [
+        {
+          "start": 1794232044581.775,
+          "end": 1794232045082.18,
+          "blockedMs": 500.405029296875,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.39013671875
+        },
+        {
+          "start": 1794232045085.7449,
+          "end": 1794232045585.805,
+          "blockedMs": 500.06005859375,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.429931640625
+        }
+      ],
+      "samples": [
+        {
+          "gpu": [
+            10.470329284667969,
+            -11.800000190734863,
+            -2.700000047683716,
+            0.06712961941957474,
+            0.02083333395421505,
+            0.0694444328546524,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000002119276,
+            -2.70000001,
+            0.06712962037037004,
+            0.020833333333333332,
+            0.06944443055555506,
+            0,
+            0
+          ],
+          "maxError": 1.8861558714888815e-7,
+          "insideIntermediateHold": true
+        },
+        {
+          "gpu": [
+            10.97029972076416,
+            -11.800000190734863,
+            -2.300076723098755,
+            0.4374289810657501,
+            0.02083333395421505,
+            0.6248934864997864,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000010594765,
+            -2.300076311574707,
+            0.43742934113453025,
+            0.020833333333333332,
+            0.6248940117017955,
+            0,
+            0
+          ],
+          "maxError": 5.25202009105108e-7,
+          "insideIntermediateHold": false
+        }
+      ],
+      "anchor": 1794232044609.7148,
+      "countersBefore": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "countersAfter": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "authorizedPassage": false,
+      "authorizedAutonomy": false,
+      "scope": "Diagnostic native worker timetable replay from one prepared native knot table, with separate immutable render/readback resources; real WASM/WebGPU, two 500 ms preparation stalls, held/resumed position and phase/budget readback. Triangle only; no character meshes, native execution, future gate lease, physical crossing or causal clock acceptance."
+    },
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "drawStats": {
+        "packets": 1,
+        "computePackets": 0,
+        "nativeFrames": 31,
+        "replayFrames": 30,
+        "gpuErrors": 0,
+        "uniformForks": 0,
+        "stagedOperations": 0
+      },
+      "holds": [
+        {
+          "gateId": 990001,
+          "distance": 0,
+          "from": 10,
+          "until": 10.15
+        },
+        {
+          "gateId": 990002,
+          "distance": 0.09999998999999965,
+          "from": 10.21712962037037,
+          "until": 10.6
+        }
+      ],
+      "knots": [
+        10,
+        10.15,
+        10.170833333333334,
+        10.21712962037037,
+        10.6,
+        18.840740573393646
+      ],
+      "blocks": [
+        {
+          "start": 1794232046314.805,
+          "end": 1794232046814.86,
+          "blockedMs": 500.05517578125,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.405029296875
+        },
+        {
+          "start": 1794232046819.805,
+          "end": 1794232047319.895,
+          "blockedMs": 500.090087890625,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.364990234375
+        }
+      ],
+      "samples": [
+        {
+          "gpu": [
+            10.471089363098145,
+            -11.800000190734863,
+            -2.700000047683716,
+            0.06712961941957474,
+            0.02083333395421505,
+            0.0694444328546524,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000002119276,
+            -2.70000001,
+            0.06712962037037004,
+            0.020833333333333332,
+            0.06944443055555506,
+            0,
+            0
+          ],
+          "maxError": 1.8861558714888815e-7,
+          "insideIntermediateHold": true
+        },
+        {
+          "gpu": [
+            10.971049308776855,
+            -11.800000190734863,
+            -2.299267292022705,
+            0.43817853927612305,
+            0.02083333395421505,
+            0.6260178685188293,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000010611921,
+            -2.2992667565209963,
+            0.4381789291472256,
+            0.020833333333333332,
+            0.6260183937208386,
+            0,
+            0
+          ],
+          "maxError": 5.355017087538272e-7,
+          "insideIntermediateHold": false
+        }
+      ],
+      "anchor": 1794232046342.31,
+      "countersBefore": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "countersAfter": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "authorizedPassage": false,
+      "authorizedAutonomy": false,
+      "scope": "Diagnostic native worker timetable replay from one prepared native knot table, with separate immutable render/readback resources; real WASM/WebGPU, two 500 ms preparation stalls, held/resumed position and phase/budget readback. Triangle only; no character meshes, native execution, future gate lease, physical crossing or causal clock acceptance."
+    },
+    {
+      "backend": "webgpu",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "drawStats": {
+        "packets": 1,
+        "computePackets": 0,
+        "nativeFrames": 31,
+        "replayFrames": 30,
+        "gpuErrors": 0,
+        "uniformForks": 0,
+        "stagedOperations": 0
+      },
+      "holds": [
+        {
+          "gateId": 990001,
+          "distance": 0,
+          "from": 10,
+          "until": 10.15
+        },
+        {
+          "gateId": 990002,
+          "distance": 0.09999998999999965,
+          "from": 10.21712962037037,
+          "until": 10.6
+        }
+      ],
+      "knots": [
+        10,
+        10.15,
+        10.170833333333334,
+        10.21712962037037,
+        10.6,
+        18.840740573393646
+      ],
+      "blocks": [
+        {
+          "start": 1794232048048.33,
+          "end": 1794232048548.4001,
+          "blockedMs": 500.070068359375,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.41015625
+        },
+        {
+          "start": 1794232048551.6401,
+          "end": 1794232049051.71,
+          "blockedMs": 500.06982421875,
+          "drawFrames": 15,
+          "maxIntervalMs": 33.385009765625
+        }
+      ],
+      "samples": [
+        {
+          "gpu": [
+            10.459394454956055,
+            -11.800000190734863,
+            -2.700000047683716,
+            0.06712961941957474,
+            0.02083333395421505,
+            0.0694444328546524,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000002119276,
+            -2.70000001,
+            0.06712962037037004,
+            0.020833333333333332,
+            0.06944443055555506,
+            0,
+            0
+          ],
+          "maxError": 1.8861558714888815e-7,
+          "insideIntermediateHold": true
+        },
+        {
+          "gpu": [
+            10.959439277648926,
+            -11.800000190734863,
+            -2.3118059635162354,
+            0.42656850814819336,
+            0.02083333395421505,
+            0.60860276222229,
+            0,
+            0
+          ],
+          "cpu": [
+            -11.800000010346189,
+            -2.3118055901391603,
+            0.4265688980192959,
+            0.020833333333333332,
+            0.6086033470289439,
+            0,
+            0
+          ],
+          "maxError": 5.848066538804986e-7,
+          "insideIntermediateHold": false
+        }
+      ],
+      "anchor": 1794232048087.31,
+      "countersBefore": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "countersAfter": {
+        "rangeSegments": 4,
+        "prefixSegments": 2,
+        "sensors": 2,
+        "sweeps": 0,
+        "clearance": 87,
+        "queries": 0,
+        "sequence": 4
+      },
+      "authorizedPassage": false,
+      "authorizedAutonomy": false,
+      "scope": "Diagnostic native worker timetable replay from one prepared native knot table, with separate immutable render/readback resources; real WASM/WebGPU, two 500 ms preparation stalls, held/resumed position and phase/budget readback. Triangle only; no character meshes, native execution, future gate lease, physical crossing or causal clock acceptance."
+    }
+  ]
+}

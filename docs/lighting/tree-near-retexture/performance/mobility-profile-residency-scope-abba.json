@@ -1,0 +1,239 @@
+{
+  "scope": "Independent synthetic 3x3 vs 5x5 resident worlds with identical island-network seed and state; full profile construction and 160 native routes per run. This removes chunks from the world, not only from a profile: it is an upper-bound feasibility probe, not an implementation or a safe equivalence claim.",
+  "mangroveNetwork": true,
+  "settlementVersion": 2,
+  "rows": [
+    {
+      "radius": 2,
+      "chunks": 25,
+      "setupMs": 972.7399,
+      "profileMs": 1041.4647999999997,
+      "times": [
+        {
+          "species": "hyena",
+          "ms": 272.82259999999997
+        },
+        {
+          "species": "buffalo",
+          "ms": 268.231
+        },
+        {
+          "species": "lion",
+          "ms": 275.48149999999987
+        },
+        {
+          "species": "rhino",
+          "ms": 224.9296999999999
+        }
+      ],
+      "recovery": null,
+      "comparison": {
+        "equal": 160,
+        "different": 0,
+        "referenceFoundCandidateUnknown": 0,
+        "otherStatusChanges": 0,
+        "changedFoundRoutes": 0,
+        "byInner": {
+          "inner": {
+            "equal": 80,
+            "different": 0
+          },
+          "outer": {
+            "equal": 80,
+            "different": 0
+          }
+        }
+      },
+      "statuses": {
+        "found": 26,
+        "unknown": 134,
+        "blocked": 0
+      }
+    },
+    {
+      "radius": 1,
+      "chunks": 9,
+      "setupMs": 400.52340000000004,
+      "profileMs": 446.5155,
+      "times": [
+        {
+          "species": "hyena",
+          "ms": 115.1534999999999
+        },
+        {
+          "species": "buffalo",
+          "ms": 112.94640000000027
+        },
+        {
+          "species": "lion",
+          "ms": 116.88130000000001
+        },
+        {
+          "species": "rhino",
+          "ms": 101.5342999999998
+        }
+      ],
+      "recovery": {
+        "installMs": 1086.3822999999998,
+        "chunkTimes": [
+          50.5608000000002,
+          72.32189999999991,
+          73.85629999999992,
+          69.33710000000019,
+          69.51470000000018,
+          68.03839999999991,
+          69.57200000000012,
+          57.54310000000032,
+          72.61589999999978,
+          67.52340000000004,
+          61.89879999999994,
+          75.00730000000021,
+          77.20509999999967,
+          72.11379999999963,
+          61.468799999999646,
+          67.70910000000003
+        ],
+        "chunks": 25,
+        "different": 0
+      },
+      "comparison": {
+        "equal": 147,
+        "different": 13,
+        "referenceFoundCandidateUnknown": 13,
+        "otherStatusChanges": 0,
+        "changedFoundRoutes": 0,
+        "byInner": {
+          "inner": {
+            "equal": 78,
+            "different": 2
+          },
+          "outer": {
+            "equal": 69,
+            "different": 11
+          }
+        }
+      },
+      "statuses": {
+        "found": 13,
+        "unknown": 147,
+        "blocked": 0
+      }
+    },
+    {
+      "radius": 1,
+      "chunks": 9,
+      "setupMs": 408.97599999999966,
+      "profileMs": 441.7380999999996,
+      "times": [
+        {
+          "species": "hyena",
+          "ms": 113.48919999999998
+        },
+        {
+          "species": "buffalo",
+          "ms": 112.85099999999966
+        },
+        {
+          "species": "lion",
+          "ms": 115.58910000000014
+        },
+        {
+          "species": "rhino",
+          "ms": 99.80879999999979
+        }
+      ],
+      "recovery": {
+        "installMs": 1097.1582000000008,
+        "chunkTimes": [
+          51.11799999999948,
+          72.64450000000033,
+          75.09739999999965,
+          69.58969999999954,
+          71.97280000000046,
+          69.21789999999964,
+          73.39519999999993,
+          58.810199999999895,
+          73.05310000000009,
+          67.63760000000002,
+          62.64059999999972,
+          76.20340000000033,
+          76.34030000000075,
+          71.96780000000035,
+          62.180099999999584,
+          65.20690000000013
+        ],
+        "chunks": 25,
+        "different": 0
+      },
+      "comparison": {
+        "equal": 147,
+        "different": 13,
+        "referenceFoundCandidateUnknown": 13,
+        "otherStatusChanges": 0,
+        "changedFoundRoutes": 0,
+        "byInner": {
+          "inner": {
+            "equal": 78,
+            "different": 2
+          },
+          "outer": {
+            "equal": 69,
+            "different": 11
+          }
+        }
+      },
+      "statuses": {
+        "found": 13,
+        "unknown": 147,
+        "blocked": 0
+      }
+    },
+    {
+      "radius": 2,
+      "chunks": 25,
+      "setupMs": 942.9529000000002,
+      "profileMs": 1039.6013999999996,
+      "times": [
+        {
+          "species": "hyena",
+          "ms": 274.5567999999994
+        },
+        {
+          "species": "buffalo",
+          "ms": 265.6395000000002
+        },
+        {
+          "species": "lion",
+          "ms": 274.65440000000035
+        },
+        {
+          "species": "rhino",
+          "ms": 224.7506999999996
+        }
+      ],
+      "recovery": null,
+      "comparison": {
+        "equal": 160,
+        "different": 0,
+        "referenceFoundCandidateUnknown": 0,
+        "otherStatusChanges": 0,
+        "changedFoundRoutes": 0,
+        "byInner": {
+          "inner": {
+            "equal": 80,
+            "different": 0
+          },
+          "outer": {
+            "equal": 80,
+            "different": 0
+          }
+        }
+      },
+      "statuses": {
+        "found": 26,
+        "unknown": 134,
+        "blocked": 0
+      }
+    }
+  ]
+}

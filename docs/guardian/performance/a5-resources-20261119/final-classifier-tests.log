@@ -1,0 +1,225 @@
+TAP version 13
+# Subtest: complete schema passes; this fixture is not hardware evidence
+ok 1 - complete schema passes; this fixture is not hardware evidence
+  ---
+  duration_ms: 17.1968
+  ...
+# Subtest: A5 rejects missing cold sample
+ok 2 - A5 rejects missing cold sample
+  ---
+  duration_ms: 3.0991
+  ...
+# Subtest: A5 rejects empty progressive observation
+ok 3 - A5 rejects empty progressive observation
+  ---
+  duration_ms: 4.0987
+  ...
+# Subtest: A5 rejects no observed progression
+ok 4 - A5 rejects no observed progression
+  ---
+  duration_ms: 4.869
+  ...
+# Subtest: A5 rejects premature material disposal
+ok 5 - A5 rejects premature material disposal
+  ---
+  duration_ms: 6.7539
+  ...
+# Subtest: A5 rejects warm atlas changed
+ok 6 - A5 rejects warm atlas changed
+  ---
+  duration_ms: 3.3821
+  ...
+# Subtest: A5 rejects missing incremental demand
+ok 7 - A5 rejects missing incremental demand
+  ---
+  duration_ms: 12.3142
+  ...
+# Subtest: A5 rejects missing local scenario
+ok 8 - A5 rejects missing local scenario
+  ---
+  duration_ms: 2.8712
+  ...
+# Subtest: A5 rejects missing recovery
+ok 9 - A5 rejects missing recovery
+  ---
+  duration_ms: 2.4995
+  ...
+# Subtest: A5 rejects reconstructed warm geometry
+ok 10 - A5 rejects reconstructed warm geometry
+  ---
+  duration_ms: 3.6408
+  ...
+# Subtest: A5 rejects extra warm factory
+ok 11 - A5 rejects extra warm factory
+  ---
+  duration_ms: 2.3704
+  ...
+# Subtest: A5 rejects extra warm fork
+ok 12 - A5 rejects extra warm fork
+  ---
+  duration_ms: 11.4191
+  ...
+# Subtest: A5 rejects incomplete regional demand
+ok 13 - A5 rejects incomplete regional demand
+  ---
+  duration_ms: 7.4318
+  ...
+# Subtest: A5 rejects unrelated pair changed
+ok 14 - A5 rejects unrelated pair changed
+  ---
+  duration_ms: 4.058
+  ...
+# Subtest: A5 rejects replaced buffer leaked
+ok 15 - A5 rejects replaced buffer leaked
+  ---
+  duration_ms: 5.9078
+  ...
+# Subtest: A5 rejects cancelled unpublished buffer leaked
+ok 16 - A5 rejects cancelled unpublished buffer leaked
+  ---
+  duration_ms: 2.7643
+  ...
+# Subtest: A5 rejects old pair never retired
+ok 17 - A5 rejects old pair never retired
+  ---
+  duration_ms: 2.3801
+  ...
+# Subtest: A5 rejects source bytes changed
+ok 18 - A5 rejects source bytes changed
+  ---
+  duration_ms: 3.8274
+  ...
+# Subtest: A5 rejects premature source disposal
+ok 19 - A5 rejects premature source disposal
+  ---
+  duration_ms: 2.9776
+  ...
+# Subtest: A5 rejects candidate cancellation unobserved
+ok 20 - A5 rejects candidate cancellation unobserved
+  ---
+  duration_ms: 2.6129
+  ...
+# Subtest: A5 rejects candidate leaked
+ok 21 - A5 rejects candidate leaked
+  ---
+  duration_ms: 2.2604
+  ...
+# Subtest: A5 rejects atlas lease leaked
+ok 22 - A5 rejects atlas lease leaked
+  ---
+  duration_ms: 2.2786
+  ...
+# Subtest: A5 rejects atlas texture leaked
+ok 23 - A5 rejects atlas texture leaked
+  ---
+  duration_ms: 3.5869
+  ...
+# Subtest: A5 rejects private buffer leaked
+ok 24 - A5 rejects private buffer leaked
+  ---
+  duration_ms: 2.3172
+  ...
+# Subtest: A5 rejects missing drain
+ok 25 - A5 rejects missing drain
+  ---
+  duration_ms: 4.5498
+  ...
+# Subtest: A5 rejects unrelated actor retired
+ok 26 - A5 rejects unrelated actor retired
+  ---
+  duration_ms: 2.0498
+  ...
+# Subtest: A5 rejects presentation lost
+ok 27 - A5 rejects presentation lost
+  ---
+  duration_ms: 3.3942
+  ...
+# Subtest: A5 rejects unsafe GPU alias
+ok 28 - A5 rejects unsafe GPU alias
+  ---
+  duration_ms: 2.2571
+  ...
+# Subtest: A5 rejects unsafe CPU alias
+ok 29 - A5 rejects unsafe CPU alias
+  ---
+  duration_ms: 2.232
+  ...
+# Subtest: A5 rejects unexplained missing owner
+ok 30 - A5 rejects unexplained missing owner
+  ---
+  duration_ms: 2.6738
+  ...
+# Subtest: QA rewrites apply once to real existing modules and reject drift
+ok 31 - QA rewrites apply once to real existing modules and reject drift
+  ---
+  duration_ms: 4.2096
+  ...
+# Subtest: A5 disposal preserves another live owner: deep-clone
+ok 32 - A5 disposal preserves another live owner: deep-clone
+  ---
+  duration_ms: 10.5188
+  ...
+# Subtest: A5 disposal preserves another live owner: cpu-array-shared-private-attributes
+ok 33 - A5 disposal preserves another live owner: cpu-array-shared-private-attributes
+  ---
+  duration_ms: 2.869
+  ...
+# Subtest: A5 negative control detects premature destruction: shared-attribute
+ok 34 - A5 negative control detects premature destruction: shared-attribute
+  ---
+  duration_ms: 2.0733
+  ...
+# Subtest: private GPU attributes do not isolate writers of a shared CPU array
+ok 35 - private GPU attributes do not isolate writers of a shared CPU array
+  ---
+  duration_ms: 0.8775
+  ...
+# Subtest: stripping geometry before disposal breaks actual RenderObject listener
+ok 36 - stripping geometry before disposal breaks actual RenderObject listener
+  ---
+  duration_ms: 4.0056
+  ...
+# Subtest: transitive imports select callers and preserve mandatory safety without unrelated tests
+ok 37 - transitive imports select callers and preserve mandatory safety without unrelated tests
+  ---
+  duration_ms: 7.2221
+  ...
+# Subtest: unknown files, native ABI and an unreferenced runtime module fail open to more coverage
+ok 38 - unknown files, native ABI and an unreferenced runtime module fail open to more coverage
+  ---
+  duration_ms: 4.683
+  ...
+# Subtest: documentation needs no runtime tests; integration keeps CPU and GPU obligations distinct
+ok 39 - documentation needs no runtime tests; integration keeps CPU and GPU obligations distinct
+  ---
+  duration_ms: 1.9058
+  ...
+# Subtest: missing mandatory safety test fails instead of silently reducing coverage
+ok 40 - missing mandatory safety test fails instead of silently reducing coverage
+  ---
+  duration_ms: 1.4746
+  ...
+# Subtest: browser scenarios deduplicate the same harness invocation but preserve different variations
+ok 41 - browser scenarios deduplicate the same harness invocation but preserve different variations
+  ---
+  duration_ms: 0.9139
+  ...
+# Subtest: broad tier does not drop unrelated tests
+ok 42 - broad tier does not drop unrelated tests
+  ---
+  duration_ms: 0.5693
+  ...
+# Subtest: runner preserves failures and distinguishes TODO from an accepted test run
+ok 43 - runner preserves failures and distinguishes TODO from an accepted test run
+  ---
+  duration_ms: 983.2577
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1228.5805

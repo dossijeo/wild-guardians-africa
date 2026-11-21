@@ -1,0 +1,27 @@
+# Presentación pendiente al liberar una barrera nativa
+
+Continúa A6/C3 del [plan integrado](integrated-gpu-migration-plan-20261104.md) y la [captura Farm→Home](e-r3-native-farm-moving-home-consumer-20261118.md). El Host termina una presentación omitida por la barrera cuando instala el release directo validado. Conserva el fence y todos los controles de mundo, recursos y tiempo. A6/A/B/C siguen abiertos; D no iniciado.
+
+## Referencias y decisión
+
+Se consulta el código real de [`DisplayScheduler` de Chromium140.0.7339.207](https://chromium.googlesource.com/chromium/src/+/refs/tags/140.0.7339.207/components/viz/service/display/display_scheduler.cc): `DesiredBeginFrameDeadlineMode` adelanta el deadline cuando las superficies están listas y hay dibujo pendiente, `ScheduleBeginFrameDeadline` conserva la programación correcta y `AttemptDrawAndSwap` vuelve a comprobar las condiciones del dibujo. Wild Guardians adapta la disponibilidad del dibujo pendiente al bucle existente: una RAF perdida durante el hold se termina al recibir el release, sin programar otra RAF. Se mantiene la retención por envío de [`LifetimeTracker` de wgpu26.0.1](https://github.com/gfx-rs/wgpu/blob/v26.0.1/wgpu-core/src/device/life.rs): el fence cubre el prefijo enviado y la barrera impide nuevos envíos hasta su liberación. Los hashes del código consultado constan en la evidencia. No hay dependencias nuevas.
+
+## Cambio acotado
+
+En la captura anterior la RAF entró justo antes del release, volvió sin dibujar y dejó unos33ms adicionales hasta la siguiente RAF. `present` conserva la cadena original y llama al mismo dibujo que usa el release. Si la barrera hizo perder una presentación, su liberación válida intenta ese dibujo pendiente después de instalar asociaciones, marcador, época y reloj. La selección del candidato y las validaciones de lease, mundo, revocación, recursos, visibilidad y retirada son las mismas. Un release sin presentación perdida no añade envíos. Un aborto puede volver a dibujar el paquete vigente; un commit sin candidato no revive el mundo anterior. La muestra registra `trigger: mutation-release` o `raf`.
+
+Esto elimina una espera añadida después del release. Durante el hold global continúa prohibido enviar comandos: un retraso largo de la autoridad sigue produciendo un intervalo largo. La continuidad de actores independientes dentro de esa barrera queda pendiente de A6/C3 y exige conservar la seguridad del fence y de los permisos. No se declara ausencia total de tirones ni una mejora estadística a partir de esta comparación.
+
+## Validación
+
+Pasan309 casos dirigidos, incluidos siete nuevos con autoridad WASM/puertos/Host reales y GPU simulado. Comprueban demoras virtuales30/50/100ms, fence pendiente, espera tras ACK, adquisición sin otra RAF, cadena única, aborto, ausencia de RAF perdida, visibilidad y commit sin candidato. El control negativo de lectura elimina sólo el dibujo al release y produce tres fallos previstos, cero cancelaciones y cuatro casos filtrados. La primera versión del test de guard consultaba una API inexistente; se sustituyó por un commit real sin candidato.
+
+La selección amplia de239 archivos ejecuta2.519 casos y omite13 sin ruta WASM explícita. La repetición de los dos archivos afectados con el WASM actual pasa15 y omite sólo la comparación opcional;12 de esos casos recuperan las omisiones. El agregado único es2.531/2.532, cero fallos y una omisión. No es una sola ejecución con2.531 aprobados. Build pasa en2m39s. Los siete fallos históricos fuera de esta selección no cambian.
+
+El arnés compartido Farm→Task/Home puede introducir30/50/100ms reales después del ACK de quiescencia, antes de devolver el recibo al coordinador. Usa el mismo protocolo y método de producción y restaura el método al terminar. La ejecución con demora exige un dibujo marcado como release en la frontera nueva y ningún envío dentro de la espera. Es una inyección en la fuente de aceptación en página; no sustituye la campaña de fallos del productor/cohort completo.
+
+Los tres ensayos NVIDIA/Turing con demoras reales30/50/100ms conservan639/640/640 IDs inmutables de geometrías/texturas residentes, retiran sólo la tabla Farm obsoleta y preparan70 recursos cada uno. Hay cero creaciones tras READY, cero shaders/pipelines nuevos, adopción5, selección de los dos actores y drain real. Los intervalos de su dibujo al release son58,07/85,60/127,25ms: incluyen deliberadamente la espera. La traza de50ms (144.194.910 bytes,633.558 eventos) sitúa el envío dentro de `intentControl.port.onmessage`,8,47ms antes de la siguiente RAF.
+
+La regresión Farm→Task normal conserva646 IDs, prepara70 recursos y crea cero después de READY, con adopción5 y drain. No perdió una RAF en su breve hold y no añade dibujo al release. Quedan máximos113,44ms en la ventana Home50 y128,13ms en la ventana Task, sin atribución causal. La pantalla observada es GTX1660 a3840×2160/30Hz; sus33,3ms nominales no equivalen a coste de dibujo. Las capturas y la traza forman parte de estos ensayos de componente.
+
+La [evidencia](performance/native-mutation-release-presentation-validation-20261118.json) congela390 entradas y64 inputs/artefactos nativos sin recompilar. Preserva los16 archivos locales ajenos, el worker pthread sin seguimiento y los bytes anteriores de los cuatro documentos principales. Siguen abiertos los siete fallos históricos fuera de la selección, la continuidad durante el hold, finales Farm, productor/cohort, guardado/recuperación y reutilización integral de3.123 recursos.

@@ -1,0 +1,21 @@
+{
+  "baselineRevision": "796060d14",
+  "fixture": "sabana712-d6-native-multi-reservation",
+  "publications": 31,
+  "passes": 4,
+  "old": {
+    "count": 120,
+    "mean": 19.097381666666706,
+    "p95": 35.67270000000008,
+    "p99": 35.989900000000034,
+    "max": 36.0586000000003
+  },
+  "current": {
+    "count": 120,
+    "mean": 10.161713333333342,
+    "p95": 11.048300000000381,
+    "p99": 11.07380000000012,
+    "max": 11.417000000000371
+  },
+  "scope": "Node queue publication+receipt+ack on identical real WASM states; no renderer or GPU, retained sizes and delivered sequence asserted equal"
+}

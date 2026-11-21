@@ -52,7 +52,7 @@ test('scene resolver reconciles terrain after focus recovery and remains stable 
  root.userData.nativeBuilding=true;root.damage=0;
  const bounds=new THREE.Box3(new THREE.Vector3(-100,0,-100),new THREE.Vector3(100,30,100));
  root.template={culling:{boxes:{still:bounds,fall:bounds,ash:bounds}}};
- const scene={camera,nav:{field},objects:new Map([[1,root]]),state:{villages:[],structures:[{id:1,kind:'center'}]}};
+ const scene={camera,nav:{field},cameraField:WorldScene.prototype.cameraField,objects:new Map([[1,root]]),state:{villages:[],structures:[{id:1,kind:'center'}]}};
  WorldScene.prototype.setCameraExclusion.call(scene,true,{centerMargin:0});
  focusTerrainCamera(camera,controls,field,{x:0,z:0});
  const first=camera.position.clone();assert.ok(first.y>=30.45&&first.y<=33);

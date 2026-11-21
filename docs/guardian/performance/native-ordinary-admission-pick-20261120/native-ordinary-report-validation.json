@@ -1,0 +1,27 @@
+{
+  "scope": "Additional report-only tests and deterministic original Surface negative; separate from the 1310-test integration run.",
+  "reportTests": {
+    "command": ".cache/tooling/node20.exe --test tests/native-audit-ordinary-report.test.js",
+    "tests": 3,
+    "pass": 3,
+    "log": ".cache/native-ordinary-report-tests.log",
+    "logSha256": "b31e62823d9de835b53d719cca8a786d678041b7ae36e68446dca4ca92296cdf"
+  },
+  "cli": {
+    "positive": ".cache/native-ordinary-after2-ordinary-report.json",
+    "positiveTraceLossFree": true,
+    "negative": ".cache/native-ordinary-60hz-after1-ordinary-report.json",
+    "negativeTraceLossFree": false
+  },
+  "pickOriginalNegative": {
+    "command": ".cache/tooling/node20.exe .cache/native-pick-before-negative.mjs",
+    "sourceCommit": "7f350bb37",
+    "exitCode": 1,
+    "expectedError": "Native assignment has no submitted pick clock",
+    "scriptSha256": "4c30ca205212d2e6bcaa135aa53202a9200fc5dae29a0c67527dd989dc89f92d"
+  },
+  "files": {
+    "tools/guardian/native-audit-ordinary-report.mjs": "4c71abe2219012ef47f2a0dbd9dcb18e1fa6dba5fa24ad0f00c7ecf1fe5da29d",
+    "tests/native-audit-ordinary-report.test.js": "29ea28982fdf6117c9cd0085c18bb48333e5d16f17499a80911b2483617094d1"
+  }
+}

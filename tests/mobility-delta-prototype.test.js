@@ -1,0 +1,32 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {createProjectionPublisher,createProjectionReceiver} from './browser/mobility-delta-prototype.js';
+const p=(elapsed,workers,events=[])=>({elapsed,workers,animals:[],structures:[],events});
+test('gap requires snapshot, events survive replay and acknowledgment',()=>{const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s');const d1=tx.publish(p(1,[{id:'a',x:1}],[{kind:'a'}]));assert.equal(rx.accept(d1).accepted,true);tx.publish(p(2,[{id:'a',x:2}],[{kind:'b'}]));const d3=tx.publish(p(3,[{id:'b',x:3},{id:'a',x:4}],[{kind:'c'}]));assert.equal(rx.accept(d3).reason,'gap');assert.equal(rx.state().version,1);const snap=tx.snapshot();assert.equal(rx.accept(snap).accepted,true);assert.equal(rx.state().events.length,3);assert.equal(rx.accept(snap).newEvents,0);assert.equal(tx.acknowledge('bad',3),false);assert.equal(tx.acknowledge('s',4),false);assert.equal(tx.acknowledge('s',3),true);assert.equal(tx.status().pending,0);const d4=tx.publish(p(4,[{id:'b',x:5}]));assert.equal(rx.accept(d4).accepted,true);assert.deepEqual(rx.state().state,{elapsed:4,workers:[{id:'b',x:5}],animals:[],structures:[]});});
+test('bad event sequence or malformed delta leaves receiver untouched',()=>{const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s'),first=tx.publish(p(1,[{id:'a'}]));rx.accept(first);const next=tx.publish(p(2,[{id:'a',x:2}],[{kind:'a'}]));const before=rx.state();assert.equal(rx.accept({...next,events:[{sequence:2,event:{}}]}).reason,'event-gap');assert.deepEqual(rx.state(),before);assert.equal(rx.accept({...next,updates:{...next.updates,workers:{order:['missing'],changed:[]}}}).accepted,false);assert.deepEqual(rx.state(),before);});
+test('byte saturation rejects atomically and retry preserves ordered events',()=>{
+ const makeEvent=message=>({message}),first=makeEvent('ñ'.repeat(20)),second=makeEvent('x'.repeat(35)),size=x=>new TextEncoder().encode(JSON.stringify(x)).length;
+ const capacity=Math.max(size([{sequence:1,event:first}]),size([{sequence:2,event:second}])),tx=createProjectionPublisher('s',{maxPendingBytes:capacity}),rx=createProjectionReceiver('s');
+ const a=tx.publish(p(1,[{id:'a'}],[first]));assert.equal(rx.accept(a).accepted,true);const before=tx.status(),b=tx.publish(p(2,[{id:'a',x:2}],[second]));assert.equal(b.reason,'event-capacity');assert.deepEqual(tx.status(),before);
+ assert.equal(tx.acknowledge('s',1),true);const retried=tx.publish(p(2,[{id:'a',x:2}],[second]));assert.equal(retried.version,2);assert.equal(rx.accept(retried).accepted,true);assert.deepEqual(rx.state().events.map(x=>x.event),[first,second]);assert.ok(tx.status().pendingBytes<=capacity);
+ const oversized=tx.publish(p(3,[{id:'a'}],[makeEvent('z'.repeat(capacity*2))]));assert.equal(oversized.reason,'oversize');assert.equal(tx.status().version,2);
+});
+
+test('pause reasons survive deltas, snapshots and invalid packets without partial application',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s');
+ const initial={...p(1,[{id:'a'}]),pauses:[]};assert.equal(rx.accept(tx.publish(initial)).accepted,true);
+ const paused={...p(2,[{id:'a',x:2}],[{kind:'pause'}]),pauses:['diagnostic']},message=tx.publish(paused);
+ const before=rx.state();assert.equal(rx.accept({...message,pauses:[42]}).accepted,false);assert.deepEqual(rx.state(),before);
+ assert.equal(rx.accept(message).accepted,true);assert.deepEqual(rx.state().state.pauses,['diagnostic']);
+ assert.equal(rx.accept(tx.snapshot()).accepted,true);assert.deepEqual(rx.state().state.pauses,['diagnostic']);
+ const resumed={...p(3,[{id:'a',x:3}]),pauses:[]};assert.equal(rx.accept(tx.publish(resumed)).accepted,true);assert.deepEqual(rx.state().state.pauses,[]);
+});
+test('game events and native conditions retain a shared order across replay and acknowledgment',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s'),first={channel:'game',payload:{type:'StructureHit',targetId:'structure-1'}},second={channel:'condition',payload:{at:1,change:{type:'StructureConditionChanged',structureId:'structure-1',status:'collapsing'}}};
+ const packet=tx.publish(p(1,[{id:'a'}],[first,second]));assert.equal(rx.accept(packet).accepted,true);assert.deepEqual(rx.state().events.map(x=>x.event),[first,second]);assert.equal(rx.accept(tx.snapshot()).newEvents,0);assert.equal(tx.acknowledge('s',1),true);const resend=tx.snapshot();assert.deepEqual(resend.events.map(x=>x.event),[second]);assert.equal(rx.accept(resend).newEvents,0);assert.equal(tx.acknowledge('s',2),true);assert.equal(tx.status().pending,0);
+});
+
+test('same-version snapshot cannot rewrite state and equivalent reordered keys are idempotent',()=>{
+ const tx=createProjectionPublisher('s'),rx=createProjectionReceiver('s');const delta=tx.publish(p(1,[{id:'a',x:1,z:2}],[{kind:'a'}]));assert.equal(rx.accept(delta).accepted,true);
+ const snapshot=tx.snapshot(),before=rx.state();const changed=structuredClone(snapshot);changed.state.workers[0].x=999;
+ assert.equal(rx.accept(changed).reason,'conflict');assert.deepEqual(rx.state(),before);
+ const reordered=structuredClone(snapshot);reordered.state.workers[0]={z:2,x:1,id:'a'};assert.equal(rx.accept(reordered).accepted,true);assert.deepEqual(rx.state().state,before.state);
+});

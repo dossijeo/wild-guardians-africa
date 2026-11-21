@@ -1,0 +1,105 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "baseCommit": "08a5d5fae",
+  "scope": "Actual expired-contract delivery to native stationary returning ownership; moving Home corridor and arrival are still pending. No A6/A/B/C closure.",
+  "research": {
+    "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L573",
+    "read": [
+      "dtCrowd::requestMoveTarget",
+      "dtCrowd::updateMoveRequest"
+    ],
+    "decision": "Retain the same actor and target request before admitting a new corridor; adapt to the existing single native proposal and retained graphical admission. No extra queue or dependency."
+  },
+  "nativeBuild": {
+    "standalone": "pass",
+    "pthread": "pass",
+    "addedExports": [
+      "nav_task_settlement_proposal_home_version",
+      "nav_task_settlement_proposal_stage_home"
+    ],
+    "headerHomeFields": [
+      21,
+      22,
+      23
+    ],
+    "stationaryWireState": 7
+  },
+  "regression": {
+    "passed": 549,
+    "failed": 0,
+    "skipped": 0,
+    "files": 48,
+    "durationMs": 89819.1435,
+    "fileList": ".cache/native-settlement-home-regression-files.json"
+  },
+  "initialDirected": {
+    "passed": 31,
+    "failed": 0,
+    "skipped": 0,
+    "durationMs": 12812.1009,
+    "includedInRegression": true
+  },
+  "productBuild": {
+    "status": "pass",
+    "seconds": 44.23,
+    "warnings": "Existing Vite chunk / Emscripten pthread memory-growth warnings."
+  },
+  "previousBridgeControl": {
+    "commit": "08a5d5fae",
+    "loader": ".cache/native-settlement-home-parent-loader.mjs",
+    "scope": "Previous bridge module only at original URL, current native artifacts; not whole-parent benchmark. No product file overwritten.",
+    "failed": 2,
+    "skipped": 11,
+    "actual": "unsupported",
+    "expected": "committed"
+  },
+  "hardware": {
+    "artifact": "native-delivery-home-pending-gpu-20261115.json",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "source": "In-page SpatialGameSession, minimal desert fixture; actor B uses explicit independent legacy Home fixture. A has an actual expired contract.",
+    "resourcesPrepared": 96,
+    "resourcesCreatedAfterReady": 0,
+    "drawsDuringPreparerBlock": 50,
+    "blockMs": 1800,
+    "inputPick": "worker-900011",
+    "gpuErrors": 0,
+    "pageErrors": 0,
+    "networkErrors": 0,
+    "drained": true,
+    "preserved": [
+      "actor root",
+      "bones",
+      "geometries",
+      "independent actor",
+      "world instance batches"
+    ],
+    "indexIdentity": "Unit roster coverage; not directly instrumented in GPU output.",
+    "followingGuard": "Same-village source projection check added after hardware run; covered by final native Game regression. No GPU path or material changes afterwards."
+  },
+  "preservedOriginalFiles": {
+    "verified": 16,
+    "mismatches": 0,
+    "manifest": ".cache/native-action-restore-preserved-hashes.json",
+    "exception": "confirmed-presentation-stream.js was intentionally committed in a previous increment and is unchanged here."
+  },
+  "logs": {
+    ".cache/native-settlement-home-build.log": "a5b61c09ac3579593145817c0092d29c8b0b6cb1f6609e0c6f17d6e99973903f",
+    ".cache/native-settlement-home-directed.log": "17c252da00df7538b594fd88302c85598c92e617a23da788c24b7e3d3a89737d",
+    ".cache/native-settlement-home-final-regression.log": "f19ea5a4ce820112d7da5e09c75178ac1aad73e513b8a98234b4507c1d6b5ba7",
+    ".cache/native-settlement-home-product-build.log": "62dcd625c9e578428ba94ef8775857b14d30bdfedbe133d8d2c2de88633acc32",
+    ".cache/native-settlement-home-parent-control.log": "edd222b02715a0ff86760b22725159fb5611cceb2301d53fe57986938a27d5f8"
+  },
+  "remaining": [
+    "Genuine prepared moving Home from stationary source and arrival",
+    "Expired contract on previously active Idle",
+    "Initial Idle / other completion and cancellation classes",
+    "Gated settlement consumer",
+    "Fresh stationary bootstrap",
+    "Ordinary all-class producer",
+    "3123-resource recovery reuse and integrated A6/A/B/C"
+  ]
+}

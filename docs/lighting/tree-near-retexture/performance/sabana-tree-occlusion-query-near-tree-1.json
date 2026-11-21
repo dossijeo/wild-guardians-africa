@@ -1,0 +1,6673 @@
+{
+  "biome": "sabana",
+  "occlusion": {
+    "scope": "Diagnostic only: actual submitted tree geometry drawn again as opaque double-sided proxy against existing depth, plus same proxy against cleared depth. No alpha, custom vertex or shadow equivalence guaranteed. A zero query is a candidate, not proof of invisibility. Queries and extra draws are not an optimization.",
+    "device": "WebKit WebGL",
+    "mode": "near-tree",
+    "camera": [
+      84.13628387451172,
+      15.606859713792801,
+      61.40520095825195
+    ],
+    "renderMs": 3024.0099999904633,
+    "submitMs": 17.71500000357628,
+    "controlSubmitMs": 0.5999999940395355,
+    "resolveWaitMs": 43.375,
+    "rows": [
+      {
+        "key": "0:2",
+        "index": 0,
+        "vertices": 5567,
+        "triangles": 2713,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "0:2",
+        "index": 1,
+        "vertices": 5567,
+        "triangles": 2713,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "1:2",
+        "index": 0,
+        "vertices": 4311,
+        "triangles": 1863,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "1:2",
+        "index": 1,
+        "vertices": 4311,
+        "triangles": 1863,
+        "available": true,
+        "samples": 0,
+        "controlAvailable": true,
+        "controlSamples": 0
+      },
+      {
+        "key": "1:2",
+        "index": 2,
+        "vertices": 4311,
+        "triangles": 1863,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "1:2",
+        "index": 3,
+        "vertices": 4311,
+        "triangles": 1863,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "1:0",
+        "index": 0,
+        "vertices": 5172,
+        "triangles": 3232,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "0:1",
+        "index": 0,
+        "vertices": 5567,
+        "triangles": 4222,
+        "available": true,
+        "samples": 1,
+        "controlAvailable": true,
+        "controlSamples": 1
+      },
+      {
+        "key": "3:0",
+        "index": 0,
+        "vertices": 2585,
+        "triangles": 1612,
+        "available": true,
+        "samples": 0,
+        "controlAvailable": true,
+        "controlSamples": 0
+      }
+    ],
+    "glError": 0
+  },
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "frames": {
+    "count": 1054,
+    "p95": 33.43999999999869,
+    "p99": 133.41499999999996,
+    "max": 1066.67
+  },
+  "wallFrames": {
+    "count": 1054,
+    "p95": 38.19499999284744,
+    "p99": 164.64000000059605,
+    "max": 1251.9100000113249
+  },
+  "observations": {
+    "trees": [
+      {
+        "at": 29578.875,
+        "afterHandoff": false,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 0,
+            "target": 0,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": true,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 0,
+            "target": 0,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": true,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 0
+          },
+          {
+            "total": 458,
+            "ready": 0,
+            "target": 0,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": true,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 0
+          },
+          {
+            "total": 428,
+            "ready": 0,
+            "target": 0,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": true,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 30331.344999998808,
+        "cinematic": true,
+        "afterHandoff": false,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 0,
+            "target": 11,
+            "active": 11,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": true,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 0,
+            "target": 30,
+            "active": 30,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 0
+          },
+          {
+            "total": 458,
+            "ready": 0,
+            "target": 14,
+            "active": 14,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 0
+          },
+          {
+            "total": 428,
+            "ready": 0,
+            "target": 17,
+            "active": 17,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 30629.67499999702,
+        "cinematic": true,
+        "afterHandoff": false,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 20,
+            "active": 9,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 16
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 31966.439999997616,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 11,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 11,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 9,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 10,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 32228.765000000596,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 11,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 11,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 9,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 10,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 0,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 32495.57000000775,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 12,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 1,
+            "prepared": 1
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 13,
+            "active": 2,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 2,
+            "prepared": 2
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 10,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 1,
+            "prepared": 1
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 11,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 1,
+            "prepared": 1
+          }
+        ]
+      },
+      {
+        "at": 32763.12000000477,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 16,
+            "active": 5,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 0
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 25,
+            "active": 14,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 14,
+            "prepared": 0
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 13,
+            "active": 4,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 4,
+            "prepared": 0
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 16,
+            "active": 6,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 0
+          }
+        ]
+      },
+      {
+        "at": 33028.335000008345,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 19,
+            "active": 8,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 8,
+            "prepared": 8
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 28,
+            "active": 17,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 17,
+            "prepared": 17
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 13,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 4,
+            "prepared": 4
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 16,
+            "active": 6,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 33294.82000000775,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 20,
+            "active": 9,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 30,
+            "active": 19,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 14,
+            "active": 5,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 17,
+            "active": 7,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 33561.79999999702,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 20,
+            "active": 9,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 11,
+            "target": 30,
+            "active": 19,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 9,
+            "target": 14,
+            "active": 5,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 10,
+            "target": 17,
+            "active": 7,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 33828.42499999702,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 16,
+            "target": 20,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 25,
+            "target": 30,
+            "active": 5,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 13,
+            "target": 14,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 17,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 34097.24500000477,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 8
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": true,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 16
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 34361.939999997616,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 34628.17499999702,
+        "cinematic": true,
+        "afterHandoff": true,
+        "stage": "true",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 34939.82999999821,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 36219.66500000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 36495.015000000596,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 36761.99500000477,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 37028.29000000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 37294.95000000298,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 37561.689999997616,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 37828.42499999702,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 38095.210000008345,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 38361.34499999881,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 38628.75,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 38894.98000000417,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 39161.560000002384,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 39428.49500000477,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 39694.89500001073,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 39961.79000000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 40228.189999997616,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 40494.685000002384,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 40761.30500000715,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 41027.90500000119,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 41294.57000000775,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 41561.45000000298,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 41828.034999996424,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 42094.685000002384,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 42361.65500000119,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 42628.260000005364,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 42894.59499999881,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 43152.939999997616,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 43428.48000000417,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 43695.37000000477,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 20,
+            "target": 20,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 9,
+            "prepared": 9
+          },
+          {
+            "total": 455,
+            "ready": 30,
+            "target": 30,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 19,
+            "prepared": 19
+          },
+          {
+            "total": 458,
+            "ready": 14,
+            "target": 14,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 5,
+            "prepared": 5
+          },
+          {
+            "total": 428,
+            "ready": 17,
+            "target": 17,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          }
+        ]
+      },
+      {
+        "at": 43962.939999997616,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 19,
+            "target": 23,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 27,
+            "target": 33,
+            "active": 6,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 13,
+            "target": 16,
+            "active": 3,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 15,
+            "target": 16,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 44228.390000000596,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 19,
+            "target": 23,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 27,
+            "target": 33,
+            "active": 6,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 13,
+            "target": 16,
+            "active": 3,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 15,
+            "target": 16,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 44494.88000001013,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 19,
+            "target": 23,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 27,
+            "target": 33,
+            "active": 6,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 13,
+            "target": 16,
+            "active": 3,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 15,
+            "target": 16,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 44761.41500000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 19,
+            "target": 23,
+            "active": 4,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 27,
+            "target": 33,
+            "active": 6,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 13,
+            "target": 16,
+            "active": 3,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 15,
+            "target": 16,
+            "active": 1,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 45028.57500000298,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 45294.710000008345,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 45561.41500000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 45828.314999997616,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 46094.60500000417,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 46361.32000000775,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 46627.82999999821,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      },
+      {
+        "at": 46894.66500000656,
+        "cinematic": false,
+        "afterHandoff": true,
+        "stage": "false",
+        "rows": [
+          {
+            "total": 455,
+            "ready": 23,
+            "target": 23,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 12,
+            "prepared": 12
+          },
+          {
+            "total": 455,
+            "ready": 33,
+            "target": 33,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 22,
+            "prepared": 22
+          },
+          {
+            "total": 458,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 7,
+            "prepared": 7
+          },
+          {
+            "total": 428,
+            "ready": 16,
+            "target": 16,
+            "active": 0,
+            "pending": {
+              "native": false,
+              "regional": 0,
+              "worker": false,
+              "standby": false,
+              "closed": false
+            },
+            "coverage": 6,
+            "prepared": 6
+          }
+        ]
+      }
+    ],
+    "face": [
+      {
+        "at": 35108.10500000417,
+        "time": 0.018980000004172326,
+        "audio": {
+          "time": 0.018980000004172326,
+          "paused": false,
+          "ended": false
+        },
+        "data": null,
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 36226.57000000775,
+        "time": 1.2688250000029804,
+        "audio": {
+          "time": 1.2688250000029804,
+          "paused": false,
+          "ended": false
+        },
+        "data": null,
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 36336.965000003576,
+        "time": 1.3795000000000002,
+        "audio": {
+          "time": 1.3795000000000002,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0.010611060495628374,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0.9893889395043717,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 36470.53000000119,
+        "time": 1.5131099999994042,
+        "audio": {
+          "time": 1.5131099999994042,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 36600.30500000715,
+        "time": 1.6430949999988083,
+        "audio": {
+          "time": 1.6430949999988083,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 36732.310000002384,
+        "time": 1.775114999994636,
+        "audio": {
+          "time": 1.775114999994636,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 36832.45000000298,
+        "time": 1.8752699999958282,
+        "audio": {
+          "time": 1.8752699999958282,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.19354693991494665,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0.8064530600850534
+        }
+      },
+      {
+        "at": 36932.84499999881,
+        "time": 1.975605000004173,
+        "audio": {
+          "time": 1.975605000004173,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 37065.42499999702,
+        "time": 2.1082699999958283,
+        "audio": {
+          "time": 2.1082699999958283,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 37166.14500001073,
+        "time": 2.208984999999405,
+        "audio": {
+          "time": 2.208984999999405,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.9398499999940526,
+          "blink_R": 0.9398499999940526,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0.24060000002378956,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0.24060000002378956,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 37266.30500000715,
+        "time": 2.3091400000005975,
+        "audio": {
+          "time": 2.3091400000005975,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.058599999994023655,
+          "blink_R": 0.058599999994023655,
+          "blink_L_25": 0.23439999997609462,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0.23439999997609462,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 37398.95000000298,
+        "time": 2.441775000005962,
+        "audio": {
+          "time": 2.441775000005962,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 37500.32999999821,
+        "time": 2.5430300000011936,
+        "audio": {
+          "time": 2.5430300000011936,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.03645896719989584,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0.9635410328001042
+        }
+      },
+      {
+        "at": 37632.24500000477,
+        "time": 2.675060000002386,
+        "audio": {
+          "time": 2.675060000002386,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 37732.92499999702,
+        "time": 2.7754200000017892,
+        "audio": {
+          "time": 2.7754200000017892,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.3847855398342992,
+          "viseme_C": 0.6152144601657008,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 37865.43000000715,
+        "time": 2.9082600000053653,
+        "audio": {
+          "time": 2.9082600000053653,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 37965.86500000954,
+        "time": 3.0086149999946366,
+        "audio": {
+          "time": 3.0086149999946366,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.06901238217416512,
+          "blink_R": 0.06901238217416512,
+          "blink_L_25": 0.27604952869666044,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0.27604952869666044,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.9765576762978975,
+          "viseme_C": 0.02344232370210253,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38066.65000000596,
+        "time": 3.1094849999994048,
+        "audio": {
+          "time": 3.1094849999994048,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.9817664325429586,
+          "blink_R": 0.9817664325429586,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0.07293426982816564,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0.07293426982816564,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38167.564999997616,
+        "time": 3.210420000001789,
+        "audio": {
+          "time": 3.210420000001789,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38298.45499999821,
+        "time": 3.341310000002385,
+        "audio": {
+          "time": 3.341310000002385,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38398.68000000715,
+        "time": 3.4415349999964246,
+        "audio": {
+          "time": 3.4415349999964246,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 1,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38532.89500001073,
+        "time": 3.5757399999946364,
+        "audio": {
+          "time": 3.5757399999946364,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0.21133665749015354,
+          "viseme_F": 0.7886633425098465,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38665.36500000954,
+        "time": 3.708209999993444,
+        "audio": {
+          "time": 3.708209999993444,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38765.42499999702,
+        "time": 3.8082699999958285,
+        "audio": {
+          "time": 3.8082699999958285,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38898.840000003576,
+        "time": 3.941689999997617,
+        "audio": {
+          "time": 3.941689999997617,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 1,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 38998.95499999821,
+        "time": 4.0418100000023856,
+        "audio": {
+          "time": 4.0418100000023856,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 1,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 39100.17499999702,
+        "time": 4.143030000001193,
+        "audio": {
+          "time": 4.143030000001193,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 39232.685000002384,
+        "time": 4.275519999995829,
+        "audio": {
+          "time": 4.275519999995829,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 39333.82000000775,
+        "time": 4.376629999995234,
+        "audio": {
+          "time": 4.376629999995234,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.42800887892505135,
+          "viseme_C": 0.5719911210749486,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 39465.560000002384,
+        "time": 4.508409999996425,
+        "audio": {
+          "time": 4.508409999996425,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.739279226429721,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0.260720773570279
+        }
+      },
+      {
+        "at": 39598.84499999881,
+        "time": 4.641635000005365,
+        "audio": {
+          "time": 4.641635000005365,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.0663500000536601,
+          "blink_R": 0.0663500000536601,
+          "blink_L_25": 0.2654000002146404,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0.2654000002146404,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 39699.460000008345,
+        "time": 4.742164999991656,
+        "audio": {
+          "time": 4.742164999991656,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.9283500000834302,
+          "blink_R": 0.9283500000834302,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0.28659999966627936,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0.28659999966627936,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 39831.859999999404,
+        "time": 4.874689999997617,
+        "audio": {
+          "time": 4.874689999997617,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 39933.60500000417,
+        "time": 4.976164999991656,
+        "audio": {
+          "time": 4.976164999991656,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.7735244485650117,
+          "viseme_C": 0,
+          "viseme_D": 0.2264755514349883,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40034.67000000179,
+        "time": 5.077444999992848,
+        "audio": {
+          "time": 5.077444999992848,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0.08358446407293435,
+          "viseme_D": 0.9164155359270656,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40165.90500000119,
+        "time": 5.208605000004173,
+        "audio": {
+          "time": 5.208605000004173,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40298.465000003576,
+        "time": 5.3412999999970205,
+        "audio": {
+          "time": 5.3412999999970205,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.9919137201038345,
+          "viseme_C": 0.008086279896165505,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40398.760000005364,
+        "time": 5.441614999994636,
+        "audio": {
+          "time": 5.441614999994636,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.6762410527810911,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0.32375894721890885,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40531.85000000894,
+        "time": 5.574709999993443,
+        "audio": {
+          "time": 5.574709999993443,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0.1932000517172154,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0.8067999482827846,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40631.93000000715,
+        "time": 5.6747499999999995,
+        "audio": {
+          "time": 5.6747499999999995,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.7973597849854117,
+          "viseme_C": 0.2026402150145883,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40765.090000003576,
+        "time": 5.807959999993443,
+        "audio": {
+          "time": 5.807959999993443,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40865.21999999881,
+        "time": 5.908084999993443,
+        "audio": {
+          "time": 5.908084999993443,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 40999.22500000894,
+        "time": 6.041894999995828,
+        "audio": {
+          "time": 6.041894999995828,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.005728118046500419,
+          "viseme_C": 0.9942718819534996,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41132.27500000596,
+        "time": 6.175129999995232,
+        "audio": {
+          "time": 6.175129999995232,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41265.460000008345,
+        "time": 6.308280000001191,
+        "audio": {
+          "time": 6.308280000001191,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41398.39500001073,
+        "time": 6.44125499999523,
+        "audio": {
+          "time": 6.44125499999523,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41498.53000000119,
+        "time": 6.541390000000594,
+        "audio": {
+          "time": 6.541390000000594,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.8370280519729947,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0.16297194802700532,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41598.68000000715,
+        "time": 6.641534999996422,
+        "audio": {
+          "time": 6.641534999996422,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 1,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41731.659999996424,
+        "time": 6.774519999995825,
+        "audio": {
+          "time": 6.774519999995825,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.7932929596460613,
+          "viseme_C": 0,
+          "viseme_D": 0.20670704035393872,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41831.98000000417,
+        "time": 6.874819999992845,
+        "audio": {
+          "time": 6.874819999992845,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 41932.29999999702,
+        "time": 6.975144999995825,
+        "audio": {
+          "time": 6.975144999995825,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42065.80500000715,
+        "time": 7.108620000004765,
+        "audio": {
+          "time": 7.108620000004765,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42198.32000000775,
+        "time": 7.241189999997613,
+        "audio": {
+          "time": 7.241189999997613,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42298.45499999821,
+        "time": 7.3413250000029775,
+        "audio": {
+          "time": 7.3413250000029775,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42400.17000000179,
+        "time": 7.44303499999642,
+        "audio": {
+          "time": 7.44303499999642,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42531.49000000954,
+        "time": 7.574355000004168,
+        "audio": {
+          "time": 7.574355000004168,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42633.35000000894,
+        "time": 7.676200000002976,
+        "audio": {
+          "time": 7.676200000002976,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42764.92499999702,
+        "time": 7.80778499999642,
+        "audio": {
+          "time": 7.80778499999642,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.987692161772566,
+          "blink_R": 0.987692161772566,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0.049231352909735904,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0.049231352909735904,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 42864.99000000954,
+        "time": 7.9078449999988045,
+        "audio": {
+          "time": 7.9078449999988045,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.0009466988224693481,
+          "blink_R": 0.0009466988224693481,
+          "blink_L_25": 0.003786795289877354,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0.003786795289877354,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43157.375,
+        "time": 8.20008499999344,
+        "audio": {
+          "time": 8.20008499999344,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.9849357164467761,
+          "viseme_C": 0.015064283553223897,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43265.74000000954,
+        "time": 8.308575000002977,
+        "audio": {
+          "time": 8.308575000002977,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43368.85000000894,
+        "time": 8.411525000005957,
+        "audio": {
+          "time": 8.411525000005957,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43500.210000008345,
+        "time": 8.543069999992843,
+        "audio": {
+          "time": 8.543069999992843,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43602.734999999404,
+        "time": 8.645325000002977,
+        "audio": {
+          "time": 8.645325000002977,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 43732.510000005364,
+        "time": 8.775340000003574,
+        "audio": {
+          "time": 8.775340000003574,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.20340000003573522,
+          "blink_R": 0.20340000003573522,
+          "blink_L_25": 0.8136000001429409,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0.8136000001429409,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 43871.32999999821,
+        "time": 8.914025000005958,
+        "audio": {
+          "time": 8.914025000005958,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.40974999994041994,
+          "blink_R": 0.40974999994041994,
+          "blink_L_25": 0.36100000023832024,
+          "blink_L_50": 0.6389999997616798,
+          "blink_L_75": 0,
+          "blink_R_25": 0.36100000023832024,
+          "blink_R_50": 0.6389999997616798,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 43999.135000005364,
+        "time": 9.041984999999402,
+        "audio": {
+          "time": 9.041984999999402,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44100.185000002384,
+        "time": 9.142885000005363,
+        "audio": {
+          "time": 9.142885000005363,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44232.710000008345,
+        "time": 9.275560000002383,
+        "audio": {
+          "time": 9.275560000002383,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.5946324875066045,
+          "viseme_C": 0.40536751249339553,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44333.484999999404,
+        "time": 9.376340000003573,
+        "audio": {
+          "time": 9.376340000003573,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44465.96999999881,
+        "time": 9.508829999998207,
+        "audio": {
+          "time": 9.508829999998207,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 1,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44566.835000008345,
+        "time": 9.60968500000238,
+        "audio": {
+          "time": 9.60968500000238,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.11356477995143482,
+          "viseme_C": 0.8864352200485652,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44699.185000002384,
+        "time": 9.742045000001784,
+        "audio": {
+          "time": 9.742045000001784,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44799.32999999821,
+        "time": 9.842179999992247,
+        "audio": {
+          "time": 9.842179999992247,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44899.609999999404,
+        "time": 9.942444999992842,
+        "audio": {
+          "time": 9.942444999992842,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 44999.760000005364,
+        "time": 10.042459999993438,
+        "audio": {
+          "time": 10.042459999993438,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 1,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45132.54000000656,
+        "time": 10.175394999995822,
+        "audio": {
+          "time": 10.175394999995822,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 1,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45232.92499999702,
+        "time": 10.275624999999994,
+        "audio": {
+          "time": 10.275624999999994,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0.812578295827168,
+          "viseme_E": 0,
+          "viseme_F": 0.187421704172832,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45365.335000008345,
+        "time": 10.408185000002378,
+        "audio": {
+          "time": 10.408185000002378,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0.46114200598886623,
+          "viseme_D": 0.5388579940111338,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45465.99500000477,
+        "time": 10.508704999998205,
+        "audio": {
+          "time": 10.508704999998205,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0.23317766263776973,
+          "viseme_B": 0.7668223373622303,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45598.79999999702,
+        "time": 10.64164499999582,
+        "audio": {
+          "time": 10.64164499999582,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0.25967205349729616,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0.7403279465027038,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45700.359999999404,
+        "time": 10.743060000002377,
+        "audio": {
+          "time": 10.743060000002377,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0.5654043579747315,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0.43459564202526846,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45832.189999997616,
+        "time": 10.875049999997012,
+        "audio": {
+          "time": 10.875049999997012,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.39463578638038543,
+          "viseme_C": 0.6053642136196146,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 45933.14500001073,
+        "time": 10.975840000003569,
+        "audio": {
+          "time": 10.975840000003569,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 1,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 46065.85000000894,
+        "time": 11.108715000003569,
+        "audio": {
+          "time": 11.108715000003569,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.13718557823037425,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0.8628144217696258
+        }
+      },
+      {
+        "at": 46165.94500000775,
+        "time": 11.208650000005953,
+        "audio": {
+          "time": 11.208650000005953,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.2865000000595188,
+          "blink_R": 0.2865000000595188,
+          "blink_L_25": 0.8539999997619248,
+          "blink_L_50": 0.14600000023807524,
+          "blink_L_75": 0,
+          "blink_R_25": 0.8539999997619248,
+          "blink_R_50": 0.14600000023807524,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 46298.69500000775,
+        "time": 11.341560000002376,
+        "audio": {
+          "time": 11.341560000002376,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0.3843999999762495,
+          "blink_R": 0.3843999999762495,
+          "blink_L_25": 0.46240000009500193,
+          "blink_L_50": 0.5375999999049981,
+          "blink_L_75": 0,
+          "blink_R_25": 0.46240000009500193,
+          "blink_R_50": 0.5375999999049981,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 1
+        }
+      },
+      {
+        "at": 46432.16500000656,
+        "time": 11.475019999995821,
+        "audio": {
+          "time": 11.475019999995821,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0.6842966871031382,
+          "viseme_C": 0,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0.3157033128968618
+        }
+      },
+      {
+        "at": 46565.439999997616,
+        "time": 11.608275000005953,
+        "audio": {
+          "time": 11.608275000005953,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0.7252640790011162,
+          "viseme_B": 0,
+          "viseme_C": 0.2747359209988838,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 46698.71999999881,
+        "time": 11.741549999997012,
+        "audio": {
+          "time": 11.741549999997012,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0,
+          "viseme_B": 0,
+          "viseme_C": 0,
+          "viseme_D": 1,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      },
+      {
+        "at": 46799.57999999821,
+        "time": 11.842269999995821,
+        "audio": {
+          "time": 11.842269999995821,
+          "paused": false,
+          "ended": false
+        },
+        "data": "ES_01",
+        "error": null,
+        "values": {
+          "blink_L": 0,
+          "blink_R": 0,
+          "blink_L_25": 0,
+          "blink_L_50": 0,
+          "blink_L_75": 0,
+          "blink_R_25": 0,
+          "blink_R_50": 0,
+          "blink_R_75": 0,
+          "viseme_A": 0.5636895402929947,
+          "viseme_B": 0,
+          "viseme_C": 0.4363104597070053,
+          "viseme_D": 0,
+          "viseme_E": 0,
+          "viseme_F": 0,
+          "viseme_G": 0,
+          "viseme_H": 0,
+          "viseme_X": 0
+        }
+      }
+    ],
+    "guardian": "<section id=\"guardian-root\" class=\"guardian-3d visible floating-guide\" aria-hidden=\"false\" role=\"region\" aria-label=\"El Espíritu\" data-gesture=\"greeting\" data-phase=\"greeting\" data-lifecycle=\"reading\"><div class=\"avatar-shell\" style=\"--guide-x: 4px; --guide-y: 414px;\"><canvas id=\"guardian-avatar\" aria-label=\"El Espíritu\" role=\"img\" data-engine=\"three.js r180\" width=\"224\" height=\"302\"></canvas><canvas id=\"guardian-magic\" aria-hidden=\"true\"></canvas></div><div class=\"bubble\"><div class=\"message-bo",
+    "tutorialText": "Estas tierras me conocen. Soy el Espíritu que las guarda. Al anochecer, una maldición agita a los animales. Echa raíces junto al poblado: levanta un centro, siembra; tu comunidad cuidará los cultivos."
+  },
+  "snapTransitions": false,
+  "sceneLoads": 1,
+  "faceLoads": 1,
+  "cinematicLoads": 1,
+  "errors": []
+}

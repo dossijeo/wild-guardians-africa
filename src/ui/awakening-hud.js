@@ -8,7 +8,7 @@ export function awakeningHudState(state,{selecting=false,blocked=false}={}){
   const available=ready&&state.awakenings?.enabled!==false&&permission(state,'awakening')&&!blocked;
   return {progress,ready,available,selecting,disabled:!selecting&&!available,
     label:selecting?'Cancelar selección de Despertar':ready?'Despertar disponible: bendecir una planta o muralla':`Energía de Despertar: ${Math.floor(progress)} de 100`,
-    caption:selecting?'Elige una planta o muralla':ready?'¡Despertar!':'Despertar'};
+    caption:'Despertar'};
 }
 // Keep the native action sizes and use the right-hand part of the tutorial reserve.
 export function awakeningHudPlacement(dims,{statsRight=0,menuLeft=dims.w,safeBottom=0}={}){
@@ -31,13 +31,12 @@ export class AwakeningHud {
       <button type="button" id="awakeningButton" disabled><svg class="awakening-ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="45"/><circle class="awakening-ring-value" cx="50" cy="50" r="45"/></svg>
       <img class="awakening-icon" alt="" aria-hidden="true"><span class="awakening-caption">Despertar</span><span class="awakening-short-caption" aria-hidden="true">Despertar</span><span class="awakening-bar" aria-hidden="true"><i></i></span><span class="awakening-value" aria-hidden="true">0 / 100</span></button>`;
     this.button=this.element.querySelector('button');this.button.onclick=onActivate;
-    for(const [name,key] of [['corner-left','frame_tl'],['corner-right','frame_tr']])this.element.style.setProperty('--awakening-'+name,`url("${assetUrl(ASSETS[key].src)}")`);
     this.element.querySelector('img').src=assetUrl(ASSETS.magic_icon.src);stage.querySelector('#hud').append(this.element);
   }
   render(state,options={}){
     const view=awakeningHudState(state,options);
     this.button.disabled=view.disabled;this.button.setAttribute('aria-label',view.label);this.button.setAttribute('aria-pressed',String(view.selecting));
-    const last=state.awakenings?.history.at(-1);
+    const last=state.awakenings?.history?.at(-1);
     this.button.title=last?`${view.label} · Última jornada: agricultura ${last.agriculture.toFixed(1)}, economía ${last.economy.toFixed(1)}, defensa ${last.defense.toFixed(1)}, acontecimientos ${last.events.toFixed(1)}`:view.label;
     this.element.classList.toggle('is-ready',view.available);this.element.classList.toggle('is-selecting',view.selecting);
     this.stage.classList.toggle('awakening-selecting',view.selecting);
@@ -45,13 +44,13 @@ export class AwakeningHud {
     this.element.style.setProperty('--awakening-arc',String(282.7433*(1-view.progress/100)));
     this.element.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',String(Math.floor(view.progress)));
     this.element.querySelector('.awakening-caption').textContent=view.caption;
-    this.element.querySelector('.awakening-short-caption').textContent=view.selecting?'Cancelar':'Despertar';
+    this.element.querySelector('.awakening-short-caption').textContent=view.caption;
     this.element.querySelector('.awakening-value').textContent=`${Math.floor(view.progress)} / 100`;
   }
   layout(dims){
     const days=this.stage.querySelector('#days'),menu=this.stage.querySelector('#menuButton');
     const safeBottom=parseFloat(getComputedStyle(this.element.querySelector('.awakening-safe-probe')).paddingBottom)||0;
-    const placement=awakeningHudPlacement(dims,{statsRight:days.offsetLeft+days.offsetWidth,menuLeft:menu.offsetLeft,safeBottom});
+    const placement=awakeningHudPlacement(dims,{statsRight:dims.statsRight??days.offsetLeft+days.offsetWidth,menuLeft:dims.menuLeft??menu.offsetLeft,safeBottom});
     this.element.classList.toggle('is-medallion',placement.portrait);
     this.element.classList.toggle('is-compact-medallion',placement.portrait&&placement.width<65);
     Object.assign(this.element.style,{left:placement.left===undefined?'auto':placement.left+'px',right:placement.right===undefined?'auto':`max(${placement.right}px, env(safe-area-inset-right, 0px))`,top:placement.top+'px',width:placement.width+'px',height:placement.height+'px'});

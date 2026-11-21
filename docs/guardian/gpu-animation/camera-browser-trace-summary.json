@@ -1,0 +1,2016 @@
+{
+  "scope": "One instrumented paused-camera browser trace. Events overlap and nest; durations cannot be summed. A thread event does not alone prove the cause of a frame delay or GPU execution time.",
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "selected": {
+    "id": "spatial:0:-1:21",
+    "slot": 3,
+    "x": -2.6859482881760885,
+    "z": 185.09613374722403,
+    "ready": 0
+  },
+  "traceBytes": 41104267,
+  "traceAnchor": 71992.17500000075,
+  "frames": 97,
+  "top": [
+    {
+      "at": 73263.27000000328,
+      "wallInterval": 89.25500000268221,
+      "rafInterval": 100.02999999999884,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73173.93200000074,
+          "duration": 84.884,
+          "overlap": 84.801
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73173.93400000075,
+          "duration": 84.88,
+          "overlap": 84.799
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73174.03400000074,
+          "duration": 77.286,
+          "overlap": 77.286
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73197.31000000074,
+          "duration": 51.047,
+          "overlap": 51.047
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73197.31500000074,
+          "duration": 51.036,
+          "overlap": 51.036
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73174.04000000075,
+          "duration": 39.078,
+          "overlap": 39.078,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73263.20100000074,
+          "duration": 38.154,
+          "overlap": 0.06900000381469727
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73263.20300000075,
+          "duration": 38.15,
+          "overlap": 0.06700000381469727
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73169.16300000074,
+          "duration": 33.376,
+          "overlap": 28.524
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73169.16600000074,
+          "duration": 33.37,
+          "overlap": 28.521
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73202.54300000075,
+          "duration": 33.324,
+          "overlap": 33.324
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73235.87100000074,
+          "duration": 33.323,
+          "overlap": 27.3990000038147
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73235.87400000074,
+          "duration": 33.317,
+          "overlap": 27.3960000038147
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73202.54700000075,
+          "duration": 33.316,
+          "overlap": 33.316
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73203.75600000075,
+          "duration": 4.327,
+          "overlap": 4.327
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73203.76500000074,
+          "duration": 4.316,
+          "overlap": 4.316
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73174.27400000075,
+          "duration": 4.272,
+          "overlap": 4.272
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73174.27900000075,
+          "duration": 4.266,
+          "overlap": 4.266
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73174.28100000074,
+          "duration": 4.262,
+          "overlap": 4.262
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73254.45500000074,
+          "duration": 3.926,
+          "overlap": 3.926
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73254.46000000075,
+          "duration": 3.921,
+          "overlap": 3.921
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73254.46300000075,
+          "duration": 3.916,
+          "overlap": 3.916
+        },
+        {
+          "name": "V8.GC_BACKGROUND_SAFEPOINT",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73226.91300000074,
+          "duration": 3.777,
+          "overlap": 3.777
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73174.79800000075,
+          "duration": 3.738,
+          "overlap": 3.738
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73254.97100000075,
+          "duration": 3.4,
+          "overlap": 3.4
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 73175.04300000075,
+          "duration": 3.383,
+          "overlap": 3.383
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73220.81000000074,
+          "duration": 3.357,
+          "overlap": 3.357
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73220.81600000075,
+          "duration": 3.35,
+          "overlap": 3.35
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73220.81900000075,
+          "duration": 3.346,
+          "overlap": 3.346
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 73255.21600000074,
+          "duration": 3.047,
+          "overlap": 3.047
+        }
+      ]
+    },
+    {
+      "at": 73119.85000000149,
+      "wallInterval": 78.33500000089407,
+      "rafInterval": 66.66500000000815,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73041.43800000075,
+          "duration": 76.111,
+          "overlap": 76.034
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73041.44000000074,
+          "duration": 76.107,
+          "overlap": 76.032
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73041.53800000074,
+          "duration": 75.323,
+          "overlap": 75.323
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73119.75700000074,
+          "duration": 43.741,
+          "overlap": 0.093
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73119.75800000074,
+          "duration": 43.739,
+          "overlap": 0.092
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73041.54300000075,
+          "duration": 33.51,
+          "overlap": 33.51,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73069.14200000075,
+          "duration": 33.361,
+          "overlap": 33.361
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73069.17000000074,
+          "duration": 33.33,
+          "overlap": 33.33
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73102.50800000074,
+          "duration": 33.326,
+          "overlap": 17.342
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73102.51100000074,
+          "duration": 33.32,
+          "overlap": 17.339
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73035.84400000074,
+          "duration": 33.294,
+          "overlap": 27.623
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73035.84700000075,
+          "duration": 33.289,
+          "overlap": 27.621
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73082.98000000074,
+          "duration": 10.853,
+          "overlap": 10.853
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 73082.98500000074,
+          "duration": 10.846,
+          "overlap": 10.846
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73035.07000000075,
+          "duration": 8.056,
+          "overlap": 1.611
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73035.07600000074,
+          "duration": 8.049,
+          "overlap": 1.61
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73035.07900000074,
+          "duration": 8.044,
+          "overlap": 1.608
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73035.62500000074,
+          "duration": 7.492,
+          "overlap": 1.602
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 73036.00900000075,
+          "duration": 6.82,
+          "overlap": 1.314
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73100.08300000074,
+          "duration": 4.221,
+          "overlap": 4.221
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73100.08700000074,
+          "duration": 4.216,
+          "overlap": 4.216
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73100.09000000074,
+          "duration": 4.212,
+          "overlap": 4.212
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73100.12800000074,
+          "duration": 4.166,
+          "overlap": 4.166
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 73100.40600000074,
+          "duration": 3.757,
+          "overlap": 3.757
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73081.92000000074,
+          "duration": 3.729,
+          "overlap": 3.729
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73081.92300000075,
+          "duration": 3.726,
+          "overlap": 3.726
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73081.92600000075,
+          "duration": 3.721,
+          "overlap": 3.721
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73070.86800000074,
+          "duration": 3.286,
+          "overlap": 3.286
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73070.87200000075,
+          "duration": 3.28,
+          "overlap": 3.28
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73082.55500000075,
+          "duration": 3.083,
+          "overlap": 3.083
+        }
+      ]
+    },
+    {
+      "at": 73382.33000000194,
+      "wallInterval": 77.94999999925494,
+      "rafInterval": 100,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73304.29200000074,
+          "duration": 75.652,
+          "overlap": 75.5639999961853
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73304.29400000075,
+          "duration": 75.648,
+          "overlap": 75.5619999961853
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73304.40000000075,
+          "duration": 71.965,
+          "overlap": 71.965
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73382.23400000074,
+          "duration": 49.317,
+          "overlap": 0.096
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 73382.23600000075,
+          "duration": 49.313,
+          "overlap": 0.094
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73335.81600000075,
+          "duration": 33.342,
+          "overlap": 33.342
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73335.81800000074,
+          "duration": 33.338,
+          "overlap": 33.338
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73369.16100000075,
+          "duration": 33.338,
+          "overlap": 13.169
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73369.16400000075,
+          "duration": 33.333,
+          "overlap": 13.166
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73302.48100000074,
+          "duration": 33.33,
+          "overlap": 31.430999996185303
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 73302.48400000074,
+          "duration": 33.325,
+          "overlap": 31.428999996185304
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73304.41900000075,
+          "duration": 32.49,
+          "overlap": 32.49,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73336.14400000074,
+          "duration": 4.172,
+          "overlap": 4.172
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73336.14900000075,
+          "duration": 4.167,
+          "overlap": 4.167
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73336.15100000074,
+          "duration": 4.164,
+          "overlap": 4.164
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73373.17700000074,
+          "duration": 3.939,
+          "overlap": 3.939
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73373.17800000074,
+          "duration": 3.936,
+          "overlap": 3.936
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73358.17500000075,
+          "duration": 3.564,
+          "overlap": 3.564
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73358.17900000075,
+          "duration": 3.559,
+          "overlap": 3.559
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73358.18200000074,
+          "duration": 3.555,
+          "overlap": 3.555
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73361.41800000075,
+          "duration": 3.475,
+          "overlap": 3.475
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73361.43200000074,
+          "duration": 3.458,
+          "overlap": 3.458
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73377.93100000074,
+          "duration": 3.237,
+          "overlap": 3.237
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 73377.93200000074,
+          "duration": 3.234,
+          "overlap": 3.234
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 73376.36800000074,
+          "duration": 3.182,
+          "overlap": 3.182
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73358.89000000074,
+          "duration": 2.841,
+          "overlap": 2.841
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 73337.49300000074,
+          "duration": 2.816,
+          "overlap": 2.816
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73302.93200000074,
+          "duration": 2.364,
+          "overlap": 0.9159999961853027
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 73302.93400000075,
+          "duration": 2.36,
+          "overlap": 0.9139999961853027
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 73337.86700000074,
+          "duration": 2.354,
+          "overlap": 2.354
+        }
+      ]
+    },
+    {
+      "at": 75027.97000000253,
+      "wallInterval": 74.58999999985099,
+      "rafInterval": 66.66000000000349,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 74953.31600000075,
+          "duration": 74.246,
+          "overlap": 74.1819999961853
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 74953.31800000074,
+          "duration": 74.243,
+          "overlap": 74.1809999961853
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 74953.39200000075,
+          "duration": 65.849,
+          "overlap": 65.849
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75027.89200000075,
+          "duration": 35.62,
+          "overlap": 0.078
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75027.89500000075,
+          "duration": 35.616,
+          "overlap": 0.075
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75002.50900000075,
+          "duration": 33.365,
+          "overlap": 25.461
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75002.51400000075,
+          "duration": 33.357,
+          "overlap": 25.456
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 74935.85600000074,
+          "duration": 33.335,
+          "overlap": 15.810999996185302
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 74935.85900000074,
+          "duration": 33.33,
+          "overlap": 15.808999996185303
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 74969.19500000075,
+          "duration": 33.311,
+          "overlap": 33.311
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 74969.19800000075,
+          "duration": 33.298,
+          "overlap": 33.298
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 74953.39700000074,
+          "duration": 31.712,
+          "overlap": 31.712,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74957.18400000075,
+          "duration": 8.839,
+          "overlap": 8.839
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74957.18700000075,
+          "duration": 8.833,
+          "overlap": 8.833
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74993.17700000074,
+          "duration": 2.519,
+          "overlap": 2.519
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74993.18200000074,
+          "duration": 2.512,
+          "overlap": 2.512
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75004.74300000074,
+          "duration": 2.455,
+          "overlap": 2.455
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75004.76400000075,
+          "duration": 2.432,
+          "overlap": 2.432
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74987.83700000074,
+          "duration": 2.334,
+          "overlap": 2.334
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74987.84500000074,
+          "duration": 2.324,
+          "overlap": 2.324
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75022.64700000074,
+          "duration": 2.279,
+          "overlap": 2.279
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 74953.75700000074,
+          "duration": 2.259,
+          "overlap": 2.259
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 74953.75900000075,
+          "duration": 2.255,
+          "overlap": 2.255
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75024.92700000074,
+          "duration": 2.221,
+          "overlap": 2.221
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74986.56400000074,
+          "duration": 2.101,
+          "overlap": 2.101
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 74986.56600000075,
+          "duration": 2.097,
+          "overlap": 2.097
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75019.24300000074,
+          "duration": 1.751,
+          "overlap": 1.751
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75021.15100000074,
+          "duration": 1.348,
+          "overlap": 1.348
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 74994.98300000075,
+          "duration": 1.341,
+          "overlap": 1.341
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 74994.98600000075,
+          "duration": 1.336,
+          "overlap": 1.336
+        }
+      ]
+    },
+    {
+      "at": 72937.54000000283,
+      "wallInterval": 73.92000000178814,
+      "rafInterval": 99.97999999999593,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72863.57200000074,
+          "duration": 73.405,
+          "overlap": 73.357
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72863.57400000075,
+          "duration": 73.401,
+          "overlap": 73.355
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72937.47500000075,
+          "duration": 55.847,
+          "overlap": 0.06500000381469727
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72937.47700000074,
+          "duration": 55.843,
+          "overlap": 0.06300000381469727
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72863.62800000074,
+          "duration": 49.149,
+          "overlap": 49.149
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72863.63100000075,
+          "duration": 40.655,
+          "overlap": 40.655,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72935.82200000074,
+          "duration": 33.367,
+          "overlap": 1.7180000038146972
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72935.82400000075,
+          "duration": 33.362,
+          "overlap": 1.7160000038146972
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72902.48500000074,
+          "duration": 33.333,
+          "overlap": 33.333
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72902.48800000074,
+          "duration": 33.327,
+          "overlap": 33.327
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72835.84700000075,
+          "duration": 33.32,
+          "overlap": 5.547
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72835.84900000074,
+          "duration": 33.316,
+          "overlap": 5.545
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72869.17100000074,
+          "duration": 33.309,
+          "overlap": 33.309
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72869.17300000075,
+          "duration": 33.304,
+          "overlap": 33.304
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72874.71400000075,
+          "duration": 8.357,
+          "overlap": 8.357
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72874.71600000074,
+          "duration": 8.353,
+          "overlap": 8.353
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72920.36600000075,
+          "duration": 8.121,
+          "overlap": 8.121
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72928.48900000074,
+          "duration": 7.526,
+          "overlap": 7.526
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72913.04100000074,
+          "duration": 4.489,
+          "overlap": 4.489
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72879.10700000075,
+          "duration": 4.469,
+          "overlap": 4.469
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72879.11200000075,
+          "duration": 4.462,
+          "overlap": 4.462
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72886.35100000075,
+          "duration": 4.392,
+          "overlap": 4.392
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72886.35400000075,
+          "duration": 4.386,
+          "overlap": 4.386
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 72901.60400000075,
+          "duration": 2.653,
+          "overlap": 2.653
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 72901.60600000074,
+          "duration": 2.649,
+          "overlap": 2.649
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72917.76100000074,
+          "duration": 2.603,
+          "overlap": 2.603
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72884.70000000074,
+          "duration": 2.236,
+          "overlap": 2.236
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72884.70300000075,
+          "duration": 2.231,
+          "overlap": 2.231
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 72899.57500000074,
+          "duration": 2.026,
+          "overlap": 2.026
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 72899.57600000074,
+          "duration": 1.948,
+          "overlap": 1.948
+        }
+      ]
+    },
+    {
+      "at": 72474.47500000149,
+      "wallInterval": 70.12000000104308,
+      "rafInterval": 66.57499999999709,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72403.81000000074,
+          "duration": 70.032,
+          "overlap": 69.487
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72403.81300000075,
+          "duration": 70.028,
+          "overlap": 69.486
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72404.58500000075,
+          "duration": 65.77,
+          "overlap": 65.77
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 72404.59000000074,
+          "duration": 41.46,
+          "overlap": 41.46,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72474.41900000075,
+          "duration": 39.498,
+          "overlap": 0.056
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 72474.42100000074,
+          "duration": 39.495,
+          "overlap": 0.054
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72469.14500000075,
+          "duration": 33.401,
+          "overlap": 5.33
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72469.14800000074,
+          "duration": 33.379,
+          "overlap": 5.327
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72435.83500000075,
+          "duration": 33.306,
+          "overlap": 33.306
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72435.83800000075,
+          "duration": 33.298,
+          "overlap": 33.298
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72402.59600000075,
+          "duration": 33.235,
+          "overlap": 31.476
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 72402.60000000075,
+          "duration": 33.229,
+          "overlap": 31.474
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72403.81800000074,
+          "duration": 21.194,
+          "overlap": 20.657
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72403.82100000074,
+          "duration": 21.191,
+          "overlap": 20.657
+        },
+        {
+          "name": "V8.GC_MC_BACKGROUND_MARKING",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72403.82400000075,
+          "duration": 21.187,
+          "overlap": 20.656
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.79600000074,
+          "duration": 19.978,
+          "overlap": 19.978
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.79800000075,
+          "duration": 19.975,
+          "overlap": 19.975
+        },
+        {
+          "name": "V8.GC_MC_BACKGROUND_MARKING",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.80000000075,
+          "duration": 19.971,
+          "overlap": 19.971
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72402.27400000075,
+          "duration": 17.197,
+          "overlap": 15.116
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72402.27600000074,
+          "duration": 17.194,
+          "overlap": 15.115
+        },
+        {
+          "name": "V8.GC_MC_BACKGROUND_MARKING",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72402.27800000075,
+          "duration": 17.191,
+          "overlap": 15.114
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.91300000074,
+          "duration": 14.486,
+          "overlap": 14.486
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.91600000074,
+          "duration": 14.482,
+          "overlap": 14.482
+        },
+        {
+          "name": "V8.GC_MC_BACKGROUND_MARKING",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72404.91800000075,
+          "duration": 14.478,
+          "overlap": 14.478
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72472.11500000075,
+          "duration": 13.814,
+          "overlap": 2.36
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72472.11800000074,
+          "duration": 13.809,
+          "overlap": 2.357
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72412.65200000074,
+          "duration": 12.36,
+          "overlap": 12.36
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72412.65400000075,
+          "duration": 12.358,
+          "overlap": 12.358
+        },
+        {
+          "name": "V8.GC_MC_BACKGROUND_MARKING",
+          "category": "devtools.timeline,disabled-by-default-v8.gc",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72412.65600000074,
+          "duration": 12.355,
+          "overlap": 12.355
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 72412.70800000074,
+          "duration": 12.276,
+          "overlap": 12.276
+        }
+      ]
+    },
+    {
+      "at": 75192.59500000253,
+      "wallInterval": 66.46000000089407,
+      "rafInterval": 66.63499999999476,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75126.07200000074,
+          "duration": 63.669,
+          "overlap": 63.606
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75126.07400000075,
+          "duration": 63.665,
+          "overlap": 63.604
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75126.15400000075,
+          "duration": 54.918,
+          "overlap": 54.918
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75192.47800000074,
+          "duration": 44.736,
+          "overlap": 0.117
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75192.48000000074,
+          "duration": 44.731,
+          "overlap": 0.115
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75126.15800000075,
+          "duration": 38.392,
+          "overlap": 38.392,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75169.18400000075,
+          "duration": 33.336,
+          "overlap": 23.411
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75135.84800000074,
+          "duration": 33.332,
+          "overlap": 33.332
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75169.18700000075,
+          "duration": 33.33,
+          "overlap": 23.408
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75135.85000000075,
+          "duration": 33.325,
+          "overlap": 33.325
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75102.54800000075,
+          "duration": 33.296,
+          "overlap": 9.709
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75102.56100000074,
+          "duration": 33.279,
+          "overlap": 9.705
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75144.53000000074,
+          "duration": 7.291,
+          "overlap": 7.291
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75144.53500000075,
+          "duration": 7.283,
+          "overlap": 7.283
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75141.52200000074,
+          "duration": 7.167,
+          "overlap": 7.167
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75141.52400000075,
+          "duration": 7.163,
+          "overlap": 7.163
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75135.29000000075,
+          "duration": 6.227,
+          "overlap": 6.227
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75135.29200000074,
+          "duration": 6.223,
+          "overlap": 6.223
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75161.10900000074,
+          "duration": 4.322,
+          "overlap": 4.322
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75161.17600000075,
+          "duration": 4.254,
+          "overlap": 4.254
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75161.17800000074,
+          "duration": 4.25,
+          "overlap": 4.25
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75149.51200000074,
+          "duration": 4.15,
+          "overlap": 4.15
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75149.51400000075,
+          "duration": 4.146,
+          "overlap": 4.146
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 75161.55100000075,
+          "duration": 3.868,
+          "overlap": 3.868
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75148.43400000075,
+          "duration": 3.681,
+          "overlap": 3.681
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75148.43700000075,
+          "duration": 3.677,
+          "overlap": 3.677
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75148.43900000074,
+          "duration": 3.673,
+          "overlap": 3.673
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 75148.44300000074,
+          "duration": 3.659,
+          "overlap": 3.659
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75174.17000000074,
+          "duration": 3.62,
+          "overlap": 3.62
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75174.17500000075,
+          "duration": 3.614,
+          "overlap": 3.614
+        }
+      ]
+    },
+    {
+      "at": 75349.60000000149,
+      "wallInterval": 63.605000000447035,
+      "rafInterval": 66.66999999999825,
+      "overlapping": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75285.90400000075,
+          "duration": 61.007,
+          "overlap": 60.916
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75285.90600000074,
+          "duration": 61.003,
+          "overlap": 60.914
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75286.02400000075,
+          "duration": 49.746,
+          "overlap": 49.746
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75269.17700000074,
+          "duration": 33.339,
+          "overlap": 16.521
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75269.17900000075,
+          "duration": 33.334,
+          "overlap": 16.518
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75335.84400000074,
+          "duration": 33.327,
+          "overlap": 13.756
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75335.84700000075,
+          "duration": 33.322,
+          "overlap": 13.753
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75302.52000000075,
+          "duration": 33.321,
+          "overlap": 33.321
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "GpuVSyncThread",
+          "start": 75302.52200000074,
+          "duration": 33.317,
+          "overlap": 33.317
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75349.52000000075,
+          "duration": 32.886,
+          "overlap": 0.08
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrRendererMain",
+          "start": 75349.52200000074,
+          "duration": 32.883,
+          "overlap": 0.078
+        },
+        {
+          "name": "FunctionCall",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75286.02900000075,
+          "duration": 29.081,
+          "overlap": 29.081,
+          "functionName": "frame",
+          "url": "http://127.0.0.1:5175/src/app/main.js",
+          "line": 611
+        },
+        {
+          "name": "ThreadPool_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75289.53100000074,
+          "duration": 5.174,
+          "overlap": 5.174
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "ThreadPoolForegroundWorker",
+          "start": 75289.53600000075,
+          "duration": 5.167,
+          "overlap": 5.167
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75342.49700000075,
+          "duration": 3.888,
+          "overlap": 3.888
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75338.83900000075,
+          "duration": 3.656,
+          "overlap": 3.656
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75287.14700000074,
+          "duration": 3.352,
+          "overlap": 3.352
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75287.15200000074,
+          "duration": 3.347,
+          "overlap": 3.347
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75287.15400000075,
+          "duration": 3.343,
+          "overlap": 3.343
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 75287.64400000074,
+          "duration": 2.846,
+          "overlap": 2.846
+        },
+        {
+          "name": "FireAnimationFrame",
+          "category": "devtools.timeline",
+          "thread": "CrRendererMain",
+          "start": 75335.77200000074,
+          "duration": 2.752,
+          "overlap": 2.752
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75321.33700000074,
+          "duration": 2.486,
+          "overlap": 2.486
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DevToolsPipeHandlerWriteThread",
+          "start": 75321.34300000075,
+          "duration": 2.475,
+          "overlap": 2.475
+        },
+        {
+          "name": "v8.compileModule",
+          "category": "v8,devtools.timeline",
+          "thread": "DedicatedWorker thread",
+          "start": 75288.03800000074,
+          "duration": 2.173,
+          "overlap": 2.173
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75335.41100000075,
+          "duration": 1.858,
+          "overlap": 1.858
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75335.41300000074,
+          "duration": 1.855,
+          "overlap": 1.855
+        },
+        {
+          "name": "SimpleWatcher::OnHandleReady",
+          "category": "toplevel",
+          "thread": "DedicatedWorker thread",
+          "start": 75335.41500000075,
+          "duration": 1.851,
+          "overlap": 1.851
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 75306.12400000074,
+          "duration": 1.816,
+          "overlap": 1.816
+        },
+        {
+          "name": "Receive mojo message",
+          "category": "toplevel,mojom",
+          "thread": "DedicatedWorker thread",
+          "start": 75335.43200000074,
+          "duration": 1.812,
+          "overlap": 1.812
+        },
+        {
+          "name": "Edge_RunTask",
+          "category": "toplevel",
+          "thread": "CrGpuMain",
+          "start": 75306.12800000074,
+          "duration": 1.807,
+          "overlap": 1.807
+        }
+      ]
+    }
+  ]
+}

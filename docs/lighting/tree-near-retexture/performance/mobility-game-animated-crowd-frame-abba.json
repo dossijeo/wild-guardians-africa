@@ -1,0 +1,154 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "responseMs": 182.7800000011921,
+      "firstTickMs": 174.6899999976158,
+      "totalComputeMs": 182.76500000059605,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 14.620416,
+        "p99": 14.94,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.395000000004075,
+        "p99": 33.42000000000553,
+        "max": 199.97000000000116
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 199.97000000000116,
+        "p99": 199.97000000000116,
+        "max": 199.97000000000116
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 26.269999995827675,
+        "p99": 28.939999997615814,
+        "max": 34.064999997615814
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "cb9a490c1b9a947a8eca1d0b8d709ca26d5c71506e68f65a052e4a4c4b6cc396"
+    },
+    {
+      "mode": "worker",
+      "responseMs": 225.94499999284744,
+      "firstTickMs": 209.7550000101328,
+      "totalComputeMs": 218.3100000023842,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 13.4744,
+        "p99": 14.789984,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.395000000004075,
+        "p99": 33.43000000000029,
+        "max": 33.45999999999913
+      },
+      "overlap": {
+        "count": 7,
+        "p95": 33.36000000000058,
+        "p99": 33.36000000000058,
+        "max": 33.38500000000204
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 32.28999999165535,
+        "p99": 35.20999999344349,
+        "max": 35.92499999701977
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "cb9a490c1b9a947a8eca1d0b8d709ca26d5c71506e68f65a052e4a4c4b6cc396"
+    },
+    {
+      "mode": "worker",
+      "responseMs": 231.69499999284744,
+      "firstTickMs": 221.8449999988079,
+      "totalComputeMs": 230.90999999642372,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 14.53056,
+        "p99": 14.858208,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.395000000004075,
+        "p99": 33.44499999999971,
+        "max": 33.44999999999709
+      },
+      "overlap": {
+        "count": 7,
+        "p95": 33.38500000000204,
+        "p99": 33.38500000000204,
+        "max": 33.44499999999971
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 28.375,
+        "p99": 31.825000002980232,
+        "max": 41.48499999940395
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "cb9a490c1b9a947a8eca1d0b8d709ca26d5c71506e68f65a052e4a4c4b6cc396"
+    },
+    {
+      "mode": "main",
+      "responseMs": 183.04999999701977,
+      "firstTickMs": 174.93000000715256,
+      "totalComputeMs": 183.03999999165535,
+      "gpu": {
+        "reason": null,
+        "count": 100,
+        "p95": 14.56128,
+        "p99": 15.12448,
+        "disjoint": 0,
+        "discarded": 0
+      },
+      "frames": {
+        "count": 99,
+        "p95": 33.3949999999968,
+        "p99": 33.4800000000032,
+        "max": 200.03499999999622
+      },
+      "overlap": {
+        "count": 1,
+        "p95": 200.03499999999622,
+        "p99": 200.03499999999622,
+        "max": 200.03499999999622
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 30.105000004172325,
+        "p99": 35.275000005960464,
+        "max": 36.24499998986721
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "animals": 20,
+      "sceneErrors": [],
+      "stateHash": "cb9a490c1b9a947a8eca1d0b8d709ca26d5c71506e68f65a052e4a4c4b6cc396"
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "One real cold Game.tick with scripted impact and Rapier in main or Worker, converted mangrove island snapshot and 24 synthetic chunks, normalized test rig in an original running pose and full state serialization. Separate frozen real WorldScene with 20 test animals; no shared simulation or pose, input, HUD, physics parity beyond this step, or gameplay integration. Initialization excluded."
+}

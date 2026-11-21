@@ -1,0 +1,1451 @@
+[
+  {
+    "layout": "mono",
+    "count": 1,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      100
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 951087663,
+    "initialReservations": {
+      "crop:crop-0": "animal-2"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-96",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 7.599999999999989,
+        "hits": 0,
+        "remainingLiving": 99
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 2,
+    "budgetSpent": 2,
+    "budgetRetained": 0,
+    "animalsSpending": 1,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 99,
+    "damageEvents": {
+      "crop": 2,
+      "structure": 0
+    },
+    "raidEnded": true,
+    "result": null
+  },
+  {
+    "layout": "mono",
+    "count": 2,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      100
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 661917272,
+    "initialReservations": {
+      "crop:crop-0": "animal-2",
+      "structure:center": "animal-3"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-97",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "entering",
+        "targetId": "center",
+        "reservation": "structure:center",
+        "hits": 2
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 10.499999999999979,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 25.200000000000088,
+        "hits": 0,
+        "remainingLiving": 99
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 4,
+    "budgetSpent": 4,
+    "budgetRetained": 0,
+    "animalsSpending": 2,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 99,
+    "damageEvents": {
+      "crop": 2,
+      "structure": 2
+    },
+    "raidEnded": true,
+    "result": null
+  },
+  {
+    "layout": "mono",
+    "count": 5,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      100
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 3128492279,
+    "initialReservations": {
+      "crop:crop-0": "animal-2",
+      "structure:center": "animal-3"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-96",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "entering",
+        "targetId": "center",
+        "reservation": "structure:center",
+        "hits": 2
+      },
+      {
+        "id": "animal-4",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-5",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-6",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 7.599999999999989,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-4",
+        "elapsed": 15.199999999999962,
+        "hits": 0,
+        "remainingLiving": 98
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 28.300000000000132,
+        "hits": 0,
+        "remainingLiving": 97
+      },
+      {
+        "id": "animal-6",
+        "elapsed": 39.000000000000284,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-5",
+        "elapsed": 49.80000000000044,
+        "hits": 0,
+        "remainingLiving": 95
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-4",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-5",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-6",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 14,
+    "budgetSpent": 14,
+    "budgetRetained": 0,
+    "animalsSpending": 5,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 95,
+    "damageEvents": {
+      "crop": 10,
+      "structure": 4
+    },
+    "raidEnded": true,
+    "result": null
+  },
+  {
+    "layout": "mono",
+    "count": 12,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      100
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 1439539886,
+    "initialReservations": {
+      "crop:crop-0": "animal-2",
+      "structure:center": "animal-3"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-97",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "entering",
+        "targetId": "center",
+        "reservation": "structure:center",
+        "hits": 2
+      },
+      {
+        "id": "animal-4",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-5",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-6",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-7",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-8",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-9",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-10",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-11",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-12",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-13",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 11.399999999999975,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-4",
+        "elapsed": 18.599999999999994,
+        "hits": 0,
+        "remainingLiving": 98
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 23.90000000000007,
+        "hits": 0,
+        "remainingLiving": 98
+      },
+      {
+        "id": "animal-7",
+        "elapsed": 40.400000000000304,
+        "hits": 0,
+        "remainingLiving": 96
+      },
+      {
+        "id": "animal-6",
+        "elapsed": 53.800000000000495,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-9",
+        "elapsed": 65.60000000000055,
+        "hits": 0,
+        "remainingLiving": 94
+      },
+      {
+        "id": "animal-10",
+        "elapsed": 78.89999999999979,
+        "hits": 0,
+        "remainingLiving": 93
+      },
+      {
+        "id": "animal-5",
+        "elapsed": 96.3999999999988,
+        "hits": 0,
+        "remainingLiving": 91
+      },
+      {
+        "id": "animal-8",
+        "elapsed": 103.4999999999984,
+        "hits": 0,
+        "remainingLiving": 91
+      },
+      {
+        "id": "animal-13",
+        "elapsed": 104.39999999999834,
+        "hits": 0,
+        "remainingLiving": 91
+      },
+      {
+        "id": "animal-11",
+        "elapsed": 109.39999999999806,
+        "hits": 0,
+        "remainingLiving": 91
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-4",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-5",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-6",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-7",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-8",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-9",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-10",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-11",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-12",
+        "initialHits": 3,
+        "hitsSpent": 2,
+        "remainingHits": 1,
+        "status": "walking"
+      },
+      {
+        "id": "animal-13",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 32,
+    "budgetSpent": 31,
+    "budgetRetained": 1,
+    "animalsSpending": 12,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 91,
+    "damageEvents": {
+      "crop": 20,
+      "structure": 11
+    },
+    "raidEnded": false,
+    "result": null
+  },
+  {
+    "layout": "fragmented",
+    "count": 12,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 3533332002,
+    "initialReservations": {
+      "crop:crop-0": "animal-2",
+      "crop:crop-1": "animal-3",
+      "crop:crop-10": "animal-4",
+      "crop:crop-11": "animal-5",
+      "crop:crop-12": "animal-6",
+      "crop:crop-13": "animal-7",
+      "crop:crop-14": "animal-8",
+      "crop:crop-15": "animal-9",
+      "crop:crop-16": "animal-10",
+      "crop:crop-17": "animal-11",
+      "crop:crop-18": "animal-12",
+      "crop:crop-19": "animal-13"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-0",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "entering",
+        "targetId": "crop-1",
+        "reservation": "crop:crop-1",
+        "hits": 2
+      },
+      {
+        "id": "animal-4",
+        "status": "entering",
+        "targetId": "crop-10",
+        "reservation": "crop:crop-10",
+        "hits": 2
+      },
+      {
+        "id": "animal-5",
+        "status": "entering",
+        "targetId": "crop-11",
+        "reservation": "crop:crop-11",
+        "hits": 4
+      },
+      {
+        "id": "animal-6",
+        "status": "entering",
+        "targetId": "crop-12",
+        "reservation": "crop:crop-12",
+        "hits": 4
+      },
+      {
+        "id": "animal-7",
+        "status": "entering",
+        "targetId": "crop-13",
+        "reservation": "crop:crop-13",
+        "hits": 2
+      },
+      {
+        "id": "animal-8",
+        "status": "entering",
+        "targetId": "crop-14",
+        "reservation": "crop:crop-14",
+        "hits": 3
+      },
+      {
+        "id": "animal-9",
+        "status": "entering",
+        "targetId": "crop-15",
+        "reservation": "crop:crop-15",
+        "hits": 2
+      },
+      {
+        "id": "animal-10",
+        "status": "entering",
+        "targetId": "crop-16",
+        "reservation": "crop:crop-16",
+        "hits": 2
+      },
+      {
+        "id": "animal-11",
+        "status": "entering",
+        "targetId": "crop-17",
+        "reservation": "crop:crop-17",
+        "hits": 3
+      },
+      {
+        "id": "animal-12",
+        "status": "entering",
+        "targetId": "crop-18",
+        "reservation": "crop:crop-18",
+        "hits": 3
+      },
+      {
+        "id": "animal-13",
+        "status": "entering",
+        "targetId": "crop-19",
+        "reservation": "crop:crop-19",
+        "hits": 3
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-9",
+        "elapsed": 12.89999999999997,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-4",
+        "elapsed": 13.899999999999967,
+        "hits": 0,
+        "remainingLiving": 97
+      },
+      {
+        "id": "animal-7",
+        "elapsed": 16.699999999999967,
+        "hits": 0,
+        "remainingLiving": 94
+      },
+      {
+        "id": "animal-2",
+        "elapsed": 17.099999999999973,
+        "hits": 0,
+        "remainingLiving": 93
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 17.299999999999976,
+        "hits": 0,
+        "remainingLiving": 92
+      },
+      {
+        "id": "animal-6",
+        "elapsed": 22.200000000000045,
+        "hits": 0,
+        "remainingLiving": 90
+      },
+      {
+        "id": "animal-10",
+        "elapsed": 25.900000000000098,
+        "hits": 0,
+        "remainingLiving": 88
+      },
+      {
+        "id": "animal-8",
+        "elapsed": 27.40000000000012,
+        "hits": 0,
+        "remainingLiving": 88
+      },
+      {
+        "id": "animal-11",
+        "elapsed": 32.40000000000019,
+        "hits": 0,
+        "remainingLiving": 87
+      },
+      {
+        "id": "animal-5",
+        "elapsed": 33.0000000000002,
+        "hits": 0,
+        "remainingLiving": 86
+      },
+      {
+        "id": "animal-12",
+        "elapsed": 36.80000000000025,
+        "hits": 0,
+        "remainingLiving": 86
+      },
+      {
+        "id": "animal-13",
+        "elapsed": 50.20000000000044,
+        "hits": 0,
+        "remainingLiving": 85
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-4",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-5",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-6",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-7",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-8",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-9",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-10",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-11",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-12",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-13",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 32,
+    "budgetSpent": 32,
+    "budgetRetained": 0,
+    "animalsSpending": 12,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 85,
+    "damageEvents": {
+      "crop": 32,
+      "structure": 0
+    },
+    "raidEnded": true,
+    "result": null
+  },
+  {
+    "layout": "center-only",
+    "count": 12,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 2284838734,
+    "initialReservations": {
+      "structure:center": "animal-2"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "center",
+        "reservation": "structure:center",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-4",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-5",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-6",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-7",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-8",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-9",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-10",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-11",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-12",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-13",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 26.400000000000105,
+        "hits": 0,
+        "remainingLiving": 0
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 48.200000000000415,
+        "hits": 0,
+        "remainingLiving": 0
+      },
+      {
+        "id": "animal-4",
+        "elapsed": 72.70000000000014,
+        "hits": 0,
+        "remainingLiving": 0
+      },
+      {
+        "id": "animal-5",
+        "elapsed": 103.99999999999837,
+        "hits": 0,
+        "remainingLiving": 0
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "retreating"
+      },
+      {
+        "id": "animal-4",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "retreating"
+      },
+      {
+        "id": "animal-5",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "retreating"
+      },
+      {
+        "id": "animal-6",
+        "initialHits": 4,
+        "hitsSpent": 0,
+        "remainingHits": 4,
+        "status": "walking"
+      },
+      {
+        "id": "animal-7",
+        "initialHits": 2,
+        "hitsSpent": 0,
+        "remainingHits": 2,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-8",
+        "initialHits": 3,
+        "hitsSpent": 0,
+        "remainingHits": 3,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-9",
+        "initialHits": 2,
+        "hitsSpent": 0,
+        "remainingHits": 2,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-10",
+        "initialHits": 2,
+        "hitsSpent": 0,
+        "remainingHits": 2,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-11",
+        "initialHits": 3,
+        "hitsSpent": 0,
+        "remainingHits": 3,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-12",
+        "initialHits": 3,
+        "hitsSpent": 0,
+        "remainingHits": 3,
+        "status": "waiting"
+      },
+      {
+        "id": "animal-13",
+        "initialHits": 3,
+        "hitsSpent": 0,
+        "remainingHits": 3,
+        "status": "waiting"
+      }
+    ],
+    "budgetInitial": 32,
+    "budgetSpent": 10,
+    "budgetRetained": 22,
+    "animalsSpending": 4,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 0,
+    "damageEvents": {
+      "crop": 0,
+      "structure": 10
+    },
+    "raidEnded": false,
+    "result": null
+  },
+  {
+    "layout": "connected-walls",
+    "count": 12,
+    "dt": 0.1,
+    "duration": 120,
+    "fixtureCropGroups": [
+      100
+    ],
+    "defensiveGroups": [
+      {
+        "id": "structure:center",
+        "pieces": 1
+      },
+      {
+        "id": "defense:wall-0",
+        "pieces": 12
+      }
+    ],
+    "rngBefore": 712,
+    "rngAfter": 3533332002,
+    "initialReservations": {
+      "crop:crop-0": "animal-2",
+      "structure:center": "animal-3",
+      "defense:wall-0": "animal-4"
+    },
+    "first": [
+      {
+        "id": "animal-2",
+        "status": "entering",
+        "targetId": "crop-97",
+        "reservation": "crop:crop-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-3",
+        "status": "entering",
+        "targetId": "center",
+        "reservation": "structure:center",
+        "hits": 2
+      },
+      {
+        "id": "animal-4",
+        "status": "entering",
+        "targetId": "wall-11",
+        "reservation": "defense:wall-0",
+        "hits": 2
+      },
+      {
+        "id": "animal-5",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-6",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 4
+      },
+      {
+        "id": "animal-7",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-8",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-9",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-10",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 2
+      },
+      {
+        "id": "animal-11",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-12",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      },
+      {
+        "id": "animal-13",
+        "status": "waiting",
+        "targetId": null,
+        "reservation": null,
+        "hits": 3
+      }
+    ],
+    "transitions": [
+      {
+        "id": "animal-2",
+        "elapsed": 9.699999999999982,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-4",
+        "elapsed": 9.699999999999982,
+        "hits": 0,
+        "remainingLiving": 99
+      },
+      {
+        "id": "animal-3",
+        "elapsed": 24.500000000000078,
+        "hits": 0,
+        "remainingLiving": 98
+      },
+      {
+        "id": "animal-8",
+        "elapsed": 29.400000000000148,
+        "hits": 0,
+        "remainingLiving": 98
+      },
+      {
+        "id": "animal-7",
+        "elapsed": 33.400000000000205,
+        "hits": 0,
+        "remainingLiving": 97
+      },
+      {
+        "id": "animal-12",
+        "elapsed": 47.3000000000004,
+        "hits": 0,
+        "remainingLiving": 96
+      },
+      {
+        "id": "animal-9",
+        "elapsed": 50.20000000000044,
+        "hits": 0,
+        "remainingLiving": 96
+      },
+      {
+        "id": "animal-5",
+        "elapsed": 57.70000000000055,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-13",
+        "elapsed": 62.10000000000061,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-10",
+        "elapsed": 66.10000000000052,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-11",
+        "elapsed": 66.70000000000049,
+        "hits": 0,
+        "remainingLiving": 95
+      },
+      {
+        "id": "animal-6",
+        "elapsed": 76.69999999999992,
+        "hits": 0,
+        "remainingLiving": 95
+      }
+    ],
+    "actors": [
+      {
+        "id": "animal-2",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-3",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-4",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-5",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-6",
+        "initialHits": 4,
+        "hitsSpent": 4,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-7",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-8",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-9",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-10",
+        "initialHits": 2,
+        "hitsSpent": 2,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-11",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-12",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      },
+      {
+        "id": "animal-13",
+        "initialHits": 3,
+        "hitsSpent": 3,
+        "remainingHits": 0,
+        "status": "gone"
+      }
+    ],
+    "budgetInitial": 32,
+    "budgetSpent": 32,
+    "budgetRetained": 0,
+    "animalsSpending": 12,
+    "animalsRetreatingWithBudget": 0,
+    "remainingLiving": 95,
+    "damageEvents": {
+      "crop": 11,
+      "structure": 21
+    },
+    "raidEnded": true,
+    "result": null
+  }
+]

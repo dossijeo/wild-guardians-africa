@@ -1,0 +1,197 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "b29429ae9",
+  "scope": "Ungated moving Home restored from semantic data into a fresh authority, then admitted through the common Home route protocol on the resident authored actor. Full corridor/current body are native. Home walking policy and unspent running budget are retained. Ordinary producer, live-world replacement, gated cases and full incremental 3123-resource recovery remain pending.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L482-L635",
+      "read": [
+        "addAgent resets corridor/velocities and starts with target NONE",
+        "removeAgent and getActiveAgents keep participation in the existing record",
+        "requestMoveTarget separates a new request from its later executable corridor"
+      ],
+      "decision": "Keep one native intent owner; separate semantic declaration, first actual physical binding and issued Home route. Do not reuse an old route/settlement permission, snap the saved position to a navmesh or introduce another framework/dependency."
+    }
+  ],
+  "nativeBuild": {
+    "command": "$env:PYTHONUTF8='1'; .cache/emsdk/python/3.13.3_64bit/python.exe .cache/build-native-gate-presentation.py",
+    "log": ".cache/native-home-fresh-request-bound-build.log",
+    "standalone": "passed",
+    "threaded": "passed",
+    "exports": [
+      "nav_home_request_version",
+      "nav_intent_restore_home_request",
+      "nav_home_request_snapshot",
+      "nav_home_request_ptr",
+      "nav_home_requests_snapshot",
+      "nav_home_requests_ptr"
+    ],
+    "warning": "Existing pthread + ALLOW_MEMORY_GROWTH warning"
+  },
+  "requestLayout": {
+    "width": 19,
+    "columns": [
+      "version",
+      "actorId",
+      "nativeSession",
+      "requestSequence",
+      "requestedAt",
+      "villageId",
+      "homeX",
+      "homeZ",
+      "x",
+      "z",
+      "yaw",
+      "runPhase",
+      "walkPhase",
+      "carryPhase",
+      "runRemaining",
+      "profile",
+      "bodyId",
+      "radius",
+      "bodyFlags"
+    ],
+    "lifetime": "Initial unbound declaration emits state 6 without usable source. First binding completes immutable physical identity and emits its new request sequence/time. Existing intent/body removal cancels it; route admission retains the exact source in its normal Home binding."
+  },
+  "regression": {
+    "command": ".cache/tooling/node20.exe --test --test-concurrency=2 <65 paths in fileList>",
+    "fileList": ".cache/native-home-restoration-regression-files.json",
+    "log": ".cache/native-home-restoration-regression-final.log",
+    "files": 65,
+    "tests": 690,
+    "pass": 690,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 203420.565,
+    "newHomeCasesIncluded": 17,
+    "coverage": [
+      "Saved origin/heading/phases/budget and no old execution, TaskStart, Carry or Settlement binding",
+      "Authority subscription and Game advance before physical binding/causal clock do not invoke the legacy mover",
+      "Native source body/phase/birth/session identity, malformed duplicate baseline and stale request rejection",
+      "Common advancing-preparation/drain/cancellation/failure/committed-control-failure contract through actual WASM/control/resource/Host/Client ports and deterministic GPU queue",
+      "Native body mutation/rebinding rejection and removal cancellation",
+      "First Home route on threaded runtime with no previously executing peer",
+      "Fresh Home reaches its endpoint and retires through actual shared absence/control/resource channels and deterministic GPU queue",
+      "Original authored roster actor/root/bone/geometry preservation, cancel/exact/late origin, and unchanged walking policy with a positive unspent running budget"
+    ]
+  },
+  "parentControl": {
+    "command": ".cache/tooling/node20.exe --loader ./.cache/native-home-parent-game-loader.mjs --test --test-name-pattern='authority can observe' tests/native-home-restoration.test.js",
+    "loader": ".cache/native-home-parent-game-loader.mjs",
+    "moduleLoadedReadOnly": "src/simulation/game.js at b29429ae9, at its original URL; current bridge, WASM and other modules retained",
+    "log": ".cache/native-home-restoration-parent-unbound-control.log",
+    "tests": 17,
+    "pass": 0,
+    "fail": 1,
+    "skipped": 16,
+    "duration_ms": 3488.0981,
+    "expectedFailure": "Old Game enters its legacy Home logic before a causal clock; pending source path becomes incompatible and confirmed snapshot rejects Solicitud de recursos nativa invalida. Current pending guard preserves the saved point and null path. This is not a whole-parent benchmark."
+  },
+  "productBuild": {
+    "command": ".cache/tooling/node20.exe node_modules/vite/bin/vite.js build",
+    "log": ".cache/native-home-restoration-product-build.log",
+    "status": "passed",
+    "seconds": 49.38,
+    "warnings": "Existing dynamic/static import and large bundle warnings"
+  },
+  "hardware": {
+    "command": "QA_NATIVE_HOME_RESTORE=true; QA_NATIVE_ACTION/QA_NATIVE_ACTION_RESTORE/QA_NATIVE_CONSEQUENCE/QA_NATIVE_SETTLEMENT/QA_NATIVE_SETTLEMENT_HOME/QA_NATIVE_HOME_ROUTE/QA_NATIVE_HOME_ARRIVAL=false; QA_NATIVE_SETTLEMENT_REJECT_ADOPTION=false; PLAYWRIGHT_MODULE=C:/Users/Gabriel/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright; QA_BASE_URL=http://127.0.0.1:5181; OUTPUT=.cache/native-home-restoration-gpu-final.json; .cache/tooling/node20.exe tools/guardian/audit_native_first_task_world_owner.mjs",
+    "log": ".cache/native-home-restoration-gpu-final.log",
+    "artifact": "native-home-restoration-gpu-20261115.json",
+    "status": "passed",
+    "runnerExitCode": 0,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "quality": "muy_baja",
+    "world": "Original assets, minimal desert, source in-page; B is the explicit independent Home fixture. New native authority is created from the semantic save before opening the GPU world; this is not in-place world replacement. Old source save setup uses actual native execution and trusted native proposal ABI, not a previous GPU admission.",
+    "resourcesPrepared": 100,
+    "resourcesAfterReady": 0,
+    "cumulativeResources": [
+      1960,
+      2060,
+      2060
+    ],
+    "preparationBlock": {
+      "start": 1794778630449.8699,
+      "end": 1794778632250.025,
+      "drawFrames": 54
+    },
+    "postCommitBlockedPreparer": {
+      "start": 1794778633374.7349,
+      "end": 1794778635174.8398,
+      "committedAt": 1794778633386.94,
+      "drawFrames": 53
+    },
+    "rootsBefore": [
+      681,
+      682
+    ],
+    "rootsAfter": [
+      681,
+      682
+    ],
+    "sameBonesGeometryAndWorldBatches": true,
+    "postReadyForkCountersEqual": "Asserted in-page for uniform/binding/buffer/texture forks; final consumer not duplicated in receipt. Cumulative resource totals are stored at all three boundaries.",
+    "picks": [
+      "worker-900011",
+      "worker-900012"
+    ],
+    "ledgerUnchanged": true,
+    "noOldSettlementBinding": true,
+    "actualConsumerRetirementDrained": true,
+    "gpuErrors": 0,
+    "pageErrors": [],
+    "consoleErrors": [],
+    "httpFailures": [],
+    "requestFailures": [],
+    "screenshotsReviewed": [
+      "native-home-restoration-before-20261115.png",
+      "native-home-restoration-after-20261115.png"
+    ]
+  },
+  "developmentFailuresNotCountedAsPasses": [
+    {
+      "log": ".cache/native-home-restoration-first-directed.log",
+      "result": "0/10; real integration-order bug: Home active declaration preceded restore_assigned_tasks, which requires an empty intent index. Fixed by restoring Home at its existing later initialization point."
+    },
+    {
+      "log": ".cache/native-home-restoration-second-directed.log",
+      "result": "9/10; new pick test queried actual reference rather than submitted prepared reference. Corrected fixture assertion; no production picking bypass."
+    },
+    {
+      "log": ".cache/native-home-restoration-roster-directed.log",
+      "result": "29/32; reusable fixture wrapper spread live getters into scalar snapshots. Restored live fixture counters; subsequent 32/32 and final regression pass."
+    },
+    {
+      "log": ".cache/native-home-restoration-regression.log",
+      "result": "689/690; new control test supplied the wrong initial logical clock anchor. Corrected baseline setup; final 690/690 supersedes."
+    },
+    {
+      "log": ".cache/native-home-restoration-gpu-first.log",
+      "result": "Stopped before Home preparation: readiness counted harvested/dead crops as visible. Corrected expected count to live plants."
+    },
+    {
+      "log": ".cache/native-home-restoration-gpu-second.log",
+      "result": "In-page GPU checks passed; runner failed because new receipt omitted final.gpuErrors. Receipt completed and final hardware run repeated successfully."
+    }
+  ],
+  "protectedOriginalFiles": {
+    "count": 16,
+    "exactAfterFinalProductBuild": true,
+    "manifest": ".cache/native-action-restore-preserved-hashes.json",
+    "exclusion": "confirmed-presentation-stream.js was intentionally committed earlier in this goal and was unchanged by this component"
+  },
+  "limits": [
+    "No added dependency, controller, queue, movement registry or renderer",
+    "No saved authority token or invented Task/Carry/Settlement/Resume history becomes a new execution permit",
+    "Home is the current task-free returning, walking class; gates, fleeing, recovery, raids and other final classes remain separately pending",
+    "The prior component documented three additional intent-test failures reproduced with an earlier bridge; this step does not claim that those failures or the complete repository suite are resolved",
+    "No ordinary producer, live-world handoff or full healthy-device 3123-resource recovery acceptance",
+    "A6/e-R3/e-R4/f-R4/A/B/C remain open"
+  ]
+}

@@ -153,3 +153,18 @@ test('original can and soil contact coexist only during the authored pour withou
 test('sowing and seed layers share four family slots and two slots per worker after concurrent decode',async()=>{
  const {audio}=fixture();await audio.unlock();audio.context.currentTime=0;audio.sfx={items:FARM_CONTACT_IDS.map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async()=>({});const workers=Array.from({length:20},(_,i)=>({id:'worker-'+i,profile:'olderFemale',taskId:'task-'+i,status:'acting',actionRemaining:7.2,x:0,z:0})),state={elapsed:0,pauses:[],workers,tasks:workers.map((w,i)=>({id:w.taskId,kind:'initial',targetId:'plant-'+i})),plants:workers.map((w,i)=>({id:'plant-'+i,alive:true})),crates:[]};audio.updateFarm(state);workers.forEach(w=>w.actionRemaining=5.9);state.elapsed=.1;audio.updateFarm(state);await new Promise(done=>setImmediate(done));assert.equal(audio.active.length,4);assert.ok([...audio.voices.values()].every(v=>v.family==='farm-plant-contact'));for(const w of workers)assert.ok([...audio.voices.values()].filter(v=>v.emitter===w.id).length<=2);audio.stop();assert.equal(audio.farm.entries.size,0);audio.dispose();
 });
+
+
+test('magic hurt priority survives bank routing and replaces a lower-priority animal voice',async()=>{
+ const {audio}=fixture();await audio.unlock();audio.context.currentTime=1;
+ audio.sfx={items:['hyena_hurt','beast_take_damage'].map(id=>({id,loop:false,audio:{url:id}}))};audio.buffer=async url=>({url});
+ const older=audio.startBuffer({}, {family:'animal-attack',emitter:'beast',priority:1});
+ const newer=audio.startBuffer({}, {family:'animal-neutral',emitter:'beast',priority:1});
+ const animal={id:'beast',status:'walking'},state={elapsed:1,pauses:[],raid:{animals:[animal]}};
+ audio.process([{id:'magic-hit',type:'GuardianMagicHit',targetId:'beast',species:'hyena',presentation:{cueAt:1}}],{state});
+ await new Promise(done=>setImmediate(done));
+ const hurt=[...audio.voices].find(([source])=>source.buffer.url==='hyena_hurt');
+ assert.ok(hurt,'hurt voice was discarded behind lower-priority animal sounds');assert.equal(hurt[1].priority,2);
+ assert.equal(older.stopped,true);assert.notEqual(newer.stopped,true);
+ assert.equal([...audio.voices.values()].filter(v=>v.emitter==='beast').length,2);audio.dispose();
+});

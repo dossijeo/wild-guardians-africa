@@ -1,0 +1,98 @@
+{
+  "commit": "0db3a85aaa2fe652a13536d3a88f178e31859260",
+  "command": "QA_AUTOMATIC_RETAINED_RECOVERY=true node tools/experiments/audit_main_retained_resources.mjs",
+  "fullReportSha256": "532e9974f67a5374d204f4ede96e85a254454384c25ff9a841ae2101c72fada4",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 128.48500001430511
+    }
+  },
+  "rows": [
+    {
+      "sequence": 14,
+      "binding": 1,
+      "client": 2,
+      "canvas": 3,
+      "clients": 1,
+      "resources": 26666,
+      "uniformForks": 0,
+      "bindingForks": 0,
+      "compiles": 907
+    },
+    {
+      "sequence": 14,
+      "binding": 1,
+      "client": 2,
+      "canvas": 3,
+      "clients": 1,
+      "resources": 26666,
+      "uniformForks": 0,
+      "bindingForks": 0,
+      "compiles": 907
+    },
+    {
+      "sequence": 15,
+      "binding": 1,
+      "client": 2,
+      "canvas": 3,
+      "clients": 1,
+      "resources": 26666,
+      "uniformForks": 0,
+      "bindingForks": 0,
+      "compiles": 907
+    }
+  ],
+  "resourceReuse": {
+    "accepted": true,
+    "violations": [],
+    "residentDataRows": 15423,
+    "referenceWindows": 2,
+    "retainedRecoveries": 2,
+    "producerResourcesCreated": 26666,
+    "compiles": 907,
+    "scope": "Settled paused actual-main reuse; not cold allocation minimality, native WALK integration or cadence acceptance."
+  },
+  "automatic": {
+    "injection": "typed obsolete failure at real Worker.fail; not a native commit",
+    "attempts": [
+      {
+        "at": 60020.99000000954
+      },
+      {
+        "at": 67169.61500000954
+      }
+    ],
+    "marks": [
+      60017.82000005245,
+      67165.4200000763
+    ],
+    "results": [
+      {
+        "base": 1,
+        "sequence": 14,
+        "retained": true
+      },
+      {
+        "base": 1,
+        "sequence": 15,
+        "retained": true
+      }
+    ]
+  },
+  "disposed": 1,
+  "unexpectedErrors": {
+    "page": 0,
+    "http": 0,
+    "requests": 0
+  }
+}

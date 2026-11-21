@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "date": "2026-11-15",
+  "baseCommit": "c605731b7adc0f0b5c43f10c92c806f283ce664a",
+  "scope": "First task native cumulative phase seeds through retained resource admission; ordinary authority/arrival/action integration and A/B/C acceptance remain pending.",
+  "sourceHashes": {
+    "src/world/wild-engine/spatial-intent-state.cpp": "07f6e92b970c9e2a59af517987868f97968b75898bec8679581f85d3439e405f",
+    "src/world/wild-engine/spatial-task-start-proposal.inc": "7f8bed8c947e1b56708c3b7320239fe72710b623f047dac50748fad3b0df8ed7",
+    "src/world/wild-engine/spatial-intent-bridge.js": "cbcc4358b70cc7272ebf055ac1e20dd305f3349358dfa7860a803b69e6770e99",
+    "src/world/wild-engine/spatial-savanna.wasm": "8ef667badd62bb2f2ad91574d421bc68c628f0cea4f1ba50d683a87d9d3339e4",
+    "public/wild-engine/spatial-threaded.mjs": "d71bdcb3ad5a4cbac18dcc8ebf564e1c379980f11f235ff8e63e927edb634ef7",
+    "public/wild-engine/spatial-threaded.wasm": "d691623d46b4830c3cfb496a6495295519daad2808e7644ef8dfb8603d05062c",
+    "tests/helpers/native-task-start-graphics.js": "1384d25bc61b4e6c2fc558a63b9f54844e14cc8a9066d323101e7bb8be3d74d0",
+    "tests/native-task-start-proposal.test.js": "f917dfcdb4d861af854e946990e49152a848cfc5b041183fde159a1e174b98ea",
+    "tests/native-task-start-graphics.test.js": "3331b6be4af0e11ab41c261c8623fcb56aa2ac0bfbe0081f1bbbb2bf93f3a4e5",
+    "tests/browser/native-first-task-world-owner.js": "7e5f36ddd5244ff34caa428417c936e30bdda6ce2b79344ebc8096dec83b36af"
+  },
+  "builds": {
+    "native": [
+      "standalone",
+      "pthread"
+    ],
+    "productSeconds": 43.66,
+    "warnings": "Existing chunk size, mixed imports and pthread memory-growth warnings"
+  },
+  "directed": {
+    "tests": 60,
+    "pass": 60,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "owners": {
+    "tests": 225,
+    "pass": 225,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "gpu": {
+    "record": "native-first-task-phases-gpu-20261115.json",
+    "phaseSeed": {
+      "runPhase": 23.125,
+      "walkPhase": 41.75,
+      "carryPhase": 9.5
+    },
+    "sourceAssertions": [
+      "prepared native rows retain exact initial phases",
+      "actual native execution retains phase seed plus calibrated distance increments"
+    ],
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": ""
+    },
+    "block": {
+      "start": 1794711520168.25,
+      "end": 1794711521968.305,
+      "committedAt": 1794711520184.88,
+      "drawFrames": 53,
+      "minClock": 13.179999999999932,
+      "maxClock": 14.779999999999898,
+      "resourcesAfterReady": 0
+    },
+    "drained": true
+  },
+  "syntax": "node --check for all owned JS/MJS",
+  "research": [
+    {
+      "project": "Three.js",
+      "revision": "r180",
+      "source": "src/animation/AnimationAction.js",
+      "functions": [
+        "reset",
+        "_update",
+        "_updateTime"
+      ],
+      "decision": "Preserve clip time across ownership changes; reset only explicitly. Retain native distance calibration and existing shader."
+    }
+  ],
+  "acceptanceClosed": []
+}

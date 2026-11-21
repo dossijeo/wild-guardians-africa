@@ -1,1 +1,10 @@
 tools/build-spatial-savanna-wasm.sh text eol=lf
+src/world/wall-layout-native.js text eol=lf
+src/rendering/walls-native.js text eol=lf
+*.rgb8 binary
+*.rgba8 binary
+src/rendering/destruction-native.js text eol=lf
+src/rendering/destruction-effects-native.js text eol=lf
+src/world/wild-engine/spatial-gate-mechanisms-native.h text eol=lf
+content/manifests/gate-mechanisms-native.json text eol=lf
+tools/prepare_gate_mechanisms.py text eol=lf

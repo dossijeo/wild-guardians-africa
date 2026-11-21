@@ -1,0 +1,5 @@
+# Reanudación de checkpoints tras feedback del guardián
+
+Una guía del tutorial, un gesto provisional o una orden provisional anterior pendiente impiden capturar un checkpoint visual. Si la guía se retira o una orden se rechaza por el canal de entrada, el guardián avisa ahora al flujo de presentación cuando desaparece el último impedimento. El flujo reintenta el checkpoint ya diferido; no descarta ni reordena publicaciones o eventos, y conserva las barreras de capacidad existentes.
+
+La prueba conecta el guardián y los módulos reales del flujo y del diario: llena el diario hasta su umbral con un checkpoint diferido, retira la guía sin publicar otro estado y verifica que se rearma el checkpoint y que los eventos se entregan en orden. Otras pruebas cubren guías y rechazos independientes con varias órdenes pendientes. No ejecuta un navegador ni una pérdida real de dispositivo. Un diario acotado todavía puede saturarse si el checkpoint permanece imposible durante demasiado tiempo o si se pierde el dispositivo antes de aceptar uno nuevo; este cambio no elimina ese límite ni justifica activar la recuperación histórica por defecto.

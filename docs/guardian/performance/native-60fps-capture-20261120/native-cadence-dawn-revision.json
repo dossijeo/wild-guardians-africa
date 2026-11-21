@@ -1,0 +1,27 @@
+{
+  "base": "https://dawn.googlesource.com/dawn",
+  "revision": "f71aade802862921933aa26ed83c9e15aa249ced",
+  "log": {
+    "log": [
+      {
+        "commit": "f71aade802862921933aa26ed83c9e15aa249ced",
+        "tree": "f42032f7e7016d73c79aa45199ce742cf424b0a5",
+        "parents": [
+          "0c29f68ac364f5ce23fdf3e064c3477e6d43298f"
+        ],
+        "author": {
+          "name": "Antonio Maiorano",
+          "email": "amaiorano@google.com",
+          "time": "Fri Nov 20 09:06:51 2026 -0800"
+        },
+        "committer": {
+          "name": "dawn-scoped@luci-project-accounts.iam.gserviceaccount.com",
+          "email": "dawn-scoped@luci-project-accounts.iam.gserviceaccount.com",
+          "time": "Fri Nov 20 09:06:51 2026 -0800"
+        },
+        "message": "[native] Always retain ResourceTable TextureState\n\nStop special-casing ReadOnly textures for removal from mTextureState\nwhen slots becomes empty in SetResourceUsage and SetEntry, and add a\nGetOrCreateTextureState helper. Once a non-destroyed texture is added\nto mTextureState (via SetEntry or SetResourceUsage), its entry and\nmResourceTableUses registration are retained until either the texture\nis destroyed (OnTextureDestroyed) or the table is destroyed\n(DestroyImpl).\n\nAlso ignore already-destroyed textures in SetEntry so mTextureState and\nSlotState::resource never hold destroyed textures, allowing IsVisible\nand the backends to assert !IsDestroyed().\n\nNote that this trades away the optimization where ReadOnly textures\nwith no bound slots were untracked from mTextureState and\nmResourceTableUses while still alive. In typical bindless usage,\ntextures remain in the resource table until they are destroyed, at\nwhich point OnTextureDestroyed cleans them up immediately.\n\nBug: 579994653\nChange-Id: Icae7158be6d572dae52b88b64a5644b1f36ba30d\nReviewed-on: https://dawn-review.googlesource.com/c/dawn/+/359075\nCommit-Queue: Antonio Maiorano <amaiorano@google.com>\nReviewed-by: Corentin Wallez <cwallez@chromium.org>\n"
+      }
+    ],
+    "next": "0c29f68ac364f5ce23fdf3e064c3477e6d43298f"
+  }
+}

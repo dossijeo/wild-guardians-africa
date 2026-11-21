@@ -1,0 +1,192 @@
+{
+  "source": "0784e44964a4b55a159a257e25747895ab27904d",
+  "fixture": "nativeFarmArrivalRouteFixture with pending daytime plan, a single warthog and resident camera bounds",
+  "entryTime": 100.8,
+  "bounds": [
+    -48,
+    -48,
+    48,
+    48
+  ],
+  "host": "deterministic remote Host with real WASM and authority",
+  "cases": [
+    {
+      "attach": true,
+      "before": {
+        "elapsed": 10.099999999999998,
+        "time": 100.1,
+        "worker": {
+          "id": "worker-900011",
+          "status": "arriving",
+          "nativeRouteAdmission": "native-farm-arrival",
+          "x": -17.876367532368146,
+          "z": 0.12363246763185436
+        },
+        "raid": null,
+        "spawn": null,
+        "dayPlan": {
+          "done": false,
+          "at": 100.8,
+          "group": [
+            "warthog"
+          ]
+        },
+        "latestNotice": "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."
+      },
+      "atRaid": {
+        "elapsed": 10.799999999999983,
+        "time": 100.8,
+        "worker": {
+          "id": "worker-900011",
+          "status": "fleeing",
+          "x": -17.418842712474635,
+          "z": 0
+        },
+        "raid": {
+          "id": "raid-15-day",
+          "daytime": true,
+          "animals": [
+            {
+              "id": "animal-1000000",
+              "species": "warthog",
+              "status": "entering"
+            }
+          ]
+        },
+        "spawn": {
+          "id": "event-29208",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-15-day",
+            "day": 15,
+            "daytime": true,
+            "elapsed": 10.799999999999983,
+            "waveIndex": 0,
+            "pressureFacts": null,
+            "exposedLiving": 0,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-1000000",
+                "species": "warthog",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": -10,
+                  "z": 27.1
+                },
+                "exit": {
+                  "x": -10,
+                  "z": 30.1
+                }
+              }
+            ]
+          },
+          "simulationTime": 10.799999999999983
+        },
+        "dayPlan": {
+          "done": true,
+          "at": 100.8,
+          "group": [
+            "warthog"
+          ]
+        },
+        "latestNotice": "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."
+      },
+      "records": [
+        {
+          "kind": "farm-arrival",
+          "committed": true,
+          "id": 900011,
+          "bodyId": 1
+        }
+      ],
+      "nextAdvanceError": "Native task game cohort contains an unsupported mover"
+    },
+    {
+      "attach": false,
+      "before": {
+        "elapsed": 10.099999999999998,
+        "time": 100.1,
+        "worker": {
+          "id": "worker-900011",
+          "status": "arriving",
+          "nativeRouteAdmission": "pending-farm-arrival-resources",
+          "x": -17.8,
+          "z": 0.2
+        },
+        "raid": null,
+        "spawn": null,
+        "dayPlan": {
+          "done": false,
+          "at": 100.8,
+          "group": [
+            "warthog"
+          ]
+        },
+        "latestNotice": "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."
+      },
+      "atRaid": {
+        "elapsed": 10.799999999999983,
+        "time": 100.8,
+        "worker": {
+          "id": "worker-900011",
+          "status": "fleeing",
+          "x": -17.8,
+          "z": 0.2
+        },
+        "raid": {
+          "id": "raid-15-day",
+          "daytime": true,
+          "animals": [
+            {
+              "id": "animal-1000000",
+              "species": "warthog",
+              "status": "entering"
+            }
+          ]
+        },
+        "spawn": {
+          "id": "event-29208",
+          "type": "RaidSpawned",
+          "raidFacts": {
+            "id": "raid-15-day",
+            "day": 15,
+            "daytime": true,
+            "elapsed": 10.799999999999983,
+            "waveIndex": 0,
+            "pressureFacts": null,
+            "exposedLiving": 0,
+            "exposedWounded": 0,
+            "actors": [
+              {
+                "id": "animal-1000000",
+                "species": "warthog",
+                "hitsRemaining": 4,
+                "spawn": {
+                  "x": -10,
+                  "z": 27.1
+                },
+                "exit": {
+                  "x": -10,
+                  "z": 30.1
+                }
+              }
+            ]
+          },
+          "simulationTime": 10.799999999999983
+        },
+        "dayPlan": {
+          "done": true,
+          "at": 100.8,
+          "group": [
+            "warthog"
+          ]
+        },
+        "latestNotice": "¡Incursión! Los trabajadores buscan refugio. Protege la finca con Escudo."
+      },
+      "records": [],
+      "nextAdvanceError": "Native game execution still requires projection for this intention class"
+    }
+  ],
+  "diagnosticSha256": "57ce6c268683bc2b201e0baf683dd6fec7b2f5bd8758befd2816cf6eb30a6056"
+}

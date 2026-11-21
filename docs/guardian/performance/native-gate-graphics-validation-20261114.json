@@ -1,0 +1,578 @@
+{
+  "date": "2026-11-14",
+  "baseRevision": "0f947f952",
+  "scope": "Native reserved gate motor capture and original gate graphics on ordinary WorldSurface/Settlements/roster owners. Explicit resource admission with paused native clock; logical retirement, independent gate motor proposals and ordinary gameplay execution remain open. No A6/A/B/C closure.",
+  "tests": {
+    "directed": {
+      "log": ".cache/native-gate-directed.tap",
+      "tests": 41,
+      "pass": 41,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "rotatedAndFinalMutualExclusion": {
+      "log": ".cache/native-gate-final-geometry.tap",
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "finalOwnersAfterStagingReferenceRelease": {
+      "log": ".cache/native-gate-final-owners.tap",
+      "tests": 27,
+      "pass": 27,
+      "fail": 0,
+      "skipped": 0,
+      "failures": []
+    },
+    "regression": {
+      "log": ".cache/native-gate-regression.tap",
+      "tests": 1469,
+      "pass": 1467,
+      "fail": 2,
+      "skipped": 0,
+      "failures": [
+        "late crate admission is rejected after drop and retries a later pickup",
+        "confirmed harvest installs its sampled GPU horizon and cancels on changed target"
+      ],
+      "files": 132,
+      "concurrency": 2
+    },
+    "baselineEvidence": "native-input-clock-validation-20261114.json and native-idle-validation-20261114.json record the same Carry/Harvest failures; native-carry-validation-20261114.json contains earlier baseline reproduction."
+  },
+  "build": {
+    "passed": true,
+    "seconds": 46.21,
+    "log": ".cache/native-gate-build.log"
+  },
+  "wasm": {
+    "standalone": true,
+    "threaded": true,
+    "log": ".cache/native-gate-presentation-wasm.log",
+    "threadedAbi": {
+      "threaded": true,
+      "gatePresentationVersion": 1,
+      "rejectedMissingRoute": true
+    }
+  },
+  "syntax": {
+    "files": 366,
+    "scripts": 308,
+    "failures": []
+  },
+  "shaderInvestigation": {
+    "initialExtraShaderModules": 2,
+    "initialExtraPipelines": 2,
+    "sourcePattern": "r180 WGSLNodeBuilder defaults buffer names to NodeBuffer_ + uniformNode.id; UniformNode.setName supplies a stable semantic slot name, with distinct buffers per material.",
+    "normalizedPairs": [
+      {
+        "before": ".cache/native-gate-0.wgsl",
+        "after": ".cache/native-gate-2.wgsl",
+        "identicalAfterBufferNameNormalization": true,
+        "sha256": "628dff0c9ec902c22403294e2fe35b47cfc210b065e8714d4adb561f6c02eac4"
+      },
+      {
+        "before": ".cache/native-gate-1.wgsl",
+        "after": ".cache/native-gate-3.wgsl",
+        "identicalAfterBufferNameNormalization": true,
+        "sha256": "bed39dfb253d540b42898cdf0e47c14bc9749907a2a65fe9d0976b1ef8c30ef9"
+      }
+    ],
+    "afterExtraShaderModules": 0,
+    "afterExtraPipelines": 0
+  },
+  "hardware": [
+    {
+      "artifact": "native-worker-drawn-gate-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794653095422.225,
+        "end": 1794653095922.305,
+        "blockedMs": 500.079833984375,
+        "drawFrames": 15,
+        "minClock": 10.08283984375,
+        "maxClock": 11.92616015625
+      },
+      "gates": {
+        "before": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 434,
+            "geometry": 150,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 0,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 2,
+              "routeHandle": {
+                "authorityEpoch": "9414d32d-aebb-4c4f-82f1-6ab2b3fef75f/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            }
+          }
+        ],
+        "after": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 434,
+            "geometry": 150,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 2,
+              "routeHandle": {
+                "authorityEpoch": "9414d32d-aebb-4c4f-82f1-6ab2b3fef75f/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            }
+          }
+        ],
+        "replaced": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 434,
+            "geometry": 150,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "9414d32d-aebb-4c4f-82f1-6ab2b3fef75f/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              }
+            }
+          }
+        ],
+        "final": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 434,
+            "geometry": 150,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "9414d32d-aebb-4c4f-82f1-6ab2b3fef75f/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              }
+            }
+          }
+        ]
+      },
+      "gateInput": {
+        "entityId": "structure-990001",
+        "hitPoint": {
+          "x": -12.1280548405647,
+          "y": 12.247439646720908,
+          "z": -16.388798007170386
+        },
+        "point": {
+          "x": -13.258616094727667,
+          "z": -17.924568583713132
+        },
+        "sequence": 1
+      },
+      "inputPick": {
+        "at": 11.926160097122192,
+        "frameSequence": 41,
+        "result": {
+          "entityId": "worker-900011",
+          "hitPoint": {
+            "x": -11.53718377248111,
+            "y": 12.35833160837482,
+            "z": -16.04371686009427
+          },
+          "point": {
+            "x": -12.663043478260846,
+            "z": -17.757930993619127
+          },
+          "sequence": 0
+        }
+      },
+      "sameAssignmentResources": [
+        1796,
+        1796
+      ],
+      "firstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementFirstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementFactoryDelta": {
+        "createBuffer": 36,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 16,
+        "createBindGroupLayout": 16,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "drained": true,
+      "errors": []
+    },
+    {
+      "artifact": "native-worker-drawn-gate-carry-20261114.json",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": ""
+      },
+      "block": {
+        "start": 1794653271325.945,
+        "end": 1794653271826.04,
+        "blockedMs": 500.094970703125,
+        "drawFrames": 15,
+        "minClock": 10.0814404296875,
+        "maxClock": 11.924500000000004
+      },
+      "gates": {
+        "before": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 431,
+            "geometry": 149,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 0,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 2,
+              "routeHandle": {
+                "authorityEpoch": "9fb4e147-19b2-4034-9489-afa0cbfd23e1/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            }
+          }
+        ],
+        "after": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 431,
+            "geometry": 149,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 2,
+              "routeHandle": {
+                "authorityEpoch": "9fb4e147-19b2-4034-9489-afa0cbfd23e1/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            }
+          }
+        ],
+        "replaced": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 431,
+            "geometry": 149,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "9fb4e147-19b2-4034-9489-afa0cbfd23e1/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              }
+            }
+          }
+        ],
+        "final": [
+          {
+            "entityId": "structure-990001",
+            "mesh": 431,
+            "geometry": 149,
+            "positionVersion": 1,
+            "normalVersion": 1,
+            "positionHash": 603722329,
+            "opening": 1,
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "9fb4e147-19b2-4034-9489-afa0cbfd23e1/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 7
+              }
+            }
+          }
+        ]
+      },
+      "gateInput": {
+        "entityId": "structure-990001",
+        "hitPoint": {
+          "x": -12.1280548405647,
+          "y": 12.247439646720908,
+          "z": -16.388798007170386
+        },
+        "point": {
+          "x": -13.258616094727667,
+          "z": -17.924568583713132
+        },
+        "sequence": 1
+      },
+      "inputPick": {
+        "at": 11.924499988555908,
+        "frameSequence": 36,
+        "result": {
+          "entityId": "worker-900011",
+          "hitPoint": {
+            "x": -11.5469850865078,
+            "y": 12.35081726762101,
+            "z": -16.0603117555902
+          },
+          "point": {
+            "x": -12.663043478260818,
+            "z": -17.76026958133859
+          },
+          "sequence": 0
+        }
+      },
+      "sameAssignmentResources": [
+        2181,
+        2181
+      ],
+      "firstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementFirstRenderFactories": {
+        "createBuffer": 0,
+        "createTexture": 0,
+        "createSampler": 0,
+        "createBindGroup": 0,
+        "createBindGroupLayout": 0,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "replacementFactoryDelta": {
+        "createBuffer": 99,
+        "createTexture": 1,
+        "createSampler": 1,
+        "createBindGroup": 52,
+        "createBindGroupLayout": 52,
+        "createPipelineLayout": 0,
+        "createShaderModule": 0,
+        "createRenderPipeline": 0,
+        "createRenderPipelineAsync": 0,
+        "createComputePipeline": 0,
+        "createComputePipelineAsync": 0
+      },
+      "drained": true,
+      "errors": []
+    }
+  ],
+  "expandedTestFiles": [
+    "tests/admission-scene-reference.test.js",
+    "tests/authority-compact-paused.test.js",
+    "tests/authority-visual-terrain-checkpoint.test.js",
+    "tests/baked-walk-catalog.test.js",
+    "tests/baked-worker-walk-catalog.test.js",
+    "tests/camera-terrain-exclusion.test.js",
+    "tests/confirmed-camera-terrain.test.js",
+    "tests/confirmed-terrain-receiver.test.js",
+    "tests/confirmed-terrain-retirement.test.js",
+    "tests/continuous-grass-mangrove-water.test.js",
+    "tests/continuous-grass-river.test.js",
+    "tests/continuous-grass.test.js",
+    "tests/grass-chunk-data.test.js",
+    "tests/grass-generation-queue.test.js",
+    "tests/grass-obstacles.test.js",
+    "tests/grass-terrain-sampling.test.js",
+    "tests/grass-tile-generation.test.js",
+    "tests/grass-transfer-instrumentation.test.js",
+    "tests/grass-water.test.js",
+    "tests/historical-event-auto-recovery-integration.test.js",
+    "tests/historical-terrain-recovery.test.js",
+    "tests/host-publication-queue.test.js",
+    "tests/live-terrain-checkpoint.test.js",
+    "tests/native-biome-retention.test.js",
+    "tests/native-frame-continuation.test.js",
+    "tests/native-gate-gpu-binding.test.js",
+    "tests/native-gpu-motion.test.js",
+    "tests/native-intent-control-authority.test.js",
+    "tests/native-route-pick-frame.test.js",
+    "tests/native-route-presentation.test.js",
+    "tests/native-route-terrain-support.test.js",
+    "tests/native-terrain-retention.test.js",
+    "tests/native-worker-roster.test.js",
+    "tests/native-world-checkpoint.test.js",
+    "tests/native-world-prepared-commit.test.js",
+    "tests/native-world-prepared-props.test.js",
+    "tests/native-world-prepared-terrain.test.js",
+    "tests/native-world-resource-preview.test.js",
+    "tests/native-world-resource-projection.test.js",
+    "tests/native-world-resource-reconciliation.test.js",
+    "tests/presentation-recovery-journal.test.js",
+    "tests/presentation-recovery-replay.test.js",
+    "tests/raid-camera-terrain.test.js",
+    "tests/remote-frame-preparations.test.js",
+    "tests/remote-texture-preparation.test.js",
+    "tests/remote-webgpu.test.js",
+    "tests/simulation-authority-chunks.test.js",
+    "tests/simulation-authority-client.test.js",
+    "tests/simulation-terrain-history-worker.test.js",
+    "tests/spatial-native-barrier-proposal.test.js",
+    "tests/spatial-native-gate-crossings.test.js",
+    "tests/spatial-native-gate-multiwaits.test.js",
+    "tests/spatial-native-gate-resume.test.js",
+    "tests/spatial-native-overlay-proposal.test.js",
+    "tests/spatial-native-prop-mutations.test.js",
+    "tests/spatial-native-residency.test.js",
+    "tests/spatial-native-route-execution.test.js",
+    "tests/spatial-native-terrain-mutations.test.js",
+    "tests/temporal-recovery-pipeline.test.js",
+    "tests/temporal-recovery-receiver.test.js",
+    "tests/temporal-surface-recovery.test.js",
+    "tests/terrain-bootstrap-publication.test.js",
+    "tests/terrain-camera.test.js",
+    "tests/terrain-history-cancellation.test.js",
+    "tests/terrain-history-detached.test.js",
+    "tests/terrain-history-replay.test.js",
+    "tests/terrain-history.test.js",
+    "tests/terrain-native-proposal.test.js",
+    "tests/terrain-publication.test.js",
+    "tests/terrain-resource-payload.test.js",
+    "tests/terrain-resource-removal.test.js",
+    "tests/three-webgpu-pipeline-patch.test.js",
+    "tests/three-webgpu-shadow-compile.test.js",
+    "tests/three-webgpu-source-material.test.js",
+    "tests/visible-camera-terrain.test.js",
+    "tests/webgpu-actor-motion-binding.test.js",
+    "tests/webgpu-admission-scene.test.js",
+    "tests/webgpu-auto-recovery-qa.test.js",
+    "tests/webgpu-baked-walk.test.js",
+    "tests/webgpu-biome-props.test.js",
+    "tests/webgpu-chunk-batch.test.js",
+    "tests/webgpu-chunk-publication.test.js",
+    "tests/webgpu-confirmed-worker-clock.test.js",
+    "tests/webgpu-graphical-chunk-batch.test.js",
+    "tests/webgpu-grass-bootstrap-zero.test.js",
+    "tests/webgpu-grass-hidden-fluid.test.js",
+    "tests/webgpu-grass-local-eviction.test.js",
+    "tests/webgpu-grass-local-readmission-integration.test.js",
+    "tests/webgpu-grass-material.test.js",
+    "tests/webgpu-grass-owner.test.js",
+    "tests/webgpu-grass-temporal-recovery.test.js",
+    "tests/webgpu-guardian-worker-boundary.test.js",
+    "tests/webgpu-hidden-actor-motion.test.js",
+    "tests/webgpu-native-world-admission.test.js",
+    "tests/webgpu-pipeline-admission.test.js",
+    "tests/webgpu-prepared-terrain-removal.test.js",
+    "tests/webgpu-recovery-failure.test.js",
+    "tests/webgpu-resource-registry.test.js",
+    "tests/webgpu-settlement-height.test.js",
+    "tests/webgpu-settlement-terrain-retention.test.js",
+    "tests/webgpu-shared-shadow.test.js",
+    "tests/webgpu-surface-handoff.test.js",
+    "tests/webgpu-surface-owner.test.js",
+    "tests/webgpu-temporal-checkpoint.test.js",
+    "tests/webgpu-temporal-recovery-worker.test.js",
+    "tests/webgpu-temporal-terrain.test.js",
+    "tests/webgpu-terrain-motion-invalidation.test.js",
+    "tests/webgpu-terrain-residency.test.js",
+    "tests/webgpu-village-admission.test.js",
+    "tests/webgpu-village-preview.test.js",
+    "tests/webgpu-worker-action-retry.test.js",
+    "tests/webgpu-worker-baked-alert.test.js",
+    "tests/webgpu-worker-baked-carry.test.js",
+    "tests/webgpu-worker-baked-fall.test.js",
+    "tests/webgpu-worker-baked-getup.test.js",
+    "tests/webgpu-worker-baked-harvest.test.js",
+    "tests/webgpu-worker-baked-idle.test.js",
+    "tests/webgpu-worker-baked-plant.test.js",
+    "tests/webgpu-worker-baked-run.test.js",
+    "tests/webgpu-worker-baked-walk.test.js",
+    "tests/webgpu-worker-baked-water.test.js",
+    "tests/webgpu-worker-carry-roster.test.js",
+    "tests/webgpu-worker-carry-tool.test.js",
+    "tests/webgpu-worker-fall-roster.test.js",
+    "tests/webgpu-worker-getup-roster.test.js",
+    "tests/webgpu-worker-harvest-roster.test.js",
+    "tests/webgpu-worker-recovery-exit-motion.test.js",
+    "tests/webgpu-worker-roster.test.js",
+    "tests/webgpu-worker-run-roster.test.js",
+    "tests/webgpu-worker-water-tools.test.js",
+    "tests/webgpu-world-client-temporal-profile.test.js",
+    "tests/webgpu-world-client.test.js"
+  ]
+}

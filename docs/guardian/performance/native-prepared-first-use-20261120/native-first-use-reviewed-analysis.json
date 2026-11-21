@@ -1,0 +1,922 @@
+{
+  "frozen": ".cache/native-first-use-reviewed-frozen.json",
+  "files": {
+    "src/rendering/remote-webgpu-host.js": "050ea43cabb5214794d83b0e02b29363cb988ce880f8b3aa2bbacd8d52f3c199",
+    "src/rendering/remote-webgpu-client.js": "d93997b0cf39f2177db21b3c71a437463c61ef316a99a05209e451c25626f34a",
+    "tests/helpers/remote-webgpu-fixture.js": "c5e2f860c91fcd016cb617f209daa4da9af68d1d96a37f1c0fb5426baad00262",
+    "tests/remote-webgpu.test.js": "107da87f58feee5c67201eb02d29c1b5b054305f8d9b7f40ba8c04b8322cb019",
+    "tests/native-task-settlement-remote.test.js": "f66df447d4a2d45cc546ae9041d68ceed87a3cb230224a98e8874f8926c4ef05",
+    "src/rendering/remote-prepared-first-use.js": "95a17748392b3b1a8efd23aca161f82ecf154ecd8da0ce33f24a5be8fff030cd",
+    "tests/remote-prepared-first-use.test.js": "2e902a22f30575b219f09c84594fa5db2a07d861f767993a70b0716b396d5e01"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-olderMale.json",
+      "log": ".cache/native-first-use-reviewed-olderMale.log",
+      "startedAt": "2026-11-20T06:22:37.626Z",
+      "finishedAt": "2026-11-20T06:23:55.069Z",
+      "wallMs": 77443,
+      "exitCode": 0,
+      "receiptSha256": "50cd7ddf2348bf0ffc126ec2bd563f8ac5f6adc03c13a806f8f9ed05ba1e203d",
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "firstUse": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 78,
+        "firstUsePipelines": 36,
+        "firstUseTargets": 49
+      },
+      "broadGaps": [
+        {
+          "from": 1795155780188.735,
+          "through": 1795155780370.2651,
+          "ms": 181.530029296875
+        },
+        {
+          "from": 1795155780388.84,
+          "through": 1795155780499.605,
+          "ms": 110.764892578125
+        },
+        {
+          "from": 1795155780555.43,
+          "through": 1795155780630.2751,
+          "ms": 74.84521484375
+        },
+        {
+          "from": 1795155818822.195,
+          "through": 1795155818879.02,
+          "ms": 56.824951171875
+        },
+        {
+          "from": 1795155785888.81,
+          "through": 1795155785933.845,
+          "ms": 45.034912109375
+        }
+      ],
+      "blocked": {
+        "preparation": {
+          "kind": "birth-block-end",
+          "stage": "preparation",
+          "start": 1795155775454.895,
+          "end": 1795155777254.965,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.6999999999999638,
+          "peerProgress": 1.621223615029396,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.409912109375,
+            "p95GapMs": 33.405029296875,
+            "over50": 0
+          }
+        },
+        "ready": {
+          "kind": "birth-block-end",
+          "stage": "late-ready",
+          "start": 1795155783923.885,
+          "end": 1795155785723.9202,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999999638,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.4150390625,
+            "p95GapMs": 33.39501953125,
+            "over50": 0
+          }
+        },
+        "task": {
+          "kind": "birth-block-end",
+          "stage": "task-commit",
+          "start": 1795155782086.675,
+          "end": 1795155783886.715,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999999638,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.454833984375,
+            "p95GapMs": 33.39013671875,
+            "over50": 0
+          }
+        },
+        "action": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "action-ready",
+            "start": 1795155801631.745,
+            "end": 1795155803431.76,
+            "drawFrames": 54,
+            "confirmedPublications": 89,
+            "clockAdvance": 1.740000000000272,
+            "peerProgress": 0,
+            "maxGapMs": 33.43505859375
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "action-commit",
+            "start": 1795155803473.685,
+            "end": 1795155805273.7,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7000000000002657,
+            "peerProgress": 0,
+            "maxGapMs": 33.43505859375
+          }
+        },
+        "consequence": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "consequence-ready",
+            "start": 1795155809213.925,
+            "end": 1795155811013.945,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 0,
+            "maxGapMs": 33.39990234375
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "consequence-commit",
+            "start": 1795155811051.6802,
+            "end": 1795155812851.69,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7000000000002657,
+            "bornProgress": 1.8074561844981845,
+            "maxGapMs": 33.4150390625
+          }
+        },
+        "settlement": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "settlement-ready",
+            "start": 1795155817010.36,
+            "end": 1795155818810.375,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000002657,
+            "maxGapMs": 33.454833984375
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "settlement-commit",
+            "start": 1795155818849.56,
+            "end": 1795155820649.57,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000002657,
+            "maxGapMs": 33.43505859375
+          }
+        }
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100003"
+      },
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795155821378.465,
+            "image": ".cache/native-first-use-reviewed-olderMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795155821541.495
+          }
+        ]
+      },
+      "prepared": 119,
+      "afterReady": 1586
+    },
+    {
+      "label": "olderFemale",
+      "profile": "olderFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-olderFemale.json",
+      "log": ".cache/native-first-use-reviewed-olderFemale.log",
+      "startedAt": "2026-11-20T06:23:55.077Z",
+      "finishedAt": "2026-11-20T06:25:12.828Z",
+      "wallMs": 77751,
+      "exitCode": 0,
+      "receiptSha256": "6a60f3ede91f1e3d9508a11c2064f08400e0912a87cc284013eaa95a6ebadb1f",
+      "retained": 576,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "firstUse": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 78,
+        "firstUsePipelines": 36,
+        "firstUseTargets": 49
+      },
+      "broadGaps": [
+        {
+          "from": 1795155896389.1648,
+          "through": 1795155896440.135,
+          "ms": 50.97021484375
+        },
+        {
+          "from": 1795155868622.42,
+          "through": 1795155868672.6748,
+          "ms": 50.2548828125
+        },
+        {
+          "from": 1795155876656.73,
+          "through": 1795155876706.16,
+          "ms": 49.429931640625
+        },
+        {
+          "from": 1795155892989.13,
+          "through": 1795155893031.6099,
+          "ms": 42.47998046875
+        },
+        {
+          "from": 1795155883022.4348,
+          "through": 1795155883058.905,
+          "ms": 36.47021484375
+        }
+      ],
+      "blocked": {
+        "preparation": {
+          "kind": "birth-block-end",
+          "stage": "preparation",
+          "start": 1795155853076.5652,
+          "end": 1795155854876.6301,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999999638,
+          "peerProgress": 1.5996725671930259,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.469970703125,
+            "p95GapMs": 33.434814453125,
+            "over50": 0
+          }
+        },
+        "ready": {
+          "kind": "birth-block-end",
+          "stage": "late-ready",
+          "start": 1795155861535.935,
+          "end": 1795155863335.965,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.434814453125,
+            "p95GapMs": 33.4150390625,
+            "over50": 0
+          }
+        },
+        "task": {
+          "kind": "birth-block-end",
+          "stage": "task-commit",
+          "start": 1795155859705.715,
+          "end": 1795155861505.77,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.8791999999999618,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.47998046875,
+            "p95GapMs": 33.4150390625,
+            "over50": 0
+          }
+        },
+        "action": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "action-ready",
+            "start": 1795155879237.85,
+            "end": 1795155881037.87,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.740000000000272,
+            "peerProgress": 0,
+            "maxGapMs": 33.494873046875
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "action-commit",
+            "start": 1795155881071.76,
+            "end": 1795155882871.7751,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "peerProgress": 0,
+            "maxGapMs": 33.52490234375
+          }
+        },
+        "consequence": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "consequence-ready",
+            "start": 1795155886762.27,
+            "end": 1795155888562.2852,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 0,
+            "maxGapMs": 33.469970703125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "consequence-commit",
+            "start": 1795155888603.12,
+            "end": 1795155890403.1301,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 1.8074561844981845,
+            "maxGapMs": 33.460205078125
+          }
+        },
+        "settlement": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "settlement-ready",
+            "start": 1795155894564.725,
+            "end": 1795155896364.745,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "maxGapMs": 33.425048828125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "settlement-commit",
+            "start": 1795155896405.9502,
+            "end": 1795155898205.965,
+            "drawFrames": 54,
+            "confirmedPublications": 86,
+            "clockAdvance": 1.7000000000002657,
+            "maxGapMs": 33.43505859375
+          }
+        }
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000002",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99997"
+      },
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795155899063.67,
+            "image": ".cache/native-first-use-reviewed-olderFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795155899238.855
+          }
+        ]
+      },
+      "prepared": 119,
+      "afterReady": 1581
+    },
+    {
+      "label": "youngFemale",
+      "profile": "youngFemale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-youngFemale.json",
+      "log": ".cache/native-first-use-reviewed-youngFemale.log",
+      "startedAt": "2026-11-20T06:25:12.834Z",
+      "finishedAt": "2026-11-20T06:26:30.125Z",
+      "wallMs": 77291,
+      "exitCode": 0,
+      "receiptSha256": "396430f1278b48679b519ac93dd6f4c0829634cf732a404dfb422ea59e3406c0",
+      "retained": 585,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "firstUse": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 96,
+        "firstUsePipelines": 48,
+        "firstUseTargets": 49
+      },
+      "broadGaps": [
+        {
+          "from": 1795155960222.7551,
+          "through": 1795155960441.875,
+          "ms": 219.119873046875
+        },
+        {
+          "from": 1795155960655.965,
+          "through": 1795155960813.035,
+          "ms": 157.06982421875
+        },
+        {
+          "from": 1795155960456.04,
+          "through": 1795155960610.1301,
+          "ms": 154.090087890625
+        },
+        {
+          "from": 1795155955089.36,
+          "through": 1795155955144.44,
+          "ms": 55.079833984375
+        },
+        {
+          "from": 1795155973956.205,
+          "through": 1795155974008.15,
+          "ms": 51.94482421875
+        }
+      ],
+      "blocked": {
+        "preparation": {
+          "kind": "birth-block-end",
+          "stage": "preparation",
+          "start": 1795155931017.255,
+          "end": 1795155932817.335,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.4798381563837095,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.449951171875,
+            "p95GapMs": 33.445068359375,
+            "over50": 0
+          }
+        },
+        "ready": {
+          "kind": "birth-block-end",
+          "stage": "late-ready",
+          "start": 1795155939341.185,
+          "end": 1795155941141.2349,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.46484375,
+            "p95GapMs": 33.405029296875,
+            "over50": 0
+          }
+        },
+        "task": {
+          "kind": "birth-block-end",
+          "stage": "task-commit",
+          "start": 1795155937494.42,
+          "end": 1795155939294.49,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.419921875,
+            "p95GapMs": 33.389892578125,
+            "over50": 0
+          }
+        },
+        "action": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "action-ready",
+            "start": 1795155957213.31,
+            "end": 1795155959013.375,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "peerProgress": 0,
+            "maxGapMs": 33.455078125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "action-commit",
+            "start": 1795155959052.3699,
+            "end": 1795155960852.41,
+            "drawFrames": 43,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000002657,
+            "peerProgress": 0,
+            "maxGapMs": 219.119873046875
+          }
+        },
+        "consequence": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "consequence-ready",
+            "start": 1795155964071.72,
+            "end": 1795155965871.76,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 0,
+            "maxGapMs": 33.469970703125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "consequence-commit",
+            "start": 1795155965916.06,
+            "end": 1795155967716.09,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 1.8074561844981845,
+            "maxGapMs": 33.434814453125
+          }
+        },
+        "settlement": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "settlement-ready",
+            "start": 1795155972111.93,
+            "end": 1795155973911.955,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000002657,
+            "maxGapMs": 33.440185546875
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "settlement-commit",
+            "start": 1795155973959.6199,
+            "end": 1795155975759.625,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "maxGapMs": 33.43505859375
+          }
+        }
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "11",
+        "entry": {
+          "n": "11",
+          "d": "1"
+        },
+        "expectedBalance": "99992"
+      },
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795155976866.77,
+            "image": ".cache/native-first-use-reviewed-youngFemale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795155977032.39
+          }
+        ]
+      },
+      "prepared": 154,
+      "afterReady": 1757
+    },
+    {
+      "label": "youngMale",
+      "profile": "youngMale",
+      "followSettlement": true,
+      "output": ".cache/native-first-use-reviewed-youngMale.json",
+      "log": ".cache/native-first-use-reviewed-youngMale.log",
+      "startedAt": "2026-11-20T06:26:30.131Z",
+      "finishedAt": "2026-11-20T06:27:47.641Z",
+      "wallMs": 77510,
+      "exitCode": 0,
+      "receiptSha256": "31f25c71949852c898c4d3a243b70ab9252f5676f6e7032f50b9a68ee5ba1633",
+      "retained": 585,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "firstUse": {
+        "firstUseSubmissions": 7,
+        "firstUsePasses": 21,
+        "firstUseDraws": 96,
+        "firstUsePipelines": 48,
+        "firstUseTargets": 49
+      },
+      "broadGaps": [
+        {
+          "from": 1795156020223.03,
+          "through": 1795156020412.445,
+          "ms": 189.4150390625
+        },
+        {
+          "from": 1795156020422.85,
+          "through": 1795156020592.33,
+          "ms": 169.47998046875
+        },
+        {
+          "from": 1795156020656.385,
+          "through": 1795156020730.79,
+          "ms": 74.405029296875
+        },
+        {
+          "from": 1795156051489.82,
+          "through": 1795156051551.4402,
+          "ms": 61.6201171875
+        },
+        {
+          "from": 1795156053723.5251,
+          "through": 1795156053779.28,
+          "ms": 55.7548828125
+        }
+      ],
+      "blocked": {
+        "preparation": {
+          "kind": "birth-block-end",
+          "stage": "preparation",
+          "start": 1795156009373.16,
+          "end": 1795156011173.2349,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.4798381563837095,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.43505859375,
+            "p95GapMs": 33.409912109375,
+            "over50": 0
+          }
+        },
+        "ready": {
+          "kind": "birth-block-end",
+          "stage": "late-ready",
+          "start": 1795156017327.415,
+          "end": 1795156019127.445,
+          "drawFrames": 54,
+          "confirmedPublications": 89,
+          "clockAdvance": 1.739999999999963,
+          "peerProgress": 1.9007999999999594,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.47998046875,
+            "p95GapMs": 33.4150390625,
+            "over50": 0
+          }
+        },
+        "task": {
+          "kind": "birth-block-end",
+          "stage": "task-commit",
+          "start": 1795156015481.17,
+          "end": 1795156017281.205,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.87919999999996,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.41015625,
+            "p95GapMs": 33.400146484375,
+            "over50": 0
+          }
+        },
+        "action": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "action-ready",
+            "start": 1795156035153.845,
+            "end": 1795156036953.875,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7000000000002657,
+            "peerProgress": 0,
+            "maxGapMs": 33.4599609375
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "action-commit",
+            "start": 1795156036992.035,
+            "end": 1795156038792.06,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7000000000002657,
+            "peerProgress": 0,
+            "maxGapMs": 33.39501953125
+          }
+        },
+        "consequence": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "consequence-ready",
+            "start": 1795156041744.1099,
+            "end": 1795156043544.13,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 0,
+            "maxGapMs": 33.469970703125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "consequence-commit",
+            "start": 1795156043582.895,
+            "end": 1795156045382.915,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "bornProgress": 1.8074561844981845,
+            "maxGapMs": 33.465087890625
+          }
+        },
+        "settlement": {
+          "ready": {
+            "kind": "birth-block-end",
+            "stage": "settlement-ready",
+            "start": 1795156049656.525,
+            "end": 1795156051456.55,
+            "drawFrames": 54,
+            "confirmedPublications": 87,
+            "clockAdvance": 1.7200000000002689,
+            "maxGapMs": 33.469970703125
+          },
+          "commit": {
+            "kind": "birth-block-end",
+            "stage": "settlement-commit",
+            "start": 1795156051502.96,
+            "end": 1795156053302.97,
+            "drawFrames": 54,
+            "confirmedPublications": 88,
+            "clockAdvance": 1.7200000000002689,
+            "maxGapMs": 33.449951171875
+          }
+        }
+      },
+      "economic": {
+        "entryId": "deliver:crate-1000003",
+        "expectedIncome": "14",
+        "entry": {
+          "n": "14",
+          "d": "1"
+        },
+        "expectedBalance": "100000"
+      },
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795156054434.525,
+            "image": ".cache/native-first-use-reviewed-youngMale-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795156054596.775
+          }
+        ]
+      },
+      "prepared": 154,
+      "afterReady": 1750
+    },
+    {
+      "label": "task-control",
+      "profile": "youngFemale",
+      "followSettlement": false,
+      "output": ".cache/native-first-use-reviewed-task-control.json",
+      "log": ".cache/native-first-use-reviewed-task-control.log",
+      "startedAt": "2026-11-20T06:27:47.645Z",
+      "finishedAt": "2026-11-20T06:28:17.997Z",
+      "wallMs": 30352,
+      "exitCode": 0,
+      "receiptSha256": "bb60fe7232db07d41214fd3eaab76bac61939713092a60d3961867e21ba72a90",
+      "retained": 585,
+      "bankRefs": [
+        1,
+        2,
+        2
+      ],
+      "firstUse": {
+        "firstUseSubmissions": 3,
+        "firstUsePasses": 9,
+        "firstUseDraws": 18,
+        "firstUsePipelines": 12,
+        "firstUseTargets": 21
+      },
+      "broadGaps": [
+        {
+          "from": 1795156091656.6199,
+          "through": 1795156091693.675,
+          "ms": 37.05517578125
+        },
+        {
+          "from": 1795156088156.565,
+          "through": 1795156088190.905,
+          "ms": 34.340087890625
+        },
+        {
+          "from": 1795156095989.9849,
+          "through": 1795156096024.105,
+          "ms": 34.1201171875
+        },
+        {
+          "from": 1795156091023.14,
+          "through": 1795156091056.635,
+          "ms": 33.4951171875
+        },
+        {
+          "from": 1795156086623.115,
+          "through": 1795156086656.5898,
+          "ms": 33.474853515625
+        }
+      ],
+      "blocked": {
+        "preparation": {
+          "kind": "birth-block-end",
+          "stage": "preparation",
+          "start": 1795156085810.9648,
+          "end": 1795156087611.035,
+          "drawFrames": 54,
+          "confirmedPublications": 88,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.621223615029396,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.474853515625,
+            "p95GapMs": 33.429931640625,
+            "over50": 0
+          }
+        },
+        "ready": {
+          "kind": "birth-block-end",
+          "stage": "late-ready",
+          "start": 1795156094008.4148,
+          "end": 1795156095808.4548,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.7199999999999633,
+          "peerProgress": 1.8575999999999606,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.46484375,
+            "p95GapMs": 33.420166015625,
+            "over50": 0
+          }
+        },
+        "task": {
+          "kind": "birth-block-end",
+          "stage": "task-commit",
+          "start": 1795156092191.065,
+          "end": 1795156093991.1099,
+          "drawFrames": 54,
+          "confirmedPublications": 87,
+          "clockAdvance": 1.6999999999948585,
+          "peerProgress": 1.8575999999944468,
+          "cadence": {
+            "frames": 54,
+            "maxGapMs": 33.429931640625,
+            "p95GapMs": 33.41015625,
+            "over50": 0
+          }
+        }
+      },
+      "capture": {
+        "mode": "visual",
+        "clock": "browser-performance-epoch-ms",
+        "visualEvidence": true,
+        "checkpoints": [
+          {
+            "label": "ordinary-farm-birth-cancel-after-task",
+            "mode": "visual",
+            "startedAt": 1795156096483.4001,
+            "image": ".cache/native-first-use-reviewed-task-control-ordinary-farm-birth-cancel-after-task.png",
+            "finishedAt": 1795156096666.94
+          }
+        ]
+      },
+      "prepared": 154,
+      "afterReady": 132
+    }
+  ],
+  "cadenceAccepted": false,
+  "scope": "Functional GPU validation and cumulative first-use counters. Broad gaps are not attributed causal GPU time and are not fluency acceptance."
+}

@@ -1,0 +1,673 @@
+{
+  "source": "Rama fa51f8c723eb2b758aafc86bd32e8e7864e45597 con WASM público intacto y la lectura opcional de cancelación sin exports disponibles. Water de youngFemale usó 4,4 unidades de crecimiento hasta el umbral para que el paseo se publicara antes del vencimiento.",
+  "cases": [
+    {
+      "profile": "olderMale",
+      "action": "initial",
+      "trigger": {
+        "kind": "CropPlaced",
+        "targetId": "plant-1000001",
+        "sequence": 282,
+        "position": {
+          "time": 152.85000000000065,
+          "elapsed": 12.84999999999994,
+          "x": -17.95273506473629,
+          "z": 0.0472649352637087,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 282
+        }
+      },
+      "receiptSha256": "e1b84090814e2fcefecaf22b6d6347acf5a0b058b68686f23bee67be2936d3f3",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 667,
+      "retainedGeometryOwners": 33,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        2920,
+        3047,
+        3519
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795255095474.5,
+          "sequence": 40,
+          "ticket": 8,
+          "intervalMs": 33.400146484375,
+          "drawMs": 3.599853515625,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795255095507.8,
+          "sequence": 40,
+          "ticket": 8,
+          "intervalMs": 33.300048828125,
+          "drawMs": 2.89990234375,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795255092309.8,
+          "sequence": 27,
+          "ticket": 4,
+          "intervalMs": 35.400146484375,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255092909.9,
+          "sequence": 31,
+          "ticket": 4,
+          "intervalMs": 35.39990234375,
+          "drawMs": 2.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255086775.8,
+          "sequence": 21,
+          "ticket": null,
+          "intervalMs": 34.7001953125,
+          "drawMs": 0.89990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255091909.2,
+          "sequence": 24,
+          "ticket": 4,
+          "intervalMs": 34.699951171875,
+          "drawMs": 2.60009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255095042.5,
+          "sequence": 38,
+          "ticket": 6,
+          "intervalMs": 34.699951171875,
+          "drawMs": 1.39990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255085242.5,
+          "sequence": 15,
+          "ticket": null,
+          "intervalMs": 34.60009765625,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000001",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    },
+    {
+      "profile": "olderMale",
+      "action": "water",
+      "trigger": {
+        "waterSlot": "future"
+      },
+      "receiptSha256": "089016caa20da84e8528e356fe81cc9b5ff30d92e2759a96dbfa643e9b725ebf",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 705,
+      "retainedGeometryOwners": 33,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        2887,
+        3129,
+        3569
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795255134207.7,
+          "sequence": 44,
+          "ticket": 8,
+          "intervalMs": 33.199951171875,
+          "drawMs": 4.39990234375,
+          "trigger": "raf",
+          "replay": false
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795255124012.5,
+          "sequence": 16,
+          "ticket": null,
+          "intervalMs": 38,
+          "drawMs": 0.89990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255132644.7,
+          "sequence": 31,
+          "ticket": 6,
+          "intervalMs": 36.800048828125,
+          "drawMs": 2,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255121944.4,
+          "sequence": 5,
+          "ticket": null,
+          "intervalMs": 36.599853515625,
+          "drawMs": 1.10009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255132710.3,
+          "sequence": 31,
+          "ticket": 6,
+          "intervalMs": 35.800048828125,
+          "drawMs": 1.39990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255131976.8,
+          "sequence": 27,
+          "ticket": 6,
+          "intervalMs": 35.60009765625,
+          "drawMs": 2.39990234375,
+          "trigger": "mutation-release",
+          "replay": false
+        },
+        {
+          "at": 1795255129943.3,
+          "sequence": 18,
+          "ticket": 2,
+          "intervalMs": 35.400146484375,
+          "drawMs": 1.7998046875,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000000",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    },
+    {
+      "profile": "youngFemale",
+      "action": "initial",
+      "trigger": {
+        "kind": "CropPlaced",
+        "targetId": "plant-1000001",
+        "sequence": 304,
+        "position": {
+          "time": 203.45000000000078,
+          "elapsed": 13.449999999999926,
+          "x": -17.95273506473629,
+          "z": 0.0472649352637087,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 304
+        }
+      },
+      "receiptSha256": "c0aaeef3f8e53c7014d76456e6d42806191ff4c86194765ba8229494ce49f30d",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 708,
+      "retainedGeometryOwners": 36,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        3053,
+        3104,
+        3734
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795255168074.7,
+          "sequence": 38,
+          "ticket": 8,
+          "intervalMs": 33.5,
+          "drawMs": 3.800048828125,
+          "trigger": "raf",
+          "replay": false
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795255164510.5,
+          "sequence": 26,
+          "ticket": 4,
+          "intervalMs": 35.800048828125,
+          "drawMs": 1.89990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255165043.6,
+          "sequence": 30,
+          "ticket": 4,
+          "intervalMs": 35.5,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255165410.1,
+          "sequence": 33,
+          "ticket": 4,
+          "intervalMs": 35.400146484375,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255164109.8,
+          "sequence": 23,
+          "ticket": 4,
+          "intervalMs": 35.199951171875,
+          "drawMs": 1.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255164376.5,
+          "sequence": 25,
+          "ticket": 4,
+          "intervalMs": 35.199951171875,
+          "drawMs": 1.800048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255154309.6,
+          "sequence": 2,
+          "ticket": null,
+          "intervalMs": 35,
+          "drawMs": 0.2998046875,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000001",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    },
+    {
+      "profile": "youngFemale",
+      "action": "water",
+      "trigger": {
+        "waterSlot": "future"
+      },
+      "receiptSha256": "c90d44b3d4c90d634b6a796ddd1bad613a620028296d99428f4ce82c4712bc5b",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "REST21",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 672,
+      "retainedGeometryOwners": 36,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "terminalArrival": {
+        "endElapsed": 14.375635183469244,
+        "stopProposed": false,
+        "anchor": {
+          "id": "farm-plant-900098",
+          "x": -17.8,
+          "z": 0.2,
+          "radius": 3
+        }
+      },
+      "consumerResourceCounts": [
+        3090,
+        3373,
+        3852
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795255372309,
+          "sequence": 51,
+          "ticket": 8,
+          "intervalMs": 33.39990234375,
+          "drawMs": 3.199951171875,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795255372342.2,
+          "sequence": 51,
+          "ticket": 8,
+          "intervalMs": 33.199951171875,
+          "drawMs": 4.400146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255372375.5,
+          "sequence": 51,
+          "ticket": 8,
+          "intervalMs": 33.300048828125,
+          "drawMs": 4.800048828125,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795255358314.5,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 39,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255359013.5,
+          "sequence": 7,
+          "ticket": null,
+          "intervalMs": 37.89990234375,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255366379.3,
+          "sequence": 22,
+          "ticket": 2,
+          "intervalMs": 37.10009765625,
+          "drawMs": 4.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255369312.2,
+          "sequence": 30,
+          "ticket": 4,
+          "intervalMs": 36.599853515625,
+          "drawMs": 2.400146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255370145.2,
+          "sequence": 34,
+          "ticket": 6,
+          "intervalMs": 35.39990234375,
+          "drawMs": 1.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795255368077.5,
+          "sequence": 29,
+          "ticket": 4,
+          "intervalMs": 35.300048828125,
+          "drawMs": 2,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000000",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    }
+  ],
+  "coldStart": {
+    "profile": "youngFemale",
+    "action": "water",
+    "remainingGrowth": 3.2,
+    "stage": "ordinary Idle20 acquisition",
+    "visibleError": "Error: Error: Error: Worker command not admitted: failed",
+    "receiptSha256": "8ef4e467d332b945885f28efffb217b581cd507b70a11fff4860169ed095c3cf",
+    "trace": [
+      {
+        "type": "idle-authority-request",
+        "at": 1795255189834.6,
+        "id": 1,
+        "ticket": 1,
+        "minSequence": 2
+      },
+      {
+        "type": "idle-receiver-request",
+        "at": 1795255189846.3,
+        "id": 1,
+        "ticket": 1,
+        "minSequence": 2
+      },
+      {
+        "type": "idle-surface-before-publication",
+        "at": 1795255189848.3,
+        "ticket": 1,
+        "minSequence": 2,
+        "publication": 0
+      },
+      {
+        "type": "idle-surface-after-publication",
+        "at": 1795255195276.6,
+        "ticket": 1,
+        "publication": 9
+      },
+      {
+        "type": "authority-client-fail",
+        "at": 1795255199837.2002,
+        "error": "Error: Native resource preparation timed out"
+      }
+    ],
+    "acquired": []
+  },
+  "earlyDue": {
+    "profile": "youngFemale",
+    "action": "water",
+    "remainingGrowth": 3.2,
+    "stage": "ordinary Idle22 movement before crop assignment",
+    "visibleError": "Error: Timed out: Idle22 acquisition",
+    "receiptSha256": "b13be4f048672226795fc8251c32055e304ee579e61ba2256c14a755ce959532",
+    "trace": [
+      {
+        "type": "idle-authority-request",
+        "at": 1795255288983,
+        "id": 1,
+        "ticket": 1,
+        "minSequence": 2
+      },
+      {
+        "type": "idle-receiver-request",
+        "at": 1795255290675.7,
+        "id": 1,
+        "ticket": 1,
+        "minSequence": 2
+      },
+      {
+        "type": "idle-surface-before-publication",
+        "at": 1795255290677.7,
+        "ticket": 1,
+        "minSequence": 2,
+        "publication": 0
+      },
+      {
+        "type": "idle-surface-after-publication",
+        "at": 1795255294103,
+        "ticket": 1,
+        "publication": 9
+      },
+      {
+        "type": "idle-receiver-ready",
+        "at": 1795255298406.3,
+        "id": 1,
+        "ticket": 1
+      },
+      {
+        "type": "idle-authority-request",
+        "at": 1795255311502.9001,
+        "id": 6,
+        "ticket": 10,
+        "minSequence": 453
+      },
+      {
+        "type": "idle-receiver-request",
+        "at": 1795255311503.2,
+        "id": 6,
+        "ticket": 10,
+        "minSequence": 453
+      },
+      {
+        "type": "idle-surface-before-publication",
+        "at": 1795255311503.5,
+        "ticket": 10,
+        "minSequence": 453,
+        "publication": 451
+      },
+      {
+        "type": "idle-surface-after-publication",
+        "at": 1795255311534.8,
+        "ticket": 10,
+        "publication": 453
+      },
+      {
+        "type": "idle-receiver-ready",
+        "at": 1795255311944.2,
+        "id": 6,
+        "ticket": 10
+      }
+    ],
+    "acquired": [
+      {
+        "key": "nativeInitialIdleBodyBinding",
+        "ticket": 2,
+        "elapsed": 10
+      },
+      {
+        "key": "nativeIdleCycleBinding",
+        "ticket": 4,
+        "elapsed": 10
+      },
+      {
+        "key": "nativeTaskStartBinding",
+        "ticket": 7,
+        "elapsed": 14.999999999999893
+      },
+      {
+        "key": "nativeTaskActionBinding",
+        "ticket": 9,
+        "elapsed": 18.74999999999991
+      }
+    ]
+  }
+}

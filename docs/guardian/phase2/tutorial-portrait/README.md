@@ -1,0 +1,5 @@
+# Portrait guide validation
+
+Opened tests/browser/tutorial-guardian-portrait.html with its 390x844 iframe, using production NativeGuardian, TutorialHudGuide, HUD markup and layout. Clicked Retirar guia and then Senalar Cultivar. Inspected the initial Build pose, rest above the bubble and Grow pointing pose. Vortex is visible and labels remain readable; no old 2D hands. The fixture reports errors=[], draws=6, legacyHands=0. Rest position converges to x=68.400009, y=507.25. An intermediate position after removing the guide was x=95.536981, y=429.785317, consistent with interpolated travel instead of an immediate endpoint jump.
+
+Saved rest-above-bubble.png and point-grow.png. The enclosing browser is shorter than the iframe, so the rest screenshot is scrolled to the bottom; this is not a cropped phone recording. QA panel is fixture-only. No audio is supplied in this fixture and the background is synthetic. This validates these HUD layouts/poses; it does not establish complete real-game portrait tutorial, world-to-HUD travel, all screen sizes, lip sync or continuous video acceptance.

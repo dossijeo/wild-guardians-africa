@@ -1,0 +1,38 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {WebGPURenderer} from 'three/webgpu';
+import {texture,uniform} from 'three/tsl';
+import {createWebGpuVolcanicGround} from '../src/rendering/webgpu-volcanic-ground.js';
+
+const tile={base:'base',normal:'normal',arh:'arh',scale:.12,normalBoost:1.05,relief:.22};
+const fetchImpl=async()=>({ok:true,json:async()=>({volcanoes:tile})});
+
+test('invalid light or incomplete environment fails before downloading assets',async()=>{
+ let calls=0;const fetchSpy=async()=>{calls++;return fetchImpl();},day={isTextureNode:true},dark={isTextureNode:true},blend={isNode:true};
+ await assert.rejects(createWebGpuVolcanicGround({fetchImpl:fetchSpy,light:{}}),/options/);
+ await assert.rejects(createWebGpuVolcanicGround({fetchImpl:fetchSpy,environment:{day,dark,blend}}),/options/);
+ assert.equal(calls,0);
+});
+
+test('volcanic chunks share their shader graph and own independent confirmed masks',async()=>{
+ const images=[],provider=await createWebGpuVolcanicGround({fetchImpl,imageLoader:async()=>{const bitmap={close(){this.closed=true;}};images.push(bitmap);return bitmap;}});
+ const first=provider.create({cx:0,cz:0,groundMask:new Uint8Array(35*35*4)}),second=provider.create({cx:1,cz:-1,groundMask:new Uint8Array(35*35*4)});
+ try{assert.equal(first.outputNode,second.outputNode);assert.notEqual(first._wgGroundMask,second._wgGroundMask);assert.deepEqual(second._wgGroundMin.toArray(),[24,-72]);assert.equal(first._wgGroundMask.image.width,35);let disposed=0;first._wgGroundMask.addEventListener('dispose',()=>disposed++);first.dispose();assert.equal(disposed,1);assert.equal(images.some(i=>i.closed),false);assert.throws(()=>provider.create({cx:0,cz:0,groundMask:new Uint8Array(2)}),/mask/);}finally{second.dispose();provider.dispose();}assert.ok(images.every(i=>i.closed));
+});
+
+test('volcanic material generates WGSL including atlas gradients and parallax',async()=>{
+ const provider=await createWebGpuVolcanicGround({fetchImpl,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0,groundMask:new Uint8Array(35*35*4)}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
+ try{const builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleGrad/);assert.match(builder.fragmentShader,/loop|for\s*\(/);}finally{material.dispose();geometry.dispose();provider.dispose();}
+});
+
+test('volcanic ground samples the shared sky endpoints with stable bindings',async()=>{
+ const placeholder=new THREE.DataTexture(new Uint8Array([64,64,64,255]),1,1);placeholder.minFilter=THREE.LinearMipmapLinearFilter;placeholder.magFilter=THREE.LinearFilter;
+ const environment={day:texture(placeholder),dark:texture(placeholder),night:uniform(0),blend:uniform(0)},provider=await createWebGpuVolcanicGround({fetchImpl,environment,imageLoader:async()=>({close(){}})}),material=provider.create({cx:0,cz:0}),geometry=new THREE.PlaneGeometry(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;
+ try{const node=material.outputNode,builder=renderer.backend.createNodeBuilder(new THREE.Mesh(geometry,material),renderer);builder.scene=new THREE.Scene();builder.camera=new THREE.PerspectiveCamera();builder.build();assert.match(builder.fragmentShader,/textureSampleLevel/);assert.match(builder.fragmentShader,/atan2/);environment.night.value=1;environment.blend.value=1;assert.equal(material.outputNode,node);assert.equal(environment.day.value,placeholder);}finally{material.dispose();geometry.dispose();provider.dispose();placeholder.dispose();}
+});
+
+test('volcanic ground waits for submitted atlas uploads and releases after cancellation',async()=>{
+ const controller=new AbortController(),images=[],waiters=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waiters.push(resolve))}}},initTexture(){}},pending=createWebGpuVolcanicGround({renderer,signal:controller.signal,fetchImpl,imageLoader:async()=>{const image={closed:false,close(){this.closed=true;}};images.push(image);return image;}});
+ for(let i=0;i<10&&!waiters.length;i++)await new Promise(resolve=>setImmediate(resolve));assert.equal(waiters.length,1);const rejected=assert.rejects(pending,{name:'AbortError'});controller.abort();await rejected;assert.equal(images[0].closed,false);waiters[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(images[0].closed,true);
+});

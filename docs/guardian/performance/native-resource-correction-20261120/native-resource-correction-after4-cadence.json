@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scope": "Host draw attempts and browser callbacks, not GPU execution time or physical scanout",
+  "owner": {
+    "pid": 24280,
+    "tid": 4964
+  },
+  "clockOffsetMs": 1794583626527.898,
+  "capture": {
+    "mode": "timing",
+    "clock": "browser-performance-epoch-ms",
+    "visualEvidence": false,
+    "checkpoints": [
+      {
+        "label": "ordinary-farm-birth-cancel-after-task",
+        "mode": "timing",
+        "startedAt": 1795181738854.42,
+        "image": null,
+        "finishedAt": 1795181738856.64
+      },
+      {
+        "label": "ordinary-post-settlement-next-task",
+        "mode": "timing",
+        "startedAt": 1795181767305.295,
+        "image": null,
+        "finishedAt": 1795181767307.255
+      }
+    ]
+  },
+  "frameSamples": 2453,
+  "hostCallbacks": 2483,
+  "medianHostCallbackIntervalMs": 33.3330078125,
+  "estimatedCallbackHz": 30.00029297161105,
+  "medianGpuVSyncTaskIntervalMs": 33.333984375,
+  "maxHostDrawCpuMs": 8.724853515625,
+  "maxHostSubmissionIntervalMs": 49.669921875,
+  "releaseTriggeredFrames": 5,
+  "recordedOpportunities": 1723,
+  "opportunityCoverage": {
+    "firstAt": 1795181702018.84,
+    "lastAt": 1795181767021.11
+  },
+  "gaps": [],
+  "limitations": [
+    "An absent Host submission is not proof of a slow GPU.",
+    "Callbacks inside gaps need the Host guard outcome for causal attribution.",
+    "Trace/screenshot events are correlations, not proof that capture caused a gap.",
+    "A 30 Hz display has a nominal 33.33 ms refresh period; no timer or counter change can remove it."
+  ],
+  "inputs": {
+    "receipt": {
+      "path": ".cache/native-resource-correction-after4.json",
+      "sha256": "39d89529cf5035bfe7ea9913b7bef15dd3a254a9bf098afa6d45d6b4cebf5dcb"
+    },
+    "trace": {
+      "path": ".cache/native-resource-correction-after4.trace.json",
+      "sha256": "0c8e5002b7847c575af1259c6f29516b355c4a817bc5e088f8a1bd79b600d90f"
+    }
+  }
+}

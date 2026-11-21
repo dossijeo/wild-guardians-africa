@@ -1,0 +1,338 @@
+{
+  "source": "61281e0e1013d8e270177c81d60976a20056a00b",
+  "gate": {
+    "id": 1000000,
+    "x": -14,
+    "z": 8.2,
+    "material": "zarzas"
+  },
+  "setup": {
+    "id": "worker-900012",
+    "actorId": 900012,
+    "opposite": true,
+    "lateral": -1.8,
+    "firstStart": {
+      "x": -14,
+      "z": 11.799999999999999
+    },
+    "secondStart": {
+      "x": -14,
+      "z": 4.2
+    },
+    "secondGoal": {
+      "x": -14,
+      "z": 13
+    }
+  },
+  "physical": {
+    "sha256": "22f852c2787dc9fb0283cb5f7cf04b38c3a43c291238ced9a7b269624ba93737",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 134.29999995231628
+      }
+    },
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "perBody": [
+      {
+        "actor": 900011,
+        "body": 1,
+        "ticket": 2,
+        "acquiredAt": 10,
+        "root": 689,
+        "geometries": 32,
+        "samplesInAperture": 12,
+        "closestPassage": {
+          "elapsed": 13.949999999999916,
+          "opening": 1,
+          "workers": [
+            {
+              "x": -13.949600219726562,
+              "z": 8.182641344984123,
+              "status": "arriving",
+              "admission": "native-farm-arrival",
+              "profile": "youngMale"
+            },
+            {
+              "x": -14,
+              "z": 4.2,
+              "status": "arriving",
+              "admission": "pending-farm-arrival-resources",
+              "profile": "youngFemale"
+            }
+          ]
+        }
+      },
+      {
+        "actor": 900012,
+        "body": 2,
+        "ticket": 4,
+        "acquiredAt": 17.14999999999989,
+        "root": 758,
+        "geometries": 32,
+        "samplesInAperture": 12,
+        "closestPassage": {
+          "elapsed": 20.84999999999994,
+          "opening": 1,
+          "workers": [
+            {
+              "x": -14.972064018249512,
+              "z": 5.02058219909668,
+              "status": "idle",
+              "admission": "native-idle",
+              "profile": "youngMale"
+            },
+            {
+              "x": -13.949600219726562,
+              "z": 8.195586178428373,
+              "status": "arriving",
+              "admission": "native-farm-arrival",
+              "profile": "youngFemale"
+            }
+          ]
+        }
+      }
+    ],
+    "gateOwner": {
+      "root": 472,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 474,
+          "geometry": 200,
+          "material": [
+            439
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "retainedBuffers": {
+      "initialOwners": 875,
+      "finalOwners": 947,
+      "commonOwners": 875,
+      "replacedOwners": 0,
+      "uniqueReferences": 779,
+      "gateReferences": [
+        "Buffer:2289",
+        "Buffer:2288",
+        "Buffer:2287",
+        "Buffer:2286",
+        "Buffer:3303",
+        "Buffer:3302",
+        "Buffer:3301"
+      ]
+    },
+    "timing": {
+      "scope": "Most recent 240 host opportunities at original 30 Hz",
+      "opportunities": 240,
+      "skipped": 0,
+      "maxDrawInterval": {
+        "at": 1795269868183,
+        "sequence": 99,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "a7babc3a-ab14-4e9f-b998-3e9534370466/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 18.399999999999906
+        },
+        "intervalMs": 38,
+        "drawMs": 3,
+        "replay": true,
+        "clockElapsed": 20.299999999999933,
+        "safeUntil": 20.299999999999933,
+        "cameraVersion": null
+      }
+    },
+    "drained": true,
+    "gpuErrors": 0
+  },
+  "controls": {
+    "physicalBlocked": {
+      "sha256": "54aa69a4eb1582e8190082740d1b5ef129e6c5af18eedb964cb1d4825bf74008",
+      "initialDraw": {
+        "residentGateId": "structure-1000000",
+        "gateStructure": {
+          "root": 475,
+          "visible": true,
+          "meshes": [
+            {
+              "id": 477,
+              "geometry": 203,
+              "material": [
+                402
+              ],
+              "visible": true,
+              "effectiveVisible": true
+            }
+          ]
+        },
+        "actorRoots": [
+          690,
+          759
+        ],
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "imageCopyPreparation": {
+            "version": 1,
+            "formats": [
+              "rgba8unorm",
+              "rgba8unorm-srgb"
+            ],
+            "completed": true,
+            "milliseconds": 123.10000002384186
+          }
+        },
+        "tickets": [
+          2
+        ],
+        "activeSequence": 27,
+        "gpuErrors": 0
+      },
+      "last": {
+        "elapsed": 55.95000000000214,
+        "opening": 1,
+        "workers": [
+          {
+            "x": -13.97523021697998,
+            "z": 5.199846267700195,
+            "status": "idle",
+            "admission": "native-idle",
+            "profile": "youngMale"
+          },
+          {
+            "x": -14,
+            "z": 4.2,
+            "status": "arriving",
+            "admission": "pending-farm-arrival-resources",
+            "profile": "youngFemale"
+          }
+        ]
+      },
+      "reversePassageSamples": 0
+    },
+    "nativeHost": {
+      "sha256": "401161945aceacd3b72548f89425cb78f06647343c563e4a9c48f99a409c887c",
+      "isolatedReverse": {
+        "result": "both referenced sides reached",
+        "firstPass": {
+          "elapsed": 15.099999999999891,
+          "opening": 1,
+          "actors": [
+            {
+              "id": "worker-900012",
+              "x": -13.949600219726562,
+              "z": 8.735586178428207,
+              "status": "arriving",
+              "admission": "native-farm-arrival"
+            }
+          ]
+        },
+        "prepare": {
+          "kind": "farm-arrival",
+          "committed": true,
+          "aborted": false,
+          "at": 10,
+          "actor": 900012,
+          "gates": [
+            1000000
+          ]
+        }
+      },
+      "paired": {
+        "result": null,
+        "last": {
+          "elapsed": 75.1000000000022,
+          "opening": 1,
+          "actors": [
+            {
+              "id": "worker-900011",
+              "x": -13.97523021697998,
+              "z": 5.199846267700195,
+              "status": "idle",
+              "admission": "native-idle"
+            },
+            {
+              "id": "worker-900012",
+              "x": -14,
+              "z": 4.2,
+              "status": "arriving",
+              "admission": "pending-farm-arrival-resources"
+            }
+          ]
+        },
+        "reverseOutcome": {
+          "elapsed": 10.49999999999999,
+          "actorId": "worker-900012",
+          "kind": "farm-arrival",
+          "status": "blocked"
+        }
+      }
+    },
+    "pairedWest": {
+      "sha256": "3030d75fb047549fd78b682f8e9742a03988462ed9391f45fe8de13c248a0549",
+      "lateralShift": -1.8,
+      "preparations": [
+        {
+          "kind": "farm-arrival",
+          "committed": true,
+          "aborted": false,
+          "at": 10,
+          "actor": 900011,
+          "gates": [
+            1000000
+          ]
+        },
+        {
+          "kind": "farm-arrival",
+          "committed": true,
+          "aborted": false,
+          "at": 16.399999999999878,
+          "actor": 900012,
+          "gates": [
+            1000000
+          ]
+        }
+      ],
+      "last": {
+        "elapsed": 20.69999999999994,
+        "opening": 1,
+        "actors": [
+          {
+            "id": "worker-900011",
+            "x": -14.972064018249512,
+            "z": 5.02058219909668,
+            "status": "idle",
+            "admission": "native-idle"
+          },
+          {
+            "id": "worker-900012",
+            "x": -13.949600219726562,
+            "z": 8.735586178428381,
+            "status": "arriving",
+            "admission": "native-farm-arrival"
+          }
+        ]
+      }
+    }
+  }
+}

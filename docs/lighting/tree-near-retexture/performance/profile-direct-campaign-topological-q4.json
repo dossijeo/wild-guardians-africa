@@ -1,0 +1,39 @@
+{
+  "status": "completed",
+  "daysRequested": 100,
+  "defensePolicy": "topological",
+  "labourPolicy": "q4",
+  "completedNights": 2,
+  "result": "defeat",
+  "finalHash": "6b813526c710301d0cbae9acbe3b9dd9a2f2b78e8adf17919669ce0215e1557b",
+  "steps": 801,
+  "decisions": 801,
+  "daily": [
+    {
+      "day": 1,
+      "stateHash": "2551704d8bd2e0dab229fb7072f53ff223375c17464736684eafbc48c47ec059",
+      "decisionHash": "f9125586269023928d93a2ffb9a0a353b5a885e7625e1f0e221fc9a8bebe560a",
+      "tickHash": "0ef8b7b778b13ccd6859ead368512f710d6821c30a04c3ef3c486574c3cbc1fb",
+      "steps": 401,
+      "decisions": 401,
+      "result": null
+    },
+    {
+      "day": 2,
+      "stateHash": "6b813526c710301d0cbae9acbe3b9dd9a2f2b78e8adf17919669ce0215e1557b",
+      "decisionHash": "594135e756e44437958bfca594676bbe4ae899e3886ac79514b30d3f4aa03f5e",
+      "tickHash": "01e5b272d2c2b3a3dd966a64a1212d719d6c4795f9e8b9cc54898975fd2dadc0",
+      "steps": 801,
+      "decisions": 801,
+      "result": "defeat"
+    }
+  ],
+  "wasmSha256": "d5a1f67c760a938829bde8255372fa2539096d452b8866d961ca65e297d91651",
+  "wallMs": 6369.7185,
+  "tickMs": {
+    "p95": 15.746099999999842,
+    "p99": 33.13180000000011,
+    "max": 75.08489999999983
+  },
+  "scope": "Native deterministic scripted campaign on island-network mangrove, same legal policy, single continuous session without raid reload; no graphics, input, Rapier or frame timings. Per-step hash covers logical clock and selected animal fields, daily hash covers serialized state; no full native internal state comparison. Tick timings are instrumented and are not a controlled performance claim."
+}

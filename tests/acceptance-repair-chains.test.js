@@ -39,6 +39,7 @@ function ordered(){
 }
 function settledRepair(s,target,previousHp,paidCoins,previousStatus='intact'){
  const event=s.events.find(e=>e.type==='RepairApplied'&&e.targetId===target.id);
+ assert.deepEqual(event.presentation.structure,{x:target.x,z:target.z});
  assert.ok(event,'only physical completion provides a repair receipt');
  assert.deepEqual(event.repair,{taskId:event.repair.taskId,paymentId:`repair:${event.repair.taskId}`,paidCoins,previousHp,previousStatus,restoredHp:target.maxHp,maxHp:target.maxHp});
  assert.deepEqual(s.ledger.entries[event.repair.paymentId],rational(-paidCoins));
@@ -157,4 +158,10 @@ test('QA-083: stale completion identity cannot restore later damage or emit a se
  until(s,nav,()=>!s.tasks.some(t=>t.id===stale.id));
  assert.equal(numberOf(s.ledger.balance),620);assert.equal(target.hp,280);
  assert.equal(s.events.filter(e=>e.type==='RepairApplied'&&e.targetId===target.id).length,1);
+});
+
+test('repair completes at arrival without a confirmed acting phase',()=>{
+ const {s,nav,target}=fixture();Game.requestRepair(s,'repair-no-action-phase',target.id);let observedAssigned=false;
+ until(s,nav,()=>s.events.some(event=>event.type==='RepairApplied'&&event.targetId===target.id),180,current=>{for(const worker of current.workers){const task=current.tasks.find(item=>item.id===worker.taskId);if(task?.kind==='repair'){observedAssigned=true;assert.notEqual(worker.status,'acting');}}});
+ assert.equal(observedAssigned,true);assert.equal(s.events.filter(event=>event.type==='RepairApplied'&&event.targetId===target.id).length,1);
 });

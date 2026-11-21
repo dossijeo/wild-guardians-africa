@@ -1,0 +1,5 @@
+# Persistent guidance orbit/zoom and spell handoff
+
+2026-10-28, real WorldScene controlled fixture, production Guardian GLB, Intel UHD, 1600x900 render buffer. Added a visible guide toggle to guardian-combat.html; it supplies a tutorial target at the fixture crop site, with production placement, body, vortex and update code. This is not a complete narrated tutorial.
+
+Inspected start.png, orbit-zoom.png, grow.png and resumed.png. After the fixture camera orbit and zoom controls, the planned origin changed and the visible Guardian settled beside the crops. Cast Grow while guide was active, advanced the frozen simulation to .24 s and inspected the luminous arrival and hand-to-crop streams; resumed time and inspected the guide returning with neutral materials/vortex. Corresponding visible DOM status receipts show maxVisibleGuardians=1 and no errors. These static observations validate sampled positions and handoff states, not every intermediate frame or all environments. Audio was not activated. No performance regression claim.

@@ -1,0 +1,58 @@
+{
+  "initial": "1,0",
+  "added": "2,0",
+  "held": {
+    "kind": "status",
+    "id": 2,
+    "resident": 1,
+    "receiver": {
+      "closed": false,
+      "confirmedSequence": 0,
+      "pending": true,
+      "lastId": 2
+    },
+    "keys": [
+      {
+        "key": "1,0",
+        "present": true,
+        "revision": 1
+      },
+      {
+        "key": "2,0",
+        "present": false,
+        "revision": null
+      }
+    ]
+  },
+  "confirmed": {
+    "kind": "status",
+    "id": 3,
+    "resident": 2,
+    "receiver": {
+      "closed": false,
+      "confirmedSequence": 1,
+      "pending": false,
+      "lastId": 2
+    },
+    "keys": [
+      {
+        "key": "1,0",
+        "present": true,
+        "revision": 1
+      },
+      {
+        "key": "2,0",
+        "present": true,
+        "revision": 1
+      }
+    ]
+  },
+  "simulationSequence": 2,
+  "capture": {
+    "kind": "capture",
+    "id": 4,
+    "draws": 2,
+    "nonBackground": 112688
+  },
+  "scope": "Real simulation authority Worker adds a native mangrove chunk; WebGPU Worker holds it until its sequence is explicitly confirmed. Temporary vertex-color terrain only; no full scene, eviction or performance comparison."
+}

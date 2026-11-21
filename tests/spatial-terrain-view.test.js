@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {createSpatialTerrainView} from '../src/world/wild-engine/spatial-terrain-view.js';
+import {createShoreMask} from '../src/rendering/mangrove-shore.js';
 
 const module=new WebAssembly.Module(readFileSync(new URL(
   '../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
@@ -22,6 +23,7 @@ for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','can
       assert.equal(info.inside,level>0);
       assert.equal(info.level,level>0?level:null);
       assert.equal(info.shore,core.waterShoreAnywhere(x,z));
+      assert.equal(field.waterShore(x,z),info.shore);
       assert.equal(field.fluidInside(x,z),info.inside);
       assert(Number.isFinite(field.slope(x,z)));
       if(biome==='mangrove'){assert.equal(info.mask,core.wetlandMaskAnywhere(x,z));assert.equal(field.wetlandMask(x,z),info.mask);}
@@ -40,6 +42,16 @@ for(const biome of ['savanna','desert','grand_river','volcanoes','mangrove','can
     if(biome!=='mangrove')assert(nearby.some(point=>field.surface(point.x,point.z)!==point.before),
       'the view must observe a native terrain edit');
   });
+
+test('native mangrove shore mask matches the complete water query byte for byte',()=>{
+  const core=createSpatialWorld(module);core.generate(712,0,0,'mangrove');
+  const field=createSpatialTerrainView(core);
+  for(const bounds of [{minX:-24,minZ:-24},{minX:72,minZ:-120}]){
+    const direct=createShoreMask(field,bounds);
+    const fallback=createShoreMask({waterInfo:(x,z)=>field.waterInfo(x,z)},bounds);
+    try{assert.deepEqual(direct.image.data,fallback.image.data);}finally{direct.dispose();fallback.dispose();}
+  }
+});
 
 test('a canyon settlement spanning both banks preserves the wet river barrier',()=>{
   const core=createSpatialWorld(module);core.generate(712,0,0,'canyons');

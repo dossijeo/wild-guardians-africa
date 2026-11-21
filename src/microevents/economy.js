@@ -39,17 +39,25 @@ export function settleEvent(s,ticket,outcome,{enabled=true,losses=true}={}){
   }
   return {applied:true,delta:0};
 }
-export function harvestMicroLoss(s,target,value,onLoss=()=>{}){
+// Read-only consequence data. Preparing graphics must not consume a reservation
+// or the day's settlement allowance before the authoritative harvest boundary.
+export function previewHarvestMicroLoss(s,target,value){
   const pending=s.microevents?.pendingLosses,loss=pending?.[target.id];
-  if(!loss)return value;
-  delete pending[target.id];
-  const m=s.microevents;if(m.settledDay!==s.day){m.settledDay=s.day;m.settledLoss=0;}
-  const cap=Math.min(C.negativeDailyCoins,Math.floor(m.previousIncome*C.negativeDailyFraction)),allowed=Math.min(loss,Math.max(0,cap-(m.settledLoss??0)));
-  if(!allowed)return value;
+  const m=s.microevents,resetDay=!!loss&&m.settledDay!==s.day,previous=resetDay?0:m?.settledLoss??0;
+  const cap=loss?Math.min(C.negativeDailyCoins,Math.floor(m.previousIncome*C.negativeDailyFraction)):0,allowed=loss?Math.min(loss,Math.max(0,cap-previous)):0;
   // Deduct whole coins AFTER ordinary bonuses; never multiply the nuisance loss.
-  const settled=(BigInt(value.n)+BigInt(value.d)-1n)/BigInt(value.d);
-  const applied=Math.min(allowed,Number(settled));m.settledLoss=(m.settledLoss??0)+applied;if(applied)onLoss({targetId:target.id,delta:-applied});
-  return rational(settled-BigInt(applied));
+  const settled=allowed?(BigInt(value.n)+BigInt(value.d)-1n)/BigInt(value.d):null,applied=allowed?Math.min(allowed,Number(settled)):0;
+  return Object.freeze({version:1,targetId:target.id,day:s.day,pendingLoss:loss??0,resetDay,allowed,applied,
+    value:Object.freeze(allowed?rational(settled-BigInt(applied)):rational(value.n,value.d))});
+}
+export function harvestMicroLoss(s,target,value,onLoss=()=>{}){
+  const preview=previewHarvestMicroLoss(s,target,value);
+  if(!preview.pendingLoss)return value;
+  const m=s.microevents;delete m.pendingLosses[target.id];
+  if(preview.resetDay){m.settledDay=s.day;m.settledLoss=0;}
+  if(!preview.allowed)return value;
+  m.settledLoss=(m.settledLoss??0)+preview.applied;if(preview.applied)onLoss({targetId:target.id,delta:-preview.applied});
+  return preview.value;
 }
 export function disableMicroEconomy(s){if(s.microevents){s.microevents.pendingLosses={};s.microevents.ticket=null;}}
 export function validateMicroState(s){

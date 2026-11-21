@@ -1,0 +1,34 @@
+import fs from 'node:fs';
+import {createRequire} from 'node:module';
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE??'playwright');
+const species=process.env.REVIEW_SPECIES??'lion',peer=process.env.PEER_SPECIES??species,biome=process.env.REVIEW_BIOME??'manglares',slope=process.env.SLOPE_TRIAL==='1',stageSlope=process.env.STAGE_SLOPE==='1';
+const out=`docs/lighting/tree-near-retexture/performance/animal-ground-vertical-${biome}-${species}-${peer}${slope?'-slope':''}${stageSlope?'-staged':''}${process.env.ONE_BLOCK==='1'&&process.env.CACHED_ONLY==='1'?'-candidate':''}-combat-abba`;fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try{
+ for(const [lot,cached] of (process.env.ONE_BLOCK==='1'?[process.env.CACHED_ONLY==='1']:[false,true,true,false]).entries()){
+  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:1}),errors=[];page.on('pageerror',e=>errors.push(String(e)));
+  const query='biome='+encodeURIComponent(biome)+'&culture=mapungubwe&lightingReview&characterLod=auto&recoveryClose&profileStages&recoveryDay&frameTrace&depthReview&productionFarWarm&treeReview&wildEngineThreads=0&peerSpecies='+encodeURIComponent(peer)+(slope?'&slopeTrial':'');
+  console.log(JSON.stringify({lot,cached,phase:'loading',biome,species,peer,slope}));
+  await page.goto('http://127.0.0.1:5175/tests/browser/guardian-combat.html?'+query);
+  try{await page.waitForFunction(()=>{try{return window.treeReview&&JSON.parse(document.querySelector('#status').textContent).combatPhysics}catch{return false;}},null,{timeout:180000});}
+  catch(error){fs.writeFileSync(`${out}/load-failure-${lot}.json`,JSON.stringify({query,errors,status:await page.locator('#status').textContent(),failure:String(error)},null,2));throw error;}
+  const device=await page.evaluate(async({enabled,stageSlope})=>{
+   const {GpuTimer}=await import('/tests/browser/gpu-timer.js'),w=window.treeReview.world,gl=w.renderer.getContext(),ext=gl.getExtension('WEBGL_debug_renderer_info'),originalUpdate=w.updateActor,originalDraw=w.drawWorldFrame,timer=new GpuTimer(gl,64);let sequence=0;
+   w.updateActor=function(actor,dt,type){const data=this.mixers.get(actor.id);if(type==='animal'&&data)data.cachedSkinning=enabled?2:false;return originalUpdate.call(this,actor,dt,type);};
+   if(stageSlope){const nav=window.treeReview.nav,original=nav.setState;nav.setState=function(state){const result=original.call(this,state),target=state.structures.find(s=>s.kind==='center'&&s.status==='intact');if(target)for(const actor of state.raid?.animals??[])if(actor.status==='walking'&&!actor.magicDown)Object.assign(actor,{status:'attacking',targetId:target.id,animation:'Right_Hand_Sword_Slash',attackId:'qa-staged-'+actor.id,attackDuration:100,attackRemaining:100,hitApplied:false});return result;};}
+   w.drawWorldFrame=function(...args){const active=window.skinCacheMeasure&&timer.begin(sequence++);try{return originalDraw.apply(this,args);}finally{if(active)timer.end();}};
+   window.skinCacheGpuTimer=timer;return {renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),authority:window.treeReview.authority,network:window.treeReview.state.mangroveNetwork??false,stageSlope};
+  },{enabled:cached,stageSlope});
+  if(device.authority!=='spatial-wasm'||biome==='manglares'&&!device.network)throw Error('Run must use Wild Engine and the mangrove island layout when applicable');
+  await page.locator('#species').selectOption(species);await page.locator('#direction').selectOption('side');await page.evaluate(()=>{window.skinCacheGpuTimer.clear();window.skinCacheMeasure=true;});await page.locator('#benchCollision').evaluate(e=>e.click());
+  try{await page.waitForFunction(()=>{try{return window.treeReview?.errors.length||JSON.parse(document.querySelector('#status').textContent).report?.completedSimulation}catch{return window.treeReview?.errors.length>0;}},null,{timeout:150000});}
+  catch(error){fs.writeFileSync(`${out}/cycle-failure-${lot}.json`,JSON.stringify({query,errors,status:await page.locator('#status').textContent(),fixtureErrors:await page.evaluate(()=>window.treeReview?.errors??[]),failure:String(error)},null,2));throw error;}
+  const fixtureErrors=await page.evaluate(()=>window.treeReview?.errors??[]);if(fixtureErrors.length){fs.writeFileSync(`${out}/cycle-failure-${lot}.json`,JSON.stringify({query,errors,fixtureErrors,status:await page.locator('#status').textContent()},null,2));throw Error(fixtureErrors.join('\n'));}
+  const data=await page.locator('#status').evaluate(e=>JSON.parse(e.textContent)),gpu=await page.evaluate(async()=>{window.skinCacheMeasure=false;const timer=window.skinCacheGpuTimer;for(let i=0;i<90&&timer.pending.length;i++){await new Promise(requestAnimationFrame);timer.poll();}const report=timer.report();timer.dispose();return report;});
+  fs.writeFileSync(`${out}/${lot}.json`,JSON.stringify({...data,lot,cached,device,gpuTimer:gpu,pageErrors:errors},null,2));
+  const details=await page.evaluate(async()=>{const href=document.querySelector('#peerReportDownload')?.href;if(!href)throw Error('Full recovery report unavailable');return await (await fetch(href)).json();});
+  fs.writeFileSync(`${out}/${lot}-full.json`,JSON.stringify(details,null,2));
+  if(errors.length||data.errors.length||data.report.errors.length||data.report.hiddenFrames||data.report.rejectedPhysics)throw Error('Invalid run '+lot);
+  console.log(JSON.stringify({lot,cached,device,dt:data.report.metrics.dt,render:data.report.metrics.renderMs,physics:data.report.metrics.physicsTotal,gpuSamples:gpu.samples.length,gpuReason:gpu.reason}));await page.close();
+ }
+}finally{await browser.close();}

@@ -1,0 +1,2201 @@
+{
+  "counts": {
+    "camera-mailbox:": 1,
+    "configure:": 1,
+    "create:createTexture": 107,
+    "destroy:": 80,
+    "create:createSampler": 106,
+    "operation:writeTexture": 160,
+    "ordered-submission:": 69,
+    "view:": 839,
+    "operation:submit": 7,
+    "create:createBuffer": 2064,
+    "unmap:": 666,
+    "create:createBindGroupLayout": 324,
+    "create:createBindGroup": 988,
+    "camera-binding:": 280,
+    "operation:writeBuffer": 1618,
+    "create:createShaderModule": 160,
+    "create:createPipelineLayout": 105,
+    "create:createRenderPipelineAsync": 105,
+    "frame:": 665,
+    "inspect:": 90,
+    "create:createRenderPipeline": 2,
+    "pipeline-layout:": 6,
+    "release:": 900,
+    "fence:": 79,
+    "operation:copyExternalImageToTexture": 4,
+    "bundle:": 49,
+    "clock-binding:": 450,
+    "prepare-world-frame:": 11,
+    "cancel-world-frame:": 1
+  },
+  "slow": [
+    {
+      "at": 1795177628827.7952,
+      "ms": 15.534912109375,
+      "kind": "operation:copyExternalImageToTexture",
+      "id": null,
+      "label": null,
+      "image": {
+        "width": 4096,
+        "height": 2048
+      }
+    },
+    {
+      "at": 1795177611118.62,
+      "ms": 9.784912109375,
+      "kind": "operation:copyExternalImageToTexture",
+      "id": null,
+      "label": null,
+      "image": {
+        "width": 2048,
+        "height": 2048
+      }
+    },
+    {
+      "at": 1795177611090.1702,
+      "ms": 8.224853515625,
+      "kind": "operation:copyExternalImageToTexture",
+      "id": null,
+      "label": null,
+      "image": {
+        "width": 2048,
+        "height": 2048
+      }
+    },
+    {
+      "at": 1795177613653.3352,
+      "ms": 7.349853515625,
+      "kind": "operation:copyExternalImageToTexture",
+      "id": null,
+      "label": null,
+      "image": {
+        "width": 2048,
+        "height": 2048
+      }
+    },
+    {
+      "at": 1795177613374.2002,
+      "ms": 4.375,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613369.0151,
+      "ms": 4.284912109375,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632953.34,
+      "ms": 3.344970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634590.62,
+      "ms": 3.2451171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640448.9902,
+      "ms": 3.179931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631082.8652,
+      "ms": 3.1748046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634141.62,
+      "ms": 3.06005859375,
+      "kind": "prepare-world-frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613433.3901,
+      "ms": 3.010009765625,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632020.3352,
+      "ms": 2.94482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635789.395,
+      "ms": 2.925048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639122.61,
+      "ms": 2.550048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637588.3,
+      "ms": 2.47998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640650.635,
+      "ms": 2.41015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633087.2302,
+      "ms": 2.389892578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633624.995,
+      "ms": 2.375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637054.1052,
+      "ms": 2.369873046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633352.685,
+      "ms": 2.324951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628441.135,
+      "ms": 2.210205078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637848.82,
+      "ms": 2.2099609375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613479.2402,
+      "ms": 2.199951171875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632751.155,
+      "ms": 2.18017578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613397.12,
+      "ms": 2.1650390625,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637315.8652,
+      "ms": 2.15478515625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630286.6802,
+      "ms": 2.094970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611035.645,
+      "ms": 2.070068359375,
+      "kind": "unmap:",
+      "id": "Buffer:117",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631285.09,
+      "ms": 2.070068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636185.51,
+      "ms": 2.065185546875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637118.8452,
+      "ms": 2.06494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632218.4902,
+      "ms": 2.0498046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640056.885,
+      "ms": 2.03515625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630753.3901,
+      "ms": 2.014892578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640118.0552,
+      "ms": 2.0048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637651.0952,
+      "ms": 2,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638117.6602,
+      "ms": 1.97998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639521.7102,
+      "ms": 1.97998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632286.0852,
+      "ms": 1.969970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638850.56,
+      "ms": 1.965087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639650.7102,
+      "ms": 1.96484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630223.31,
+      "ms": 1.949951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633153.0552,
+      "ms": 1.94482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633752.2302,
+      "ms": 1.94482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638653.8552,
+      "ms": 1.94482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177641120.9802,
+      "ms": 1.94482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640520.3152,
+      "ms": 1.93994140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637188.25,
+      "ms": 1.93505859375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633483.455,
+      "ms": 1.929931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639054.2852,
+      "ms": 1.929931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636125.1501,
+      "ms": 1.925048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631016.4102,
+      "ms": 1.919921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636656.7102,
+      "ms": 1.919921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639586.2551,
+      "ms": 1.9150390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177641054.705,
+      "ms": 1.905029296875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637715.7402,
+      "ms": 1.90478515625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638252.9902,
+      "ms": 1.90478515625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631219.33,
+      "ms": 1.900146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638588.895,
+      "ms": 1.900146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636918.7302,
+      "ms": 1.885009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630085.2852,
+      "ms": 1.8798828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633218.8552,
+      "ms": 1.8798828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638184.5352,
+      "ms": 1.875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640587.9302,
+      "ms": 1.869873046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640782.395,
+      "ms": 1.864990234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633685.2551,
+      "ms": 1.85498046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639849.4001,
+      "ms": 1.85498046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636251.8152,
+      "ms": 1.849853515625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631752.6152,
+      "ms": 1.844970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632158.415,
+      "ms": 1.844970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631349.61,
+      "ms": 1.840087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637783.78,
+      "ms": 1.830078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639719.465,
+      "ms": 1.830078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631419.7002,
+      "ms": 1.829833984375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636588.0352,
+      "ms": 1.824951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640319.2402,
+      "ms": 1.824951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631884.1501,
+      "ms": 1.81494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636383.9302,
+      "ms": 1.81494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637986.5,
+      "ms": 1.80517578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638315.82,
+      "ms": 1.804931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640917.8552,
+      "ms": 1.804931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632686.8052,
+      "ms": 1.800048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639452.57,
+      "ms": 1.800048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640250.7002,
+      "ms": 1.7998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640382.3452,
+      "ms": 1.7998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637382.29,
+      "ms": 1.795166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637516.26,
+      "ms": 1.795166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629953.36,
+      "ms": 1.794921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631693.51,
+      "ms": 1.7900390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638055.205,
+      "ms": 1.7900390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632552.2402,
+      "ms": 1.789794921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633549.6802,
+      "ms": 1.784912109375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638515.36,
+      "ms": 1.784912109375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639382.06,
+      "ms": 1.780029296875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177641248.9102,
+      "ms": 1.780029296875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630417.175,
+      "ms": 1.775146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640850.8352,
+      "ms": 1.77490234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630886.4702,
+      "ms": 1.77001953125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631158.35,
+      "ms": 1.77001953125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631483.195,
+      "ms": 1.76513671875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636049.77,
+      "ms": 1.76513671875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630155.3801,
+      "ms": 1.764892578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638448.9402,
+      "ms": 1.764892578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639249.2952,
+      "ms": 1.760009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635185.7002,
+      "ms": 1.7548828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630689.5352,
+      "ms": 1.75,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630950.2302,
+      "ms": 1.75,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632483.57,
+      "ms": 1.75,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639182.4802,
+      "ms": 1.744873046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639981.9402,
+      "ms": 1.744873046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633283.155,
+      "ms": 1.72998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631550.6052,
+      "ms": 1.719970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638781.8801,
+      "ms": 1.719970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636516.5552,
+      "ms": 1.7099609375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631949.3801,
+      "ms": 1.705078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634718.36,
+      "ms": 1.705078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635715.925,
+      "ms": 1.705078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636849.1602,
+      "ms": 1.699951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177641315.7651,
+      "ms": 1.699951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630018.61,
+      "ms": 1.695068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632816.445,
+      "ms": 1.695068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632883.235,
+      "ms": 1.695068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638382.125,
+      "ms": 1.695068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638915.155,
+      "ms": 1.695068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632349.6052,
+      "ms": 1.69482421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636783.26,
+      "ms": 1.690185546875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637455.5051,
+      "ms": 1.68505859375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630619.5952,
+      "ms": 1.684814453125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632618.0952,
+      "ms": 1.684814453125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630550.57,
+      "ms": 1.679931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636452.0251,
+      "ms": 1.679931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636983.0652,
+      "ms": 1.679931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637249.0452,
+      "ms": 1.679931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635984.02,
+      "ms": 1.675048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640715.85,
+      "ms": 1.675048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634654.79,
+      "ms": 1.670166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635650.01,
+      "ms": 1.670166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177637915.57,
+      "ms": 1.670166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177641183.25,
+      "ms": 1.670166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631817.0151,
+      "ms": 1.669921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635916.9202,
+      "ms": 1.669921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636717.1301,
+      "ms": 1.669921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633416.35,
+      "ms": 1.6650390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638718.1702,
+      "ms": 1.6650390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177642695.58,
+      "ms": 1.66015625,
+      "kind": "prepare-world-frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639315.6052,
+      "ms": 1.659912109375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177633017.7651,
+      "ms": 1.64990234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635248.62,
+      "ms": 1.64990234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640984.235,
+      "ms": 1.64990234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632417.11,
+      "ms": 1.64501953125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630816.4202,
+      "ms": 1.635009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177638982.7852,
+      "ms": 1.635009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177636315.6702,
+      "ms": 1.625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630352.885,
+      "ms": 1.6201171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177640182.53,
+      "ms": 1.614990234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634249.215,
+      "ms": 1.610107421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639782.415,
+      "ms": 1.610107421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635588.5251,
+      "ms": 1.594970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634384.57,
+      "ms": 1.590087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634849.82,
+      "ms": 1.590087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177632082.9702,
+      "ms": 1.58984375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634982.175,
+      "ms": 1.580078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635515.675,
+      "ms": 1.580078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635850.1,
+      "ms": 1.580078125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177642817.3052,
+      "ms": 1.56982421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635120.4302,
+      "ms": 1.56494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635452.1501,
+      "ms": 1.56494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177630483,
+      "ms": 1.56005859375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177639915.4702,
+      "ms": 1.554931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177631616.2952,
+      "ms": 1.550048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634448.975,
+      "ms": 1.5400390625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634918.5752,
+      "ms": 1.5048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635383.34,
+      "ms": 1.47998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177642882.915,
+      "ms": 1.47998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634318.235,
+      "ms": 1.469970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629884.5752,
+      "ms": 1.405029296875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634782.1702,
+      "ms": 1.405029296875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177634515.27,
+      "ms": 1.400146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177643080.3252,
+      "ms": 1.31494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629615.86,
+      "ms": 1.31005859375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635049.185,
+      "ms": 1.295166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177635314.635,
+      "ms": 1.295166015625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629686.3452,
+      "ms": 1.284912109375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177643014.1802,
+      "ms": 1.27490234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615424.185,
+      "ms": 1.25,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628712.62,
+      "ms": 1.2451171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629752.975,
+      "ms": 1.235107421875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629192.5151,
+      "ms": 1.219970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177643286.145,
+      "ms": 1.215087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614890.2952,
+      "ms": 1.21484375,
+      "kind": "operation:writeBuffer",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629814.6052,
+      "ms": 1.21484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628782.745,
+      "ms": 1.2099609375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628870.62,
+      "ms": 1.18994140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177618432.6152,
+      "ms": 1.184814453125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628581.84,
+      "ms": 1.175048828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629549.7102,
+      "ms": 1.164794921875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177642945.165,
+      "ms": 1.150146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628645.62,
+      "ms": 1.135009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629113.485,
+      "ms": 1.135009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177643146.3901,
+      "ms": 1.135009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629483.665,
+      "ms": 1.130126953125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615425.5852,
+      "ms": 1.1298828125,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629001.4902,
+      "ms": 1.1298828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177643213.1702,
+      "ms": 1.1298828125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177628514.415,
+      "ms": 1.125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629418.09,
+      "ms": 1.1201171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615427.725,
+      "ms": 1.10498046875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629250.04,
+      "ms": 1.094970703125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629048.675,
+      "ms": 1.090087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177620867.0752,
+      "ms": 1.08984375,
+      "kind": "prepare-world-frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177624308.9802,
+      "ms": 1.06494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177629315.7751,
+      "ms": 1.054931640625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614886.455,
+      "ms": 1.044921875,
+      "kind": "operation:writeBuffer",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177624767.205,
+      "ms": 1.03515625,
+      "kind": "prepare-world-frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615431.145,
+      "ms": 1.025146484375,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177618400.0752,
+      "ms": 1.014892578125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613481.635,
+      "ms": 0.980224609375,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177618482.7551,
+      "ms": 0.97998046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177618238.27,
+      "ms": 0.97021484375,
+      "kind": "prepare-world-frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615513.2551,
+      "ms": 0.965087890625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615579.2002,
+      "ms": 0.9248046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613436.59,
+      "ms": 0.919921875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611042.5552,
+      "ms": 0.909912109375,
+      "kind": "unmap:",
+      "id": "Buffer:157",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615430.06,
+      "ms": 0.905029296875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615429.0552,
+      "ms": 0.89990234375,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615845.4802,
+      "ms": 0.824951171875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613426.4802,
+      "ms": 0.81494140625,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615426.8452,
+      "ms": 0.809814453125,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611045.8652,
+      "ms": 0.7998046875,
+      "kind": "unmap:",
+      "id": "Buffer:169",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611044.665,
+      "ms": 0.78515625,
+      "kind": "unmap:",
+      "id": "Buffer:165",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177618390.2751,
+      "ms": 0.784912109375,
+      "kind": "unmap:",
+      "id": "Buffer:2214",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614939.84,
+      "ms": 0.755126953125,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614892.6702,
+      "ms": 0.7548828125,
+      "kind": "unmap:",
+      "id": "Buffer:1423",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615423.155,
+      "ms": 0.7451171875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615912.3152,
+      "ms": 0.744873046875,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614891.6802,
+      "ms": 0.739990234375,
+      "kind": "operation:writeBuffer",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614854.4001,
+      "ms": 0.699951171875,
+      "kind": "unmap:",
+      "id": "Buffer:1194",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614894.55,
+      "ms": 0.670166015625,
+      "kind": "operation:writeBuffer",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611038.4402,
+      "ms": 0.64990234375,
+      "kind": "unmap:",
+      "id": "Buffer:118",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611041.52,
+      "ms": 0.614990234375,
+      "kind": "unmap:",
+      "id": "Buffer:153",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613390.59,
+      "ms": 0.610107421875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613399.36,
+      "ms": 0.610107421875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611047.0652,
+      "ms": 0.594970703125,
+      "kind": "unmap:",
+      "id": "Buffer:173",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614893.655,
+      "ms": 0.594970703125,
+      "kind": "unmap:",
+      "id": "Buffer:1425",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611048,
+      "ms": 0.570068359375,
+      "kind": "unmap:",
+      "id": "Buffer:177",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615213.225,
+      "ms": 0.570068359375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615645.6301,
+      "ms": 0.56494140625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615780.59,
+      "ms": 0.56005859375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611040.7002,
+      "ms": 0.554931640625,
+      "kind": "unmap:",
+      "id": "Buffer:149",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177611043.7302,
+      "ms": 0.5498046875,
+      "kind": "unmap:",
+      "id": "Buffer:161",
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615143.455,
+      "ms": 0.525146484375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615457.3152,
+      "ms": 0.52490234375,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177613473.645,
+      "ms": 0.51513671875,
+      "kind": "operation:writeTexture",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177615713.2551,
+      "ms": 0.510009765625,
+      "kind": "frame:",
+      "id": null,
+      "label": null,
+      "image": null
+    },
+    {
+      "at": 1795177614807.205,
+      "ms": 0.505126953125,
+      "kind": "unmap:",
+      "id": "Buffer:865",
+      "label": null,
+      "image": null
+    }
+  ],
+  "images": [
+    {
+      "at": 1795177628850.5251,
+      "width": 4096,
+      "height": 2048,
+      "sourceOrigin": null,
+      "flipY": true,
+      "destination": {
+        "texture": {
+          "__remoteGpuId": "Texture:2510"
+        },
+        "mipLevel": 0,
+        "origin": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "premultipliedAlpha": false
+      },
+      "extent": {
+        "width": 4096,
+        "height": 2048,
+        "depthOrArrayLayers": 1
+      },
+      "label": "",
+      "ms": 17.864990234375
+    },
+    {
+      "at": 1795177611133.6501,
+      "width": 2048,
+      "height": 2048,
+      "sourceOrigin": null,
+      "flipY": false,
+      "destination": {
+        "texture": {
+          "__remoteGpuId": "Texture:222"
+        },
+        "mipLevel": 0,
+        "origin": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "premultipliedAlpha": false
+      },
+      "extent": {
+        "width": 2048,
+        "height": 2048,
+        "depthOrArrayLayers": 1
+      },
+      "label": "",
+      "ms": 11.85986328125
+    },
+    {
+      "at": 1795177611106.4202,
+      "width": 2048,
+      "height": 2048,
+      "sourceOrigin": null,
+      "flipY": false,
+      "destination": {
+        "texture": {
+          "__remoteGpuId": "Texture:184"
+        },
+        "mipLevel": 0,
+        "origin": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "premultipliedAlpha": false
+      },
+      "extent": {
+        "width": 2048,
+        "height": 2048,
+        "depthOrArrayLayers": 1
+      },
+      "label": "",
+      "ms": 11.034912109375
+    },
+    {
+      "at": 1795177613663.195,
+      "width": 2048,
+      "height": 2048,
+      "sourceOrigin": null,
+      "flipY": false,
+      "destination": {
+        "texture": {
+          "__remoteGpuId": "Texture:439"
+        },
+        "mipLevel": 0,
+        "origin": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "premultipliedAlpha": false
+      },
+      "extent": {
+        "width": 2048,
+        "height": 2048,
+        "depthOrArrayLayers": 1
+      },
+      "label": "base",
+      "ms": 1.75
+    }
+  ]
+}

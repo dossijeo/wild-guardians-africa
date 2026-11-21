@@ -1,0 +1,468 @@
+{
+  "parent": "143bdefab9b501f6eeea5dd712386b017208d266",
+  "command": {
+    "kind": "placeStructure",
+    "id": "build-live-native-gate",
+    "structure": {
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": true,
+      "yaw": 0,
+      "x": -14,
+      "z": 8.2
+    }
+  },
+  "originalFailure": {
+    "wasmSha256": "09204da0c52d8dd1b78daa4843776a426782fdb00a5ad220fbe5a8378fd6acc9",
+    "effectiveTime": 10,
+    "body": {
+      "x": -11.8,
+      "z": -5.8,
+      "radius": 0.28,
+      "kind": 0,
+      "flags": 1
+    },
+    "gate": {
+      "x": -11.8,
+      "z": 0.2
+    },
+    "count": -5,
+    "sweepBefore": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "sweepAfter": [
+      990010,
+      1,
+      10,
+      21.111110934504758,
+      1,
+      0
+    ],
+    "ticket": 0
+  },
+  "nativeQueries": {
+    "standalone": {
+      "wasmSha256": "88fbbdc3203697807e359de6cd24682b22237a36b1e517e739f55c2ba57c1e28",
+      "effectiveTime": 10,
+      "body": {
+        "x": -11.8,
+        "z": -5.8,
+        "radius": 0.28,
+        "kind": 0,
+        "flags": 1
+      },
+      "gate": {
+        "x": -11.8,
+        "z": 0.2
+      },
+      "count": 1,
+      "actors": [
+        900011
+      ],
+      "sweepBefore": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sweepAfter": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ticket": 0,
+      "stageStillRejects": true
+    },
+    "pthread": {
+      "wasmSha256": "04aac14c840fe76d05698bf2fa291ebcd847fa5bd1d1c7e889ad5105958f7ea1",
+      "effectiveTime": 10,
+      "body": {
+        "x": -11.8,
+        "z": -5.8,
+        "radius": 0.28,
+        "kind": 0,
+        "flags": 1
+      },
+      "gate": {
+        "x": -11.8,
+        "z": 0.2
+      },
+      "count": 1,
+      "actors": [
+        900011
+      ],
+      "sweepBefore": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sweepAfter": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "ticket": 0,
+      "stageStillRejects": true
+    }
+  },
+  "abi": {
+    "newExports": [
+      "nav_gate_addition_inspect_stops",
+      "nav_gate_addition_stop_actors_ptr",
+      "nav_gate_addition_stop_query_version"
+    ],
+    "unchangedImports": true,
+    "standaloneExports": [
+      779,
+      782
+    ],
+    "pthreadExports": [
+      800,
+      803
+    ],
+    "pthreadPublicFunctions": [
+      785,
+      788
+    ],
+    "versions": {
+      "addStops": 1,
+      "settlement": 2,
+      "home": 2
+    },
+    "hashes": {
+      "standalone/spatial-savanna.wasm": "88fbbdc3203697807e359de6cd24682b22237a36b1e517e739f55c2ba57c1e28",
+      "pthread/spatial-threaded.mjs": "2d8089968bfb814f7c21a94f344ea78d729375e6d9c97c7b79a157b6441a30cc",
+      "pthread/spatial-threaded.wasm": "04aac14c840fe76d05698bf2fa291ebcd847fa5bd1d1c7e889ad5105958f7ea1"
+    }
+  },
+  "validation": {
+    "directedFiles": 4,
+    "directed": {
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 9766.9277
+    },
+    "relatedFiles": 35,
+    "related": {
+      "tests": 400,
+      "pass": 400,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "duration_ms": 96622.0603
+    },
+    "productionBuild": "52.35s"
+  },
+  "hardware": {
+    "rawReceiptSha256": "0febf2674ee06e5e8251c74f6406ef8c09c5555290daa5e62ec642363e1d8354",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 258.3000000715256
+      }
+    },
+    "resolution": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "displayHz": 30,
+    "initialFarmTicket": 2,
+    "before": {
+      "elapsed": 10.149999999999997,
+      "position": [
+        -14,
+        11.638000000000002
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 8
+    },
+    "holds": [
+      {
+        "kind": "production-farm-stop-ready",
+        "prepared": {
+          "ticket": 3,
+          "effectiveTime": 10.149999999999997
+        },
+        "elapsedMs": 615.7999999523163,
+        "draws": 19,
+        "prior": {
+          "elapsed": 10.599999999999987,
+          "position": [
+            -14,
+            11.152000000000013
+          ],
+          "worker": {
+            "status": "arriving",
+            "admission": "native-farm-arrival"
+          },
+          "sequence": 17
+        },
+        "next": {
+          "elapsed": 11.249999999999973,
+          "position": [
+            -14,
+            10.450000000000028
+          ],
+          "worker": {
+            "status": "arriving",
+            "admission": "native-farm-arrival"
+          },
+          "sequence": 30
+        }
+      },
+      {
+        "kind": "production-barrier-ready",
+        "prepared": {
+          "ticket": 5,
+          "effectiveTime": 11.299999999999972
+        },
+        "elapsedMs": 622.2000000476837,
+        "draws": 19,
+        "prior": {
+          "elapsed": 11.749999999999963,
+          "position": [
+            -14,
+            10.39600000000003
+          ],
+          "worker": {
+            "status": "arriving",
+            "admission": "native-farm-arrival-held"
+          },
+          "sequence": 40
+        },
+        "next": {
+          "elapsed": 12.34999999999995,
+          "position": [
+            -14,
+            10.39600000000003
+          ],
+          "worker": {
+            "status": "arriving",
+            "admission": "native-farm-arrival-held"
+          },
+          "sequence": 52
+        }
+      }
+    ],
+    "stop": {
+      "ticket": 4,
+      "effectiveTime": 11.299999999999972,
+      "actor": 900011,
+      "body": 1
+    },
+    "purchase": {
+      "ticket": 6,
+      "effectiveTime": 12.399999999999949,
+      "nativeIds": [
+        116,
+        117,
+        118
+      ],
+      "entityId": "structure-1000000",
+      "mechanism": 1,
+      "balance": {
+        "n": "99990",
+        "d": "1"
+      }
+    },
+    "continuedFarm": {
+      "ticket": 8,
+      "effectiveTime": 13.899999999999917,
+      "body": 1,
+      "gateIds": [
+        1000000
+      ],
+      "after": {
+        "elapsed": 17.049999999999887,
+        "position": [
+          -13.949600219726562,
+          7.644200775257552
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 148
+      }
+    },
+    "samplesInOpenAperture": [
+      {
+        "elapsed": 16.249999999999876,
+        "x": -13.949600219726562,
+        "z": 8.508200775257565,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.299999999999876,
+        "x": -13.949600219726562,
+        "z": 8.454200775257563,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.349999999999877,
+        "x": -13.949600219726562,
+        "z": 8.400200775257563,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.399999999999878,
+        "x": -13.949600219726562,
+        "z": 8.346200775257563,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.44999999999988,
+        "x": -13.949600219726562,
+        "z": 8.29220077525756,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.49999999999988,
+        "x": -13.949600219726562,
+        "z": 8.23820077525756,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.54999999999988,
+        "x": -13.949600219726562,
+        "z": 8.18420077525756,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.59999999999988,
+        "x": -13.949600219726562,
+        "z": 8.13020077525756,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.64999999999988,
+        "x": -13.949600219726562,
+        "z": 8.076200775257558,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.699999999999882,
+        "x": -13.949600219726562,
+        "z": 8.022200775257557,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.749999999999883,
+        "x": -13.949600219726562,
+        "z": 7.968200775257557,
+        "opening": 1
+      },
+      {
+        "elapsed": 16.799999999999883,
+        "x": -13.949600219726562,
+        "z": 7.914200775257556,
+        "opening": 1
+      }
+    ],
+    "renderer": {
+      "generation": "420257ac-504c-4be6-8c91-bb3367010ce0",
+      "root": 616,
+      "meshes": 32,
+      "uniqueRetainedBuffers": 760,
+      "commonMeshAttributeOwners": 824,
+      "replacedBuffersAmongCommonOwners": 0,
+      "retainedDrawWindow": 240,
+      "submittedOpportunities": 240,
+      "presentationStartInterval": {
+        "targetBudgetMs": 16.666666666666668,
+        "finiteSamples": 240,
+        "aboveBudget": 240,
+        "medianMs": 33.300048828125,
+        "p95Ms": 34.10009765625,
+        "p99Ms": 36.5,
+        "maxMs": 36.89990234375
+      },
+      "firstDraws": [
+        {
+          "at": 1795273182390.5999,
+          "sequence": 20,
+          "intervalMs": 33.39990234375,
+          "drawMs": 3.699951171875,
+          "replay": false,
+          "ticket": 4
+        },
+        {
+          "at": 1795273183523.9,
+          "sequence": 22,
+          "intervalMs": 33.300048828125,
+          "drawMs": 3.39990234375,
+          "replay": false,
+          "ticket": 6
+        },
+        {
+          "at": 1795273184990.5,
+          "sequence": 23,
+          "intervalMs": 33.2001953125,
+          "drawMs": 1.89990234375,
+          "replay": false,
+          "ticket": 8
+        }
+      ],
+      "maxIntervals": [
+        {
+          "at": 1795273182961.2998,
+          "sequence": 21,
+          "intervalMs": 36.89990234375,
+          "drawMs": 2.2001953125,
+          "replay": true,
+          "ticket": 4
+        },
+        {
+          "at": 1795273186693.7998,
+          "sequence": 41,
+          "intervalMs": 36.599853515625,
+          "drawMs": 2.7001953125,
+          "replay": true,
+          "ticket": 8
+        },
+        {
+          "at": 1795273180860.2998,
+          "sequence": 13,
+          "intervalMs": 36.5,
+          "drawMs": 0.800048828125,
+          "replay": true,
+          "ticket": null
+        }
+      ],
+      "gpuErrors": 0,
+      "drained": true
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "scope": "Real new-game native island mangroves with spatial far layer. QA enables shared preparation after loading, moves camera, and holds its upload before fence; context loss releases it. Existing full-world recovery check verifies native snapshot and renderer. Does not establish pixel parity or performance.",
+  "result": {
+    "requests": 4,
+    "epoch": 0,
+    "lostAt": 64705.45499999821,
+    "outcomes": [
+      {
+        "status": "rejected",
+        "name": "AbortError",
+        "at": 64705.6950000003
+      },
+      {
+        "status": "rejected",
+        "name": "AbortError",
+        "at": 64705.710000000894
+      },
+      {
+        "status": "rejected",
+        "name": "AbortError",
+        "at": 64705.71499999985
+      },
+      {
+        "status": "rejected",
+        "name": "AbortError",
+        "at": 64705.71499999985
+      },
+      {
+        "status": "fulfilled",
+        "at": 65827.6799999997
+      },
+      {
+        "status": "fulfilled",
+        "at": 65827.92500000075
+      },
+      {
+        "status": "fulfilled",
+        "at": 65828.10500000045
+      },
+      {
+        "status": "fulfilled",
+        "at": 65828.25
+      }
+    ],
+    "recovery": {
+      "temporaryProgramScope": null,
+      "compilationCancellation": null,
+      "recovery": {
+        "revision": 3,
+        "ms": 943.3700000010431,
+        "retained": 32
+      },
+      "retained": {
+        "retained": 32,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 0,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "abandoned": {
+        "retained": 87,
+        "released": 0,
+        "destroyed": 0,
+        "abandoned": 87,
+        "skipped": 0,
+        "unsupported": false
+      },
+      "programs": 32,
+      "drawCalls": 114,
+      "worldUnchanged": true,
+      "backend": "pthreads",
+      "nativeBytes": 16777216,
+      "glEpoch": {
+        "epoch": 1,
+        "created": 6161,
+        "staleDeletes": 191,
+        "currentDeletes": 1456,
+        "unknownDeletes": 0
+      }
+    },
+    "adapters": [
+      {
+        "errors": [],
+        "pending": {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        "coverage": 69,
+        "prepared": 69
+      },
+      {
+        "errors": [],
+        "pending": {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        "coverage": 60,
+        "prepared": 60
+      },
+      {
+        "errors": [],
+        "pending": {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        "coverage": 17,
+        "prepared": 17
+      },
+      {
+        "errors": [],
+        "pending": {
+          "native": false,
+          "regional": 0,
+          "worker": false,
+          "standby": false,
+          "closed": false
+        },
+        "coverage": 17,
+        "prepared": 17
+      }
+    ]
+  }
+}

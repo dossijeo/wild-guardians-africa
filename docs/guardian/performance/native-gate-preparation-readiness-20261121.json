@@ -1,0 +1,365 @@
+{
+  "sourcePatch": {
+    "path": ".cache/native-gate-readiness.patch",
+    "sha256": "ea001620b660890e826b2d8728f90ae610d412e3da0a8c152fb18b4103c38159"
+  },
+  "cause": {
+    "path": ".cache/native-farm-restored-gate-f8b3-crossing-owner-probe.failure.json",
+    "sha256": "3709f0635286ea0f3d59d868284eb3c3249a626eba48603ff9abd914236c96a6",
+    "entityId": "structure-1000000",
+    "graphicRoot": 476,
+    "visible": false,
+    "ready": false,
+    "upToDate": false,
+    "compilesStarted": 278,
+    "compilesSettled": 277
+  },
+  "directed": {
+    "path": ".cache/native-gate-readiness-scoped.log",
+    "sha256": "ff32a7696c0270ebe27331057fe103ce94d211488aaac31d4c99d435ea2bbc4e",
+    "passed": 28,
+    "failed": 0,
+    "newTests": 6,
+    "existingTests": 22,
+    "gpu": "double"
+  },
+  "recovery": {
+    "path": ".cache/native-gate-readiness-recovery.log",
+    "sha256": "09f9f4f5ed31a2635518d91d79d9bd4abb219c7701304bac0bad707e1c884651",
+    "passed": 1,
+    "failed": 0,
+    "skippedByFilter": 5,
+    "source": "final source in checkout"
+  },
+  "parent": {
+    "path": ".cache/native-gate-readiness-parent.log",
+    "sha256": "672cd8cdf07900a12a034755fef6dc143fdf1dcc8c3f7fbb164aa18e76106d7d",
+    "failed": 1,
+    "skippedByFilter": 3
+  },
+  "physical": {
+    "browser": "Edge",
+    "viewport": [
+      640,
+      480
+    ],
+    "displayHz": 30,
+    "quality": "muy_baja",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "gate": {
+      "id": "structure-1000000",
+      "anchor": {
+        "x": -11.8,
+        "z": 8.2,
+        "yaw": 0
+      },
+      "retainedRoot": 478,
+      "retainedGeometry": 209,
+      "gpuBinding": {
+        "entityId": "structure-1000000",
+        "mesh": 480,
+        "geometry": 209,
+        "positionVersion": 1,
+        "normalVersion": 1,
+        "positionHash": 603722329,
+        "opening": 1,
+        "nativeGate": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "c5a729bf-e16a-40b4-8072-d2b9ee35e547/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 10
+          }
+        }
+      },
+      "openingSamples": [
+        {
+          "opening": 0,
+          "elapsed": 10.149999999999997,
+          "position": [
+            -14.585859828280514,
+            11.662624274751177
+          ]
+        },
+        {
+          "opening": 0.016036889689414007,
+          "elapsed": 12.249999999999952,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.09937022302274556,
+          "elapsed": 12.299999999999951,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.18270355635607713,
+          "elapsed": 12.34999999999995,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.2660368896894087,
+          "elapsed": 12.399999999999949,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.34937022302274023,
+          "elapsed": 12.449999999999948,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.43270355635607183,
+          "elapsed": 12.499999999999947,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.5160368896894034,
+          "elapsed": 12.549999999999946,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.5993702230227349,
+          "elapsed": 12.599999999999945,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.6827035563560665,
+          "elapsed": 12.649999999999944,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.7660368896893981,
+          "elapsed": 12.699999999999942,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.8493702230227296,
+          "elapsed": 12.749999999999941,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 0.9327035563560612,
+          "elapsed": 12.79999999999994,
+          "position": [
+            -14,
+            10.523790017724451
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 12.84999999999994,
+          "position": [
+            -14,
+            10.513398113205724
+          ]
+        }
+      ],
+      "frameLocalBoundsX": [
+        -1.1759320497512817,
+        1.2656879425048828
+      ],
+      "closedLeafLocalBoundsX": [
+        -0.6200000047683716,
+        0.6200000047683716
+      ]
+    },
+    "farm": {
+      "bodyId": 1,
+      "ticket": 2,
+      "gateIds": [
+        1000000
+      ],
+      "retainedRoot": 622,
+      "retainedGeometryOwners": 32,
+      "before": [
+        -14.5,
+        11.799999999999999
+      ],
+      "after": [
+        -14,
+        7.705398113205784
+      ],
+      "planeSamples": [
+        {
+          "opening": 1,
+          "elapsed": 14.6999999999999,
+          "position": [
+            -14,
+            8.515398113205766
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.749999999999899,
+          "position": [
+            -14,
+            8.461398113205767
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.799999999999898,
+          "position": [
+            -14,
+            8.407398113205769
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.849999999999897,
+          "position": [
+            -14,
+            8.35339811320577
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.899999999999896,
+          "position": [
+            -14,
+            8.299398113205772
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.949999999999894,
+          "position": [
+            -14,
+            8.245398113205773
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 14.999999999999893,
+          "position": [
+            -14,
+            8.191398113205775
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 15.049999999999892,
+          "position": [
+            -14,
+            8.137398113205775
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 15.099999999999891,
+          "position": [
+            -14,
+            8.083398113205776
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 15.14999999999989,
+          "position": [
+            -14,
+            8.029398113205776
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 15.19999999999989,
+          "position": [
+            -14,
+            7.975398113205778
+          ]
+        },
+        {
+          "opening": 1,
+          "elapsed": 15.249999999999888,
+          "position": [
+            -14,
+            7.92139811320578
+          ]
+        }
+      ]
+    },
+    "timing": {
+      "samples": 182,
+      "maxIntervalMs": 37.60009765625,
+      "maxIntervalSample": {
+        "at": 1795247923486.1,
+        "sequence": 23,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "c5a729bf-e16a-40b4-8072-d2b9ee35e547/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 37.60009765625,
+        "drawMs": 2.39990234375,
+        "replay": true,
+        "clockElapsed": 11.099999999999977,
+        "safeUntil": 11.099999999999977,
+        "cameraVersion": null
+      }
+    },
+    "fullCrossingObserved": false,
+    "drained": true,
+    "gpuErrors": 0,
+    "diagnosticSha256": "5fc3c17216b0b1618219bc4a8efb2c3d0996d52f3532b3ecc861e770ccdfcffd"
+  },
+  "limits": {
+    "newGatePlacement": false,
+    "fullCrossingAccepted": false,
+    "sixtyFps": false,
+    "A6Closed": false
+  },
+  "checkout": {
+    "test": {
+      "path": ".cache/native-gate-readiness-checkout-regression.log",
+      "sha256": "ca1757c03938e6128ceab47e6485fd4aa8cc2af967251f9b5a8377443a4439bd",
+      "passed": 84,
+      "failed": 0
+    },
+    "build": {
+      "path": ".cache/native-gate-readiness-checkout-vite.log",
+      "sha256": "fa4557e369b6951c1ee6e8e0205bea161a83112a559246caf9dea5d646a142ed",
+      "presentationBackend": "webgpu-worker",
+      "remoteDraw": true
+    }
+  }
+}

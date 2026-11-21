@@ -1,0 +1,182 @@
+{
+  "profiles": [
+    {
+      "profile": "youngMale",
+      "adapter": "nvidia turing",
+      "bodyId": 1,
+      "actorMeshes": 28,
+      "wallId": "structure-749",
+      "wallRoot": 68,
+      "wallMeshes": {
+        "before": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ],
+        "after": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ]
+      },
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 5,
+        "previousHp": 50,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "drawsWhileReady": 22,
+      "drawsWithIdle": 33,
+      "drained": true
+    },
+    {
+      "profile": "olderMale",
+      "adapter": "nvidia turing",
+      "bodyId": 1,
+      "actorMeshes": 27,
+      "wallId": "structure-749",
+      "wallRoot": 68,
+      "wallMeshes": {
+        "before": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ],
+        "after": [
+          {
+            "id": 671,
+            "geometry": 294
+          },
+          {
+            "id": 672,
+            "geometry": 295
+          }
+        ]
+      },
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 5,
+        "previousHp": 50,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "drawsWhileReady": 21,
+      "drawsWithIdle": 32,
+      "drained": true
+    },
+    {
+      "profile": "olderFemale",
+      "adapter": "nvidia turing",
+      "bodyId": 1,
+      "actorMeshes": 27,
+      "wallId": "structure-749",
+      "wallRoot": 68,
+      "wallMeshes": {
+        "before": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ],
+        "after": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ]
+      },
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 5,
+        "previousHp": 50,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "drawsWhileReady": 22,
+      "drawsWithIdle": 32,
+      "drained": true
+    },
+    {
+      "profile": "youngFemale",
+      "adapter": "nvidia turing",
+      "bodyId": 1,
+      "actorMeshes": 28,
+      "wallId": "structure-749",
+      "wallRoot": 68,
+      "wallMeshes": {
+        "before": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ],
+        "after": [
+          {
+            "id": 70,
+            "geometry": 32
+          }
+        ]
+      },
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 5,
+        "previousHp": 50,
+        "previousStatus": "intact",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "drawsWhileReady": 22,
+      "drawsWithIdle": 46,
+      "drained": true
+    }
+  ],
+  "nativeBuild": {
+    "base": "7513a1616b8b052e1255dab483a5b7f88df45efc",
+    "outputs": {
+      "src/world/wild-engine/spatial-savanna.wasm": "4eb51e01b5c1b10dec2a8a277dad611a0bdb79c23c8e5fc6402d465cc0b8fa47",
+      "public/wild-engine/spatial-threaded.mjs": "cf446c0d4bb430ae438eac90217fc178a736fad2979228fa3d169d7e902f6936",
+      "public/wild-engine/spatial-threaded.wasm": "8279673aacece0ac0dc0b084d1fef5eefec8015ebdc2d13616b6a68736f0e612"
+    },
+    "variants": [
+      {
+        "variant": "standalone",
+        "seconds": 75.07446569995955
+      },
+      {
+        "variant": "pthread",
+        "seconds": 71.42077890003566
+      }
+    ],
+    "abi": {
+      "standalone": {
+        "before": 757,
+        "after": 759,
+        "oldNamesAndKindsPreserved": true,
+        "importsUnchanged": true
+      },
+      "pthread": {
+        "before": 778,
+        "after": 780,
+        "publicBefore": 763,
+        "publicAfter": 765,
+        "publicNamesPreserved": true,
+        "pairedFactoryInstantiated": true
+      },
+      "additiveNames": [
+        "nav_initial_idle_body_proposal_stage_wall_repair",
+        "nav_initial_idle_body_wall_repair_source_snapshot"
+      ]
+    }
+  }
+}

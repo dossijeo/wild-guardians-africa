@@ -1,0 +1,802 @@
+{
+  "scenario": "day-31 savanna raid; direct QA attack",
+  "order": "ABBA",
+  "batch": 16,
+  "limitations": "Short frame windows; direct input; uncontrolled cache and browser scheduling; no full visual or deterministic parity",
+  "runs": [
+    {
+      "run": "A1",
+      "sharedGlb": false,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)"
+      },
+      "attack": {
+        "batch": 16,
+        "scanMs": 6,
+        "attackLatencyMs": 1649,
+        "before": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": false,
+          "queued": 0,
+          "pendingSteps": 0,
+          "pendingChunks": 0,
+          "confirmedSequence": 236,
+          "confirmedElapsed": 23.8497449999951,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": null,
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 10,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "setNavigationView": 28,
+            "advance": 172,
+            "tutorialCommand:advance": 11,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {},
+          "outbox": {
+            "inFlight": 222,
+            "queued": 5,
+            "coalesced": 172,
+            "acknowledged": 221,
+            "foldedViewCount": 18,
+            "queuedPublications": 3,
+            "eventfulPublications": 0,
+            "tickPublications": 1,
+            "unchangedPublications": 0,
+            "queuedBySource": {
+              "tutorialCommand": 2,
+              "advance": 1
+            },
+            "peakQueuedBySource": {
+              "tutorialCommand": 2,
+              "advance": 4
+            },
+            "snapshotChars": 433734,
+            "peakSnapshotChars": 868012,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 11
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 67,
+            "acknowledged": 232,
+            "foldedViewCount": 17,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 8,
+              "advance": 5,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 2314607,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 17,
+            "peakQueuedMessages": 17
+          },
+          "publicationBacklog": 11,
+          "peakPublicationBacklog": 129,
+          "reception": {
+            "count": 59,
+            "mean": 4.148220340074119,
+            "p95": 8.775000005960464,
+            "p99": 10.36499997973442,
+            "max": 10.36499997973442
+          }
+        },
+        "after": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": true,
+          "queued": 3,
+          "pendingSteps": 2,
+          "pendingChunks": 0,
+          "confirmedSequence": 272,
+          "confirmedElapsed": 25.39974499999512,
+          "saveAvailable": false,
+          "lastAttackDiagnostic": {
+            "kind": "castAttack",
+            "preparationMs": 872.2849999964237,
+            "executionMs": 6.625
+          },
+          "completedKinds": {
+            "snapshot": 4,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 13,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "setNavigationView": 38,
+            "advance": 193,
+            "tutorialCommand:advance": 14,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1,
+            "castAttack": 1
+          },
+          "queuedKinds": {
+            "tutorialCommand": 2,
+            "setNavigationView": 1
+          },
+          "outbox": {
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 177,
+            "acknowledged": 271,
+            "foldedViewCount": 20,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 2,
+              "advance": 4
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 868012,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 11
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 78,
+            "acknowledged": 271,
+            "foldedViewCount": 25,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 8,
+              "advance": 5,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 2314607,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 17,
+            "peakQueuedMessages": 17
+          },
+          "publicationBacklog": 0,
+          "peakPublicationBacklog": 129,
+          "reception": {
+            "count": 86,
+            "mean": 3.9183720942846563,
+            "p95": 7.284999996423721,
+            "p99": 10.36499997973442,
+            "max": 10.36499997973442
+          }
+        },
+        "frames": {
+          "count": 12,
+          "p95": 766.7200000000012,
+          "p99": 766.7200000000012,
+          "max": 766.7200000000012
+        }
+      }
+    },
+    {
+      "run": "B1",
+      "sharedGlb": true,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)"
+      },
+      "attack": {
+        "batch": 16,
+        "scanMs": 7,
+        "attackLatencyMs": 665,
+        "before": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": false,
+          "queued": 0,
+          "pendingSteps": 0,
+          "pendingChunks": 0,
+          "confirmedSequence": 235,
+          "confirmedElapsed": 24.199744999995104,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": null,
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 10,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:advance": 10,
+            "setNavigationView": 29,
+            "advance": 174,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {},
+          "outbox": {
+            "inFlight": 220,
+            "queued": 2,
+            "coalesced": 181,
+            "acknowledged": 219,
+            "foldedViewCount": 16,
+            "queuedPublications": 1,
+            "eventfulPublications": 0,
+            "tickPublications": 1,
+            "unchangedPublications": 0,
+            "queuedBySource": {
+              "advance": 1
+            },
+            "peakQueuedBySource": {
+              "advance": 5,
+              "tutorialCommand": 1
+            },
+            "snapshotChars": 144572,
+            "peakSnapshotChars": 867935,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 69,
+            "acknowledged": 234,
+            "foldedViewCount": 16,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 6,
+              "advance": 3,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 1735353,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 12,
+            "peakQueuedMessages": 12
+          },
+          "publicationBacklog": 15,
+          "peakPublicationBacklog": 135,
+          "reception": {
+            "count": 53,
+            "mean": 4.093396230126327,
+            "p95": 8.655000001192093,
+            "p99": 12.100000023841858,
+            "max": 12.100000023841858
+          }
+        },
+        "after": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": true,
+          "queued": 6,
+          "pendingSteps": 5,
+          "pendingChunks": 0,
+          "confirmedSequence": 246,
+          "confirmedElapsed": 24.399744999995107,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": {
+            "kind": "castAttack",
+            "preparationMs": 479.0300000011921,
+            "executionMs": 4.505000025033951
+          },
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 11,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:advance": 11,
+            "setNavigationView": 32,
+            "advance": 179,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {
+            "tutorialCommand": 2,
+            "setNavigationView": 2,
+            "steps": 2
+          },
+          "outbox": {
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 186,
+            "acknowledged": 244,
+            "foldedViewCount": 18,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "advance": 5,
+              "tutorialCommand": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 867935,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 74,
+            "acknowledged": 244,
+            "foldedViewCount": 18,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 6,
+              "advance": 3,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 1735353,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 12,
+            "peakQueuedMessages": 12
+          },
+          "publicationBacklog": 0,
+          "peakPublicationBacklog": 135,
+          "reception": {
+            "count": 59,
+            "mean": 4.077288138664375,
+            "p95": 8.655000001192093,
+            "p99": 12.100000023841858,
+            "max": 12.100000023841858
+          }
+        },
+        "frames": {
+          "count": 8,
+          "p95": 266.695000000007,
+          "p99": 266.695000000007,
+          "max": 266.695000000007
+        }
+      }
+    },
+    {
+      "run": "B2",
+      "sharedGlb": true,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)"
+      },
+      "attack": {
+        "batch": 16,
+        "scanMs": 4,
+        "attackLatencyMs": 1982,
+        "before": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": true,
+          "queued": 1,
+          "pendingSteps": 2,
+          "pendingChunks": 0,
+          "confirmedSequence": 228,
+          "confirmedElapsed": 22.849744999995085,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": null,
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 12,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:advance": 12,
+            "advance": 165,
+            "setNavigationView": 29,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {
+            "tutorialCommand": 1
+          },
+          "outbox": {
+            "inFlight": 227,
+            "queued": 3,
+            "coalesced": 164,
+            "acknowledged": 222,
+            "foldedViewCount": 14,
+            "queuedPublications": 2,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 1,
+            "queuedBySource": {
+              "tutorialCommand": 1,
+              "setNavigationView": 1
+            },
+            "peakQueuedBySource": {
+              "tutorialCommand": 2,
+              "advance": 2,
+              "snapshot": 1,
+              "resume": 1,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 144717,
+            "peakSnapshotChars": 1012413,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 7,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 220,
+            "queued": 5,
+            "coalesced": 60,
+            "acknowledged": 219,
+            "foldedViewCount": 12,
+            "queuedPublications": 5,
+            "eventfulPublications": 0,
+            "tickPublications": 1,
+            "unchangedPublications": 1,
+            "queuedBySource": {
+              "tutorialCommand": 3,
+              "setNavigationView": 2
+            },
+            "peakQueuedBySource": {
+              "advance": 6,
+              "tutorialCommand": 7,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 578944,
+            "peakSnapshotChars": 1879479,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 14,
+            "peakQueuedMessages": 14
+          },
+          "publicationBacklog": 7,
+          "peakPublicationBacklog": 132,
+          "reception": {
+            "count": 64,
+            "mean": 4.391250001266599,
+            "p95": 7.155000001192093,
+            "p99": 9.534999996423721,
+            "max": 9.534999996423721
+          }
+        },
+        "after": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": false,
+          "queued": 0,
+          "pendingSteps": 0,
+          "pendingChunks": 0,
+          "confirmedSequence": 233,
+          "confirmedElapsed": 23.14974499999509,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": {
+            "kind": "castAttack",
+            "preparationMs": 517.2650000154972,
+            "executionMs": 4.375
+          },
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 13,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:present": 2,
+            "tutorialCommand:advance": 14,
+            "advance": 178,
+            "setNavigationView": 30,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1,
+            "castAttack": 1
+          },
+          "queuedKinds": {},
+          "outbox": {
+            "inFlight": 232,
+            "queued": 6,
+            "coalesced": 176,
+            "acknowledged": 231,
+            "foldedViewCount": 14,
+            "queuedPublications": 4,
+            "eventfulPublications": 1,
+            "tickPublications": 2,
+            "unchangedPublications": 0,
+            "queuedBySource": {
+              "advance": 2,
+              "tutorialCommand": 2
+            },
+            "peakQueuedBySource": {
+              "tutorialCommand": 2,
+              "advance": 2,
+              "snapshot": 1,
+              "resume": 1,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 583903,
+            "peakSnapshotChars": 1012413,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 7,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 61,
+            "acknowledged": 247,
+            "foldedViewCount": 12,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "advance": 6,
+              "tutorialCommand": 7,
+              "setNavigationView": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 1879479,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 14,
+            "peakQueuedMessages": 14
+          },
+          "publicationBacklog": 16,
+          "peakPublicationBacklog": 132,
+          "reception": {
+            "count": 68,
+            "mean": 4.346838236731641,
+            "p95": 7.155000001192093,
+            "p99": 9.534999996423721,
+            "max": 9.534999996423721
+          }
+        },
+        "frames": {
+          "count": 3,
+          "p95": 1633.4100000000035,
+          "p99": 1633.4100000000035,
+          "max": 1633.4100000000035
+        }
+      }
+    },
+    {
+      "run": "A2",
+      "sharedGlb": false,
+      "device": {
+        "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+        "vendor": "Google Inc. (NVIDIA)"
+      },
+      "attack": {
+        "batch": 16,
+        "scanMs": 5,
+        "attackLatencyMs": 720,
+        "before": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": false,
+          "queued": 0,
+          "pendingSteps": 0,
+          "pendingChunks": 0,
+          "confirmedSequence": 220,
+          "confirmedElapsed": 22.099744999995075,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": null,
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 10,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:present": 2,
+            "advance": 170,
+            "tutorialCommand:advance": 10,
+            "setNavigationView": 30,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {},
+          "outbox": {
+            "inFlight": 216,
+            "queued": 3,
+            "coalesced": 176,
+            "acknowledged": 215,
+            "foldedViewCount": 18,
+            "queuedPublications": 2,
+            "eventfulPublications": 1,
+            "tickPublications": 2,
+            "unchangedPublications": 0,
+            "queuedBySource": {
+              "advance": 1,
+              "setNavigationView": 1
+            },
+            "peakQueuedBySource": {
+              "advance": 5,
+              "tutorialCommand": 1
+            },
+            "snapshotChars": 289416,
+            "peakSnapshotChars": 854470,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 230,
+            "queued": 1,
+            "coalesced": 63,
+            "acknowledged": 229,
+            "foldedViewCount": 15,
+            "queuedPublications": 1,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 1,
+            "queuedBySource": {
+              "setNavigationView": 1
+            },
+            "peakQueuedBySource": {
+              "tutorialCommand": 5,
+              "advance": 3,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 1566054,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 11,
+            "peakQueuedMessages": 11
+          },
+          "publicationBacklog": 16,
+          "peakPublicationBacklog": 128,
+          "reception": {
+            "count": 53,
+            "mean": 4.340754716463809,
+            "p95": 7.6700000166893005,
+            "p99": 10.089999973773956,
+            "max": 10.089999973773956
+          }
+        },
+        "after": {
+          "running": true,
+          "closed": false,
+          "fault": null,
+          "busy": true,
+          "queued": 8,
+          "pendingSteps": 8,
+          "pendingChunks": 0,
+          "confirmedSequence": 238,
+          "confirmedElapsed": 23.399744999995093,
+          "saveAvailable": true,
+          "lastAttackDiagnostic": {
+            "kind": "castAttack",
+            "preparationMs": 542.2800000011921,
+            "executionMs": 4.245000004768372
+          },
+          "completedKinds": {
+            "snapshot": 3,
+            "tutorialStart": 1,
+            "tutorialCommand:update": 11,
+            "tutorialActionPause": 2,
+            "microIncome": 1,
+            "tutorialCommand:present": 2,
+            "advance": 172,
+            "tutorialCommand:advance": 11,
+            "setNavigationView": 30,
+            "tutorialCommand:dismiss": 1,
+            "resume": 1
+          },
+          "queuedKinds": {
+            "setNavigationView": 3,
+            "steps": 3,
+            "tutorialCommand": 2
+          },
+          "outbox": {
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 177,
+            "acknowledged": 235,
+            "foldedViewCount": 18,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "advance": 5,
+              "tutorialCommand": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 854470,
+            "peakEventfulPublications": 3,
+            "peakQueuedPublications": 6,
+            "peakQueuedMessages": 12
+          },
+          "visualPublication": {
+            "active": true,
+            "detached": false,
+            "inFlight": 0,
+            "queued": 0,
+            "coalesced": 64,
+            "acknowledged": 235,
+            "foldedViewCount": 15,
+            "queuedPublications": 0,
+            "eventfulPublications": 0,
+            "tickPublications": 0,
+            "unchangedPublications": 0,
+            "queuedBySource": {},
+            "peakQueuedBySource": {
+              "tutorialCommand": 5,
+              "advance": 3,
+              "snapshot": 1,
+              "resume": 1,
+              "tutorialActionPause": 1
+            },
+            "snapshotChars": 0,
+            "peakSnapshotChars": 1566054,
+            "peakEventfulPublications": 1,
+            "peakQueuedPublications": 11,
+            "peakQueuedMessages": 11
+          },
+          "publicationBacklog": 0,
+          "peakPublicationBacklog": 128,
+          "reception": {
+            "count": 59,
+            "mean": 4.429830507706788,
+            "p95": 8.205000013113022,
+            "p99": 10.089999973773956,
+            "max": 10.089999973773956
+          }
+        },
+        "frames": {
+          "count": 8,
+          "p95": 233.30999999999767,
+          "p99": 233.30999999999767,
+          "max": 233.30999999999767
+        }
+      }
+    }
+  ]
+}

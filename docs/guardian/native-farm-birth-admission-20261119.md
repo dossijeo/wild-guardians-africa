@@ -1,0 +1,37 @@
+# Admisión incremental de contratados Farm
+
+Continúa la [pose de nacimiento](native-worker-birth-pose-20261119.md) y la [activación de Farm restaurada](native-farm-restored-authority-20261119.md). Dentro de un cohort nativo ya soportado, SimulationAuthority incorpora ahora contratos diarios y adicionales al mismo registro y al mismo productor. La declaración conserva la pose real del contratado; no se reinicia el mundo, se vuelven a publicar cuerpos anteriores ni se inventa una historia Idle, Task o llegada.
+
+## Referencias y adaptación
+
+La investigación previa al mecanismo revisó código real de EnTT v3.15.0, [registry.create](https://github.com/skypjack/entt/blob/v3.15.0/src/entt/entity/registry.hpp) y [storage.generate](https://github.com/skypjack/entt/blob/v3.15.0/src/entt/entity/storage.hpp), y [Flecs v4.1.0, flecs_stage_merge](https://github.com/SanderMertens/flecs/blob/v4.1.0/src/stage.c#L18-L65). EnTT incorpora una entrada en el registro existente; Flecs difiere cambios estructurales y los aplica en puntos de sincronización. Se adaptan esas decisiones a las fronteras de comando y declaraciones retenidas que ya teníamos. No se copia su reciclaje, command buffer, framework o dependencia. La comprobación geométrica reutiliza el índice, la política de participación y la guarda nativa de reservas futuras del juego, sin nuevo algoritmo de planificación.
+
+## Contrato implementado
+
+La contratación notifica y vacía los eventos de trabajadores existentes antes de declarar los nuevos Farm13. Una declaración sin cuerpo permite mantener la intención y compartir el reloj causal, pero no aparece en las listas de peticiones ejecutables ni puede adquirir una propuesta23. La adquisición de rutas y recursos sigue exigiendo cuerpo real y todos sus comprobantes anteriores.
+
+`spatial_body_admit` sirve exclusivamente para una primera admisión de trabajador. Rechaza un ID existente, un ID cero, parámetros inválidos o un disco solapado con otro participante. Después usa el mismo upsert protegido frente a corredores futuros. Un bloqueo no cambia cuerpos ni consume IDs. El adaptador `admit` asigna el siguiente ID del registro únicamente tras aceptación; una llamada para una clave ya conocida devuelve su ID sin reescribirla. Los cuerpos anteriores conservan IDs y permisos.
+
+SimulationAuthority conserva solo una indicación de altas pendientes y una memoización de la revisión física y la secuencia de intenciones existentes. Mientras haya espera, vuelve a intentar la admisión en una frontera ordinaria cuando cambia alguna dependencia o nace otro trabajador. No añade un temporizador, cola, scheduler o reloj. Una vez admitidos los contratados, no consulta esas revisiones ni recorre el roster por este mecanismo. El bind vuelve a emitir la petición física Farm/Home; el productor y los puertos existentes preparan solamente el sucesor real.
+
+Un contrato puede vencer antes de tener cuerpo: el retarget13→Home19 existente conserva su fuente. Una nueva lectura tipada observa exclusivamente ese Home sin cuerpo de origen Farm; no tiene bodyId, flags ni radio, no puede pasar el codec de petición ejecutable y no se publica como recurso preparado. Game comprueba su pose y destino y conserva la espera mientras los compañeros avanzan. La primera unión exacta permite preparar18. Los demás Home/Idle fríos conservan sus guardas de inicialización.
+
+Una tarea también puede reclamar al contratado pendiente. Se reutilizan la fuente de pose retenida y el bind tardío que TaskStart ya tenía; tras la admisión se prepara14 directamente, sin fabricar una Farm23. La prueba ordinaria detectó además que las guardas de transferencia podían interpretar el slot0 de otro actor como si perteneciera a una intención aún sin ruta. Ahora se comprueban actor, generación y slot activo antes de usar una ruta Stroll/Farm o capturar su pose. Las guardas de la ruta realmente propietaria permanecen.
+
+## Validación
+
+Pasan **30/30 casos dirigidos**, sin omisiones, con **17 nuevos**. Los nuevos cubren cuatro perfiles de contratación adicional, contratación diaria con Home anterior, espera por disco ocupado, comandos repetidos, dos contratados en una entrada, espera de preparación gráfica sin detener un corredor ya admitido, cierre con preparación pendiente, expiración sin cuerpo, TaskStart directo, ID/registro, codec no ejecutable y reservas futuras. Las pruebas de reserva futura y Home sin cuerpo se ejecutan en standalone y pthread. El fixture ordinario usa Game, autoridad, productor, ambos puertos y cliente/Host reales; su cola GPU y sus triángulos son dobles deterministas, no hardware.
+
+La expectativa fría anterior de Farm se actualiza: un reloj semántico coherente puede confirmarse sin cuerpo, pero el stage23 sigue rechazándose. El primer ensayo encontró una omisión real de Home19 sin cuerpo en la guarda del límite horario. Otro resultado identificó un error del fixture: youngMale también termina a250; se usa youngFemale para que el compañero siga contratado. El rechazo posterior de Task localizó la comprobación de slot ajeno descrita arriba. Un acceso de test al nombre incorrecto del comprobante Task se sustituyó por su perfil tipado existente. No se desactivan validadores para obtener los pases.
+
+Regresión final: **4807/4808 casos**, 362 archivos, 1 omisión opcional de comparación WASM, cero fallos, 657.278s. Ocho comprobaciones de sintaxis y build WebGPU/Worker remoto pasan; build 56.157s, con el aviso de tamaño de chunks existente. Los **646 inputs probados**, **64 inputs/artefactos nativos**, **16 archivos ajenos** y **38 inputs A5** permanecen exactos después de las comprobaciones. [Recibo y hashes](performance/native-farm-birth-admission-validation-20261119.json), [fuentes y logs propios](performance/native-farm-birth-admission-20261119/).
+
+Las compilaciones nativas finales usan el script, exports y parámetros canónicos de producto, con salida aislada antes de instalar los tres artefactos propios. Se verifica la identidad de los 61 inputs de fuente compilada y la igualdad del helper pthread ajeno. El primer par de binarios es diagnóstico de los fallos anteriores; la aceptación usa el segundo par, que incluye la corrección de propiedad de slot e ID cero. Los detalles y hashes quedan en el recibo.
+
+## Límites y siguiente punto
+
+Esto amplía el cohort nativo que ya estaba activado; no activa el backend nativo para un guardado íntegramente legacy ni habilita cohorts con incursiones, puertas u otras clases todavía excluidas. La prueba de dos altas acredita que una espera física no detiene al compañero, no una aceptación general de todos los lotes, cancelaciones de tareas, recuperación, guardado o device loss. Las guardas y pendientes de esas clases siguen vigentes.
+
+No cambia código de preparación de geometría, materiales o bancos. Tampoco hay una nueva prueba en GPU real ni una medición de cadencia: falta comprobar el alta con Worker/Surface y sus propietarios gráficos reales. El caso histórico de recuperación que reconstruyó3.123 recursos sigue abierto; sus recursos invariantes deben conservar identidad y residencia. No se sustituye esa recuperación por este avance de admisión física.
+
+Siguiente: integración de las altas y sus esperas con Worker/Surface y evidencia gráfica de reutilización, completar independencia/cancelación de lotes y los demás pendientes de e-R3/e-R4/f-R4 y A6. A/A6, B1–B7 y C abiertos; D no iniciado; f-R3 mantiene solo su cierre de seguridad. No se cierra ninguna de las tres exclusiones históricas.

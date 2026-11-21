@@ -1,0 +1,1647 @@
+{
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 1067.4800000041723,
+  "publications": [
+    {
+      "sequence": 1,
+      "workMs": 832.1749999970198,
+      "responseMs": 861.0049999952316,
+      "applyDelayMs": 5.394999995827675,
+      "applyAndDrawMs": 47.45500001311302,
+      "events": 8,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ],
+      "center": {
+        "id": "structure-2",
+        "status": "intact",
+        "hp": 130,
+        "collapseRemaining": 0
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 2,
+      "workMs": 15.120000004768372,
+      "responseMs": 42.96999999880791,
+      "applyDelayMs": 0.4749999940395355,
+      "applyAndDrawMs": 42.46000000834465,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "intact",
+        "hp": 130,
+        "collapseRemaining": 0
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 3,
+      "workMs": 9.375,
+      "responseMs": 37.70000000298023,
+      "applyDelayMs": 0.3199999928474426,
+      "applyAndDrawMs": 45.15500000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "intact",
+        "hp": 130,
+        "collapseRemaining": 0
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 4,
+      "workMs": 8.479999989271164,
+      "responseMs": 37.79999999701977,
+      "applyDelayMs": 0.3800000101327896,
+      "applyAndDrawMs": 36.934999987483025,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "intact",
+        "hp": 130,
+        "collapseRemaining": 0
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 5,
+      "workMs": 12.07999999821186,
+      "responseMs": 45.64000000059605,
+      "applyDelayMs": 29.339999988675117,
+      "applyAndDrawMs": 42.53000000119209,
+      "events": 11,
+      "replayed": 0,
+      "conditions": [
+        {
+          "at": 0.25,
+          "change": {
+            "type": "StructureConditionChanged",
+            "change": "damaged",
+            "structureId": "structure-2",
+            "kind": "center",
+            "gate": false,
+            "enclosureId": null,
+            "plannedGroupId": null,
+            "hp": 70,
+            "maxHp": 600,
+            "previousHp": 130,
+            "status": "collapsing",
+            "previousStatus": "intact",
+            "severity": "critical",
+            "thresholdCrossed": true
+          }
+        }
+      ],
+      "trace": [
+        {
+          "kind": "game-event",
+          "type": "StructureHit",
+          "at": 0.25
+        },
+        {
+          "kind": "native-condition",
+          "type": "StructureConditionChanged",
+          "at": 0.25,
+          "status": "collapsing"
+        }
+      ],
+      "eventTypes": [
+        "StructureHit",
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 3.2
+      },
+      "moved": 10
+    },
+    {
+      "sequence": 6,
+      "workMs": 8.849999994039536,
+      "responseMs": 40.13000001013279,
+      "applyDelayMs": 0.4099999964237213,
+      "applyAndDrawMs": 39.125,
+      "events": 1,
+      "replayed": 11,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [
+        "AnimalTargetUnavailable"
+      ],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 3.1500000000000004
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 7,
+      "workMs": 6.954999998211861,
+      "responseMs": 37.25999999046326,
+      "applyDelayMs": 0.3500000089406967,
+      "applyAndDrawMs": 43.70499999821186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 3.1000000000000005
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 8,
+      "workMs": 7.469999998807907,
+      "responseMs": 37.99500000476837,
+      "applyDelayMs": 0.38500000536441803,
+      "applyAndDrawMs": 38.125,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 3.0500000000000007
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 9,
+      "workMs": 9.469999998807907,
+      "responseMs": 36.2250000089407,
+      "applyDelayMs": 0.3399999886751175,
+      "applyAndDrawMs": 37.60999999940395,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 3.000000000000001
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 10,
+      "workMs": 7.064999997615814,
+      "responseMs": 39.23499999940395,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 39.71999999880791,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.950000000000001
+      },
+      "moved": 11
+    },
+    {
+      "sequence": 11,
+      "workMs": 7.604999989271164,
+      "responseMs": 39.26500000059605,
+      "applyDelayMs": 0.35500000417232513,
+      "applyAndDrawMs": 37.96500000357628,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.9000000000000012
+      },
+      "moved": 12
+    },
+    {
+      "sequence": 12,
+      "workMs": 7.61999998986721,
+      "responseMs": 39.00500001013279,
+      "applyDelayMs": 0.3499999940395355,
+      "applyAndDrawMs": 43.53000000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.8500000000000014
+      },
+      "moved": 13
+    },
+    {
+      "sequence": 13,
+      "workMs": 10,
+      "responseMs": 39.810000002384186,
+      "applyDelayMs": 0.6349999904632568,
+      "applyAndDrawMs": 39.91500000655651,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.8000000000000016
+      },
+      "moved": 13
+    },
+    {
+      "sequence": 14,
+      "workMs": 7.570000007748604,
+      "responseMs": 37.87000000476837,
+      "applyDelayMs": 0.3499999940395355,
+      "applyAndDrawMs": 38.20500001311302,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.7500000000000018
+      },
+      "moved": 13
+    },
+    {
+      "sequence": 15,
+      "workMs": 7.075000002980232,
+      "responseMs": 41.625,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 39.4750000089407,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.700000000000002
+      },
+      "moved": 13
+    },
+    {
+      "sequence": 16,
+      "workMs": 7.195000007748604,
+      "responseMs": 37.28999999165535,
+      "applyDelayMs": 0.2850000113248825,
+      "applyAndDrawMs": 45.56999999284744,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.650000000000002
+      },
+      "moved": 14
+    },
+    {
+      "sequence": 17,
+      "workMs": 9.560000002384186,
+      "responseMs": 38.314999997615814,
+      "applyDelayMs": 0.3150000125169754,
+      "applyAndDrawMs": 41.974999994039536,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.6000000000000023
+      },
+      "moved": 14
+    },
+    {
+      "sequence": 18,
+      "workMs": 6.1099999994039536,
+      "responseMs": 35.29500000178814,
+      "applyDelayMs": 0.3500000089406967,
+      "applyAndDrawMs": 38.00499999523163,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.5500000000000025
+      },
+      "moved": 14
+    },
+    {
+      "sequence": 19,
+      "workMs": 5.655000001192093,
+      "responseMs": 36.61500000953674,
+      "applyDelayMs": 0.3499999940395355,
+      "applyAndDrawMs": 37.20499999821186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.5000000000000027
+      },
+      "moved": 13
+    },
+    {
+      "sequence": 20,
+      "workMs": 5.280000001192093,
+      "responseMs": 36.66500000655651,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 50.22000001370907,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.450000000000003
+      },
+      "moved": 15
+    },
+    {
+      "sequence": 21,
+      "workMs": 7.53999999165535,
+      "responseMs": 46.01500000059605,
+      "applyDelayMs": 0.44999998807907104,
+      "applyAndDrawMs": 49.45000000298023,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.400000000000003
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 22,
+      "workMs": 3.790000006556511,
+      "responseMs": 37.97000001370907,
+      "applyDelayMs": 0.2799999862909317,
+      "applyAndDrawMs": 37.650000005960464,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.350000000000003
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 23,
+      "workMs": 4.9749999940395355,
+      "responseMs": 40.53499999642372,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 36.690000012516975,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.3000000000000034
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 24,
+      "workMs": 6.019999995827675,
+      "responseMs": 40.59000000357628,
+      "applyDelayMs": 0.45499999821186066,
+      "applyAndDrawMs": 44.40500000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.2500000000000036
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 25,
+      "workMs": 4.9100000113248825,
+      "responseMs": 38.375,
+      "applyDelayMs": 0.3050000071525574,
+      "applyAndDrawMs": 40.810000002384186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.2000000000000037
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 26,
+      "workMs": 4.075000002980232,
+      "responseMs": 37.145000010728836,
+      "applyDelayMs": 0.3449999988079071,
+      "applyAndDrawMs": 37.63499999046326,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.150000000000004
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 27,
+      "workMs": 4.079999998211861,
+      "responseMs": 36.82999999821186,
+      "applyDelayMs": 0.3050000071525574,
+      "applyAndDrawMs": 36.75999999046326,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.100000000000004
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 28,
+      "workMs": 4.519999995827675,
+      "responseMs": 36.695000007748604,
+      "applyDelayMs": 0.41499999165534973,
+      "applyAndDrawMs": 41.4750000089407,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.0500000000000043
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 29,
+      "workMs": 5.030000001192093,
+      "responseMs": 44.179999992251396,
+      "applyDelayMs": 0.5300000011920929,
+      "applyAndDrawMs": 48.73499999940395,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 2.0000000000000044
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 30,
+      "workMs": 4.600000008940697,
+      "responseMs": 38.04500000178814,
+      "applyDelayMs": 0.4050000011920929,
+      "applyAndDrawMs": 38.09499999880791,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.9500000000000044
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 31,
+      "workMs": 4.219999998807907,
+      "responseMs": 35.82999999821186,
+      "applyDelayMs": 0.2900000065565109,
+      "applyAndDrawMs": 47.184999987483025,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.9000000000000044
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 32,
+      "workMs": 3.905000001192093,
+      "responseMs": 37.53999999165535,
+      "applyDelayMs": 0.32999999821186066,
+      "applyAndDrawMs": 38.92500001192093,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.8500000000000043
+      },
+      "moved": 20
+    },
+    {
+      "sequence": 33,
+      "workMs": 2.8399999886751175,
+      "responseMs": 36.41000001132488,
+      "applyDelayMs": 0.3399999886751175,
+      "applyAndDrawMs": 36.74500000476837,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.8000000000000043
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 34,
+      "workMs": 3.355000004172325,
+      "responseMs": 39.90500000119209,
+      "applyDelayMs": 0.3199999928474426,
+      "applyAndDrawMs": 37.480000004172325,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.7500000000000042
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 35,
+      "workMs": 5.840000003576279,
+      "responseMs": 36.42499999701977,
+      "applyDelayMs": 0.3100000023841858,
+      "applyAndDrawMs": 35.57500000298023,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.7000000000000042
+      },
+      "moved": 20
+    },
+    {
+      "sequence": 36,
+      "workMs": 5.145000010728836,
+      "responseMs": 36.16500000655651,
+      "applyDelayMs": 0.3149999976158142,
+      "applyAndDrawMs": 35.054999992251396,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.6500000000000041
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 37,
+      "workMs": 6.569999992847443,
+      "responseMs": 42.60999999940395,
+      "applyDelayMs": 0.3400000035762787,
+      "applyAndDrawMs": 37.229999989271164,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.600000000000004
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 38,
+      "workMs": 6.935000002384186,
+      "responseMs": 36.40999999642372,
+      "applyDelayMs": 0.3199999928474426,
+      "applyAndDrawMs": 38.690000012516975,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.550000000000004
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 39,
+      "workMs": 5.844999998807907,
+      "responseMs": 36.48999999463558,
+      "applyDelayMs": 0.32500000298023224,
+      "applyAndDrawMs": 44.58499999344349,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.500000000000004
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 40,
+      "workMs": 7.239999994635582,
+      "responseMs": 38.679999992251396,
+      "applyDelayMs": 0.3400000035762787,
+      "applyAndDrawMs": 35.599999994039536,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.450000000000004
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 41,
+      "workMs": 5.065000012516975,
+      "responseMs": 35.76500000059605,
+      "applyDelayMs": 0.3349999934434891,
+      "applyAndDrawMs": 37.63500000536442,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.400000000000004
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 42,
+      "workMs": 4.549999997019768,
+      "responseMs": 36.03500001132488,
+      "applyDelayMs": 0.32999999821186066,
+      "applyAndDrawMs": 42.25999999046326,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.3500000000000039
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 43,
+      "workMs": 3.6700000017881393,
+      "responseMs": 35.42000000178814,
+      "applyDelayMs": 0.3049999922513962,
+      "applyAndDrawMs": 37.48499999940395,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.3000000000000038
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 44,
+      "workMs": 3.3700000047683716,
+      "responseMs": 36.564999997615814,
+      "applyDelayMs": 0.27000001072883606,
+      "applyAndDrawMs": 36.1499999910593,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.2500000000000038
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 45,
+      "workMs": 4.215000003576279,
+      "responseMs": 42.99499998986721,
+      "applyDelayMs": 0.33500000834465027,
+      "applyAndDrawMs": 34.810000002384186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.2000000000000037
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 46,
+      "workMs": 4.769999995827675,
+      "responseMs": 35.935000002384186,
+      "applyDelayMs": 0.3400000035762787,
+      "applyAndDrawMs": 37.15500000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.1500000000000037
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 47,
+      "workMs": 7.295000001788139,
+      "responseMs": 36.65999999642372,
+      "applyDelayMs": 0.3400000035762787,
+      "applyAndDrawMs": 35.604999989271164,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.1000000000000036
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 48,
+      "workMs": 5.739999994635582,
+      "responseMs": 65.79999999701977,
+      "applyDelayMs": 0.4399999976158142,
+      "applyAndDrawMs": 38.814999997615814,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.0500000000000036
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 49,
+      "workMs": 3.3250000029802322,
+      "responseMs": 37.98499999940395,
+      "applyDelayMs": 1.709999993443489,
+      "applyAndDrawMs": 38.060000002384186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 1.0000000000000036
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 50,
+      "workMs": 2.740000009536743,
+      "responseMs": 36.34499999880791,
+      "applyDelayMs": 0.32500000298023224,
+      "applyAndDrawMs": 40.09000000357628,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.9500000000000035
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 51,
+      "workMs": 2.6949999928474426,
+      "responseMs": 34.86500000953674,
+      "applyDelayMs": 0.2549999952316284,
+      "applyAndDrawMs": 34.59000000357628,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.9000000000000035
+      },
+      "moved": 15
+    },
+    {
+      "sequence": 52,
+      "workMs": 3.0349999964237213,
+      "responseMs": 36,
+      "applyDelayMs": 0.2849999964237213,
+      "applyAndDrawMs": 33.775000005960464,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.8500000000000034
+      },
+      "moved": 15
+    },
+    {
+      "sequence": 53,
+      "workMs": 4.5,
+      "responseMs": 34.83000001311302,
+      "applyDelayMs": 0.4099999964237213,
+      "applyAndDrawMs": 41.89000000059605,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.8000000000000034
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 54,
+      "workMs": 2.9000000059604645,
+      "responseMs": 35.41499999165535,
+      "applyDelayMs": 0.2900000065565109,
+      "applyAndDrawMs": 37.88499999046326,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.7500000000000033
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 55,
+      "workMs": 2.7349999994039536,
+      "responseMs": 39.42000000178814,
+      "applyDelayMs": 0.3499999940395355,
+      "applyAndDrawMs": 37.82999999821186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.7000000000000033
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 56,
+      "workMs": 2.969999998807907,
+      "responseMs": 40.21999999880791,
+      "applyDelayMs": 0.45499999821186066,
+      "applyAndDrawMs": 38.03000000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.6500000000000032
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 57,
+      "workMs": 3.759999990463257,
+      "responseMs": 37.70999999344349,
+      "applyDelayMs": 0.29999999701976776,
+      "applyAndDrawMs": 35.91500000655651,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.6000000000000032
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 58,
+      "workMs": 4.239999994635582,
+      "responseMs": 37.09499999880791,
+      "applyDelayMs": 0.3149999976158142,
+      "applyAndDrawMs": 37.855000004172325,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.5500000000000032
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 59,
+      "workMs": 4.290000006556511,
+      "responseMs": 42.945000007748604,
+      "applyDelayMs": 0.3149999976158142,
+      "applyAndDrawMs": 38.875,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.5000000000000031
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 60,
+      "workMs": 4.200000002980232,
+      "responseMs": 34.980000004172325,
+      "applyDelayMs": 0.3149999976158142,
+      "applyAndDrawMs": 35.54999999701977,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.45000000000000306
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 61,
+      "workMs": 4.319999992847443,
+      "responseMs": 38.07500000298023,
+      "applyDelayMs": 0.25,
+      "applyAndDrawMs": 46.01500000059605,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.400000000000003
+      },
+      "moved": 15
+    },
+    {
+      "sequence": 62,
+      "workMs": 4.1500000059604645,
+      "responseMs": 36.48999999463558,
+      "applyDelayMs": 0.3149999976158142,
+      "applyAndDrawMs": 44.41500000655651,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.350000000000003
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 63,
+      "workMs": 4.24499998986721,
+      "responseMs": 38.58499999344349,
+      "applyDelayMs": 0.3150000125169754,
+      "applyAndDrawMs": 37.87999999523163,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.30000000000000293
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 64,
+      "workMs": 4.379999995231628,
+      "responseMs": 42.93000000715256,
+      "applyDelayMs": 0.3199999928474426,
+      "applyAndDrawMs": 35.53000000119209,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.2500000000000029
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 65,
+      "workMs": 5.450000002980232,
+      "responseMs": 37.519999995827675,
+      "applyDelayMs": 0.48000000417232513,
+      "applyAndDrawMs": 38.32999999821186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.2000000000000029
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 66,
+      "workMs": 10.63000001013279,
+      "responseMs": 38.375,
+      "applyDelayMs": 0.7899999916553497,
+      "applyAndDrawMs": 57.6000000089407,
+      "events": 13,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [
+        "CropHit",
+        "CropDestroyed",
+        "AnimalLogicalHit",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.1500000000000029
+      },
+      "moved": 16
+    },
+    {
+      "sequence": 67,
+      "workMs": 4.709999993443489,
+      "responseMs": 39.54999999701977,
+      "applyDelayMs": 0.35500000417232513,
+      "applyAndDrawMs": 37.49500000476837,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.10000000000000292
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 68,
+      "workMs": 4.995000004768372,
+      "responseMs": 38.79500000178814,
+      "applyDelayMs": 0.3700000047683716,
+      "applyAndDrawMs": 40.435000002384186,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "collapsing",
+        "hp": 70,
+        "collapseRemaining": 0.05000000000000291
+      },
+      "moved": 17
+    },
+    {
+      "sequence": 69,
+      "workMs": 48.05000001192093,
+      "responseMs": 57.570000007748604,
+      "applyDelayMs": 0.7099999934434891,
+      "applyAndDrawMs": 49.895000010728836,
+      "events": 12,
+      "replayed": 0,
+      "conditions": [
+        {
+          "at": 3.449999999999996,
+          "change": {
+            "type": "StructureConditionChanged",
+            "change": "ruined",
+            "structureId": "structure-2",
+            "kind": "center",
+            "gate": false,
+            "enclosureId": null,
+            "plannedGroupId": null,
+            "hp": 0,
+            "maxHp": 600,
+            "previousHp": 70,
+            "status": "ruined",
+            "previousStatus": "collapsing",
+            "severity": "breach",
+            "thresholdCrossed": true
+          }
+        }
+      ],
+      "trace": [
+        {
+          "kind": "native-condition",
+          "type": "StructureConditionChanged",
+          "at": 3.449999999999996,
+          "status": "ruined"
+        }
+      ],
+      "eventTypes": [
+        "StructureRuined",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable",
+        "AnimalTargetUnavailable"
+      ],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 18
+    },
+    {
+      "sequence": 70,
+      "workMs": 5.594999998807907,
+      "responseMs": 38.75499999523163,
+      "applyDelayMs": 0.3799999952316284,
+      "applyAndDrawMs": 40.9750000089407,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 71,
+      "workMs": 5.180000007152557,
+      "responseMs": 36.74500000476837,
+      "applyDelayMs": 0.3699999898672104,
+      "applyAndDrawMs": 37.04000000655651,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 72,
+      "workMs": 4.584999993443489,
+      "responseMs": 36.695000007748604,
+      "applyDelayMs": 0.38499999046325684,
+      "applyAndDrawMs": 37.33500000834465,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 73,
+      "workMs": 4.355000004172325,
+      "responseMs": 42.48999999463558,
+      "applyDelayMs": 0.42500001192092896,
+      "applyAndDrawMs": 38.34499999880791,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 74,
+      "workMs": 3.074999988079071,
+      "responseMs": 37.064999997615814,
+      "applyDelayMs": 0.4300000071525574,
+      "applyAndDrawMs": 37.25999999046326,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    },
+    {
+      "sequence": 75,
+      "workMs": 3.1849999874830246,
+      "responseMs": 28.180000007152557,
+      "applyDelayMs": 0.39499999582767487,
+      "applyAndDrawMs": 35.79500000178814,
+      "events": 0,
+      "replayed": 0,
+      "conditions": [],
+      "trace": [],
+      "eventTypes": [],
+      "center": {
+        "id": "structure-2",
+        "status": "ruined",
+        "hp": 0,
+        "collapseRemaining": 2.9073965457371287e-15
+      },
+      "moved": 19
+    }
+  ],
+  "observerCount": 43,
+  "conditionCount": 2,
+  "simObserverCount": 0,
+  "visibility": [
+    {
+      "visible": false,
+      "at": 49980.090000003576
+    },
+    {
+      "visible": true,
+      "at": 50031.56999999285
+    },
+    {
+      "visible": false,
+      "at": 50322.159999996424
+    },
+    {
+      "visible": true,
+      "at": 50393.439999997616
+    },
+    {
+      "visible": false,
+      "at": 50433.92499999702
+    },
+    {
+      "visible": true,
+      "at": 50473.12000000477
+    },
+    {
+      "visible": false,
+      "at": 55128.715000003576
+    },
+    {
+      "visible": true,
+      "at": 55186.37999999523
+    },
+    {
+      "visible": false,
+      "at": 55401.609999999404
+    },
+    {
+      "visible": true,
+      "at": 55451.58499999344
+    }
+  ],
+  "structuralMarkers": [],
+  "receiver": {
+    "version": 75,
+    "lastEvent": 45
+  },
+  "fence": {
+    "received": 75,
+    "nextEvent": 45,
+    "displayed": 75,
+    "minimum": 69,
+    "pending": 0,
+    "fault": false,
+    "hide": false,
+    "visible": true
+  },
+  "ack": {
+    "version": 75,
+    "acknowledged": 45,
+    "delivered": 45,
+    "pending": 0,
+    "pendingBytes": 2,
+    "maxPendingBytes": 65536
+  },
+  "frames": {
+    "count": 339,
+    "p95": 44.269999995827675,
+    "p99": 50.78999999165535,
+    "max": 64.18000000715256
+  },
+  "renderMs": {
+    "count": 340,
+    "p95": 43.650000005960464,
+    "p99": 49.45000000298023,
+    "max": 63.07500000298023
+  },
+  "gpu": {
+    "samples": 340,
+    "disjoint": 0,
+    "discarded": 0,
+    "elapsed": {
+      "count": 340,
+      "p95": 27.140992,
+      "p99": 29.433568,
+      "max": 34.225248
+    }
+  },
+  "snapshotEqual": true,
+  "eventEqual": true,
+  "holdProbe": {
+    "staleSessionRejected": true,
+    "staleSessionVersion": 5,
+    "staleSessionElapsed": 0.25,
+    "staleSessionPending": 11,
+    "reason": "uncommitted",
+    "sequence": 6,
+    "version": 5,
+    "elapsed": 0.25,
+    "pending": 11,
+    "snapshotEqual": true
+  },
+  "sceneErrors": [],
+  "device": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "scope": "75 sequential advanceReal(.05) requests in a Worker-owned cloned simulation with ordered deltas and acknowledged events; partial positions, heading, elapsed time, structures and acknowledged game/condition records copied to an existing mangrove-islands QA scene with advancing visual delta. All game events are treated as structural; no structure-status scan or synthetic marker is used, and canvas is hidden until the next confirmed draw. Other geometry and movement changes are not detected. One request in flight; no actual game inputs, simulation authority transfer, Rapier, complete visual state, interpolation, temporal safe horizon, rollback, lost messages, production integration or integrated GPU. Renderer and Worker use separate native worlds. A committed rhino attack is configured by the test; damage is applied by game rules. Acknowledgment is deliberately delayed at request six. Wrong-session and uncommitted-version advances are deliberately attempted before presentation."
+}

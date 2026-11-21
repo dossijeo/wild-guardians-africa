@@ -1,0 +1,32 @@
+{
+  "command": [
+    ".cache/tooling/node20.exe",
+    "--test",
+    "tests/native-idle-stroll-contract-home.test.js",
+    "tests/native-idle-completed-home-graphics.test.js",
+    "tests/native-idle-completed-home-control.test.js",
+    "tests/native-idle-completed-home-remote.test.js",
+    "tests/native-idle-current-home-data.test.js",
+    "tests/native-initial-idle-clock.test.js",
+    "tests/native-idle-stroll-restoration-game.test.js",
+    "tests/native-idle-stroll-game.test.js",
+    "tests/native-idle-stroll-remote.test.js",
+    "tests/native-home-route-remote.test.js",
+    "tests/remote-webgpu.test.js"
+  ],
+  "environment": {
+    "WILD_ENGINE_NATIVE_ROUTE_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm",
+    "WILD_ENGINE_SPATIAL_SERVICES_WASM": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\src\\world\\wild-engine\\spatial-savanna.wasm"
+  },
+  "exitCode": 0,
+  "startedAt": "2026-11-20T08:19:10.554Z",
+  "finishedAt": "2026-11-20T08:19:59.334Z",
+  "seconds": 48.779,
+  "log": ".cache/native-post-settlement-home-reconciled-directed.log",
+  "sha256": "82bbe9f2116163766cf7a98a77d5e25c76c509370b6cc36b3f00b88908cd1daf",
+  "tests": 275,
+  "pass": 275,
+  "fail": 0,
+  "cancelled": 0,
+  "skipped": 0
+}

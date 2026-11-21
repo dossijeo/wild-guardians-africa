@@ -1,0 +1,152 @@
+{
+  "runs": [
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 13.274999998509884,
+        "float32": [
+          {
+            "origin": 0,
+            "maxPositionError": 0.0000013765515413150475,
+            "maxMatrixError": 0.0000010543253878836367
+          },
+          {
+            "origin": 10000,
+            "maxPositionError": 0.0006757846695278684,
+            "maxMatrixError": 0.00048816897651704494
+          },
+          {
+            "origin": 1000000,
+            "maxPositionError": 0.04258979491005354,
+            "maxMatrixError": 0.031150043942034245
+          }
+        ],
+        "rawFloat32Bytes": 880
+      },
+      "main": {
+        "initializationMs": 191.0649999976158,
+        "runMs": 691.5949999988079
+      },
+      "worker": {
+        "initializationMs": 210.35999999940395,
+        "runMs": 486.4100000038743,
+        "wallMs": 1058.210000000894
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 13.71000000089407,
+        "float32": [
+          {
+            "origin": 0,
+            "maxPositionError": 0.0000013765515413150475,
+            "maxMatrixError": 0.0000010543253878836367
+          },
+          {
+            "origin": 10000,
+            "maxPositionError": 0.0006757846695278684,
+            "maxMatrixError": 0.00048816897651704494
+          },
+          {
+            "origin": 1000000,
+            "maxPositionError": 0.04258979491005354,
+            "maxMatrixError": 0.031150043942034245
+          }
+        ],
+        "rawFloat32Bytes": 880
+      },
+      "main": {
+        "initializationMs": 180.24500000476837,
+        "runMs": 667.8250000029802
+      },
+      "worker": {
+        "initializationMs": 200.5,
+        "runMs": 474.3149999976158,
+        "wallMs": 1078.835000000894
+      }
+    },
+    {
+      "equal": true,
+      "steps": 900,
+      "phases": [
+        "falling",
+        "rolling",
+        "recovering",
+        "released"
+      ],
+      "recoveriesUsed": [
+        "AuthoredBeastRecovery"
+      ],
+      "boneCount": 21,
+      "peerContacts": 0,
+      "barrierContacts": 0,
+      "reconstruction": {
+        "maxError": 0,
+        "boneCount": 21,
+        "rawFloat64Bytes": 1760,
+        "totalApplyMs": 13.450000002980232,
+        "float32": [
+          {
+            "origin": 0,
+            "maxPositionError": 0.0000013765515413150475,
+            "maxMatrixError": 0.0000010543253878836367
+          },
+          {
+            "origin": 10000,
+            "maxPositionError": 0.0006757846695278684,
+            "maxMatrixError": 0.00048816897651704494
+          },
+          {
+            "origin": 1000000,
+            "maxPositionError": 0.04258979491005354,
+            "maxMatrixError": 0.031150043942034245
+          }
+        ],
+        "rawFloat32Bytes": 880
+      },
+      "main": {
+        "initializationMs": 183.5,
+        "runMs": 675.4099999964237
+      },
+      "worker": {
+        "initializationMs": 197.58500000089407,
+        "runMs": 478.54500000178814,
+        "wallMs": 1061.1199999973178
+      }
+    }
+  ],
+  "scope": "Edge headless, real Rapier, authored recovery clip and geometry-only rigs independently loaded in main thread and browser Worker, flat terrain and repeated hit. One actor. Selected logical fields, physical pose and all bone world matrices compared every step; no Game.tick, WebGL pixels, live GLTF materials or FPS measurement. Timings not comparable as a performance benchmark."
+}

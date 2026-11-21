@@ -1,0 +1,28 @@
+{
+  "scope": "Node WASM replay of one captured raid, reconstructed 5x5 resident chunks, original event order and navigation profiles. Includes JS bridge and result allocations, excludes complete simulation and GPU.",
+  "binarySha256": [
+    "e4dc46ecb3476ce10b4f1e4c1dcc71a14e74675a35c0eff894db72a6c3a42fe5",
+    "fe612cedfae1d8b9c4871e22ff78511f3b050e530745ec5753cb4f40cac11c37"
+  ],
+  "events": 10144,
+  "queries": 3046,
+  "parity": true,
+  "blocks": [
+    {
+      "kind": "baseline",
+      "ms": 866.7638999999999
+    },
+    {
+      "kind": "candidate",
+      "ms": 884.2735000000002
+    },
+    {
+      "kind": "candidate",
+      "ms": 892.0385999999999
+    },
+    {
+      "kind": "baseline",
+      "ms": 867.6512000000002
+    }
+  ]
+}

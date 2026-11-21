@@ -1,0 +1,131 @@
+{
+  "path": ".cache/webgpu-horde-wgsl.json.summary.json",
+  "loss": false,
+  "apiRequests": {
+    "createShaderModule": 115,
+    "createRenderPipeline": 19,
+    "createRenderPipelineAsync": 96
+  },
+  "results": [
+    {
+      "label": "vertex_Material_0",
+      "count": 13,
+      "exact": 13,
+      "normalized": 1,
+      "normalizedGroups": [
+        13
+      ],
+      "example": {
+        "differenceLines": 3,
+        "firstDifferences": [
+          {
+            "line": 15,
+            "first": "struct NodeBuffer_448619Struct {",
+            "second": "struct NodeBuffer_451982Struct {"
+          },
+          {
+            "line": 19,
+            "first": "var<uniform> NodeBuffer_448619 : NodeBuffer_448619Struct;",
+            "second": "var<uniform> NodeBuffer_451982 : NodeBuffer_451982Struct;"
+          },
+          {
+            "line": 347,
+            "first": "\t\tnodeVar70 = NodeBuffer_448619.value[ i ].x;",
+            "second": "\t\tnodeVar70 = NodeBuffer_451982.value[ i ].x;"
+          }
+        ]
+      }
+    },
+    {
+      "label": "vertex_Mane repairs",
+      "count": 13,
+      "exact": 13,
+      "normalized": 1,
+      "normalizedGroups": [
+        13
+      ],
+      "example": {
+        "differenceLines": 3,
+        "firstDifferences": [
+          {
+            "line": 15,
+            "first": "struct NodeBuffer_450327Struct {",
+            "second": "struct NodeBuffer_453690Struct {"
+          },
+          {
+            "line": 19,
+            "first": "var<uniform> NodeBuffer_450327 : NodeBuffer_450327Struct;",
+            "second": "var<uniform> NodeBuffer_453690 : NodeBuffer_453690Struct;"
+          },
+          {
+            "line": 341,
+            "first": "\t\tnodeVar70 = NodeBuffer_450327.value[ i ].x;",
+            "second": "\t\tnodeVar70 = NodeBuffer_453690.value[ i ].x;"
+          }
+        ]
+      }
+    },
+    {
+      "label": "vertex_Warthog oral tissue",
+      "count": 12,
+      "exact": 12,
+      "normalized": 1,
+      "normalizedGroups": [
+        12
+      ],
+      "example": {
+        "differenceLines": 3,
+        "firstDifferences": [
+          {
+            "line": 15,
+            "first": "struct NodeBuffer_456947Struct {",
+            "second": "struct NodeBuffer_458582Struct {"
+          },
+          {
+            "line": 19,
+            "first": "var<uniform> NodeBuffer_456947 : NodeBuffer_456947Struct;",
+            "second": "var<uniform> NodeBuffer_458582 : NodeBuffer_458582Struct;"
+          },
+          {
+            "line": 341,
+            "first": "\t\tnodeVar70 = NodeBuffer_456947.value[ i ].x;",
+            "second": "\t\tnodeVar70 = NodeBuffer_458582.value[ i ].x;"
+          }
+        ]
+      }
+    },
+    {
+      "label": "vertex_Actor eyelid original fur",
+      "count": 13,
+      "exact": 13,
+      "normalized": 1,
+      "normalizedGroups": [
+        13
+      ],
+      "example": {
+        "differenceLines": 3,
+        "firstDifferences": [
+          {
+            "line": 15,
+            "first": "struct NodeBuffer_461893Struct {",
+            "second": "struct NodeBuffer_463562Struct {"
+          },
+          {
+            "line": 19,
+            "first": "var<uniform> NodeBuffer_461893 : NodeBuffer_461893Struct;",
+            "second": "var<uniform> NodeBuffer_463562 : NodeBuffer_463562Struct;"
+          },
+          {
+            "line": 347,
+            "first": "\t\tnodeVar70 = NodeBuffer_461893.value[ i ].x;",
+            "second": "\t\tnodeVar70 = NodeBuffer_463562.value[ i ].x;"
+          }
+        ]
+      }
+    }
+  ],
+  "limitations": [
+    "Normalization compares only NodeBuffer identifiers; equivalent layouts or resource bindings are not established.",
+    "Repeated shader source requests do not prove reuse of complete pipelines."
+  ]
+}

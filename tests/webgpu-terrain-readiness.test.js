@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as THREE from 'three';
+import {createWebGpuTerrainResidency} from '../src/rendering/webgpu-terrain-residency.js';
+import {createConfirmedTerrainReceiver} from '../src/rendering/confirmed-terrain-receiver.js';
+import {createWebGpuPicker,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
+import {pickTerrainStroke} from '../src/rendering/webgpu-terrain-stroke.js';
+
+function chunk(cx=0,cz=0){const positions=new Float32Array(49*49*3),colors=new Float32Array(positions.length),indices=new Uint16Array(48*48*6);for(let z=0;z<49;z++)for(let x=0;x<49;x++){const k=(z*49+x)*3;positions[k]=x-24;positions[k+2]=z-24;}for(let z=0;z<48;z++)for(let x=0;x<48;x++){const k=(z*48+x)*6,a=z*49+x;indices.set([a,a+49,a+1,a+1,a+49,a+50],k);}return {authority:'spatial-wasm',cx,cz,terrain:{positions,colors,indices}};}
+test('confirmed but unadmitted terrain makes clicks and wall strokes incomplete without delaying the ACK',async()=>{
+ const requests=[],acks=[],scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,100),material=new THREE.MeshBasicMaterial({side:THREE.DoubleSide}),admission={prepare(){return new Promise(resolve=>requests.push(resolve));}},residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:admission}),port={postMessage:m=>acks.push(m),start(){},close(){}},terrain=createConfirmedTerrainReceiver({port,session:'s',residency});camera.position.set(0,10,10);camera.lookAt(0,0,0);camera.updateProjectionMatrix();const terrainReady=()=>{const status=terrain.status();return !status.closed&&!status.pending&&!status.presentationPending;},state={},picker=createWebGpuPicker({scene,camera,state,animals:{get:()=>null},cropBounds:()=>[],isTerrainReady:terrainReady,isReady:()=>webGpuPickerReady(state,{terrain:terrain.status()})});
+ port.onmessage({data:{kind:'terrain',session:'s',id:1,sequence:0,revision:1,payload:chunk()}});await Promise.resolve();assert.equal(acks[0].kind,'terrainAck');assert.equal(terrain.status().presentationPending,true);assert.equal(picker.pick({x:0,y:0,terrainOnly:true}).incomplete,true);assert.equal(picker.pick({x:0,y:0}).incomplete,true);await assert.rejects(pickTerrainStroke({scene,camera,samples:[[0,0],[.1,.1]],isReady:terrainReady}),/Terrain changed/);
+ requests[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(terrain.status().presentationPending,false);assert.equal(picker.pick({x:0,y:0,terrainOnly:true}).incomplete,undefined);
+ const stroke=pickTerrainStroke({scene,camera,samples:[[0,0],[.1,.1]],batchSize:1,isReady:terrainReady,yieldBatch:async()=>{port.onmessage({data:{kind:'terrain',session:'s',id:2,sequence:0,revision:2,payload:chunk()}});}});await assert.rejects(stroke,/Terrain changed/);terrain.dispose();residency.dispose();material.dispose();
+});
+
+test('only pending chunk columns intersecting the ray before the hit delay a click',async()=>{
+ const requests=[],scene=new THREE.Scene(),material=new THREE.MeshBasicMaterial(),admission={prepare(){return new Promise(resolve=>requests.push(resolve));}},residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:admission});residency.replace(chunk(2,0),1);await Promise.resolve();
+ const ray=(origin,direction)=>new THREE.Ray(new THREE.Vector3(...origin),new THREE.Vector3(...direction).normalize());assert.equal(residency.visualReady(),false);assert.equal(residency.visualRayReady(ray([0,10,0],[1,0,0]),60),true);assert.equal(residency.visualRayReady(ray([0,10,0],[1,0,0]),100),false);assert.equal(residency.visualRayReady(ray([0,10,0],[0,0,1]),Infinity),true);assert.equal(residency.visualRayReady(ray([100,10,0],[-1,0,0]),1),false);assert.equal(residency.visualRayReady(ray([72,10,24],[0,-1,0]),0),false);assert.equal(residency.visualRayReady(ray([0,10,0],[-1,0,0]),Infinity),true);
+ requests[0]();await new Promise(resolve=>setImmediate(resolve));assert.equal(residency.visualRayReady(ray([0,10,0],[1,0,0]),Infinity),true);residency.dispose();material.dispose();
+});
+
+test('a nearer target remains selectable while a farther chunk is being prepared',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(45,1,.1,1000),material=new THREE.MeshBasicMaterial(),residency=createWebGpuTerrainResidency({scene,material,pipelineAdmission:{prepare(){return new Promise(()=>{});}}});camera.position.set(0,1,10);camera.lookAt(0,1,0);camera.updateProjectionMatrix();const target=new THREE.Group();target.userData.entityId='wall';target.position.set(0,1,0);target.add(new THREE.Mesh(new THREE.BoxGeometry(1,2,1),new THREE.MeshBasicMaterial()));scene.add(target);residency.replace(chunk(0,-2),1);const picker=createWebGpuPicker({scene,camera,state:{},animals:{get:()=>null},cropBounds:()=>[],isReady:(ray,limit)=>residency.visualRayReady(ray,limit)});assert.equal(picker.pick({x:0,y:0}).entityId,'wall');assert.equal(picker.pick({x:0,y:0}).incomplete,undefined);target.visible=false;assert.equal(picker.pick({x:0,y:0}).incomplete,true);residency.dispose();material.dispose();target.children[0].geometry.dispose();target.children[0].material.dispose();
+});

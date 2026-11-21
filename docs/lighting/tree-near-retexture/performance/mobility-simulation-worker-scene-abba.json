@@ -1,0 +1,82 @@
+{
+  "runs": [
+    {
+      "mode": "main",
+      "responseMs": 61.49000000208616,
+      "frames": {
+        "count": 99,
+        "p95": 33.38500000000204,
+        "p99": 33.44499999999971,
+        "max": 66.63500000000204
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 8.929999999701977,
+        "p99": 10.259999997913837,
+        "max": 10.575000002980232
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "sceneErrors": []
+    },
+    {
+      "mode": "worker",
+      "responseMs": 75.03999999910593,
+      "frames": {
+        "count": 99,
+        "p95": 33.37999999999738,
+        "p99": 33.41500000000087,
+        "max": 33.455000000001746
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 9.344999998807907,
+        "p99": 9.929999999701977,
+        "max": 10.939999997615814
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "sceneErrors": []
+    },
+    {
+      "mode": "worker",
+      "responseMs": 82,
+      "frames": {
+        "count": 99,
+        "p95": 33.419999999998254,
+        "p99": 33.44000000000233,
+        "max": 33.455000000001746
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 10.519999995827675,
+        "p99": 10.774999998509884,
+        "max": 10.814999997615814
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "sceneErrors": []
+    },
+    {
+      "mode": "main",
+      "responseMs": 62.37999999523163,
+      "frames": {
+        "count": 99,
+        "p95": 33.38000000000466,
+        "p99": 33.42999999999665,
+        "max": 66.56000000000131
+      },
+      "renderMs": {
+        "count": 100,
+        "p95": 10.160000003874302,
+        "p99": 10.560000002384186,
+        "max": 11.640000000596046
+      },
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "mangroveNetwork": true,
+      "sceneErrors": []
+    }
+  ],
+  "selectedProjectionEqual": true,
+  "scope": "Edge headless; frozen real WorldScene in mangrove islands and independent restored savanna raid simulation. 100 steps are artificially batched. Not an integrated Worker-owned game: displayed world does not consume the simulation projection. No input, audio or gameplay parity, GPU timer or physics manager in the separate simulation."
+}

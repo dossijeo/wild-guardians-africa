@@ -1,0 +1,7 @@
+// One-shot ownership: cancel terminates native work without changing the
+// caller's state, and late messages cannot adopt a cancelled result.
+export function findSpatialStartInWorker(module,state,payload,{signal,workerFactory=()=>new Worker(new URL('./spatial-initial-site-worker.js',import.meta.url),{type:'module'})}={}){
+ if(!(module instanceof WebAssembly.Module)||!state||!payload||typeof workerFactory!=='function')return Promise.reject(TypeError('Invalid initial site request'));
+ if(signal?.aborted)return Promise.reject(new DOMException('Wild Engine cancelled','AbortError'));
+ return new Promise((resolve,reject)=>{let worker,settled=false;const finish=(fn,value)=>{if(settled)return;settled=true;signal?.removeEventListener('abort',abort);worker?.terminate();fn(value);},abort=()=>finish(reject,new DOMException('Wild Engine cancelled','AbortError'));try{worker=workerFactory();worker.onmessage=({data})=>{if(data?.kind==='result'&&data.result?.site)finish(resolve,data.result);else finish(reject,Error(data?.message??'Invalid initial site response'));};worker.onerror=event=>finish(reject,Error(event.message||'Initial site worker failed'));worker.onmessageerror=()=>finish(reject,Error('Initial site worker transfer failed'));signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted){abort();return;}worker.postMessage({module,state,payload});}catch(error){finish(reject,error);}});
+}

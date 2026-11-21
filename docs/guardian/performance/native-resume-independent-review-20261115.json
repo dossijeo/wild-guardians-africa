@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-15",
+  "branch": "codex/guardian-3d-animation",
+  "scope": "Independent review of coordinated deferred native resume admission. Ordinary gameplay migration and integrated A6 acceptance remain outside this validation.",
+  "regression": {
+    "advanceSeconds": 0.02,
+    "compatibleTranslations": 100,
+    "compared": "Entire packed GPU terrain and locomotion data",
+    "file": "tests/native-resume-packed-projection.test.js"
+  },
+  "independentFocusedTests": {
+    "passed": 18,
+    "skipped": 0,
+    "failed": 0,
+    "tests": 18
+  },
+  "longPreparationRegression": {
+    "advanceDuringDrainSeconds": 100,
+    "before": "Native commit succeeded, but the draw owner did not adopt the retained packet",
+    "advanceDuringPreparationSeconds": 100,
+    "reproduction": ".cache/review-deferred-coverage.test.mjs",
+    "preparedCoverage": "Finite original resource end",
+    "passed": 1,
+    "after": "Passed unchanged reproduction",
+    "selectedTests": 1
+  },
+  "hardware": "native-resume-independent-review-hardware-20261115.json",
+  "sourceHashesAtReviewCompletion": {
+    "src/world/native-resume-attestation.js": "633a5171066650cebc37155d5d254c73e6dde115a477b427e47488e27ec634f4",
+    "src/world/wild-engine/spatial-intent-bridge.js": "3c73cc748f37e5c30a4baa25e1955905095b1a608ba064cbabe38a406313959b",
+    "src/world/wild-engine/spatial-gate-crossing-api.inc": "bdb6cb4bf5df49adf504ef0aa475267e88c063f03bd54addeac3bb3a508bee66",
+    "src/world/wild-engine/spatial-savanna.wasm": "09c115e96e64379572f0f8e8a0f95e1f72fcbb6c73308ff4f65c54ea033ff23d",
+    "src/rendering/remote-webgpu-host.js": "3ec27ed8ddd81f2eee661f218cad8e41415ac0ff2f497c98c11d87e4b0e3aeda",
+    "src/rendering/native-gpu-motion.js": "e2ca4cec6730ff69dda0c27fe7b3f194faaf60f7469a87ce7691e488d2e84dc1",
+    "src/rendering/webgpu-world-surface.js": "62b1714f457cef31e01281dbb9fc130c1b4d470ebf38eac6e6b1aa818d54cbc9",
+    "tests/native-resume-packed-projection.test.js": "c2bd2ba35b2b6f239977758e92be504fb307f46d2902f1a39398f574c820eff2"
+  }
+}

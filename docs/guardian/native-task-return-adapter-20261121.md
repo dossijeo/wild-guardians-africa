@@ -1,0 +1,39 @@
+# Fin de turno de Task y retorno a Home
+
+El productor ordinario reconoce una Task14 en movimiento al vencer el turno y solicita la parada 25. El trabajador conserva la tarea, la ruta y su cuerpo mientras se preparan los gráficos. El recibo adquirido detiene el cuerpo y permite liberar la tarea y solicitar Home18. Home19 retira ese mismo cuerpo cuando llega a su vivienda. [Plan integrado](integrated-gpu-migration-plan-20261104.md) · [Criterios de A6](A6-CHECKLIST.md).
+
+## Frontera del turno
+
+Game evalúa la guarda de retorno con el mismo tiempo canónico que aplica al ejecutar el paso. La captura a 250 s fallaba antes de avanzar. La captura a 300 s sumaba 0,05 a 299,9499999999955, quedaba por debajo de la guarda y luego redondeaba a 300 para ejecutar el retorno heredado. Ahora los dos casos conservan la ejecución de Task hasta adquirir la parada. [Reproducciones a 250 y 300 s](native-task-stop-home-graphics-20261120.md).
+
+La autoridad publica los avisos de planificación y confirma el reloj causal de la declaración Home antes de que el productor intente admitir Home18. La historia de recursos acepta la frontera 25 con un delta de terreno vacío y Surface mantiene la guarda que exige la parada preparada. El motor WASM, el propietario de dibujo y el productor existentes realizan cada adquisición. La corrección de la señal de terreno conserva las regiones de vegetación durante estas paradas. [Conservación de la vegetación](far-structure-revision-retention-20261121.md).
+
+La implementación de OpenRA en `release-20250330` conserva una actividad cancelada hasta que `TickOuter` completa su salida. `Move.Tick` confirma la cancelación cuando el móvil puede quedarse en su celda. Wild Guardians aplica la misma transición sobre el propietario activo y acredita el punto de entrega con el recibo de parada 25. [Activity.Cancel y TickOuter](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Game/Activities/Activity.cs#L87-L140) · [Estado de cancelación](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Game/Activities/Activity.cs#L183-L194) · [Move.Tick](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Activities/Move/Move.cs#L130-L140).
+
+## Validación de autoridad
+
+```powershell
+.cache/tooling/node20.exe --test tests/native-task-return-authority.test.js tests/native-task-route-stop-source.test.js tests/native-task-route-stop-admission.test.js
+```
+
+Las 33 pruebas dirigidas pasan. La prueba ordinaria valida los cuatro perfiles con WASM y los dos puertos reales, y usa una cola de dibujo determinista. Retiene las respuestas de la parada y de Home para confirmar, respectivamente, el movimiento con la misma tarea y la pose fija mientras se espera el retorno. También comprueba la frontera fraccionaria, el rechazo de una preparación y la retirada después de Home. Los controles de fuente conservan su cobertura WASM autónoma y pthread. Pasaron las 629 pruebas de la selección ampliada y la compilación Vite de producción. [Pruebas de autoridad](../../tests/native-task-return-authority.test.js).
+
+## Worker y GPU física
+
+En NVIDIA Turing, el checkout integrado completó el retorno de `olderMale`, `olderFemale` y `youngFemale`. `youngMale` completó el mismo recorrido al servir la adaptación candidata en los Workers de producto. Los cuatro casos mantuvieron el cuerpo 1 en movimiento mientras la respuesta gráfica de la parada estuvo retenida. El Host dibujó Task14 con el ticket 5, la parada con el 7 y Home18 con el 9. El actor conservó la raíz y sus 33 o 36 propietarios de geometría, según el perfil. Home19 retiró ese cuerpo y emitió el dibujo del ticket 11. Los cuatro recorridos drenaron el consumidor sin errores de GPU. [Recibos de los cuatro perfiles](performance/native-task-stop-home-graphics-20261120/ordinary-shift-task-stop-home-20261121.json).
+
+## Arranque Idle20
+
+En cuatro ejecuciones NVIDIA, la primera solicitud de Idle20 pidió como mínimo la publicación visual 2 y Surface empezó a esperar en la 0. En tres ejecuciones Surface continuó al llegar a la 9, entre 8,53 y 9,30 s después de empezar la espera, y en una seguía esperando cuando venció el plazo. Una ejecución de `olderFemale` recibió READY en 9,42 s y completó Task y Home. Las otras tres agotaron 10 s antes de READY, incluidas una con el arranque ordinario de `youngMale` y dos con snapshots espaciados en pausa. Los tres journals seguían por debajo de saturación. Astra recibió los tiempos para identificar qué retiene la publicación visual durante el arranque. [Trazas de publicación y preparación de Idle20](performance/native-task-stop-home-graphics-20261120/idle20-startup-publication-wait.json).
+
+Una traza posterior localizó la espera en la barrera de terreno de la línea temporal visual. Las publicaciones 1 y 2 ya estaban encoladas cuando salió la solicitud. El terreno local seguía pendiente incluso después de recibir la marca de completitud. Se confirmó la primera publicación a los 7,67 s y la segunda a los 11,82 s, tras vencer el plazo. El recibo conserva ambos bloqueos de terreno y el instante de confirmación.
+
+Las sondas dentro de la preparación de terreno sitúan la mayor parte de la espera en los tickets del coordinador. En una traza, cuatro de las 18 raíces del lote inicial requirieron entre 1,20 y 2,12 s cada una y las otras 14 tardaron como máximo 9,9 ms cada una. El siguiente lote contenía una sola región nueva. Su ticket de terreno tardó 3,59 s y el de bioma, 3 ms. Three r180 conserva los stages por código WGSL y reutiliza el pipeline por su clave. Esa implementación orienta el siguiente contraste entre caché, preparación de recursos y espera asíncrona. Los tiempos medidos son de ticket completo. [Código de Pipelines](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Pipelines.js#L159-L215) · [Creación asíncrona WebGPU](https://github.com/mrdoob/three.js/blob/r180/src/renderers/webgpu/utils/WebGPUPipelineUtils.js#L217-L233).
+
+Una traza del planificador de admisión separó la espera en cola del trabajo del ticket. El chunk `2,0` esperó 3.510,4 ms para entrar en ejecución en un ticket total de 3.512,5 ms. Las primeras cuatro raíces del lote inicial también esperaron entre 1,09 y 2,13 s antes de entrar. Una se encoló con otras 117 solicitudes pendientes. El planificador, que ya admite dos clases de prioridad, concentra la espera medida. Falta identificar qué trabajo precede a esas solicitudes y validar cualquier cambio de orden sin degradar el dibujo activo.
+
+## Llegada con la parada pendiente
+
+En NVIDIA Turing, una Task de `olderFemale` alcanzó el destino mientras se retenía la respuesta READY de la parada 25. La última publicación conservó el cuerpo 1 en movimiento a 21,50 s de tiempo transcurrido. Al cruzar el fin de ruta de 21,507 s, Game lanzó `Expired Task lost its executed moving source`. Solo se dibujaron las adquisiciones Idle20 y Task14. Astra recibió la reproducción para resolver la continuación hacia Home desde la ruta completada. [Captura de llegada durante la preparación](performance/native-task-stop-home-graphics-20261120/ordinary-shift-arrival-during-stop.json).
+
+ También quedan los motores de puerta y los retornos por cambios de centro o incursión. La aceptación de 60 FPS sigue abierta.

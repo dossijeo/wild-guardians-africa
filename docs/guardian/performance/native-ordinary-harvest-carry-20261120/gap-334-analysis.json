@@ -1,0 +1,73 @@
+{
+  "gap": {
+    "gap": 334.099853515625,
+    "before": 1795148760196.11,
+    "after": 1795148760530.21,
+    "beforeTicket": 13,
+    "ticket": 13
+  },
+  "ready": {
+    "at": 1795148756557.3,
+    "ticket": 12
+  },
+  "blocks": [
+    {
+      "kind": "birth-block-end",
+      "stage": "consequence-ready",
+      "start": 1795148756591.555,
+      "end": 1795148758391.575,
+      "drawFrames": 54,
+      "confirmedPublications": 88,
+      "clockAdvance": 1.7000000000002657,
+      "bornProgress": 0,
+      "maxGapMs": 33.489990234375
+    },
+    {
+      "kind": "birth-block-end",
+      "stage": "consequence-commit",
+      "start": 1795148758426.345,
+      "end": 1795148760226.355,
+      "drawFrames": 54,
+      "confirmedPublications": 87,
+      "clockAdvance": 1.7000000000002657,
+      "bornProgress": 1.785990427610404,
+      "maxGapMs": 33.455078125
+    }
+  ],
+  "commit": {
+    "at": 1795148760226.615,
+    "ticket": 13
+  },
+  "opportunityCoverage": {
+    "count": 864,
+    "first": 1795148731562.62,
+    "last": 1795148760670.12
+  },
+  "opportunities": [
+    {
+      "at": 1795148760196.11,
+      "intervalMs": 33.4599609375,
+      "outcome": "submitted",
+      "holdId": null,
+      "sequence": 276
+    },
+    {
+      "at": 1795148760530.205,
+      "intervalMs": 334.094970703125,
+      "outcome": "submitted",
+      "holdId": null,
+      "sequence": 277
+    }
+  ],
+  "consumerMetrics": {
+    "nativeIntentControlAppliedAt": 1795148758443.6,
+    "nativeIntentControlAppliedSequence": 11,
+    "nativeCausalClockAppliedAt": 1795148760583.385,
+    "nativeCausalClockAppliedSequence": 1955,
+    "nativeMutationQuiescedAt": 1795148758438.435,
+    "nativeMutationReleasedAt": 1795148758446.52,
+    "nativeMutationHold": null,
+    "nativeMutationFloor": 46.860000000001854,
+    "nativeMutationEpoch": 6
+  }
+}

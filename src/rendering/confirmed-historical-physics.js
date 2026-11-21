@@ -1,0 +1,4 @@
+const validTransform=a=>Array.isArray(a)&&a.length===10&&a.every(Number.isFinite);
+const sameTransform=(a,b)=>validTransform(a)&&validTransform(b)&&a.every((value,i)=>Math.abs(value-b[i])<=1e-10);
+export function sameHistoricalPhysicsPose(a,b){return a?.active===true&&b?.active===true&&a.actorId===b.actorId&&a.visualTransition===undefined&&b.visualTransition===undefined&&sameTransform(a.root,b.root)&&sameTransform(a.model,b.model)&&Array.isArray(a.bones)&&Array.isArray(b.bones)&&a.bones.length===b.bones.length&&a.bones.every((bone,i)=>bone.name===b.bones[i]?.name&&sameTransform(bone.transform,b.bones[i].transform));}
+export function discreteHistoricalPhysicsSample(samples,elapsed){if(!Array.isArray(samples)||!samples.length||!Number.isFinite(elapsed))throw TypeError('Invalid historical physics playback');let index=0;while(index+1<samples.length&&samples[index+1].at<=elapsed)index++;return index;}

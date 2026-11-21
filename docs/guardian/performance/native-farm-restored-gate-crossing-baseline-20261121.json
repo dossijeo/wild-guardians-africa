@@ -1,0 +1,102 @@
+{
+  "revision": "f8b3bb692093f23cc4933fe4dc0557d1bbc6b323",
+  "scope": "Legal persisted gate and a Farm route that requests its motor. This run stopped before the route drew.",
+  "fixture": {
+    "actor": "worker-900011",
+    "start": {
+      "x": -14.5,
+      "z": 11.799999999999999
+    },
+    "villageEntry": {
+      "x": -14.5,
+      "z": 11.799999999999999
+    },
+    "destination": {
+      "x": -5.800000000000001,
+      "z": 0.2
+    },
+    "gate": {
+      "id": "structure-1000000",
+      "x": -11.8,
+      "z": 8.2,
+      "yaw": 0
+    },
+    "regions": [
+      [
+        -1,
+        -1
+      ],
+      [
+        0,
+        -1
+      ],
+      [
+        1,
+        -1
+      ],
+      [
+        -1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        -1,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        -1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ]
+  },
+  "authorityPreparation": {
+    "phase": "preparing",
+    "distanceMetres": 18.753423328354586,
+    "gateIds": [
+      1000000
+    ],
+    "committed": false
+  },
+  "hosted": {
+    "browser": "Edge",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "elapsed": 10,
+    "publication": 31,
+    "admission": "pending-farm-arrival-resources",
+    "stage": "original Farm acquisition",
+    "initialDraw": null,
+    "events": [
+      "production-visual-checkpoint"
+    ],
+    "resourceError": "Error: Native gate motor wall not resident",
+    "outerError": "Error: Worker command not admitted: failed"
+  },
+  "diagnosticSha256": "a084876a9f72406a224dd6fcf37651f4bdfccc66d33e182c8c270d68a6259428"
+}

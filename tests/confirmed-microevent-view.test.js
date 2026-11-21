@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {newGame} from '../src/simulation/game.js';
+import {createPlant} from '../src/simulation/crops.js';
+import {projectConfirmedActorAudio} from '../src/simulation/confirmed-actor-audio.js';
+import {microState} from '../src/microevents/economy.js';
+import {EVENTS,compatible,eligibleAnchor} from '../src/microevents/definitions.js';
+import {projectConfirmedMicroeventFacts,applyConfirmedMicroeventView,microeventCommandCount} from '../src/microevents/confirmed-view.js';
+
+test('compact worker microevent view retains anchor and compatibility decisions',()=>{const state=newGame({seed:712}),plant=createPlant('crop','platano',1,2,'center');state.plants.push(plant);state.structures.push({id:'wall',kind:'wall',material:'empalizada',status:'intact',hp:20,x:3,z:4});microState(state);state.commandIds.push('one');const facts=projectConfirmedMicroeventFacts(state),view=applyConfirmedMicroeventView({},projectConfirmedActorAudio(state),facts);assert.equal(microeventCommandCount(view),microeventCommandCount(state));for(const def of Object.values(EVENTS)){assert.equal(compatible(def,view),compatible(def,state));const original=def.anchor==='wood'?state.structures.at(-1):plant,projected=def.anchor==='wood'?view.structures.at(-1):view.plants.at(-1);assert.equal(eligibleAnchor(def,projected),eligibleAnchor(def,original),def.id);}assert.notEqual(view.microevents,state.microevents);view.microevents.income=123;assert.notEqual(state.microevents.income,123);});
+test('view updates keep identity, command counter and confirmed economic facts',()=>{const state=newGame({seed:713}),view={};applyConfirmedMicroeventView(view,projectConfirmedActorAudio(state),projectConfirmedMicroeventFacts(state));assert.equal(view.microevents,undefined);state.commandIds.push('action');const memory=microState(state);memory.rewards=2;const result=applyConfirmedMicroeventView(view,projectConfirmedActorAudio(state),projectConfirmedMicroeventFacts(state));assert.equal(result,view);assert.equal(microeventCommandCount(view),1);assert.equal(view.microevents.rewards,2);assert.throws(()=>applyConfirmedMicroeventView(view,projectConfirmedActorAudio(state),{version:1,seed:state.seed,commandCount:-1,microevents:null}),/Invalid/);});

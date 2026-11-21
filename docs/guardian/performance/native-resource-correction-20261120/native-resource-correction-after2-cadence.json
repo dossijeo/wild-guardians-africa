@@ -1,0 +1,193 @@
+{
+  "version": 1,
+  "scope": "Host draw attempts and browser callbacks, not GPU execution time or physical scanout",
+  "owner": {
+    "pid": 8904,
+    "tid": 3380
+  },
+  "clockOffsetMs": 1794583626527.902,
+  "capture": {
+    "mode": "timing",
+    "clock": "browser-performance-epoch-ms",
+    "visualEvidence": false,
+    "checkpoints": [
+      {
+        "label": "ordinary-farm-birth-cancel-after-task",
+        "mode": "timing",
+        "startedAt": 1795180341226.925,
+        "image": null,
+        "finishedAt": 1795180341228.84
+      },
+      {
+        "label": "ordinary-post-settlement-next-task",
+        "mode": "timing",
+        "startedAt": 1795180369807.12,
+        "image": null,
+        "finishedAt": 1795180369809.3901
+      }
+    ]
+  },
+  "frameSamples": 2464,
+  "hostCallbacks": 2493,
+  "medianHostCallbackIntervalMs": 33.33203125,
+  "estimatedCallbackHz": 30.001171920778155,
+  "medianGpuVSyncTaskIntervalMs": 33.3330078125,
+  "maxHostDrawCpuMs": 8.929931640625,
+  "maxHostSubmissionIntervalMs": 51,
+  "releaseTriggeredFrames": 3,
+  "recordedOpportunities": 1717,
+  "opportunityCoverage": {
+    "firstAt": 1795180304580.315,
+    "lastAt": 1795180369580.665
+  },
+  "gaps": [
+    {
+      "at": 1795180289497.845,
+      "intervalMs": 51,
+      "drawMs": 0.18017578125,
+      "sequence": 2,
+      "trigger": "raf",
+      "start": 1795180289446.845,
+      "nominalRefreshPeriods": 1.530059767959686,
+      "hostCallbacksInsideGap": 0,
+      "hostGuardOutcomes": [],
+      "captureCheckpoints": [],
+      "gpuProcessTasks": [
+        {
+          "name": "Scheduler::RunTask",
+          "thread": "CrGpuMain",
+          "at": 1795180289422.198,
+          "durationMs": 68.689,
+          "threadCpuMs": 67.168,
+          "overlapMs": 44.0419921875
+        },
+        {
+          "name": "Scheduler::RunTask",
+          "thread": "CrGpuMain",
+          "at": 1795180289490.902,
+          "durationMs": 4.486,
+          "threadCpuMs": 4.357,
+          "overlapMs": 4.486083984375
+        },
+        {
+          "name": "Scheduler::RunTask",
+          "thread": "CrGpuMain",
+          "at": 1795180289495.4082,
+          "durationMs": 1.779,
+          "threadCpuMs": 1.364,
+          "overlapMs": 1.779052734375
+        },
+        {
+          "name": "Scheduler::RunTask",
+          "thread": "CrGpuMain",
+          "at": 1795180289497.2551,
+          "durationMs": 0.431,
+          "threadCpuMs": 0.364,
+          "overlapMs": 0.430908203125
+        }
+      ],
+      "hostTasks": [
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289497.76,
+          "durationMs": 0.033,
+          "threadCpuMs": 0.026,
+          "overlapMs": 0.032958984375
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289497.2632,
+          "durationMs": 0.028,
+          "threadCpuMs": 0.025,
+          "overlapMs": 0.028076171875
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289447.2932,
+          "durationMs": 0.005,
+          "threadCpuMs": 0.003,
+          "overlapMs": 0.0048828125
+        },
+        {
+          "name": "ThreadControllerImpl::RunTask",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289447.302,
+          "durationMs": 0.004,
+          "threadCpuMs": 0.002,
+          "overlapMs": 0.00390625
+        }
+      ],
+      "correlatedEvents": [
+        {
+          "name": "RunMicrotasks",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289446.76,
+          "durationMs": 0.524,
+          "threadCpuMs": 0.385,
+          "overlapMs": 0.43896484375
+        },
+        {
+          "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+          "thread": "CrGpuMain",
+          "at": 1795180289497.4302,
+          "durationMs": 0.251,
+          "threadCpuMs": 0.19,
+          "overlapMs": 0.2509765625
+        },
+        {
+          "name": "FireAnimationFrame",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289446.769,
+          "durationMs": 0.295,
+          "threadCpuMs": 0.269,
+          "overlapMs": 0.218994140625
+        },
+        {
+          "name": "FunctionCall",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289446.802,
+          "durationMs": 0.258,
+          "threadCpuMs": 0.245,
+          "overlapMs": 0.215087890625,
+          "function": "present",
+          "url": "http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795180149588"
+        },
+        {
+          "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+          "thread": "CrGpuMain",
+          "at": 1795180289497.433,
+          "durationMs": 0.101,
+          "threadCpuMs": 0.049,
+          "overlapMs": 0.10107421875
+        },
+        {
+          "name": "RunMicrotasks",
+          "thread": "DedicatedWorker thread",
+          "at": 1795180289497.7952,
+          "durationMs": 0.544,
+          "threadCpuMs": 0.296,
+          "overlapMs": 0.0498046875
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "An absent Host submission is not proof of a slow GPU.",
+    "Callbacks inside gaps need the Host guard outcome for causal attribution.",
+    "Trace/screenshot events are correlations, not proof that capture caused a gap.",
+    "A 30 Hz display has a nominal 33.33 ms refresh period; no timer or counter change can remove it."
+  ],
+  "inputs": {
+    "receipt": {
+      "path": ".cache/native-resource-correction-after2.json",
+      "sha256": "833305851f33412261f524e32efd08b843f98bd2ae6484af269be2d35de3dfb9"
+    },
+    "trace": {
+      "path": ".cache/native-resource-correction-after2.trace.json",
+      "sha256": "3f13625bc43a1c421b622c88b4dc14a0a592d9f75f006bdea89a1e417fe6d23d"
+    }
+  }
+}

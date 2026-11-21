@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "codec": "EXT_meshopt_compression (v0, lossless, no reorder)",
+  "textures": "EXT_texture_webp (default color quality 90, ORM 95, normals lossless, alpha 100, max 2048; reviewed color overrides in embedded-color-recipes.json)",
+  "records": [
+    {
+      "source": "C:\\tmp\\guardian-faces\\hyena-lids-v9.glb",
+      "runtime": "C:\\tmp\\guardian-faces\\hyena-face-web.glb",
+      "sourceSha256": "f9fd8a4397066563bbd9464dc7ce1a1f4ca23862e2195b58bb81af6bed731164",
+      "runtimeSha256": "b5f34cfdd9698fe73b2a5492ca934fcba5821eba72c5cd9874a556b015bf30a2",
+      "beforeBytes": 59908736,
+      "afterBytes": 4752800,
+      "compressedViews": 464,
+      "images": [
+        {
+          "index": 0,
+          "beforeBytes": 9801952,
+          "afterBytes": 2301352,
+          "before": [
+            4096,
+            4096
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 95,
+          "lossless": true,
+          "role": "normal",
+          "alphaQuality": 100
+        },
+        {
+          "index": 1,
+          "beforeBytes": 41388637,
+          "afterBytes": 683022,
+          "before": [
+            8192,
+            8192
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": false,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        },
+        {
+          "index": 2,
+          "beforeBytes": 6559054,
+          "afterBytes": 491702,
+          "before": [
+            2048,
+            2048
+          ],
+          "after": [
+            2048,
+            2048
+          ],
+          "alpha": true,
+          "quality": 90,
+          "lossless": false,
+          "role": "color",
+          "alphaQuality": 100
+        }
+      ],
+      "geometryTolerance": 0,
+      "animationTolerance": 0
+    }
+  ]
+}

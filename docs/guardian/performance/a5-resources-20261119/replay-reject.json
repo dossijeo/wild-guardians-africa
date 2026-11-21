@@ -1,0 +1,23 @@
+{
+  "source": "C:\\Users\\Gabriel\\source\\repos\\wild-guardians-africa\\docs\\guardian\\performance\\a5-resources-20261119\\rejected-lod-pilot.json.gz",
+  "sha256": "9ec48164365b2aa567239aa08b44f4abf786b153f0d3a712cbc40be21f117561",
+  "result": {
+    "accepted": false,
+    "violations": [
+      "unchanged-source-content-local"
+    ],
+    "reuse": {
+      "accepted": true,
+      "violations": [],
+      "residentDataRows": 15423,
+      "referenceWindows": 2,
+      "retainedRecoveries": 2,
+      "producerResourcesCreated": 26666,
+      "compiles": 907,
+      "scope": "Settled paused actual-main reuse; not cold allocation minimality, native WALK integration or cadence acceptance."
+    },
+    "privateBuffersChecked": 10494,
+    "attributedGeometryBuffersChecked": 10656,
+    "scope": "A–F instrumented component evidence; no gate closure, driver-memory bound, minimum allocation or cadence claim."
+  }
+}

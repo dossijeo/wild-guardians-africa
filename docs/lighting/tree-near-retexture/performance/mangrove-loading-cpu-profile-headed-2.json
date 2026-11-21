@@ -1,0 +1,1267 @@
+{
+  "note": "Sampling profiler; performance.now anchor after profiler start; windows widened by 10 ms. Samples are attribution clues, not exact task durations.",
+  "headed": true,
+  "visibility": [
+    {
+      "event": "record-start",
+      "at": 1556.074999988079,
+      "visibility": "visible",
+      "focused": true
+    },
+    {
+      "event": "record-end",
+      "at": 71091.77499999106,
+      "visibility": "visible",
+      "focused": true
+    }
+  ],
+  "renderer": "ANGLE (NVIDIA, NVIDIA GeForce GTX 1660 (0x00002184) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "frames": {
+    "count": 1952,
+    "p95": 33.400000000001455,
+    "p99": 99.92499999999927,
+    "max": 933.4049999999988
+  },
+  "wallFrames": {
+    "count": 1952,
+    "p95": 35.13000001013279,
+    "p99": 108.06499999761581,
+    "max": 961.7099999934435
+  },
+  "sampleCount": 37233,
+  "spikes": [
+    {
+      "at": 41746.039999991655,
+      "wallInterval": 961.7099999934435,
+      "rafInterval": 933.4049999999988,
+      "samples": 581,
+      "self": [
+        {
+          "functionName": "(idle) :0",
+          "samples": 385
+        },
+        {
+          "functionName": "texSubImage2D http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:37319",
+          "samples": 62
+        },
+        {
+          "functionName": "update http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:33966",
+          "samples": 23
+        },
+        {
+          "functionName": "renderObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36700",
+          "samples": 10
+        },
+        {
+          "functionName": "publish http://127.0.0.1:5175/src/app/loading-progress-qa.js:7",
+          "samples": 8
+        },
+        {
+          "functionName": "updateMatrixWorld http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:8325",
+          "samples": 8
+        },
+        {
+          "functionName": "projectObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40593",
+          "samples": 7
+        },
+        {
+          "functionName": "snapshot http://127.0.0.1:5175/src/app/loading-downloads.js:21",
+          "samples": 6
+        },
+        {
+          "functionName": "(garbage collector) :0",
+          "samples": 5
+        },
+        {
+          "functionName": "compose http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:7082",
+          "samples": 5
+        },
+        {
+          "functionName": "onFirstUse http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:35313",
+          "samples": 5
+        },
+        {
+          "functionName": "unionDuration http://127.0.0.1:5175/src/app/loading-downloads.js:9",
+          "samples": 4
+        },
+        {
+          "functionName": "multiplyMatrices http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:6652",
+          "samples": 4
+        },
+        {
+          "functionName": "renderScreenPreloadBatched http://127.0.0.1:5175/src/rendering/screen-preload.js:23",
+          "samples": 4
+        },
+        {
+          "functionName": "(program) :0",
+          "samples": 3
+        }
+      ],
+      "inclusive": [
+        {
+          "functionName": "(root) :0",
+          "samples": 581
+        },
+        {
+          "functionName": "(idle) :0",
+          "samples": 385
+        },
+        {
+          "functionName": "renderObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36700",
+          "samples": 224
+        },
+        {
+          "functionName": "renderScreenPreloadBatched http://127.0.0.1:5175/src/rendering/screen-preload.js:23",
+          "samples": 173
+        },
+        {
+          "functionName": "loadingSyncWitness http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:2",
+          "samples": 162
+        },
+        {
+          "functionName": "withScreenTarget http://127.0.0.1:5175/src/rendering/screen-target.js:5",
+          "samples": 161
+        },
+        {
+          "functionName": "WebGLRenderer.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40506",
+          "samples": 160
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:12",
+          "samples": 157
+        },
+        {
+          "functionName": "renderScreenPreload http://127.0.0.1:5175/src/rendering/screen-preload.js:10",
+          "samples": 157
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:40",
+          "samples": 157
+        },
+        {
+          "functionName": "render http://127.0.0.1:5175/src/rendering/native-shadow.js:39",
+          "samples": 114
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40314",
+          "samples": 106
+        },
+        {
+          "functionName": "setProgram http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40855",
+          "samples": 102
+        },
+        {
+          "functionName": "renderObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40748",
+          "samples": 68
+        },
+        {
+          "functionName": "renderObjects http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40732",
+          "samples": 68
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 20974.219999998808,
+          "end": 42428.76999999583,
+          "duration": 21454.54999999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 40027.26999999583,
+          "end": 42380.589999988675,
+          "duration": 2353.3199999928474,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 40804.484999999404,
+          "end": 41756.50999999046,
+          "duration": 952.0249999910593,
+          "budgetElapsed": 18.930000007152557,
+          "budgetCpu": 16.974999949336052,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 40769.58499999344,
+          "end": 40785.55499999225,
+          "duration": 15.969999998807907,
+          "budgetElapsed": 17.385000005364418,
+          "budgetCpu": 16.570000007748604,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 41167.964999988675,
+          "end": 41175.26999999583,
+          "duration": 7.305000007152557,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40803.11999998987,
+          "end": 40804.36999998987,
+          "duration": 1.25,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40799.07999999821,
+          "end": 40800.14499999583,
+          "duration": 1.0649999976158142,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40797.839999988675,
+          "end": 40798.75499999523,
+          "duration": 0.9150000065565109,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40785.80499999225,
+          "end": 40786.69999998808,
+          "duration": 0.8949999958276749,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "presentation-diorama-render",
+          "start": 40784.47999998927,
+          "end": 40785.34499999881,
+          "duration": 0.8650000095367432,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        }
+      ]
+    },
+    {
+      "at": 3686.5349999964237,
+      "wallInterval": 688.2049999982119,
+      "rafInterval": 400.02,
+      "samples": 404,
+      "self": [
+        {
+          "functionName": "(idle) :0",
+          "samples": 238
+        },
+        {
+          "functionName": "onFirstUse http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:35313",
+          "samples": 36
+        },
+        {
+          "functionName": "projectedBounds http://127.0.0.1:5175/menu/native.js:364",
+          "samples": 19
+        },
+        {
+          "functionName": "shaderProgram http://127.0.0.1:5175/menu/native.js:3",
+          "samples": 17
+        },
+        {
+          "functionName": "makeTexture http://127.0.0.1:5175/menu/native.js:358",
+          "samples": 15
+        },
+        {
+          "functionName": "(program) :0",
+          "samples": 14
+        },
+        {
+          "functionName": "transform http://127.0.0.1:5175/menu/native.js:2",
+          "samples": 9
+        },
+        {
+          "functionName": "setFromBufferAttribute http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:5068",
+          "samples": 4
+        },
+        {
+          "functionName": "configureResolution http://127.0.0.1:5175/menu/native.js:363",
+          "samples": 4
+        },
+        {
+          "functionName": "computeBoundingSphere http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:11260",
+          "samples": 4
+        },
+        {
+          "functionName": "s http://127.0.0.1:5175/menu/native.js:3",
+          "samples": 2
+        },
+        {
+          "functionName": "prepareBridges http://127.0.0.1:5175/src/rendering/crop-batch.js:164",
+          "samples": 2
+        },
+        {
+          "functionName": "(garbage collector) :0",
+          "samples": 2
+        },
+        {
+          "functionName": "cloneUniforms http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:12023",
+          "samples": 2
+        },
+        {
+          "functionName": "computeHome http://127.0.0.1:5175/menu/native.js:365",
+          "samples": 2
+        }
+      ],
+      "inclusive": [
+        {
+          "functionName": "(root) :0",
+          "samples": 404
+        },
+        {
+          "functionName": "(idle) :0",
+          "samples": 238
+        },
+        {
+          "functionName": "render http://127.0.0.1:5175/src/rendering/native-shadow.js:39",
+          "samples": 80
+        },
+        {
+          "functionName": "renderObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36700",
+          "samples": 76
+        },
+        {
+          "functionName": "init http://127.0.0.1:5175/menu/native.js:680",
+          "samples": 71
+        },
+        {
+          "functionName": "prepare http://127.0.0.1:5175/src/rendering/loading-diorama.js:61",
+          "samples": 67
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/loading-diorama.js:98",
+          "samples": 60
+        },
+        {
+          "functionName": "withScreenTarget http://127.0.0.1:5175/src/rendering/screen-target.js:5",
+          "samples": 59
+        },
+        {
+          "functionName": "WebGLRenderer.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40506",
+          "samples": 52
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:12",
+          "samples": 52
+        },
+        {
+          "functionName": "renderScreenPreload http://127.0.0.1:5175/src/rendering/screen-preload.js:10",
+          "samples": 52
+        },
+        {
+          "functionName": "loadingSyncWitness http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:2",
+          "samples": 52
+        },
+        {
+          "functionName": "sync http://127.0.0.1:5175/src/rendering/loading-diorama.js:62",
+          "samples": 52
+        },
+        {
+          "functionName": "WebGLShadowMap.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36553",
+          "samples": 39
+        },
+        {
+          "functionName": "render http://127.0.0.1:5175/src/rendering/asset-shadows.js:41",
+          "samples": 39
+        }
+      ],
+      "spans": [
+        {
+          "label": "diorama-compile-maize",
+          "start": 2762.1649999916553,
+          "end": 3327.420000001788,
+          "duration": 565.2550000101328,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-upload-maize-soil",
+          "start": 3327.5349999964237,
+          "end": 3685.2999999970198,
+          "duration": 357.76500000059605,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "diorama-compile-sky",
+          "start": 3685.344999998808,
+          "end": 3824.015000000596,
+          "duration": 138.67000000178814,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    },
+    {
+      "at": 42284.37999999523,
+      "wallInterval": 538.3400000035763,
+      "rafInterval": 566.6450000000041,
+      "samples": 301,
+      "self": [
+        {
+          "functionName": "(idle) :0",
+          "samples": 284
+        },
+        {
+          "functionName": "publish http://127.0.0.1:5175/src/app/loading-progress-qa.js:7",
+          "samples": 5
+        },
+        {
+          "functionName": "createBuffer http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:31378",
+          "samples": 2
+        },
+        {
+          "functionName": "multiplyMatrices http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:6652",
+          "samples": 2
+        },
+        {
+          "functionName": "tick :2",
+          "samples": 1
+        },
+        {
+          "functionName": "compose http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:7082",
+          "samples": 1
+        },
+        {
+          "functionName": "initAttributes http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:32520",
+          "samples": 1
+        },
+        {
+          "functionName": "(program) :0",
+          "samples": 1
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40314",
+          "samples": 1
+        },
+        {
+          "functionName": "setValue http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:34690",
+          "samples": 1
+        },
+        {
+          "functionName": "setup http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36240",
+          "samples": 1
+        },
+        {
+          "functionName": "traverseVisible http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:8284",
+          "samples": 1
+        }
+      ],
+      "inclusive": [
+        {
+          "functionName": "(root) :0",
+          "samples": 301
+        },
+        {
+          "functionName": "(idle) :0",
+          "samples": 284
+        },
+        {
+          "functionName": "updateMatrixWorld http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:8325",
+          "samples": 13
+        },
+        {
+          "functionName": "WebGLRenderer.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40506",
+          "samples": 10
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:12",
+          "samples": 10
+        },
+        {
+          "functionName": "withScreenTarget http://127.0.0.1:5175/src/rendering/screen-target.js:5",
+          "samples": 10
+        },
+        {
+          "functionName": "renderScreenPreload http://127.0.0.1:5175/src/rendering/screen-preload.js:10",
+          "samples": 10
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:40",
+          "samples": 10
+        },
+        {
+          "functionName": "loadingSyncWitness http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:2",
+          "samples": 10
+        },
+        {
+          "functionName": "renderScreenPreloadBatched http://127.0.0.1:5175/src/rendering/screen-preload.js:23",
+          "samples": 10
+        },
+        {
+          "functionName": "traverseVisible http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:8284",
+          "samples": 7
+        },
+        {
+          "functionName": "projectObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40593",
+          "samples": 6
+        },
+        {
+          "functionName": "publish http://127.0.0.1:5175/src/app/loading-progress-qa.js:7",
+          "samples": 5
+        },
+        {
+          "functionName": "update http://127.0.0.1:5175/src/app/loading-progress-qa.js:19",
+          "samples": 5
+        },
+        {
+          "functionName": "refreshLoadingOverlay http://127.0.0.1:5175/src/app/main.js:125",
+          "samples": 5
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 20974.219999998808,
+          "end": 42428.76999999583,
+          "duration": 21454.54999999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 40027.26999999583,
+          "end": 42380.589999988675,
+          "duration": 2353.3199999928474,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 40804.484999999404,
+          "end": 41756.50999999046,
+          "duration": 952.0249999910593,
+          "budgetElapsed": 18.930000007152557,
+          "budgetCpu": 16.974999949336052,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 41774.74499998987,
+          "end": 42285.97499999404,
+          "duration": 511.2300000041723,
+          "budgetElapsed": 18.229999989271164,
+          "budgetCpu": 16.685000002384186,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "presentation-overlay-refresh",
+          "start": 41747.04999999702,
+          "end": 41756.390000000596,
+          "duration": 9.340000003576279,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 41747.114999994636,
+          "end": 41756.29500000179,
+          "duration": 9.180000007152557,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "qa-dom-serialize",
+          "start": 42168.114999994636,
+          "end": 42175.614999994636,
+          "duration": 7.5,
+          "failed": false,
+          "scope": "Diagnostic JSON serialization and DOM text write CPU; final export write is not self-recorded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 41756.659999996424,
+          "end": 41758.95499999821,
+          "duration": 2.2950000017881393,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 41767.409999996424,
+          "end": 41769.40500000119,
+          "duration": 1.9950000047683716,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 41761.54500000179,
+          "end": 41763.539999991655,
+          "duration": 1.9949999898672104,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ]
+    },
+    {
+      "at": 40535.83499999344,
+      "wallInterval": 384.5300000011921,
+      "rafInterval": 366.6599999999962,
+      "samples": 293,
+      "self": [
+        {
+          "functionName": "(idle) :0",
+          "samples": 82
+        },
+        {
+          "functionName": "texSubImage2D http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:37319",
+          "samples": 50
+        },
+        {
+          "functionName": "update http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:33966",
+          "samples": 37
+        },
+        {
+          "functionName": "onFirstUse http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:35313",
+          "samples": 21
+        },
+        {
+          "functionName": "renderObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:36700",
+          "samples": 8
+        },
+        {
+          "functionName": "publish http://127.0.0.1:5175/src/app/loading-progress-qa.js:7",
+          "samples": 4
+        },
+        {
+          "functionName": "computeBoundingSphere http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:13990",
+          "samples": 4
+        },
+        {
+          "functionName": "setProgram http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40855",
+          "samples": 4
+        },
+        {
+          "functionName": "compose http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:7082",
+          "samples": 3
+        },
+        {
+          "functionName": "WebGLRenderer.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40506",
+          "samples": 2
+        },
+        {
+          "functionName": "nearWater http://127.0.0.1:5175/src/rendering/continuous-grass.js:114",
+          "samples": 2
+        },
+        {
+          "functionName": "nearWaterChunk http://127.0.0.1:5175/src/rendering/continuous-grass.js:107",
+          "samples": 2
+        },
+        {
+          "functionName": "projectObject http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40593",
+          "samples": 2
+        },
+        {
+          "functionName": "createBuffer http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:31378",
+          "samples": 2
+        },
+        {
+          "functionName": "applyMatrix4 http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:2225",
+          "samples": 2
+        }
+      ],
+      "inclusive": [
+        {
+          "functionName": "(root) :0",
+          "samples": 293
+        },
+        {
+          "functionName": "renderScreenPreloadBatched http://127.0.0.1:5175/src/rendering/screen-preload.js:23",
+          "samples": 197
+        },
+        {
+          "functionName": "loadingSyncWitness http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:2",
+          "samples": 195
+        },
+        {
+          "functionName": "withScreenTarget http://127.0.0.1:5175/src/rendering/screen-target.js:5",
+          "samples": 194
+        },
+        {
+          "functionName": "renderScreenPreload http://127.0.0.1:5175/src/rendering/screen-preload.js:10",
+          "samples": 191
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:40",
+          "samples": 191
+        },
+        {
+          "functionName": "WebGLRenderer.render http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40506",
+          "samples": 190
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/screen-preload.js:12",
+          "samples": 190
+        },
+        {
+          "functionName": "WebGLRenderer.renderBufferDirect http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40314",
+          "samples": 132
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/src/rendering/scene.js:619",
+          "samples": 128
+        },
+        {
+          "functionName": "loadingAwaitWitness http://127.0.0.1:5175/src/rendering/loading-sync-witness.js:13",
+          "samples": 128
+        },
+        {
+          "functionName": "phase http://127.0.0.1:5175/src/rendering/scene.js:558",
+          "samples": 128
+        },
+        {
+          "functionName": "warmAnimalGpu http://127.0.0.1:5175/src/rendering/scene.js:557",
+          "samples": 128
+        },
+        {
+          "functionName": "setProgram http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40855",
+          "samples": 125
+        },
+        {
+          "functionName": "renderScene http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:40651",
+          "samples": 109
+        }
+      ],
+      "spans": [
+        {
+          "label": "load-warm-gpu",
+          "start": 20974.219999998808,
+          "end": 42428.76999999583,
+          "duration": 21454.54999999702,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "warm-draw-batches",
+          "start": 40027.26999999583,
+          "end": 42380.589999988675,
+          "duration": 2353.3199999928474,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40161.214999988675,
+          "end": 40534.77499999106,
+          "duration": 373.5600000023842,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work.",
+          "batchIndex": 18,
+          "programsBefore": 80,
+          "programsAfter": 80,
+          "addedPrograms": [],
+          "objects": [
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 6037,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5096,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 6442,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 2048,
+                  "height": 2048
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            },
+            {
+              "name": "",
+              "type": "Mesh",
+              "parent": "",
+              "entityId": null,
+              "vertices": 5428,
+              "instances": 0,
+              "material": "",
+              "textures": [
+                {
+                  "slot": "map",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "normalMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "roughnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                },
+                {
+                  "slot": "metalnessMap",
+                  "name": "",
+                  "width": 1024,
+                  "height": 1024
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 40141.76999999583,
+          "end": 40152.79999999702,
+          "duration": 11.030000001192093,
+          "budgetElapsed": 17.894999995827675,
+          "budgetCpu": 16.530000001192093,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-budget-frame-wait",
+          "start": 40535.359999999404,
+          "end": 40545.659999996424,
+          "duration": 10.299999997019768,
+          "budgetElapsed": 382.5600000023842,
+          "budgetCpu": 381.75,
+          "frameBudget": 16,
+          "failed": false,
+          "scope": "Awaited cooperative frame wall time; budgetCpu is accumulated synchronous invocation wall time in the delivered presentation epoch. Program/driver readiness waits are excluded."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40159.20499999821,
+          "end": 40160.539999991655,
+          "duration": 1.334999993443489,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40152.95999999344,
+          "end": 40154.214999988675,
+          "duration": 1.2549999952316284,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "presentation-diorama-render",
+          "start": 40151.44999998808,
+          "end": 40152.55499999225,
+          "duration": 1.1050000041723251,
+          "failed": false,
+          "scope": "Synchronous presentation CPU wall time; includes nested witnesses, no awaited/GPU work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40154.50499999523,
+          "end": 40155.32499998808,
+          "duration": 0.8199999928474426,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        },
+        {
+          "label": "loading-screen-upload-submit",
+          "start": 40158.25,
+          "end": 40158.97499999404,
+          "duration": 0.7249999940395355,
+          "failed": false,
+          "scope": "Synchronous invocation CPU wall time; no GPU queries or awaited work."
+        }
+      ]
+    },
+    {
+      "at": 2737.7749999910593,
+      "wallInterval": 306.84999999403954,
+      "rafInterval": 33.320000000000164,
+      "samples": 173,
+      "self": [
+        {
+          "functionName": "(program) :0",
+          "samples": 32
+        },
+        {
+          "functionName": "parseGLB http://127.0.0.1:5175/menu/native.js:4",
+          "samples": 30
+        },
+        {
+          "functionName": "wasm-function[2] wasm://wasm/00b364ba:1",
+          "samples": 20
+        },
+        {
+          "functionName": "(idle) :0",
+          "samples": 15
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:23482",
+          "samples": 14
+        },
+        {
+          "functionName": "decode http://127.0.0.1:5175/node_modules/three/examples/jsm/libs/meshopt_decoder.module.js?v=d06880d7:48",
+          "samples": 13
+        },
+        {
+          "functionName": "init http://127.0.0.1:5175/menu/native.js:680",
+          "samples": 12
+        },
+        {
+          "functionName": "shaderProgram http://127.0.0.1:5175/menu/native.js:3",
+          "samples": 8
+        },
+        {
+          "functionName": "GLTFBinaryExtension http://127.0.0.1:5175/node_modules/three/examples/jsm/loaders/GLTFLoader.js?v=d06880d7:1916",
+          "samples": 7
+        },
+        {
+          "functionName": "readData http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:23481",
+          "samples": 4
+        },
+        {
+          "functionName": "wasm-function[5] wasm://wasm/00b364ba:1",
+          "samples": 3
+        },
+        {
+          "functionName": "s http://127.0.0.1:5175/menu/native.js:3",
+          "samples": 3
+        },
+        {
+          "functionName": "(garbage collector) :0",
+          "samples": 2
+        },
+        {
+          "functionName": "URLSearchParams :0",
+          "samples": 2
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:26049",
+          "samples": 1
+        }
+      ],
+      "inclusive": [
+        {
+          "functionName": "(root) :0",
+          "samples": 173
+        },
+        {
+          "functionName": "decode http://127.0.0.1:5175/node_modules/three/examples/jsm/libs/meshopt_decoder.module.js?v=d06880d7:48",
+          "samples": 36
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/three/examples/jsm/libs/meshopt_decoder.module.js?v=d06880d7:186",
+          "samples": 36
+        },
+        {
+          "functionName": "(program) :0",
+          "samples": 32
+        },
+        {
+          "functionName": "parseGLB http://127.0.0.1:5175/menu/native.js:4",
+          "samples": 30
+        },
+        {
+          "functionName": "js-to-wasm:i:i wasm://wasm/00b364ba:1",
+          "samples": 23
+        },
+        {
+          "functionName": "init http://127.0.0.1:5175/menu/native.js:680",
+          "samples": 23
+        },
+        {
+          "functionName": "wasm-function[2] wasm://wasm/00b364ba:1",
+          "samples": 20
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:23482",
+          "samples": 18
+        },
+        {
+          "functionName": "(idle) :0",
+          "samples": 15
+        },
+        {
+          "functionName": "shaderProgram http://127.0.0.1:5175/menu/native.js:3",
+          "samples": 11
+        },
+        {
+          "functionName": "compile http://127.0.0.1:5175/menu/native.js:354",
+          "samples": 11
+        },
+        {
+          "functionName": "parse http://127.0.0.1:5175/node_modules/three/examples/jsm/loaders/GLTFLoader.js?v=d06880d7:415",
+          "samples": 8
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/three/examples/jsm/loaders/GLTFLoader.js?v=d06880d7:305",
+          "samples": 8
+        },
+        {
+          "functionName": "(anonymous) http://127.0.0.1:5175/node_modules/.vite-pthreads/deps/three.js?v=d06880d7:23529",
+          "samples": 8
+        }
+      ],
+      "spans": [
+        {
+          "label": "diorama-prepare-mountain-atlas",
+          "start": 2433.0999999940395,
+          "end": 2738.9599999934435,
+          "duration": 305.85999999940395,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        },
+        {
+          "label": "diorama-prepare-soil-texture",
+          "start": 2378.734999999404,
+          "end": 2432.344999998808,
+          "duration": 53.60999999940395,
+          "failed": false,
+          "scope": "Awaited phase wall time including nested CPU, waits and concurrent presentation; not exclusive CPU or GPU duration."
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

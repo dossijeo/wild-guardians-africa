@@ -1,0 +1,29 @@
+# Fuente Farm23 terminada → Idle21
+
+Continúa la [aceptación de identidad Farm→Home](native-farm-arrived-home-surface-20261118.md) en el [plan integrado](integrated-gpu-migration-plan-20261104.md). Una Farm realmente completada puede preparar y adquirir el ciclo Idle finito21 sobre su cuerpo existente. No se fabrica20/24 ni un pasado Idle. La fuente y su proyección Game avanzan; control, actor, Surface y GPU del nuevo relevo siguen pendientes. A6/A/B/C abiertos; D no iniciado.
+
+## Investigación integrada y adaptación
+
+Se revisa código real de [`dtCrowd::resetMoveTarget`, Recast/Detour1.6](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L646), y [`NavigationAgent3D::_transition_to_navigation_finished`, Godot4.3](https://github.com/godotengine/godot/blob/4.3-stable/scene/3d/navigation_agent_3d.cpp#L915). Ambos terminan la navegación conservando el agente; Godot mantiene además su posición y anula las velocidades al terminar. Se adapta esa separación a los propietarios existentes: se retira el corredor al adquirir21 y se conserva el mismo cuerpo. No se incorpora motor, dependencia, registro, timer o fence nuevo.
+
+El reposo inicial usa literalmente `createIdleState` e `idleFarmAnchor` de Wild Guardians: mismo FNV de `seed:personId`, estado privado inicial y duración `idleSeconds*2`, sin consumir azar privado ni del mundo para crear la intención. Se distingue del REST posterior a un paseo22, que avanza su stream y selecciona otra duración. El programa finito rest/watch y su transición xorshift ya existen; se reutilizan.
+
+## Fuente y ciclo de vida
+
+`native-farm-arrival-idle-source` amplía el descriptor acotado del cuerpo Idle con origen23. El nativo copia cuerpo, perfil, flags, radio, x/z/yaw, fases y presupuesto desde la ejecución realmente completada. La secuencia y `sourceAt` corresponden a su asignación y final REAL, incluso con adquisición tardía. El bridge contrasta el espejo Game y aporta la semántica original del ancla y la semilla privada; no calcula una trayectoria o una pose.
+
+El export `nav_idle_cycle_farm_proposal_stage` reutiliza la propuesta21. Su draft conserva la asociación Farm original y comprueba llegada nativa, cuerpo/slot/asignación, ancla, pose y conflictos de reservas. La preparación no emite transición ni revoca el permiso23. Cancelar mantiene Farm; revalidar puede trasladar la época conservando el descriptor exacto. Adquirir21 vuelve a comprobar los conflictos, libera el corredor mediante `releaseRoute`, conserva el cuerpo y emite un único `RouteCompleted`7 con la revocación23 y la asociación Idle real.
+
+El nacimiento semántico Idle ocurre en la adquisición21; el periodo de preparación no adelanta el programa rest/watch. Game pasa explícitamente de `arriving`/`native-farm-arrival` a `idle`/`native-idle` y proyecta el reloj nativo. El nuevo Idle conserva la ruta existente hacia solicitudes Task/Home. El ancla debe contener ya el cuerpo: una planta cercana o el punto de servicio del centro sin cultivos. Si el ancla original queda lejos, se rechaza el ciclo estacionario; su aproximación nativa sigue pendiente. No se añade un fallback JS.
+
+## Validación y límites
+
+Pasan36 casos nuevos y146 dirigidos en7 archivos: cuatro perfiles standalone/pthread, llegada con viaje o ya dentro del radio, reposo y vigilancia frente a `idle.js`, Game.tick, espera1.8s, cancelación/revalidación, journal único, origen Farm tardío, ancla de centro sin cultivos, cuerpo fijado/removal, entradas incompatibles y solicitudes Task/Home posteriores. La regresión amplia pasa2754/2755 casos en251 archivos, sin fallos/cancelaciones y con una omisión opcional, en439.762s. Build pasa en1m56s. Tras congelar los inputs se compilan standalone y pthread con la receta canónica: los61 inputs nativos de fuente permanecen exactos; los64 inputs/artefactos finales tienen7 cambios (tres fuentes C++, export del script y tres artefactos WASM/módulo). Los412 inputs de pruebas coinciden.
+
+Los dos controles negativos de sólo lectura fallan una vez y filtrar los otros35 casos. El WASM anterior de `b33286877` carece del export nuevo y exige reconstrucción. Quitar sólo la comparación de pose del origen permite preparar21 con un heading Game incompatible. La fixture de ruta carga un WASM fijo: el control anterior sustituye exclusivamente esa URL mediante loader, en vez de confiar en variables de entorno que la fixture no consulta.
+
+La sonda del siguiente punto obtiene21 nativo y conserva vigente el permiso Farm instalado, pero `admitIdleCycle` responde `Native Idle cycle is obsolete or lacks its admitted source`. Esa instalación es de confianza en la fixture: no es un recibo gráfico. El controlador todavía reconoce como primeros orígenes20/22; debe admitir la ascendencia23 exacta antes de extender roster, puertos y Surface.
+
+La regresión GPU del relevo ANTERIOR23→Home19/18 pasa sobre los artefactos nativos finales en NVIDIA/Turing. Conserva646 IDs inmutables, prepara70 recursos y0 después de READY, sustituye sólo una textura de movimiento y crea0 shaders/pipelines. Hay54/54 dibujos en los bloqueos1800ms, picking, adopción5 y drain. Ventana completa Home: 126 frames, máximo33.475ms, p9533.405ms y0>50ms; global855 frames, máximo86.635ms y2>50ms. Es captura de timing sin PNG. No acredita el nuevo consumidor Idle21 ni ausencia global de tirones.
+
+La cadencia Home ya documentada sigue sin aceptarse: la medición anterior de264/147ms no se elimina ni se atribuye a una causa por no reproducirse en otras ejecuciones. Quedan también aproximación Idle, productor/cohort, restauración/recuperación incremental integral de3.123 y aceptación de plataforma. Los [resultados y hashes](performance/native-farm-arrived-idle-cycle-source-validation-20261118.json) separan cada alcance. Se conservan16 archivos ajenos, el worker pthread sin seguimiento y los bytes anteriores de los cuatro documentos principales.

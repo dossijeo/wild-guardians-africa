@@ -1,0 +1,16 @@
+(node:2688) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-budget.js:3 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+(Use `node20 --trace-warnings ...` to show where the warning was created)
+(node:2688) V8: file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/raid-pressure-plan.js:1 'assert' is deprecated in import statements and support will be removed in a future version; use 'with' instead
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.evaluate: Error: Actor acquired unexpected meshes instead of the original Carry crate pieces
+    at auditTaskSupersedesFarmBirth (http://127.0.0.1:5218/tests/browser/native-farm-birth-task-scenario.js?t=1795148255595:35:602)
+    at async auditNativeFarmBirthWorldOwner (http://127.0.0.1:5218/tests/browser/native-farm-birth-world-owner.js?t=1795148255595:50:39)
+    at async <anonymous>:381:23
+    at C:\Users\Gabriel\source\repos\wild-guardians-africa\tools\guardian\audit_native_farm_birth_world_owner.mjs:45:26 {
+  log: []
+}
+
+Node.js v20.19.0

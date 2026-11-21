@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {updateIdle} from '../src/simulation/idle.js';
+import {observePathMotion} from '../src/simulation/locomotion.js';
 import {createWorkerBodyIndex} from '../src/simulation/actor-motion.js';
 import {LOCOMOTION as L} from '../src/simulation/locomotion-calibration.js';
 import {workerPose} from '../src/rendering/worker-actions.js';
@@ -53,6 +54,14 @@ test('A changed navigation version invalidates a blocked paseo before moving',()
   const w=worker('youngMale');while(w.idleState?.mode!=='walk')updateIdle(w,anchor,.1,nav,712);
   const position={x:w.x,z:w.z};updateIdle(w,anchor,1,{...nav,version:2,path:()=>null},712);
   assert.deepEqual({x:w.x,z:w.z},position);assert.equal(w.path,null);assert.equal(w.idleState.mode,'rest');
+});
+
+test('ambient walking reports its simulation-time segment without changing movement',()=>{
+  const w=worker('youngMale');w.x=0;w.path=[{x:2,z:0}];w.destinationId='idle-worker-1';w.pathVersion=nav.version;
+  w.idleState={anchorId:anchor.id,mode:'walk',elapsed:0,rng:1,remaining:10,approachRetry:0,pathVersion:nav.version,destination:{id:w.destinationId,x:2,z:0}};
+  const state={elapsed:10.1,workers:[w],raid:null},segments=[],stop=observePathMotion(w,(x0,z0,x1,z1,t0,t1)=>segments.push({x0,z0,x1,z1,t0,t1}));
+  try{updateIdle(w,anchor,.1,nav,712,[],state);}finally{stop();}
+  assert.equal(segments.length,1);assert.equal(segments[0].t0,10);assert.ok(Math.abs(segments[0].t1-10.1)<1e-9);assert.ok(w.x>0);
 });
 
 test('an ambient worker avoids a coworker without overlapping or replanning',()=>{

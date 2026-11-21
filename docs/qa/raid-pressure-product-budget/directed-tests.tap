@@ -1,0 +1,75 @@
+TAP version 13
+# Subtest: V uses only native living agricultural base value, not cash/maturity/magic bonuses
+ok 1 - V uses only native living agricultural base value, not cash/maturity/magic bonuses
+  ---
+  duration_ms: 2.7409
+  ...
+# Subtest: five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+ok 2 - five-night EMA is pure/idempotent, initializes legacy, persists exactly and never invents missing samples
+  ---
+  duration_ms: 1.6292
+  ...
+# Subtest: P follows independent formula with clamping and growing/retiring agriculture
+ok 3 - P follows independent formula with clamping and growing/retiring agriculture
+  ---
+  duration_ms: 0.5509
+  ...
+# Subtest: species formulas apply jointly with no cash-dependent input
+ok 4 - species formulas apply jointly with no cash-dependent input
+  ---
+  duration_ms: 0.5397
+  ...
+# Subtest: mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+ok 5 - mixture interpolates weak opening to final proportions, preserves unlocks and finite rounding
+  ---
+  duration_ms: 0.8524
+  ...
+# Subtest: reference directional area is below cap when radius/spacing cannot reach neighbours
+ok 6 - reference directional area is below cap when radius/spacing cannot reach neighbours
+  ---
+  duration_ms: 0.5803
+  ...
+# Subtest: Q controls joint product without deleting animals or materializing composition lists
+ok 7 - Q controls joint product without deleting animals or materializing composition lists
+  ---
+  duration_ms: 5.7461
+  ...
+# Subtest: selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+ok 8 - selection deterministically roundtrips RNG and leaves inputs/config/balance unchanged
+  ---
+  duration_ms: 2.1492
+  ...
+# Subtest: introductions keep original one actor/min budget without new random draws
+ok 9 - introductions keep original one actor/min budget without new random draws
+  ---
+  duration_ms: 0.4309
+  ...
+# Subtest: infeasible Q returns explicit unselected result rather than synthetic zero damage or omitted actors
+ok 10 - infeasible Q returns explicit unselected result rather than synthetic zero damage or omitted actors
+  ---
+  duration_ms: 0.8058
+  ...
+# Subtest: invalid inputs reject bounded work instead of propagating unsafe values
+ok 11 - invalid inputs reject bounded work instead of propagating unsafe values
+  ---
+  duration_ms: 1.1667
+  ...
+# Subtest: peaceful postgame has no actor, pressure draw or budget assignment
+ok 12 - peaceful postgame has no actor, pressure draw or budget assignment
+  ---
+  duration_ms: 0.2823
+  ...
+# Subtest: unintegrated candidate configuration matches the pure module decisions
+ok 13 - unintegrated candidate configuration matches the pure module decisions
+  ---
+  duration_ms: 4.6123
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 188.3476

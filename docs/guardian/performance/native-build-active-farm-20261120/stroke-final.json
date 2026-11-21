@@ -1,0 +1,174 @@
+{
+  "browserErrors": [],
+  "httpFailures": [],
+  "attempts": [
+    {
+      "stroke": [
+        [
+          0.35,
+          0.65
+        ],
+        [
+          0.55,
+          0.65
+        ]
+      ],
+      "timing": [
+        {
+          "name": "release",
+          "at": 15236.09500002861
+        },
+        {
+          "name": "feedback",
+          "at": 15236.784999966621,
+          "present": true,
+          "floor": 119,
+          "previous": 32
+        },
+        {
+          "name": "current-frame",
+          "at": 20035.700000047684,
+          "floor": 119,
+          "sequence": 119
+        },
+        {
+          "name": "pick-sent",
+          "at": 20035.77999997139,
+          "floor": 119
+        },
+        {
+          "name": "pick-result",
+          "at": 20083.514999985695,
+          "sequence": 120,
+          "points": 13
+        },
+        {
+          "name": "build-sent",
+          "at": 20084.080000042915,
+          "id": "154c9d18-5f4b-4bc0-b1ab-071bb05ee127",
+          "points": 13
+        },
+        {
+          "name": "build-result",
+          "at": 20749.59500002861,
+          "id": "154c9d18-5f4b-4bc0-b1ab-071bb05ee127",
+          "accepted": true,
+          "rejection": null,
+          "events": [
+            {
+              "id": "event-16",
+              "type": "WallChainBuilt",
+              "commandId": "154c9d18-5f4b-4bc0-b1ab-071bb05ee127",
+              "material": "zarzas",
+              "count": 3,
+              "gates": 0,
+              "targetId": "structure-14",
+              "presentation": {
+                "x": 82.71463728467361,
+                "z": 5.71535270269883,
+                "points": [
+                  {
+                    "x": 82.71463728467361,
+                    "z": 5.71535270269883
+                  },
+                  {
+                    "x": 84.3029983671286,
+                    "z": 4.71695430801253
+                  },
+                  {
+                    "x": 85.89135944958359,
+                    "z": 3.718555913326229
+                  }
+                ],
+                "targetIds": [
+                  "structure-14",
+                  "structure-15",
+                  "structure-16"
+                ]
+              },
+              "simulationTime": 9.699999999999873
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fixture": {
+    "slotId": "qa-early-native-chain",
+    "elapsed": 0,
+    "plants": 3
+  },
+  "before": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "isFallbackAdapter": null
+    },
+    "walls": 0,
+    "elapsed": 3.799999999999995,
+    "backend": "WebGPU"
+  },
+  "observedWaitMs": 4798.915000081062,
+  "after": {
+    "at": 26290.174999952316,
+    "walls": 3,
+    "event": {
+      "id": "event-16",
+      "type": "WallChainBuilt",
+      "commandId": "154c9d18-5f4b-4bc0-b1ab-071bb05ee127",
+      "material": "zarzas",
+      "count": 3,
+      "gates": 0,
+      "targetId": "structure-14",
+      "presentation": {
+        "x": 82.71463728467361,
+        "z": 5.71535270269883,
+        "points": [
+          {
+            "x": 82.71463728467361,
+            "z": 5.71535270269883
+          },
+          {
+            "x": 84.3029983671286,
+            "z": 4.71695430801253
+          },
+          {
+            "x": 85.89135944958359,
+            "z": 3.718555913326229
+          }
+        ],
+        "targetIds": [
+          "structure-14",
+          "structure-15",
+          "structure-16"
+        ]
+      },
+      "simulationTime": 9.699999999999873
+    },
+    "settlements": {
+      "closed": false,
+      "villages": 1,
+      "units": 10,
+      "centers": 1,
+      "walls": 3,
+      "damagedCenters": 0,
+      "selectableReady": true,
+      "provisional": 0,
+      "previewHistorySaturated": false,
+      "destruction": [],
+      "banks": 3,
+      "failure": null,
+      "textureFailure": null,
+      "villagePreviews": 1,
+      "villageTextured": 1,
+      "centerPreviews": 1,
+      "centerTextured": 1,
+      "wallPreviews": 1,
+      "wallTextured": 1
+    },
+    "gpuErrors": 0
+  },
+  "ok": true
+}

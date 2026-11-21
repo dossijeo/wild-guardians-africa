@@ -1,0 +1,84 @@
+{
+  "scope": "QA inspection can temporarily expose no state during surface handoff. No product error recorded. Runner now waits for a state before comparing sequence.",
+  "failure": "TypeError: Cannot read properties of null (reading 'sequence')\n    at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:25:156\n    at until (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:18:925)\n    at async file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tools/experiments/audit_integrated_device_recovery.mjs:25:103",
+  "errors": [],
+  "lastSamples": [
+    {
+      "phase": "resumed simulation and input",
+      "state": {
+        "closed": false,
+        "sequence": 194,
+        "lastElapsed": 16.849744999995,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": null,
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "uiErrors": []
+    },
+    {
+      "phase": "resumed simulation and input",
+      "state": {
+        "closed": false,
+        "sequence": 194,
+        "lastElapsed": 16.849744999995,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": null,
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "uiErrors": []
+    },
+    {
+      "phase": "resumed simulation and input",
+      "state": {
+        "closed": false,
+        "sequence": 194,
+        "lastElapsed": 16.849744999995,
+        "fault": false,
+        "historicalEventMetrics": {
+          "starts": 0,
+          "boundaries": 0,
+          "events": 0,
+          "completed": 0
+        },
+        "historicalEventRejection": null,
+        "timing": {
+          "samples": 0,
+          "decode": null,
+          "reconcile": null,
+          "hooks": null,
+          "total": null
+        }
+      },
+      "uiErrors": []
+    },
+    {
+      "phase": "resumed simulation and input",
+      "state": null,
+      "uiErrors": []
+    }
+  ]
+}

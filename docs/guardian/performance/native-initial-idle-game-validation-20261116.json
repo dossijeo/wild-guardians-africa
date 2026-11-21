@@ -1,0 +1,157 @@
+{
+  "date": "2026-11-16",
+  "branch": "codex/guardian-3d-animation",
+  "sourceBaseCommit": "53bd809c7",
+  "scope": "Explicit Game declaration, read-only retained-source checking, semantic save and fresh initial Idle declaration restoration. No native/graphical execution grant, ordinary activation or A6/A/B/C closure.",
+  "research": [
+    {
+      "source": "https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L482-L591",
+      "read": "addAgent, requestMoveTarget",
+      "decision": "Keep presence, pending declaration and executable goal separate on existing owners; do not import NavMesh snapping or local corridor limitations."
+    },
+    {
+      "source": "https://github.com/mrdoob/three.js/blob/r180/src/loaders/ObjectLoader.js#L193-L231",
+      "read": "Installed 0.180.0 ObjectLoader.parse: geometries, materials, object and skeleton reconstruction",
+      "decision": "Do not restore a graphics graph to load semantic Idle state. Existing graphics residency/admission retains resource ownership; no new dependency."
+    }
+  ],
+  "nativeBuild": {
+    "status": "unchanged; reused from successful standalone/pthread builds in 53bd809c7",
+    "sourceAndBinaryHashes": {
+      "src/world/wild-engine/spatial-intent-state.cpp": "f33e76a762e8c8c186d4f39c3e77bb1a46b5527561a2455a33110d6497d25639",
+      "src/world/wild-engine/spatial-gate-api.inc": "59c12369f3a8d9b328ae2eb53c02a9d3c3dfcb76664287bbb5d0ccec4095244c",
+      "src/world/wild-engine/spatial-initial-idle-resource-request.inc": "d940aba37501af48f7d52e7986b5e5025bd8003f61714fd717a6418374adcfe5",
+      "tools/build-spatial-savanna-wasm.sh": "0f9cc40618d026b104fa53f44a649837700dfdc32d1374ed6e59512e61fc6cda",
+      "src/world/wild-engine/spatial-savanna.wasm": "bc3d3457d71912636005b72d17bc443209ea641c40d6c4fd22bb006464b6ecd7",
+      "public/wild-engine/spatial-threaded.wasm": "2b92a1064ce00579536c7c9e426a102f877ce9bb4e72e9e8630e75f401332b0e",
+      "public/wild-engine/spatial-threaded.mjs": "175671b891b3430e1fda7a2da6e162f24d9db24299198fd4fc799ac45282548e"
+    }
+  },
+  "primaryRegression": {
+    "tests": 747,
+    "pass": 747,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "durationMs": 424174.941,
+    "log": ".cache/native-initial-idle-game-regression-final.log",
+    "files": [
+      "tests/native-task-settlement-proposal.test.js",
+      "tests/native-task-settlement-game.test.js",
+      "tests/settlement-notification.test.js",
+      "tests/native-task-consequence-proposal.test.js",
+      "tests/native-task-consequence-game.test.js",
+      "tests/native-task-consequence-admission.test.js",
+      "tests/native-task-consequence-control.test.js",
+      "tests/native-task-consequence-graphics.test.js",
+      "tests/native-task-consequence-crops.test.js",
+      "tests/delivery-consequence-data.test.js",
+      "tests/harvest-consequence.test.js",
+      "tests/agricultural-power.test.js",
+      "tests/closest-center-delivery.test.js",
+      "tests/native-task-action-binding.test.js",
+      "tests/native-task-action-game-execution.test.js",
+      "tests/native-task-action-restoration.test.js",
+      "tests/native-task-action-proposal.test.js",
+      "tests/native-task-action-clock.test.js",
+      "tests/native-task-start-proposal.test.js",
+      "tests/native-task-start-binding.test.js",
+      "tests/native-task-start-graphics.test.js",
+      "tests/native-resource-preparation-channel.test.js",
+      "tests/native-admission-vertical.test.js",
+      "tests/spatial-native-causal-clock.test.js",
+      "tests/spatial-native-route-execution.test.js",
+      "tests/spatial-native-route-reservations.test.js",
+      "tests/spatial-native-gate-transactions.test.js",
+      "tests/spatial-native-gate-resume.test.js",
+      "tests/spatial-native-gate-crossings.test.js",
+      "tests/spatial-native-gate-waits.test.js",
+      "tests/native-gate-causal-transaction.test.js",
+      "tests/native-gate-gpu-binding.test.js",
+      "tests/remote-webgpu.test.js",
+      "tests/native-route-pick-frame.test.js",
+      "tests/native-resume-control.test.js",
+      "tests/native-resume-graphics.test.js",
+      "tests/native-resume-time-translation.test.js",
+      "tests/money-rational-add.test.js",
+      "tests/money-decimal.test.js",
+      "tests/acceptance-economic-boundaries.test.js",
+      "tests/repair-settlement-evidence.test.js",
+      "tests/native-task-settlement-clock.test.js",
+      "tests/native-task-settlement-control.test.js",
+      "tests/native-task-settlement-gpu-motion.test.js",
+      "tests/native-task-settlement-graphics.test.js",
+      "tests/native-task-settlement-remote.test.js",
+      "tests/native-task-settlement-publication.test.js",
+      "tests/spatial-native-worker-home.test.js",
+      "tests/native-home-route-proposal.test.js",
+      "tests/native-home-route-game.test.js",
+      "tests/acceptance-workforce.test.js",
+      "tests/prepared-save-load.test.js",
+      "tests/save-game.test.js",
+      "tests/crop-task-queue.test.js",
+      "tests/native-home-route-graphics.test.js",
+      "tests/native-home-route-control.test.js",
+      "tests/native-home-route-remote.test.js",
+      "tests/native-home-route-clock.test.js",
+      "tests/native-home-arrival-proposal.test.js",
+      "tests/native-home-arrival-game.test.js",
+      "tests/native-home-arrival-graphics.test.js",
+      "tests/native-home-arrival-control.test.js",
+      "tests/native-home-arrival-remote.test.js",
+      "tests/native-home-inactive-restoration.test.js",
+      "tests/native-home-restoration.test.js",
+      "tests/native-idle-home.test.js",
+      "tests/native-initial-idle-request.test.js",
+      "tests/idle.test.js",
+      "tests/native-initial-idle-game.test.js"
+    ],
+    "command": "node20 --test --test-concurrency=1 <selected 69 files>",
+    "finalReviewIncluded": false
+  },
+  "finalReview": {
+    "change": "Removed premature control flush from the new low-level declaration API, so Game adopts pending semantics before ordinary publication. Added a real control-observer ordering case.",
+    "validation": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 7958.2825,
+      "log": ".cache/native-initial-idle-game-directed-review.log"
+    },
+    "files": [
+      "tests/native-initial-idle-game.test.js"
+    ]
+  },
+  "productBuild": {
+    "passed": true,
+    "seconds": 47.28,
+    "log": ".cache/native-initial-idle-game-product-build.log",
+    "command": "node20 node_modules/vite/bin/vite.js build"
+  },
+  "preservation": {
+    "priorUnrelatedFiles": 16,
+    "byteHashesUnchanged": true
+  },
+  "gpu": {
+    "run": false,
+    "reason": "This request class has no graphical admission yet; no new rendering/resource code was changed."
+  },
+  "finalSourceHashes": {
+    "src/world/native-initial-idle-request-reference.js": "f92cce4df0b0ef00865f211f99cc37ac8648497687480ada8bbc0dd538b52921",
+    "src/world/native-initial-idle-state.js": "94e7fa4afdba7da77bea1972c9be4392f3b9792ea8b907fc5b438417c63d08c0",
+    "src/world/wild-engine/spatial-intent-bridge.js": "2cf8a40f2c2596315e8d2da8d348542d539c37152e6c20ef3265dfe0825ac779",
+    "src/persistence/snapshots.js": "ce571e888068f4b04cac476c934591241f920bbaa2e2273a3f1ac335f41552b1",
+    "src/simulation/tasks.js": "882b3405fdff75b782b343115bcd49bc8f814d8bb0f06330af5b04cfff025b27",
+    "src/simulation/game.js": "401f179d253652f6aac6bbb082b11bf7045f8bd3c6d28776e75ed84bb163aae4",
+    "tests/native-initial-idle-game.test.js": "625cdd8f8a96ddb72a21ea9bdbdcaa2ef674ac32af12f69745e1336659e2a63e"
+  },
+  "pending": [
+    "Native Game clock/cohort integration for the pending class, without a global step stall",
+    "Initial Idle to genuine task or Home before READY, including unbound startup",
+    "Control event/baseline metadata and stationary prepared admission through existing owners",
+    "Original Idle/Alert cycles and ambient walk with private RNG and original rules",
+    "Other classes/finals/gates, ordinary producer, live-world replacement, healthy incremental3123 recovery and A/B/C acceptance before D"
+  ]
+}

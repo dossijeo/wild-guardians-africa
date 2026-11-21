@@ -1,0 +1,44 @@
+{
+  "scope": "Independent-session ABBA of captured body snapshot and synthetic ordered single-segment commands. Includes body publication, command copy and returned position projection for native batch; excludes full game simulation, detours, coordination, render and GPU. Per-batch percentiles are not frame percentiles.",
+  "parity": true,
+  "bodies": 33,
+  "commands": 960,
+  "blocks": [
+    {
+      "variant": "js-reference",
+      "setupMs": 0.0038999999999305146,
+      "totalMs": 17.605799999999817,
+      "batches": 120,
+      "p95": 0.23520000000007713,
+      "p99": 1.044300000000021,
+      "max": 2.238700000000108
+    },
+    {
+      "variant": "native-batch",
+      "setupMs": 0.5367000000001099,
+      "totalMs": 8.569299999997838,
+      "batches": 120,
+      "p95": 0.06550000000015643,
+      "p99": 0.627100000000155,
+      "max": 1.9899999999997817
+    },
+    {
+      "variant": "native-batch",
+      "setupMs": 0.016900000000077853,
+      "totalMs": 6.11549999999761,
+      "batches": 120,
+      "p95": 0.08230000000003201,
+      "p99": 0.12069999999994252,
+      "max": 0.12609999999995125
+    },
+    {
+      "variant": "js-reference",
+      "setupMs": 0.0009000000000014552,
+      "totalMs": 23.700900000004367,
+      "batches": 120,
+      "p95": 0.18910000000050786,
+      "p99": 5.720699999999852,
+      "max": 5.865600000000086
+    }
+  ]
+}

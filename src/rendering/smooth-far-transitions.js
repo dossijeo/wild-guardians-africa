@@ -13,6 +13,7 @@ function registerScene(scene,owner){
  if(!entry){
   const previous=scene.onBeforeRender;entry={previous,owners:new Set()};
   entry.hook=function(...args){previous.apply(this,args);for(const item of entry.owners)item.prepare(args[2]);};
+  entry.hook.groundDepthSafe=previous===THREE.Object3D.prototype.onBeforeRender||previous.groundDepthSafe===true;
   sceneOwners.set(scene,entry);scene.onBeforeRender=entry.hook;
  }
  entry.owners.add(owner);

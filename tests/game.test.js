@@ -70,22 +70,22 @@ test('Starting an attack immediately cancels manual repair orders and releases t
 
 test('Postgame founding uses complete native village, valid departure, exact fixed costs and persistent state',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.day=101;s.initialPreparation=false;s.ledger.balance=rational(1000000);
-  const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8')).find(v=>v.id==='suajili');
-  const preview=previewVillage(s,'suajili',100,50,payload,nav);
+  const payload=JSON.parse(readFileSync(new URL('../public/content/villages.json',import.meta.url),'utf8')).find(v=>v.id===s.culture);
+  const preview=previewVillage(s,s.culture,100,50,payload,nav);
   assert.equal(numberOf(s.ledger.balance),1000000);assert.equal(preview.cost,50000);
   assert.equal(preview.buildings.length,payload.units.length);assert.ok(preview.entry);
-  assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),true);
+  assert.equal(foundVillage(s,'village-command',s.culture,100,50,payload,nav),true);
   assert.equal(numberOf(s.ledger.balance),950000);assert.equal(s.villages.length,2);
   assert.ok(s.villages[1].buildings.every(b=>b.footprint.length>=3));
-  assert.equal(foundVillage(s,'village-command','suajili',100,50,payload,nav),false);
+  assert.equal(foundVillage(s,'village-command',s.culture,100,50,payload,nav),false);
   assert.equal(numberOf(s.ledger.balance),950000);
-  assert.equal(previewVillage(s,'suajili',200,50,payload,nav).cost,80000);
+  assert.equal(previewVillage(s,s.culture,200,50,payload,nav).cost,80000);
   assert.deepEqual(deserialize(serialize(s)).villages,s.villages);
 });
 test('A village without a walkable departure is rejected before charging or founding',()=>{
   const s=ready();placeStructure(s,'center',{x:4,z:0},nav);s.postgame=true;s.ledger.balance=rational(100000);
   const payload={units:[{key:'house',kind:'Edificio',min:[0,0,0],max:[1,1,1]}]};
-  assert.throws(()=>foundVillage(s,'blocked-village','musgum',100,0,payload,{...nav,walkable:()=>false}),/salida transitable/);
+  assert.throws(()=>foundVillage(s,'blocked-village',s.culture,100,0,payload,{...nav,walkable:()=>false}),/salida transitable/);
   assert.equal(numberOf(s.ledger.balance),100000);assert.equal(s.villages.length,1);
 });
 test('30 canonical combinations validate and each new game starts isolated at 1500',()=>{
@@ -142,7 +142,7 @@ test('Raid drops a carried crate, frees tasks and preserves its value',()=>{
   spawnRaid(s,{group:['warthog']},nav);assert.equal(w.crateId,null);assert.equal(s.crates[0].carrierId,null);assert.equal(numberOf(s.ledger.balance),665);assert.equal(w.status,'fleeing');
 });
 test('Combo attack counts one logical hit; active raid survives roundtrip',()=>{
-  const s=setup();s.time=320;spawnRaid(s,{group:['warthog']},nav);const a=s.raid.animals[0],center=s.structures[0];
+  const s=setup();s.time=320;s.nightPlan={at:320,done:true,group:['warthog']};spawnRaid(s,s.nightPlan,nav);const a=s.raid.animals[0],center=s.structures[0];
   a.targetId=center.id;a.status='attacking';a.animation='Weapon_Combo_2';a.attackRemaining=1;a.hitApplied=false;a.hitsRemaining=3;a.attackId='combo';
   updateRaid(s,.3,nav);assert.equal(center.hp,600);assert.equal(a.hitsRemaining,3);const loaded=deserialize(serialize(s));
   updateRaid(loaded,.7,nav);assert.equal(loaded.structures[0].hp,580);assert.equal(loaded.raid.animals[0].hitsRemaining,2);

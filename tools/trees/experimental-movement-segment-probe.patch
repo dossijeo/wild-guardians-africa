@@ -1,0 +1,70 @@
+diff --git a/src/simulation/game.js b/src/simulation/game.js
+index 285b01cd7..fb014a36a 100644
+--- a/src/simulation/game.js
++++ b/src/simulation/game.js
+@@ -838,6 +838,8 @@ function retainRouteAfterWallChange(w,destination,nav){
+ }
+ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignore=null,worker=true,motion=null,expandRoute=false,routeVia=null,externallyPlanned=false}={}) {
+   const previous={x:w.x,z:w.z};
++  // Opt-in diagnostic only; not an authoritative trajectory or collision contract.
++  const segmentObserver=!worker&&nav.movementSegmentObserver?nav.movementSegmentObserver:null;
+   if(worker)w.running=false;
+   if(w.exitRouteRecovery&&
+     (w.exitRouteRecovery.destinationId!==destination.id||w.exitRouteRecovery.version!==nav.version))
+@@ -959,7 +961,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+     const {exit,wallIds}=w.wallEscape,remaining=dist(w,exit);
+     if(remaining>1e-8){
+       const metres=movePath(w,Math.min(speed*dt,remaining),
+-        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false));
++        (a,b)=>nav.wallOverlapMotionClear(a,b,w.radius??.28,wallIds,false),segmentObserver);
+       w.motionPhase=(w.motionPhase??0)+metres/speed;
+       if(metres>1e-8){w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+         w.dynamicStallSeconds=0;}
+@@ -1020,7 +1022,7 @@ export function walkTo(s,w,destination,dt,nav,{speed=L.walkMetresPerSecond,ignor
+   const routeClearance=worker?workerRiskClearance(w,nav,{radius:w.radius??.28,ignore},dynamicClear):animalRouteClearance(w,nav,{radius:w.radius??.28,ignore,escapeProps:expandRoute},dynamicClear);
+   const clear=routeClearance?.clear??dynamicClear;
+   if(motion)moveWorker(w,dt,{...motion,gates:worker?s.structures:[],clear});else {
+-    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear);w.motionPhase=(w.motionPhase??0)+metres/speed;
++    const metres=worker?movePathWithGates(w,speed*dt,s.structures,clear):movePath(w,speed*dt,clear,segmentObserver);w.motionPhase=(w.motionPhase??0)+metres/speed;
+   }
+   if(nav.tickProfile)nav.tickProfile.moveMotion+=performance.now()-motionMark;
+   if(dist(previous,w)>1e-9)w.heading=Math.atan2(w.x-previous.x,w.z-previous.z);
+diff --git a/src/simulation/locomotion.js b/src/simulation/locomotion.js
+index 408a868c8..102112db3 100644
+--- a/src/simulation/locomotion.js
++++ b/src/simulation/locomotion.js
+@@ -20,14 +20,16 @@ export function urgentWork(state,worker){
+   for(const task of state.tasks)if(task.centerId===worker.centerId&&++pending/active>B.workers.run_start_pending_tasks_per_worker_over)return true;
+   return pending/active>B.workers.run_start_pending_tasks_per_worker_over;
+ }
+-export function movePath(actor,metres,clear=null){
++export function movePath(actor,metres,clear=null,observeSegment=null){
+   let left=metres;
+   while(actor.path.length&&left>0){
+     const point=actor.path[0],distance=Math.hypot(actor.x-point.x,actor.z-point.z);
+     const amount=Math.min(distance,left),end=distance?{x:actor.x+(point.x-actor.x)*amount/distance,z:actor.z+(point.z-actor.z)*amount/distance}:point;
+     if(clear&&!clear(actor,end))break;
++    const start=observeSegment&&amount>0?{x:actor.x,z:actor.z}:null;
+     if(distance<=left){actor.x=point.x;actor.z=point.z;left-=distance;actor.path.shift();}
+     else{actor.x+=(point.x-actor.x)*left/distance;actor.z+=(point.z-actor.z)*left/distance;left=0;}
++    if(start)observeSegment(actor,start,{x:actor.x,z:actor.z});
+   }
+   return metres-left;
+ }
+diff --git a/tests/movement-segment-probe.test.js b/tests/movement-segment-probe.test.js
+new file mode 100644
+index 000000000..0879e9c3f
+--- /dev/null
++++ b/tests/movement-segment-probe.test.js
+@@ -0,0 +1,11 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {movePath} from '../src/simulation/locomotion.js';
++
++test('opt-in movement probe records only executed segments and does not alter the path',()=>{
++ const actor={id:'a',x:0,z:0,path:[{x:1,z:0},{x:1,z:1},{x:2,z:1}]},reference=structuredClone(actor),events=[];
++ const clear=(_from,end)=>end.x<2;
++ const moved=movePath(actor,3,clear,(a,from,to)=>events.push({id:a.id,from,to})),expected=movePath(reference,3,clear);
++ assert.equal(moved,expected);assert.deepEqual(actor,reference);
++ assert.deepEqual(events,[{id:'a',from:{x:0,z:0},to:{x:1,z:0}},{id:'a',from:{x:1,z:0},to:{x:1,z:1}}]);
++});

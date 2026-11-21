@@ -19,6 +19,7 @@ function workerSnapshot(worker){
     profile:worker.profile,raidReturn:worker.raidReturn};
 }
 export function notifyWorkerPlanningChange(state,worker){
+  if(!worker.taskId){if(!['native-delivery','native-home','pending-home-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held','pending-idle-resources','pending-stroll-resources','native-idle-stroll','native-idle'].includes(worker.nativeRouteAdmission))delete worker.nativeRouteAdmission;delete worker.nativeTaskAction;}
   const listeners=taskObservers.get(state);
   if(!listeners?.size)return;
   const event={type:'worker',worker:workerSnapshot(worker)};
@@ -159,7 +160,8 @@ export function reserveTasks(state,canExecute=()=>true,onAssigned=()=>{}) {
 // the corresponding native lease first; this function never selects targets or
 // computes routes. Check the entire batch before changing any JS assignment.
 export function applyConfirmedTaskAssignments(state,assignments,navVersion,
-  {validateOnly=false}={}){
+  {validateOnly=false,pendingResources=false}={}){
+  if(typeof pendingResources!=='boolean')throw TypeError('Invalid native task resource policy');
   if(!Number.isFinite(navVersion))throw TypeError('Expected a navigation revision');
   const tasks=new Map(state.tasks.map(task=>[task.id,task]));
   const workers=new Map(state.workers.map(worker=>[worker.id,worker]));
@@ -183,9 +185,11 @@ export function applyConfirmedTaskAssignments(state,assignments,navVersion,
     const task=tasks.get(taskId),worker=workers.get(workerId);
     cancelIdle(worker);
     task.workerId=worker.id;task.blocked=false;
-    worker.taskId=task.id;worker.status='walking';worker.path=path;
-    worker.destinationId=destination.id;worker.pathVersion=navVersion;
-    if(['repair','initial','water'].includes(task.kind))
+    worker.taskId=task.id;worker.status=pendingResources?'waiting-task':'walking';worker.path=pendingResources?null:path;
+    delete worker.nativeTaskAction;
+    if(pendingResources)worker.nativeRouteAdmission='pending-resources';else delete worker.nativeRouteAdmission;
+    worker.destinationId=pendingResources?null:destination.id;worker.pathVersion=navVersion;
+    if(!pendingResources&&['repair','initial','water'].includes(task.kind))
       worker.taskApproach={taskId:task.id,destination};
     else worker.taskApproach=null;
     changed(state);
@@ -195,6 +199,8 @@ export function applyConfirmedTaskAssignments(state,assignments,navVersion,
   return assignments.length;
 }
 export function releaseTask(state,worker) {
+  delete worker.nativeRouteAdmission;
+  delete worker.nativeTaskAction;
   const t=state.tasks.find(t=>t.id===worker.taskId);
   worker.taskId=null;
   worker.taskApproach=null;

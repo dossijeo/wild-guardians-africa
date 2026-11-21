@@ -1,0 +1,419 @@
+{
+  "source": "e9a1698c3d6c2c23fc39afd70988815014466293",
+  "authority": "createSimulationAuthority",
+  "native": "standalone spatial-savanna.wasm",
+  "display": "Deterministic remote Host, no physical GPU timings",
+  "fixture": "nativeIdleCycleGameFixture, youngMale, center moved near worker, awakening charge 100",
+  "steps": [
+    "Acquire Idle20 in nativeProductionAuthority",
+    "Plant through the authority or advance an existing crop to its watering deadline",
+    "Wait for the recorded Task14 or Action15 preparation/commit",
+    "Use bless with the exact assigned crop",
+    "Plant a second crop through the authority and advance"
+  ],
+  "cases": [
+    {
+      "kind": "water",
+      "mode": "ready",
+      "before": {
+        "id": "worker-900011",
+        "x": -17.8,
+        "z": 0.2,
+        "status": "waiting-task",
+        "nativeRouteAdmission": "pending-resources",
+        "taskId": "task-1000001"
+      },
+      "atBless": {
+        "worker": {
+          "id": "worker-900011",
+          "x": -17.8,
+          "z": 0.2,
+          "status": "idle",
+          "taskId": null
+        },
+        "task": null
+      },
+      "targetId": "plant-1000000",
+      "secondId": "plant-1000002",
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "aborted": false
+        },
+        {
+          "kind": "idle-cycle",
+          "committed": false,
+          "aborted": true
+        },
+        {
+          "kind": "task-start",
+          "targetId": 1000000,
+          "committed": false,
+          "aborted": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "BlessingApplied",
+          "commandId": "bless-cancelling-watering",
+          "targetId": "plant-1000000",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 10.199999999999996
+          },
+          "presentation": {
+            "x": -15.8,
+            "z": 6.2,
+            "elapsed": 10.199999999999996,
+            "source": {
+              "id": "plant-1000000",
+              "kind": "plant",
+              "x": -15.8,
+              "z": 6.2,
+              "species": "mijo",
+              "growth": 70.01999999999998
+            }
+          },
+          "simulationTime": 10.199999999999996
+        },
+        {
+          "id": "event-29211",
+          "type": "CropPlaced",
+          "commandId": "replacement-initial-0-4",
+          "targetId": "plant-1000002",
+          "simulationTime": 10.199999999999996,
+          "presentation": {
+            "x": -23.8,
+            "z": 10.2
+          }
+        }
+      ],
+      "status": {
+        "phase": "preparing",
+        "fault": null,
+        "active": {
+          "actorId": "worker-900011",
+          "kind": "task-start"
+        },
+        "last": {
+          "actorId": "worker-900011",
+          "kind": "idle-cycle",
+          "status": "cancelled"
+        },
+        "publicationSequence": 7
+      },
+      "error": "Error: Native task game cohort contains an unsupported mover",
+      "diagnosticSha256": "ae0432aabdd853b329365e01fee8c3254b7ea4a708bc04242d85fbb46332ea38"
+    },
+    {
+      "kind": "water",
+      "mode": "walking",
+      "before": {
+        "id": "worker-900011",
+        "x": -17.915642712474625,
+        "z": 0,
+        "status": "walking",
+        "nativeRouteAdmission": "native-task",
+        "taskId": "task-1000001"
+      },
+      "atBless": {
+        "worker": {
+          "id": "worker-900011",
+          "x": -17.915642712474625,
+          "z": 0,
+          "status": "idle",
+          "taskId": null
+        },
+        "task": null
+      },
+      "targetId": "plant-1000000",
+      "secondId": "plant-1000002",
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "aborted": false
+        },
+        {
+          "kind": "idle-cycle",
+          "committed": false,
+          "aborted": true
+        },
+        {
+          "kind": "task-start",
+          "targetId": 1000000,
+          "committed": true,
+          "aborted": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "BlessingApplied",
+          "commandId": "bless-cancelling-watering",
+          "targetId": "plant-1000000",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 10.639999999999986
+          },
+          "presentation": {
+            "x": -15.8,
+            "z": 6.2,
+            "elapsed": 10.639999999999986,
+            "source": {
+              "id": "plant-1000000",
+              "kind": "plant",
+              "x": -15.8,
+              "z": 6.2,
+              "species": "mijo",
+              "growth": 70.45999999999992
+            }
+          },
+          "simulationTime": 10.639999999999986
+        },
+        {
+          "id": "event-29211",
+          "type": "CropPlaced",
+          "commandId": "replacement-initial-0-4",
+          "targetId": "plant-1000002",
+          "simulationTime": 10.639999999999986,
+          "presentation": {
+            "x": -23.8,
+            "z": 10.2
+          }
+        }
+      ],
+      "status": {
+        "phase": "idle",
+        "fault": null,
+        "active": null,
+        "last": {
+          "actorId": "worker-900011",
+          "kind": "task-start",
+          "status": "committed",
+          "publicationSequence": 4
+        },
+        "publicationSequence": 10
+      },
+      "error": "Error: Native task game cohort contains an unsupported mover",
+      "diagnosticSha256": "dca58388fae16b6051838f6141818b2941f6a40551eafb63e257e46b1ab4f019"
+    },
+    {
+      "kind": "water",
+      "mode": "acting",
+      "before": {
+        "id": "worker-900011",
+        "x": -16.062469482421875,
+        "z": 5.412592887878418,
+        "status": "acting",
+        "nativeRouteAdmission": "native-action",
+        "taskId": "task-1000001",
+        "nativeTaskAction": {
+          "version": 1,
+          "kind": "water",
+          "duration": 2.2666666666666666,
+          "elapsed": 0.10000000000000142
+        }
+      },
+      "atBless": {
+        "worker": {
+          "id": "worker-900011",
+          "x": -16.062469482421875,
+          "z": 5.412592887878418,
+          "status": "idle",
+          "taskId": null
+        },
+        "task": null
+      },
+      "targetId": "plant-1000000",
+      "secondId": "plant-1000002",
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "aborted": false
+        },
+        {
+          "kind": "idle-cycle",
+          "committed": false,
+          "aborted": true
+        },
+        {
+          "kind": "task-start",
+          "targetId": 1000000,
+          "committed": true,
+          "aborted": false
+        },
+        {
+          "kind": "task-action",
+          "committed": true,
+          "aborted": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "BlessingApplied",
+          "commandId": "bless-cancelling-watering",
+          "targetId": "plant-1000000",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 17.699999999999896
+          },
+          "presentation": {
+            "x": -15.8,
+            "z": 6.2,
+            "elapsed": 17.699999999999896,
+            "source": {
+              "id": "plant-1000000",
+              "kind": "plant",
+              "x": -15.8,
+              "z": 6.2,
+              "species": "mijo",
+              "growth": 77.51999999999956
+            }
+          },
+          "simulationTime": 17.699999999999896
+        },
+        {
+          "id": "event-29211",
+          "type": "CropPlaced",
+          "commandId": "replacement-initial-0-4",
+          "targetId": "plant-1000002",
+          "simulationTime": 17.699999999999896,
+          "presentation": {
+            "x": -23.8,
+            "z": 10.2
+          }
+        }
+      ],
+      "status": {
+        "phase": "idle",
+        "fault": null,
+        "active": null,
+        "last": {
+          "actorId": "worker-900011",
+          "kind": "task-action",
+          "status": "committed",
+          "publicationSequence": 77
+        },
+        "publicationSequence": 82
+      },
+      "error": "Error: Native task game cohort contains an unsupported mover",
+      "diagnosticSha256": "79ec05fcceab5947e42e06b00701f8df95b4a86e6038689d76dac10f8eca99bb"
+    },
+    {
+      "kind": "initial",
+      "mode": "walking",
+      "before": {
+        "id": "worker-900011",
+        "x": -18.084357287525375,
+        "z": 0,
+        "status": "walking",
+        "nativeRouteAdmission": "native-task",
+        "taskId": "task-1000001"
+      },
+      "atBless": {
+        "worker": {
+          "id": "worker-900011",
+          "x": -18.084357287525375,
+          "z": 0,
+          "status": "idle",
+          "taskId": null
+        },
+        "task": null
+      },
+      "targetId": "plant-1000000",
+      "secondId": "plant-1000002",
+      "records": [
+        {
+          "kind": "initial-idle-body",
+          "committed": true,
+          "aborted": false
+        },
+        {
+          "kind": "task-start",
+          "targetId": 1000000,
+          "committed": true,
+          "aborted": false
+        }
+      ],
+      "events": [
+        {
+          "id": "event-29208",
+          "type": "CropPlaced",
+          "commandId": "initial-before-cancellation-0-4",
+          "targetId": "plant-1000000",
+          "simulationTime": 10,
+          "presentation": {
+            "x": -23.8,
+            "z": 10.2
+          }
+        },
+        {
+          "id": "event-29209",
+          "type": "BlessingApplied",
+          "commandId": "bless-cancelling-watering",
+          "targetId": "plant-1000000",
+          "kind": "plant",
+          "blessing": {
+            "version": 1,
+            "ordinal": 1,
+            "day": 15,
+            "at": 10.539999999999988
+          },
+          "presentation": {
+            "x": -23.8,
+            "z": 10.2,
+            "elapsed": 10.539999999999988,
+            "source": {
+              "id": "plant-1000000",
+              "kind": "plant",
+              "x": -23.8,
+              "z": 10.2,
+              "species": "mijo",
+              "growth": 0
+            }
+          },
+          "simulationTime": 10.539999999999988
+        },
+        {
+          "id": "event-29212",
+          "type": "CropPlaced",
+          "commandId": "replacement-initial-0--4",
+          "targetId": "plant-1000002",
+          "simulationTime": 10.539999999999988,
+          "presentation": {
+            "x": -23.8,
+            "z": 2.2
+          }
+        }
+      ],
+      "status": {
+        "phase": "idle",
+        "fault": null,
+        "active": null,
+        "last": {
+          "actorId": "worker-900011",
+          "kind": "task-start",
+          "status": "committed",
+          "publicationSequence": 4
+        },
+        "publicationSequence": 13
+      },
+      "error": "Error: Native task game cohort contains an unsupported mover",
+      "diagnosticSha256": "651500ec0e0a76c589f4ae0d40d46e5226ba06af2fc07f8ca2ebf96347052d5a"
+    }
+  ]
+}

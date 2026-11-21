@@ -1,0 +1,46 @@
+import {nativeIdleCyclePhaseOffset} from './native-farm-idle-phase.js';
+import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
+import {uniform,int} from 'three/tsl';
+import {copyNativeIdleCycleReference,nativeIdleCycleSuccessor,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
+import {nativeEntityNumericId} from '../world/native-entity-id.js';
+import {markRemoteClockNode} from './remote-clock-bindings.js';
+import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
+import {floorFloat32} from './float32-time.js';
+
+// Finite native program on the resident body. Both authored clips belong to
+// the same graph; the native clock selects phase, never a JS timer or RNG.
+export function createNativeIdleCycleGpuMotion({actorId,support,anchorPosition=null,anchorYaw=0,heightOffset=0}={}){
+ let reference=copyNativeIdleCycleReference(support?.reference);
+ function supported(value,r){const p=nativeIdleCycleBodyState(r.sourceBody).pose;return value?.kind==='native-idle-cycle-terrain-support'&&value.valid?.()===true&&value.point?.x===p.x&&value.point.z===p.z&&value.point.at===r.worldBoundary.effectiveTime&&Number.isFinite(value.point.height)&&Number.isFinite(Math.fround(value.point.height));}
+ if(!supported(support,reference)||nativeEntityNumericId(actorId)!==reference.actorId||![anchorYaw,heightOffset].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n)))||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(n=>Number.isFinite(n)&&Number.isFinite(Math.fround(n))))throw TypeError('Invalid native Idle cycle GPU support');
+ let source=reference;const pose=nativeIdleCycleBodyState(source.sourceBody).pose,clockNode=markRemoteClockNode(uniform(0),'relative',reference.worldBoundary.effectiveTime,null,null,null,null,null,null,null,null,null,null,null,null,reference),
+  endNode=uniform(floorFloat32(source.duration)),modeNode=uniform(source.initialState.mode==='watch'?1:0,'int'),watchKnotNode=markRemoteClockNode(uniform(nativeIdleCycleWatchKnot(reference)),'idle-cycle-watch-knot',reference.worldBoundary.effectiveTime,null,null,null,null,null,null,null,null,null,null,null,null,reference),timeNode=clockNode.clamp(0,endNode),
+  clipNames=Object.freeze(['Idle','Alert']),clipNode=timeNode.greaterThanEqual(watchKnotNode).or(modeNode.equal(1)).select(int(1),int(0)),
+  offsetHighNode=uniform(Math.fround(source.watchStartOffset)),offsetLowNode=uniform(Math.fround(source.watchStartOffset-Math.fround(source.watchStartOffset))),watchTime=timeNode.sub(offsetHighNode).sub(offsetLowNode).max(0),
+  stationary=createNativeStationaryGpuTransform({origin:pose,height:support.point.height,heading:pose.yaw,anchorPosition,anchorYaw,heightOffset,label:'Idle cycle'}),phases=new Map(),phaseOffsets=new Map(),bases=new Map();
+ let disposed=false,sealed=false,executionEpoch=reference.worldBoundary.effectiveTime;
+ function check(){if(disposed)throw Error('Native Idle cycle GPU motion disposed');}
+ function age(value){check();if(!Number.isFinite(value)||value<0||Math.fround(value)!==value)throw TypeError('Native Idle cycle requires its submitted relative float');return Math.min(value,endNode.value);}
+ function phase(clip,duration){check();if(!clipNames.includes(clip)||!Number.isFinite(duration)||duration<=0||!Number.isFinite(Math.fround(duration))||Math.fround(duration)===0)throw TypeError('Invalid native Idle cycle clip');return Math.fround((source.initialState.mode===(clip==='Idle'?'rest':'watch')?source.initialState.elapsed:0)%duration);}
+ function reusable(nextSupport){
+  const next=copyNativeIdleCycleReference(nextSupport?.reference);
+  return !disposed&&sealed&&supported(nextSupport,next)&&next.sourceCycleSequence>0&&next.actorId===reference.actorId&&next.bodyId===reference.bodyId&&next.profile===reference.profile&&next.worldBoundary.authorityEpoch===reference.worldBoundary.authorityEpoch&&next.worldBoundary.nativeSession===reference.worldBoundary.nativeSession&&next.worldBoundary.ticket>reference.worldBoundary.ticket&&JSON.stringify(next.sourceBody)===JSON.stringify(reference.sourceBody)&&nextSupport.point.height===support.point.height;
+ }
+ return {actorId,clockNode,watchKnotNode,timeNode,clipNode,clipNames,bindingAnchor:stationary.bindingAnchor,
+  resolve(_fallback,clip,duration){const base=phase(clip,duration),key=clip+':'+duration;let node=phases.get(key);if(!node){let offset=phaseOffsets.get(duration);if(!offset){offset=markRemoteClockNode(uniform(0),'idle-offset',reference.worldBoundary.effectiveTime,null,null,null,null,duration,null,null,null,null,null,null,null,reference);phaseOffsets.set(duration,offset);}const baseNode=uniform(base);bases.set(key,{node:baseNode,clip,duration});node=(clip==='Idle'?timeNode:watchTime).add(baseNode).add(offset);phases.set(key,node);}return node;},
+  sampleForClip(value,clip,duration,phaseOffset){const base=phase(clip,duration),t=age(value),local=clip==='Idle'?t:Math.max(0,Math.fround(Math.fround(t-offsetHighNode.value)-offsetLowNode.value)),offset=phaseOffset??nativeIdleCyclePhaseOffset({elapsed:value,executionEpoch:0,relativeTime:t,duration:source.duration,period:duration});if(!Number.isFinite(offset)||Math.fround(offset)!==offset)throw TypeError('Invalid submitted Idle cycle phase offset');return Math.fround(Math.fround(local+base)+offset);},
+  sampleClip(value){const t=age(value);return source.initialState.mode==='watch'||t>=watchKnotNode.value?'Alert':'Idle';},
+  bind(material){check();return stationary.bind(material);},unbind:stationary.unbind,sample(value){age(value);return stationary.sample();},
+  canReuseNativeIdleCycle:reusable,
+  reuseNativeIdleCycle(nextSupport,{retagClock}={}){check();if(typeof retagClock!=='function'||!reusable(nextSupport))return false;const next=copyNativeIdleCycleReference(nextSupport.reference);
+   for(const node of [clockNode,watchKnotNode,...phaseOffsets.values()])if(retagClock(node,reference,next)!==true)throw Error('Retired Idle graph clock was not rebound');
+   reference=source=next;support=nextSupport;executionEpoch=next.worldBoundary.effectiveTime;sealed=false;clockNode.value=0;watchKnotNode.value=nativeIdleCycleWatchKnot(next);endNode.value=floorFloat32(next.duration);modeNode.value=next.initialState.mode==='watch'?1:0;offsetHighNode.value=Math.fround(next.watchStartOffset);offsetLowNode.value=Math.fround(next.watchStartOffset-offsetHighNode.value);
+   for(const base of bases.values())base.node.value=phase(base.clip,base.duration);for(const node of phaseOffsets.values())node.value=0;return true;
+  },
+  retargetNativeIdleCycle(nextSupport,{retagClock}={}){check();if(sealed||typeof retagClock!=='function')throw Error('Native Idle cycle already published');const next=copyNativeIdleCycleReference(nextSupport?.reference);if(!supported(nextSupport,next)||!nativeIdleCycleSuccessor(reference,next)||nextSupport.point.height!==support.point.height)return false;if(retagClock(clockNode,reference,next)!==true||retagClock(watchKnotNode,reference,next)!==true)throw Error('Native Idle cycle clock was not retagged');for(const offset of phaseOffsets.values())if(retagClock(offset,reference,next)!==true)throw Error('Native Idle cycle phase clock was not retagged');reference=next;support=nextSupport;executionEpoch=next.worldBoundary.effectiveTime;watchKnotNode.value=nativeIdleCycleWatchKnot(reference,executionEpoch);return Object.freeze({changedData:false,nativeIdleCycle:reference});},
+  setExecutionEpoch(at){check();if(sealed||!Number.isFinite(at)||at<reference.worldBoundary.effectiveTime)throw Error('Native Idle cycle execution origin unavailable');executionEpoch=at;watchKnotNode.value=nativeIdleCycleWatchKnot(reference,at);},
+  seal(){check();sealed=true;},valid:()=>!disposed&&support.valid()===true,
+  status(){return {disposed,sealed,nativeIdleCycle:reference,executionEpoch,installed:disposed?null:Object.freeze({start:Object.freeze({at:reference.worldBoundary.effectiveTime,x:pose.x,y:support.point.height+heightOffset,z:pose.z}),segments:0,nativeIdleCycle:reference})};},
+  dispose(){if(disposed)return;disposed=true;stationary.dispose();phases.clear();phaseOffsets.clear();bases.clear();}
+ };
+}

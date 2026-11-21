@@ -1,0 +1,107 @@
+{
+  "source": "4f96697ecbc543701ac624dd6ce5c6ccf551d9a8",
+  "command": {
+    "kind": "placeStructure",
+    "id": "native-gate-resident-control",
+    "structure": {
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": true,
+      "yaw": 0,
+      "x": -11.8,
+      "z": 8.2
+    }
+  },
+  "chunkKeys": [
+    "-1,-1",
+    "0,-1",
+    "1,-1",
+    "-1,0",
+    "0,0",
+    "1,0",
+    "-1,1",
+    "0,1",
+    "1,1",
+    "2,-1",
+    "2,0",
+    "2,1"
+  ],
+  "legacy": {
+    "events": [
+      "PlacementCommitted"
+    ],
+    "gate": {
+      "id": "structure-1000000",
+      "created": 29207,
+      "kind": "wall",
+      "material": "zarzas",
+      "gate": true,
+      "x": -11.8,
+      "z": 8.2,
+      "yaw": 0,
+      "maxHp": 60,
+      "hp": 60,
+      "status": "intact",
+      "villageId": "village-1",
+      "cost": 10,
+      "collapseRemaining": 0
+    }
+  },
+  "farm": {
+    "originalTicket": 1,
+    "admission": "native-farm-arrival"
+  },
+  "result": {
+    "value": false,
+    "rejection": "La construcción necesita su preparación nativa",
+    "events": [],
+    "charged": false,
+    "sameStructures": true,
+    "recordKinds": [
+      "farm-arrival"
+    ],
+    "faults": []
+  },
+  "restoredWithGate": {
+    "productionStatus": {
+      "phase": "unsupported-cohort",
+      "fault": null,
+      "active": null,
+      "last": null
+    }
+  },
+  "preparedCommand": {
+    "source": "f8b3bb692093f23cc4933fe4dc0557d1bbc6b323",
+    "entryPoints": [
+      "prepareNativeStructureCommand",
+      "beginNativeStructureCommand",
+      "execute",
+      "finishNativeStructureCommand"
+    ],
+    "farm": {
+      "originalTicket": 1,
+      "admission": "native-farm-arrival"
+    },
+    "result": {
+      "value": false,
+      "rejection": "La construcción nativa admite por ahora solo muros sólidos nuevos en regiones residentes",
+      "events": [],
+      "charged": false,
+      "sameStructures": true,
+      "recordKinds": [
+        "farm-arrival"
+      ],
+      "faults": []
+    },
+    "restoredWithGate": {
+      "productionStatus": {
+        "phase": "idle",
+        "fault": null,
+        "active": null,
+        "last": null,
+        "publicationSequence": 0
+      }
+    },
+    "diagnosticSha256": "c4adf28c8407f9fb88fecdf46582064e6eea07f76c254e13c928248ae3a27d99"
+  }
+}

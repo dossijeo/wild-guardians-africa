@@ -1,0 +1,54 @@
+vite v6.4.3 building for production...
+transforming...
+✓ 678 modules transformed.
+rendering chunks...
+computing gzip size...
+.cache/b-three-close-build/assets/loading-image-worker-CNcGMC6u.js                0.51 kB
+.cache/b-three-close-build/index.html                                             0.56 kB │ gzip:     0.38 kB
+.cache/b-three-close-build/assets/biome-tangents-worker-Ch_kHS7g.js               1.44 kB
+.cache/b-three-close-build/assets/mangrove-mud-edge-worker-Dd-smhXK.js            2.40 kB
+.cache/b-three-close-build/assets/sky-pixels-worker-TPp-8HSF.js                   2.88 kB
+.cache/b-three-close-build/assets/cinematic-pencil-webgpu-worker-CgZB4o7R.js      6.63 kB
+.cache/b-three-close-build/assets/building-data-worker-Yf5KmUwU.js               10.15 kB
+.cache/b-three-close-build/assets/horizon-worker-CzbkByWh.js                     17.80 kB
+.cache/b-three-close-build/assets/baked-beast-fallbacks-qyJLH_71.js              33.65 kB
+.cache/b-three-close-build/assets/chunk-worker-B78_hbk5.js                       33.74 kB
+.cache/b-three-close-build/assets/spatial-horizon-worker-BJD1l_Jx.js             46.74 kB
+.cache/b-three-close-build/assets/snapshot-decode-worker-VLPBpaoq.js             56.39 kB
+.cache/b-three-close-build/assets/far-ground-seam-worker-Dgo4FdCt.js             59.60 kB
+.cache/b-three-close-build/assets/worker-checkpoint-store-Bm9KpgkW.js            75.50 kB
+.cache/b-three-close-build/assets/mud-worker-browser-B5t3QxSD.js                 83.54 kB
+.cache/b-three-close-build/assets/far-scene-worker-DwJ8mTMX.js                   87.24 kB
+.cache/b-three-close-build/assets/worker-beast-physics-Bhen1h9s.js              118.96 kB
+.cache/b-three-close-build/assets/worker-runtime-host-BJB79Ch1.js               139.14 kB
+.cache/b-three-close-build/assets/spatial-initial-site-worker-B3YqifXj.js       148.48 kB
+.cache/b-three-close-build/assets/character-preview-data-worker-Czpum4u3.js     156.95 kB
+.cache/b-three-close-build/assets/fresh-worker-bootstrap-worker-Dnh-4-D5.js     222.12 kB
+.cache/b-three-close-build/assets/guardian-3d-worker-DC36L3OT.js                241.11 kB
+.cache/b-three-close-build/assets/spatial-savanna-upTRNM09.wasm                 600.88 kB │ gzip:   202.24 kB
+.cache/b-three-close-build/assets/simulation-authority-worker-D4SbC1xX.js       900.58 kB
+.cache/b-three-close-build/assets/guardian-3d-webgpu-experiment-zk6agvr8.js   1,114.51 kB
+.cache/b-three-close-build/assets/worker-loading-diorama-render-2OtLNpJA.js   1,121.55 kB
+.cache/b-three-close-build/assets/webgpu-world-worker-B-nVOZj-.js             2,137.61 kB
+.cache/b-three-close-build/assets/index-Dzi8qAYD.css                             45.14 kB │ gzip:    10.27 kB
+.cache/b-three-close-build/assets/native-bc7-glb-BuljZlDR.js                      0.24 kB │ gzip:     0.20 kB
+.cache/b-three-close-build/assets/far-atmosphere-Bqvztrmn.js                      0.39 kB │ gzip:     0.27 kB
+.cache/b-three-close-build/assets/tutorial-hand-target-CNSKdQHA.js                1.66 kB │ gzip:     0.88 kB
+.cache/b-three-close-build/assets/mangrove-fern-lod-CFYd5mjF.js                   4.27 kB │ gzip:     2.05 kB
+.cache/b-three-close-build/assets/mangrove-fern-material-N7gXMNXa.js              6.52 kB │ gzip:     2.92 kB
+.cache/b-three-close-build/assets/mountain-backdrop-profile-DkigJDNZ.js           8.61 kB │ gzip:     3.14 kB
+.cache/b-three-close-build/assets/loading-diorama--cSxWVFB.js                    29.11 kB │ gzip:     9.86 kB
+.cache/b-three-close-build/assets/crop-library-Dyzv61wh.js                       33.84 kB │ gzip:    12.40 kB
+.cache/b-three-close-build/assets/KTX2Loader-CyPjdOHN.js                         59.18 kB │ gzip:    24.02 kB
+.cache/b-three-close-build/assets/far-vegetation-BvUrg59O.js                     90.90 kB │ gzip:    30.32 kB
+.cache/b-three-close-build/assets/scene-C4uD-vgg.js                             643.63 kB │ gzip:   212.60 kB
+.cache/b-three-close-build/assets/index-BwSArH5n.js                           2,006.12 kB │ gzip:   599.47 kB
+.cache/b-three-close-build/assets/rapier-Dr7-2af2.js                          4,336.69 kB │ gzip: 1,645.15 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1m 24s
+Shared GLB images: 22 models, 11 banks, 35379776 bytes saved
+Wall buffer bank: { filesSaved: 159, bytes: 5135464 }

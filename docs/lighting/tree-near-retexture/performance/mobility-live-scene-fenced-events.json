@@ -1,0 +1,41 @@
+{
+  "network": true,
+  "chunks": 25,
+  "animals": 20,
+  "initMs": 859.9499999880791,
+  "tickMs": 1052.9099999964237,
+  "responseMs": 1064.2049999982119,
+  "applyDelayMs": 3.1700000017881393,
+  "applyMs": 1.2650000005960464,
+  "projectionBytes": 3872,
+  "snapshotBytes": 39648,
+  "actorsApplied": 21,
+  "actorsChanged": 5,
+  "eventsReceived": 12,
+  "observerCount": 12,
+  "simulationObserverCount": 0,
+  "fenceState": {
+    "received": 1,
+    "nextEvent": 12,
+    "displayed": 1,
+    "minimum": 1,
+    "pending": 0,
+    "fault": false,
+    "hide": false
+  },
+  "frames": {
+    "count": 149,
+    "p95": 33.44999999999709,
+    "p99": 33.51000000000204,
+    "max": 33.525000000001455
+  },
+  "renderMs": {
+    "count": 150,
+    "p95": 32.940000012516975,
+    "p99": 37.95000000298023,
+    "max": 38.83500000834465
+  },
+  "fullSnapshotEqual": true,
+  "sceneErrors": [],
+  "scope": "One experimental confirmed actor-position publication from a Worker-owned clone into a frozen real mangrove-islands QA scene. QA animal ID 0 renamed in clone, 25 scene chunk keys, no physics manager in clone; only x/z/heading copied, no gameplay, routes, events, time, collision, smooth interpolation, animation synchronization, input, or production authority. The main scene remains a separate native world. Events and actor positions are delivered inside a diagnostic visual fence, with every event classified as structural; no simulation observer receives the external events. Snapshot requested separately for validation. This does not prove safe synchronization, reliability, collision validation or visual interpolation."
+}

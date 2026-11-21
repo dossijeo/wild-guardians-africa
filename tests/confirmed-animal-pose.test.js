@@ -1,0 +1,11 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {Group,Bone} from 'three';import {applyConfirmedAnimalPose} from '../src/rendering/confirmed-animal-pose.js';
+const transform=(x=0)=>[x,0,0,0,0,0,1,1,1,1];
+function fixture(){const root=new Group(),model=new Group(),bone=new Bone();bone.name='Hips';model.add(bone);root.add(model);return {root,model,bone,pose:{actorId:'a',active:true,root:transform(3),model:transform(1),bones:[{name:'Hips',transform:transform(2)}]}};}
+test('applies the complete confirmed pose to existing render objects',()=>{const {root,model,bone,pose}=fixture();applyConfirmedAnimalPose(root,model,pose);assert.equal(root.position.x,3);assert.equal(model.position.x,1);assert.equal(bone.position.x,2);assert.equal(bone.getWorldPosition(root.position.clone()).x,6);});
+test('invalid or incompatible poses fail before modifying any transform',()=>{const {root,model,bone,pose}=fixture();for(const bad of [{...pose,bones:[{name:'Other',transform:transform(2)}]},{...pose,bones:[{name:'Hips',transform:[NaN]}]},{...pose,active:false}]){assert.throws(()=>applyConfirmedAnimalPose(root,model,bad));assert.equal(root.position.x,0);assert.equal(model.position.x,0);assert.equal(bone.position.x,0);}});
+
+test('auxiliary physics toe tips absent from visual rig do not shift applied bone transforms',()=>{
+ const {root,model,bone,pose}=fixture(),tip=name=>({name,transform:transform(99)}),extra={...pose,bones:[tip('LeftToeBase'),...pose.bones,tip('RightToeBase')]};
+ applyConfirmedAnimalPose(root,model,extra);assert.equal(bone.position.x,2);assert.equal(root.position.x,3);
+ for(const bad of [{...pose,bones:[tip('LeftToeBase'),tip('LeftToeBase'),...pose.bones]},{...pose,bones:[{name:'LeftToeBase',transform:[NaN]},...pose.bones]},{...pose,bones:[tip('OtherToeBase'),...pose.bones]},{...pose,bones:[tip('LeftToeBase')]}])assert.throws(()=>applyConfirmedAnimalPose(root,model,bad));
+});

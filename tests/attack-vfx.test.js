@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import * as THREE from 'three';
-import {AttackVfx,attackVfxPlans,attackVfxContacts} from '../src/rendering/attack-vfx.js';
+import {AttackVfx,attackVfxPlans,attackVfxContacts,attackVfxPlanFromEvent} from '../src/rendering/attack-vfx.js';
 import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {ANIMAL_ACTIONS as A} from '../src/simulation/animal-actions-data.js';
@@ -73,3 +73,8 @@ test('Legacy center hit facts recover native culture and yaw from the retained s
   assert.deepEqual(attackVfxPlans(deserialize(before))[0],expected);assert.equal(target.hp,575);
  }
 });
+
+test('versioned hit visual equals its event snapshot after targets and raid are removed',()=>{
+ for(const species of Object.keys(A.animals))for(const culture of Game.CULTURES)for(const blocked of [false,true]){const {state,target,duration}=fixture(species,'Weapon_Combo',culture);target.yaw=.73;if(blocked)state.spells.push({id:'shield',kind:'shield',x:target.x,z:target.z,radius:4,remaining:20});Game.tick(state,duration+.01,nav);const event=state.events.find(e=>e.type==='AnimalLogicalHit');assert.equal(event.presentation.version,1);for(const age of [0,.15,.6]){state.elapsed=event.presentation.elapsed+age;state.events=[event];const legacy={...event,presentation:{...event.presentation,version:undefined}},expected=attackVfxPlans({...state,events:[legacy]})[0]??null;assert.deepEqual(attackVfxPlanFromEvent(event,state.elapsed),expected);const later={...state,structures:[],plants:[],spells:[],raid:null};assert.deepEqual(attackVfxPlans(later)[0]??null,expected);}assert.equal(attackVfxPlanFromEvent(event,event.presentation.elapsed-1),null);}
+});
+test('production attack plan consumes the versioned self-contained event path',()=>{const {state,duration}=fixture('hyena','Weapon_Combo');Game.tick(state,duration+.01,nav);const event=state.events.find(e=>e.type==='AnimalLogicalHit');let inspected=0;Object.defineProperty(event.presentation,'version',{configurable:true,get(){inspected++;return 1;}});state.raid=null;state.structures=[];state.events=[event];assert.ok(attackVfxPlans(state)[0]);assert.ok(inspected>0,'versioned event path was not invoked');});

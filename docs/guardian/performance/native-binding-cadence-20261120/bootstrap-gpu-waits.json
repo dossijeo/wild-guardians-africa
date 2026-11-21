@@ -1,0 +1,106 @@
+{
+  "targetMs": 16.666666666666668,
+  "captures": {
+    "baseline": {
+      "rawTraceSha256": "046bd536177f8a133da90701fb2df422aeb5583eda53a89ad181c73152e2aad3",
+      "sourceEventCount": 3901201,
+      "drawStartGapMs": 188.545166015625,
+      "drawStartWindowAbsoluteMs": [
+        1795208151132.8699,
+        1795208151321.415
+      ],
+      "closingDraw": {
+        "at": 1795208151321.415,
+        "sequence": 3,
+        "trigger": "raf",
+        "nativeWorldBoundary": null,
+        "intervalMs": 188.545166015625,
+        "drawMs": 0.27490234375,
+        "replay": true,
+        "clockElapsed": 10,
+        "safeUntil": 10,
+        "cameraVersion": null,
+        "ordinal": 121
+      },
+      "endAccess": {
+        "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+        "pid": 12552,
+        "tid": 24392,
+        "ts": 624524588751,
+        "dur": 204367,
+        "tdur": 77,
+        "thread": "CrGpuMain",
+        "ms": 204.367,
+        "cpuMs": 0.077
+      },
+      "containingSwapBuffers": {
+        "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+        "pid": 12552,
+        "tid": 24392,
+        "ts": 624524588748,
+        "dur": 204565,
+        "tdur": 267,
+        "thread": "CrGpuMain",
+        "ms": 204.565,
+        "cpuMs": 0.267
+      },
+      "overlappingDawnWorkers": 0
+    },
+    "candidate": {
+      "rawTraceSha256": "feede81097e8bf17654ff647cfe88bb7d0f1ec127c999fe17a59e9b57c1960d7",
+      "sourceEventCount": 3890602,
+      "drawStartGapMs": 206.18994140625,
+      "drawStartWindowAbsoluteMs": [
+        1795208405867.1501,
+        1795208406073.34
+      ],
+      "closingDraw": {
+        "at": 1795208406073.34,
+        "sequence": 3,
+        "trigger": "raf",
+        "nativeWorldBoundary": null,
+        "intervalMs": 206.18994140625,
+        "drawMs": 0.25,
+        "replay": true,
+        "clockElapsed": 10,
+        "safeUntil": 10,
+        "cameraVersion": null,
+        "ordinal": 67
+      },
+      "endAccess": {
+        "name": "SkiaOutputSurfaceImplOnGpu::EndAccessImages",
+        "pid": 24264,
+        "tid": 17152,
+        "ts": 624779323401,
+        "dur": 221413,
+        "tdur": 371,
+        "thread": "CrGpuMain",
+        "ms": 221.413,
+        "cpuMs": 0.371
+      },
+      "containingSwapBuffers": {
+        "name": "SkiaOutputSurfaceImplOnGpu::SwapBuffers",
+        "pid": 24264,
+        "tid": 17152,
+        "ts": 624779323398,
+        "dur": 221717,
+        "tdur": 608,
+        "thread": "CrGpuMain",
+        "ms": 221.717,
+        "cpuMs": 0.608
+      },
+      "overlappingDawnWorkers": 0
+    }
+  },
+  "sources": {
+    "skia_output_surface_impl_on_gpu.cc": {
+      "sha256": "0aefc1c1f463fac1dad206d134ddf4d356b572766e0061009aeed90bcfe0f0eb",
+      "revision": "671d6af90da4ab79e89cabbd7220cae70025cc11"
+    },
+    "image_context_impl.cc": {
+      "sha256": "c7836b11ac9c377dafc2b2f0cd3daa2472bd66a2e45b7acfbb608b3193ff86d2",
+      "revision": "671d6af90da4ab79e89cabbd7220cae70025cc11"
+    }
+  },
+  "scope": "GPU process and trace scope located. No image, native wait stack or causally associated resource identified."
+}

@@ -1,0 +1,75 @@
+{
+  "geometryChanged": false,
+  "textures": [
+    {
+      "name": "buffalo-lids-v4.atlas.png",
+      "before": [
+        1024,
+        1024
+      ],
+      "after": [
+        1024,
+        1024
+      ]
+    },
+    {
+      "name": "Image_0",
+      "before": [
+        8192,
+        8192
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "Image_2",
+      "before": [
+        4096,
+        4096
+      ],
+      "after": [
+        2048,
+        2048
+      ]
+    }
+  ],
+  "bytes": 15085209,
+  "originalPackagingSource": "C:\\tmp\\guardian-faces\\buffalo-oral-v4.blend",
+  "source": "content/source/actors/buffalo/expressive-pre-arm.blend",
+  "normalRevision": {
+    "pipeline": "tools/guardian/study_buffalo_arm_normals.py",
+    "transfer": "tools/guardian/transfer_authored_normals.py",
+    "scope": "Rear mane plus localized arm normals; non-normal runtime payloads preserved",
+    "sourceAudit": "docs/guardian/phase2/vfx-scalar-review/buffalo-arm-source-audit.json"
+  },
+  "files": {
+    "expressive-pre-mane.blend": {
+      "bytes": 14992262,
+      "sha256": "6f52cb652aee89963a445527762041b31ce04a67c43c2804133c633100d59436"
+    },
+    "expressive-pre-arm.blend": {
+      "bytes": 15012303,
+      "sha256": "46439b046b4fb42735a085933b2e6f135676577e910a0c28cdc6159e77375315"
+    },
+    "expressive-candidate.blend": {
+      "bytes": 15085209,
+      "sha256": "ac62a5e30c39298832d40de3dc8a192e2be9dddb8d81627e5a3d79b1cc5ebc03"
+    },
+    "expressive-candidate.glb": {
+      "bytes": 6117900,
+      "sha256": "057eaeef7ff6a0159de12270b941bd533942d0337ed44abecca3f20bd7c59772"
+    },
+    "expressive-pre-fur.blend": {
+      "bytes": 15078153,
+      "sha256": "fe7d2241c34bd9c470856d3fc0f8f2e61104190819468ef6d5fa551e72074a8f"
+    }
+  },
+  "furLightingMask": {
+    "sourceSha256": "cbe635e87c120401a013b10b2d5fc76a9d1babb83bfbed79dd9957b722b1dd6b",
+    "report": "docs/guardian/phase2/vfx-scalar-review/buffalo-masked-fur.md",
+    "attribute": "_FUR_LIGHT",
+    "pipeline": "tools/guardian/transfer_fur_mask.py"
+  }
+}

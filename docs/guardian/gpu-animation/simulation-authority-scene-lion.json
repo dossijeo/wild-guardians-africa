@@ -1,0 +1,28 @@
+{
+  "species": "lion",
+  "biome": "manglares",
+  "network": true,
+  "animalId": "qa-beast-1",
+  "site": {
+    "x": 54.59110991546882,
+    "z": -36.89417145876975
+  },
+  "chunks": 25,
+  "publications": 86,
+  "framesWhilePending": 210,
+  "activeSteps": 82,
+  "verifiedPoses": 82,
+  "phases": [
+    "released",
+    "falling",
+    "rolling",
+    "recovering"
+  ],
+  "finalPhase": "released",
+  "visualEvents": 51,
+  "simulationEvents": 0,
+  "saveAvailable": true,
+  "sequence": 86,
+  "sceneErrors": [],
+  "scope": "One programmatic impact on a relocated animal in the real island-mangrove WorldScene QA fixture with 20 animals. Worker physics supports only that actor and rejects missing nearby building geometry. Confirmed poses are applied on the main thread, not GPU. No original WorldScene physical comparison, player UI, multiple ragdolls, moving obstacles, recovery across save, production integration or continuous visual acceptance."
+}

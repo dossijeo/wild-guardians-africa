@@ -1,0 +1,24 @@
+{
+  "baseCommit": "c0b796b026e0363fe0f1901ee9111360afc65de7",
+  "files": {
+    "src/rendering/remote-webgpu-host.js": "e0b57854eae577f5d8b8e5f8d11a02a6712521fb42fcee14e4810a5b0db65de5",
+    "src/rendering/remote-webgpu-client.js": "d93997b0cf39f2177db21b3c71a437463c61ef316a99a05209e451c25626f34a",
+    "tests/helpers/remote-webgpu-fixture.js": "c5e2f860c91fcd016cb617f209daa4da9af68d1d96a37f1c0fb5426baad00262",
+    "tests/remote-webgpu.test.js": "107da87f58feee5c67201eb02d29c1b5b054305f8d9b7f40ba8c04b8322cb019",
+    "tests/native-task-settlement-remote.test.js": "f66df447d4a2d45cc546ae9041d68ceed87a3cb230224a98e8874f8926c4ef05",
+    "src/rendering/remote-prepared-first-use.js": "f050bdf3463a4ce636ead0d6451cb083f0b88f904ce5bc1439989f83bc8a7f2e",
+    "tests/remote-prepared-first-use.test.js": "fa5c82375e4a161f2480aceabae4d53b33b33e07cb9dd6c77d486b52064380b5"
+  },
+  "cases": [
+    {
+      "label": "olderMale",
+      "profile": "olderMale",
+      "output": ".cache/native-first-use-pilot-olderMale.json",
+      "log": ".cache/native-first-use-pilot-olderMale.log",
+      "startedAt": "2026-11-20T05:53:30.495Z",
+      "finishedAt": "2026-11-20T05:54:48.426Z",
+      "wallMs": 77931,
+      "exitCode": 0
+    }
+  ]
+}

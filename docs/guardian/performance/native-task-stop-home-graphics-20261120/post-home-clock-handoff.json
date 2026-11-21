@@ -1,0 +1,68 @@
+{
+  "sourceBase": "7b0f5dcd9f8a60426228532de8d7f2092fe7e521",
+  "environment": {
+    "browser": "Edge Chromium",
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "desktopRefreshHz": 30,
+    "warmVisualBootstrap": true
+  },
+  "controlledReproduction": {
+    "graphicsSourceCommit": "5d43ffc2be2ee713ca7adecebf30e35071c46102",
+    "source": "Harvest / Carry / Home",
+    "lastPresented": 98.14327059565188,
+    "staleCoverageThrough": 98.09327059565189
+  },
+  "cases": [
+    {
+      "profile": "olderMale",
+      "before": {
+        "lastPresented": 41.949999999999115,
+        "possibleElapsed": 41.89999999999911,
+        "home19": 41.849999999999106,
+        "actorStatus": "home"
+      },
+      "after": {
+        "drawTickets": [
+          2,
+          5,
+          8,
+          10
+        ],
+        "timeGuardRejections": 0,
+        "staleClockDiscardsObserved": 0,
+        "sameRoot": true,
+        "actorRetired": true,
+        "gpuErrors": 0,
+        "consumerDrained": true
+      }
+    },
+    {
+      "profile": "youngMale",
+      "before": {
+        "lastPresented": 43.39999999999924,
+        "possibleElapsed": 43.349999999999234,
+        "home19": 43.29999999999923,
+        "actorStatus": "home"
+      },
+      "after": {
+        "drawTickets": [
+          2,
+          5,
+          8,
+          10
+        ],
+        "timeGuardRejections": 0,
+        "staleClockDiscardsObserved": 0,
+        "sameRoot": true,
+        "actorRetired": true,
+        "gpuErrors": 0,
+        "consumerDrained": true
+      }
+    }
+  ]
+}

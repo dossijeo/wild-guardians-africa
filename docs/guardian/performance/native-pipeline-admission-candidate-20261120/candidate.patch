@@ -1,0 +1,148 @@
+--- a/src/rendering/remote-webgpu-host.js
++++ b/src/rendering/remote-webgpu-host.js
+@@ -284,6 +284,15 @@
+     }
+     return waits.length ? Promise.all(waits) : null;
+   }
++  let nativePipelineEntry=null;
++  function releaseNativePipeline(entry){
++    if(nativePipelineEntry!==entry)return;
++    nativePipelineEntry=null;
++    if(stopped||failed||nativeConsumerRetirement)return;
++    for(const job of pendingResources.values())if(job.resumePipeline){
++      const resume=job.resumePipeline;delete job.resumePipeline;queueMicrotask(resume);break;
++    }
++  }
+   function createResourceJob(message, dependencies, build, extra = {}) {
+     if (resources.has(message.id)) throw Error(`Duplicate remote resource ${message.id}`);
+     const waiting = waitForResources(dependencies);
+@@ -294,18 +303,30 @@
+     promise.catch(() => {});
+     pendingResources.set(message.id, { promise, reject: rejectReady });
+     const failedJob = error => {
++      try{
+       entry.pending = false; pendingResources.delete(message.id); rejectReady(error);
+       if (stopped) return;
+       reply(message, null, error);
+       if (!deviceDestroyRequested) fail(error);
++      }finally{releaseNativePipeline(entry); }
+     };
+     const finished = value => {
++      try{
+       if (stopped) { rejectReady(Error('Remote GPU disposed during preparation')); return; }
+       entry.value = value; entry.pending = false; pendingResources.delete(message.id);
+       resolveReady(entry); reply(message); tryRetire(entry);
++      }finally{releaseNativePipeline(entry); }
+     };
+     const start = () => {
+       if (stopped || failed) { failedJob(Error('Remote GPU preparation canceled')); return; }
++      if(/^create(?:Render|Compute)Pipeline(?:Async)?$/.test(entry.kind)){
++        if(nativeConsumerRetirement)return; // Terminal disposal owns these unstarted promises.
++        // Async native factories can saturate the driver compiler pool. Keep
++        // unstarted jobs with their existing promises/dependencies instead of
++        // blocking resource dispatch, credits or the independent draw owner.
++        if(nativePipelineEntry){pendingResources.get(message.id).resumePipeline=()=>startReady().catch(failedJob);return;}
++        nativePipelineEntry=entry;
++      }
+       // Resolve the native dependency generation held by this job, not whatever
+       // happens to be in the global alias table when asynchronous work finishes.
+       const previous = resolutionResources; resolutionResources = entry.dependencyEntries;
+@@ -318,10 +339,11 @@
+       } catch (error) { failedJob(error); }
+       finally { resolutionResources = previous; }
+     };
+-    if (waiting) waiting.then(async () => {
++    const startReady=async()=>{
+       const yielding=resourceBudget();if(yielding)await yielding;
+       start();
+-    }).catch(failedJob);
++    };
++    if (waiting) waiting.then(startReady).catch(failedJob);
+     else start();
+   }
+   function snapshotResources(initial,{allowPending=false,source=null}={}) {
+--- /dev/null
++++ b/tests/remote-pipeline-admission.test.js
+@@ -0,0 +1,82 @@
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
++import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
++import {createNativeIntentControlPublication} from '../src/simulation/native-intent-control-publication.js';
++
++// Production Host/client; deferred native factories and virtual GPU/RAF.
++// This proves admission/ownership, not physical frame cadence or driver cost.
++function gate(f){
++ const jobs=[];let closing=false;
++ const create=kind=>descriptor=>new Promise((resolve,reject)=>{
++  const value={descriptor,getBindGroupLayout:()=>({kind:'original-native-layout'})};
++  const job={kind,descriptor,value,resolve:()=>resolve(value),reject};jobs.push(job);if(closing)job.resolve();
++ });
++ f.gpu.device.createRenderPipelineAsync=create('render');f.gpu.device.createComputePipelineAsync=create('compute');
++ return {jobs,release(){closing=true;for(const job of jobs)job.resolve();}};
++}
++
++test('pending native compilation bounds native starts while dispatch, resident draws and inspection continue',async()=>{
++ const f=await fixture({}, {absoluteNow:()=>1000}),g=gate(f);let first,second;
++ try{
++  const shown=f.frame(1);await flush();await f.host.idle();f.host.present();await shown;
++  first=f.client.device.createRenderPipelineAsync({label:'first'});second=f.client.device.createRenderPipelineAsync({label:'second'});first.catch(()=>{});second.catch(()=>{});
++  await flush();assert.equal(g.jobs.length,1,'native jobs must not flood the compiler while an earlier pipeline is unresolved');
++  const before=f.gpu.canvasSubmissions.length;f.host.present();assert.equal(f.gpu.canvasSubmissions.length,before+1);assert.equal(f.host.inspect().activeSequence,1);
++  const {consumer:inspection}=await f.client.inspectAsync();assert.equal(inspection.pendingResources,2);assert.equal(f.client.inspect().transportInFlight,0);assert.equal(inspection.failed,false);
++  g.jobs[0].resolve();await first;await flush();assert.equal(g.jobs.length,2);assert.equal(g.jobs[1].descriptor.label,'second');
++  g.jobs[1].resolve();await second;await f.host.idle();assert.equal(f.host.inspect().pendingResources,0);assert.deepEqual(f.errors,[]);
++ }finally{g.release();f.client.dispose();await f.host.dispose();await Promise.allSettled([first,second]);}
++});
++
++test('render and compute compilation share admission and retain the original layout dependency',async()=>{
++ const f=await fixture({}, {absoluteNow:()=>1000}),g=gate(f);let compute;
++ try{
++  const render=f.client.device.createRenderPipeline({label:'render'}),layout=render.getBindGroupLayout(0);
++  compute=f.client.device.createComputePipelineAsync({label:'compute',layout});compute.catch(()=>{});
++  await flush();assert.equal(g.jobs.length,1);g.jobs[0].resolve();await flush();
++  assert.equal(g.jobs.length,2);assert.equal(g.jobs[1].kind,'compute');assert.equal(g.jobs[1].descriptor.layout.kind,'original-native-layout');
++  g.jobs[1].resolve();await compute;await f.host.idle();assert.deepEqual(f.errors,[]);
++ }finally{g.release();f.client.dispose();await f.host.dispose();await Promise.allSettled([compute]);}
++});
++
++test('disposal rejects queued compilation and does not wait for or start the next native factory',async()=>{
++ const f=await fixture({}, {absoluteNow:()=>1000}),g=gate(f);const a=f.client.device.createRenderPipelineAsync({label:'in-flight'}),b=f.client.device.createRenderPipelineAsync({label:'queued'});a.catch(()=>{});b.catch(()=>{});
++ try{
++  await flush();assert.equal(g.jobs.length,1);await f.host.dispose();await flush();await f.host.idle();
++  assert.equal(g.jobs.length,1);assert.equal(f.host.inspect().resources,0);assert.equal(f.host.inspect().pendingResources,0);
++  g.jobs[0].resolve();await flush();assert.equal(g.jobs.length,1);assert.equal(f.host.inspect().resources,0);
++ }finally{g.release();f.client.dispose();await f.host.dispose();await Promise.allSettled([a,b]);}
++});
++
++test('a rejected compilation fails admission without starting the queued pipeline',async()=>{
++ const f=await fixture({}, {absoluteNow:()=>1000}),g=gate(f);const a=f.client.device.createRenderPipelineAsync({label:'rejected'}),b=f.client.device.createComputePipelineAsync({label:'queued'});a.catch(()=>{});b.catch(()=>{});
++ try{
++  await flush();assert.equal(g.jobs.length,1);g.jobs[0].reject(Error('driver compilation rejected'));await flush();await f.host.idle();
++  assert.equal(g.jobs.length,1);assert.equal(f.host.inspect().failed,true);assert(f.errors.some(e=>/driver compilation rejected/.test(e.message)));
++ }finally{g.release();f.client.dispose();await f.host.dispose();await Promise.allSettled([a,b]);}
++});
++
++test('retirement during the existing budget yield cannot restart a queued pipeline factory',async()=>{
++ let now=1000,releaseYield,entered;const yielding=new Promise(resolve=>{entered=resolve;});
++ const f=await fixture({}, {absoluteNow:()=>now,yieldResourceTask:()=>new Promise(resolve=>{releaseYield=resolve;entered();})}),g=gate(f);
++ const a=f.client.device.createRenderPipelineAsync({label:'first'}),b=f.client.device.createRenderPipelineAsync({label:'waiting'});a.catch(()=>{});b.catch(()=>{});
++ try{
++  await flush();assert.equal(g.jobs.length,1);now+=10;g.jobs[0].resolve();await yielding;await a;
++  assert.equal(g.jobs.length,1);await f.host.dispose();assert.equal(f.host.inspect().resources,0);
++  releaseYield();await flush();assert.equal(g.jobs.length,1);assert.equal(f.host.inspect().pendingResources,0);
++ }finally{now=1000;releaseYield?.();g.release();f.client.dispose();await f.host.dispose();await Promise.allSettled([a,b]);}
++});
++
++test('a drained native consumer does not start queued factories when an earlier compiler finishes late',async()=>{
++ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let source,a,b;
++ const f=await fixture({}, {absoluteNow:()=>1000,intentControl:{port:drawPort,session:'pipeline-retirement'}}),g=gate(f);
++ try{
++  native.worker(1,native.point(-6,0),native.point(6,0));native.bridge.beginNativeRouteExecution();native.bridge.commitNativeCausalClock();
++  source=createNativeIntentControlPublication({port:sourcePort,session:'pipeline-retirement',observe:native.bridge.observeNativeIntentControl});await source.ready;
++  a=f.client.device.createRenderPipelineAsync({label:'active'});b=f.client.device.createRenderPipelineAsync({label:'queued'});a.catch(()=>{});b.catch(()=>{});
++  await flush();assert.equal(g.jobs.length,1);await source.retireGpu();assert.equal(source.status().drained,true);assert.equal(f.host.inspect().failed,false);
++  g.jobs[0].resolve();await a;await flush();assert.equal(g.jobs.length,1,'native completion after retirement must not open another compiler job');
++  await f.host.idle();assert.equal(f.host.inspect().failed,false);
++ }finally{g.release();source?.dispose();f.client.dispose();await f.host.dispose();await Promise.allSettled([a,b]);native.session.dispose();}
++});
