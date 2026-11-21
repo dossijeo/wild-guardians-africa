@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir su motor. NVIDIA dibujó la apertura y Farm reanudó el movimiento sobre el mismo cuerpo junto al marco. Quedan el paso por el vano, la compra y C4. [Admisión y recibo](native-gate-preparation-readiness-20261121.md).
+
 YoungMale completó una segunda cosecha y entrega ordinarias sobre el mismo cuerpo después del primer abono. NVIDIA dibujó los cuatro tickets nativos, el segundo ingreso fue de 14 monedas y se conservó el primero. Quedan los demás perfiles y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
