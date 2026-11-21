@@ -6,6 +6,8 @@ Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador
 
 Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpos distintos y sus geometrías residentes. Una prueba en frío agotó el plazo de preparación y una parada después de cruzar rechazó la pose del motor. Dos intervalos de arranque de 42,4 y 47,7 ms siguen sin atribución. [Prueba de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
 
+Al prolongar la prueba de tráfico en WASM, el primer trabajador se quedó en Action15 y el segundo en el extremo de Farm. El productor alternó dos intentos bloqueados. El mismo cultivo se cosechó y se entregó con un solo trabajador. [Control de la cohorte](performance/native-ordinary-farm-gate-traffic-20261121.json).
+
 Farm cruzó también los portones alineados de empalizada y reforzado en NVIDIA. Cada cruce conservó el mismo cuerpo y 32 geometrías, y dibujó las 137 oportunidades registradas. Los giros de 0,37 rad aún reproducen un rodeo en empalizada y un rechazo de ruta en reforzado. [Controles](native-farm-gate-aperture-20261121.md#empalizada-y-portón-reforzado).
 
 La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxies en NVIDIA y cobró 10 monedas una sola vez. Farm conservó su cuerpo y 32 geometrías, y el consumidor confirmó el drenaje. El primer dibujo de la puerta registró 40,8 ms a 30 Hz tras una oportunidad retenida por la mutación. La autoridad rechaza la compra dentro de un corredor Farm activo y conserva su marcha y saldo. Quedan el relevo preparado, la retirada y C4. [Compra](native-gate-addition-20261121.md), [control del corredor activo](performance/native-gate-buy-active-route-baseline-20261121.json).

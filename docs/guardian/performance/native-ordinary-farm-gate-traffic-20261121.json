@@ -215,5 +215,171 @@
     "sha256": "80acbd848bd3da4043a934274ee0ce93eb265ed1a77635aec21fb5ec2f37da26",
     "error": "Error: Native stopped gate lacks its projected physical pose",
     "lastZ": 7.534641344983965
+  },
+  "extendedHarvest": {
+    "scope": "Native authority and deterministic Host beyond both crossings",
+    "withPeer": {
+      "sha256": "1ae09dd34f8652086cf2fdf03dec4f803fe5c88e8905b05e90d9df5f3bb55265",
+      "last": {
+        "elapsed": 67.00000000000266,
+        "opening": 1,
+        "workers": [
+          {
+            "id": "worker-900011",
+            "status": "acting",
+            "admission": "native-action",
+            "x": -10.600000381469727,
+            "z": 5.300000190734863
+          },
+          {
+            "id": "worker-900012",
+            "status": "arriving",
+            "admission": "native-farm-arrival",
+            "x": -13.97523021697998,
+            "z": 5.199846267700195
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "HarvestRequested",
+          "targetId": "plant-1000001",
+          "simulationTime": 18.999999999999915
+        }
+      ],
+      "lastAttempts": [
+        {
+          "elapsed": 66.70000000000267,
+          "actorId": "worker-900012",
+          "kind": "idle-stroll",
+          "status": "blocked"
+        },
+        {
+          "elapsed": 66.80000000000267,
+          "actorId": "worker-900011",
+          "kind": "task-consequence",
+          "status": "blocked"
+        },
+        {
+          "elapsed": 66.90000000000266,
+          "actorId": "worker-900012",
+          "kind": "idle-stroll",
+          "status": "blocked"
+        },
+        {
+          "elapsed": 67.00000000000266,
+          "actorId": "worker-900011",
+          "kind": "task-consequence",
+          "status": "blocked"
+        }
+      ],
+      "acquisitions": [
+        {
+          "kind": "farm-arrival",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 1
+        },
+        {
+          "kind": "idle-stroll",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 3
+        },
+        {
+          "kind": "farm-arrival",
+          "actor": 900012,
+          "body": 2,
+          "ticket": 5
+        },
+        {
+          "kind": "idle-stroll-stop",
+          "ticket": 7
+        },
+        {
+          "kind": "task-start",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 9
+        },
+        {
+          "kind": "task-action",
+          "ticket": 11
+        }
+      ]
+    },
+    "solo": {
+      "sha256": "69fc5b43a9e52bee8c574349a6ba89fb1d70fadb745a3193fceb97bb30d166b9",
+      "last": {
+        "elapsed": 26.800000000000026,
+        "opening": 1,
+        "workers": [
+          {
+            "id": "worker-900011",
+            "status": "idle",
+            "x": -14.23367977142334,
+            "z": 4.891669750213623
+          }
+        ]
+      },
+      "events": [
+        {
+          "type": "HarvestRequested",
+          "targetId": "plant-1000001",
+          "simulationTime": 18.999999999999915
+        },
+        {
+          "type": "CropPicked",
+          "targetId": "plant-1000001",
+          "simulationTime": 23.199999999999974
+        },
+        {
+          "type": "CrateDelivered",
+          "targetId": "crate-1000003",
+          "simulationTime": 26.700000000000024
+        }
+      ],
+      "lastAttempts": null,
+      "acquisitions": [
+        {
+          "kind": "farm-arrival",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 1
+        },
+        {
+          "kind": "idle-stroll",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 3
+        },
+        {
+          "kind": "idle-stroll-stop",
+          "ticket": 5
+        },
+        {
+          "kind": "task-start",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 7
+        },
+        {
+          "kind": "task-action",
+          "ticket": 9
+        },
+        {
+          "kind": "task-consequence",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 11
+        },
+        {
+          "kind": "task-settlement",
+          "ticket": 13
+        }
+      ]
+    },
+    "distanceFromPeerToSoloDelivery": 0.40220509459991005,
+    "combinedWorkerRadii": 0.56
   }
 }
