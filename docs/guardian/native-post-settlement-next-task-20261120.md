@@ -43,3 +43,9 @@ El piloto fallido, sus cinco fuentes QA exactas y las fuentes de producto origin
 ## Siguiente punto
 
 La disponibilidad para una segunda Task14 desde liquidación queda comprobada en estos cuatro perfiles. No equivale a terminar su segunda acción/entrega. Evaluar la continuidad Idle autónoma después de liquidación: en estas observaciones el contratado conserva Idle estacionario con idleState null, mientras el compañero Farm sí ejecuta21/22. Mantener pendientes los demás orígenes/cohortes, fallos/cancelación, puertas/device loss/VFX, interacciones, costes y aceptación global3.123/cadencia según checklist; investigar código fuente consolidado antes de ampliar cada mecanismo.
+
+## Segunda entrega de youngMale
+
+El mismo ensayo continuó después de Task14 sin parar la autoridad. La segunda planta maduró tras 65 segundos de simulación en la misma ubicación, con margen para completar la entrega antes del fin de turno a 250. El segundo recorrido empezó con el contrato vigente y liquidó a 247,12. Los tickets 21, 25, 27 y 29 se dibujaron en NVIDIA Turing. La secuencia de asignación enlaza Task14 con Harvest15, la de acción enlaza Harvest15 con Carry16 y la segunda caja enlaza Carry16 con la liquidación17.
+
+La primera entrada de 14 monedas se conservó. La segunda caja pertenecía al segundo cultivo, quedó entregada y dejó una sola entrada nueva de 14 monedas. El trabajador volvió a Idle con el cuerpo 2. Conservaron las dos raíces y las geometrías del recorrido previo y el consumidor confirmó el drenaje. El mayor intervalo en los cuatro tickets de la segunda entrega fue de 37,6 ms a 30 Hz. La comprobación de la entrega repetida cubre youngMale y deja C4 abierto. [Recibo](performance/native-post-settlement-second-delivery-20261121.json).

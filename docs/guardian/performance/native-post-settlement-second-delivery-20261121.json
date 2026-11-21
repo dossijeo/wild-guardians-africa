@@ -1,0 +1,194 @@
+{
+  "source": "4a921799bd4dd850941c6ccc89c32dc5dc080af5",
+  "fixture": {
+    "auditor": "tools/guardian/audit_native_farm_birth_world_owner.mjs",
+    "scenario": "cancel-before-task",
+    "profile": "youngMale",
+    "secondCropMaturityDelaySeconds": 65,
+    "initialOrdinaryHiringAndCropMaturity": true,
+    "viewport": [
+      640,
+      360
+    ],
+    "displayHz": 30,
+    "captureMode": "timing"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "firstSettlement": {
+    "entryId": "deliver:crate-1000003",
+    "income": {
+      "n": "14",
+      "d": "1"
+    },
+    "balance": {
+      "n": "99999",
+      "d": "1"
+    },
+    "time": 207.74000000002442
+  },
+  "secondTask": {
+    "time": 229.10000000003535,
+    "bodyId": 2,
+    "readyRetained": true
+  },
+  "secondDelivery": {
+    "actor": 1000001,
+    "bodyId": 2,
+    "taskId": 1000004,
+    "plantId": "plant-900100",
+    "crateId": "crate-1000005",
+    "firstEntryId": "deliver:crate-1000003",
+    "entryId": "deliver:crate-1000005",
+    "income": {
+      "n": "14",
+      "d": "1"
+    },
+    "balance": {
+      "n": "100013",
+      "d": "1"
+    },
+    "time": 247.12000000004457,
+    "elapsed": 97.11999999999794,
+    "tickets": [
+      21,
+      25,
+      27,
+      29
+    ],
+    "observations": [
+      {
+        "at": 1795247559418.365,
+        "sequence": 587,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 21,
+          "effectiveTime": 77.30000000000189
+        },
+        "intervalMs": 37.60009765625,
+        "drawMs": 5.43994140625,
+        "replay": true,
+        "clockElapsed": 79.20000000000151,
+        "safeUntil": 79.20000000000151,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795247559884.965,
+        "sequence": 593,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 21,
+          "effectiveTime": 77.30000000000189
+        },
+        "intervalMs": 37.52001953125,
+        "drawMs": 2.93994140625,
+        "replay": true,
+        "clockElapsed": 79.66000000000142,
+        "safeUntil": 79.66000000000142,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795247569182.16,
+        "sequence": 718,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 25,
+          "effectiveTime": 85.7800000000002
+        },
+        "intervalMs": 34.760009765625,
+        "drawMs": 1.9501953125,
+        "replay": true,
+        "clockElapsed": 88.69999999999962,
+        "safeUntil": 88.69999999999962,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795247566248.35,
+        "sequence": 681,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 25,
+          "effectiveTime": 85.7800000000002
+        },
+        "intervalMs": 34.26513671875,
+        "drawMs": 3.75,
+        "replay": true,
+        "clockElapsed": 85.84000000000019,
+        "safeUntil": 85.84000000000019,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795247569481.67,
+        "sequence": 718,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 25,
+          "effectiveTime": 85.7800000000002
+        },
+        "intervalMs": 34.244873046875,
+        "drawMs": 1.97509765625,
+        "replay": true,
+        "clockElapsed": 88.97999999999956,
+        "safeUntil": 88.97999999999956,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795247566314.54,
+        "sequence": 682,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "5aee5976-178c-4784-8837-11086cac5e50/1",
+          "nativeSession": 1,
+          "ticket": 25,
+          "effectiveTime": 85.7800000000002
+        },
+        "intervalMs": 33.7900390625,
+        "drawMs": 3.179931640625,
+        "replay": true,
+        "clockElapsed": 85.90000000000018,
+        "safeUntil": 85.90000000000018,
+        "cameraVersion": null
+      }
+    ],
+    "roots": [
+      {
+        "root": 612,
+        "meshCount": 36
+      },
+      {
+        "root": 721,
+        "meshCount": 49
+      }
+    ],
+    "gpuErrors": 0,
+    "states": [
+      "Task14",
+      "Harvest15",
+      "Carry16",
+      "settlement17"
+    ],
+    "finalWorkerStatus": "idle",
+    "retainedSameRootsAndGeometry": true,
+    "errors": 0
+  },
+  "drained": true,
+  "diagnosticSha256": "e6502747c02ab8248ce7a0cea12624f14b2553aa7d1fef2c4608114f2be64903"
+}

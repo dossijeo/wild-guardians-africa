@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+YoungMale completó una segunda cosecha y entrega ordinarias sobre el mismo cuerpo después del primer abono. NVIDIA dibujó los cuatro tickets nativos, el segundo ingreso fue de 14 monedas y se conservó el primero. Quedan los demás perfiles y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
+
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
