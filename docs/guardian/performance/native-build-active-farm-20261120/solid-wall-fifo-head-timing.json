@@ -492,5 +492,201 @@
         false
       ]
     }
+  },
+  "physicalSixtyHz": {
+    "commit": "deb328ed12a14cb86c0053546aa7d44328781d08",
+    "adapter": "NVIDIA Turing",
+    "quality": "muy_baja",
+    "trials": [
+      {
+        "phaseTrace": true,
+        "desktop": {
+          "width": 3840,
+          "height": 2160,
+          "refreshChanged": [
+            30,
+            60,
+            30
+          ],
+          "registryPersisted": false
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "windowMs": 2097.9,
+        "submissions": 126,
+        "replays": 115,
+        "medianSubmissionIntervalMs": 16.7,
+        "maxSubmissionIntervalMs": 32.1,
+        "drawMsAtMaxInterval": 6.3,
+        "maxDrawTrigger": "mutation-release",
+        "maxDrawTicket": 7,
+        "skippedOpportunities": [
+          {
+            "atMs": 1197.9,
+            "intervalMs": 16.7,
+            "outcome": "mutation-hold",
+            "holdId": 3,
+            "sequence": 93,
+            "nextSubmissionIntervalMs": 32.1,
+            "nextTicket": 7
+          }
+        ],
+        "holdMs": 28,
+        "holdTimeline": [
+          {
+            "step": "authority-wall-fifo-head",
+            "atMs": -19.6
+          },
+          {
+            "step": "authority-wall-requote-start",
+            "atMs": -19.3
+          },
+          {
+            "step": "authority-wall-requote-ready",
+            "atMs": -9.1
+          },
+          {
+            "step": "authority-quiesce-sent",
+            "atMs": 0,
+            "ticket": 6
+          },
+          {
+            "step": "draw-quiesce-received",
+            "atMs": 1.1,
+            "ticket": 6
+          },
+          {
+            "step": "draw-fence-start",
+            "atMs": 1.4
+          },
+          {
+            "step": "draw-fence-ack",
+            "atMs": 8.3
+          },
+          {
+            "step": "authority-fence-received",
+            "atMs": 8.7
+          },
+          {
+            "step": "authority-build-consume",
+            "atMs": 9.4,
+            "ticket": 6
+          },
+          {
+            "step": "native-revalidation-start",
+            "atMs": 9.7,
+            "ticket": 6
+          },
+          {
+            "step": "native-revalidation-end",
+            "atMs": 10.1,
+            "ticket": 6
+          },
+          {
+            "step": "native-physical-commit-start",
+            "atMs": 10.5,
+            "ticket": 7
+          },
+          {
+            "step": "native-physical-commit-end",
+            "atMs": 16.5,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-start",
+            "atMs": 16.9,
+            "ticket": 7
+          },
+          {
+            "step": "game-wall-projection-end",
+            "atMs": 19.8,
+            "ticket": 7
+          },
+          {
+            "step": "authority-build-committed",
+            "atMs": 20.7,
+            "ticket": 7
+          },
+          {
+            "step": "authority-release-sent",
+            "atMs": 23.5,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-received",
+            "atMs": 23.8,
+            "ticket": 7
+          },
+          {
+            "step": "draw-release-installed",
+            "atMs": 28,
+            "ticket": 7
+          }
+        ],
+        "drawTickets": [
+          2,
+          5,
+          7,
+          9
+        ],
+        "gpuErrors": 0,
+        "consumerDrained": true
+      },
+      {
+        "phaseTrace": false,
+        "desktop": {
+          "width": 3840,
+          "height": 2160,
+          "refreshChanged": [
+            30,
+            60,
+            30
+          ],
+          "registryPersisted": false
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "windowMs": 2296.8,
+        "submissions": 138,
+        "replays": 129,
+        "medianSubmissionIntervalMs": 16.7,
+        "maxSubmissionIntervalMs": 23.6,
+        "drawMsAtMaxInterval": 2.5,
+        "maxDrawTrigger": "mutation-release",
+        "maxDrawTicket": 9,
+        "skippedOpportunities": [
+          {
+            "atMs": 1446.7,
+            "intervalMs": 16.6,
+            "outcome": "mutation-hold",
+            "holdId": 3,
+            "sequence": 89,
+            "nextSubmissionIntervalMs": 21.7,
+            "nextTicket": 7
+          },
+          {
+            "atMs": 2246.8,
+            "intervalMs": 16.7,
+            "outcome": "mutation-hold",
+            "holdId": 4,
+            "sequence": 90,
+            "nextSubmissionIntervalMs": 23.6,
+            "nextTicket": 9
+          }
+        ],
+        "drawTickets": [
+          2,
+          5,
+          7,
+          9
+        ],
+        "gpuErrors": 0,
+        "consumerDrained": true
+      }
+    ]
   }
 }

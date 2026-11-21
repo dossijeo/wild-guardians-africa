@@ -21,6 +21,10 @@ En el segundo cruce, el fence tomó 7,4 ms, la revalidación WASM 0,2 ms, la inc
 
 El cruce con READY retenida confirmó que Game avanza mientras espera. Entre la parada y el muro se conservaron los 34 propietarios de vegetación que ya estaban residentes y sus 58 pares. Fuera del corredor, Farm mantuvo su ruta original. Con regiones frías se rechazó antes de cobrar o detener a Farm. Los cinco recorridos drenaron el consumidor.
 
+## Escritorio a 60 Hz
+
+En dos cruces adicionales con NVIDIA Turing, Windows se cambió temporalmente de 4K/30 a 4K/60 Hz y se restauró al terminar cada prueba. La escena siguió a 640×480 en calidad `muy_baja`. La mediana entre envíos fue de 16,7 ms en ambos cruces. El primero midió una pausa del muro de 28,0 ms y omitió un dibujo. El siguiente envío llegó a los 32,1 ms. En el segundo, sin sondas de fase, se omitió un dibujo al adquirir el muro y otro al adquirir la ruta Farm sucesora. Los siguientes envíos llegaron a los 21,7 y 23,6 ms, respectivamente. Ambos cruces conservaron la misma cadena de tickets y drenaron con cero errores WebGPU. C4 sigue abierto. [Recibos a 60 Hz](performance/native-build-active-farm-20261120/solid-wall-fifo-head-timing.json).
+
 ## Regresión
 
 Pasaron 996 pruebas relacionadas y la compilación Vite de producción. Cuatro pruebas nuevas cubren la espera en la cola ordinaria, cancelación tras READY, cotización desactualizada y ejecución fuera de turno. La prueba de cola falla con la implementación anterior porque READY ya había adquirido la pausa. [Pruebas de la cola](../../tests/native-build-head.test.js).
