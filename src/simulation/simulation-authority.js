@@ -215,12 +215,28 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       return true;
     };
     return new Promise((ready,reject)=>{
+      let commitReady;owner.commitReady=new Promise(resolve=>{commitReady=resolve;});
       owner.completion=planner.addNativeBarriersAfterGpuQuiescence({additions:first.additions,getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
-        prepareResources:({resources:proposal,signal})=>resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(first.quoted.plan.pieces)}),
+        prepareResources:async({resources:proposal,signal})=>{
+          const handle=await resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(first.quoted.plan.pieces)});
+          try{
+            // Graphics are ready, but the command has not reached the FIFO head.
+            // Keep the existing resource transaction before GPU quiescence.
+            await new Promise((resolve,reject)=>{
+              const cleanup=()=>{signal.removeEventListener('abort',abort);owner.enterCommit=null;};
+              const abort=()=>{cleanup();reject(new DOMException('Native wall command cancelled','AbortError'));};
+              owner.enterCommit=()=>{cleanup();resolve();};
+              signal.addEventListener('abort',abort,{once:true});
+              if(signal.aborted){abort();return;}
+              owner.ready=true;ready({version:1});
+            });
+            return handle;
+          }catch(error){handle.abort();throw error;}
+        },
         atCommitBoundary:consume=>new Promise(resolve=>{
           if(!validOwner()){reject(Error('Native wall command owner retired'));return;}
           owner.consume=()=>{const run=owner.consume;if(!run)throw Error('Native wall command already consumed');owner.consume=null;owner.consumed=true;try{return consume();}finally{resolve();}};
-          owner.ready=true;ready({version:1});
+          owner.commitBoundarySettled=true;commitReady();
         }),
         project:proof=>{
           // Check the native result before charging, but apply the mirror only
@@ -233,7 +249,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       owner.completion.then(result=>{
         if(result.status==='committed-control-failed'){nativeStructureFailure=Error('Native wall command '+result.status+': '+result.error);onNativeIntentControlError?.(nativeStructureFailure);}
         if(!owner.ready)reject(Error('Native wall preparation '+result.status+(result.error?': '+result.error:'')));
-      },reject);
+        else if(!owner.consume&&!owner.consumed)owner.rejection='La construcción cambió durante su preparación: '+result.status;
+        owner.commitBoundarySettled=true;commitReady();
+      },error=>{reject(error);owner.failure=error;commitReady();});
     });
   }
 
@@ -271,6 +289,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       owner.ready=true;return {version:1};
     }catch(error){if(nativeStructurePreparation===owner)await releaseNativeStructureCommand(owner);throw error;}
   }
+  // Called by the existing authority Worker only after this command reaches
+  // the runtime/client FIFO head. No purchase or sequence is consumed here.
+  async function beginNativeStructureCommand(command){
+    if(!command||!['buildWallChain','placeStructure'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
+    const owner=nativeStructurePreparation;
+    if(owner?.commandSequence!==undefined)throw Error('Native structure command already entered');
+    if(!owner?.ready||owner.identity!==structureIdentity(command)||!owner.enterCommit)return;
+    owner.commandSequence=command.sequence;
+    owner.enterCommit();
+    await owner.commitReady;
+    if(closed||nativeStructurePreparation!==owner)throw Error('Native structure command retired before execution');
+    if(owner.failure)throw owner.failure;
+  }
   async function releaseNativeStructureCommand(owner){
     if(!owner.consumed)owner.controller.abort();
     try{await owner.completion;}finally{owner.controller.abort();if(nativeStructurePreparation===owner)nativeStructurePreparation=null;}
@@ -293,7 +324,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
-    prepareNativeStructureCommand,finishNativeStructureCommand,
+    prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
       nativeResourcePreparation?.dispose();
@@ -366,6 +397,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    execute(command){
     if(closed)throw Error('Simulation authority is closed');if(nativeProduction?.status().fault)throw Error('Native intent production failed: '+nativeProduction.status().fault);if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
+    if(nativeStructurePreparation?.commandSequence!==undefined){
+      if(command.sequence!==nativeStructurePreparation.commandSequence||nativeStructurePreparation.identity!==structureIdentity(command))throw Error('Native structure FIFO head is occupied');
+      if(!nativeStructurePreparation.commitBoundarySettled)throw Error('Native structure command boundary is not ready');
+      delete nativeStructurePreparation.commandSequence;
+    }
     if(command.captureClockSegments!==undefined&&(command.kind!=='advance'||typeof command.captureClockSegments!=='boolean'))throw TypeError('Invalid clock segment request');
     // A completed native admission may have projected Game since the last
     // publication. Publish that actual boundary atomically; a capture started

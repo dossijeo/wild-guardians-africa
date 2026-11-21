@@ -16,7 +16,7 @@ for(const away of [false,true])test(`ordinary native solid Build ${away?'outside
   await pump(f,f.authority.prepareNativeStructureCommand(command));
   const ready=f.records.find(r=>r.kind==='barrier-addition');assert(ready);assert.equal(ready.committed,false);assert.equal(f.snapshot().ledger.entries[command.id],undefined);
   const intermediate=f.command({kind:'advance',seconds:.05,nightFastForward:false});assert.equal(intermediate.events.some(e=>e.type==='WallChainBuilt'),false);assert.equal(JSON.parse(intermediate.snapshot).ledger.entries[command.id],undefined);assert.equal(intermediate.nativeWorldResources?.some(r=>r.kind===2)??false,false);
-  const result=f.command(command),after=JSON.parse(result.snapshot),event=result.events.find(e=>e.type==='WallChainBuilt');
+  const result=await pump(f,f.structureCommand(command)),after=JSON.parse(result.snapshot),event=result.events.find(e=>e.type==='WallChainBuilt');
   assert.equal(result.value,true,JSON.stringify({rejection:result.rejection,events:result.events,faults:f.faults}));assert(event);assert.equal(event.commandId,command.id);assert.equal(result.events.filter(e=>e.type==='WallChainBuilt').length,1);assert.equal(event.gates,0);
   assert.deepEqual(after.ledger.entries[command.id],rational(-event.count*wallSpec(command.material).cost));assert.equal(after.structures.length,before.structures.length+event.count);
   const record=result.nativeWorldResources?.find(r=>r.kind===2);assert(record?.nativeBarrierAdditionBinding);assert.equal(result.terrainChanged,false);assert.deepEqual(record.chunks,[]);assert.deepEqual(record.removed,[]);
@@ -38,7 +38,7 @@ test('cancelling a ready native solid Build retires its preparation without cons
 test('native solid Build rejects an expired quote in its command and never charges',async()=>{
  const x=await setup(true),{f,command}=x;try{
   await pump(f,f.authority.prepareNativeStructureCommand(command));const before=f.snapshot();f.command({kind:'pause',reason:'test-build-stale'});
-  const result=f.command(command),after=JSON.parse(result.snapshot);assert.equal(result.value,false);assert.equal(after.ledger.entries[command.id],undefined);assert.deepEqual(after.structures,before.structures);assert.equal(result.nativeWorldResources?.some(r=>r.kind===2)??false,false);assert.equal(result.events.some(e=>e.type==='WallChainBuilt'),false);
+  const result=await pump(f,f.structureCommand(command)),after=JSON.parse(result.snapshot);assert.equal(result.value,false);assert.equal(after.ledger.entries[command.id],undefined);assert.deepEqual(after.structures,before.structures);assert.equal(result.nativeWorldResources?.some(r=>r.kind===2)??false,false);assert.equal(result.events.some(e=>e.type==='WallChainBuilt'),false);
   await pump(f,f.authority.finishNativeStructureCommand(command));assert.equal(f.records.find(r=>r.kind==='barrier-addition').committed,false);assert.deepEqual(f.faults,[]);
  }finally{await x.close();}
 });

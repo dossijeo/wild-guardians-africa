@@ -5,6 +5,10 @@ import {wallSpec} from '../src/simulation/rules.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 
+async function commitPrepared(f,command){
+ let result,error,done=false;const pending=f.structureCommand(command).then(r=>{result=r;done=true;},e=>{error=e;done=true;});
+ await untilProduction(f,()=>done);await pending;if(error)throw error;return result;
+}
 async function completePreparation(f,command){
  let settled=false,error;
  const prep=f.authority.prepareNativeStructureCommand(command).then(()=>{settled=true;},cause=>{settled=true;error=cause;});
@@ -36,7 +40,7 @@ test('a paid wall holds an affected native Farm body while its replacement route
 
   const build={kind:'buildWallChain',id:commandId,material:'zarzas',points,options:{smooth:false,snap:false}};
   await completePreparation(f,build);
-  const placed=f.command(build),finishing=f.authority.finishNativeStructureCommand(build),snapshot=JSON.parse(placed.snapshot);
+  const placed=await commitPrepared(f,build),finishing=f.authority.finishNativeStructureCommand(build),snapshot=JSON.parse(placed.snapshot);
   const event=placed.events.find(item=>item.type==='WallChainBuilt');
   assert.equal(placed.value,true);
   assert.equal(event.commandId,commandId);
@@ -89,7 +93,7 @@ test('a paid wall outside the Farm corridor keeps the acquired route and its pre
   const command={kind:'buildWallChain',id:'build-away-from-native-farm',material:'zarzas',
    points:[[from.x,from.z],[to.x,to.z]],options:{smooth:false,snap:false}};
   await completePreparation(f,command);
-  const placed=f.command(command);
+  const placed=await commitPrepared(f,command);
   await f.authority.finishNativeStructureCommand(command);
   assert.equal(placed.value,true);
   const event=placed.events.find(item=>item.type==='WallChainBuilt');

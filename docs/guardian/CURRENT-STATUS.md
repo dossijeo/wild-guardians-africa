@@ -6,6 +6,8 @@ La parada de Farm antes de Build conserva ahora los 34 propietarios de vegetaci�
 
 Build de muros sólidos residentes ya pasó en NVIDIA Turing con Farm en marcha. En el cruce adquirió la parada y el muro, conservó el checkpoint inmediato y retomó el mismo cuerpo, raíz y 32 mallas. Fuera del corredor mantuvo la ruta original. Con regiones frías rechazó antes de cobrar. Quedan las demás formas de Build, la recuperación de colisión y la cadencia de presentación. [Recibos y alcance](native-wall-causal-adapter-20261121.md).
 
+La compra de muros residentes ya entra en la pausa GPU desde la cabeza de la cola de autoridad. En dos cruces NVIDIA la pausa bajó de 45,5 a 23,1 ms, con la cotización fuera y cero oportunidades de dibujo omitidas a 30 Hz. C4 sigue abierto a 60 Hz. [Mediciones y alcance](native-build-fifo-head-handoff-20261121.md).
+
 El fin de turno de Task usa la parada25, Home18 y la retirada19. La espera de la parada conserva la tarea y el cuerpo en movimiento. Los cuatro perfiles completaron el recorrido en NVIDIA, tres sobre el checkout y uno con el adaptador candidato. Quedan la llegada durante la parada pendiente, las puertas y el arranque Idle20 intermitente. [Pruebas y límites](native-task-return-adapter-20261121.md).
 
 La colocación individual de centro y muro superó la prueba en NVIDIA Turing y activó una sola copia de textura de 1×64 con cero errores WebGPU. El contraste físico del fence verificó que el resto de los recursos conserva su identidad. Pasaron las 337 pruebas relacionadas y el build. La latencia del gesto y C4 siguen abiertas. [Aislamiento de la textura y recibos](native-standalone-texture-upload-20261121.md).

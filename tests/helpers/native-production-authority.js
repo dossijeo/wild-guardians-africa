@@ -40,6 +40,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
  let sequence=0;
  const result={authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,
   command(command){return authority.execute({...command,sequence:++sequence});},
+  async structureCommand(command){const captured={...command,sequence:++sequence};await authority.beginNativeStructureCommand(captured);return authority.execute(captured);},
   snapshot(){return JSON.parse(authority.execute({kind:'snapshot',sequence:++sequence}).snapshot);},
   advance(seconds=.05){return JSON.parse(authority.execute({kind:'advance',sequence:++sequence,seconds,nightFastForward:false,steps:2}).snapshot);},
   async attach(){result.snapshot();await authority.attachNativeIntentControl(sourcePort,controlSession);await authority.attachNativeResourcePreparation(port1,resourceSession);},

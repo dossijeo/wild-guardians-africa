@@ -22,7 +22,7 @@ test('ordinary Build stops its native Farm consumer before purchase and admits t
   assert.equal(prepared.terrainChanged,false,'the acquired stop preserves terrain and vegetation');
   assert.equal(snapshot.ledger.entries[command.id],undefined,'preparation never charges');
   assert.equal(snapshot.workers[0].nativeRouteAdmission,'native-farm-arrival-held');
-  const result=f.command(command);assert.equal(result.value,true);assert.equal(result.events.filter(e=>e.type==='WallChainBuilt').length,1);
+  const result=await pump(f,f.structureCommand(command));assert.equal(result.value,true);assert.equal(result.events.filter(e=>e.type==='WallChainBuilt').length,1);
   assert.equal(f.command(command).value,false);f.authority.finishNativeStructureCommand(command);
   for(let i=0;i<2;i++){f.advance();await f.present();}
   await untilProduction(f,()=>f.records.some(r=>r.kind==='farm-arrival'&&r!==f.records[0]&&r.committed));
@@ -43,7 +43,7 @@ test('pending stop preparation keeps actual native execution and Game advancing 
   await assert.rejects(f.authority.quiesceNativeIntentProduction(),/structure/);
   for(let i=0;i<5;i++){f.advance();await f.present();}
   const during=f.snapshot();assert(during.elapsed>before.elapsed);assert.notDeepEqual([during.workers[0].x,during.workers[0].z],[before.workers[0].x,before.workers[0].z]);assert.equal(during.ledger.entries[command.id],undefined);assert.deepEqual(during.structures,before.structures);
-  release();await pump(f,pending);await f.present();assert.equal(f.command(command).value,true);f.authority.finishNativeStructureCommand(command);assert.deepEqual(f.faults,[]);
+  release();await pump(f,pending);await f.present();assert.equal((await pump(f,f.structureCommand(command))).value,true);f.authority.finishNativeStructureCommand(command);assert.deepEqual(f.faults,[]);
  }finally{release();await x.close();}
 });
 test('a failed stop preparation cannot charge, destroy the acquired route or keep production held',async()=>{
