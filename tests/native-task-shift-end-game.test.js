@@ -25,8 +25,16 @@ for(const profile of PROFILES)for(const kind of ['action','delivery'])test(`${th
  else{assert.notDeepEqual(f.body(1),body);assert.equal(f.body(1)[0],body[0]);assert.equal(f.worker.crateId,crateId);tick(f.state,Math.max(.1,source.reference.endTime-f.state.elapsed+.15),f.nav);assert(read().arrived);assert.equal(f.worker.crateId,crateId);const crate=f.state.crates.find(c=>c.id===crateId);assert.equal(crate.delivered,false);assert.equal(crate.carrierId,f.actor);}
  assert.equal(f.worker.status,kind==='action'?'acting':'carrying');assert.deepEqual(f.state.ledger,ledger);assert.deepEqual(binding(),source);assert.equal(f.w.spatial_body_count(),count);
 }));
-test(`${threaded?'pthread':'standalone'} a native Task walker still requires prepared stop and Home at shift end`,async()=>fixture('walking',PROFILES[2],f=>{
- f.state.time=249.95;const at=f.state.elapsed,own=f.body(1),peer=f.body(3);assert.throws(()=>tick(f.state,.1,f.nav),/unsupported return boundary/);assert.equal(f.state.elapsed,at);assert.deepEqual(f.body(1),own);assert.deepEqual(f.body(3),peer);assert.equal(f.worker?.nativeRouteAdmission??f.state.workers[0].nativeRouteAdmission,'native-task');
+test(`${threaded?'pthread':'standalone'} a native Task walker retains its moving body and task until the prepared stop`,async()=>fixture('walking',PROFILES[2],f=>{
+ const worker=f.state.workers[0],taskId=worker.taskId,at=f.state.elapsed,own=f.body(1);
+ f.state.time=249.95;tick(f.state,.1,f.nav);
+ assert(f.state.time>=250);assert(f.state.elapsed>at);
+ assert.equal(worker.status,'walking');assert.equal(worker.nativeRouteAdmission,'native-task');
+ assert.equal(worker.taskId,taskId);assert.equal(f.state.tasks.find(task=>task.id===taskId).workerId,worker.id);
+ assert(own);assert(f.body(1));assert(f.body(3));assert.notDeepEqual(f.body(1),own);
+ const execution=f.planner.nativeTaskExecution(worker.id),request=f.planner.nativeTaskRouteStopRequest(worker.id);
+ assert.equal(execution.bodyId,1);
+ assert.deepEqual(request,{reason:'home',taskId,bodyId:execution.bodyId,nativeRoute:execution.nativeRoute});
 }));
 test(`${threaded?'pthread':'standalone'} delivery completed after shift still settles once to the genuine Home source`,async()=>fixture('delivery',PROFILES[2],f=>{
  const source=f.carry.reference,ledger=structuredClone(f.state.ledger);f.state.time=249.95;tick(f.state,source.endTime-f.state.elapsed+.15,f.nav);assert(f.planner.nativeDeliveryExecution(f.actor).arrived);assert.deepEqual(f.state.ledger,ledger);const body=f.body(1),crate=f.state.crates.find(c=>c.id===f.worker.crateId),preview=prepareCrateDeliveryConsequence(f.state,f.worker,crate,f.center);assert.equal(preview.status,'returning');assert(preview.home);

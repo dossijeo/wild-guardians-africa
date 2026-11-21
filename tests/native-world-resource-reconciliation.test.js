@@ -65,7 +65,7 @@ test('solid addition history requires the exact committed attestation and an emp
 });
 
 
-for(const kind of [12,24])test(`body-only native stop${kind} requires an applied empty prepared boundary and rejects invented geometry`,()=>{
+for(const kind of [12,24,25])test(`body-only native stop${kind} requires an applied empty prepared boundary and rejects invented geometry`,()=>{
  const f=fixture(),record=f.publication.nativeWorldResources[0];record.kind=kind;record.chunks=[];f.admitted={...f.admitted,changes:[],empty:true,nativeWorldBoundary:record.worldBoundary};assert.deepEqual(reconcileNativeWorldResources(f),record.worldBoundary);
  delete f.admitted.empty;assert.throws(()=>reconcileNativeWorldResources(f),/lack/);f.admitted.empty=true;
  for(const side of ['chunks','removed']){record[side]=[{cx:0,cz:0}];assert.throws(()=>reconcileNativeWorldResources(f),/body-only/);record[side]=[];}

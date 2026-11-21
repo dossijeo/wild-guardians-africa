@@ -3514,6 +3514,40 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     if(!home||!execution||!pending&&execution?.kind!=='native-farm-arrival-held-execution'&&(execution?.kind!=='native-farm-arrival-route-execution'||!execution.arrived||execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.binding.reference.endTime))throw Error('Native Farm Home requires its actual completed or stopped source');
     const request=bridge.requestNativeFarmArrivalHome(execution,{villageId:numericId(village.id),x:home.x,z:home.z});cancelIdle(worker);Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };
+  // Cancellation retains the executed Task until its existing stop25 has an
+  // acquired resource receipt. The producer selects it from the actor itself.
+  const nativeTaskReturnSource=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
+    if(!worker||worker.status!=='walking'||worker.nativeRouteAdmission!=='native-task'||!worker.taskId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid)return null;
+    const task=state.tasks.find(t=>t.id===worker.taskId),village=state.villages.find(v=>v.id===worker.villageId),execution=bridge.nativeTaskExecution(actor);
+    if(!task||task.workerId!==worker.id||task.centerId!==worker.centerId||!village||!execution||execution.arrived||execution.taskId!==numericId(task.id)||execution.targetId!==numericId(task.targetId)||execution.executedThrough!==state.elapsed)return null;
+    return execution;
+  };
+  const nativeTaskRouteStopRequest=actorId=>{
+    const execution=nativeTaskReturnSource(actorId);if(!execution)return null;
+    const state=observedTaskState??sourceState,worker=state.workers.find(w=>numericId(w.id)===execution.nativeRoute.actorId);
+    if(!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))return null;
+    return Object.freeze({reason:'home',taskId:worker.taskId,bodyId:execution.bodyId,nativeRoute:execution.nativeRoute});
+  };
+  const stopNativeTaskForHomeAfterGpuQuiescence=async options=>{
+    const owner=bridge.authorityEpoch,source=nativeTaskRouteStopRequest(options.actorId),identity=JSON.stringify(source);
+    if(!source)return {status:'unsupported',authorizedAutonomy:false,authorizedPassage:false};
+    const result=await bridge.stopNativeTaskRouteAfterGpuQuiescence({...options,prepareResources:args=>{
+      if(JSON.stringify(nativeTaskRouteStopRequest(options.actorId))!==identity)throw Error('Native Task stop source changed');
+      return options.prepareResources(args);
+    }});
+    if(result.status==='committed'){
+      // No task release or Home request is permitted before this acquired25.
+      const state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===source.nativeRoute.actorId);
+      if(bridge.authorityEpoch!==owner||!worker||worker.taskId!==source.taskId)throw Error('Native acquired Task stop lost its Game owner');
+      requestNativeStoppedTaskHome(state,worker,result.nativeTaskRouteStopBinding);
+      flushTaskEvents();
+      const clock=bridge.nativeCausalClock();
+      if(!['committed','unchanged'].includes(bridge.commitNativeCausalClock({rate:clock?.rate??1,paused:!!state.pauses.length||!!state.result}).status))throw Error('Native Task Home declaration could not commit its causal boundary');
+    }
+    return result;
+  };
+
   const requestNativeStoppedTaskHome=(state,worker,stop)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Task Home belongs to another game');
     if(!state.workers.includes(worker)||worker.status!=='walking'||worker.nativeRouteAdmission!=='native-task'||!worker.taskId||
@@ -3996,6 +4030,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     async startNativeIdleStrollAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleStrollAfterGpuQuiescence(options,farmIdleAdmissionCurrent(options?.actorId));if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleStrollBinding.reference.actorId);if(worker)projectNativeIdleStroll(state,worker);}return result;},
     prepareNativeFarmArrivalStopProposal:bridge.prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal:bridge.captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal:bridge.revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal:bridge.cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding:bridge.nativeFarmArrivalStopBinding,
     prepareNativeTaskRouteStopProposal:bridge.prepareNativeTaskRouteStopProposal,captureNativeTaskRouteStopProposal:bridge.captureNativeTaskRouteStopProposal,revalidateNativeTaskRouteStopProposal:bridge.revalidateNativeTaskRouteStopProposal,cancelNativeTaskRouteStopProposal:bridge.cancelNativeTaskRouteStopProposal,nativeTaskRouteStopBinding:bridge.nativeTaskRouteStopBinding,
+    nativeTaskReturnSource,nativeTaskRouteStopRequest,stopNativeTaskForHomeAfterGpuQuiescence,
     stopNativeTaskRouteAfterGpuQuiescence:bridge.stopNativeTaskRouteAfterGpuQuiescence,
     prepareNativeIdleStrollStopProposal:bridge.prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal:bridge.captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal:bridge.revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal:bridge.cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding:bridge.nativeIdleStrollStopBinding,
     nativeIdleStrollDeclarationReference:bridge.nativeIdleStrollDeclarationReference,projectNativeIdleStrollRequest,projectNativeIdleStrollDeclaration,

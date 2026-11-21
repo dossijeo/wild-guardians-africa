@@ -39,6 +39,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if(!cycle&&planner.nativeInitialIdleBodyState(actorId)||request){const stroll=request?.idleState.mode==='walk';return {actorId,kind:stroll?'idle-stroll':'idle-cycle',operation:stroll?'startNativeIdleStrollAfterGpuQuiescence':'startNativeIdleCycleAfterGpuQuiescence',prepare:stroll?'prepareNativeIdleStrollResources':'prepareNativeIdleCycleResources'};}
    }
    if(marker==='native-idle-stroll'&&!contractExpired(worker,state)&&state.time<profileEnd.get(worker.profile)&&planner.nativeIdleStrollExecution(actorId)?.arrived)return {actorId,kind:'idle-cycle',operation:'startNativeIdleCycleAfterGpuQuiescence',prepare:'prepareNativeIdleCycleResources'};
+   if(marker==='native-task'){
+    const stopRequest=planner.nativeTaskRouteStopRequest?.(actorId);
+    if(stopRequest)return {actorId,kind:'task-route-stop',operation:'stopNativeTaskForHomeAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+   }
    if(marker==='pending-resources'){
     const request=planner.pendingTaskRoute(actorId),id=bodyId(actorId);
     if(request&&id!==undefined)return {actorId,kind:'task-start',operation:'startNativeTaskRouteAfterGpuQuiescence',prepare:'prepareNativeTaskStartResources',request,policy:{bodyId:id,radius:WORKER_SPATIAL_PROFILE.radius,urgent:urgentWork(state,worker),runRemaining:worker.runRemaining,runPhase:worker.runPhase??0,walkPhase:worker.walkPhase??0,carryPhase:worker.carryPhase??0}};
@@ -64,6 +68,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   switch(request.kind){
    case 'farm-arrival':return JSON.stringify([planner.nativeFarmArrivalRequestReference(actor),request.urgent]);
    case 'farm-arrival-continuation':{const source=planner.nativeFarmArrivalContinuationSource(actor);return source&&JSON.stringify({...source,executedThrough:0});}
+   case 'task-route-stop':
    case 'farm-arrival-stop':return JSON.stringify(request.stopRequest);
    case 'idle-stroll-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));
