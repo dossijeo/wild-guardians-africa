@@ -211,5 +211,69 @@
       "journalEntries": 127,
       "journalSaturated": false
     }
-  ]
+  ],
+  "terrainBarrierTrace": {
+    "commit": "37470122844aae8f1da6dede803110c928c5fe64",
+    "profile": "youngMale",
+    "pacedSnapshotCommands": false,
+    "timeline": [
+      {
+        "step": "timeline-queued",
+        "milliseconds": -64.8,
+        "sequence": 1
+      },
+      {
+        "step": "timeline-queued",
+        "milliseconds": -23.1,
+        "sequence": 2
+      },
+      {
+        "step": "timeline-manual-blocked",
+        "milliseconds": -8,
+        "sequence": 1,
+        "reason": "terrain",
+        "terrain": {
+          "completeSequence": 2,
+          "confirmedSequence": 0,
+          "pending": true,
+          "presentationPending": false,
+          "waitingForCapacity": false,
+          "retainedRevisions": 10,
+          "retainedBytes": 932266
+        }
+      },
+      {
+        "step": "timeline-commit",
+        "milliseconds": 7668.9,
+        "sequence": 1
+      },
+      {
+        "step": "timeline-manual-blocked",
+        "milliseconds": 7887.7,
+        "sequence": 2,
+        "reason": "terrain",
+        "terrain": {
+          "completeSequence": 128,
+          "confirmedSequence": 1,
+          "pending": true,
+          "presentationPending": false,
+          "waitingForCapacity": false,
+          "retainedRevisions": 1,
+          "retainedBytes": 124910
+        }
+      },
+      {
+        "step": "publication-timeout",
+        "milliseconds": 10013.5,
+        "needed": 2,
+        "visualSequence": 1,
+        "holding": false
+      },
+      {
+        "step": "timeline-commit",
+        "milliseconds": 11823,
+        "sequence": 2
+      }
+    ]
+  }
 }

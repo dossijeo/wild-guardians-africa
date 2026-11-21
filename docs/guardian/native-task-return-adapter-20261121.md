@@ -26,6 +26,10 @@ En NVIDIA Turing, el checkout integrado completó el retorno de `olderMale`, `ol
 
 En cuatro ejecuciones NVIDIA, la primera solicitud de Idle20 pidió como mínimo la publicación visual 2 y Surface empezó a esperar en la 0. En tres ejecuciones Surface continuó al llegar a la 9, entre 8,53 y 9,30 s después de empezar la espera, y en una seguía esperando cuando venció el plazo. Una ejecución de `olderFemale` recibió READY en 9,42 s y completó Task y Home. Las otras tres agotaron 10 s antes de READY, incluidas una con el arranque ordinario de `youngMale` y dos con snapshots espaciados en pausa. Los tres journals seguían por debajo de saturación. Astra recibió los tiempos para identificar qué retiene la publicación visual durante el arranque. [Trazas de publicación y preparación de Idle20](performance/native-task-stop-home-graphics-20261120/idle20-startup-publication-wait.json).
 
+Una traza posterior localizó la espera en la barrera de terreno de la línea temporal visual. Las publicaciones 1 y 2 ya estaban encoladas cuando salió la solicitud. El terreno local seguía pendiente incluso después de recibir la marca de completitud. Se confirmó la primera publicación a los 7,67 s y la segunda a los 11,82 s, tras vencer el plazo. El recibo conserva ambos bloqueos de terreno y el instante de confirmación.
+
+## Llegada con la parada pendiente
+
 En NVIDIA Turing, una Task de `olderFemale` alcanzó el destino mientras se retenía la respuesta READY de la parada 25. La última publicación conservó el cuerpo 1 en movimiento a 21,50 s de tiempo transcurrido. Al cruzar el fin de ruta de 21,507 s, Game lanzó `Expired Task lost its executed moving source`. Solo se dibujaron las adquisiciones Idle20 y Task14. Astra recibió la reproducción para resolver la continuación hacia Home desde la ruta completada. [Captura de llegada durante la preparación](performance/native-task-stop-home-graphics-20261120/ordinary-shift-arrival-during-stop.json).
 
  También quedan los motores de puerta y los retornos por cambios de centro o incursión. La aceptación de 60 FPS sigue abierta.
