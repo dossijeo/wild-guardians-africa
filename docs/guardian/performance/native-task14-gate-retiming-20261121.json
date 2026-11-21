@@ -278,7 +278,7 @@
           }
         }
       ],
-      "scope": "Timing between recorded draw submissions, with tracing enabled. The panel mode was set to 60 Hz during the run.",
+      "scope": "Intervals between starts of draws that were submitted, with tracing enabled. The panel mode was set to 60 Hz during the run.",
       "actionLargest": {
         "opportunities": [
           {
@@ -297,7 +297,21 @@
           }
         ],
         "authorityMs": 11.231,
-        "gpuFlushMs": 12.873
+        "gpuFlushMs": 12.873,
+        "callbackStartAtUnixMs": [
+          1795262845086.104,
+          1795262845111.399
+        ],
+        "nearbyVizBeginFrameAtUnixMs": [
+          1795262845085.908,
+          1795262845102.447,
+          1795262845119.122
+        ],
+        "nearestVizToCallbackMs": [
+          0.196,
+          8.952
+        ],
+        "gpuFlushEndedAtUnixMs": 1795262845094.635
       },
       "carryFirst": {
         "opportunities": [
@@ -385,6 +399,139 @@
         "changeResult": 0,
         "registryPersisted": false,
         "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+      }
+    },
+    "blinkStartup": {
+      "reference": "Separate diagnostic with blink, mojom and sequence_manager tracing. It failed before Idle20 and did not repeat the Action15 measurement.",
+      "traceSha256": "1090487157a9b66a80d563585d3e1bd54b261d67148c54cde052dc4371a1329e",
+      "traceEventCount": 1103879,
+      "drawCallbackIntervals": 1050,
+      "dataLossOccurred": false,
+      "failure": {
+        "stage": "ordinary Idle20 acquisition",
+        "reason": "Worker command not admitted: failed",
+        "confirmedSequence": 128,
+        "confirmedElapsed": 10,
+        "actorAdmission": "pending-idle-resources"
+      },
+      "largest": [
+        {
+          "id": 958,
+          "intervalMs": 207.902,
+          "priorCallbackMs": 1.629,
+          "drawCallbackMs": 4.999,
+          "thread": "10660:452",
+          "vizAtUs": 679766493416,
+          "providerAtUs": 679766495751,
+          "dispatchAtUs": 679766495754,
+          "callbackAtUs": 679766495773,
+          "drawAtUs": 679766495779,
+          "nearestVizToProviderMs": 2.335,
+          "providerToDrawMs": 0.028,
+          "nativeMicrotaskToDrawMs": 0.006
+        },
+        {
+          "id": 945,
+          "intervalMs": 143.87,
+          "priorCallbackMs": 142.707,
+          "drawCallbackMs": 25.814,
+          "thread": "10660:452",
+          "vizAtUs": 679766059974,
+          "providerAtUs": 679766061254,
+          "dispatchAtUs": 679766061256,
+          "callbackAtUs": 679766061269,
+          "drawAtUs": 679766061273,
+          "nearestVizToProviderMs": 1.28,
+          "providerToDrawMs": 0.019,
+          "nativeMicrotaskToDrawMs": 0.004
+        },
+        {
+          "id": 1035,
+          "intervalMs": 67.751,
+          "priorCallbackMs": 65.15,
+          "drawCallbackMs": 5.473,
+          "thread": "10660:452",
+          "vizAtUs": 679767860083,
+          "providerAtUs": 679767875888,
+          "dispatchAtUs": 679767875890,
+          "callbackAtUs": 679767875903,
+          "drawAtUs": 679767875908,
+          "nearestVizToProviderMs": 15.805,
+          "providerToDrawMs": 0.02,
+          "nativeMicrotaskToDrawMs": 0.005
+        }
+      ],
+      "sameThreadSpans": [
+        {
+          "name": "Receive mojo message",
+          "startTraceUs": 679766293151,
+          "durationMs": 190,
+          "interface": "viz.mojom.CompositorFrameSinkClient",
+          "ipcHash": 2378294256
+        },
+        {
+          "name": "FunctionCall",
+          "startTraceUs": 679765917419,
+          "durationMs": 142.685,
+          "callback": "present"
+        },
+        {
+          "name": "CommandBufferProxyImpl::Flush",
+          "startTraceUs": 679767809234,
+          "durationMs": 63.253
+        }
+      ],
+      "display": {
+        "apply": {
+          "atUnixMs": 1795263365484.2754,
+          "action": "apply",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        },
+        "restore": {
+          "atUnixMs": 1795263411075.0444,
+          "action": "restore",
+          "device": "\\\\.\\DISPLAY1",
+          "before": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 60,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "after": {
+            "width": 3840,
+            "height": 2160,
+            "hz": 30,
+            "bpp": 32,
+            "x": 0,
+            "y": 0
+          },
+          "testResult": 0,
+          "changeResult": 0,
+          "registryPersisted": false,
+          "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+        }
       }
     }
   }

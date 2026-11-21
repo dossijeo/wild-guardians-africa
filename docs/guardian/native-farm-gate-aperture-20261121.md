@@ -34,7 +34,7 @@ La partida de ida y vuelta cruzó con Task14, cosechó con Action15 y regresó p
 
 ### Cadencia con la pantalla a 60 Hz
 
-La misma partida con trazado CDP completó los dos cruces en NVIDIA con la pantalla a 3840 × 2160 y 60 Hz. El auditor midió intervalos entre envíos del consumidor y retuvo las siguientes muestras. El presupuesto es 16,666… ms.
+La misma partida con trazado CDP completó los dos cruces en NVIDIA con la pantalla a 3840 × 2160 y 60 Hz. El auditor midió intervalos entre los inicios de los dibujos que el consumidor llegó a enviar y retuvo las siguientes muestras. El presupuesto es 16,666… ms.
 
 | Fase | Muestras | Sobre el presupuesto | p95 | Máximo |
 | --- | ---: | ---: | ---: | ---: |
@@ -42,7 +42,9 @@ La misma partida con trazado CDP completó los dos cruces en NVIDIA con la panta
 | Action15 | 300 | 175 | 16,9 ms | 25,3 ms |
 | Carry16 | 230 | 131 | 18,3 ms | 23,2 ms |
 
-En el intervalo de 25,3 ms el consumidor envió ambas oportunidades sin retención. Coincidieron un `CommandBuffer::Flush` de 12,87 ms en el proceso gráfico y una tarea de autoridad de 11,23 ms. Su contribución al intervalo queda pendiente de atribución. Una oportunidad se retuvo antes del primer dibujo de Carry, de 23,2 ms. En otro intervalo de Action, la traza registró `pump` de preparación durante 225,35 ms en su Worker. Los hilos se solapan en el tiempo. La captura se exportó sin pérdidas y se restauró el modo original de 4K a 30 Hz. C4 sigue abierto. [Traza y contadores](performance/native-task14-gate-retiming-20261121.json).
+Durante el intervalo de 25,3 ms el consumidor envió ambas oportunidades sin retención. Entre las señales de Viz pasaron 16,54 ms. Los callbacks de dibujo empezaron 0,20 ms y 8,95 ms después de sus señales cercanas. El callback anterior ya había terminado. El `CommandBuffer::Flush` de 12,87 ms terminó 7,81 ms antes de la segunda señal. Una tarea de autoridad de 11,23 ms solapó la espera, con causalidad pendiente. Una oportunidad se retuvo antes del primer dibujo de Carry, de 23,2 ms. En otro intervalo de Action, la traza registró `pump` de preparación durante 225,35 ms en su Worker. Los hilos se solapan en el tiempo. La captura se exportó sin pérdidas y se restauró el modo original de 4K a 30 Hz. C4 sigue abierto. [Traza y contadores](performance/native-task14-gate-retiming-20261121.json).
+
+La captura adicional con eventos de Blink terminó antes de adquirir Idle20. En ese arranque, el intervalo de 207,90 ms contiene una tarea Mojo de 190,00 ms en el propio hilo de dibujo. El intervalo de 67,75 ms sigue a un callback que pasó 63,25 ms en `CommandBufferProxyImpl::Flush`. El de 143,87 ms sigue a un callback que pasó 142,69 ms en `present`, con la mayor parte del tiempo pendiente de atribución. Los eventos de Blink separan la recepción de `BeginFrame`, su microtarea y el callback. Esta segunda captura caracteriza el arranque y conserva su fallo en el recibo. El seguimiento de Action sigue abierto. [Recibo](performance/native-task14-gate-retiming-20261121.json) · [Código del proveedor de BeginFrame](https://chromium.googlesource.com/chromium/src/+/5cf4b8b13ed518472038170f8de9db2f6c258fe4/third_party/blink/renderer/platform/graphics/begin_frame_provider.cc#104) · [Código del callback del Worker](https://chromium.googlesource.com/chromium/src/+/78c3f601c9b3851be1810f3c3f885167a134b6af/third_party/blink/renderer/core/animation_frame/worker_animation_frame_provider.cc#43).
 
 ## Carry por el vano
 
