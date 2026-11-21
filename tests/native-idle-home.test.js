@@ -34,9 +34,19 @@ for(const threaded of [false,true])test(`Idle crosses its exact end time on the 
  }finally{f?.close();await runtime?.dispose();}
 });
 
-test('a moving task still rejects its unsupported expiry boundary',()=>{
+test('shift expiry requests Home for Idle and retains a peer Task until its stop is ready',()=>{
  const f=nativeIdleHomeFixture({configureSave:s=>{s.time=249.95;}});try{
-  const body=f.body(1),peer=f.body(3),elapsed=f.state.elapsed;assert.throws(()=>tick(f.state,.1,f.nav),/unsupported return boundary/);assert.equal(f.state.elapsed,elapsed);assert.deepEqual(f.body(1),body);assert.deepEqual(f.body(3),peer);assert.equal(f.worker.status,'idle');assert.equal(f.planner.nativeHomeRequestReference(f.actor),null);
+  const body=f.body(1),peerBody=f.body(3),peer=f.state.workers[1],taskId=peer.taskId;
+  const peerActor=Number(peer.id.split('-').at(-1));
+  tick(f.state,.1,f.nav);
+  assert.equal(f.worker.nativeRouteAdmission,'pending-home-resources');
+  assert.equal(f.planner.nativeHomeRequestReference(f.actor)?.bodyId,1);
+  assert.deepEqual(f.body(1),body);
+  assert.equal(peer.nativeRouteAdmission,'native-task');
+  assert.equal(peer.taskId,taskId);
+  assert.notDeepEqual(f.body(3),peerBody);
+  assert(f.planner.nativeTaskRouteStopRequest(peerActor));
+  assert.equal(f.planner.nativeHomeRequestReference(peerActor),null);
  }finally{f.close();}
 });
 
