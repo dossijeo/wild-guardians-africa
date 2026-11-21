@@ -1,0 +1,224 @@
+[
+  {
+    "mode": "moving",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "actor": "worker-900011",
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "e74035bf-0932-40b5-beac-1569d411a610/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10.269999999999998
+    },
+    "ownerGeneration": "fe3093d3-174f-43b2-8a09-725ac54769ef",
+    "presentation": [
+      94,
+      104
+    ],
+    "hostResources": [
+      3368,
+      2949
+    ],
+    "bounds": {
+      "start": 1795220051999.6,
+      "end": 1795220053638.8,
+      "draws": 49,
+      "opportunities": 49,
+      "maximumInterval": 34.60009765625,
+      "outcomeCounts": {
+        "submitted": 49
+      }
+    },
+    "resident": {
+      "resources": 1355,
+      "bindings": 259,
+      "unreferencedBefore": 1736
+    },
+    "resourceSnapshots": [
+      {
+        "reference": "Buffer:3597",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3613",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3627",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3641",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3654",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3667",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3678",
+        "changedBytes": 4,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3690",
+        "changedBytes": 4,
+        "qualified": true
+      }
+    ],
+    "factoryDelta": {
+      "createBuffer": 42,
+      "createTexture": 3,
+      "createSampler": 3,
+      "createBindGroup": 25,
+      "createBindGroupLayout": 10,
+      "createPipelineLayout": 5,
+      "createShaderModule": 8,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 5,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "factoryOwners": {
+      "vfx-atlas": 2,
+      "footstep-object": 58,
+      "existing-render-context-binding": 1,
+      "footstep-texture": 2,
+      "vfx-ground-depth": 38
+    },
+    "visual": {
+      "width": 640,
+      "height": 480,
+      "differingPixels": 298179,
+      "sha256": "6ce4bf273fb66e2ff9c0fc23ab8bf2c23934bb065200dffa4b9899b25c3f5102"
+    },
+    "disposal": {
+      "drain": {
+        "disposed": true
+      },
+      "authorityAlive": true
+    }
+  },
+  {
+    "mode": "paused",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "actor": "worker-900011",
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "49c7009c-d848-4e96-b8e2-218f16f1bc9a/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10.269999999999998
+    },
+    "ownerGeneration": "0260e97d-7df2-4c0d-b026-e1d13500f5fb",
+    "presentation": [
+      130,
+      175
+    ],
+    "hostResources": [
+      3367,
+      2838
+    ],
+    "bounds": {
+      "start": 1795220146203.4,
+      "end": 1795220147567.5999,
+      "draws": 41,
+      "opportunities": 41,
+      "maximumInterval": 34.800048828125,
+      "outcomeCounts": {
+        "submitted": 41
+      }
+    },
+    "resident": {
+      "resources": 1355,
+      "bindings": 259,
+      "unreferencedBefore": 1736
+    },
+    "resourceSnapshots": [
+      {
+        "reference": "Buffer:3583",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3599",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3613",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3627",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3640",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3653",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3664",
+        "changedBytes": 0,
+        "qualified": true
+      },
+      {
+        "reference": "Buffer:3676",
+        "changedBytes": 0,
+        "qualified": true
+      }
+    ],
+    "factoryDelta": {
+      "createBuffer": 0,
+      "createTexture": 0,
+      "createSampler": 0,
+      "createBindGroup": 1,
+      "createBindGroupLayout": 0,
+      "createPipelineLayout": 0,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 0,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "factoryOwners": {
+      "existing-render-context-binding": 1
+    },
+    "visual": {
+      "width": 640,
+      "height": 480,
+      "differingPixels": 298179,
+      "sha256": "cb3663d94411403f5d82ea6aef21bb69b79fb92e34459d6464effd90ddf8d17a"
+    },
+    "disposal": {
+      "drain": {
+        "disposed": true
+      },
+      "authorityAlive": true
+    }
+  }
+]
