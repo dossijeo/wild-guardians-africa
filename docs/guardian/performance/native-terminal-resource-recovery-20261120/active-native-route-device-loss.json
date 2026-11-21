@@ -1,0 +1,217 @@
+{
+  "commit": "31b095fec568b6ca6c8b2f7834f589d325431797",
+  "scope": "Product Continue in Edge, real restored native Idle22 and real device destruction",
+  "startupControl": {
+    "deviceLossRequested": false,
+    "sourceFailures": [
+      {
+        "stage": "source client",
+        "error": "Error: Native resource preparation timed out\n    at receiveNativeIntentControl (http://127.0.0.1:5218/src/simulation/simulation-authority-client.js?t=1795221120628:44:54)\n    at worker.onmessage (http://127.0.0.1:5218/src/simulation/simulation-authority-client.js?t=1795221120628:62:190)"
+      }
+    ],
+    "notices": [
+      {
+        "message": "Error: Worker command not admitted: failed\n    at pump (http://127.0.0.1:5218/src/simulation/worker-game-runtime.js:26:77)\n    at wake (http://127.0.0.1:5218/src/simulation/worker-game-runtime.js:35:133)",
+        "loadingFailure": false
+      },
+      {
+        "message": "Loading reveal cancelled",
+        "loadingFailure": true
+      }
+    ],
+    "httpFailures": [],
+    "requestErrors": []
+  },
+  "physicalLoss": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 126.92999994754791
+      }
+    },
+    "seed": {
+      "slotId": "qa-active-lease-device-loss",
+      "actor": "worker-900011",
+      "elapsed": 10.269999999999998
+    },
+    "before": {
+      "sourceSequence": 149,
+      "elapsed": 10.61999999999999,
+      "visual": 138,
+      "owners": 1,
+      "clock": {
+        "type": "IntentClock",
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "a5d6f7ff-0cf4-4afa-9f83-b7b2e5ed6eac/1",
+        "nativeSession": 1,
+        "clockSequence": 23,
+        "intentSequence": 3,
+        "committedThrough": 10.61999999999999,
+        "rate": 1,
+        "paused": false,
+        "reanchor": false,
+        "anchorLogicalTime": 10.269999999999998,
+        "anchorAbsoluteMs": 1795221228297.7249,
+        "session": "3805401b-a93a-4770-a8cb-c4179581a615"
+      },
+      "bindings": [
+        {
+          "actorId": 900011,
+          "bodyId": 1,
+          "semantic": "relative"
+        },
+        {
+          "actorId": 900011,
+          "bodyId": 1,
+          "semantic": "idle-offset"
+        }
+      ]
+    },
+    "after80s": {
+      "boundClient": null,
+      "owners": 1,
+      "sourceSequence": 258,
+      "elapsed": 20.069999999999936,
+      "blocked": true,
+      "recoveryFault": null,
+      "journal": {
+        "base": 131,
+        "candidate": 163,
+        "through": 258,
+        "entries": 127,
+        "bytes": 9387386,
+        "entryBytes": 4065284,
+        "overheadBytes": 5322102,
+        "capacity": 256,
+        "highWatermark": 128,
+        "maxBytes": 268435456,
+        "highWatermarkBytes": 201326592,
+        "pendingTerrain": false,
+        "saturated": false,
+        "encoderFault": false,
+        "checkpointDeferred": false,
+        "checkpointRetry": false,
+        "closed": false
+      }
+    },
+    "device": [
+      "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+    ],
+    "frames": [
+      {
+        "kind": "rendered-frame",
+        "sequence": 0,
+        "cameraVersion": 1,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 1,
+        "cameraVersion": 2,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 108,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 110,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 115,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 122,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 128,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 130,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 131,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 138,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "rendered-frame",
+        "sequence": 143,
+        "cameraVersion": 5,
+        "viewportVersion": 1
+      },
+      {
+        "kind": "failure",
+        "message": "Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5218/src/rendering/webgpu-world-surface.js?t=1795219175419:168:833"
+      }
+    ],
+    "notes": [
+      {
+        "message": "No se pudo guardar la partida: espera a que termine la caída física.",
+        "loadingFailure": false
+      }
+    ],
+    "sourceTrace": [
+      {
+        "stage": "resource requested",
+        "id": 1,
+        "kind": "prepareNativeIdleStrollResources",
+        "minSequence": 1,
+        "ticket": 1,
+        "at": 1795221230161.74,
+        "timeoutMs": 10000
+      },
+      {
+        "stage": "resource received",
+        "id": 1,
+        "kind": "prepareNativeIdleStrollResources",
+        "ticket": 1,
+        "at": 1795221230166.75
+      },
+      {
+        "stage": "resource ready",
+        "id": 1,
+        "kind": "prepareNativeIdleStrollResources",
+        "ticket": 1,
+        "at": 1795221239737.315
+      }
+    ],
+    "errors": [],
+    "httpFailures": [],
+    "requestErrors": []
+  }
+}

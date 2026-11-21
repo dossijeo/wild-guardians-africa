@@ -43,3 +43,11 @@ $env:QA_RETAINED_RECOVERY='fresh'
 $env:QA_ACTIVE_DEVICE_LOSS='true'
 node tools/experiments/audit_early_native_gpu_view.mjs
 ```
+
+## Pérdida real con una ruta Idle22 adquirida
+
+Un guardado semántico de Idle22 generado con el WASM vigente se abrió por Continue en NVIDIA Turing. La prueba liberó la pausa y comprobó el actor 900011 y el cuerpo 1 en el paquete de dibujo, con reloj causal nativo. La autoridad estaba en la publicación 149 y 10,62 s, y la vista había presentado la 138 al destruir el dispositivo. El navegador confirmó su destrucción y la vista desapareció.
+
+Al vencer el plazo de 80 s seguía habiendo un solo cliente creado y ningún cliente vinculado a la vista. Game llegó a la publicación 258 y 20,07 s con `visualDispatchBlocked` activo. El diario conservaba su base 131 y el candidato 163. La causa de que el reemplazo nunca se iniciara sigue bajo investigación con Astra.
+
+En otro intento, la preparación inicial de recursos agotó su plazo y Continue canceló la revelación de la escena antes de destruir el dispositivo. En la ejecución que sí alcanzó la pérdida, la solicitud `prepareNativeIdleStrollResources` llegó al preparador en 5 ms y obtuvo READY a los 9,58 s de un plazo de 10 s. Los dos fallos se registran por separado. [Captura del arranque y de la pérdida](performance/native-terminal-resource-recovery-20261120/active-native-route-device-loss.json).
