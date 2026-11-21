@@ -754,5 +754,177 @@
     "gateGeometry": 202,
     "drained": true,
     "gpuErrors": 0
+  },
+  "ordinaryDiskCheckpoint": {
+    "base": "78d78ae7d2dd440651d345b0dc57d07833bae545",
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "scope": "Native authority and deterministic Host. Ordinary save coordinator and in-memory repository.",
+    "rawSha256": "528d86b2d95da906f8737ec68da822fc8a3980d60377325983a878282d4a1ce6",
+    "gate": "structure-1000000",
+    "walkingCheckpoint": {
+      "pose": {
+        "time": 10.65000000000001,
+        "worker": {
+          "x": -13.989817815680736,
+          "z": 11.399983810442837,
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "run": 23.25,
+          "walk": 7.680757999200579,
+          "carry": 9.5
+        },
+        "gate": {
+          "open": 0.21582444533270184,
+          "hp": 60,
+          "material": "zarzas"
+        }
+      },
+      "receipt": {
+        "saved": false,
+        "reason": "physics-active",
+        "sequence": 16
+      }
+    },
+    "uninterrupted": {
+      "time": 17.00000000000003,
+      "worker": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "status": "idle",
+        "admission": "native-idle",
+        "run": 23.25,
+        "walk": 16.292991407378103,
+        "carry": 9.5
+      },
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      }
+    },
+    "saved": {
+      "time": 17.00000000000003,
+      "worker": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "status": "idle",
+        "admission": "native-idle",
+        "run": 23.25,
+        "walk": 16.292991407378103,
+        "carry": 9.5
+      },
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      }
+    },
+    "receipt": {
+      "saved": true,
+      "sequence": 146,
+      "elapsed": 17.00000000000003
+    },
+    "chunks": [
+      "1,0",
+      "-1,-1",
+      "0,-1",
+      "1,-1",
+      "-1,0",
+      "0,0",
+      "-1,1",
+      "0,1",
+      "1,1",
+      "2,-1",
+      "2,0",
+      "2,1"
+    ],
+    "bootstrap": true,
+    "after": {
+      "time": 17.200000000000017,
+      "worker": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "status": "idle",
+        "admission": "native-idle",
+        "run": 23.25,
+        "walk": 16.292991407378103,
+        "carry": 9.5
+      },
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      }
+    },
+    "first": {
+      "time": 17.050000000000026,
+      "worker": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "status": "idle",
+        "admission": "pending-idle-resources",
+        "run": 23.25,
+        "walk": 16.292991407378103,
+        "carry": 9.5
+      },
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      }
+    },
+    "stage": "acquire the same worker at the saved settled pose",
+    "old": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "body": 1,
+        "gates": [
+          1000000
+        ],
+        "world": {
+          "version": 1,
+          "authorityEpoch": "e7d552be-b5c0-41fc-a32c-63e6cfb6108d/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        }
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "e7d552be-b5c0-41fc-a32c-63e6cfb6108d/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 16.900000000000034
+        }
+      }
+    ],
+    "new": [
+      {
+        "kind": "initial-idle-body",
+        "committed": true,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "2ace5f07-b3ef-4b20-8ece-862c18ef8a25/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 17.00000000000003
+        }
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": false,
+        "world": {
+          "version": 1,
+          "authorityEpoch": "2ace5f07-b3ef-4b20-8ece-862c18ef8a25/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 17.200000000000017
+        }
+      }
+    ]
   }
 }
