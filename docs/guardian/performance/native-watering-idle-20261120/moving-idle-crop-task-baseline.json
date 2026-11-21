@@ -268,5 +268,78 @@
       "gpuErrors": 0,
       "browserErrors": []
     }
-  ]
+  ],
+  "lateStopCandidate": {
+    "revision": {
+      "publishedBase": "fa6a67cca6452e3a4c85b0578c8a4cc6982bfeed",
+      "candidateSha256": "8a0e3c93aca92e4df7e0b9fa458ef4ac007e2a7adfa6a431047ef39a4447b0cd",
+      "bridgeSha256": "f7f69cdb72b91632ee4e032ff854883e7de75017814aac4e76ef12b296ce3fc7"
+    },
+    "receiptSha256": "0945750ca761cf3f916da90762ae65c77acf3b61107486bd709d0fb9c766f65f",
+    "cause": "automatic Water becomes due while rendered Idle22 still advances, Stop12 aborts on actual arrival",
+    "profile": "youngMale",
+    "moving": {
+      "ticket": 6,
+      "presented": true,
+      "waterSlot": "future",
+      "observedElapsed": 12.199999999999953,
+      "endElapsed": 14.325635183469245
+    },
+    "stopRequest": {
+      "id": 4,
+      "ticket": 7,
+      "minSequence": 261,
+      "requestMs": 12941,
+      "abortMs": 13245
+    },
+    "dispatchAfterAbort": {
+      "last": {
+        "actorId": "worker-900011",
+        "kind": "idle-stroll-stop",
+        "status": "cancelled"
+      },
+      "resources": {
+        "phase": "running",
+        "fault": null,
+        "pending": 0,
+        "retained": 0
+      },
+      "publicationCoherent": true,
+      "publicationClosed": false
+    },
+    "subsequentIdleCycles": {
+      "selectedAfterArrival": true,
+      "status": "unsupported",
+      "attempts": 559,
+      "firstSequence": 266,
+      "lastSequence": 824,
+      "resourceRequests": 0
+    },
+    "lastConfirmed": {
+      "sequence": 824,
+      "elapsed": 42.25000000000097,
+      "admission": "native-idle-stroll",
+      "taskId": null,
+      "workerPosition": {
+        "x": -17.799999237060547,
+        "z": 2.200000047683716
+      },
+      "fault": null
+    },
+    "acquired": [
+      {
+        "binding": "nativeInitialIdleBodyBinding",
+        "ticket": 2
+      },
+      {
+        "binding": "nativeIdleCycleBinding",
+        "ticket": 4
+      },
+      {
+        "binding": "nativeIdleStrollBinding",
+        "ticket": 6
+      }
+    ],
+    "browserErrors": []
+  }
 }
