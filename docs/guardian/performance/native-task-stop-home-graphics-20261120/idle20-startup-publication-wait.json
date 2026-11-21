@@ -701,5 +701,246 @@
         ]
       }
     ]
+  },
+  "pipelineAdmissionQueueTrace": {
+    "commit": "b4d597ab880c3c6989d1021cf123ad356c223ff2",
+    "profile": "youngMale",
+    "terrainTicketPhases": [
+      {
+        "batch": 1,
+        "key": "-1,-1",
+        "side": "terrain",
+        "ticketMs": 2539.9,
+        "waitForAdmissionMs": 2131.2,
+        "milestones": [
+          {
+            "step": "pipeline-enqueued",
+            "milliseconds": 0.1,
+            "queued": 0,
+            "inflightCompiles": 1
+          },
+          {
+            "step": "pipeline-picked",
+            "milliseconds": 2131.2
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 2131.2,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 2256.9,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 2538.8,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 2539,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 2539.6,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 2539.7,
+            "pass": "world"
+          }
+        ]
+      },
+      {
+        "batch": 1,
+        "key": "-1,-1",
+        "side": "biome",
+        "ticketMs": 2046.6,
+        "waitForAdmissionMs": 1606.9,
+        "milestones": [
+          {
+            "step": "pipeline-enqueued",
+            "milliseconds": 0.1,
+            "queued": 117,
+            "inflightCompiles": 0
+          },
+          {
+            "step": "pipeline-picked",
+            "milliseconds": 1606.9
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 1607,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 1728.6,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 1987.3,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-shadow-awaited",
+            "milliseconds": 1992.3,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-shadow-completed",
+            "milliseconds": 2045.9,
+            "pass": "world"
+          }
+        ]
+      },
+      {
+        "batch": 1,
+        "key": "0,-1",
+        "side": "terrain",
+        "ticketMs": 1092.2,
+        "waitForAdmissionMs": 1087.4,
+        "milestones": [
+          {
+            "step": "pipeline-enqueued",
+            "milliseconds": 0.1,
+            "queued": 1,
+            "inflightCompiles": 0
+          },
+          {
+            "step": "pipeline-picked",
+            "milliseconds": 1087.4
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 1087.5,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 1089,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 1091.4,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 1091.4,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 1091.9,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 1091.9,
+            "pass": "world"
+          }
+        ]
+      },
+      {
+        "batch": 1,
+        "key": "0,-1",
+        "side": "biome",
+        "ticketMs": 1368.5,
+        "waitForAdmissionMs": 1358.5,
+        "milestones": [
+          {
+            "step": "pipeline-enqueued",
+            "milliseconds": 0.2,
+            "queued": 1,
+            "inflightCompiles": 0
+          },
+          {
+            "step": "pipeline-picked",
+            "milliseconds": 1358.5
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 1358.5,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 1365.4,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 1365.7,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-shadow-awaited",
+            "milliseconds": 1368,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-shadow-completed",
+            "milliseconds": 1368,
+            "pass": "world"
+          }
+        ]
+      },
+      {
+        "batch": 2,
+        "key": "2,0",
+        "side": "terrain",
+        "ticketMs": 3512.5,
+        "waitForAdmissionMs": 3510.4,
+        "milestones": [
+          {
+            "step": "pipeline-enqueued",
+            "milliseconds": 0,
+            "queued": 3,
+            "inflightCompiles": 1
+          },
+          {
+            "step": "pipeline-picked",
+            "milliseconds": 3510.4
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 3510.5,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 3511.7,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 3511.8,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-pass-enter",
+            "milliseconds": 3512,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-awaited",
+            "milliseconds": 3512.2,
+            "pass": "world"
+          },
+          {
+            "step": "pipeline-completed",
+            "milliseconds": 3512.2,
+            "pass": "world"
+          }
+        ]
+      }
+    ]
   }
 }
