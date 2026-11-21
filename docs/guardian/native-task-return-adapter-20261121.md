@@ -24,4 +24,6 @@ En NVIDIA Turing, el checkout integrado completó el retorno de `olderMale`, `ol
 
 Los intentos del checkout integrado con `youngMale` se interrumpieron antes de adquirir Idle20. La última traza identifica `Native resource preparation timed out` sin respuesta gráfica y con 28 entradas del journal, por debajo del umbral. Astra recibió el fallo de arranque y el recibo de retorno del candidato.
 
-Si el trabajador alcanza el destino mientras la parada está pendiente, la propuesta móvil pierde vigencia. El control de fuente rechaza ese caso y queda pendiente darle una continuación ordinaria. También quedan los motores de puerta y los retornos por cambios de centro o incursión. La aceptación de 60 FPS sigue abierta.
+En NVIDIA Turing, una Task de `olderFemale` alcanzó el destino mientras se retenía la respuesta READY de la parada 25. La última publicación conservó el cuerpo 1 en movimiento a 21,50 s de tiempo transcurrido. Al cruzar el fin de ruta de 21,507 s, Game lanzó `Expired Task lost its executed moving source`. Solo se dibujaron las adquisiciones Idle20 y Task14. Astra recibió la reproducción para resolver la continuación hacia Home desde la ruta completada. [Captura de llegada durante la preparación](performance/native-task-stop-home-graphics-20261120/ordinary-shift-arrival-during-stop.json).
+
+ También quedan los motores de puerta y los retornos por cambios de centro o incursión. La aceptación de 60 FPS sigue abierta.
