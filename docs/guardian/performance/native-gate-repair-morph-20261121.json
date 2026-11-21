@@ -1,0 +1,785 @@
+{
+  "baselineCommit": "0ddd12c6e9daa675014bcfbc55d30824ac04dfa7",
+  "initialDamagePatchSha256": "7469c9a8104b5d3e35bdde1ca8e7198b7e3baf840fbce5189e06769b0f602c21",
+  "repairShaderPatchSha256": "39c356178f39666a8f703e56c987f6582652b9efd8ac7ebded18ad7ada3dc6a7",
+  "vertexLayoutPatchSha256": "17d37ee3873baabc080eabfcee2c489f4567a4591c9328a3969f0652b4cf8226",
+  "run": {
+    "rawSha256": "ba2679917583c7a830677f8a84ebd451c71a84d319328df3ec6e7725adbb0c74",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 116
+      }
+    },
+    "display": {
+      "width": 3840,
+      "height": 2160,
+      "hz": 30
+    },
+    "canvas": {
+      "width": 640,
+      "height": 480,
+      "quality": "muy_baja"
+    },
+    "profile": "youngMale",
+    "source": "ordinary requestRepair through Game, Worker, WASM and GPU"
+  },
+  "negative": {
+    "vertexBufferCount": 11,
+    "adapterVertexBufferLimit": 8,
+    "stage": "first damaged Task14",
+    "rawSha256": "9f5c7668957b7e744f170f222db0ec4363d21f10b3ba725a0c505ffc2ba8aef3"
+  },
+  "gate": {
+    "entity": "structure-1000000",
+    "root": 518,
+    "startingGeometries": [
+      {
+        "id": 520,
+        "geometry": 247
+      },
+      {
+        "id": 521,
+        "geometry": 248
+      }
+    ],
+    "fullyOpenGeometries": [
+      {
+        "id": 520,
+        "geometry": 247
+      },
+      {
+        "id": 521,
+        "geometry": 248
+      }
+    ],
+    "repairedGeometries": [
+      {
+        "id": 759,
+        "geometry": 365
+      }
+    ],
+    "buffers": [
+      {
+        "geometry": 247,
+        "buffer": "Buffer:3300",
+        "attributes": [
+          "wgMorphPosition",
+          "wgMorphNormal",
+          "wgMorphRoot",
+          "wgMorphPeer",
+          "wgMorphTarget",
+          "wgMorphTargetNormal"
+        ],
+        "bytes": 1253880
+      },
+      {
+        "geometry": 248,
+        "buffer": "Buffer:3316",
+        "attributes": [
+          "wgMorphPosition",
+          "wgMorphNormal",
+          "wgMorphRoot",
+          "wgMorphPeer",
+          "wgMorphTarget",
+          "wgMorphTargetNormal"
+        ],
+        "bytes": 685800
+      }
+    ],
+    "morphShaderCount": 2,
+    "finalWasOpen": true,
+    "bindingPreserved": true
+  },
+  "worker": {
+    "id": "worker-900011",
+    "body": 1,
+    "actorRoot": 660,
+    "originalMeshes": 36,
+    "originalMeshesRetained": 36,
+    "allAfterMeshes": 36
+  },
+  "repair": {
+    "event": {
+      "id": "event-29209",
+      "type": "RepairApplied",
+      "workerId": "worker-900011",
+      "targetId": "structure-1000000",
+      "repair": {
+        "taskId": "task-1000002",
+        "paymentId": "repair:task-1000002",
+        "paidCoins": 5,
+        "previousHp": 30,
+        "previousStatus": "intact",
+        "restoredHp": 60,
+        "maxHp": 60
+      },
+      "presentation": {
+        "elapsed": 17.449999999999893,
+        "x": -14,
+        "z": 7.599999904632568,
+        "yaw": 3.141592653589793,
+        "structure": {
+          "x": -14,
+          "z": 8.2
+        }
+      },
+      "simulationTime": 17.449999999999893
+    },
+    "readyTicket": 9,
+    "taskTicket": 6,
+    "drawnRepairTicket": 10,
+    "curve": {
+      "from": 0.5,
+      "to": 1,
+      "at": 17.449999999999893
+    },
+    "samples": [
+      {
+        "elapsed": 17.8999999999999,
+        "presentationElapsed": 17.499998092651367,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 17.9499999999999,
+        "presentationElapsed": 17.94999885559082,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.249999999999904,
+        "presentationElapsed": 18.049999237060547,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.349999999999905,
+        "presentationElapsed": 18.349998474121094,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.449999999999907,
+        "presentationElapsed": 18.399999618530273,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.499999999999908,
+        "presentationElapsed": 18.499998092651367,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.59999999999991,
+        "presentationElapsed": 18.549999237060547,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.64999999999991,
+        "presentationElapsed": 18.599998474121094,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          247,
+          248
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3300",
+          "Buffer:3316"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.69999999999991,
+        "presentationElapsed": 18.649999618530273,
+        "gateMorphShaderCount": 2,
+        "root": 518,
+        "geometries": [
+          365
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a3ed1674-8ece-4fe4-9e97-f7a0d9953a96/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [],
+        "destroyRequests": []
+      }
+    ]
+  },
+  "cadence": {
+    "targetIntervalMs": 16.666666666666668,
+    "scope": "Intervals between starts of draws submitted. Display operated at 30 Hz.",
+    "largest": {
+      "at": 1795264167378.2,
+      "sequence": 34,
+      "ticket": 6,
+      "intervalMs": 37.300048828125,
+      "drawMs": 1.5,
+      "trigger": "raf",
+      "replay": true
+    },
+    "otherRetirementDraws": [
+      {
+        "at": 1795264171943.4,
+        "sequence": 58,
+        "ticket": 12,
+        "intervalMs": 36,
+        "drawMs": 2,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "repairFirst": {
+      "at": 1795264170974.2998,
+      "sequence": 56,
+      "ticket": 10,
+      "intervalMs": 33.39990234375,
+      "drawMs": 1.7001953125,
+      "trigger": "raf",
+      "replay": false
+    }
+  },
+  "gpuErrors": 0,
+  "drained": 1,
+  "lifetime": {
+    "layout": "One independent interleaved buffer per damaged mesh.",
+    "morphDestroyRequestsBeforeDrain": [],
+    "hostResources": [
+      2696,
+      2753,
+      3176,
+      3307
+    ]
+  },
+  "integrated": {
+    "rawSha256": "322c93f113d01b45be63ee8cd1b0a94d252a81b386b3edbb9de17857050575dd",
+    "clockPatchSha256": "c001848140d9272480b575289b40a4a8dd957d412bf4d2f78535e5bb1eefc717",
+    "phase": "Ordinary gate repair with deliberately retained READY and the optional clock receipt.",
+    "ready": {
+      "requestedMs": 620,
+      "wallMs": 646,
+      "drawSamplesBefore": 557,
+      "drawSamplesAfter": 577,
+      "hp": 30,
+      "eventCount": 0,
+      "newSubmittedDraws": 20
+    },
+    "body": 1,
+    "actorRoot": 696,
+    "retainedWorkerMeshes": 36,
+    "damagedGateRoot": 393,
+    "repairedGateRoot": 393,
+    "curve": {
+      "from": 0.5,
+      "to": 1,
+      "at": 17.9999999999999
+    },
+    "event": {
+      "id": "event-29209",
+      "type": "RepairApplied",
+      "workerId": "worker-900011",
+      "targetId": "structure-1000000",
+      "repair": {
+        "taskId": "task-1000002",
+        "paymentId": "repair:task-1000002",
+        "paidCoins": 5,
+        "previousHp": 30,
+        "previousStatus": "intact",
+        "restoredHp": 60,
+        "maxHp": 60
+      },
+      "presentation": {
+        "elapsed": 17.9999999999999,
+        "x": -14,
+        "z": 7.599999904632568,
+        "yaw": 3.141592653589793,
+        "structure": {
+          "x": -14,
+          "z": 8.2
+        }
+      },
+      "simulationTime": 17.9999999999999
+    },
+    "samples": [
+      {
+        "elapsed": 18.099999999999902,
+        "presentationElapsed": 18.049999237060547,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.64999999999991,
+        "presentationElapsed": 18.599998474121094,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.69999999999991,
+        "presentationElapsed": 18.69999885559082,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 18.949999999999914,
+        "presentationElapsed": 18.899999618530273,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.049999999999915,
+        "presentationElapsed": 18.999998092651367,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.099999999999916,
+        "presentationElapsed": 19.099998474121094,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.149999999999917,
+        "presentationElapsed": 19.149999618530273,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.199999999999918,
+        "presentationElapsed": 19.19999885559082,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.29999999999992,
+        "presentationElapsed": 19.249998092651367,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          142,
+          143
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [
+          "Buffer:3414",
+          "Buffer:3430"
+        ],
+        "destroyRequests": []
+      },
+      {
+        "elapsed": 19.34999999999992,
+        "presentationElapsed": 19.299999237060547,
+        "gateMorphShaderCount": 2,
+        "root": 393,
+        "geometries": [
+          365
+        ],
+        "opening": 1,
+        "gateRef": {
+          "gateId": 1000000,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "a1eb0790-8fb2-42ce-999d-96a72e23b896/1",
+            "nativeSession": 1,
+            "ticket": 5,
+            "effectiveTime": 10.049999999999999
+          }
+        },
+        "drawn": true,
+        "morphBuffers": [],
+        "destroyRequests": []
+      }
+    ],
+    "gpuErrors": 0,
+    "drained": 1,
+    "largest": {
+      "at": 1795264687579.2998,
+      "sequence": 1,
+      "ticket": null,
+      "intervalMs": 36.5,
+      "drawMs": 0.300048828125,
+      "trigger": "raf",
+      "replay": true
+    },
+    "firstRepairDraw": {
+      "at": 1795264705076.2,
+      "sequence": 54,
+      "ticket": 10,
+      "intervalMs": 33.199951171875,
+      "drawMs": 2.800048828125,
+      "trigger": "raf",
+      "replay": false
+    },
+    "lifetime": {
+      "lastSampledMorphDestroyRequests": [],
+      "independentMorphBuffers": [
+        "Buffer:3414",
+        "Buffer:3430"
+      ]
+    }
+  },
+  "validation": {
+    "tests": 569,
+    "testFiles": 42,
+    "passed": 569,
+    "failed": 0,
+    "build": "WebGPU Worker and remote drawing, Vite completed in 1m 13s"
+  }
+}

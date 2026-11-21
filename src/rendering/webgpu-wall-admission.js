@@ -4,14 +4,29 @@ import {createNativeGateGpuBinding} from './native-gate-gpu-binding.js';
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
-export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
+export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,presentationClock=null,getPresentationTime=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
  if(!prototypes||!entity||typeof prepareInitial!=='boolean'||typeof createWall!=='function'||setWallPresentation!==null&&typeof setWallPresentation!=='function')throw TypeError('Invalid admitted wall');
- const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady,onError,release:wall=>wall.dispose()});let closed=false,gatePreparation=null;
+ const inherited=new WeakSet();
+ const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady:()=>{
+  const binding=slot.active?.nativeGpuGate;if(binding&&inherited.has(binding)){binding.commit();inherited.delete(binding);}onReady();
+ },onError,release:wall=>wall.dispose()});let closed=false,gatePreparation=null;
  function update(value,time){
   if(closed)return;
   const base=slot.active??slot.pending;let key=base?.nextConfirmedStageKey(value,time)??null,first=null;
   if(key===null){first=createWall(prototypes,value,time,{previous:null});key=first.stageKey;}
-  slot.request(key,previous=>{const wall=first??createWall(prototypes,value,time,{previous});setWallPresentation?.(wall,value);return wall;});
+  slot.request(key,previous=>{
+   const wall=first??createWall(prototypes,value,time,{previous});
+   try{
+    setWallPresentation?.(wall,value);
+    if(previous?.nativeGpuGate){
+     // Same slot/root; the old shape remains visible through admission. Attach
+     // the hidden candidate before checking the native mechanism transform.
+     wall.visible=false;slot.group.add(wall);
+     inherited.add(previous.nativeGpuGate.prepareReplacement(wall));
+    }
+    return wall;
+   }catch(error){slot.group.remove(wall);wall.dispose();throw error;}
+  });
   const selected=slot.active?.stageKey===key?slot.active:slot.pending;
   if(selected!==first)selected?.update(value,undefined,time);if(selected)setWallPresentation?.(selected,value);if(slot.active&&slot.active!==selected)setWallPresentation?.(slot.active,value);
  }
@@ -25,11 +40,11 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  }else update(entity,elapsed);
  function prepareNativeGate({presentation,motion,getPickTime,signal}){
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
-  const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime});let previous=wall.nativeGpuGate??null;
+  const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime,presentationClock,getPresentationTime});let previous=wall.nativeGpuGate??null;
   let finished=false,activated=false;
   const current=()=>!closed&&!finished&&!signal?.aborted&&gatePreparation===participant&&slot.upToDate&&slot.active===wall&&(activated?binding.current():binding.canActivate());
   const retire=value=>{if(!value)return;const release=()=>value.dispose();if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(wall,release);else release();};
-  const participant={request:{object:wall,options:{signal,include:[binding.mesh],materialAlternatives:[{mesh:binding.mesh,material:binding.material}]}},valid:current,
+  const participant={request:{object:wall,options:{signal,include:binding.materialAlternatives.map(r=>r.mesh),materialAlternatives:binding.materialAlternatives}},valid:current,
    rollback(){if(!current())throw Error('Native gate rollback unavailable');if(activated){binding.rollback();activated=false;}},
    retarget(presentation,options){if(!current()||activated)throw Error('Native gate retarget unavailable');return binding.retarget(presentation,options);},
    activate(){if(!current()||activated)throw Error('Native gate preparation became stale');binding.activate();activated=true;},
@@ -39,7 +54,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   participant.chunkParticipant=()=>{
    if(!signal||!current())throw Error('Native gate chunk preparation unavailable');let active=true,armed=false,finalized=false;
    const valid=()=>active&&current(),check=()=>{if(!valid())throw Error('Native gate chunk changed');};
-   return {object:wall,signal,include:[binding.mesh],materialAlternatives:participant.request.options.materialAlternatives,valid,eventRoots:()=>[wall],presentation:()=>({show:[],hide:[]}),capturePresentation:record=>{check();return binding.capturePresentation(record);},
+   return {object:wall,signal,include:binding.materialAlternatives.map(r=>r.mesh),materialAlternatives:participant.request.options.materialAlternatives,valid,eventRoots:()=>[wall],presentation:()=>({show:[],hide:[]}),capturePresentation:record=>{check();return binding.capturePresentation(record);},
     activate(){check();if(armed)throw Error('Native gate chunk already armed');armed=true;return true;},attach(){check();if(!armed)throw Error('Native gate chunk not armed');participant.activate();},
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;

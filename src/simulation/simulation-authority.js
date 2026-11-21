@@ -65,7 +65,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
-  const nativeRosterSupported=nativeRestoration&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&s.hp===s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  const nativeRosterSupported=nativeRestoration&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
@@ -94,7 +94,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    if(active.length!==nativeGateOwners.length||active.some(gate=>!nativeGateOwners.includes(gate)))throw Error('Native gate projection has another structure owner');
    for(const gate of nativeGateOwners){
     const pose=planner.nativeGateMechanismPose(gate.id);
-    if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||gate.hp!==gate.maxHp)throw Error('Native gate projection lost its current mechanism');
+    if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||!Number.isFinite(gate.maxHp)||!(gate.hp>0&&gate.hp<=gate.maxHp))throw Error('Native gate projection lost its current mechanism');
     gate.gateOpen=pose.opening;
    }
   }

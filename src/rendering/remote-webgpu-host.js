@@ -807,7 +807,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
-      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
+      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(clockElapsed===null?{}:{presentationElapsed:floorFloat32(active.admittedMotionBinding?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;

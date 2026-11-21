@@ -46,7 +46,7 @@ export class NativeWall extends THREE.Group {
         throw Error('Native gate binding requires an explicit geometry/lifecycle transition');
       this.applyNativeGatePose(entity.nativeGatePose);return;
     }
-    if(this.nativeGpuGate){this.nativeGpuGate.checkEntity(entity);return;}
+    if(this.nativeGpuGate){this.nativeGpuGate.checkEntity(entity,elapsed);return;}
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -61,7 +61,8 @@ export class NativeWall extends THREE.Group {
     this.lastStatus=entity.status;
     if(entity.status!=='intact'||seconds===undefined){this.target=target;this.from=visual;this.damageAge=.48;}
     const opening=entity.status==='ruined'?0:Math.max(0,Math.min(1,entity.gateOpen??0));
-    if(this.visual===visual&&this.gate===entity.gate&&this.gateOpen===opening)return;
+    const shapeChanged=this.visual!==visual||this.gate!==entity.gate;
+    if(!shapeChanged&&this.gateOpen===opening)return;
     this.visual=visual;this.gate=entity.gate;this.gateOpen=opening;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;
     this.scale.set((entity.baseScaleX??1)*scale,scale,scale);
@@ -81,6 +82,14 @@ export class NativeWall extends THREE.Group {
         // Stable inputs are present at first admission. Adding attributes while
         // a replacement is staged would change the visible geometry cache key.
         if(material.isNodeMaterial&&bridge.leafFlags){geometry.setAttribute('wgGatePosition',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('wgGateNormal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('wgGateLeaf',new THREE.BufferAttribute(Float32Array.from(bridge.leafFlags),1));}
+        // Each damaged owner retains its own immutable Bastion morph basis.
+        // Both stages are admitted before Repair; no per-frame attribute writes.
+        if(material.isNodeMaterial&&entity.gate&&stages.length===2){
+          const fields=Object.entries({Position:bridge.pos,Normal:bridge.normal,Root:bridge.roots,Peer:bridge.peers,Target:bridge.targets,TargetNormal:bridge.targetNormals}),packed=new Float32Array(bridge.pos.length*fields.length);
+          for(let vertex=0;vertex<bridge.pos.length/3;vertex++)for(let field=0;field<fields.length;field++)for(let axis=0;axis<3;axis++)packed[vertex*18+field*3+axis]=fields[field][1][vertex*3+axis];
+          const basis=new THREE.InterleavedBuffer(packed,18);
+          fields.forEach(([name],field)=>geometry.setAttribute('wgMorph'+name,new THREE.InterleavedBufferAttribute(basis,3,field*3)));
+        }
         geometry.computeBoundingBox();const bounds=geometry.boundingBox;material.userData.blessingWallBounds={value:new THREE.Vector4(bounds.min.x,bounds.min.y,Math.max(.01,bounds.max.x-bounds.min.x),Math.max(.01,bounds.max.y-bounds.min.y))};
         const mesh=new THREE.Mesh(geometry,material);mesh.castShadow=mesh.receiveShadow=true;this.add(mesh);this.parts.push({mesh,bridge,sourceMaterial:prototype.material,releaseMaterialReplica});
       }
@@ -91,6 +100,10 @@ export class NativeWall extends THREE.Group {
       const p=Math.max(0,Math.min(1,stage.morph)),t=p*p*p*(p*(p*6-15)+10);
       for(let j=0;j<normals.length;j++)normals[j]=bridge.normal[j]+(bridge.targetNormals[j]-bridge.normal[j])*t;
       for(let j=0;j<normals.length;j+=3)if(normals[j]**2+normals[j+1]**2+normals[j+2]**2<.0001)normals.set(bridge.normal.subarray(j,j+3),j);
+      // The motor articulates the actual damage shape. Keep these resident
+      // attributes unrotated; canonical mechanism geometry stays in bridge.pos.
+      const gatePosition=mesh.geometry.attributes.wgGatePosition,gateNormal=mesh.geometry.attributes.wgGateNormal;
+      if(shapeChanged&&gatePosition){gatePosition.array.set(positions);gatePosition.needsUpdate=true;gateNormal.array.set(normals);gateNormal.needsUpdate=true;}
       mesh.geometry.attributes.position.array.set(articulateGate(bridge,opening,positions,normals));mesh.geometry.attributes.position.needsUpdate=true;mesh.geometry.attributes.normal.needsUpdate=true;
       const ao=mesh.geometry.attributes.ambientVisibility;if(ao){const release=Math.sin(Math.PI*t);for(let k=0;k<ao.count;k++){const fade=Math.max(release,bridge.leafFlags?.[k]?opening:0);ao.array[k]=bridge.visibility[k]+(1-bridge.visibility[k])*fade;}ao.needsUpdate=true;}
       mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
