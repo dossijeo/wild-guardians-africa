@@ -66,11 +66,35 @@ test('a semantic save/load recreates a fresh cold arrival and body without carry
  }finally{restored?.close();f.close();}
 });
 
-test('losing a pending Farm body or crossing its unmigrated Task peer return edge still rejects before time',()=>{
- for(const cause of ['body','contract']){const f=fixture({peer:true});try{
-  if(cause==='body')assert.equal(f.w.spatial_body_remove(1),1);else f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;
-  const elapsed=f.state.elapsed,peer=f.body(3);assert.throws(()=>tick(f.state,.1,f.nav));assert.equal(f.state.elapsed,elapsed);assert.deepEqual(f.body(3),peer);
- }finally{f.close();}}
+test('losing a pending Farm body rejects before time and preserves its Task peer',()=>{
+ const f=fixture({peer:true});try{
+  assert.equal(f.w.spatial_body_remove(1),1);
+  const elapsed=f.state.elapsed,peer=f.body(3);
+  assert.throws(()=>tick(f.state,.1,f.nav));
+  assert.equal(f.state.elapsed,elapsed);
+  assert.deepEqual(f.body(3),peer);
+ }finally{f.close();}
+});
+
+test('contract expiry retargets the pending Farm body to Home and requests a prepared Task peer stop',()=>{
+ const f=fixture({peer:true});try{
+  f.state.time=PROFILES.find(p=>p.id===f.worker.profile).end-.05;
+  const elapsed=f.state.elapsed,body=f.body(1),peer=f.state.workers[1],peerBody=f.body(3);
+  const source=f.planner.nativeFarmArrivalRequestReference(f.actor);
+  tick(f.state,.1,f.nav);
+  assert(f.state.elapsed>elapsed);
+  assert.equal(f.worker.nativeRouteAdmission,'pending-home-resources');
+  assert.equal(f.planner.nativeFarmArrivalRequestReference(f.actor),null);
+  const home=f.planner.nativeHomeRequestReference(f.worker.id);
+  assert.equal(home.bodyId,1);
+  assert.deepEqual(home.pose,source.pose);
+  assert.deepEqual(f.body(1),body);
+  assert.equal(peer.nativeRouteAdmission,'native-task');
+  assert.notDeepEqual(f.body(3),peerBody);
+  const stop=f.planner.nativeTaskRouteStopRequest(peer.id);
+  assert.equal(stop.reason,'home');
+  assert.equal(stop.bodyId,3);
+ }finally{f.close();}
 });
 
 test('a cold arrival with a retired native source cannot borrow the supported Home return edge',()=>{
