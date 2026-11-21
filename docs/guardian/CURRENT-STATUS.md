@@ -8,6 +8,8 @@ Harvest con una puerta sana ya admite Task14 cuando la preparación termina más
 
 Repair ordinario pasó en NVIDIA con puertas dañadas de zarzas, empalizada y reforzado. Las dos geometrías y el motor se conservaron durante la transición de 480 ms. Cada partida restauró los HP con un solo débito y conservó el cuerpo 1. El retiro del portón liberó los dos buffers antiguos antes del cierre y conservó las 786 referencias de los dueños que seguían en escena. [Reparación del portón](native-gate-repair-morph-20261121.md).
 
+Se guardó una reparación de zarzas 150 ms después de iniciar la curva. Una nueva autoridad conservó la puerta, el tiempo y el débito. La restauración todavía usa el morph de CPU y cambió las versiones de posición y normal de las dos piezas. [Control de restauración](native-gate-repair-morph-20261121.md#control-de-guardado-durante-repair).
+
 Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3 ms entre inicios de dibujos enviados y 549 de 964 muestras superaron 16,67 ms. C4 sigue abierto. La pantalla se restauró al modo original de 30 Hz. [Traza y recuentos](native-farm-gate-aperture-20261121.md#cadencia-con-la-pantalla-a-60-hz).
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).
