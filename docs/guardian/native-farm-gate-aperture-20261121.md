@@ -25,3 +25,9 @@ En WebGPU físico, Carry dibujó el ticket 10 y llegó a x=-14, z=4,639. Settlem
 El fin de turno de `youngMale` desde Idle20 solicitó Home18. Salió de z=5,7 y cruzó el vano por x=-13,9496 con la hoja abierta. NVIDIA dibujó el ticket 6 con el cuerpo 1, la raíz 695 y las 36 geometrías del trabajador. La puerta conservó su raíz 397 y la malla residente. El mayor intervalo observado durante el cruce fue de 37,2 ms a 30 Hz.
 
 Al llegar a z=11,8, Home19 intentó retirar al trabajador. La Surface rechazó el paquete con `Native Home absence gate graphics are not prepared`. El Host determinista también llegó al destino y rechazó la preparación de retirada con el motor 1000000. Queda transferir el motor a su dueño de destino en la misma frontera que retira el trabajador, conservando las reservas activas. [Recibos de Home](performance/native-ordinary-home-gate-20261121.json).
+
+## Empalizada y portón reforzado
+
+En ambos materiales, un portón comprado mediante la orden ordinaria y restaurado con yaw 0 dejó cruzar por el centro con apertura 1. Farm conservó el cuerpo 1, la raíz y las 32 geometrías del trabajador. El portón conservó su raíz y geometría. NVIDIA dibujó las 137 oportunidades registradas con el ticket 2 en cada caso y drenó con cero errores WebGPU. Los máximos fueron 36,3 ms en empalizada y 36,0 ms en reforzado con pantalla a 30 Hz.
+
+Con yaw 0,37 rad, el plan de empalizada incluyó el motor, pero cruzó el plano unos 2,11 m a un lado del eje. Se reprodujo en WASM con Host determinista en dos posiciones y se verificó el rodeo en NVIDIA con la puerta a 120/120 HP. El control equivalente de reforzado produjo `farm-arrival unsupported` en el Host determinista. Ambos casos oblicuos quedan pendientes. [Recibos alineados y oblicuos](performance/native-farm-other-gate-apertures-20261121.json).

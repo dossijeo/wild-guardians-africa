@@ -1,0 +1,321 @@
+{
+  "source": "deb99b26ff50af9f14d0d048bc6ab736b758f246",
+  "scope": "Ordinary Farm through a legally placed gate restored with the native world",
+  "displayHz": 30,
+  "viewport": [
+    640,
+    480
+  ],
+  "quality": "muy_baja",
+  "targetIntervalMs": 16.666666666666668,
+  "deterministic": {
+    "sha256": "d9db5010ce5d0f1219107c8070db2b07df603c2263f4b3edf3297dfe7371d612",
+    "trials": [
+      {
+        "material": "empalizada",
+        "yaw": 0.37,
+        "x": -14,
+        "z": 8.2,
+        "start": {
+          "x": -12.698184444926136,
+          "z": 11.556378444181723
+        },
+        "goal": {
+          "x": -15.80807715982481,
+          "z": 3.5383632719698266
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 2,
+        "crossings": [
+          -2.112157604789858
+        ],
+        "near": false,
+        "distance": 8.114733257856727,
+        "gateId": "structure-1000000",
+        "hp": 120
+      },
+      {
+        "material": "empalizada",
+        "yaw": 0,
+        "x": -14,
+        "z": 8.2,
+        "start": {
+          "x": -14,
+          "z": 11.799999999999999
+        },
+        "goal": {
+          "x": -14,
+          "z": 3.1999999999999993
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 2,
+        "crossings": [
+          0
+        ],
+        "near": true,
+        "distance": 6.600000190734862,
+        "gateId": "structure-1000000",
+        "hp": 120
+      },
+      {
+        "material": "empalizada",
+        "yaw": 0.37,
+        "x": -14,
+        "z": 9.2,
+        "start": {
+          "x": -12.698184444926136,
+          "z": 12.556378444181723
+        },
+        "goal": {
+          "x": -15.80807715982481,
+          "z": 4.538363271969827
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 2,
+        "crossings": [
+          -2.112157604789858
+        ],
+        "near": false,
+        "distance": 8.114733257856727,
+        "gateId": "structure-1000000",
+        "hp": 120
+      },
+      {
+        "material": "reforzado",
+        "yaw": 0,
+        "x": -14,
+        "z": 8.2,
+        "start": {
+          "x": -14,
+          "z": 11.799999999999999
+        },
+        "goal": {
+          "x": -14,
+          "z": 3.1999999999999993
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 2,
+        "crossings": [
+          0
+        ],
+        "near": true,
+        "distance": 6.600000190734862,
+        "gateId": "structure-1000000",
+        "hp": 240
+      },
+      {
+        "material": "reforzado",
+        "yaw": 0,
+        "x": -14,
+        "z": 9.2,
+        "start": {
+          "x": -14,
+          "z": 12.799999999999999
+        },
+        "goal": {
+          "x": -14,
+          "z": 4.199999999999999
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 2,
+        "crossings": [
+          0
+        ],
+        "near": true,
+        "distance": 6.600000190734862,
+        "gateId": "structure-1000000",
+        "hp": 240
+      },
+      {
+        "material": "reforzado",
+        "yaw": 0.37,
+        "x": -14,
+        "z": 8.2,
+        "start": {
+          "x": -12.698184444926136,
+          "z": 11.556378444181723
+        },
+        "goal": {
+          "x": -15.80807715982481,
+          "z": 3.5383632719698266
+        },
+        "commandValue": true,
+        "authorityError": "Native authority production did not reach boundary: {\"phase\":\"idle\",\"fault\":null,\"active\":null,\"last\":{\"actorId\":\"worker-900011\",\"kind\":\"farm-arrival\",\"status\":\"unsupported\"},\"publicationSequence\":1}",
+        "gateId": "structure-1000000",
+        "hp": 240
+      }
+    ]
+  },
+  "rotatedEmpalizadaHardware": {
+    "sha256": "766f10c4c2cd97b4d1a338a61e09594f22b416256e29945ba44f6644f8f4944b",
+    "stage": "existing gate and restored Farm draw",
+    "error": "Error: Farm chose a route outside the opened vane",
+    "crossing": {
+      "opening": 1,
+      "elapsed": 14.949999999999894,
+      "position": [
+        -15.968893182176638,
+        8.952708410456689
+      ],
+      "localPosition": [
+        -2.1078439313115185,
+        -0.010211524229250979
+      ]
+    }
+  },
+  "alignedHardware": [
+    {
+      "sha256": "08ce1c122ed7a31e79c432da636a47236d2566cd50bd3262a386a875cea5f7d4",
+      "gate": {
+        "id": "structure-1000000",
+        "created": 29207,
+        "kind": "wall",
+        "material": "empalizada",
+        "gate": true,
+        "x": -14,
+        "z": 8.2,
+        "yaw": 0,
+        "maxHp": 120,
+        "hp": 120,
+        "status": "intact",
+        "villageId": "village-1",
+        "cost": 20,
+        "collapseRemaining": 0,
+        "gateOpen": 1
+      },
+      "gateIds": [
+        1000000
+      ],
+      "body": 1,
+      "actorRoot": 623,
+      "workerMeshesRetained": true,
+      "workerMeshes": 32,
+      "gateRoot": 478,
+      "gateGeometry": 206,
+      "gateRetained": true,
+      "start": [
+        -14,
+        11.799999999999999
+      ],
+      "exit": {
+        "elapsed": 14.399999999999906,
+        "position": [
+          -14,
+          7.696000000000099
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 93
+      },
+      "plane": {
+        "opening": 1,
+        "elapsed": 13.949999999999916,
+        "position": [
+          -14,
+          8.18200000000009
+        ],
+        "localPosition": [
+          0,
+          -0.017999999999910088
+        ]
+      },
+      "ticket": 2,
+      "adapter": [
+        "nvidia",
+        "turing"
+      ],
+      "draws": 137,
+      "submissions": 137,
+      "opportunities": 137,
+      "maxIntervalMs": 36.300048828125,
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "sha256": "6d6c60423d3e26e9506cad64b707d3b17c20eba28ad8af77befbafe2f18d85a0",
+      "gate": {
+        "id": "structure-1000000",
+        "created": 29207,
+        "kind": "wall",
+        "material": "reforzado",
+        "gate": true,
+        "x": -14,
+        "z": 8.2,
+        "yaw": 0,
+        "maxHp": 240,
+        "hp": 240,
+        "status": "intact",
+        "villageId": "village-1",
+        "cost": 55,
+        "collapseRemaining": 0,
+        "gateOpen": 1
+      },
+      "gateIds": [
+        1000000
+      ],
+      "body": 1,
+      "actorRoot": 619,
+      "workerMeshesRetained": true,
+      "workerMeshes": 32,
+      "gateRoot": 129,
+      "gateGeometry": 87,
+      "gateRetained": true,
+      "start": [
+        -14,
+        11.799999999999999
+      ],
+      "exit": {
+        "elapsed": 14.399999999999906,
+        "position": [
+          -14,
+          7.696000000000099
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 93
+      },
+      "plane": {
+        "opening": 1,
+        "elapsed": 13.949999999999916,
+        "position": [
+          -14,
+          8.18200000000009
+        ],
+        "localPosition": [
+          0,
+          -0.017999999999910088
+        ]
+      },
+      "ticket": 2,
+      "adapter": [
+        "nvidia",
+        "turing"
+      ],
+      "draws": 137,
+      "submissions": 137,
+      "opportunities": 137,
+      "maxIntervalMs": 36,
+      "gpuErrors": 0,
+      "drained": true
+    }
+  ]
+}
