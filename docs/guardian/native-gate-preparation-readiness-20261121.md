@@ -21,3 +21,9 @@ Hubo 182 dibujos del ticket, un máximo de 37,6 ms entre dibujos a 30 Hz y cero 
 Los controles con el compilador retenido usan los assets originales y comprueban espera, continuidad del propietario, cancelación, sustitución, fallos aislados y recuperación del mismo slot.
 
 Pasaron las 84 pruebas dirigidas del checkout. La compilación de producción con WebGPU Worker y dibujo remoto completó el empaquetado de recursos.
+
+## Control del vano
+
+La colocación ordinaria aceptó dos puertas con el vano centrado en `x=-14`, en `z=8.2` y `z=9.2`. Con el mismo origen y servicio de centro, sin puerta se prepara una ruta directa de 6,60 m. Al restaurar cada puerta, WASM devuelve -2 durante la preparación temporal. Los contadores registran consultas de despeje y cero pruebas de reserva o barrido de la hoja. El despeje conservador rechaza también el polígono con paso para trabajadores cuando la ruta solicita una prueba de puerta. [Código de despeje](../../src/world/wild-engine/spatial-execution-clearance.h), [recibos con y sin puerta](performance/native-farm-gate-aperture-baseline-20261121.json).
+
+Detour consume una conexión especial mediante su referencia dentro del corredor y sus extremos de navegación. El control de Wild Guardians delimita el próximo ajuste a la identidad del proxy de la puerta registrada y conserva las pruebas del marco, la hoja y el resto de los sólidos. [Detour PathCorridor](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourPathCorridor.cpp#L356-L395).
