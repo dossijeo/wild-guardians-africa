@@ -69,5 +69,39 @@
       "active": null,
       "last": null
     }
+  },
+  "preparedCommand": {
+    "source": "f8b3bb692093f23cc4933fe4dc0557d1bbc6b323",
+    "entryPoints": [
+      "prepareNativeStructureCommand",
+      "beginNativeStructureCommand",
+      "execute",
+      "finishNativeStructureCommand"
+    ],
+    "farm": {
+      "originalTicket": 1,
+      "admission": "native-farm-arrival"
+    },
+    "result": {
+      "value": false,
+      "rejection": "La construcción nativa admite por ahora solo muros sólidos nuevos en regiones residentes",
+      "events": [],
+      "charged": false,
+      "sameStructures": true,
+      "recordKinds": [
+        "farm-arrival"
+      ],
+      "faults": []
+    },
+    "restoredWithGate": {
+      "productionStatus": {
+        "phase": "idle",
+        "fault": null,
+        "active": null,
+        "last": null,
+        "publicationSequence": 0
+      }
+    },
+    "diagnosticSha256": "c4adf28c8407f9fb88fecdf46582064e6eea07f76c254e13c928248ae3a27d99"
   }
 }
