@@ -258,5 +258,15 @@
         "away"
       ]
     }
+  },
+  "crossingWithEffectiveStopTicket": {
+    "firstBuildSequence": 202,
+    "confirmedSequence": 210,
+    "confirmedElapsed": 12.34999999999995,
+    "preparedStopTicket": 4,
+    "acquiredStopTicket": 5,
+    "sourceFault": "Error: Error: Native world changed outside its committed resource boundary\n    at Object.nativeWorldResourceBoundary (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js?t=1795222242083:239:69)\n    at Object.execute (http://127.0.0.1:5218/src/simulation/simulation-authority.js?t=1795222241958:485:40)\n    at self.onmessage (http://127.0.0.1:5218/src/simulation/simulation-authority-worker.js?worker_file&type=module:106:1584)\n    at worker.onmessage (http://127.0.0.1:5218/src/simulation/worker-hosted-runtime.js:64:748)",
+    "surfaceFaults": [],
+    "surfaceTestsPassed": 2
   }
 }
