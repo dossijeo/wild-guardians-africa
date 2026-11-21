@@ -901,5 +901,219 @@
     ],
     "threeR180": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Geometries.js#L154-L193",
     "threeR187": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/common/Geometries.js#L187-L236"
+  },
+  "fixedRetirement": {
+    "base": "a5109ccb67bc10377973403dde813c951afe900b",
+    "patchSha256": "d282d44323e48d2288164915dff9dcda7b07e2baaf5e87e6cef49373e11153e3",
+    "rawSha256": "823a4e180d5453ef9bf253241ba70a9a2d6f4107b52c79b4a35c5fdffd5950ca",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 115.40000009536743
+      }
+    },
+    "displayHz": 30,
+    "gateId": "structure-1000000",
+    "root": 518,
+    "ready": {
+      "ms": 648.7999999523163,
+      "draws": 20,
+      "hp": 30,
+      "eventCount": 0
+    },
+    "repair": {
+      "id": "event-29209",
+      "type": "RepairApplied",
+      "workerId": "worker-900011",
+      "targetId": "structure-1000000",
+      "repair": {
+        "taskId": "task-1000002",
+        "paymentId": "repair:task-1000002",
+        "paidCoins": 5,
+        "previousHp": 30,
+        "previousStatus": "intact",
+        "restoredHp": 60,
+        "maxHp": 60
+      },
+      "presentation": {
+        "elapsed": 18.74999999999991,
+        "x": -14,
+        "z": 7.599999904632568,
+        "yaw": 3.141592653589793,
+        "structure": {
+          "x": -14,
+          "z": 8.2
+        }
+      },
+      "simulationTime": 18.74999999999991
+    },
+    "resources": {
+      "damagedVertexBuffers": [
+        "Buffer:3301",
+        "Buffer:3317"
+      ],
+      "destroyedBeforeClose": [
+        "Buffer:3301",
+        "Buffer:3317"
+      ],
+      "damagedGeometryDisposals": [
+        {
+          "geometry": 246,
+          "material": 167,
+          "initialAttributes": [
+            "color",
+            "uv",
+            "normal",
+            "position"
+          ],
+          "stage": "disposed",
+          "firstOwnerAttributesAtDispose": [
+            "color",
+            "uv",
+            "normal",
+            "position"
+          ],
+          "buffers": [
+            [
+              "wgMorphPosition",
+              null
+            ],
+            [
+              "wgMorphNormal",
+              null
+            ],
+            [
+              "wgMorphRoot",
+              null
+            ],
+            [
+              "wgMorphPeer",
+              null
+            ],
+            [
+              "wgMorphTarget",
+              null
+            ],
+            [
+              "wgMorphTargetNormal",
+              null
+            ]
+          ]
+        },
+        {
+          "geometry": 247,
+          "material": 168,
+          "initialAttributes": [
+            "color",
+            "uv",
+            "normal",
+            "position"
+          ],
+          "stage": "disposed",
+          "firstOwnerAttributesAtDispose": [
+            "color",
+            "uv",
+            "normal",
+            "position"
+          ],
+          "buffers": [
+            [
+              "wgMorphPosition",
+              null
+            ],
+            [
+              "wgMorphNormal",
+              null
+            ],
+            [
+              "wgMorphRoot",
+              null
+            ],
+            [
+              "wgMorphPeer",
+              null
+            ],
+            [
+              "wgMorphTarget",
+              null
+            ],
+            [
+              "wgMorphTargetNormal",
+              null
+            ]
+          ]
+        }
+      ],
+      "duringMorph": {
+        "baselineOwners": 886,
+        "currentOwners": 899,
+        "retainedOwnerKeys": 886,
+        "baselineReferences": 794,
+        "liveReferences": 797,
+        "retainedReferences": 794,
+        "replacedResidentOwners": []
+      },
+      "afterRetirement": {
+        "baselineOwners": 886,
+        "currentOwners": 973,
+        "retainedOwnerKeys": 878,
+        "baselineReferences": 794,
+        "liveReferences": 821,
+        "retainedReferences": 786,
+        "replacedResidentOwners": []
+      }
+    },
+    "lastPresentedClock": 20.549999237060547,
+    "retainedWorkerInitialMeshes": 36,
+    "gpuErrors": 0,
+    "didDrain": true,
+    "peakIntervals": [
+      {
+        "at": 1795265581551.2002,
+        "sequence": 53,
+        "ticket": 12,
+        "intervalMs": 38.5,
+        "drawMs": 4.39990234375,
+        "trigger": "mutation-release",
+        "replay": false
+      },
+      {
+        "at": 1795265578615.9001,
+        "sequence": 50,
+        "ticket": 6,
+        "intervalMs": 36.5,
+        "drawMs": 8.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795265562882.4001,
+        "sequence": 1,
+        "ticket": null,
+        "intervalMs": 36.400146484375,
+        "drawMs": 0.099853515625,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "references": {
+      "r180": "https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Geometries.js#L154-L193",
+      "r187": "https://github.com/mrdoob/three.js/blob/r187/src/renderers/common/Geometries.js#L187-L236"
+    },
+    "validation": {
+      "tests": 573,
+      "testFiles": 43,
+      "failures": 0,
+      "build": "Vite WebGPU Worker and remote drawing completed in 1m 20s"
+    }
   }
 }

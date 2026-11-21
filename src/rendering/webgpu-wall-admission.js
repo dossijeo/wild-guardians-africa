@@ -4,7 +4,7 @@ import {createNativeGateGpuBinding} from './native-gate-gpu-binding.js';
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
-export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,presentationClock=null,getPresentationTime=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
+export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,renderer=null,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,presentationClock=null,getPresentationTime=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
  if(!prototypes||!entity||typeof prepareInitial!=='boolean'||typeof createWall!=='function'||setWallPresentation!==null&&typeof setWallPresentation!=='function')throw TypeError('Invalid admitted wall');
  const inherited=new WeakSet();
  const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady:()=>{
@@ -13,9 +13,9 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  function update(value,time){
   if(closed)return;
   const base=slot.active??slot.pending;let key=base?.nextConfirmedStageKey(value,time)??null,first=null;
-  if(key===null){first=createWall(prototypes,value,time,{previous:null});key=first.stageKey;}
+  if(key===null){first=createWall(prototypes,value,time,{previous:null,renderer});key=first.stageKey;}
   slot.request(key,previous=>{
-   const wall=first??createWall(prototypes,value,time,{previous});
+   const wall=first??createWall(prototypes,value,time,{previous,renderer});
    try{
     setWallPresentation?.(wall,value);
     if(previous?.nativeGpuGate){
@@ -32,7 +32,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  }
  let initialParticipant=null;
  if(prepareInitial){
-  const wall=createWall(prototypes,entity,elapsed,{previous:null});let handed=false;
+  const wall=createWall(prototypes,entity,elapsed,{previous:null,renderer});let handed=false;
   try{
    setWallPresentation?.(wall,entity);
    initialParticipant=slot.prepareParticipant(wall.stageKey,()=>{handed=true;return wall;},{initial:true});

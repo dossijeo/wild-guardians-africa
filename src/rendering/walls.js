@@ -1,3 +1,4 @@
+import {disposeWebGpuWallGeometry} from './webgpu-wall-geometry-disposal.js';
 import {awakeningVisible,awakeningVisibleAt} from './awakening-presentation.js';
 import * as THREE from 'three';
 import {wallVisualAt} from '../simulation/structure-presentation.js';
@@ -20,8 +21,8 @@ export function wallBridge(source,destination=null){
 }
 
 export class NativeWall extends THREE.Group {
-  constructor(prototypes,entity,elapsed,{previous=null}={}){
-    super();this.prototypes=prototypes;this.entityId=entity.id;this.nativeGateMaterial=entity.material;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
+  constructor(prototypes,entity,elapsed,{previous=null,renderer=null}={}){
+    super();this.webGpuRenderer=renderer;this.prototypes=prototypes;this.entityId=entity.id;this.nativeGateMaterial=entity.material;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
     if(previous){this.lastStatus=previous.lastStatus;this.visual=previous.visual;this.collapseFromVisual=previous.collapseFromVisual;}
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
@@ -150,6 +151,6 @@ export class NativeWall extends THREE.Group {
     const ao=mesh.geometry.attributes.ambientVisibility;if(ao){for(let i=0;i<ao.count;i++)ao.array[i]=bridge.visibility[i]+(1-bridge.visibility[i])*(bridge.leafFlags[i]?pose.opening:0);ao.needsUpdate=true;}
     mesh.geometry.computeBoundingBox();mesh.geometry.computeBoundingSphere();
   }
-  disposeParts(){this.nativeGpuGate?.dispose();for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();mesh.geometry.dispose();mesh.material.dispose();this.remove(mesh);}this.parts=[];}
+  disposeParts(){this.nativeGpuGate?.dispose();for(const {mesh,releaseMaterialReplica} of this.parts){releaseMaterialReplica?.();disposeWebGpuWallGeometry(mesh.geometry,this.webGpuRenderer);mesh.material.dispose();this.remove(mesh);}this.parts=[];}
   dispose(){this.disposeParts();}
 }
