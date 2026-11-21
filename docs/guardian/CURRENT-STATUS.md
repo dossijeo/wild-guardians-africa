@@ -10,6 +10,8 @@ Repair ordinario pasó en NVIDIA con puertas dañadas de zarzas, empalizada y re
 
 Una reparación de zarzas guardada a los 150 ms de su curva se restaura en GPU con la apertura estática y la misma raíz de pared. Se conservaron 790 buffers residentes comparables y hubo un solo débito. Pasaron 123 pruebas y el build de producto. La captura a 30 Hz dejó un máximo de arranque de 36,9 ms sin atribución. [Restauración y controles](native-restored-gate-repair-handoff-20261121.md).
 
+La reparación de una ruina sólida quedó reproducida en NVIDIA. `requestRepair` adquiere Task14 y Action15 sobre el cuerpo original. La pared sigue en 0 de 100 HP, sin preparación de barrera, cobro ni `RepairApplied`. [Control físico de la ruina](native-intact-wall-repair-20261121.md#control-de-ruina-en-nvidia).
+
 Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3 ms entre inicios de dibujos enviados y 549 de 964 muestras superaron 16,67 ms. C4 sigue abierto. La pantalla se restauró al modo original de 30 Hz. [Traza y recuentos](native-farm-gate-aperture-20261121.md#cadencia-con-la-pantalla-a-60-hz).
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).

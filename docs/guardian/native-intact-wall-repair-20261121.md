@@ -23,6 +23,12 @@ El control posterior de autoridad rechazó una segunda orden de Repair sobre el 
 
 El caso de ruina necesita revalidar el acceso y adquirir las paradas de las rutas afectadas antes de restaurar la colisión. El rendimiento de C4 y la integración ordinaria de Build al cruzar Farm continúan abiertos.
 
+## Control de ruina en NVIDIA
+
+La orden pública `requestRepair` sobre `structure-749` adquirió Task14 con el ticket 6 y Action15 con el ticket 8, ambos sobre el cuerpo 1. La acción terminó a t=31,24. En t=32,74 la pared seguía en ruinas con 0 de 100 HP, el saldo era 100.000 y aún no existía una preparación de barrera ni un evento `RepairApplied`. La raíz 125 y la geometría 74 de la ruina siguieron en escena.
+
+Se conservaron 570 buffers residentes entre 680 vínculos comparables y el consumidor drenó sin errores. La captura a 30 Hz registró un máximo de arranque de 36,3 ms sin atribución. El control reproduce el bloqueo antes de incorporar la colisión al recorrido nativo. [Recibo](performance/native-ruined-solid-wall-baseline-20261121.json).
+
 ## Puerta intacta con daño parcial
 
 Antes de admitir el daño parcial, una puerta de zarzas restaurada a 30/60 HP dejaba el roster en `unsupported-cohort`. Una puerta sana con la misma estructura adquiere Idle20 y rechaza Repair por estar a pleno HP. Con el trabajador cerca del vano y una ampliación privada del filtro de HP, la autoridad admite Repair, abre el motor 1000000 y confirma 60 HP, el cuerpo 1 y un solo débito de 5 monedas en Host determinista. El control legacy con el trabajador más lejos dejó la tarea pendiente de asignación. El caso ordinario con GPU ya admite daño parcial y la transición completa de la reparación. [Controles previos](performance/native-intact-wall-repair-20261121/damaged-bramble-gate-control.json) · [Reparación integrada](native-gate-repair-morph-20261121.md).
