@@ -498,7 +498,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
-    routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,
+    wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,

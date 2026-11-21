@@ -24,3 +24,6 @@ bool spatialIntentGateUnsupported(double,double,double,double,double);
 // Internal, unadmitted gate-candidate proof. Still checks all static world
 // geometry, including any worker-passable overlay without modelled ownership.
 int spatialGateCandidateSegmentClear(double,double,double,double,double);
+
+bool spatialGateProxyBarrierMatches(int,double,double,double,double,double,int);
+bool spatialIntentGateProxyRetirementAllowed(int);

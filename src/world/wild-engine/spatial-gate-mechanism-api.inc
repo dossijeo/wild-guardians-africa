@@ -17,11 +17,30 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_motion_presentation(double session,double tick
   s.gateResult={id,double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};const auto root=gateRootMatrix(gate);s.gateResult.insert(s.gateResult.end(),root.begin(),root.end());
   for(double at:times)s.gateResult.insert(s.gateResult.end(),{at,gateOpening(gate,at)});return int(times.size());
 }
-EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install(double id,int modelId){
+// Navigation proxies remain in the canonical barrier index. Only the exact
+// three immutable proxies of this authored mechanism are self geometry.
+static bool gateNavigationProxiesMatch(const IntentState& s,NativeGate& gate,const std::array<int,3>& ids){
+ if(ids[0]<=0||ids[1]<=0||ids[2]<=0||ids[0]==ids[1]||ids[0]==ids[2]||ids[1]==ids[2])return false;
+ for(const auto& [otherId,other]:s.gates)for(int owned:other.navigationBarriers)if(owned&&std::find(ids.begin(),ids.end(),owned)!=ids.end())return false;
+ const auto parts=gateMeshParts(gate,-std::numeric_limits<double>::infinity(),gate.mesh->height/gate.sz);
+ const double c=std::cos(gate.yaw),sin=std::sin(gate.yaw);
+ for(int side=0;side<2;side++){
+  if(parts[side].size()<6)return false;
+  double minX=std::numeric_limits<double>::infinity(),minZ=minX,maxX=-minX,maxZ=-minX;
+  for(size_t at=0;at<parts[side].size();at+=2){const double x=parts[side][at]*gate.sx,z=parts[side][at+1]*gate.sz;minX=std::min(minX,x);maxX=std::max(maxX,x);minZ=std::min(minZ,z);maxZ=std::max(maxZ,z);}
+  const double x=(minX+maxX)/2,z=(minZ+maxZ)/2;
+  if(!spatialGateProxyBarrierMatches(ids[side],gate.x+x*c+z*sin,gate.z-x*sin+z*c,(maxX-minX)/2,(maxZ-minZ)/2,gate.yaw,0))return false;
+ }
+ if(!spatialGateProxyBarrierMatches(ids[2],gate.x,gate.z,1.09*gate.sx,.22*gate.sz,gate.yaw,1))return false;
+ gate.navigationBarriers=ids;return true;
+}
+
+static int installGateMechanism(double id,int modelId,const std::array<int,3>& proxies={}){
   auto& s=state();if(!s.session||!integer(id)||!s.gates.count(uint64_t(id))||s.nextGateMechanism>=uint64_t(maxId))return -4;
   if(!gateStaticProofCurrent(s))return -5;
   NativeGate candidate=s.gates.at(uint64_t(id));
   if(!prepareGateMechanismGeometry(candidate,nativeGateMeshModel(modelId)))return -4;
+  if(proxies[0]&&(!gateNavigationProxiesMatch(s,candidate,proxies)||s.causalClock||s.barrierProposal.pending||s.worldMutationPreview||s.executionEnabled))return -4;
   const auto& b=candidate.unsupported;double support[3];
   const int mounted=spatialGateMountSupport(candidate.x,candidate.z,b.minX,b.minZ,b.maxX,b.maxZ,support);
   if(mounted!=1)return mounted==0?-3:mounted;
@@ -41,6 +60,12 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install(double id,int modelId){
   const int objects=gateSweepStaticObjects(s,proposed,true);if(objects!=1)return objects==-6?-1:objects==-7?-2:-5;
   auto& installed=proposed.at(uint64_t(id));installed.mechanism=++s.nextGateMechanism;installed.bodySweepCertified=installed.staticSweepCertified=true;
   const auto before=executionWorldStamp();cancelGateMotionProposal(s);publishGateMotion(s,proposed);acknowledgeGateSupport(s,before);return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install(double id,int modelId){return installGateMechanism(id,modelId);}
+// Additive bootstrap entry point. Existing install ABI and live fences remain.
+EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_install_owned(double id,int modelId,double left,double right,double envelope){
+ if(!integer(left)||!integer(right)||!integer(envelope)||left>2147483647||right>2147483647||envelope>2147483647)return -4;
+ return installGateMechanism(id,modelId,{int(left),int(right),int(envelope)});
 }
 EMSCRIPTEN_KEEPALIVE int nav_gate_mechanism_pose(double id){
   auto& s=state();s.gateMechanismPose.fill(0);

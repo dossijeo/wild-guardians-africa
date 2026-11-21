@@ -53,6 +53,7 @@ int gateSweepStaticObjects(IntentState& s,const std::map<uint64_t,NativeGate>& g
     const auto& b=gate.unsupported;
     const int status=onlyMechanisms&&!gate.mesh?1:spatialVisitGateStaticObjects(b.minX,b.minZ,b.maxX,b.maxZ,
       [](const SpatialGateStaticObject& object,void* opaque){auto& q=*static_cast<Query*>(opaque);
+        if(object.kind==1&&std::find(q.gate.navigationBarriers.begin(),q.gate.navigationBarriers.end(),object.id)!=q.gate.navigationBarriers.end())return true;
         const auto answer=gateSweepStaticPair(q.s,q.gate,object.shape,q.s.effectiveTime,
           std::max(q.s.effectiveTime,gateMotionEnd(q.gate)));
         if(!answer.clear)gateStaticWitness(q.s,q.gate.id,object.kind,object.id,object.gx,object.gz,answer);

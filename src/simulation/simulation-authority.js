@@ -63,7 +63,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
-  const nativeRosterSupported=nativeRestoration&&!game.raid&&!game.structures.some(s=>s.gate&&s.status!=='ruined')&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  const restoredGates=game.structures.filter(s=>s.gate&&s.status!=='ruined');
+  const nativeRosterSupported=nativeRestoration&&!game.raid&&restoredGates.every(s=>s.kind==='wall'&&s.status==='intact'&&s.hp===s.maxHp&&['zarzas','empalizada','reforzado'].includes(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
@@ -92,6 +93,23 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    for(const worker of game.workers)if(worker.status!=='home'){
     const body=nativeBodies.publish(worker.id,{x:worker.x,z:worker.z,radius:WORKER_SPATIAL_PROFILE.radius,kind:0,flags:1});
     if(!bindings.bindWorker(worker.id,body))throw Error('Native restored worker body binding rejected');
+   }
+   if(restoredGates.length){
+    // Bootstrap only: establish the original native mechanism before any GPU
+    // consumer or causal clock. A saved absence of gateOpen is resolved by
+    // native occupancy, never by assuming the gate is closed over a body.
+    for(const gate of restoredGates)if(!bindings.register(gate))throw Error('Native restored gate registration rejected');
+    if(bindings.reconcile({enabled:true}).status!=='updated'||bindings.reconcile({enabled:false}).status!=='updated')throw Error('Native restored gate occupancy unavailable');
+    for(const gate of restoredGates){
+     const installed=bindings.installMechanism(gate.id,gate.material,{navigationBarriers:session.wallBarrierIds(gate.id)});
+     if(installed.status!=='installed')throw Error('Native restored gate mechanism rejected: '+installed.status);
+    }
+    nav.projectNativeGateLeaves=()=>{
+     const active=game.structures.filter(s=>s.gate&&s.status!=='ruined');
+     if(active.length!==restoredGates.length||active.some(g=>!restoredGates.includes(g)))throw Error('Native gate projection has another structure owner');
+     for(const gate of restoredGates){const pose=planner.nativeGateMechanismPose(gate.id);if(!pose||pose.sampledAt!==game.elapsed||gate.status!=='intact'||gate.hp!==gate.maxHp)throw Error('Native gate projection lost its current mechanism');gate.gateOpen=pose.opening;}
+    };
+    nav.projectNativeGateLeaves();
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,onError:error=>onNativeIntentControlError?.(error)});

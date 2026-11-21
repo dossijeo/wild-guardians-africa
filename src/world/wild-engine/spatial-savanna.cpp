@@ -2628,6 +2628,7 @@ int spatial_add_wall(float x,float z,float halfX,float halfZ){
   return addBarrier(x,z,halfX,halfZ,0);
 }
 int spatial_remove_wall(int id){
+  if(!spatialIntentGateProxyRetirementAllowed(id))return 0;
   auto& index=barrierIndex();
   const auto it=index.byId.find(id);
   if(it==index.byId.end())return 0;
@@ -2742,7 +2743,7 @@ int spatial_apply_barrier_batch(int removeCount,int addCount){
   std::unordered_set<int> unique;
   for(int i=0;i<removeCount;i++){
     const int id=barrierRemovalIds[i];
-    if(!unique.insert(id).second||!barrierIndex().byId.count(id))return 0;
+    if(!unique.insert(id).second||!barrierIndex().byId.count(id)||!spatialIntentGateProxyRetirementAllowed(id))return 0;
   }
   for(int i=0;i<addCount;i++){
     const float x=barrierBatch[i*6],z=barrierBatch[i*6+1];

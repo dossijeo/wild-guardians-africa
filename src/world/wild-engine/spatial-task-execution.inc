@@ -5,7 +5,8 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  const auto& s=state();if(!s.executionEnabled&&!s.causalClock)return 0;
  // Other movers must gain their own source projection before sharing Game.tick.
  // Their existing native clocks and component consumers remain supported.
- if(!s.gates.empty())return -1;
+ for(const auto& [id,gate]:s.gates)
+  if(!gate.mesh||gate.status!=0||!gateStaticProofCurrent(s)||std::any_of(gate.navigationBarriers.begin(),gate.navigationBarriers.end(),[](int proxy){return proxy<=0;}))return -1;
  // Prepared stopped workers retain their bodies while the cohort advances.
  // A stopped Task joins this projection once it owns a valid Home request.
  for(const auto& [body,slot]:s.suspendedBodies){

@@ -19,6 +19,7 @@ struct NativeGate {
   SpatialStaticMutation unsupported;
   const NativeGateMeshModel* mesh=nullptr;
   uint64_t mechanism=0;
+  std::array<int,3> navigationBarriers{}; // Own canonical proxies, never foreign obstacles.
   double baseY=0,supportMin=0,supportMax=0,physicalRadius=0;
   std::vector<double> physicalLeaf;
   std::array<std::vector<double>,4> workerParts,fullParts;

@@ -47,10 +47,12 @@ export function createSpatialGateIntents(session,state){
     return {status:result>=0?'prepared':result===-2?'incomplete-facts':result===-3||result===-8?'blocked':result===-6?'unknown':result===-7?'unsupported':result===-9?'crossing-reserved':'invalid',
     witness:sweepResult(),...(staticObjects?{staticWitness:readNativeGateStaticWitness(w)}:{}),authorizedPassage:false};},
   bodySweepCertified:id=>w.nav_gate_body_sweep_certified(numeric(id))===1,
-  installMechanism:(id,material)=>{
+  installMechanism:(id,material,{navigationBarriers=null}={})=>{
    boundary();if(w.nav_gate_mechanism_version?.()!==1)throw Error('Rebuild native gate mechanism service');
    const model={zarzas:1,empalizada:2,reforzado:3}[material];if(!model)throw TypeError('Unsupported mobile gate material');
-   const result=w.nav_gate_mechanism_install(numeric(id),model);
+   if(navigationBarriers!==null&&(!Array.isArray(navigationBarriers)||navigationBarriers.length!==3||navigationBarriers.some(id=>!Number.isSafeInteger(id)||id<=0)||new Set(navigationBarriers).size!==3))throw TypeError('Invalid gate navigation proxy identities');
+   if(navigationBarriers&&typeof w.nav_gate_mechanism_install_owned!=='function')throw Error('Rebuild native gate proxy ownership');
+   const result=navigationBarriers?w.nav_gate_mechanism_install_owned(numeric(id),model,...navigationBarriers):w.nav_gate_mechanism_install(numeric(id),model);
    return {status:result===1?'installed':result===-1?'unknown':result===-2?'unsupported':result===-3?'unsupported-support':result===-5?'blocked':'invalid',
     authorizedPassage:false,authorizedAutonomy:false};
   },

@@ -68,3 +68,11 @@ int spatialVisitGateStaticObjects(double minX,double minZ,double maxX,double max
     if(!visit({propMutation(*prop),3,prop->group,prop->gx,prop->gz},context))return 0;
   return 1;
 }
+
+bool spatialGateProxyBarrierMatches(int id,double x,double z,double halfX,double halfZ,double yaw,int mask){
+ const auto found=barrierIndex().byId.find(id);if(found==barrierIndex().byId.end())return false;const auto& b=found->second;
+ // The mirror stores float32 rectangles derived from the same clipped mesh.
+ // Allow only their numerical projection error, never a neighbouring shape.
+ const auto same=[](float actual,double expected){const float value=float(expected);return std::abs(double(actual)-expected)<=std::max(2e-6,2*std::abs(double(std::nextafter(value,std::numeric_limits<float>::infinity()))-value));};
+ return b.passMask==mask&&same(b.x,x)&&same(b.z,z)&&same(b.halfX,halfX)&&same(b.halfZ,halfZ)&&b.yaw==float(yaw);
+}

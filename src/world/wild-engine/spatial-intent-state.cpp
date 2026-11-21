@@ -1687,6 +1687,11 @@ SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* r
   return residencyMutationBefore(state(),regions,count,removing,releaseOnly);
 }
 void spatialIntentResidencyCommitted(const SpatialStaticTicket& ticket,int count){residencyMutationCommitted(state(),ticket,count);}
+
+bool spatialIntentGateProxyRetirementAllowed(int id){
+ for(const auto& [gateId,gate]:state().gates)if(gate.mesh&&std::find(gate.navigationBarriers.begin(),gate.navigationBarriers.end(),id)!=gate.navigationBarriers.end())return false;
+ return true;
+}
 bool spatialIntentStaticRestorationAllowed(){return !state().bodyDomainActive&&!state().gateStaticProofs;}
 bool spatialIntentStaticPreflight(const SpatialStaticMutation* shapes,int count){
   return staticMutationPreflight(state(),shapes,count);
