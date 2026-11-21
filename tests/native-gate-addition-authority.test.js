@@ -16,7 +16,7 @@ async function withFarm(operation){
   authority.advance();
   await authority.present();
   const command={kind:'placeStructure',id:'native-ordinary-gate',structure:{kind:'wall',material:'zarzas',gate:true,yaw:0,...source.point(0,8)}};
-  await operation(authority,command);
+  await operation(authority,command,chunks);
  }finally{await authority?.close();source.close();}
 }
 
@@ -29,7 +29,7 @@ async function withPreparedFrame(f,pending){
  return result;
 }
 
-test('one prepared gate is acquired and paid once while the original Farm keeps advancing',()=>withFarm(async(f,command)=>{
+test('one prepared gate is paid once, retains Farm and restores from its save',()=>withFarm(async(f,command,chunks)=>{
  const before=f.snapshot();
  await withPreparedFrame(f,f.authority.prepareNativeStructureCommand(command));
  const ready=f.snapshot(),candidate=f.records.find(record=>record.kind==='barrier-addition');
@@ -58,6 +58,17 @@ test('one prepared gate is acquired and paid once while the original Farm keeps 
  assert.deepEqual(f.records.map(record=>record.kind),['farm-arrival','barrier-addition']);
  assert.deepEqual(after.ledger,committed.ledger);
  assert.deepEqual(f.faults,[]);
+ const restored=await nativeProductionAuthority(after,{chunkKeys:chunks});
+ try{
+  await untilProduction(restored,()=>restored.records.some(record=>record.kind==='farm-arrival'&&record.committed));
+  const next=restored.snapshot();
+  assert.deepEqual(next.structures.find(entity=>entity.id===gate.id),gate);
+  assert.deepEqual(next.ledger,after.ledger);
+  assert.equal(next.workers[0].id,worker.id);
+  assert.equal(next.workers[0].nativeRouteAdmission,'native-farm-arrival');
+  assert.notEqual(restored.records[0].resources.worldBoundary.authorityEpoch,binding.reference.worldBoundary.authorityEpoch);
+  assert.deepEqual(restored.faults,[]);
+ }finally{await restored.close();}
 }));
 
 test('cancelling a gate after resource preparation keeps the previous world and balance',()=>withFarm(async(f,command)=>{
