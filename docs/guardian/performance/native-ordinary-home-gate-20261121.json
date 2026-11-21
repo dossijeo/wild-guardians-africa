@@ -1,0 +1,455 @@
+{
+  "source": "bd3b3898406a5a424c04a3af5c07fc2524230b4d",
+  "worker": "youngMale",
+  "gate": "structure-1000000",
+  "aperture": {
+    "x": -14,
+    "z": 8.2
+  },
+  "entry": {
+    "x": -14,
+    "z": 11.8
+  },
+  "deterministic": {
+    "sha256": "1d68551a13a3fde486a54c15b6518f41771bffa5f9eb7d35b103fd3174040825",
+    "phases": [
+      {
+        "x": -14,
+        "z": 5.7,
+        "time": 249.8,
+        "elapsed": 10.099999999999998,
+        "status": "idle",
+        "admission": "native-idle",
+        "gateOpen": 0
+      },
+      {
+        "x": -14,
+        "z": 5.7,
+        "time": 250,
+        "elapsed": 10.299999999999928,
+        "status": "returning",
+        "admission": "pending-home-resources",
+        "gateOpen": 0
+      },
+      {
+        "x": -14,
+        "z": 5.7,
+        "time": 250.20000000000005,
+        "elapsed": 10.499999999999924,
+        "status": "returning",
+        "admission": "native-home",
+        "gateOpen": 0.16666666666666313
+      }
+    ],
+    "firstCrossing": {
+      "x": -13.949600219726562,
+      "z": 7.319190688284325,
+      "time": 252.2000000000005,
+      "elapsed": 12.499999999999881,
+      "status": "returning",
+      "admission": "native-home",
+      "gateOpen": 1
+    },
+    "lastCrossing": {
+      "x": -13.949600219726562,
+      "z": 9.047190688284289,
+      "time": 253.80000000000086,
+      "elapsed": 14.099999999999847,
+      "status": "returning",
+      "admission": "native-home",
+      "gateOpen": 1
+    },
+    "last": {
+      "x": -14,
+      "z": 11.800000190734863,
+      "time": 256.5000000000009,
+      "elapsed": 16.79999999999982,
+      "status": "returning",
+      "admission": "native-home",
+      "gateOpen": 1
+    },
+    "preparations": [
+      {
+        "kind": "initial-idle-body",
+        "committed": true,
+        "aborted": false,
+        "ticket": 1,
+        "gateIds": null
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 3,
+        "gateIds": null
+      },
+      {
+        "kind": "home-route",
+        "committed": true,
+        "aborted": false,
+        "ticket": 5,
+        "body": 1,
+        "gateIds": [
+          1000000
+        ]
+      },
+      {
+        "kind": "home-arrival",
+        "committed": false,
+        "aborted": false,
+        "ticket": 7,
+        "body": 1,
+        "gateIds": [
+          1000000
+        ]
+      }
+    ],
+    "failure": "Error: Native Home absence gate graphics are not prepared"
+  },
+  "physical": {
+    "sha256": "b2fa1ca97cf9fea82b5cfc262c72167c13a6cbc8b4a7c498d382ca3edf906447",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 121.80000007152557
+      }
+    },
+    "consumerErrorsBeforeEnd": 0,
+    "ticket": 6,
+    "bodyId": 1,
+    "workerRoot": 695,
+    "workerGeometries": 36,
+    "gateOwner": {
+      "root": 397,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 399,
+          "geometry": 154,
+          "material": [
+            151
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "presented": [
+      {
+        "at": 1795258042685,
+        "sequence": 21,
+        "ticket": 6,
+        "intervalMs": 33.39990234375,
+        "drawMs": 2.5,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795258042718.3,
+        "sequence": 21,
+        "ticket": 6,
+        "intervalMs": 33.300048828125,
+        "drawMs": 1.800048828125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258042751.7,
+        "sequence": 21,
+        "ticket": 6,
+        "intervalMs": 33.39990234375,
+        "drawMs": 1.900146484375,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "crossing": [
+      {
+        "time": 254.350000000001,
+        "elapsed": 14.649999999999835,
+        "x": -13.949600219726562,
+        "z": 7.373190688284324,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 272,
+        "opening": 1
+      },
+      {
+        "time": 254.400000000001,
+        "elapsed": 14.699999999999834,
+        "x": -13.949600219726562,
+        "z": 7.427190688284323,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 273,
+        "opening": 1
+      },
+      {
+        "time": 254.450000000001,
+        "elapsed": 14.749999999999833,
+        "x": -13.949600219726562,
+        "z": 7.481190688284322,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 274,
+        "opening": 1
+      },
+      {
+        "time": 254.50000000000102,
+        "elapsed": 14.799999999999832,
+        "x": -13.949600219726562,
+        "z": 7.53519068828432,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 275,
+        "opening": 1
+      },
+      {
+        "time": 254.55000000000103,
+        "elapsed": 14.849999999999831,
+        "x": -13.949600219726562,
+        "z": 7.58919068828432,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 276,
+        "opening": 1
+      },
+      {
+        "time": 254.60000000000105,
+        "elapsed": 14.89999999999983,
+        "x": -13.949600219726562,
+        "z": 7.643190688284318,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 277,
+        "opening": 1
+      },
+      {
+        "time": 254.65000000000106,
+        "elapsed": 14.949999999999829,
+        "x": -13.949600219726562,
+        "z": 7.6971906882843175,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 278,
+        "opening": 1
+      },
+      {
+        "time": 254.70000000000107,
+        "elapsed": 14.999999999999828,
+        "x": -13.949600219726562,
+        "z": 7.751190688284316,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 279,
+        "opening": 1
+      },
+      {
+        "time": 254.75000000000108,
+        "elapsed": 15.049999999999827,
+        "x": -13.949600219726562,
+        "z": 7.8051906882843145,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 280,
+        "opening": 1
+      },
+      {
+        "time": 254.8000000000011,
+        "elapsed": 15.099999999999826,
+        "x": -13.949600219726562,
+        "z": 7.859190688284314,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 281,
+        "opening": 1
+      },
+      {
+        "time": 254.8500000000011,
+        "elapsed": 15.149999999999824,
+        "x": -13.949600219726562,
+        "z": 7.913190688284312,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 282,
+        "opening": 1
+      },
+      {
+        "time": 254.9000000000011,
+        "elapsed": 15.199999999999823,
+        "x": -13.949600219726562,
+        "z": 7.967190688284312,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 283,
+        "opening": 1
+      },
+      {
+        "time": 254.95000000000113,
+        "elapsed": 15.249999999999822,
+        "x": -13.949600219726562,
+        "z": 8.02119068828431,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 284,
+        "opening": 1
+      },
+      {
+        "time": 255.00000000000114,
+        "elapsed": 15.299999999999821,
+        "x": -13.949600219726562,
+        "z": 8.075190688284309,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 285,
+        "opening": 1
+      },
+      {
+        "time": 255.05000000000115,
+        "elapsed": 15.34999999999982,
+        "x": -13.949600219726562,
+        "z": 8.129190688284307,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 286,
+        "opening": 1
+      },
+      {
+        "time": 255.10000000000116,
+        "elapsed": 15.39999999999982,
+        "x": -13.949600219726562,
+        "z": 8.183190688284308,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 287,
+        "opening": 1
+      },
+      {
+        "time": 255.15000000000117,
+        "elapsed": 15.449999999999818,
+        "x": -13.949600219726562,
+        "z": 8.237190688284306,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 288,
+        "opening": 1
+      },
+      {
+        "time": 255.20000000000118,
+        "elapsed": 15.499999999999817,
+        "x": -13.949600219726562,
+        "z": 8.291190688284304,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 289,
+        "opening": 1
+      },
+      {
+        "time": 255.2500000000012,
+        "elapsed": 15.549999999999816,
+        "x": -13.949600219726562,
+        "z": 8.345190688284303,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 290,
+        "opening": 1
+      },
+      {
+        "time": 255.3000000000012,
+        "elapsed": 15.599999999999815,
+        "x": -13.949600219726562,
+        "z": 8.399190688284301,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 291,
+        "opening": 1
+      },
+      {
+        "time": 255.35000000000122,
+        "elapsed": 15.649999999999814,
+        "x": -13.949600219726562,
+        "z": 8.453190688284302,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 292,
+        "opening": 1
+      }
+    ],
+    "last": {
+      "x": -14,
+      "z": 11.800000190734863,
+      "status": "returning",
+      "admission": "native-home"
+    },
+    "peakIntervals": [
+      {
+        "at": 1795258043922.3,
+        "sequence": 31,
+        "ticket": 6,
+        "intervalMs": 37.199951171875,
+        "drawMs": 1.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258033020.9001,
+        "sequence": 10,
+        "ticket": null,
+        "intervalMs": 35.800048828125,
+        "drawMs": 0.099853515625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258045520.6,
+        "sequence": 46,
+        "ticket": 6,
+        "intervalMs": 35.5,
+        "drawMs": 1.5,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258039187.1,
+        "sequence": 12,
+        "ticket": 2,
+        "intervalMs": 35.300048828125,
+        "drawMs": 0.89990234375,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258045020.2,
+        "sequence": 41,
+        "ticket": 6,
+        "intervalMs": 35.199951171875,
+        "drawMs": 1.800048828125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795258032086.9001,
+        "sequence": 7,
+        "ticket": null,
+        "intervalMs": 34.7001953125,
+        "drawMs": 0.099853515625,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "preparationFailure": {
+      "at": 1795258049047.1,
+      "id": 4,
+      "message": "Native Home absence gate graphics are not prepared"
+    }
+  }
+}
