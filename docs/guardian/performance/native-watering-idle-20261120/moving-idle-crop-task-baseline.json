@@ -1,0 +1,272 @@
+{
+  "environment": {
+    "browser": "Edge",
+    "runtime": "WorkerHostedRuntime",
+    "bootstrap": "cold",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "cases": [
+    {
+      "source": "deb759adc81db91867a41570e52d49f0204400e5",
+      "cause": "plant-command",
+      "profile": "youngMale",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 124.80000007152557
+        }
+      },
+      "receiptSha256": "24a12cc5412bbf10561506b609d4c067ee83cacee3080ac40a2a2cc074ffe481",
+      "stroll": {
+        "actorId": 900011,
+        "bodyId": 1,
+        "ticket": 6,
+        "presented": null,
+        "endElapsed": 14.425635183469243,
+        "start": {
+          "time": 152.10000000000048,
+          "elapsed": 12.099999999999955,
+          "x": -17.838183766184073,
+          "z": 0.1618162338159272,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 229
+        },
+        "beforeCropAssignment": {
+          "time": 152.1500000000005,
+          "elapsed": 12.149999999999954,
+          "x": -17.876367532368146,
+          "z": 0.12363246763185436,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 230
+        },
+        "metersMoved": 0.053999999999998875
+      },
+      "cropPlaced": {
+        "targetId": "plant-1000001",
+        "sequence": 232,
+        "position": {
+          "time": 152.2000000000005,
+          "elapsed": 12.199999999999953,
+          "x": -17.91455129855222,
+          "z": 0.08544870144778152,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 232
+        }
+      },
+      "failure": {
+        "sequence": 233,
+        "command": "advance",
+        "confirmedSequence": 232,
+        "confirmedElapsed": 12.199999999999953,
+        "message": "Native task proposal became stale before commit",
+        "stack": [
+          "at Object.commitTaskBatchToState (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js:3152:13)",
+          "at reserveAvailableTasks (http://127.0.0.1:5218/src/simulation/game.js:1521:15)",
+          "at reserve (http://127.0.0.1:5218/src/simulation/game.js:1648:49)",
+          "at updateWorkers (http://127.0.0.1:5218/src/simulation/game.js:1862:3)",
+          "at tick (http://127.0.0.1:5218/src/simulation/game.js:2000:5)"
+        ],
+        "workerStatus": "idle",
+        "workerAdmission": "native-idle-stroll",
+        "workerTaskId": null,
+        "journalSaturated": false
+      },
+      "acquired": [
+        {
+          "binding": "nativeInitialIdleBodyBinding",
+          "ticket": 2
+        },
+        {
+          "binding": "nativeIdleStrollBinding",
+          "ticket": 6
+        }
+      ],
+      "gpuErrors": 0,
+      "browserErrors": []
+    },
+    {
+      "source": "ef54a24b602f18980d4a425a24d24badc9582649",
+      "cause": "plant-command",
+      "profile": "olderFemale",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 128.39999997615814
+        }
+      },
+      "receiptSha256": "07dc813adac562495eef45fbb3b45ccf25053a0bac9830ea013815ba974aeb2f",
+      "stroll": {
+        "actorId": 900011,
+        "bodyId": 1,
+        "ticket": 6,
+        "presented": true,
+        "endElapsed": 13.875635183469255,
+        "start": {
+          "time": 201.55000000000035,
+          "elapsed": 11.549999999999967,
+          "x": -17.838183766184073,
+          "z": 0.1618162338159272,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 198
+        },
+        "beforeCropAssignment": {
+          "time": 201.7000000000004,
+          "elapsed": 11.699999999999964,
+          "x": -17.95273506473629,
+          "z": 0.0472649352637087,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 201
+        },
+        "metersMoved": 0.16199999999999662
+      },
+      "cropPlaced": {
+        "targetId": "plant-1000001",
+        "sequence": 203,
+        "position": {
+          "time": 201.7500000000004,
+          "elapsed": 11.749999999999963,
+          "x": -17.990918830920364,
+          "z": 0.009081169079635909,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 203
+        }
+      },
+      "failure": {
+        "sequence": 204,
+        "command": "advance",
+        "confirmedSequence": 203,
+        "confirmedElapsed": 11.749999999999963,
+        "message": "Native task proposal became stale before commit",
+        "stack": [
+          "at Object.commitTaskBatchToState (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js:3152:13)",
+          "at reserveAvailableTasks (http://127.0.0.1:5218/src/simulation/game.js:1521:15)",
+          "at reserve (http://127.0.0.1:5218/src/simulation/game.js:1648:49)",
+          "at updateWorkers (http://127.0.0.1:5218/src/simulation/game.js:1862:3)",
+          "at tick (http://127.0.0.1:5218/src/simulation/game.js:2000:5)"
+        ],
+        "workerStatus": "idle",
+        "workerAdmission": "native-idle-stroll",
+        "workerTaskId": null,
+        "journalSaturated": false
+      },
+      "acquired": [
+        {
+          "binding": "nativeInitialIdleBodyBinding",
+          "ticket": 2
+        },
+        {
+          "binding": "nativeIdleStrollBinding",
+          "ticket": 6
+        }
+      ],
+      "gpuErrors": 0,
+      "browserErrors": []
+    },
+    {
+      "source": "ef54a24b602f18980d4a425a24d24badc9582649",
+      "cause": "saved-crop-watering-due",
+      "profile": "youngMale",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 125.89999997615814
+        }
+      },
+      "receiptSha256": "853aea54f5d505f60541a08980922caad0d558a815143be650de04c7656b8c45",
+      "stroll": {
+        "actorId": 900011,
+        "bodyId": 1,
+        "ticket": 6,
+        "presented": true,
+        "endElapsed": 14.625635183469239,
+        "start": {
+          "time": 152.30000000000052,
+          "elapsed": 12.299999999999951,
+          "x": -17.838183766184073,
+          "z": 0.1618162338159272,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 233
+        },
+        "beforeCropAssignment": {
+          "time": 152.45000000000056,
+          "elapsed": 12.449999999999948,
+          "x": -17.95273506473629,
+          "z": 0.0472649352637087,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 236
+        },
+        "metersMoved": 0.16199999999999662
+      },
+      "waterSlotBeforeAssignment": "future",
+      "failure": {
+        "sequence": 251,
+        "command": "advance",
+        "confirmedSequence": 250,
+        "confirmedElapsed": 13.149999999999933,
+        "message": "Native task proposal became stale before commit",
+        "stack": [
+          "at Object.commitTaskBatchToState (http://127.0.0.1:5218/src/world/wild-engine/spatial-intent-bridge.js:3152:13)",
+          "at reserveAvailableTasks (http://127.0.0.1:5218/src/simulation/game.js:1521:15)",
+          "at reserve (http://127.0.0.1:5218/src/simulation/game.js:1648:49)",
+          "at updateWorkers (http://127.0.0.1:5218/src/simulation/game.js:1862:3)",
+          "at tick (http://127.0.0.1:5218/src/simulation/game.js:2000:5)"
+        ],
+        "workerStatus": "idle",
+        "workerAdmission": "native-idle-stroll",
+        "workerTaskId": null,
+        "journalSaturated": false
+      },
+      "acquired": [
+        {
+          "binding": "nativeInitialIdleBodyBinding",
+          "ticket": 2
+        },
+        {
+          "binding": "nativeIdleStrollBinding",
+          "ticket": 6
+        }
+      ],
+      "gpuErrors": 0,
+      "browserErrors": []
+    }
+  ]
+}
