@@ -28,3 +28,16 @@ test('confirmed revision cancels the first unserved far request through the cove
  const f=fixture();let rev=1,aborted=false,finish;f.stream.farVisualRevision=()=>rev;f.stream.queryFarVisualChunk=(_,options)=>{options.signal.addEventListener('abort',()=>{aborted=true;},{once:true});return new Promise(resolve=>{finish=resolve;});};const owner=await createWebGpuFarCoverage({...f,start:0,end:1,range:1});
  try{owner.updateCamera();owner.pump();await turn();assert.equal(owner.status().pendingPhase,'query');owner.confirmRevision(1);assert.equal(aborted,false);rev=2;f.setSequence(3);owner.confirmRevision(2);assert.equal(aborted,true);assert.equal(owner.status().pending,null);finish(null);await turn();assert.equal(f.offers,0);}finally{owner.dispose();}
 });
+
+// Invoke Surface's actual confirmed-publication callback fragment against the
+// real coverage/region owners. Swap/GPU services use this file's existing fixture.
+const farSurfaceSource=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+const farConfirmedStart=farSurfaceSource.indexOf('if(farCoverage){farCoverage.confirmRevision(stream.farVisualRevision());farCoverage.setNight(lightingNight);'),farConfirmedEnd=farSurfaceSource.indexOf('acceptPreparedNativeTerrain(message);',farConfirmedStart);
+assert(farConfirmedStart>=0&&farConfirmedEnd>farConfirmedStart);
+const confirmSurfaceFar=new Function('farCoverage','stream','state','lightingNight','message','changedKeys',farSurfaceSource.slice(farConfirmedStart,farConfirmedEnd));
+test('Surface retains acquired far coverage for structures when the native vegetation revision is unchanged',async()=>{
+ const f=fixture();f.stream.farVisualRevision=()=>4;const owner=await createWebGpuFarCoverage({...f,start:0,end:1,range:1});try{owner.updateCamera();owner.pump();await turn();assert.equal(f.offers,1);const before=owner.status();f.setSequence(3);confirmSurfaceFar(owner,f.stream,f.state,0,{terrainChanged:false},new Set(['structures']));assert.equal(owner.status().offered,before.offered);assert.equal(owner.status().swaps,before.swaps);assert.equal(f.restores,0);assert.equal(f.release,0);assert.equal(owner.pump(),false);assert.equal(f.offers,1);}finally{owner.dispose();}
+});
+test('Surface preserves actual terrain, native revision, suppression and unknown-revision invalidations',async()=>{
+ for(const mode of ['terrain','revision','unknown','suppression','chunk']){const f=fixture();let revision=mode==='unknown'?null:4;f.stream.farVisualRevision=()=>revision;const owner=await createWebGpuFarCoverage({...f,start:0,end:1,range:1});try{owner.updateCamera();owner.pump();await turn();assert.equal(owner.status().offered,1);f.setSequence(3);if(mode==='revision')revision=5;let suppressed=null;const set=owner.setSuppressed;owner.setSuppressed=ids=>{suppressed=ids;set(ids);};f.state.suppressed=['tree'];confirmSurfaceFar(owner,f.stream,f.state,0,{terrainChanged:mode==='terrain'},new Set(['structures',...(mode==='suppression'?['suppressed']:[])]));if(mode==='chunk')f.invalidate({cx:0,cz:0,reason:'replace'});if(mode==='suppression'){assert.deepEqual(suppressed,['tree']);assert.equal(owner.status().offered,1);}else{assert.equal(owner.status().offered,0,mode);assert.equal(f.restores,1,mode);}}finally{owner.dispose();}}
+});
