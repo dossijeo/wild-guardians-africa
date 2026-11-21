@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Carry cruzó el mismo vano con su caja y llegó al centro en WebGPU físico. La autoridad perdió la preparación de Settlement17 porque la presentación aún rechaza la liquidación con motores de puerta. El control con WASM y Host determinista entregó la caja y abonó 14 monedas. [Recibo de Carry](performance/native-ordinary-carry-gate-20261121.json).
+
 Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
 
 La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxies en NVIDIA y cobró 10 monedas una sola vez. Farm conservó su cuerpo y 32 geometrías, y el consumidor confirmó el drenaje. El primer dibujo de la puerta registró 40,8 ms a 30 Hz tras una oportunidad retenida por la mutación. La autoridad rechaza la compra dentro de un corredor Farm activo y conserva su marcha y saldo. Quedan el relevo preparado, la retirada y C4. [Compra](native-gate-addition-20261121.md), [control del corredor activo](performance/native-gate-buy-active-route-baseline-20261121.json).

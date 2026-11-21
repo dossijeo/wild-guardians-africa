@@ -13,3 +13,9 @@ Los controles incluyen la ruta en ambos sentidos, invalidación de la ruta guard
 Pasaron 62 pruebas de integración y regresión con standalone y 17 comprobaciones en pthread. El rechazo del corredor central explícito ocurre al intentar restaurarlo, antes de adquirir una ruta o activar su motor. Las pruebas dirigidas de los tres materiales y del barrido contra otro cuerpo pasaron con el binario candidato. La interfaz WASM conserva sus 772 exports standalone y 778 funciones públicas pthread. El factory y el Worker auxiliar conservaron sus bytes. [Hashes y resultados](performance/native-farm-gate-aperture-20261121.json).
 
 La compilación Vite de producción con WebGPU Worker y dibujo remoto completó el empaquetado.
+
+## Carry por el vano
+
+El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.
+
+En WebGPU físico, Carry dibujó el ticket 10 y llegó a x=-14, z=4,639. Settlement17 llamó al preparador de la Surface, que devolvió Native settlement gate graphics are not prepared porque el recorrido conserva el motor. La última publicación confirmada todavía contiene Carry. Queda preparar la entrega para el dueño exacto de la hoja y comprobar el cierre de Home con puerta. [Recibo de Carry](performance/native-ordinary-carry-gate-20261121.json).
