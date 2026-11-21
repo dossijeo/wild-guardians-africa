@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
+
 Una partida con puerta de zarzas existente ya restaura y mueve Farm nativo. En NVIDIA el trabajador avanzó con el mismo cuerpo y 32 geometrías. La puerta conservó su raíz y geometría visibles. Quedan la compra de una puerta nueva, el cruce del corredor y C4. [Restauración y recibo](native-farm-restored-gate-20261121.md).
 
 Plant y Water pasan en NVIDIA cuando Idle22 ya está en marcha. Plant adquiere Stop12 antes de Task14. Si el paseo llega antes de la parada solicitada, REST21 usa el ancla ejecutada y da paso a la tarea. Cada caso aplicó un solo riego en el mismo cuerpo y conservó los 36 propietarios de geometría. Quedan la cadencia de presentación y las demás adversidades de esta familia. [Relevo y recibos](native-moving-idle-task-handoff-20261121.md).

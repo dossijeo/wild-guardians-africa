@@ -12,6 +12,10 @@ Jolt encadena un filtro por identidad del cuerpo propio con los filtros de colis
 
 Edge con NVIDIA Turing restauró un `youngMale` y una puerta de zarzas fuera del corredor de Farm. El ticket 2 se dibujó con el cuerpo 1. El trabajador avanzó 0,162 m con su raíz y los 32 propietarios de geometría originales. La puerta siguió visible con su raíz y geometría originales. Hubo cero errores WebGPU y el consumidor confirmó el drenaje. El mayor intervalo del Host en los 15 dibujos medidos de ese ticket fue de 33,5 ms a 30 Hz. Quedan la aceptación a 60 Hz, el cruce completo, la colocación de puertas nuevas y las pruebas con puertas dañadas, varios mecanismos u otros biomas. [Captura y alcance](performance/native-farm-restored-gate-20261121.json).
 
+## Control de cruce
+
+El control conservó la puerta legal en `x=-11.8, z=8.2` y desplazó el punto de partida del trabajador y la entrada del poblado a `x=-14.5, z=11.8`. WASM preparó 18,75 m de ruta con el motor 1000000. En el navegador, la adquisición se detuvo con `Native gate motor wall not resident` tras publicar las doce regiones visuales. El trabajador quedó en `pending-farm-arrival-resources`, sin primer dibujo de esa ruta. El siguiente paso del cruce es adquirir el motor sobre el grupo residente. [Recibo del control de cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
+
 ## Pruebas y binarios
 
 ```powershell
