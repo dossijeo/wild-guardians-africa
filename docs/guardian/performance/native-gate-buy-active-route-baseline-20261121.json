@@ -58,5 +58,138 @@
   ],
   "errors": [],
   "placementEvents": [],
-  "diagnosticSha256": "87df4dd21b008a5eedba06855e8545f5b6417ab585789a92113a8117474d64df"
+  "diagnosticSha256": "87df4dd21b008a5eedba06855e8545f5b6417ab585789a92113a8117474d64df",
+  "hardware": {
+    "source": "b16e0a2323c05cbeec8955bb2975024ba40a44be",
+    "rawSha256": "6473efa79084f76a96ef663e0aaf2084ea21dc35e32c9d24412a4e7f1b03e927",
+    "displayHz": 30,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 116.79999995231628
+      }
+    },
+    "command": {
+      "kind": "placeStructure",
+      "id": "build-live-native-gate",
+      "structure": {
+        "kind": "wall",
+        "material": "zarzas",
+        "gate": true,
+        "yaw": 0,
+        "x": -14,
+        "z": 8.2
+      }
+    },
+    "before": {
+      "elapsed": 10.149999999999997,
+      "position": [
+        -14,
+        11.638000000000002
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 8
+    },
+    "atReply": {
+      "elapsed": 10.149999999999997,
+      "position": [
+        -14,
+        11.638000000000002
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 8
+    },
+    "after": {
+      "elapsed": 10.349999999999993,
+      "position": [
+        -14,
+        11.422000000000008
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 12
+    },
+    "reason": "Error: Native wall preparation invalid",
+    "beforeReady": true,
+    "addedGate": false,
+    "ledger": {
+      "n": "100000",
+      "d": "1"
+    },
+    "nativeFarm": {
+      "body": 1,
+      "gateIds": [],
+      "ticket": 2,
+      "root": 616,
+      "meshes": 32
+    },
+    "maxWindowDrawInterval": {
+      "at": 1795271921987.8,
+      "sequence": 13,
+      "trigger": "raf",
+      "nativeWorldBoundary": null,
+      "intervalMs": 35.400146484375,
+      "drawMs": 0.2998046875,
+      "replay": true,
+      "clockElapsed": 10,
+      "safeUntil": 10,
+      "cameraVersion": null
+    },
+    "opportunities": 240,
+    "notSubmitted": [
+      {
+        "at": 1795271918152.3,
+        "intervalMs": 33.300048828125,
+        "outcome": "awaiting-native-baseline",
+        "holdId": null,
+        "sequence": null
+      },
+      {
+        "at": 1795271918185.7,
+        "intervalMs": 33.39990234375,
+        "outcome": "awaiting-native-baseline",
+        "holdId": null,
+        "sequence": null
+      },
+      {
+        "at": 1795271918218.9,
+        "intervalMs": 33.199951171875,
+        "outcome": "awaiting-native-baseline",
+        "holdId": null,
+        "sequence": null
+      },
+      {
+        "at": 1795271918252.3,
+        "intervalMs": 33.400146484375,
+        "outcome": "awaiting-native-baseline",
+        "holdId": null,
+        "sequence": null
+      }
+    ],
+    "drained": true,
+    "gpuErrors": 0,
+    "errors": []
+  }
 }
