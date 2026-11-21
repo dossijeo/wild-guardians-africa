@@ -10,7 +10,7 @@ Los cuatro perfiles completaron una segunda cosecha y entrega ordinarias sobre e
 
 Al aplicar Despertar sobre el cultivo asignado, Game confirma la bendición y retira la tarea. El cuerpo aún tiene un propietario nativo y el siguiente avance falla antes de asignar el cultivo nuevo. La autoridad y WASM reprodujeron el fallo con Water antes de adquirir Task14, durante la marcha y durante Action15, y con Plant durante la marcha. El ensayo usa Host determinista. [Casos y pasos](performance/native-watering-idle-20261120/target-invalidation-baseline.json).
 
-Multiplicar precedió una cosecha y entrega ordinarias sobre el mismo cuerpo. La caja conservó la potencia, liquidó 10 monedas adicionales y generó un solo abono de 24 tras el redondeo. Pasaron 52 pruebas dirigidas con Game, WASM y Host determinista. Queda probar el efecto de Multiplicar en GPU física. [Comprobación](native-ordinary-guardian-growth-20261121.md#multiplicar-hasta-la-entrega).
+Multiplicar precedió una cosecha y entrega ordinarias sobre el mismo cuerpo. La caja conservó la potencia, liquidó 10 monedas adicionales y generó un solo abono de 24 tras el redondeo. NVIDIA dibujó el efecto de ocho haces y la entrega con el mismo cuerpo y 32 geometrías originales. Las dos ventanas registraron 34,7 ms y 34,8 ms a 30 Hz. [Recibo físico](performance/native-ordinary-guardian-multiply-20261121.json).
 
 Una incursión diurna confirmó el cambio del trabajador de Farm a Flee. El siguiente avance falló con la protección del cohort nativo, con Farm adquirido y con Farm pendiente de recursos. Queda transferir el cuerpo al refugio y probar su recuperación. [Recibo de autoridad](performance/native-daytime-flee-baseline-20261121.json).
 
