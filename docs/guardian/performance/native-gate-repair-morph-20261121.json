@@ -1115,5 +1115,195 @@
       "failures": 0,
       "build": "Vite WebGPU Worker and remote drawing completed in 1m 20s"
     }
-  }
+  },
+  "materialControls": [
+    {
+      "material": "empalizada",
+      "profile": "youngMale",
+      "yaw": 0,
+      "base": "6949637e9d414cbf5f3d79e9e8da8aaffbd5b7a5",
+      "rawSha256": "90bf86e62eaf4b812364dd0a35d63ed78f36c8a404092e99d60562f97a935b94",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 120.89999997615814
+        }
+      },
+      "displayHz": 30,
+      "repair": {
+        "taskId": "task-1000002",
+        "paymentId": "repair:task-1000002",
+        "paidCoins": 10,
+        "previousHp": 60,
+        "previousStatus": "intact",
+        "restoredHp": 120,
+        "maxHp": 120
+      },
+      "ready": {
+        "ms": 644.3999999761581,
+        "draws": 19,
+        "hp": 60,
+        "eventCount": 0
+      },
+      "bodyId": 1,
+      "originalGateRoot": 592,
+      "finalGateRoot": 592,
+      "destroyedBeforeClose": [
+        "Buffer:3357",
+        "Buffer:3373"
+      ],
+      "duringMorph": {
+        "baselineOwners": 886,
+        "currentOwners": 899,
+        "retainedOwnerKeys": 886,
+        "baselineReferences": 794,
+        "liveReferences": 797,
+        "retainedReferences": 794,
+        "replacedResidentOwners": []
+      },
+      "afterRetirement": {
+        "baselineOwners": 886,
+        "currentOwners": 973,
+        "retainedOwnerKeys": 878,
+        "baselineReferences": 794,
+        "liveReferences": 821,
+        "retainedReferences": 786,
+        "replacedResidentOwners": []
+      },
+      "maxInterval": {
+        "at": 1795267359392.1,
+        "sequence": 64,
+        "ticket": 12,
+        "intervalMs": 56.300048828125,
+        "drawMs": 4.099853515625,
+        "trigger": "mutation-release",
+        "replay": false
+      },
+      "additionalPeaks": [
+        {
+          "at": 1795267339039.1,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 36.900146484375,
+          "drawMs": 0.2998046875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795267354638.7,
+          "sequence": 42,
+          "ticket": 6,
+          "intervalMs": 36.099853515625,
+          "drawMs": 1.60009765625,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "gpuErrors": 0,
+      "drained": true
+    },
+    {
+      "material": "reforzado",
+      "profile": "youngMale",
+      "yaw": 0,
+      "base": "6949637e9d414cbf5f3d79e9e8da8aaffbd5b7a5",
+      "rawSha256": "5c39db3cf4feb26205551aa289bdcaf0fda1e30e35b9069e6fdca389d7c03e44",
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 118.89999997615814
+        }
+      },
+      "displayHz": 30,
+      "repair": {
+        "taskId": "task-1000002",
+        "paymentId": "repair:task-1000002",
+        "paidCoins": 28,
+        "previousHp": 120,
+        "previousStatus": "intact",
+        "restoredHp": 240,
+        "maxHp": 240
+      },
+      "ready": {
+        "ms": 646,
+        "draws": 19,
+        "hp": 120,
+        "eventCount": 0
+      },
+      "bodyId": 1,
+      "originalGateRoot": 526,
+      "finalGateRoot": 526,
+      "destroyedBeforeClose": [
+        "Buffer:3348",
+        "Buffer:3364"
+      ],
+      "duringMorph": {
+        "baselineOwners": 886,
+        "currentOwners": 899,
+        "retainedOwnerKeys": 886,
+        "baselineReferences": 794,
+        "liveReferences": 797,
+        "retainedReferences": 794,
+        "replacedResidentOwners": []
+      },
+      "afterRetirement": {
+        "baselineOwners": 886,
+        "currentOwners": 955,
+        "retainedOwnerKeys": 878,
+        "baselineReferences": 794,
+        "liveReferences": 815,
+        "retainedReferences": 786,
+        "replacedResidentOwners": []
+      },
+      "maxInterval": {
+        "at": 1795267387205.4001,
+        "sequence": 6,
+        "ticket": null,
+        "intervalMs": 36.10009765625,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      "additionalPeaks": [
+        {
+          "at": 1795267400072.7002,
+          "sequence": 43,
+          "ticket": 6,
+          "intervalMs": 35.900146484375,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795267398771.8,
+          "sequence": 31,
+          "ticket": 4,
+          "intervalMs": 35.699951171875,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "gpuErrors": 0,
+      "drained": true
+    }
+  ]
 }

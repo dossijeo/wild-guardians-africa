@@ -30,4 +30,10 @@ La retirada del dueño de cada módulo consulta su geometría completa. Libera l
 
 NVIDIA registró una solicitud de destrucción por cada uno de los dos buffers antiguos antes de cerrar la partida. Al comenzar el morph se conservaron las 794 referencias de malla iniciales. Tras el reemplazo, las 786 referencias de los dueños que seguían presentes conservaron su identificador. El consumidor siguió dibujando y drenó con cero errores. El máximo medido fue 38,5 ms al liberar una retención con la pantalla a 30 Hz. C4 sigue abierto. [Recibo de retirada](performance/native-gate-repair-morph-20261121.json).
 
+## Empalizada y reforzado
+
+La misma orden pasó con los otros dos materiales alineados. En empalizada, Repair restauró 60 a 120 HP y cobró 10 monedas. En reforzado, restauró 120 a 240 HP y cobró 28 monedas. Durante la espera de READY cada prueba añadió 19 dibujos sin aplicar HP ni débito. Tras Repair, ambos controles conservaron su mecanismo abierto, el cuerpo 1 y las 786 referencias de los dueños restantes. Cada buffer antiguo recibió una sola solicitud de destrucción antes del cierre. Los dos cierres drenaron con cero errores GPU.
+
+A 30 Hz, empalizada registró 56,3 ms en un dibujo al liberar la retención de un ticket posterior a Repair. La causa de la duración de esa retención sigue abierta. El máximo de reforzado fue 36,1 ms durante el arranque. [Recibos por material](performance/native-gate-repair-morph-20261121.json).
+
 La restauración iniciada a mitad de una reparación, la reconstrucción tras una ruina y los cierres de trayectos con motor activo siguen abiertos. La continuidad funcional y el límite de 16,67 ms de C4 se verifican por separado.
