@@ -106,7 +106,7 @@ int executionTerrain(ExecutionPoint a,ExecutionPoint b,double radius,double coor
   }
   return 1;
 }
-int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius){
+int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius,bool gateCandidate=false){
   const int minCx=int(std::floor((std::min(a.x,b.x)-radius+24)/side)),
     maxCx=int(std::floor((std::max(a.x,b.x)+radius+24)/side)),
     minCz=int(std::floor((std::min(a.z,b.z)-radius+24)/side)),
@@ -121,10 +121,10 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius){
     }
   }
   if(!wallSegmentClear(a.x,a.z,b.x,b.z,nullptr,0,radius))return 0;
-  // Worker-passable barriers may be automatic gates whose leaves still live
-  // outside this static world. Never certify their passage before native gate
-  // timing/geometry is connected. Other ordinary worker connectors are supported.
-  if(workerNow&&!wallSegmentClear(a.x,a.z,b.x,b.z,nullptr,0,radius,true))return -2;
+  // Foreign worker-passable overlays remain unsupported. A gate candidate
+  // may defer only its registered mechanism's exact envelope to the existing
+  // timed admission; this static test does not grant an execution permit.
+  if(workerNow&&!wallSegmentClear(a.x,a.z,b.x,b.z,nullptr,0,radius,true,gateCandidate))return -2;
   const int minX=int(std::floor(std::min(a.x,b.x)/barrierBucketWidth)),
     maxX=int(std::floor(std::max(a.x,b.x)/barrierBucketWidth)),
     minZ=int(std::floor(std::min(a.z,b.z)/barrierBucketWidth)),
@@ -165,7 +165,7 @@ int executionSegmentClear(double x,double z,double nx,double nz,double radius,bo
   for(int i=0;i<pieces;i++){
     const double from=double(i)/pieces,to=double(i+1)/pieces;
     const ExecutionPoint a{x+(nx-x)*from,z+(nz-z)*from},b{x+(nx-x)*to,z+(nz-z)*to};
-    const int solid=executionSolids(a,b,effectiveRadius);if(solid!=1)return solid;
+    const int solid=executionSolids(a,b,effectiveRadius,gateCandidate);if(solid!=1)return solid;
     const int terrain=executionTerrain(a,b,radius,rounding);if(terrain!=1)return terrain;
   }
   return 1;

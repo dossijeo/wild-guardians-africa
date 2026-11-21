@@ -1736,6 +1736,41 @@ SpatialStaticTicket spatialIntentResidencyBefore(const SpatialResidencyRegion* r
 }
 void spatialIntentResidencyCommitted(const SpatialStaticTicket& ticket,int count){residencyMutationCommitted(state(),ticket,count);}
 
+bool spatialIntentGateCandidateOwnsEnvelope(int id){
+ const auto& s=state();if(id<=0||!s.session||!gateStaticProofCurrent(s))return false;
+ const NativeGate* owner=nullptr;
+ for(const auto& [gateId,gate]:s.gates){
+  if(gate.navigationBarriers[2]!=id)continue;
+  const auto& ids=gate.navigationBarriers;
+  if(owner||gate.id!=gateId||!gate.defined||!gate.mesh||!gate.mechanism||gate.status!=0||
+     !gate.staticSweepCertified||!gate.bodySweepCertified||ids[0]<=0||ids[1]<=0||
+     ids[0]==ids[1]||ids[0]==id||ids[1]==id)return false;
+  owner=&gate;
+ }
+ // Installation/commit validates the full triplet against the authored mesh;
+ // its canonical barrier IDs cannot be removed while that mechanism is live.
+ return owner!=nullptr;
+}
+bool spatialIntentGatePlanningClear(double x,double z,double nx,double nz,double radius){
+ const auto& s=state();
+ for(const auto& [id,gate]:s.gates){
+  if(!gate.mesh||!gate.navigationBarriers[2])continue;
+  const auto& b=gate.unsupported;
+  if(std::max(x,nx)+radius<b.minX||std::min(x,nx)-radius>b.maxX||
+     std::max(z,nz)+radius<b.minZ||std::min(z,nz)-radius>b.maxZ)continue;
+  if(!spatialIntentGateCandidateOwnsEnvelope(gate.navigationBarriers[2]))return false;
+  const float magnitude=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)}));
+  const double error=std::max(1e-5,4.0*double(std::nextafter(magnitude,std::numeric_limits<float>::infinity())-magnitude));
+  // Reuse the mounted worker frame and the SAME full leaf as the timed sweep.
+  // Actual route terrain/height and continuous motor proof remain at admission.
+  for(int part=0;part<4;part++){
+   const auto& local=part==3?gate.physicalLeaf:gate.workerParts[part];if(local.size()<6)continue;
+   const auto polygon=gatePartWorld(gate,local,part==3,s.effectiveTime,1);
+   if(spatialNativePolygonDistance(polygon.data(),int(polygon.size()/2),x,z,nx,nz)<=radius+error)return false;
+  }
+ }
+ return true;
+}
 bool spatialIntentGateProxyRetirementAllowed(int id){
  for(const auto& [gateId,gate]:state().gates)if(gate.mesh&&std::find(gate.navigationBarriers.begin(),gate.navigationBarriers.end(),id)!=gate.navigationBarriers.end())return false;
  return true;

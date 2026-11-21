@@ -4,10 +4,11 @@ GateMatrix gateRootMatrix(const NativeGate& g){
   const double c=std::cos(g.yaw),s=std::sin(g.yaw);
   return {g.sx*c,0,-g.sx*s,0,0,g.sz,0,0,g.sz*s,0,g.sz*c,0,g.x,g.baseY,g.z,1};
 }
-GateMatrix gateLeafMatrix(const NativeGate& g,double at){
-  const double angle=gateOpening(g,at)*pi/2,c=std::cos(angle),s=std::sin(angle);
+GateMatrix gateLeafMatrixAtOpening(const NativeGate& g,double opening){
+  const double angle=opening*pi/2,c=std::cos(angle),s=std::sin(angle);
   return {c,0,s,0,0,1,0,0,-s,0,c,0,g.hx-g.hx*c+g.hz*s,0,g.hz-g.hx*s-g.hz*c,1};
 }
+GateMatrix gateLeafMatrix(const NativeGate& g,double at){return gateLeafMatrixAtOpening(g,gateOpening(g,at));}
 GatePoint3 gateTransform(const GateMatrix& m,GatePoint3 p){
   return {m[0]*p.x+m[4]*p.y+m[8]*p.z+m[12],m[1]*p.x+m[5]*p.y+m[9]*p.z+m[13],m[2]*p.x+m[6]*p.y+m[10]*p.z+m[14]};
 }
@@ -41,8 +42,8 @@ std::array<std::vector<double>,4> gateMeshParts(const NativeGate& g,double minY,
   }
   std::array<std::vector<double>,4> result;for(int i=0;i<4;i++)result[i]=gateHull(std::move(points[i]));return result;
 }
-std::vector<double> gatePartWorld(const NativeGate& g,const std::vector<double>& local,bool leaf,double at){
-  std::vector<double> out;out.reserve(local.size());const auto root=gateRootMatrix(g),hinge=gateLeafMatrix(g,at);
+std::vector<double> gatePartWorld(const NativeGate& g,const std::vector<double>& local,bool leaf,double at,double opening=-1){
+  std::vector<double> out;out.reserve(local.size());const auto root=gateRootMatrix(g),hinge=opening<0?gateLeafMatrix(g,at):gateLeafMatrixAtOpening(g,opening);
   for(size_t i=0;i<local.size();i+=2){GatePoint3 p{local[i],0,local[i+1]};if(leaf)p=gateTransform(hinge,p);p=gateTransform(root,p);out.insert(out.end(),{p.x,p.z});}
   return out;
 }

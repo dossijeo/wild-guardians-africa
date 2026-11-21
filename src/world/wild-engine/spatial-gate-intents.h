@@ -27,3 +27,10 @@ int spatialGateCandidateSegmentClear(double,double,double,double,double);
 
 bool spatialGateProxyBarrierMatches(int,double,double,double,double,double,int);
 bool spatialIntentGateProxyRetirementAllowed(int);
+// Read-only ownership recognition for an unadmitted candidate, never a passage
+// permit. Static clearance still feeds the existing timed gate/body proof.
+bool spatialIntentGateCandidateOwnsEnvelope(int);
+// Speculative planning against an opened authored mechanism. Timed admission
+// still proves its actual opening and reservations before execution.
+bool spatialIntentGatePlanningClear(double,double,double,double,double);
+bool spatialGatePlanningClear(double,double,double,double);

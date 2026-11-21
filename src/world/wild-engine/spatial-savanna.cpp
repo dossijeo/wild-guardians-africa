@@ -849,7 +849,7 @@ bool expandedBoxIntersects(const double a[2],const double b[2],const double half
 }
 bool wallSegmentClear(double x,double z,double nx,double nz,
   const int* ignored=nullptr,int ignoredCount=0,double clearanceRadius=-1,
-  bool includePassable=false){
+  bool includePassable=false,bool gateCandidate=false){
   const uint8_t profileBit=workerNow?1:2;
   const auto& index=barrierIndex();
   const int minBx=int(std::floor(std::min(x,nx)/barrierBucketWidth));
@@ -871,7 +871,13 @@ bool wallSegmentClear(double x,double z,double nx,double nz,
       const double half[2]={clearanceRadius>=0?double(wall.halfX)+clearanceRadius:
         double(wall.halfX+radiusNow),clearanceRadius>=0?double(wall.halfZ)+clearanceRadius:
         double(wall.halfZ+radiusNow)};
-      if(expandedBoxIntersects(a,b,half))return false;
+      if(expandedBoxIntersects(a,b,half)){
+        // Only an exact owned worker envelope may defer to the native timed
+        // gate proof. Solid frames, foreign IDs and other masks stay blocking.
+        if(gateCandidate&&includePassable&&workerNow&&wall.passMask==1&&
+           spatialIntentGateCandidateOwnsEnvelope(id))continue;
+        return false;
+      }
     }
   }
   return true;
@@ -1878,6 +1884,9 @@ double spatialNativePolygonDistance(const double* xy,int count,double x,double z
   return best;
 }
 void spatialGateSupportChanged(){++overlayRevision;}
+bool spatialGatePlanningClear(double x,double z,double nx,double nz){
+ return !workerNow||spatialIntentGatePlanningClear(x,z,nx,nz,radiusNow);
+}
 int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius,true);
 }

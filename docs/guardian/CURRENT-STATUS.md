@@ -1,8 +1,10 @@
 # Current delivery status (2026-10-29)
 
-La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxies en NVIDIA y cobró 10 monedas una sola vez. Farm conservó su cuerpo y 32 geometrías, y el consumidor confirmó el drenaje. El primer dibujo de la puerta registró 40,8 ms a 30 Hz tras una oportunidad retenida por la mutación. Quedan el paso por el vano, la retirada preparada y C4. [Compra y validación](native-gate-addition-20261121.md).
+Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
 
-Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir su motor. NVIDIA dibujó la apertura y Farm reanudó el movimiento sobre el mismo cuerpo junto al marco. Quedan el paso por el vano, la compra y C4. [Admisión y recibo](native-gate-preparation-readiness-20261121.md).
+La compra ordinaria de una puerta de zarzas adquirió un mecanismo y tres proxies en NVIDIA y cobró 10 monedas una sola vez. Farm conservó su cuerpo y 32 geometrías, y el consumidor confirmó el drenaje. El primer dibujo de la puerta registró 40,8 ms a 30 Hz tras una oportunidad retenida por la mutación. Quedan el relevo del corredor al comprar dentro de la ruta, la retirada preparada y C4. [Compra y validación](native-gate-addition-20261121.md).
+
+Farm ya espera la admisión gráfica de la puerta restaurada antes de adquirir su motor. NVIDIA dibujó la apertura y Farm reanudó el movimiento sobre el mismo cuerpo junto al marco. La validación del vano se completó en un ensayo posterior. [Admisión y recibo](native-gate-preparation-readiness-20261121.md).
 
 Los cuatro perfiles completaron una segunda cosecha y entrega ordinarias sobre el mismo cuerpo. NVIDIA dibujó los cuatro tickets nativos de cada recorrido a 30 Hz. Cada caja se abonó una sola vez, 14 monedas en los dos perfiles masculinos y 11 en los femeninos. Quedan la cadena con puertas y tráfico, las adversidades de restauración y C4. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 

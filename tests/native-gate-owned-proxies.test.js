@@ -4,6 +4,7 @@ import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-threa
 import {pathToFileURL} from 'node:url';import {resolve} from 'node:path';
 import {nativeGateCrossingFixture} from './helpers/native-gate-crossings.js';
 import {spatialGateBarriers} from '../src/world/wild-engine/spatial-wall-bridge.js';
+import {gatePortalPoints} from '../src/world/gate-passages.js';
 const module=new WebAssembly.Module(readFileSync(process.env.QA_BARRIER_WASM??new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
 async function fixture(material='zarzas',yaw=0,owned=true){let runtime,f;try{
  if(process.env.QA_GATE_PTHREAD){const {default:factory}=await import(pathToFileURL(resolve(process.env.QA_GATE_PTHREAD)).href);runtime=await createThreadedSpatialWorld(factory);}
@@ -34,3 +35,72 @@ test('a removal batch is rejected atomically while an owned proxy remains live',
  assert(f.bridge.nativeGateMechanismPose(f.gate.id));assert(f.service.remove(f.gate.id));assert.equal(f.w.spatial_remove_barrier(f.ids[0]),1,'retirement succeeds only after its mechanism is removed');
 }finally{await f.close();}});
 test('unintegrated component gate still cannot grant ordinary Game execution',async()=>{const f=await fixture('zarzas',0,false);try{assert.equal(f.install().status,'installed');f.bridge.commitNativeCausalClock();assert.equal(f.w.nav_intent_game_execution_state(),-1);}finally{await f.close();}});
+
+function routePoints(f,from,to){
+ const count=f.w.spatial_world_route_cached(from.x,from.z,to.x,to.z);
+ assert(count>0,`native route outcome ${count}`);
+ return Array.from(new Float32Array(f.w.memory.buffer,f.w.spatial_world_route_ptr(),count*2));
+}
+
+for(const direction of [-1,1])test(`a centered zarzas route uses the registered aperture in direction ${direction}`,async()=>{
+ const f=await fixture();
+ try{
+  f.session.actorSectorRevision({worker:true});
+  f.session.core.setWorkerGatePortals([f.gate]);
+  const from=[0,3.6*direction],to=[0,-5*direction];
+  const origin=f.point(...from),destination=f.point(...to),gateOrigin=f.point(0,0);
+  const centerline=routePoints(f,origin,destination),misses=f.w.spatial_route_cache_misses();
+  assert.deepEqual(routePoints(f,origin,destination),centerline);
+  assert.equal(f.w.spatial_route_cache_misses(),misses);
+  assert.equal(f.install().status,'installed');
+
+  const aperture=routePoints(f,origin,destination);
+  assert(f.w.spatial_route_cache_misses()>misses);
+  assert.notDeepEqual(aperture,centerline);
+  const localPoints=[];
+  for(let i=0;i<aperture.length;i+=2)localPoints.push([aperture[i]-gateOrigin.x,aperture[i+1]-gateOrigin.z]);
+  for(const {x,z} of gatePortalPoints(f.gate)){
+   assert(aperture.some((value,index)=>index%2===0&&value===Math.fround(x)&&aperture[index+1]===Math.fround(z)));
+  }
+  const admitted=f.admit(f.route({origin:from,points:localPoints}));
+  assert.equal(admitted.status,'admitted');
+  assert.deepEqual(Array.from(admitted.motionPlan.points),aperture);
+  assert.equal(admitted.motionPlan.holds.length,1);
+  assert.equal(f.bridge.beginNativeRouteExecution().status,'started');
+  assert.equal(f.advance(admitted.motionPlan.endTime).status,'advanced');
+  assert.equal(f.bridge.nativeRouteExecution(admitted.routeHandle).arrived,true);
+ }finally{await f.close();}
+});
+
+test('restoration rejects an explicit centered path that clips the open leaf',async()=>{
+ const f=await fixture();
+ try{
+  f.session.actorSectorRevision({worker:true});
+  f.session.core.setWorkerGatePortals([f.gate]);
+  assert.equal(f.install().status,'installed');
+  const motor=f.service.read(f.gate.id);
+  const transition=f.w.nav_intent_transition_sequence();
+  const from=f.point(0,3.6),to=f.point(0,-5);
+  const pointer=f.w.nav_intent_attack_route_input_ptr(1);
+  new Float32Array(f.w.memory.buffer,pointer,2).set([to.x,to.z]);
+  assert.equal(f.w.nav_intent_restore_home(900011,from.x,from.z,to.x,to.z,1),0);
+  assert.equal(f.w.nav_intent_transition_sequence(),transition);
+  assert.deepEqual(f.service.read(f.gate.id),motor);
+  assert.equal(f.w.nav_intent_route_reservation_count(),0);
+ }finally{await f.close();}
+});
+
+test('an unrelated route keeps its path and cache hits after the mechanism is installed',async()=>{
+ const f=await fixture();
+ try{
+  f.session.actorSectorRevision({worker:true});
+  f.session.core.setWorkerGatePortals([f.gate]);
+  const from=f.point(4,-5),to=f.point(4,5),before=routePoints(f,from,to);
+  assert.equal(f.install().status,'installed');
+  assert.deepEqual(routePoints(f,from,to),before);
+  const misses=f.w.spatial_route_cache_misses(),hits=Number(f.w.spatial_route_cache_hits());
+  assert.deepEqual(routePoints(f,from,to),before);
+  assert.equal(f.w.spatial_route_cache_misses(),misses);
+  assert.equal(Number(f.w.spatial_route_cache_hits()),hits+1);
+ }finally{await f.close();}
+});

@@ -1,0 +1,699 @@
+{
+  "base": "f4ec49a0ab2d76a2bb047008e18bc9ac3a9529aa",
+  "candidatePatchSha256": "f7af493e532f5616d21e795aa1d00446f1f8be7ba68ac698d050069163b3d203",
+  "standaloneSha256": "dfdbc5ad684a9f4642f35529b06933b9dd940fabef45963a33cf744f229ebb61",
+  "nativeTests": {
+    "privateProofs": 10,
+    "authorityProposals": [
+      {
+        "x": -11.8,
+        "z": 8.2,
+        "start": {
+          "x": -11.8,
+          "z": 11.799999999999999
+        },
+        "goal": {
+          "x": -11.8,
+          "z": 3.2
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 3,
+        "crossings": [
+          -11.749600410461426
+        ],
+        "near": true,
+        "distance": 6.600953808458768,
+        "entityId": "structure-1000000"
+      },
+      {
+        "x": -14,
+        "z": 8.2,
+        "start": {
+          "x": -14,
+          "z": 11.799999999999999
+        },
+        "goal": {
+          "x": -14,
+          "z": 3.2
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 3,
+        "crossings": [
+          -13.949600219726562
+        ],
+        "near": true,
+        "distance": 6.600953813312233,
+        "entityId": "structure-1000000"
+      },
+      {
+        "x": -14,
+        "z": 9.2,
+        "start": {
+          "x": -14,
+          "z": 12.799999999999999
+        },
+        "goal": {
+          "x": -14,
+          "z": 4.2
+        },
+        "commandValue": true,
+        "gateIds": [
+          1000000
+        ],
+        "pathLength": 3,
+        "crossings": [
+          -13.949600219726562
+        ],
+        "near": true,
+        "distance": 6.600953813312233,
+        "entityId": "structure-1000000"
+      }
+    ],
+    "standaloneCheckout": {
+      "tests": 62,
+      "passed": 62
+    },
+    "pthread": {
+      "tests": 17,
+      "passed": 17
+    }
+  },
+  "physical": {
+    "mode": "Edge hosted WebGPU Worker with remote draws",
+    "quality": "muy_baja",
+    "width": 640,
+    "height": 480,
+    "displayHz": 30,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 132.60000002384186
+      }
+    },
+    "gateId": "structure-1000000",
+    "bodyId": 1,
+    "actorRoot": 619,
+    "geometryOwners": [
+      {
+        "id": 555,
+        "geometry": 209
+      },
+      {
+        "id": 556,
+        "geometry": 210
+      },
+      {
+        "id": 557,
+        "geometry": 211
+      },
+      {
+        "id": 558,
+        "geometry": 212
+      },
+      {
+        "id": 559,
+        "geometry": 213
+      },
+      {
+        "id": 560,
+        "geometry": 214
+      },
+      {
+        "id": 561,
+        "geometry": 215
+      },
+      {
+        "id": 562,
+        "geometry": 216
+      },
+      {
+        "id": 563,
+        "geometry": 217
+      },
+      {
+        "id": 565,
+        "geometry": 218
+      },
+      {
+        "id": 566,
+        "geometry": 219
+      },
+      {
+        "id": 567,
+        "geometry": 220
+      },
+      {
+        "id": 568,
+        "geometry": 221
+      },
+      {
+        "id": 569,
+        "geometry": 222
+      },
+      {
+        "id": 571,
+        "geometry": 223
+      },
+      {
+        "id": 572,
+        "geometry": 224
+      },
+      {
+        "id": 573,
+        "geometry": 225
+      },
+      {
+        "id": 574,
+        "geometry": 226
+      },
+      {
+        "id": 577,
+        "geometry": 227
+      },
+      {
+        "id": 578,
+        "geometry": 228
+      },
+      {
+        "id": 580,
+        "geometry": 229
+      },
+      {
+        "id": 581,
+        "geometry": 230
+      },
+      {
+        "id": 582,
+        "geometry": 231
+      },
+      {
+        "id": 583,
+        "geometry": 232
+      },
+      {
+        "id": 585,
+        "geometry": 233
+      },
+      {
+        "id": 588,
+        "geometry": 234
+      },
+      {
+        "id": 589,
+        "geometry": 235
+      },
+      {
+        "id": 634,
+        "geometry": 234
+      },
+      {
+        "id": 635,
+        "geometry": 235
+      },
+      {
+        "id": 590,
+        "geometry": 236
+      },
+      {
+        "id": 633,
+        "geometry": 233
+      },
+      {
+        "id": 636,
+        "geometry": 236
+      }
+    ],
+    "gateBefore": {
+      "root": 474,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 476,
+          "geometry": 202,
+          "material": [
+            284
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "gateAfter": {
+      "root": 474,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 476,
+          "geometry": 202,
+          "material": [
+            284
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "gateBinding": {
+      "entityId": "structure-1000000",
+      "mesh": 476,
+      "geometry": 202,
+      "positionVersion": 1,
+      "normalVersion": 1,
+      "positionHash": 603722329,
+      "opening": 1,
+      "nativeGate": {
+        "gateId": 1000000,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        }
+      }
+    },
+    "farmBoundary": {
+      "version": 1,
+      "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "firstGateIds": [
+      1000000
+    ],
+    "before": [
+      -14,
+      11.799999999999999
+    ],
+    "after": {
+      "elapsed": 14.399999999999906,
+      "position": [
+        -13.949600219726562,
+        7.696641344984133
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 216
+    },
+    "gatePlane": [
+      {
+        "opening": 1,
+        "elapsed": 13.649999999999922,
+        "position": [
+          -13.949600219726562,
+          8.506641344984116
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.699999999999921,
+        "position": [
+          -13.949600219726562,
+          8.452641344984118
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.74999999999992,
+        "position": [
+          -13.949600219726562,
+          8.398641344984119
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.799999999999919,
+        "position": [
+          -13.949600219726562,
+          8.34464134498412
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.849999999999918,
+        "position": [
+          -13.949600219726562,
+          8.290641344984122
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.899999999999917,
+        "position": [
+          -13.949600219726562,
+          8.236641344984122
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.949999999999916,
+        "position": [
+          -13.949600219726562,
+          8.182641344984123
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 13.999999999999915,
+        "position": [
+          -13.949600219726562,
+          8.128641344984125
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 14.049999999999914,
+        "position": [
+          -13.949600219726562,
+          8.074641344984126
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 14.099999999999913,
+        "position": [
+          -13.949600219726562,
+          8.020641344984128
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 14.149999999999912,
+        "position": [
+          -13.949600219726562,
+          7.9666413449841285
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 14.19999999999991,
+        "position": [
+          -13.949600219726562,
+          7.912641344984129
+        ]
+      }
+    ],
+    "gateOpenings": [
+      {
+        "opening": 0,
+        "elapsed": 10.149999999999997,
+        "position": [
+          -13.995877717504507,
+          11.638052456681102
+        ]
+      },
+      {
+        "opening": 0.04915777866600912,
+        "elapsed": 10.399999999999991,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.1324911119993407,
+        "elapsed": 10.44999999999999,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.21582444533267225,
+        "elapsed": 10.49999999999999,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.2991577786660038,
+        "elapsed": 10.549999999999988,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.3824911119993354,
+        "elapsed": 10.599999999999987,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.4658244453326669,
+        "elapsed": 10.649999999999986,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.5491577786659985,
+        "elapsed": 10.699999999999985,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.6324911119993301,
+        "elapsed": 10.749999999999984,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.7158244453326617,
+        "elapsed": 10.799999999999983,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.7991577786659931,
+        "elapsed": 10.849999999999982,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.8824911119993247,
+        "elapsed": 10.89999999999998,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 0.9658244453326563,
+        "elapsed": 10.94999999999998,
+        "position": [
+          -13.989817815680736,
+          11.399983810442837
+        ]
+      },
+      {
+        "opening": 1,
+        "elapsed": 10.999999999999979,
+        "position": [
+          -13.989007246678687,
+          11.368139884482952
+        ]
+      }
+    ],
+    "drawCount": 142,
+    "maxDrawIntervalMs": 36,
+    "drawIntervals": [
+      {
+        "at": 1795252474867.7998,
+        "sequence": 31,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 36,
+        "drawMs": 1.10009765625,
+        "replay": true,
+        "clockElapsed": 11.749999999999963,
+        "safeUntil": 11.749999999999963,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252475433.5999,
+        "sequence": 36,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 35.300048828125,
+        "drawMs": 1,
+        "replay": true,
+        "clockElapsed": 12.34999999999995,
+        "safeUntil": 12.34999999999995,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252476966.9,
+        "sequence": 52,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 35.10009765625,
+        "drawMs": 1.5,
+        "replay": true,
+        "clockElapsed": 13.899999999999917,
+        "safeUntil": 13.899999999999917,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252477266.7998,
+        "sequence": 55,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 35.099853515625,
+        "drawMs": 1.400146484375,
+        "replay": true,
+        "clockElapsed": 14.149999999999912,
+        "safeUntil": 14.149999999999912,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252473633.2998,
+        "sequence": 15,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 34.89990234375,
+        "drawMs": 1.2001953125,
+        "replay": true,
+        "clockElapsed": 10.49999999999999,
+        "safeUntil": 10.49999999999999,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252476033.2,
+        "sequence": 42,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 34.800048828125,
+        "drawMs": 1.800048828125,
+        "replay": true,
+        "clockElapsed": 12.949999999999937,
+        "safeUntil": 12.949999999999937,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252476599.7,
+        "sequence": 48,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 34.699951171875,
+        "drawMs": 1.5,
+        "replay": true,
+        "clockElapsed": 13.449999999999926,
+        "safeUntil": 13.449999999999926,
+        "cameraVersion": null
+      },
+      {
+        "at": 1795252476699.7,
+        "sequence": 49,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "860dbdff-3335-4806-a6c8-5101d4bc418e/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 34.699951171875,
+        "drawMs": 1.5,
+        "replay": true,
+        "clockElapsed": 13.599999999999923,
+        "safeUntil": 13.599999999999923,
+        "cameraVersion": null
+      }
+    ],
+    "gpuErrors": 0,
+    "drained": true,
+    "diagnosticSha256": "cec0aa416f1e6540ce925a2b206d1b1801a4eb643f0e3fdca6d5de5f930a13fb"
+  },
+  "abi": {
+    "standaloneExports": 772,
+    "threadedRawExports": 793,
+    "threadedPublicExports": 778,
+    "importsPreserved": true
+  },
+  "pthreadSha256": "af769997a33f9b7e52811165480b45dadc87db2091920bfa8255372ac6a2d4e1",
+  "threadedFactorySha256": "0687e30ad7d36b4452ae8a0d0b0fd577b080c514c8a722288cc4f78608492c7b",
+  "protectedInputs": {
+    "preexistingLocalInputs": 16,
+    "externalA5Inputs": 38,
+    "changed": []
+  },
+  "productionPackage": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "buildSeconds": 48.08,
+    "passed": true
+  }
+}

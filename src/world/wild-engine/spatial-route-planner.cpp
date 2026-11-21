@@ -5,6 +5,7 @@
 #include <limits>
 #include <cstring>
 #include <vector>
+#include "spatial-gate-intents.h"
 
 // Experimental whole-world route entry point. The existing sector graph and
 // physical predicates remain authoritative; no JavaScript geometry callback is
@@ -16,6 +17,8 @@ int lazy_route(int fromX,int fromZ,int toX,int toZ);
 int32_t* lazy_route_ptr();
 int lazy_connected_reason();
 int lazy_portal_world_points(int encoded,float* out);
+int lazy_portal_count();
+uint64_t spatial_execution_revision(int);
 int lazy_add_portal_world(int fromX,int fromZ,int toX,int toZ,
   float fromWorldX,float fromWorldZ,float toWorldX,float toWorldZ);
 int lazy_selected_context();
@@ -32,7 +35,7 @@ struct WorldRoute {
   const float* view=nullptr;
   int reason=0,graphReason=0;
 };
-struct RouteKey {uint32_t x,z,tx,tz,revision;int profile;};
+struct RouteKey {uint32_t x,z,tx,tz,revision;int profile;uint64_t world;};
 struct CacheEntry {
   RouteKey key{};
   std::vector<float> points;
@@ -60,11 +63,13 @@ size_t slotFor(const RouteKey& key){
   uint64_t h=mix((uint64_t(key.x)<<32)|key.z);
   h^=mix((uint64_t(key.tx)<<32)|key.tz);
   h^=mix((uint64_t(key.revision)<<32)|uint32_t(key.profile));
+  h^=mix(key.world);
   return size_t(h)&(cacheCapacity-1);
 }
 bool equal(const RouteKey& a,const RouteKey& b){return a.x==b.x&&a.z==b.z&&
-  a.tx==b.tx&&a.tz==b.tz&&a.revision==b.revision&&a.profile==b.profile;}
+  a.tx==b.tx&&a.tz==b.tz&&a.revision==b.revision&&a.profile==b.profile&&a.world==b.world;}
 bool clearWorld(Point a,Point b){
+  if(!spatialGatePlanningClear(a.x,a.z,b.x,b.z))return false;
   const float length=distance(a,b);
   const int steps=std::max(1,int(std::ceil(length/1.25f)));
   for(int i=0;i<steps;i++){
@@ -200,8 +205,22 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
   WorldRoute& out=result();out.points.clear();out.view=nullptr;out.reason=0;out.graphReason=0;
   const Point start{fromX,fromZ},end{toX,toZ};
   if(!finite(start)||!finite(end)){out.reason=4;return -1;}
-  if(spatial_local_clear(fromX,fromZ,toX,toZ)){
+  if(spatialGatePlanningClear(fromX,fromZ,toX,toZ)&&spatial_local_clear(fromX,fromZ,toX,toZ)){
     append(end);out.view=out.points.data();return 1;
+  }
+  // A coarse grid edge can cut the opened leaf even though its frame proxies
+  // are passable. Reuse registered sub-grid connectors before accepting that
+  // shortcut. Their original endpoints remain in the returned native route.
+  if(!spatialGatePlanningClear(fromX,fromZ,toX,toZ)){
+    std::vector<float> connector;float best=std::numeric_limits<float>::infinity();
+    for(int id=0;id<lazy_portal_count();id++)for(int reverse=0;reverse<2;reverse++){
+      float p[4];if(!lazy_portal_world_points(id*2+reverse,p))continue;
+      const Point a{p[0],p[1]},b{p[2],p[3]};
+      const float length=distance(start,a)+distance(a,b)+distance(b,end);
+      if(length>=best||!clearWorld(start,a)||!clearWorld(a,b)||!clearWorld(b,end))continue;
+      connector={a.x,a.z,b.x,b.z,end.x,end.z};best=length;
+    }
+    if(!connector.empty()){out.points=std::move(connector);out.view=out.points.data();return int(out.points.size()/2);}
   }
   int startCount=0,endCount=0;
   const auto starts=anchors(start,startCount),ends=anchors(end,endCount);
@@ -240,8 +259,10 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
       float length=0;Point previous=start;
       for(size_t at=0;at<out.points.size();at+=2){
         const Point next{out.points[at],out.points[at+1]};
+        if(!spatialGatePlanningClear(previous.x,previous.z,next.x,next.z)){valid=false;break;}
         length+=distance(previous,next);previous=next;
       }
+      if(!valid){out.points.clear();continue;}
       if(length<bestLength){bestLength=length;bestRoute=out.points;}
       if(bestLength<=acceptable){
         out.points=std::move(bestRoute);out.view=out.points.data();
@@ -267,7 +288,7 @@ int spatial_world_route_reason(){return result().reason;}
 int spatial_world_route_graph_reason(){return result().graphReason;}
 int spatial_world_route_cached(float fromX,float fromZ,float toX,float toZ){
   const RouteKey key{bits(fromX),bits(fromZ),bits(toX),bits(toZ),
-    lazy_route_revision(),lazy_selected_context()};
+    lazy_route_revision(),lazy_selected_context(),spatial_execution_revision(2)};
   CacheEntry& entry=cache().entries[slotFor(key)];
   if(entry.valid&&equal(entry.key,key)){
     cache().hits++;
