@@ -751,5 +751,66 @@
     },
     "drained": true,
     "gpuErrors": 0
+  },
+  "homeOlderFemale": {
+    "source": "a44a7e63008b5ffecb9e4c5d2bddc66235fba267",
+    "rawSha256": "d5b21b78581515b6920fdc012246117de809aeaf3ca4712fc820f329a9ef8a65",
+    "profile": "olderFemale",
+    "adapter": [
+      "nvidia",
+      "turing"
+    ],
+    "body": 1,
+    "root": 655,
+    "geometries": 33,
+    "heldMs": 614.1999999284744,
+    "drawsDuringHold": 18,
+    "commit": {
+      "version": 1,
+      "authorityEpoch": "2afe2e75-fa05-4a5e-99c8-bc556c70e586/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 28.050000000000164
+    },
+    "firstAbsence": {
+      "at": 1795272253620.4,
+      "sequence": 53,
+      "ticket": 8,
+      "intervalMs": 33.39990234375,
+      "drawMs": 1.300048828125,
+      "trigger": "raf",
+      "replay": false
+    },
+    "retainedBuffers": {
+      "retainedGateBuffers": [
+        "Buffer:2354",
+        "Buffer:2353",
+        "Buffer:2352",
+        "Buffer:2351",
+        "Buffer:3125",
+        "Buffer:3124",
+        "Buffer:3123"
+      ],
+      "commonOwners": 807,
+      "replacedOwners": [],
+      "uniqueRetained": 767
+    },
+    "continued": {
+      "elapsedMs": 664.6000000238419,
+      "draws": 23
+    },
+    "peakDrawInterval": {
+      "at": 1795272251522.7998,
+      "sequence": 36,
+      "ticket": 4,
+      "intervalMs": 35.89990234375,
+      "drawMs": 1.400146484375,
+      "trigger": "raf",
+      "replay": true
+    },
+    "opportunities": 240,
+    "missed": 0,
+    "drained": true,
+    "gpuErrors": 0
   }
 }

@@ -14,6 +14,8 @@ En NVIDIA Turing, Home cruzó por x=-13,9496 y conservó el cuerpo 1 y las 36 ge
 
 En otra ejecución se movió la cámara a z=31 mirando hacia z=43, más allá del margen de 16 m del encuadre remoto. El renderizador registró cero dibujos del portón y el consumidor conservó su reloj. Home19 dibujó la ausencia y la escena registró otros 672 ms y 23 dibujos. Los 707 buffers de dueños que seguían en escena conservaron sus IDs, incluidos los siete del portón. Las 240 oportunidades enviaron dibujos y el consumidor drenó. [Prueba fuera del encuadre](performance/native-terminal-gate-retention-20261121.json).
 
+El perfil `olderFemale` también pasó Home19 en NVIDIA con el portón residente. Conservó el cuerpo y sus 33 geometrías durante el trayecto, mantuvo el trabajador durante 614,2 ms de READY retenida y dibujó su ausencia con el ticket 8. Después siguieron 23 dibujos y el drenaje. Los 767 buffers de los dueños que permanecieron conservaron sus IDs. [Recibo del perfil](performance/native-terminal-gate-retention-20261121.json).
+
 ## Controles nativos
 
 Standalone y pthread devuelven las dos versiones 2 y mantienen los nombres y tipos de sus interfaces, con 779 exportaciones en standalone y 800 en pthread. Los seis controles con WASM standalone usaron el portón 1000000 y sus reservas reales. Para ambos terminales, una propuesta de motor posterior fue rechazada con −7 y un intento de reescribir el motor reservado fue rechazado con −9. Los dos terminales pudieron confirmar después de esos rechazos. En el tercer control, una publicación causal de motor preparada antes del terminal incrementó la revisión sin cambiar el motor reservado. El terminal anterior fue rechazado con −2 y conservó el cuerpo y el estado económico en ambos casos.
