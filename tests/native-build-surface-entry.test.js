@@ -74,11 +74,16 @@ test('Surface solid additions hold the first wall slot and publish only its acqu
  const boundary=f.preparedStop.proposal.worldBoundary,template=barrierCodec.copyNativeBarrierAdditionReference({kind:'native-barrier-addition-reference',version:1,worldBoundary:boundary,sourceControlSequence:0,additions:[addition]});
  const proposal={kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,nativeBarrierAddition:template,authorizedAutonomy:false,authorizedConsequences:false};
  const object=new Group(),slot=createWebGpuReplacementSlot({pipelineAdmission:{prepare:async()=>{}},release:()=>{}});f.scene.add(slot.group);
- const s=surface(f,{barrierTemplate:template,prepareNativeWallAdditions(entities){assert.deepEqual(entities,[wall]);return [slot.prepareParticipant('wall',()=>object,{initial:true})];}});
+ let entered,load;
+ const waiting=new Promise(resolve=>{entered=resolve;}),assets=new Promise(resolve=>{load=resolve;});
+ const s=surface(f,{barrierTemplate:template,async prepareNativeWallAdditions(entities){assert.deepEqual(entities,[wall]);entered();await assets;return [slot.prepareParticipant('wall',()=>object,{initial:true})];}});
  try{
   const actor=f.roster.get(f.actor),options={minSequence:10,nativeBarrierWallEntities:[wall]};
   await assert.rejects(s.prepareNativeBarrierAdditionResources(proposal,{...options,nativeBarrierWallEntities:[{...wall,x:3}]}),/differ/);
-  const handle=await s.prepareNativeBarrierAdditionResources(proposal,options);assert(handle.valid());assert.equal(slot.active,null);assert.equal(object.visible,false);
+  const pending=s.prepareNativeBarrierAdditionResources(proposal,options);
+  await waiting;assert.equal(s.stats().prepared,0);assert.equal(slot.active,null);assert.equal(f.roster.get(f.actor),actor);
+  load();
+  const handle=await pending;assert(handle.valid());assert.equal(slot.active,null);assert.equal(object.visible,false);
   const worldBoundary={...boundary,ticket:boundary.ticket+1,effectiveTime:boundary.effectiveTime+.1};
   const binding={kind:'native-barrier-addition-attestation',version:1,reference:{...template,worldBoundary},preparedReference:template,nativeIds:[75]};
   const resources={version:1,kind:2,phase:'committed',worldBoundary,nativeSession:worldBoundary.nativeSession,ticket:worldBoundary.ticket,effectiveTime:worldBoundary.effectiveTime,chunks:[],removed:[],nativeBarrierAdditionBinding:binding};

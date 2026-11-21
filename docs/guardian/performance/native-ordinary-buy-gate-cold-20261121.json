@@ -1,0 +1,170 @@
+{
+  "source": "3294f877b4ae0ef3bebf1acb7c3923b2d88e2419",
+  "scenario": "Ordinary hosted gate placement while the original Farm keeps moving",
+  "displayHz": 30,
+  "viewport": [
+    640,
+    480
+  ],
+  "quality": "muy_baja",
+  "coldControl": {
+    "sha256": "fc4bd03f3632eabacfd7016590426877fc3d1d3ca62d892bb950243f4de89858",
+    "error": "Error: Native wall preparation control-failed: Native wall placement requires resident assets and terrain\n    at worker.onmessage (http://127.0.0.1:5218/src/simulation/worker-hosted-runtime.js:64:748)"
+  },
+  "coldPurchases": [
+    {
+      "material": "empalizada",
+      "sha256": "c52e3fa3b5e638eb0e5b8bdfcc0f086c9ace3df13eba6fdc4508743c8e49377e",
+      "quotedCost": 20,
+      "yaw": 0.37,
+      "modelId": 2,
+      "mechanismId": 1,
+      "preparedTicket": 3,
+      "acquiredTicket": 4,
+      "proxyIds": [
+        116,
+        117,
+        118
+      ],
+      "placementEvent": "PlacementCommitted",
+      "before": {
+        "elapsed": 10.149999999999997,
+        "position": [
+          -17.91455129855222,
+          0.08544870144778152
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 8
+      },
+      "after": {
+        "elapsed": 11.149999999999975,
+        "position": [
+          -17.040842712474646,
+          0
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 30
+      },
+      "body": 1,
+      "farmRoot": 620,
+      "farmMeshCount": 32,
+      "farmMeshesRetained": true,
+      "surfaceGenerationRetained": true,
+      "newGate": {
+        "root": 642,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 644,
+            "geometry": 274,
+            "material": [
+              296
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "resourceCounts": [
+        2381,
+        2442
+      ],
+      "adapter": [
+        "nvidia",
+        "turing"
+      ],
+      "firstDraw": {
+        "intervalMs": 33.099853515625,
+        "drawMs": 1.7001953125
+      },
+      "maxIntervalMs": 35.300048828125,
+      "submissionOpportunities": 36,
+      "otherOpportunities": 0,
+      "drained": true,
+      "gpuErrors": 0
+    },
+    {
+      "material": "reforzado",
+      "sha256": "e59f72a6e0212294152b7476d5a15079c897e81b782ab476452f0793eaa6fd22",
+      "quotedCost": 55,
+      "yaw": 0,
+      "modelId": 3,
+      "mechanismId": 1,
+      "preparedTicket": 3,
+      "acquiredTicket": 4,
+      "proxyIds": [
+        116,
+        117,
+        118
+      ],
+      "placementEvent": "PlacementCommitted",
+      "before": {
+        "elapsed": 10.149999999999997,
+        "position": [
+          -17.91455129855222,
+          0.08544870144778152
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 8
+      },
+      "after": {
+        "elapsed": 11.499999999999968,
+        "position": [
+          -16.662842712474653,
+          0
+        ],
+        "worker": {
+          "status": "arriving",
+          "admission": "native-farm-arrival"
+        },
+        "sequence": 37
+      },
+      "body": 1,
+      "farmRoot": 621,
+      "farmMeshCount": 32,
+      "farmMeshesRetained": true,
+      "surfaceGenerationRetained": true,
+      "newGate": {
+        "root": 642,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 644,
+            "geometry": 274,
+            "material": [
+              296
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "resourceCounts": [
+        2371,
+        2432
+      ],
+      "adapter": [
+        "nvidia",
+        "turing"
+      ],
+      "firstDraw": {
+        "intervalMs": 33.39990234375,
+        "drawMs": 1.5
+      },
+      "maxIntervalMs": 35.10009765625,
+      "submissionOpportunities": 46,
+      "otherOpportunities": 0,
+      "drained": true,
+      "gpuErrors": 0
+    }
+  ]
+}

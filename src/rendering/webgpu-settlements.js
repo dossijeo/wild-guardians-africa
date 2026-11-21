@@ -92,21 +92,35 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
  function bank(kind,key){const id=kind+':'+key;let result=banks.get(id);if(!result){result={value:null,promise:null};banks.set(id,result);result.promise=(kind==='village'?villageBank(key):kind==='center'?centerBank(key):wallsBank(key)).then(value=>{if(closed)return;result.value=value;sync();if(kind==='village')villagePreview?.assetsReady(key);}).catch(error=>{if(closed||abort.signal.aborted)return;result.preparationError=error;banks.delete(id);failure=String(error?.message??error);onSelectableChange?.();onError(error);});}return result.value;}
  function remove(id,entry){entry.centerAdmission?.abort();scene.remove(entry.group);entry.damage?.dispose();entry.village?.dispose();if(entry.kind==='wall'){if(entry.wall)entry.wall.dispose();else entry.group.dispose();}entries.delete(id);}
  const intactWallPlacement=entity=>JSON.stringify([entity.id,entity.material,entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.gate===true,entity.status,entity.hp,entity.maxHp,entity.wallPresentation??null]);
- function prepareNativeWallAdditions(entities,{signal,gate=null}={}){
+ async function prepareNativeWallAdditions(entities,{signal,gate=null}={}){
   if(closed||!pipelineAdmission||!signal||signal.aborted||!Array.isArray(entities)||!entities.length||entities.length>256)throw Error('Native wall placement resources unavailable');
   if(gate&&(entities.length!==1||entities[0]?.id!==gate.entityId))throw Error('Native gate resource owner changed');
   const ids=new Set(),parts=[];
+  const owned=(id,entity)=>entries.has(id)||preparedWalls.has(id)||state.structures.some(item=>item.id===entity.id);
+  const placements=entities.map(entity=>{
+   if(!entity||entity.kind!=='wall'||entity.status!=='intact'||Boolean(entity.gate)!==Boolean(gate)||entity.wallPresentation||entity.blessing||typeof entity.id!=='string'||!entity.id||typeof entity.material!=='string'||![entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.hp,entity.maxHp].every(Number.isFinite)||entity.hp<=0||entity.hp!==entity.maxHp)throw TypeError('Invalid prepared native wall');
+   const id='s:'+entity.id,key=entity.material,height=surface(entity.x,entity.z);
+   if(ids.has(id)||owned(id,entity))throw Error('Native wall placement already owned');
+   if(height===null)throw Error('Native wall placement requires resident terrain');
+   if(gate&&(entity.gateOpen!==gate.opening||Math.abs(height+.025-gate.rootMatrix[13])>1e-5))throw Error('Native gate placement differs from its initial pose');
+   ids.add(id);
+   return {id,key,height,entity,stamp:intactWallPlacement(entity)};
+  });
+  const materialBanks=new Map();
+  for(const key of new Set(placements.map(placement=>placement.key))){
+   bank('wall',key);
+   materialBanks.set(key,banks.get('wall:'+key));
+  }
+  const pending=[...materialBanks.values()].filter(item=>!item.value);
+  if(pending.length)await Promise.all(pending.map(item=>item.promise));
+  if(closed||signal.aborted)throw new DOMException('Native wall placement cancelled','AbortError');
+  for(const item of pending){if(item.preparationError)throw item.preparationError;if(!item.value)throw Error('Native wall placement assets unavailable');}
   try{
-   for(const entity of entities){
-    if(!entity||entity.kind!=='wall'||entity.status!=='intact'||Boolean(entity.gate)!==Boolean(gate)||entity.wallPresentation||entity.blessing||typeof entity.id!=='string'||!entity.id||typeof entity.material!=='string'||![entity.x,entity.z,entity.yaw??0,entity.baseScaleX??1,entity.hp,entity.maxHp].every(Number.isFinite)||entity.hp<=0||entity.hp!==entity.maxHp)throw TypeError('Invalid prepared native wall');
-    const id='s:'+entity.id,key=entity.material;
-    if(ids.has(id)||entries.has(id)||preparedWalls.has(id)||state.structures.some(item=>item.id===entity.id))throw Error('Native wall placement already owned');
-    ids.add(id);
-    const assets=bank('wall',key),height=surface(entity.x,entity.z);
-    if(!assets||height===null)throw Error('Native wall placement requires resident assets and terrain');
-    if(gate&&(entity.gateOpen!==gate.opening||Math.abs(height+.025-gate.rootMatrix[13])>1e-5))throw Error('Native gate placement differs from its initial pose');
+   for(const {id,key,height,entity,stamp} of placements){
+    if(owned(id,entity)||surface(entity.x,entity.z)!==height||intactWallPlacement(entity)!==stamp||(gate&&entity.gateOpen!==gate.opening))throw new DOMException('Native wall placement changed','AbortError');
+    const assets=materialBanks.get(key).value;
     const wall=createWebGpuAdmittedWall({prototypes:assets,entity,elapsed:state.elapsed,pipelineAdmission,resourceRegistry,onError,setWallPresentation,prepareInitial:true}),group=wall.group,initial=wall.initialParticipant;
-    const entry={kind:'wall',key,group,wall,hasResidentGeometry:true},stamp=intactWallPlacement(entity),record={entry,stamp,ready:false,cancel:null};
+    const entry={kind:'wall',key,group,wall,hasResidentGeometry:true},record={entry,stamp,ready:false,cancel:null};
     group.userData.entityId=entity.id;group.position.set(entity.x,height+.025,entity.z);group.rotation.y=entity.yaw??0;
     const cancel=()=>{if(preparedWalls.get(id)!==record)return false;preparedWalls.delete(id);try{scene.remove(group);}finally{wall.dispose();}return true;};
     record.cancel=cancel;preparedWalls.set(id,record);
