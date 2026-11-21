@@ -14,7 +14,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
   function rejectNativeStructureControl(error){const pending=nativeStructureControl;nativeStructureControl=null;nativeStructureHold=null;pending?.reject(error);}
   function nativeStructureRequest(action,command){
     if(state!=='ready'||nativeStructureControl||action==='prepare'&&nativeStructureHold||action==='finish'&&!nativeStructureHold)return Promise.reject(Error('Native structure control unavailable'));
-    if(!command||!['buildWallChain','placeStructure'].includes(command.kind))return Promise.reject(TypeError('Invalid native structure command'));
+    if(!command||!['buildWallChain','placeStructure','bless'].includes(command.kind))return Promise.reject(TypeError('Invalid native structure command'));
     if(nativeStructureSerial>=Number.MAX_SAFE_INTEGER)return Promise.reject(Error('Native structure request IDs exhausted'));
     const captured=structuredClone(command),id=++nativeStructureSerial;
     return new Promise((resolve,reject)=>{nativeStructureControl={id,action,command:captured,resolve,reject};try{worker.postMessage({kind:action==='prepare'?'prepareNativeStructureCommand':'finishNativeStructureCommand',session,id,command:captured});}catch(error){rejectNativeStructureControl(error);}});

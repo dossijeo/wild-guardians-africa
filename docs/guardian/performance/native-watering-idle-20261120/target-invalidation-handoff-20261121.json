@@ -1,0 +1,269 @@
+{
+  "sourceBefore": "9ff5cc4d77c08900abfece2a041e5240f40d4488",
+  "validation": {
+    "authorityControlTests": 363,
+    "focusedAfterGlow": 18,
+    "standaloneDirect": 7,
+    "pthreadDirect": 7,
+    "receiptTests": 3,
+    "viteSeconds": 55.78
+  },
+  "native": {
+    "patchSha256": "cac2ead20995741b9172ff9cfa8d1ff2757d49812395d942fad11ab59ee7b7db",
+    "standalone": "bf0524ccac2fc1005a973bc09ba5ff97a9caa9560d23036f8a5b9a0420efaac9",
+    "pthread": "11e1154b403a1752e33824ff540cb7cb0e2a5f8de699872b70463439af2a447a",
+    "factory": "0653849f577e8f92a85feeedfabd71af85d24edac83dacd6ce14ad0771a9284a",
+    "exports": {
+      "standalone": 779,
+      "pthreadRaw": 800,
+      "pthreadFactory": 785
+    }
+  },
+  "cases": {
+    "pendingWater": {
+      "sha256": "70ad19cbe88ac06a370b880cbb68795c1e0d67801a1cfcde3a8c1641ed585349",
+      "profile": "olderFemale",
+      "commandSequence": 257,
+      "originalTask": "task-1000001",
+      "assignedState": "pending-resources",
+      "originalAction": null,
+      "poseBefore": [
+        -17.8,
+        0.2
+      ],
+      "poseAtCommit": [
+        -17.8,
+        0.2
+      ],
+      "originalPresentationTicket": 4,
+      "preparedTaskAborted": 5,
+      "successorTicket": null,
+      "tickets": [
+        2,
+        4
+      ],
+      "sourcePhase": null,
+      "root": 704,
+      "bodyId": 1,
+      "workerGeometries": 33,
+      "drawOfOwner": {
+        "at": 1795257661050.5999,
+        "sequence": 18,
+        "ticket": 4,
+        "intervalMs": 33.5,
+        "drawMs": 2.300048828125,
+        "trigger": "raf",
+        "replay": false
+      },
+      "drawsAfter": 77,
+      "gpuErrors": 0,
+      "event": {
+        "id": "event-29208",
+        "type": "BlessingApplied",
+        "commandId": "hardware-awakening-on-water-assignment",
+        "targetId": "plant-1000000",
+        "kind": "plant",
+        "blessing": {
+          "version": 1,
+          "ordinal": 1,
+          "day": 15,
+          "at": 12.499999999999947
+        },
+        "presentation": {
+          "x": -17.8,
+          "z": 3.2,
+          "elapsed": 12.499999999999947,
+          "source": {
+            "id": "plant-1000000",
+            "kind": "plant",
+            "x": -17.8,
+            "z": 3.2,
+            "species": "mijo",
+            "growth": 71.49999999999986
+          }
+        },
+        "simulationTime": 12.499999999999947
+      },
+      "peakHostIntervalMs30Hz": 35.800048828125,
+      "drained": true
+    },
+    "walkingPlant": {
+      "sha256": "58d02aa0c58df1e799a021c461311d2603dd63472c3009920321533ed836d2b6",
+      "profile": "youngMale",
+      "commandSequence": 308,
+      "originalTask": "task-1000002",
+      "assignedState": "native-task",
+      "originalAction": null,
+      "poseBefore": [
+        -17.838183766184073,
+        0.1618162338159272
+      ],
+      "poseAtCommit": [
+        -17.838183766184073,
+        0.1618162338159272
+      ],
+      "originalPresentationTicket": 6,
+      "preparedTaskAborted": null,
+      "successorTicket": 10,
+      "tickets": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12
+      ],
+      "sourcePhase": 25,
+      "root": 674,
+      "bodyId": 1,
+      "workerGeometries": 36,
+      "drawOfOwner": {
+        "at": 1795257752750.6,
+        "sequence": 33,
+        "ticket": 10,
+        "intervalMs": 33.300048828125,
+        "drawMs": 2.699951171875,
+        "trigger": "raf",
+        "replay": false
+      },
+      "drawsAfter": 88,
+      "gpuErrors": 0,
+      "event": {
+        "id": "event-29209",
+        "type": "BlessingApplied",
+        "commandId": "hardware-awakening-on-water-assignment",
+        "targetId": "plant-1000001",
+        "kind": "plant",
+        "blessing": {
+          "version": 1,
+          "ordinal": 1,
+          "day": 15,
+          "at": 12.499999999999947
+        },
+        "presentation": {
+          "x": -17.8,
+          "z": 3.2,
+          "elapsed": 12.499999999999947,
+          "source": {
+            "id": "plant-1000001",
+            "kind": "plant",
+            "x": -17.8,
+            "z": 3.2,
+            "species": "mijo",
+            "growth": 0
+          }
+        },
+        "simulationTime": 12.499999999999947
+      },
+      "peakHostIntervalMs30Hz": 37.60009765625,
+      "drained": true
+    },
+    "actingWater": {
+      "sha256": "7fd4d4cdcb4e54dc3eedd6f11fe1aa602bd60c46e4dd33612fbf5ffed4affd64",
+      "profile": "olderFemale",
+      "commandSequence": 300,
+      "originalTask": "task-1000001",
+      "assignedState": "native-action",
+      "originalAction": {
+        "version": 1,
+        "kind": "water",
+        "duration": 3.4,
+        "elapsed": 0.09999999999999787
+      },
+      "poseBefore": [
+        -17.799999237060547,
+        2.369999885559082
+      ],
+      "poseAtCommit": [
+        -17.799999237060547,
+        2.369999885559082
+      ],
+      "originalPresentationTicket": 8,
+      "preparedTaskAborted": null,
+      "successorTicket": 10,
+      "tickets": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12
+      ],
+      "sourcePhase": 15,
+      "root": 704,
+      "bodyId": 1,
+      "workerGeometries": 33,
+      "drawOfOwner": {
+        "at": 1795257543083.4,
+        "sequence": 56,
+        "ticket": 10,
+        "intervalMs": 33.300048828125,
+        "drawMs": 1.800048828125,
+        "trigger": "raf",
+        "replay": false
+      },
+      "drawsAfter": 77,
+      "gpuErrors": 0,
+      "event": {
+        "id": "event-29208",
+        "type": "BlessingApplied",
+        "commandId": "hardware-awakening-on-water-assignment",
+        "targetId": "plant-1000000",
+        "kind": "plant",
+        "blessing": {
+          "version": 1,
+          "ordinal": 1,
+          "day": 15,
+          "at": 15.749999999999877
+        },
+        "presentation": {
+          "x": -17.8,
+          "z": 3.2,
+          "elapsed": 15.749999999999877,
+          "source": {
+            "id": "plant-1000000",
+            "kind": "plant",
+            "x": -17.8,
+            "z": 3.2,
+            "species": "mijo",
+            "growth": 74.74999999999967
+          }
+        },
+        "simulationTime": 15.749999999999877
+      },
+      "peakHostIntervalMs30Hz": 36.60009765625,
+      "drained": true
+    }
+  },
+  "pendingRestore": {
+    "claim": {
+      "id": "task-920001",
+      "kind": "water",
+      "centerId": "structure-2",
+      "targetId": "plant-900099",
+      "created": 0,
+      "workerId": "worker-900011",
+      "blocked": false
+    },
+    "before": "pending-action-resources",
+    "phase": {
+      "version": 1,
+      "kind": "water",
+      "duration": 2.2666666666666666,
+      "elapsed": 0.6000000000000085
+    },
+    "result": {
+      "value": false,
+      "rejection": "El Despertar necesita preparar el relevo del trabajador asignado."
+    },
+    "after": "pending-action-resources",
+    "faults": [],
+    "preparations": [
+      {
+        "kind": "task-action",
+        "aborted": false,
+        "committed": false
+      }
+    ]
+  }
+}

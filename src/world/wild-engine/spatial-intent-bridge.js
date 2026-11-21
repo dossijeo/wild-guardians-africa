@@ -23,7 +23,8 @@ import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,c
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteSource,nativeHomeRouteSourceSequence} from '../native-home-route.js';
 import {copyNativeHomeRequestReference,copyNativeHomeDeclarationReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival,nativeHomeRequestContinuesCompletedIdleStroll} from '../native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference,copyNativeInitialIdleState} from '../native-initial-idle-request-reference.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation} from '../native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeTaskCancellationSource,sameNativeTaskCancellationSource} from '../native-initial-idle-body.js';
+import {readNativePendingTaskCancellation} from '../native-pending-task-cancellation.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleNextRequest} from '../native-idle-cycle.js';
 import {nativeInitialIdleDeclaration,nativeInitialIdleInitialization,nativeInitialIdleRetainedState,nativeInitialIdleSavedState} from '../native-initial-idle-state.js';
 import {cancelIdle,createIdleState} from '../../simulation/idle.js';
@@ -602,9 +603,11 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       if(data[at+14]!==2||data[at+8]!==after+index+1||
          !types[data[at+13]]||!Number.isFinite(data[at+9]))
         throw Error('Invalid native intent transition order or protocol');
+      const pendingTaskCancellation=data[at+1]===7&&data[at+13]===4?readNativePendingTaskCancellation(wasm,epoch(),data[at],data[at+8]):null;
       return {actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
+        ...(pendingTaskCancellation?{pendingTaskCancellation}:{}),
         topologyRevision:data[at+7],sequence:data[at+8],effectiveTime:data[at+9],
         revokedRouteHandle:data[at+12]?
           routeHandle(data[at+10],data[at+11],data[at+12]):null,
@@ -1525,7 +1528,22 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const nativeInitialIdleRequestReference=actorId=>readNativeInitialIdleReference(actorId,true);
   const nativeInitialIdleDeclarationReference=actorId=>readNativeInitialIdleReference(actorId,false);
-  const readInitialIdleActionSource=(actor,ticket)=>{
+  const readTaskCancellationSource=actor=>{
+    const row=new Float64Array(wasm.memory.buffer,wasm.nav_task_cancellation_source_ptr(),20);
+    const [version,phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,x,z,yaw,radius,runPhase,walkPhase,carryPhase,runRemaining,bodyFlags]=row;
+    if(actorId!==actor||nativeSession!==wasm.nav_intent_session())throw Error('Native Task cancellation differs from the current owner');
+    return copyNativeTaskCancellationSource({kind:'native-task-cancellation-source',version,phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,
+      pose:{x,z,yaw,radius,runPhase,walkPhase,carryPhase,runRemaining},bodyFlags});
+  };
+  const nativeTaskCancellationSource=actorId=>{
+    const actor=typeof actorId==='number'?actorId:numericId(actorId);
+    return wasm.nav_task_cancellation_source_snapshot?.(actor)===1?readTaskCancellationSource(actor):null;
+  };
+  const nativeTaskCancellationSupported=()=>typeof wasm.nav_task_cancellation_source_snapshot==='function';
+  const cancelNativePendingTask=request=>typeof wasm.nav_intent_pending_task_cancellation_snapshot==='function'&&
+    wasm.nav_intent_pending_task_cancel(request.actorId,request.requestHandle.session,request.requestSequence)===1;
+  const readInitialIdleBodySourceProof=(actor,ticket)=>{
+    if(wasm.nav_initial_idle_body_cancellation_source_snapshot?.(actor,ticket)===1)return {cancellationSource:readTaskCancellationSource(actor)};
     let field;
     if(wasm.nav_initial_idle_body_watering_source_snapshot?.(actor,ticket)===1)field='wateringSource';
     else if(wasm.nav_initial_idle_body_center_repair_source_snapshot?.(actor,ticket)===1)field='centerRepairSource';
@@ -1534,15 +1552,15 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     const readRestore=()=>taskActionRestoreSource(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_task_action_restore_source_ptr(),8)));
     return {[field]:readTaskActionBindings(1,readRestore)[0].binding};
   };
-  const initialIdleBodyReference=(h,ticket,sourceRequest,actionSource)=>{
+  const initialIdleBodyReference=(h,ticket,sourceRequest,sourceProof)=>{
     if(h.length!==8||h[0]!==1||!h.every(Number.isFinite)||h[3]!==sourceRequest?.requestSequence||h[4]!==sourceRequest.requestedAt)throw Error('Invalid native initial Idle body header');
-    return copyNativeInitialIdleBodyReference({kind:'native-initial-idle-body-reference',version:1,actorId:h[1],bodyId:h[2],profile:h[7],sourceControlSequence:h[6],sourceRequest,...actionSource,
+    return copyNativeInitialIdleBodyReference({kind:'native-initial-idle-body-reference',version:1,actorId:h[1],bodyId:h[2],profile:h[7],sourceControlSequence:h[6],sourceRequest,...sourceProof,
       worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),ticket,effectiveTime:h[5]}});
   };
   const captureNativeInitialIdleBodyProposal=ticket=>{
     if(ticket?.kind!=='native-initial-idle-body-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_initial_idle_body_proposal_snapshot?.(ticket.session,ticket.ticket)!==1)return null;
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_proposal_header_ptr(),8)),source=readNativeInitialIdleReference(h[1],true,ticket.ticket);
-    const nativeInitialIdleBody=initialIdleBodyReference(h,ticket.ticket,source,readInitialIdleActionSource(h[1],ticket.ticket));
+    const nativeInitialIdleBody=initialIdleBodyReference(h,ticket.ticket,source,readInitialIdleBodySourceProof(h[1],ticket.ticket));
     return copyNativeInitialIdleBodyProposal({kind:'native-initial-idle-body-proposal',version:1,ticket,worldBoundary:nativeInitialIdleBody.worldBoundary,nativeInitialIdleBody});
   };
   const prepareInitialIdleBodyProposal=stage=>{
@@ -1571,8 +1589,8 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const nativeInitialIdleBodyBinding=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_initial_idle_body_binding_snapshot?.(actor)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_body_binding_ptr(),20));if(a[0]!==1||!a.every(Number.isFinite))throw Error('Invalid native initial Idle body binding');
-    const source=readNativeInitialIdleReference(actor,true,0),actionSource=readInitialIdleActionSource(actor,0);
-    return copyNativeInitialIdleBodyAttestation({kind:'native-initial-idle-body-attestation',version:1,projectionVersion:1,bodySequence:a[1],preparedReference:initialIdleBodyReference(a.slice(4,12),a[2],source,actionSource),reference:initialIdleBodyReference(a.slice(12,20),a[3],source,actionSource)});
+    const source=readNativeInitialIdleReference(actor,true,0),sourceProof=readInitialIdleBodySourceProof(actor,0);
+    return copyNativeInitialIdleBodyAttestation({kind:'native-initial-idle-body-attestation',version:1,projectionVersion:1,bodySequence:a[1],preparedReference:initialIdleBodyReference(a.slice(4,12),a[2],source,sourceProof),reference:initialIdleBodyReference(a.slice(12,20),a[3],source,sourceProof)});
   };
   const nativeInitialIdleBodyBindings=()=>{
     if(wasm.nav_initial_idle_body_binding_actors===undefined)return Object.freeze([]);const count=wasm.nav_initial_idle_body_binding_actors();if(!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Invalid native initial Idle body cohort');
@@ -2244,12 +2262,17 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       mark({resources,nativeIdleCycleBinding:binding});return {status:1,value:{resources,nativeIdleCycleBinding:binding}};
     },prepareResources,signal,protocol);
   };
-  const startNativeInitialIdleBodyAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null,stationaryTaskNavigation=null}={})=>{
+  const startNativeInitialIdleBodyAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null,stationaryTaskNavigation=null,cancelTask=null,returnStoppedTaskToIdle=false,atCommitBoundary=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native initial Idle body requires retained resource preparation');
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),source=stationaryTaskNavigation?null:nativeInitialIdleRequestReference(actor);
+    if(cancelTask&&(stationaryTaskNavigation||typeof cancelTask.valid!=='function'||typeof cancelTask.project!=='function')||atCommitBoundary!==null&&typeof atCommitBoundary!=='function')throw TypeError('Invalid native initial Idle command');
+    const cancelling=!!cancelTask||returnStoppedTaskToIdle;
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),source=stationaryTaskNavigation||cancelling?null:nativeInitialIdleRequestReference(actor);
     const action=stationaryTaskNavigation?nativeTaskActionExecution(actor):null;
     const completion=action?.completed?prepareNativeStationaryTaskConsequence(state,worker,action.binding,stationaryTaskNavigation):null;
-    if(!worker||(stationaryTaskNavigation?!completion:!source?.idleState))return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
+    const cancellation=cancelling?nativeTaskCancellationSource(actor):null;
+    const center=cancellation&&state.structures.find(item=>item.id===worker?.centerId);
+    const cancelledIdle=worker&&center?copyNativeInitialIdleState({...createIdleState(worker,idleFarmAnchor(state,worker,center),state.seed),approachRetry:0}):null;
+    if(!worker||(cancelling?(!cancelledIdle||returnStoppedTaskToIdle&&cancellation.phase!==25):stationaryTaskNavigation?!completion:!source?.idleState))return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
     let stage=()=>prepareNativeInitialIdleBodyProposal(source);
     if(completion){
       const idle=completion.idleState,anchorKind=idle.anchorId.startsWith('farm-plant-')?1:2;
@@ -2259,8 +2282,19 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       stage=()=>prepareInitialIdleBodyProposal(()=>stageAction(actor,action.binding.reference.worldBoundary.nativeSession,action.binding.actionSequence,
         PROFILES.findIndex(p=>p.id===worker.profile),anchorKind,numericId(idle.anchorId),idle.rng,idle.remaining));
     }
+    if(cancellation){
+      const idle=cancelledIdle,anchorKind=idle.anchorId.startsWith('farm-plant-')?1:2;
+      stage=()=>prepareInitialIdleBodyProposal(()=>wasm.nav_initial_idle_body_proposal_stage_cancelled_task(actor,cancellation.nativeSession,cancellation.phase,
+        cancellation.sourceSequence,cancellation.routeGeneration,PROFILES.findIndex(p=>p.id===worker.profile),anchorKind,numericId(idle.anchorId),idle.rng,idle.remaining));
+    }
     const current=()=>{
       if(owningState!==state||!state.workers.includes(worker))return false;
+      if(cancellation){
+        const p=cancellation.pose;
+        return (!cancelTask||cancelTask.valid())&&!!worker.taskId&&numericId(worker.taskId)===cancellation.taskId&&state.tasks.some(t=>t.id===worker.taskId&&t.workerId===worker.id&&numericId(t.targetId)===cancellation.targetId)&&
+          worker.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===p[k])&&
+          sameNativeTaskCancellationSource(nativeTaskCancellationSource(actor),cancellation);
+      }
       if(completion){
         const actual=nativeTaskActionExecution(actor);
         if(!actual?.completed||actual.executedThrough!==state.elapsed||JSON.stringify(actual.binding)!==JSON.stringify(action.binding))return false;
@@ -2272,7 +2306,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       try{const semantic=nativeInitialIdleDeclaration(state,worker,{canonical:true});return worker.profile===source.workerProfile&&numericId(worker.centerId)===source.centerId&&Object.entries(semantic.pose).every(([key,value])=>value===source.pose[key])&&JSON.stringify(semantic.idleState)===JSON.stringify(source.idleState);}catch{return false;}
     };
     let candidate=null,translation=null,preparedTicket=null;
-    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'initial-idle-body',
+    const protocol={preparedFrameRequired:true,deferred:true,motionKind:'initial-idle-body',atCommitBoundary,
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===20;},
       revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeInitialIdleBodyProposal({kind:'native-initial-idle-body-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},
       timeTranslation:()=>translation,ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
@@ -2281,6 +2315,12 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=stage();return p.status==='proposed'?1:p.status==='busy'?-4:-2;},(mark,...boundary)=>{
       if(!current())return {status:-2};const status=wasm.nav_initial_idle_body_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
       if(completion)projectNativeStationaryTaskConsequence(state,worker,stationaryTaskNavigation,{nativeInitialIdleBodyBinding});
+      else if(cancellation){
+        if(returnStoppedTaskToIdle)releaseTask(state,worker);
+        else if(cancelTask.project()!==true||worker.taskId)throw Error('Native cancelled Task consequence did not release the assignment');
+        Object.assign(worker,{status:'idle',path:null,taskApproach:null,destinationId:null,idleState:{...cancelledIdle},running:false,gateWaiting:false,nativeRouteAdmission:'native-idle',actionRemaining:0});
+        notifyWorkerPlanningChange(state,worker);
+      }
       else worker.nativeRouteAdmission='native-idle';
       const binding=nativeInitialIdleBodyBinding(actor),resources=Object.freeze({version:1,kind:20,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeInitialIdleBodyBinding:binding});
       mark({resources,nativeInitialIdleBodyBinding:binding});return {status:1,value:{resources,nativeInitialIdleBodyBinding:binding}};
@@ -2795,7 +2835,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
-    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,requestNativeTaskActionResources,nativeTaskActionRequest,
+    beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
@@ -3376,10 +3416,32 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   };
   const projectNativeTaskExecution=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native task projection belongs to another game');
-    const execution=bridge.nativeTaskExecution(worker.id);if(!execution)return null;
+    const execution=bridge.nativeTaskExecution(worker.id)??nativeStoppedTaskExecution(state,worker);if(!execution)return null;
     const task=state.tasks.find(value=>value.id===worker.taskId);
     if(!task||numericId(task.id)!==execution.taskId||numericId(task.targetId)!==execution.targetId||task.workerId!==worker.id||execution.executedThrough!==state.elapsed)throw Error('Native task projection is not the executed game boundary');
-    adoptNativeTaskExecution(worker,execution);return execution;
+    adoptNativeTaskExecution(worker,execution);
+    if(execution.held)worker.gateWaiting=false;
+    return execution;
+  };
+  const cancelNativePendingTaskForBlessing=(state,worker,request,project)=>{
+    if(state!==sourceState&&state!==observedTaskState)throw Error('Native provisional Task belongs to another game');
+    const current=bridge.pendingTaskRoute(worker.id);
+    if(!current||worker.nativeRouteAdmission!=='pending-resources'||!worker.taskId||numericId(worker.taskId)!==request.taskId||
+      current.actorId!==request.actorId||current.taskId!==request.taskId||current.targetId!==request.targetId||current.requestSequence!==request.requestSequence||
+      !['session','slot','generation'].every(key=>current.requestHandle[key]===request.requestHandle[key])||!bridge.cancelNativePendingTask(request))return false;
+    const body=bridge.nativeIdleCycleExecution(worker.id)??bridge.nativeInitialIdleBodyState(worker.id);
+    const idle=body?.idleState??body?.binding.reference.sourceRequest.idleState;
+    if(!idle||body.executedThrough!==state.elapsed||project()!==true||worker.taskId)throw Error('Native provisional Task cancellation lost its retained body');
+    Object.assign(worker,{status:'idle',path:null,taskApproach:null,destinationId:null,idleState:{...idle},running:false,gateWaiting:false,nativeRouteAdmission:'native-idle',actionRemaining:0});
+    notifyWorkerPlanningChange(state,worker);
+    pendingNativeChanges=true;
+    bridge.flushNativeIntentControl();
+    return true;
+  };
+  const nativeStoppedTaskExecution=(state,worker)=>{
+    if(worker.nativeRouteAdmission!=='native-task'||!worker.taskId)return null;
+    const source=bridge.nativeTaskCancellationSource(worker.id);
+    return source?.phase===25?{...source,...source.pose,held:true,arrived:false,running:false,currentSpeed:0,executedThrough:state.elapsed}:null;
   };
   const projectNativeDeliveryExecution=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native delivery projection belongs to another game');
@@ -3596,12 +3658,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
   const nativeTaskReturnSource=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
     if(!worker||worker.status!=='walking'||worker.nativeRouteAdmission!=='native-task'||!worker.taskId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid)return null;
-    const task=state.tasks.find(t=>t.id===worker.taskId),village=state.villages.find(v=>v.id===worker.villageId),execution=bridge.nativeTaskExecution(actor);
+    const task=state.tasks.find(t=>t.id===worker.taskId),village=state.villages.find(v=>v.id===worker.villageId),execution=bridge.nativeTaskExecution(actor)??nativeStoppedTaskExecution(state,worker);
     if(!task||task.workerId!==worker.id||task.centerId!==worker.centerId||!village||!execution||execution.arrived&&(execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.at)||execution.taskId!==numericId(task.id)||execution.targetId!==numericId(task.targetId)||execution.executedThrough!==state.elapsed)return null;
     return execution;
   };
   const nativeTaskRouteStopRequest=actorId=>{
-    const execution=nativeTaskReturnSource(actorId);if(!execution||execution.arrived)return null;
+    const execution=nativeTaskReturnSource(actorId);if(!execution||execution.arrived||execution.held)return null;
     const state=observedTaskState??sourceState,worker=state.workers.find(w=>numericId(w.id)===execution.nativeRoute.actorId);
     if(!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))return null;
     return Object.freeze({reason:'home',taskId:worker.taskId,bodyId:execution.bodyId,nativeRoute:execution.nativeRoute});
@@ -4091,7 +4153,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     beginNativeRouteExecution:bridge.beginNativeRouteExecution,
     advanceNativeRouteExecution:bridge.advanceNativeRouteExecution,
     stopNativeRouteExecution:bridge.stopNativeRouteExecution,nativeRouteExecution:bridge.nativeRouteExecution,
-    nativeGameExecutionState:bridge.nativeGameExecutionState,advanceNativeGameExecution:bridge.advanceNativeGameExecution,nativeTaskExecution:bridge.nativeTaskExecution,projectNativeTaskExecution,requestNativeTaskActionResources:bridge.requestNativeTaskActionResources,nativeTaskActionRequest:bridge.nativeTaskActionRequest,
+    nativeGameExecutionState:bridge.nativeGameExecutionState,advanceNativeGameExecution:bridge.advanceNativeGameExecution,nativeTaskExecution:bridge.nativeTaskExecution,nativeTaskCancellationSource:bridge.nativeTaskCancellationSource,nativeTaskCancellationSupported:bridge.nativeTaskCancellationSupported,cancelNativePendingTaskForBlessing,projectNativeTaskExecution,requestNativeTaskActionResources:bridge.requestNativeTaskActionResources,nativeTaskActionRequest:bridge.nativeTaskActionRequest,
     async startNativeTaskActionAfterGpuQuiescence(options){
       const owner=bridge.authorityEpoch,result=await bridge.startNativeTaskActionAfterGpuQuiescence(options);
       if(bridge.authorityEpoch===owner&&(result.status==='committed'||result.status==='committed-control-failed'))pendingNativeChanges=true;

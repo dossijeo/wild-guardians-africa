@@ -166,7 +166,7 @@ self.onmessage=async({data})=>{
     try{
      // Preparation is not a command admission. The ordinary FIFO and Game
      // clock continue; purchase/placement are revalidated at the later command.
-     if(nativeResourceAttached&&['buildWallChain','placeStructure'].includes(data.command?.kind)){
+     if(nativeResourceAttached&&['buildWallChain','placeStructure','bless'].includes(data.command?.kind)){
       if(nativeRecoveryHold||recoveryFrozen)throw Error('Native structure preparation unavailable during recovery');
       if(nativeStructureRelease)await nativeStructureRelease;
       await authorityClient.prepareNativeStructureCommand(data.command);structurePrepared=true;

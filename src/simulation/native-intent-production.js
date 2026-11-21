@@ -42,6 +42,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(marker==='native-task'){
     const stopRequest=planner.nativeTaskRouteStopRequest?.(actorId);
     if(stopRequest)return {actorId,kind:'task-route-stop',operation:'stopNativeTaskForHomeAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+    const stopped=planner.nativeTaskCancellationSource?.(actorId);
+    if(stopped?.phase===25)return {actorId,kind:'stopped-task-idle',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',returnStoppedTaskToIdle:true,stopped};
     // A completed expired Task waits for its native Home request; never start
     // a newly prepared action after the ordinary shift has ended.
     if(contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile))return null;
@@ -82,6 +84,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'task-start':return JSON.stringify([request.request.requestHandle,request.request.requestSequence,request.policy]);
    case 'task-action':{const {executedThrough,...source}=request.request;return JSON.stringify(source);}
    case 'stationary-task':case 'task-consequence':return JSON.stringify(planner.nativeTaskActionBinding(actor));
+   case 'stopped-task-idle':return JSON.stringify(request.stopped);
    case 'task-settlement':return JSON.stringify(planner.nativeTaskConsequenceBinding(actor));
   }
  }
@@ -102,6 +105,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const manifest=terrainManifest();if(!manifest)return Promise.resolve(null);
   const request=next();if(!request)return Promise.resolve(null);
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
+  if(['task-start','task-action','stationary-task','task-consequence'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
    try{
     const {operation,prepare,...options}=request,result=await planner[operation]({...options,getPublication,signal:transaction.controller.signal,
@@ -122,13 +126,16 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise.then(()=>{if(!closed&&transaction.obsolete)wake();});
   return transaction.promise;
  }
- function quiesce(){
+ function quiesce({cancelTask=null}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
   // Holding dispatch is not completion. Only the existing operation's actual
   // settlement can certify a stable source; its errors remain terminal.
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
+  if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId){
+   active.obsolete=true;active.controller.abort();
+  }
   hold.promise=Promise.resolve(active?.promise).then(()=>{
    if(closed||fault)throw Error(fault?'Native intent production failed: '+fault:'Native intent production closed');
    if(quiescence!==hold)throw Error('Native production quiescence became obsolete');

@@ -7,7 +7,7 @@ import {createPlant} from '../src/simulation/crops.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeInitialIdleBodyResources} from '../src/world/native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeInitialIdleBodyResources,nativeInitialIdleBodySuccessor} from '../src/world/native-initial-idle-body.js';
 import {restoreNativeActionGame} from './helpers/native-task-action-restoration.js';
 
 // Source ABI tests grant no graphical receipt. The prepared consumer is tested
@@ -51,6 +51,24 @@ test('initial body schemas reject role substitution, extra history and detached 
   for(const bad of [{...r,bodyId:r.bodyId+1},{...r,sourceSettlement:{}},{...r,sourceRequest:{...r.sourceRequest,idleState:null}},{...r,worldBoundary:{...r.worldBoundary,nativeSession:r.worldBoundary.nativeSession+1}}])assert.throws(()=>copyNativeInitialIdleBodyReference(bad));
   assert.throws(()=>copyNativeInitialIdleBodyProposal({...p,authorizedAutonomy:true}));assert.throws(()=>copyNativeInitialIdleBodyAttestation({...binding,bodySequence:r.sourceControlSequence}));
   const resources={version:1,kind:20,phase:'committed',worldBoundary:binding.reference.worldBoundary,nativeInitialIdleBodyBinding:binding};assert.deepEqual(copyNativeInitialIdleBodyResources(resources),resources);assert.throws(()=>copyNativeInitialIdleBodyResources({...resources,kind:17}));assert.throws(()=>copyNativeInitialIdleBodyResources({...resources,nativeTaskSettlementBinding:{}}));
+ }finally{f.close();}
+});
+
+test('an Idle successor keeps the cancelled Task owner and complete physical pose',()=>{
+ const f=nativeInitialIdleGameFixture();
+ try{
+  const {nativeInitialIdleBody:ref}=propose(f),q=ref.sourceRequest;
+  const cancellationSource={kind:'native-task-cancellation-source',version:1,phase:25,actorId:q.actorId,taskId:10,targetId:11,nativeSession:q.nativeSession,
+   sourceSequence:q.requestSequence,routeSlot:0,routeGeneration:4,bodyId:q.bodyId,sourceAt:q.requestedAt,pose:q.pose,bodyFlags:q.bodyFlags};
+  const value={...ref,cancellationSource};
+  assert.deepEqual(copyNativeInitialIdleBodyReference(value),value);
+  assert(nativeInitialIdleBodySuccessor(value,{...value,worldBoundary:{...value.worldBoundary,ticket:value.worldBoundary.ticket+1}}));
+  assert.equal(nativeInitialIdleBodySuccessor(value,{...value,cancellationSource:{...cancellationSource,targetId:12}}),false);
+  assert.equal(nativeInitialIdleBodySuccessor(value,ref),false);
+  for(const bad of [{bodyId:q.bodyId+1},{nativeSession:q.nativeSession+1},{sourceSequence:q.requestSequence+1},
+   {sourceAt:q.requestedAt+1},{bodyFlags:q.bodyFlags+1},{phase:15},{pose:{...q.pose,x:q.pose.x+.01}}]){
+   assert.throws(()=>copyNativeInitialIdleBodyReference({...value,cancellationSource:{...cancellationSource,...bad}}),/native .*cancellation|cancelled Task/);
+  }
  }finally{f.close();}
 });
 

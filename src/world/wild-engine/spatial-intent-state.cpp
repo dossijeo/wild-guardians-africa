@@ -188,8 +188,10 @@ struct NativeIdleStrollResourceRequest:NativeWorkerPoseResourceRequest {
 // Prepared residency of an actual initial stationary body. No task, route,
 // duration or autonomous Idle policy is manufactured by this association.
 struct NativeInitialIdleBodyOrigin {std::array<double,8> header{};uint64_t ticket=0;};
+struct NativeTaskCancellationSource {std::array<double,20> values{};};
 struct NativeInitialIdleBodyBinding {
  NativeInitialIdleBodyOrigin prepared,actual;uint64_t bodySequence=0;
+ std::shared_ptr<const NativeTaskCancellationSource> cancellationSource;
  std::shared_ptr<const NativeInitialIdleResourceRequest> source;
  std::shared_ptr<const NativeTaskActionBinding> actionSource;
  int repairTargetKind=0;
@@ -274,6 +276,7 @@ struct ActiveIntent {
   int dependencyProfile=-1;
   std::set<std::pair<int,int>> routeSectors;
   bool requiresResources=false;uint64_t resourceRequestSequence=0;double resourceRequestedAt=0;
+  std::optional<std::array<double,16>> pendingTaskCancellation;
   uint64_t assignmentSequence=0;
   double assignedAt=0;
   int timingMode=0;
@@ -413,6 +416,7 @@ struct PendingBarrierProposal {
   std::optional<PendingTaskSettlementDraft> settlement;
   std::optional<PendingHomeArrivalDraft> homeArrival;
   struct InitialIdleBodyDraft {
+   std::shared_ptr<const NativeTaskCancellationSource> cancellationSource;
    std::array<double,8> header{};std::shared_ptr<const NativeInitialIdleResourceRequest> source;
    std::shared_ptr<const NativeTaskActionBinding> actionSource;
    int repairTargetKind=0;
@@ -535,6 +539,8 @@ struct IntentState {
   std::vector<double> taskSettlementBindingResult,homeBindingResult,farmArrivalRouteBindingResult;
   std::array<double,30> farmArrivalExecutionResult{};
   std::vector<double> initialIdleBodyBindingResult;
+  std::array<double,20> taskCancellationResult{};
+  std::array<double,16> pendingTaskCancellationResult{};
   std::vector<double> idleCycleBindingResult;
   std::array<double,14> idleCycleExecutionResult{};
   std::array<double,14> idleCycleNextResult{};
@@ -930,6 +936,7 @@ bool intentHasSuspendedRoute(const IntentState& s,const ActiveIntent& intent){
   return route.active&&route.suspended&&route.actor==intent.actor&&route.generation==intent.generation;
 }
 uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
+  intent.pendingTaskCancellation.reset();
   indexRouteDependencies(s,intent);
   const IntentEvent event=intent.state==PlanningState::RouteActive?
     (intent.revokedGeneration?IntentEvent::RouteReplaced:IntentEvent::RouteAssigned):
@@ -955,6 +962,7 @@ uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
 }
 void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
+  intent.pendingTaskCancellation.reset();
   intent.actionRequest.reset();
   intent.restoredActionSource.reset();
   intent.actionBinding.reset();
@@ -2528,7 +2536,7 @@ static int commitTaskProposal(bool pendingResources){
     }
     // A moved stationary body retains its actual cycle through the pending
     // task request. Only prepared TaskStart may acquire its next trajectory.
-    if(old!=s.activeIntents.end()&&old->second.idleCycle&&!old->second.initialIdleBodyBinding&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
+    if(old!=s.activeIntents.end()&&old->second.idleCycle&&(!pendingResources||!nativeIdleCycleCurrent(s,old->second))){clearProposal(s);return 0;}
   }
   for(const auto& [taskId,workerId]:s.proposals){
     s.tasks.at(taskId).assigned=workerId;s.workers.at(workerId).eligible=false;
@@ -2546,7 +2554,7 @@ static int commitTaskProposal(bool pendingResources){
     const auto heldIdle=existing!=s.activeIntents.end()&&existing->second.farmArrivalRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.farmArrivalRequest):existing!=s.activeIntents.end()&&existing->second.strollRequest?std::static_pointer_cast<const NativeWorkerPoseResourceRequest>(existing->second.strollRequest):ownedRoute&&(ownedRoute->idleStrollBinding||ownedRoute->farmArrivalBinding)?captureHeldWorkerTaskSource(s,existing->second):nullptr;
     const auto stationary=existing!=s.activeIntents.end()?existing->second.settlementBinding:nullptr;
     const auto initialIdleBody=existing!=s.activeIntents.end()?existing->second.initialIdleBodyBinding:nullptr;
-    const auto cycle=existing!=s.activeIntents.end()&&!initialIdleBody?existing->second.idleCycle:nullptr;
+    const auto cycle=existing!=s.activeIntents.end()?existing->second.idleCycle:nullptr;
     if(existing!=s.activeIntents.end()){
       if(heldIdle)releaseIntent(s,workerId,PlanningState::Cancelled,false);
       else if(!stationary&&!initialIdleBody&&!cycle)releaseIntent(s,workerId,PlanningState::Cancelled);
@@ -2850,6 +2858,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_route_execution(double session,double slot,d
   s.executionResult=route.executionPose;return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_route_execution_ptr(){return state().executionResult.data();}
+#include "spatial-task-cancellation-source.inc"
 #include "spatial-task-execution.inc"
 #include "spatial-task-action-proposal.inc"
 #include "spatial-task-consequence-proposal.inc"

@@ -5,9 +5,49 @@ import {nativeTaskActionActor} from './native-task-action-presentation.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const actionSourceFields=['wateringSource','centerRepairSource','wallRepairSource'];
-const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest',...actionSourceFields];
+const fields=['kind','version','actorId','bodyId','profile','sourceControlSequence','worldBoundary','sourceRequest','cancellationSource',...actionSourceFields];
 const actionSourceField=value=>actionSourceFields.find(field=>value[field]!==undefined);
 export const nativeInitialIdleActionSource=value=>value?.wateringSource??value?.centerRepairSource??value?.wallRepairSource??null;
+const cancellationPoseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
+const cancellationFields=['kind','version','phase','actorId','taskId','targetId','nativeSession','sourceSequence','routeSlot','routeGeneration','bodyId','sourceAt','pose','bodyFlags'];
+
+export function copyNativeTaskCancellationSource(value){
+ if(value?.kind!=='native-task-cancellation-source'||value.version!==1||Object.keys(value).some(key=>!cancellationFields.includes(key)))throw TypeError('Invalid native Task cancellation source');
+ const {phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,bodyFlags}=value;
+ const pose=value.pose;
+ if(![14,15,25].includes(phase)||![actorId,taskId,targetId,nativeSession,sourceSequence,bodyId].every(id)||
+  !Number.isSafeInteger(routeSlot)||routeSlot<0||!Number.isSafeInteger(routeGeneration)||routeGeneration<0||
+  (phase===15?(routeSlot!==0||routeGeneration!==0):!id(routeGeneration))||!Number.isFinite(sourceAt)||sourceAt<0||
+  !Number.isSafeInteger(bodyFlags)||bodyFlags<0||!pose||Object.keys(pose).length!==cancellationPoseFields.length||
+  cancellationPoseFields.some(key=>!Number.isFinite(pose[key]))||pose.radius<=0||pose.runRemaining<0)throw TypeError('Invalid native Task cancellation identity or pose');
+ return Object.freeze({kind:value.kind,version:1,phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,
+  pose:Object.freeze(Object.fromEntries(cancellationPoseFields.map(key=>[key,pose[key]]))),bodyFlags});
+}
+
+export function sameNativeTaskCancellationSource(a,b){
+ try{return JSON.stringify(copyNativeTaskCancellationSource(a))===JSON.stringify(copyNativeTaskCancellationSource(b));}catch{return false;}
+}
+
+export function nativeTaskCancellationMatchesAction(source,binding){
+ const r=binding?.reference,q=r?.request,p=source?.pose;
+ return source?.phase===15&&!!q&&nativeTaskActionActor(q)===source.actorId&&q.taskId===source.taskId&&q.targetId===source.targetId&&
+  q.bodyId===source.bodyId&&r.worldBoundary.nativeSession===source.nativeSession&&binding.actionSequence===source.sourceSequence&&r.startTime===source.sourceAt&&
+  r.origin.x===p.x&&r.origin.z===p.z&&q.heading===p.yaw&&['radius','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>r[key]===p[key]);
+}
+
+export function nativeTaskCancellationMatchesTerminalRoute(source,binding){
+ const r=binding?.reference,h=r?.expectedRouteHandle;
+ return source?.phase===14&&!!h&&source.actorId===r.actorId&&source.taskId===r.taskId&&source.targetId===r.targetId&&source.bodyId===r.bodyId&&
+  source.sourceSequence===binding.assignmentSequence&&source.nativeSession===h.session&&source.routeSlot===h.slot&&source.routeGeneration===h.generation&&source.sourceAt===r.endTime;
+}
+
+export function nativeTaskCancellationMatchesHeldRoute(source,held,generation){
+ const r=held?.nativeRoute,h=r?.routeHandle;
+ return source?.phase===25&&!!h&&source.actorId===r.actorId&&source.bodyId===held.bodyId&&source.sourceSequence===r.assignmentSequence&&
+  source.nativeSession===h.session&&source.routeSlot===h.slot&&source.routeGeneration===generation&&source.sourceAt===held.suspendedAt&&
+  cancellationPoseFields.every(key=>source.pose[key]===held.pose[key]);
+}
+
 // Residency of the held, initialized Idle/Alert pose. There is no task, route,
 // action duration or authorization to run the remaining Idle policy here.
 export function copyNativeInitialIdleBodyReference(value){
@@ -17,6 +57,11 @@ export function copyNativeInitialIdleBodyReference(value){
   worldBoundary.authorityEpoch!==sourceRequest.authorityEpoch||worldBoundary.nativeSession!==sourceRequest.nativeSession||worldBoundary.effectiveTime<sourceRequest.requestedAt)throw TypeError('Native initial Idle body differs from its held source');
  const sourceField=actionSourceField(value);
  if(sourceField&&actionSourceFields.some(field=>field!==sourceField&&value[field]!==undefined))throw TypeError('Multiple native initial Idle action sources');
+ const cancellationSource=value.cancellationSource===undefined?null:copyNativeTaskCancellationSource(value.cancellationSource);
+ if(cancellationSource&&(sourceField||cancellationSource.actorId!==sourceRequest.actorId||cancellationSource.bodyId!==sourceRequest.bodyId||
+  cancellationSource.nativeSession!==sourceRequest.nativeSession||cancellationSource.sourceSequence!==sourceRequest.requestSequence||
+  cancellationSource.sourceAt>sourceRequest.requestedAt||cancellationSource.bodyFlags!==sourceRequest.bodyFlags||
+  cancellationPoseFields.some(key=>cancellationSource.pose[key]!==sourceRequest.pose[key])))throw TypeError('Native Idle body differs from its cancelled Task');
  const actionSource=sourceField?copyNativeTaskActionAttestation(value[sourceField]):null;
  if(actionSource){
   const action=actionSource.reference,request=action.request,pose=sourceRequest.pose;
@@ -26,13 +71,14 @@ export function copyNativeInitialIdleBodyReference(value){
      actionSource.actionSequence!==sourceRequest.requestSequence||action.endTime!==sourceRequest.requestedAt||action.profile!==sourceRequest.profile||
      pose.x!==action.origin.x||pose.z!==action.origin.z||pose.yaw!==request.heading||['radius','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==action[key]))throw TypeError('Native Idle body differs from its completed action');
  }
- return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceControlSequence:value.sourceControlSequence,worldBoundary,sourceRequest,...(actionSource?{[sourceField]:actionSource}:{})});
+ return Object.freeze({kind:value.kind,version:1,actorId:value.actorId,bodyId:value.bodyId,profile:value.profile,sourceControlSequence:value.sourceControlSequence,worldBoundary,sourceRequest,...(actionSource?{[sourceField]:actionSource}:{}),...(cancellationSource?{cancellationSource}:{})});
 }
 export function sameNativeInitialIdleBodyReference(a,b){try{return JSON.stringify(copyNativeInitialIdleBodyReference(a))===JSON.stringify(copyNativeInitialIdleBodyReference(b));}catch{return false;}}
 export function nativeInitialIdleBodySuccessor(previous,next){
  const a=copyNativeInitialIdleBodyReference(previous),b=copyNativeInitialIdleBodyReference(next);
  return sameNativeInitialIdleRequestReference(a.sourceRequest,b.sourceRequest)&&actionSourceField(a)===actionSourceField(b)&&
   JSON.stringify(nativeInitialIdleActionSource(a))===JSON.stringify(nativeInitialIdleActionSource(b))&&b.sourceControlSequence>=a.sourceControlSequence&&
+  (!a.cancellationSource&&!b.cancellationSource||sameNativeTaskCancellationSource(a.cancellationSource,b.cancellationSource))&&
   a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&
   (b.worldBoundary.ticket>a.worldBoundary.ticket||sameNativeInitialIdleBodyReference(a,b));
 }

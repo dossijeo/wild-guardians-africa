@@ -14,23 +14,24 @@ static bool initialIdleBodySourceCurrent(const IntentState& s,const PendingBarri
  const auto& h=d.header;const auto found=s.activeIntents.find(uint64_t(h[1]));
  if(found==s.activeIntents.end())return false;
  const auto& intent=found->second;const auto& r=*d.source;
- const bool current=d.actionSource?completedIdleActionCurrent(s,intent,*d.actionSource,d.repairTargetKind)&&
+ const bool current=d.cancellationSource?taskCancellationSourceCurrent(s,intent,*d.cancellationSource)&&s.workers.at(intent.actor).center==r.center:d.actionSource?completedIdleActionCurrent(s,intent,*d.actionSource,d.repairTargetKind)&&
    s.workers.at(intent.actor).center==r.center:nativeInitialIdleRequestBodyCurrent(s,intent)&&intent.initialIdleRequest==d.source;
  return current&&r.mode>=1&&r.mode<=2&&h[2]==double(r.body)&&h[3]==double(r.sequence)&&h[4]==r.at&&h[7]==double(r.profile);
 }
 static int stageInitialIdleBody(double actor,double session,double requestSequence,
-    std::shared_ptr<const NativeInitialIdleResourceRequest> actionIdle={},std::shared_ptr<const NativeTaskActionBinding> action={},int repairTargetKind=0){
+    std::shared_ptr<const NativeInitialIdleResourceRequest> actionIdle={},std::shared_ptr<const NativeTaskActionBinding> action={},int repairTargetKind=0,std::shared_ptr<const NativeTaskCancellationSource> cancellation={}){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;
- const auto source=action?actionIdle:found->second.initialIdleRequest;
+ const auto source=(action||cancellation)?actionIdle:found->second.initialIdleRequest;
  if(!source||source->sequence!=uint64_t(requestSequence))return -2;
- PendingBarrierProposal::InitialIdleBodyDraft d;d.source=source;d.actionSource=action;d.repairTargetKind=repairTargetKind;
+ PendingBarrierProposal::InitialIdleBodyDraft d;d.source=source;d.actionSource=action;d.repairTargetKind=repairTargetKind;d.cancellationSource=cancellation;
  d.header={1,actor,double(source->body),double(source->sequence),source->at,s.effectiveTime,double(s.intentSequence),double(source->profile)};
  if(!initialIdleBodySourceCurrent(s,d))return -2;
  const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
  auto& p=s.barrierProposal;p.kind=20;p.initialIdleBody=std::move(d);return 1;
 }
+#include "spatial-task-cancellation-stage.inc"
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_stage(double actor,double session,double requestSequence){return stageInitialIdleBody(actor,session,requestSequence);}
 static int stageCompletedActionIdle(double actor,double session,double actionSequence,double profile,double anchorKind,double anchor,double rng,double remaining,int repairTargetKind){
@@ -74,7 +75,7 @@ EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_cancel(double session,do
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=20||!p.initialIdleBody||session!=double(p.session)||ticket!=double(p.ticket))return -1;
  auto old=std::move(*p.initialIdleBody);clearWorldMutationProposal(p);
- const int result=stageInitialIdleBody(old.header[1],session,old.header[3],old.source,old.actionSource,old.repairTargetKind);if(result!=1)return result;
+ const int result=stageInitialIdleBody(old.header[1],session,old.header[3],old.source,old.actionSource,old.repairTargetKind,old.cancellationSource);if(result!=1)return result;
  auto& next=*p.initialIdleBody;bool same=old.source==next.source;
  for(size_t i=0;i<old.header.size();i++)if(i!=5&&i!=6&&old.header[i]!=next.header[i])same=false;
  next.previous=NativeInitialIdleBodyOrigin{old.header,uint64_t(ticket)};
@@ -87,12 +88,16 @@ EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_commit_bound(double sess
  auto& s=state();const auto& p=s.barrierProposal;if(!p.pending||p.kind!=20||!p.initialIdleBody||!integer(preparedTicket))return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,20);if(valid!=1)return valid;
  if(!initialIdleBodySourceCurrent(s,*p.initialIdleBody)){clearWorldMutationProposal(s.barrierProposal);return -2;}
- const auto& d=*p.initialIdleBody;auto binding=std::make_shared<NativeInitialIdleBodyBinding>();binding->source=d.source;binding->actionSource=d.actionSource;binding->repairTargetKind=d.repairTargetKind;binding->actual={d.header,uint64_t(ticket)};
+ const auto& d=*p.initialIdleBody;auto binding=std::make_shared<NativeInitialIdleBodyBinding>();binding->source=d.source;binding->actionSource=d.actionSource;binding->repairTargetKind=d.repairTargetKind;binding->cancellationSource=d.cancellationSource;binding->actual={d.header,uint64_t(ticket)};
  if(preparedTicket==ticket)binding->prepared=binding->actual;
  else if(d.previous&&preparedTicket==double(d.previous->ticket)&&d.timeTranslation[7]==1)binding->prepared=*d.previous;
  else return -9;
  const uint64_t actor=uint64_t(d.header[1]);clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(actor);
- if(binding->actionSource){releaseIntent(s,actor,PlanningState::Cancelled,false);intent.lease=false;}
+ if(binding->actionSource||binding->cancellationSource){
+  const uint64_t task=intent.task;
+  releaseIntent(s,actor,PlanningState::Cancelled,false);intent.lease=false;
+  if(binding->cancellationSource){auto found=s.tasks.find(task);if(found!=s.tasks.end()&&found->second.assigned==actor)found->second.assigned=0;}
+ }
  intent.initialIdleRequest.reset();intent.initialIdleBodyBinding=binding;intent.state=PlanningState::StationaryActive;
  auto& worker=s.workers.at(actor);worker.eligible=true;worker.actionActive=false;
  binding->bodySequence=emitIntentChange(s,intent);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,20);return 1;

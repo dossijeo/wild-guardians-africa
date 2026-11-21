@@ -9,9 +9,10 @@ import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRo
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource} from '../world/native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
+import {copyNativePendingTaskCancellation} from '../world/native-pending-task-cancellation.js';
 import {copyNativeTaskStartReference} from '../world/native-task-start-reference.js';
 import {copyNativeTaskStartAttestation,nativeTaskStartAttestationCovers} from '../world/native-task-start-attestation.js';
 import {copyNativeResumeAttestation,nativeResumeAttestationCovers} from '../world/native-resume-attestation.js';
@@ -186,8 +187,18 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(homeRequest&&actor?.pendingIdleStrollRequest){const q=actor.pendingIdleStrollRequest;if(!['authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','profile'].every(k=>homeRequest[k]===q[k])||homeRequest.requestSequence<=q.requestSequence||homeRequest.requestedAt<q.requestedAt||Object.keys(q.pose).some(k=>homeRequest.pose[k]!==q.pose[k]))throw Error('Native Home differs from its pending restored stroll body');}
     if(current?.issuedStroll&&event.type==='RouteCompleted'&&event.state===7&&!idleCycle)throw Error('Native Idle stroll completion omitted its stationary source');
     if(idleCycle&&(!actor||!cyclePreparationSourceMatches(idleCycle.reference,actor)))throw Error('Native Idle cycle acquisition has no exact admitted body source');
-    if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||actor.latestSequence!==idleCycleNext.sourceCycle.cycleSequence))throw Error('Native Idle cycle successor has no current native cycle');
-    if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext)throw Error('Native Idle cycle event omitted its typed source');
+    if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||!stationarySequenceCurrent(actor,21,idleCycleNext.sourceCycle.cycleSequence)))throw Error('Native Idle cycle successor has no current native cycle');
+    const pendingTaskCancellation=event.pendingTaskCancellation===undefined?null:copyNativePendingTaskCancellation(event.pendingTaskCancellation);
+    if(pendingTaskCancellation){
+      const {request,owner}=pendingTaskCancellation,stationary=owner.kind===21?actor?.idleCycleProof:actor?.initialIdleBodyProof,ref=stationary?.reference;
+      if(event.type!=='IntentChanged'||event.state!==7||current||handle||revoked||event.taskId||event.targetId||taskRequest||actionRequest||homeRequest||initialIdleRequest||idleStrollRequest||farmArrivalRequest||idleCycle||idleCycleNext||
+         actor?.state!==6||actor.latestSequence!==request.requestSequence||actor.taskId!==request.taskId||actor.targetId!==request.targetId||!actor.pendingTaskRequest||JSON.stringify(request)!==JSON.stringify(actor.pendingTaskRequest)||
+         pendingTaskCancellation.sequence!==event.sequence||pendingTaskCancellation.effectiveTime!==event.effectiveTime||
+         !ref||ref.bodyId!==owner.bodyId||ref.worldBoundary.ticket!==owner.ticket||ref.worldBoundary.nativeSession!==request.requestHandle.session||
+         (owner.kind===21?owner.sequence!==stationary.cycleSequence||owner.endTime!==ref.worldBoundary.effectiveTime+ref.duration||!cycleRecordCurrent(ref,actor):
+           !!actor.idleCycleSource||owner.sequence!==stationary.bodySequence||!initialBodyRecordCurrent(ref,actor)))throw Error('Native pending Task cancellation lacks its retained Idle owner');
+    }
+    if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext&&pendingTaskCancellation?.owner.kind!==21)throw Error('Native Idle cycle event omitted its typed source');
     const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival||actor.revoked.taskStopBodyId);
     const heldHomeSource=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
     const heldTaskHome=homeRequest&&stoppedTaskHomeMatches(actor,homeRequest);
@@ -195,7 +206,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const heldTaskSource=taskRequest?stoppedHomeSource(actor):null;
     if(taskRequest&&stoppedRouteSourceRequired&&!heldTaskSource)throw Error('Native task request lacks its actual stopped worker body');
     const keepStoppedBody=!!(heldHomeSource||heldTaskHome||heldTaskSource)&&!current&&event.type==='IntentChanged'&&event.state===6;
-    const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
+    const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===21||!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     const phaseDelay=idleCycle?inheritedIdleCyclePhaseDelay(idleCycle,actor):0;
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
@@ -203,13 +214,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');
     const initialBodyRequest=actor?.initialIdleBodySource?.request;
     if(homeRequest&&initialBodyRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,initialBodyRequest))throw Error('Native Home request differs from its held initial Idle body');
-    const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state);
+    const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===20||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(actor?.pendingInitialIdleRequest&&event.state===7&&(event.type!=='IntentChanged'||current||handle||revoked||event.taskId||event.targetId||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest))throw Error('Native initial Idle body acquisition conflicts with its pending source');
     const completedInitialBody=actor?.pendingInitialIdleRequest&&!current&&event.type==='IntentChanged'&&event.state===7&&!handle&&!revoked&&!event.taskId&&!event.targetId?{request:actor.pendingInitialIdleRequest,bodySequence:event.sequence,at:event.effectiveTime}:null;
     const action=actor?.actionProof;
-    const completedAction=action&&['initial','water','repair'].includes(action.reference.request.actionKind)&&actionCurrent(action.reference,actor)&&
-      event.type==='IntentChanged'&&event.state===7&&!handle&&!revoked&&!event.taskId&&!event.targetId&&event.effectiveTime>=action.reference.endTime?
-      {actionSource:action,bodySequence:event.sequence,at:event.effectiveTime}:null;
+    const adoptsActionBody=action&&actionCurrent(action.reference,actor)&&event.type==='IntentChanged'&&event.state===7&&
+      !handle&&!revoked&&!event.taskId&&!event.targetId;
+    const completedAction=adoptsActionBody&&['initial','water','repair'].includes(action.reference.request.actionKind)&&event.effectiveTime>=action.reference.endTime;
+    const adoptedAction=adoptsActionBody?{...(completedAction?{actionSource:action}:{}),cancelledActionSource:action,bodySequence:event.sequence,at:event.effectiveTime}:null;
+    const taskRouteSource=event.state===7&&!handle&&!event.taskId&&!event.targetId&&actor?.taskId&&actor?.targetId&&
+      (event.type==='RouteCompleted'&&revoked&&current?.issuedStart||event.type==='IntentChanged'&&!revoked&&!current&&actor.state===4)?currentTaskRouteCancellationOwner(actor):null;
+    const adoptedTaskRoute=taskRouteSource?{taskRouteSource,bodySequence:event.sequence,at:event.effectiveTime}:null;
     if(actor?.initialIdleBodyRecord?.lastDrawTime!==null&&actor?.initialIdleBodyRecord?.lastDrawTime!==undefined&&event.effectiveTime<actor.initialIdleBodyRecord.lastDrawTime){const error=Error('Native initial Idle body revocation arrived after its presented time');error.code='native-initial-idle-body-revocation-late';throw error;}
     const retiringCarry=current&&actor?.consequenceProof&&consequenceCurrent(actor.consequenceProof.reference,actor)?actor.consequenceProof:null;
     if(homeRequest&&actor?.settlementProof&&!nativeHomeRequestContinuesIdle(homeRequest,actor.settlementProof))throw Error('Native Home request differs from its held Idle body');
@@ -237,14 +252,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actor){
       if(keepStoppedBody){actor.revoked.stoppedHomeRequest=homeRequest;actor.revoked.stoppedTaskRequest=taskRequest;}
       if(!keepIdleCycle){if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=Math.min(actor.idleCycleRecord.safeUntil,event.effectiveTime);actor.idleCycleProof=null;actor.idleCycleRecord=null;actor.idleCycleSource=idleCycle?{binding:idleCycle,fromBaseline:false,phaseUntil:Infinity,phaseDelay}:null;actor.pendingIdleCycleRequest=null;}
-      else if(event.state===6){actor.idleCycleSource.phaseUntil=Math.min(actor.idleCycleSource.phaseUntil,event.effectiveTime);if(actor.idleCycleRecord)actor.idleCycleRecord.phaseUntil=Math.min(actor.idleCycleRecord.phaseUntil,event.effectiveTime);}
+      else if(event.state===6){
+        if(taskRequest)actor.idleCycleSource.phaseBeforeTask=actor.idleCycleSource.phaseUntil;
+        actor.idleCycleSource.phaseUntil=Math.min(actor.idleCycleSource.phaseUntil,event.effectiveTime);
+        if(actor.idleCycleRecord)actor.idleCycleRecord.phaseUntil=Math.min(actor.idleCycleRecord.phaseUntil,event.effectiveTime);
+      }else if(pendingTaskCancellation){
+        const source=actor.idleCycleSource;
+        source.phaseUntil=Math.min(source.phaseBeforeTask??source.phaseUntil,pendingTaskCancellation.owner.endTime);
+        actor.idleCycleRecord.phaseUntil=source.phaseUntil;
+        delete source.phaseBeforeTask;
+      }
       if(idleCycleNext)actor.pendingIdleCycleRequest=idleCycleNext;
-      if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody??completedAction;}
+      if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody??adoptedAction??adoptedTaskRoute;}
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;if(!completedTaskHome)actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;if(!completedStrollHome)actor.strollProof=null;if(!completedFarmGoal)actor.farmArrivalProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;if(!keepStoppedBody)actor.stoppedProjection=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       // NeedsPlan retains its existing intent and revoked record, never a draw clock.
       if(!actor.current&&actor.state!==0&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
-    if(actor){actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.pendingIdleStrollRequest=idleStrollRequest;actor.pendingFarmArrivalRequest=farmArrivalRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
+    if(actor){actor.pendingTaskCancellation=pendingTaskCancellation;actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.pendingIdleStrollRequest=idleStrollRequest;actor.pendingFarmArrivalRequest=farmArrivalRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
   }
@@ -309,6 +333,20 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(nativeTaskActionActor(reference.request))===actor&&actor.state===2&&actor.current===null&&actor.actionRecord?.actionSequence===actor.latestSequence&&actor.actionProof?.actionSequence===actor.latestSequence&&nativeTaskActionAttestationCovers(actor.actionProof,reference);
   }
   function sameActionProof(a,b){return !!a&&!!b&&a.actionSequence===b.actionSequence&&sameNativeTaskActionReference(a.reference,b.reference)&&sameNativeTaskActionReference(a.preparedReference,b.preparedReference);}
+  function currentTaskRouteCancellationOwner(actor){
+    const current=actor?.current,record=current??actor?.revoked,start=record?.issuedStart;
+    if(!start)return null;
+    if(current)return startCurrent(start.reference,actor)?{start}:null;
+    const body=actor.proof,projection=actor.stoppedProjection;
+    return body&&projection&&record.stopProof===projection.proof&&suspendedCurrent(body,record,actor)?
+      {start,body,projection}:null;
+  }
+  function taskRouteCancellationMatches(source,owner){
+    if(source.phase===14)return nativeTaskCancellationMatchesTerminalRoute(source,owner?.start);
+    const {start,body,projection}=owner??{};
+    return !!body&&start.reference.taskId===source.taskId&&start.reference.targetId===source.targetId&&
+      nativeTaskCancellationMatchesHeldRoute(source,{...body,pose:projection.homePose(source.pose.radius)},body.resumeGeneration);
+  }
   function consequenceCurrent(reference,actor){
     const record=actor?.current,proof=actor?.consequenceProof;
     return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.state===1&&active.get(reference.actorId)===record&&!!record&&actor.latestSequence===record.assignmentSequence&&sameHandle(record.handle,reference.expectedRouteHandle)&&record.startTime===proof?.reference.worldBoundary.effectiveTime&&proof?.assignmentSequence===record.assignmentSequence&&nativeTaskConsequenceAttestationCovers(proof,reference);
@@ -384,10 +422,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function settlementState(actor,proof){return actor.state===7&&actor.latestSequence===proof.settlementSequence||!proof.reference.home&&actor.state===6&&actor.latestSequence>proof.settlementSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence&&(actor.settlementProof===proof||nativeHomeRequestContinuesIdle(actor.pendingHomeRequest,proof)));}
   function settlementRecordCurrent(reference,actor){const proof=actor?.settlementProof,record=actor?.settlementRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.settlementSequence===proof.settlementSequence&&settlementState(actor,proof);}
   function settlementCurrent(reference,actor){return settlementRecordCurrent(reference,actor)&&nativeTaskSettlementAttestationCovers(actor.settlementProof,reference);}
-  function initialBodyState(actor,proof){return actor.state===7&&actor.latestSequence===proof.bodySequence||actor.state===6&&actor.latestSequence>proof.bodySequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
+  function stationarySequenceCurrent(actor,kind,ownerSequence){
+    const cancelled=actor.pendingTaskCancellation;
+    return actor.latestSequence===ownerSequence||cancelled?.sequence===actor.latestSequence&&cancelled.owner.kind===kind&&cancelled.owner.sequence===ownerSequence;
+  }
+  function initialBodyState(actor,proof){return actor.state===7&&stationarySequenceCurrent(actor,20,proof.bodySequence)||actor.state===6&&actor.latestSequence>proof.bodySequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
   function initialBodyRecordCurrent(reference,actor){const proof=actor?.initialIdleBodyProof,record=actor?.initialIdleBodyRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&record.bodySequence===proof.bodySequence&&proof.bodySequence<=clock.intentSequence&&initialBodyState(actor,proof);}
   function cycleHomeMatches(request,proof){return nativeHomeRequestContinuesIdleCycle(request,proof);}
-  function cycleState(actor,proof){return actor.state===7&&(actor.latestSequence===proof.cycleSequence||actor.pendingIdleCycleRequest?.sourceCycle.cycleSequence===proof.cycleSequence&&actor.latestSequence===actor.pendingIdleCycleRequest.requestSequence)||actor.state===6&&actor.latestSequence>proof.cycleSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
+  function cycleState(actor,proof){return actor.state===7&&(stationarySequenceCurrent(actor,21,proof.cycleSequence)||actor.pendingIdleCycleRequest?.sourceCycle.cycleSequence===proof.cycleSequence&&actor.latestSequence===actor.pendingIdleCycleRequest.requestSequence)||actor.state===6&&actor.latestSequence>proof.cycleSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
   function cycleRecordCurrent(reference,actor){const proof=actor?.idleCycleProof,record=actor?.idleCycleRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&actor.idleCycleSource?.binding===proof&&record.cycleSequence===proof.cycleSequence&&proof.cycleSequence<=clock.intentSequence&&cycleState(actor,proof);}
   // Keep one cosmetic delay on the existing association, never old bindings.
   // Inherit only from an installed predecessor playing the same terminal clip.
@@ -501,18 +543,26 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native initial Idle body requires prepared admission at its current boundary');
       const staged=[],ids=new Set(),bodies=new Set();
       for(const input of values){const value=copyNativeInitialIdleBodyAttestation(input),r=value.reference,actor=actors.get(r.actorId),source=actor?.initialIdleBodySource;
-        const action=nativeInitialIdleActionSource(r),sourceMatches=action?sameActionProof(source?.actionSource,action):!source?.actionSource&&sameNativeInitialIdleRequestReference(source?.request,r.sourceRequest);
+        const action=nativeInitialIdleActionSource(r),cancellation=r.cancellationSource,
+          sourceMatches=cancellation?cancellation.phase===15?nativeTaskCancellationMatchesAction(cancellation,source?.cancelledActionSource):taskRouteCancellationMatches(cancellation,source?.taskRouteSource):
+            action?sameActionProof(source?.actionSource,action):sameNativeInitialIdleRequestReference(source?.request,r.sourceRequest);
         if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||value.bodySequence>sequence||value.bodySequence>clock.intentSequence||r.sourceControlSequence!==value.bodySequence-1||ids.has(r.actorId)||bodies.has(r.bodyId)||!actor||actor.closed||actor.current||actor.actionProof||actor.settlementProof||actor.initialIdleBodyProof||!sourceMatches||source.bodySequence!==value.bodySequence||source.at!==boundary.effectiveTime||!initialBodyState(actor,value))throw Error('Native initial Idle body differs from its issued request or current owner');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
       }
-      for(const {actor,value} of staged){const r=value.reference;actor.initialIdleBodySource.request=r.sourceRequest;actor.initialIdleBodyProof=value;actor.initialIdleBodyRecord={actorId:r.actorId,bodyId:r.bodyId,bodySequence:value.bodySequence,startTime:r.worldBoundary.effectiveTime,safeUntil:Infinity,lastDrawTime:null};}return staged.length;
+      for(const {actor,value} of staged){
+        const r=value.reference;
+        if(r.cancellationSource?.phase===25){actor.revoked=null;actor.proof=null;actor.stoppedProjection=null;}
+        actor.initialIdleBodySource.request=r.sourceRequest;actor.initialIdleBodyProof=value;actor.initialIdleBodyRecord={actorId:r.actorId,bodyId:r.bodyId,bodySequence:value.bodySequence,startTime:r.worldBoundary.effectiveTime,safeUntil:Infinity,lastDrawTime:null};
+      }return staged.length;
     },
     admitInitialIdleBody(value,{preparingWorldBoundary=null}={}){
-      const reference=copyNativeInitialIdleBodyReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),source=actor?.pendingInitialIdleRequest,action=nativeInitialIdleActionSource(reference),
+      const reference=copyNativeInitialIdleBodyReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),source=actor?.pendingInitialIdleRequest,action=nativeInitialIdleActionSource(reference),cancellation=reference.cancellationSource,
         sourceMatches=!!source&&sameNativeInitialIdleRequestReference(reference.sourceRequest,source),
         current=proofLeaseCurrent(reference,actor,'initialIdleBodyProof',nativeInitialIdleBodyAttestationCovers,initialBodyRecordCurrent),
         pending=()=>sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&
-          (action?actionCurrent(action.reference,actor)&&sameActionProof(actor.actionProof,action):sourceMatches&&actor.pendingInitialIdleRequest===source&&initialIdleRequestCurrent(source,actor));
+          (cancellation?cancellation.phase===15?!!actor?.actionProof&&actionCurrent(actor.actionProof.reference,actor)&&nativeTaskCancellationMatchesAction(cancellation,actor.actionProof):
+            taskRouteCancellationMatches(cancellation,currentTaskRouteCancellationOwner(actor)):
+            action?actionCurrent(action.reference,actor)&&sameActionProof(actor.actionProof,action):sourceMatches&&actor.pendingInitialIdleRequest===source&&initialIdleRequestCurrent(source,actor));
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native initial Idle body is obsolete or lacks its direct pending source');error.code='native-initial-idle-body-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get initialIdleBodyRecord(){return current()?actor.initialIdleBodyRecord:null;},get executionEpoch(){return current()?actor.initialIdleBodyProof.reference.worldBoundary.effectiveTime:null;}});
     },

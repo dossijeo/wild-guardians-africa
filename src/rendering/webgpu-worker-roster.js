@@ -16,7 +16,7 @@ import {nativeHomeRequestContinuesIdle} from '../world/native-home-request-refer
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,nativeTaskSettlementAttestationCovers,sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {createNativeTaskSettlementGpuMotion} from './native-task-settlement-gpu-motion.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,sameNativeInitialIdleBodyReference,nativeInitialIdleActionSource} from '../world/native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,sameNativeInitialIdleBodyReference,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
 import {createNativeInitialIdleBodyGpuMotion} from './native-initial-idle-body-gpu-motion.js';
 import {nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
@@ -313,26 +313,46 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const copyRef=cycle?copyNativeIdleCycleReference:copyNativeInitialIdleBodyReference,copyProof=cycle?copyNativeIdleCycleAttestation:copyNativeInitialIdleBodyAttestation,covers=cycle?nativeIdleCycleAttestationCovers:nativeInitialIdleBodyAttestationCovers,key=cycle?'nativeIdleCycle':'nativeInitialIdleBody',bindingKey=cycle?'nativeIdleCycleBinding':'nativeInitialIdleBodyBinding';
   let ref=copyRef(support?.reference);const id=`worker-${ref.actorId}`,entry=entries.get(id),previous=entry?.nativeState,oldMotion=entry?.motion,oldBinding=entry?.motionBinding,q=cycle?nativeIdleCycleBodyState(ref.sourceBody):ref.sourceRequest,fromFailed=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-failed-source',fromStroll=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-arrival-source',fromFarm=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-farm-arrival-idle-source',fromSettlement=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-settled-worker-idle-source';
   const completedAction=cycle?null:nativeInitialIdleActionSource(ref);
+  const cancellation=cycle?null:ref.cancellationSource,cancelsAction=cancellation?.phase===15;
   const sourceCurrent=()=>{
+   if(cancelsAction)return nativeTaskCancellationMatchesAction(cancellation,previous?.nativeActionBinding)&&previous.motion.valid();
+   if(cancellation?.phase===25)return nativeTaskCancellationMatchesHeldRoute(cancellation,previous?.nativeHeldTaskRoute,previous?.suspended?.resumeGeneration)&&previous.motion.valid();
+   if(cancellation?.phase===14){
+    const packet=previous?.packet,rows=packet?.rows,i=(rows?.length??0)-16,p=cancellation.pose;
+    return nativeTaskCancellationMatchesTerminalRoute(cancellation,previous?.nativeTaskStartBinding)&&i>=0&&rows[i]===packet.endTime&&rows[i+7]===1&&rows[i+14]===0&&rows[i+15]===0&&
+      packet.radius===p.radius&&['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'].every((key,j)=>p[key]===rows[i+[1,2,5,8,9,10,13][j]])&&previous.motion.valid();
+   }
    if(completedAction){const source=previous?.nativeActionBinding;return !!source&&previous.motion.valid()&&source.actionSequence===completedAction.actionSequence&&
     sameNativeTaskActionReference(source.reference,completedAction.reference)&&sameNativeTaskActionReference(source.preparedReference,completedAction.preparedReference);}
    return !cycle||fromFailed?!previous:!!previous&&previous.motion.valid()&&(ref.sourceCycleSequence?previous.nativeIdleCycleBinding?.cycleSequence===ref.sourceCycleSequence&&JSON.stringify(previous.nativeIdleCycleBinding.reference.sourceBody)===JSON.stringify(ref.sourceBody):fromSettlement?nativeSettledIdleSourceMatches(q,previous.nativeSettlementBinding):fromFarm?idleCycleContinuesCompletedFarm(q,previous,entry.entity,state.elapsed):fromStroll?nativeIdleStrollArrivalSourceMatches(ref.sourceBody,previous.nativeIdleStrollBinding):JSON.stringify(previous.nativeInitialIdleBodyBinding)===JSON.stringify(ref.sourceBody));
   };
   const entityCurrent=()=>{const e=entry?.entity,idle=e?.idleState,stroll=previous?.nativeIdleStrollBinding?.reference;
    if(fromFailed)return pendingIdleStrollMatches(state,e,q.sourceRequest);
-   if(completedAction){const action=completedAction.reference.request,task=state.tasks?.find(t=>t.id===e?.taskId),p=q.pose;
+   if(completedAction||cancelsAction){const action=(completedAction??previous?.nativeActionBinding)?.reference.request,task=state.tasks?.find(t=>t.id===e?.taskId),p=q.pose;
+    if(!action)return false;
     const targetKind=action.actionKind==='repair'?'structure':'plant';
     return !!e&&e.status==='acting'&&e.nativeRouteAdmission==='native-action'&&!e.crateId&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&
      e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k])&&
-     e.nativeTaskAction?.elapsed===action.duration&&e.nativeTaskAction?.duration===action.duration&&e.nativeTaskAction?.kind===action.actionKind&&
+     (cancelsAction?e.nativeTaskAction?.elapsed>=0&&e.nativeTaskAction.elapsed<=action.duration:e.nativeTaskAction?.elapsed===action.duration)&&e.nativeTaskAction?.duration===action.duration&&e.nativeTaskAction?.kind===action.actionKind&&
      task?.id===`task-${action.taskId}`&&task.workerId===id&&task.kind===action.actionKind&&task.targetId===`${targetKind}-${action.targetId}`;
+   }
+   if(cancellation){
+    const task=state.tasks?.find(t=>t.id===e?.taskId),p=cancellation.pose;
+    return !!e&&e.status==='walking'&&e.nativeRouteAdmission==='native-task'&&!e.crateId&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&!e.nativeTaskAction&&
+      e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k])&&
+      task?.id===`task-${cancellation.taskId}`&&task.workerId===id&&['initial','water'].includes(task.kind)&&task.targetId===`plant-${cancellation.targetId}`;
    }
    const sourcePhase=fromSettlement?idle===null&&!e.nativeTaskAction:fromFarm?idle===null&&e.destinationId===null&&farmPathMetadataCurrent(e)&&!e.nativeTaskAction:fromStroll?!!stroll&&!!idle&&Object.keys(idle).every(k=>['anchorId','mode','elapsed','remaining','rng','approachRetry','destination'].includes(k))&&idle.mode==='walk'&&idle.elapsed===0&&idle.remaining===nativeIdleStrollWalkRemaining(stroll)&&idle.anchorId===q.idleState.anchorId&&idle.rng===stroll.walkRng&&idle.approachRetry===q.idleState.approachRetry&&e.destinationId===(nativeIdleStrollApproachesAnchor(stroll)?q.idleState.anchorId:`idle-${id}`)&&idle.destination?.id===e.destinationId&&idle.destination.x===stroll.destination.x&&idle.destination.z===stroll.destination.z:cycle?!!idle&&['rest','watch'].includes(idle.mode)&&(!ref.sourceCycleSequence?JSON.stringify(idle)===JSON.stringify(ref.initialState):true):JSON.stringify(idle)===JSON.stringify(q.idleState);
    return !!e&&e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&e.status===(fromFarm?'arriving':'idle')&&e.nativeRouteAdmission===(fromSettlement?undefined:fromFarm?'native-farm-arrival':fromStroll?'native-idle-stroll':cycle?'native-idle':'pending-idle-resources')&&e.path===null&&!e.taskId&&!e.crateId&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&e.running===false&&e.gateWaiting===false&&e.heading===q.pose.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===q.pose[k])&&sourcePhase;
   };
   if(closed||!entry||historyRun||entry.nativePending||entry.motionPreparing||!sourceCurrent()||cycle&&!!previous&&!previous.variant.current()||!pipelineAdmission||!bakedIdleBank||!bakedAlertBank||support?.kind!==(cycle?'native-idle-cycle-terrain-support':'native-initial-idle-body-terrain-support')||support.valid?.()!==true||typeof getPickAge!=='function'||signal?.aborted||!entityCurrent())throw Error('Native initial Idle body has no matching pending worker');
-  const stamp=JSON.stringify(entry.entity),controller=new AbortController(),abort=()=>controller.abort(),pending={controller,stage:'loading',[key]:ref};entry.nativePending=pending;signal?.addEventListener('abort',abort,{once:true});let candidate=null,activated=false,finished=false,locked=false;
-  const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&JSON.stringify(entry.entity)===stamp&&entityCurrent()&&support.valid()===true&&sourceCurrent()&&entry.nativeState===(activated?candidate:previous);
+  const entityStamp=()=>{
+   if(!cancelsAction)return JSON.stringify(entry.entity);
+   const {nativeTaskAction,actionRemaining,...owned}=entry.entity;
+   return JSON.stringify({...owned,kind:nativeTaskAction?.kind,duration:nativeTaskAction?.duration});
+  };
+  const stamp=entityStamp(),controller=new AbortController(),abort=()=>controller.abort(),pending={controller,stage:'loading',[key]:ref};entry.nativePending=pending;signal?.addEventListener('abort',abort,{once:true});let candidate=null,activated=false,finished=false,locked=false;
+  const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&entityStamp()===stamp&&entityCurrent()&&support.valid()===true&&sourceCurrent()&&entry.nativeState===(activated?candidate:previous);
   const check=()=>{if(!current())throw new DOMException('Native initial Idle worker changed','AbortError');};
   try{
    await entry.ready;check();
@@ -360,7 +380,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    function restore(){if(activated){if(oldBinding)binding.rollbackActivation();else binding.detach();variant.rollbackActivation();entry.nativeState=previous;entry.motion=oldMotion;entry.motionBinding=oldBinding;activated=false;}}
    function cancel(){if(finished)return false;restore();finished=true;controller.abort();if(entry.nativePending===pending)entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;signal?.removeEventListener('abort',abort);retireNative(candidate);return true;}
    function validateCommit(data){const proof=copyProof(data?.[bindingKey]);if(!valid()||!activated||!covers(proof,ref))throw Error('Native initial Idle body differs from its issued source');return proof;}
-   pending.stage='preparing';pending.cancel=cancel;const part={reused,request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},valid,validateCommit,rollback(){check();restore();},cancel,
+   pending.stage='preparing';pending.cancel=cancel;pending.candidate=candidate;const part={reused,request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},valid,validateCommit,rollback(){check();restore();},cancel,
     retarget(nextSupport,options){check();if(activated)throw Error('Native initial Idle body must be rolled back before retargeting');const result=(cycle?motion.retargetNativeIdleCycle:motion.retargetNativeInitialIdleBody)(nextSupport,options);if(!result)return false;ref=copyRef(nextSupport.reference);picking.reference=ref;support=nextSupport;pending[key]=ref;candidate[key]=ref;candidate.support=support;candidate.start=ref.worldBoundary.effectiveTime;return true;},
     activate(){if(!valid()||activated)throw Error('Native initial Idle activation unavailable');variant.activate();try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}entry.nativeState=candidate;entry.motion=motion;entry.motionBinding=binding;activated=true;},
     finalize(data){const proof=validateCommit(data);candidate[bindingKey]=proof;candidate.start=proof.reference.worldBoundary.effectiveTime;motion.setExecutionEpoch(candidate.start);motion.seal();entry.nativePending=null;if(entry.motionPreparing===pending)entry.motionPreparing=null;finished=true;signal?.removeEventListener('abort',abort);if(previous)retireNative(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}onSelectableChange();}
@@ -594,7 +614,15 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     const bodyOwnerCurrent=()=>!closed&&entries.get(id)===entry&&(template?policyStamp!==null&&policy(entry.entity)===policyStamp:JSON.stringify(entry.entity)===stamp)&&(finalFoot??foot).valid()&&(finalFoot??foot).unchangedBy(view)===true&&(!template||previous.support.valid()&&previous.support.unchangedBy(view)===true),ownerCurrent=()=>bodyOwnerCurrent()&&!entry.nativePending;
     if(!ownerCurrent()||entry.nativeState!==previous||!previous.motion.valid()||!previous.variant.current())throw Error('Native stopped worker changed during preparation');
     const selector=template?{kind:codec.stoppedBodyKind,version:1,stop:template,actorId:reference.nativeRoute.actorId}:null;
-    const motion=(template?previous.motion.prepareStopped:previous.motion.prepareSuspended)({reference:selector??reference,nativePose:pose,height:foot.point.height,isCurrent:()=>bodyOwnerCurrent()&&(entry.nativeState===previous||entry.nativeState===candidate||entry.nativeState===entry.nativePending?.candidate&&(nativeHomeRequestContinuesHeldWorker(entry.nativePending?.nativeHome?.sourceRequest,candidate?.nativeHeldTaskRoute??candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||taskStartContinuesHeldWorker(entry.nativePending?.candidate?.packet,candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||nativeFarmArrivalContinuesHeld(entry.nativePending?.nativeFarmArrival,candidate?.nativeHeldFarmArrival))),...(template?{getProjection:()=>getStoppedProjection(selector,previous.motion.clockEpoch)}:{})});let variant,binding;
+    const handingOff=()=>{
+     const pending=entry.nativePending;
+     return !!pending&&entry.nativeState===pending.candidate&&(
+      nativeHomeRequestContinuesHeldWorker(pending.nativeHome?.sourceRequest,candidate?.nativeHeldTaskRoute??candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||
+      taskStartContinuesHeldWorker(pending.candidate?.packet,candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival)||
+      nativeFarmArrivalContinuesHeld(pending.nativeFarmArrival,candidate?.nativeHeldFarmArrival)||
+      nativeTaskCancellationMatchesHeldRoute(pending.nativeInitialIdleBody?.cancellationSource,candidate?.nativeHeldTaskRoute,candidate?.suspended?.resumeGeneration));
+    };
+    const motion=(template?previous.motion.prepareStopped:previous.motion.prepareSuspended)({reference:selector??reference,nativePose:pose,height:foot.point.height,isCurrent:()=>bodyOwnerCurrent()&&(entry.nativeState===previous||entry.nativeState===candidate||handingOff()),...(template?{getProjection:()=>getStoppedProjection(selector,previous.motion.clockEpoch)}:{})});let variant,binding;
     try{const pickTime=()=>template?getStoppedProjection(selector,motion.clockEpoch).at:getPickTime(reference,motion.clockEpoch),phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip:()=>carrying?'Carry_Crate':'Idle',sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration)};
      variant=entry.actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':entry.actor.isBakedIdle?.()?'Idle':null});binding=previous.binding.prepareReplacement({motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)});
      candidate={...previous,motion,variant,binding,support:foot,...(template?{nativeStopped:selector}:{}),suspended:reference,start:reference.suspendedAt,end:Number.MAX_SAFE_INTEGER,preparedIdle:!carrying,gateParticipants:[]};

@@ -182,12 +182,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
    try{return prepareStructurePlacement(game,structure,nav);}finally{nav.withCenterPreview=original;}
   }
   let nativeStructurePreparation=null,nativeStructureFailure=null;
-  const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:{kind:command.kind,id:command.id,structure:command.structure});
+  const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:
+    command.kind==='bless'?{kind:command.kind,id:command.id,targetId:command.targetId}:{kind:command.kind,id:command.id,structure:command.structure});
   function nativeBlessingWorkers(targetId){
     if(!nativeBodies)return [];
     const tasks=new Set(game.tasks.filter(task=>task.targetId===targetId&&task.workerId).map(task=>task.id));
     return game.workers.filter(worker=>tasks.has(worker.taskId)&&nativeBodies.id(worker.id)!==undefined&&
       ['pending-resources','native-task','pending-action-resources','native-action'].includes(worker.nativeRouteAdmission));
+  }
+  function quoteBlessing(command){
+    if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
+    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return {duplicate:true};
+    if(!permission(game,'awakening'))return {rejection:'Esta acción no está disponible ahora'};
+    const draft=previewBlessing(game,command.targetId);
+    if(!draft.valid)return {rejection:draft.reason};
+    const a=awakeningState(game);
+    return a.enabled===false||a.progress<AWAKENINGS.maximum?{rejection:'El Despertar todavía está recargando.'}:{};
   }
   // Once a native world is acquired, ordinary eager loading cannot publish a
   // new region without its prepared resource receipt. Leave cold admission
@@ -232,6 +242,43 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const scale=gateScale(entity),gate={entityId:entity.id,modelId,x:entity.x,z:entity.z,yaw:entity.yaw??0,sx:scale*(entity.baseScaleX??1),sz:scale};
     return {quoted,gate,signature:JSON.stringify({entity,gate,cost:plan.cost,suppression:plan.suppression})};
   }
+  const nativeCommandOwnerCurrent=owner=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&
+    owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
+
+  function prepareNativeCommandCommit(owner,operation,{label,rejection}){
+    return new Promise((ready,reject)=>{
+      let commitReady;
+      owner.commitReady=new Promise(resolve=>{commitReady=resolve;});
+      const retain=async(handle,signal)=>{
+        try{
+          // Keep READY resources retained until the existing authority FIFO
+          // admits this command and the consumer reaches its mutation boundary.
+          await new Promise((resolve,cancel)=>{
+            const cleanup=()=>{signal.removeEventListener('abort',abort);owner.enterCommit=null;};
+            const abort=()=>{cleanup();cancel(new DOMException(`${label} cancelled`,'AbortError'));};
+            owner.enterCommit=()=>{cleanup();resolve();};
+            signal.addEventListener('abort',abort,{once:true});
+            if(signal.aborted){abort();return;}
+            owner.ready=true;ready({version:1});
+          });
+          return handle;
+        }catch(error){handle.abort();throw error;}
+      };
+      const atCommitBoundary=consume=>new Promise((resolve,retire)=>{
+        if(!nativeCommandOwnerCurrent(owner)){retire(Error(`${label} owner retired`));return;}
+        owner.consume=()=>{if(!owner.consume)throw Error(`${label} already consumed`);owner.consume=null;owner.consumed=true;try{return consume();}finally{resolve();}};
+        owner.commitBoundarySettled=true;commitReady();
+      });
+      owner.completion=operation({retain,atCommitBoundary});
+      owner.completion.then(result=>{
+        if(result.status==='committed-control-failed'){nativeStructureFailure=Error(`${label} ${result.status}: ${result.error}`);onNativeIntentControlError?.(nativeStructureFailure);}
+        if(!owner.ready)reject(Error(`${label} preparation ${result.status}`+(result.error?`: ${result.error}`:'')));
+        else if(!owner.consume&&!owner.consumed)owner.rejection=`${rejection}: ${result.status}`;
+        owner.commitBoundarySettled=true;commitReady();
+      },error=>{reject(error);owner.failure=error;commitReady();});
+    });
+  }
+
   function prepareNativeBarrierCommit(owner){
     // The preceding stop projected a held Game owner and queued its existing
     // planning notice. Flush that consequence before capturing a new proposal;
@@ -241,10 +288,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     if(!first)throw Error('Native construction requires an unchanged resident addition quote');
     const resources=owner.resources,manifest=getTerrainManifest?.(),minSequence=sequence;
     if(!resources||!manifest)throw Error('Native solid wall preparation lacks its resource owner');
-    const validOwner=()=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!owner.control.status().closed&&owner.resources.status().phase==='running';
     let current=first,lastQuoteSequence=sequence,lastQuoteTime=game.elapsed;
     const validate=()=>{
-      if(!validOwner())return false;
+      if(!nativeCommandOwnerCurrent(owner))return false;
       if(lastQuoteSequence!==sequence||lastQuoteTime!==game.elapsed){
         const next=nativeStructureQuote(quoteStructureCommand(owner.command,[]));
         if(!next||next.signature!==first.signature)return false;
@@ -252,33 +298,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       }
       return true;
     };
-    return new Promise((ready,reject)=>{
-      let commitReady;owner.commitReady=new Promise(resolve=>{commitReady=resolve;});
-      owner.completion=planner.addNativeBarriersAfterGpuQuiescence({...(first.gate?{gate:first.gate}:{additions:first.additions}),getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
+    return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>
+      planner.addNativeBarriersAfterGpuQuiescence({...(first.gate?{gate:first.gate}:{additions:first.additions}),getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,
         prepareResources:async({resources:proposal,signal})=>{
           const plan=first.quoted.plan,gate=proposal.nativeBarrierAddition.gate;
           if(gate&&Object.entries(first.gate).some(([key,value])=>gate[key]!==value))throw Error('Native gate preparation changed the placement quote');
           const entities=gate?[{...plan.entity,gateOpen:gate.opening}]:plan.pieces;
           const handle=await resources.prepareNativeBarrierAdditionResources(proposal,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:structuredClone(entities)});
-          try{
-            // Graphics are ready, but the command has not reached the FIFO head.
-            // Keep the existing resource transaction before GPU quiescence.
-            await new Promise((resolve,reject)=>{
-              const cleanup=()=>{signal.removeEventListener('abort',abort);owner.enterCommit=null;};
-              const abort=()=>{cleanup();reject(new DOMException('Native wall command cancelled','AbortError'));};
-              owner.enterCommit=()=>{cleanup();resolve();};
-              signal.addEventListener('abort',abort,{once:true});
-              if(signal.aborted){abort();return;}
-              owner.ready=true;ready({version:1});
-            });
-            return handle;
-          }catch(error){handle.abort();throw error;}
+          return retain(handle,signal);
         },
-        atCommitBoundary:consume=>new Promise(resolve=>{
-          if(!validOwner()){reject(Error('Native wall command owner retired'));return;}
-          owner.consume=()=>{const run=owner.consume;if(!run)throw Error('Native wall command already consumed');owner.consume=null;owner.consumed=true;try{return consume();}finally{resolve();}};
-          owner.commitBoundarySettled=true;commitReady();
-        }),
+        atCommitBoundary,
         project:proof=>{
           // Check the native result before charging, but apply the mirror only
           // at Game's normal nav.setState seam, after quote validation.
@@ -298,20 +327,60 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
               buildWallChain(game,owner.command.id,owner.command.material,owner.command.points,nav,{...quoted.options,preparedPlan:plan});
             return placed===true&&adopted;
           }finally{nav.setState=original;}
-        }});
-      owner.completion.then(result=>{
-        if(result.status==='committed-control-failed'){nativeStructureFailure=Error('Native wall command '+result.status+': '+result.error);onNativeIntentControlError?.(nativeStructureFailure);}
-        if(!owner.ready)reject(Error('Native wall preparation '+result.status+(result.error?': '+result.error:'')));
-        else if(!owner.consume&&!owner.consumed)owner.rejection='La construcción cambió durante su preparación: '+result.status;
-        owner.commitBoundarySettled=true;commitReady();
-      },error=>{reject(error);owner.failure=error;commitReady();});
-    });
+        }}),{label:'Native wall',rejection:'La construcción cambió durante su preparación'});
+  }
+
+  async function prepareNativeBlessingCommand(owner){
+    const command=owner.command,quote=quoteBlessing(command),workers=quote.rejection||quote.duplicate?[]:nativeBlessingWorkers(command.targetId);
+    const worker=workers[0],task=game.tasks.find(item=>item.id===worker?.taskId);
+    const taskMarkers=['pending-resources','native-task','native-action'];
+    if(workers.length!==1||!taskMarkers.includes(worker.nativeRouteAdmission)||!['initial','water'].includes(task?.kind)||!planner.nativeTaskCancellationSupported()){
+      owner.ready=true;return {version:1};
+    }
+    owner.receipt=await nativeProduction?.quiesce({cancelTask:{actorId:worker.id,taskId:task.id}})??null;
+    const manifest=getTerrainManifest?.();
+    const valid=()=>{
+      if(!nativeCommandOwnerCurrent(owner)||worker.taskId!==task.id||!taskMarkers.includes(worker.nativeRouteAdmission)||task.workerId!==worker.id||
+        !game.tasks.includes(task)||nativeBlessingWorkers(command.targetId).length!==1)return false;
+      const current=quoteBlessing(command);
+      return !current.rejection&&!current.duplicate;
+    };
+    if(!valid()||!manifest){owner.ready=true;return {version:1};}
+    if(worker.nativeRouteAdmission==='pending-resources'){
+      const request=planner.pendingTaskRoute(worker.id);
+      owner.ready=true;
+      if(request)owner.consume=()=>{
+        owner.consume=null;owner.consumed=true;
+        const accepted=valid()&&planner.cancelNativePendingTaskForBlessing(game,worker,request,()=>bless(game,command.id,command.targetId));
+        return {status:accepted?'committed':'stale'};
+      };
+      return {version:1};
+    }
+    if(!planner.nativeTaskCancellationSource(worker.id)&&worker.nativeRouteAdmission==='native-task'){
+      const minSequence=sequence;
+      const stopped=await planner.stopNativeTaskRouteAfterGpuQuiescence({actorId:worker.id,getPublication:()=>nativeIntentControl,
+        signal:owner.controller.signal,prepareResources:({resources,signal})=>owner.resources.prepareNativeGateResources(resources,{signal,minSequence,terrainManifest:manifest})});
+      if(stopped.status==='committed-control-failed'){
+        nativeStructureFailure=Error(`Native Awakening stop ${stopped.status}: ${stopped.error}`);onNativeIntentControlError?.(nativeStructureFailure);throw nativeStructureFailure;
+      }
+      if(stopped.status==='committed')planner.projectNativeTaskExecution(game,worker);
+      // A moving source may reach its true endpoint while Stop25 prepares.
+      // Use that actual arrival only when WASM can still attest its owner.
+      if(!valid()||!planner.nativeTaskCancellationSource(worker.id)){owner.ready=true;return {version:1};}
+    }
+    const minSequence=sequence;
+    return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>planner.startNativeInitialIdleBodyAfterGpuQuiescence({actorId:worker.id,
+      getPublication:()=>nativeIntentControl,signal:owner.controller.signal,atCommitBoundary,
+      cancelTask:{valid,project:()=>bless(game,command.id,command.targetId)},
+      prepareResources:async({resources,signal,deferredStart})=>retain(await owner.resources.prepareNativeInitialIdleBodyResources(resources,{signal,minSequence,terrainManifest:manifest,deferredStart}),signal)
+    }),{label:'Native Awakening',rejection:'El cultivo cambió durante la preparación del Despertar'});
   }
 
   async function prepareNativeStructureCommand(command){
     if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
     const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
     try{
+      if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
       // Dispatch is held; authority commands and native execution keep running.
       owner.receipt=await nativeProduction?.quiesce()??null;
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
@@ -352,7 +421,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Called by the existing authority Worker only after this command reaches
   // the runtime/client FIFO head. No purchase or sequence is consumed here.
   async function beginNativeStructureCommand(command){
-    if(!command||!['buildWallChain','placeStructure'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
+    if(!command||!['buildWallChain','placeStructure','bless'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
     const owner=nativeStructurePreparation;
     if(owner?.commandSequence!==undefined)throw Error('Native structure command already entered');
     if(!owner?.ready||owner.identity!==structureIdentity(command)||!owner.enterCommit)return;
@@ -554,11 +623,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }else if(command.kind==='previewBlessing'){
      if(typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing preview target');value=previewBlessing(game,command.targetId);
     }else if(command.kind==='bless'){
-     if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid blessing command');
-     const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id);
-     if(!duplicate){if(!permission(game,'awakening'))rejection='Esta acción no está disponible ahora';else{const draft=previewBlessing(game,command.targetId);if(!draft.valid)rejection=draft.reason;else{const a=awakeningState(game);if(a.enabled===false||a.progress<AWAKENINGS.maximum)rejection='El Despertar todavía está recargando.';}}}
-     if(!rejection&&!duplicate&&nativeBlessingWorkers(command.targetId).length)rejection='El Despertar necesita preparar el relevo del trabajador asignado.';
-     value=rejection?false:bless(game,command.id,command.targetId);
+     const quote=quoteBlessing(command),owner=nativeStructurePreparation;
+     rejection=quote.rejection??null;
+     if(!rejection&&!quote.duplicate&&nativeBlessingWorkers(command.targetId).length){
+      if(owner?.identity===structureIdentity(command)&&nativeCommandOwnerCurrent(owner)&&owner.consume){
+       const result=owner.consume();if(result.status==='committed-control-failed')throw Error(result.error);
+       value=result.status==='committed';if(!value)rejection='El cultivo cambió durante la preparación del Despertar.';
+      }else{value=false;rejection='El Despertar necesita preparar el relevo del trabajador asignado.';}
+     }else value=rejection?false:bless(game,command.id,command.targetId);
     }else if(command.kind==='harvest'||command.kind==='requestRepair'){
      if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid farm command');
      try{(command.kind==='harvest'?validateHarvest:validateRepair)(game,command.targetId);}catch(error){rejection=error.message;}

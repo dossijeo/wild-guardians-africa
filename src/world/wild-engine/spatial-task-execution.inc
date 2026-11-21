@@ -15,7 +15,9 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
    if(found==s.activeIntents.end()||found->second.slot!=slot)return -1;
    const auto& intent=found->second;
    const bool stoppedTaskHome=intent.homeRequest&&intent.homeRequest->stoppedTaskSourceSequence&&nativeHomeRequestBodyCurrent(s,intent);
-   if(!stoppedTaskHome&&!nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)&&
+   NativeTaskCancellationSource heldTask;
+   const bool stoppedTaskIdle=captureTaskCancellationSource(s,intent,heldTask)&&heldTask.values[1]==25;
+   if(!stoppedTaskHome&&!stoppedTaskIdle&&!nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)&&
       !nativeHeldFarmArrivalBodyCurrent(s,intent))return -1;
  }
  for(const auto& [actor,intent]:s.activeIntents){
