@@ -166,5 +166,46 @@
       "drained": true,
       "gpuErrors": 0
     }
-  ]
+  ],
+  "allocationControl": {
+    "base": "f8cac49e71e02fe14d4f852a48399d55a5f10fcb",
+    "workingChanges": "Damaged-gate candidate present. Purchased gate was healthy.",
+    "material": "empalizada",
+    "sha256": "895d6ed14e514aaf8b83164acd3bde66029a12d50f63c41b66c92d6b4af90fe4",
+    "targetIntervalMs": 16.666666666666668,
+    "liveHandles": [
+      2419,
+      2486
+    ],
+    "producerObjectsCreated": [
+      2499,
+      2538
+    ],
+    "producerBytesWritten": [
+      52828576,
+      52863652
+    ],
+    "visibleMeshBufferIds": {
+      "before": 795,
+      "after": 799,
+      "retained": 795
+    },
+    "factoryDelta": {
+      "createBuffer": 11,
+      "createTexture": 2,
+      "createSampler": 2,
+      "createBindGroup": 16,
+      "createBindGroupLayout": 4,
+      "createPipelineLayout": 2,
+      "createShaderModule": 0,
+      "createRenderPipeline": 0,
+      "createRenderPipelineAsync": 2,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "actorRoot": 617,
+    "workerMeshes": 32,
+    "firstTicketDrawMs": 33.300048828125,
+    "peakIntervalMs": 34.5
+  }
 }
