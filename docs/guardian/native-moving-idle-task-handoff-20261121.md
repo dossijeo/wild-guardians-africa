@@ -17,6 +17,8 @@ Antes del ajuste, Plant y Water abortaban al confirmar una asignación sobre un 
 
 Ambas ejecuciones usaron `youngMale`, arranque en frío, Edge con NVIDIA Turing y 640×480 a 30 Hz. El primer envío de cada relevo midió 33,5 y 33,4 ms de intervalo en el Host. La única diferencia entre el puente usado para Plant y la revisión integrada está en el ancla de REST21 al completar un paseo. Water ejecutó esa rama con el puente exacto de la integración. Los recibos conservan los hashes, el ancla, la cancelación, las geometrías y los tickets. C4 a 60 Hz y el timeout intermitente del arranque frío siguen abiertos. [Recibos físicos](performance/native-watering-idle-20261120/moving-idle-crop-task-handoff.json).
 
+Las dos órdenes también completaron el recorrido en NVIDIA Turing con `olderFemale`. En ambos casos Stop12 adquirió el cuerpo 1 y precedió a Task14, Action15 e Idle20. Se conservaron las 33 geometrías de cada actor y se verificó el drenaje. Los primeros dibujos de Stop12 llegaron a los 33,2 ms en Plant y 33,3 ms en Water a 30 Hz. En el arranque de Plant, dos repeticiones previas a cualquier ticket separaron dibujos por 41,1 y 40,9 ms. Los envíos duraron 0,2 ms en ambos casos y la causa queda abierta. [Recibos de olderFemale](performance/native-watering-idle-20261120/moving-idle-older-female-20261121.json).
+
 ## Pruebas dirigidas
 
 ```powershell

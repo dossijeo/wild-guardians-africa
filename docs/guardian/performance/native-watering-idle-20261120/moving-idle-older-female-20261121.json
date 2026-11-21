@@ -1,0 +1,250 @@
+{
+  "source": "Rama a6a00d3dfb808803ff304f5eca8d7f20f3a9283c; dos ejecuciones del Worker/Surface WebGPU en NVIDIA Turing con binario público intacto. Durante la validación había lectura opcional del candidato de cancelación sin exports en el WASM público.",
+  "cases": [
+    {
+      "profile": "olderFemale",
+      "action": "initial",
+      "trigger": {
+        "kind": "CropPlaced",
+        "targetId": "plant-1000001",
+        "sequence": 276,
+        "position": {
+          "time": 202.75000000000063,
+          "elapsed": 12.749999999999941,
+          "x": -17.990918830920364,
+          "z": 0.009081169079635909,
+          "admission": "native-idle-stroll",
+          "status": "idle",
+          "sequence": 276
+        }
+      },
+      "receiptSha256": "5a57aeb045ace44697995d53a2e6feef31238b8f1f0408a0ffc913094e5c0952",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 671,
+      "retainedGeometryOwners": 33,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        2918,
+        3045,
+        3518
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795254829906.8,
+          "sequence": 35,
+          "ticket": 8,
+          "intervalMs": 33.199951171875,
+          "drawMs": 3.800048828125,
+          "trigger": "raf",
+          "replay": false
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795254818247.8,
+          "sequence": 3,
+          "ticket": null,
+          "intervalMs": 41.10009765625,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254819981.1,
+          "sequence": 12,
+          "ticket": null,
+          "intervalMs": 40.900146484375,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254815743.1,
+          "sequence": 2,
+          "ticket": null,
+          "intervalMs": 36.400146484375,
+          "drawMs": 0.39990234375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254827441.8,
+          "sequence": 25,
+          "ticket": 4,
+          "intervalMs": 35,
+          "drawMs": 2.10009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254818310.3,
+          "sequence": 3,
+          "ticket": null,
+          "intervalMs": 34.89990234375,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254829774.9001,
+          "sequence": 33,
+          "ticket": 6,
+          "intervalMs": 34.800048828125,
+          "drawMs": 2.599853515625,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000001",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    },
+    {
+      "profile": "olderFemale",
+      "action": "water",
+      "trigger": {
+        "waterSlot": "future"
+      },
+      "receiptSha256": "c67f44c7578c983e09f1a52d6185839e520e161a05ce57e3b51eebe8332cded7",
+      "acquisitions": [
+        {
+          "family": "Idle22",
+          "ticket": 6,
+          "bodyId": 1
+        },
+        {
+          "family": "Stop12",
+          "ticket": 8,
+          "bodyId": 1
+        },
+        {
+          "family": "Task14",
+          "ticket": 10,
+          "bodyId": 1
+        },
+        {
+          "family": "Action15",
+          "ticket": 12,
+          "bodyId": 1
+        },
+        {
+          "family": "Idle20",
+          "ticket": 14,
+          "bodyId": 1
+        }
+      ],
+      "bodyId": 1,
+      "actorRoot": 667,
+      "retainedGeometryOwners": 33,
+      "presentedStroll": true,
+      "presentedHandoff": true,
+      "consumerResourceCounts": [
+        2934,
+        3242,
+        3558
+      ],
+      "firstHandoffSamples": [
+        {
+          "at": 1795254903473.8,
+          "sequence": 45,
+          "ticket": 8,
+          "intervalMs": 33.300048828125,
+          "drawMs": 4.199951171875,
+          "trigger": "raf",
+          "replay": false
+        }
+      ],
+      "observedHandoffPeakIntervals": [
+        {
+          "at": 1795254901977,
+          "sequence": 33,
+          "ticket": 6,
+          "intervalMs": 36.39990234375,
+          "drawMs": 1.60009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254901775.7,
+          "sequence": 31,
+          "ticket": 6,
+          "intervalMs": 35.300048828125,
+          "drawMs": 1.60009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254901875.6,
+          "sequence": 32,
+          "ticket": 6,
+          "intervalMs": 35.2001953125,
+          "drawMs": 1.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254897808.9,
+          "sequence": 20,
+          "ticket": null,
+          "intervalMs": 35.099853515625,
+          "drawMs": 1.10009765625,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254901242,
+          "sequence": 28,
+          "ticket": 4,
+          "intervalMs": 34.800048828125,
+          "drawMs": 1.800048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795254901675.2,
+          "sequence": 30,
+          "ticket": 6,
+          "intervalMs": 34.800048828125,
+          "drawMs": 1.400146484375,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "waterEvent": {
+        "targetId": "plant-1000000",
+        "type": "WaterSatisfied"
+      },
+      "drained": true
+    }
+  ]
+}
