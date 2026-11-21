@@ -11,3 +11,5 @@ Las dos pruebas usan WASM, la geometría y las animaciones del proyecto, y una s
 Quedan conectar el disparo al fin de turno ordinario, cubrir el relevo con motores de puerta y validar el recorrido y su cadencia en GPU física. A6, la integración y C4 siguen abiertos.
 
 En el original, Home rechazaba el trabajador detenido por falta de una fuente gráfica de Task25. La selección final pasó 483 pruebas en 36 archivos y la compilación de producto terminó correctamente. [Evidencia de validación](performance/native-task-stop-home-graphics-20261120/manifest.json).
+
+El 21 de noviembre se reprodujo el disparo pendiente desde una orden ordinaria de Harvest. La autoridad WASM, con los puertos reales y un Host simulado, adquirió Task14 a la hora de juego 249,60 sobre el cuerpo 1. El trabajador avanzó siete pasos hasta 249,95. El siguiente avance, al vencer el turno a 250, rechazó `unsupported return boundary`. El registro solo contiene Idle20 y Task14 adquiridos. Esta captura fija el caso de partida para conectar Task25 y después Home18 y se remitió a Astra. [Reproducción de autoridad](performance/native-task-stop-home-graphics-20261120/ordinary-shift-expiry.json).

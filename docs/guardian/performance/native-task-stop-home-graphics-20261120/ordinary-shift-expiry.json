@@ -1,0 +1,75 @@
+{
+  "profile": "youngMale",
+  "end": 250,
+  "actor": "worker-900011",
+  "bodyId": 1,
+  "first": {
+    "time": 249.60000000000002,
+    "elapsed": 10.149999999999997,
+    "x": -17.838183766184073,
+    "z": 0.1618162338159272
+  },
+  "steps": [
+    {
+      "time": 249.65000000000003,
+      "elapsed": 10.199999999999996,
+      "x": -17.876367532368146,
+      "z": 0.12363246763185436,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.70000000000005,
+      "elapsed": 10.249999999999995,
+      "x": -17.91455129855222,
+      "z": 0.08544870144778152,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.75000000000006,
+      "elapsed": 10.299999999999994,
+      "x": -17.95273506473629,
+      "z": 0.0472649352637087,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.80000000000007,
+      "elapsed": 10.349999999999993,
+      "x": -17.990918830920364,
+      "z": 0.009081169079635909,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.85000000000008,
+      "elapsed": 10.399999999999991,
+      "x": -17.958842712474624,
+      "z": 0,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.9000000000001,
+      "elapsed": 10.44999999999999,
+      "x": -17.904842712474625,
+      "z": 0,
+      "admission": "native-task"
+    },
+    {
+      "time": 249.9500000000001,
+      "elapsed": 10.49999999999999,
+      "x": -17.850842712474627,
+      "z": 0,
+      "admission": "native-task"
+    }
+  ],
+  "rejection": "Error: Native task game cohort reached an unsupported return boundary\n    at tick (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/game.js:1949:200)\n    at advanceReal (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/game.js:2009:44)\n    at Object.execute (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/src/simulation/simulation-authority.js:250:104)\n    at Object.advance (file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/tests/helpers/native-production-authority.js:40:52)\n    at file:///C:/Users/Gabriel/source/repos/wild-guardians-africa/.cache/native-task-shift-end-ordinary.mjs:26:21",
+  "records": [
+    {
+      "kind": "initial-idle-body",
+      "committed": true
+    },
+    {
+      "kind": "task-start",
+      "committed": true
+    }
+  ],
+  "faults": []
+}
