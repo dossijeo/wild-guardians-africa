@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El arranque en frío ya dibuja Idle20 en NVIDIA para los cuatro perfiles. Surface prioriza el terreno de la publicación causal y el roster espera la instalación efectiva de Walk sobre el mismo actor. Plant y Water también completaron el riego desde ese arranque con youngMale, conservando cuerpo, raíz y 36 propietarios de geometría. Queda Plant durante Idle22 en marcha. [Validación y recibos](native-idle-walk-handoff-20261121.md).
+
 Una colocación de centro conservó en NVIDIA Turing los propietarios de 173 regiones y sus 582 pares de vegetación lejana. La revisión nativa siguió en 3 y no hubo nuevas ofertas ni altas de atributos en esos lotes. Surface conserva la invalidación por terreno o cambio de revisión y las supresiones selectivas. [Corrección y prueba física](far-structure-revision-retention-20261121.md).
 
 La parada de Farm antes de Build conserva ahora los 34 propietarios de vegetación lejana y sus 58 pares en NVIDIA Turing. Su recibo conserva la misma revisión y llega con `terrainChanged:false`. Tanto el muro como el nuevo corredor adquieren sus paquetes sin invalidar globalmente la vegetación. [Prueba de identidad](performance/native-build-active-farm-20261120/far-body-stop-retention.json).
@@ -8,7 +10,7 @@ Build de muros sólidos residentes ya pasó en NVIDIA Turing con Farm en marcha.
 
 La compra de muros residentes ya entra en la pausa GPU desde la cabeza de la cola de autoridad. En dos cruces NVIDIA la pausa bajó de 45,5 a 23,1 ms, con la cotización fuera y cero oportunidades de dibujo omitidas a 30 Hz. C4 sigue abierto a 60 Hz. [Mediciones y alcance](native-build-fifo-head-handoff-20261121.md).
 
-El fin de turno de Task usa la parada25, Home18 y la retirada19. La espera de la parada conserva la tarea y el cuerpo en movimiento. Los cuatro perfiles completaron el recorrido en NVIDIA, tres sobre el checkout y uno con el adaptador candidato. Quedan la llegada durante la parada pendiente, las puertas y el arranque Idle20 intermitente. [Pruebas y límites](native-task-return-adapter-20261121.md).
+El fin de turno de Task usa la parada25, Home18 y la retirada19. La espera de la parada conserva la tarea y el cuerpo en movimiento. Los cuatro perfiles completaron el recorrido en NVIDIA, tres sobre el checkout y uno con el adaptador candidato. Quedan las puertas y las adversidades de esta familia. [Pruebas y límites](native-task-return-adapter-20261121.md).
 
 Task ya transfiere su pose terminal a Home desde el mismo cuerpo si llega mientras READY25 está pendiente. La prueba física confirma que se ignora la respuesta tardía, se conservan el actor y la geometría y el cultivo queda intacto. Un paquete ordinario tardío después de Home19 se retira si quedó por detrás del reloj presentado. La regrabación conserva los recursos del mismo mundo. El control dirigido reproduce la antigua carrera desde Harvest y los dos perfiles probados tras el ajuste completan el dibujo y el drenaje en NVIDIA. [Relevo de Task](native-task-completed-home-handoff-20261121.md) · [Continuidad después de Home19](native-post-home-clock-handoff-20261121.md).
 

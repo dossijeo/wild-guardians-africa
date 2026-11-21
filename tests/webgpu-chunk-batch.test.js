@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {Group,Scene,Mesh} from 'three';
+import {Group,Scene,Mesh,PerspectiveCamera} from 'three';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {createChunkPublicationCoordinator} from '../src/rendering/webgpu-chunk-publication.js';
 
-function fixture(){
- const calls=[],errors=[],scene=new Scene();let valid=true,validations=0;const admission={prepareManyAndPublish(){throw Error('unexpected');},async prepareTicket(){return {valid:()=>{validations++;return valid;}};}},coordinator=createChunkPublicationCoordinator({admission,onError:error=>errors.push(error.message)});
+function fixture({admission:providedAdmission,scene:providedScene}={}){
+ const calls=[],errors=[],scene=providedScene??new Scene();let valid=true,validations=0;const admission=providedAdmission??{prepareManyAndPublish(){throw Error('unexpected');},async prepareTicket(){return {valid:()=>{validations++;return valid;}};}},coordinator=createChunkPublicationCoordinator({admission,onError:error=>errors.push(error.message)});
  function part(key,side,extra={}){const controller=new AbortController(),name=key+':'+side,object=new Group();return {key,side,epoch:'e',revision:1,publicationOrder:1,object,signal:controller.signal,eventRoots(){return [object];},activate(){calls.push('activate '+name);return true;},attach(){calls.push('attach '+name);},rollback(){calls.push('rollback '+name);},finalize(){calls.push('finalize '+name);return {retire:()=>calls.push('retire '+name),notify:()=>calls.push('notify '+name)};},rollbackFinalized(){calls.push('undo '+name);},cancel(){calls.push('cancel '+name);},...extra};}
  return {coordinator,calls,errors,scene,part,get validations(){return validations;},invalidate(){valid=false;}};
 }
@@ -106,4 +107,31 @@ test('cancellation during a reversible phase stops before calling another partic
   const batch=await f.coordinator.prepareBatch(parts,{scene:f.scene,signal:controller.signal});assert.throws(()=>batch.commit(),/stale/);
   assert.deepEqual(f.calls,['activate terrain','cancel 0,0:biome','cancel 0,0:terrain']);
  }finally{f.coordinator.dispose();}
+});
+
+for(const outcome of ['commit','abort'])test(`confirmed terrain batch bypasses queued ordinary preparation with bounded fairness and ${outcome}`,async()=>{
+ const scene=new Scene(),camera=new PerspectiveCamera(),started=[],finishes=[],pending=[];
+ const renderer={backend:{isWebGPUBackend:true},compileAsync(object){started.push(object.name);return new Promise(resolve=>finishes.push(resolve));}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),f=fixture({admission,scene}),controller=new AbortController(),turn=()=>new Promise(resolve=>setImmediate(resolve));
+ const submit=(name)=>{const object=new Group();object.name=name;const promise=admission.prepare(object);promise.catch(()=>{});pending.push(promise);};
+ let batchPromise,batch;
+ try{
+  submit('normal0');await turn();for(let i=1;i<12;i++)submit('normal'+i);
+  const parts=['0,0','1,0'].flatMap(key=>['terrain','biome'].map(side=>f.part(key,side))),dependent=f.part('actor','dependent',{valid:()=>true});
+  for(const p of [...parts,dependent]){p.object.name=p.key+':'+p.side;const attach=p.attach,rollback=p.rollback;p.attach=()=>{scene.add(p.object);attach();};p.rollback=()=>{p.object.removeFromParent();rollback();};}
+  batchPromise=f.coordinator.prepareBatch(parts,{scene:f.scene,signal:controller.signal,dependents:[dependent]});batchPromise.catch(()=>{});
+  await turn();assert.deepEqual(started,['normal0'],'the inflight compile is not interrupted');assert.deepEqual(f.calls,[]);
+  finishes.shift()();await turn();assert.equal(started[1],'0,0:terrain','the required terrain must not wait behind the ordinary backlog');
+  if(outcome==='abort'){controller.abort();await assert.rejects(batchPromise,{name:'AbortError'});assert.equal(f.calls.filter(c=>c.startsWith('cancel ')).length,5);assert.equal(f.calls.some(c=>c.startsWith('activate ')),false);}
+  // Advance controlled compilations, not wall-clock deadlines or a fake GPU.
+  for(let i=0;i<30&&(finishes.length||admission.status().queued);i++){finishes.shift()?.();await turn();}
+  await Promise.all(pending);
+  const normal=started.filter(n=>n.startsWith('normal'));assert.deepEqual(normal,Array.from({length:12},(_,i)=>'normal'+i));
+  if(outcome==='commit'){
+   batch=await batchPromise;assert.deepEqual(f.calls,[]);assert(batch.valid());batch.commit();assert.equal(f.calls.filter(c=>c.startsWith('finalize ')).length,5);
+   assert.deepEqual(started.filter(n=>!n.startsWith('normal')),['0,0:terrain','0,0:biome','1,0:terrain','1,0:biome','actor:dependent']);
+   assert(started.indexOf('1,0:biome')<started.indexOf('normal11'),'publication completes before the unrelated backlog drains');
+   let burst=0;for(const name of started){if(name.startsWith('normal'))burst=0;else{burst++;assert(burst<=2,'ordinary jobs retain the existing fairness turn');}}
+  }else assert.deepEqual(started.filter(n=>!n.startsWith('normal')),['0,0:terrain']);
+  assert.deepEqual(f.errors,[]);
+ }finally{controller.abort();finishes.forEach(finish=>finish());f.coordinator.dispose();admission.dispose();await Promise.allSettled([...pending,...(batchPromise?[batchPromise]:[])]);}
 });
