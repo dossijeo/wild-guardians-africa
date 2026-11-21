@@ -16,6 +16,8 @@ Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpo
 
 Stop24 detiene al trabajador después del vano de zarzas cuando el diario nativo de motores está vacío. En NVIDIA conservó el cuerpo 1, ambos trabajadores, el reloj del portón y 798 referencias de buffer residentes. El ticket definitivo se dibujó y el consumidor drenó con cero errores. La oportunidad registrada como `stale-binding` dejó un intervalo de 66,6 ms a 30 Hz y C4 sigue abierto. [Validación de Stop24](native-farm-stop-historical-gate-retention-20261121.md).
 
+Dos trabajadores cruzaron en sentidos opuestos por el mismo vano de zarzas en NVIDIA cuando quedó libre la salida. Conservaron los cuerpos 1 y 2, las raíces y 779 buffers residentes. El control con el primer destino en el corredor mantuvo al segundo trabajador en espera aunque su ruta individual cruzaba. Quedan el egreso ocupado y C4. [Cruce inverso y controles](native-farm-gate-aperture-20261121.md#dos-trabajadores-en-sentidos-opuestos).
+
 Al prolongar la prueba de tráfico en WASM, el primer trabajador se quedó en Action15 y el segundo en el extremo de Farm. El productor alternó dos intentos bloqueados. El mismo cultivo se cosechó y se entregó con un solo trabajador. [Control de la cohorte](performance/native-ordinary-farm-gate-traffic-20261121.json).
 
 Farm cruzó también los portones alineados de empalizada y reforzado en NVIDIA. Cada cruce conservó el mismo cuerpo y 32 geometrías, y dibujó las 137 oportunidades registradas. Los giros de 0,37 rad aún reproducen un rodeo en empalizada y un rechazo de ruta en reforzado. [Controles](native-farm-gate-aperture-20261121.md#empalizada-y-portón-reforzado).
