@@ -10,6 +10,8 @@ Los cuatro perfiles completaron una segunda cosecha y entrega ordinarias sobre e
 
 Al aplicar Despertar sobre el cultivo asignado, Game confirma la bendición y retira la tarea. El cuerpo aún tiene un propietario nativo y el siguiente avance falla antes de asignar el cultivo nuevo. La autoridad y WASM reprodujeron el fallo con Water antes de adquirir Task14, durante la marcha y durante Action15, y con Plant durante la marcha. El ensayo usa Host determinista. [Casos y pasos](performance/native-watering-idle-20261120/target-invalidation-baseline.json).
 
+Despertar confirma el ritual y la fuente sobre un cultivo sin tarea. La admisión del resplandor comienza dentro del paquete de dibujo y falla. Al diferirla en privado, Dawn detectó una copia desde una textura del compositor ya destruida. [Recibo de Despertar](native-ordinary-awakening-boundary-20261121.md).
+
 Escudo confirma la orden desde la cámara y muestra el efecto, pero la autoridad pierde la frontera comprometida con el consumidor gráfico. Se reprodujo tanto fuera del corredor de Farm, que siguió en marcha, como sobre el corredor, que quedó detenido. [Controles de Escudo](webgpu-shield.md#escudo-durante-farm-nativo).
 
 Multiplicar precedió una cosecha y entrega ordinarias sobre el mismo cuerpo. La caja conservó la potencia, liquidó 10 monedas adicionales y generó un solo abono de 24 tras el redondeo. NVIDIA dibujó el efecto de ocho haces y la entrega con el mismo cuerpo y 32 geometrías originales. Las dos ventanas registraron 34,7 ms y 34,8 ms a 30 Hz. [Recibo físico](performance/native-ordinary-guardian-multiply-20261121.json).

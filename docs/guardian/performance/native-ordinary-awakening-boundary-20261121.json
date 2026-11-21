@@ -1,0 +1,46 @@
+{
+  "source": "1464c89797dae913d50338409a083648f40055d2",
+  "scenario": "A camera-selected unassigned millet receives a prepared Awakening ritual during native Farm",
+  "renderer": "Edge physical WebGPU Worker with remote draws",
+  "initial": {
+    "stage": "Awakening shows the confirmed permanent source",
+    "error": "page.evaluate: Error: Awakening presentation incomplete {\"guardian\":{\"closed\":false,\"began\":1,\"confirmed\":1,\"rejected\":0,\"provisionalFrames\":0,\"lastCommand\":\"ordinary-guardian-awakening\",\"active\":{\"id\":\"ordinary-guardian-awakening\",\"targetId\":\"plant-1000000\",\"provisional\":false,\"kind\":\"awakening\"},\"ritualPreview\":false,\"ritualReady\":true,\"cropBeams\":0,\"modelReady\":true,\"effectsReady\":true,\"beamVisible\":false,\"coreVisible\":false},\"blessing\":{\"closed\":false,\"sources\":1,\"sourceIds\":[\"plant-1000000\"],\"particles\":19,\"pending\":0,\"admitted\":false,\"admissionError\":null,\"motion\":false},\"seenRitual\":{\"id\":\"ordinary-guardian-awakening\",\"targetId\":\"plant-1000000\",\"provisional\":false,\"kind\":\"awakening\"},\"target\":{\"version\":1,\"ordinal\":1,\"day\":15,\"at\":10.299999999999994},\"elapsed\":12.499999999999947}\n    at auditBuildFarm (http://127.0.0.1:5218/tests/browser/native-build-active-farm-hosted-private.js:204:57)\n    at async <anonymous>:381:23",
+    "errors": [
+      "{\"resource\":\"blessing-glow\",\"message\":\"Cannot order uncommitted remote frame resources\"}"
+    ],
+    "worker": {
+      "id": "worker-900011",
+      "status": "arriving",
+      "nativeRouteAdmission": "native-farm-arrival",
+      "x": -16,
+      "z": 0.417157287525324
+    },
+    "confirmedElapsed": 12.499999999999947,
+    "confirmedSequence": 210,
+    "authorityFault": null,
+    "diagnosticSha256": "78977ca9eebf6fba3b0417de7f479e4e6164170b104d2d2fd5509147e07a3a09"
+  },
+  "candidate": {
+    "patchSha256": "b176135a0bfb7a3ef503e4c9ab7485f2125c75553707db06e0e70c65889f023c",
+    "phase": "Texture upload begins after the synchronous frame packet closes",
+    "selectedTestsPassed": 86,
+    "published": false,
+    "stage": "Awakening shows the confirmed permanent source",
+    "error": "page.evaluate: Error: Error: Error: Destroyed texture [Texture \"D3DImageBacking_D3DSharedImage_WebGPUSwapBufferProvider_Pid:13616\"] used in a submit.\n - While calling [Queue].Submit([[CommandBuffer from CommandEncoder \"copyFramebufferToTexture_97\"]])\n",
+    "errors": [
+      "Error: Error: Error: Destroyed texture [Texture \"D3DImageBacking_D3DSharedImage_WebGPUSwapBufferProvider_Pid:13616\"] used in a submit.\n - While calling [Queue].Submit([[CommandBuffer from CommandEncoder \"copyFramebufferToTexture_97\"]])\n\n    at GPUDevice.<anonymous> (http://127.0.0.1:5218/src/rendering/remote-webgpu-host.js?t=1795249829108:1969:85)\n    at port.onmessage (http://127.0.0.1:5218/src/rendering/remote-webgpu-client.js?t=1795249829108:414:45)\n    at worker.onmessage (http://127.0.0.1:5218/src/rendering/webgpu-world-client.js:29:760)"
+    ],
+    "worker": {
+      "id": "worker-900011",
+      "status": "arriving",
+      "nativeRouteAdmission": "native-farm-arrival",
+      "x": -16,
+      "z": 0.5251572875253219
+    },
+    "confirmedElapsed": 12.599999999999945,
+    "confirmedSequence": 243,
+    "authorityFault": null,
+    "diagnosticSha256": "538c1e4806f81c01f5064507ef284722dea736b839aece0fbed8e60daab53f8f"
+  },
+  "selectedBaselineTestsPassed": 44
+}
