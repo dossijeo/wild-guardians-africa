@@ -1735,7 +1735,10 @@ function updateWorkers(s,dt,nav) {
         if(ended)throw Error('Native idle contract transition requires prepared Home resources');if(!nav.intentTaskPlanner.projectNativeSettledWorkerExecution(s,w))throw Error('Native idle has no current execution projection');continue;
       }
       if(ended&&w.nativeRouteAdmission==='native-task'){
-        if(!nativeExecutionActive||!nav.intentTaskPlanner?.nativeTaskReturnSource?.(w.id)||!nav.intentTaskPlanner.projectNativeTaskExecution(s,w))throw Error('Expired Task lost its executed moving source');
+        if(!nativeExecutionActive||!nav.intentTaskPlanner?.nativeTaskReturnSource?.(w.id))throw Error('Expired Task lost its executed source');
+        const execution=nav.intentTaskPlanner.projectNativeTaskExecution(s,w);
+        if(!execution)throw Error('Expired Task lost its executed projection');
+        if(execution.arrived)nav.intentTaskPlanner.requestNativeCompletedTaskHome(s,w);
         continue;
       }
       if(ended&&!['acting','carrying'].includes(w.status)) {cancelIdle(w);releaseTask(s,w);w.status='returning';w.path=null;notifyWorkerPlanningChange(s,w);continue;}

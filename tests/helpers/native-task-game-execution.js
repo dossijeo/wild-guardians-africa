@@ -8,8 +8,8 @@ function issue(f,workerId,bodyId,policy={}){
  assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);const tuple=Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));
  assert.equal(f.w.nav_task_start_proposal_commit_bound(...tuple.slice(0,5),p.proposal.ticket.ticket),1);assert.equal(f.planner.beginNativeRouteExecution().status,'started');assert.equal(f.planner.commitNativeCausalClock().status,'committed');return p.proposal;
 }
-export function createNativeTaskGameFixture({core=null,taskKind='harvest',runBudget=4}={}){
- const f=nativeTaskRequestFixture({core,taskKind,bindBodies:true,independentHome:false,configureState:state=>{state.structures=state.structures.filter(s=>!s.gate);}});f.claim();
+export function createNativeTaskGameFixture({core=null,taskKind='harvest',runBudget=4,profile='youngMale'}={}){
+ const f=nativeTaskRequestFixture({core,taskKind,profile,bindBodies:true,independentHome:false,configureState:state=>{state.structures=state.structures.filter(s=>!s.gate);}});f.claim();
  Object.assign(f.state,{pauses:[],result:null,initialPreparation:false,raid:null,spells:[],dayPlan:{done:true},nightPlan:{done:true}});if(f.state.awakenings)f.state.awakenings.enabled=false;f.state.tutorial.step='done';
  f.state.plants=f.state.plants.map(p=>({...createPlant(p.id,p.species,p.x,p.z,f.state.workers[0].centerId),growth:999999,harvestRequested:true,water:[]}));
  for(const w of f.state.workers)Object.assign(w,{recovery:null,recoveryExitRemaining:0,fallRemaining:0,raidReturn:false,crateId:null});

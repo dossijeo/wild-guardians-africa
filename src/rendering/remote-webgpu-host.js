@@ -651,7 +651,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   // Installed Farm/Stroll endpoint data remains drawable while the same body
   // waits for its next prepared owner. This is not permission to execute past the route end.
-  function retainedIdleEndpoint(binding,at){return !!(binding.nativeFarmArrival||binding.nativeStroll)&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
+  function retainedCompletedEndpoint(binding,at){return !!(binding.nativeFarmArrival||binding.nativeStroll||binding.nativeStart)&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
   function patchPresentation(elapsed, camera, nativeTimes) {
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
@@ -661,8 +661,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const executionEpoch=binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
         const scoped=!!(binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??Infinity;
-        const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalIdle=retainedIdleEndpoint(binding,bindingTime);
-        const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,idleRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
+        const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalRoute=idleRoute??binding.nativeStart,terminalIdle=retainedCompletedEndpoint(binding,bindingTime);
+        const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
         // Finite actions retain their declared duration. Do not add the age to
@@ -741,7 +741,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const permit=routeControl.clockLease(frameClock(next).epoch,frameClock(next).safeUntil),at=evaluateRemoteClock(permit,startedAt);
         const bounded=Math.max(at,nativeMutationFloor??-Infinity);
         if(nativeMutationFloor!==null&&(permit.safeUntil<nativeMutationFloor||next.admittedClockBindings.some(binding=>
-             binding.routeRecord&&binding.routeRecord.safeUntil<nativeMutationFloor&&!retainedIdleEndpoint(binding,nativeMutationFloor)))||bounded<next.metadata.clock.elapsed||
+             binding.routeRecord&&binding.routeRecord.safeUntil<nativeMutationFloor&&!retainedCompletedEndpoint(binding,nativeMutationFloor)))||bounded<next.metadata.clock.elapsed||
            next.admittedClockBindings.some(binding=>binding.routeRecord&&binding.routeRecord.startTime>bounded))next=null;
       }
       const candidate = next || active;
@@ -1647,7 +1647,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               !Number.isSafeInteger(message.holdId)||message.holdId!==lastNativeMutationFence+1||
-              active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedIdleEndpoint(binding,message.effectiveTime)))
+              active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedCompletedEndpoint(binding,message.effectiveTime)))
              throw Error('Invalid or unsafe native mutation quiescence boundary');
            const preparedWorldBoundary=copyNativeWorldBoundary(message.preparedWorldBoundary??null);
            if(preparedWorldBoundary&&(!pending?.preparedUploadsComplete||!sameNativeWorldBoundary(pending.preparedWorldBoundary,preparedWorldBoundary))){

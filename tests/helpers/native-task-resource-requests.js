@@ -3,9 +3,9 @@ import {createNativeRouteExecutionFixture} from './native-route-execution.js';
 import {createEventDrivenTaskPlanner} from '../../src/world/wild-engine/spatial-intent-bridge.js';
 import {createNativeRouteControl} from '../../src/rendering/native-route-control.js';
 
-export function nativeTaskRequestFixture({core=null,bindBodies=false,independentHome=true,configureState=null,taskKind='harvest'}={}){
+export function nativeTaskRequestFixture({core=null,bindBodies=false,independentHome=true,configureState=null,taskKind='harvest',profile='youngMale'}={}){
  const f=createNativeRouteExecutionFixture({...(core?{core}:{}),configureState}),{state,w,point}=f;
- state.time=100;state.nextId=Math.max(state.nextId,1000000);state.workers=state.workers.slice(0,3);state.workers.forEach((worker,i)=>{Object.assign(worker,point(-6,i===1?6:i===2?-3.3:0),{status:i===1?'waiting-task':'idle',taskId:null,path:null,contractDay:state.day,profile:'youngMale'});});
+ state.time=100;state.nextId=Math.max(state.nextId,1000000);state.workers=state.workers.slice(0,3);state.workers.forEach((worker,i)=>{Object.assign(worker,point(-6,i===1?6:i===2?-3.3:0),{status:i===1?'waiting-task':'idle',taskId:null,path:null,contractDay:state.day,profile});});
  state.plants=[{id:'plant-900099',species:'mijo',alive:true,...point(6,0)},{id:'plant-900098',species:'mijo',alive:true,...point(6,-3.3)}];
  state.tasks=state.plants.map((plant,i)=>({id:`task-${920001+i}`,kind:taskKind,centerId:state.workers[0].centerId,targetId:plant.id,created:i,workerId:null}));
  const planner=createEventDrivenTaskPlanner(f.session);planner.resetFromState(state);

@@ -92,6 +92,53 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,false);}
 EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,true);}
+// A genuinely completed Task can transfer its final native pose to the same
+// Home request used by completed Farm/Idle. It is never a fabricated stop25.
+EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ){
+  auto& s=state();
+  if(!integer(actor)||session!=double(s.session)||!integer(assignment)||!integer(generation)||
+     generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
+  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;
+  auto& intent=found->second;
+  if(intent.homeRequest){
+    const auto& r=*intent.homeRequest;
+    if(r.completedTaskSourceSequence!=uint64_t(assignment)||r.completedTaskSourceGeneration!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
+    return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
+  }
+  // The existing producer cancels an obsolete prepared25. Do not steal its
+  // proposal slot or retarget while a late resource response still owns it.
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  const auto* route=executedTaskRoute(s,uint64_t(actor));
+  if(!route||intent.assignmentSequence!=uint64_t(assignment)||intent.generation!=uint32_t(generation)||
+     !intent.lease||intent.delivery||intent.actionBinding||intent.restoredActionSource||
+     route->suspended||!route->reserved||route->pendingResources||!route->startBinding||
+     route->executionPose[6]!=1||route->executionPose[15]!=0||route->executionPose[16]!=0)return -2;
+  const auto worker=s.workers.find(intent.actor);const auto task=s.tasks.find(intent.task);
+  SpatialBodyView body;
+  if(worker==s.workers.end()||task==s.tasks.end()||task->second.assigned!=intent.actor||
+     task->second.target!=intent.target||task->second.center!=worker->second.center||
+     !worker->second.bodyBound||worker->second.body!=route->reservationBody||worker->second.actionActive||worker->second.inactiveSequence||
+     !spatialReadBody(route->reservationBody,body)||body.kind!=0||body.r!=route->radius||
+     worker->second.x!=body.x||worker->second.z!=body.z)return -2;
+  if(!idleStrollCycleReleaseClear(s,route->reservationBody))return 0;
+  const auto& pose=route->executionPose;
+  auto request=std::make_shared<NativeHomeResourceRequest>();
+  request->actor=intent.actor;request->session=s.session;request->village=uint64_t(village);
+  request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+  request->body=route->reservationBody;request->radius=route->radius;request->profile=route->profile;request->bodyFlags=body.flags;
+  request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];
+  request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];
+  request->completedTaskSourceSequence=uint64_t(assignment);request->completedTaskSourceGeneration=uint32_t(generation);
+  task->second.assigned=0;
+  releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
+  worker->second.eligible=false;
+  intent.lease=false;intent.home=true;intent.state=PlanningState::AwaitingResources;
+  intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);intent.approachRadius=0;
+  intent.homeRequest=std::move(request);intent.homeRequest->sequence=s.intentSequence+1;
+  emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+
 // Transfer the live Task claim after the prepared stop has retained its body.
 EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,double session,double assignment,
     double generation,double village,double homeX,double homeZ){

@@ -1939,6 +1939,21 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(wasm.nav_intent_farm_arrival_home_request(held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z)!==1)throw Error('Native Farm Home request rejected');
     const request=nativeHomeRequestReference(held.actorId);if(!(completed?nativeHomeRequestContinuesCompletedFarmArrival:nativeHomeRequestContinuesHeldFarmArrival)(request,held))throw Error('Native Farm Home lost its actual body');return request;
   };
+  const requestNativeTaskHomeFromCompletion=(actorId,taskId,targetId,source,home)=>{
+    const actor=numericId(actorId),actual=nativeTaskExecution(actor);
+    if(!actual||!actual.arrived||actual.running||actual.currentSpeed!==0||actual.executedThrough<actual.at||
+       actual.taskId!==numericId(taskId)||actual.targetId!==numericId(targetId)||
+       JSON.stringify({...actual,executedThrough:0})!==JSON.stringify({...source,executedThrough:0}))throw Error('Completed Task Home source is not current');
+    if(typeof wasm.nav_intent_completed_task_home_request!=='function')throw Error('Rebuild native completed Task Home request');
+    syncBoundaryTime();
+    const handle=actual.nativeRoute.routeHandle,result=wasm.nav_intent_completed_task_home_request(actor,handle.session,actual.nativeRoute.assignmentSequence,handle.generation,home.villageId,home.x,home.z);
+    if(result===-4||result===0)return null;
+    if(result!==1)throw Error('Completed Task Home request rejected');
+    const request=nativeHomeRequestReference(actor);
+    if(!request||request.bodyId!==actual.bodyId||['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>request.pose[key]!==actual[key]))throw Error('Completed Task Home lost its actual pose');
+    return request;
+  };
+
   const requestNativeTaskHomeFromStop=(actorId,taskId,targetId,stop,home)=>{
     if(stop?.kind!==nativeTaskRouteStopCodec.attestationKind||stop.version!==1||stop.projectionVersion!==1||!stop.projection)
       throw Error('Native Task stop receipt is required for Home');
@@ -2750,7 +2765,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     nativeIdleStrollFailedRestReference,startNativeIdleStrollAfterGpuQuiescence,nativeIdleStrollBinding,nativeIdleStrollBindings,nativeIdleStrollExecution,nativeIdleStrollHeldExecution,prepareNativeIdleStrollStopProposal,captureNativeIdleStrollStopProposal,revalidateNativeIdleStrollStopProposal,cancelNativeIdleStrollStopProposal,nativeIdleStrollStopBinding,prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding,prepareNativeIdleStrollProposal,captureNativeIdleStrollProposal,revalidateNativeIdleStrollProposal,cancelNativeIdleStrollProposal,
     prepareNativeTaskRouteStopProposal,captureNativeTaskRouteStopProposal,revalidateNativeTaskRouteStopProposal,cancelNativeTaskRouteStopProposal,nativeTaskRouteStopBinding,
     stopNativeTaskRouteAfterGpuQuiescence,
-    requestNativeTaskHomeFromStop,
+    requestNativeTaskHomeFromCompletion,requestNativeTaskHomeFromStop,
     nativeIdleCycleBinding,nativeIdleCycleBindings,nativeIdleCycleNextRequest,nativeIdleCycleExecution,prepareNativeIdleCycleProposal,startNativeIdleCycleAfterGpuQuiescence,captureNativeIdleCycleProposal,revalidateNativeIdleCycleProposal,cancelNativeIdleCycleProposal,
     prepareNativeFarmArrivalContinuationProposal,prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution,nativeFarmArrivalHeldExecution,
     nativeFarmArrivalRequestReference,nativeFarmArrivalRequestReferences,nativeFarmArrivalDeclarationReference,nativeFarmArrivalIdleSource,
@@ -3520,11 +3535,11 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=observedTaskState??sourceState,worker=state?.workers.find(w=>numericId(w.id)===actor);
     if(!worker||worker.status!=='walking'||worker.nativeRouteAdmission!=='native-task'||!worker.taskId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid)return null;
     const task=state.tasks.find(t=>t.id===worker.taskId),village=state.villages.find(v=>v.id===worker.villageId),execution=bridge.nativeTaskExecution(actor);
-    if(!task||task.workerId!==worker.id||task.centerId!==worker.centerId||!village||!execution||execution.arrived||execution.taskId!==numericId(task.id)||execution.targetId!==numericId(task.targetId)||execution.executedThrough!==state.elapsed)return null;
+    if(!task||task.workerId!==worker.id||task.centerId!==worker.centerId||!village||!execution||execution.arrived&&(execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.at)||execution.taskId!==numericId(task.id)||execution.targetId!==numericId(task.targetId)||execution.executedThrough!==state.elapsed)return null;
     return execution;
   };
   const nativeTaskRouteStopRequest=actorId=>{
-    const execution=nativeTaskReturnSource(actorId);if(!execution)return null;
+    const execution=nativeTaskReturnSource(actorId);if(!execution||execution.arrived)return null;
     const state=observedTaskState??sourceState,worker=state.workers.find(w=>numericId(w.id)===execution.nativeRoute.actorId);
     if(!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))return null;
     return Object.freeze({reason:'home',taskId:worker.taskId,bodyId:execution.bodyId,nativeRoute:execution.nativeRoute});
@@ -3548,7 +3563,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     return result;
   };
 
-  const requestNativeStoppedTaskHome=(state,worker,stop)=>{
+  const requestNativeTaskHome=(state,worker,stop,completed=null)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Task Home belongs to another game');
     if(!state.workers.includes(worker)||worker.status!=='walking'||worker.nativeRouteAdmission!=='native-task'||!worker.taskId||
        worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||
@@ -3557,7 +3572,9 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     const task=state.tasks.find(value=>value.id===worker.taskId);
     const village=state.villages.find(value=>value.id===worker.villageId),home=village?.entry??village;
     if(!task||task.workerId!==worker.id||task.centerId!==worker.centerId||!home)throw Error('Native Task Home lost its assignment or village');
-    const request=bridge.requestNativeTaskHomeFromStop(worker.id,task.id,task.targetId,stop,{villageId:numericId(village.id),x:home.x,z:home.z});
+    const goal={villageId:numericId(village.id),x:home.x,z:home.z};
+    const request=completed?bridge.requestNativeTaskHomeFromCompletion(worker.id,task.id,task.targetId,completed,goal):bridge.requestNativeTaskHomeFromStop(worker.id,task.id,task.targetId,stop,goal);
+    if(!request)return null;
     releaseTask(state,worker);
     cancelIdle(worker);
     const {x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining}=request.pose;
@@ -3566,6 +3583,13 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     projectedPositions.set(numericId(worker.id),[x,z]);
     notifyWorkerPlanningChange(state,worker);
     pendingNativeChanges=true;
+    return request;
+  };
+  const requestNativeStoppedTaskHome=(state,worker,stop)=>requestNativeTaskHome(state,worker,stop);
+  const requestNativeCompletedTaskHome=(state,worker)=>{
+    const execution=nativeTaskReturnSource(worker.id);if(!execution?.arrived)throw Error('Completed Task Home requires its executed endpoint');
+    const request=requestNativeTaskHome(state,worker,null,execution);
+    if(request)flushTaskEvents();
     return request;
   };
   const projectNativeTaskActionExecution=(state,worker)=>{
@@ -4026,7 +4050,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     async startNativeHomeRouteAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeHomeRouteAfterGpuQuiescence(options);if(bridge.authorityEpoch===owner&&result.resources)pendingNativeChanges=true;return result;},
     prepareNativeFarmArrivalContinuationProposal:bridge.prepareNativeFarmArrivalContinuationProposal,prepareNativeFarmArrivalRouteProposal:bridge.prepareNativeFarmArrivalRouteProposal,captureNativeFarmArrivalRouteProposal:bridge.captureNativeFarmArrivalRouteProposal,revalidateNativeFarmArrivalRouteProposal:bridge.revalidateNativeFarmArrivalRouteProposal,cancelNativeFarmArrivalRouteProposal:bridge.cancelNativeFarmArrivalRouteProposal,nativeFarmArrivalRouteSourceRequestReference:bridge.nativeFarmArrivalRouteSourceRequestReference,nativeFarmArrivalRouteBinding:bridge.nativeFarmArrivalRouteBinding,nativeFarmArrivalRouteBindings:bridge.nativeFarmArrivalRouteBindings,nativeFarmArrivalRouteExecution:bridge.nativeFarmArrivalRouteExecution,nativeFarmArrivalHeldExecution:bridge.nativeFarmArrivalHeldExecution,
     nativeFarmArrivalIdleSource,nativeFarmArrivalRequestReference:bridge.nativeFarmArrivalRequestReference,nativeFarmArrivalRequestReferences:bridge.nativeFarmArrivalRequestReferences,nativeFarmArrivalDeclarationReference:bridge.nativeFarmArrivalDeclarationReference,requestNativeFarmArrivalResources,projectNativeFarmArrivalRequest,projectNativeFarmArrivalDeclaration,projectNativeFarmArrivalExecution,
-    nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,requestNativeFarmHome,requestNativeStoppedTaskHome,projectNativeSettledWorkerExecution,
+    nativeInitialIdleRequestReference:bridge.nativeInitialIdleRequestReference,nativeInitialIdleRequestReferences:bridge.nativeInitialIdleRequestReferences,nativeInitialIdleDeclarationReference:bridge.nativeInitialIdleDeclarationReference,requestNativeInitialIdleResources,projectNativeInitialIdleRequest,projectNativeInitialIdleDeclaration,requestNativeIdleHome,requestNativeFarmHome,requestNativeStoppedTaskHome,requestNativeCompletedTaskHome,projectNativeSettledWorkerExecution,
     async startNativeIdleStrollAfterGpuQuiescence(options){const owner=bridge.authorityEpoch,result=await bridge.startNativeIdleStrollAfterGpuQuiescence(options,farmIdleAdmissionCurrent(options?.actorId));if(bridge.authorityEpoch===owner&&result.resources){pendingNativeChanges=true;const state=sourceState??observedTaskState,worker=state?.workers.find(w=>numericId(w.id)===result.nativeIdleStrollBinding.reference.actorId);if(worker)projectNativeIdleStroll(state,worker);}return result;},
     prepareNativeFarmArrivalStopProposal:bridge.prepareNativeFarmArrivalStopProposal,captureNativeFarmArrivalStopProposal:bridge.captureNativeFarmArrivalStopProposal,revalidateNativeFarmArrivalStopProposal:bridge.revalidateNativeFarmArrivalStopProposal,cancelNativeFarmArrivalStopProposal:bridge.cancelNativeFarmArrivalStopProposal,nativeFarmArrivalStopBinding:bridge.nativeFarmArrivalStopBinding,
     prepareNativeTaskRouteStopProposal:bridge.prepareNativeTaskRouteStopProposal,captureNativeTaskRouteStopProposal:bridge.captureNativeTaskRouteStopProposal,revalidateNativeTaskRouteStopProposal:bridge.revalidateNativeTaskRouteStopProposal,cancelNativeTaskRouteStopProposal:bridge.cancelNativeTaskRouteStopProposal,nativeTaskRouteStopBinding:bridge.nativeTaskRouteStopBinding,

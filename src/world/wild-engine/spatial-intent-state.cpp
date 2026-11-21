@@ -165,6 +165,8 @@ struct NativeWorkerPoseResourceRequest {
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
  uint64_t strollRequestSourceSequence=0,farmRequestSourceSequence=0,farmArrivalSourceSequence=0;uint32_t idleStrollSourceGeneration=0,farmArrivalSourceGeneration=0;double homeX=0,homeZ=0;
+ uint64_t completedTaskSourceSequence=0;
+ uint32_t completedTaskSourceGeneration=0;
  uint64_t stoppedTaskSourceSequence=0;
  uint32_t stoppedTaskSourceGeneration=0;
  bool completedFarmArrival=false,completedIdleStroll=false;
@@ -727,6 +729,10 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
  if(!intent.homeRequest||!intent.home||!intent.requiresResources||intent.task||intent.target||intent.lease||intent.animal||intent.retreat||intent.delivery||intent.state!=PlanningState::AwaitingResources)return false;
  const auto& r=*intent.homeRequest;const bool stroll=r.idleStrollSourceSequence&&(r.completedIdleStroll?!intent.generation&&!s.suspendedBodies.count(r.body)&&r.idleStrollSourceGeneration&&r.idleStrollSourceSequence==intent.assignmentSequence&&r.idleStrollSourceSequence<r.sequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&!r.farmArrivalSourceSequence&&!r.farmArrivalSourceGeneration:nativeHeldIdleStrollBodyCurrent(s,intent,r.idleStrollSourceSequence,r.idleStrollSourceGeneration)),farm=r.farmArrivalSourceSequence&&(r.completedFarmArrival?!intent.generation&&!s.suspendedBodies.count(r.body)&&r.farmArrivalSourceGeneration&&r.farmArrivalSourceSequence==intent.assignmentSequence&&r.farmArrivalSourceSequence<r.sequence&&!r.initialIdleSourceSequence&&!r.idleCycleSourceSequence&&!r.idleStrollSourceSequence&&!r.idleStrollSourceGeneration:nativeHeldFarmArrivalBodyCurrent(s,intent));
  if(r.completedFarmArrival&&!farm||r.completedIdleStroll&&!stroll||r.completedFarmArrival&&r.completedIdleStroll)return false;
+ if(r.completedTaskSourceSequence&&(!r.completedTaskSourceGeneration||intent.generation||s.suspendedBodies.count(r.body)||
+    r.completedTaskSourceSequence!=intent.assignmentSequence||r.completedTaskSourceSequence>=r.sequence||
+    r.initialIdleSourceSequence||r.idleCycleSourceSequence||r.idleStrollSourceSequence||r.farmArrivalSourceSequence||
+    r.strollRequestSourceSequence||r.farmRequestSourceSequence||r.stoppedTaskSourceSequence||r.completedFarmArrival||r.completedIdleStroll))return false;
  const bool taskStop=r.stoppedTaskSourceSequence&&stoppedTaskHomeRequestCurrent(s,intent,r);
  if((r.stoppedTaskSourceSequence&&!taskStop)||(r.idleStrollSourceSequence&&r.farmArrivalSourceSequence)||
     (r.idleStrollSourceSequence?!stroll:r.farmArrivalSourceSequence?!farm:!taskStop&&intent.generation!=0))return false;

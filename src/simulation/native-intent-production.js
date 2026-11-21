@@ -42,6 +42,9 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(marker==='native-task'){
     const stopRequest=planner.nativeTaskRouteStopRequest?.(actorId);
     if(stopRequest)return {actorId,kind:'task-route-stop',operation:'stopNativeTaskForHomeAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};
+    // A completed expired Task waits for its native Home request; never start
+    // a newly prepared action after the ordinary shift has ended.
+    if(contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile))return null;
    }
    if(marker==='pending-resources'){
     const request=planner.pendingTaskRoute(actorId),id=bodyId(actorId);
