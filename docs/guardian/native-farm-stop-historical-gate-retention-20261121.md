@@ -16,4 +16,8 @@ El primer dibujo de Stop24 llegó 66,6 ms después del dibujo anterior a 30 Hz. 
 
 Pasaron 944 pruebas en 72 archivos y el build de producción con `webgpu-worker` y dibujo remoto. Los siete controles nuevos comprueban el rechazo de un diario con efecto, un reloj de actor, un dueño obsoleto, una forma incompatible y un recibo ausente. También verifican la cancelación y la transacción por el coordinador de chunks.
 
+## Repeticiones de C4
+
+Tres ejecuciones en la revisión `71c7f81f6` registraron la decisión del consumidor y variaron la fase de liberación de READY. Las 720 oportunidades observadas enviaron dibujos. Los primeros dibujos de Stop24 llegaron tras 33,4, 33,3 y 33,1 ms a 30 Hz, y los tres recorridos drenaron sin errores. El caso original de 66,6 ms sigue abierto. La sonda queda preparada para identificar qué candidato se descartó y qué registro quedó obsoleto si reaparece. [Recibos de las repeticiones](performance/native-farm-stop-historical-gate-retention-20261121.json).
+
 Quedan pendientes los diarios que cambian motores, los egresos ocupados y C4. Las [entregas y retiradas con un portón visible](native-terminal-gate-retention-20261121.md) y los [cruces en sentidos opuestos con egreso libre](native-farm-gate-aperture-20261121.md#dos-trabajadores-en-sentidos-opuestos) se verificaron después.
