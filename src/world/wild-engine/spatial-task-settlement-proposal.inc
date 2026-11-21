@@ -5,7 +5,7 @@ static bool taskSettlementSourceCurrent(IntentState& s,const PendingTaskSettleme
  const auto& h=d.header;const auto found=s.activeIntents.find(uint64_t(h[1]));
  if(found==s.activeIntents.end()||!nativeDeliveryBodyCurrent(s,found->second))return false;
  const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];
- return route.consequenceBinding==d.source&&route.executionPose[6]==1&&double(intent.assignmentSequence)==h[5]&&
+ return gateCrossingReleaseRetainsMotors(s,route)&&route.consequenceBinding==d.source&&route.executionPose[6]==1&&double(intent.assignmentSequence)==h[5]&&
   double(intent.slot)==h[7]&&double(intent.generation)==h[8]&&double(route.reservationBody)==h[2]&&
   double(intent.carriedTarget)==h[3]&&double(intent.target)==h[4]&&route.executionPose[0]==h[9]&&route.executionPose[1]==h[10]&&
   route.executionPose[4]==h[11]&&route.radius==h[12]&&route.executionPose[9]==h[13]&&route.executionPose[10]==h[14]&&
@@ -29,7 +29,7 @@ static int stageTaskSettlement(double actor,double session,double assignment,dou
  const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
  auto& p=s.barrierProposal;p.kind=17;p.settlement=std::move(d);return 1;
 }
-EMSCRIPTEN_KEEPALIVE int nav_task_settlement_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_task_settlement_proposal_version(){return 2;}
 EMSCRIPTEN_KEEPALIVE int nav_task_settlement_proposal_stage(double actor,double session,double assignment,double village=0,double homeX=0,double homeZ=0){return stageTaskSettlement(actor,session,assignment);}
 EMSCRIPTEN_KEEPALIVE int nav_task_settlement_proposal_home_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_task_settlement_proposal_stage_home(double actor,double session,double assignment,double village,double x,double z){if(!integer(village))return -1;return stageTaskSettlement(actor,session,assignment,village,x,z);}

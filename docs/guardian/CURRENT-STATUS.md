@@ -1,6 +1,6 @@
 # Current delivery status (2026-10-29)
 
-Carry cruzó el mismo vano con su caja y llegó al centro en WebGPU físico. La autoridad perdió la preparación de Settlement17 porque la presentación aún rechaza la liquidación con motores de puerta. El control con WASM y Host determinista entregó la caja y abonó 14 monedas. [Recibo de Carry](performance/native-ordinary-carry-gate-20261121.json). Home también cruzó la puerta y llegó al pueblo con el cuerpo y 36 geometrías originales. La Surface rechaza la retirada mientras el motor sigue en la ruta. [Recibos de Home](performance/native-ordinary-home-gate-20261121.json).
+Settlement17 entregó en NVIDIA la caja de Carry tras cruzar el vano y registró un solo abono de 14 monedas. Home19 retiró al trabajador después del cruce y dibujó el portón original durante otros 681,5 ms. Se conservaron 843 buffers en la entrega y 791 en Home, con siete del portón en ambos casos y cero errores de drenaje. Quedan las retiradas de paso que cambian el motor, la cobertura fuera del paquete gráfico y C4. [Validación de Settlement17 y Home19](native-terminal-gate-retention-20261121.md).
 
 Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
 

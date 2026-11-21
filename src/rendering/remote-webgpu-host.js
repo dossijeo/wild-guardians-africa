@@ -984,6 +984,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     for(const entry of pendingRetirement)tryRetire(entry);
     return true;
   }
+  // Listing historical gate IDs never substitutes for the independent clocks
+  // actually included in this retained frame's pinned resource snapshot.
+  function assertTerminalGateClocks(reference,bindings){
+    const source=reference?.sourceHome??reference?.sourceCarry;if(!source)return;
+    for(const id of source.gateIds)if(!bindings.some(b=>b.nativeGate?.gateId===id&&!b.nativeRoute&&nativeGateReferenceCovered(b.nativeGate,reference.worldBoundary)))
+      throw Error(reference.sourceHome?'Native Home absence gate graphics are not prepared':'Native settlement gate graphics are not prepared');
+  }
   function validatePreparedWorldBoundary(packet){
     const boundary=copyNativeWorldBoundary(packet.metadata?.nativeWorldBoundary??null),status=routeControl?.status(),clock=packet.metadata?.clock;
     if(!worldBoundaryRequired||!status?.clock||!clock||!boundary||boundary.authorityEpoch!==status.authorityEpoch||
@@ -1001,8 +1008,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(packet.metadata.nativeFarmArrivalStopTemplate){const ref=copyNativeFarmArrivalStopReference(packet.metadata.nativeFarmArrivalStopTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Farm stop template');routeControl.admitFarmArrivalStop(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeInitialIdleBodyTemplate){const ref=copyNativeInitialIdleBodyReference(packet.metadata.nativeInitialIdleBodyTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native initial Idle body template');routeControl.admitInitialIdleBody(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeIdleCycleTemplate){const ref=packet.metadata.nativeIdleCycleTemplate=copyNativeIdleCycleReference(packet.metadata.nativeIdleCycleTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle cycle template');routeControl.admitIdleCycle(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeTaskSettlementTemplate){const ref=packet.metadata.nativeTaskSettlementTemplate=copyNativeTaskSettlementReference(packet.metadata.nativeTaskSettlementTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native settlement template');routeControl.admitSettlement(ref,{preparingWorldBoundary:boundary});}
-    if(packet.metadata.nativeHomeArrivalTemplate){const ref=copyNativeHomeArrivalReference(packet.metadata.nativeHomeArrivalTemplate);if(ref.sourceHome.gateIds.length)throw Error('Native Home absence gate graphics are not prepared');if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home absence template');packet.preparedHomeArrivalLease=routeControl.admitHomeArrival(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeTaskSettlementTemplate){const ref=packet.metadata.nativeTaskSettlementTemplate=copyNativeTaskSettlementReference(packet.metadata.nativeTaskSettlementTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native settlement template');assertTerminalGateClocks(ref,Array.from(clockBindings.values()).filter(b=>resources.has(b.id)));routeControl.admitSettlement(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.nativeHomeArrivalTemplate){const ref=copyNativeHomeArrivalReference(packet.metadata.nativeHomeArrivalTemplate);assertTerminalGateClocks(ref,Array.from(clockBindings.values()).filter(b=>resources.has(b.id)));if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home absence template');packet.preparedHomeArrivalLease=routeControl.admitHomeArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeIdleStrollTemplate){const ref=copyNativeIdleStrollReference(packet.metadata.nativeIdleStrollTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle stroll template');routeControl.admitStroll(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeFarmArrivalTemplate){const ref=copyNativeFarmArrivalRouteReference(packet.metadata.nativeFarmArrivalTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native farm arrival template');routeControl.admitFarmArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeHomeRouteTemplate){const ref=copyNativeHomeRouteReference(packet.metadata.nativeHomeRouteTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home template');routeControl.admitHome(ref,{preparingWorldBoundary:boundary});}
@@ -1014,6 +1021,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
+    assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
     if(preparing&&packet.metadata.nativeHomeArrivalTemplate){if(!packet.preparedHomeArrivalLease?.isPrepared())throw Error('Native Home absence lost its current source');const actor=packet.metadata.nativeHomeArrivalTemplate.actorId;if(preparedBindings.some(binding=>binding.nativeHome?.actorId===actor||binding.nativeRoute?.actorId===actor))throw Error('Native Home absence still includes its actor clock');}
     // One synchronous admission pass can share a lease for equal Host-owned
     // binding identities. This map never survives a yield or control event.

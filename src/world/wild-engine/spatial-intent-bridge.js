@@ -1451,7 +1451,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const prepareNativeTaskSettlementProposal=(source,{home}={})=>{
     if(home!==undefined&&(!home||!Number.isSafeInteger(home.villageId)||home.villageId<=0||![home.x,home.z].every(x=>Number.isFinite(x)&&Math.abs(x)<2147483000)))throw TypeError('Invalid native settlement Home destination');
     const carry=copyNativeTaskConsequenceAttestation(source),r=carry.reference,outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
-    if(r.worldBoundary.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_task_settlement_proposal_version?.()!==1)throw Error('Rebuild native task settlement');
+    if(r.worldBoundary.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_task_settlement_proposal_version?.()!==2)throw Error('Rebuild native task settlement');
     syncBoundaryTime();flushNativeIntentControl();const current=nativeTaskConsequenceBinding(r.actorId);if(!current||JSON.stringify(current)!==JSON.stringify(carry))return outcome('stale');
     if(home&&wasm.nav_task_settlement_proposal_home_version?.()!==1)throw Error('Rebuild native settlement Home disposition');
     const result=home?wasm.nav_task_settlement_proposal_stage_home(r.actorId,r.worldBoundary.nativeSession,carry.assignmentSequence,home.villageId,home.x,home.z):wasm.nav_task_settlement_proposal_stage(r.actorId,r.worldBoundary.nativeSession,carry.assignmentSequence);if(result!==1)return outcome(result===-4?'busy':result===-2?'unsupported':'stale');
@@ -2162,7 +2162,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   };
   const prepareNativeHomeArrivalProposal=value=>{
     const source=copyNativeHomeRouteAttestation(value),r=source.reference,outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
-    if(r.worldBoundary.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_home_arrival_proposal_version?.()!==1)throw Error('Rebuild native Home arrival admission');syncBoundaryTime();flushNativeIntentControl();
+    if(r.worldBoundary.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_home_arrival_proposal_version?.()!==2)throw Error('Rebuild native Home arrival admission');syncBoundaryTime();flushNativeIntentControl();
     if(JSON.stringify(nativeHomeRouteBinding(r.actorId))!==JSON.stringify(source))return outcome('stale');
     const result=wasm.nav_home_arrival_proposal_stage(r.actorId,r.worldBoundary.nativeSession,source.assignmentSequence);if(result!==1)return outcome(result===-4?'busy':'unsupported');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native Home arrival lost its ticket');const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-home-arrival-proposal-ticket',authorityEpoch:epoch(),session:a[0],ticket:a[1]};

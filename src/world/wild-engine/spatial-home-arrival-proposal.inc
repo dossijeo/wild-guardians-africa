@@ -5,7 +5,7 @@ static bool homeArrivalSourceCurrent(const IntentState& s,const PendingHomeArriv
  const auto& h=d.header;const auto found=s.activeIntents.find(uint64_t(h[1]));
  if(found==s.activeIntents.end()||!nativeHomeBodyCurrent(s,found->second))return false;
  const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];const auto& pose=route.executionPose;
- return route.homeBinding==d.source&&pose[6]==1&&double(intent.assignmentSequence)==h[4]&&double(intent.slot)==h[6]&&double(intent.generation)==h[7]&&
+ return gateCrossingReleaseRetainsMotors(s,route)&&route.homeBinding==d.source&&pose[6]==1&&double(intent.assignmentSequence)==h[4]&&double(intent.slot)==h[6]&&double(intent.generation)==h[7]&&
   double(route.reservationBody)==h[2]&&pose[0]==h[8]&&pose[1]==h[9]&&pose[4]==h[10]&&route.radius==h[11]&&
   pose[9]==h[12]&&pose[10]==h[13]&&pose[11]==h[14]&&pose[14]==h[15]&&pose[0]==double(float(h[17]))&&pose[1]==double(float(h[18]));
 }
@@ -23,7 +23,7 @@ static int stageHomeArrival(double actor,double session,double assignment){
  const int staged=stageWorldMutationBoundary(nullptr,0);if(staged!=1)return staged;
  auto& p=s.barrierProposal;p.kind=19;p.homeArrival=std::move(d);s.homeArrivalResult.fill(0);return 1;
 }
-EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_version(){return 2;}
 EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_stage(double actor,double session,double assignment){return stageHomeArrival(actor,session,assignment);}
 EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;if(!p.pending||p.kind!=19||!p.homeArrival)return -1;return takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),19);}
 EMSCRIPTEN_KEEPALIVE const double* nav_home_arrival_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==19&&p.homeArrival?p.homeArrival->header.data():nullptr;}

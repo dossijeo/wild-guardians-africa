@@ -16,4 +16,4 @@ El primer dibujo de Stop24 llegó 66,6 ms después del dibujo anterior a 30 Hz. 
 
 Pasaron 944 pruebas en 72 archivos y el build de producción con `webgpu-worker` y dibujo remoto. Los siete controles nuevos comprueban el rechazo de un diario con efecto, un reloj de actor, un dueño obsoleto, una forma incompatible y un recibo ausente. También verifican la cancelación y la transacción por el coordinador de chunks.
 
-Se mantienen pendientes los diarios que cambian motores, Settlement17 y Home19 con portón, el tráfico en sentidos opuestos y C4. En las fronteras terminales, liberar una reserva de paso puede modificar un motor compartido.
+Quedan pendientes los diarios que cambian motores, los egresos ocupados y C4. Las [entregas y retiradas con un portón visible](native-terminal-gate-retention-20261121.md) y los [cruces en sentidos opuestos con egreso libre](native-farm-gate-aperture-20261121.md#dos-trabajadores-en-sentidos-opuestos) se verificaron después.

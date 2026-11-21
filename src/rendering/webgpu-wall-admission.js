@@ -1,3 +1,5 @@
+import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,nativeHomeArrivalSuccessor} from '../world/native-home-arrival.js';
+import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
 import {nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeWorldStopEffects} from '../world/native-suspended-body-reference.js';
@@ -74,6 +76,46 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   gatePreparation=part;return part;
  }
 
+ // The v2 native terminal contract permits publication only if removing its
+ // reservation leaves all motors unchanged, rechecked at the source commit.
+ function prepareNativeTerminalGateRetention({presentation,resources,signal}){
+  const home=resources?.kind==='native-home-arrival-proposal',copy=home?copyNativeHomeArrivalProposal:copyNativeTaskSettlementProposal,
+   copyProof=home?copyNativeHomeArrivalAttestation:copyNativeTaskSettlementAttestation,
+   same=home?sameNativeHomeArrivalReference:sameNativeTaskSettlementReference,
+   successor=home?nativeHomeArrivalSuccessor:nativeTaskSettlementSuccessor,
+   key=home?'nativeHomeArrival':'nativeSettlement',proofKey=home?'nativeHomeArrivalBinding':'nativeTaskSettlementBinding';
+  let reference=copy(resources)[key];
+  if(!(reference.sourceHome??reference.sourceCarry).gateIds.includes(presentation.gateId))throw Error('Native terminal does not own its historical gate');
+  if(closed||!signal||signal.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
+  const wall=slot.active,binding=wall.nativeGpuGate;
+  if(!binding)throw Error('Native terminal gate has no resident motor');
+  const retained=binding.captureRetention(presentation,reference.worldBoundary);let active=true,activated=false;
+  const valid=()=>active&&!closed&&!signal.aborted&&gatePreparation===part&&slot.upToDate&&slot.active===wall&&retained();
+  const check=()=>{if(!valid())throw Error('Native terminal gate became stale');};
+  const finish=()=>{active=false;if(gatePreparation===part)gatePreparation=null;};
+  function validateCommit(data){
+   check();const proof=copyProof(data?.[proofKey]);
+   if(!activated||!same(proof.preparedReference,reference)||!sameNativeWorldBoundary(proof.reference.worldBoundary,data.worldBoundary))throw Error('Native terminal gate differs from its final source');
+   return proof;
+  }
+  // No new shader/material needs admission. The retained frame and Host must
+  // still contain and pin the independent motor clock for every source gate.
+  const part={requests:[],valid,validateCommit,
+   activate(){check();if(activated)throw Error('Native terminal gate already activated');activated=true;},
+   rollback(){check();activated=false;},
+   retarget(value){
+    check();if(activated)throw Error('Native terminal gate must roll back before refresh');
+    const next=copy(value);if(!successor(reference,next[key]))return false;
+    // valid() pins the same immutable owner; successor() keeps the world
+    // monotone. Neither its canonical shape nor its clock changed here.
+    reference=next[key];return true;
+   },
+   finalize(data){validateCommit(data);finish();},
+   cancel(){if(!active)return false;finish();return true;}
+  };
+  gatePreparation=part;return part;
+ }
+
  function prepareNativeGate({presentation,motion,getPickTime,signal}){
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
   const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime,presentationClock,getPresentationTime});let previous=wall.nativeGpuGate??null;
@@ -95,5 +137,5 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
- return {group:slot.group,initialParticipant,update,prepareNativeGate,prepareNativeGateRetention,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
+ return {group:slot.group,initialParticipant,update,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
 }

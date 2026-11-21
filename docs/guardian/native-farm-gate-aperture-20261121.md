@@ -52,13 +52,13 @@ Una tercera captura dejó completar el arranque visual antes de iniciar el recor
 
 El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.
 
-En WebGPU físico, Carry dibujó el ticket 10 y llegó a x=-14, z=4,639. Settlement17 llamó al preparador de la Surface, que devolvió Native settlement gate graphics are not prepared porque el recorrido conserva el motor. La última publicación confirmada todavía contiene Carry. Queda preparar la entrega para el dueño exacto de la hoja y comprobar el cierre de Home con puerta. [Recibo de Carry](performance/native-ordinary-carry-gate-20261121.json).
+En el ensayo inicial, Carry dibujó el ticket 10 y llegó a x=-14, z=4,639. La preparación de Settlement17 rechazaba el historial del motor. El recorrido corregido dibujó la entrega con el ticket 12, conservó el cuerpo y el portón, abonó 14 monedas una sola vez y drenó. [Recibo inicial](performance/native-ordinary-carry-gate-20261121.json) · [Entrega verificada](native-terminal-gate-retention-20261121.md).
 
 ## Home por el vano
 
 El fin de turno de `youngMale` desde Idle20 solicitó Home18. Salió de z=5,7 y cruzó el vano por x=-13,9496 con la hoja abierta. NVIDIA dibujó el ticket 6 con el cuerpo 1, la raíz 695 y las 36 geometrías del trabajador. La puerta conservó su raíz 397 y la malla residente. El mayor intervalo observado durante el cruce fue de 37,2 ms a 30 Hz.
 
-Al llegar a z=11,8, Home19 intentó retirar al trabajador. La Surface rechazó el paquete con `Native Home absence gate graphics are not prepared`. El Host determinista también llegó al destino y rechazó la preparación de retirada con el motor 1000000. Queda transferir el motor a su dueño de destino en la misma frontera que retira el trabajador, conservando las reservas activas. [Recibos de Home](performance/native-ordinary-home-gate-20261121.json).
+En el ensayo inicial, Home19 rechazó la preparación de retirada al llegar a z=11,8 porque el trayecto había usado el portón. El recorrido corregido dibujó la ausencia con el ticket 8. El portón conservó su reloj y siguió dibujándose otros 681,5 ms antes del drenaje. [Recibos iniciales](performance/native-ordinary-home-gate-20261121.json) · [Retirada verificada](native-terminal-gate-retention-20261121.md).
 
 ## Empalizada y portón reforzado
 

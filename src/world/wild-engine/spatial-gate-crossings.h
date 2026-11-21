@@ -109,6 +109,14 @@ bool gateCrossingReleaseStopsOthers(const NativeGate& gate,const RouteSlot& rout
   return lease!=gate.crossings.end()&&lease->second.generation==route.generation&&
     (gateOpening(gate,now)!=gate.target||gateMotionPending(gate,now));
 }
+// Terminal17/19 carry no projected motor changes. Use the very same predicate
+// as release, at both preparation and commit, including a future pending motor.
+bool gateCrossingReleaseRetainsMotors(const IntentState& s,const RouteSlot& route){
+  for(uint64_t id:route.gateReservations){const auto found=s.gates.find(id);
+    if(found==s.gates.end()||gateCrossingReleaseStopsOthers(found->second,route,s.effectiveTime))return false;
+  }
+  return true;
+}
 void releaseGateCrossings(IntentState& s,const RouteSlot& route){
   if(route.gateReservations.empty())return;
   cancelGateMotionProposal(s);

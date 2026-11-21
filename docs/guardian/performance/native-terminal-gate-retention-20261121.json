@@ -1,0 +1,580 @@
+{
+  "base": "8a9d3ac4c34427f437ef2018c9d24e658ff07d4a",
+  "deltas": {
+    "terminal": "23b52621a0cd60420eaab696dae3d50e9c74a3b1957c313e3aa11ea694b37416",
+    "clock": "b21c7e3ed421233b3c2309fbec7f74e382c4ac604826907a46d28baddc68258e"
+  },
+  "abi": {
+    "standalone": {
+      "imports": 1,
+      "exports": 779,
+      "versions": [
+        2,
+        2
+      ]
+    },
+    "pthread": {
+      "imports": 16,
+      "exports": 800,
+      "publicFunctions": 785,
+      "versions": [
+        2,
+        2
+      ]
+    },
+    "unchangedAbiNamesAndKinds": true,
+    "rebuiltOutputs": {
+      "standalone/spatial-savanna.wasm": "d66ae0183705f22ed7ce828c31998464fe5b1fbd04d4eb4419c25b64a336a25a",
+      "pthread/spatial-threaded.mjs": "0653849f577e8f92a85feeedfabd71af85d24edac83dacd6ce14ad0771a9284a",
+      "pthread/spatial-threaded.wasm": "11fcc4c475fd21ad6da0211d122a8cbf9b4907bc767ee8b4a7591c3830f3d03d"
+    }
+  },
+  "configuration": {
+    "adapter": "NVIDIA Turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "displayHz": 30,
+    "workerProfile": "youngMale"
+  },
+  "settlement": {
+    "rawSha256": "c93140ca3b4231976a4588c6301ae0e482f49bbc40a403a8b08935a16f8ee719",
+    "sourcePlant": "plant-1000001",
+    "gate": {
+      "root": 519,
+      "visible": true,
+      "meshes": [
+        {
+          "id": 521,
+          "geometry": 250,
+          "material": [
+            331
+          ],
+          "visible": true,
+          "effectiveVisible": true
+        }
+      ]
+    },
+    "gateIds": [
+      1000000
+    ],
+    "body": 1,
+    "actorRoot": 662,
+    "geometries": 32,
+    "crossed": [
+      {
+        "elapsed": 27.00000000000003,
+        "x": -13.949600219726562,
+        "z": 8.280457203149192,
+        "opening": 1
+      },
+      {
+        "elapsed": 27.05000000000003,
+        "x": -13.949600219726562,
+        "z": 8.226457203149192,
+        "opening": 1
+      },
+      {
+        "elapsed": 27.10000000000003,
+        "x": -13.949600219726562,
+        "z": 8.17245720314919,
+        "opening": 1
+      }
+    ],
+    "draft": {
+      "draft": {
+        "version": 1,
+        "authorityEpoch": "7abd07d4-55aa-44a6-a1b9-59864814f367/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 30.400000000000077
+      },
+      "elapsedMs": 620.1000000238419,
+      "draws": 19,
+      "activeGate": [
+        {
+          "entityId": "structure-1000000",
+          "mesh": 521,
+          "geometry": 250,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "7abd07d4-55aa-44a6-a1b9-59864814f367/1",
+              "nativeSession": 1,
+              "ticket": 9,
+              "effectiveTime": 19.699999999999925
+            }
+          }
+        }
+      ],
+      "balance": {
+        "n": "100000",
+        "d": "1"
+      }
+    },
+    "commit": {
+      "version": 1,
+      "authorityEpoch": "7abd07d4-55aa-44a6-a1b9-59864814f367/1",
+      "nativeSession": 1,
+      "ticket": 12,
+      "effectiveTime": 31.9500000000001
+    },
+    "entry": "deliver:crate-1000003",
+    "credit": {
+      "n": "14",
+      "d": "1"
+    },
+    "crate": {
+      "id": "crate-1000003",
+      "delivered": true,
+      "carrierId": null
+    },
+    "retainedBuffers": {
+      "retainedGateBuffers": [
+        "Buffer:2355",
+        "Buffer:2354",
+        "Buffer:2353",
+        "Buffer:2352",
+        "Buffer:4187",
+        "Buffer:4186",
+        "Buffer:4185"
+      ],
+      "commonOwners": 1011,
+      "replacedOwners": 0,
+      "uniqueRetained": 843
+    },
+    "firstPayment": {
+      "at": 1795270925082.2,
+      "sequence": 188,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7abd07d4-55aa-44a6-a1b9-59864814f367/1",
+        "nativeSession": 1,
+        "ticket": 12,
+        "effectiveTime": 31.9500000000001
+      },
+      "intervalMs": 33.39990234375,
+      "drawMs": 3.10009765625,
+      "replay": false,
+      "clockElapsed": 32.0000000000001,
+      "safeUntil": 32.0000000000001,
+      "cameraVersion": null
+    },
+    "maxWindowDrawInterval": {
+      "at": 1795270920985,
+      "sequence": 160,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "7abd07d4-55aa-44a6-a1b9-59864814f367/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 22.399999999999963
+      },
+      "intervalMs": 36.099853515625,
+      "drawMs": 2.400146484375,
+      "replay": true,
+      "clockElapsed": 27.90000000000004,
+      "safeUntil": 27.90000000000004,
+      "cameraVersion": null
+    },
+    "opportunities": 240,
+    "missedOpportunities": 0,
+    "drained": true,
+    "gpuErrors": 0
+  },
+  "home": {
+    "rawSha256": "0f72a895b000957b4fd87a22512a5efb042c4cc72353d433df5e21b6ced58dd6",
+    "crossing": {
+      "ticket": 6,
+      "body": 1,
+      "root": 696,
+      "geometries": 36,
+      "position": {
+        "time": 254.8000000000011,
+        "elapsed": 15.099999999999826,
+        "x": -13.949600219726562,
+        "z": 8.453190688284302,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 325
+      },
+      "aperture": [
+        {
+          "time": 254.450000000001,
+          "elapsed": 14.749999999999833,
+          "x": -13.949600219726562,
+          "z": 8.075190688284309,
+          "admission": "native-home",
+          "status": "returning",
+          "sequence": 318,
+          "opening": 1
+        },
+        {
+          "time": 254.50000000000102,
+          "elapsed": 14.799999999999832,
+          "x": -13.949600219726562,
+          "z": 8.129190688284307,
+          "admission": "native-home",
+          "status": "returning",
+          "sequence": 319,
+          "opening": 1
+        },
+        {
+          "time": 254.55000000000103,
+          "elapsed": 14.849999999999831,
+          "x": -13.949600219726562,
+          "z": 8.183190688284308,
+          "admission": "native-home",
+          "status": "returning",
+          "sequence": 320,
+          "opening": 1
+        },
+        {
+          "time": 254.60000000000105,
+          "elapsed": 14.89999999999983,
+          "x": -13.949600219726562,
+          "z": 8.237190688284306,
+          "admission": "native-home",
+          "status": "returning",
+          "sequence": 321,
+          "opening": 1
+        },
+        {
+          "time": 254.65000000000106,
+          "elapsed": 14.949999999999829,
+          "x": -13.949600219726562,
+          "z": 8.291190688284304,
+          "admission": "native-home",
+          "status": "returning",
+          "sequence": 322,
+          "opening": 1
+        }
+      ]
+    },
+    "draft": {
+      "draft": {
+        "version": 1,
+        "authorityEpoch": "076e8367-9ed0-4bfd-adba-6bce4485020a/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 18.19999999999984
+      },
+      "elapsedMs": 625.3000000715256,
+      "draws": 19,
+      "activeGate": [
+        {
+          "entityId": "structure-1000000",
+          "mesh": 521,
+          "geometry": 246,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "076e8367-9ed0-4bfd-adba-6bce4485020a/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 10.299999999999928
+            }
+          }
+        }
+      ],
+      "position": {
+        "time": 258.599999999999,
+        "elapsed": 18.89999999999985,
+        "x": -14,
+        "z": 11.800000190734863,
+        "admission": "native-home",
+        "status": "returning",
+        "sequence": 401
+      }
+    },
+    "commit": {
+      "version": 1,
+      "authorityEpoch": "076e8367-9ed0-4bfd-adba-6bce4485020a/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 18.99999999999985
+    },
+    "firstAbsence": {
+      "at": 1795270857181.9001,
+      "sequence": 102,
+      "ticket": 8,
+      "intervalMs": 33.300048828125,
+      "drawMs": 1.89990234375,
+      "trigger": "raf",
+      "replay": false
+    },
+    "absentRoots": [],
+    "retainedBuffers": {
+      "retainedGateBuffers": [
+        "Buffer:2366",
+        "Buffer:2365",
+        "Buffer:2364",
+        "Buffer:2363",
+        "Buffer:3299",
+        "Buffer:3298",
+        "Buffer:3297"
+      ],
+      "commonOwners": 879,
+      "replacedOwners": [],
+      "uniqueRetained": 791
+    },
+    "continued": {
+      "elapsedMs": 681.5,
+      "draws": 23,
+      "gate": {
+        "root": 519,
+        "visible": true,
+        "meshes": [
+          {
+            "id": 521,
+            "geometry": 246,
+            "material": [
+              315
+            ],
+            "visible": true,
+            "effectiveVisible": true
+          }
+        ]
+      },
+      "motor": [
+        {
+          "entityId": "structure-1000000",
+          "mesh": 521,
+          "geometry": 246,
+          "positionVersion": 1,
+          "normalVersion": 1,
+          "positionHash": 603722329,
+          "opening": 1,
+          "nativeGate": {
+            "gateId": 1000000,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "076e8367-9ed0-4bfd-adba-6bce4485020a/1",
+              "nativeSession": 1,
+              "ticket": 5,
+              "effectiveTime": 10.299999999999928
+            }
+          }
+        }
+      ],
+      "opportunities": 240,
+      "missedOpportunities": 0,
+      "maxWindowDrawInterval": {
+        "at": 1795270851352.3,
+        "sequence": 48,
+        "ticket": 6,
+        "intervalMs": 37,
+        "drawMs": 1.300048828125,
+        "trigger": "raf",
+        "replay": true
+      }
+    },
+    "drained": true,
+    "gpuErrors": 0
+  },
+  "homeClockBaseline": {
+    "rawSha256": "bdabc357a2a2c7d0ebe9d116865a67a17ab0f103b66d8bb32478d14a2c45dac2",
+    "reason": "page.evaluate: Error: Timed out: Home GPU drain",
+    "invalidInterval": {
+      "at": 1795270751048.5,
+      "clock": {
+        "version": 1,
+        "sequence": 362,
+        "epoch": 10,
+        "elapsed": 19.249999999999854,
+        "anchorAbsoluteMs": 1795270751006.5999,
+        "safeUntil": 9007199254740991,
+        "paused": true,
+        "segments": [],
+        "consumerAnchored": true
+      },
+      "interval": {
+        "token": 1,
+        "sequence": 362,
+        "start": 19.249999999999854,
+        "end": 19.299999999999855,
+        "segments": [
+          {
+            "start": 19.249999999999854,
+            "end": 19.299999999999855,
+            "realDuration": 0.05000000000000071,
+            "rate": 1
+          }
+        ]
+      },
+      "previousClock": {
+        "version": 1,
+        "sequence": 346,
+        "epoch": 10,
+        "elapsed": 18.449999999999843,
+        "anchorAbsoluteMs": 1795270750163.3,
+        "safeUntil": 9007199254740991,
+        "paused": true,
+        "segments": []
+      },
+      "previousInterval": null,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "bc996bb1-be09-4084-9771-8079d4166888/1",
+        "nativeSession": 1,
+        "ticket": 8,
+        "effectiveTime": 19.199999999999854
+      },
+      "activeBoundary": {
+        "version": 1,
+        "authorityEpoch": "bc996bb1-be09-4084-9771-8079d4166888/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 18.449999999999843
+      },
+      "ownKeys": [
+        "nativeWorldBoundary",
+        "nativeRouteResourceRevision",
+        "preparedInterval",
+        "clock",
+        "cameraSafe",
+        "cameraBlockers",
+        "cameraEnvelope",
+        "cameraVersion",
+        "viewportVersion"
+      ],
+      "receivedAt": 1795270751021.2,
+      "now": 1795270751048.3
+    },
+    "priorSubmittedAbsence": [
+      {
+        "at": 1795270750881.6,
+        "sequence": 93,
+        "ticket": 8,
+        "intervalMs": 33.300048828125,
+        "drawMs": 2.599853515625,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795270750914.9,
+        "sequence": 93,
+        "ticket": 8,
+        "intervalMs": 33.2998046875,
+        "drawMs": 1.5,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "unattributedPeak": {
+      "at": 1795270745024.4,
+      "sequence": 40,
+      "ticket": 6,
+      "intervalMs": 42.7998046875,
+      "drawMs": 1.900146484375,
+      "trigger": "raf",
+      "replay": true
+    }
+  },
+  "nativeMotorControls": {
+    "rawSha256": "6d93fb06dfdb023999ce563cd022912c3b97f10326ca02e485d37e335e0e4807",
+    "scope": "Standalone v2 ABI controls with real gate reservations and production gate APIs. The causal publication advances the gate revision while preserving the reserved motor.",
+    "cases": [
+      {
+        "kind": 17,
+        "mode": "after-terminal-stage",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": -7,
+        "terminalCommit": 1,
+        "result": "pass"
+      },
+      {
+        "kind": 17,
+        "mode": "reserved-motor-rewrite",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": -9,
+        "terminalCommit": 1,
+        "result": "pass"
+      },
+      {
+        "kind": 17,
+        "mode": "preexisting-motor-publication",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": 1,
+        "motorCommit": 1,
+        "terminalCommit": -2,
+        "result": "pass"
+      },
+      {
+        "kind": 19,
+        "mode": "after-terminal-stage",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": -7,
+        "terminalCommit": 1,
+        "result": "pass"
+      },
+      {
+        "kind": 19,
+        "mode": "reserved-motor-rewrite",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": -9,
+        "terminalCommit": 1,
+        "result": "pass"
+      },
+      {
+        "kind": 19,
+        "mode": "preexisting-motor-publication",
+        "gates": [
+          1000000
+        ],
+        "versions": [
+          2,
+          2
+        ],
+        "motorStage": 1,
+        "motorCommit": 1,
+        "terminalCommit": -2,
+        "result": "pass"
+      }
+    ]
+  }
+}

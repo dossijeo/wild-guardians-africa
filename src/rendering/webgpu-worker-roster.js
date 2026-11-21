@@ -297,7 +297,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    pending.stage='preparing';pending.cancel=cancel;
    // An absence needs no replacement material, route texture or pipeline.
    // Keep the old Home owner until the retained absent frame is presented.
-   return {requests:[],valid,validateCommit,cancel,
+   return {retainedGatePresentations:previous.packet.gates,requests:[],valid,validateCommit,cancel,
     rollback(){check();restore();},
     retarget(next){check();if(activated)throw Error('Native Home absence must be rolled back before retargeting');next=copyNativeHomeArrivalProposal(next);if(!nativeHomeArrivalSuccessor(ref,next.nativeHomeArrival))return false;packet=next;ref=next.nativeHomeArrival;pending.nativeHomeArrival=ref;return true;},
     activate(){if(!valid()||activated)throw Error('Native Home absence activation unavailable');actor.root.visible=false;activated=true;},
@@ -418,7 +418,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    function restore(){if(activated){binding.rollbackActivation();variant.rollbackActivation();entry.nativeState=previous;entry.motion=oldMotion;entry.motionBinding=oldBinding;activated=false;}}
    function cancel(){if(finished)return false;restore();finished=true;controller.abort();if(entry.nativePending===pending)entry.nativePending=null;signal?.removeEventListener('abort',abort);retireNative(candidate);return true;}
    function validateCommit(data){const proof=copyNativeTaskSettlementAttestation(data?.nativeTaskSettlementBinding);if(!valid()||!activated||!nativeTaskSettlementAttestationCovers(proof,ref))throw Error('Native settlement differs from its issued source');return proof;}
-   pending.stage='preparing';pending.cancel=cancel;return {request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},valid,validateCommit,rollback(){check();restore();},cancel,
+   pending.stage='preparing';pending.cancel=cancel;return {request:{object:actor.root,options:{signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()}},retainedGatePresentations:previous.packet.gates,valid,validateCommit,rollback(){check();restore();},cancel,
     retarget(nextSupport,options){check();if(activated)throw Error('Native settlement must be rolled back before retargeting');const result=motion.retargetNativeTaskSettlement(nextSupport,options);if(!result)return false;ref=copyNativeTaskSettlementReference(nextSupport.reference);support=nextSupport;pending.nativeSettlement=ref;candidate.nativeSettlement=ref;candidate.support=support;candidate.start=ref.worldBoundary.effectiveTime;return true;},
     activate(){if(!valid()||activated)throw Error('Native settlement activation unavailable');variant.activate();try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}entry.nativeState=candidate;entry.motion=motion;entry.motionBinding=binding;activated=true;},
     finalize(data){const proof=validateCommit(data);candidate.nativeSettlementBinding=proof;candidate.start=proof.reference.worldBoundary.effectiveTime;motion.setExecutionEpoch(candidate.start);motion.seal();entry.nativePending=null;finished=true;signal?.removeEventListener('abort',abort);retireNative(previous);onSelectableChange();}
