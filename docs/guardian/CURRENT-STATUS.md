@@ -2,6 +2,8 @@
 
 Una colocación de centro conservó en NVIDIA Turing los propietarios de 173 regiones y sus 582 pares de vegetación lejana. La revisión nativa siguió en 3 y no hubo nuevas ofertas ni altas de atributos en esos lotes. Surface conserva la invalidación por terreno o cambio de revisión y las supresiones selectivas. [Corrección y prueba física](far-structure-revision-retention-20261121.md).
 
+La parada de Farm antes de Build conserva ahora los 34 propietarios de vegetación lejana y sus 58 pares en NVIDIA Turing. Su recibo conserva la misma revisión y llega con `terrainChanged:false`. Tanto el muro como el nuevo corredor adquieren sus paquetes sin invalidar globalmente la vegetación. [Prueba de identidad](performance/native-build-active-farm-20261120/far-body-stop-retention.json).
+
 Build de muros sólidos residentes ya pasó en NVIDIA Turing con Farm en marcha. En el cruce adquirió la parada y el muro, conservó el checkpoint inmediato y retomó el mismo cuerpo, raíz y 32 mallas. Fuera del corredor mantuvo la ruta original. Con regiones frías rechazó antes de cobrar. Quedan las demás formas de Build, la recuperación de colisión y la cadencia de presentación. [Recibos y alcance](native-wall-causal-adapter-20261121.md).
 
 La colocación individual de centro y muro superó la prueba en NVIDIA Turing y activó una sola copia de textura de 1×64 con cero errores WebGPU. El contraste físico del fence verificó que el resto de los recursos conserva su identidad. Pasaron las 337 pruebas relacionadas y el build. La latencia del gesto y C4 siguen abiertas. [Aislamiento de la textura y recibos](native-standalone-texture-upload-20261121.md).

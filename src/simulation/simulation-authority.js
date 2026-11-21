@@ -77,7 +77,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
   const planner=createEventDrivenTaskPlanner(session,{onNativeWorldResources:resources=>{
-    if(resources.kind!==2&&!resources.chunks.length)terrainGeneration++;
+    // The published boundary carries wall occupancy and worker stops. Empty
+    // receipts for those changes do not invalidate the terrain or vegetation.
+    const preservesTerrain=[2,12,24,25].includes(resources.kind)&&resources.removed.length===0;
+    if(!preservesTerrain&&!resources.chunks.length)terrainGeneration++;
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{})});
   }});planner.resetFromState(game);

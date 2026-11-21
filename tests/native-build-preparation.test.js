@@ -15,8 +15,13 @@ test('ordinary Build stops its native Farm consumer before purchase and admits t
   const before=f.snapshot(),original=f.records[0].resources.nativeFarmArrival;
   await pump(f,f.authority.prepareNativeStructureCommand(command));
   await f.present();const stop=f.records.find(r=>r.kind==='farm-arrival-stop');assert(stop?.committed);
-  assert.equal(f.snapshot().ledger.entries[command.id],undefined,'preparation never charges');
-  assert.equal(f.snapshot().workers[0].nativeRouteAdmission,'native-farm-arrival-held');
+  const prepared=f.command({kind:'snapshot',visualTerrain:true}),snapshot=JSON.parse(prepared.snapshot);
+  const stopResources=prepared.nativeWorldResources?.find(resource=>resource.kind===24);
+  assert(stopResources);assert.deepEqual(stopResources.chunks,[]);assert.deepEqual(stopResources.removed,[]);
+  assert.deepEqual(prepared.terrainCheckpoint.nativeWorldBoundary,stopResources.worldBoundary);
+  assert.equal(prepared.terrainChanged,false,'the acquired stop preserves terrain and vegetation');
+  assert.equal(snapshot.ledger.entries[command.id],undefined,'preparation never charges');
+  assert.equal(snapshot.workers[0].nativeRouteAdmission,'native-farm-arrival-held');
   const result=f.command(command);assert.equal(result.value,true);assert.equal(result.events.filter(e=>e.type==='WallChainBuilt').length,1);
   assert.equal(f.command(command).value,false);f.authority.finishNativeStructureCommand(command);
   for(let i=0;i<2;i++){f.advance();await f.present();}
