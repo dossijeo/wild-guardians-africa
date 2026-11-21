@@ -644,5 +644,486 @@
   },
   "drained": true,
   "maxHostDrawIntervalMs": 34.099853515625,
-  "diagnosticSha256": "0f267a6a1387927e7040b396c7ec6919f1612bab93e1b0ec77f0e702321f458d"
+  "diagnosticSha256": "0f267a6a1387927e7040b396c7ec6919f1612bab93e1b0ec77f0e702321f458d",
+  "cameraSelection": {
+    "source": "0d7835ea892ecb35369db12c05481f38890724c4",
+    "growth": {
+      "commandId": "ordinary-guardian-growth",
+      "value": true,
+      "picked": {
+        "coordinate": {
+          "x": 0.5776036645548688,
+          "y": -0.2362100296433569
+        },
+        "candidate": {
+          "entityId": "plant-1000000",
+          "hitPoint": {
+            "x": -11.968750000000124,
+            "y": 16.58240756511699,
+            "z": 4.650000000000002
+          },
+          "point": {
+            "x": -11.764555735911998,
+            "z": 4.105481962431654
+          },
+          "sequence": 161
+        }
+      },
+      "activation": {
+        "id": "event-29207",
+        "type": "SpellActivated",
+        "commandId": "ordinary-guardian-growth",
+        "spellId": "spell-1000002",
+        "simulationDay": 15,
+        "kind": "growth",
+        "x": -11.8,
+        "z": 4.2,
+        "targetPlantId": "plant-1000000",
+        "benefited": true,
+        "power": {
+          "day": 15,
+          "amount": {
+            "n": "180",
+            "d": "13"
+          },
+          "intensity": 0.9230769230769231,
+          "benefited": true
+        },
+        "duration": 30,
+        "targetId": "plant-1000000",
+        "presentation": {
+          "elapsed": 10.249999999999995,
+          "origin": {
+            "x": -8.8,
+            "y": 15.899540901184082,
+            "z": 5.2
+          },
+          "contact": {
+            "x": -11.968750000000124,
+            "y": 16.58240756511699,
+            "z": 4.650000000000002
+          }
+        },
+        "simulationTime": 10.249999999999995
+      },
+      "sequence": 165,
+      "base": {
+        "elapsed": 10.249999999999995,
+        "growth": 10.249999999999995,
+        "peer": 10.249999999999995
+      },
+      "crops": {
+        "target": 10.688461538461537,
+        "peer": 10.549999999999988
+      },
+      "beforeGuardian": {
+        "closed": false,
+        "began": 0,
+        "confirmed": 0,
+        "rejected": 0,
+        "provisionalFrames": 0,
+        "lastCommand": null,
+        "active": null,
+        "ritualPreview": false,
+        "ritualReady": false,
+        "cropBeams": 0,
+        "modelReady": true,
+        "effectsReady": true,
+        "beamVisible": false,
+        "coreVisible": false
+      },
+      "afterGuardian": {
+        "closed": false,
+        "began": 1,
+        "confirmed": 1,
+        "rejected": 0,
+        "provisionalFrames": 0,
+        "lastCommand": "ordinary-guardian-growth",
+        "active": {
+          "id": "ordinary-guardian-growth",
+          "targetId": "plant-1000000",
+          "provisional": false,
+          "kind": "growth"
+        },
+        "ritualPreview": false,
+        "ritualReady": false,
+        "cropBeams": 2,
+        "modelReady": true,
+        "effectsReady": true,
+        "beamVisible": false,
+        "coreVisible": true
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 134.79999995231628
+        }
+      },
+      "farm": {
+        "ticket": 2,
+        "body": 1,
+        "root": 682,
+        "geometryCount": 36,
+        "before": [
+          -17.8,
+          0.2
+        ],
+        "after": [
+          -17.68884271247463,
+          0
+        ]
+      },
+      "started": 1795251925235.9001,
+      "finished": 1795251925608.1,
+      "firstBeamSample": {
+        "elapsed": 10.399999999999991,
+        "got": {
+          "id": "ordinary-guardian-growth",
+          "targetId": "plant-1000000",
+          "provisional": false,
+          "kind": "growth"
+        },
+        "beams": 2,
+        "diff": 0.06923076923077431,
+        "sequence": 22,
+        "at": 1795251925396.3
+      },
+      "lastBeamSample": {
+        "elapsed": 10.549999999999988,
+        "got": {
+          "id": "ordinary-guardian-growth",
+          "targetId": "plant-1000000",
+          "provisional": false,
+          "kind": "growth"
+        },
+        "beams": 2,
+        "diff": 0.13846153846154863,
+        "sequence": 23,
+        "at": 1795251925562.9
+      },
+      "observed": [
+        {
+          "elapsed": 10.299999999999994,
+          "got": {
+            "id": "ordinary-guardian-growth",
+            "targetId": "plant-1000000",
+            "provisional": true,
+            "kind": "growth"
+          },
+          "beams": 0,
+          "diff": 0.02307692307692477,
+          "sequence": 21,
+          "at": 1795251925296.3
+        },
+        {
+          "elapsed": 10.399999999999991,
+          "got": {
+            "id": "ordinary-guardian-growth",
+            "targetId": "plant-1000000",
+            "provisional": false,
+            "kind": "growth"
+          },
+          "beams": 2,
+          "diff": 0.06923076923077431,
+          "sequence": 22,
+          "at": 1795251925396.3
+        },
+        {
+          "elapsed": 10.49999999999999,
+          "got": {
+            "id": "ordinary-guardian-growth",
+            "targetId": "plant-1000000",
+            "provisional": false,
+            "kind": "growth"
+          },
+          "beams": 2,
+          "diff": 0.11538461538462386,
+          "sequence": 22,
+          "at": 1795251925496.5999
+        },
+        {
+          "elapsed": 10.549999999999988,
+          "got": {
+            "id": "ordinary-guardian-growth",
+            "targetId": "plant-1000000",
+            "provisional": false,
+            "kind": "growth"
+          },
+          "beams": 2,
+          "diff": 0.13846153846154863,
+          "sequence": 23,
+          "at": 1795251925562.9
+        }
+      ],
+      "samples": [
+        {
+          "at": 1795251925263,
+          "sequence": 20,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.300048828125,
+          "drawMs": 1.199951171875,
+          "replay": true,
+          "clockElapsed": 10.249999999999995,
+          "safeUntil": 10.249999999999995,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925296.3,
+          "sequence": 21,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.300048828125,
+          "drawMs": 1.2998046875,
+          "replay": false,
+          "clockElapsed": 10.299999999999994,
+          "safeUntil": 10.299999999999994,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925329.5999,
+          "sequence": 21,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.2998046875,
+          "drawMs": 1.2001953125,
+          "replay": true,
+          "clockElapsed": 10.349999999999993,
+          "safeUntil": 10.349999999999993,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925363,
+          "sequence": 21,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.400146484375,
+          "drawMs": 1.199951171875,
+          "replay": true,
+          "clockElapsed": 10.349999999999993,
+          "safeUntil": 10.349999999999993,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925396.3,
+          "sequence": 22,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.300048828125,
+          "drawMs": 1.2998046875,
+          "replay": false,
+          "clockElapsed": 10.399999999999991,
+          "safeUntil": 10.399999999999991,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925429.7,
+          "sequence": 22,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.39990234375,
+          "drawMs": 1.5,
+          "replay": true,
+          "clockElapsed": 10.399999999999991,
+          "safeUntil": 10.399999999999991,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925463,
+          "sequence": 22,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.300048828125,
+          "drawMs": 1.300048828125,
+          "replay": true,
+          "clockElapsed": 10.44999999999999,
+          "safeUntil": 10.44999999999999,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925496.5999,
+          "sequence": 22,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.599853515625,
+          "drawMs": 1,
+          "replay": true,
+          "clockElapsed": 10.44999999999999,
+          "safeUntil": 10.44999999999999,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925529.7,
+          "sequence": 23,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.10009765625,
+          "drawMs": 1.10009765625,
+          "replay": false,
+          "clockElapsed": 10.49999999999999,
+          "safeUntil": 10.49999999999999,
+          "cameraVersion": null
+        },
+        {
+          "at": 1795251925562.9,
+          "sequence": 23,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "7f65383d-744a-4300-94f8-b1c2288ddfc5/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 33.199951171875,
+          "drawMs": 1.400146484375,
+          "replay": true,
+          "clockElapsed": 10.549999999999988,
+          "safeUntil": 10.549999999999988,
+          "cameraVersion": null
+        }
+      ],
+      "timings": [],
+      "opportunities": [
+        {
+          "at": 1795251925263,
+          "intervalMs": 33.300048828125,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 20
+        },
+        {
+          "at": 1795251925296.3,
+          "intervalMs": 33.300048828125,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 21
+        },
+        {
+          "at": 1795251925329.5999,
+          "intervalMs": 33.2998046875,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 21
+        },
+        {
+          "at": 1795251925363,
+          "intervalMs": 33.400146484375,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 21
+        },
+        {
+          "at": 1795251925396.3,
+          "intervalMs": 33.300048828125,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        },
+        {
+          "at": 1795251925429.7,
+          "intervalMs": 33.39990234375,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        },
+        {
+          "at": 1795251925463,
+          "intervalMs": 33.300048828125,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        },
+        {
+          "at": 1795251925496.5999,
+          "intervalMs": 33.599853515625,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 22
+        },
+        {
+          "at": 1795251925529.7,
+          "intervalMs": 33.10009765625,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 23
+        },
+        {
+          "at": 1795251925562.9,
+          "intervalMs": 33.199951171875,
+          "outcome": "submitted",
+          "holdId": null,
+          "sequence": 23
+        }
+      ],
+      "errors": [],
+      "duplicate": false
+    },
+    "drained": true,
+    "maxHostDrawIntervalMs": 33.599853515625,
+    "diagnosticSha256": "920cda468e2a0c92c747a4369a63c99680985fff57cd297dfa656c9cf2f04ee9"
+  }
 }
