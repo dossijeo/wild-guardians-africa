@@ -5,6 +5,7 @@ import {nativeProductionAuthority,untilProduction} from './helpers/native-produc
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {rational} from '../src/simulation/money.js';
+import {cropSpec} from '../src/simulation/rules.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {nativeActionSave} from './helpers/native-task-action-restoration.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
@@ -59,6 +60,60 @@ test('restored harvest action produces Carry and genuine settlement through ordi
   for(let i=0;i<400&&!f.records.some(r=>r.kind==='task-settlement');i++){f.advance();await f.present();}
   await untilProduction(f,()=>f.records.some(r=>r.kind==='task-settlement'&&r.committed));const state=f.snapshot();assert.deepEqual(f.records.filter(r=>r.committed).map(r=>r.kind),['task-action','task-consequence','task-settlement']);assert.equal(state.crates.length,1);assert.equal(state.crates[0].delivered,true);assert.equal(state.workers[0].crateId,null);assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
  }finally{await f.close();}
+});
+
+test('ordinary Multiply follows the same crop through native Harvest, Carry and one settlement',async()=>{
+ const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
+ let f;
+ try{
+  const state=structuredClone(fixture.state),worker=state.workers[0];
+  const center=state.structures.find(structure=>structure.id===worker.centerId);
+  Object.assign(center,{x:worker.x-6,z:worker.z+6});
+  state.crates=[];
+  delete state.agriculturalPower;
+  state.ledger.balance=rational(100000);
+  const {x,z}=fixture.point(-4,6);
+  const crop=createPlant(`plant-${state.nextId++}`,'mijo',x,z,center.id);
+  crop.growth=cropSpec(crop.species).growth_seconds-1;
+  for(const water of crop.water)water.status='manual';
+  state.plants.push(crop);
+
+  f=await nativeProductionAuthority(state);
+  const committed=kind=>f.records.find(record=>record.kind===kind&&record.committed);
+  await untilProduction(f,()=>committed('initial-idle-body'));
+  const command={kind:'castAgricultural',id:'multiply-before-native-harvest',spell:'multiply',x,z,selection:{targetId:crop.id}};
+  const spell=f.command(command);
+  assert.equal(spell.value,true);
+  const [activation]=spell.events.filter(event=>event.type==='SpellActivated');
+  assert.equal(activation.targetId,crop.id);
+  assert.deepEqual(activation.power.amount,rational(132,13));
+  assert.equal(f.command(command).value,false);
+
+  const events=new Map();
+  for(let i=0;i<450&&!committed('task-settlement');i++){
+   for(const event of f.advance().events)events.set(event.id,event);
+   await f.present();
+   assert.deepEqual(f.faults,[]);
+  }
+  const after=f.snapshot(),[crate]=after.crates;
+  assert(committed('task-settlement'),JSON.stringify({
+   worker:after.workers[0],tasks:after.tasks,crates:after.crates,
+   status:f.authority.nativeIntentProductionStatus(),preparations:f.records.map(record=>record.kind),
+  }));
+  assert.equal(after.crates.length,1);
+  assert.equal(crate.sourcePlantId,crop.id);
+  assert.equal(crate.delivered,true);
+  assert.equal(crate.carrierId,null);
+  assert.equal(crate.multiplyPowerSettled,true);
+  assert.deepEqual(crate.multiplyIncome,rational(10));
+  assert.deepEqual(crate.value,rational(66,5));
+  assert.deepEqual(after.ledger.entries[`deliver:${crate.id}`],rational(24));
+  assert.deepEqual(after.ledger.balance,rational(100024));
+  assert.equal([...events.values()].filter(event=>event.type==='CropPicked'&&event.targetId===crop.id).length,1);
+  assert.equal(after.workers[0].id,worker.id);
+  assert.equal(committed('task-settlement').resources.nativeSettlement.bodyId,committed('task-start').resources.bodyId);
+  assert.deepEqual(f.errors,[]);
+ }finally{await f?.close();fixture.close();}
 });
 
 for(const kind of ['initial','water'])test(`completed ${kind} irrigates only when retained Idle adopts the same body`,async()=>{
