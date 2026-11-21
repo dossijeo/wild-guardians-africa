@@ -32,6 +32,18 @@ La prueba de regresión usa Game, WASM y los puertos reales con un Host determin
 
 La partida de ida y vuelta cruzó con Task14, cosechó con Action15 y regresó por la misma hoja con Carry16. NVIDIA dibujó los tickets 6, 8 y 10 sobre el cuerpo 1. El cultivo produjo una sola caja. Las 13 mallas añadidas al actor durante Carry usaron geometrías que ya estaban en el conjunto residente de 36 mallas. El portón conservó su raíz y geometría. El primer dibujo de Carry fue de 33,4 ms a 30 Hz y los máximos de la ventana anterior fueron 39,0 ms en Task y 39,8 ms en Action, ambos en dibujos de repetición, con causa pendiente. El ensayo terminó tras el cruce de regreso y drenó con cero errores. [Recibo de ida y vuelta](performance/native-task14-gate-retiming-20261121.json).
 
+### Cadencia con la pantalla a 60 Hz
+
+La misma partida con trazado CDP completó los dos cruces en NVIDIA con la pantalla a 3840 × 2160 y 60 Hz. El auditor midió intervalos entre envíos del consumidor y retuvo las siguientes muestras. El presupuesto es 16,666… ms.
+
+| Fase | Muestras | Sobre el presupuesto | p95 | Máximo |
+| --- | ---: | ---: | ---: | ---: |
+| Task14 | 434 | 243 | 17,9 ms | 21,7 ms |
+| Action15 | 300 | 175 | 16,9 ms | 25,3 ms |
+| Carry16 | 230 | 131 | 18,3 ms | 23,2 ms |
+
+En el intervalo de 25,3 ms el consumidor envió ambas oportunidades sin retención. Coincidieron un `CommandBuffer::Flush` de 12,87 ms en el proceso gráfico y una tarea de autoridad de 11,23 ms. Su contribución al intervalo queda pendiente de atribución. Una oportunidad se retuvo antes del primer dibujo de Carry, de 23,2 ms. En otro intervalo de Action, la traza registró `pump` de preparación durante 225,35 ms en su Worker. Los hilos se solapan en el tiempo. La captura se exportó sin pérdidas y se restauró el modo original de 4K a 30 Hz. C4 sigue abierto. [Traza y contadores](performance/native-task14-gate-retiming-20261121.json).
+
 ## Carry por el vano
 
 El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.

@@ -199,5 +199,193 @@
     "displayHz": 30,
     "gpuErrors": 0,
     "drained": true
+  },
+  "cadence": {
+    "base": "f347aac95d341841d5f53ab20bc97819e44d1e2f",
+    "targetIntervalMs": 16.666666666666668,
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "instrumentation": "Native CDP trace and samples retained by the physical GPU consumer. Durations overlap across threads.",
+    "trace30": {
+      "sha256": "53b6b25e742f7ce501b327623acdfc679d311b13fdfebdc2c429c444d64026c0",
+      "eventCount": 1069131,
+      "largest": {
+        "at": 1795262672307.1,
+        "sequence": 85,
+        "ticket": 6,
+        "intervalMs": 38.300048828125,
+        "drawMs": 1.89990234375,
+        "trigger": "raf",
+        "replay": true
+      }
+    },
+    "trace60": {
+      "sha256": "5f5d4fe7a9538bb459c914fc80e03b786e97532b1411d01676510c13bab30738",
+      "eventCount": 1332770,
+      "rawSha256": "6cc916c58247930b6066ebf8838748bf438c4e0919d74b911129752566ca3f2f",
+      "summaries": [
+        {
+          "name": "task",
+          "ticket": 6,
+          "observed": 434,
+          "overBudget": 243,
+          "p50": 16.699951171875,
+          "p95": 17.89990234375,
+          "p99": 18.89990234375,
+          "largest": {
+            "at": 1795262836341.3,
+            "sequence": 55,
+            "ticket": 6,
+            "intervalMs": 21.699951171875,
+            "drawMs": 2.5,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "name": "action",
+          "ticket": 8,
+          "observed": 300,
+          "overBudget": 175,
+          "p50": 16.699951171875,
+          "p95": 16.900146484375,
+          "p99": 18.800048828125,
+          "largest": {
+            "at": 1795262845111.5,
+            "sequence": 180,
+            "ticket": 8,
+            "intervalMs": 25.300048828125,
+            "drawMs": 6.300048828125,
+            "trigger": "raf",
+            "replay": true
+          }
+        },
+        {
+          "name": "carry",
+          "ticket": 10,
+          "observed": 230,
+          "overBudget": 131,
+          "p50": 16.699951171875,
+          "p95": 18.300048828125,
+          "p99": 19.5,
+          "largest": {
+            "at": 1795262847342.8,
+            "sequence": 181,
+            "ticket": 10,
+            "intervalMs": 23.199951171875,
+            "drawMs": 2.5,
+            "trigger": "mutation-release",
+            "replay": false
+          }
+        }
+      ],
+      "scope": "Timing between recorded draw submissions, with tracing enabled. The panel mode was set to 60 Hz during the run.",
+      "actionLargest": {
+        "opportunities": [
+          {
+            "at": 1795262845086.2,
+            "intervalMs": 16.5,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          },
+          {
+            "at": 1795262845111.5,
+            "intervalMs": 25.300048828125,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          }
+        ],
+        "authorityMs": 11.231,
+        "gpuFlushMs": 12.873
+      },
+      "carryFirst": {
+        "opportunities": [
+          {
+            "at": 1795262847319.6,
+            "intervalMs": 16.900146484375,
+            "outcome": "submitted",
+            "holdId": null,
+            "sequence": 180
+          },
+          {
+            "at": 1795262847336.2,
+            "intervalMs": 16.599853515625,
+            "outcome": "mutation-hold",
+            "holdId": 5,
+            "sequence": 180
+          }
+        ],
+        "preparationWorkerMs": 13.963
+      },
+      "actionPreparation": {
+        "function": "webgpu-pipeline-admission.js pump",
+        "taskAt": 1795262844766.83,
+        "taskMs": 225.351,
+        "nearestReportedInterval": {
+          "at": 1795262845008.1,
+          "sequence": 180,
+          "ticket": 8,
+          "intervalMs": 21.900146484375,
+          "drawMs": 2.599853515625,
+          "trigger": "raf",
+          "replay": true
+        }
+      },
+      "gpuErrors": 0,
+      "drained": true
+    },
+    "display": {
+      "apply": {
+        "atUnixMs": 1795262797980.912,
+        "action": "apply",
+        "device": "\\\\.\\DISPLAY1",
+        "before": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "after": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "testResult": 0,
+        "changeResult": 0,
+        "registryPersisted": false,
+        "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+      },
+      "restore": {
+        "atUnixMs": 1795262871965.9504,
+        "action": "restore",
+        "device": "\\\\.\\DISPLAY1",
+        "before": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "after": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "testResult": 0,
+        "changeResult": 0,
+        "registryPersisted": false,
+        "savedOriginalSha256": "cc7b5abd26c4e1f748670dbf82858319b701880e57a968edaf0df66dff39d72f"
+      }
+    }
   }
 }

@@ -6,6 +6,8 @@ Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador
 
 Harvest con una puerta sana ya admite Task14 cuando la preparación termina más tarde que el ticket original. El Worker valida la trayectoria y las filas relativas del motor con la atestación nativa. NVIDIA dibujó el cruce con el mismo cuerpo, portón y 36 geometrías. [Recibo](performance/native-task14-gate-retiming-20261121.json). La cadena de ida y vuelta confirmó Harvest y Carry por el mismo vano con una sola caja y sin crear geometría adicional del trabajador.
 
+Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3 ms entre envíos de dibujo y 549 de 964 muestras superaron 16,67 ms. C4 sigue abierto. La pantalla se restauró al modo original de 30 Hz. [Traza y recuentos](native-farm-gate-aperture-20261121.md#cadencia-con-la-pantalla-a-60-hz).
+
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).
 
 Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpos distintos y sus geometrías residentes. Una prueba en frío agotó el plazo de preparación y una parada después de cruzar rechazó la pose del motor. Dos intervalos de arranque de 42,4 y 47,7 ms siguen sin atribución. [Prueba de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
