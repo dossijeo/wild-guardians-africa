@@ -14,6 +14,10 @@ Pasaron 62 pruebas de integración y regresión con standalone y 17 comprobacion
 
 La compilación Vite de producción con WebGPU Worker y dibujo remoto completó el empaquetado.
 
+## Pausa con la hoja en movimiento
+
+La pausa ordinaria durante Farm congeló el cuerpo y el motor en el segundo 10,5 con apertura 0,216. NVIDIA envió 13 dibujos en la parte estable de los 550 ms del control y registró un máximo de 33,5 ms a 30 Hz. Al reanudar, Farm cruzó con apertura 1 sin cambiar el ticket 2, el cuerpo 1, las 32 geometrías ni la malla de la puerta. El consumidor confirmó el drenaje con cero errores. [Recibo de la pausa](performance/native-farm-gate-aperture-20261121.json).
+
 ## Carry por el vano
 
 El mijo maduró en el lado de entrada de la puerta y Game asignó Harvest. Carry16 adquirió el mismo cuerpo 1, la caja y el motor 1000000. Con la hoja abierta el trabajador pasó de z=8,28 a z=8,17 por x=-13,9496. En el control con WASM y Host determinista llegó al centro y generó un solo abono de 14 monedas.

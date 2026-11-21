@@ -4,6 +4,8 @@ Carry cruzó el mismo vano con su caja y llegó al centro en WebGPU físico. La 
 
 Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
 
+Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento).
+
 Dos trabajadores cruzaron después el mismo vano de zarzas en NVIDIA, con cuerpos distintos y sus geometrías residentes. Una prueba en frío agotó el plazo de preparación y una parada después de cruzar rechazó la pose del motor. Dos intervalos de arranque de 42,4 y 47,7 ms siguen sin atribución. [Prueba de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
 
 Al prolongar la prueba de tráfico en WASM, el primer trabajador se quedó en Action15 y el segundo en el extremo de Farm. El productor alternó dos intentos bloqueados. El mismo cultivo se cosechó y se entregó con un solo trabajador. [Control de la cohorte](performance/native-ordinary-farm-gate-traffic-20261121.json).

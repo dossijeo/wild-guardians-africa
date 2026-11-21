@@ -695,5 +695,64 @@
     "remoteDraw": true,
     "buildSeconds": 48.08,
     "passed": true
+  },
+  "ordinaryPause": {
+    "base": "202fb6fd9c3cd662a95acabf05c77f40a7d1d306",
+    "workingChanges": "Damaged-gate candidate present. Gate was healthy throughout.",
+    "rawSha256": "96b673ab9af9e916842984d41ce2d0a71917febbe295cca75e0d18a91ee14e2f",
+    "adapter": [
+      "nvidia",
+      "turing"
+    ],
+    "displayHz": 30,
+    "targetIntervalMs": 16.666666666666668,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "body": 1,
+    "ticket": 2,
+    "clock": 10.49999999999999,
+    "pausedPose": [
+      -13.989817815680736,
+      11.399983810442837
+    ],
+    "confirmedFrozen": true,
+    "gateOpening": 0.21582444533267225,
+    "drawOpening": 0.21582359211351107,
+    "sampledPauseMs": 550,
+    "pausedDrawCount": 13,
+    "pausedPeakIntervalMs": 33.5,
+    "crossing": {
+      "opening": 1,
+      "elapsed": 13.949999999999916,
+      "position": [
+        -13.949600219726562,
+        8.182641344984123
+      ],
+      "localPosition": [
+        0.0503997802734375,
+        -0.017358655015875968
+      ]
+    },
+    "final": {
+      "elapsed": 14.399999999999906,
+      "position": [
+        -13.949600219726562,
+        7.696641344984133
+      ],
+      "worker": {
+        "status": "arriving",
+        "admission": "native-farm-arrival"
+      },
+      "sequence": 107
+    },
+    "actorRoot": 619,
+    "retainedActorMeshes": 32,
+    "gateRoot": 474,
+    "gateGeometry": 202,
+    "drained": true,
+    "gpuErrors": 0
   }
 }
