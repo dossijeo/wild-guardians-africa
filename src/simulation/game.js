@@ -204,8 +204,13 @@ export function prepareStructurePlacement(s,{kind='center',material='zarzas',gat
 export function placeStructure(s,id,options,nav) {
   if(s.commandIds.includes(id)||Object.hasOwn(s.ledger.entries,id))return false;
   const plan=prepareStructurePlacement(s,options,nav);if(!plan)return false;
+  return commitStructurePlacement(s,id,plan,nav);
+}
+export function commitStructurePlacement(s,id,plan,nav) {
   const {kind,x,z,entity,suppression,cost}=plan;
   return commit(s,id,kind==='center'?'center':'wall',()=>{
+    // The authority validates the placement before entering its commit boundary.
+    if(entity.id!==`structure-${s.nextId}`||entity.created!==s.sequence)throw new StructurePlacementError('La cotización de la construcción ha caducado');
     ensurePurchaseBudget(s,cost);transact(s.ledger,id,rational(-cost));
     const replaced=kind==='wall'?replaceCoincidentRuins(s,[entity]):[];
     s.nextId++;s.sequence++;s.structures.push(entity);

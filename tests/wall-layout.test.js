@@ -77,6 +77,20 @@ test('a single paid wall also replaces a coincident ruin',()=>{
   assert.equal(state.structures.some(item=>item.id===ruin.id),false);
   assert.equal(Number(state.ledger.balance.n),balance-10);
 });
+test('a prepared single gate commits its quoted entity once without querying placement again',()=>{
+  const {state,nav}=fixture();
+  const options={kind:'wall',material:'zarzas',gate:true,x:0,z:0,yaw:0};
+  const quote=Game.prepareStructurePlacement(state,options,nav);
+  const balance=Number(state.ledger.balance.n);
+  nav.wallPlacement=()=>{throw Error('Placement must use its prepared quote');};
+  assert.equal(Game.commitStructurePlacement(state,'prepared-gate',quote,nav),true);
+  assert.equal(state.structures.at(-1),quote.entity);
+  assert.equal(Number(state.ledger.balance.n),balance-quote.cost);
+  assert.equal(Game.commitStructurePlacement(state,'prepared-gate',quote,nav),false);
+  const saved=serialize(state);
+  assert.throws(()=>Game.commitStructurePlacement(state,'stale-gate',quote,nav),/ha caducado/);
+  assert.equal(serialize(state),saved);
+});
 test('Enclosure graph and deterministic gates match source including crossings and T junctions',()=>{
   const paths=[square,[...square,[8,4],[0,4]],[[0,0],[8,0],[8,8]],[[0,0],[8,8],[0,8],[8,0],[0,0]]];
   for(const path of paths){
