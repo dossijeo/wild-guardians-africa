@@ -1,3 +1,4 @@
+import {copyNativeStoppedGateSelector} from './native-stopped-clock.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollArrivalSourceMatches,nativeIdleStrollAttestationCovers,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {copyNativeIdleStrollRequestReference,sameNativeIdleStrollRequestReference} from '../world/native-idle-stroll-request-reference.js';
 import {nativeFarmArrivalContinuesHeld,copyNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteAttestation,nativeFarmArrivalRouteAttestationCovers} from '../world/native-farm-arrival-route.js';
@@ -482,11 +483,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(ids.has(owner.nativeRoute.actorId)||bodies.has(owner.bodyId)||!stoppedRecordCurrent(owner,boundary,actor,record)||record.stopProof||proof.preparedReference.worldBoundary.effectiveTime<record.startTime)throw Error('Native moving stop differs from its exact revocations');
         const reference=owner.state===4?stopBody(r,owner):null;
         if(actor.proof&&(reference===null||!sameNativeSuspendedBodyReference(actor.proof,reference)))throw Error('Native moving stop changed an installed body proof');
-        ids.add(owner.nativeRoute.actorId);bodies.add(owner.bodyId);staged.push({actor,record,proof,reference,pose:projection?projection.routeEffects.rows.slice(i*26+8,(i+1)*26):null});
+        ids.add(owner.nativeRoute.actorId);bodies.add(owner.bodyId);staged.push({actor,record,proof,reference,pose:projection?projection.routeEffects.rows.slice(i*26+8,(i+1)*26):null,gateProjection:projection?.gateEffects.rows??null});
       }
     }
     // All validation precedes every write, including a bad later proof.
-    for(const {actor,record,proof,reference,pose} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?Object.freeze({proof,read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];},homePose(radius){return Object.freeze({x:pose[0],z:pose[1],yaw:pose[4],radius,runPhase:pose[9],walkPhase:pose[10],carryPhase:pose[11],runRemaining:pose[14]});}}):null;}
+    for(const {actor,record,proof,reference,pose,gateProjection} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?Object.freeze({proof,readGate(gateId,mechanism){const i=proof.reference.gates.findIndex(g=>g.gateId===gateId&&g.mechanism===mechanism);if(i<0||!gateProjection)throw Error('Native stopped motor has no final projection');return gateProjection[i*3+2];},read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];},homePose(radius){return Object.freeze({x:pose[0],z:pose[1],yaw:pose[4],radius,runPhase:pose[9],walkPhase:pose[10],carryPhase:pose[11],runRemaining:pose[14]});}}):null;}
     return staged.length;
   }
   function admitRouteStop(family,value,{preparingWorldBoundary=null}={}){
@@ -678,6 +679,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const current=()=>actionCurrent(reference,actor),pending=()=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(actorId)===actor&&(q.sourceRequest?actor.state===6&&actor.latestSequence===q.sourceRequest.requestSequence&&sameNativeTaskActionRestoreReference(actor.pendingActionRequest,q.sourceRequest):actor.state===1&&actor.latestSequence===actor.current?.assignmentSequence&&matches(actor.current,q.nativeRoute))&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.startTime;
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native action is obsolete or lacks direct authority proof');error.code='native-action-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get actionRecord(){return current()?actor.actionRecord:null;},get executionEpoch(){return current()?actor.actionProof.reference.startTime:null;},get executionEnd(){return current()?actor.actionProof.reference.endTime:null;}});
+    },
+    admitFarmArrivalStoppedGate(value,{preparingWorldBoundary=null}={}){
+      const reference=copyNativeStoppedGateSelector(value),lease=admitRouteStop(farmStopFamily,reference.stop,{preparingWorldBoundary}),actor=actors.get(reference.stop.sourceRoute.actorId);
+      const current=()=>lease.isCurrent()&&actor?.stoppedProjection?.proof===lease.binding;
+      return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||lease.isPrepared(),get worldBoundary(){return current()?lease.binding.reference.worldBoundary:null;},value(field){if(field!=='opening'||!current())throw Error('Native stopped motor projection is obsolete');return actor.stoppedProjection.readGate(reference.gateId,reference.mechanism);}});
     },
     startGateExecutionEpoch(gate){for(const actor of actors.values()){for(const [proof,current] of [[actor.startProof,startCurrent],[actor.consequenceProof,consequenceCurrent],[actor.homeProof,homeRecordCurrent],[actor.strollProof,strollRecordCurrent],[actor.farmArrivalProof,farmArrivalRecordCurrent]])if(proof&&current(proof.reference,actor)&&proof.gateIds.includes(gate.gateId)&&sameNativeWorldBoundary(proof.preparedReference.worldBoundary,gate.worldBoundary))return (actor.current??actor.revoked).startTime;}return null;},
     installStartedRoutes(boundary,values=[],{bootstrap=false}={}){

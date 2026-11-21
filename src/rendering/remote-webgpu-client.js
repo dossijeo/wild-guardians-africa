@@ -515,9 +515,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if(binding.semantic==='idle-offset'&&(binding.nativeIdleCycle?capabilities.nativeIdleCycleIdlePhaseVersion:binding.nativeFarmArrival?capabilities.nativeFarmArrivalIdlePhaseVersion:capabilities.nativeIdleStrollIdlePhaseVersion)!==1)throw Error('Draw owner does not support native '+(binding.nativeIdleCycle?'Cycle':binding.nativeFarmArrival?'Farm':'Stroll')+' Idle phase clocks');
       if(binding.semantic==='stop-value'&&!binding.nativeStopped)throw TypeError('Native stopped value requires its body');
       if(binding.nativeStopped){
-        const farm=binding.nativeStopped.kind==='native-farm-arrival-stopped-body',task=binding.nativeStopped.kind==='native-task-route-stopped-body';
+        const gate=binding.nativeStopped.kind==='native-farm-arrival-stopped-gate',farm=gate||binding.nativeStopped.kind==='native-farm-arrival-stopped-body',task=binding.nativeStopped.kind==='native-task-route-stopped-body';
         const clockVersion=task?capabilities.nativeTaskRouteStopClockVersion:farm?capabilities.nativeFarmArrivalStopClockVersion:capabilities.nativeIdleStrollStopClockVersion;
-        if(clockVersion!==1||task&&capabilities.nativeTaskRouteStopVersion!==1||farm&&capabilities.nativeFarmArrivalStopVersion!==1)throw Error('Draw owner does not support native final stopped values');
+        if(gate&&capabilities.nativeFarmArrivalStopGateVersion!==1||clockVersion!==1||task&&capabilities.nativeTaskRouteStopVersion!==1||farm&&capabilities.nativeFarmArrivalStopVersion!==1)throw Error('Draw owner does not support native final stopped values');
         copyNativeStoppedClock(binding);
       }
       if(binding.semantic==='idle-cycle-watch-knot'&&!binding.nativeIdleCycle)throw TypeError('Native watch knot requires its cycle');

@@ -541,11 +541,11 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  }
  // The terrain transaction owns staging and capture. No root/rig/geometry is
  // rebuilt; the old binding stays live until all owners commit synchronously.
- async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate,nativeFarmArrivalStopTemplate,nativeTaskRouteStopTemplate,getStoppedProjection=null,retainNativeGate=null}={}){
+ async function prepareNativeTerrainStops(view,{stopEffects,boundary,prepareBodySupport,getPickTime,nativeIdleStrollStopTemplate,nativeFarmArrivalStopTemplate,nativeTaskRouteStopTemplate,getStoppedProjection=null,retainNativeGate=null,prepareStoppedGate=null}={}){
   const templates={nativeIdleStrollStopTemplate:nativeIdleStrollStopTemplate??undefined,nativeFarmArrivalStopTemplate:nativeFarmArrivalStopTemplate??undefined,nativeTaskRouteStopTemplate:nativeTaskRouteStopTemplate??undefined};
   const stop=terrainStopWireProtocol(templates,'Native stop mixes source families'),codec=stop?.codec;
   const template=codec?codec.copyReference(templates[stop.wireTemplateField]):null,farm=codec?.kind===24,task=codec?.kind===25;
-  if(template?.gates.length)throw Error('Native moving stop gate projection requires its prepared motor uniforms');
+  if(template?.gates.length&&(!farm||typeof prepareStoppedGate!=='function'))throw Error('Native moving stop gate projection requires its prepared motor uniforms');
   if(template&&typeof getStoppedProjection!=='function')throw Error('Native moving stop requires its submitted projection reader');
   const effects=copyNativeWorldStopEffects(stopEffects,boundary),references=effects?nativeSuspendedBodiesFromProposal(effects,boundary):[],parts=[],gates=new Map(),retainedGates=new Set(),exclude=new Set();
   if(!effects||effects.routeEffects.rows.length!==references.length*26||typeof prepareBodySupport!=='function'||typeof getPickTime!=='function')throw Error('Native stopped terrain requires pinned projected workers');
@@ -656,7 +656,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      return true;
     };
     parts.push(part);
-    for(const original of previous.packet.gates){let at=-1;for(let j=0;j<effects.gateEffects.rows.length;j+=3)if(effects.gateEffects.rows[j]===original.gateId){at=j;break;}if(at<0&&farm&&!effects.gateEffects.rows.length&&typeof retainNativeGate==='function'){
+    for(const original of previous.packet.gates){let at=-1;for(let j=0;j<effects.gateEffects.rows.length;j+=3)if(effects.gateEffects.rows[j]===original.gateId){at=j;break;}if(at<0&&farm&&typeof retainNativeGate==='function'){
      if(!retainedGates.has(original.gateId)){
       const retained=retainNativeGate(original,{template,stopEffects:effects,boundary});
       if(!retained||typeof retained.valid!=='function'||!retained.valid()){retained?.cancel?.();throw Error('Native stopped gate retention unavailable');}
@@ -664,10 +664,10 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      }
      continue;
     }
-    if(at<0||effects.gateEffects.rows[at+1]!==original.mechanism)throw Error('Native stopped gate lacks its projected physical pose');const {nativeRoute,...shape}=original,presentation=copyNativeGatePresentation({...shape,worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt,rows:Float64Array.from([reference.suspendedAt,effects.gateEffects.rows[at+2]])},{worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt});if(!gates.has(presentation.gateId))gates.set(presentation.gateId,presentation);}
+    if(at<0||effects.gateEffects.rows[at+1]!==original.mechanism)throw Error('Native stopped gate lacks its projected physical pose');const {nativeRoute,...shape}=original,presentation=copyNativeGatePresentation({...shape,worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt,rows:Float64Array.from([reference.suspendedAt,effects.gateEffects.rows[at+2]])},{worldBoundary:boundary,startTime:reference.suspendedAt,endTime:reference.suspendedAt});if(!gates.has(presentation.gateId)){if(template?.gates.length){const part=prepareStoppedGate(presentation,{template});if(!part?.valid?.()){part?.cancel?.();throw Error('Native stopped motor preparation unavailable');}parts.push(part);}gates.set(presentation.gateId,presentation);}}
    }
    if(gates.size*3!==effects.gateEffects.rows.length)throw Error('Native stop includes an unowned gate motor');
-   parts.push(...prepareNativeTerrainRetention(view,{exclude}));return {parts,gates:[...gates.values()]};
+   parts.push(...prepareNativeTerrainRetention(view,{exclude}));return {parts,gates:template?.gates.length?[]:[...gates.values()]};
   }catch(error){for(const part of parts.reverse())part.cancel();throw error;}
  }
  function nativeRouteCurrent(actorId,ref){const entry=entries.get(actorId),value=entry?.nativeState;return !!value&&!value.suspended&&sameNativeReference(value.nativeRoute,ref)&&value.motion.valid()&&value.variant.current();}

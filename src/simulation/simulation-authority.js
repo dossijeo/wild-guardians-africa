@@ -183,7 +183,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   }
   let nativeStructurePreparation=null,nativeStructureFailure=null;
   const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:
-    command.kind==='bless'?{kind:command.kind,id:command.id,targetId:command.targetId}:{kind:command.kind,id:command.id,structure:command.structure});
+    ['bless','removeWall'].includes(command.kind)?{kind:command.kind,id:command.id,targetId:command.targetId}:{kind:command.kind,id:command.id,structure:command.structure});
   function nativeBlessingWorkers(targetId){
     if(!nativeBodies)return [];
     const tasks=new Set(game.tasks.filter(task=>task.targetId===targetId&&task.workerId).map(task=>task.id));
@@ -376,26 +376,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     }),{label:'Native Awakening',rejection:'El cultivo cambió durante la preparación del Despertar'});
   }
 
-  async function prepareNativeStructureCommand(command){
-    if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
-    const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
-    try{
-      if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
-      // Dispatch is held; authority commands and native execution keep running.
-      owner.receipt=await nativeProduction?.quiesce()??null;
-      if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
-      const quoted=quoteStructureCommand(captured,[]),{plan,missingNativeChunks}=quoted;
-      if(missingNativeChunks)throw Error('Native structure requires prepared regions: '+missingNativeChunks.map(p=>`${p.cx},${p.cz}`).join(';'));
-      const nativeQuote=nativeBodies?nativeStructureQuote(quoted):null;
-      if(nativeBodies&&(!plan||quoted.rejection||!nativeQuote)){
-        owner.rejection=quoted.rejection??'La construcción nativa necesita un muro sólido o una puerta compatible en regiones residentes';
-        owner.ready=true;return {version:1};
-      }
-      // A new gate changes the certified corridor even when its passage proxy
-      // permits workers. Query the native mechanism; reuse the existing Stop24
-      // handoff and kind2 acquisition, retaining the same body throughout.
-      const impact=nativeQuote?.gate?planner.inspectNativeGateAdditionStops(nativeQuote.gate):inspectStructureStops(plan);
-      if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
+  async function stopNativeStructureActors(owner,impact){
+    if(impact.status!=='ready')throw Error('Native structure stop query '+impact.status);
       // Reject unsupported consumers before stopping any actor. No JS route
       // approximation may decide whether a native trajectory is affected.
       for(const actor of impact.actors)if(!planner.nativeFarmArrivalRouteBinding(actor))throw Error('Native structure preflight requires an unsupported route stop');
@@ -413,6 +395,61 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
         }
         for(const worker of game.workers)if(planner.nativeFarmArrivalHeldExecution(worker.id))planner.projectNativeFarmArrivalExecution(game,worker);
       }
+  }
+  function quoteNativeGateRemoval(command){
+    if(typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId)throw TypeError('Invalid wall removal command');
+    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return {duplicate:true};
+    if(!permission(game,'wall'))return {rejection:'Esta acción no está disponible ahora'};
+    const target=game.structures.find(s=>s.id===command.targetId&&s.kind==='wall');
+    if(!target)return {rejection:'No existe esa defensa'};
+    if(!nativeGateOwners.includes(target)||target.status!=='intact'||!nativeGateModelId(target.material)||target.wallPresentation||game.tasks.some(t=>t.targetId===target.id&&t.workerId))return {rejection:'La retirada nativa necesita una puerta intacta sin reparación adquirida'};
+    const {gateOpen,...identity}=target;
+    return {target,signature:JSON.stringify(identity)};
+  }
+  async function prepareNativeGateRemovalCommand(owner){
+    const target=game.structures.find(s=>s.id===owner.command.targetId&&s.kind==='wall');
+    // The new handshake must not intercept ordinary solid/legacy removal.
+    if(!nativeBodies||!nativeGateOwners.includes(target)){owner.ready=true;return {version:1};}
+    owner.receipt=await nativeProduction?.quiesce()??null;
+    const first=quoteNativeGateRemoval(owner.command);
+    if(first.rejection||first.duplicate){owner.rejection=first.rejection;owner.ready=true;return {version:1};}
+    await stopNativeStructureActors(owner,planner.inspectNativeGateRemovalStops(first.target.id));
+    planner.flushTaskEvents();planner.flushNativeIntentControl();
+    const validate=()=>{if(!nativeCommandOwnerCurrent(owner))return false;const next=quoteNativeGateRemoval(owner.command);return next.target===first.target&&next.signature===first.signature;};
+    if(!validate())throw Error('Native gate removal changed during stop');
+    const manifest=getTerrainManifest?.(),minSequence=sequence;if(!manifest||!owner.resources)throw Error('Native removal lacks its resource owner');
+    return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>planner.addNativeBarriersAfterGpuQuiescence({
+      removal:{entityId:first.target.id},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,validate,atCommitBoundary,
+      prepareResources:async({resources,signal})=>retain(await owner.resources.prepareNativeBarrierAdditionResources(resources,{signal,minSequence,terrainManifest:manifest,nativeBarrierWallEntities:[structuredClone(first.target)]}),signal),
+      project:proof=>{
+        const adopt=session.prepareNativeWallRemovalAdoption(first.target,proof),original=nav.setState;let adopted=false;
+        nav.setState=next=>{if(next!==game||adopted)throw Error('Native removal Game owner changed');adopt();adopted=true;const index=nativeGateOwners.indexOf(first.target);if(index<0)throw Error('Native gate owner disappeared');nativeGateOwners.splice(index,1);return original(next);};
+        try{return removeWall(game,owner.command.id,owner.command.targetId,nav)===true&&adopted;}finally{nav.setState=original;}
+      }
+    }),{label:'Native gate removal',rejection:'La retirada cambió durante su preparación'});
+  }
+  async function prepareNativeStructureCommand(command){
+    if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
+    const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
+    try{
+      if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
+      if(captured.kind==='removeWall')return await prepareNativeGateRemovalCommand(owner);
+      // Dispatch is held; authority commands and native execution keep running.
+      owner.receipt=await nativeProduction?.quiesce()??null;
+      if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
+      const quoted=quoteStructureCommand(captured,[]),{plan,missingNativeChunks}=quoted;
+      if(missingNativeChunks)throw Error('Native structure requires prepared regions: '+missingNativeChunks.map(p=>`${p.cx},${p.cz}`).join(';'));
+      const nativeQuote=nativeBodies?nativeStructureQuote(quoted):null;
+      if(nativeBodies&&(!plan||quoted.rejection||!nativeQuote)){
+        owner.rejection=quoted.rejection??'La construcción nativa necesita un muro sólido o una puerta compatible en regiones residentes';
+        owner.ready=true;return {version:1};
+      }
+      // A new gate changes the certified corridor even when its passage proxy
+      // permits workers. Query the native mechanism; reuse the existing Stop24
+      // handoff and kind2 acquisition, retaining the same body throughout.
+      const impact=nativeQuote?.gate?planner.inspectNativeGateAdditionStops(nativeQuote.gate):inspectStructureStops(plan);
+      if(impact.status!=='ready')throw Error('Native structure preflight '+impact.status);
+      await stopNativeStructureActors(owner,impact);
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
       if(nativeBodies)return await prepareNativeBarrierCommit(owner);
       owner.ready=true;return {version:1};
@@ -421,7 +458,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   // Called by the existing authority Worker only after this command reaches
   // the runtime/client FIFO head. No purchase or sequence is consumed here.
   async function beginNativeStructureCommand(command){
-    if(!command||!['buildWallChain','placeStructure','bless'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
+    if(!command||!['buildWallChain','placeStructure','bless','removeWall'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
     const owner=nativeStructurePreparation;
     if(owner?.commandSequence!==undefined)throw Error('Native structure command already entered');
     if(!owner?.ready||owner.identity!==structureIdentity(command)||!owner.enterCommit)return;
@@ -686,8 +723,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
      const duplicate=game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id),target=game.structures.find(s=>s.id===command.targetId&&s.kind==='wall');
      if(!duplicate&&!permission(game,'wall'))rejection='Esta acción no está disponible ahora';
      else if(!duplicate&&!target)rejection='No existe esa defensa';
-     else if(!duplicate&&nativeBodies&&nativeGateOwners.includes(target))rejection='La retirada de la puerta necesita preparación nativa';
-     value=rejection?false:removeWall(game,command.id,command.targetId,nav);
+     if(!duplicate&&!rejection&&nativeBodies&&nativeGateOwners.includes(target)){
+      const owner=nativeStructurePreparation;if(nativeStructureFailure)throw nativeStructureFailure;
+      if(!owner?.ready||owner.identity!==structureIdentity(command)||!nativeCommandOwnerCurrent(owner)||owner.rejection||!owner.consume){value=false;rejection=owner?.rejection??'La retirada de la puerta necesita preparación nativa';}
+      else{const result=owner.consume();if(result.status==='committed-control-failed')throw Error(result.error);value=result.status==='committed';if(!value)rejection='La retirada cambió durante su preparación: '+result.status;}
+     }else value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
      admitPendingNativeBirths();planner.flushNativeIntentControl();
      const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);

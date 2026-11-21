@@ -156,6 +156,35 @@ test('a solid addition uses the retained packet with its effective ticket and le
   assert.deepEqual(f.errors,[]);
  }finally{f.close();}
 });
+for (const removedMotorInFrame of [false, true]) {
+ test(`prepared gate removal ${removedMotorInFrame ? 'rejects its old clock' : 'retains a different gate clock'}`, async () => {
+  const f = await nativePreparationFixture({}, {capabilities:{nativeBarrierAdditionVersion:1}});
+  try {
+   const worldBoundary = {version:1,authorityEpoch:f.source.status().authorityEpoch,nativeSession:1,ticket:1,effectiveTime:10};
+   const template = {
+    kind:'native-barrier-addition-reference',
+    version:3,
+    worldBoundary,
+    sourceControlSequence:f.native.w.nav_intent_last_sequence(),
+    removal:{entityId:'structure-9',mechanismId:1,nativeIds:[1,2,3]},
+   };
+   f.client.registerClockBinding(f.buffer,{
+    byteOffset:0,semantic:'relative',epoch:10,nativeGate:{gateId:removedMotorInFrame?9:10,worldBoundary},
+   });
+   const packet = preparedWorldDraw(f,worldBoundary,0,null,{nativeBarrierAdditionTemplate:template});
+   if (removedMotorInFrame) {
+    await assert.rejects(packet,/Native gate removal still includes its motor clock/);
+   } else {
+    const prepared = await packet;
+    prepared.presented.catch(()=>{});
+    assert(prepared.valid());
+    prepared.abort();
+   }
+  } finally {
+   f.close();
+  }
+ });
+}
 function preparationDraw(f,buffer,metadata,pipeline=f.pipeline,upload=null){
  f.client.beginFrame(metadata);if(upload!==null)f.client.device.queue.writeBuffer(buffer,0,new Uint32Array([upload]));
  const group=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]}),encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});

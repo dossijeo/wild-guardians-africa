@@ -35,17 +35,22 @@ function copyPreparedGate(value){
   rootMatrix:Object.freeze([...value.rootMatrix]),leafMatrix:Object.freeze([...value.leafMatrix]),proxies:Object.freeze(proxies)
  });
 }
+function copyPreparedRemoval(value){
+ const id=typeof value?.entityId==='string'&&/^structure-([1-9][0-9]*)$/.exec(value.entityId);
+ if(!only(value,['entityId','mechanismId','nativeIds'])||!id||!Number.isSafeInteger(Number(id[1]))||!Number.isSafeInteger(value.mechanismId)||value.mechanismId<1||!Array.isArray(value.nativeIds)||value.nativeIds.length!==3||value.nativeIds.some(id=>!Number.isSafeInteger(id)||id<1||id>2147483647)||new Set(value.nativeIds).size!==3)throw TypeError('Invalid native gate removal identity');
+ return Object.freeze({entityId:value.entityId,mechanismId:value.mechanismId,nativeIds:Object.freeze([...value.nativeIds])});
+}
 export function copyNativeBarrierAdditionReference(value){
- const variant=value?.version===2?'gate':'additions';
- if(!only(value,['kind','version','worldBoundary','sourceControlSequence',variant])||value.kind!=='native-barrier-addition-reference'||![1,2].includes(value.version)||!Number.isSafeInteger(value.sourceControlSequence)||value.sourceControlSequence<0)throw TypeError('Invalid native solid addition reference');
+ const variant=value?.version===3?'removal':value?.version===2?'gate':'additions';
+ if(!only(value,['kind','version','worldBoundary','sourceControlSequence',variant])||value.kind!=='native-barrier-addition-reference'||![1,2,3].includes(value.version)||!Number.isSafeInteger(value.sourceControlSequence)||value.sourceControlSequence<0)throw TypeError('Invalid native solid addition reference');
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary);if(!worldBoundary)throw TypeError('Missing native solid addition boundary');
  return Object.freeze({kind:value.kind,version:value.version,worldBoundary,sourceControlSequence:value.sourceControlSequence,
-  [variant]:variant==='gate'?copyPreparedGate(value.gate):copyNativeBarrierAdditions(value.additions)});
+  [variant]:variant==='removal'?copyPreparedRemoval(value.removal):variant==='gate'?copyPreparedGate(value.gate):copyNativeBarrierAdditions(value.additions)});
 }
 export const sameNativeBarrierAdditionReference=(a,b)=>{try{return JSON.stringify(copyNativeBarrierAdditionReference(a))===JSON.stringify(copyNativeBarrierAdditionReference(b));}catch{return false;}};
 export function nativeBarrierAdditionSuccessor(a,b){
  a=copyNativeBarrierAdditionReference(a);b=copyNativeBarrierAdditionReference(b);const x=a.worldBoundary,y=b.worldBoundary;
- return a.version===b.version&&a.sourceControlSequence===b.sourceControlSequence&&JSON.stringify(a.gate??a.additions)===JSON.stringify(b.gate??b.additions)&&x.authorityEpoch===y.authorityEpoch&&x.nativeSession===y.nativeSession&&y.effectiveTime>=x.effectiveTime&&(y.ticket>x.ticket||sameNativeBarrierAdditionReference(a,b));
+ return a.version===b.version&&a.sourceControlSequence===b.sourceControlSequence&&JSON.stringify(a.removal??a.gate??a.additions)===JSON.stringify(b.removal??b.gate??b.additions)&&x.authorityEpoch===y.authorityEpoch&&x.nativeSession===y.nativeSession&&y.effectiveTime>=x.effectiveTime&&(y.ticket>x.ticket||sameNativeBarrierAdditionReference(a,b));
 }
 export function copyNativeBarrierAdditionProposal(value){
  if(!only(value,['kind','version','worldBoundary','nativeBarrierAddition','authorizedAutonomy','authorizedConsequences'])||value.kind!=='native-barrier-addition-proposal'||value.version!==1||value.authorizedAutonomy!==false||value.authorizedConsequences!==false)throw TypeError('Invalid native solid addition proposal');
@@ -57,7 +62,8 @@ export const nativeBarrierAdditionReferenceFromProposal=value=>copyNativeBarrier
 export function copyNativeBarrierAdditionAttestation(value){
  if(!only(value,['kind','version','reference','preparedReference','nativeIds'])||value.kind!=='native-barrier-addition-attestation'||value.version!==1)throw TypeError('Invalid native solid addition attestation');
  const reference=copyNativeBarrierAdditionReference(value.reference),preparedReference=copyNativeBarrierAdditionReference(value.preparedReference),ids=value.nativeIds;
- const count=reference.gate?.proxies.length??reference.additions.length;
+ const count=reference.removal?.nativeIds.length??reference.gate?.proxies.length??reference.additions.length;
+ if(reference.removal&&JSON.stringify(ids)!==JSON.stringify(reference.removal.nativeIds))throw TypeError('Native gate removal changed its triplet');
  if(!nativeBarrierAdditionSuccessor(preparedReference,reference)||!Array.isArray(ids)||ids.length!==count||ids.some(id=>!Number.isSafeInteger(id)||id<1||id>2147483647)||new Set(ids).size!==ids.length)throw TypeError('Native solid addition differs from its preparation');
  return Object.freeze({kind:value.kind,version:1,reference,preparedReference,nativeIds:Object.freeze([...ids])});
 }

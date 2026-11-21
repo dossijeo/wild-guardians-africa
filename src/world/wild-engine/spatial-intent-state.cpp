@@ -440,7 +440,7 @@ struct PendingBarrierProposal {
     std::array<double,8> translation{};
   };
   std::optional<WorkerRouteStopDraft> workerRouteStop;
-  struct BarrierAdditionDraft {uint64_t preparedTicket=0;double preparedAt=0;std::array<double,8> translation{};uint64_t gateId=0;std::map<uint64_t,NativeGate> gate;};
+  struct BarrierAdditionDraft {uint64_t preparedTicket=0;double preparedAt=0;std::array<double,8> translation{};uint64_t gateId=0;std::map<uint64_t,NativeGate> gate;bool removal=false;};
   std::optional<BarrierAdditionDraft> barrierAddition;
   bool retainsRoutes=false;
   std::vector<double> routeEffects,gateEffects;
@@ -1569,7 +1569,7 @@ int spatialIntentTakeBarrier(double session,double ticket,double sequence,double
 // native fact, intent, gate or world cannot borrow this preparation.
 int spatialIntentRevalidateBarrierAddition(double session,double ticket,const SpatialStaticMutation* shapes,int count,std::array<double,8>& translation){
   auto& s=state();auto& p=s.barrierProposal;
-  if(!integer(session)||!integer(ticket)||!p.pending||p.kind!=2||!p.barrierAddition||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+  if(!integer(session)||!integer(ticket)||!p.pending||p.kind!=2||!p.barrierAddition||p.barrierAddition->removal||session!=double(p.session)||ticket!=double(p.ticket))return -1;
   if(p.session!=s.session||p.facts!=s.sequence||p.intents!=s.intentSequence||p.gates!=s.gateRevision||p.world!=executionWorldStamp()){
     clearWorldMutationProposal(p);return -2;
   }
@@ -1592,6 +1592,30 @@ extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_barrier_addition_proposal_tran
 }
 // Shared by explicit source families12/24/25. Refresh only the final stop frontier; immutable route/gate owners must still
 // match the original preparation. Keep one bounded origin, never a chain.
+// A prepared Farm motor can finish naturally while READY is retained. It no
+// longer needs a mutation, but its already-prepared scalar still needs a final
+// native projection. The caller has rechecked the original world/gate/intent
+// revisions and exact stopped route owners. Never add a new motor or borrow a
+// different mechanism; only preserve a completed original, still-owned curve.
+static bool retainCompletedFarmStopMotorProjection(const IntentState& s,const std::vector<double>& prepared,const std::vector<double>& routes,std::vector<double>& gates){
+ std::map<uint64_t,std::array<double,3>> pending;
+ for(size_t i=0;i<gates.size();i+=3)if(!pending.emplace(uint64_t(gates[i]),std::array<double,3>{gates[i],gates[i+1],gates[i+2]}).second)return false;
+ std::vector<double> projected;projected.reserve(prepared.size());
+ for(size_t i=0;i<prepared.size();i+=3){const auto id=uint64_t(prepared[i]),mechanism=uint64_t(prepared[i+1]);const auto changed=pending.find(id);
+  if(changed!=pending.end()){if(changed->second[1]!=double(mechanism))return false;projected.insert(projected.end(),changed->second.begin(),changed->second.end());pending.erase(changed);continue;}
+  const auto found=s.gates.find(id);if(found==s.gates.end())return false;const auto& gate=found->second;
+  if(!gate.mesh||gate.status!=0||gate.mechanism!=mechanism||gateMotionPending(gate,s.effectiveTime)||gateMotionEnd(gate)>s.effectiveTime||gateOpening(gate,s.effectiveTime)!=gate.target)return false;
+  bool owned=false;
+  for(size_t j=0;j<routes.size();j+=26){const auto lease=gate.crossings.find(uint64_t(routes[j]));const auto slot=size_t(routes[j+2]);
+   if(lease==gate.crossings.end()||slot>=s.routeSlots.size())continue;const auto& route=s.routeSlots[slot];
+   if(lease->second.slot==slot&&lease->second.generation==uint32_t(routes[j+3])&&lease->second.body==uint64_t(routes[j+4])&&std::find(route.gateReservations.begin(),route.gateReservations.end(),id)!=route.gateReservations.end()){owned=true;break;}
+  }
+  if(!owned)return false;
+  projected.insert(projected.end(),{double(id),double(mechanism),gate.target});
+ }
+ if(!pending.empty())return false;
+ gates=std::move(projected);return true;
+}
 int spatialIntentRevalidateWorkerRouteStop(double session,double ticket,std::array<double,8>& translation){
   auto& s=state();auto& p=s.barrierProposal;
   if(!integer(session)||!integer(ticket)||!p.pending||(p.kind!=12&&p.kind!=24&&p.kind!=25)||!p.workerRouteStop||session!=double(p.session)||ticket!=double(p.ticket))return -1;
@@ -1604,9 +1628,11 @@ int spatialIntentRevalidateWorkerRouteStop(double session,double ticket,std::arr
   int result=spatialIntentBeginWorldPreview();if(result!=1)return result;
   result=spatialIntentStopWorkerRoute(input);spatialIntentEndWorldPreview();if(result!=1)return result;
   result=spatialIntentStageWorld(input,nullptr,-1);if(result!=1)return result;
-  const auto& routes=p.routeEffects;const auto& gates=p.gateEffects;
-  bool same=routes.size()==origin.preparedRoutes.size()&&gates.size()==origin.preparedGates.size();
+  const auto& routes=p.routeEffects;auto& gates=p.gateEffects;
+  bool same=routes.size()==origin.preparedRoutes.size();
   for(size_t i=0;same&&i<routes.size();i+=26)for(size_t j=0;j<8;j++)if(j!=6&&routes[i+j]!=origin.preparedRoutes[i+j]){same=false;break;}
+  if(same&&input.kind==24)same=retainCompletedFarmStopMotorProjection(s,origin.preparedGates,routes,gates);
+  else same=same&&gates.size()==origin.preparedGates.size();
   for(size_t i=0;same&&i<gates.size();i+=3)if(gates[i]!=origin.preparedGates[i]||gates[i+1]!=origin.preparedGates[i+1])same=false;
   origin.translation={1,double(origin.preparedTicket),double(p.ticket),origin.preparedAt,p.at,same?1.:0.,double(routes.size()/26),double(gates.size()/3)};
   translation=origin.translation;p.workerRouteStop=std::move(origin);return 1;
@@ -1688,7 +1714,7 @@ int spatialIntentStageGateAddition(const std::array<double,7>& value,int firstBa
 
 int spatialIntentCommitGateAddition(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,int firstBarrier,SpatialWorldProposalInput& input,std::array<double,5>& receipt,int(*apply)(const SpatialWorldProposalInput&)){
  auto& s=state();auto& p=s.barrierProposal;
- if(!p.pending||p.kind!=2||!p.barrierAddition||!p.barrierAddition->gateId||p.barrierAddition->gate.size()!=1||!apply)return -1;
+ if(!p.pending||p.kind!=2||!p.barrierAddition||p.barrierAddition->removal||!p.barrierAddition->gateId||p.barrierAddition->gate.size()!=1||!apply)return -1;
  const auto& draft=*p.barrierAddition;const auto& gate=draft.gate.begin()->second;
  if(s.gates.count(gate.id)||gate.navigationBarriers[0]!=firstBarrier||gate.mechanism!=s.nextGateMechanism+1)return -2;
  // Validate the receipt before transferring the prepared node. A foreign
@@ -1704,9 +1730,66 @@ int spatialIntentCommitGateAddition(double session,double ticket,double sequence
  const auto before=executionWorldStamp();s.nextGateMechanism=node.mapped().mechanism;s.gates.insert(std::move(node));s.gateRevision++;
  cancelGateMotionProposal(s);updateGateStaticDomain(s);acknowledgeGateSupport(s,before);return 1;
 }
+// A removal is another kind2 batch on the existing world owner. The query
+// collects every executable owner of this mechanism, including historical
+// route dependencies. Only the normal stop transaction may release them.
+bool spatialIntentGateCandidateOwnsEnvelope(int);
+int gateRemovalActors(IntentState& s,uint64_t id,std::set<uint64_t>& actors){
+ const auto found=s.gates.find(id);if(found==s.gates.end())return -1;
+ const auto& gate=found->second;
+ if(!gate.mesh||!gate.mechanism||gate.status!=0||!gateStaticProofCurrent(s)||!spatialIntentGateCandidateOwnsEnvelope(gate.navigationBarriers[2]))return -2;
+ const auto proxies=gateAdditionProxies(gate);if(proxies.size()!=18)return -2;
+ for(int i=0;i<3;i++){const auto* p=proxies.data()+i*6;if(!spatialGateProxyBarrierMatches(gate.navigationBarriers[i],p[0],p[1],p[2],p[3],p[4],int(p[5])))return -2;}
+ for(const auto& [actor,crossing]:gate.crossings)actors.insert(actor);
+ for(const auto& [actor,intent]:s.activeIntents){
+  if(intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())continue;
+  const auto& route=s.routeSlots[intent.slot];
+  if(std::find(route.gateReservations.begin(),route.gateReservations.end(),id)!=route.gateReservations.end())actors.insert(actor);
+ }
+ return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_removal_inspect_stops(double id){
+ auto& s=state();s.gateResult.clear();if(!integer(id))return -1;if(s.barrierProposal.pending||s.gateMotionProposal.pending)return -4;
+ if(!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
+ std::set<uint64_t> actors;const int valid=gateRemovalActors(s,uint64_t(id),actors);if(valid!=1)return valid;
+ std::vector<double> rows,gates;if(!projectWorldRouteStops(s,actors,rows,gates))return -2;
+ for(size_t i=0;i<rows.size();i+=26)s.gateResult.push_back(rows[i]);return int(s.gateResult.size());
+}
+int spatialIntentStageGateRemoval(double id,std::array<int,3>& ids){
+ auto& s=state();if(!integer(id))return -1;if(s.barrierProposal.pending||s.gateMotionProposal.pending)return -4;
+ std::set<uint64_t> actors;const int valid=gateRemovalActors(s,uint64_t(id),actors);if(valid!=1)return valid;if(!actors.empty())return 0;
+ const auto& gate=s.gates.at(uint64_t(id));ids=gate.navigationBarriers;
+ SpatialWorldProposalInput input;input.kind=2;input.mode=3;input.integers.assign(ids.begin(),ids.end());
+ const int result=spatialIntentStageWorld(input,nullptr,0,true);if(result!=1)return result;
+ auto& draft=*s.barrierProposal.barrierAddition;draft.gateId=gate.id;draft.removal=true;draft.gate.emplace(gate.id,gate);return 1;
+}
+int spatialIntentRevalidateGateRemoval(double session,double ticket){
+ auto& s=state();auto& p=s.barrierProposal;
+ if(!integer(session)||!integer(ticket)||!p.pending||p.kind!=2||!p.barrierAddition||!p.barrierAddition->removal||session!=double(p.session)||ticket!=double(p.ticket))return -1;
+ if(p.session!=s.session||p.facts!=s.sequence||p.intents!=s.intentSequence||p.gates!=s.gateRevision||p.world!=executionWorldStamp()){clearWorldMutationProposal(p);return -2;}
+ const auto origin=*p.barrierAddition;clearWorldMutationProposal(p);std::array<int,3> ids{};
+ const int result=spatialIntentStageGateRemoval(double(origin.gateId),ids);if(result!=1)return result;
+ auto& next=*p.barrierAddition;
+ if(next.gate.at(origin.gateId).mechanism!=origin.gate.at(origin.gateId).mechanism||ids!=origin.gate.at(origin.gateId).navigationBarriers){clearWorldMutationProposal(p);return -2;}
+ next.preparedTicket=origin.preparedTicket;next.preparedAt=origin.preparedAt;
+ next.translation={1,double(origin.preparedTicket),double(p.ticket),origin.preparedAt,p.at,1,3,0};return 1;
+}
+int spatialIntentCommitGateRemoval(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket,SpatialWorldProposalInput& input,std::array<double,5>& receipt,int(*apply)(const SpatialWorldProposalInput&)){
+ auto& s=state();auto& p=s.barrierProposal;
+ if(!p.pending||p.kind!=2||!p.barrierAddition||!p.barrierAddition->removal||!apply)return -1;
+ const auto& d=*p.barrierAddition;const auto found=s.gates.find(d.gateId);std::set<uint64_t> actors;
+ if(found==s.gates.end()||gateRemovalActors(s,d.gateId,actors)!=1||!actors.empty()||found->second.mechanism!=d.gate.at(d.gateId).mechanism||found->second.navigationBarriers!=d.gate.at(d.gateId).navigationBarriers)return -2;
+ const auto id=d.gateId;
+ const int taken=spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,receipt,true);if(taken!=1)return taken;
+ // The batch validates the entire triplet before changing its index. Extract
+ // only inside this synchronous commit so the ordinary proxy guard stays strict.
+ auto node=s.gates.extract(id);
+ if(apply(input)!=1){s.gates.insert(std::move(node));return -6;}
+ const auto before=executionWorldStamp();s.gateRevision++;cancelGateMotionProposal(s);updateGateStaticDomain(s);acknowledgeGateSupport(s,before);return 1;
+}
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double session,double ticket){
  auto& s=state();s.gateMechanismPose.fill(0);std::array<double,6> boundary{};
- if(spatialIntentWorldProposalSnapshot(boundary)!=1||boundary[0]!=session||boundary[1]!=ticket||!s.barrierProposal.barrierAddition||s.barrierProposal.barrierAddition->gate.size()!=1)return 0;
+ if(spatialIntentWorldProposalSnapshot(boundary)!=1||boundary[0]!=session||boundary[1]!=ticket||!s.barrierProposal.barrierAddition||s.barrierProposal.barrierAddition->removal||s.barrierProposal.barrierAddition->gate.size()!=1)return 0;
  const auto& gate=s.barrierProposal.barrierAddition->gate.begin()->second;const auto root=gateRootMatrix(gate),leaf=gateLeafMatrix(gate,s.effectiveTime);auto& out=s.gateMechanismPose;
  out[0]=double(gate.id);out[1]=gate.mesh->id;out[2]=double(gate.mechanism);out[3]=gate.baseY;out[4]=gate.supportMin;out[5]=gate.supportMax;out[6]=s.effectiveTime;out[7]=gateOpening(gate,s.effectiveTime);
  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);return 1;

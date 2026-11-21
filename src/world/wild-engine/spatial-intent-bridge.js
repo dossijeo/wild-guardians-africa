@@ -878,11 +878,24 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return {status:'ready',actors};
   };
 
+  const inspectNativeGateRemovalStops=entityId=>{
+    const id=numericId(entityId);if(!id||entityId!==`structure-${id}`)throw TypeError('Invalid gate removal owner');
+    if(wasm.spatial_world_gate_removal_version?.()!==1)throw Error('Rebuild native gate removal');
+    syncBoundaryTime();flushNativeIntentControl();const count=wasm.nav_gate_removal_inspect_stops(id);
+    if(!Number.isSafeInteger(count)||count>32768)throw Error('Invalid removal stop count');
+    if(count<0)return {status:count===-4?'busy':count===-2?'stale':'invalid',actors:[]};
+    const actors=count?Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_addition_stop_actors_ptr(),count)):[];
+    if(actors.some(id=>!Number.isSafeInteger(id)||id<1)||new Set(actors).size!==actors.length)throw Error('Invalid removal stop owners');
+    return {status:'ready',actors};
+  };
   // Both addition classes use the existing world transaction. A gate keeps
   // its mechanism, three proxies and initial pose in a single native proposal.
-  const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
+  const addNativeBarriersAfterGpuQuiescence=({additions,gate=null,removal=null,getPublication,prepareResources,signal=null,validate,project,atCommitBoundary=null}={})=>{
+    if(removal!==null&&(gate!==null||additions!==undefined))throw TypeError('Removal must use its own kind2 batch');
     if(gate!==null&&additions!==undefined)throw TypeError('Native gate and solid additions require separate proposals');
-    const shapes=gate===null?copyNativeBarrierAdditions(additions):null,count=shapes?.length??3;
+    const shapes=gate===null&&removal===null?copyNativeBarrierAdditions(additions):null,count=shapes?.length??3;
+    const removalId=removal&&numericId(removal.entityId);
+    if(removal&&(!removalId||removal.entityId!==`structure-${removalId}`||wasm.spatial_world_gate_removal_version?.()!==1))throw Error('Native gate removal unavailable');
     const gateId=gate&&numericId(gate.entityId);
     if(gate!==null&&(!gateId||gate.entityId!==`structure-${gateId}`||![1,2,3].includes(gate.modelId)||![gate.x,gate.z,gate.yaw,gate.sx,gate.sz].every(Number.isFinite)||gate.sx<=0||gate.sz<=0))throw TypeError('Invalid native gate placement');
     if(typeof prepareResources!=='function'||typeof validate!=='function'||typeof project!=='function')throw TypeError('Native solid addition requires preparation and synchronous Game adoption');
@@ -906,8 +919,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
           mechanismId:pose[2],opening:pose[7],rootMatrix:pose.slice(8,24),leafMatrix:pose.slice(24,40),
           proxies:Array.from({length:3},(_,index)=>{const [x,z,halfX,halfZ,yaw,passMask]=proxies.slice(index*6,index*6+6);return {x,z,halfX,halfZ,yaw,passMask};})}};
       }
+      if(removal){
+        const pointer=wasm.spatial_world_gate_removal_ids_ptr(row[0],row[1]);if(!pointer||wasm.nav_gate_mechanism_pose(removalId)!==1)throw Error('Native removal lost its owner');
+        const ids=Array.from(new Int32Array(wasm.memory.buffer,pointer,3)),pose=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_gate_mechanism_pose_ptr(),40));
+        shape={removal:{entityId:removal.entityId,mechanismId:pose[2],nativeIds:ids}};
+      }
       return copyNativeBarrierAdditionProposal({kind:'native-barrier-addition-proposal',version:1,worldBoundary:boundary,
-        nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:gate?2:1,worldBoundary:boundary,sourceControlSequence:row[2],...shape},
+        nativeBarrierAddition:{kind:'native-barrier-addition-reference',version:removal?3:gate?2:1,worldBoundary:boundary,sourceControlSequence:row[2],...shape},
         authorizedAutonomy:false,authorizedConsequences:false});
     };
     const protocol={motionKind:'barrier-addition',preparedFrameRequired:true,deferred:true,atCommitBoundary,
@@ -916,7 +934,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       retained(session,ticket){if(validate()!==true||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const row=tuple();return row[0]===session&&row[1]===ticket;},
       revalidate(session,ticket){
         if(validate()!==true)return {status:'stale'};
-        const result=gate?wasm.spatial_world_gate_addition_revalidate(session,ticket):wasm.spatial_world_proposal_revalidate_barriers(session,ticket);
+        const result=removal?wasm.spatial_world_gate_removal_revalidate(session,ticket):gate?wasm.spatial_world_gate_addition_revalidate(session,ticket):wasm.spatial_world_proposal_revalidate_barriers(session,ticket);
         if(result!==1)return {status:result===0?'blocked':'stale'};
         const row=tuple(),boundary=copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:row[0],ticket:row[1],effectiveTime:row[3]});
         let retained=false;
@@ -939,12 +957,13 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     };
     return commitNativeWorldProposal(getPublication,()=>{
       if(validate()!==true)return -2;
+      if(removal)return wasm.spatial_world_gate_removal_stage(removalId);
       if(gate)return wasm.spatial_world_gate_addition_stage(gateId,gate.modelId,gate.x,gate.z,gate.yaw,gate.sx,gate.sz);
       const values=shapes.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]),pointer=wasm.spatial_world_proposal_float_ptr(values.length);if(!pointer)throw Error('Native solid addition input allocation failed');
       new Float32Array(wasm.memory.buffer,pointer,values.length).set(values);wasm.spatial_world_proposal_int_ptr(0);return wasm.spatial_world_proposal_stage_resources(2,0,values.length,0);
     },(mark,...boundary)=>{
       if(validate()!==true)return {status:-2};
-      const commit=gate?wasm.spatial_world_gate_addition_commit_bound:wasm.spatial_world_proposal_barriers_commit_bound;
+      const commit=removal?wasm.spatial_world_gate_removal_commit_bound:gate?wasm.spatial_world_gate_addition_commit_bound:wasm.spatial_world_proposal_barriers_commit_bound;
       const status=commit(...boundary,preparedReference.worldBoundary.ticket);if(status!==1)return {status};mark();
       const pointer=wasm.spatial_world_barrier_binding_ptr();if(!pointer||wasm.spatial_world_proposal_result_count()!==count)throw Error('Native addition receipt unavailable');
       const proof=Array.from(new Float64Array(wasm.memory.buffer,pointer,5)),expected=[1,preparedReference.worldBoundary.ticket,preparedReference.worldBoundary.effectiveTime,boundary[1],boundary[3]];
@@ -2849,7 +2868,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -4142,7 +4161,7 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,
-    inspectNativeStructureStops:bridge.inspectNativeStructureStops,inspectNativeGateAdditionStops:bridge.inspectNativeGateAdditionStops,addNativeBarriersAfterGpuQuiescence:bridge.addNativeBarriersAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
+    inspectNativeStructureStops:bridge.inspectNativeStructureStops,inspectNativeGateAdditionStops:bridge.inspectNativeGateAdditionStops,inspectNativeGateRemovalStops:bridge.inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence:bridge.addNativeBarriersAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence:bridge.mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence,
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,

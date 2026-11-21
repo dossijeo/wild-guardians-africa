@@ -1254,7 +1254,8 @@ bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
 }
 struct TerrainProposal;
 struct WorldResourcePreview {
-  bool gateAddition=false;
+  bool gateAddition=false,gateRemoval=false;
+  std::array<int,3> gateRemovalIds{};
   std::vector<float> barrierAdditions;
   std::array<double,9> header{};
   bool publishChunks=true;
@@ -3073,6 +3074,24 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_revalidate_stop(double session,d
   std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
   auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
 }
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_stage(double id){
+ WorldResourcePreview preview;preview.gateRemoval=true;
+ const int result=spatialIntentStageGateRemoval(id,preview.gateRemovalIds);if(result!=1)return result;
+ std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
+ preview.header={1,identity[0],identity[1],identity[3],2,0,double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+ worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
+}
+EMSCRIPTEN_KEEPALIVE const int* spatial_world_gate_removal_ids_ptr(double session,double ticket){
+ if(!worldResourcePreview||!worldResourcePreview->gateRemoval||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return nullptr;
+ return worldResourcePreview->gateRemovalIds.data();
+}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_revalidate(double session,double ticket){
+ if(!worldResourcePreview||!worldResourcePreview->gateRemoval||worldResourcePreview->header[1]!=session||worldResourcePreview->header[2]!=ticket)return -1;
+ const int result=spatialIntentRevalidateGateRemoval(session,ticket);if(result!=1){if(result!=-1)worldResourcePreview.reset();return result;}
+ std::array<double,6> identity{};if(spatialIntentWorldProposalSnapshot(identity)!=1){worldResourcePreview.reset();return -2;}
+ auto& h=worldResourcePreview->header;h[2]=identity[1];h[3]=identity[3];return 1;
+}
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_stage(double id,int model,double x,double z,double yaw,double sx,double sz){
  WorldResourcePreview preview;preview.gateAddition=true;
@@ -3142,8 +3161,9 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session
 }
 EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
-int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket,bool barrierBound=false,bool gateBound=false){
+int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket,bool barrierBound=false,bool gateBound=false,bool removalBound=false){
   const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
+  if(removalBound&&(!hasPrepared||!worldResourcePreview->gateRemoval)||hasPrepared&&worldResourcePreview->gateRemoval&&!removalBound)return -1;
   if(gateBound&&(!hasPrepared||!worldResourcePreview->gateAddition)||hasPrepared&&worldResourcePreview->gateAddition&&!gateBound)return -1;
   if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
   struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
@@ -3151,7 +3171,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   // semantics. Keep its canonical path until that owner uses protected commits.
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
-  std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=gateBound?1:barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=(gateBound||removalBound)?1:barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
   if(!stopBound&&(input.kind==12||input.kind==24||input.kind==25))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
@@ -3160,8 +3180,9 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
     explicit ResourceGuard(std::map<std::pair<int,int>,int>& target):previous(worldResourceCapture){worldResourceCapture=&target;}
     ~ResourceGuard(){worldResourceCapture=previous;}
   } recording(resources);
-  const int result=gateBound?spatialIntentCommitGateAddition(session,ticket,sequence,time,clockSequence,preparedTicket,nextBarrierId,input,barrierBinding,applyWorldProposalInput):applyWorldProposalInput(input);
-  if(gateBound&&result!=1)return result;
+  const int result=removalBound?spatialIntentCommitGateRemoval(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding,applyWorldProposalInput):gateBound?spatialIntentCommitGateAddition(session,ticket,sequence,time,clockSequence,preparedTicket,nextBarrierId,input,barrierBinding,applyWorldProposalInput):applyWorldProposalInput(input);
+  if((gateBound||removalBound)&&result!=1)return result;
+  if(removalBound&&result==1)worldProposalResult.assign(input.integers.begin(),input.integers.end());
   if(result==1){
     if(input.kind==6||input.kind==11)recordWorldResourceChunk(worldProposalResult[0],worldProposalResult[1]);
     if(input.kind==7)for(size_t i=0;i<worldProposalResult.size();i+=2)
@@ -3186,6 +3207,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double tic
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,true,preparedTicket);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_barriers_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,preparedTicket,true);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_gate_addition_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,preparedTicket,true,true);}
+EMSCRIPTEN_KEEPALIVE int spatial_world_gate_removal_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,preparedTicket,true,false,true);}
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_barrier_binding_ptr(){
   if(spatial_world_resource_snapshot()!=1)return nullptr;const auto& p=*worldResourcePublication;
   return p.header[4]==2&&p.header[5]==0&&p.barrierBinding[0]==1&&p.barrierBinding[3]==p.header[2]&&p.barrierBinding[4]==p.header[3]?p.barrierBinding.data():nullptr;

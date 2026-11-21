@@ -24,7 +24,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  const rest=morphedWallPositions(part.bridge,stages[0].morph);
  if(rest.length!==geometry.attributes.wgGatePosition.array.length||rest.some((v,i)=>v!==geometry.attributes.wgGatePosition.array[i]))throw Error('Native gate damage rest geometry mismatch');
  const root=new Matrix4().fromArray(packet.rootMatrix),hinge=new Vector3().fromArray(packet.hinge);let duration=floorFloat32(packet.endTime-packet.startTime);const rows=Array.from({length:6},(_,i)=>{const at=Math.min(i,packet.rows.length/2-1)*2;return new Vector2(at===packet.rows.length-2?duration:ceilFloat32(packet.rows[at]-packet.startTime),Math.fround(packet.rows[at+1]));}),knots=uniformArray(rows,'vec2').setName('nativeGateKnots'),count=uniform(packet.rows.length/2,'int'),pivot=uniform(hinge);
- const opening=Fn(()=>{const value=knots.element(int(0)).y.toVar();Loop({start:1,end:6},({i})=>{If(i.lessThan(count),()=>{const a=knots.element(i.sub(1)),b=knots.element(i),t=clamp(timeNode.sub(a.x).div(b.x.sub(a.x).max(1e-30)),0,1);value.assign(mix(value,b.y,t));});});return value;})();
+ const opening=motion.openingNode??Fn(()=>{const value=knots.element(int(0)).y.toVar();Loop({start:1,end:6},({i})=>{If(i.lessThan(count),()=>{const a=knots.element(i.sub(1)),b=knots.element(i),t=clamp(timeNode.sub(a.x).div(b.x.sub(a.x).max(1e-30)),0,1);value.assign(mix(value,b.y,t));});});return value;})();
  const angle=opening.mul(Math.PI/2).mul(attribute('wgGateLeaf','float'));
  const material=cloneWebGpuNodeMaterial(original);material.userData=original.userData;
  material.positionNode=Fn(()=>{normalLocal.assign(rotate(attribute('wgGateNormal','vec3'),vec3(0,angle,0)));return rotate(attribute('wgGatePosition','vec3').sub(pivot),vec3(0,angle,0)).add(pivot);})();
@@ -38,6 +38,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  const proxy=new Mesh(geometry,original),rotation=new Matrix4();let disposed=false,activated=false,committed=false;
  proxy.getVertexPosition=(index,target)=>{if(repairLayer)repairLayer.position(0,index,target);else target.fromBufferAttribute(geometry.attributes.wgGatePosition,index);if(packet.leafFlags[index])target.sub(hinge).applyMatrix4(rotation).add(hinge);return target;};
  function sample(at){
+  if(motion.stoppedSelector)return motion.sampleOpening();
   if(!Number.isFinite(at)||at<packet.startTime)throw Error('Native gate input frame unavailable');
   const raw=floorFloat32(at-packet.startTime),time=Math.max(0,Math.min(Math.fround(raw-Math.fround(Math.max(Math.abs(raw),1)*.000000476837158203125)),duration));
   let value=rows[0].y;for(let i=1;i<packet.rows.length/2;i++){const a=rows[i-1],b=rows[i],t=Math.max(0,Math.min(1,(time-a.x)/Math.max(1e-30,b.x-a.x)));value=value+(b.y-value)*t;}return value;
@@ -51,6 +52,11 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
   sampleOpening:sample,
   // A stopped actor can leave a historical crossing without changing its motor.
   // Retain only the independent, committed world clock on this exact owner.
+  captureRemoval(reference){
+   const r=reference.removal,next=copyNativeWorldBoundary(reference.worldBoundary),source=packet.worldBoundary;
+   if(!r||!next||!source||!committed||!binding.current()||r.entityId!==packet.entityId||r.mechanismId!==packet.mechanism||next.authorityEpoch!==source.authorityEpoch||next.nativeSession!==source.nativeSession||next.ticket<=source.ticket||next.effectiveTime<source.effectiveTime)throw Error('Native gate removal lost its resident mechanism');
+   const original=packet,clock=motion.status().installed;return ()=>committed&&binding.current()&&packet===original&&motion.status().installed.nativeGate===clock.nativeGate;
+  },
   captureRetention(presentation,proposedBoundary){
    // The caller supplies an already-copied route packet. Compare its shape
    // against our private validated packet without copying the vertex arrays.

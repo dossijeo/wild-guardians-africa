@@ -31,6 +31,8 @@ Pasaron 76 pruebas del checkout que cubren las fronteras de puerta, barreras y a
 
 ## Retirada del propietario
 
-La orden de retirar una puerta registrada borraba primero la entidad en Game. WASM conservaba sus proxies y el siguiente avance fallaba al proyectar la hoja. La autoridad ahora rechaza esa orden antes de borrar la entidad o cambiar el saldo. En los controles con apertura inicial cerrada y parcial, Farm siguió avanzando con el mismo actor y el mismo mecanismo. Pasaron 33 pruebas dirigidas. La retirada ordinaria de una puerta registrada queda pendiente de confirmar el mecanismo y los tres proxies en una sola transacción. [Recibo antes y después](performance/native-restored-gate-removal-20261121.json).
+La orden de retirar una puerta registrada borraba primero la entidad en Game. WASM conservaba sus proxies y el siguiente avance fallaba al proyectar la hoja. El primer cambio hizo que la autoridad rechazara esa orden antes de borrar la entidad o cambiar el saldo. En los controles con apertura inicial cerrada y parcial, Farm siguió avanzando con el mismo actor y el mismo mecanismo. Pasaron 33 pruebas dirigidas. Este control verificó el rechazo de la orden sin preparación. [Recibo antes y después](performance/native-restored-gate-removal-20261121.json).
 
 En NVIDIA Turing, el jugador solicitó retirar la puerta cuando su apertura era del 13,25 %. La orden fue rechazada y el saldo se mantuvo en 100.000. La hoja terminó de abrirse y el cuerpo 1 cruzó por el mismo vano con el ticket Farm original. Se conservaron 767 referencias de buffer residentes y el consumidor drenó sin errores. [Control físico durante la apertura](performance/native-restored-gate-removal-20261121.json).
+
+La implementación posterior confirma el mecanismo y sus tres proxies en una transacción de mundo. Pasó en NVIDIA con la puerta estacionaria y durante la apertura para Farm. [Retirada preparada](native-gate-removal-handoff-20261121.md).

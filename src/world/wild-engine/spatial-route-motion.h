@@ -98,6 +98,10 @@ std::array<double,18> sampleRouteTiming(const RouteSlot& route,double at){
   if(nearby!=route.distances.end()&&at==routeTimeAtDistance(route,*nearby))distance=*nearby;
   else if(nearby!=route.distances.begin()&&at==routeTimeAtDistance(route,*std::prev(nearby)))distance=*std::prev(nearby);
   if(route.runDistance>0&&at==routeTimeAtDistance(route,route.runDistance))distance=route.runDistance;
+  // A gate activation a fraction of an ulp away can share the published
+  // start knot with the origin. Preserve that exact owned source before
+  // deriving distance and phases; interior waits still use their real distance.
+  if(at<=route.startTime)distance=0;
   const double runDistance=std::min(route.runDistance,distance),walkDistance=distance-runDistance;
   const auto next=std::upper_bound(route.distances.begin(),route.distances.end(),distance);
   const size_t index=size_t(next-route.distances.begin());

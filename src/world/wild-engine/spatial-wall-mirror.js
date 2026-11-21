@@ -127,6 +127,18 @@ export function createSpatialWallMirror(core){
     changes.push({from:revision++,bounds});if(changes.length>64)changes.shift();return true;
     };
   }
+  function prepareNativeRemovalAdoption(structure,{worldBoundary,ids,nativeBarrierAdditionBinding}={}){
+    const proof=copyNativeBarrierAdditionAttestation(nativeBarrierAdditionBinding),r=proof.reference.removal;
+    if(!r||structure.id!==r.entityId||!sameNativeWorldBoundary(worldBoundary,proof.reference.worldBoundary)||JSON.stringify(ids)!==JSON.stringify(r.nativeIds))throw Error('Native wall removal receipt mismatch');
+    const record=installed.get(structure.id),prior=revision;
+    const wasm=core.wasm,resources=core.captureNativeWorldResources(worldBoundary),count=wasm.spatial_barrier_state_count();
+    if(resources.kind!==2||resources.chunks.length||resources.removed.length||!Number.isSafeInteger(count)||count<0)throw Error('Native wall removal has no world receipt');
+    if(wasm.spatial_world_proposal_result_count()!==3||Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),3)).some((id,i)=>id!==ids[i]))throw Error('Native wall removal has another committed triplet');
+    const view=new DataView(wasm.memory.buffer,wasm.spatial_barrier_state_ptr(),count*28);
+    for(let i=0;i<count;i++)if(ids.includes(view.getInt32(i*28,true)))throw Error('Native removed proxy is still live');
+    if(!record||record.signature!==signature(structure)||JSON.stringify(record.ids)!==JSON.stringify(ids)||wasm.nav_gate_mechanism_pose(Number(r.entityId.slice(10)))!==0)throw Error('Native wall removal has not retired its exact owner');
+    let used=false;return ()=>{if(used||revision!==prior||installed.get(structure.id)!==record)throw Error('Native wall removal adoption is stale');used=true;installed.delete(structure.id);changes.push({from:revision++,bounds:record.bounds});if(changes.length>64)changes.shift();return true;};
+  }
   const adoptNativeAdditions=(structures,receipt)=>prepareNativeAdditionAdoption(structures,receipt)();
   function routeUnaffectedSince(from,points,radius){
     if(!Number.isInteger(from)||from<0||from>revision||
@@ -154,6 +166,6 @@ export function createSpatialWallMirror(core){
     }
     installed.clear();
   }
-  return {sync,adoptNativeAdditions,prepareNativeAdditionAdoption,clear,revision:()=>revision,routeUnaffectedSince,
+  return {sync,adoptNativeAdditions,prepareNativeAdditionAdoption,prepareNativeRemovalAdoption,clear,revision:()=>revision,routeUnaffectedSince,
     barrierIds:id=>installed.get(id)?.ids.slice()??[]};
 }
