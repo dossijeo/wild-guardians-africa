@@ -19,6 +19,8 @@ Ambas ejecuciones usaron `youngMale`, arranque en frío, Edge con NVIDIA Turing 
 
 Las dos órdenes también completaron el recorrido en NVIDIA Turing con `olderFemale`. En ambos casos Stop12 adquirió el cuerpo 1 y precedió a Task14, Action15 e Idle20. Se conservaron las 33 geometrías de cada actor y se verificó el drenaje. Los primeros dibujos de Stop12 llegaron a los 33,2 ms en Plant y 33,3 ms en Water a 30 Hz. En el arranque de Plant, dos repeticiones previas a cualquier ticket separaron dibujos por 41,1 y 40,9 ms. Los envíos duraron 0,2 ms en ambos casos y la causa queda abierta. [Recibos de olderFemale](performance/native-watering-idle-20261120/moving-idle-older-female-20261121.json).
 
+Las cuatro ejecuciones restantes completaron el riego con `olderMale` y `youngFemale`. Las dos órdenes de Plant y Water de `olderMale` pasaron por Stop12. Water de `youngFemale` llegó al extremo de Idle22 antes de preparar la parada y adquirió REST21 con la misma ancla y el mismo tiempo terminal. Las cuatro conservaron el cuerpo 1 y las 33 o 36 geometrías originales. Los primeros dibujos de esos relevos tardaron de 33,2 a 33,4 ms a 30 Hz. El primer Water de `youngFemale` agotó el plazo de Idle20 al arrancar. Una ejecución con más trazas adquirió Idle20, pero Water venció antes del paseo. Para medir el recorrido solicitado, la ejecución final partió de 4,4 unidades de crecimiento antes del umbral. El timeout inicial sigue abierto. [Recibos de olderMale y youngFemale](performance/native-watering-idle-20261120/moving-idle-remaining-profiles-20261121.json).
+
 ## Pruebas dirigidas
 
 ```powershell
