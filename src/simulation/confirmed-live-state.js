@@ -1,5 +1,11 @@
 import {validateSnapshot} from '../persistence/snapshots.js';
 import {guardianImpactTime} from './guardian-timing.js';
+import {PROFILES,contractExpired} from './workforce.js';
+const farmProfileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
+// Active Farm saves carry pose/intent, never a resident corridor. A held owner
+// may restore to Home after expiry; an expired moving corridor stays unsavable.
+// Full semantic validation remains in the checkpoint serializer.
+function farmSaveBlocked(state,worker){return ['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission)&&(contractExpired(worker,state)||!farmProfileEnd.has(worker.profile)||state.time>=farmProfileEnd.get(worker.profile));}
 
 // Live physics can roll or remain down longer than the save format permits.
 // This validation does not claim that the resulting state is restorable.
@@ -21,4 +27,4 @@ export function prepareConfirmedStateTransport(state,{projectPaths=false}={}){
  let snapshot=null;return {fields,get snapshot(){return snapshot??='{'+[...fields].map(([key,value])=>JSON.stringify(key)+':'+value).join(',')+'}';}};
 }
 export function deserializeConfirmedState(source){const state=JSON.parse(source);validateSnapshot(state,{livePhysics:true});return state;}
-export function confirmedStateSaveAvailable(state){return !(state.workers??[]).some(w=>['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(w.nativeRouteAdmission)||w.nativeRouteAdmission==='native-idle-stroll'||w.nativeRouteAdmission==='pending-stroll-resources')&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}
+export function confirmedStateSaveAvailable(state){return !(state.workers??[]).some(w=>farmSaveBlocked(state,w)||w.nativeRouteAdmission==='native-idle-stroll'||w.nativeRouteAdmission==='pending-stroll-resources')&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);}

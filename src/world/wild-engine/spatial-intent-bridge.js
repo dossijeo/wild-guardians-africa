@@ -131,6 +131,9 @@ function normalizeNativeIntentRestoration(state,wasm){
   const farmArrivals=state.workers.filter(w=>['pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held'].includes(w.nativeRouteAdmission));
   if(farmArrivals.length&&(wasm.nav_farm_arrival_request_version?.()!==1||wasm.spatial_body_count()!==0))throw Error('Native farm arrival restoration requires a fresh supported world');
   for(const worker of farmArrivals)if(worker.nativeRouteAdmission==='native-farm-arrival-held')nativeFarmArrivalHeldState(state,worker);else if(worker.nativeRouteAdmission==='native-farm-arrival')nativeFarmArrivalExecutionState(state,worker);else nativeFarmArrivalState(state,worker,{canonical:true});
+  // Only an already-held semantic Farm pose can retarget Home on cold restore.
+  // Moving expired corridors were rejected above; no saved execution is resumed.
+  const farmHomes=farmArrivals.filter(w=>w.nativeRouteAdmission==='native-farm-arrival-held'&&(contractExpired(w,state)||state.time>=profileEnd.get(w.profile))).map(worker=>({worker,home:{...worker,status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false}}));
   const initialIdles=state.workers.filter(w=>['pending-idle-resources','native-idle'].includes(w.nativeRouteAdmission));
   if(initialIdles.length&&(wasm.nav_initial_idle_request_version?.()!==1||typeof wasm.nav_intent_request_initial_idle!=='function'))throw Error('Rebuild native initial Idle restoration');
   if(initialIdles.length&&wasm.spatial_body_count()!==0)throw Error('Native initial Idle restoration requires a fresh physical world');
@@ -145,7 +148,7 @@ function normalizeNativeIntentRestoration(state,wasm){
     if(contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile)){const home={...worker};cancelIdle(home);Object.assign(home,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});return {worker,home};}
     restoredStrollGameState(state,worker);return {worker};
   });
-  const homeWorkers=[...state.workers.filter(w=>['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)),...strolls.filter(p=>p.home).map(p=>p.home)];
+  const homeWorkers=[...state.workers.filter(w=>['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)),...strolls.filter(p=>p.home).map(p=>p.home),...farmHomes.map(p=>p.home)];
   if(homeWorkers.length&&(wasm.nav_home_request_version?.()!==1||typeof wasm.nav_intent_restore_home_request!=='function'))throw Error('Rebuild native Home restoration');
   if(homeWorkers.length&&wasm.spatial_body_count()!==0)throw Error('Native Home restoration requires a fresh physical world');
   const homes=homeWorkers.map(worker=>{
@@ -162,6 +165,7 @@ function normalizeNativeIntentRestoration(state,wasm){
   for(const {worker,action} of prepared){worker.nativeTaskAction=action;worker.nativeRouteAdmission='pending-action-resources';worker.status='waiting-task';worker.path=null;worker.taskApproach=null;worker.running=false;worker.gateWaiting=false;}
   for(const worker of homes){worker.nativeRouteAdmission='pending-home-resources';worker.running=false;worker.gateWaiting=false;}
   for(const worker of farmArrivals)if(['native-farm-arrival','native-farm-arrival-held'].includes(worker.nativeRouteAdmission))Object.assign(worker,{nativeRouteAdmission:'pending-farm-arrival-resources',running:false,gateWaiting:false});
+  for(const {worker,home} of farmHomes)Object.assign(worker,home);
   for(const worker of initialIdles)worker.nativeRouteAdmission='pending-idle-resources';
   for(const {worker,home} of strolls)if(home)Object.assign(worker,home);else worker.nativeRouteAdmission='pending-stroll-resources';
 }

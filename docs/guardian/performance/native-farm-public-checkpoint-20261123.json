@@ -1,0 +1,490 @@
+{
+  "date": "2026-11-23",
+  "renderer": "NVIDIA GTX 1660 (Turing) with Edge 158 and remote WebGPU Draw Worker",
+  "canvas": [
+    640,
+    480
+  ],
+  "quality": "muy_baja",
+  "displayHz": 30,
+  "receipt": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.json",
+    "sha256": "43cefa866c4f7c475952a667211964ca68e504717216b41960e0418afb51cb7d"
+  },
+  "trace": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.trace.json.gz",
+    "sha256": "61669e8bf7d57536fe08c673b8cded8ca2a52656a0e613f690574f490a3ba292",
+    "dataLossOccurred": false
+  },
+  "checkpoint": {
+    "saved": true,
+    "sequence": 16,
+    "elapsed": 10.49999999999999,
+    "version": 2,
+    "chunkKeys": [
+      "1,0",
+      "-1,-1",
+      "0,-1",
+      "1,-1",
+      "-1,0",
+      "0,0",
+      "-1,1",
+      "0,1",
+      "1,1",
+      "2,-1",
+      "2,0",
+      "2,1"
+    ],
+    "bodyId": 1,
+    "authorityEpoch": "49095ee2-b922-4cc1-8870-b873690ff2da/1",
+    "firstDrawTicket": 2,
+    "paused": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "native-farm-arrival",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 0.21582359211351107,
+      "drawSequence": 19,
+      "drawTicket": 2,
+      "root": 618,
+      "gateRoot": 397
+    }
+  },
+  "restoration": {
+    "cold": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "paused": {
+      "elapsed": 10.49999999999999,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "ready": {
+      "at": 1795432233786,
+      "preparedTicket": 1
+    },
+    "held": {
+      "elapsed": 14.299999999999908,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": null,
+      "drawSequence": 14,
+      "drawTicket": null,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "firstFarm": {
+      "elapsed": 14.299999999999908,
+      "pose": {
+        "x": -13.989817815680736,
+        "z": 11.399983810442837,
+        "heading": 3.1161437184417013,
+        "runPhase": 23.25,
+        "walkPhase": 7.680757999200579,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "pending-farm-arrival-resources",
+      "gate": {
+        "open": 0.21582444533267225,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 0.2158244401216507,
+      "drawSequence": 15,
+      "drawTicket": 2,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "idle": {
+      "elapsed": 21.799999999999955,
+      "pose": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "heading": -3.1292060741233034,
+        "runPhase": 23.25,
+        "walkPhase": 16.292991407378103,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "state": "native-idle",
+      "gate": {
+        "open": 1,
+        "hp": 60,
+        "material": "zarzas"
+      },
+      "renderedOpening": 1,
+      "drawSequence": 68,
+      "drawTicket": 4,
+      "root": 618,
+      "gateRoot": 475
+    },
+    "bodyIds": [
+      1,
+      1
+    ],
+    "origin": {
+      "x": -13.989817815680736,
+      "z": 11.399983810442837,
+      "yaw": 3.1161437184417013,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.680757999200579,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "authorityEpoch": "6d3f85b0-c322-404b-8da6-c0f127c8e35c/1",
+    "idleSource": "native-farm-arrival-idle-source",
+    "graphics": {
+      "compared": 831,
+      "changed": [],
+      "actorGeometryIds": [
+        205,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        212,
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        221,
+        222,
+        223,
+        224,
+        225,
+        226,
+        227,
+        228,
+        229,
+        230,
+        231,
+        230,
+        231,
+        232,
+        229,
+        232
+      ]
+    },
+    "observedGateOpenings": [
+      [
+        14.299999999999908,
+        0.21582444533267225,
+        11.399983810442837
+      ],
+      [
+        14.349999999999907,
+        0.2991577786660038,
+        11.399983810442837
+      ],
+      [
+        14.399999999999906,
+        0.3824911119993354,
+        11.399983810442837
+      ],
+      [
+        14.449999999999905,
+        0.4658244453326669,
+        11.399983810442837
+      ],
+      [
+        14.499999999999904,
+        0.5491577786659985,
+        11.399983810442837
+      ],
+      [
+        14.549999999999903,
+        0.6324911119993301,
+        11.399983810442837
+      ],
+      [
+        14.599999999999902,
+        0.7158244453326617,
+        11.399983810442837
+      ],
+      [
+        14.6499999999999,
+        0.7991577786659931,
+        11.399983810442837
+      ],
+      [
+        14.6999999999999,
+        0.8824911119993248,
+        11.399983810442837
+      ],
+      [
+        14.749999999999899,
+        0.9658244453326563,
+        11.399983810442837
+      ],
+      [
+        14.799999999999898,
+        1,
+        11.368139884482952
+      ]
+    ]
+  },
+  "drains": {
+    "original": {
+      "disposed": true
+    },
+    "restored": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "original": {
+      "samples": 258,
+      "intervals": 257,
+      "aboveTarget": 257,
+      "targetFrameMs": 16.666666666666668,
+      "completeHistory": true,
+      "peaks": [
+        {
+          "at": 1795432220367.8,
+          "sequence": 13,
+          "ticket": null,
+          "intervalMs": 36.199951171875,
+          "drawMs": 0.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432221000,
+          "sequence": 19,
+          "ticket": 2,
+          "intervalMs": 35,
+          "drawMs": 2.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432214566.4001,
+          "sequence": 5,
+          "ticket": null,
+          "intervalMs": 34.900146484375,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": false
+        },
+        {
+          "at": 1795432220899.3,
+          "sequence": 18,
+          "ticket": 2,
+          "intervalMs": 34.39990234375,
+          "drawMs": 1.699951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432214899.1,
+          "sequence": 7,
+          "ticket": null,
+          "intervalMs": 34.199951171875,
+          "drawMs": 0.199951171875,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "slowestImageRegion": {
+        "at": 1795432214181.6,
+        "end": 1795432214185.4001,
+        "durationMs": 3.800048828125,
+        "reference": "Texture:202",
+        "label": "",
+        "format": "rgba8unorm-srgb",
+        "layer": 0,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 512
+        },
+        "destinationOrigin": {
+          "x": 1024,
+          "y": 512,
+          "z": 0
+        },
+        "sourceDimensions": [
+          2048,
+          2048
+        ],
+        "extent": {
+          "width": 512,
+          "height": 512,
+          "depthOrArrayLayers": 1
+        },
+        "activeSequence": 1
+      },
+      "imageRegionsInsideWorstFrameInterval": []
+    },
+    "restored": {
+      "samples": 472,
+      "intervals": 471,
+      "aboveTarget": 471,
+      "targetFrameMs": 16.666666666666668,
+      "completeHistory": true,
+      "peaks": [
+        {
+          "at": 1795432231078.3,
+          "sequence": 14,
+          "ticket": null,
+          "intervalMs": 46.39990234375,
+          "drawMs": 1.900146484375,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432235469.7002,
+          "sequence": 20,
+          "ticket": 2,
+          "intervalMs": 37.800048828125,
+          "drawMs": 1.5,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432227502.3,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 37,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432233768.3,
+          "sequence": 14,
+          "ticket": null,
+          "intervalMs": 36.5,
+          "drawMs": 1.199951171875,
+          "trigger": "raf",
+          "replay": true
+        },
+        {
+          "at": 1795432227400.9001,
+          "sequence": 1,
+          "ticket": null,
+          "intervalMs": 36,
+          "drawMs": 0.300048828125,
+          "trigger": "raf",
+          "replay": true
+        }
+      ],
+      "slowestImageRegion": {
+        "at": 1795432235464.9001,
+        "end": 1795432235469.3,
+        "durationMs": 4.39990234375,
+        "reference": "Texture:2870",
+        "label": "",
+        "format": "rgba8unorm",
+        "layer": 0,
+        "sourceOrigin": {
+          "x": 2560,
+          "y": 1536
+        },
+        "destinationOrigin": {
+          "x": 2560,
+          "y": 0,
+          "z": 0
+        },
+        "sourceDimensions": [
+          4096,
+          2048
+        ],
+        "extent": {
+          "width": 512,
+          "height": 512,
+          "depthOrArrayLayers": 1
+        },
+        "activeSequence": 20
+      },
+      "imageRegionsInsideWorstFrameInterval": []
+    }
+  },
+  "firstAttempt": {
+    "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
+    "sha256": "1c032a4e76b39f8ecc13b8232db60e0ba2aa96ced5df5e4c6169cd5bc436da03",
+    "traceSha256": "83debb2e7a9a792852fe77316b6551a6cf3e9d053ca22b903b88a10656cf434b",
+    "saved": {
+      "saved": true,
+      "sequence": 17,
+      "elapsed": 10.549999999999988
+    },
+    "gate": 0.2991577786660038,
+    "reached": "native-idle",
+    "harnessError": "The observer waited for Initial Idle20 instead of the Farm Idle cycle."
+  },
+  "scope": {
+    "c4Closed": false,
+    "expiredHeldFarmHomeVerifiedWithGpuDouble": true
+  }
+}
