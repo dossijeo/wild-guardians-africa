@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Repair de un muro intacto ya termina por Idle20. Las cuatro pruebas en GPU física restauraron de 50 a 100 HP con un solo débito, conservaron el actor y el grupo del muro y confirmaron el drenaje. Pasaron 441 pruebas de la selección, con nueve omisiones, y el build. Quedan las ruinas que restauran colisión y el relevo de las rutas afectadas por Build. [Recorrido y validación](native-intact-wall-repair-20261121.md).
+Repair de un muro intacto ya termina por Idle20. Las cuatro pruebas en GPU física restauraron de 50 a 100 HP con un solo débito, conservaron el actor y el grupo del muro y confirmaron el drenaje. Pasaron 441 pruebas de la selección, con nueve omisiones, y el build. El caso de ruina sólida con sitio libre ya recupera colisión y HP en NVIDIA. Queda la reparación que requiere detener una ruta y reanudarla tras incorporar la huella. [Repair de muro intacto](native-intact-wall-repair-20261121.md), [Repair de ruina sólida](native-ruined-solid-wall-repair-handoff-20261123.md).
 
 El Host ya puede aislar una escritura CPU de textura entre dos publicaciones sin reconstruir recursos ajenos. La colocación individual de centro y muro activó una copia de 1×64 en NVIDIA Turing y terminó sin errores WebGPU. El contraste físico del Host reprodujo el rechazo anterior y verificó los texels, los IDs y el fence después del cambio. Pasaron las 337 pruebas seleccionadas y el build. La latencia del gesto y C4 siguen abiertas. [Implementación y evidencia](native-standalone-texture-upload-20261121.md).
 

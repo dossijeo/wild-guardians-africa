@@ -1,3 +1,4 @@
+import {copyNativeBarrierClock} from './remote-clock-bindings.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -511,6 +512,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     registerClockBinding(buffer, binding) {
 
       if (!buffer?.[REF] || !['absolute', 'relative', 'origin-modulo','idle-offset','idle-cycle-watch-knot','stop-value'].includes(binding.semantic) || !Number.isInteger(binding.byteOffset) || binding.byteOffset < 0 || binding.byteOffset % 4) throw TypeError('Invalid remote clock binding');
+      if(binding.nativeBarrierAddition){if(capabilities.nativeBarrierAdditionClockVersion!==1)throw Error('Draw owner does not support native solid Repair clocks');copyNativeBarrierClock(binding);}
       if(binding.semantic==='idle-offset'&&(!(binding.nativeFarmArrival||binding.nativeStroll||binding.nativeIdleCycle)||binding.resourceEnd!==undefined||!Number.isFinite(binding.period)||binding.period<=0))throw TypeError('Invalid native Farm Idle phase offset');
       if(binding.semantic==='idle-offset'&&(binding.nativeIdleCycle?capabilities.nativeIdleCycleIdlePhaseVersion:binding.nativeFarmArrival?capabilities.nativeFarmArrivalIdlePhaseVersion:capabilities.nativeIdleStrollIdlePhaseVersion)!==1)throw Error('Draw owner does not support native '+(binding.nativeIdleCycle?'Cycle':binding.nativeFarmArrival?'Farm':'Stroll')+' Idle phase clocks');
       if(binding.semantic==='stop-value'&&!binding.nativeStopped)throw TypeError('Native stopped value requires its body');

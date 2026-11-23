@@ -21,8 +21,8 @@ export function wallBridge(source,destination=null){
 }
 
 export class NativeWall extends THREE.Group {
-  constructor(prototypes,entity,elapsed,{previous=null,renderer=null}={}){
-    super();this.webGpuRenderer=renderer;this.prototypes=prototypes;this.entityId=entity.id;this.nativeGateMaterial=entity.material;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
+  constructor(prototypes,entity,elapsed,{previous=null,renderer=null,prepareRepair=false}={}){
+    super();this.gpuRepairBasis=prepareRepair;this.webGpuRenderer=renderer;this.prototypes=prototypes;this.entityId=entity.id;this.nativeGateMaterial=entity.material;this.parts=[];this.blessingUniform={value:new THREE.Vector4()};
     if(previous){this.lastStatus=previous.lastStatus;this.visual=previous.visual;this.collapseFromVisual=previous.collapseFromVisual;}
     this.userData.entityId=entity.id;this.userData.nativeWall=true;
     const scale=entity.gate?({adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1):1;this.scale.setScalar(scale);
@@ -31,6 +31,7 @@ export class NativeWall extends THREE.Group {
   // Settlement updates use undefined seconds. Predict the topology without
   // mutating this wall, so the visible phase remains available during setup.
   nextConfirmedStageKey(entity,elapsed){
+    const retained=this.nativeGpuRepair?.stageKeyFor?.(entity,elapsed);if(retained!==null&&retained!==undefined)return retained;
     const target=entity.hp/entity.maxHp;let visual=target;
     if(entity.wallPresentation&&(Number.isFinite(elapsed)||entity.status==='collapsing'))visual=wallVisualAt(entity,elapsed??entity.wallPresentation.at);
     else if(entity.status==='ruined')visual=0;
@@ -86,7 +87,7 @@ export class NativeWall extends THREE.Group {
         if(material.isNodeMaterial&&bridge.leafFlags){geometry.setAttribute('wgGatePosition',new THREE.BufferAttribute(bridge.pos.slice(),3));geometry.setAttribute('wgGateNormal',new THREE.BufferAttribute(bridge.normal.slice(),3));geometry.setAttribute('wgGateLeaf',new THREE.BufferAttribute(Float32Array.from(bridge.leafFlags),1));}
         // Each damaged owner retains its own immutable Bastion morph basis.
         // Both stages are admitted before Repair; no per-frame attribute writes.
-        if(material.isNodeMaterial&&entity.gate&&stages.length===2){
+        if(material.isNodeMaterial&&(entity.gate||this.gpuRepairBasis)&&stages.length===2){
           const fields=Object.entries({Position:bridge.pos,Normal:bridge.normal,Root:bridge.roots,Peer:bridge.peers,Target:bridge.targets,TargetNormal:bridge.targetNormals}),packed=new Float32Array(bridge.pos.length*fields.length);
           for(let vertex=0;vertex<bridge.pos.length/3;vertex++)for(let field=0;field<fields.length;field++)for(let axis=0;axis<3;axis++)packed[vertex*18+field*3+axis]=fields[field][1][vertex*3+axis];
           const basis=new THREE.InterleavedBuffer(packed,18);

@@ -7,10 +7,12 @@ const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
 // source. There is no copied request queue, movement clock or retry timer here.
-export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,onError=()=>{}}){
+export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,restoreRuinedWall=null,ruinedWallWakeKey=null,onError=()=>{}}){
  if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
  let closed=false,fault=null,active=null,last=null,quiescence=null;
+ const rejectedRuins=new Map();
  function next(onlyActor=null){
+  for(const actorId of rejectedRuins.keys())if(!state.workers.some(w=>w.id===actorId&&w.nativeRouteAdmission==='native-action'))rejectedRuins.delete(actorId);
   // Rotate the existing roster after the last attempt. A blocked native source
   // must not starve another ready agent; no duplicate request queue is retained.
   const workers=state.workers,start=onlyActor===null?(workers.findIndex(w=>w.id===last?.actorId)+1)%Math.max(1,workers.length):0;
@@ -60,6 +62,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if(action?.completed){
      const {actionKind:kind,targetId}=action.binding.reference.request;
      if(kind==='harvest')return {actorId,kind:'task-consequence',operation:'startNativeTaskConsequenceAfterGpuQuiescence',prepare:'prepareNativeTaskConsequenceResources'};
+     if(restoreRuinedWall&&kind==='repair'&&state.structures.some(target=>target.id===`structure-${targetId}`&&target.kind==='wall'&&!target.gate&&target.hp===0&&target.status==='ruined')){const wakeKey=ruinedWallWakeKey?.(actorId);if(onlyActor===null&&wakeKey!==undefined&&rejectedRuins.get(actorId)===wakeKey)continue;return {actorId,kind:'ruined-wall-repair',prepare:'prepareNativeBarrierAdditionResources'};}
      const intactRepair=kind==='repair'&&state.structures.some(target=>target.id===`structure-${targetId}`&&isIntactRepairTarget(target));
      if(stationaryTaskNavigation&&(intactRepair||['initial','water'].includes(kind)))return {actorId,kind:'stationary-task',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources',stationaryTaskNavigation};
     }
@@ -83,7 +86,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'home-arrival':return JSON.stringify(planner.nativeHomeRouteBinding(actor));
    case 'task-start':return JSON.stringify([request.request.requestHandle,request.request.requestSequence,request.policy]);
    case 'task-action':{const {executedThrough,...source}=request.request;return JSON.stringify(source);}
-   case 'stationary-task':case 'task-consequence':return JSON.stringify(planner.nativeTaskActionBinding(actor));
+   case 'ruined-wall-repair':case 'stationary-task':case 'task-consequence':return JSON.stringify(planner.nativeTaskActionBinding(actor));
    case 'stopped-task-idle':return JSON.stringify(request.stopped);
    case 'task-settlement':return JSON.stringify(planner.nativeTaskConsequenceBinding(actor));
   }
@@ -104,14 +107,16 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   // without that owner yet waits for a real boundary, not a fabricated stamp.
   const manifest=terrainManifest();if(!manifest)return Promise.resolve(null);
   const request=next();if(!request)return Promise.resolve(null);
+  const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
-  if(['task-start','task-action','stationary-task','task-consequence'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
+  if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
    try{
-    const {operation,prepare,...options}=request,result=await planner[operation]({...options,getPublication,signal:transaction.controller.signal,
-     prepareResources:({resources:proposal,signal,deferredStart})=>resources[prepare](proposal,{signal,...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest})});
+    const {operation,prepare,...options}=request,result=await (request.kind==='ruined-wall-repair'?restoreRuinedWall:planner[operation])({...options,getPublication,signal:transaction.controller.signal,
+     prepareResources:({resources:proposal,signal,deferredStart,nativeBarrierWallEntities})=>resources[prepare](proposal,{signal,...(nativeBarrierWallEntities?{nativeBarrierWallEntities}:{}),...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest})});
     if(closed)return null;
     if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
+    if(wakeKey!==undefined&&['unsupported','blocked'].includes(result.status))rejectedRuins.set(request.actorId,wakeKey);else rejectedRuins.delete(request.actorId);
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};
     if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control');
     if(result.status==='control-failed')throw Error(result.error??'Native production control failed');

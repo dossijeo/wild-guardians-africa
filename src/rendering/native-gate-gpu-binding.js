@@ -1,3 +1,4 @@
+import {WALL_REPAIR_DURATION} from '../simulation/structure-presentation.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {Box3,Matrix4,Mesh,Sphere,Vector2,Vector3} from 'three';
 import {Fn,If,Loop,attribute,clamp,float,int,mix,normalLocal,rotate,uniform,uniformArray,vec3} from 'three/tsl';
@@ -33,7 +34,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
  let radius=0;for(let i=0;i<packet.leafFlags.length;i++)if(packet.leafFlags[i])radius=Math.max(radius,Math.hypot(rest[i*3]-hinge.x,rest[i*3+2]-hinge.z));
  bounds.expandByPoint(new Vector3(hinge.x-radius,bounds.min.y,hinge.z-radius));bounds.expandByPoint(new Vector3(hinge.x+radius,bounds.max.y,hinge.z+radius));const sphere=bounds.getBoundingSphere(new Sphere());
  let repairLayer=null;
- try{if(visual<1&&presentationClock)repairLayer=createGateRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous});}catch(error){unregister?.();material.dispose();throw error;}
+ try{if(visual<1&&presentationClock)repairLayer=createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous});}catch(error){unregister?.();material.dispose();throw error;}
  if(repairLayer){bounds.union(repairLayer.records[0].bounds);bounds.getBoundingSphere(sphere);}
  const proxy=new Mesh(geometry,original),rotation=new Matrix4();let disposed=false,activated=false,committed=false;
  proxy.getVertexPosition=(index,target)=>{if(repairLayer)repairLayer.position(0,index,target);else target.fromBufferAttribute(geometry.attributes.wgGatePosition,index);if(packet.leafFlags[index])target.sub(hinge).applyMatrix4(rotation).add(hinge);return target;};
@@ -103,7 +104,7 @@ export function createNativeGateGpuBinding({wall,presentation,motion,getPickTime
 // opening remains fixed until a real native gate binding acquires this owner.
 export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,getPresentationTime}={}){
  const p=entity?.wallPresentation,parts=wall?.parts;
- if(!wall?.isObject3D||wall.nativeGpuGate||wall.nativeGpuRepair||wall.nativeGateBinding||entity.id!==wall.entityId||entity.material!==wall.nativeGateMaterial||entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||!p||!Number.isFinite(p.from)||p.from<=0||p.from>=1||p.to!==1||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(elapsed)||elapsed<p.at||elapsed>=p.at+.48||wall.visual!==p.from||wall.target!==p.from||parts?.length!==2||!parts[0].bridge.leaf||!Number.isFinite(entity.gateOpen)||entity.gateOpen<0||entity.gateOpen>1)
+ if(!wall?.isObject3D||wall.nativeGpuGate||wall.nativeGpuRepair||wall.nativeGateBinding||entity.id!==wall.entityId||entity.material!==wall.nativeGateMaterial||entity.gate!==true||entity.status!=='intact'||entity.hp!==entity.maxHp||!Number.isFinite(entity.maxHp)||entity.maxHp<=0||!p||!Number.isFinite(p.from)||p.from<=0||p.from>=1||p.to!==1||!Number.isFinite(p.at)||p.at<0||!Number.isFinite(elapsed)||elapsed<p.at||elapsed>=p.at+WALL_REPAIR_DURATION||wall.visual!==p.from||wall.target!==p.from||parts?.length!==2||!parts[0].bridge.leaf||!Number.isFinite(entity.gateOpen)||entity.gateOpen<0||entity.gateOpen>1)
   throw Error('Restored gate Repair source unavailable');
  const opening=entity.gateOpen,visual=wall.visual,[x,z]=parts[0].bridge.leaf.hinge,pivot=uniform(new Vector3(x,0,z));
  const mesh=parts[0].mesh,geometry=mesh.geometry,originalMaterial=mesh.material,originalRaycast=mesh.raycast,originalBounds=geometry.boundingBox,originalSphere=geometry.boundingSphere;
@@ -111,7 +112,7 @@ export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,ge
  let layer,unregister;
  try{
   unregister=parts[0].sourceMaterial?.[structureMaterialReplica]?.(material);
-  layer=createGateRepairLayer({parts,material,opening:float(opening),pivot,presentationClock,getPresentationTime,visual,previous:null});
+  layer=createWallRepairLayer({parts,material,opening:float(opening),pivot,presentationClock,getPresentationTime,visual,previous:null});
   if(!layer.accept(entity,elapsed))throw Error('Restored gate Repair curve unavailable');
  }catch(error){layer?.dispose();unregister?.();material.dispose();throw error;}
  const proxy=new Mesh(geometry,originalMaterial),rotation=new Matrix4().makeRotationY(-opening*Math.PI/2),hinge=pivot.value;
@@ -129,12 +130,12 @@ export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,ge
 
 // The confirmed visual clock drives the 480 ms Repair.
 // Successive bindings on the same wall retain this policy and the motor clock.
-function createGateRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous}){
- if(!presentationClock?.isNode||typeof getPresentationTime!=='function')
+export function createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,gate=true,repairAge=null,getRepairAge=null}){
+ if(!presentationClock?.isNode||typeof getPresentationTime!=='function'||repairAge&&typeof getRepairAge!=='function')
   throw Error('Native gate Repair requires a submitted presentation clock');
  const policy=previous?.repairLayer?.policy??{node:uniform(new Vector3(visual,visual,0)),event:null};
- const elapsed=clamp(presentationClock.sub(policy.node.z).div(.48),0,1);
- const amount=mix(policy.node.x,policy.node.y,float(1).sub(float(1).sub(elapsed).pow(3)));
+ const elapsed=clamp((repairAge??presentationClock.sub(policy.node.z)).div(WALL_REPAIR_DURATION),0,1);
+ const amount=mix(repairAge?float(0):policy.node.x,repairAge?float(1):policy.node.y,float(1).sub(float(1).sub(elapsed).pow(3)));
  const ease=value=>{
   const t=clamp(value,0,1);
   return t.mul(t).mul(t).mul(t.mul(t.mul(6).sub(15)).add(10));
@@ -144,7 +145,7 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
   for(let i=0;i<parts.length;i++){
    const part=parts[i],mesh=part.mesh,geometry=mesh.geometry;
    const old=previous?.repairLayer?.records[i];
-   const isLeaf=i===0;
+   const isLeaf=gate&&i===0;
    for(const name of ['Position','Normal','Root','Peer','Target','TargetNormal']){
     if(geometry.attributes['wgMorph'+name]?.count!==part.bridge.pos.length/3)
      throw Error('Native gate morph basis unavailable');
@@ -161,14 +162,16 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
    records.push(record);
    if(!isLeaf)record.unregister=part.sourceMaterial?.[structureMaterialReplica]?.(owned);
 
-   const morph=isLeaf?float(1).sub(amount):amount,t=ease(morph);
+   const local=gate?amount:clamp(i<2?amount.mul(2):amount.mul(2).sub(1),0,1);
+   const morph=i%2===0?float(1).sub(local):local,t=ease(morph);
    const scale=float(1).sub(ease(t.sub(.5).mul(2))).max(0).sqrt();
    const root=attribute('wgMorphRoot','vec3'),peer=attribute('wgMorphPeer','vec3');
    const source=attribute('wgMorphPosition','vec3'),target=attribute('wgMorphTarget','vec3');
    const baseNormal=attribute('wgMorphNormal','vec3');
    owned.positionNode=Fn(()=>{
     const center=mix(root,peer,t);
-    const position=center.add(mix(source,target,t).sub(center).mul(scale));
+    const position=center.add(mix(source,target,t).sub(center).mul(scale)).toVar();
+    if(!gate)If(i<2?amount.greaterThan(.5):amount.lessThanEqual(.5),()=>{position.assign(vec3(0));});
     const normal=mix(baseNormal,attribute('wgMorphTargetNormal','vec3'),t).toVar();
     If(normal.dot(normal).lessThan(.0001),()=>{normal.assign(baseNormal);});
     if(isLeaf){
@@ -210,7 +213,7 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
    }
   }
  }catch(error){
-  for(const record of records.slice(1)){
+  for(const record of records.slice(gate?1:0)){
    record.unregister?.();
    record.material.dispose();
   }
@@ -221,13 +224,16 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
  function sample(at){
   if(!Number.isFinite(at))throw Error('Native gate morph input frame unavailable');
   const curve=policy.node.value;
-  const t=Math.max(0,Math.min(1,(at-curve.z)/.48));
+  const t=Math.max(0,Math.min(1,(at-curve.z)/WALL_REPAIR_DURATION));
   return curve.x+(curve.y-curve.x)*(1-(1-t)**3);
  }
  function position(partIndex,index,out){
   const bridge=parts[partIndex].bridge;
-  const visual=sample(getPresentationTime());
-  const p=partIndex===0?1-visual:visual;
+  const age=repairAge?getRepairAge():null;if(repairAge&&(!Number.isFinite(age)||age<0||age>WALL_REPAIR_DURATION))throw Error('Native solid Repair requires its submitted age');
+  const visual=repairAge?1-(1-Math.min(1,age/WALL_REPAIR_DURATION))**3:sample(getPresentationTime());
+  if(!gate&&(partIndex<2?visual>.5:visual<=.5))return out.set(0,0,0);
+  const local=gate?visual:Math.max(0,Math.min(1,partIndex<2?visual*2:visual*2-1));
+  const p=partIndex%2===0?1-local:local;
   const t=p*p*p*(p*(p*6-15)+10);
   const q=Math.max(0,Math.min(1,(t-.5)*2));
   const scale=Math.sqrt(Math.max(0,1-q*q*q*(q*(q*6-15)+10)));
@@ -246,16 +252,16 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
    if(ratio!==1||!Number.isFinite(at))return false;
    if(policy.event){
     const event=policy.event;
-    return p?p.from===event.from&&p.to===event.to&&p.at===event.at:at>=event.at+.48;
+    return p?p.from===event.from&&p.to===event.to&&p.at===event.at:at>=event.at+WALL_REPAIR_DURATION;
    }
    if(!p||p.from!==visual||p.to!==1||!Number.isFinite(p.at)||p.at<0||p.at>at)return false;
    policy.event=Object.freeze({from:p.from,to:p.to,at:p.at});
    policy.node.value.set(Math.fround(p.from),1,Math.fround(p.at));
    return true;
   },
-  current:()=>active&&!closed&&records.slice(1).every(r=>r.mesh.material===r.material&&r.mesh.geometry===r.geometry),
+  current:()=>active&&!closed&&records.slice(gate?1:0).every(r=>r.mesh.material===r.material&&r.mesh.geometry===r.geometry),
   capture(record){
-   const extra=records.slice(1);
+   const extra=records.slice(gate?1:0);
    try{
     for(const stage of extra)stage.mesh.material=stage.material;
     const result=record();
@@ -267,7 +273,7 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
   },
   activate(){
    active=true;
-   for(const record of records.slice(1)){
+   for(const record of records.slice(gate?1:0)){
     record.mesh.material=record.material;
     record.mesh.raycast=record.raycast;
     record.geometry.boundingBox=record.bounds;
@@ -276,7 +282,7 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
   },
   rollback(){
    active=false;
-   for(const record of records.slice(1)){
+   for(const record of records.slice(gate?1:0)){
     record.mesh.material=record.prior;
     record.mesh.raycast=record.priorRaycast;
     record.geometry.boundingBox=record.priorBounds;
@@ -286,7 +292,7 @@ function createGateRepairLayer({parts,material,opening,pivot,presentationClock,g
   dispose(){
    if(closed)return;
    closed=true;
-   for(const record of records.slice(1)){
+   for(const record of records.slice(gate?1:0)){
     if(record.mesh.material===record.material){
      record.mesh.material=record.original;
      record.mesh.raycast=record.originalRaycast;

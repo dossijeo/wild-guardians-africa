@@ -1,3 +1,4 @@
+import {createPreparedRuinedWallRepair} from './webgpu-wall-repair.js';
 import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,nativeHomeArrivalSuccessor} from '../world/native-home-arrival.js';
 import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
 import {nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
@@ -9,7 +10,7 @@ import {createNativeGateGpuBinding,bindRestoredGateRepair} from './native-gate-g
 
 // Keep the current confirmed visual until the actual next topology is ready.
 // This owns presentation only; the simulation never waits for admission.
-export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,renderer=null,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,presentationClock=null,getPresentationTime=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
+export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmission,renderer=null,resourceRegistry=null,onReady=()=>{},onError=()=>{},setWallPresentation=null,prepareInitial=false,presentationClock=null,getPresentationTime=null,getRepairAge=null,createWall=(assets,value,time,options)=>new NativeWall(assets,value,time,options)}={}){
  if(!prototypes||!entity||typeof prepareInitial!=='boolean'||typeof createWall!=='function'||setWallPresentation!==null&&typeof setWallPresentation!=='function')throw TypeError('Invalid admitted wall');
  const inherited=new WeakSet();
  const slot=createWebGpuReplacementSlot({pipelineAdmission,resourceRegistry,onReady:()=>{
@@ -123,6 +124,11 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   gatePreparation=part;return part;
  }
 
+ function prepareNativeRepair({entity,elapsed,signal,template}){
+  if(closed||signal?.aborted||gatePreparation||!slot.upToDate||slot.active.gate||slot.active.lastStatus!=='ruined'||slot.active.visual!==0)throw Error('Native Repair wall owner unavailable');
+  const wall=createPreparedRuinedWallRepair({prototypes,entity,elapsed,renderer,presentationClock,getPresentationTime,getRepairAge,template});let handed=false;
+  try{setWallPresentation?.(wall,entity);const part=slot.prepareParticipant(wall.stageKey,()=>{handed=true;return wall;});return {...part,valid:()=>part.valid()&&wall.nativeGpuRepair?.current()===true};}catch(error){if(!handed)wall.dispose();throw error;}
+ }
  function captureNativeRemoval(reference){
   if(closed||gatePreparation||!slot.upToDate||!reference.removal)throw Error('Native gate removal owner unavailable');
   const wall=slot.active,binding=wall.nativeGpuGate??null;
@@ -153,5 +159,5 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');if(motion.stoppedSelector&&!motion.readyToCommit())throw Error('Native stopped gate lacks its final receipt');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
- return {group:slot.group,initialParticipant,update,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
+ return {group:slot.group,initialParticipant,update,prepareNativeRepair,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
 }

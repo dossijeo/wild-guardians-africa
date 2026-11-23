@@ -1406,7 +1406,7 @@ export function projectNativeHarvestConsequence(s,w,preview,native){
   emit(s,'CropPicked',{workerId:w.id,targetId:target.id,crateId:crate.id});
   return crate;
 }
-export function prepareNativeStationaryTaskConsequence(s,w,source,nav){
+export function prepareNativeStationaryTaskConsequence(s,w,source,nav,{ruinedWall=false}={}){
   const action=source?.reference,request=action?.request,id=nativeEntityNumericId;
   if(!w||!nav||!request||!['initial','water','repair'].includes(request.actionKind)||s.elapsed<action.endTime||
     w.nativeRouteAdmission!=='native-action'||w.status!=='acting'||!w.taskId||w.crateId||w.incapacitated||w.recovery||w.raidReturn||
@@ -1414,7 +1414,7 @@ export function prepareNativeStationaryTaskConsequence(s,w,source,nav){
   const task=s.tasks.find(t=>t.id===w.taskId),repair=request.actionKind==='repair';
   const target=(repair?s.structures:s.plants).find(item=>item.id===task?.targetId),center=s.structures.find(c=>c.id===w.centerId);
   if(!task||task.workerId!==w.id||task.kind!==request.actionKind||!target||id(target.id)!==request.targetId||!center||!operational(center))return null;
-  if(repair?!isIntactRepairTarget(target):!target.alive||target.blessing)return null;
+  if(repair?!(isIntactRepairTarget(target)||ruinedWall&&target.kind==='wall'&&!target.gate&&target.status==='ruined'&&target.hp===0):!target.alive||target.blessing)return null;
   const idleState=copyNativeInitialIdleState({...createIdleState(w,idleFarmAnchor(s,w,center),s.seed),approachRetry:0});
   if(repair)return {task,target,idleState,reachable:true,hp:target.hp,maxHp:target.maxHp,cost:target.cost};
   return {task,target,idleState,reachable:canWaterFrom({x:w.x,z:w.z,radius:action.radius},target,nav),due:target.water.find(slot=>slot.status==='due')??null};
@@ -1435,9 +1435,19 @@ export function projectNativeStationaryTaskConsequence(s,w,nav,native){
   if(repair&&target.hp<target.maxHp)completeRepairTask(s,w,task,target,nav,true);
   if(watered)emit(s,'WaterSatisfied',{workerId:w.id,targetId:target.id});
 }
-function completeRepairTask(s,w,t,target,nav,retainStructureGeometry=false){
+export function prepareNativeRuinedWallRepair(s,w,source,nav){
+ const plan=prepareNativeStationaryTaskConsequence(s,w,source,nav,{ruinedWall:true});
+ if(!plan||plan.task.kind!=='repair'||plan.target.kind!=='wall'||plan.target.gate||plan.target.status!=='ruined'||plan.target.hp!==0||plan.target.blessing)return null;
+ try{validateRepair(s,plan.target.id);const access=planRepairAccess(s,plan.target,nav);if(access.status!=='safe'||access.updates.length)return null;return {...plan,access};}catch(error){if(error.code==='hiring-reserve'||error.message==='Fondos insuficientes'||error.name==='SpatialChunkUnavailable')return null;throw error;}
+}
+export function projectNativeRuinedWallRepair(s,w,plan,nav){
+ if(!plan||!s.tasks.includes(plan.task)||!s.structures.includes(plan.target)||w.taskId!==plan.task.id||plan.target.status!=='ruined'||plan.target.hp!==0)throw Error('Native Repair lost its validated consequence');
+ completeRepairTask(s,w,plan.task,plan.target,nav,false,plan.access);
+ return plan.target.status==='intact'&&plan.target.hp===plan.target.maxHp&&Object.hasOwn(s.ledger.entries,`repair:${plan.task.id}`);
+}
+function completeRepairTask(s,w,t,target,nav,retainStructureGeometry=false,preparedAccess=null){
   try {
-    const access=planRepairAccess(s,target,nav);
+    const access=preparedAccess??planRepairAccess(s,target,nav);
     if(access.status!=='safe')throw new Error(access.status==='unknown'?
       'La reparación espera información del terreno para conservar el acceso.':
       'La reparación cerraría el acceso de los trabajadores sin una puerta válida.');

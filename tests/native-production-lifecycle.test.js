@@ -1,3 +1,6 @@
+import {wallVisualAt,WALL_REPAIR_DURATION} from '../src/simulation/structure-presentation.js';
+import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
+import {rational} from '../src/simulation/money.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {build} from 'esbuild';
@@ -61,7 +64,7 @@ const bundles=new Map();let generation=0;
 async function bundle(kind){
  if(!bundles.has(kind))bundles.set(kind,(async()=>{
   const entry=kind==='source'?'simulation-authority-worker.js':'worker-runtime-host.js';
-  const result=await build({entryPoints:[resolve('src/simulation/'+entry)],bundle:true,write:false,platform:'node',format:'esm',define:{'import.meta.env':'{"DEV":false,"MODE":"production"}'},banner:{js:'const __nativeProductionHarness=globalThis.__nativeProductionHarness;const self=__nativeProductionHarness.self;const postMessage=(...args)=>__nativeProductionHarness.postMessage(...args);const close=()=>__nativeProductionHarness.close();const fetch=(...args)=>__nativeProductionHarness.fetch(...args);'},plugins:[{name:'native-production-creation-adapters',setup(p){
+  const result=await build({entryPoints:[resolve('src/simulation/'+entry)],bundle:true,write:false,platform:'node',format:'esm',define:{'import.meta.env':'{"DEV":false,"MODE":"production"}'},banner:{js:'const __nativeProductionHarness=globalThis.__nativeProductionHarness;const performance={now:()=>__nativeProductionHarness.now?.()??globalThis.performance.now(),timeOrigin:globalThis.performance.timeOrigin};const self=__nativeProductionHarness.self;const postMessage=(...args)=>__nativeProductionHarness.postMessage(...args);const close=()=>__nativeProductionHarness.close();const fetch=(...args)=>__nativeProductionHarness.fetch(...args);'},plugins:[{name:'native-production-creation-adapters',setup(p){
    if(kind==='source')p.onResolve({filter:/simulation-authority\.js$/},()=>({path:'authority',namespace:'native-lifecycle'}));
    else p.onResolve({filter:/simulation-authority-client\.js$/},()=>({path:'client',namespace:'native-lifecycle'}));
    p.onResolve({filter:/\.wasm\?url$/},()=>({path:'wasm',namespace:'native-lifecycle'}));
@@ -276,4 +279,67 @@ test('ordinary hosted Build waits for its stopped Farm packet while Game ticks, 
   const duplicate=f.runtime.submit(command);let duplicated=false;duplicate.then(()=>{duplicated=true;});await until(()=>duplicated,()=>f.native.present());assert.equal((await duplicate).value,false);
   assert.equal(f.created(),1);assert.deepEqual(f.native.faults,[]);const commands=f.sourceWorker.sent.filter(m=>m.data.kind==='command').map(m=>m.data.command.sequence);assert.deepEqual(commands,commands.map((_,i)=>i+1));
  }finally{release();try{await f?.close();}finally{origin.close();}}
+});
+
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
+test('hosted autonomous Repair animates both Repair pairs with finite causal coverage, pauses and continues to Idle',async(t)=>{
+ const saved=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});let f,release,releaseIdle,proof;
+ const held=new Promise(r=>{release=r;}),idleHeld=new Promise(r=>{releaseIdle=r;});
+ try{
+  const state=structuredClone(saved.state),wall=state.structures.find(w=>w.kind==='wall'&&w.status==='intact'&&!w.gate&&w.material==='zarzas');Object.assign(wall,saved.point(1,4),{hp:0,status:'ruined',collapseRemaining:0});state.ledger.balance=rational(100000);
+  let preparedAt;
+  f=await fullFixture({state,chunkKeys:Array.from({length:12},(_,i)=>`${i%4-1},${Math.floor(i/4)-1}`),async onPrepare(r){
+   if(r.kind==='barrier-addition'){
+    preparedAt=r.resources.worldBoundary.effectiveTime;
+    Object.assign(f.native.clock,{elapsed:preparedAt,safeUntil:preparedAt,paused:true,segments:[]});
+    f.native.client.registerClockBinding(f.native.buffer,{byteOffset:4,semantic:'relative',epoch:preparedAt,nativeBarrierAddition:r.resources.nativeBarrierAddition});
+    f.native.client.registerClockBinding(f.native.buffer,{byteOffset:8,semantic:'absolute',epoch:0});
+   }else if(proof){if(r.kind==='initial-idle-body')await idleHeld;Object.assign(f.native.clock,{elapsed:preparedAt,safeUntil:Number.MAX_SAFE_INTEGER,paused:false,segments:[{start:preparedAt,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-preparedAt}]});}
+  },onReady(r){if(r.kind==='barrier-addition')return held;},onCommit(r,data){if(r.kind==='barrier-addition')proof=data.nativeBarrierAdditionBinding;}});
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  await until(()=>f.native.records.some(r=>r.kind==='initial-idle-body'&&r.committed),()=>f.native.present());
+  await f.runtime.submit({kind:'requestRepair',id:'finite-ruin',targetId:wall.id});
+  let now=performance.now();f.host.now=()=>now;await f.runtime.activateClock();
+  const advance=async(ms=100)=>{const goal=f.state.elapsed+ms/1000-.01;now+=ms;await until(()=>f.state.elapsed>=goal,()=>f.native.present());};
+  for(let i=0;i<350&&!f.native.records.some(r=>r.kind==='barrier-addition'&&r.packet);i++)await advance();
+  const barrier=f.native.records.find(r=>r.kind==='barrier-addition');assert(barrier?.packet);assert(f.native.records.find(r=>r.kind==='task-action')?.committed);
+  let presented=false;barrier.packet.presented.then(()=>{presented=true;},()=>{}); // Disposal after a failed assertion may reject.
+  for(let i=0;i<6;i++)await advance();assert.equal(presented,false,'READY is not presentation');assert.equal(f.state.structures.find(w=>w.id===wall.id).hp,0);
+  release();await until(()=>barrier.committed,()=>f.native.present());for(let i=0;i<8;i++)await f.native.present();
+  const at=proof.reference.worldBoundary.effectiveTime,ticket=proof.reference.worldBoundary.ticket;assert(at-preparedAt>.5);
+  const sample=f.native.host.inspect().samples.find(s=>s.nativeWorldBoundary?.ticket===ticket);
+  assert(sample,'the acquired kind2 must draw; a committed receipt alone cannot release the dependency');
+  assert.equal(presented,true,'the actual Host resolves the presentation awaited by Surface');
+  assert.equal(sample.clockElapsed,at);assert.equal(sample.safeUntil,at,'only the acquired boundary is added to the finite lease');
+  let packetSequence=sample.sequence;const buffer=f.native.gpu.buffers.filter(b=>!b.destroyed&&b.data.length===16).at(-1);let values=new Float32Array(buffer.data.buffer);
+  assert.equal(values[1],0,'Repair starts at acquired age zero');assert(values[2]<=preparedAt,'unscoped presentation stays inside its original coverage');
+  const ages=[],readAge=()=>{const sample=f.native.host.inspect().samples.findLast(s=>s.sequence===packetSequence);assert(sample.clockElapsed<=f.native.host.inspect().nativeCausalClock.committedThrough);assert(values[2]<=preparedAt,'unscoped clocks retain their original ceiling');assert(values[1]>0,'retained Repair must advance with causal time before Idle');const pick=captureNativeRoutePickFrame(f.native.host.inspect());assert.equal(pick.getBarrierRepairElapsed(proof.preparedReference),values[1]);assert.equal(pick.getBarrierRepairExecutionTime(proof.preparedReference),at+values[1]);assert(pick.getPresentationTime()<=preparedAt);ages.push(values[1]);return values[1];};
+  await advance(50);await f.native.present();const lower=readAge();
+  assert(lower>0&&lower<.48*(1-Math.cbrt(.5)),'first authored pair must actually animate before the cubic midpoint');
+  const repaired={...wall,hp:wall.maxHp,status:'intact',wallPresentation:{from:0,to:1,at}};assert(wallVisualAt(repaired,at+lower)<.5);
+  await f.runtime.submit({kind:'pause',reason:'menu'});await f.native.present();const paused=readAge();
+  now+=1000;for(let i=0;i<8;i++)await f.native.present();assert.equal(readAge(),paused,'wall time during pause cannot advance Repair');
+  const client=f.native.client,physical=client.device.createBuffer({size:16,usage:72}),group=client.device.createBindGroup({entries:[{binding:0,resource:{buffer:physical}}]});
+  const actionReference=f.native.host.inspect().nativeRouteFrame.bindings.find(b=>b.nativeAction).nativeAction;
+  client.registerClockBinding(physical,{byteOffset:0,semantic:'relative',epoch:actionReference.startTime,nativeAction:actionReference});
+  client.registerClockBinding(physical,{byteOffset:4,semantic:'relative',epoch:preparedAt,nativeBarrierAddition:proof.preparedReference});client.registerClockBinding(physical,{byteOffset:8,semantic:'absolute',epoch:0});
+  client.beginFrame({clock:f.native.clock,nativeWorldBoundary:proof.reference.worldBoundary});client.device.queue.writeBuffer(physical,0,new Float32Array(4));
+  const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});pass.setPipeline(f.native.pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
+  const shown=client.endFrame();await f.native.present();await shown;
+  packetSequence=f.native.host.inspect().activeSequence;assert.notEqual(packetSequence,sample.sequence);
+  const replacement=f.native.gpu.buffers.filter(b=>!b.destroyed&&b.data.length===16).at(-1);assert.notEqual(replacement,buffer,'exercise a real physical uniform fork');values=new Float32Array(replacement.data.buffer);
+  assert.equal(readAge(),paused,'replacement and physical fork preserve the acquired origin during pause');
+  await f.runtime.submit({kind:'resume',reason:'menu'});await advance(100);await f.native.present();const upper=readAge();
+  assert(upper>.48*(1-Math.cbrt(.5))&&upper<.48,'second authored pair must animate before completion');assert(wallVisualAt(repaired,at+upper)>.5);
+  for(let i=0;i<5;i++){await advance(100);await f.native.present();readAge();}
+  assert.equal(ages.at(-1),Math.fround(WALL_REPAIR_DURATION),'the retained local curve saturates at its finite end');
+  assert(ages.every((age,i)=>i===0||age>=ages[i-1]));
+  assert.equal(f.native.host.inspect().samples.findLast(s=>s.sequence===packetSequence).clockElapsed,at+WALL_REPAIR_DURATION,'no lease beyond the prepared local curve');
+  releaseIdle();for(let i=0;i<30&&f.state.workers[0].nativeRouteAdmission!=='native-idle';i++)await advance();
+  assert.equal(f.state.workers[0].nativeRouteAdmission,'native-idle');assert.equal(f.state.structures.find(w=>w.id===wall.id).hp,wall.maxHp);
+  assert.equal(f.state.events.filter(e=>e.type==='RepairApplied').length,1);assert.equal(f.created(),1);
+  const action=f.native.records.find(r=>r.kind==='task-action').resources.request,idle=f.native.records.findLast(r=>r.kind==='initial-idle-body').resources.nativeInitialIdleBody;assert.equal(idle.bodyId,action.bodyId);
+  t.diagnostic(JSON.stringify({preparedAt,acquiredAt:at,ticket,drawSequence:sample.sequence,safeUntil:sample.safeUntil,ages,repairAge:values[1],globalPresentation:values[2],finalAdmission:f.state.workers[0].nativeRouteAdmission}));
+  assert.deepEqual(f.native.errors,[]);assert.deepEqual(f.native.faults,[]);
+ }finally{release?.();releaseIdle?.();await f?.close();saved.close();}
 });

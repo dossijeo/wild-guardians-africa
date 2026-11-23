@@ -331,7 +331,7 @@ test('a draw owner without resume support refuses the candidate clock',async()=>
 });
 
 test('a preparer cannot inject direct native execution bindings into a packet',async()=>{
- const f=await fixture();try{for(const key of ['admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'])await assert.rejects(f.host.handle({type:'frame',packet:{sequence:1,operations:[],[key]:{}}}),/producer cannot supply/);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().activeSequence,null);}finally{f.client.dispose();await f.host.dispose();}
+ const f=await fixture();try{for(const key of ['admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd','admittedBarrierAdditionBinding','admittedBarrierClockCoverageEnd'])await assert.rejects(f.host.handle({type:'frame',packet:{sequence:1,operations:[],[key]:{}}}),/producer cannot supply/);assert.equal(f.gpu.submitted.length,0);assert.equal(f.host.inspect().activeSequence,null);}finally{f.client.dispose();await f.host.dispose();}
 });
 
 test('a draw owner without suspension support cannot silently accept the new clock as an ordinary clock',async()=>{

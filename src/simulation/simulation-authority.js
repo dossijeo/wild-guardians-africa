@@ -17,7 +17,7 @@ import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,serializeConfirmedPresentationState,prepareConfirmedStateTransport,deserializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
 import {encodePhysicsCheckpoint} from './physics-checkpoint-codec.js';
 import {pausedAuthorityQuiescent} from './paused-authority-quiescence.js';
-import {advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,coincidentRuins,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
+import {prepareNativeRuinedWallRepair,projectNativeRuinedWallRepair,advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,coincidentRuins,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
@@ -118,7 +118,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     nav.projectNativeGateLeaves();
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
-   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,onError:error=>onNativeIntentControlError?.(error)});
+   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,onError:error=>onNativeIntentControlError?.(error)});
   }
   function admitPendingNativeBirths({force=false}={}){
    if(!nativeBodies||!nativeBirthsPending)return;
@@ -374,6 +374,50 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       cancelTask:{valid,project:()=>bless(game,command.id,command.targetId)},
       prepareResources:async({resources,signal,deferredStart})=>retain(await owner.resources.prepareNativeInitialIdleBodyResources(resources,{signal,minSequence,terrainManifest:manifest,deferredStart}),signal)
     }),{label:'Native Awakening',rejection:'El cultivo cambió durante la preparación del Despertar'});
+  }
+
+  function nativeRuinedWallWakeKey(actorId){
+    const worker=game.workers.find(w=>w.id===actorId),task=game.tasks.find(t=>t.id===worker?.taskId),target=game.structures.find(t=>t.id===task?.targetId);
+    // Source-scoped rejection uses existing owners' revisions. Clock
+    // advance alone is not new evidence for the same completed action.
+    return JSON.stringify([nav.version,planner.nativeCausalClock()?.intentSequence,game.ledger.balance,target,
+      game.workers.map(w=>[w.id,w.x,w.z,w.status,w.nativeRouteAdmission,w.taskId,w.centerId,w.villageId,w.incapacitated,w.recovery,w.raidReturn]),
+      game.villages.map(v=>[v.id,v.entry?.x??v.x,v.entry?.z??v.z])]);
+  }
+  async function restoreNativeRuinedWall({actorId,getPublication,prepareResources,signal}){
+    const worker=game.workers.find(w=>w.id===actorId),source=worker&&planner.nativeTaskActionExecution(actorId);
+    const first=source?.completed&&prepareNativeRuinedWallRepair(game,worker,source.binding,nav);
+    if(!first)return {status:'unsupported'};
+    const snapshot=JSON.stringify(first.target),repaired={...first.target,hp:first.target.maxHp,status:'intact',collapseRemaining:0};delete repaired.wallPresentation;
+    const shapes=spatialStructureBarriers(repaired);
+    if(shapes.length!==1||(shapes[0].passMask??0)!==0)return {status:'unsupported'};
+    const additions=shapes.map(p=>({entityId:repaired.id,x:Math.fround(p.x),z:Math.fround(p.z),halfX:Math.fround(p.halfX),halfZ:Math.fround(p.halfZ),yaw:Math.fround(p.yaw),passMask:0}));
+    const impact=()=>planner.inspectNativeStructureStops(2,additions.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]));
+    const affected=impact();
+    // This delivery covers a free resident ruin. A Repair that needs an
+    // acquired route stop must keep its explicit negative until that full
+    // Stop24 -> Repair -> continuation chain has its own acceptance evidence.
+    if(affected.status!=='ready'||affected.actors.length)return {status:'blocked'};
+    planner.flushTaskEvents();planner.flushNativeIntentControl();
+    let current=first;
+    const validate=()=>{
+      if(closed||signal.aborted||nativeStructurePreparation||!game.workers.includes(worker)||JSON.stringify(first.target)!==snapshot)return false;
+      const action=planner.nativeTaskActionExecution(actorId);
+      if(!action?.completed||action.executedThrough!==game.elapsed||JSON.stringify(action.binding)!==JSON.stringify(source.binding))return false;
+      current=prepareNativeRuinedWallRepair(game,worker,action.binding,nav);
+      // The stage/revalidation of this same native kind2 proposal checks all
+      // current bodies and routes. A second stop inventory while it is pending
+      // would be busy; it cannot stand in for that native transaction check.
+      return !!current&&current.task===first.task&&current.target===first.target;
+    };
+    return planner.addNativeBarriersAfterGpuQuiescence({additions,getPublication,signal,validate,
+      prepareResources:({resources,signal})=>prepareResources({resources,signal,nativeBarrierWallEntities:[repaired]}),
+      project:proof=>{
+        const adopt=session.prepareNativeWallAdditionAdoption([repaired],proof),original=nav.setState;let adopted=false;
+        nav.setState=next=>{if(next!==game||adopted)throw Error('Native Repair adoption owner changed');adopt();adopted=true;return original(next);};
+        try{return projectNativeRuinedWallRepair(game,worker,current,nav)&&adopted;}finally{nav.setState=original;}
+      }
+    });
   }
 
   async function stopNativeStructureActors(owner,impact){

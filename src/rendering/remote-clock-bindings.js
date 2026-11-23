@@ -1,3 +1,4 @@
+import {copyNativeBarrierAdditionReference} from '../world/native-barrier-addition.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
 import {copyNativeFarmArrivalRouteReference,sameNativeFarmArrivalRouteReference,nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
@@ -18,6 +19,17 @@ import {copyNativeStoppedClock} from './native-stopped-clock.js';
 // structure/cache keys. Registration occurs when a physical binding is updated,
 // never by discovering graph nodes during replay.
 const clockMetadata=Symbol.for('wild-guardians.remote-clock');
+// This scalar's origin is supplied only by the acquired kind2 receipt.
+export function copyNativeBarrierClock(binding){
+ const reference=copyNativeBarrierAdditionReference(binding.nativeBarrierAddition);
+ if(reference.gate||reference.removal||reference.additions.length!==1||binding.semantic!=='relative'||binding.epoch!==reference.worldBoundary.effectiveTime||binding.resourceEnd!==undefined||binding.period!==undefined||Object.keys(binding).some(key=>key.startsWith('native')&&key!=='nativeBarrierAddition')||['executionEpoch','barrierOrigin'].some(key=>Object.hasOwn(binding,key)))throw TypeError('Invalid native solid Repair clock');
+ return {semantic:'relative',epoch:binding.epoch,nativeBarrierAddition:reference};
+}
+export function markRemoteBarrierClockNode(node,reference){
+ if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid native solid Repair clock node');
+ const metadata=copyNativeBarrierClock({semantic:'relative',epoch:reference.worldBoundary.effectiveTime,nativeBarrierAddition:reference});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze(metadata),enumerable:false});return node;
+}
 export function markRemoteStoppedNode(node,reference,epoch,field=null){
  if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid or already marked stopped uniform');
  const metadata=copyNativeStoppedClock({nativeStopped:reference,epoch,semantic:field===null?'relative':'stop-value',...(field===null?{}:{stopField:field})});

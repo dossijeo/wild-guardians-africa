@@ -27,7 +27,7 @@ El caso de ruina necesita revalidar el acceso y adquirir las paradas de las ruta
 
 La orden pública `requestRepair` sobre `structure-749` adquirió Task14 con el ticket 6 y Action15 con el ticket 8, ambos sobre el cuerpo 1. La acción terminó a t=31,24. En t=32,74 la pared seguía en ruinas con 0 de 100 HP, el saldo era 100.000 y aún no existía una preparación de barrera ni un evento `RepairApplied`. La raíz 125 y la geometría 74 de la ruina siguieron en escena.
 
-Se conservaron 570 buffers residentes entre 680 vínculos comparables y el consumidor drenó sin errores. La captura a 30 Hz registró un máximo de arranque de 36,3 ms sin atribución. El control reproduce el bloqueo antes de incorporar la colisión al recorrido nativo. [Recibo](performance/native-ruined-solid-wall-baseline-20261121.json).
+Se conservaron 570 buffers residentes entre 680 vínculos comparables y el consumidor drenó sin errores. La captura a 30 Hz registró un máximo de arranque de 36,3 ms sin atribución. El control reproduce el bloqueo anterior a la [adquisición de la colisión en el caso libre](native-ruined-solid-wall-repair-handoff-20261123.md). [Recibo](performance/native-ruined-solid-wall-baseline-20261121.json).
 
 ## Puerta intacta con daño parcial
 

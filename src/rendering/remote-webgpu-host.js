@@ -1,3 +1,5 @@
+import {WALL_REPAIR_DURATION} from '../simulation/structure-presentation.js';
+import {copyNativeBarrierClock} from './remote-clock-bindings.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {nativeFarmIdlePhaseOffset,nativeIdleCyclePhaseOffset} from './native-farm-idle-phase.js';
 import {nativeClockResourceEnd} from './native-clock-resource-end.js';
@@ -63,7 +65,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   let nativeWorldBoundary=null,worldBoundaryRequired=false;
   const frameBoundary=packet=>packet.admittedWorldBoundary??packet.metadata?.nativeWorldBoundary??null;
   const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(frameBoundary(packet),nativeWorldBoundary);
-  const frameClock=packet=>packet?.admittedClockBindings?.some(b=>b.semantic==='idle-offset'&&b.motionRecord.isCurrent())?{...packet.metadata.clock,safeUntil:Number.MAX_SAFE_INTEGER}:packet?.admittedMotionBinding?{...packet.metadata.clock,safeUntil:packet.admittedClockCoverageEnd??Math.max(packet.metadata.clock.safeUntil,(packet.admittedMotionBinding.reference.endTime??packet.metadata.clock.safeUntil))}:packet?.metadata?.clock;
+  // The acquired receipt anchors a retained Repair curve of finite duration.
+  // Its ceiling is admitted with the actual bindings, including replacements;
+  // direct causal time, pauses and native body revocations still bound drawing.
+  const baseFrameClock=packet=>packet?.admittedBarrierAdditionBinding?{...packet.metadata.clock,safeUntil:Math.max(packet.metadata.clock.safeUntil,packet.admittedBarrierAdditionBinding.reference.worldBoundary.effectiveTime)}:packet?.admittedClockBindings?.some(b=>b.semantic==='idle-offset'&&b.motionRecord.isCurrent())?{...packet.metadata.clock,safeUntil:Number.MAX_SAFE_INTEGER}:packet?.admittedMotionBinding?{...packet.metadata.clock,safeUntil:packet.admittedClockCoverageEnd??Math.max(packet.metadata.clock.safeUntil,(packet.admittedMotionBinding.reference.endTime??packet.metadata.clock.safeUntil))}:packet?.metadata?.clock;
+  const frameClock=packet=>{const clock=baseFrameClock(packet);return clock&&packet.admittedBarrierClockCoverageEnd!=null?{...clock,safeUntil:Math.max(clock.safeUntil,packet.admittedBarrierClockCoverageEnd)}:clock;};
   const drawCommandsCurrent=(op,boundary)=>op.method!=='submit'||op.args[0].every(buffer=>{
     if(buffer.texturePreparation)return validRemoteTexturePreparation(buffer,key=>resolutionResources?.get(key)||resources.get(key));
     return !worldBoundaryRequired||!buffer.__remoteCommands.some(command=>command.method==='beginRenderPass')||sameNativeWorldBoundary(buffer.nativeWorldBoundary??null,boundary);
@@ -667,8 +673,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (!active?.retained?.has(binding.id)) continue;
         // A scene can contain long-lived independent motors and a finite
         // resumed body. Each binding retains its own data and revocation cap.
-        const executionEpoch=binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
-        const scoped=!!(binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&active.admittedMotionBinding?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
+        const executionEpoch=binding.barrierOrigin?.proof?.reference.worldBoundary.effectiveTime??binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
+        const scoped=!!(binding.nativeBarrierAddition||binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&(active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null)?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??Infinity;
         const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalRoute=idleRoute??binding.nativeStart,terminalIdle=retainedCompletedEndpoint(binding,bindingTime);
         const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
@@ -680,11 +686,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const idleRelative=idleRoute?Math.max(0,Math.min((nativeClockResourceEnd(binding.epoch,idleRoute.endTime)-binding.epoch),routeTime-executionEpoch)):null;
         const cyclePhaseDelay=cycleRoute&&(cycleRoute.initialState.mode==='watch'||floorFloat32(cycleRelative)<binding.idleCycleWatchKnot)?binding.idleCycleRecord?.phaseDelay??0:0,cyclePhaseTime=cycleRoute&&!cycleTerminal?Math.min(bindingTime,executionEpoch+cycleRelative):bindingTime;
         const idleOffset=binding.semantic==='idle-offset'?cycleRoute?nativeIdleCyclePhaseOffset({elapsed:cyclePhaseTime,executionEpoch,relativeTime:floorFloat32(cycleRelative),duration:cycleRoute.duration,period:binding.period,phaseDelay:cyclePhaseDelay}):nativeFarmIdlePhaseOffset({elapsed:bindingTime,executionEpoch,relativeTime:floorFloat32(idleRelative),duration:floorFloat32(idleRoute.endTime-binding.epoch),period:binding.period}):null;
-        const value=idleOffset??(binding.nativeStopped&&binding.semantic==='stop-value'?binding.submittedStopValue:binding.semantic==='idle-cycle-watch-knot'?binding.idleCycleWatchKnot:(binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.semantic==='relative'?Math.max(0,Math.min(resourceCeiling-binding.epoch,routeTime-executionEpoch)):binding.nativeInitialIdleBody&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeIdleCycle&&binding.semantic==='relative'?cycleRelative:binding.nativeSettlement&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?nativeTaskActionRemainingDuration(binding.nativeAction.request):Math.min(nativeTaskActionRemainingDuration(binding.nativeAction.request),Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime);
+        const value=binding.nativeBarrierAddition?Math.min(WALL_REPAIR_DURATION,Math.max(0,bindingTime-executionEpoch)):idleOffset??(binding.nativeStopped&&binding.semantic==='stop-value'?binding.submittedStopValue:binding.semantic==='idle-cycle-watch-knot'?binding.idleCycleWatchKnot:(binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.semantic==='relative'?Math.max(0,Math.min(resourceCeiling-binding.epoch,routeTime-executionEpoch)):binding.nativeInitialIdleBody&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeIdleCycle&&binding.semantic==='relative'?cycleRelative:binding.nativeSettlement&&binding.semantic==='relative'?Math.max(0,routeTime-executionEpoch):binding.nativeAction?(routeTime>=binding.motionRecord.executionEnd?nativeTaskActionRemainingDuration(binding.nativeAction.request):Math.min(nativeTaskActionRemainingDuration(binding.nativeAction.request),Math.max(0,routeTime-executionEpoch))):binding.semantic==='origin-modulo'?executionEpoch%binding.period:binding.semantic==='relative'?resourceTime-binding.epoch:resourceTime);
         if (!Number.isFinite(value)) throw Error('Invalid remote presentation clock value');
         const fixedStop=binding.nativeStopped&&binding.semantic==='stop-value';
         const submittedValue=fixedStop?binding.submittedStopValue:['origin-modulo','idle-offset'].includes(binding.semantic)?Math.fround(value):floorFloat32(value);
         if(!fixedStop)device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
+        if(binding.nativeBarrierAddition)nativeTimes.set(binding.barrierOrigin,{nativeBarrierAddition:binding.nativeBarrierAddition,nativeBarrierAdditionBinding:binding.barrierOrigin.proof,semantic:'relative',epoch:binding.epoch,executionEpoch,relativeTime:submittedValue,elapsed:executionEpoch+submittedValue});
         if(binding.nativeStopped?.kind==='native-farm-arrival-stopped-gate'){
           nativeTimes.set(binding.nativeClockKey,{nativeStopped:binding.nativeStopped,semantic:'stop-value',stopField:'opening',epoch:binding.epoch,worldBoundary:binding.motionRecord.worldBoundary,opening:binding.submittedStopValue});
         }else if(binding.nativeStopped){
@@ -818,7 +825,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
-      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(clockElapsed===null?{}:{presentationElapsed:floorFloat32(active.admittedMotionBinding?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
+      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
@@ -1055,7 +1062,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       const lease=routeControl[method](reference,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
       if(key)leases.set(key,lease);return lease;
     };
+    packet.admittedBarrierClockCoverageEnd=null;
     return preparedBindings.map(original=>{let binding=original;
+      if(binding.nativeBarrierAddition){
+        const ref=binding.nativeBarrierAddition,proof=binding.barrierOrigin?.proof,boundary=proof?.reference.worldBoundary;
+        const covered=b=>b&&boundary&&b.authorityEpoch===boundary.authorityEpoch&&b.nativeSession===boundary.nativeSession&&b.ticket>=boundary.ticket&&b.effectiveTime>=boundary.effectiveTime;
+        if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired)throw Error('Native solid Repair requires its causal world');
+        if(proof){if(!sameNativeBarrierAdditionReference(proof.preparedReference,ref)||!covered(packet.admittedWorldBoundary??packet.metadata.nativeWorldBoundary)||!covered(nativeWorldBoundary))throw Error('Native solid Repair lost its acquired origin');packet.admittedBarrierClockCoverageEnd=Math.max(packet.admittedBarrierClockCoverageEnd??0,boundary.effectiveTime+WALL_REPAIR_DURATION);}
+        else if(!preparing||!sameNativeBarrierAdditionReference(ref,packet.metadata.nativeBarrierAdditionTemplate))throw Error('Native solid Repair lacks its acquired origin');
+        return binding;
+      }
       if(binding.nativeInitialIdleBody){
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,packet.metadata.nativeWorldBoundary)||!preparing&&!nativeInitialIdleBodyReferenceCovered(binding.nativeInitialIdleBody,nativeWorldBoundary))throw Error('Native initial Idle body requires its applied world and causal clock');
         const motionRecord=admitMotion(original,'admitInitialIdleBody',binding.nativeInitialIdleBody);
@@ -1292,7 +1308,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'unconfigure': context.unconfigure(); deviceConfigured = false; break;
       case 'prepare-world-frame':
       case 'frame': {
-        if(['preparedClockBindings','preparedCameraBindings','preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
+        if(['preparedClockBindings','preparedCameraBindings','preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd','admittedBarrierAdditionBinding','admittedBarrierClockCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
         const preparing=message.type==='prepare-world-frame';
         if(preparing&&message.version!==1)throw Error('Unsupported prepared world frame version');
         if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
@@ -1549,6 +1565,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(message.binding.semantic==='idle-offset'&&(!(message.binding.nativeFarmArrival||message.binding.nativeStroll||message.binding.nativeIdleCycle)||message.binding.resourceEnd!==undefined||!Number.isFinite(message.binding.period)||message.binding.period<=0))throw Error('Invalid native Farm Idle phase offset');
         if(message.binding.semantic==='stop-value'&&!message.binding.nativeStopped)throw Error('Native stopped value requires its body');
         const stopped=message.binding.nativeStopped?copyNativeStoppedClock(message.binding):null;
+        if(Object.hasOwn(message.binding,'barrierOrigin'))throw Error('A preparer cannot supply a native solid receipt');
+        const solid=message.binding.nativeBarrierAddition?copyNativeBarrierClock(message.binding):null;
+        // The existing physical binding owner retains the receipt. A later
+        // material binding for this same immutable curve borrows that origin.
+        const barrierOrigin=solid?Array.from(clockBindings.values()).find(b=>b.nativeBarrierAddition&&sameNativeBarrierAdditionReference(b.nativeBarrierAddition,solid.nativeBarrierAddition))?.barrierOrigin??{proof:null}:null;
         if(message.binding.resourceEnd!==undefined&&(!Number.isFinite(message.binding.resourceEnd)||message.binding.resourceEnd<message.binding.epoch))throw Error('Invalid native clock resource end');
         if(message.binding.executionEpoch!==undefined)throw Error('A preparer cannot set the execution origin');
         if(message.binding.stoppedGateProjection!==undefined)throw Error('A preparer cannot supply an acquired motor projection');
@@ -1574,7 +1595,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(nativeConsequence&&message.binding.epoch!==nativeConsequence.worldBoundary.effectiveTime)throw Error('Invalid native consequence clock epoch');
         if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement,nativeHome,nativeFarmArrival,nativeStroll,nativeInitialIdleBody,nativeIdleCycle].filter(Boolean).length>1)throw Error('Conflicting native clock references');
         if(nativeAction&&(message.binding.semantic!=='relative'||message.binding.epoch!==nativeAction.startTime||message.binding.resourceEnd!==undefined))throw Error('Invalid native action phase clock');
-        clockBindings.set(key, { ...message.binding, ...(stopped?stopped:{}), ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),...(nativeConsequence?{nativeConsequence}:{}),...(nativeStroll?{nativeStroll}:{}),...(nativeHome?{nativeHome}:{}),...(nativeFarmArrival?{nativeFarmArrival}:{}),...(nativeSettlement?{nativeSettlement}:{}),...(nativeInitialIdleBody?{nativeInitialIdleBody}:{}),...(nativeIdleCycle?{nativeIdleCycle}:{}),
+        clockBindings.set(key, { ...message.binding, ...(solid?{...solid,barrierOrigin}:{}), ...(stopped?stopped:{}), ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),...(nativeConsequence?{nativeConsequence}:{}),...(nativeStroll?{nativeStroll}:{}),...(nativeHome?{nativeHome}:{}),...(nativeFarmArrival?{nativeFarmArrival}:{}),...(nativeSettlement?{nativeSettlement}:{}),...(nativeInitialIdleBody?{nativeInitialIdleBody}:{}),...(nativeIdleCycle?{nativeIdleCycle}:{}),
           ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction||nativeConsequence||nativeSettlement||nativeHome||nativeFarmArrival||nativeStroll||nativeInitialIdleBody||nativeIdleCycle)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeFarmArrival?'farm-arrival':nativeStroll?'idle-stroll':nativeHome?'home':nativeConsequence?'consequence':nativeAction?'action':nativeInitialIdleBody?'initial-idle-body':nativeIdleCycle?'idle-cycle':nativeSettlement?'settlement':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction??nativeConsequence??nativeSettlement??nativeFarmArrival??nativeHome??nativeStroll??nativeInitialIdleBody??nativeIdleCycle,message.binding.semantic,message.binding.epoch,...(message.binding.semantic==='idle-offset'?[message.binding.period]:[])])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),...(stopped?{nativeClockKey:nativeStoppedClockKey(stopped)}:{}),...(prior?.stoppedGateProjection&&stopped&&nativeStoppedClockKey(prior)===nativeStoppedClockKey(stopped)?{stoppedGateProjection:prior.stoppedGateProjection}:{}),id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
@@ -1796,7 +1817,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                if(other.some(key=>message[key]?.length)||message.nativeBarrierAdditions?.length!==1||!pending||pending.sequence!==hold.preparedFrameSequence)throw Error('Native solid addition lost its retained frame');
                const binding=copyNativeBarrierAdditionAttestation(message.nativeBarrierAdditions[0]);
                if(!sameNativeBarrierAdditionReference(binding.preparedReference,hold.preparedBarrierAdditionTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,boundary)||binding.reference.sourceControlSequence!==hold.sequence)throw Error('Native solid addition differs from its retained frame');
-               pending.admittedWorldBoundary=boundary;
+               pending.admittedWorldBoundary=boundary;pending.admittedBarrierAdditionBinding=binding;
+               for(const clock of clockBindings.values())if(clock.nativeBarrierAddition&&sameNativeBarrierAdditionReference(clock.nativeBarrierAddition,binding.preparedReference)){
+                 if(clock.barrierOrigin.proof){if(clock.barrierOrigin.proof===binding)continue;throw Error('Native solid Repair origin already acquired');}
+                 // Several physical uniforms share this object. Install once.
+                 clock.barrierOrigin.proof=binding;
+               }
              }
              if(hold.preparedTaskRouteStopTemplate){
                const other=['nativeFarmArrivalStops','nativeStrollStops','nativeFarmArrivals','nativeStrolls','nativeIdleCycles','nativeInitialIdleBodies','nativeSettlements','nativeConsequences','nativeActions','nativeStartedRoutes','nativeSuspendedBodies','nativeResumedRoutes','nativeHomes','nativeHomeArrivals'];

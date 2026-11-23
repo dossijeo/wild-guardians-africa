@@ -1,3 +1,4 @@
+import {floorFloat32} from '../src/rendering/float32-time.js';
 import {uniform} from 'three/tsl';
 import {recordWallPresentation,wallVisualAt} from '../src/simulation/structure-presentation.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
@@ -17,8 +18,8 @@ import {createWebGpuAdmittedWall} from '../src/rendering/webgpu-wall-admission.j
 import {nativeGateCrossingFixture} from '../tests/helpers/native-gate-crossings.js';
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
 const pack=JSON.parse(readFileSync('public/content/walls.json'));
-function assets(material){const array=(d,T)=>{const b=readFileSync('public'+d.url);return new T(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength));};
- return Object.fromEntries(['puerta','destruido'].map(suffix=>{const key=material+'_'+suffix,p=pack.pieces[key],piece={p:array(p.p,Float32Array),n:array(p.n,Float32Array),uv:array(p.uv,Float32Array),i:array(p.i,Uint16Array),faceRegions:array(p.faceRegions,Uint16Array),regions:p.regions,morph:Object.fromEntries(Object.entries(p.morph).map(([key,m])=>[key,{p:array(m.p,Float32Array),n:array(m.n,Float32Array),peers:m.peers}]))};
+function assets(material,suffixes=['puerta','destruido']){const array=(d,T)=>{const b=readFileSync('public'+d.url);return new T(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength));};
+ return Object.fromEntries(suffixes.map(suffix=>{const key=material+'_'+suffix,p=pack.pieces[key],piece={p:array(p.p,Float32Array),n:array(p.n,Float32Array),uv:array(p.uv,Float32Array),i:array(p.i,Uint16Array),faceRegions:array(p.faceRegions,Uint16Array),regions:p.regions,morph:Object.fromEntries(Object.entries(p.morph).map(([key,m])=>[key,{p:array(m.p,Float32Array),n:array(m.n,Float32Array),peers:m.peers}]))};
   const mesh=new Mesh(new BufferGeometry(),new MeshStandardNodeMaterial({side:DoubleSide}));mesh.userData.nativePiece=piece;return [key,mesh];}));}
 async function fixture(material='zarzas',restore=false){
  const yaw=.37,turnPoint=(x,z)=>[x*Math.cos(yaw)+z*Math.sin(yaw),-x*Math.sin(yaw)+z*Math.cos(yaw)];
@@ -187,3 +188,41 @@ test('restored Repair cannot silently fall back to CPU when the submitted clock 
  try{assert.throws(()=>createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:17.4,pipelineAdmission:{prepare(){throw Error('unexpected admission');}}}),/submitted presentation clock/);}
  finally{for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
 });
+
+{
+const template={kind:'native-barrier-addition-reference',version:1,worldBoundary:{version:1,authorityEpoch:'ruin-test',nativeSession:1,ticket:3,effectiveTime:17},sourceControlSequence:1,additions:[{entityId:'structure-749',x:0,z:0,halfX:1,halfZ:1,yaw:0,passMask:0}]};
+const proof={kind:'native-barrier-addition-attestation',version:1,preparedReference:template,reference:{...template,worldBoundary:{...template.worldBoundary,ticket:4,effectiveTime:18}},nativeIds:[77]};
+for(const material of ['zarzas','empalizada','adobe','piedra','reforzado'])test(`${material}: ruin replacement prepares every original phase before READY and retains them through the canonical 480ms`,async()=>{
+ const proto=assets(material,['intacto','danado','destruido']),entity={id:'structure-749',kind:'wall',material,gate:false,hp:0,maxHp:100,status:'ruined',collapseRemaining:0},healthy={...entity,hp:100,status:'intact'},requests=[],releases=[];
+ let at=17,pick;const clock=uniform(at),pipelineAdmission={prepare(object){return new Promise((resolve,reject)=>requests.push({object,resolve,reject}));},deferRelease(object,release){releases.push(release);}};
+ const view=createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:at,pipelineAdmission,presentationClock:clock,getRepairAge:reference=>pick.getBarrierRepairElapsed(reference),getPresentationTime:()=>17});
+ try{
+  await turn();requests[0].resolve();await turn();const ruin=view.group.children.find(x=>x.visible),initialGeometry=ruin.parts[0].mesh.geometry;
+  assert.equal(typeof view.prepareNativeRepair,'function');const p=view.prepareNativeRepair({entity:healthy,elapsed:at,signal:new AbortController().signal,template}),wall=p.object;
+  assert.equal(wall.parts.length,4);assert.equal(ruin.visible,true);assert.equal(wall.visible,false);assert(p.valid());
+  for(const part of wall.parts)assert.equal(part.mesh.material.userData.blessingObject,wall.blessingUniform,'both authored pairs consume the resident root uniform');
+  const renderer=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});renderer.hasFeature=()=>true;renderer.backend.renderer=renderer;
+  for(const {mesh} of wall.parts){const builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=new Scene();builder.camera=new PerspectiveCamera();builder.build();assert.match(builder.vertexShader,/wgMorphTarget/);}
+  wall.nativeGpuRepair.acceptBoundary(proof);p.activate();p.attach();const final=p.finalize();final.retire();final.notify();
+  const versions=()=>wall.parts.map(({mesh})=>Object.values(mesh.geometry.attributes).map(a=>[a.version,a.data?.version])),v=versions(),identities=wall.parts.map(p=>[p.mesh.geometry,p.mesh.material]);
+  const current={...healthy,wallPresentation:{from:0,to:1,at:18}};
+  for(const age of [0,.02,.08,.1,.2,.4,.479]){
+   at=18+age;clock.value=17;const submittedAge=floorFloat32(at-18);pick=captureNativeRoutePickFrame({nativeRouteFrame:{sequence:1,clockElapsed:at,presentationElapsed:17,worldBoundary:proof.reference.worldBoundary,bindings:[{nativeBarrierAddition:template,nativeBarrierAdditionBinding:proof,semantic:'relative',epoch:17,executionEpoch:18,relativeTime:submittedAge,elapsed:18+submittedAge}]}});view.update(current,at);assert.equal(requests.length,1);assert.deepEqual(versions(),v);assert.deepEqual(wall.parts.map(p=>[p.mesh.geometry,p.mesh.material]),identities);
+   if(age===.1){
+    wall.updateMatrixWorld(true);const mesh=wall.parts[3].mesh,index=mesh.geometry.index;
+    let hit=false;
+    for(let k=0;k<(index?.count??mesh.geometry.attributes.position.count)&&!hit;k+=3){
+     const triangle=[0,1,2].map(offset=>wall.nativeGpuRepair.repairLayer.position(3,(index?index.getX(k+offset):k+offset),new Vector3()).applyMatrix4(mesh.matrixWorld)),[a,b,c]=triangle,normal=new Vector3().subVectors(b,a).cross(new Vector3().subVectors(c,a));if(normal.lengthSq()<1e-10)continue;
+     normal.normalize();const center=a.clone().add(b).add(c).divideScalar(3),hits=[];mesh.raycast(new Raycaster(center.clone().addScaledVector(normal,2),normal.clone().negate()),hits);hit=hits.some(h=>h.point.distanceTo(center)<1e-4);
+    }
+    assert(hit,'raycast uses the submitted second-pair geometry while the global clock remains frozen');
+   }
+   const visual=wallVisualAt(current,pick.getBarrierRepairExecutionTime(template)),start=visual<=.5?0:2,local=start===0?visual*2:visual*2-1;
+   for(let i=0;i<4;i++)for(let k=0;k<wall.parts[i].bridge.pos.length/3;k+=109){const actual=wall.nativeGpuRepair.repairLayer.position(i,k,new Vector3());if(i<start||i>=start+2)assert.equal(actual.length(),0);else{const expected=morphedWallPositions(wall.parts[i].bridge,i%2===0?1-local:local);assert(actual.distanceTo(new Vector3().fromArray(expected,k*3))<2e-5);}}
+  }
+  at=18.5;view.update(current,at);await turn();assert.equal(requests.length,2);assert.equal(requests[1].object.parts.length,1);assert(wall.nativeGpuRepair.current());requests[1].resolve();await turn();for(const release of releases.splice(0))release();
+  assert.equal(view.parts.length,1);assert.notEqual(view.parts[0].mesh.geometry,initialGeometry);
+ }finally{view.dispose();for(const release of releases.splice(0))release();for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
+});
+
+}
