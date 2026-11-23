@@ -17,6 +17,7 @@ import {BIOME_IDS} from '../biome-ids.js';
 export function createSpatialGameSession(module,state,streamOptions){
   if(!Object.hasOwn(BIOME_IDS,state?.biome)||!Array.isArray(state.villages)||!state.villages.length)
     throw TypeError('Expected a supported game biome and a village');
+  if(streamOptions.nativeBootstrap!=null&&streamOptions.core)throw Error('Native bootstrap requires a new unpublished core');
   let core=streamOptions.core??createSpatialWorld(module);
   const confirmedCore=core,first=state.villages[0];
   const cx=Math.floor((first.x+24)/48),cz=Math.floor((first.z+24)/48);
@@ -95,10 +96,10 @@ export function createSpatialGameSession(module,state,streamOptions){
     if(stream)stream.invalidate([...changed]);
   }
   for(const village of state.villages)installVillage(village,state,village===first);
-  const walls=createSpatialWallMirror(core),centers=createSpatialCenterMirror(core),
-    shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
-  walls.sync(state.structures);
+  const centers=createSpatialCenterMirror(core),shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
   centers.sync(state);shields.sync(state.spells);
+  const walls=createSpatialWallMirror(core,{structures:state.structures,bootstrap:streamOptions.nativeBootstrap??null});
+  walls.sync(state.structures);
   const profiles=new Set();
   let workerPortalRevision=-1,workerPortalChunkRevision=-1,
     workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
@@ -498,7 +499,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     streamOptions.loaded(),props.suppressed,x,z,radius,
     key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
-    wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
+    captureWallOwners:walls.captureOwners,wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,
