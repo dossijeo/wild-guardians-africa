@@ -67,6 +67,28 @@ export function summarizeNativeCadenceTarget(receipt,{targetFrameMs=1000/60,limi
     coverage:completeHistory?'Contiguous recorded history only; this does not establish full-session or physical-presentation coverage.':'Incomplete recorded history; no full-history cadence acceptance or percentile claim.'};
 }
 
+function describeDawnDecoding(events,intervals,at,threadNames){
+  const complete=events.filter(event=>event.ph==='X'&&Number.isFinite(event.ts)&&Number.isFinite(event.dur)&&event.dur>0&&
+    Number.isFinite(event.pid)&&Number.isFinite(event.tid)&&typeof event.cat==='string'&&event.cat.includes('gpu.dawn'));
+  const batches=complete.filter(event=>event.name==='WebGPUDecoderImpl::HandleDawnCommands');
+  const detail=event=>({name:event.name,thread:threadNames.get(`${event.pid}/${event.tid}`),at:at(event),
+    durationMs:event.dur/1000,threadCpuMs:Number.isFinite(event.tdur)?event.tdur/1000:null});
+  const batchDetail=batch=>({
+    ...detail(batch),bytes:batch.args?.bytes??null,
+    containedEvents:complete.filter(event=>event!==batch&&event.pid===batch.pid&&event.tid===batch.tid&&
+      event.ts>=batch.ts&&event.ts+event.dur<=batch.ts+batch.dur)
+      .sort((a,b)=>b.dur-a.dur).slice(0,8).map(detail)
+  });
+  const targetOverlaps=intervals.map(interval=>{
+    const overlap=batch=>Math.min(interval.at,at(batch)+batch.dur/1000)-Math.max(interval.from,at(batch));
+    return {from:interval.from,through:interval.at,sequence:interval.sequence,intervalMs:interval.intervalMs,
+      batches:batches.filter(batch=>overlap(batch)>0).sort((a,b)=>overlap(b)-overlap(a)).slice(0,5)
+        .map(batch=>({...batchDetail(batch),overlapMs:overlap(batch)}))};
+  }).filter(interval=>interval.batches.length);
+  return {recordedBatches:batches.length,longestBatches:[...batches].sort((a,b)=>b.dur-a.dur).slice(0,5).map(batchDetail),targetOverlaps,
+    scope:'Decoder spans and same-thread contained spans overlap in time. They do not establish the cause of a gap or GPU execution time.'};
+}
+
 export function analyzeNativeFrameCadence(receipt,trace){
   const anchor=receipt.traceClockAnchor,events=trace.traceEvents;
   if(!anchor||!Number.isFinite(anchor.absoluteMs)||!Array.isArray(events))throw Error('A receipt with its trace clock anchor and a Chrome trace are required');
@@ -98,8 +120,9 @@ export function analyzeNativeFrameCadence(receipt,trace){
       hostTasks:hostTasks.filter(e=>overlap(e)>0).sort((a,b)=>overlap(b)-overlap(a)).slice(0,4).map(detail),
       correlatedEvents:relevant.filter(e=>overlap(e)>0).sort((a,b)=>overlap(b)-overlap(a)).slice(0,6).map(detail)};
   });
+  const targetCadence=summarizeNativeCadenceTarget(receipt);
   return {version:1,scope:'Host draw attempts and browser callbacks, not GPU execution time or physical scanout',owner,clockOffsetMs:offset,capture:receipt.capture??null,
-    targetCadence:summarizeNativeCadenceTarget(receipt),frameSamples:frames.length,hostCallbacks:callbacks.length,medianHostCallbackIntervalMs:baseline,estimatedCallbackHz:baseline?1000/baseline:null,
+    targetCadence,dawnDecoding:describeDawnDecoding(events,targetCadence.topIntervals,at,threadNames),frameSamples:frames.length,hostCallbacks:callbacks.length,medianHostCallbackIntervalMs:baseline,estimatedCallbackHz:baseline?1000/baseline:null,
     medianGpuVSyncTaskIntervalMs:median(intervals(vsync)),maxHostDrawCpuMs:Math.max(...frames.map(f=>f.drawMs)),maxHostSubmissionIntervalMs:Math.max(...frames.map(f=>f.intervalMs??0)),
     releaseTriggeredFrames:frames.filter(f=>f.trigger==='mutation-release').length,recordedOpportunities:opportunities.size,
     opportunityCoverage:opportunities.size?{firstAt:Math.min(...opportunities.keys()),lastAt:Math.max(...opportunities.keys())}:null,gaps,
@@ -114,9 +137,9 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
     const report=summarizeNativeGapPhases(cases);report.inputs=inputs;writeFileSync(output,JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({output,...report.totals}));
   }else{
   const [receiptPath,tracePath,output]=process.argv.slice(2);
-  if(!receiptPath||!tracePath||!output)throw Error('Usage: node tools/guardian/analyze_native_frame_cadence.mjs receipt.json trace.json output.json');
+  if(!receiptPath||!tracePath||!output)throw Error('Usage: node tools/guardian/analyze_native_frame_cadence.mjs receipt.json trace.json[.gz] output.json');
   const raw=readFileSync(receiptPath),rawTrace=readFileSync(tracePath),hash=b=>createHash('sha256').update(b).digest('hex');
-  const report=analyzeNativeFrameCadence(JSON.parse(raw),JSON.parse(rawTrace));
+  const report=analyzeNativeFrameCadence(JSON.parse(raw),JSON.parse(tracePath.endsWith('.gz')?gunzipSync(rawTrace):rawTrace));
   report.inputs={receipt:{path:receiptPath,sha256:hash(raw)},trace:{path:tracePath,sha256:hash(rawTrace)}};
   writeFileSync(output,JSON.stringify(report,null,2)+'\n');
   console.log(JSON.stringify({output,frameSamples:report.frameSamples,callbackHz:report.estimatedCallbackHz,maxHostDrawCpuMs:report.maxHostDrawCpuMs,maxHostSubmissionIntervalMs:report.maxHostSubmissionIntervalMs,gaps:report.gaps.length}));

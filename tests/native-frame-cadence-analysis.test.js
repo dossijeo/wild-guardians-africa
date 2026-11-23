@@ -58,3 +58,25 @@ test('compositor wall time and thread CPU time are reported separately',()=>{
   const event=analyzeNativeFrameCadence(receipt,trace).gaps[0].correlatedEvents[0];
   assert.equal(event.durationMs,66);assert.equal(event.threadCpuMs,.05);assert.equal(event.thread,'CrGpuMain');
 });
+
+test('Dawn batches retain contained events on their own thread and separate out-of-gap work',()=>{
+  const {receipt,trace}=fixture();
+  const event=(name,ts,dur,extra={})=>({name,ts,dur,ph:'X',cat:'gpu.dawn',pid:2,tid:3,...extra});
+  const batch=(ts,dur,extra={})=>event('WebGPUDecoderImpl::HandleDawnCommands',ts,dur,{cat:'disabled-by-default-gpu.dawn',...extra});
+  trace.traceEvents.push(
+    batch(41000,10000,{tdur:7000,args:{bytes:192}}),
+    event('CompileShaderDXC',43000,6000,{tdur:4800}),
+    event('Other thread',44000,3000,{tid:4}),
+    event('Crosses decoder boundary',40000,4000),
+    batch(150000,40000)
+  );
+  const r=analyzeNativeFrameCadence(receipt,trace).dawnDecoding;
+  assert.equal(r.recordedBatches,2);
+  assert.equal(r.longestBatches[0].durationMs,40);
+  assert.equal(r.targetOverlaps.length,1);
+  const caught=r.targetOverlaps[0].batches[0];
+  assert.equal(caught.overlapMs,10);
+  assert.equal(caught.bytes,192);
+  assert.equal(caught.threadCpuMs,7);
+  assert.deepEqual(caught.containedEvents.map(({name,threadCpuMs})=>[name,threadCpuMs]),[['CompileShaderDXC',4.8]]);
+});

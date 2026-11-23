@@ -49,3 +49,11 @@ Para una ventana que supere los anillos del Host, `collectNativeHostHistory` fus
 | ¿El intervalo se produjo en el envío, GPU o compositor? | Operaciones de envío, colas GPU y Viz, evidencias de presentación y fences existentes |
 
 `tools/guardian/native-audit-trace.mjs` conserva el ancla de reloj y el resultado de finalización de la traza. La captura debe identificar el solapamiento con las inspecciones y la instrumentación de Repair.
+
+## Trabajo de Dawn durante la recarga
+
+El mismo analizador acepta trazas comprimidas y muestra `dawnDecoding`. Registra los mayores lotes de `HandleDawnCommands` y los lotes que coinciden con los intervalos principales de `targetCadence`. Conserva cada tramo de Dawn contenido en el mismo hilo y su tiempo de CPU cuando está disponible. Perfetto también usa la pista y la relación temporal para asociar tramos anidados. Chromium registra el tamaño de cada lote y Dawn instrumenta por separado su compilación DXC. [Perfetto SliceTracker](https://github.com/google/perfetto/blob/main/src/trace_processor/importers/common/slice_tracker.cc#L106-L139), [Chromium WebGPU decoder](https://github.com/chromium/chromium/blob/main/gpu/command_buffer/service/webgpu_decoder_impl.cc#L1854-L1889), [Dawn ShaderUtils](https://github.com/google/dawn/blob/main/src/dawn/native/d3d/ShaderUtils.cpp#L349-L367).
+
+En la recarga con Action15 se registraron 3.059 lotes. Uno de 16,07 ms coincidió en 15,71 ms con el intervalo de dibujo de 37,60 ms e incluyó 15,02 ms de `DeviceBase::APICreateShaderModule`. En otra parte de la misma traza, un lote de 115,43 ms incluyó una compilación DXC de 79,15 ms. El mayor lote duró 160,05 ms y dejó 117,23 ms de CPU con detalle insuficiente para identificar la operación. Estas coincidencias describen tiempo en el decodificador. La causa de los intervalos de Plant y Water sigue abierta. [Recarga con Action15](native-task-action-resource-boundary-20261123.md).
+
+Pasaron 14 pruebas del analizador. La ejecución con la traza comprimida de la recarga verificó el solapamiento, los nombres y las duraciones registrados.
