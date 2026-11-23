@@ -1,3 +1,5 @@
+import {copyRestoredWallRepairDeclaration,restoredWallRepairKey} from '../world/restored-wall-repair-reference.js';
+import {WALL_REPAIR_DURATION} from '../simulation/structure-presentation.js';
 import {copyNativeStoppedGateSelector} from './native-stopped-clock.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollArrivalSourceMatches,nativeIdleStrollAttestationCovers,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {copyNativeIdleStrollRequestReference,sameNativeIdleStrollRequestReference} from '../world/native-idle-stroll-request-reference.js';
@@ -46,11 +48,14 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],nativeIdleCycles=[],pendingIdleCycleRequests=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(pendingIdleStrollRequests)||!Array.isArray(pendingFarmArrivalRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
     throw TypeError('Invalid native route control identity');
+  if(!Array.isArray(restoredWallRepairs))throw TypeError('Invalid restored wall Repair baseline');
+  const restoredRepairs=new Map();
+  for(const value of restoredWallRepairs){const declaration=copyRestoredWallRepairDeclaration(value),key=restoredWallRepairKey(declaration.reference);if(declaration.authorityEpoch!==authorityEpoch||initialTime===null||declaration.restoredAt>initialTime||restoredRepairs.has(key)||[...restoredRepairs.values()].some(d=>d.reference.entityId===declaration.reference.entityId))throw Error('Invalid restored wall Repair baseline owner');restoredRepairs.set(key,declaration);}
   const active=new Map(),actors=new Map();
   const actorContext=(actorId,register=true)=>{let value=actors.get(actorId);if(!value){value={closed:false,latestSequence:0,state:null,taskId:null,targetId:null,current:null,revoked:null,proof:null,resumeProof:null,startProof:null,consequenceProof:null,homeProof:null,strollProof:null,farmArrivalProof:null,settlementProof:null,settlementRecord:null,settlementSource:null,initialIdleBodyProof:null,initialIdleBodyRecord:null,initialIdleBodySource:null,idleCycleProof:null,idleCycleRecord:null,idleCycleSource:null,pendingIdleCycleRequest:null,pendingIdleStrollRequest:null,pendingFarmArrivalRequest:null,pendingTaskRequest:null,pendingActionRequest:null,pendingHomeRequest:null,pendingInitialIdleRequest:null,actionSourceRequest:null,actionProof:null,actionRecord:null};if(register)actors.set(actorId,value);}return value;};
   const matches=(record,reference)=>!!record&&record.actorId===reference.actorId&&record.assignmentSequence===reference.assignmentSequence&&sameHandle(record.handle,reference.routeHandle);
@@ -518,6 +523,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get bodyReference(){return current()?body:null;},value(field){if(!current())throw Error('Native stopped body projection is obsolete');return field==='age'?observed.reference.worldBoundary.effectiveTime-record.startTime:actor.stoppedProjection.read(field);}});
   }
   return {
+    admitRestoredWallRepair(reference){
+      const key=restoredWallRepairKey(reference),declaration=restoredRepairs.get(key);if(closed||!clock||!declaration)throw Error('Restored wall Repair has no current authority declaration');
+      return Object.freeze({declaration,end:declaration.reference.at+WALL_REPAIR_DURATION,isCurrent:()=>!closed&&!!clock&&restoredRepairs.get(key)===declaration});
+    },
     // Metadata only. It cannot authorize drawing, movement or installation of
     // an executable binding and expires with the existing actor/control record.
     pendingInitialIdleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingInitialIdleRequest;return request&&initialIdleRequestCurrent(request,actor)?request:null;},

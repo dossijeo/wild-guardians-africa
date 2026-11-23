@@ -130,12 +130,12 @@ export function bindRestoredGateRepair({wall,entity,elapsed,presentationClock,ge
 
 // The confirmed visual clock drives the 480 ms Repair.
 // Successive bindings on the same wall retain this policy and the motor clock.
-export function createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,gate=true,repairAge=null,getRepairAge=null}){
+export function createWallRepairLayer({parts,material,opening,pivot,presentationClock,getPresentationTime,visual,previous,gate=true,repairAge=null,getRepairAge=null,repairFrom=0}){
  if(!presentationClock?.isNode||typeof getPresentationTime!=='function'||repairAge&&typeof getRepairAge!=='function')
   throw Error('Native gate Repair requires a submitted presentation clock');
  const policy=previous?.repairLayer?.policy??{node:uniform(new Vector3(visual,visual,0)),event:null};
  const elapsed=clamp((repairAge??presentationClock.sub(policy.node.z)).div(WALL_REPAIR_DURATION),0,1);
- const amount=mix(repairAge?float(0):policy.node.x,repairAge?float(1):policy.node.y,float(1).sub(float(1).sub(elapsed).pow(3)));
+ const amount=mix(repairAge?float(repairFrom):policy.node.x,repairAge?float(1):policy.node.y,float(1).sub(float(1).sub(elapsed).pow(3)));
  const ease=value=>{
   const t=clamp(value,0,1);
   return t.mul(t).mul(t).mul(t.mul(t.mul(6).sub(15)).add(10));
@@ -230,7 +230,7 @@ export function createWallRepairLayer({parts,material,opening,pivot,presentation
  function position(partIndex,index,out){
   const bridge=parts[partIndex].bridge;
   const age=repairAge?getRepairAge():null;if(repairAge&&(!Number.isFinite(age)||age<0||age>WALL_REPAIR_DURATION))throw Error('Native solid Repair requires its submitted age');
-  const visual=repairAge?1-(1-Math.min(1,age/WALL_REPAIR_DURATION))**3:sample(getPresentationTime());
+  const visual=repairAge?repairFrom+(1-repairFrom)*(1-(1-Math.min(1,age/WALL_REPAIR_DURATION))**3):sample(getPresentationTime());
   if(!gate&&(partIndex<2?visual>.5:visual<=.5))return out.set(0,0,0);
   const local=gate?visual:Math.max(0,Math.min(1,partIndex<2?visual*2:visual*2-1));
   const p=partIndex%2===0?1-local:local;

@@ -1,4 +1,4 @@
-import {createPreparedRuinedWallRepair} from './webgpu-wall-repair.js';
+import {createPreparedRuinedWallRepair,createRestoredSolidWallRepair} from './webgpu-wall-repair.js';
 import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,nativeHomeArrivalSuccessor} from '../world/native-home-arrival.js';
 import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
 import {nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
@@ -17,6 +17,9 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   const binding=slot.active?.nativeGpuGate;if(binding&&inherited.has(binding)){binding.commit();inherited.delete(binding);}onReady();
  },onError,release:wall=>wall.dispose()});let closed=false,gatePreparation=null;
  function makeWall(value,time,previous){
+  const saved=value.wallPresentation;
+  if(!previous&&!value.gate&&value.status==='intact'&&value.hp===value.maxHp&&saved&&saved.from>=0&&saved.from<1&&saved.to===1&&Number.isFinite(time)&&time>=saved.at&&time<saved.at+.48)
+   return createRestoredSolidWallRepair({prototypes,entity:value,elapsed:time,renderer,presentationClock,getPresentationTime,getRepairAge});
   const p=value.wallPresentation,restore=!previous&&value.gate===true&&value.status==='intact'&&value.hp===value.maxHp&&p&&p.from>0&&p.from<1&&p.to===1&&Number.isFinite(time)&&time>=p.at&&time<p.at+.48;
   const source=restore?{...value,hp:p.from*value.maxHp,wallPresentation:null}:value;
   const wall=createWall(prototypes,source,time,{previous,renderer});

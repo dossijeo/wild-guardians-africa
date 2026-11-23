@@ -226,3 +226,54 @@ for(const material of ['zarzas','empalizada','adobe','piedra','reforzado'])test(
 });
 
 }
+
+for(const material of ['zarzas','empalizada','adobe','piedra','reforzado'])for(const savedAge of [.05,.10])test(`${material}: cold solid Repair resumes age ${savedAge} without CPU geometry or a new boundary`,async()=>{
+ const proto=assets(material,['intacto','danado','destruido']),entity={id:'structure-749',kind:'wall',material,gate:false,hp:100,maxHp:100,status:'intact',wallPresentation:{from:0,to:1,at:17.25}},original=structuredClone(entity),requests=[],releases=[],errors=[];
+ let submitted=17.25+savedAge;const clock=uniform(submitted),pipelineAdmission={prepare(object){return new Promise((resolve,reject)=>requests.push({object,resolve,reject}));},deferRelease(object,release){releases.push(release);}};
+ const view=createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:submitted,pipelineAdmission,presentationClock:clock,getPresentationTime:()=>submitted,getRepairAge:()=>floorFloat32(Math.min(.48,submitted-17.25)),onError:e=>errors.push(e)});
+ try{
+  await turn();const wall=requests[0].object,owner=wall.nativeGpuRepair;assert(owner,'cold solid Repair must acquire a GPU morph owner before its first admission');assert(owner.current());assert.equal(wall.parts.length,4);assert.equal(wall.nativeGpuGate,undefined);assert.equal(owner.clockNode[Symbol.for('wild-guardians.remote-clock')].nativeRestoredWallRepair.kind,'restored-wall-repair-reference');
+  assert.deepEqual(owner.repairLayer.policy.event,entity.wallPresentation);assert.equal(owner.repairLayer.policy.node.value.z,17.25);
+  const root=view.group,v=versions(wall),ids=wall.parts.map(p=>[p.mesh.geometry,p.mesh.material]);assert(wall.parts.every(p=>p.mesh.material.userData.blessingObject===wall.blessingUniform));requests[0].resolve();await turn();
+  const compare=()=>{
+   const visual=wallVisualAt(entity,submitted),start=visual<=.5?0:2,local=start===0?visual*2:visual*2-1;
+   assert(Math.abs(owner.repairLayer.sample(submitted)-visual)<1e-8);
+   for(let i=0;i<4;i++){
+    const expected=morphedWallPositions(wall.parts[i].bridge,i%2===0?1-local:local);
+    for(let k=0;k<expected.length/3;k+=109){const actual=owner.repairLayer.position(i,k,new Vector3());if(i<start||i>=start+2)assert.equal(actual.length(),0);else assert(actual.distanceTo(new Vector3().fromArray(expected,k*3))<2e-5);}
+   }
+   return start;
+  };
+  compare();const pinned=owner.repairLayer.position(savedAge<.099?1:3,0,new Vector3());clock.value=100;view.update(entity,submitted);assert.deepEqual(owner.repairLayer.position(savedAge<.099?1:3,0,new Vector3()),pinned,'pause/picking use submitted time, not a newer CPU clock');
+  for(const age of [savedAge,.12,.24,.47]){submitted=17.25+age;clock.value=submitted;view.update(entity,submitted);compare();assert(owner.current());assert.equal(requests.length,1);assert.deepEqual(versions(wall),v);assert.deepEqual(wall.parts.map(p=>[p.mesh.geometry,p.mesh.material]),ids);}
+  submitted=17.25+savedAge;wall.updateMatrixWorld(true);const active=compare(),mesh=wall.parts[active+1].mesh;let hit=false;
+  for(let k=0;k<mesh.geometry.attributes.position.count&&!hit;k+=3){const points=[0,1,2].map(j=>owner.repairLayer.position(active+1,k+j,new Vector3()).applyMatrix4(mesh.matrixWorld)),[a,b,c]=points,n=b.clone().sub(a).cross(c.clone().sub(a));if(n.lengthSq()<1e-10)continue;n.normalize();const center=a.clone().add(b).add(c).divideScalar(3),hits=[];mesh.raycast(new Raycaster(center.clone().addScaledVector(n,1),n.clone().negate()),hits);hit=hits.some(h=>h.point.distanceTo(center)<1e-4);}assert(hit,'raycast agrees at the saved side of the pair crossing');
+  for(const change of [{wallPresentation:{...entity.wallPresentation,at:17.26}},{hp:99},{id:'foreign-owner'}])assert.throws(()=>view.update({...entity,...change},17.5),/prepared geometry transition/);assert(owner.current());assert.deepEqual(versions(wall),v);
+  if(savedAge===.10){const renderer=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});renderer.hasFeature=()=>true;renderer.backend.renderer=renderer;for(const {mesh} of wall.parts){const builder=renderer.backend.createNodeBuilder(mesh,renderer);builder.scene=new Scene();builder.camera=new PerspectiveCamera();builder.build();assert.match(builder.vertexShader,/wgMorphTarget/);}}
+  let disposed=0;ids.forEach(([g])=>g.addEventListener('dispose',()=>disposed++));submitted=17.74;view.update(entity,submitted);await turn();assert.equal(requests.length,2);assert(owner.current());assert.equal(disposed,0);assert.equal(requests[1].object.parts.length,1);requests[1].resolve();await turn();assert.equal(view.group,root);assert.equal(disposed,0);for(const release of releases.splice(0))release();assert.equal(disposed,4);assert.equal(view.parts.length,1);assert.deepEqual(errors,[]);assert.deepEqual(entity,original);
+ }finally{view.dispose();for(const release of releases.splice(0))release();for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
+});
+
+test('cold solid Repair refuses a missing submitted clock before any graphical admission',()=>{
+ const proto=assets('zarzas',['intacto','danado','destruido']),entity={id:'structure-749',kind:'wall',material:'zarzas',gate:false,hp:100,maxHp:100,status:'intact',wallPresentation:{from:0,to:1,at:17.25}};
+ try{assert.throws(()=>createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:17.35,getRepairAge:()=>.1,pipelineAdmission:{prepare(){throw Error('unexpected admission');}}}),/submitted presentation clock/);}finally{for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
+});
+
+test('cold solid Repair cancellation retires only owned geometry and late completion cannot publish',async()=>{
+ const proto=assets('zarzas',['intacto','danado','destruido']),entity={id:'structure-749',kind:'wall',material:'zarzas',gate:false,hp:100,maxHp:100,status:'intact',wallPresentation:{from:0,to:1,at:17.25}},releases=[],requests=[],errors=[],clock=uniform(17.35);
+ const pipelineAdmission={prepare(object){return new Promise((resolve,reject)=>requests.push({object,resolve,reject}));},deferRelease(object,release){releases.push(release);}};
+ const make=prepareInitial=>createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:17.35,pipelineAdmission,presentationClock:clock,getPresentationTime:()=>17.35,getRepairAge:()=>floorFloat32(.1),prepareInitial,onError:e=>errors.push(e)});
+ const first=make(true),second=make(true);let pending;
+ try{
+  const a=first.initialParticipant.object,b=second.initialParticipant.object,other=b.parts[0].mesh.geometry,owned=a.parts[0].mesh.geometry;let otherDisposed=0,ownedDisposed=0;other.addEventListener('dispose',()=>otherDisposed++);owned.addEventListener('dispose',()=>ownedDisposed++);
+  assert(a.nativeGpuRepair.current());assert(b.nativeGpuRepair.current());assert.notEqual(owned,other);
+  a.parts[0].mesh.geometry=other;assert.equal(a.nativeGpuRepair.current(),false,'foreign alias must invalidate the owner');first.initialParticipant.cancel();assert.equal(ownedDisposed,0);for(const release of releases.splice(0))release();assert.equal(ownedDisposed,1);assert.equal(otherDisposed,0);assert(b.nativeGpuRepair.current());
+  pending=make(false);await turn();assert.equal(requests.length,1);const candidate=requests[0].object;pending.dispose();requests[0].resolve();await turn();for(const release of releases.splice(0))release();assert.equal(pending.parts.length,0);assert.equal(candidate.parent,null);assert(b.nativeGpuRepair.current());assert.deepEqual(errors,[]);
+ }finally{first.dispose();second.dispose();pending?.dispose();for(const release of releases.splice(0))release();for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
+});
+
+test('cold solid Repair keeps the submitted owner when final healthy preparation is rejected',async()=>{
+ const proto=assets('zarzas',['intacto','danado','destruido']),entity={id:'structure-749',kind:'wall',material:'zarzas',gate:false,hp:100,maxHp:100,status:'intact',wallPresentation:{from:0,to:1,at:17.25}},requests=[],releases=[],errors=[],clock=uniform(17.35);let submitted=17.35;
+ const view=createWebGpuAdmittedWall({prototypes:proto,entity,elapsed:submitted,presentationClock:clock,getPresentationTime:()=>submitted,getRepairAge:()=>floorFloat32(Math.min(.48,submitted-17.25)),pipelineAdmission:{prepare(object){return new Promise((resolve,reject)=>requests.push({object,resolve,reject}));},deferRelease(object,release){releases.push(release);}},onError:e=>errors.push(e)});
+ try{await turn();requests[0].resolve();await turn();const wall=requests[0].object,owner=wall.nativeGpuRepair,v=versions(wall);submitted=18;clock.value=submitted;view.update(entity,submitted);await turn();requests[1].reject(Error('intentional final refusal'));await turn();for(const release of releases.splice(0))release();assert(owner.current());assert(wall.visible);assert.deepEqual(versions(wall),v);assert.equal(owner.repairLayer.sample(submitted),1);assert.equal(errors.length,1);}finally{view.dispose();for(const release of releases.splice(0))release();for(const p of Object.values(proto)){p.geometry.dispose();p.material.dispose();}}
+});

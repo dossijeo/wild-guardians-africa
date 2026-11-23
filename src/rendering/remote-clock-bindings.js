@@ -1,3 +1,4 @@
+import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditionReference} from '../world/native-barrier-addition.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
@@ -24,6 +25,10 @@ export function copyNativeBarrierClock(binding){
  const reference=copyNativeBarrierAdditionReference(binding.nativeBarrierAddition);
  if(reference.gate||reference.removal||reference.additions.length!==1||binding.semantic!=='relative'||binding.epoch!==reference.worldBoundary.effectiveTime||binding.resourceEnd!==undefined||binding.period!==undefined||Object.keys(binding).some(key=>key.startsWith('native')&&key!=='nativeBarrierAddition')||['executionEpoch','barrierOrigin'].some(key=>Object.hasOwn(binding,key)))throw TypeError('Invalid native solid Repair clock');
  return {semantic:'relative',epoch:binding.epoch,nativeBarrierAddition:reference};
+}
+export function markRestoredWallRepairClockNode(node,reference){
+ if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid restored wall Repair clock node');
+ const metadata=copyRestoredWallRepairClock({semantic:'relative',epoch:reference.at,nativeRestoredWallRepair:reference});Object.defineProperty(node,clockMetadata,{value:Object.freeze(metadata),enumerable:false});return node;
 }
 export function markRemoteBarrierClockNode(node,reference){
  if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid native solid Repair clock node');
