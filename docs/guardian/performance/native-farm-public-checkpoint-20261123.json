@@ -527,7 +527,104 @@
         }
       ]
     },
-    "scope": "CPU work and wall-clock overlap. Callback-delivery dependency remains unverified."
+    "presentationDelivery": {
+      "extraction": {
+        "file": "farm-begin-frame-flow.json",
+        "sha256": "5641b083a1083256e9dfb8bf6e69fa85b4a13d8d45fe90f4f17918571db0a517"
+      },
+      "displayTraceId": "-1945226264772534766",
+      "steps": [
+        {
+          "step": "STEP_DRAW_AND_SWAP",
+          "relativeMs": -31.236328125,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_SURFACE_AGGREGATION",
+          "relativeMs": -31.232421875,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_SEND_BUFFER_SWAP",
+          "relativeMs": -30.768310546875,
+          "thread": "VizCompositorThread"
+        },
+        {
+          "step": "STEP_BUFFER_SWAP_POST_SUBMIT",
+          "relativeMs": 46.048583984375,
+          "thread": "CrGpuMain"
+        },
+        {
+          "step": "STEP_FINISH_BUFFER_SWAP",
+          "relativeMs": 46.191650390625,
+          "thread": "CrGpuMain"
+        },
+        {
+          "step": "STEP_SWAP_BUFFERS_ACK",
+          "relativeMs": 46.2216796875,
+          "thread": "VizCompositorThread"
+        }
+      ],
+      "queues": [
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": -31.58349609375,
+          "flow": 46430,
+          "phase": "s",
+          "thread": "Chrome_ChildIOThread"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": -30.74951171875,
+          "flow": 46433,
+          "phase": "s",
+          "thread": "VizCompositorThread"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": 45.358642578125,
+          "flow": 46430,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::ScheduleTask",
+          "relativeMs": 45.403564453125,
+          "flow": 46433,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::SequenceUnblocked",
+          "relativeMs": 45.403564453125,
+          "flow": 46436,
+          "phase": "s",
+          "thread": "CrGpuMain"
+        },
+        {
+          "name": "Scheduler::SequenceUnblocked",
+          "relativeMs": 45.439697265625,
+          "flow": 46436,
+          "phase": "f",
+          "thread": "CrGpuMain"
+        }
+      ],
+      "syncTokenReleasedAtMs": 45.399658203125,
+      "externalBeginFrames": [
+        {
+          "relativeMs": -0.243408203125,
+          "frameTimeUs": 11684363546,
+          "intervalUs": 33333
+        },
+        {
+          "relativeMs": 46.23046875,
+          "frameTimeUs": 11684396745,
+          "intervalUs": 33333
+        }
+      ],
+      "drawWorkerDeliveryAtMs": 46.379638671875
+    },
+    "scope": "Swap and SyncToken scheduler flow. Shader CPU spans overlap the interval. Why the release job waited in the queue and its producer identity remain open."
   },
   "firstAttempt": {
     "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
