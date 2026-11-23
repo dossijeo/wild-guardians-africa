@@ -470,6 +470,65 @@
       "imageRegionsInsideWorstFrameInterval": []
     }
   },
+  "cadenceCorrelation": {
+    "file": "native-moving-farm-checkpoint-idle-cycle-physical-20261123.astra-analysis.json",
+    "sha256": "a3265bee6de75eba1b02d26f2484946f00696056acac8a04d6448fee93e51a9d",
+    "restoredWorstInterval": {
+      "sequence": 14,
+      "intervalMs": 46.39990234375,
+      "batches": [
+        {
+          "thread": "CrGpuMain",
+          "at": 1795432231047.2407,
+          "durationMs": 27.124,
+          "threadCpuMs": 26.769,
+          "overlapMs": 27.1240234375,
+          "bytes": 59144,
+          "shaderModules": [
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231047.2788,
+              "durationMs": 17.242,
+              "threadCpuMs": 17.113
+            },
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231064.5608,
+              "durationMs": 9.674,
+              "threadCpuMs": 9.458
+            }
+          ]
+        },
+        {
+          "thread": "CrGpuMain",
+          "at": 1795432231023.8267,
+          "durationMs": 22.235,
+          "threadCpuMs": 22.154,
+          "overlapMs": 14.16162109375,
+          "bytes": 59408,
+          "shaderModules": [
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231023.8486,
+              "durationMs": 12.319,
+              "threadCpuMs": 12.312
+            },
+            {
+              "name": "DeviceBase::APICreateShaderModule",
+              "thread": "CrGpuMain",
+              "at": 1795432231036.2117,
+              "durationMs": 9.675,
+              "threadCpuMs": 9.61
+            }
+          ]
+        }
+      ]
+    },
+    "scope": "CPU work and wall-clock overlap. Callback-delivery dependency remains unverified."
+  },
   "firstAttempt": {
     "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
     "sha256": "1c032a4e76b39f8ecc13b8232db60e0ba2aa96ced5df5e4c6169cd5bc436da03",
