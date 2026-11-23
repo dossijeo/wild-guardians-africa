@@ -394,10 +394,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
     const additions=shapes.map(p=>({entityId:repaired.id,x:Math.fround(p.x),z:Math.fround(p.z),halfX:Math.fround(p.halfX),halfZ:Math.fround(p.halfZ),yaw:Math.fround(p.yaw),passMask:0}));
     const impact=()=>planner.inspectNativeStructureStops(2,additions.flatMap(p=>[p.x,p.z,p.halfX,p.halfZ,p.yaw,0]));
     const affected=impact();
-    // This delivery covers a free resident ruin. A Repair that needs an
-    // acquired route stop must keep its explicit negative until that full
-    // Stop24 -> Repair -> continuation chain has its own acceptance evidence.
-    if(affected.status!=='ready'||affected.actors.length)return {status:'blocked'};
+    // Inventory every consumer before acquiring any stop. Repair uses the
+    // same Stop24 owner as Build, never an unaccredited route revocation.
+    if(affected.status!=='ready'||affected.actors.some(actor=>!planner.nativeFarmArrivalRouteBinding(actor)))return {status:'blocked'};
     planner.flushTaskEvents();planner.flushNativeIntentControl();
     let current=first;
     const validate=()=>{
@@ -410,6 +409,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
       // would be busy; it cannot stand in for that native transaction check.
       return !!current&&current.task===first.task&&current.target===first.target;
     };
+    try{
+      for(const actor of affected.actors){
+        if(!validate())return {status:'stale'};
+        await stopNativeStructureActors({controller:{signal}},{status:'ready',actors:[actor]});
+      }
+    }catch(error){if(signal.aborted)return {status:'control-failed',error:String(error?.message??error)};throw error;}
+    if(!validate())return {status:'stale'};
+    // A stopped body remains held even if this later acquisition is cancelled.
+    // The ordinary producer owns its fresh Farm continuation after settlement.
+    planner.flushTaskEvents();planner.flushNativeIntentControl();
+    const remaining=impact();if(remaining.status!=='ready'||remaining.actors.length)return {status:'blocked'};
     return planner.addNativeBarriersAfterGpuQuiescence({additions,getPublication,signal,validate,
       prepareResources:({resources,signal})=>prepareResources({resources,signal,nativeBarrierWallEntities:[repaired]}),
       project:proof=>{

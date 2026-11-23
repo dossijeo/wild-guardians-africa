@@ -1,0 +1,643 @@
+{
+  "date": "2026-11-23",
+  "profile": {
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "browser": "Edge headless",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "displayHz": 30
+  },
+  "sources": {
+    "baselineCommit": "0042a1d8b9468d96e11c29ad0e61f14ad5e197a6",
+    "geometryCommit": "7ef4ff519ba38e39ed5d6b1a187ae2f9d0a1e741",
+    "authorityPatchSha256": "62a2373832e06e4afd397ddb71feeb4fdee85f018e4864529dd3ed0dd87710db",
+    "rawSha256": "9824bf47431f224eb1bc4efeb1202f5d5c99703dae08de8d0865e22b27944660",
+    "negativeRawSha256": "24ab1717eb3588bdcb8c77d6d13213e41aa8ab73e2b07866ec209c43d6fe5d8a"
+  },
+  "scenario": {
+    "repairerStart": {
+      "x": -12.553333282470703,
+      "z": 8.2
+    },
+    "farmStart": {
+      "x": -14,
+      "z": 15.2
+    },
+    "wallCenter": {
+      "x": -14,
+      "z": 8.2
+    },
+    "order": "requestRepair before resuming tutorial-action"
+  },
+  "repairer": {
+    "id": "worker-900011",
+    "bodyId": 1,
+    "actionTicket": 7,
+    "finalAdmission": "native-idle"
+  },
+  "farm": {
+    "initial": {
+      "id": "worker-900012",
+      "x": -14,
+      "z": 10.879999999999992,
+      "admission": "native-farm-arrival"
+    },
+    "end": {
+      "id": "worker-900012",
+      "x": -16,
+      "z": 7.803999999999918,
+      "admission": "native-farm-arrival"
+    },
+    "bodyId": 2,
+    "ticket": 3,
+    "stopBoundary": {
+      "version": 1,
+      "authorityEpoch": "edf35d18-9931-42dd-a943-f5bdc85f5442/1",
+      "nativeSession": 1,
+      "ticket": 10,
+      "effectiveTime": 20.199999999999932
+    },
+    "stoppedPose": {
+      "x": -14,
+      "z": 9.151999999999965,
+      "admission": "native-farm-arrival-held",
+      "elapsed": 20.249999999999932
+    },
+    "continuationBoundary": {
+      "version": 1,
+      "authorityEpoch": "edf35d18-9931-42dd-a943-f5bdc85f5442/1",
+      "nativeSession": 1,
+      "ticket": 15,
+      "effectiveTime": 23.149999999999974
+    },
+    "continuationSourcePose": {
+      "x": -14,
+      "z": 9.151999999999965,
+      "yaw": 3.141592653589793,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 15.525000000000047,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "crossingSamples": [
+      {
+        "x": -16,
+        "z": 8.66799999999993,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.450000000000006
+      },
+      {
+        "x": -16,
+        "z": 8.61399999999993,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.500000000000007
+      },
+      {
+        "x": -16,
+        "z": 8.559999999999928,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.550000000000008
+      },
+      {
+        "x": -16,
+        "z": 8.505999999999927,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.60000000000001
+      },
+      {
+        "x": -16,
+        "z": 8.451999999999927,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.65000000000001
+      },
+      {
+        "x": -16,
+        "z": 8.397999999999925,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.70000000000001
+      },
+      {
+        "x": -16,
+        "z": 8.343999999999925,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.75000000000001
+      },
+      {
+        "x": -16,
+        "z": 8.289999999999925,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.80000000000001
+      },
+      {
+        "x": -16,
+        "z": 8.235999999999924,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.850000000000012
+      },
+      {
+        "x": -16,
+        "z": 8.181999999999924,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.900000000000013
+      },
+      {
+        "x": -16,
+        "z": 8.127999999999922,
+        "admission": "native-farm-arrival",
+        "elapsed": 25.950000000000014
+      },
+      {
+        "x": -16,
+        "z": 8.073999999999922,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.000000000000014
+      },
+      {
+        "x": -16,
+        "z": 8.019999999999921,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.050000000000015
+      },
+      {
+        "x": -16,
+        "z": 7.965999999999919,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.100000000000016
+      },
+      {
+        "x": -16,
+        "z": 7.911999999999919,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.150000000000016
+      },
+      {
+        "x": -16,
+        "z": 7.857999999999919,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.200000000000017
+      },
+      {
+        "x": -16,
+        "z": 7.803999999999918,
+        "admission": "native-farm-arrival",
+        "elapsed": 26.250000000000018
+      }
+    ]
+  },
+  "heldStop": {
+    "milliseconds": 367.699951171875,
+    "draws": 11,
+    "first": {
+      "x": -14,
+      "z": 9.583999999999971,
+      "admission": "native-farm-arrival",
+      "elapsed": 19.799999999999926
+    },
+    "last": {
+      "x": -14,
+      "z": 9.205999999999968,
+      "admission": "native-farm-arrival",
+      "elapsed": 20.14999999999993
+    }
+  },
+  "heldCollision": {
+    "milliseconds": 620.300048828125,
+    "draws": 18,
+    "factoriesBefore": {
+      "createBuffer": 1962,
+      "createTexture": 72,
+      "createSampler": 73,
+      "createBindGroup": 760,
+      "createBindGroupLayout": 202,
+      "createPipelineLayout": 93,
+      "createShaderModule": 126,
+      "createRenderPipeline": 2,
+      "createRenderPipelineAsync": 93,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    },
+    "factoriesAfter": {
+      "createBuffer": 1962,
+      "createTexture": 72,
+      "createSampler": 73,
+      "createBindGroup": 760,
+      "createBindGroupLayout": 202,
+      "createPipelineLayout": 93,
+      "createShaderModule": 126,
+      "createRenderPipeline": 2,
+      "createRenderPipelineAsync": 93,
+      "createComputePipeline": 0,
+      "createComputePipelineAsync": 0
+    }
+  },
+  "heldContinuation": {
+    "milliseconds": 254.800048828125,
+    "draws": 7,
+    "pose": {
+      "x": -14,
+      "z": 9.151999999999965,
+      "admission": "native-farm-arrival-held",
+      "elapsed": 23.049999999999972
+    }
+  },
+  "collision": {
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "edf35d18-9931-42dd-a943-f5bdc85f5442/1",
+      "nativeSession": 1,
+      "ticket": 13,
+      "effectiveTime": 21.999999999999957
+    },
+    "wall": {
+      "id": "structure-749",
+      "start": {
+        "hp": 0,
+        "maxHp": 100,
+        "status": "ruined"
+      },
+      "end": {
+        "hp": 100,
+        "maxHp": 100,
+        "status": "intact"
+      }
+    },
+    "additions": [
+      {
+        "entityId": "structure-749",
+        "x": -14,
+        "z": 8.199999809265137,
+        "halfX": 1.0666667222976685,
+        "halfZ": 0.2199999988079071,
+        "yaw": 0,
+        "passMask": 0
+      }
+    ],
+    "payment": {
+      "n": "-10",
+      "d": "1"
+    },
+    "balance": {
+      "n": "99990",
+      "d": "1"
+    },
+    "events": [
+      {
+        "id": "event-29209",
+        "type": "RepairApplied",
+        "workerId": "worker-900011",
+        "targetId": "structure-749",
+        "repair": {
+          "taskId": "task-1000000",
+          "paymentId": "repair:task-1000000",
+          "paidCoins": 10,
+          "previousHp": 0,
+          "previousStatus": "ruined",
+          "restoredHp": 100,
+          "maxHp": 100
+        },
+        "presentation": {
+          "elapsed": 21.999999999999957,
+          "x": -12.553333282470703,
+          "z": 8.199999809265137,
+          "yaw": 3.141592653589793,
+          "structure": {
+            "x": -14,
+            "z": 8.2
+          }
+        },
+        "simulationTime": 21.999999999999957
+      }
+    ]
+  },
+  "curve": {
+    "firstDraw": {
+      "at": 1795426495341.4001,
+      "sequence": 43,
+      "ticket": 13,
+      "intervalMs": 33.400146484375,
+      "drawMs": 8.599853515625,
+      "trigger": "raf",
+      "replay": false,
+      "clocks": [
+        {
+          "buffer": "Buffer:3787",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3805",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3822",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3839",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3865",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3877",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3888",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        },
+        {
+          "buffer": "Buffer:3899",
+          "byteOffset": 0,
+          "elapsed": 22.049999999999958,
+          "executionEpoch": 21.999999999999957,
+          "originTicket": 13,
+          "value": 0.04999999701976776
+        }
+      ]
+    },
+    "activeDraws": [
+      {
+        "at": 1795426495341.4001,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.400146484375,
+        "drawMs": 8.599853515625,
+        "trigger": "raf",
+        "replay": false,
+        "age": 0.04999999701976776
+      },
+      {
+        "at": 1795426495374.8,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.39990234375,
+        "drawMs": 7.699951171875,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.04999999701976776
+      },
+      {
+        "at": 1795426495408.1,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 5.5,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.09999999403953552
+      },
+      {
+        "at": 1795426495441.4001,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 7.5,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.09999999403953552
+      },
+      {
+        "at": 1795426495474.9001,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.5,
+        "drawMs": 7.300048828125,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.14999999105930328
+      },
+      {
+        "at": 1795426495508,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.099853515625,
+        "drawMs": 7.10009765625,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.19999998807907104
+      },
+      {
+        "at": 1795426495541.3,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 5.900146484375,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.19999998807907104
+      },
+      {
+        "at": 1795426495574.7002,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.400146484375,
+        "drawMs": 7.599853515625,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.25
+      },
+      {
+        "at": 1795426495608.1,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.39990234375,
+        "drawMs": 6,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.29999998211860657
+      },
+      {
+        "at": 1795426495641.4001,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 4.599853515625,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.29999998211860657
+      },
+      {
+        "at": 1795426495674.7002,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 7.39990234375,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.3499999940395355
+      },
+      {
+        "at": 1795426495708.1,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.39990234375,
+        "drawMs": 6.800048828125,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.3499999940395355
+      },
+      {
+        "at": 1795426495741.4001,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 5.89990234375,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.3999999761581421
+      },
+      {
+        "at": 1795426495774.7002,
+        "sequence": 43,
+        "ticket": 13,
+        "intervalMs": 33.300048828125,
+        "drawMs": 4.5,
+        "trigger": "raf",
+        "replay": true,
+        "age": 0.44999998807907104
+      }
+    ],
+    "lastDraw": {
+      "at": 1795426498341.5,
+      "sequence": 44,
+      "ticket": 15,
+      "intervalMs": 31.099853515625,
+      "drawMs": 5.2001953125,
+      "trigger": "raf",
+      "replay": true,
+      "age": 0.47999998927116394
+    }
+  },
+  "graphics": {
+    "beforeRoot": 52,
+    "afterRoot": 52,
+    "intactGeometry": 420,
+    "actorRoots": [
+      758,
+      827
+    ],
+    "retainedOwnerKeys": 915,
+    "retainedReferences": 790,
+    "displaced": [],
+    "drawTickets": [
+      3,
+      5,
+      7,
+      10,
+      13,
+      15,
+      17
+    ],
+    "wallBuffers": {
+      "initial": [
+        "Buffer:184",
+        "Buffer:183",
+        "Buffer:182",
+        "Buffer:181"
+      ],
+      "final": [
+        "Buffer:4078",
+        "Buffer:4077",
+        "Buffer:4076",
+        "Buffer:4075"
+      ],
+      "retiredExclusive": [
+        "Buffer:184",
+        "Buffer:183",
+        "Buffer:182",
+        "Buffer:181"
+      ],
+      "destructionRequests": [
+        "Buffer:184",
+        "Buffer:183",
+        "Buffer:182",
+        "Buffer:181"
+      ]
+    }
+  },
+  "cadence": {
+    "scope": "Host submission intervals at 30 Hz",
+    "count": 683,
+    "peaks": [
+      {
+        "at": 1795426497154.5,
+        "sequence": 44,
+        "ticket": 15,
+        "intervalMs": 46.599853515625,
+        "drawMs": 4.400146484375,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795426491083.1,
+        "sequence": 32,
+        "ticket": 5,
+        "intervalMs": 41,
+        "drawMs": 4.39990234375,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795426491013.2002,
+        "sequence": 32,
+        "ticket": 5,
+        "intervalMs": 38.5,
+        "drawMs": 4.099853515625,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795426481279.7002,
+        "sequence": 15,
+        "ticket": null,
+        "intervalMs": 38.400146484375,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      }
+    ]
+  },
+  "drain": {
+    "completed": true,
+    "errors": []
+  }
+}
