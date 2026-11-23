@@ -39,6 +39,34 @@ export function collectNativeHostHistory(result){
   const frames=[...samples.values()].sort((a,b)=>a.at-b.at);
   return {frames,opportunities};
 }
+// Target cadence is independent of the observed browser callback schedule.
+// Missing samples are a coverage defect, never evidence of smoothness.
+export function summarizeNativeCadenceTarget(receipt,{targetFrameMs=1000/60,limit=20}={}){
+  if(!Number.isFinite(targetFrameMs)||targetFrameMs<=0||!Number.isSafeInteger(limit)||limit<1||limit>1000)throw Error('Invalid target cadence');
+  const {frames,opportunities}=collectNativeHostHistory(receipt?.result);
+  const declaredCount=receipt?.result?.cadence?.count??null;
+  if(declaredCount!==null&&(!Number.isSafeInteger(declaredCount)||declaredCount<0))throw Error('Invalid declared sample count');
+  const history=frames.map((frame,index)=>{
+    const preceding=frames[index-1];
+    const predecessor=preceding&&Number.isFinite(frame.intervalMs)&&Math.abs(frame.at-preceding.at-frame.intervalMs)<.1?preceding:null;
+    return {frame,predecessor};
+  });
+  const intervals=history.filter(({frame})=>Number.isFinite(frame.intervalMs)&&frame.intervalMs>0);
+  const missingPredecessors=intervals.filter(({predecessor})=>!predecessor);
+  const ordered=history.slice(1).every(({predecessor})=>predecessor);
+  const completeHistory=frames.length>=2&&ordered&&(declaredCount===null||frames.length===declaredCount);
+  const exceeded=intervals.filter(({frame})=>frame.intervalMs>targetFrameMs);
+  return {targetFrameMs,declaredSamples:declaredCount,recordedSamples:frames.length,recordedIntervals:intervals.length,
+    completeHistory,missingPredecessors:missingPredecessors.length,recordedOpportunities:opportunities.size,
+    intervalsAboveTarget:exceeded.length,maxRecordedIntervalMs:intervals.length?Math.max(...intervals.map(({frame})=>frame.intervalMs)):null,
+    topIntervals:exceeded.sort((a,b)=>b.frame.intervalMs-a.frame.intervalMs).slice(0,limit).map(({frame,predecessor})=>({
+      ...frame,from:frame.at-frame.intervalMs,excessOverTargetMs:frame.intervalMs-targetFrameMs,
+      previousDrawMs:predecessor?.drawMs??null,afterPreviousDrawUntilCurrentStartMs:predecessor?frame.at-(predecessor.at+predecessor.drawMs):null
+    })),
+    attribution:'Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.',
+    coverage:completeHistory?'Contiguous recorded history only; this does not establish full-session or physical-presentation coverage.':'Incomplete recorded history; no full-history cadence acceptance or percentile claim.'};
+}
+
 export function analyzeNativeFrameCadence(receipt,trace){
   const anchor=receipt.traceClockAnchor,events=trace.traceEvents;
   if(!anchor||!Number.isFinite(anchor.absoluteMs)||!Array.isArray(events))throw Error('A receipt with its trace clock anchor and a Chrome trace are required');
@@ -71,7 +99,7 @@ export function analyzeNativeFrameCadence(receipt,trace){
       correlatedEvents:relevant.filter(e=>overlap(e)>0).sort((a,b)=>overlap(b)-overlap(a)).slice(0,6).map(detail)};
   });
   return {version:1,scope:'Host draw attempts and browser callbacks, not GPU execution time or physical scanout',owner,clockOffsetMs:offset,capture:receipt.capture??null,
-    frameSamples:frames.length,hostCallbacks:callbacks.length,medianHostCallbackIntervalMs:baseline,estimatedCallbackHz:baseline?1000/baseline:null,
+    targetCadence:summarizeNativeCadenceTarget(receipt),frameSamples:frames.length,hostCallbacks:callbacks.length,medianHostCallbackIntervalMs:baseline,estimatedCallbackHz:baseline?1000/baseline:null,
     medianGpuVSyncTaskIntervalMs:median(intervals(vsync)),maxHostDrawCpuMs:Math.max(...frames.map(f=>f.drawMs)),maxHostSubmissionIntervalMs:Math.max(...frames.map(f=>f.intervalMs??0)),
     releaseTriggeredFrames:frames.filter(f=>f.trigger==='mutation-release').length,recordedOpportunities:opportunities.size,
     opportunityCoverage:opportunities.size?{firstAt:Math.min(...opportunities.keys()),lastAt:Math.max(...opportunities.keys())}:null,gaps,
