@@ -12,6 +12,8 @@ Una reparación de zarzas guardada a los 150 ms de su curva se restaura en GPU c
 
 Una ruina sólida de zarzas en terreno residente recupera la colisión y 100 HP con un solo cargo de 10 monedas. NVIDIA dibujó ambos pares de la curva de Repair y conservó 800 buffers comparables. El trabajador volvió a Idle con el cuerpo original. Quedan el relevo con Farm afectado, la restauración en curso y C4. [Reparación de la ruina y recibos](native-ruined-solid-wall-repair-handoff-20261123.md).
 
+El recorte nativo de Farm admite el rodeo alrededor de la huella reparada cuando un tramo lejano solo es tangente en su prolongación. Las variantes standalone y pthread conservan su ABI. [Corrección geométrica y controles](native-farm-detour-circle-range-20261123.md).
+
 Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3 ms entre inicios de dibujos enviados y 549 de 964 muestras superaron 16,67 ms. C4 sigue abierto. La pantalla se restauró al modo original de 30 Hz. [Traza y recuentos](native-farm-gate-aperture-20261121.md#cadencia-con-la-pantalla-a-60-hz).
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).

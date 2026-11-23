@@ -27,6 +27,9 @@ int gateCircleRange(double ax,double az,double bx,double bz,double x,double z,do
     if(strict?d>=radius:d>radius)return 0;range[0]=range[1]=0;return 1;}
   const double ux=dx/length,uz=dz/length,rx=x-ax,rz=z-az,
     projection=rx*ux+rz*uz,perpendicular=std::abs(rx*uz-rz*ux);
+  // The finite segment cannot meet the circle when their axial intervals
+  // are separated. A distant supporting-line tangency is not ambiguous.
+  if(projection < -radius-boundaryError || projection > length+radius+boundaryError)return 0;
   // Near-tangent roots are ill-conditioned. Leave the old protected route
   // untouched instead of inventing a timing boundary from rounding noise.
   if(std::abs(perpendicular-radius)<=boundaryError)return -1;
