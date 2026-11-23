@@ -100,7 +100,8 @@ EMSCRIPTEN_KEEPALIVE int nav_task_action_proposal_commit_bound(double session,do
   else return -9;
   clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(actor);
   releaseRoute(s,intent);intent.state=PlanningState::ActionActive;intent.actionBinding=binding;
-  binding->actionSequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+  binding->actionSequence=emitIntentChange(s,intent);s.entityRevision++;
+  spatialRecordMotionResourceBoundary(session,ticket,time,15);return 1;
 }
 static void appendTaskActionBindingData(IntentState& s,const NativeTaskActionBinding& b){
   auto& out=s.taskActionBindingResult;

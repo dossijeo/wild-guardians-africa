@@ -90,7 +90,7 @@ async function fullFixture(options={}){
  const close=async()=>{runtime?.dispose();await flush();await flush();await base.close();};
  try{
   await loadWorker('host',host);
-  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:()=>receiver},session:'s',clientOptions:{snapshot,chunkKeys:Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`)},runtimeOptions:{startupSuspended:true},workerFactory:()=>hostWorker});
+  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:()=>receiver},session:'s',clientOptions:{snapshot,nativeAuthorityCheckpoints:options.nativeAuthorityCheckpoints===true,nativeBootstrap:options.nativeBootstrap??null,chunkKeys:options.chunkKeys??Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`)},runtimeOptions:{startupSuspended:true},workerFactory:()=>hostWorker});
   await runtime.start();return {runtime,native,source,host,sourceWorker,hostWorker,state,created:base.created,close};
  }catch(error){await close();throw error;}
 }
@@ -342,4 +342,40 @@ test('hosted autonomous Repair animates both Repair pairs with finite causal cov
   t.diagnostic(JSON.stringify({preparedAt,acquiredAt:at,ticket,drawSequence:sample.sequence,safeUntil:sample.safeUntil,ages,repairAge:values[1],globalPresentation:values[2],finalAdmission:f.state.workers[0].nativeRouteAdmission}));
   assert.deepEqual(f.native.errors,[]);assert.deepEqual(f.native.faults,[]);
  }finally{release?.();releaseIdle?.();await f?.close();saved.close();}
+});
+
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+test('restored terminal Repair publishes Action15 terrain through both Workers and settles without a second consequence',async(t)=>{
+ const original=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});let producer,f;
+ try{
+  let state;
+  if(process.env.QA_TERMINAL_REPAIR_RECEIPT)state=JSON.parse(readFileSync(process.env.QA_TERMINAL_REPAIR_RECEIPT)).result.checkpoint;
+  else{
+   state=structuredClone(original.state);const wall=state.structures.find(w=>w.kind==='wall'&&w.status==='intact'&&!w.gate&&w.material==='zarzas');
+   Object.assign(wall,original.point(1,4),{hp:0,status:'ruined',collapseRemaining:0});state.ledger.balance=rational(100000);
+   producer=await nativeProductionAuthority(state,{chunkKeys:Array.from({length:12},(_,i)=>`${i%4-1},${Math.floor(i/4)-1}`)});
+   await until(()=>producer.records.some(r=>r.kind==='initial-idle-body'&&r.committed),()=>producer.present());
+   assert.equal(producer.command({kind:'requestRepair',id:'resource-boundary-repair',targetId:wall.id}).value,true);
+   for(let i=0;i<350&&!producer.records.some(r=>r.kind==='barrier-addition'&&r.committed);i++){producer.advance();await producer.present();}
+   assert(producer.records.some(r=>r.kind==='barrier-addition'&&r.committed));producer.command({kind:'pause',reason:'tutorial-action'});
+   const saved=prepareWorkerCheckpoint(producer.command({kind:'snapshot',nativeAuthorityCheckpoint:true}),{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});assert.equal(saved.saved,true);state=saved.state;
+  }
+  assert.equal(state.workers[0].nativeTaskAction.kind,'repair');assert.equal(state.workers[0].nativeTaskAction.duration,0);
+  const savedOptions=savedNativeAuthorityOptions(JSON.stringify(state)),balances=structuredClone(state.ledger),barriers=state.workerNativeAuthorityCheckpoint.spatialState.barriers;
+  f=await fullFixture({state,chunkKeys:savedOptions.chunkKeys,nativeBootstrap:savedOptions.nativeBootstrap,nativeAuthorityCheckpoints:true});
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  for(const reason of state.pauses)await f.runtime.submit({kind:'resume',reason});
+  let now=performance.now();f.host.now=()=>now;await f.runtime.activateClock();let snapshots=0,sawIdle=false;
+  for(let i=0;i<70;i++){
+   const goal=f.state.elapsed+.09;now+=100;await until(()=>f.state.elapsed>=goal,()=>f.native.present());
+   const result=await f.runtime.submit({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});snapshots++;sawIdle ||= f.state.workers[0].nativeRouteAdmission==='native-idle';
+   assert.deepEqual(result.nativeAuthorityCheckpoint.spatialState.barriers,barriers);
+  }
+  assert(f.native.records.some(r=>r.kind==='task-action'&&r.committed));assert(f.native.records.some(r=>r.kind==='initial-idle-body'&&r.committed));
+  assert(!f.native.records.some(r=>r.kind==='barrier-addition'),'a paid Repair must not recur');assert.deepEqual(f.state.ledger,balances);
+  assert(sawIdle,'the restored action must reach ordinary Idle before its following idle cycle');assert.equal(f.created(),1);assert.deepEqual(f.native.faults,[]);assert.deepEqual(f.native.errors,[]);
+  const action=f.native.records.find(r=>r.kind==='task-action').resources.request,idle=f.native.records.find(r=>r.kind==='initial-idle-body').resources.nativeInitialIdleBody;
+  assert.equal(idle.bodyId,action.bodyId);t.diagnostic(JSON.stringify({snapshots,first:'task-action',final:f.state.workers[0].nativeRouteAdmission,bodyId:idle.bodyId,balance:f.state.ledger.balance}));
+ }finally{await f?.close();await producer?.close();original.close();}
 });
