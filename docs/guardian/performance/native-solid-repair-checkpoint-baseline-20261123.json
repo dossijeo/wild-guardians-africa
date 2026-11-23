@@ -1,0 +1,128 @@
+{
+  "date": "2026-11-23",
+  "revision": "4c2f32a15cc664d3c6a055395317318853d73665",
+  "runtime": {
+    "browser": "Edge",
+    "adapter": "NVIDIA Turing",
+    "displayHz": 30,
+    "backend": "webgpu-worker",
+    "remoteDraw": true,
+    "viewport": [
+      640,
+      480
+    ]
+  },
+  "save": {
+    "saved": true,
+    "sequence": 424,
+    "elapsed": 30.850000000000083,
+    "pausedAt": 30.850000000000083,
+    "wall": {
+      "id": "structure-749",
+      "hp": 100,
+      "maxHp": 100,
+      "status": "intact",
+      "wallPresentation": {
+        "from": 0,
+        "to": 1,
+        "at": 30.75000000000008
+      }
+    },
+    "balance": {
+      "n": "99990",
+      "d": "1"
+    },
+    "repair": {
+      "id": "event-29209",
+      "type": "RepairApplied",
+      "workerId": "worker-900011",
+      "targetId": "structure-749",
+      "repair": {
+        "taskId": "task-1000001",
+        "paymentId": "repair:task-1000001",
+        "paidCoins": 10,
+        "previousHp": 0,
+        "previousStatus": "ruined",
+        "restoredHp": 100,
+        "maxHp": 100
+      },
+      "presentation": {
+        "elapsed": 30.75000000000008,
+        "x": -5.800000190734863,
+        "z": 3.5999999046325684,
+        "yaw": 0.14090139653790174,
+        "structure": {
+          "x": -5.800000000000001,
+          "z": 4.2
+        }
+      },
+      "simulationTime": 30.75000000000008
+    },
+    "drained": true,
+    "hostPeaks": [
+      {
+        "at": 1795427351617.7,
+        "sequence": 1,
+        "ticket": null,
+        "intervalMs": 38.599853515625,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795427352116.5,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 38.10009765625,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795427353648.5,
+        "sequence": 11,
+        "ticket": null,
+        "intervalMs": 36.699951171875,
+        "drawMs": 0.300048828125,
+        "trigger": "raf",
+        "replay": true
+      }
+    ],
+    "sourceSha256": "099a5167ec0d79c710830cd18f5edd362d51d82f0df20739cfec7fad96eda63a",
+    "traceSha256": "af02e73451a8da2d09b09bb4d8f87758e85134b7e14bb8c68464a22530f497b3",
+    "traceDataLoss": false
+  },
+  "restore": {
+    "scope": "new hosted authority using savedNativeAuthorityOptions",
+    "error": "Native bootstrap reconstruction mismatch",
+    "firstWorldDraw": false,
+    "sourceSha256": "20b068267b3b70ae70a9dc7a2508e673ab5f222c29d1eac327f8609745c08cbc",
+    "traceSha256": "461b97accc7e848a70d7a44e9ce07eca97b4d11e062c46622c5dc854a266f213",
+    "traceDataLoss": false
+  },
+  "standaloneWasmCheck": {
+    "sha256": "14dc522b1f90b0ff5aadbc294f7ca975b4cf0597451632ad61d53ea46bd3ae6d",
+    "error": "Native bootstrap reconstruction mismatch",
+    "sameChunkKeys": true,
+    "barrierCounts": {
+      "expected": 115,
+      "actual": 115
+    },
+    "movedIds": 115,
+    "otherDifferences": [],
+    "missingShapes": 0,
+    "newShapes": 0,
+    "repairedWall": {
+      "id": 115,
+      "x": -5.800000190734863,
+      "z": 4.199999809265137,
+      "halfX": 1.0666667222976685,
+      "halfZ": 0.2199999988079071,
+      "yaw": 0,
+      "passMask": 0,
+      "reconstructedId": 1
+    },
+    "otherIdShift": 1,
+    "sourceSha256": "597a07ffcd2033297e0ae9638d742208dcdb7e2e1f3815cf1778682e588ca662"
+  }
+}

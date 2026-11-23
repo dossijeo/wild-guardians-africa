@@ -14,6 +14,8 @@ Una ruina sólida de zarzas en terreno residente recupera la colisión y 100 HP 
 
 El recorte nativo de Farm admite el rodeo alrededor de la huella reparada cuando un tramo lejano solo es tangente en su prolongación. Las variantes standalone y pthread conservan su ABI. [Corrección geométrica y controles](native-farm-detour-circle-range-20261123.md).
 
+El guardado público pausado a 100 ms de Repair sólido pasa. La recarga se detiene antes del primer dibujo porque los 115 proxies reconstruidos conservan su forma y reciben otros identificadores. [Recarga y diferencia exacta](native-solid-repair-checkpoint-baseline-20261123.md).
+
 Con la pantalla a 60 Hz, la misma ida y vuelta tuvo un intervalo máximo de 25,3 ms entre inicios de dibujos enviados y 549 de 964 muestras superaron 16,67 ms. C4 sigue abierto. La pantalla se restauró al modo original de 30 Hz. [Traza y recuentos](native-farm-gate-aperture-20261121.md#cadencia-con-la-pantalla-a-60-hz).
 
 Pausar Farm mientras se abre el portón conserva su pose y su motor en GPU. Se reanuda y cruza con el mismo ticket y los mismos recursos. [Recibo](native-farm-gate-aperture-20261121.md#pausa-con-la-hoja-en-movimiento). Después de adquirir Idle, el guardado nativo se restauró en una autoridad nueva con la misma pose y puerta abierta. [Recibo del guardado](native-farm-gate-aperture-20261121.md#guardado-tras-el-cruce).

@@ -1,0 +1,9 @@
+# Recarga de una reparación sólida en curso
+
+El guardado público aceptó una reparación de zarzas pausada a t=30,85 s, 100 ms después de adquirir kind2. El checkpoint de la secuencia 424 conserva los 100 HP, el cargo de 10 monedas y el tramo de la curva de 0 a 1 iniciado a t=30,75 s. El consumidor original drenó sin errores. [Recibo del control](performance/native-solid-repair-checkpoint-baseline-20261123.json).
+
+Al cargar ese checkpoint, la nueva autoridad confirmó la residencia esperada, pero rechazó el arranque antes del primer dibujo con `Native bootstrap reconstruction mismatch`. El control en Node con el WASM canónico reprodujo el rechazo. Las 115 formas son iguales. La barrera de `structure-749` fue la última añadida durante la partida, con ID 115. Al reconstruir por el orden de las estructuras, es la primera y recibe el ID 1. Las otras 114 cambian de `id` a `id + 1`.
+
+La recarga debe recuperar la correspondencia entre dueños de Game y proxies nativos antes de comprobar el checkpoint. Detour restaura la referencia exacta de un tile al reservar su índice y generación. Jolt reserva el identificador explícito de un cuerpo y comprueba que el slot esté libre. Wild Engine ya dispone de una API de restauración de barreras con ID y contador explícitos. El dueño de la correspondencia sigue siendo `spatial-wall-mirror`. [Detour 1.6.0](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/Detour/Source/DetourNavMesh.cpp#L862-L918), [Jolt 5.3.0](https://github.com/jrouwe/JoltPhysics/blob/v5.3.0/Jolt/Physics/Body/BodyManager.cpp#L309-L368).
+
+Después de recuperar el arranque queda comprobar en hardware el primer dibujo a la edad guardada, el paso a la malla sana y la ausencia de otro cobro. El caso separado de Farm adquirido sigue limitado por la disponibilidad de guardado.
