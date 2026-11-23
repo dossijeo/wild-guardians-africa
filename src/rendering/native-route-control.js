@@ -10,7 +10,7 @@ import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRo
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
-import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
+import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesPendingAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
 import {copyNativeTaskRequestReference,nativeTaskRequestMatchesStart} from '../world/native-task-request-reference.js';
 import {copyNativePendingTaskCancellation} from '../world/native-pending-task-cancellation.js';
@@ -218,6 +218,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===20||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(actor?.pendingInitialIdleRequest&&event.state===7&&(event.type!=='IntentChanged'||current||handle||revoked||event.taskId||event.targetId||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest))throw Error('Native initial Idle body acquisition conflicts with its pending source');
     const completedInitialBody=actor?.pendingInitialIdleRequest&&!current&&event.type==='IntentChanged'&&event.state===7&&!handle&&!revoked&&!event.taskId&&!event.targetId?{request:actor.pendingInitialIdleRequest,bodySequence:event.sequence,at:event.effectiveTime}:null;
+    const declaredAction=actor?.pendingActionRequest;
+    const adoptedPendingAction=declaredAction&&actor.state===6&&actor.latestSequence===declaredAction.requestSequence&&
+      event.type==='IntentChanged'&&event.state===7&&!current&&!handle&&!revoked&&!event.taskId&&!event.targetId?
+      {pendingActionSource:declaredAction,bodySequence:event.sequence,at:event.effectiveTime}:null;
     const action=actor?.actionProof;
     const adoptsActionBody=action&&actionCurrent(action.reference,actor)&&event.type==='IntentChanged'&&event.state===7&&
       !handle&&!revoked&&!event.taskId&&!event.targetId;
@@ -264,7 +268,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         delete source.phaseBeforeTask;
       }
       if(idleCycleNext)actor.pendingIdleCycleRequest=idleCycleNext;
-      if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody??adoptedAction??adoptedTaskRoute;}
+      if(!keepInitialBody){if(actor.initialIdleBodyRecord)actor.initialIdleBodyRecord.safeUntil=Math.min(actor.initialIdleBodyRecord.safeUntil,event.effectiveTime);actor.initialIdleBodyProof=null;actor.initialIdleBodyRecord=null;actor.initialIdleBodySource=completedInitialBody??adoptedAction??adoptedTaskRoute??adoptedPendingAction;}
       if(!keepSettlement){if(actor.settlementRecord)actor.settlementRecord.safeUntil=Math.min(actor.settlementRecord.safeUntil,event.effectiveTime);actor.settlementProof=null;actor.settlementRecord=null;actor.settlementSource=event.type==='RouteCompleted'&&event.state===7&&retiringCarry?{proof:retiringCarry,record:current}:null;}
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;if(!completedTaskHome)actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;if(!completedStrollHome)actor.strollProof=null;if(!completedFarmGoal)actor.farmArrivalProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;if(!keepStoppedBody)actor.stoppedProjection=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       // NeedsPlan retains its existing intent and revoked record, never a draw clock.
@@ -545,7 +549,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const staged=[],ids=new Set(),bodies=new Set();
       for(const input of values){const value=copyNativeInitialIdleBodyAttestation(input),r=value.reference,actor=actors.get(r.actorId),source=actor?.initialIdleBodySource;
         const action=nativeInitialIdleActionSource(r),cancellation=r.cancellationSource,
-          sourceMatches=cancellation?cancellation.phase===15?nativeTaskCancellationMatchesAction(cancellation,source?.cancelledActionSource):taskRouteCancellationMatches(cancellation,source?.taskRouteSource):
+          sourceMatches=cancellation?cancellation.phase===6?nativeTaskCancellationMatchesPendingAction(cancellation,source?.pendingActionSource):cancellation.phase===15?nativeTaskCancellationMatchesAction(cancellation,source?.cancelledActionSource):taskRouteCancellationMatches(cancellation,source?.taskRouteSource):
             action?sameActionProof(source?.actionSource,action):sameNativeInitialIdleRequestReference(source?.request,r.sourceRequest);
         if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||value.bodySequence>sequence||value.bodySequence>clock.intentSequence||r.sourceControlSequence!==value.bodySequence-1||ids.has(r.actorId)||bodies.has(r.bodyId)||!actor||actor.closed||actor.current||actor.actionProof||actor.settlementProof||actor.initialIdleBodyProof||!sourceMatches||source.bodySequence!==value.bodySequence||source.at!==boundary.effectiveTime||!initialBodyState(actor,value))throw Error('Native initial Idle body differs from its issued request or current owner');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,value});
@@ -561,7 +565,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         sourceMatches=!!source&&sameNativeInitialIdleRequestReference(reference.sourceRequest,source),
         current=proofLeaseCurrent(reference,actor,'initialIdleBodyProof',nativeInitialIdleBodyAttestationCovers,initialBodyRecordCurrent),
         pending=()=>sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime&&
-          (cancellation?cancellation.phase===15?!!actor?.actionProof&&actionCurrent(actor.actionProof.reference,actor)&&nativeTaskCancellationMatchesAction(cancellation,actor.actionProof):
+          (cancellation?cancellation.phase===6?actor?.state===6&&actor.latestSequence===actor.pendingActionRequest?.requestSequence&&
+            actor.pendingActionRequest?.authorityEpoch===authorityEpoch&&nativeTaskCancellationMatchesPendingAction(cancellation,actor.pendingActionRequest):cancellation.phase===15?!!actor?.actionProof&&actionCurrent(actor.actionProof.reference,actor)&&nativeTaskCancellationMatchesAction(cancellation,actor.actionProof):
             taskRouteCancellationMatches(cancellation,currentTaskRouteCancellationOwner(actor)):
             action?actionCurrent(action.reference,actor)&&sameActionProof(actor.actionProof,action):sourceMatches&&actor.pendingInitialIdleRequest===source&&initialIdleRequestCurrent(source,actor));
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native initial Idle body is obsolete or lacks its direct pending source');error.code='native-initial-idle-body-admission-obsolete';throw error;}

@@ -10,7 +10,16 @@ static bool captureTaskCancellationSource(const IntentState& s,const ActiveInten
     !worker->second.bodyBound||worker->second.inactiveSequence)return false;
  SpatialBodyView body;if(!spatialReadBody(worker->second.body,body)||body.kind!=0||!(body.flags&1))return false;
  double phase=0,sequence=0,slot=0,generation=0,at=0;std::array<double,8> pose{};
- if(intent.actionBinding){
+ // Phase6 is an unacquired restored declaration, never an executed Action15.
+ // Its saved progress remains owned by the intent until Idle20 commits.
+ if(intent.restoredActionSource&&!intent.actionBinding){
+  const auto& q=intent.actionRequest;const auto& r=*intent.restoredActionSource;
+  if(intent.state!=PlanningState::AwaitingResources||intent.generation||!q||
+     (q->kind!=1&&q->kind!=2)||!r.requestSequence||(body.flags&2)||
+     s.reservedBodies.count(worker->second.body)||s.suspendedBodies.count(worker->second.body))return false;
+  phase=6;sequence=double(r.requestSequence);at=q->requestedAt;
+  pose={body.x,body.z,q->heading,body.r,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining};
+ }else if(intent.actionBinding){
   if(!nativeTaskActionBodyCurrent(s,intent))return false;
   const auto& b=*intent.actionBinding;const auto& h=b.actual;
   phase=15;sequence=double(b.actionSequence);at=h[15];

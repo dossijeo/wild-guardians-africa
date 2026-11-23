@@ -313,8 +313,9 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const copyRef=cycle?copyNativeIdleCycleReference:copyNativeInitialIdleBodyReference,copyProof=cycle?copyNativeIdleCycleAttestation:copyNativeInitialIdleBodyAttestation,covers=cycle?nativeIdleCycleAttestationCovers:nativeInitialIdleBodyAttestationCovers,key=cycle?'nativeIdleCycle':'nativeInitialIdleBody',bindingKey=cycle?'nativeIdleCycleBinding':'nativeInitialIdleBodyBinding';
   let ref=copyRef(support?.reference);const id=`worker-${ref.actorId}`,entry=entries.get(id),previous=entry?.nativeState,oldMotion=entry?.motion,oldBinding=entry?.motionBinding,q=cycle?nativeIdleCycleBodyState(ref.sourceBody):ref.sourceRequest,fromFailed=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-failed-source',fromStroll=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-arrival-source',fromFarm=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-farm-arrival-idle-source',fromSettlement=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-settled-worker-idle-source';
   const completedAction=cycle?null:nativeInitialIdleActionSource(ref);
-  const cancellation=cycle?null:ref.cancellationSource,cancelsAction=cancellation?.phase===15;
+  const cancellation=cycle?null:ref.cancellationSource,cancelsAction=cancellation?.phase===15,cancelsPendingAction=cancellation?.phase===6;
   const sourceCurrent=()=>{
+   if(cancelsPendingAction)return !previous;
    if(cancelsAction)return nativeTaskCancellationMatchesAction(cancellation,previous?.nativeActionBinding)&&previous.motion.valid();
    if(cancellation?.phase===25)return nativeTaskCancellationMatchesHeldRoute(cancellation,previous?.nativeHeldTaskRoute,previous?.suspended?.resumeGeneration)&&previous.motion.valid();
    if(cancellation?.phase===14){
@@ -328,6 +329,14 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   };
   const entityCurrent=()=>{const e=entry?.entity,idle=e?.idleState,stroll=previous?.nativeIdleStrollBinding?.reference;
    if(fromFailed)return pendingIdleStrollMatches(state,e,q.sourceRequest);
+   if(cancelsPendingAction){
+    const task=state.tasks?.find(t=>t.id===e?.taskId),a=e?.nativeTaskAction,p=cancellation.pose;
+    return !!e&&e.status==='waiting-task'&&e.nativeRouteAdmission==='pending-action-resources'&&e.path===null&&
+     !e.crateId&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&!e.running&&!e.gateWaiting&&
+     e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&e.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===p[k])&&
+     a?.version===1&&['initial','water'].includes(a.kind)&&Number.isFinite(a.duration)&&a.duration>0&&Number.isFinite(a.elapsed)&&a.elapsed>=0&&a.elapsed<=a.duration&&
+     task?.id===`task-${cancellation.taskId}`&&task.workerId===id&&task.kind===a.kind&&task.targetId===`plant-${cancellation.targetId}`;
+   }
    if(completedAction||cancelsAction){const action=(completedAction??previous?.nativeActionBinding)?.reference.request,task=state.tasks?.find(t=>t.id===e?.taskId),p=q.pose;
     if(!action)return false;
     const targetKind=action.actionKind==='repair'?'structure':'plant';

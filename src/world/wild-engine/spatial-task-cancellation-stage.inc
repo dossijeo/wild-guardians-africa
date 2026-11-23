@@ -1,9 +1,9 @@
-// Source phase is explicit: 25 acquired stop, 14 executed endpoint, 15 action.
+// Source phase: 6 pending restored action, 25 acquired stop, 14 endpoint, 15 acquired action.
 // Caller supplies semantic Idle policy; physical identity/pose come from WASM.
 EMSCRIPTEN_KEEPALIVE int nav_initial_idle_body_proposal_stage_cancelled_task(double actor,double session,double phase,
     double sequence,double generation,double profile,double anchorKind,double anchor,double rng,double remaining){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
- if(!integer(actor)||session!=double(s.session)||(phase!=14&&phase!=15&&phase!=25)||!integer(sequence)||
+ if(!integer(actor)||session!=double(s.session)||(phase!=6&&phase!=14&&phase!=15&&phase!=25)||!integer(sequence)||
     !integer(generation,true)||generation>UINT32_MAX||!integer(profile,true)||profile>3||
     !integer(anchorKind)||anchorKind>2||!integer(anchor)||!integer(rng,true)||rng>4294967295.||
     !std::isfinite(remaining)||remaining<=0||remaining>3600)return -1;

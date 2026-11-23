@@ -333,7 +333,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{raidWaitBin
   async function prepareNativeBlessingCommand(owner){
     const command=owner.command,quote=quoteBlessing(command),workers=quote.rejection||quote.duplicate?[]:nativeBlessingWorkers(command.targetId);
     const worker=workers[0],task=game.tasks.find(item=>item.id===worker?.taskId);
-    const taskMarkers=['pending-resources','native-task','native-action'];
+    const taskMarkers=['pending-resources','native-task','pending-action-resources','native-action'];
     if(workers.length!==1||!taskMarkers.includes(worker.nativeRouteAdmission)||!['initial','water'].includes(task?.kind)||!planner.nativeTaskCancellationSupported()){
       owner.ready=true;return {version:1};
     }

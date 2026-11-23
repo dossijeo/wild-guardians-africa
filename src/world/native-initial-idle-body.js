@@ -15,9 +15,9 @@ export function copyNativeTaskCancellationSource(value){
  if(value?.kind!=='native-task-cancellation-source'||value.version!==1||Object.keys(value).some(key=>!cancellationFields.includes(key)))throw TypeError('Invalid native Task cancellation source');
  const {phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,bodyFlags}=value;
  const pose=value.pose;
- if(![14,15,25].includes(phase)||![actorId,taskId,targetId,nativeSession,sourceSequence,bodyId].every(id)||
+ if(![6,14,15,25].includes(phase)||![actorId,taskId,targetId,nativeSession,sourceSequence,bodyId].every(id)||
   !Number.isSafeInteger(routeSlot)||routeSlot<0||!Number.isSafeInteger(routeGeneration)||routeGeneration<0||
-  (phase===15?(routeSlot!==0||routeGeneration!==0):!id(routeGeneration))||!Number.isFinite(sourceAt)||sourceAt<0||
+  ([6,15].includes(phase)?(routeSlot!==0||routeGeneration!==0):!id(routeGeneration))||!Number.isFinite(sourceAt)||sourceAt<0||
   !Number.isSafeInteger(bodyFlags)||bodyFlags<0||!pose||Object.keys(pose).length!==cancellationPoseFields.length||
   cancellationPoseFields.some(key=>!Number.isFinite(pose[key]))||pose.radius<=0||pose.runRemaining<0)throw TypeError('Invalid native Task cancellation identity or pose');
  return Object.freeze({kind:value.kind,version:1,phase,actorId,taskId,targetId,nativeSession,sourceSequence,routeSlot,routeGeneration,bodyId,sourceAt,
@@ -26,6 +26,14 @@ export function copyNativeTaskCancellationSource(value){
 
 export function sameNativeTaskCancellationSource(a,b){
  try{return JSON.stringify(copyNativeTaskCancellationSource(a))===JSON.stringify(copyNativeTaskCancellationSource(b));}catch{return false;}
+}
+
+// The direct pending declaration is not an acquired action proof. Body/pose
+// come from the same native prepared Idle20 proposal and its terrain owner.
+export function nativeTaskCancellationMatchesPendingAction(source,request){
+ return source?.phase===6&&request?.kind==='native-task-action-restore-reference'&&
+  source.actorId===request.actorId&&source.taskId===request.taskId&&source.targetId===request.targetId&&
+  source.nativeSession===request.nativeSession&&source.sourceSequence===request.requestSequence&&source.sourceAt===request.requestedAt;
 }
 
 export function nativeTaskCancellationMatchesAction(source,binding){
