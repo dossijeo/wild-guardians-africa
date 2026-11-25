@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La incursión con portón también conserva al trabajador cuando RaidSpawned cancela Farm23 antes de adquirirlo. Home19 acredita el refugio con la hoja cerrada. NVIDIA confirmó el READY tardío, la ruina, la ausencia tras Retreat y el drenaje. [Recibo del caso pendiente](native-desert-mixed-flight-center-20261125.md#farm-pendiente-al-nacer-la-incursión).
+
 El recorrido de ruina del centro también conserva al trabajador refugiado por Home19 y el portón abierto que usó al volver. NVIDIA confirmó cuatro golpes, retirada del polígono, dibujo con Retreat vigente, derrota por pérdida del último centro y drenaje. [Caso mixto con portón](native-desert-mixed-flight-center-20261125.md#ruina-con-el-trabajador-refugiado-y-el-portón-abierto).
 
 NVIDIA presentó la ruina de un centro durante un Retreat nativo. El mismo ticket retiró el polígono dentro del subpaso que emitió StructureRuined y dibujó la ceniza y las partículas con el facóquero aún en retirada. El recorrido aislado confirma además la ausencia del actor y el drenaje. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#ruina-del-centro-durante-retreat).

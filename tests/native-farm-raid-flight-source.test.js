@@ -227,8 +227,9 @@ test('the Desert Farm gate remains with Home while the animal takes a different 
   }finally{await world.close();rig?.close();}
 });
 
-test('a gate in an unacquired Farm proposal grants no mixed admission', async () => {
-  const {state,chunkKeys,gateId}=gatedDesertRaid();
+test('a gate in an unacquired Farm proposal grants no mixed admission away from the refuge', async () => {
+  const {state,chunkKeys,gateId,start}=gatedDesertRaid();
+  state.workers[0].z=start.z+.25;
   let release;
   const hold=new Promise(resolve=>{release=resolve;});
   let farm;

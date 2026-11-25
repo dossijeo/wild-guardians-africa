@@ -111,3 +111,16 @@ El arranque del arnés esperó el primer Farm23 adquirido antes de activar el re
 Pasaron 53 de 53 pruebas dirigidas y la compilación web terminó en 47,88 s. Las dos pruebas mixtas fallaron con la guarda anterior. La regresión del retiro cubre el rechazo antes y después de confirmar la ausencia y descarta una generación ajena.
 
 SHA-256 del recibo gzip `c2f0632563e234658558a7a99c0612f97fa67c5e890a62fb8e544067471cdd5d`. SHA-256 del snapshot de entrada `9eea11bd2ffa33e9c442019f66a884098008e7a450cd734c503554d5bc75792f`.
+
+
+### Farm pendiente al nacer la incursión
+
+El arnés retuvo el READY real de Farm23, ticket 1, hasta el RaidSpawned de 13,400 s. Entregó el READY después de que el pedido hubiese sido cancelado. El trabajador ya estaba en el refugio. La petición Home v2 volvió a acreditar su cuerpo, pose y evento, con un barrido estacionario contra el mecanismo vigente. Home19 adquirió el ticket 7 y confirmó la ausencia física sin ninguna reserva de cruce. La hoja original conservó apertura 0 y 60 HP. Farm23 y Stop24 no adquirieron una ruta.
+
+NVIDIA presentó la retirada del polígono 9 con el ticket 24 y el dibujo 399 a 63,920 s. Tras RaidEnded a 69,140 s, el dibujo 446 acreditó la ausencia del animal y el dispositivo drenó sin avisos. Los cuatro golpes conservaron sus débitos de HP y el trabajador permaneció en el refugio. [Recibo de Edge con NVIDIA](performance/native-desert-pending-farm-gated-center-ruin-20261125.json.gz).
+
+La primera presentación de ruina registró 40,500 ms. El máximo de 1998 muestras retenidas fue 166,700 ms con el escritorio a 30 Hz. C4 y la huida pendiente desde fuera del refugio con portón instalado siguen abiertos.
+
+Pasaron 35 de 35 pruebas dirigidas. El control anterior al cambio reproduce el bloqueo cuando el trabajador ya está en el refugio. El control negativo conserva el rechazo cuando comienza a 0,25 m del refugio. La compilación web terminó en 45,91 s.
+
+SHA-256 del recibo gzip `29cf8766fb98710f447b0eec74853d88a8783f54a893eab3f17a94cba8e86fd8`. SHA-256 del snapshot de entrada `9eea11bd2ffa33e9c442019f66a884098008e7a450cd734c503554d5bc75792f`.

@@ -77,15 +77,24 @@ function assertRetreatRetiresAfterRuin(publication,proof,structures){
  }
 }
 
-for(const gated of [false,true])test(`center ruin preserves the certified refuge ${gated?'and its settled gate':'without a gate'}`,{timeout:90000},async()=>{
+for(const scenario of [
+ {gated:false,name:'without a gate'},
+ {gated:true,name:'after crossing the gate'},
+ {gated:true,pendingFarm:true,name:'when RaidSpawned cancels Farm before the gate'},
+])test('center ruin preserves the certified refuge '+scenario.name,{timeout:90000},async()=>{
+ const {gated,pendingFarm}=scenario;
  const initial=mixedState(gated),workerId=initial.workers[0].id,destroyedId=initial.structures[0].id;
- const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
+ let releaseFarm,farmReady=null;
+ const farmGate=new Promise(resolve=>{releaseFarm=resolve;});
+ const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  onReady(record){if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}}});
  const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
  const events=[];
  let confirmed=initial,ruin,workerAtCut,gateAtCut,snap,ruinPublication;
  try{
   world.command({kind:'setNavigationView',view});
-  await untilProduction(world,()=>world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  await untilProduction(world,()=>pendingFarm?farmReady!==null:world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  let spawn=null;
   for(let retry=0;retry<540&&!events.some(row=>row.type==='RaidEnded');retry++){
    let next=advance();
    if(next instanceof Promise){
@@ -104,6 +113,13 @@ for(const gated of [false,true])test(`center ruin preserves the certified refuge
    }
    events.push(...next.events);
    confirmed=JSON.parse(next.snapshot);
+   if(pendingFarm&&!spawn&&next.events.some(event=>event.type==='RaidSpawned')){
+    spawn=confirmed.workers[0];
+    assert.deepEqual([spawn.x,spawn.z],[initial.workers[0].x,initial.workers[0].z]);
+    assert.equal(spawn.nativeRouteAdmission,'pending-raid-flight-resources');
+    assert.equal(confirmed.structures.find(row=>row.id===gateId).gateOpen,0);
+    releaseFarm();
+   }
    for(const key of next.residency.missing){
     const [cx,cz]=key.split(',').map(Number);
     world.command({kind:'addChunk',cx,cz});
@@ -129,11 +145,22 @@ for(const gated of [false,true])test(`center ruin preserves the certified refuge
   assert.equal(events.filter(row=>row.type==='RaidEnded').length,1);
   assert.equal(confirmed.structures.find(row=>row.id===destroyedId).status,'ruined');
   if(gated){
-   assert.equal(gateAtCut.gateOpen,1);
+   assert.equal(gateAtCut.gateOpen,pendingFarm?0:1);
+   if(pendingFarm){
+    assert(spawn&&farmReady.aborted&&!farmReady.committed);
+    assert(!world.records.some(row=>row.kind==='farm-arrival-stop'));
+    const home=world.records.find(row=>row.kind==='home-route'&&row.committed);
+    assert(home);
+    assert.deepEqual(home.resources.origin,{x:spawn.x,z:spawn.z});
+    const rounded=[Math.fround(spawn.x),Math.fround(spawn.z)];
+    assert.deepEqual(Array.from(home.resources.points.slice(-2)),rounded);
+    assert(home.resources.distance<=Math.hypot(rounded[0]-spawn.x,rounded[1]-spawn.z)+1e-9);
+    assert.deepEqual(home.resources.gates,[]);
+   }
    assert.equal(gateAtCut.hp,60);
    assert.deepEqual(confirmed.structures.find(row=>row.id===gateId),gateAtCut);
    assert.equal(confirmed.result,'defeat');
    assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
   }
- }finally{await world.close();}
+ }finally{releaseFarm();await world.close();}
 });

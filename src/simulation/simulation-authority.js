@@ -152,13 +152,20 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    const source=worker.nativeRouteAdmission==='pending-farm-flight-stop'?planner.nativeFarmFlightStopRequest(worker.id)?.binding:
      worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null;
    if(nativeGateOwners.length){
-    // The worker's acquired Farm corridor identifies the live gate. Home and
-    // the animal still prove their routes separately before either can move.
     const [gate]=nativeGateOwners;
-    if(!centerAttack||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||source?.gateIds?.length!==1)return;
-    const mechanism=planner.nativeGateMechanismPose(gate.id),boundary=source.reference.worldBoundary;
-    if(!mechanism||mechanism.gateId!==source.gateIds[0]||mechanism.authorityEpoch!==boundary.authorityEpoch||
+    if(!centerAttack||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||!source)return;
+    const mechanism=planner.nativeGateMechanismPose(gate.id),boundary=source.reference?.worldBoundary??source;
+    if(!mechanism||mechanism.authorityEpoch!==boundary.authorityEpoch||
        mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
+    if(source.gateIds?.length!==1||mechanism.gateId!==source.gateIds[0]){
+     // A Farm cancelled at the refuge never acquired a crossing. Home can
+     // keep the same body there if the existing gate owner certifies its pose.
+     if(source.kind!=='native-home-request-reference'||source.version!==2||source.requestedAt!==game.elapsed||
+        source.raidSpawnSequence!==Number(event.id.split('-').at(-1))||
+        source.pose.x!==source.home.x||source.pose.z!==source.home.z)return;
+     const stationary=planner.nativeGateMechanismSegment(gate.id,source.bodyId,source.pose,source.home);
+     if(stationary.status!=='clear'||stationary.mechanism!==mechanism.mechanism||stationary.sampledAt!==game.elapsed)return;
+    }
    }
    const seq=source?.assignmentSequence??source?.requestSequence;
    const originClear=centerAttack?session.core.wasm.nav_flight_center_origin_clear:session.core.wasm.nav_flight_crop_origin_clear;
