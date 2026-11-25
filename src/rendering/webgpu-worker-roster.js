@@ -226,7 +226,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
       const resources=profile.copyResources(source.resources),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
-      if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>(farm?1:0)||
+      if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>profile.maxGates||
          typeof options.isCurrent!=='function')throw Error('Recovery requires a fresh worker');
       const current=()=>{try{
         const worker=entry.entity,e=source.execution;
@@ -237,10 +237,10 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         if(home){
           const sourceHome=nativeHomeRouteSource(r),destination=sourceHome.home;
           const village=state.villages.find(row=>nativeEntityNumericId(row.id)===destination.villageId),arrival=village?.entry??village;
-          return !sourceHome.raidSpawnSequence&&nativeLocomotionEntity(entry,false)&&worker.status==='returning'&&
+          return !sourceHome.raidSpawnSequence&&nativeLocomotionEntity(entry,false,b.gateIds.length>0)&&worker.status==='returning'&&
             !worker.taskId&&!worker.raidReturn&&worker.path===null&&nativeEntityNumericId(worker.villageId)===destination.villageId&&
             e.villageId===destination.villageId&&arrival?.x===destination.x&&arrival.z===destination.z&&
-            worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===false&&
+            worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===(e.currentSpeed===0)&&
             ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===e[key]);
         }
         if(farm){

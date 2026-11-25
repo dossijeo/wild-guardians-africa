@@ -710,7 +710,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
       const execution=profile.kind===18?nativeHomeRouteExecution(data[0]):
         profile.kind===22?nativeIdleStrollExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
-      if(!execution||execution.arrived||execution.binding.gateIds.length>(profile.kind===23?1:0)||
+      if(!execution||execution.arrived||execution.binding.gateIds.length>profile.maxGates||
          profile.kind===18&&execution.binding.reference.sourceRequest?.raidSpawnSequence||
          !profile.sameAttestation(execution.binding,recoveredWorkerRoute.proof))
         throw Error('Held native worker route changed before bootstrap');

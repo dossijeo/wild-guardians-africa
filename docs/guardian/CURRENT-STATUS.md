@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Home18 también se recupera con un portón de zarzas en apertura. El reemplazo acredita ambos relojes antes de reanudar. NVIDIA confirmó el picking, Home19 y el drenaje. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-de-home18-mientras-abre-un-portón).
+
 Recovery ya permite reanudar un Home18 civil adquirido tras perder Draw. NVIDIA verificó los dos fences, el picking del sustituto, la retirada Home19 y el drenaje al salir. La prueba cubre un trabajador sin portón ni incursión. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-home18-civil).
 
 Escudo puede caducar mientras dos civiles con Farm23 adquirido conservan sus cuerpos y relojes. NVIDIA presentó la baja del polígono 11 a 10,526 s y confirmó el avance posterior de ambos trabajadores y el drenaje. La calificación sigue limitada a desarrollo y sin incursión. [Recorrido y recibo](webgpu-shield.md#caducidad-con-dos-trabajadores-en-farm23).

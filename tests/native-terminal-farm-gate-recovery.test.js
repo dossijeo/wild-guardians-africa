@@ -15,14 +15,15 @@ import {NativeWall} from '../src/rendering/walls.js';
 import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.js';
 import {createNativeGateGpuBinding} from '../src/rendering/native-gate-gpu-binding.js';
 
-async function farmAuthority(){
+async function gateRouteAuthority(home){
   const origin=nativeFarmArrivalRouteFixture({peer:false}),state=structuredClone(origin.state);origin.close();
  const start={x:-14,z:11.8},goal={x:-14,z:3.2},gate={
   id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,maxHp:60,hp:60,
   status:'intact',villageId:'village-1',cost:10,collapseRemaining:0,gateOpen:0
  };
  const worker=state.workers[0],center=state.structures.find(row=>row.id===worker.centerId),service=centerServicePoint(center,state,.8);
- Object.assign(worker,start);
+ if(home)Object.assign(worker,goal,{status:'returning',nativeRouteAdmission:'pending-home-resources',idleState:null,destinationId:null});
+ else Object.assign(worker,start);
  state.villages.find(v=>v.id===worker.villageId).entry={...start};
  center.x+=goal.x-service.x;center.z+=goal.z-service.z;
  state.structures.push(gate);state.nextId=1000001;
@@ -30,11 +31,14 @@ async function farmAuthority(){
  return nativeProductionAuthority(state,{chunkKeys});
 }
 
-for(const mode of ['exact','missing','earlier ticket'])test('recovered Farm23 requires the actual gate clock ('+mode+')',async t=>{
- const f=await farmAuthority(),ports=new MessageChannel();
+for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
+ [23,'farm-arrival','native-farm-arrival','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion'],
+ [18,'home-route','native-home','nativeHome','nativeHomeRouteBinding','nativeHomeRouteVersion']
+])for(const mode of ['exact','missing','earlier ticket'])test(`recovered ${routeKind} requires the actual gate clock (${mode})`,async t=>{
+ const f=await gateRouteAuthority(kind===18),ports=new MessageChannel();
  let draw,rig,binding,wallMesh,prototype,admission;
  try{
-  await untilProduction(f,()=>f.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  await untilProduction(f,()=>f.records.some(row=>row.kind===routeKind&&row.committed));
   let view,wall;
   for(let i=0;i<100;i++){
     view=f.advance(.025);await f.present();
@@ -42,32 +46,32 @@ for(const mode of ['exact','missing','earlier ticket'])test('recovered Farm23 re
     if(wall.gateOpen>.2&&wall.gateOpen<.65)break;
   }
   assert(wall.gateOpen>.2&&wall.gateOpen<.65);
-  assert.equal(view.workers[0].nativeRouteAdmission,'native-farm-arrival');
-  const originalBinding=f.host.inspect().nativeRouteFrame.bindings.find(b=>b.nativeFarmArrival?.actorId===900011);
+  assert.equal(view.workers[0].nativeRouteAdmission,marker);
+  const originalBinding=f.host.inspect().nativeRouteFrame.bindings.find(b=>b[clockField]?.actorId===900011);
   assert(originalBinding?.relativeTime>0);
-  const acquired=f.records.find(row=>row.kind==='farm-arrival'&&row.committed);
+  const acquired=f.records.find(row=>row.kind===routeKind&&row.committed);
   assert.equal(acquired.resources.gates.length,1);
   f.gpu.device.destroy();f.retireResourceEndpoint();
   const receipt=await f.authority.quiesceNativeIntentProduction();
   const retired=await f.authority.flushNativeResourcePreparation({allowRetired:true});
   const route=await f.authority.terminalWorkerRoute();
   assert.equal(retired.terminal,true);
-  assert.deepEqual(route,{kind:23,actorId:900011},'The terminal owner must include the already moving native gate');
-  const capabilities={nativeFarmArrivalVersion:1};
+  assert.deepEqual(route,{kind,actorId:900011},'The terminal owner must include the already moving native gate');
+  const capabilities={[capability]:1};
   draw=await fixture({capabilities},{intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:q}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,receipt,route);
-  const ref=q.resources.nativeFarmArrivalBinding.reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime,at=q.execution.executedThrough;
+  const ref=q.resources[bindingField].reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime,at=q.execution.executedThrough;
   assert.equal(q.resources.presentation.gates.length,1);
   assert.equal(q.resources.presentation.gates[0].gateId,1000000);
   const expectAge=floorFloat32(at-epoch),resourceEnd=nativeClockResourceEnd(epoch,ref.endTime);
-  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeFarmArrival:ref,resourceEnd});
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',[clockField]:ref,resourceEnd});
   const controlOnly=await f.authority.checkHeldDraw(30,receipt,route).catch(error=>error);
   assert.match(controlOnly.message,/Missing submitted/);
   const badMode=mode==='exact'?null:mode;
   if(badMode!=='missing'){
    draw.client.registerClockBinding(draw.buffer,{byteOffset:4,epoch,semantic:'relative',resourceEnd,
      nativeGate:{gateId:1000000,worldBoundary:badMode==='earlier ticket'?
-        q.resources.nativeFarmArrivalBinding.preparedReference.worldBoundary:boundary}});
+        q.resources[bindingField].preparedReference.worldBoundary:boundary}});
   }
   if(!badMode){
    const payloads=new Map();f.authority.publishResidentTerrainForQa(p=>payloads.set(p.cx+','+p.cz,p));

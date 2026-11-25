@@ -4,14 +4,14 @@ import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHo
 
 const profiles=new Map([
  [18,Object.freeze({
-  kind:18,admission:'native-home',executionKind:'native-home-route-execution',
+  kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1,
   bindingField:'nativeHomeRouteBinding',clockField:'nativeHome',proofField:'homeProof',
   obsoleteCode:'native-home-admission-obsolete',
   copyResources:copyNativeHomeRouteResources,copyAttestation:copyNativeHomeRouteAttestation,
   sameAttestation:sameNativeHomeRouteAttestation,sameReference:sameNativeHomeRouteReference
  })],
  [22,Object.freeze({
-  kind:22,admission:'native-idle-stroll',executionKind:'native-idle-stroll-execution',
+  kind:22,admission:'native-idle-stroll',executionKind:'native-idle-stroll-execution',maxGates:0,
   bindingField:'nativeIdleStrollBinding',clockField:'nativeStroll',issuedField:'issuedStroll',
   proofField:'strollProof',admittedField:'strollAdmitted',
   obsoleteCode:'native-idle-stroll-admission-obsolete',
@@ -19,7 +19,7 @@ const profiles=new Map([
   sameAttestation:sameNativeIdleStrollAttestation,sameReference:sameNativeIdleStrollReference
  })],
  [23,Object.freeze({
-  kind:23,admission:'native-farm-arrival',executionKind:'native-farm-arrival-route-execution',
+  kind:23,admission:'native-farm-arrival',executionKind:'native-farm-arrival-route-execution',maxGates:1,
   bindingField:'nativeFarmArrivalBinding',clockField:'nativeFarmArrival',issuedField:'issuedFarmArrival',
   proofField:'farmArrivalProof',admittedField:'farmArrivalAdmitted',
   obsoleteCode:'native-farm-arrival-admission-obsolete',

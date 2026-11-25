@@ -808,7 +808,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   function recoveryGateCurrent(kind,execution,presentation=null){
     const {gateIds,reference}=execution.binding;
     if(!gateIds.length)return true;
-    if(kind!==23||gateIds.length!==1||nativeGateOwners.length!==1)return false;
+    if(gateIds.length>nativeWorkerRouteRecoveryProfile(kind).maxGates||nativeGateOwners.length!==1)return false;
     const [gate]=nativeGateOwners,gateId=gateIds[0],at=execution.executedThrough;
     if(gate.id!=='structure-'+gateId||gate.status!=='intact'||gate.hp!==gate.maxHp||gate.wallPresentation)return false;
     const pose=planner.nativeGateMechanismPose(gate.id),boundary=reference.worldBoundary;
