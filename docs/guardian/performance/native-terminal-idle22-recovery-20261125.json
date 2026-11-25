@@ -235,10 +235,184 @@
     "fault": "Error: OperationError: Failed to execute 'getMappedRange' on 'GPUBuffer': getMappedRange failed",
     "recovered": false
   },
+  "mappedDestruction": {
+    "evidenceSha256": "63f886cc7e33fdd2fe324237798a195f84803f1d42bc51743ead40c3333de70e",
+    "destroy": {
+      "stage": "real destroy during an unmap",
+      "id": "Buffer:135",
+      "before": "mapped",
+      "after": "unmapped"
+    },
+    "skippedDispatchObserved": false,
+    "initialFence": {
+      "holdId": 21,
+      "actorId": 900011,
+      "fenceId": 1,
+      "effectiveTime": 10.819999999999986,
+      "authorityTime": 10.819999999999986,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.5499999523162842,
+      "pose": {
+        "x": -18,
+        "z": 0.5703572875253664,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.309999999999981,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "finalFence": {
+      "holdId": 21,
+      "actorId": 900011,
+      "fenceId": 2,
+      "effectiveTime": 10.819999999999986,
+      "authorityTime": 10.819999999999986,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.5499999523162842,
+      "pose": {
+        "x": -18,
+        "z": 0.5703572875253664,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.309999999999981,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "intermediateFrame": {
+      "sequence": 2,
+      "publishedSequence": 98,
+      "elapsed": 10.819999999999986,
+      "bodyId": 1,
+      "ageFloat32": 0.5499999523162842
+    },
+    "resumed": {
+      "elapsed": 11.06999999999998,
+      "sequence": 102
+    },
+    "drained": true,
+    "saveableSequence": 219,
+    "pick": {
+      "stage": "replacement held pick",
+      "actorId": "worker-900011",
+      "pose": {
+        "x": -18,
+        "z": 0.5703572875253664,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.309999999999981,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "ground": 15.301375427404118,
+      "publication": 98,
+      "frameSequence": 2,
+      "attempts": [
+        {
+          "height": 1,
+          "coordinate": {
+            "x": -2.1930478060284058,
+            "y": 0.8428828673221709
+          },
+          "outside": true
+        },
+        {
+          "height": 0.65,
+          "coordinate": {
+            "x": -2.189184743451383,
+            "y": 0.8308593668663294
+          },
+          "outside": true
+        },
+        {
+          "height": 1.3,
+          "coordinate": {
+            "x": -2.196369870206318,
+            "y": 0.8532225497272764
+          },
+          "outside": true
+        },
+        {
+          "height": 1.65,
+          "coordinate": {
+            "x": -2.200258354845431,
+            "y": 0.865325174496803
+          },
+          "outside": true
+        },
+        {
+          "height": 0.35,
+          "coordinate": {
+            "x": -2.1858843627576072,
+            "y": 0.8205871727237616
+          },
+          "outside": true
+        }
+      ]
+    },
+    "cadence": {
+      "displayHz": 30,
+      "traced": false,
+      "beforeLoss": {
+        "samples": 338,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795631521347.8901,
+          "sequence": 24,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2e1b8b40-660d-482e-8fd9-d0eefb66fd44/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 360.085205078125,
+          "drawMs": 8.2998046875,
+          "replay": false,
+          "clockElapsed": 10.269999999999998,
+          "safeUntil": 10.269999999999998,
+          "cameraVersion": 5
+        },
+        "overTarget": 335
+      },
+      "replacement": {
+        "samples": 15,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795631537622.215,
+          "sequence": 3,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "2e1b8b40-660d-482e-8fd9-d0eefb66fd44/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 34.505126953125,
+          "drawMs": 7.56005859375,
+          "replay": true,
+          "clockElapsed": 10.969999999999983,
+          "safeUntil": 10.969999999999983,
+          "cameraVersion": null
+        },
+        "overTarget": 15
+      }
+    }
+  },
   "limitations": [
     "One recovered Idle22 actor with no gate motor.",
     "The two fences acknowledge the first submitted lease. An ordinary intermediate draw uses that same lease.",
-    "Physical picking and loss overlapping mapped buffer reads remain open.",
+    "Physical picking has yet to confirm a hit. The explicit mapped loss case passed through the application; skipping a dispatched unmap is verified in the deterministic transport tests.",
     "Presentation samples are partial and captured at 30 Hz without a CDP trace."
   ]
 }

@@ -1657,19 +1657,23 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         break;
       }
       case 'map': {
+        // GPUDevice.destroy() has already unmapped its buffers. Outstanding
+        // map RPCs settle through the device's actual lost notification.
+        if (deviceDestroyRequested) break;
         const entry = resources.get(message.id); if (!entry) throw Error('Unknown mapped buffer');
         if (entry.mapJob || entry.mapMode) { reply(message, null, Error('Remote buffer already mapped')); break; }
         const job = { done: false, finish(result, error) {
           if (job.done) return;
           job.done = true;
           if (entry.mapJob === job) entry.mapJob = null;
-          if (!stopped) reply(message, result, error);
+          if (!stopped && !deviceDestroyRequested) reply(message, result, error);
           entry.pins--; tryRetire(entry);
         } };
         entry.mapJob = job; entry.pins++;
         try {
           Promise.resolve(entry.value.mapAsync(message.mode, message.offset, message.size)).then(() => {
-            if (job.done || stopped) return;
+            if (job.done) return;
+            if (stopped || deviceDestroyRequested) { job.finish(); return; }
             entry.mapMode = message.mode;
             entry.mappedRange = entry.value.getMappedRange(message.offset, message.size);
             job.finish({ bytes: entry.mappedRange.slice(0) });
@@ -1678,6 +1682,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         break;
       }
       case 'unmap': {
+        if (deviceDestroyRequested) break;
         const entry = resources.get(message.id); if (!entry) throw Error('Unknown unmapped buffer');
         if (entry.mapJob) { cancelMapping(entry, 'Remote buffer mapping canceled by unmap'); break; }
         if ((entry.mapMode & 2) && message.bytes) new Uint8Array(entry.mappedRange || entry.value.getMappedRange(message.offset, message.bytes.byteLength)).set(new Uint8Array(message.bytes));

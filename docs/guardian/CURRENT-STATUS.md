@@ -1,6 +1,6 @@
 # Current delivery status (2026-10-29)
 
-El reemplazo terminal de Idle22 conserva el diario, recompone la ruta adquirida del mismo trabajador y confirma dos fences antes de reanudar. NVIDIA verificó los dos paquetes del reemplazo a 10,92 s, avance a 11,27 s y drenaje tras la salida. El recorrido cubre un solo trabajador sin portón. Siguen abiertos el picking físico y la pérdida que se solapa con una lectura de buffer, además de C4. [Recorrido y recibos](native-terminal-resource-recovery-20261120.md#traspaso-terminal-acotado-a-idle22).
+El reemplazo terminal de Idle22 conserva el diario, recompone la ruta adquirida del mismo trabajador y confirma dos fences antes de reanudar. NVIDIA verificó los dos paquetes del reemplazo a 10,92 s, avance a 11,27 s y drenaje tras la salida. El recorrido cubre un solo trabajador sin portón. La repetición con un buffer mapeado también llegó al drenaje. Siguen abiertos el picking físico, otras cohortes de Recovery y C4. [Recorrido y recibos](native-terminal-resource-recovery-20261120.md#traspaso-terminal-acotado-a-idle22).
 
 La recarga fría de Escudo v3 conserva el polígono adquirido y vuelve a dibujar los 5.568 vértices de la cúpula a la edad guardada. NVIDIA confirmó la publicación posterior a Idle20, el mismo buffer y versión y el drenaje con el reloj suspendido. El máximo fue de 38,30 ms durante el arranque a 30 Hz. Quedan el alta desde el menú con reloj en marcha, la caducidad coordinada y C4. [Validación](webgpu-shield.md#recarga-de-un-escudo-activo).
 
