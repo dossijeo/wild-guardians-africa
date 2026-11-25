@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La recarga fría de Escudo v3 conserva el polígono adquirido y vuelve a dibujar los 5.568 vértices de la cúpula a la edad guardada. NVIDIA confirmó la publicación posterior a Idle20, el mismo buffer y versión y el drenaje con el reloj suspendido. El máximo fue de 38,30 ms durante el arranque a 30 Hz. Quedan el alta desde el menú con reloj en marcha, la caducidad coordinada y C4. [Validación](webgpu-shield.md#recarga-de-un-escudo-activo).
+
 El arranque WebGPU remoto espera el primer dibujo de la publicación confirmada antes de abrir el puerto de recursos. NVIDIA verificó la secuencia 1 con 25 regiones desde el menú y el primer Farm23 del guardado pagado de Sabana. READY tardó 3,327 s desde la solicitud y el cuerpo adquirido se dibujó con drenaje limpio. [Prueba de arranque](native-sabana-flee-crop-physical-20261125.md#preparación-de-farm-y-stop24).
 
 El paquete web conserva los GLB optimizados de personaje y marca los archivos decodificados como procedencia del repositorio. El build y las siete pruebas de empaquetado pasan. La validación integral llega al límite de distribución y rechaza 1.443 archivos frente a los 1.000 exigidos por el verificador.

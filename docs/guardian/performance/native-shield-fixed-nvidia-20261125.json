@@ -164,6 +164,31 @@
       "domeBufferSubmitted": true,
       "pausedPublicationAfterIdle": false,
       "stopReason": "Native publication boundary did not arrive"
+    },
+    "pausedRestoreThroughDrain": {
+      "baseCommit": "f09c3b09e608132d978bca86eb4ba8b2cd385498",
+      "receiptSha256": "d5a5e44626405ca68ccadee332eaff8da453479e1899611afc14af3f2a50b543",
+      "traceSha256": "be6d5fc4bc1fb778c2c022a6f44664e26f801fecb3f4d8780d007f8cc58c2cba",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "firstConfirmedDraw": 11,
+      "domeAdmittedDraw": 29,
+      "idleDraw": 31,
+      "idleTicket": 2,
+      "heldNativeProductionAfterIdleSubmit": true,
+      "idleConfirmedPublication": 2,
+      "nextCheckpoint": 3,
+      "domeDrawAfterIdleProjection": 33,
+      "sharedDomeBuffer": "Buffer:2774",
+      "bufferVersion": 1,
+      "vertexCount": 5568,
+      "elapsed": 101.19999999999784,
+      "polygonId": 11,
+      "maxIntervalMs": 38.300048828125,
+      "maxIntervalSequence": 10,
+      "displayHz": 30,
+      "drained": true,
+      "errors": []
     }
   },
   "domeReuse": {
