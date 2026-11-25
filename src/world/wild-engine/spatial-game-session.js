@@ -5,6 +5,7 @@ import {createSpatialChunkStream} from './spatial-chunk-stream.js';
 import {createSpatialWallMirror} from './spatial-wall-mirror.js';
 import {createSpatialCenterMirror} from './spatial-center-mirror.js';
 import {createSpatialShieldMirror} from './spatial-shield-mirror.js';
+import {validateSpatialState} from './spatial-state.js';
 import {createSpatialPropMirror} from './spatial-prop-mirror.js';
 import {queryResidentSpatialProps} from './spatial-prop-query.js';
 import {addSpatialVillageBuildings} from './spatial-village-bridge.js';
@@ -98,8 +99,27 @@ export function createSpatialGameSession(module,state,streamOptions){
   for(const village of state.villages)installVillage(village,state,village===first);
   const centers=createSpatialCenterMirror(core),shields=createSpatialShieldMirror(core),props=createSpatialPropMirror(core,state.suppressed);
   centers.sync(state);shields.sync(state.spells);
-  const walls=createSpatialWallMirror(core,{structures:state.structures,bootstrap:streamOptions.nativeBootstrap??null});
+  const walls=createSpatialWallMirror(core);
   walls.sync(state.structures);
+  const bootstrap=streamOptions.nativeBootstrap;
+  if(bootstrap!=null){
+    if(![1,2,3].includes(bootstrap.version))throw TypeError('Invalid native world bootstrap');
+    const saved=validateSpatialState(bootstrap.spatialState),actual=core.snapshot(),serialized=JSON.stringify(saved),
+      matches=JSON.stringify(actual)===serialized;
+    if(bootstrap.version!==1||!matches){
+      const wallPlan=walls.prepareBootstrap(actual,bootstrap),shieldPlan=shields.prepareBootstrap(actual,bootstrap);
+      const authorized={...actual,barriers:wallPlan.barriers,nextBarrierId:saved.nextBarrierId,
+        polygons:shieldPlan.polygons,nextPolygonId:saved.nextPolygonId};
+      if(JSON.stringify(authorized)!==serialized)throw Error('Native world bootstrap reconstruction mismatch');
+      // Cold bootstrap owns the only restore. No routes, bodies or graphics
+      // have been installed, and both mirrors adopt the IDs from this restore.
+      if(!matches){
+        const selected=core.currentChunk();core.restoreState(authorized,selected.cx,selected.cz);
+        if(JSON.stringify(core.snapshot())!==serialized)throw Error('Native restored world state mismatch');
+      }
+      wallPlan.adopt();shieldPlan.adopt();
+    }
+  }
   const profiles=new Set();
   let workerPortalRevision=-1,workerPortalChunkRevision=-1,
     workerPortalTerrainRevision=-1,workerPortalCenterRevision=-1,
@@ -500,7 +520,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
     captureWallOwners:walls.captureOwners,wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
-    shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
+    captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,

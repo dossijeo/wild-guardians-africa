@@ -1,9 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {centerServicePoint} from '../src/world/centers.js';
 import {rational} from '../src/simulation/money.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 
 const chunkKeys=[...Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),'2,-1','2,0','2,1'];
 const command={kind:'castShield',id:'shield-across-native-farm',x:-14,z:8.2};
@@ -80,4 +84,62 @@ test('a Shield READY for an older native clock cannot commit a polygon or an act
   assert.deepEqual(after.spells,[]);assert(!after.commandIds.includes(command.id));
   assert.equal(record.committed,false);assert.deepEqual(f.faults,[]);
  }finally{release();await f.close();}
+});
+
+test('cold Shield bootstrap keeps the second acquired polygon and the next allocation',async()=>{
+ const f=await fixture();
+ let restored;
+ const activate=async(f,id)=>{
+  const order={...command,id};
+  await pump(f,f.authority.prepareNativeStructureCommand(order));
+  const result=await pump(f,f.structureCommand(order));
+  await f.authority.finishNativeStructureCommand(order);
+  assert.equal(result.value,true,result.rejection);
+  return result.nativeWorldResources[0].nativeShield;
+ };
+ const cooldown=async f=>{
+  let current=f.snapshot();
+  for(let i=0;i<100&&current.cooldowns.shield>0;i++){current=f.advance(.5);await f.present();}
+  assert.equal(current.cooldowns.shield,0);
+  assert.deepEqual(current.spells,[]);
+ };
+ try{
+  const first=await activate(f,'first-shield');await cooldown(f);
+  const second=await activate(f,'second-shield');
+  assert.equal(second.polygonId,first.polygonId+1);
+  const current=f.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
+  const checkpoint=prepareWorkerCheckpoint(current,{slotId:JSON.parse(current.snapshot).slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert.equal(checkpoint.saved,true);
+  const options=savedNativeAuthorityOptions(JSON.stringify(checkpoint.state)),bootstrap=options.nativeBootstrap;
+  assert.equal(bootstrap.version,3);assert.deepEqual(bootstrap.shieldOwners,[{spellId:second.spell.id,polygonId:second.polygonId}]);
+  const wasm=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
+  const rebuild=source=>createSimulationAuthority(wasm,options.snapshot,options.chunkKeys,{...options,nativeBootstrap:source});
+  for(const version of [1,2]){
+   const legacy=structuredClone(bootstrap);legacy.version=version;delete legacy.shieldOwners;
+   if(version===1)delete legacy.wallOwners;
+   const loaded=rebuild(legacy);
+   try{assert(loaded.verifyNativeBootstrap(legacy));}finally{loaded.dispose();}
+  }
+  for(const alter of [
+   cp=>cp.shieldOwners[0].spellId='different',
+   cp=>cp.shieldOwners.push({...cp.shieldOwners[0]}),
+   cp=>cp.spatialState.polygons.find(row=>row.id===second.polygonId).points[0].x+=.25,
+   cp=>cp.spatialState.polygons[0].points[0].x+=.25,
+   cp=>cp.spatialState.nextPolygonId=second.polygonId
+  ]){
+   const bad=structuredClone(bootstrap);alter(bad);assert.throws(()=>rebuild(bad),/shield|polygon/i);
+  }
+  const ambiguous=structuredClone(bootstrap);ambiguous.version=2;delete ambiguous.shieldOwners;
+  ambiguous.spatialState.polygons.push({...structuredClone(ambiguous.spatialState.polygons.at(-1)),id:ambiguous.spatialState.nextPolygonId++});
+  assert.throws(()=>rebuild(ambiguous),/ambiguous legacy native shield/i);
+  restored=await nativeProductionAuthority(checkpoint.state,{nativeBootstrap:bootstrap,chunkKeys:options.chunkKeys});
+  assert(restored.authority.verifyNativeBootstrap(bootstrap));
+  const after=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.deepEqual(after.nativeAuthorityCheckpoint.spatialState,bootstrap.spatialState);
+  assert.deepEqual(JSON.parse(after.snapshot).spells,[second.spell]);
+  await cooldown(restored);const third=await activate(restored,'third-shield');
+  assert.equal(third.polygonId,bootstrap.spatialState.nextPolygonId);
+  assert.notEqual(third.spell.id,second.spell.id);
+  assert.deepEqual([...f.faults,...restored.faults],[]);
+ }finally{await restored?.close();await f.close();}
 });

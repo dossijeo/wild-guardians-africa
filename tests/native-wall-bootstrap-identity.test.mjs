@@ -105,7 +105,7 @@ test('gate proxy order and masks remain exact and a borrowed core cannot be boot
  }finally{restored?.dispose();source?.dispose();f.s.dispose();}
 });
 
-test('ordinary acquired Repair saves v2 inside its curve and cold authority verifies complete topology without another payment',async()=>{
+test('ordinary acquired Repair captures both world owner tables inside its curve without another payment',async()=>{
  const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false}),state=structuredClone(fixture.state),wall=state.structures.find(w=>w.kind==='wall'&&w.status==='intact'&&!w.gate&&w.material==='zarzas');
  Object.assign(wall,fixture.point(1,4),{hp:0,status:'ruined',collapseRemaining:0});state.ledger.balance=rational(100000);let f,restored,worker;
  try{
@@ -113,7 +113,7 @@ test('ordinary acquired Repair saves v2 inside its curve and cold authority veri
   for(let i=0;i<350&&!f.records.some(r=>r.kind==='barrier-addition'&&r.committed);i++){f.advance();await f.present();}
   assert(f.records.some(r=>r.kind==='barrier-addition'&&r.committed),JSON.stringify(f.authority.nativeIntentProductionStatus()));f.advance(.1);await f.present();f.command({kind:'pause',reason:'tutorial-action'});
   const result=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}),saved=prepareWorkerCheckpoint(result,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});assert.equal(saved.saved,true);
-  const cp=saved.state.workerNativeAuthorityCheckpoint;assert.equal(cp.version,2);validateNativeAuthorityCheckpoint(cp);
+  const cp=saved.state.workerNativeAuthorityCheckpoint;assert.equal(cp.version,3);assert.deepEqual(cp.shieldOwners,[]);validateNativeAuthorityCheckpoint(cp);
   const wallState=saved.state.structures.find(w=>w.id===wall.id),age=saved.state.elapsed-wallState.wallPresentation.at;assert(age>0&&age<.48,`curve age ${age}`);
   const options=savedNativeAuthorityOptions(JSON.stringify(saved.state));restored=createSimulationAuthority(wasm,options.snapshot,options.chunkKeys,options);assert.equal(restored.verifyNativeBootstrap(options.nativeBootstrap),true);
   const next=restored.execute({kind:'snapshot',sequence:1,nativeAuthorityCheckpoint:true});assert.deepEqual(next.nativeAuthorityCheckpoint.spatialState,cp.spatialState);assert.deepEqual(next.nativeAuthorityCheckpoint.wallOwners,cp.wallOwners);

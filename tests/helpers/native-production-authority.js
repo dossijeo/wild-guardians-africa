@@ -25,7 +25,10 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await onPrepare(record);
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
-   const packet=await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
+   const lastActorPacket=records.findLast(item=>item.committed&&item.kind!=='shield');
+   const packet=lastActorPacket?.kind==='home-arrival'?
+    await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):
+    await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
    packet.presented.catch(()=>{});record.packet=packet;
    try{await onReady(record);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,
