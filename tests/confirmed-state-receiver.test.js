@@ -1,5 +1,6 @@
+import {createHistoricalEventBoundaryCapture} from '../src/simulation/historical-event-boundaries.js';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {gunzipSync} from 'node:zlib';
-import {deserialize,serialize} from '../src/persistence/snapshots.js';import {emit,observeGameEvents,observePresentationGameEvents} from '../src/simulation/game.js';import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';import {newGame,emit,observeGameEvents,observePresentationGameEvents} from '../src/simulation/game.js';import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 const fixture=()=>deserialize(gunzipSync(readFileSync('tests/fixtures/manglares-123-d10-raid-state.json.gz')).toString());
 test('projected path markers cannot disguise full paths or checkpoints',()=>{
  const state=fixture(),receiver=createConfirmedStateReceiver(state,'s'),packet={session:'s',sequence:1,snapshot:serialize(state),events:[],presentationPaths:'head-v1'};assert.throws(()=>receiver.accept({...packet,presentationPaths:'unknown'}),/projection/);assert.throws(()=>receiver.accept({...packet,terrainCheckpoint:{}}),/projection/);assert.throws(()=>receiver.accept(packet),/projected presentation path/);assert.equal(receiver.status().sequence,0);
@@ -115,4 +116,31 @@ test('lifecycle journal rejects missing relevant events, duplicate exits and exi
  const state=fixture(),authority=deserialize(serialize(state)),animal=authority.raid.animals.find(a=>a.status!=='gone');assert.ok(animal);emit(authority,'SpellActivated',{kind:'attack',targetId:animal.id});const event=authority.events.at(-1),receiver=createConfirmedStateReceiver(state,'s'),packet={session:'s',sequence:1,snapshot:serialize(authority),events:[event]};
  for(const presentationJournal of [[],[{kind:'event',eventId:event.id},{kind:'event',eventId:event.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id},{kind:'animalGone',actorId:animal.id}],[{kind:'event',eventId:event.id},{kind:'animalGone',actorId:animal.id}]])assert.throws(()=>receiver.accept({...packet,presentationJournal}),/lifecycle/);
  assert.equal(receiver.status().sequence,0);
+});
+
+test('a deferred event reader keeps its original base and freezes hidden data without invoking accessors',()=>{
+ function fixture(){
+  const state=newGame({seed:712,slotId:'deferred-reader'}),producer=deserialize(serialize(state));
+  const capture=createHistoricalEventBoundaryCapture(producer);
+  producer.elapsed=.02;emit(producer,'Prepared');
+  const events=producer.events.slice(-1);
+  capture.event(producer,events[0],events);capture.sample(producer,events);
+  const message={session:'s',sequence:1,elapsed:.02,snapshot:serialize(producer),events,
+   historicalEventBoundaries:capture.finish(events),worldMotionTrace:{actorTickStates:{complete:true,actors:[]}}};
+  return {state,message,receiver:createConfirmedStateReceiver(state,'s')};
+ }
+ const f=fixture();
+ const nested={proof:true};
+ Object.defineProperty(f.message.historicalEventBoundaries,'detail',{value:nested,enumerable:false});
+ const prepared=f.receiver.prepare(f.message),read=f.receiver.deferPreparedHistoricalGroups(prepared.token);
+ assert(Object.isFrozen(nested));
+ f.receiver.commit(prepared.token);
+ f.state.elapsed=1;
+ assert.deepEqual(read(),[{at:.02,eventIds:[f.message.events[0].id],count:2}]);
+
+ const bad=fixture();let invoked=0;
+ Object.defineProperty(bad.message.events[0],'detail',{get(){invoked++;return {};},enumerable:false});
+ const pending=bad.receiver.prepare(bad.message);
+ assert.throws(()=>bad.receiver.deferPreparedHistoricalGroups(pending.token),/accessor/);
+ assert.equal(invoked,0);bad.receiver.discard(pending.token);assert.equal(bad.receiver.status().sequence,0);
 });

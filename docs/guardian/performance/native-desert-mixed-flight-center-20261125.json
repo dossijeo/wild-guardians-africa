@@ -2341,5 +2341,180 @@
       "animalAcquired": 21.999999999999957,
       "stop": "concurrent native clocks oracle before center impact"
     }
+  },
+  "confirmPreviewDescriptorTraversal": {
+    "testedBase": "04b711af960fd3de65c45895c3695582a1371271",
+    "productDelta": {
+      "path": ".cache/c4-center-preview/preview-freeze.patch",
+      "sha256": "6c7590e1c959c0ecbda802c7fcb25853d30338dc924d05154c1d93fbb24b6bf9"
+    },
+    "cpu": {
+      "publication": {
+        "path": ".cache/c4-center-preview/hit.json",
+        "sha256": "d20d11cfb6989c28d5076048eeea259680efebca37ac9cce472481e93cbb62be"
+      },
+      "comparison": {
+        "path": ".cache/c4-center-preview/comparison.json",
+        "sha256": "7f2c6871770113a8845976965de43a4383286230a5b54498800cae8c7cd054d8"
+      },
+      "measurements": {
+        "path": ".cache/c4-center-preview/measurements.json",
+        "sha256": "f3f4f3d7a2280a731b1031605ca087f4a623cbebc074f7a2e0aed6150cf587db"
+      },
+      "deferredReader": {
+        "path": ".cache/c4-center-preview/reader.json",
+        "sha256": "d57a8d1b2ec78140546f22daba3acf8c79489affd50aadffef8cc3037a02ebc0"
+      },
+      "samplesPerVariant": 24,
+      "travelAndTransport": {
+        "path": ".cache/c4-center-preview/branch-impact.tap",
+        "sha256": "e9b31eae9936386aead6a5702fada5fb0fac59df34a0d5a80224905c2c6603c9"
+      },
+      "passedBeforeCreditOracleFix": 92,
+      "priorCreditOracleFailure": {
+        "path": ".cache/c4-center-preview/baseline-ports.tap",
+        "sha256": "7cabfc8eb64ef6f79f102079e9872d0795f14d15ec38ba1522fdefcb079217aa"
+      },
+      "verifiedCreditWindow": {
+        "path": ".cache/c4-center-preview/receipt-window.tap",
+        "sha256": "0ac082d1f9aa0e32fe2eb87c28f8fd57a34ae91c14c45652e2fdbe1ed453d085"
+      },
+      "transportPassed": 67,
+      "creditCommit": "04b711af9"
+    },
+    "reference": {
+      "cuts": {
+        "path": ".cache/c4-first-center/gated-first-colors-focal-60hz.owner-cut.json",
+        "sha256": "e730f4295e88147eae032f29891f2d8c10adecfb0771385075b4ea22a47e0da4"
+      },
+      "sample": {
+        "at": 1795639399812.7,
+        "sequence": 406,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "e707eb34-9f06-441e-a76e-22a5ac37c06e/1",
+          "nativeSession": 1,
+          "ticket": 13,
+          "effectiveTime": 46.40000000000133
+        },
+        "intervalMs": 168.2998046875,
+        "drawMs": 2.400146484375,
+        "replay": false,
+        "clockElapsed": 48.10000000000147,
+        "safeUntil": 48.10000000000147,
+        "cameraVersion": null
+      },
+      "timelineMs": 49.6,
+      "captureMs": 34.599,
+      "previewMs": 22.299,
+      "damageMs": 18.2,
+      "postMs": 154.325,
+      "resourceWaitMs": 0,
+      "staleBindingOpportunities": 9
+    },
+    "physical": {
+      "receipt": {
+        "path": ".cache/c4-center-preview/gated-first-preview-focal-60hz.json",
+        "sha256": "c17af906a714437e654e2bd78495283fe813e68815f93a0ce57c74e60ef74318"
+      },
+      "cuts": {
+        "path": ".cache/c4-center-preview/gated-first-preview-focal-60hz.owner-cut.json",
+        "sha256": "78dbd688fe8515b13d016f2a279ff1fed8f3a0e2a13836ae6cec5a2bbbf059cd"
+      },
+      "trace": {
+        "path": ".cache/c4-center-preview/gated-first-preview-focal-60hz.trace.json.gz",
+        "sha256": "390bdd1ef3b835ee19fc009fba4f496acdd8e533ea55a77ba1385275bd8fe170",
+        "dataLossOccurred": false
+      },
+      "display": {
+        "temporary": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "restored": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "applyReceipt": {
+          "path": ".cache/native-60hz-gated-first-preview-focal-60hz-apply-receipt.json",
+          "sha256": "6f06157402cde5ca0fa728794024b43a4afc34cafc5994e396be3c01309a899c"
+        },
+        "restoreReceipt": {
+          "path": ".cache/native-60hz-gated-first-preview-focal-60hz-restore-receipt.json",
+          "sha256": "01ee9b629f29b2f1477674cc7fd6156760411b7cad4f8e23a8defa51def1343b"
+        }
+      },
+      "sample": {
+        "at": 1795640173115.3,
+        "sequence": 398,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "8164cdb4-2228-4801-8d17-99e2a40a659d/1",
+          "nativeSession": 1,
+          "ticket": 13,
+          "effectiveTime": 46.600000000001344
+        },
+        "intervalMs": 150.2001953125,
+        "drawMs": 5.099853515625,
+        "replay": false,
+        "clockElapsed": 48.30000000000149,
+        "safeUntil": 48.30000000000149,
+        "cameraVersion": null
+      },
+      "timelineMs": 46.701,
+      "captureMs": 31.4,
+      "previewMs": 14.601,
+      "damageMs": 21.3,
+      "postMs": 129.968,
+      "resourceWaitMs": 0,
+      "staleBindingOpportunities": 8,
+      "hit": {
+        "id": "event-29211",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29209",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 48.15000000000148,
+          "animal": {
+            "x": -18.67253303527832,
+            "z": -0.43426570296287537,
+            "heading": -0.07756698100668953
+          },
+          "target": {
+            "x": -18.954998779296876,
+            "z": 3.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 48.15000000000148
+      },
+      "buffers": {
+        "compared": 1335,
+        "sameReference": 1335,
+        "sameVersion": 1335
+      },
+      "mixedDraws": 9,
+      "selectable": true,
+      "drained": true
+    }
   }
 }

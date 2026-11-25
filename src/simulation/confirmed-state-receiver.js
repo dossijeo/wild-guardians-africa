@@ -11,7 +11,14 @@ function isRecord(value){return value!==null&&typeof value==='object'&&!Array.is
 // getter. Historical decoded states remain private to the transaction.
 function freezeOwned(value,seen=new WeakSet(),allowSnapshotGetter=false){
  if(!value||typeof value!=='object'||seen.has(value))return value;
- seen.add(value);for(const [key,descriptor] of Object.entries(Object.getOwnPropertyDescriptors(value))){if('value' in descriptor)freezeOwned(descriptor.value,seen);else if(!allowSnapshotGetter||key!=='snapshot')throw TypeError('Historical owned data contains an accessor');}
+ seen.add(value);
+ // Visit nonenumerable fields too, without allocating a descriptor map and
+ // an entries array for every object in the confirmed snapshot.
+ for(const key of Object.getOwnPropertyNames(value)){
+  const descriptor=Object.getOwnPropertyDescriptor(value,key);
+  if('value' in descriptor)freezeOwned(descriptor.value,seen);
+  else if(!allowSnapshotGetter||key!=='snapshot')throw TypeError('Historical owned data contains an accessor');
+ }
  return Object.freeze(value);
 }
 function keyed(array){return array.length>0&&array.every(item=>isRecord(item)&&typeof item.id==='string')&&new Set(array.map(item=>item.id)).size===array.length;}
