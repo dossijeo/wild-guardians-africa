@@ -1,3 +1,4 @@
+import {copyNativeIdleStrollResources as copyRecoveredStrollResources} from '../world/native-idle-stroll.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
 import {sameNativeShieldWorld} from '../world/native-shield-world.js';
@@ -5,6 +6,7 @@ import {BALANCE} from './balance.js';
 import {centerFootprint} from '../world/centers.js';
 import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
+import {floorFloat32 as recoveryFloorFloat32} from '../float32-time.js';
 import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
 import {createNativeResourcePreparationConnection} from './native-resource-preparation-connection.js';
 import {createNativeIntentProduction} from './native-intent-production.js';
@@ -659,6 +661,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
+
+    async terminalIdleStrollActor(){
+      if(nativeProduction?.status().phase!=='suspended'||game.raid||game.workers.length!==1)return null;
+      const {current,pending,cohort}=nativeIntentControl.connections();
+      if(!current||pending||cohort.consumers!==1)return null;
+      const bindings=planner.nativeIdleStrollBindings();
+      if(bindings.length!==1||bindings[0].gateIds.length)return null;
+      const id=bindings[0].reference.actorId,e=planner.nativeIdleStrollExecution(id);
+      if(game.workers[0].id!=='worker-'+id||game.workers[0].nativeRouteAdmission!=='native-idle-stroll'||!e||e.arrived)return null;
+      await nativeIntentControl.waitForTerminalDraw();
+      const live=planner.nativeIdleStrollExecution(id);
+      if(nativeProduction.status().phase!=='suspended'||!live||live.arrived||live.binding.assignmentSequence!==e.binding.assignmentSequence)
+        throw Error('Idle22 source changed while waiting for terminal draw');
+      return id;
+    },
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
       nativeResourcePreparation?.dispose();
@@ -699,6 +716,43 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     prepareNativeTaskStartResources(resources,options){
       if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
       return nativeResourcePreparation.prepareNativeTaskStartResources(resources,options);
+    },
+    async attachHeldStroll(port,transportSession,holdId,receipt,actorId){
+      if(!Number.isSafeInteger(holdId)||holdId<1||closed||nativeProduction?.status().phase!=='suspended'||
+         await nativeProduction.quiesce()!==receipt)throw Error('Exact active native hold required');
+      const terminal=await nativeResourcePreparation.settleForRecovery();
+      const {current,pending,cohort}=nativeIntentControl.connections();
+      if(!terminal?.terminal||!terminal.callbacksSettled||!current?.closed||!current.drained||pending||cohort.consumers!==1||
+         nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
+      const execution=planner.nativeIdleStrollExecution(actorId);
+      if(!execution||execution.arrived)throw Error('Expected current moving Idle22');
+
+      const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,proof:execution.binding});
+      const liveExecution=planner.nativeIdleStrollExecution(actorId);
+      if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
+        !liveExecution||liveExecution.arrived||JSON.stringify(liveExecution)!==JSON.stringify(execution))
+        throw Error('Held source changed while installing replacement');
+      const binding=liveExecution.binding,boundary=binding.reference.worldBoundary;
+      const presentation=planner.captureNativeRoutePresentation(binding.reference.expectedRouteHandle);
+      const resources=copyRecoveredStrollResources({version:1,kind:22,phase:'committed',worldBoundary:boundary,
+        nativeRoute:presentation.nativeRoute,nativeIdleStrollBinding:binding,presentation});
+      const manifest=getTerrainManifest?.();
+      if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
+      return {...attachment,recoveredStroll:{version:1,holdId,publicationSequence:sequence,execution:liveExecution,resources,terrainManifest:manifest}};
+    },
+    async checkHeldDraw(holdId,receipt,actorId){
+      if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
+      const previous=planner.nativeIdleStrollExecution(actorId);
+      const fence=await nativeIntentControl.fenceGpu();
+      const draw=fence.recoveredSubmission;
+      if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
+         !sameHeld(previous,planner.nativeIdleStrollExecution(actorId),draw))throw Error('Missing submitted Idle22 at recovery cut');
+      return draw;
+      function sameHeld(before,after,row){
+        if(!before||!after||JSON.stringify(before)!==JSON.stringify(after)||row.assignmentSequence!==after.binding.assignmentSequence)return false;
+        const age=row.elapsed-after.binding.reference.worldBoundary.effectiveTime;
+        return row.elapsed===planner.nativeCausalClock().committedThrough&&row.relativeTime===recoveryFloorFloat32(age);
+      }
     },
     attachNativeIntentControl(port,transportSession){
       if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));

@@ -67,7 +67,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);if(record.committed)onCommit?.(record,data);return record.committed;},abort(){record.aborted=true;packet.abort();}};
  }});
  let sequence=0;
- const result={authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,
+ const result={retireResourceEndpoint:()=>endpoint.dispose(),authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,
   command(command){return authority.execute({...command,sequence:++sequence});},
   async structureCommand(command){const captured={...command,sequence:++sequence};await authority.beginNativeStructureCommand(captured);return authority.execute(captured);},
   snapshot(){return JSON.parse(authority.execute({kind:'snapshot',sequence:++sequence}).snapshot);},

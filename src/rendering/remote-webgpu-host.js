@@ -65,6 +65,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       session:request.session,authorityEpoch:request.authorityEpoch,consumerToken:nativeConsumerToken,
       opportunityId:request.opportunityId,accepted,...(reason?{reason}:{})});
   }
+  let recovered=null,recoveredSubmission=null;
   let nativeWorldBoundary=null,worldBoundaryRequired=false;
   const frameBoundary=packet=>packet.admittedWorldBoundary??packet.metadata?.nativeWorldBoundary??null;
   const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(frameBoundary(packet),nativeWorldBoundary);
@@ -856,6 +857,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
+      if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at&&
+        nativeRouteFrame.bindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref))){
+        const row=nativeRouteFrame.bindings.find(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref));
+        recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
+          assignmentSequence:recovered.assignmentSequence,nativeStroll:row.nativeStroll,elapsed:recovered.at,relativeTime:row.relativeTime};
+        recovered=null;
+      }
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
       samples[sampleCursor++ % samples.length] = { at: startedAt,sequence:active.sequence,trigger,nativeWorldBoundary:frameBoundary(active),intervalMs: previousFrameAt === null ? null : startedAt - previousFrameAt, drawMs: absoluteNow() - startedAt, replay: !next, clockElapsed, safeUntil: effectiveLease?.safeUntil ?? null, cameraVersion: camera?.version ?? null };
@@ -1161,6 +1169,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
+    if(recovered) {
+      if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
+         packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
+         !preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref)
+             &&b.epoch===recovered.ref.worldBoundary.effectiveTime&&b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime)))
+        throw Object.assign(Error('Replacement requires its bound Idle22 clock at the loss cut'),{code:'native-idle-stroll-admission-obsolete'});
+      if(recovered.install){recovered.install();recovered.install=null;}
+    }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
     const removedGate=packet.metadata.nativeBarrierAdditionTemplate?.removal;
     if(removedGate&&preparedBindings.some(binding=>(binding.nativeGate?.gateId??binding.nativeStopped?.gateId)===Number(removedGate.entityId.slice('structure-'.length))))throw Error('Native gate removal still includes its motor clock');
@@ -2155,7 +2171,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock?.clockSequence||
               message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
             throw Error('Invalid native GPU fence boundary');
-          lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
+          lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&nativeRouteFrame?.bindings.some(b=>b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recoveredSubmission.nativeStroll))?recoveredSubmission:null;
           // Snapshot the already-submitted GPU work now, outside the resource
           // FIFO. Future draws read the revoked records; late preparations must
           // still pass native admission. This is not a new clock/mutation permit.
@@ -2163,7 +2179,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             nativeGpuFences.delete(message.fenceId);
             if(stopped||failed||routeControl.status().closed)return;
             metrics.nativeIntentGpuFencedAt=absoluteNow();metrics.nativeIntentGpuFencedSequence=message.sequence;
-            intentControl.port.postMessage({type:'intent-control-fenced',fenceVersion:1,
+            intentControl.port.postMessage({type:'intent-control-fenced',fenceVersion:1,...(recoveredAtFence?{recoveredSubmission:recoveredAtFence}:{}),
               ...(intentControl.session?{session:intentControl.session}:{}),authorityEpoch:message.authorityEpoch,
               sequence:message.sequence,effectiveTime:message.effectiveTime,fenceId:message.fenceId,accepted:true,
               ...(message.clockSequence===undefined?{}:{clockSequence:message.clockSequence})});
@@ -2206,6 +2222,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
+           if(message.recoveredStroll!==undefined){
+             // Only a fresh receiver created for this exact recovery attempt.
+             const q=message.recoveredStroll;
+             if(!Number.isSafeInteger(intentControl.recoveryHold)||intentControl.recoveryHold<1||
+                q.holdId!==intentControl.recoveryHold||!nativeConsumerToken||q.consumerToken!==nativeConsumerToken||
+                !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered stroll attachment');
+             const proof=copyNativeIdleStrollAttestation(q.proof);
+             recovered={holdId:q.holdId,consumerToken:q.consumerToken,assignmentSequence:proof.assignmentSequence,ref:proof.reference,at:message.clock.committedThrough,
+               install:routeControl.prepareRecoveredStroll(proof,nativeWorldBoundary)};
+           }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');
           accepted=true;

@@ -799,6 +799,24 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       };
       counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },
+
+    prepareRecoveredStroll(input,boundary) {
+      const proof=copyNativeIdleStrollAttestation(input),ref=proof.reference;
+      const actor=actors.get(ref.actorId),record=actor?.current;
+      if(closed||!clock||actors.size!==1||active.size!==1||proof.gateIds.length||
+         !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||
+         actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:ref.expectedRouteHandle})||
+         !sameNativeWorldBoundary(boundary,ref.worldBoundary)||record.startTime!==boundary.effectiveTime||
+         clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||
+         clock.committedThrough<record.startTime||clock.committedThrough>ref.endTime)
+        throw Error('Recovered stroll conflicts with the fresh control baseline');
+      // While this source is waiting, an ordinary route selector cannot use the slot.
+      record.recoveringStroll=true;
+      return ()=>{if(closed||actors.get(ref.actorId)!==actor||active.get(ref.actorId)!==record||
+        actor.current!==record||actor.latestSequence!==proof.assignmentSequence||record.lastDrawTime!==null)
+        throw Error('Recovered stroll was revoked before materialization');
+        record.issuedStroll=actor.strollProof=proof;record.strollAdmitted=true;};
+    },
     installStrolls(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native Idle stroll requires prepared admission at its current boundary');
@@ -1013,6 +1031,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     admit({actorId,routeHandle,assignmentSequence}={}){
       if(closed)throw Error('Native route control is closed');
       const record=active.get(actorId);
+      if(record?.recoveringStroll)throw Error('Recovered stroll requires its typed resource');
       if(record?.issuedCrop)throw Error('Animal crop route requires its typed prepared admission');
       if(record?.issuedFarmArrival)throw Error('Native farm arrival requires its typed prepared admission');
       if(!record||!sameHandle(record.handle,routeHandle)||

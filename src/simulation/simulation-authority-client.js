@@ -1,3 +1,4 @@
+import {copyNativeIdleStrollResources,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
 // One ordered asynchronous authority. The caller must retain commands rejected
@@ -29,12 +30,12 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
   }
 
   function rejectNativeProductionControl(error){const item=nativeProductionControl;nativeProductionControl=null;item?.reject(error);}
-  function nativeProductionRequest(action,id,holdId=id,{withPublicationFloor=false}={}){
+  function nativeProductionRequest(action,id,holdId=id,{withPublicationFloor=false,forLostDraw=false}={}){
    if(state!=='ready'||nativeProductionControl)return Promise.reject(Error('Native production control unavailable'));
-   if(typeof withPublicationFloor!=='boolean'||withPublicationFloor&&action!=='quiesce')return Promise.reject(TypeError('Invalid native publication floor option'));
+   if(typeof forLostDraw!=='boolean'||forLostDraw&&!withPublicationFloor||typeof withPublicationFloor!=='boolean'||withPublicationFloor&&action!=='quiesce')return Promise.reject(TypeError('Invalid native publication floor option'));
    if(!Number.isSafeInteger(id)||id<=lastNativeProductionRequestId||!Number.isSafeInteger(holdId)||holdId<1||action==='resume'&&holdId>=id)return Promise.reject(Error('Invalid native production request identity'));
    lastNativeProductionRequestId=id;
-   return new Promise((resolve,reject)=>{const item={action,id,holdId,withPublicationFloor,resolve,reject};nativeProductionControl=item;try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{}),...(withPublicationFloor?{withPublicationFloor:true}:{})});}catch(error){if(nativeProductionControl===item)rejectNativeProductionControl(error);}});
+   return new Promise((resolve,reject)=>{const item={action,id,holdId,withPublicationFloor,forLostDraw,resolve,reject};nativeProductionControl=item;try{worker.postMessage({kind:action==='quiesce'?'quiesceNativeIntentProduction':'resumeNativeIntentProduction',session,id,...(action==='resume'?{holdId}:{}),...(withPublicationFloor?{withPublicationFloor:true}:{}),...(forLostDraw?{forLostDraw:true}:{})});}catch(error){if(nativeProductionControl===item)rejectNativeProductionControl(error);}});
   }
   function receiveNativeProductionControl(data){
    if(!['nativeIntentProductionQuiesced','nativeIntentProductionResumed','nativeIntentProductionControlError'].includes(data.kind))return false;
@@ -44,7 +45,10 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
    if(data.kind==='nativeIntentProductionControlError'){item.reject(Error(data.message||'Native production control failed'));return true;}
    if(state!=='ready'||data.version!==1||data.holdId!==item.holdId||data.kind!==(item.action==='quiesce'?'nativeIntentProductionQuiesced':'nativeIntentProductionResumed')){const error=Error('Invalid native production response');item.reject(error);fail(error);return true;}
    if(item.withPublicationFloor){const sent=inflight?.sequence??next-queue.length-1,confirmed=sent-(inflight?1:0),floor=data.publicationFloor;if(floor!==null&&(!Number.isSafeInteger(floor)||floor<confirmed||floor>sent)){const error=Error('Invalid native publication floor response');item.reject(error);fail(error);return true;}}
-   item.resolve({version:1,holdId:item.holdId,...(item.withPublicationFloor?{publicationFloor:data.publicationFloor}:{})});return true;
+   if(data.terminal!==undefined&&(!item.forLostDraw||data.terminal!==true||data.publicationFloor===null)){
+      const error=Error('Invalid terminal producer response');item.reject(error);fail(error);return true;
+   }
+   item.resolve({version:1,holdId:item.holdId,...(data.terminal?{terminal:true}:{}),...(item.withPublicationFloor?{publicationFloor:data.publicationFloor}:{})});return true;
   }
   function rejectNativeResourceAttachment(error){const item=nativeResourceAttachment;nativeResourceAttachment=null;if(item){item.reject(error);item.port.close?.();}}
   function receiveNativeResourceAttachment(data){if(!['nativeResourcePreparationAttached','nativeResourcePreparationAttachError'].includes(data.kind))return false;const item=nativeResourceAttachment;if(!item){fail(Error('Unexpected native resource attachment'));return true;}nativeResourceAttachment=null;if(data.kind==='nativeResourcePreparationAttachError')item.reject(Error(data.message||'Native resource attachment failed'));else if(data.version!==1){const error=Error('Invalid native resource attachment');item.reject(error);fail(error);}else item.resolve({version:1,session});return true;}
@@ -55,7 +59,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
  // ahead of an already queued action; advances alone cannot starve it.
   function pump(){if(state!=='ready'||inflight||reattach||inspection)return;try{
    if(nativeIntentAttachment){if(!nativeIntentAttachment.sent){nativeIntentAttachment.sent=true;
-    worker.postMessage({kind:'attachNativeIntentControl',session,port:nativeIntentAttachment.port},[nativeIntentAttachment.port]);}return;}
+    worker.postMessage({kind:'attachNativeIntentControl',session,...(nativeIntentAttachment.recoveryHold===undefined?{}:{recoveryHold:nativeIntentAttachment.recoveryHold}),port:nativeIntentAttachment.port},[nativeIntentAttachment.port]);}return;}
    if(terrainBlocked)return;
    if(farPending&&farOutstanding===null&&canDispatchFar()&&queue.every(item=>item.command.kind==='advance')){farOutstanding=farPending.id;worker.postMessage({kind:'farVisualQuery',session,id:farPending.id,request:farPending.request});}if(queue.length){inflight=queue.shift();worker.postMessage({kind:'command',session,command:{...inflight.command,sequence:inflight.sequence}});}}catch(error){fail(error);}}
   function receiveNativeIntentControl(data){
@@ -66,16 +70,34 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
    if(data.kind==='nativeIntentControlAttachError')item.reject(Error(data.message||'Native intent control attachment failed'));
    else if(typeof data.authorityEpoch!=='string'||!data.authorityEpoch||!Number.isSafeInteger(data.sequence)||data.sequence<0){
     const error=Error('Invalid native intent control attachment');item.reject(error);fail(error);
-   }else item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence});
+   }else{
+      try{
+        let recoveredStroll;
+        if(item.recoveryHold!==undefined||data.recoveredStroll!==undefined){
+          const q=data.recoveredStroll,b=q?.execution;
+          if(q?.version!==1||item.recoveryHold===undefined||q.holdId!==item.recoveryHold||
+             !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
+             b?.kind!=='native-idle-stroll-execution'||b.arrived!==false||!Number.isFinite(b.executedThrough)||
+             !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
+          const resources=copyNativeIdleStrollResources(q.resources),ref=resources.nativeIdleStrollBinding.reference;
+          if(resources.worldBoundary.authorityEpoch!==data.authorityEpoch||ref.actorId!==b.actorId||ref.bodyId!==b.bodyId||
+             b.executedThrough<ref.worldBoundary.effectiveTime||b.executedThrough>=ref.endTime||
+             !sameNativeIdleStrollAttestation(resources.nativeIdleStrollBinding,b.binding))
+            throw Error('Invalid replacement committed assignment');
+          recoveredStroll={...q,resources};
+        }
+        item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredStroll?{recoveredStroll}:{})});
+      }catch(error){item.reject(error);fail(error);return true;}
+   }
    pump();return true;
   }
-  const nativeIntentControlApi={prepareNativeStructureCommand:command=>nativeStructureRequest('prepare',command),finishNativeStructureCommand:command=>nativeStructureRequest('finish',command),quiesceNativeIntentProduction(id,options){return nativeProductionRequest('quiesce',id,id,options);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port){
+  const nativeIntentControlApi={prepareNativeStructureCommand:command=>nativeStructureRequest('prepare',command),finishNativeStructureCommand:command=>nativeStructureRequest('finish',command),quiesceNativeIntentProduction(id,options){return nativeProductionRequest('quiesce',id,id,options);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port,{recoveryHold}={}){
    if(state!=='ready'||nativeResourceAttachment||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native resource attachment unavailable'));
-   return new Promise((resolve,reject)=>{nativeResourceAttachment={port,resolve,reject};try{worker.postMessage({kind:'attachNativeResourcePreparation',session,port},[port]);}catch(error){rejectNativeResourceAttachment(error);}});
-  },attachNativeIntentControl(port){
+   return new Promise((resolve,reject)=>{nativeResourceAttachment={port,resolve,reject};try{worker.postMessage({kind:'attachNativeResourcePreparation',session,port,...(recoveryHold===undefined?{}:{recoveryHold})},[port]);}catch(error){rejectNativeResourceAttachment(error);}});
+  },attachNativeIntentControl(port,{recoveryHold}={}){
    if(state!=='ready'||nativeIntentAttachment||!port||typeof port.postMessage!=='function')
     return Promise.reject(Error('Native intent control attachment unavailable'));
-   return new Promise((resolve,reject)=>{nativeIntentAttachment={port,resolve,reject,sent:false};pump();});
+   return new Promise((resolve,reject)=>{nativeIntentAttachment={port,recoveryHold,resolve,reject,sent:false};pump();});
   }};
   worker.onmessage=({data})=>{if(data?.session!==session){fail(Error('Simulation session mismatch'));return;}if(receiveNativeStructureControl(data)||receiveNativeProductionControl(data)||receiveNativeResourceAttachment(data)||receiveNativeIntentControl(data))return;if(data.kind==='farVisualSnapshot'){if(!farVisualQueries){fail(Error('Unexpected far visual snapshot'));return;}if(farReplicaWorkerFactory!==undefined||typeof Worker!=='undefined'){farReplica??=createFarVisualReplicaClient({session,...(farReplicaWorkerFactory?{workerFactory:farReplicaWorkerFactory}:{})});farReplica.updateSnapshot(data);}return;}if(data.kind==='farVisualResult'){if(!Number.isSafeInteger(data.id)||data.id<1||data.id>farSerial){fail(Error('Invalid far visual response'));return;}if(data.id!==farOutstanding)return;farOutstanding=null;if(!farPending||data.id!==farPending.id)return;if(data.error!==undefined){finishFar(null,Error(String(data.error)));return;}const value=data.result;if(value!==null&&(!value||(!Number.isSafeInteger(value.sequence)||value.sequence<farPending.expectedSequence||farPending.expectedRevision===null&&value.sequence!==farPending.expectedSequence)||value.cx!==farPending.cx||value.cz!==farPending.cz||!Number.isSafeInteger(value.revision)||value.revision<1||farPending.expectedRevision!==null&&value.revision!==farPending.expectedRevision||!Number.isFinite(value.elapsed)||!Array.isArray(value.instances)||value.instances.length!==20||value.instances.some((items,slot)=>!Array.isArray(items)||!farPending.slots.has(slot)&&items.length>0||items.some(item=>typeof item?.id!=='string'||!item.id||item.slot!==slot||![item.x,item.y,item.z,item.yaw,item.sx,item.sy,item.sz].every(Number.isFinite))))){finishFar(null,Error('Invalid far visual result'));return;}finishFar(value);return;}if(data.kind==='terrainRecoveryHandoff'||data.kind==='terrainRecoveryHandoffError'){if(!inspection||state!=='ready'){fail(Error('Unexpected terrain recovery inspection'));return;}const done=inspection;inspection=null;if(data.kind==='terrainRecoveryHandoffError')done.reject(Error(data.message||'Terrain recovery inspection failed'));else if(data.handoff?.lastSequence!==done.through||typeof data.handoff?.epoch!=='string'||!Array.isArray(data.handoff.chunks))done.reject(Error('Invalid terrain recovery handoff'));else done.resolve(data.handoff);pump();return;}if(data.kind==='terrainReattachError'){if(!reattach||state!=='ready'){fail(Error('Unexpected terrain reattachment error'));return;}const done=reattach;reattach=null;done.reject(Error(data.message||'Terrain reattachment failed'));pump();return;}if(data.kind==='terrainHistoryDetached'){const error=Error(data.message||'Terrain history detached');if(recoverHistoricalTerrainFailures&&state==='ready'&&!reattach&&!inspection&&!terrainFailure){terrainFailure=error;terrainBlocked=true;try{onTerrainPressure?.(true);onTerrainFailure(error);}catch(failure){fail(failure);}return;}fail(error);return;}if(data.kind==='terrainHistoryFailure'){const error=Error(data.message||'Terrain history failed');if(recoverHistoricalTerrainFailures&&state==='ready'&&!inflight&&!reattach&&!inspection&&!terrainFailure){terrainFailure=error;terrainBlocked=true;try{onTerrainPressure?.(true);onTerrainFailure(error);}catch(failure){fail(failure);}return;}fail(error);return;}if(data.kind==='terrainPressure'){if(!terrainHistory||typeof data.blocked!=='boolean'){fail(Error('Invalid terrain pressure'));return;}terrainBlocked=data.blocked;try{onTerrainPressure?.(terrainBlocked);if(!terrainBlocked)pump();}catch(error){fail(error);}return;}if(data.kind==='terrainReattached'){if(!reattach||state!=='ready'){fail(Error('Unexpected terrain reattachment'));return;}const done=reattach;reattach=null;if(done.bootstrap)bootstrapAvailable=false;if(done.historical)terrainFailure=null;done.resolve();pump();return;}if(data.kind==='terrainJournal'){if(!onTerrainJournal||state!=='ready'||!inflight||data.sequence!==inflight.sequence||!Array.isArray(data.chunks)){fail(Error('Invalid terrain journal'));return;}try{onTerrainJournal(data.sequence,data.chunks,data.terrainManifest??null);}catch(error){fail(error);}return;}if(data.kind==='ready'&&state==='initializing'){state='ready';resolveReady();pump();return;}if(data.kind==='error'){fail(Error(data.message));return;}if(data.kind!=='result'||state!=='ready'||!inflight||data.sequence!==inflight.sequence){fail(Error('Unexpected simulation response'));return;}let result;try{result=decoder?decoder.decode({kind:'publication',publication:data}).publication:data;}catch(error){fail(error);return;}farReplica?.confirm({sequence:result.sequence,elapsed:result.elapsed,revision:result.farVisualRevision});const item=inflight;inflight=null;item.resolve(result);pump();};
  worker.onerror=event=>fail(Error(event.message||'Simulation worker failed'));worker.onmessageerror=()=>fail(Error('Simulation worker message failed'));

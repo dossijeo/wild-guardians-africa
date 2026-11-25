@@ -36,8 +36,8 @@ export function createNativeIntentControlPublication({port,session,observe,
   let nextMutationFence=0,mutationHold=null;
   let mutationOpportunityVersion=0,nextMutationOpportunity=0,mutationOpportunity=null;
   const consumerToken=crypto.randomUUID();
-  let retirement=null,drained=false,consumerDrainReceipt=null;
-  let worldBoundary=null;
+  let retirement=null,drained=false,consumerDrainReceipt=null,terminalWait=null;
+  let worldBoundary=null,recoveryBaseline=null;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
     if(record?.protocolVersion!==2||record.clockVersion!==1||record.authorityEpoch!==authorityEpoch||record.intentSequence!==sentSequence||
@@ -61,6 +61,8 @@ export function createNativeIntentControlPublication({port,session,observe,
   ready.catch(()=>{});
   function dispose(reason='disposed'){
     if(closed)return;closed=true;clearTimeout(timer);stop?.();stop=null;
+    if(terminalWait){clearTimeout(terminalWait.timer);if(consumerDrainReceipt)terminalWait.resolve(consumerDrainReceipt);
+      else terminalWait.reject(Error('Direct consumer closed without a terminal receipt'));terminalWait=null;}
     for(const fence of gpuFences.values()){clearTimeout(fence.timer);fence.reject(Error('Native GPU fence closed: '+(fault??reason)));}
     gpuFences.clear();
     if(mutationOpportunity){clearTimeout(mutationOpportunity.timer);mutationOpportunity.cleanup();mutationOpportunity.reject(Error('Native mutation opportunity closed: '+(fault??reason)));mutationOpportunity=null;}
@@ -139,8 +141,15 @@ export function createNativeIntentControlPublication({port,session,observe,
           data.clockSequence!==fence.clockSequence){
         fail(Error('Invalid native GPU fence acknowledgement'));return;
       }
+      const draw=data.recoveredSubmission;
+      if(draw&&(!recoveryBaseline||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
+         draw.assignmentSequence!==recoveryBaseline.proof.assignmentSequence||!Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||
+         !sameNativeIdleStrollReference(draw.nativeStroll,recoveryBaseline.proof.reference)||draw.elapsed!==fence.effectiveTime||
+         !Number.isFinite(draw.relativeTime)||draw.relativeTime<0)){
+        fail(Error('Invalid recovered frame at native fence'));return;
+      }
       gpuFences.delete(data.fenceId);clearTimeout(fence.timer);
-       fence.resolve({authorityEpoch,sequence:fence.sequence,effectiveTime:fence.effectiveTime,fenceId:data.fenceId,
+       fence.resolve({...(draw?{recoveredSubmission:draw}:{}),authorityEpoch,sequence:fence.sequence,effectiveTime:fence.effectiveTime,fenceId:data.fenceId,
          ...(fence.clockSequence===undefined?{}:{clockSequence:fence.clockSequence})});return;
     }
     if(data?.type!=='intent-control-applied'||data.session!==session||
@@ -175,8 +184,8 @@ export function createNativeIntentControlPublication({port,session,observe,
         const initial=baseline.clock?prepareClock(baseline.clock,{baseline:true}):null;
         if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
           throw Error('Native world resources precede their causal baseline');
-        baselineClockSequence=initial?.clockSequence??null;
-        port.postMessage({...baseline,...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
+        baselineClockSequence=initial?.clockSequence??null;recoveryBaseline=baseline.recoveredStroll??null;
+        port.postMessage({...baseline,...(baseline.recoveredStroll?{recoveredStroll:{...baseline.recoveredStroll,consumerToken}}:{}),...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
       },
       onClock(record){
         if(closed||retirement)return;
@@ -412,7 +421,16 @@ export function createNativeIntentControlPublication({port,session,observe,
     catch(error){fail(error);}
     return promise;
   }
-  return Object.assign(publication,{ready,dispose,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,
+
+    function waitForTerminalDraw(){
+      if(consumerDrainReceipt)return Promise.resolve(consumerDrainReceipt);
+      if(closed||terminalWait||retirement||appliedSequence===null||mutationHold||gpuFences.size)
+        return Promise.reject(Error('Terminal draw observation unavailable'));
+      return new Promise((resolve,reject)=>{terminalWait={resolve,reject,timer:setTimeout(()=>{
+        terminalWait=null;reject(Error('Timed out waiting for the previous draw to retire'));
+      },timeoutMs)};});
+    }
+    return Object.assign(publication,{ready,dispose,waitForTerminalDraw,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,retireGpu,
     ownsGpuConsumer:consumer=>consumer===publication,status:()=>({session,authorityEpoch,baselineSequence,
     sentSequence,sentTime,appliedSequence,pendingGpuFences:gpuFences.size,closed,fault,
     ...(clock?{clockSequence:clock.clockSequence,appliedClockSequence,pendingClockReceipts:clockReceipts.size}:{} ),

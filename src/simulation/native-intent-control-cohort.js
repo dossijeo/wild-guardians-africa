@@ -20,9 +20,9 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
     for(const member of members)member.dispose('cohort-failed');
     try{onError(error instanceof Error?error:Error(fault));}catch{}
   }
-  async function attach(port,session){
+  async function attach(port,session,recoveredStroll=null){
     if(status().closed||pending||boundary)throw Error('Native intent control attachment unavailable');
-    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe,controlOwner:api,onError:fail});
+    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe:recoveredStroll===null?observe:observers=>observe({...observers,recoveredStroll}),controlOwner:api,onError:fail});
     members.add(candidate);pending=candidate;
     try{
       const result=await candidate.ready;
@@ -85,7 +85,19 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
       boundary=null;return true;
     }catch(error){fail(error);throw error;}
   }
-  const api={attach,status,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,ownsGpuConsumer:consumer=>members.has(consumer),
+
+    async function waitForTerminalDraw(){
+      if(closed||fault||pending||boundary||members.size!==1||!current||!members.has(current))
+        throw Error('Terminal recovery requires a single current draw');
+      const member=current,tx={kind:'terminal-observation'};boundary=tx;
+      try{
+        const receipt=await member.waitForTerminalDraw();
+        if(closed||fault||pending||current!==member||boundary!==tx||!member.status().drained)
+          throw Error('Previous direct draw changed during terminal observation');
+        return receipt;
+      }finally{if(boundary===tx)boundary=null;}
+    }
+    const api={attach,status,waitForTerminalDraw,fenceGpu,waitForMutationOpportunity,quiesceGpuForMutation,releaseGpuAfterMutation,ownsGpuConsumer:consumer=>members.has(consumer),
     connections:()=>({current:current?.status()??null,pending:pending?.status()??null,cohort:status()}),
     dispose(reason='disposed'){if(closed)return;closed=true;for(const member of members)member.dispose(reason);}};
   return api;

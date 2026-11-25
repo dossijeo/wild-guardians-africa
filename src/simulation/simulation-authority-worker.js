@@ -61,6 +61,7 @@ self.onmessage=async ({data})=>{
     const source=authority;let createdHold=null;
     try{
      if(!Number.isSafeInteger(data.id)||data.id<=lastNativeProductionRequestId)throw Error('Invalid native production request identity');
+     if(data.forLostDraw!==undefined&&(data.forLostDraw!==true||data.withPublicationFloor!==true||data.kind!=='quiesceNativeIntentProduction'))throw Error('Invalid loss request');
      if(data.withPublicationFloor!==undefined&&(data.kind!=='quiesceNativeIntentProduction'||data.withPublicationFloor!==true))throw Error('Invalid native publication floor request');
      lastNativeProductionRequestId=data.id;
      if(data.kind==='quiesceNativeIntentProduction'){
@@ -71,15 +72,25 @@ self.onmessage=async ({data})=>{
       createdHold.receipt=receipt;
       // The checkpoint recovery path may consume a terminal callback receipt;
       // native consumer retirement still requires its independent GPU proof.
-      await source.flushNativeResourcePreparation({allowRetired:data.withPublicationFloor===true});
+      const settled=await source.flushNativeResourcePreparation({allowRetired:data.withPublicationFloor===true});
       if(authority!==source||nativeProductionHold!==createdHold)return;
       const publicationFloor=data.withPublicationFloor===true&&receipt!==null?source.nativeIntentProductionStatus().publicationSequence:null;
       if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');
+
+      if(data.forLostDraw&&receipt!==null&&settled?.terminal===true&&settled.callbacksSettled===true)
+        createdHold.terminalActor=await source.terminalIdleStrollActor();
+      if(authority!==source||nativeProductionHold!==createdHold)return;
       createdHold.settled=true;
-      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(data.withPublicationFloor===true?{publicationFloor}:{})});
+      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(createdHold.terminalActor?{terminal:true}:{}),...(data.withPublicationFloor===true?{publicationFloor}:{})});
      }else{
       const hold=nativeProductionHold;
       if(!hold?.settled||data.holdId!==hold.id||!Number.isSafeInteger(data.holdId)||data.holdId<1||data.holdId>=data.id)throw Error('Native production hold is stale or unavailable');
+
+      if(hold.terminalActor){
+        if(!hold.replacement||source.nativeResourcePreparationStatus()?.phase!=='running')throw Error('Replacement is not ready for resume');
+        await source.checkHeldDraw(hold.id,hold.receipt,hold.terminalActor);
+        if(authority!==source||nativeProductionHold!==hold||source.nativeResourcePreparationStatus()?.phase!=='running')throw Error('Replacement changed during resume');
+      }
       if(source.resumeNativeIntentProduction(hold.receipt)!==true)throw Error('Native production did not resume');
       nativeProductionHold=null;postMessage({kind:'nativeIntentProductionResumed',session,id:data.id,version:1,holdId:hold.id});
      }
@@ -87,13 +98,32 @@ self.onmessage=async ({data})=>{
     return;
    }
    if(data.kind==='attachNativeResourcePreparation'){
-    try{const result=await authority.attachNativeResourcePreparation(data.port,session);postMessage({kind:'nativeResourcePreparationAttached',session,...result});}
+    try{
+    const held=nativeProductionHold,source=authority;
+    if(data.recoveryHold!==undefined||held?.terminalActor){
+      if(!held?.terminalActor||!held.settled||!held.replacement||held.id!==data.recoveryHold)
+        throw Error('Invalid terminal replacement resource attachment');
+      await source.checkHeldDraw(held.id,held.receipt,held.terminalActor);
+      if(held!==nativeProductionHold||source!==authority)throw Error('Terminal replacement changed during fence');
+    }
+    const result=await source.attachNativeResourcePreparation(data.port,session);postMessage({kind:'nativeResourcePreparationAttached',session,...result});}
     catch(error){data.port?.close?.();postMessage({kind:'nativeResourcePreparationAttachError',session,message:String(error?.message??error)});}
     return;
    }
    if(data.kind==='attachNativeIntentControl'){
     try{
-      const result=await authority.attachNativeIntentControl(data.port,session);
+
+      const hold=nativeProductionHold;
+      let result;
+      if(data.recoveryHold!==undefined){
+       if(!hold?.terminalActor||!hold.settled||data.recoveryHold!==hold.id)throw Error('Invalid replacement hold');
+       // A retry keeps its original hold. The previous replacement must itself
+       // have completed the direct retirement before a new Draw can take it.
+       if(hold.replacement&&!authority.nativeIntentControlStatus().current?.drained)throw Error('Previous replacement is still live');
+        result=await authority.attachHeldStroll(data.port,session,hold.id,hold.receipt,hold.terminalActor);
+        if(nativeProductionHold!==hold)throw Error('Stale replacement hold');
+        hold.replacement=true;
+      }else result=await authority.attachNativeIntentControl(data.port,session);
       postMessage({kind:'nativeIntentControlAttached',session,...result});
     }catch(error){data.port?.close?.();postMessage({kind:'nativeIntentControlAttachError',session,message:String(error?.message??error)});}
     return;

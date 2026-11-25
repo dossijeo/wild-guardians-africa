@@ -1,3 +1,5 @@
+import {fixture as createRemoteFixture} from './helpers/remote-webgpu-fixture.js';
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {wallVisualAt,WALL_REPAIR_DURATION} from '../src/simulation/structure-presentation.js';
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
@@ -532,4 +534,62 @@ test('paused ordinary Harvest discards late Carry READY and settles the original
   assert.equal(f.created(),1);
   assert.deepEqual(f.native.faults,[]);
  }finally{releaseCarry();await f?.close();fixture.close();}
+});
+
+test('a terminal Idle22 hold resumes only from the first matching submit on its replacement Draw',async()=>{
+ const f=await sourceFixture();
+ const terrain=new MessageChannel(),control=new MessageChannel(),resources=new MessageChannel();
+ const client=createSimulationAuthorityClient({session:'s',snapshot:f.snapshot,terrainPort:terrain.port1,
+   chunkKeys:Array.from({length:9},(_,i)=>(i%3-1)+','+(Math.floor(i/3)-1)),workerFactory:()=>f.sourceWorker});
+ const interruptedControl=new MessageChannel();
+ let interrupted,replacement,endpoint;
+ try{
+   await client.ready;await client.submit({kind:'snapshot'}).result;
+   await client.attachNativeIntentControl(f.native.controlPort);
+   await client.attachNativeResourcePreparation(f.native.resourcePort);
+   await until(()=>f.native.records.some(r=>r.committed),()=>f.native.present());
+   await client.submit({kind:'resume',reason:'menu'}).result;
+   const at=(await client.submit({kind:'advance',steps:2,seconds:.05,nightFastForward:false}).result).elapsed;
+   const live=await client.quiesceNativeIntentProduction(30,{withPublicationFloor:true,forLostDraw:true});
+   assert.equal(live.terminal,undefined);await client.resumeNativeIntentProduction(30,31);
+   f.native.gpu.device.destroy();
+   await until(()=>f.native.authority.nativeIntentControlStatus().current?.drained);
+   f.native.retireResourceEndpoint();
+   const cut=await client.quiesceNativeIntentProduction(32,{withPublicationFloor:true,forLostDraw:true});
+   assert.equal(cut.terminal,true);
+   await assert.rejects(client.resumeNativeIntentProduction(32,33),/Replacement is not ready/);
+   interrupted=await createRemoteFixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeIdleStrollVersion:1}},
+      {intentControl:{port:interruptedControl.port2,session:'s',recoveryHold:cut.holdId}});
+   await client.attachNativeIntentControl(interruptedControl.port1,{recoveryHold:cut.holdId});
+   const competing=new MessageChannel();
+   try{await assert.rejects(client.attachNativeIntentControl(competing.port1,{recoveryHold:cut.holdId}),/Previous replacement is still live/);}
+   finally{competing.port1.close();competing.port2.close();}
+   interrupted.gpu.device.destroy();
+   await until(()=>f.native.authority.nativeIntentControlStatus().current?.drained);
+   replacement=await createRemoteFixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeIdleStrollVersion:1}},
+      {intentControl:{port:control.port2,session:'s',recoveryHold:cut.holdId}});
+   const {recoveredStroll:q}=await client.attachNativeIntentControl(control.port1,{recoveryHold:cut.holdId});
+   assert.equal(q.holdId,cut.holdId);assert.equal(q.execution.executedThrough,at);
+   const ref=q.resources.nativeIdleStrollBinding.reference,epoch=ref.worldBoundary.effectiveTime;
+   const early=new MessageChannel();
+   try{await assert.rejects(client.attachNativeResourcePreparation(early.port1,{recoveryHold:cut.holdId}),/Missing submitted/);}
+   finally{early.port1.close();early.port2.close();}
+   replacement.client.registerClockBinding(replacement.buffer,{byteOffset:0,epoch,semantic:'relative',
+     nativeStroll:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+   const frame=replacement.frame(77,{nativeWorldBoundary:ref.worldBoundary,
+     clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
+   await flush();await replacement.host.idle();replacement.host.present();await frame;
+   assert.equal(replacement.host.inspect().nativeRouteFrame.bindings.find(b=>b.nativeStroll)?.relativeTime,floorFloat32(at-epoch));
+   endpoint=attachNativeResourcePreparationEndpoint({port:resources.port2,session:'s',isRunning:()=>true,
+     prepare:async()=>{throw Error('Unexpected preparation during hold');}});
+   await client.attachNativeResourcePreparation(resources.port1,{recoveryHold:cut.holdId});
+   await client.resumeNativeIntentProduction(32,34);
+   const next=await client.submit({kind:'advance',steps:1,seconds:.05,nightFastForward:false}).result;
+   assert.equal(next.sequence,q.publicationSequence+1);assert(Math.abs(next.elapsed-at-.05)<1e-8);
+ }finally{
+   client.dispose();endpoint?.dispose();replacement?.client.dispose();await replacement?.host.dispose();
+   interrupted?.client.dispose();await interrupted?.host.dispose();
+   for(const channel of [terrain,control,resources,interruptedControl]){channel.port1.close();channel.port2.close();}
+   await f.close();
+ }
 });

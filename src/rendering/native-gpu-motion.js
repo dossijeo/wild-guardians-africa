@@ -3,7 +3,7 @@ import {prepareAnimalCropGpuTable} from './native-route-gpu-table.js';
 import {nativeFarmIdlePhaseOffset} from './native-farm-idle-phase.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeStoppedBodySelector} from './native-stopped-clock.js';
-import {nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
+import {copyNativeIdleStrollResources,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
 import {nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
 import {nativeHomeRouteSuccessor} from '../world/native-home-route.js';
 import {nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
@@ -51,9 +51,25 @@ function routeData(table,resourceRegistry){
  try{if(resourceRegistry){lease=resourceRegistry.adopt({namespace:'native-gpu-motion',key:String(++nextResource),bytes:table.data.byteLength,dispose:()=>texture.dispose()});lease.commit();}}catch(error){if(lease)lease.release();else texture.dispose();throw error;}
  return {table,texture,retain(){if(closed)throw Error('Native route data retired');refs++;let released=false;return ()=>{if(released)return;released=true;if(--refs===0){closed=true;if(lease)lease.release();else texture.dispose();}};},references:()=>refs};
 }
-function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition=null,resourceRegistry=null},shared=null,suspension=null){
+// Creates graphical data only. The direct authority channel must separately
+// authorize presentation on the new consumer before the runtime releases hold.
+export function createRecoveredIdleStrollGpuMotion({resources,terrain,terrainManifest,...options}) {
+  const source = copyNativeIdleStrollResources(resources);
+  const support = terrain.prepareNativeRoute(source.presentation, {terrainManifest});
+  if (!support?.valid()) throw Error('Recovered Idle22 corridor is not resident');
+  const {nativeRoute, ...table} = prepareNativeRouteGpuTable(support);
+  const ref = source.nativeIdleStrollBinding.reference;
+  if (nativeRoute.assignmentSequence !== source.nativeIdleStrollBinding.assignmentSequence) {
+    throw Error('Recovered Idle22 assignment changed');
+  }
+  const restored = createMotion({...options,support}, null, null, {...table,nativeStroll:ref});
+  restored.seal();
+  return restored;
+}
+
+function createMotion({actorId,support,anchorYaw=0,heightOffset=0,anchorPosition=null,resourceRegistry=null},shared=null,suspension=null,recoveredTable=null){
  if(typeof actorId!=='string'||!actorId||![anchorYaw,heightOffset].every(Number.isFinite)||anchorPosition!==null&&![anchorPosition?.x,anchorPosition?.y,anchorPosition?.z].every(Number.isFinite)||resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function')throw TypeError('Invalid native GPU motion configuration');
- let table=shared?.table??(support?.kind==='native-animal-crop-route-support'?prepareAnimalCropGpuTable(support):support?.kind==='native-farm-arrival-terrain-support'?prepareNativeFarmArrivalGpuTable(support):support?.kind==='native-idle-stroll-terrain-support'?prepareNativeIdleStrollGpuTable(support):support?.kind==='native-home-route-terrain-support'?prepareNativeHomeRouteGpuTable(support):support?.kind==='native-task-consequence-terrain-support'?prepareNativeTaskConsequenceGpuTable(support):support?.kind==='native-resume-terrain-support'?prepareNativeResumeGpuTable(support):support?.kind==='native-task-start-terrain-support'?prepareNativeTaskStartGpuTable(support):prepareNativeRouteGpuTable(support));
+ let table=shared?.table??recoveredTable??(support?.kind==='native-animal-crop-route-support'?prepareAnimalCropGpuTable(support):support?.kind==='native-farm-arrival-terrain-support'?prepareNativeFarmArrivalGpuTable(support):support?.kind==='native-idle-stroll-terrain-support'?prepareNativeIdleStrollGpuTable(support):support?.kind==='native-home-route-terrain-support'?prepareNativeHomeRouteGpuTable(support):support?.kind==='native-task-consequence-terrain-support'?prepareNativeTaskConsequenceGpuTable(support):support?.kind==='native-resume-terrain-support'?prepareNativeResumeGpuTable(support):support?.kind==='native-task-start-terrain-support'?prepareNativeTaskStartGpuTable(support):prepareNativeRouteGpuTable(support));
  if(nativeEntityNumericId(actorId)!==(table.nativeAnimalCrop?.actorId??table.nativeRoute?.actorId??table.nativeResume?.actorId??table.nativeStart?.actorId??table.nativeConsequence?.actorId??table.nativeStroll?.actorId??table.nativeHome?.actorId??table.nativeFarmArrival?.actorId))throw TypeError('Native GPU actor identity mismatch');
  const data=shared??routeData(table,resourceRegistry),releaseData=data.retain(),texture=data.texture,held=suspension?.pose??new Float64Array(18);let start=Object.freeze(suspension?{at:suspension.reference.suspendedAt,x:held[0],y:suspension.height+heightOffset,z:held[1]}:{...table.start,y:table.start.y+heightOffset}),end=Object.freeze(suspension?{...start}:{...table.end,y:table.end.y+heightOffset});const bindingAnchor=Object.freeze(anchorPosition?{x:anchorPosition.x,y:anchorPosition.y,z:anchorPosition.z}:{x:start.x,y:start.y,z:start.z}),clockNode=table.nativeAnimalCrop?markRemoteAnimalCropNode(uniform(0),table.nativeAnimalCrop):suspension?.stop?markRemoteStoppedNode(uniform(0),suspension.stop,table.epoch):markRemoteClockNode(uniform(0),'relative',table.epoch,suspension?null:table.nativeRoute??null,null,suspension?.reference??null,suspension?null:table.nativeResume??null,null,suspension?Number.MAX_SAFE_INTEGER:nativeClockResourceEnd(table.epoch,table.end.at),suspension?null:table.nativeStart??null,null,suspension?null:table.nativeConsequence??null,null,suspension?null:table.nativeHome??null,null,null,suspension?null:table.nativeStroll??null,suspension?null:table.nativeFarmArrival??null),bindings=new Map(),idlePhases=new Map(),anchor=uniform(new Vector3(bindingAnchor.x,bindingAnchor.y,bindingAnchor.z)),parameters=uniform(new Vector4(table.count,table.columns,table.duration,anchorYaw)),heldFlag=uniform(suspension?.stop?2:suspension?1:0),heldPose=uniform(new Vector4(held[0],suspension?.height??0,held[1],held[4])),heldPhases=uniform(new Vector4(held[3],held[9],held[10],held[11])),heldArrived=uniform(held[6]);
  let executionEpoch=table.epoch;let disposed=false,sealed=!!suspension||!(table.nativeResume||table.nativeStart||table.nativeConsequence||table.nativeHome||table.nativeStroll||table.nativeFarmArrival);

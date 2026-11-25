@@ -370,21 +370,36 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
         const prepared=await runtime.prepareVisualRecovery(),checkpoint=prepared.checkpoint;
         if(!checkpoint?.terrainCheckpoint||owner.confirmedWorkerVisualHeadings instanceof Map&&!Array.isArray(checkpoint.terrainCheckpoint.workerHeadings)||owner!==world||ownerState!==state||owner.disposed)throw Error('Invalid or stale visual recovery checkpoint');
         previous=owner.webGpuWorld;
-        if(temporalOptions?.recovery&&typeof previous?.client.prepareRetainedRecovery==='function'){
+        if(prepared.terminalHoldId===undefined&&temporalOptions?.recovery&&typeof previous?.client.prepareRetainedRecovery==='function'){
           try{transport=await previous.client.prepareRetainedRecovery();retained=true;client=previous.client;canvas=previous.canvas;}catch{if(!current())throw Error('World changed during visual recovery');}
         }
         if(!current())throw Error('World changed during visual recovery');
         if(!retained){
           canvas=document.createElement('canvas');canvas.className='qa-webgpu-world';canvas.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;visibility:hidden';owner.canvas.parentElement.append(canvas);
           const channel=new MessageChannel();intentControl=import.meta.env.VITE_WEBGPU_REMOTE_DRAW==='true'?new MessageChannel():null;
-          client=createWebGpuWorldClient({canvas,session,snapshot:checkpoint.snapshot,presentationWorkerHeadingSeed:checkpoint.terrainCheckpoint.workerHeadings??null,initialSequence:checkpoint.sequence,recoveryPort:channel.port1,...(temporalOptions?.recovery?{experimentalTimelineRecovery:true}:{}),camera:camera(),width:owner.canvas.width,height:owner.canvas.height,...worldOptions,intentControlPort:intentControl?.port2??null,quality:owner.quality??'media',onResourceError:onGpuResourceError,onStructureFrame:id=>owner.structureInputFeedback?.remove(id,client),onGuardianPresence:(id,origin)=>{if(owner===world&&ownerState===state&&owner.workerGpuOnly&&!owner.disposed&&owner.webGpuWorld?.client===client)owner.onGuardianPresence?.(id,origin,()=>!owner.disposed&&owner.webGpuWorld?.client===client);},onError:failure=>handleGpuError(client,canvas,failure)});
+          client=createWebGpuWorldClient({canvas,session,snapshot:checkpoint.snapshot,recoveryHold:prepared.terminalHoldId??null,presentationWorkerHeadingSeed:checkpoint.terrainCheckpoint.workerHeadings??null,initialSequence:checkpoint.sequence,recoveryPort:channel.port1,...(temporalOptions?.recovery?{experimentalTimelineRecovery:true}:{}),camera:camera(),width:owner.canvas.width,height:owner.canvas.height,...worldOptions,intentControlPort:intentControl?.port2??null,quality:owner.quality??'media',onResourceError:onGpuResourceError,onStructureFrame:id=>owner.structureInputFeedback?.remove(id,client),onGuardianPresence:(id,origin)=>{if(owner===world&&ownerState===state&&owner.workerGpuOnly&&!owner.disposed&&owner.webGpuWorld?.client===client)owner.onGuardianPresence?.(id,origin,()=>!owner.disposed&&owner.webGpuWorld?.client===client);},onError:failure=>handleGpuError(client,canvas,failure)});
           transport={terrainPort:client.terrainPort,presentationPort:client.presentationPort,recoveryPort:channel.port2,intentControlPort:intentControl?.port1??null};
         }
         owner.pendingQualityClient=client;if(import.meta.env.DEV)owner.qaRecoveryClient=client;
         await client.ready;if(!current())throw Error('World changed during visual recovery');
         client.setQuality(owner.quality??'media');client.setAwakeningSelection(owner.awakeningSelecting===true,owner.awakeningTargetId??null);client.setPresentationVisibility?.(document.hidden);
-        attachStarted=true;const attached=await runtime.attachVisualRecovery(transport),dispatchToken=runtime.visualRecoveryDispatchToken();if(!current())throw Error('World changed during visual recovery');client.finishRecovery();
-        await handoffWebGpuSurface({client,canvas,previous,retainPrevious:retained,isCurrent:current,readCamera:camera,readSize:()=>({width:owner.canvas.width,height:owner.canvas.height}),bind:()=>bindWebGpuWorld(client,canvas),commit:next=>{owner.webGpuWorld=next;},beforeCommit:async()=>{finishStarted=true;deferVisibilityDuringVisualRecovery(owner,document.hidden,'hidden',onError);for(;;){const pending=owner.pendingVisualRecoveryVisibility;if(pending)await pending;if(pending===owner.pendingVisualRecoveryVisibility)break;}await runtime.finishVisualRecoveryConfirmed();const activated=await runtime.activateVisualRecovery();return activated.sequence;},beforeVisibleFrame:async()=>{for(;;){const pending=owner.pendingVisualRecoveryVisibility;if(!pending)return null;const result=await pending;if(pending===owner.pendingVisualRecoveryVisibility)return {sequence:result.sequence,current:()=>pending===owner.pendingVisualRecoveryVisibility};}},beforePublish:()=>{if(!runtime.canPublishVisualRecovery(dispatchToken))throw Error('Stale visual recovery dispatch token');},afterPublish:()=>{runtime.publishVisualRecovery(dispatchToken);owner.confirmedAutosave?.setSuspended(false);delete owner.pendingVisualRecoveryVisibility;},minSequence:attached.sequence,timeoutMs:RECOVERY_REQUEST_MS});
+        attachStarted=true;const attached=await runtime.attachVisualRecovery(transport),dispatchToken=runtime.visualRecoveryDispatchToken();if(!current())throw Error('World changed during visual recovery');client.finishRecovery(attached.recoveredStroll);
+        await handoffWebGpuSurface({client,canvas,previous,retainPrevious:retained,isCurrent:current,readCamera:camera,readSize:()=>({width:owner.canvas.width,height:owner.canvas.height}),bind:()=>bindWebGpuWorld(client,canvas),commit:next=>{owner.webGpuWorld=next;},beforeCommit:async()=>{
+          finishStarted=true;
+          if(prepared.terminalHoldId!==undefined){
+            await attachWebGpuNativeResources({client,isCurrent:current,runtime:{
+              attachNativeResourcePreparation:port=>runtime.attachNativeResourcePreparation(port,{recoveryHold:prepared.terminalHoldId})}});
+          }
+          deferVisibilityDuringVisualRecovery(owner,document.hidden,'hidden',onError);
+          for(;;){
+            const pending=owner.pendingVisualRecoveryVisibility;
+            if(pending)await pending;
+            if(pending===owner.pendingVisualRecoveryVisibility)break;
+          }
+          await runtime.finishVisualRecoveryConfirmed();
+          const activated=await runtime.activateVisualRecovery();
+          return activated.sequence;
+        },beforeVisibleFrame:async()=>{for(;;){const pending=owner.pendingVisualRecoveryVisibility;if(!pending)return null;const result=await pending;if(pending===owner.pendingVisualRecoveryVisibility)return {sequence:result.sequence,current:()=>pending===owner.pendingVisualRecoveryVisibility};}},beforePublish:()=>{if(!runtime.canPublishVisualRecovery(dispatchToken))throw Error('Stale visual recovery dispatch token');},afterPublish:()=>{runtime.publishVisualRecovery(dispatchToken);owner.confirmedAutosave?.setSuspended(false);delete owner.pendingVisualRecoveryVisibility;},minSequence:attached.sequence,timeoutMs:RECOVERY_REQUEST_MS});
         try{owner.structureInputFeedback?.clearScope(previous?.client);}catch{}if(owner===world)microevents?.presentationReady(client);return {base:checkpoint.sequence,sequence:attached.sequence,retained};
       }catch(error){
         intentControl?.port1.close();let failure=error;if(!attachStarted){runtime.cancelVisualRecovery().catch(()=>{});for(const port of [transport?.terrainPort,transport?.presentationPort,transport?.recoveryPort])try{port?.close?.();}catch{}}else failure=await classifyVisualRecoveryFailure(runtime,error,{finishStarted});

@@ -76,9 +76,9 @@ export function createWorkerHostedRuntime({world,confirmedReceiver=null,session,
   return {
    quiesceNativeIntentProduction(options){return nativeProductionRequest('quiesce',undefined,options);},
    resumeNativeIntentProduction(holdId){return nativeProductionRequest('resume',holdId);},
-   attachNativeResourcePreparation(port){
+   attachNativeResourcePreparation(port,{recoveryHold}={}){
     if(phase!=='running'||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native resource attachment unavailable'));
-    const id=next++;return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject,kind:'nativeResourcePreparation'});try{worker.postMessage({kind:'attachNativeResourcePreparation',session,id,port},[port]);}catch(error){pending.delete(id);reject(error);}});
+    const id=next++;return new Promise((resolve,reject)=>{pending.set(id,{resolve,reject,kind:'nativeResourcePreparation'});try{worker.postMessage({kind:'attachNativeResourcePreparation',session,id,port,...(recoveryHold===undefined?{}:{recoveryHold})},[port]);}catch(error){pending.delete(id);reject(error);}});
    },
    attachNativeIntentControl(port){
     if(phase!=='running'||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native intent control attachment unavailable'));

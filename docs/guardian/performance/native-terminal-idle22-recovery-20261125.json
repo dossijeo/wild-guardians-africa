@@ -1,0 +1,244 @@
+{
+  "title": "Idle22 terminal device recovery on real NVIDIA WebGPU",
+  "sourceCommit": "3d62b556d1c451b2b662b6f5ef46e48cf0ee626f",
+  "red": {
+    "evidenceSha256": "dc19b87bdbb3f153579967c90af337b1ed5cad7d6936ac233dccd046d8d8e96c",
+    "initialFence": {
+      "holdId": 26,
+      "actorId": 900011,
+      "fenceId": 1,
+      "effectiveTime": 11.019999999999982,
+      "authorityTime": 11.019999999999982,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.7499999403953552,
+      "pose": {
+        "x": -18,
+        "z": 0.7863572875253617,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.609999999999975,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "finalFence": {
+      "holdId": 26,
+      "actorId": 900011,
+      "fenceId": 2,
+      "effectiveTime": 11.06999999999998,
+      "authorityTime": 11.06999999999998,
+      "submittedSequence": null,
+      "assignment": null,
+      "bodyId": null,
+      "ageFloat32": null,
+      "pose": {
+        "x": -18,
+        "z": 0.8403572875253607,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.684999999999972,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "error": "Native recovery hold release failed: Missing submitted Idle22 at recovery cut"
+  },
+  "recoveredAndDrained": {
+    "evidenceSha256": "740c72dcdffe3a20857ff2266353f99bdfb24ed0ff940ce7add06dfdf6e2c3c1",
+    "initialFence": {
+      "holdId": 23,
+      "actorId": 900011,
+      "fenceId": 1,
+      "effectiveTime": 10.919999999999984,
+      "authorityTime": 10.919999999999984,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.6499999761581421,
+      "pose": {
+        "x": -18,
+        "z": 0.6783572875253641,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.459999999999978,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "finalFence": {
+      "holdId": 23,
+      "actorId": 900011,
+      "fenceId": 2,
+      "effectiveTime": 10.919999999999984,
+      "authorityTime": 10.919999999999984,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.6499999761581421,
+      "pose": {
+        "x": -18,
+        "z": 0.6783572875253641,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.459999999999978,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "intermediateFrame": {
+      "sequence": 2,
+      "publishedSequence": 95,
+      "elapsed": 10.919999999999984,
+      "bodyId": 1,
+      "ageFloat32": 0.6499999761581421
+    },
+    "resumed": {
+      "elapsed": 11.269999999999976,
+      "sequence": 99
+    },
+    "framebuffer": {
+      "width": 640,
+      "height": 480,
+      "region": {
+        "minX": 160,
+        "maxX": 448,
+        "minY": 120,
+        "maxY": 326
+      },
+      "differingPixels": 59257,
+      "minimum": 500,
+      "ok": true,
+      "blankControlRejected": true,
+      "sha256": "fc5bc703ac8bce98c699f21797c1893aec7acf15abb014246c0dc5275ba55bfa"
+    },
+    "saveableSequence": 225,
+    "deviceLoss": [
+      "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+    ],
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "traced": false,
+      "beforeLoss": {
+        "samples": 337,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795630521071.49,
+          "sequence": 26,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "e0eace9e-7126-4f9d-85be-e7f06a769aab/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 351.989990234375,
+          "drawMs": 7.574951171875,
+          "replay": false,
+          "clockElapsed": 10.269999999999998,
+          "safeUntil": 10.269999999999998,
+          "cameraVersion": 5
+        },
+        "overTarget": 335
+      },
+      "replacement": {
+        "samples": 17,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795630537654.47,
+          "sequence": 3,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "e0eace9e-7126-4f9d-85be-e7f06a769aab/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 37.005126953125,
+          "drawMs": 10.215087890625,
+          "replay": true,
+          "clockElapsed": 11.06999999999998,
+          "safeUntil": 11.06999999999998,
+          "cameraVersion": null
+        },
+        "overTarget": 17
+      }
+    },
+    "owner": {
+      "before": {
+        "binding": 1,
+        "client": 2,
+        "canvas": 3,
+        "pending": false,
+        "status": {
+          "phase": "running",
+          "backend": "WebGPU",
+          "firstFrameRendered": true,
+          "failure": null,
+          "cameraTerrainFailure": null,
+          "cameraTreesFailure": null
+        },
+        "hasCurrent": true,
+        "frame": {
+          "sequence": 74,
+          "terrainGeneration": 25,
+          "selectableGeneration": 454,
+          "cameraVersion": 5,
+          "viewportVersion": 1
+        }
+      },
+      "after": {
+        "binding": 4,
+        "client": 5,
+        "canvas": 6,
+        "pending": false,
+        "status": {
+          "phase": "running",
+          "backend": "WebGPU",
+          "firstFrameRendered": true,
+          "failure": null,
+          "cameraTerrainFailure": null,
+          "cameraTreesFailure": null
+        },
+        "hasCurrent": true,
+        "frame": {
+          "sequence": 97,
+          "terrainGeneration": 1,
+          "selectableGeneration": 313,
+          "cameraVersion": 3,
+          "viewportVersion": 1
+        }
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": null
+      }
+    },
+    "harnessFailure": "Expected fence2 to repeat the newer draw sequence. The initial picking probe used a Main terrain sample which was unavailable."
+  },
+  "lossClassificationFailure": {
+    "evidenceSha256": "65ab5acaaa4c2d2d64bca55a03bf10933f8f6896f4ba893c02ccfa55439ac003",
+    "originalElapsed": 11.11999999999998,
+    "laterElapsedWithoutView": 15.31999999999989,
+    "afterLostClient": null,
+    "fault": "Error: OperationError: Failed to execute 'getMappedRange' on 'GPUBuffer': getMappedRange failed",
+    "recovered": false
+  },
+  "limitations": [
+    "One recovered Idle22 actor with no gate motor.",
+    "The two fences acknowledge the first submitted lease. An ordinary intermediate draw uses that same lease.",
+    "Physical picking and loss overlapping mapped buffer reads remain open.",
+    "Presentation samples are partial and captured at 30 Hz without a CDP trace."
+  ]
+}
