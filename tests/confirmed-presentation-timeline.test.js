@@ -100,7 +100,33 @@ test('real visual ports negotiate and exert bounded backpressure until state is 
  const {openVisualStream}=await import('../src/simulation/visual-publication-stream.js'),{port1,port2}=new MessageChannel(),state=fixture(),authority=deserialize(serialize(state)),start=state.elapsed,clock=createConfirmedPresentationClock(start),errors=[];let ready=false;
  const sender=openVisualStream(port1,'s',()=>{},{receiptAcknowledgements:true,timelineHandshake:true,highWatermark:3}),receiver=createConfirmedPresentationStream({port:port2,session:'s',state,presentationClock:clock,timeline:{maxPublications:1,maxBytes:50000000,handshake:true},terrain:{ready:()=>ready,confirm(){}},onError:e=>errors.push(e.message)});
  const until=async predicate=>{const deadline=Date.now()+2000;while(!predicate()){if(Date.now()>deadline)throw Error('Visual handshake timed out');await new Promise(resolve=>setTimeout(resolve,5));}};
- try{assert.equal(sender.blocked(),true);await until(()=>sender.status().negotiated&&receiver.timelineStatus().negotiated);for(let n=1;n<=2;n++){authority.elapsed=start+n;sender.publish({session:'s',sequence:n,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[],physicsPose:null},true);}await until(()=>receiver.timelineStatus().waiting);assert.equal(sender.status().received,1);assert.equal(sender.status().inFlight,2);assert.ok(receiver.timelineStatus().waitingBytes>0);ready=true;receiver.advancePresentationTo(start+1);await until(()=>sender.status().received===1&&sender.status().acknowledged===1);receiver.advancePresentationTo(start+2);await until(()=>sender.status().acknowledged===2);assert.equal(state.elapsed,start+2);assert.deepEqual(errors,[]);}finally{sender.close();receiver.dispose();clock.dispose();}
+ try{
+  assert.equal(sender.blocked(),true);
+  await until(()=>sender.status().negotiated&&receiver.timelineStatus().negotiated);
+  for(let n=1;n<=2;n++){
+   authority.elapsed=start+n;
+   sender.publish({session:'s',sequence:n,elapsed:authority.elapsed,snapshot:serializeConfirmedState(authority),events:[],physicsPose:null},true);
+  }
+  await until(()=>sender.status().lastReceived===1);
+  // The negotiated window holds publication 2 at the sender until ACK 1.
+  assert.equal(sender.status().window.publications,1);
+  assert.equal(sender.status().queued,2);
+  assert.equal(sender.status().inFlight,0);
+  assert.equal(sender.status().acknowledged,0);
+  assert.equal(receiver.timelineStatus().waiting,false);
+  assert.equal(receiver.timelineStatus().receivedSequence,1);
+  assert.equal(state.elapsed,start);
+  ready=true;
+  receiver.advancePresentationTo(start+1);
+  await until(()=>sender.status().lastReceived===2&&sender.status().acknowledged===1);
+  assert.equal(state.elapsed,start+1);
+  receiver.advancePresentationTo(start+2);
+  await until(()=>sender.status().acknowledged===2);
+  assert.equal(sender.status().queued,0);
+  assert.equal(sender.status().window.publications,0);
+  assert.equal(state.elapsed,start+2);
+  assert.deepEqual(errors,[]);
+ }finally{sender.close();receiver.dispose();clock.dispose();}
 });
 
 test('timeline hides recovery bypass and reports producer failure without acknowledging it',()=>{
