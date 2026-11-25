@@ -459,5 +459,69 @@
       "path": ".cache/flee-mixed/root-final-build.log",
       "sha256": "3ccae0a4e32866f5ea6977f0b756bdf9ec8d9f0f5c8fd3c8a502bf8e20b379d8"
     }
+  },
+  "initialPublicationBeforeResources": {
+    "source": "35ef1335fece9233698fe4a7734027b6e9310230",
+    "app": {
+      "rawReceiptSha256": "930ba8d2e375cf64b809711e3e75c94483aea4c03d2a79d20b64dc83f43898e6",
+      "scene": "fresh Sabana 712 from product menu",
+      "startupSequence": 1,
+      "preparedRegions": 25,
+      "drawnSinceNavigationMs": 12112.854999996722,
+      "attachedSinceNavigationMs": 12113.954999998212,
+      "backend": "WebGPU",
+      "errors": []
+    },
+    "paidFarm": {
+      "rawReceiptSha256": "eaac7bba5121acd60172f2c0075f92a687b0417b7d2c40d811991c059b72cdf6",
+      "snapshotSha256": "00bfc00f1c75014eefa64f3a03946411d8e572e1fc294180ed2d3d39c35ce906",
+      "actorId": 21,
+      "bodyId": 1,
+      "preparedTicket": 1,
+      "acquiredTicket": 2,
+      "sequence": 1,
+      "initialFrame": {
+        "sequence": 1,
+        "terrainGeneration": 25,
+        "selectableGeneration": 182,
+        "cameraVersion": 0
+      },
+      "requestFloor": 1,
+      "sourceHeldElapsed": 599.99999999999,
+      "initialPublicationWaitMs": 6043.5,
+      "requestAfterInitialDrawMs": 15.300048828125,
+      "readyAfterRequestMs": 3326.7998046875,
+      "firstDrawAfterRequestMs": 3383,
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 105.40000000596046
+        }
+      },
+      "drained": true,
+      "errors": []
+    },
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "samples": 284,
+      "maximum": {
+        "ms": 60.199951171875,
+        "previousDrawWallMs": 59.900146484375,
+        "at": 1795622501169.5999,
+        "sequence": 51,
+        "worldTicket": null
+      },
+      "c4": false
+    }
   }
 }

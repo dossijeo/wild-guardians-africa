@@ -23,6 +23,31 @@ test('source transfer waits for graphics attachment and startup waits for its ex
  assert.deepEqual(f.calls,[['graphics',f.ports[1]],['source',f.ports[0]]]);await Promise.resolve();assert.equal(finished,false);f.ack.resolve({version:1,session:'s'});assert.deepEqual(await ready,{version:1,session:'s'});assert.deepEqual(f.ports.map(p=>p.closed),[0,0]);
 });
 
+test('a remote startup opens preparation only after the initial authoritative publication draws',async()=>{
+ const f=setup(),drawn=deferred();
+ f.options.initialSequence=17;
+ f.options.client.waitForCurrentFrame=options=>{assert.deepEqual(options,{minSequence:17});return drawn.promise;};
+ const ready=attachWebGpuNativeResources(f.options);
+ assert.deepEqual(f.calls,[]);
+ drawn.resolve({sequence:17});
+ await Promise.resolve();
+ assert.deepEqual(f.calls,[['graphics',f.ports[1]],['source',f.ports[0]]]);
+ f.ack.resolve({version:1,session:'s'});
+ assert.deepEqual(await ready,{version:1,session:'s'});
+});
+
+test('an initial draw for a replaced world cannot transfer the preparation port',async()=>{
+ const f=setup(),drawn=deferred();
+ let current=true;
+ f.options.initialSequence=17;f.options.isCurrent=()=>current;
+ f.options.client.waitForCurrentFrame=()=>drawn.promise;
+ f.options.channelFactory=()=>{throw Error('Unexpected allocation');};
+ const ready=attachWebGpuNativeResources(f.options);
+ current=false;drawn.resolve({sequence:17});
+ await assert.rejects(ready,/World changed/);
+ assert.deepEqual(f.calls,[]);
+});
+
 test('an obsolete world allocates and transfers nothing',async()=>{
  const f=setup();let created=0;f.options.isCurrent=()=>false;f.options.channelFactory=()=>{created++;throw Error('Unexpected allocation');};await assert.rejects(attachWebGpuNativeResources(f.options),/World changed/);assert.equal(created,0);assert.deepEqual(f.calls,[]);
 });

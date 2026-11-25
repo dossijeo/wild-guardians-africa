@@ -670,6 +670,13 @@ Cada estado mutable tiene un solo propietario. El hilo principal no conserva una
 
 ### A1. Contratos y arranque de producto
 
+El arranque de WebGPU remoto con entradas confirmadas conserva el reloj
+suspendido hasta que el consumidor dibuja la primera publicación de la
+autoridad y el puerto de preparación confirma su conexión. NVIDIA verificó
+ese orden al iniciar desde el menú y al adquirir el primer Farm23 en el
+guardado pagado de Sabana. El plazo de preparación conserva sus 10 s y
+empieza después de la publicación inicial. [Validación de arranque](native-sabana-flee-crop-physical-20261125.md#preparación-de-farm-y-stop24).
+
 Definir contratos versionados para sesión, generación de dispositivo, entidad, recurso, trayectoria, publicación y comando. Registrar qué módulo los produce, quién puede modificarlos y qué consumidor los aplica. Los nombres definitivos se adaptan a los módulos existentes; no se crea una infraestructura paralela por conservar nombres propuestos.
 
 Crear una interfaz de presentación que concentre inicio, cámara, resize, selección, feedback provisional, publicación, recuperación y cierre. El backend se elige al iniciar la sesión por capacidad y configuración. WebGPU verifica explícitamente su backend; no se admite un fallback silencioso.
