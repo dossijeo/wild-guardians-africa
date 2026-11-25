@@ -315,7 +315,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       // core can retain old bodies after nav_intent_reset; never bless those
       // as inactive merely because their new JS row says home.
       raidFlight=null;refuge=null;
-      legacyCropHomes=!!wasm.nav_animal_crop_state&&wasm.spatial_body_count()===0&&!!state.raid?.animals[0]&&
+      legacyCropHomes=!!wasm.nav_animal_crop_state&&wasm.spatial_body_count()===0&&state.biome!=='desierto'&&!!state.raid?.animals[0]&&
         !state.structures.some(v=>v.gate&&v.status!=='ruined')&&!!nativeCropRouteSubject(state,state.raid.animals[0]);
       if(wasm.spatial_body_count()===0)for(const worker of workers){
         const entry=inactiveHomeEntry(state,worker,legacyCropHomes);if(!entry)continue;
@@ -758,15 +758,20 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const workerBody=farm?.reference.bodyId??home?.bodyId;
     const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:farm?.assignmentSequence??home?.requestSequence,
       farmTicket:farm?.reference.worldBoundary.ticket??null,raidSpawnSequence:event};
-    const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,birth,center:numericId(center.id)};
+    const centerAttack=nativeCenterAttackCohort(state,worker);
+    const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
     raidFlight=pair;
     let selected;
     try{
       const result=nativeRaidFlightMember(state,animal)&&select();
-      if(!result?.native||result.shieldId||!result.target?.alive)return null;
+      if(centerAttack){
+        if(result?.target!==center||result.native||result.shieldId||!requestNativeCenterBirth(state,animal,result,body,pair))return null;
+        pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
+      }else if(!result?.native||result.shieldId||!result.target?.alive)return null;
       const q=nativeAnimalCropState(animal.id);
       if(q?.mode!==1||q.body!==body||q.target!==numericId(result.target.id)||pair.requestSequence!==q.requestSequence)throw Error('Raid spawn lost its pending crop body');
-      selected=result;return result;
+      selected=centerAttack?{...result,approach:{point:result.approach.point,path:null}}:result;
+      return selected;
     }finally{if(!selected)raidFlight=null;}
   }
   function flightCandidateClear(session,ticket){
@@ -2837,14 +2842,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       }
     }
   };
-  const requestNativeCenterBirth=(state,animal,{target,approach},body)=>{
-    if(state!==owningState||!animalRouteV2||!nativeCenterAttackCohort(state)||target!==state.structures[0]||
+  const requestNativeCenterBirth=(state,animal,{target,approach},body,pair=null)=>{
+    if(state!==owningState||!animalRouteV2||!nativeCenterAttackCohort(state,pair?.worker)||target!==state.structures[0]||
        state.raid?.animals[0]!==animal||animal.status!=='entering'||!approach.path?.length)return false;
     syncBoundaryTime();
     writeAttackRouteInput(animal,approach.path);
-    return wasm.nav_animal_plan_center_birth(wasm.nav_intent_session(),numericId(animal.id),
+    const declare=pair?wasm.nav_animal_plan_flight_center:wasm.nav_animal_plan_center_birth;
+    return declare?.(wasm.nav_intent_session(),numericId(animal.id),
       numericId(target.id),body,approach.path.length,approach.point.x,approach.point.z,
-      animal.heading??0,animal.motionPhase??0)===1;
+      animal.heading??0,animal.motionPhase??0,...(pair?[pair.birth.workerActor,pair.birth.sourceSequence]:[]))===1;
   };
   const registerAttackIntent=(state,animal,target,path)=>{
     if(!initialized||!state.raid||animal.targetId!==target.id||
@@ -2927,6 +2933,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     const finished=nativeFinishedAnimalCrop(state,animal);
     const birth=raidFlight?.animal===animal&&!raidFlight.requestSequence&&nativeRaidFlightMember(state,animal)?raidFlight:null;
+    if(birth?.centerAttack)return null;
     const transient=prepareAttackTransients(state,animal,!!finished||!!birth);
     if(!transient)return null;
     const plan=birth?wasm.nav_animal_plan_flight_crop:finished?wasm.nav_animal_plan_finished_crop:wasm.nav_intent_plan_attack_crop;

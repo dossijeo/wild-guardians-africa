@@ -774,13 +774,15 @@ export function retreatAnimal(s,a,reason='magic',nav={}) {
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
-export function nativeCenterAttackCohort(state){
- return state.biome==='desierto'&&state.workers.length===0&&state.structures.length===1&&
+export function nativeCenterAttackCohort(state,flightWorker=null){
+ return state.biome==='desierto'&&state.workers.length<=1&&state.workers.every(worker=>
+   worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)&&
+   (state.workers.length>0||state.structures.length===1)&&
    state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
 }
 export function nativeCropRouteSubject(state,animal,flightWorker=null){
  const raid=state.raid;
- const centerAttack=nativeCenterAttackCohort(state);
+ const centerAttack=nativeCenterAttackCohort(state,flightWorker);
  if((state.biome!=='sabana'&&!centerAttack)||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||animal.approachShieldId||

@@ -197,7 +197,8 @@ static bool separatedFlightRoutes(const ReservationPath& home,const ReservationP
 }
 EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ticket,double worker,double animal,double event){
  auto& s=state();const auto& p=s.barrierProposal;
- if(!integer(worker)||!integer(animal)||worker==animal||!integer(event)||event<=0||spatial_world_biome()!=0||
+ const int biome=spatial_world_biome();
+ if(!integer(worker)||!integer(animal)||worker==animal||!integer(event)||event<=0||(biome!=0&&biome!=1)||
     !p.pending||session!=double(s.session)||session!=double(p.session)||ticket!=double(p.ticket)||
     (p.kind!=18&&p.kind!=26)||spatial_body_count()!=2)return -2;
  const auto w=s.activeIntents.find(uint64_t(worker)),a=s.activeIntents.find(uint64_t(animal));
@@ -205,7 +206,11 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  const auto& wi=w->second;const auto& ai=a->second;
  const int mode=nav_animal_crop_state(animal);
  if(mode<1||mode>3||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
- const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
+ const bool center=s.animalCropState[22]==1;
+ if(center!=(biome==1))return -2;
+ // Home prepares first in the center cohort. Its proof includes the entire
+ // declared center corridor even before the animal's own timetable exists.
+ const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1&&!center?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
  const RouteSlot* hr=nullptr;auto source=std::shared_ptr<const NativeHomeResourceRequest>(wi.homeRequest);
  if(source){if(!nativeHomeRequestBodyCurrent(s,wi))return -2;}
  else{
@@ -228,15 +233,15 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
 
 // The spawn must be clear even if the acquired Farm is allowed to finish
 // its entire corridor before Stop24 arrives. A pending body remains a point.
-static int flightCropOriginClear(double session,double worker,double sequence,double x,double z,double radius,int bodies){
+static int flightCropOriginClear(double session,double worker,double sequence,double x,double z,double radius,int bodies,int biome=0){
  const auto& s=state();
  if(session!=double(s.session)||!integer(worker)||!integer(sequence)||!std::isfinite(x)||!std::isfinite(z)||
-    !std::isfinite(radius)||radius!=1.1||spatial_world_biome()!=0||spatial_body_count()!=bodies)return -2;
+    !std::isfinite(radius)||radius!=1.1||spatial_world_biome()!=biome||spatial_body_count()!=bodies)return -2;
  const auto it=s.activeIntents.find(uint64_t(worker));if(it==s.activeIntents.end())return -2;
  const auto& intent=it->second;ReservationPath path;double wr;
  if(nativeFarmArrivalBodyCurrent(s,intent)){
   const auto& route=s.routeSlots[intent.slot];
-  if(!route.workerDrySweep||intent.assignmentSequence!=uint64_t(sequence))return -2;
+  if((biome==0&&!route.workerDrySweep)||intent.assignmentSequence!=uint64_t(sequence))return -2;
   path.route=&route;wr=route.radius;
  }else{
   const auto& h=intent.homeRequest;
@@ -248,4 +253,7 @@ static int flightCropOriginClear(double session,double worker,double sequence,do
 
 EMSCRIPTEN_KEEPALIVE int nav_flight_crop_origin_clear(double session,double worker,double sequence,double x,double z,double radius){
  return flightCropOriginClear(session,worker,sequence,x,z,radius,1);
+}
+EMSCRIPTEN_KEEPALIVE int nav_flight_center_origin_clear(double session,double worker,double sequence,double x,double z,double radius){
+ return flightCropOriginClear(session,worker,sequence,x,z,radius,1,1);
 }

@@ -1,0 +1,930 @@
+{
+  "base": "02c7fee78d0112383006a98b657f7111b6775746",
+  "input": {
+    "path": ".cache/flee-return/mixed-center-physical-input.json",
+    "sha256": "f128e3b6debaa9c17da7d6d0b4af56a636fb6d44c1bfdce6cb6d3bc14fcdb35c"
+  },
+  "layout": {
+    "south": {
+      "eye": {
+        "x": -10,
+        "z": -24
+      },
+      "entry": {
+        "entries": [
+          {
+            "x": -16.6,
+            "z": -27.1
+          }
+        ],
+        "exits": [
+          {
+            "x": -16.6,
+            "z": -30.1
+          }
+        ]
+      },
+      "approach": {
+        "id": "approach-structure-2-direct-0",
+        "x": -11.52654302935014,
+        "z": -3.403619097947849
+      },
+      "animalBounds": [
+        -24,
+        -27.1,
+        -11.52654302935014,
+        -3
+      ],
+      "workerBounds": [
+        -17.418842712474635,
+        0,
+        -5.800000000000001,
+        3
+      ],
+      "separation": 3
+    },
+    "northTimed": {
+      "spawn": "event-29208",
+      "worker": "worker-900011",
+      "animal": "animal-1000000",
+      "initial": {
+        "elapsed": 10.849999999999984,
+        "distance": 27.945794196143343,
+        "worker": {
+          "x": -17.298842712474634,
+          "z": 0,
+          "heading": 1.5707963267948966,
+          "status": "fleeing"
+        },
+        "animal": {
+          "x": -10.089999999999998,
+          "z": 27,
+          "heading": -2.408777551803304,
+          "status": "entering"
+        }
+      },
+      "samples": 143,
+      "best": {
+        "elapsed": 16.800000000000068,
+        "distance": 15.856338401349765,
+        "worker": {
+          "x": -6.018842712474673,
+          "z": 3,
+          "heading": 1.5707963267948966,
+          "status": "fleeing"
+        },
+        "animal": {
+          "x": -12,
+          "z": 17.685000000000066,
+          "heading": 3.141592653589793,
+          "status": "walking"
+        }
+      },
+      "arrived": {
+        "elapsed": 17.950000000000085,
+        "distance": 16.76649220951523,
+        "worker": {
+          "x": -5.800000000000001,
+          "z": 0.2,
+          "heading": 3.141592653589793,
+          "status": "home"
+        },
+        "animal": {
+          "x": -12,
+          "z": 15.960000000000083,
+          "heading": 3.141592653589793,
+          "status": "walking"
+        }
+      },
+      "encounters": [],
+      "hitBudget": 4,
+      "semanticRange": 2.2,
+      "physicalRange": 1.3800000000000001
+    },
+    "northGeometry": {
+      "path": ".cache/flee-return/attack-center-corridor.json",
+      "sha256": "c2c4fd7b306505cc8e041f3059bc96152accb3ddcdaaeaf013c968a7b81676ac"
+    },
+    "encounterReach": 2.2
+  },
+  "validation": {
+    "regression": {
+      "path": ".cache/flee-return/mixed-center-regression.tap",
+      "sha256": "3e9983197e047afe1685b9f5d142c88057984c8caac32c67f6c6e8aab52d406a",
+      "passed": 57,
+      "failed": 0,
+      "skipped": 0
+    },
+    "baseline": {
+      "path": ".cache/flee-return/mixed-center-red.tap",
+      "sha256": "e409ff10bbf17d120d48beffc671bda2d448a64c0b929cc86d2531251156902a"
+    },
+    "northernNegative": {
+      "path": ".cache/flee-return/mixed-center-north.tap",
+      "sha256": "78a3ffa895659d68951ec4ee6af0fbf8f52f7a0f789330fdcde1153cdbb45e5d"
+    },
+    "web": {
+      "path": ".cache/flee-return/mixed-center-vite.log",
+      "sha256": "8804c5180e6b49b06433ce38b94d5278f5749a96b0dff5d4c54d0890ce740f2b"
+    },
+    "nativeInputs": {
+      "path": ".cache/flee-return/mixed-center-native-inputs.json",
+      "sha256": "1aea58a0fdf3eb3442a03ebbf5ffc90788f4e79cd6c99b94e12e0ddcec9439f2"
+    },
+    "native": {
+      "base": "02c7fee78d0112383006a98b657f7111b6775746",
+      "inputs": 66,
+      "output": [
+        {
+          "path": "src/world/wild-engine/spatial-savanna.wasm",
+          "artifact": ".cache/flee-center-mixed-final-build/standalone/spatial-savanna.wasm",
+          "before": "043d399c678445c3ca8e478ade15b3ac19bcf027df55eb24143834de794c9ccd",
+          "after": "9eeaefcfba86064614ead131472da5812867ca02346a8226730f849925a326a6",
+          "imports": 1,
+          "exports": 828
+        },
+        {
+          "path": "public/wild-engine/spatial-threaded.wasm",
+          "artifact": ".cache/flee-center-mixed-final-build/pthread/spatial-threaded.wasm",
+          "before": "76cc7c13e31642003a9d84396aecf1cbc932c80627830cdb45e89b9e48a6efcc",
+          "after": "4b6c6a2c4dcb83791d8cc2d3aed78dc7ef739bba17e9ea20d945203dac3b4a99",
+          "publicExportsVerified": 511,
+          "imports": 16,
+          "exports": 849
+        },
+        {
+          "path": "public/wild-engine/spatial-threaded.mjs",
+          "artifact": ".cache/flee-center-mixed-final-build/pthread/spatial-threaded.mjs",
+          "before": "4f15ffe3f69daec5bd16890c1b5713b24675dae6ab26e4e2604213402fa70182",
+          "after": "79542b036b43fef98519a4f7b624b80540df26d11c431b4af80c29d5e1b083f6"
+        }
+      ]
+    },
+    "pthread": {
+      "path": ".cache/flee-return/mixed-center-pthread-smoke.json",
+      "sha256": "75200108c3a9995f51007bd20d2c5bffc6dc5ec50863937a85fc045544177518"
+    }
+  },
+  "hardware": {
+    "receipt": {
+      "path": ".cache/native-desert-center-mixed-nvidia-20261125.json",
+      "sha256": "cf91018211500fde5b9593c9d15b331becba342d1fd313f752d21aefdf13487d"
+    },
+    "trace": {
+      "path": ".cache/native-desert-center-mixed-nvidia-20261125.trace.json.gz",
+      "sha256": "b9b3d05a2e10a250443b9fe830162227ca49a64af60c07c8cbe80a512c8596fe"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 122.69999999925494
+      }
+    },
+    "raid": {
+      "id": "event-29208",
+      "type": "RaidSpawned",
+      "raidFacts": {
+        "id": "raid-15-day",
+        "day": 15,
+        "daytime": true,
+        "elapsed": 10.799999999999983,
+        "waveIndex": 0,
+        "pressureFacts": null,
+        "exposedLiving": 0,
+        "exposedWounded": 0,
+        "actors": [
+          {
+            "id": "animal-1000000",
+            "species": "warthog",
+            "hitsRemaining": 4,
+            "spawn": {
+              "x": -16.6,
+              "z": -27.1
+            },
+            "exit": {
+              "x": -16.6,
+              "z": -30.1
+            }
+          }
+        ]
+      },
+      "simulationTime": 10.799999999999983
+    },
+    "source": {
+      "version": 1,
+      "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 10
+    },
+    "stop": {
+      "version": 1,
+      "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 13.199999999999932
+    },
+    "home": {
+      "version": 1,
+      "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+      "nativeSession": 1,
+      "ticket": 7,
+      "effectiveTime": 15.999999999999872
+    },
+    "arrival": {
+      "version": 1,
+      "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+      "nativeSession": 1,
+      "ticket": 11,
+      "effectiveTime": 22.649999999999967
+    },
+    "mixed": {
+      "submitted": 34,
+      "first": {
+        "at": 1795619622495.4,
+        "sequence": 43,
+        "ticket": 9,
+        "key": "15.999999999999872:9|center:18.399999999999906:0",
+        "home": {
+          "nativeHome": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 2,
+              "raidSpawnSequence": 29208,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 6,
+              "requestedAt": 13.199999999999932,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -5.800000000000001,
+                "z": 0.2
+              },
+              "pose": {
+                "x": -16,
+                "z": 1.1731572875253082,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 11.924999999999898,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "session": 1,
+              "slot": 2,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 13.24999999999993
+            },
+            "sourceControlSequence": 6,
+            "endTime": 19.689999944682175
+          },
+          "relativeTime": 2.4499998092651367,
+          "semantic": "relative",
+          "epoch": 13.24999999999993,
+          "executionEpoch": 15.999999999999872,
+          "elapsed": 15.699999809265067
+        },
+        "animal": {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 16.049999999999873
+            },
+            "sourceControlSequence": 7,
+            "endTime": 38.39188910149397,
+            "purpose": "center",
+            "actorId": 1000000,
+            "bodyId": 2,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 4,
+            "slot": 1,
+            "generation": 3,
+            "radius": 1.1,
+            "x": -16.6,
+            "z": -27.1,
+            "phase": 0,
+            "yaw": 0,
+            "targetX": -10.75499877929687,
+            "targetZ": 0.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 0.2
+          },
+          "relativeTime": 0,
+          "semantic": "relative",
+          "epoch": 16.049999999999873,
+          "executionEpoch": 18.399999999999906,
+          "elapsed": 16.049999999999873
+        }
+      },
+      "last": {
+        "at": 1795619626695.4,
+        "sequence": 80,
+        "ticket": 9,
+        "key": "15.999999999999872:25|center:18.399999999999906:17",
+        "home": {
+          "nativeHome": {
+            "kind": "native-home-route-reference",
+            "version": 1,
+            "actorId": 900011,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-home-request-reference",
+              "version": 2,
+              "raidSpawnSequence": 29208,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "actorId": 900011,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 6,
+              "requestedAt": 13.199999999999932,
+              "profile": 1,
+              "home": {
+                "villageId": 1,
+                "x": -5.800000000000001,
+                "z": 0.2
+              },
+              "pose": {
+                "x": -16,
+                "z": 1.1731572875253082,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 23.25,
+                "walkPhase": 11.924999999999898,
+                "carryPhase": 9.5,
+                "runRemaining": 40
+              }
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "session": 1,
+              "slot": 2,
+              "generation": 2
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "ticket": 6,
+              "effectiveTime": 13.24999999999993
+            },
+            "sourceControlSequence": 6,
+            "endTime": 19.689999944682175
+          },
+          "relativeTime": 6.440011978149414,
+          "semantic": "relative",
+          "epoch": 13.24999999999993,
+          "executionEpoch": 15.999999999999872,
+          "elapsed": 19.690011978149343
+        },
+        "animal": {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+              "nativeSession": 1,
+              "ticket": 8,
+              "effectiveTime": 16.049999999999873
+            },
+            "sourceControlSequence": 7,
+            "endTime": 38.39188910149397,
+            "purpose": "center",
+            "actorId": 1000000,
+            "bodyId": 2,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 4,
+            "slot": 1,
+            "generation": 3,
+            "radius": 1.1,
+            "x": -16.6,
+            "z": -27.1,
+            "phase": 0,
+            "yaw": 0,
+            "targetX": -10.75499877929687,
+            "targetZ": 0.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 0.2
+          },
+          "relativeTime": 4.25,
+          "semantic": "relative",
+          "epoch": 16.049999999999873,
+          "executionEpoch": 18.399999999999906,
+          "elapsed": 20.299999999999873
+        }
+      }
+    },
+    "workerId": "worker-900011",
+    "homeRetiredSequence": 9,
+    "resourceReuse": {
+      "compared": 1363,
+      "sameReference": 1363,
+      "sameVersion": 1363
+    },
+    "programs": [
+      {
+        "kind": 26,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 9,
+        "at": 18.399999999999906
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 13,
+        "at": 41.75000000000093,
+        "attackId": 29209
+      },
+      {
+        "kind": 26,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 15,
+        "at": 45.35000000000124
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 17,
+        "at": 46.250000000001315,
+        "attackId": 29212
+      },
+      {
+        "kind": 26,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 19,
+        "at": 48.4000000000015
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 21,
+        "at": 49.25000000000157,
+        "attackId": 29215
+      },
+      {
+        "kind": 26,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 23,
+        "at": 54.450000000002014
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "body": 2,
+        "ticket": 25,
+        "at": 55.55000000000211,
+        "attackId": 29218
+      },
+      {
+        "kind": 26,
+        "purpose": "retreat",
+        "body": 2,
+        "ticket": 27,
+        "at": 60.100000000002495
+      }
+    ],
+    "structureHits": [
+      {
+        "id": "event-29210",
+        "type": "StructureHit",
+        "animalId": "animal-1000000",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 43.30000000000106,
+          "x": -11.526542663574219,
+          "z": -3.4036190509796143
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": -10.75499877929687,
+          "z": 0.2,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        },
+        "simulationTime": 43.30000000000106
+      },
+      {
+        "id": "event-29213",
+        "type": "StructureHit",
+        "animalId": "animal-1000000",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 47.80000000000145,
+          "x": -11.526542663574219,
+          "z": -3.4036190509796143
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": -10.75499877929687,
+          "z": 0.2,
+          "previousHp": 580,
+          "hp": 560,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": false
+        },
+        "simulationTime": 47.80000000000145
+      },
+      {
+        "id": "event-29216",
+        "type": "StructureHit",
+        "animalId": "animal-1000000",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 53.80000000000196,
+          "x": -11.526542663574219,
+          "z": -3.4036190509796143
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": -10.75499877929687,
+          "z": 0.2,
+          "previousHp": 560,
+          "hp": 540,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": false
+        },
+        "simulationTime": 53.80000000000196
+      },
+      {
+        "id": "event-29219",
+        "type": "StructureHit",
+        "animalId": "animal-1000000",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 59.270000000002426,
+          "x": -11.526542663574219,
+          "z": -3.4036190509796143
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": -10.75499877929687,
+          "z": 0.2,
+          "previousHp": 540,
+          "hp": 520,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": false
+        },
+        "simulationTime": 59.270000000002426
+      }
+    ],
+    "logicalHits": [
+      {
+        "id": "event-29211",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29209",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 43.30000000000106,
+          "animal": {
+            "x": -11.526542663574219,
+            "z": -3.4036190509796143,
+            "heading": 0.21091816557947443
+          },
+          "target": {
+            "x": -10.75499877929687,
+            "z": 0.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 43.30000000000106
+      },
+      {
+        "id": "event-29214",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29212",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 47.80000000000145,
+          "animal": {
+            "x": -11.526542663574219,
+            "z": -3.4036190509796143,
+            "heading": 0.21091816557947443
+          },
+          "target": {
+            "x": -10.75499877929687,
+            "z": 0.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 47.80000000000145
+      },
+      {
+        "id": "event-29217",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29215",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 53.80000000000196,
+          "animal": {
+            "x": -11.526542663574219,
+            "z": -3.4036190509796143,
+            "heading": 0.21091816557947443
+          },
+          "target": {
+            "x": -10.75499877929687,
+            "z": 0.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 53.80000000000196
+      },
+      {
+        "id": "event-29220",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29218",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 59.270000000002426,
+          "animal": {
+            "x": -11.526542663574219,
+            "z": -3.4036190509796143,
+            "heading": 0.21091816557947443
+          },
+          "target": {
+            "x": -10.75499877929687,
+            "z": 0.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 59.270000000002426
+      }
+    ],
+    "absence": {
+      "sequence": 460,
+      "at": 1795619671462.4,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+        "nativeSession": 1,
+        "ticket": 27,
+        "effectiveTime": 60.100000000002495
+      },
+      "clockElapsed": 67.35000000000264,
+      "previous": {
+        "actorId": 1000000,
+        "bodyId": 2,
+        "executionEpoch": 60.100000000002495,
+        "sequence": 458,
+        "at": 1795619671329.5
+      }
+    },
+    "returnAfter": {
+      "version": 1,
+      "authorityEpoch": "27516cd9-0fd7-45df-952d-c270101ebd0a/1",
+      "nativeSession": 1,
+      "ticket": 29,
+      "effectiveTime": 70.30000000000247
+    },
+    "returnBody": 3,
+    "returnDraw": 461,
+    "idle": "native-idle",
+    "idleElapsed": 72.00000000000237,
+    "drained": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "refreshHz": 30,
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 2035,
+    "recordedIntervals": 2034,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 1251,
+    "intervalsAboveTarget": 2034,
+    "maxRecordedIntervalMs": 1365.5,
+    "topIntervals": [
+      {
+        "at": 1795619648695.9,
+        "intervalMs": 1365.5,
+        "drawMs": 3.10009765625,
+        "sequence": 275,
+        "trigger": "raf",
+        "from": 1795619647330.4,
+        "excessOverTargetMs": 1348.8333333333333,
+        "previousDrawMs": 2.5,
+        "afterPreviousDrawUntilCurrentStartMs": 1363
+      },
+      {
+        "at": 1795619663662.3,
+        "intervalMs": 366.7001953125,
+        "drawMs": 2.699951171875,
+        "sequence": 389,
+        "trigger": "raf",
+        "from": 1795619663295.5999,
+        "excessOverTargetMs": 350.0335286458333,
+        "previousDrawMs": 3,
+        "afterPreviousDrawUntilCurrentStartMs": 363.7001953125
+      },
+      {
+        "at": 1795619651928.8,
+        "intervalMs": 133.2001953125,
+        "drawMs": 2.699951171875,
+        "sequence": 297,
+        "trigger": "raf",
+        "from": 1795619651795.5999,
+        "excessOverTargetMs": 116.53352864583333,
+        "previousDrawMs": 2.800048828125,
+        "afterPreviousDrawUntilCurrentStartMs": 130.400146484375
+      },
+      {
+        "at": 1795619671462.4,
+        "intervalMs": 132.89990234375,
+        "drawMs": 5.300048828125,
+        "sequence": 460,
+        "trigger": "raf",
+        "from": 1795619671329.5,
+        "excessOverTargetMs": 116.23323567708333,
+        "previousDrawMs": 2.800048828125,
+        "afterPreviousDrawUntilCurrentStartMs": 130.099853515625
+      },
+      {
+        "at": 1795619657962.2,
+        "intervalMs": 132.699951171875,
+        "drawMs": 3.10009765625,
+        "sequence": 347,
+        "trigger": "raf",
+        "from": 1795619657829.5,
+        "excessOverTargetMs": 116.03328450520833,
+        "previousDrawMs": 2.699951171875,
+        "afterPreviousDrawUntilCurrentStartMs": 130
+      },
+      {
+        "at": 1795619617369.0999,
+        "intervalMs": 40.2998046875,
+        "drawMs": 8.5,
+        "sequence": 41,
+        "trigger": "raf",
+        "from": 1795619617328.8,
+        "excessOverTargetMs": 23.633138020833332,
+        "previousDrawMs": 3.89990234375,
+        "afterPreviousDrawUntilCurrentStartMs": 36.39990234375
+      },
+      {
+        "at": 1795619613902.0999,
+        "intervalMs": 40.099853515625,
+        "drawMs": 2.400146484375,
+        "sequence": 21,
+        "trigger": "raf",
+        "from": 1795619613862,
+        "excessOverTargetMs": 23.433186848958332,
+        "previousDrawMs": 1.699951171875,
+        "afterPreviousDrawUntilCurrentStartMs": 38.39990234375
+      },
+      {
+        "at": 1795619673533.5999,
+        "intervalMs": 38,
+        "drawMs": 3.400146484375,
+        "sequence": 460,
+        "trigger": "raf",
+        "from": 1795619673495.5999,
+        "excessOverTargetMs": 21.333333333333332,
+        "previousDrawMs": 3.800048828125,
+        "afterPreviousDrawUntilCurrentStartMs": 34.199951171875
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage.",
+    "breakdown": [
+      {
+        "sequence": 275,
+        "ticket": 13,
+        "intervalMs": 1365.5,
+        "preparerMs": 830.146,
+        "preparerCpuMs": 823.101,
+        "timelineMs": 572.1010000000001,
+        "captureMs": 256.30100000000004,
+        "resourcesWaitMs": 401.10000000000014,
+        "drawMs": 3.10009765625,
+        "opportunities": {}
+      },
+      {
+        "sequence": 297,
+        "ticket": 17,
+        "intervalMs": 133.2001953125,
+        "preparerMs": 48.924,
+        "preparerCpuMs": 48.791,
+        "timelineMs": 17.89999999999999,
+        "captureMs": 29.5,
+        "resourcesWaitMs": 0,
+        "drawMs": 2.699951171875,
+        "opportunities": {}
+      },
+      {
+        "sequence": 347,
+        "ticket": 21,
+        "intervalMs": 132.699951171875,
+        "preparerMs": 32.688,
+        "preparerCpuMs": 32.504,
+        "timelineMs": 16.200999999999993,
+        "captureMs": 15.200000000000003,
+        "resourcesWaitMs": 0,
+        "drawMs": 3.10009765625,
+        "opportunities": {
+          "stale-binding": 3
+        }
+      },
+      {
+        "sequence": 389,
+        "ticket": 25,
+        "intervalMs": 366.7001953125,
+        "preparerMs": 255.085,
+        "preparerCpuMs": 254.985,
+        "timelineMs": 21.69999999999999,
+        "captureMs": 231.8,
+        "resourcesWaitMs": 0,
+        "drawMs": 2.699951171875,
+        "opportunities": {
+          "stale-binding": 10
+        }
+      },
+      {
+        "sequence": 460,
+        "ticket": 27,
+        "intervalMs": 132.89990234375,
+        "preparerMs": 44.501,
+        "preparerCpuMs": 44.324,
+        "timelineMs": 25.5,
+        "captureMs": 17.599000000000004,
+        "resourcesWaitMs": 0,
+        "drawMs": 5.300048828125,
+        "opportunities": {
+          "stale-binding": 3
+        }
+      }
+    ],
+    "cuts": {
+      "path": ".cache/native-desert-center-mixed-nvidia-20261125.cuts.json",
+      "sha256": "fcaab123600a201d06962fcb7a14a6b4e0c9c7fc5453b3cf6feb2be4a89446fd"
+    }
+  }
+}

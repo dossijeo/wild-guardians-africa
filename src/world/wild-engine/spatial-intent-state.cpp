@@ -3682,6 +3682,21 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_birth(double session,double acto
      !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1)return -2;
   return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
 }
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_flight_center(double session,double actor,double targetId,double bodyId,
+    int count,double approachX,double approachZ,double yaw,double phase,double worker,double sourceSequence){
+  auto& s=state();
+  if(!integer(session)||!integer(actor)||!integer(targetId)||!integer(bodyId)||actor==worker||
+     count<=0||!coordinate(approachX)||!coordinate(approachZ)||
+     !std::isfinite(yaw)||!std::isfinite(phase)||phase<0)return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  const auto target=s.targets.find(uint64_t(targetId));
+  SpatialBodyView origin;
+  if(s.activeIntents.size()!=1||s.finishedAnimalStrike||
+     target==s.targets.end()||!intactAttackCenter(target->second)||
+     !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
+     flightCropOriginClear(session,worker,sourceSequence,origin.x,origin.z,origin.r,2,1)!=1)return -2;
+  return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
+}
 // A center can survive a strike. Its next action starts at the same validated
 // site, with a fresh preparation and the previous action's same physical body.
 EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double attackId,double targetId,double approachX,double approachZ){

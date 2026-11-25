@@ -20,7 +20,7 @@ La primera captura reveló que Surface seguía esperando una publicación de cul
 
 La regresión de 91 pruebas, los seis controles de adopción y el build pasan. El máximo medido a 30 Hz es 666,60 ms entre envíos en el relevo del primer golpe, en la secuencia 432 del ticket 4. El draw del Preparer ocupó 554,71 ms de pared y 545,01 ms de CPU antes del envío. El Host registró cero espera de recursos y 3,4 ms de dibujo. La atribución dentro del Preparer sigue abierta. C4 conserva el objetivo de 16,667 ms. [Recibos, referencias comparadas y hashes](performance/native-desert-attack-center-20261125.json).
 
-El caso mixto de Desierto 983 sigue pendiente. Los corredores ordinarios de trabajador y animal se acercan a 0,838 m frente al radio de encuentro de 2,2 m. Quedan el encuentro, la activación fuera del escenario de desarrollo y las variantes con colapso, escudos o varios animales.
+El caso mixto de Desierto 983 desde el norte sigue pendiente. Los corredores ordinarios de trabajador y animal se acercan a 0,838 m frente al radio de encuentro de 2,2 m. El encuadre sur ya tiene una prueba separada, con corredores que conservan la separación. Quedan el encuentro, la activación fuera del escenario de desarrollo y las variantes con colapso, escudos o varios animales. [Huida y ataque al centro](native-desert-mixed-flight-center-20261125.md).
 
 ## Inicio con la partida en marcha
 

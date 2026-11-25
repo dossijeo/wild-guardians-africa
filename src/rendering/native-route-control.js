@@ -156,8 +156,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(r.kind===26){
       const birth=actor.raidFlightBirth;
       if(birth){
-        const peer=actors.get(birth.workerActor),home=peer?.pendingHomeRequest;
-        if(!home||!homeRequestCurrent(home,peer)||home.raidSpawnSequence!==birth.raidSpawnSequence||
+        const peer=actors.get(birth.workerActor);
+        let home=peer?.pendingHomeRequest;
+        if(r.purpose==='center'){
+          const moving=peer?.homeProof?.reference,arrived=retiredRefuge?.reference;
+          home=moving&&homeRecordCurrent(moving,peer)?moving.sourceRequest:
+            !peer&&arrived?.actorId===birth.workerActor?arrived.sourceHome.reference.sourceRequest:null;
+        }else if(!homeRequestCurrent(home,peer))return false;
+        if(!home||home.raidSpawnSequence!==birth.raidSpawnSequence||
            home.bodyId!==birth.workerBody||home.requestSequence<birth.sourceSequence)return false;
       }
       return animalCropMatchesRequest(r,actor.cropRequest);
@@ -278,7 +284,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         home?.version===2&&home.requestSequence===birth?.sourceSequence&&home.raidSpawnSequence===birth.raidSpawnSequence&&home.bodyId===birth.workerBody;
       if(!birth||!id(birth.raidSpawnSequence)||!id(birth.sourceSequence)||!id(birth.workerBody)||!peer||peer.closed||
          peer.latestSequence!==birth.sourceSequence||!peerCurrent||actors.size!==1||actors.has(event.actorId)||!successor||
-         successor.bodyId===birth.workerBody||successor.purpose||event.pendingAnimalCrop.previousStrike||successor.actorId!==event.actorId||
+         successor.bodyId===birth.workerBody||successor.purpose&&successor.purpose!=='center'||event.pendingAnimalCrop.previousStrike||successor.actorId!==event.actorId||
          successor.nativeSession!==clock?.nativeSession||successor.authorityEpoch!==authorityEpoch||successor.requestSequence!==event.sequence||
          event.targetId!==successor.targetId||event.taskId||event.type!=='IntentChanged'||event.state!==6||current||revoked||handle||
          [event.nativeAnimalCrop,event.taskRequest,event.actionRequest,event.initialIdleRequest,event.idleStrollRequest,event.homeRequest,

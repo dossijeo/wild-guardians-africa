@@ -21,7 +21,8 @@ static int requestFarmArrival(double retired,double actor,double workerProfile,d
  if(retired){
   // Consume the exact Home19 absence. A restored inactive actor has no live receipt.
   const auto& h=s.homeArrivalResult;
-  if(!integer(retired)||spatial_world_biome()!=0||h[0]!=1||h[1]!=retired||h[29]!=actor||
+  const int biome=spatial_world_biome();
+  if(!integer(retired)||(biome!=0&&biome!=1)||h[0]!=1||h[1]!=retired||h[29]!=actor||
      worker.inactiveSequence!=uint64_t(retired)||worker.eligible||worker.body||worker.bodyBound||
      worker.x!=h[45]||worker.z!=h[46]||yaw!=h[38]||runPhase!=h[40]||walkPhase!=h[41]||
      carryPhase!=h[42]||runRemaining!=h[43]||!s.activeIntents.empty()||spatial_body_count()!=0)return -2;
