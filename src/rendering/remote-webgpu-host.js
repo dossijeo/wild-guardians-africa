@@ -1,3 +1,4 @@
+import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
@@ -1153,6 +1154,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime>status.clock.committedThrough||
       nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket||clock.safeUntil<boundary.effectiveTime||clock.elapsed>boundary.effectiveTime)
       throw Error('Prepared frame requires a new native world proposal boundary and covering resources');
+    if(packet.metadata.preparedCenterRuin){
+      const ruin=centerSource(packet.metadata.preparedCenterRuin);
+      if(Object.keys(packet.metadata).some(key=>key.endsWith('Template'))||
+         !sameNativeWorldBoundary(ruin.boundary,boundary)||!sameNativeWorldBoundary(ruin.previous,nativeWorldBoundary)||
+         ruin.intent!==status.sequence||ruin.initialClock!==status.clock.clockSequence||
+         packet.metadata.clock.elapsed!==ruin.boundary.effectiveTime||packet.metadata.clock.safeUntil!==ruin.end)
+        throw Error('Invalid retained center ruin source');
+    }
     if([packet.metadata.nativeAnimalCropTemplate,packet.metadata.nativeBarrierAdditionTemplate,packet.metadata.nativeTaskRouteStopTemplate,packet.metadata.nativeFarmArrivalStopTemplate,packet.metadata.nativeIdleStrollStopTemplate,packet.metadata.nativeTaskStartTemplate,packet.metadata.nativeResumeTemplate,packet.metadata.nativeTaskActionTemplate,packet.metadata.nativeTaskConsequenceTemplate,packet.metadata.nativeTaskSettlementTemplate,packet.metadata.nativeInitialIdleBodyTemplate,packet.metadata.nativeIdleCycleTemplate,packet.metadata.nativeIdleStrollTemplate,packet.metadata.nativeFarmArrivalTemplate,packet.metadata.nativeHomeRouteTemplate,packet.metadata.nativeHomeArrivalTemplate].filter(Boolean).length>1)throw Error('Conflicting native prepared templates');
     if(packet.metadata.nativeIdleStrollStopTemplate){const ref=copyNativeIdleStrollStopReference(packet.metadata.nativeIdleStrollStopTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native moving stop template');routeControl.admitStrollStop(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeTaskRouteStopTemplate){
@@ -1937,6 +1946,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});
              throw Error('Native mutation lacks its retained prepared command packet');
            }
+           if(message.preparedCenterRuin||pending?.metadata?.preparedCenterRuin&&preparedWorldBoundary)try{
+             const ruin=centerSource(message.preparedCenterRuin);
+             if(!sameCenter(ruin,pending?.metadata?.preparedCenterRuin)||
+                !sameNativeWorldBoundary(ruin.boundary,preparedWorldBoundary)||!sameNativeWorldBoundary(ruin.previous,nativeWorldBoundary)||
+                ruin.intent!==message.sequence||ruin.initialClock!==message.clockSequence)
+               throw Error('Center ruin hold has another source');
+             const relatives=quiescenceBindings().filter(binding=>binding.semantic==='relative'&&binding.nativeAnimalCrop);
+             if(!relatives.length||relatives.some(binding=>!binding.motionRecord?.isCurrent()||
+                !sameNativeAnimalCropReference(binding.nativeAnimalCrop,ruin.retreat.preparedReference)))
+               throw Error('Center ruin hold lost its Retreat');
+           }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedIdleStrollStopTemplate)try{
              const ref=copyNativeIdleStrollStopReference(message.preparedIdleStrollStopTemplate);if(!sameNativeIdleStrollStopReference(ref,pending?.metadata?.nativeIdleStrollStopTemplate))throw Error('Native moving stop lacks its retained template');
              const bindings=quiescenceBindings();
@@ -2010,7 +2030,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                ...(message.preparedHomeRouteTemplate?{nativeHomeRouteVersion:1,preparedHomeRouteTemplate:copyNativeHomeRouteReference(message.preparedHomeRouteTemplate)}:{}),
                ...(message.preparedTaskStartTemplate?{nativeTaskStartVersion:1,preparedTaskStartTemplate:copyNativeTaskStartReference(message.preparedTaskStartTemplate)}:{}),
                ...(message.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate)}:{}),
-               ...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
+               ...(message.preparedCenterRuin?{preparedCenterRuin:message.preparedCenterRuin}:{}),...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
            }).catch(error=>fail(error));return;
          }
          if(message?.type==='IntentMutationRelease'){
@@ -2041,9 +2061,24 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.nativeConsequences!==undefined&&(!Array.isArray(message.nativeConsequences)||!message.committed||message.nativeConsequences.some(v=>v?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native consequence attestation');
            if(message.nativeActions!==undefined&&(!Array.isArray(message.nativeActions)||!message.committed||message.nativeActions.some(value=>value?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native action attestation');
            if(message.nativeSuspendedBodies!==undefined&&(!Array.isArray(message.nativeSuspendedBodies)||!message.committed))throw Error('Uncommitted native suspension attestation');
+           if(message.acquiredCenterRuin!==undefined&&(!message.committed||!hold.preparedCenterRuin))
+             throw Error('Unsolicited center ruin acquisition');
            if(message.committed){
              const boundary=copyNativeWorldBoundary(message.worldBoundary??null);
-             if(hold.preparedWorldBoundary&&!hold.preparedAnimalCropRouteTemplate&&!hold.preparedAnimalCropStrikeTemplate&&!hold.preparedBarrierAdditionTemplate&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!hold.preparedTaskSettlementTemplate&&!hold.preparedInitialIdleBodyTemplate&&!hold.preparedIdleCycleTemplate&&!hold.preparedFarmArrivalTemplate&&!hold.preparedHomeRouteTemplate&&!hold.preparedTaskRouteStopTemplate&&!hold.preparedFarmArrivalStopTemplate&&!hold.preparedIdleStrollStopTemplate&&!hold.preparedIdleStrollTemplate&&!hold.preparedHomeArrivalTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,boundary))throw Error('Native release differs from its prepared command receipt');
+             if(hold.preparedCenterRuin){
+               const other=['nativeBarrierAdditions','nativeSuspendedBodies','nativeResumedRoutes','nativeStartedRoutes',
+                'nativeActions','nativeConsequences','nativeSettlements','nativeInitialIdleBodies','nativeIdleCycles',
+                'nativeStrollStops','nativeFarmArrivalStops','nativeTaskRouteStops','nativeStrolls','nativeHomes',
+                'nativeAnimalCropRoutes','nativeAnimalCropStrikes','nativeFarmArrivals','nativeHomeArrivals'];
+               if(!pending||pending.sequence!==hold.preparedFrameSequence||other.some(key=>message[key]?.length)||
+                  !sameCenter(hold.preparedCenterRuin,pending.metadata.preparedCenterRuin)||
+                  !verifiesCenter(hold.preparedCenterRuin,boundary,message.acquiredCenterRuin)||
+                  status.clock.clockSequence!==hold.clockSequence+1||status.sequence!==hold.sequence||
+                  !sameNativeWorldBoundary(hold.preparedCenterRuin.previous,nativeWorldBoundary))
+                 throw Error('Center ruin GO lacks the reserved packet or clock');
+               pending.admittedWorldBoundary=boundary;
+             }
+             if(hold.preparedWorldBoundary&&!hold.preparedCenterRuin&&!hold.preparedAnimalCropRouteTemplate&&!hold.preparedAnimalCropStrikeTemplate&&!hold.preparedBarrierAdditionTemplate&&!hold.preparedResumeTemplate&&!hold.preparedTaskStartTemplate&&!hold.preparedTaskActionTemplate&&!hold.preparedTaskConsequenceTemplate&&!hold.preparedTaskSettlementTemplate&&!hold.preparedInitialIdleBodyTemplate&&!hold.preparedIdleCycleTemplate&&!hold.preparedFarmArrivalTemplate&&!hold.preparedHomeRouteTemplate&&!hold.preparedTaskRouteStopTemplate&&!hold.preparedFarmArrivalStopTemplate&&!hold.preparedIdleStrollStopTemplate&&!hold.preparedIdleStrollTemplate&&!hold.preparedHomeArrivalTemplate&&!sameNativeWorldBoundary(hold.preparedWorldBoundary,boundary))throw Error('Native release differs from its prepared command receipt');
              if(worldBoundaryRequired&&(!boundary||boundary.authorityEpoch!==status.authorityEpoch||
                 boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime!==message.effectiveTime||
                 nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket))throw Error('Invalid committed world resource boundary');

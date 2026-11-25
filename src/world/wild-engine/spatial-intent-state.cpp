@@ -432,6 +432,12 @@ struct PendingHomeArrivalDraft {
   std::array<double,8> timeTranslation{};
 };
 struct PendingBarrierProposal {
+  struct CenterCollapse {
+    uint64_t actor,body,slot,generation,assignment,routeTicket;
+    double end;
+    std::shared_ptr<const NativeAnimalRouteBinding> binding;
+  };
+  std::optional<CenterCollapse> centerCollapse;
   std::optional<NativeAnimalStrike> animalStrike;
   std::optional<PendingNativeMotionDraft> resume,start,home,farmArrivalRoute,animalRoute;
   std::optional<PendingTaskActionDraft> action;
@@ -1578,7 +1584,7 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal& p){
-  p.pending=false;p.kind=0;p.animalStrike.reset();p.animalRoute.reset();p.farmArrivalRoute.reset();p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.workerRouteStop.reset();p.barrierAddition.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
+  p.pending=false;p.kind=0;p.centerCollapse.reset();p.animalStrike.reset();p.animalRoute.reset();p.farmArrivalRoute.reset();p.resume.reset();p.start.reset();p.home.reset();p.action.reset();p.consequence.reset();p.settlement.reset();p.homeArrival.reset();p.initialIdleBody.reset();p.idleCycle.reset();p.idleStroll.reset();p.workerRouteStop.reset();p.barrierAddition.reset();p.worldInput=SpatialWorldProposalInput{};p.routeEffects.clear();p.gateEffects.clear();
 }
 int takeWorldMutationBoundary(double session,double ticket,double sequence,double time,double clockSequence,int kind){
   auto& s=state();const auto& p=s.barrierProposal;
@@ -1701,6 +1707,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_task_route_stop_proposal_trans
 }
 
 int spatialIntentTakeWorld(double session,double ticket,double sequence,double time,double clockSequence,SpatialWorldProposalInput& out,bool allowGate){
+  if(state().barrierProposal.centerCollapse)return -1;
   const auto& draft=state().barrierProposal.barrierAddition;if(draft&&draft->gateId&&!allowGate)return -1;
   const int result=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,2);if(result!=1)return result;
   auto& p=state().barrierProposal;out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
@@ -1829,6 +1836,41 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double sessi
  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);return 1;
 }
 
+static bool collapseRetreatCurrent(IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
+  if(s.activeIntents.size()!=1||s.reservedBodies.size()!=1||spatial_body_count()!=1||!s.gates.empty()||
+     c.slot>=s.routeSlots.size()||!s.executionEnabled||s.clockPaused||!s.causalClock)return false;
+  const auto it=s.activeIntents.find(c.actor);
+  if(it==s.activeIntents.end()||!it->second.retreat||it->second.slot!=c.slot||it->second.generation!=c.generation)return false;
+  const auto& r=s.routeSlots[c.slot];
+  return r.generation==c.generation&&r.actor==c.actor&&r.reservationBody==c.body&&r.hasExecution&&
+    r.gateReservations.empty()&&executionBindingCoherent(s,c.body,c.slot)&&c.binding&&r.animalRouteBinding==c.binding&&
+    c.binding->actual.ticket==c.routeTicket&&c.binding->assignmentSequence==c.assignment&&c.end<c.binding->actual.header[11];
+}
+int stageCenterRuin(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,
+    double actor,double body,double slot,double gen,double assignment,double routeTicket,double end){
+  auto& s=state();
+  if(!integer(actor)||!integer(body)||!integer(slot,true)||slot>=s.routeSlots.size()||!integer(gen)||
+     !integer(assignment)||!integer(routeTicket)||!std::isfinite(end)||end<=s.effectiveTime||end>s.effectiveTime+.020000001)return -1;
+  const PendingBarrierProposal::CenterCollapse c{uint64_t(actor),uint64_t(body),uint64_t(slot),uint64_t(gen),
+    uint64_t(assignment),uint64_t(routeTicket),end,s.routeSlots[size_t(slot)].animalRouteBinding};
+  if(!collapseRetreatCurrent(s,c))return -2;
+  const int ok=spatialIntentStageWorld(input,&shape,1,true);
+  if(ok==1)s.barrierProposal.centerCollapse=c;
+  return ok;
+}
+int takeCenterRuin(double session,double ticket,double end,SpatialWorldProposalInput& out){
+  auto& s=state();auto& p=s.barrierProposal;
+  if(!p.pending||!p.centerCollapse||p.kind!=4||session!=p.session||ticket!=p.ticket)return -1;
+  const auto& c=*p.centerCollapse;
+  if(c.end!=end||end!=s.effectiveTime||s.clockThrough!=p.at||s.session!=p.session||s.clockSequence!=p.clock||
+     s.clockIntentSequence!=p.intents||s.intentSequence!=p.intents||s.sequence!=p.facts||s.gateRevision!=p.gates||
+     s.residencyPinRevision!=p.reservations||executionWorldStamp()!=p.world||!collapseRetreatCurrent(s,c))return -2;
+  const auto& route=s.routeSlots[c.slot];
+  const auto start=sampleRouteTiming(route,p.at),expected=sampleRouteTiming(route,end);
+  const uint64_t moved=(start[0]!=expected[0]||start[1]!=expected[1])?1:0;
+  if(route.executionPose!=expected||s.entityRevision!=p.entities+moved||spatialBodiesMutationRevision()!=p.bodies+moved)return -2;
+  out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
+}
 int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
   auto& p=state().barrierProposal;if(!p.pending||p.kind<2)return 0;
   const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);

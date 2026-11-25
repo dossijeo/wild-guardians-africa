@@ -1,5 +1,7 @@
 import {nativeWorkerRouteRecoveryProfile} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
+import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
+import {centerFootprint} from '../centers.js';
 import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind} from '../native-shield-world.js';
@@ -248,7 +250,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   // Retention is independent of the event subscription: closing a port or
   // stopping an observer does not prove its device stopped executing work.
   const controlConsumers=new Map();
-  let committedWorldBoundary=null;
+  let committedWorldBoundary=null,activeRetreat=null;
   const nativeWorldBoundary=()=>committedWorldBoundary?.authorityEpoch===epoch()?committedWorldBoundary:null;
   const nativeWorldResourceBoundary=()=>{
     const boundary=nativeWorldBoundary();
@@ -951,6 +953,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
            !sameNativeWorldBoundary(binding.preparedWorldBoundary,prepared.worldBoundary)||binding.bodyId!==ref.bodyId||
            binding.targetId!==ref.targetId||binding.requestSequence!==ref.requestSequence||binding.purpose!==ref.purpose)throw Error('Native crop route acquired a different resource');
         attestation=copyNativeAnimalCropAttestation({version:1,reference:ref,preparedReference:prepared.reference,assignmentSequence:binding.assignmentSequence},kind);
+        activeRetreat=ref.purpose==='retreat'?attestation:null;
       }else{
         if(wasm.nav_animal_strike_snapshot(actor)!==1)throw Error('Native strike did not acquire its terminal source');
         const a=new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),animalRouteV2?25:24);
@@ -968,6 +971,60 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     },prepareResources,signal,protocol);
   }
 
+  function prepareNativeCenterRuin(center,end){
+    const state=owningState,retreat=activeRetreat,ref=retreat?.reference,actor=state?.raid?.animals[0];
+    if(!ref||!actor||actor.id!=='animal-'+ref.actorId||actor.status!=='retreating'||
+       !state.structures.includes(center)||center.status!=='collapsing'||
+       !sameNativeWorldBoundary(ref.worldBoundary,nativeWorldBoundary())||typeof wasm.spatial_center_ruin_stage!=='function')
+      throw Error('Center ruin requires an acquired Retreat');
+    const handle=routeHandle(ref.worldBoundary.nativeSession,ref.slot,ref.generation);
+    const currentRoute=()=>{const q=nativeAnimalRouteBinding(handle);return !!q&&q.purpose==='retreat'&&
+      q.actorId===ref.actorId&&q.bodyId===ref.bodyId&&q.assignmentSequence===retreat.assignmentSequence&&
+      sameNativeWorldBoundary(q.worldBoundary,ref.worldBoundary)&&sameNativeWorldBoundary(q.preparedWorldBoundary,retreat.preparedReference.worldBoundary);};
+    const polygon=session.centerPolygonId(center.id),adoption=session.prepareNativeCenterRuinAdoption(center,state,polygon);
+    if(!polygon||!currentRoute())throw Error('Center ruin lost its native polygon or Retreat');
+    const footprint=centerFootprint(center,state).footprint.flatMap(point=>[Math.fround(point.x),Math.fround(point.z)]);
+    const prior=nativeWorldBoundary(),input=wasm.spatial_world_proposal_float_ptr(footprint.length);
+    if(!input)throw Error('Center ruin footprint storage unavailable');
+    new Float32Array(wasm.memory.buffer,input,footprint.length).set(footprint);
+    if(wasm.spatial_center_ruin_stage(numericId(center.id),polygon,ref.actorId,ref.bodyId,ref.slot,ref.generation,
+      retreat.assignmentSequence,ref.worldBoundary.ticket,end)!==1)throw Error('Center ruin could not reserve its native substep');
+    const ticketRow=()=>Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Reserved center ruin ticket unavailable');
+    const [sid,ticket,intent,at,initialClock,kind]=ticketRow(),boundary=Object.freeze({...prior,ticket,effectiveTime:at});
+    const header=()=>Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9));
+    let proof=null;
+    try{
+      if(sid!==prior.nativeSession||at!==state.elapsed||kind!==4)throw Error('Reserved center ruin ticket differs from authority');
+      const source=centerSource({boundary,previous:prior,retreat,initialClock,intent,center:center.id,polygon,end,
+        footprint,revisions:header().slice(6)});
+      const resources=Object.freeze({kind:'native-center-ruin-proposal',version:1,worldBoundary:boundary,nativeCenterRuin:source});
+      const valid=()=>!proof&&adoption.valid()&&currentRoute()&&state.elapsed===at&&sameNativeWorldBoundary(prior,nativeWorldBoundary())&&
+        wasm.nav_intent_barrier_proposal_ticket()===1&&ticketRow().every((value,index)=>value===[sid,ticket,intent,at,initialClock,kind][index]);
+      return {resources,valid,cancel:()=>!proof&&wasm.nav_intent_barrier_proposal_cancel(sid,ticket)===1,
+        consume(){
+          if(proof||state.elapsed!==end||!adoption.valid()||!currentRoute()||
+            !sameNativeWorldBoundary(prior,nativeWorldBoundary())||wasm.spatial_center_ruin_consume(sid,ticket,end)!==1)
+            throw Error('Center ruin lost its exact native substep');
+          const actual=Object.freeze({...boundary,effectiveTime:end});
+          if(wasm.spatial_world_resource_snapshot()!==1)throw Error('Acquired center ruin resources unavailable');
+          const row=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9));
+          proof=Object.freeze({prepared:source,acquired:actual,center:center.id,polygon,status:'ruined',revisions:Object.freeze(row.slice(6))});
+          if(row[1]!==sid||row[2]!==ticket||row[3]!==end||row[4]!==4||!verifiesCenter(source,actual,proof))
+            throw Error('Center ruin differs from native acquisition');
+          committedWorldBoundary=actual;adoption.adopt();
+        },
+        finish(){
+          if(!proof||center.status!=='ruined'||center.hp!==0||!currentRoute()||nativeCausalClock()?.committedThrough!==end)
+            throw Error('Center ruin did not finish at its native boundary');
+          const published=session.publishNativeWorldResources(proof.acquired);
+          if(published.kind!==4||published.chunks.length||published.removed.length)throw Error('Center ruin unexpectedly changed terrain');
+          const committed=Object.freeze({...published,phase:'committed',worldBoundary:proof.acquired,nativeCenterRuin:proof});
+          onNativeWorldResources?.(committed);
+          return {worldBoundary:proof.acquired,resources:committed,nativeCenterRuin:proof};
+        }};
+    }catch(error){wasm.nav_intent_barrier_proposal_cancel(sid,ticket);throw error;}
+  }
   const nativeAnimalRouteBinding=handle=>{
     if(handle?.authorityEpoch!==epoch()||wasm.nav_animal_route_binding?.(handle.session,handle.slot,handle.generation)!==1)return null;
     const h=new Float64Array(wasm.memory.buffer,wasm.nav_animal_route_binding_ptr(),animalRouteV2?25:24);
@@ -3248,7 +3305,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    takeRefugeReturn,intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestNativeCenterSuccessor,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    prepareNativeCenterRuin,takeRefugeReturn,intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestNativeCenterSuccessor,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -4688,7 +4745,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       if(bridge.authorityEpoch===owner&&(result.status==='committed'||result.status==='committed-control-failed'))pendingNativeChanges=true;
       return result;
     },routePoints:bridge.routePoints,
-    startNativeAnimalCropRouteAfterGpuQuiescence:bridge.startNativeAnimalCropRouteAfterGpuQuiescence,startNativeAnimalCropStrikeAfterGpuQuiescence:bridge.startNativeAnimalCropStrikeAfterGpuQuiescence,requestNativeAnimalCropRoute:bridge.requestNativeAnimalCropRoute,declareRaidFlightPair:bridge.declareRaidFlightPair,nativeRaidFlightMember:bridge.nativeRaidFlightMember,nativeFinishedAnimalRetreat:bridge.nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop:bridge.nativeFinishedAnimalCrop,nativeAnimalCropState:bridge.nativeAnimalCropState,nativeAnimalRouteBinding:bridge.nativeAnimalRouteBinding,nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
+    prepareNativeCenterRuin:bridge.prepareNativeCenterRuin,startNativeAnimalCropRouteAfterGpuQuiescence:bridge.startNativeAnimalCropRouteAfterGpuQuiescence,startNativeAnimalCropStrikeAfterGpuQuiescence:bridge.startNativeAnimalCropStrikeAfterGpuQuiescence,requestNativeAnimalCropRoute:bridge.requestNativeAnimalCropRoute,declareRaidFlightPair:bridge.declareRaidFlightPair,nativeRaidFlightMember:bridge.nativeRaidFlightMember,nativeFinishedAnimalRetreat:bridge.nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop:bridge.nativeFinishedAnimalCrop,nativeAnimalCropState:bridge.nativeAnimalCropState,nativeAnimalRouteBinding:bridge.nativeAnimalRouteBinding,nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
     nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,

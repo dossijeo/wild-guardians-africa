@@ -10,3 +10,38 @@ test('destruction smoke uses the shared terrain depth binding with a safe disabl
  const {WebGPURenderer}=await import('three/webgpu'),{createWebGpuVfxSoftDepth}=await import('../src/rendering/webgpu-vfx-sprite-material.js'),depth=new THREE.DepthTexture(8,8),next=new THREE.DepthTexture(16,16),binding=createWebGpuVfxSoftDepth(depth),source=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());source.add(mesh);const template=createWebGpuCenterDestructionTemplate({gltf:{scene:source},building:{seed:123},renderer:{library:{}},softDepth:binding}),damage=template.instantiate(),camera=new THREE.PerspectiveCamera(),canvas={width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}},renderer=new WebGPURenderer({canvas});renderer.hasFeature=()=>true;renderer.backend.renderer=renderer;
  try{damage.update({status:'intact',hp:100,maxHp:100},0);damage.update({status:'collapsing',collapseRemaining:1,hp:0,maxHp:100},1);damage.prepare(camera);assert.equal(damage.needsSoftDepth,true);damage.setSoftDepthEnabled(true);const smoke=damage.group.children[3],scene=new THREE.Scene();scene.add(damage.group);const builder=renderer.backend.createNodeBuilder(smoke,renderer);builder.scene=scene;builder.camera=camera;builder.build();assert.match(builder.fragmentShader,/textureLoad/);assert.match(builder.fragmentShader,/texture_depth_2d/);binding.setDepthTexture(next);assert.equal(binding.depthNode.value,next);damage.setSoftDepthEnabled(false);assert.throws(()=>damage.setSoftDepthEnabled(1),/Invalid/);}finally{damage.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();depth.dispose();next.dispose();}
 });
+
+test('retained center ruin packs the same particles as the next confirmed frame',()=>{
+ const gltf=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());
+ gltf.add(mesh);
+ const template=createWebGpuCenterDestructionTemplate({gltf:{scene:gltf},building:{seed:123},renderer:{library:{}}});
+ const retained=template.instantiate(),ordinary=template.instantiate(),camera=new THREE.PerspectiveCamera();
+ camera.position.set(6,4,8);camera.lookAt(0,0,0);
+ const active={kind:'center',status:'intact',hp:140,maxHp:600};
+ const damaged={...active,status:'collapsing',hp:120},ruined={...damaged,status:'ruined',hp:0,collapseRemaining:0};
+ const published=3.1,end=3.21;
+ const prepare=(owner,entity,time)=>{owner.update(entity,time);owner.prepare(camera);};
+ const packing=owner=>[[owner.group.children[2],'aOffset'],[owner.group.children[3],'aPosSize']].map(([part,name])=>{
+  const buffer=part.geometry.getAttribute(name).data,count=part.geometry.instanceCount;
+  return {count,bytes:Uint8Array.from(new Uint8Array(buffer.array.buffer,0,count*buffer.stride*buffer.array.BYTES_PER_ELEMENT))};
+ });
+ try{
+  for(const owner of [retained,ordinary]){
+   prepare(owner,active,0);
+   for(let step=1;step<62;step++)prepare(owner,{...damaged,collapseRemaining:3.25-step*.05},step*.05);
+   prepare(owner,{...damaged,collapseRemaining:.11},published);
+  }
+  const before=packing(retained);
+  assert(before.every(pack=>pack.count>0));
+  prepare(ordinary,ruined,end);
+  const expected=packing(ordinary);
+  assert(before.every((pack,i)=>!Buffer.from(pack.bytes).equals(expected[i].bytes)));
+  const record=()=>{retained.prepare(camera);return packing(retained);};
+  assert.deepEqual(retained.captureRuin(published,end,record),expected);
+  assert.deepEqual(packing(retained),before);
+  assert.throws(()=>retained.captureRuin(published,end,()=>{record();throw Error('capture cancelled');}),/capture cancelled/);
+  assert.deepEqual(packing(retained),before);
+  prepare(retained,ruined,end);
+  assert.deepEqual(packing(retained),expected);
+ }finally{retained.dispose();ordinary.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});

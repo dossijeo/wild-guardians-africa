@@ -25,6 +25,24 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await onReady(record);
    return {shield:resources,abort(){record.aborted=true;}};
   }
+  if(method==='prepareNativeGateResources'&&resources.kind==='native-center-ruin-proposal'){
+   const record={kind:'center-ruin',resources,minSequence:options.minSequence,committed:false,aborted:false};
+   records.push(record);
+   await onPrepare(record);
+   await graphics.client.whenFrameSettled();
+   if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
+   const center=resources.nativeCenterRuin,start=center.boundary.effectiveTime,end=center.end;
+   const retreat=records.findLast(item=>item.kind==='animal-crop-route'&&item.committed);
+   if(retreat?.resources.reference.purpose!=='retreat')throw Error('Center fixture has no Retreat rig');
+   const metadata={nativeWorldBoundary:center.boundary,preparedCenterRuin:center,
+    clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
+   const packet=await prepareExistingGroup(graphics,retreat.cropGroup,metadata,options.signal);
+   packet.presented.catch(()=>{});record.packet=packet;
+   try{await onReady(record);}catch(error){packet.abort();throw error;}
+   return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,
+    commit(data){record.commit=data;record.committed=packet.commit(data.worldBoundary,data.nativeCenterRuin);if(record.committed)onCommit?.(record,data);return record.committed;},
+    abort(){record.aborted=true;packet.abort();}};
+  }
   if(method==='prepareNativeGateResources'&&[3,4].includes(resources.kind)){
    const record={kind:'shield',resources,minSequence:options.minSequence,committed:false,aborted:false};
    if(options.shieldGeometry&&(options.shieldGeometry.shield.spell.id!==resources.nativeShield.spell.id||resources.kind!==3))throw Error('Invalid fixture Shield geometry');

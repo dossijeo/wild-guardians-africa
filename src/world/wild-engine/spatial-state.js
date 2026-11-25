@@ -140,7 +140,7 @@ export function validateSpatialState(state){
   return state;
 }
 
-export function applySpatialState(wasm,state){
+export function applySpatialState(wasm,state,workCenterOwners=null){
   validateSpatialState(state);
   const removed=state.removedProps??[];
   if(removed.length){
@@ -181,7 +181,9 @@ export function applySpatialState(wasm,state){
       records.setInt32(at,polygon.id,true);
       records.setInt32(at+4,polygon.points.length,true);
       records.setInt32(at+8,polygon.passMask,true);
-      records.setInt32(at+12,0,true);
+      // Only the cold Game mirror supplies this owner after matching the whole
+      // reconstructed topology. Public spatial saves still contain no owner tag.
+      records.setInt32(at+12,workCenterOwners?.get(polygon.id)??0,true);
       polygon.points.forEach((point,j)=>{
         records.setFloat32(at+16+j*8,point.x,true);
         records.setFloat32(at+20+j*8,point.z,true);

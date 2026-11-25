@@ -1,5 +1,6 @@
 import {copyNativeBarrierAdditionAttestation} from './native-barrier-addition.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind} from './native-shield-world.js';
+import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 
 // Identity of a committed native proposal, not a clock permit or a description
 // of geometry. Preparation must apply the corresponding world before using it.
@@ -28,10 +29,15 @@ function readNativeWorldResources(publication,previous){
  const expected=new Map();let boundary=before,total=0;
  for(const record of records){
   if(!record||record.version!==1||Object.keys(record).some(key=>!['version','worldBoundary','kind','chunks','removed'].includes(key)&&
-     !(record.kind===2&&key==='nativeBarrierAdditionBinding')&&!(nativeShieldWorldKind(record.kind)&&key==='nativeShield'))||
+     !(record.kind===2&&key==='nativeBarrierAdditionBinding')&&!(nativeShieldWorldKind(record.kind)&&key==='nativeShield')&&
+     !(record.kind===4&&key==='nativeCenterRuin'))||
      !Array.isArray(record.chunks)||!Array.isArray(record.removed))throw TypeError('Invalid native world resource record');
   if(![2,3,4,6,7,8,9,10,11,12,24,25].includes(record.kind))throw Error('Native graphical resource family is not implemented');
-  if(nativeShieldWorldKind(record.kind)){
+  if(record.kind===4&&record.nativeCenterRuin!==undefined){
+   const proof=record.nativeCenterRuin,source=centerSource(proof?.prepared);
+   if(record.nativeShield!==undefined||record.chunks.length||record.removed.length||!verifiesCenter(source,record.worldBoundary,proof))
+     throw Error('Native center ruin publication differs from its committed boundary');
+  }else if(nativeShieldWorldKind(record.kind)){
    if(record.chunks.length||record.removed.length)throw Error('Native shield preview changed terrain geometry');
    copyNativeShieldWorld(record.nativeShield,record.kind);
   }

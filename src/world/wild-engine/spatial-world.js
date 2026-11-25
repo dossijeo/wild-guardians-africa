@@ -631,14 +631,14 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
       if(!generated)throw Error('Generate the world before capturing terrain state');
       return captureSpatialTerrainState(wasm);
     },
-    restoreState:(state,cx=0,cz=0)=>{
+    restoreState:(state,cx=0,cz=0,workCenterOwners=null)=>{
       validateSpatialState(state);
       generate(state.seed,cx,cz,state.biome??'savanna',state);
-      applySpatialState(wasm,state);
+      applySpatialState(wasm,state,workCenterOwners);
       return chunk;
     },
     removeBarrier:id=>wasm.spatial_remove_barrier(id),
-    addPolygon:(points,passMask=0)=>{
+    addPolygon:(points,passMask=0,workCenter=0)=>{
       if(!Array.isArray(points)||points.length<3||points.length>64||
          !points.every(p=>Number.isFinite(p?.x)&&Number.isFinite(p?.z)))
         throw TypeError('Expected a finite 3–64 vertex spatial polygon');
@@ -646,7 +646,10 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
       if(!pointer)throw Error('Could not allocate spatial polygon');
       const input=new Float32Array(wasm.memory.buffer,pointer,points.length*2);
       points.forEach((point,i)=>{input[i*2]=point.x;input[i*2+1]=point.z;});
-      const id=wasm.spatial_add_polygon(points.length,passMask);
+      if(!Number.isInteger(workCenter)||workCenter<0||workCenter>0x7fffffff||workCenter>0&&passMask!==0)
+        throw TypeError('Invalid spatial work center owner');
+      const id=workCenter&&typeof wasm.spatial_install_work_center_polygon==='function'?
+        wasm.spatial_install_work_center_polygon(points.length,workCenter):wasm.spatial_add_polygon(points.length,passMask);
       if(!id)throw Error('Invalid spatial polygon');
       return id;
     },

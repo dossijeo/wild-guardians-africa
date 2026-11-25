@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+NVIDIA presentó la ruina de un centro durante un Retreat nativo. El mismo ticket retiró el polígono dentro del subpaso que emitió StructureRuined y dibujó la ceniza y las partículas con el facóquero aún en retirada. El recorrido aislado confirma además la ausencia del actor y el drenaje. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#ruina-del-centro-durante-retreat).
+
 NVIDIA verificó la recuperación de Farm23 mientras abría un portón. Trabajador y hoja conservaron el mismo reloj a 10,50 s en ambos fences. Tras seleccionar al trabajador, reanudar y cruzar, recuperó Idle y drenó al salir. La corrección de visibilidad entre pases de color y sombra queda cubierta por regresión. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-de-farm23-mientras-abre-un-portón).
 
 La recuperación tras perder el dispositivo ya cubre un Farm23 en marcha con un solo civil sin portón. NVIDIA verificó el mismo cuerpo y corredor, selección a 10,75 s durante la suspensión, dos fences, regreso a Idle y drenaje al salir. C4 y las otras cohortes de Recovery siguen abiertos. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-farm23).

@@ -114,7 +114,7 @@ export function createSpatialGameSession(module,state,streamOptions){
       // Cold bootstrap owns the only restore. No routes, bodies or graphics
       // have been installed, and both mirrors adopt the IDs from this restore.
       if(!matches){
-        const selected=core.currentChunk();core.restoreState(authorized,selected.cx,selected.cz);
+        const selected=core.currentChunk();core.restoreState(authorized,selected.cx,selected.cz,centers.workCenterOwners());
         if(JSON.stringify(core.snapshot())!==serialized)throw Error('Native restored world state mismatch');
       }
       wallPlan.adopt();shieldPlan.adopt();
@@ -520,7 +520,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
     captureWallOwners:walls.captureOwners,wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
-    captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
+    centerPolygonId:centers.polygonId,prepareNativeCenterRuinAdoption:centers.prepareRuinAdoption,captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,

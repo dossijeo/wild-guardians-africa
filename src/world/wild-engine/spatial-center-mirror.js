@@ -40,5 +40,22 @@ export function createSpatialCenterMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
+  function prepareRuinAdoption(center,state,id){
+    const source=installed.get(center.id);
+    const current=()=>!!source&&installed.get(center.id)===source&&source.polygonId===id&&
+      state.structures.includes(center)&&center.status==='collapsing'&&source.signature===signature(center,state);
+    if(!current())throw Error('Center ruin lost its installed footprint');
+    return {valid:current,adopt(){
+      if(!current())throw Error('Center ruin adoption changed');
+      installed.delete(center.id);
+      revision++;
+    }};
+  }
+  function workCenterOwners(){
+    return new Map([...installed].flatMap(([id,{polygonId}])=>{
+      const owner=Number(/^structure-([1-9][0-9]*)$/.exec(id)?.[1]??0);
+      return owner?[[polygonId,owner]]:[];
+    }));
+  }
+  return {sync,clear,prepareRuinAdoption,workCenterOwners,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
 }

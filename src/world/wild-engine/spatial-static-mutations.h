@@ -42,6 +42,8 @@ int spatialIntentStopWorkerRoute(const SpatialWorldProposalInput&);
 int spatialIntentRevalidateWorkerRouteStop(double,double,std::array<double,8>&);
 int spatialIntentTakeWorkerRouteStop(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&);
 
+int stageCenterRuin(const SpatialWorldProposalInput&,const SpatialStaticMutation&,double,double,double,double,double,double,double);
+int takeCenterRuin(double,double,double,SpatialWorldProposalInput&);
 int spatialIntentWorldProposalSnapshot(std::array<double,6>&);
 // A committed route changes its resource boundary while retaining every
 // terrain allocation. Share the existing canonical revision receipt.

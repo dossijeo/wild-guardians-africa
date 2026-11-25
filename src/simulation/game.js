@@ -1943,7 +1943,7 @@ function prepareClockEvents(s,nav){
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
-export function tick(s,seconds,nav,{clockRate=1,expiringShield=null}={}) {
+export function tick(s,seconds,nav,{clockRate=1,expiringShield=null,centerRuin=null}={}) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   if(!Number.isFinite(clockRate)||clockRate<=0||clockRate>1000000)throw TypeError('Invalid native game clock rate');
   if(seconds>1e-9&&!s.pauses.length&&!s.result&&!nav.intentTaskPlanner&&s.workers.some(worker=>worker.nativeRouteAdmission!==undefined))throw Error('Native task state requires resource admission before legacy movement');
@@ -1989,7 +1989,7 @@ export function tick(s,seconds,nav,{clockRate=1,expiringShield=null}={}) {
       s.cooldowns[kind]=remaining>1e-9?remaining:0;
     }
     for(const structure of s.structures)if(structure.status==='collapsing') {
-      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,structureKind:structure.kind,presentation:{x:structure.x,z:structure.z}});}
+      structure.collapseRemaining-=step;if(structure.collapseRemaining<=1e-9){if(structure===centerRuin?.center)centerRuin.consume();structure.status='ruined';structure.hp=0;nav.setState(s);emit(s,'StructureRuined',{targetId:structure.id,structureKind:structure.kind,presentation:{x:structure.x,z:structure.z}});}
     }
     if(previousTime<300) {
       const growthStep=s.spells.some(spell=>spell.kind==='growth'&&spell.remaining>0)?growthPowerStep(s):null;
@@ -2033,7 +2033,7 @@ export function tick(s,seconds,nav,{clockRate=1,expiringShield=null}={}) {
   }
 }
 export function advanceReal(s,seconds,nav,options={}) {
-  const {nightFastForward=true,onTick=null,onClockSegment=null,expireShield=null}=options;
+  const {nightFastForward=true,onTick=null,onClockSegment=null,expireShield=null,prepareCenterRuin=null}=options;
   if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
@@ -2058,6 +2058,14 @@ export function advanceReal(s,seconds,nav,options={}) {
           if(left>1e-9)return advanceReal(s,left,nav,options);
         });
       }
+    }
+    if(prepareCenterRuin){
+      const span=real*speed,center=s.structures.find(item=>item.kind==='center'&&item.status==='collapsing'&&item.collapseRemaining-span<=1e-9);
+      if(center)return prepareCenterRuin(center,span,consume=>tick(s,span,nav,{clockRate:speed,centerRuin:{center,consume}})).then(()=>{
+        if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+        if(onTick)onTick();
+        if(left>1e-9)return advanceReal(s,left,nav,options);
+      });
     }
     tick(s,real*speed,nav,{clockRate:speed});
     if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});

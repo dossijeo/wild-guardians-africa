@@ -97,7 +97,7 @@ struct Barrier {int id;float x,z,halfX,halfZ,yaw,c,s;uint8_t passMask;};
 struct BarrierStateRecord {int32_t id;float x,z,halfX,halfZ,yaw;int32_t passMask;};
 static_assert(sizeof(BarrierStateRecord)==28);
 constexpr int maxPolygonVertices=64;
-struct PolygonObstacle {int id;uint8_t passMask;float minX,minZ,maxX,maxZ;std::vector<float> xy;};
+struct PolygonObstacle {int id;uint8_t passMask;float minX,minZ,maxX,maxZ;std::vector<float> xy;int workCenter=0;};
 struct PolygonStateRecord {int32_t id,count,passMask,reserved;float xy[maxPolygonVertices*2];};
 static_assert(sizeof(PolygonStateRecord)==528);
 struct SettlementStateRecord {float x,z,hx,hz;};
@@ -1255,7 +1255,7 @@ bool preparedNavigationCurrent(const PreparedChunkNavigation& prepared){
 }
 struct TerrainProposal;
 struct WorldResourcePreview {
-  bool gateAddition=false,gateRemoval=false;
+  bool gateAddition=false,gateRemoval=false,centerCollapse=false;
   std::array<int,3> gateRemovalIds{};
   std::vector<float> barrierAdditions;
   std::array<double,9> header{};
@@ -2695,6 +2695,15 @@ int spatial_add_polygon(int count,int passMask){
   spatialIntentStaticCommitted(ticket);
   return polygon.id;
 }
+// Tag only a newly installed work-center footprint, never a resident polygon by ID.
+EMSCRIPTEN_KEEPALIVE int spatial_install_work_center_polygon(int count,int center){
+  if(center<=0)return 0;
+  const auto& index=polygonIndex().byId;
+  for(const auto& item:index)if(item.second.workCenter==center)return 0;
+  const int id=spatial_add_polygon(count,0);
+  if(id>0)polygonIndex().byId.at(id).workCenter=center;
+  return id;
+}
 int spatial_remove_polygon(int id){
   auto& index=polygonIndex();
   const auto it=index.byId.find(id);
@@ -2858,9 +2867,11 @@ int spatial_restore_polygons(int count,int nextId){
       nextId<1||!polygonIndex().byId.empty())return 0;
   if(!spatialIntentStaticRestorationAllowed())return 0;
   int previousId=0;
+  std::set<int> centerOwners;
   for(const PolygonStateRecord& item:polygonState){
     if(item.id<=previousId||item.id>=nextId||item.count<3||
-       item.count>maxPolygonVertices||item.passMask<0||item.passMask>3)return 0;
+       item.count>maxPolygonVertices||item.passMask<0||item.passMask>3||item.reserved<0||
+       item.reserved>0&&(item.passMask!=0||!centerOwners.insert(item.reserved).second))return 0;
     float minX=std::numeric_limits<float>::infinity(),minZ=minX,maxX=-minX,maxZ=-minX;
     double area=0;
     for(int i=0;i<item.count;i++){
@@ -2878,7 +2889,7 @@ int spatial_restore_polygons(int count,int nextId){
     PolygonObstacle polygon={item.id,uint8_t(item.passMask),
       std::numeric_limits<float>::infinity(),std::numeric_limits<float>::infinity(),
       -std::numeric_limits<float>::infinity(),-std::numeric_limits<float>::infinity(),
-      std::vector<float>(item.xy,item.xy+item.count*2)};
+      std::vector<float>(item.xy,item.xy+item.count*2),item.reserved};
     for(int i=0;i<item.count;i++){
       polygon.minX=std::min(polygon.minX,item.xy[i*2]);
       polygon.maxX=std::max(polygon.maxX,item.xy[i*2]);
@@ -3079,6 +3090,20 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
   }
   return staged;
 }
+// This removal is authorized only for the resident center's exact footprint.
+EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage(int center,int polygon,double actor,double body,double slot,
+    double generation,double assignment,double routeTicket,double end){
+  const auto it=polygonIndex().byId.find(polygon);
+  if(center<=0||it==polygonIndex().byId.end()||it->second.workCenter!=center||it->second.passMask!=0||
+     worldProposalFloatInput.empty()||it->second.xy!=worldProposalFloatInput)return -2;
+  const SpatialWorldProposalInput input{4,0,{}, {polygon}};
+  const int ok=stageCenterRuin(input,polygonMutation(it->second),actor,body,slot,generation,assignment,routeTicket,end);
+  if(ok!=1)return ok;
+  std::array<double,6> id{};if(spatialIntentWorldProposalSnapshot(id)!=1)return -2;
+  WorldResourcePreview preview;preview.centerCollapse=true;preview.header={1,id[0],id[1],id[3],4,0,
+    double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
+  worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
+}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
 // The original world preview for kinds12/24/25 owns no terrain buffers. Refresh its
@@ -3177,17 +3202,21 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_prepared_snapshot(double session
 }
 EMSCRIPTEN_KEEPALIVE void* spatial_world_resource_buffer_ptr(int index,int field){return worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).first;}
 EMSCRIPTEN_KEEPALIVE int spatial_world_resource_buffer_bytes(int index,int field){return int(worldResourceBuffer(worldResourcePublication?worldResourcePublication->prepared.get():nullptr,index,field).second);}
-int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket,bool barrierBound=false,bool gateBound=false,bool removalBound=false){
+int commitWorldProposal(double session,double ticket,double sequence,double time,double clockSequence,bool stopBound,double preparedTicket,bool barrierBound=false,bool gateBound=false,bool removalBound=false,bool collapse=false){
   const bool hasPrepared=worldResourcePreview&&worldResourcePreview->header[1]==session&&worldResourcePreview->header[2]==ticket;
   if(removalBound&&(!hasPrepared||!worldResourcePreview->gateRemoval)||hasPrepared&&worldResourcePreview->gateRemoval&&!removalBound)return -1;
   if(gateBound&&(!hasPrepared||!worldResourcePreview->gateAddition)||hasPrepared&&worldResourcePreview->gateAddition&&!gateBound)return -1;
-  if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
+  if(collapse!=(hasPrepared&&worldResourcePreview->centerCollapse))return -1;
+  if(collapse){
+    const auto& h=worldResourcePreview->header;
+    if(h[6]!=double(terrainInputRevision)||h[7]!=double(overlayRevision)||h[8]!=double(residencyRevision))return -2;
+  }else if(hasPrepared&&spatial_world_proposal_resource_snapshot(session,ticket)!=1)return -2;
   struct ApplyingGuard {WorldResourcePreview* previous;~ApplyingGuard(){worldResourcePreviewApplying=previous;}} applyingGuard{worldResourcePreviewApplying};
   // The legacy restoration without native bodies has different halo/revision
   // semantics. Keep its canonical path until that owner uses protected commits.
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
-  std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=(gateBound||removalBound)?1:barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
+  std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=collapse?takeCenterRuin(session,ticket,time,input):(gateBound||removalBound)?1:barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
   if(valid!=1)return valid;worldProposalResult.clear();
   if(!stopBound&&(input.kind==12||input.kind==24||input.kind==25))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
@@ -3219,6 +3248,9 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
     publication.valid=true;
   }
   return result==1?1:-6;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_consume(double session,double ticket,double end){
+ return commitWorldProposal(session,ticket,0,end,0,false,0,false,false,false,true);
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_commit(double session,double ticket,double sequence,double time,double clockSequence){return commitWorldProposal(session,ticket,sequence,time,clockSequence,false,0);}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stop_commit_bound(double session,double ticket,double sequence,double time,double clockSequence,double preparedTicket){return commitWorldProposal(session,ticket,sequence,time,clockSequence,true,preparedTicket);}

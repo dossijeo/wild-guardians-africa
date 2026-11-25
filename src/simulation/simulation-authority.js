@@ -43,7 +43,8 @@ import {tutorialHandTarget} from '../tutorial/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropRouteSubject} from './raids.js';
+import {sameCenter} from '../world/native-center-ruin-source.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropCohortCurrent,nativeCropRouteSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -96,11 +97,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   },onNativeWorldResources:resources=>{
     // Empty receipts for occupancy, shield polygons and worker stops retain
     // the terrain meshes and vegetation.
-    const preservesTerrain=([2,12,24,25].includes(resources.kind)||!!resources.nativeShield)&&resources.removed.length===0;
+    const preservesTerrain=([2,12,24,25].includes(resources.kind)||!!resources.nativeShield||!!resources.nativeCenterRuin)&&resources.removed.length===0;
     if(!preservesTerrain&&!resources.chunks.length)terrainGeneration++;
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
-      ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{})});
+      ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{})});
   }});planner.resetFromState(game);
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
@@ -344,7 +345,44 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   const nativeCommandOwnerCurrent=owner=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&
     owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
 
-  let shieldAdvance=null;
+  let shieldAdvance=null,centerRuinAdvance=null;
+  async function prepareCenterRuin(center,span,advanceSubstep){
+    const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
+      civilShieldPhysicsAvailable()&&game.workers.length===0&&game.structures.length===1&&game.structures[0]===center&&
+      center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&
+      game.raid.animals[0].status==='retreating'&&nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
+      !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
+    if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires its isolated Retreat and substep');
+    const owner={controller:new AbortController(),resources:nativeResourcePreparation,receipt:null};
+    centerRuinAdvance=owner;
+    const at=game.elapsed,end=at+span,signal=owner.controller.signal;
+    const current=()=>eligible()&&centerRuinAdvance===owner&&game.elapsed===at&&!signal.aborted&&owner.resources===nativeResourcePreparation;
+    let draft=null,prepared=null,hold=null,entered=false;
+    try{
+      owner.receipt=await nativeProduction.quiesce();
+      if(!current())throw Error('Native center ruin source changed');
+      draft=planner.prepareNativeCenterRuin(center,end);
+      const {resources}=draft,source=resources.nativeCenterRuin;
+      prepared=await owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence});
+      if(!current()||!draft.valid()||!prepared.valid()||!sameCenter(prepared.preparedCenterRuin,source)||
+         !sameNativeWorldBoundary(prepared.preparedWorldBoundary,source.boundary))
+        throw Error('Native center ruin lost its prepared resource');
+      planner.flushNativeIntentControl();
+      hold=await nativeIntentControl.quiesceGpuForMutation({preparedWorldBoundary:source.boundary,preparedCenterRuin:source,signal});
+      if(!current()||!draft.valid()||!prepared.valid())throw Error('Native center ruin changed before its substep');
+      entered=true;advanceSubstep(draft.consume);
+      const result=draft.finish();
+      planner.flushNativeIntentControl();
+      if(!prepared.commit(result))throw Error('Native center ruin did not commit its graphical resources');
+      nativeIntentControl.releaseGpuAfterMutation(hold,{committed:true,worldBoundary:result.worldBoundary,
+        acquiredCenterRuin:result.nativeCenterRuin});
+    }catch(error){
+      owner.failure=error;
+      prepared?.abort();draft?.cancel();
+      if(hold&&!entered&&!closed)nativeIntentControl.releaseGpuAfterMutation(hold,{committed:false});
+      throw error;
+    }
+  }
   function civilShieldPhysicsAvailable(){return !restoringPhysics&&!physicsInitializing&&!physics?.actorIds.length;}
   async function expireCivilShield(spell,advanceToExpiry){
     if(shieldAdvance)throw Error('Native shield expiry already active');
@@ -677,7 +715,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
   }
   async function prepareNativeStructureCommand(command){
-    if(closed||shieldAdvance||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
+    if(closed||shieldAdvance||centerRuinAdvance||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
     const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
     try{
       if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
@@ -797,7 +835,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction(){
-      if(shieldAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
+      if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce()??Promise.resolve(null);
     },
@@ -897,6 +935,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
     if(shieldAdvance)throw shieldAdvance.failure??Error('Native shield expiry owns this advance');
+    if(centerRuinAdvance)throw centerRuinAdvance.failure??Error('Native center ruin owns this advance');
     if(closed)throw Error('Simulation authority is closed');if(nativeProduction?.status().fault)throw Error('Native intent production failed: '+nativeProduction.status().fault);if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
     if(nativeStructurePreparation?.commandSequence!==undefined){
@@ -922,6 +961,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      if(qualifyShieldExpiry&&nativeBodies&&
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
        options.expireShield=expireCivilShield;
+     if(qualifyAnimalCrop&&nativeBodies)options.prepareCenterRuin=prepareCenterRuin;
      const completeStep=i=>{
        peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
@@ -941,13 +981,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      if(pending){
        return pending.finally(finishCapture).then(()=>{
          const result=publishResult();
-         nativeProduction.resume(shieldAdvance.receipt);
-         shieldAdvance=null;
+         nativeProduction.resume((shieldAdvance??centerRuinAdvance).receipt);
+         shieldAdvance=centerRuinAdvance=null;
          return result;
        }).catch(error=>{
          // Never serialize the private partial advance as a successful command.
          // Closing the authority aborts the retained resource through its owner.
-         if(shieldAdvance)shieldAdvance.failure=error;
+         const owner=shieldAdvance??centerRuinAdvance;if(owner)owner.failure=error;
          throw error;
        });
      }
@@ -1144,7 +1184,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;shieldAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
 }
