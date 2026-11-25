@@ -66,6 +66,7 @@ test('Dawn batches retain contained events on their own thread and separate out-
   trace.traceEvents.push(
     batch(41000,10000,{tdur:7000,args:{bytes:192}}),
     event('CompileShaderDXC',43000,6000,{tdur:4800}),
+    event('DeviceBase::APICreateShaderModule',41800,800,{tdur:760,args:{label:'vertex_Worker oral tissue'}}),
     event('Other thread',44000,3000,{tid:4}),
     event('Crosses decoder boundary',40000,4000),
     batch(150000,40000)
@@ -78,5 +79,7 @@ test('Dawn batches retain contained events on their own thread and separate out-
   assert.equal(caught.overlapMs,10);
   assert.equal(caught.bytes,192);
   assert.equal(caught.threadCpuMs,7);
-  assert.deepEqual(caught.containedEvents.map(({name,threadCpuMs})=>[name,threadCpuMs]),[['CompileShaderDXC',4.8]]);
+  assert.deepEqual(caught.containedEvents.map(({name,threadCpuMs,label})=>[name,threadCpuMs,label]),[
+    ['CompileShaderDXC',4.8,undefined],['DeviceBase::APICreateShaderModule',.76,'vertex_Worker oral tissue']
+  ]);
 });

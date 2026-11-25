@@ -72,7 +72,8 @@ function describeDawnDecoding(events,intervals,at,threadNames){
     Number.isFinite(event.pid)&&Number.isFinite(event.tid)&&typeof event.cat==='string'&&event.cat.includes('gpu.dawn'));
   const batches=complete.filter(event=>event.name==='WebGPUDecoderImpl::HandleDawnCommands');
   const detail=event=>({name:event.name,thread:threadNames.get(`${event.pid}/${event.tid}`),at:at(event),
-    durationMs:event.dur/1000,threadCpuMs:Number.isFinite(event.tdur)?event.tdur/1000:null});
+    durationMs:event.dur/1000,threadCpuMs:Number.isFinite(event.tdur)?event.tdur/1000:null,
+    ...(typeof event.args?.label==='string'?{label:event.args.label}:{})});
   const batchDetail=batch=>({
     ...detail(batch),bytes:batch.args?.bytes??null,
     containedEvents:complete.filter(event=>event!==batch&&event.pid===batch.pid&&event.tid===batch.tid&&

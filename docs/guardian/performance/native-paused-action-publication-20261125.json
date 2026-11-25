@@ -297,6 +297,66 @@
         "trigger": "raf",
         "replay": true
       }
-    ]
+    ],
+    "recordedIntervals": 891,
+    "aboveTarget": 891,
+    "correlation": {
+      "analysis": {
+        "file": "astra-cold-pause-c4.json",
+        "sha256": "9cc49764c4060d178f5d6c3dc457beb50511097c077a7f6b38a56efe84be870c"
+      },
+      "beginFrames": {
+        "file": "astra-paused-repair-beginframes.json",
+        "sha256": "726e83e765c76e97e212d2b5d589306aae1a9709dac1be6ef889a94431542bab"
+      },
+      "delivery": [
+        {
+          "sequence": 2,
+          "intervalMs": 38,
+          "vizBeginAtMs": 33.10205078125,
+          "drawBeginAtMs": 37.712158203125
+        },
+        {
+          "sequence": 260,
+          "intervalMs": 37.89990234375,
+          "vizBeginAtMs": 33.042236328125,
+          "drawBeginAtMs": 37.898193359375
+        }
+      ],
+      "firstPeakTextureRegion": {
+        "at": 1795587364907,
+        "end": 1795587364911.0999,
+        "durationMs": 4.099853515625,
+        "reference": "Texture:211",
+        "label": "",
+        "format": "rgba8unorm-srgb",
+        "layer": 0,
+        "sourceOrigin": {
+          "x": 1024,
+          "y": 512
+        },
+        "destinationOrigin": {
+          "x": 1024,
+          "y": 512,
+          "z": 0
+        },
+        "sourceDimensions": [
+          2048,
+          2048
+        ],
+        "extent": {
+          "width": 512,
+          "height": 512,
+          "depthOrArrayLayers": 1
+        },
+        "activeSequence": 1
+      },
+      "secondPeak": {
+        "thread": "Draw Worker",
+        "messageHandlerWallMs": 6.13,
+        "messageSerializationMs": 5.92,
+        "messageKind": null
+      }
+    }
   }
 }

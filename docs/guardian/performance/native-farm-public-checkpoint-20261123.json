@@ -644,9 +644,54 @@
           "spans": 7,
           "overlapMs": 70.377197265625
         }
-      }
+      },
+      "shaderModules": [
+        {
+          "label": "fragment_BakedMaterial.001",
+          "overlapMs": 4.901123046875,
+          "cpuMs": 7.668,
+          "durationMs": 7.675
+        },
+        {
+          "label": "vertex_Kofi head continuous skin shading",
+          "overlapMs": 10.741943359375,
+          "cpuMs": 10.736,
+          "durationMs": 10.742
+        },
+        {
+          "label": "fragment_Kofi head continuous skin shading",
+          "overlapMs": 5.823974609375,
+          "cpuMs": 5.514,
+          "durationMs": 5.824
+        },
+        {
+          "label": "vertex_Actor eyelid original fur",
+          "overlapMs": 12.319091796875,
+          "cpuMs": 12.312,
+          "durationMs": 12.319
+        },
+        {
+          "label": "fragment_Actor eyelid original fur",
+          "overlapMs": 9.675048828125,
+          "cpuMs": 9.61,
+          "durationMs": 9.675
+        },
+        {
+          "label": "vertex_Worker oral tissue",
+          "overlapMs": 17.241943359375,
+          "cpuMs": 17.113,
+          "durationMs": 17.242
+        },
+        {
+          "label": "fragment_Worker oral tissue",
+          "overlapMs": 9.674072265625,
+          "cpuMs": 9.458,
+          "durationMs": 9.674
+        }
+      ],
+      "actorProfile": "youngMale"
     },
-    "scope": "Swap and SyncToken scheduler flow along with measured occupancy on the same CPU thread. Work levels are nested. Shader producer identity remains open."
+    "scope": "Swap and SyncToken scheduler flow along with measured occupancy on the same CPU thread. Work levels are nested. Labels identify material stages; shader equivalence and reuse remain open."
   },
   "firstAttempt": {
     "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
