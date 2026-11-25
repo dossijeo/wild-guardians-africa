@@ -873,10 +873,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const api=kind===26?'nav_animal_route_proposal':'nav_animal_strike_proposal';
     const call=(suffix,...args)=>wasm[api+suffix](...args);
     let prepared=null,candidate=null,translation=null,attestation=null,routeBinding=null;
-    if(kind===27&&wasm.nav_intent_actor(actor)===1){
-      const row=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
-      routeBinding=nativeAnimalRouteBinding(routeHandle(row[4],row[5],row[6]));
-    }
+    if(kind===27)routeBinding=nativeAnimalRouteBinding(actorId);
     const current=()=>{
       if(state!==owningState||!initial||!nativeCropCohortCurrent(state,{nativeAnimalCropState,nativeRaidFlightMember})||state.pauses.length||state.result)return false;
       const now=nativeAnimalCropState(actorId);
@@ -1029,6 +1026,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     }catch(error){wasm.nav_intent_barrier_proposal_cancel(sid,ticket);throw error;}
   }
   const nativeAnimalRouteBinding=handle=>{
+    if(typeof handle==='string'){
+      if(wasm.nav_intent_actor(numericId(handle))!==1)return null;
+      const row=new Float64Array(wasm.memory.buffer,wasm.nav_intent_actor_ptr(),10);
+      handle=routeHandle(row[4],row[5],row[6]);
+    }
     if(handle?.authorityEpoch!==epoch()||wasm.nav_animal_route_binding?.(handle.session,handle.slot,handle.generation)!==1)return null;
     const h=new Float64Array(wasm.memory.buffer,wasm.nav_animal_route_binding_ptr(),animalRouteV2?25:24);
     const world=(ticket,at)=>copyNativeWorldBoundary({version:1,authorityEpoch:epoch(),nativeSession:handle.session,ticket,effectiveTime:at});

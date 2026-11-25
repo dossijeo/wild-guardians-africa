@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).
+
 Home18 también se recupera con un portón de zarzas en apertura. El reemplazo acredita ambos relojes antes de reanudar. NVIDIA confirmó el picking, Home19 y el drenaje. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-de-home18-mientras-abre-un-portón).
 
 Recovery ya permite reanudar un Home18 civil adquirido tras perder Draw. NVIDIA verificó los dos fences, el picking del sustituto, la retirada Home19 y el drenaje al salir. La prueba cubre un trabajador sin portón ni incursión. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-home18-civil).

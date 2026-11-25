@@ -421,32 +421,53 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(binding?.reference.bodyId!==bodyId)return null;
     return ()=>worker.status===status&&worker.nativeRouteAdmission===admission&&nativeBodies.id(id)===bodyId&&same(binding,read());
   }
-  async function expireCivilShield(spell,advanceToExpiry){
+  function captureShieldExpiryCropRoute(){
+    const raid=game.raid,animal=raid?.animals[0];
+    if(!qualifyAnimalCrop||game.biome!=='sabana'||!animal)return null;
+    const read=()=>{
+      if(game.raid!==raid||raid.animals[0]!==animal||!game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||
+         !nativeCropCohortCurrent(game,planner))return null;
+      const execution=planner.nativeAnimalCropState(animal.id);
+      if(execution?.mode!==2||execution.arrived||execution.purpose||execution.body!==nativeBodies.id(animal.id))return null;
+      const binding=planner.nativeAnimalRouteBinding(animal.id);
+      return binding?.bodyId===execution.body&&binding.requestSequence===execution.requestSequence&&
+        binding.endTime>game.elapsed?binding:null;
+    };
+    const binding=read();
+    if(!binding)return null;
+    return ()=>{
+      const current=read();
+      return current?.assignmentSequence===binding.assignmentSequence&&sameNativeWorldBoundary(current.worldBoundary,binding.worldBoundary);
+    };
+  }
+  async function expireNativeShield(spell,advanceToExpiry){
     if(shieldAdvance)throw Error('Native shield expiry already active');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
     shieldAdvance=owner;
     const workers=game.workers.slice(),motion=workers.map(captureShieldExpiryWorker);
-    const civil=()=>civilShieldPhysicsAvailable()&&!game.raid&&workers.length>0&&game.workers.length===workers.length&&
+    const civil=()=>!game.raid&&workers.length>0&&game.workers.length===workers.length&&
       workers.every((worker,index)=>game.workers[index]===worker&&motion[index]?.());
+    const subject=game.raid?captureShieldExpiryCropRoute():civil;
+    const cohortCurrent=()=>civilShieldPhysicsAvailable()&&subject?.()===true;
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
-       !nativeIntentControl||!civil()||
+       !nativeIntentControl||!cohortCurrent()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
        ['suspended','quiescing'].includes(nativeProduction.status().phase))
-      throw Error('Native shield expiry requires acquired civil workers and their resource owner');
+      throw Error('Native shield expiry requires acquired civil workers or an acquired crop approach and their resource owner');
     const polygonId=session.shieldPolygonId(spell.id);
     if(!polygonId)throw Error('Native shield expiry lacks its polygon');
     const current=()=>!closed&&!owner.controller.signal.aborted&&shieldAdvance===owner&&
       owner.resources===nativeResourcePreparation&&owner.control===nativeIntentControl&&
       game.spells.includes(spell)&&session.shieldPolygonId(spell.id)===polygonId;
     owner.receipt=await nativeProduction.quiesce();
-    if(!current()||!civil())throw Error('Native shield expiry source changed');
-    // Workers pass through this polygon. Finish the normal substep and its
-    // causal watermark before preparing removal. Keep the acquired route
-    // association if present. The enclosing advance owns publication.
+    if(!current()||!cohortCurrent())throw Error('Native shield expiry source changed');
+    // The current program either passes workers through the shield or was
+    // admitted around its boundary. Finish its normal substep and watermark
+    // before preparing removal. The enclosing advance owns publication.
     advanceToExpiry();
     const at=game.elapsed;
     const validate=()=>current()&&spell.remaining<=1e-9&&game.elapsed===at&&
-      civil()&&
+      cohortCurrent()&&
       planner.nativeCausalClock()?.committedThrough===at;
     if(!validate())throw Error('Native shield expiry lost its clock or polygon at the cut');
     const result=await planner.mutateNativeWorldAfterGpuQuiescence({
@@ -991,7 +1012,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      const steps=command.steps??1,options={nightFastForward:command.nightFastForward,...(clockCapture?{onClockSegment:segment=>{if(!clockCapture.complete)return;const previous=clockCapture.segments.at(-1);if(previous&&previous.rate===segment.rate&&previous.end===segment.start){previous.end=segment.end;previous.realDuration+=segment.realDuration;}else if(clockCapture.segments.length<256)clockCapture.segments.push(segment);else{clockCapture.complete=false;clockCapture.segments=[];}}}:{}),...(worldCapture||eventBoundaries?{onTick:()=>{if(worldCapture)try{worldCapture.sampleTick();}catch{worldCapture.invalidateSamples();}if(eventBoundaries)try{eventBoundaries.sample(game,events);}catch{eventBoundaries.invalidate();}}}:{})};
      if(qualifyShieldExpiry&&nativeBodies&&
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
-       options.expireShield=expireCivilShield;
+       options.expireShield=expireNativeShield;
      if(qualifyAnimalCrop&&nativeBodies)options.prepareCenterRuin=prepareCenterRuin;
      const completeStep=i=>{
        peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);

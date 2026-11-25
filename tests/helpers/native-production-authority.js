@@ -52,7 +52,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
    const lastActorPacket=records.findLast(item=>item.committed&&item.kind!=='shield');
-   const packet=drawAllFarmActors?await prepareExistingGroup(graphics,[...farmGroups.values()],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):lastActorPacket?.kind==='home-arrival'?
+   const packet=lastActorPacket?.cropGroup?await prepareExistingGroup(graphics,lastActorPacket.cropGroup,{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):drawAllFarmActors?await prepareExistingGroup(graphics,[...farmGroups.values()],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):lastActorPacket?.kind==='home-arrival'?
     await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):
     await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
    packet.presented.catch(()=>{});record.packet=packet;

@@ -1,0 +1,218 @@
+{
+  "base": "7fea2308ff1b4619bf91ccd64d9f3344dfaded1d",
+  "scope": "Sabana 712 con un facóquero en una aproximación AttackCrops26 adquirida y los civiles en casa.",
+  "recipe": ".cache/native-shield-raid-expiry-physical.mjs",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyShieldExpiry": true
+  },
+  "sourceFixtureSHA256": "8520884802b64d0bd89644ddcb4252dad60a0ba1b81b77ffc722a53fe95e5c81",
+  "sourceReceiptSHA256": "3963345e050e6918cecc57e17e941b6a0e89055469410b7badc0e4248212cc03",
+  "trace": {
+    "dataLossOccurred": false,
+    "traceFormat": "json",
+    "streamCompression": "gzip",
+    "browserVersion": "158.0.4370.33",
+    "options": {
+      "traceConfig": {
+        "recordMode": "recordUntilFull",
+        "traceBufferSizeInKb": 524288,
+        "includedCategories": [
+          "toplevel",
+          "blink",
+          "blink.user_timing",
+          "devtools.timeline",
+          "v8.execute",
+          "gpu",
+          "viz",
+          "cc",
+          "disabled-by-default-gpu.dawn",
+          "gpu.dawn",
+          "gpu.dawn.validation",
+          "gpu.dawn.recording"
+        ]
+      },
+      "transferMode": "ReturnAsStream",
+      "streamFormat": "json",
+      "streamCompression": "gzip",
+      "bufferUsageReportingInterval": 1000
+    },
+    "peakBufferUsage": 0.12282668054103851,
+    "usageReports": 16,
+    "collectionComplete": true,
+    "tracePath": ".cache/shield-raid-expiry/physical.trace.json.gz",
+    "exportedBytes": 19071044,
+    "sha256": "4e81fb96f65c9de536d1bb228fd5dd6664091afbcefc3a9a18c74eb744f67403"
+  },
+  "observedDisplayHz": 30,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 112.09999999962747
+    }
+  },
+  "owner": {
+    "spellId": "spell-397",
+    "polygonId": 10
+  },
+  "heldGameElapsed": 375.50000000000665,
+  "expiryReady": {
+    "kind": "shield-expiry-ready-held",
+    "id": 2,
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "e56406c5-3e80-4f01-ab8e-b808baa1506f/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 375.5260000000066
+    },
+    "at": 1795649420700.9
+  },
+  "removal": {
+    "kind": "shield-expiry-commit",
+    "id": 2,
+    "data": {
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "e56406c5-3e80-4f01-ab8e-b808baa1506f/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 375.5260000000066
+      },
+      "resources": {
+        "version": 1,
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 375.5260000000066,
+        "kind": 4,
+        "chunks": [],
+        "removed": [],
+        "phase": "committed",
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "e56406c5-3e80-4f01-ab8e-b808baa1506f/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 375.5260000000066
+        },
+        "nativeShield": {
+          "spell": {
+            "id": "spell-397",
+            "kind": "shield",
+            "x": 62,
+            "z": 0,
+            "radius": 1.95,
+            "remaining": 0
+          },
+          "polygonId": 10
+        }
+      }
+    },
+    "at": 1795649421066.6
+  },
+  "firstSubmitted": {
+    "at": 1795649421075.7,
+    "sequence": 45,
+    "trigger": "raf",
+    "nativeWorldBoundary": {
+      "version": 1,
+      "authorityEpoch": "e56406c5-3e80-4f01-ab8e-b808baa1506f/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 375.5260000000066
+    },
+    "intervalMs": 33.199951171875,
+    "drawMs": 5.800048828125,
+    "replay": false,
+    "clockElapsed": 375.60000000000656,
+    "safeUntil": 375.60000000000656,
+    "cameraVersion": null
+  },
+  "route": {
+    "version": 1,
+    "kind": 26,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "e56406c5-3e80-4f01-ab8e-b808baa1506f/1",
+      "nativeSession": 1,
+      "ticket": 1,
+      "effectiveTime": 375.0000000000071
+    },
+    "sourceControlSequence": 10,
+    "endTime": 391.3467996957248,
+    "actorId": 396,
+    "bodyId": 1,
+    "targetId": 373,
+    "centerId": 2,
+    "requestSequence": 10,
+    "slot": 0,
+    "generation": 3,
+    "radius": 1.1,
+    "x": 84,
+    "z": 30.51480569445,
+    "phase": 4.497729763870326,
+    "yaw": 3.141592653589793,
+    "targetX": 90,
+    "targetZ": 7.5,
+    "centerX": 83,
+    "centerZ": 0
+  },
+  "clocks": {
+    "before": {
+      "sequence": 36,
+      "executionEpoch": 375.0000000000071,
+      "relativeTime": 0
+    },
+    "held": {
+      "sequence": 44,
+      "executionEpoch": 375.0000000000071,
+      "relativeTime": 0.5259999632835388
+    },
+    "after": {
+      "sequence": 45,
+      "executionEpoch": 375.0000000000071,
+      "relativeTime": 0.5999999642372131
+    },
+    "finalView": {
+      "sequence": 49,
+      "executionEpoch": 375.0000000000071,
+      "relativeTime": 1.3499999046325684
+    }
+  },
+  "checkpoint": {
+    "sequence": 34,
+    "elapsed": 376.3500000000059
+  },
+  "phases": {
+    "held": 4.997729763869871,
+    "final": 5.847729763869098
+  },
+  "drain": {
+    "kind": "drained",
+    "receipt": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "samples": 348,
+    "maximumIntervalMs": 38.199951171875
+  },
+  "limits": "Escudo restaurado con 526 ms restantes y fuera del objetivo del animal. Ataque, retirada, contacto, otras cohortes y C4 permanecen pendientes.",
+  "validation": {
+    "tests": {
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0
+    },
+    "viteBuildSeconds": 48.52
+  }
+}
