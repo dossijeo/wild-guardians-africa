@@ -149,12 +149,29 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius,bool gateCan
 }
 // 1 continuous static clearance, 0 blocked/unproven, -1 missing resident data,
 // -2 unsupported execution class, -3 invalid request. Never authorizes traffic.
-int executionSegmentClear(double x,double z,double nx,double nz,double radius,bool gateCandidate=false){
+// The Savanna animal proof excludes the entire possible water footprint,
+// including dry parts of a bank. Height can only shrink the wet area.
+int executionSavannaAnimalDry(ExecutionPoint a,ExecutionPoint b,double radius){
+  const double middleZ=(a.z+b.z)*.5,center=riverX(middleZ);
+  const double reach=mainRiverReach(middleZ)+inlandRiverFrequency*inlandRiverAmplitude*(std::abs(b.z-a.z)*.5+radius);
+  if(std::min(a.x,b.x)-radius<=center+reach&&std::max(a.x,b.x)+radius>=center-reach)return 0;
+  const int minX=int(std::floor((std::min(a.x,b.x)-radius+24)/side)),maxX=int(std::floor((std::max(a.x,b.x)+radius+24)/side));
+  const int minZ=int(std::floor((std::min(a.z,b.z)-radius+24)/side)),maxZ=int(std::floor((std::max(a.z,b.z)+radius+24)/side));
+  for(int cz=minZ;cz<=maxZ;cz++)for(int cx=minX;cx<=maxX;cx++){
+    const auto it=residentSpatial().find(chunkKey(cx,cz));
+    if(it==residentSpatial().end())return -1;
+    for(const Pond& pond:it->second.ponds)
+      if(executionPointDistance({pond.x,pond.z},a,b)<=radius+pond.radius)return 0;
+  }
+  return 1;
+}
+int executionSegmentClear(double x,double z,double nx,double nz,double radius,bool gateCandidate=false,bool animalAttack=false){
   executionClearanceChecks++;
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
      std::max({std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})>=2147483000.0||
      !std::isfinite(radius)||radius<=0||radius>2||std::abs(radius-radiusNow)>1e-6)return -3;
-  if(worldBiome!=1)return -2;
+  const bool savannaAnimal=animalAttack&&worldBiome==0&&!workerNow;
+  if(worldBiome!=1&&!savannaAnimal)return -2;
   if(!gateCandidate&&spatialIntentGateUnsupported(x,z,nx,nz,radius))return -2;
   const double length=std::hypot(nx-x,nz-z);if(length>10000)return -2;
   const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})+radius+3);
@@ -165,6 +182,7 @@ int executionSegmentClear(double x,double z,double nx,double nz,double radius,bo
   for(int i=0;i<pieces;i++){
     const double from=double(i)/pieces,to=double(i+1)/pieces;
     const ExecutionPoint a{x+(nx-x)*from,z+(nz-z)*from},b{x+(nx-x)*to,z+(nz-z)*to};
+    if(savannaAnimal){const int dry=executionSavannaAnimalDry(a,b,effectiveRadius);if(dry!=1)return dry;}
     const int solid=executionSolids(a,b,effectiveRadius,gateCandidate);if(solid!=1)return solid;
     const int terrain=executionTerrain(a,b,radius,rounding);if(terrain!=1)return terrain;
   }

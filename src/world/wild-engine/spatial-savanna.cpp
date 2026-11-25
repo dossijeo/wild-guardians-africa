@@ -310,11 +310,12 @@ double noise(double x,double z,uint32_t salt){
   const double c=unit(cellHash(ix,iz+1,salt)),d=unit(cellHash(ix+1,iz+1,salt));
   return (a+(b-a)*u)*(1-v)+(c+(d-c)*u)*v;
 }
+constexpr double inlandRiverFrequency=.035,inlandRiverAmplitude=17;
 double riverX(double z){
   const double phase=unit(cellHash(9,7,63))*2*pi;
   return worldBiome==5?-20+std::sin(z*.012+phase)*22+
     std::sin(z*.027+phase*.71)*8:
-    -20+std::sin(z*.035+phase)*17;
+    -20+std::sin(z*inlandRiverFrequency+phase)*inlandRiverAmplitude;
 }
 double canyonWaterHalf(double z){return 5.8+noise(z*.009,14,5901)*1.8;}
 double mainRiverLevel(){return worldBiome==5?3.28:3.6;}
@@ -1930,6 +1931,9 @@ void spatialRecordMotionResourceBoundary(double session,double ticket,double tim
 extern "C" {
 EMSCRIPTEN_KEEPALIVE int spatial_execution_segment_clear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius);
+}
+int spatial_animal_attack_segment_clear(double x,double z,double nx,double nz,double radius){
+  return executionSegmentClear(x,z,nx,nz,radius,false,true);
 }
 int spatial_execution_profile_kind(){return workerNow?0:1;}
 // Fixed-world execution lease. Authoritative mutation counters, not per-route

@@ -1,3 +1,4 @@
+import {copyNativeAnimalCropProposal} from '../world/native-animal-crop-resource.js';
 import {copyNativeIdleStrollProposal} from '../world/native-idle-stroll.js';
 import {copyNativeFarmArrivalRouteProposal} from '../world/native-farm-arrival-route.js';
 import {copyNativeHomeRouteProposal} from '../world/native-home-route.js';
@@ -42,6 +43,11 @@ export function prepareNativeHomeRouteGpuTable(support){
 export function prepareNativeIdleStrollGpuTable(support){
  if(support?.kind!=='native-idle-stroll-terrain-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw TypeError('Native Idle stroll requires current terrain support');
  const presentation=copyNativeIdleStrollProposal(support.presentation);return packNativeMotion(support,presentation,presentation.actorId,{nativeStroll:presentation.nativeIdleStroll});
+}
+export function prepareAnimalCropGpuTable(support){
+ if(support?.kind!=='native-animal-crop-route-support'||support.valid?.()!==true||!Array.isArray(support.actor?.segments))throw Error('Crop route terrain unavailable');
+ const p=copyNativeAnimalCropProposal(support.presentation,26);
+ return packNativeMotion(support,p,p.reference.actorId,{nativeAnimalCrop:p.reference});
 }
 function packNativeMotion(support,presentation,actorId,identity){
  const {rows:source,startTime:epoch,endTime}=presentation,{segments,startHeight,endHeight}=support.actor;

@@ -1,3 +1,4 @@
+import {copyPendingAnimalCrop,animalCropMatchesRequest,copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyRestoredWallRepairDeclaration,restoredWallRepairKey} from '../world/restored-wall-repair-reference.js';
 import {WALL_REPAIR_DURATION} from '../simulation/structure-presentation.js';
 import {copyNativeStoppedGateSelector} from './native-stopped-clock.js';
@@ -48,7 +49,7 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[]}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[]}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(pendingIdleStrollRequests)||!Array.isArray(pendingFarmArrivalRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
@@ -107,6 +108,16 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(!actor||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,request.sourceCycle)||assignments.has(request.requestSequence)||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending Idle cycle baseline');
     actor.pendingIdleCycleRequest=request;actor.latestSequence=request.requestSequence;assignments.add(request.requestSequence);
   }
+  if(pendingAnimalCrop!==null){
+    const q=copyPendingAnimalCrop(pendingAnimalCrop);
+    // This first ordinary raid owns the only moving body. A mixed cohort must
+    // establish its own causal transition before it can use the same profile.
+    if(actors.size||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence)
+      throw Error('Crop request conflicts with its native cohort or baseline');
+    const actor=actorContext(q.actorId);actor.state=6;actor.latestSequence=q.requestSequence;
+    actor.targetId=q.targetId;actor.cropRequest=q;
+  }
+
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
   const counters={accepted:0,revoked:0,oldEpoch:0,admissions:0};
   const homeRequestCurrent=(request,actor)=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(request.actorId)===actor&&actor.state===6&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.authorityEpoch===authorityEpoch&&request.nativeSession===clock.nativeSession&&request.requestSequence<=clock.intentSequence&&sameNativeHomeRequestReference(actor.pendingHomeRequest,request);
@@ -115,6 +126,76 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   const farmArrivalRequestCurrent=(request,actor)=>!closed&&!!clock&&!!actor&&!actor.closed&&actors.get(request.actorId)===actor&&actor.state===6&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.authorityEpoch===authorityEpoch&&request.nativeSession===clock.nativeSession&&request.requestSequence<=clock.intentSequence&&actor.pendingFarmArrivalRequest===request;
   const strollSelectedSourceMatches=(reference,next,request)=>reference.sourceRequest?sameNativeIdleStrollRequestReference(reference.sourceRequest,request):nativeIdleStrollContinuesNext(reference,next);
   const strollIssuedSourceMatches=(reference,record)=>reference.sourceSettlement?!!record.sourceSettledApproach&&JSON.stringify(reference.sourceSettlement)===JSON.stringify(record.sourceSettledApproach):reference.sourceFarm?!!record.sourceFarmApproach?.admitted&&completedFarmStrollSourceMatches(reference,{issuedFarmArrival:record.sourceFarmApproach.proof,assignmentSequence:record.sourceFarmApproach.proof.assignmentSequence}):reference.sourceRequest?sameNativeIdleStrollRequestReference(reference.sourceRequest,record.sourceStrollRequest):record.sourceIdleCycleAdmitted&&nativeIdleStrollContinuesNext(reference,record.sourceIdleCycleNext);
+  function validateCropChange(event,current){
+    const issued=event.nativeAnimalCrop,actor=actors.get(event.actorId),q=actor?.cropRequest;
+    if(!q||event.actorId!==issued.actorId||event.taskId||event.targetId!==q.targetId||
+       issued.bodyId!==q.bodyId||issued.targetId!==q.targetId||event.revokedRouteHandle||
+       [event.nativeFarmArrival,event.nativeIdleStroll,event.taskRequest,event.actionRequest,event.idleCycle].some(Boolean))
+      throw Error('Animal crop change has a different owner');
+    if(issued.kind===26){
+      const o=issued.origin,t=issued.terminal,w=issued.worldBoundary;
+      if(current||actor.state!==6||actor.latestSequence!==q.requestSequence||event.type!=='RouteAssigned'||event.state!==1||
+         issued.requestSequence!==q.requestSequence||issued.assignmentSequence!==event.sequence||!sameHandle(event.routeHandle,issued.routeHandle)||
+         w.authorityEpoch!==authorityEpoch||w.nativeSession!==q.nativeSession||w.effectiveTime!==event.effectiveTime||
+         issued.centerId!==q.centerId||issued.center.x!==q.centerX||issued.center.z!==q.centerZ||issued.radius!==q.radius||
+         !['x','z','phase','yaw'].every(k=>o[k]===q[k])||![t?.x,t?.z,t?.phase,issued.endTime].every(Number.isFinite))
+        throw Error('Crop assignment lost its request or end pose');
+    }else{
+      const route=current?.cropBinding,r=route?.reference,t=current?.issuedCrop?.terminal;
+      if(issued.kind!==27||actor.state!==1||event.type!=='IntentChanged'||event.state!==2||event.routeHandle||
+         !r||current.issuedCrop.kind!==26||event.effectiveTime<r.endTime||event.effectiveTime!==issued.at||
+         issued.session!==q.nativeSession||r.worldBoundary.ticket!==issued.routeTicket||route.assignmentSequence!==issued.routeAssignment||
+         issued.generation!==current.handle.generation||!['x','z','phase'].every(k=>issued[k]===t[k])||
+         issued.targetX!==q.targetX||issued.targetZ!==q.targetZ||!id(issued.attackId))
+        throw Error('Crop strike must acquire its installed terminal body');
+    }
+  }
+  function sameCropSource(r,actor){
+    if(!actor?.cropRequest)return false;
+    if(r.kind===26)return animalCropMatchesRequest(r,actor.cropRequest);
+    const rec=actor.current,b=rec?.cropBinding,source=b?.reference,t=rec?.issuedCrop?.terminal;
+    return source?.kind===26&&b.assignmentSequence===r.routeAssignment&&source.worldBoundary.ticket===r.routeTicket&&
+      source.endTime<=r.worldBoundary.effectiveTime&&t&&['x','z','phase'].every(k=>r[k]===t[k])&&
+      ['bodyId','targetId','centerId','slot','generation','radius','requestSequence','targetX','targetZ','centerX','centerZ'].every(k=>r[k]===source[k]);
+  }
+  function installAnimalCrop(boundary,input){
+    const proof=copyNativeAnimalCropAttestation(input,input?.reference?.kind),r=proof.reference,p=proof.preparedReference;
+    const actor=actors.get(r.actorId),rec=actor?.current,e=rec?.issuedCrop;
+    if(closed||!clock||clock.nativeSession!==r.worldBoundary.nativeSession||r.worldBoundary.authorityEpoch!==authorityEpoch||
+       !sameNativeWorldBoundary(boundary,r.worldBoundary)||boundary.effectiveTime!==clock.committedThrough||
+       proof.assignmentSequence!==actor?.latestSequence||proof.assignmentSequence!==r.sourceControlSequence+1||
+       proof.assignmentSequence>clock.intentSequence||!rec||active.get(r.actorId)!==rec||e?.kind!==r.kind||
+       r.slot!==rec.handle.slot||r.generation!==rec.handle.generation||rec.cropBinding?.reference.kind===r.kind)
+      throw Error('Crop acquisition lacks its issued assignment');
+    if(r.kind===26){
+      if(actor.state!==1||!animalCropMatchesRequest(r,actor.cropRequest)||!sameNativeWorldBoundary(e.worldBoundary,boundary)||
+         !sameNativeWorldBoundary(e.preparedWorldBoundary,p.worldBoundary)||e.endTime!==r.endTime||e.preparedEndTime!==p.endTime)
+        throw Error('Crop route acquisition changed its prepared program');
+    }else{
+      const route=rec.cropBinding,prev=route?.reference;
+      if(actor.state!==2||prev?.kind!==26||route.assignmentSequence!==r.routeAssignment||prev.worldBoundary.ticket!==r.routeTicket||
+         !['actorId','bodyId','targetId','clip','duration','generation','routeTicket','routeAssignment','phase','x','z','yaw','targetX','targetZ','endTime'].every(k=>e[k]===r[k])||
+         !['slot','requestSequence','centerId','centerX','centerZ','radius'].every(k=>r[k]===prev[k])||
+         e.ticket!==boundary.ticket||e.preparedTicket!==p.worldBoundary.ticket||e.preparedAt!==p.worldBoundary.effectiveTime||proof.attackId!==e.attackId)
+        throw Error('Crop strike acquisition changed its prepared action');
+    }
+    rec.cropBinding=proof;
+    return proof;
+  }
+  function admitAnimalCrop(input,{preparingWorldBoundary=null}={}){
+    const r=copyNativeAnimalCropReference(input,input?.kind),actor=actors.get(r.actorId);
+    const live=()=>!closed&&!!clock&&actor&&!actor.closed&&actors.get(r.actorId)===actor&&clock.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch;
+    const current=()=>!!(live()&&actor.current&&active.get(r.actorId)===actor.current&&actor.state===(r.kind===26?1:2)&&
+      sameNativeAnimalCropReference(actor.current.cropBinding?.preparedReference,r));
+    const pending=()=>!!(live()&&sequence>=r.sourceControlSequence&&clock.committedThrough>=r.worldBoundary.effectiveTime&&
+      sameNativeWorldBoundary(preparingWorldBoundary,r.worldBoundary)&&actor.state===(r.kind===26?6:1)&&sameCropSource(r,actor));
+    if(!current()&&!pending())throw Error('Animal crop preparation lacks its current native source');
+    return Object.freeze({reference:r,isCurrent:current,isPrepared:()=>current()||pending(),
+      get routeRecord(){return current()?(r.kind===26?actor.current:actor.current.cropStrikeRecord):null;},
+      get executionEpoch(){return current()?actor.current.cropBinding.reference.worldBoundary.effectiveTime:null;},
+      get executionEnd(){return current()?actor.current.cropBinding.reference.endTime:null;}});
+  }
+
   function accept(event){
     if(closed)throw Error('Native route control is closed');
     if(event?.authorityEpoch!==authorityEpoch){counters.oldEpoch++;return false;}
@@ -156,8 +237,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       throw Error('Native route revocation does not match the active version');
     if(current&&assigned&&!revoked)
       throw Error('Native route assignment omitted the previous revocation');
-    if(current&&!assigned&&!revoked)
+    const crop=event.nativeAnimalCrop;
+    if(crop)validateCropChange(event,current);
+    if(current&&!assigned&&!revoked&&crop?.kind!==27)
       throw Error('Native intent transition omitted the active route revocation');
+    if(current?.cropStrikeRecord?.lastDrawTime!=null&&event.effectiveTime<current.cropStrikeRecord.lastDrawTime)
+      throw Error('Native strike revocation arrived after its submitted time');
     if(current&&revoked&&current.lastDrawTime!==null&&
        event.effectiveTime<current.lastDrawTime){
       const error=Error('Native route revocation arrived after its presented time');
@@ -248,6 +333,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const sourceCompletedTask=assigned?(completedTaskHomeRecord(actor)?.issuedStart??null):null;
     const sourceSettledApproach=settledStroll?stroll.reference.sourceSettlement:null;
     const sourceFarmApproach=completedFarmStroll?Object.freeze({proof:actor.farmArrivalProof,admitted:current.farmArrivalAdmitted===true}):null;
+    if(current?.cropBinding && current.lastDrawTime!==null && event.effectiveTime<current.lastDrawTime)
+      throw Error('Native crop owner changed after its submitted time');
+    if(actor?.cropRequest&&assigned&&!crop)throw Error('Native crop assignment omitted its typed source');
     if(actor&&!actors.has(event.actorId))actors.set(event.actorId,actor);
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
@@ -259,6 +347,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(assigned){const record={actorId:event.actorId,handle:Object.freeze({...handle}),
       assignmentSequence:event.sequence,startTime:event.effectiveTime,
       safeUntil:Infinity,lastDrawTime:null,actor,sourceSuspension,sourceStoppedTaskBody,sourceCompletedTask,sourceCompletedFarm,sourceCompletedStroll,sourceFarmApproach,sourceSettledApproach,sourceTaskRequest,sourceAction,sourceHome,sourceHomeRequest:actor?.pendingHomeRequest??null,sourceInitialIdleBody:actor?.initialIdleBodySource?.request??null,sourceIdleCycle:actor?.idleCycleSource?.binding??null,sourceIdleCycleNext:actor?.pendingIdleCycleRequest??null,sourceStrollRequest:actor?.pendingIdleStrollRequest??null,sourceFarmArrivalRequest:actor?.pendingFarmArrivalRequest??(sourceFarmArrivalHeld?farmArrival.reference.sourceRequest:null),sourceFarmArrivalHeld,issuedFarmArrival:farmArrival,sourceIdleCycleAdmitted:!!actor?.idleCycleProof&&cycleRecordCurrent(actor.idleCycleProof.reference,actor),issuedStroll:stroll};active.set(event.actorId,record);actor.current=record;actor.proof=null;}
+    if(crop){
+      actor.current.issuedCrop=Object.freeze({...crop});
+      if(crop.kind===27)actor.current.cropStrikeRecord={startTime:event.effectiveTime,safeUntil:Infinity,lastDrawTime:null};
+    }
+    if(current?.cropStrikeRecord&&revoked){
+      const strike=current.cropStrikeRecord;
+      strike.safeUntil=Math.min(strike.safeUntil,event.effectiveTime);
+    }
     if(actor){
       if(keepStoppedBody){actor.revoked.stoppedHomeRequest=homeRequest;actor.revoked.stoppedTaskRequest=taskRequest;}
       if(!keepIdleCycle){if(actor.idleCycleRecord)actor.idleCycleRecord.safeUntil=Math.min(actor.idleCycleRecord.safeUntil,event.effectiveTime);actor.idleCycleProof=null;actor.idleCycleRecord=null;actor.idleCycleSource=idleCycle?{binding:idleCycle,fromBaseline:false,phaseUntil:Infinity,phaseDelay}:null;actor.pendingIdleCycleRequest=null;}
@@ -533,7 +629,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     pendingFarmArrivalRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingFarmArrivalRequest;return request&&farmArrivalRequestCurrent(request,actor)?request:null;},
     pendingIdleStrollRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingIdleStrollRequest;return request&&idleStrollRequestCurrent(request,actor)?request:null;},
     pendingIdleCycleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingIdleCycleRequest;return !closed&&!!clock&&!!request&&!actor.closed&&actor.state===7&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence?request:null;},
-    accept,
+    accept,admitAnimalCrop,installAnimalCrop,
     installIdleCycles(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native Idle cycle requires prepared admission at its current boundary');
@@ -791,6 +887,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          message.paused&&message.anchorLogicalTime!==message.committedThrough)
         throw Error('Invalid native causal clock boundary');
        for(const actor of actors.values()){
+         if(actor.cropRequest&&actor.cropRequest.nativeSession!==message.nativeSession)throw Error('Invalid crop session');
          if(actor.pendingTaskRequest&&actor.pendingTaskRequest.requestHandle.session!==message.nativeSession)throw Error('Invalid native pending request session');
          if(actor.pendingHomeRequest&&actor.pendingHomeRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending Home session');
          if(actor.pendingInitialIdleRequest&&actor.pendingInitialIdleRequest.nativeSession!==message.nativeSession)throw Error('Invalid native pending initial Idle session');
@@ -823,6 +920,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     admit({actorId,routeHandle,assignmentSequence}={}){
       if(closed)throw Error('Native route control is closed');
       const record=active.get(actorId);
+      if(record?.issuedCrop)throw Error('Animal crop route requires its typed prepared admission');
       if(record?.issuedFarmArrival)throw Error('Native farm arrival requires its typed prepared admission');
       if(!record||!sameHandle(record.handle,routeHandle)||
          record.assignmentSequence!==assignmentSequence){

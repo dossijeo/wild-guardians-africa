@@ -1,3 +1,5 @@
+import {copyNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
+import {nativeClockResourceEnd} from './native-clock-resource-end.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditionReference} from '../world/native-barrier-addition.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
@@ -33,6 +35,21 @@ export function markRestoredWallRepairClockNode(node,reference){
 export function markRemoteBarrierClockNode(node,reference){
  if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid native solid Repair clock node');
  const metadata=copyNativeBarrierClock({semantic:'relative',epoch:reference.worldBoundary.effectiveTime,nativeBarrierAddition:reference});
+ Object.defineProperty(node,clockMetadata,{value:Object.freeze(metadata),enumerable:false});return node;
+}
+export function copyAnimalCropClock(binding){
+ const r=copyNativeAnimalCropReference(binding.nativeAnimalCrop,binding.nativeAnimalCrop?.kind),epoch=r.worldBoundary.effectiveTime;
+ const resourceEnd=r.kind===26?nativeClockResourceEnd(epoch,r.endTime):r.endTime;
+ if(binding.semantic!=='relative'||binding.epoch!==epoch||binding.resourceEnd!==resourceEnd||
+    binding.period!==undefined||Object.keys(binding).some(k=>k.startsWith('native')&&k!=='nativeAnimalCrop')||binding.executionEpoch!==undefined)
+   throw TypeError('Invalid animal crop clock owner or horizon');
+ return {semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:r};
+}
+export function markRemoteAnimalCropNode(node,reference){
+ if(!node?.isNode||Object.hasOwn(node,clockMetadata))throw TypeError('Invalid animal crop uniform');
+ const epoch=reference.worldBoundary.effectiveTime;
+ const metadata=copyAnimalCropClock({semantic:'relative',epoch,nativeAnimalCrop:reference,
+   resourceEnd:reference.kind===26?nativeClockResourceEnd(epoch,reference.endTime):reference.endTime});
  Object.defineProperty(node,clockMetadata,{value:Object.freeze(metadata),enumerable:false});return node;
 }
 export function markRemoteStoppedNode(node,reference,epoch,field=null){

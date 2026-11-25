@@ -5,7 +5,8 @@ bool executionBindingCoherent(const IntentState& s,uint64_t body,uint32_t slot){
   if(slot>=s.routeSlots.size())return false;
   const auto& route=s.routeSlots[slot];const auto active=s.activeIntents.find(route.actor);
    return route.active&&!route.suspended&&route.reserved&&!route.gateCandidate&&route.reservationBody==body&&route.timingMode&&
-    active!=s.activeIntents.end()&&active->second.state==PlanningState::RouteActive&&
+    active!=s.activeIntents.end()&&(active->second.state==PlanningState::RouteActive||
+      (active->second.state==PlanningState::ActionActive&&active->second.animalStrike&&route.animalRouteBinding==active->second.animalStrike->route&&route.hasExecution&&route.executionPose[6]==1))&&
      active->second.slot==slot&&active->second.generation==route.generation&&
      (!route.gateAdmitted||gateRouteBindingsCoherent(s,route,slot))&&
     (active->second.animal||s.workers.count(route.actor));

@@ -1,0 +1,323 @@
+{
+  "version": 1,
+  "mode": "DEV qualification, one substep, stop dispatch after first logical hit",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "receipt": {
+    "file": "native-attack-crops-adopted-nvidia-20261125.json",
+    "sha256": "8985e722c8323c2617da17e54d0a4434218d7394d8fb427d91c9fe2eab831221"
+  },
+  "display": {
+    "refreshHz": 30,
+    "width": 640,
+    "height": 480,
+    "quality": "muy_baja"
+  },
+  "trace": {
+    "sha256": "d718ba9573f24c8205987abe091249d8572483dd5ef300ff74781f071c202c5a",
+    "complete": true,
+    "loss": false
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 128.29999999981374
+    }
+  },
+  "crop": "plant-373",
+  "actor": "animal-396",
+  "originalPhase": 4.497729763870326,
+  "motion": {
+    "ticket": 2,
+    "preparedTicket": 1,
+    "at": 379.80000000000274,
+    "firstAge": 0,
+    "lastAge": 16.25389862060547,
+    "switchAfter": 1.4565299212779905,
+    "samples": 66
+  },
+  "strike": {
+    "ticket": 4,
+    "preparedTicket": 3,
+    "at": 397.69999999998646,
+    "firstAge": 0,
+    "lastAge": 4.253899574279785,
+    "duration": 4.541666824370623,
+    "firstDrawAt": 1795593038264.7
+  },
+  "body": 1,
+  "endpoint": [
+    90.31144714355469,
+    9.17122745513916,
+    20.84452945958807
+  ],
+  "attackId": "attack-661",
+  "hit": {
+    "id": "event-664",
+    "type": "AnimalLogicalHit",
+    "attackId": "attack-661",
+    "targetId": "plant-373",
+    "species": "warthog",
+    "presentation": {
+      "version": 1,
+      "elapsed": 402.2499999999823,
+      "animal": {
+        "x": 90.31144714355469,
+        "z": 9.17122745513916,
+        "heading": -2.9573478356832616
+      },
+      "target": {
+        "x": 90,
+        "z": 7.5
+      },
+      "shield": null
+    },
+    "simulationTime": 402.2499999999823
+  },
+  "remaining": 1,
+  "originalGeometry": {
+    "root": 338,
+    "geometries": [
+      258,
+      259,
+      260,
+      261
+    ]
+  },
+  "residentBuffers": [
+    {
+      "stage": "route",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "walking",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "terminal",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "attack",
+      "compared": 78,
+      "retained": 78
+    },
+    {
+      "stage": "afterHit",
+      "compared": 78,
+      "retained": 78
+    }
+  ],
+  "firstSourceHold": {
+    "before": 51,
+    "after": 51,
+    "draws": 18
+  },
+  "secondSourceHold": {
+    "draws": 8
+  },
+  "releaseToDrawMs": {
+    "route": 13.099853515625,
+    "strike": 14.699951171875
+  },
+  "drawCadence": {
+    "sampledIntervals": 1000,
+    "prelude": {
+      "count": 326,
+      "peaks": [
+        {
+          "at": 1795593016902.5999,
+          "sequence": 48,
+          "intervalMs": 38,
+          "drawMs": 4.10009765625,
+          "trigger": "raf",
+          "ticket": null
+        },
+        {
+          "at": 1795593015767.9,
+          "sequence": 37,
+          "intervalMs": 36.60009765625,
+          "drawMs": 3.699951171875,
+          "trigger": "raf",
+          "ticket": null
+        },
+        {
+          "at": 1795593009601,
+          "sequence": 1,
+          "intervalMs": 36.400146484375,
+          "drawMs": 0.39990234375,
+          "trigger": "raf",
+          "ticket": null
+        }
+      ]
+    },
+    "route": {
+      "count": 537,
+      "peaks": [
+        {
+          "at": 1795593036805.2,
+          "sequence": 201,
+          "intervalMs": 40.60009765625,
+          "drawMs": 4.800048828125,
+          "trigger": "raf",
+          "ticket": 2
+        },
+        {
+          "at": 1795593032803.7,
+          "sequence": 162,
+          "intervalMs": 39,
+          "drawMs": 6.099853515625,
+          "trigger": "raf",
+          "ticket": 2
+        },
+        {
+          "at": 1795593029136.7998,
+          "sequence": 126,
+          "intervalMs": 38.89990234375,
+          "drawMs": 2.7001953125,
+          "trigger": "raf",
+          "ticket": 2
+        }
+      ]
+    },
+    "strike": {
+      "count": 139,
+      "peaks": [
+        {
+          "at": 1795593043398.4,
+          "sequence": 246,
+          "intervalMs": 633.699951171875,
+          "drawMs": 5.199951171875,
+          "trigger": "raf",
+          "ticket": 4
+        },
+        {
+          "at": 1795593038804.9,
+          "sequence": 206,
+          "intervalMs": 40.199951171875,
+          "drawMs": 2.39990234375,
+          "trigger": "raf",
+          "ticket": 4
+        },
+        {
+          "at": 1795593039837.2,
+          "sequence": 216,
+          "intervalMs": 39.199951171875,
+          "drawMs": 2.699951171875,
+          "trigger": "raf",
+          "ticket": 4
+        }
+      ]
+    },
+    "terminalGap": {
+      "fromSequence": 245,
+      "toSequence": 246,
+      "intervalMs": 633.699951171875,
+      "opportunities": {
+        "count": 18,
+        "outcome": "stale-binding",
+        "ticket": 4
+      },
+      "closedToSendMs": 515,
+      "sendToNextDrawMs": 28.199951171875,
+      "previousClock": 402.1538999023509,
+      "newClock": 402.2499999999823,
+      "preparer": {
+        "pid": 21536,
+        "tid": 1576,
+        "function": "pump",
+        "script": "src/rendering/webgpu-pipeline-admission.js",
+        "startedAfterPreviousDrawMs": 90.971,
+        "endedAfterPreviousDrawMs": 605.308,
+        "wallMs": 514.337,
+        "cpuMs": 508.174,
+        "preparationRequest": null
+      }
+    }
+  },
+  "presentation": {
+    "scope": {
+      "stepBatch": 1,
+      "endsDispatchAfterFirstHit": true
+    },
+    "publicationCounts": {
+      "total": 666,
+      "positionChanges": 327
+    },
+    "drained": true
+  },
+  "blockedPreparer": null,
+  "adopted": [
+    {
+      "ticket": 2,
+      "preparedSequence": 128,
+      "sequence": 136,
+      "elapsed": 375.7500000000064
+    },
+    {
+      "ticket": 4,
+      "preparedSequence": 545,
+      "sequence": 577,
+      "elapsed": 397.79999999998637
+    }
+  ],
+  "negativeControls": {
+    "originalRig": {
+      "file": "native-attack-crops-first-failure-nvidia-20261125.failure.json",
+      "sha256": "6c210b8994f467136801b474069dfbbe85bf707e15f639bee1f42a3115c290fb",
+      "minSequence": 110,
+      "observedSequence": 9,
+      "readySequence": 117,
+      "waitMs": 1823.39990234375,
+      "visible": true,
+      "bakedWalking": true,
+      "bakedRunning": true,
+      "optionalHistoricalMotionPreparing": true
+    },
+    "historicalAdoption": {
+      "file": "native-attack-crops-adoption-diagnostics-nvidia-20261125.failure.json",
+      "sha256": "88200e0549d8a2a843dfd27225818aab187bf7700754e9df4406ecb60d4f1909",
+      "surfaceSequence": 123,
+      "front": {
+        "sequence": 124,
+        "elapsed": 375.40000000000674,
+        "terrainReady": true
+      },
+      "preparedWaiting": {
+        "token": 1,
+        "sequence": 124,
+        "start": 375.3500000000068,
+        "end": 375.40000000000674,
+        "sealed": false,
+        "held": false
+      }
+    }
+  },
+  "cadenceAcceptance": false,
+  "nativeBinaries": {
+    "standalone": "5787838cc35f8448d6affd3f9fb352b16193a7ae6ee402d30b4f077743b4c2ec",
+    "pthread": "553aee6a1264131c614fa35b5eab772bac4de857989f49fadace8856e9a62b78",
+    "pthreadGlue": "11e9e12e5298d8ec89d238b433691e658863cceaeeffdf2d4028853683996c94",
+    "pthreadGlueWindowsBuild": "9cde90ea47fa28f1038d78052759560f4fd9e4f0ab367bb2482c2c3c8b3edb9e"
+  },
+  "validation": {
+    "selected": 522,
+    "passed": 512,
+    "knownQa100Failures": 5,
+    "skipped": 5,
+    "productBuildSecondsReported": 65,
+    "previousWasmSignaturesPreserved": true,
+    "addedFunctions": 25
+  }
+}

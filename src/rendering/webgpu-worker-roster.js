@@ -1,3 +1,4 @@
+import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {terrainStopWireProtocol} from '../simulation/terrain-stop-reservation.js';
 import {copyNativeFarmArrivalHeldExecution,nativeFarmArrivalContinuesHeld,nativeFarmArrivalSourcePose} from '../world/native-farm-arrival-route.js';
 import {nativeIdleStrollSavedState} from '../world/native-idle-stroll-state.js';
@@ -126,19 +127,6 @@ function idleCycleContinuesCompletedFarm(source,previous,entity,at){
 // This is a source check only; control and the native receipt grant execution.
 function pendingIdleStrollMatches(state,e,q){
  try{const {pose,idleState:i}=nativeIdleStrollSavedState(state,e);return e.nativeRouteAdmission==='pending-stroll-resources'&&e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&Object.keys(pose).every(k=>pose[k]===q.pose[k])&&(q.approach===true)===(i.destination.id===i.anchorId)&&i.anchorId===`${q.anchor.kind===1?'farm-plant':'farm-structure'}-${q.anchor.id}`&&i.remaining===(q.version===2?q.walkRemaining:q.approach?q.idleSeconds*2:0)&&i.rng===q.walkRng&&i.approachRetry===q.approachRetry&&i.destination.x===q.destination.x&&i.destination.z===q.destination.z;}catch{return false;}
-}
-// Raycaster uses the live scene. Reuse the same reversible participant to
-// query the acquired source, then restore the candidate even if picking fails.
-// This synchronous view neither grants a native permission nor invents a clock.
-function attachNativeSourcePresentation(part,isActivated){
- let pickingSource=false;
- part.withSourcePresentation=operation=>{
-  if(typeof operation!=='function'||pickingSource||!part.valid())throw Error('Native source presentation unavailable');
-  const restoreCandidate=isActivated();pickingSource=true;
-  try{if(restoreCandidate)part.rollback();const result=operation();if(result&&typeof result.then==='function')throw Error('Native source presentation must be synchronous');return result;}
-  finally{try{if(restoreCandidate&&!isActivated())part.activate();}finally{pickingSource=false;}}
- };
- return part;
 }
 export function createWebGpuWorkerRoster({scene,residency,state,assetBank,renderer=null,resourceRegistry=null,bakedWalkBank=null,bakedRunBank=null,bakedHarvestBank=null,bakedIdleBank=null,bakedAlertBank=null,bakedWaterBank=null,bakedPlantBank=null,bakedCarryBank=null,bakedFallBank=null,bakedGetUpBank=null,ownsAssetBank=true,walkRetryDelay=5000,pipelineAdmission=null,presentationWorkerHeadings=null,confirmedClock=null,experimentalHistoricalMotion=null,onError=()=>{},onBakedWalkError=()=>{},onReady=()=>{},onSelectableChange=()=>{},createWorker=createWebGpuConfirmedWorker}={}){
  if(!Number.isFinite(walkRetryDelay)||walkRetryDelay<0||resourceRegistry!==null&&typeof resourceRegistry?.adopt!=='function'||!scene||!residency||!state||!assetBank||typeof ownsAssetBank!=='boolean'||pipelineAdmission!==null&&typeof pipelineAdmission.prepare!=='function'||bakedWalkBank!==null&&(typeof bakedWalkBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedRunBank!==null&&(typeof bakedRunBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedHarvestBank!==null&&(typeof bakedHarvestBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedIdleBank!==null&&(typeof bakedIdleBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedAlertBank!==null&&(typeof bakedAlertBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedWaterBank!==null&&(typeof bakedWaterBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedPlantBank!==null&&(typeof bakedPlantBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedCarryBank!==null&&(typeof bakedCarryBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedFallBank!==null&&(typeof bakedFallBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||bakedGetUpBank!==null&&(typeof bakedGetUpBank.get!=='function'||!pipelineAdmission||!renderer?.backend?.isWebGPUBackend)||presentationWorkerHeadings!==null&&!(presentationWorkerHeadings instanceof Map)||confirmedClock!==null&&(!confirmedClock.node?.isNode||!Number.isFinite(confirmedClock.elapsed))||typeof onError!=='function'||typeof onBakedWalkError!=='function'||typeof onReady!=='function'||typeof onSelectableChange!=='function'||typeof createWorker!=='function')throw TypeError('Invalid worker roster');

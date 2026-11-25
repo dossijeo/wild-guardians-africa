@@ -26,7 +26,7 @@ function surface(f,{barrierTemplate,prepareNativeWallAdditions}={}){
  const admission={...f.admission,prepareManyAndPublish(){throw Error('Unexpected eager publication');},prepareTicket:async()=>({valid:()=>true}),completePreparation:async()=>{}};
  const coordinator=createChunkPublicationCoordinator({admission,onError:e=>errors.push(e)});
  const injected={...stops,...boundaries,...barrierCodec,spatialStructureBarriers,copyNativeGateMotionResources,assertNativeTerrainPresentationSupport,
-  state:f.state,workers:f.roster,scene:f.scene,residency:f.residency,terrainSupport:f.terrain,
+  state:f.state,roster:null,workers:f.roster,scene:f.scene,residency:f.residency,terrainSupport:f.terrain,
   settlements:{prepareVillageTerrain:()=>[],prepareNativeGateMotors:()=>[],prepareNativeWallAdditions},crops:null,crates:null,
   chunkCoordinator:coordinator,pipelineAdmission:admission,renderer:{shadowMap:{}},sun:{shadow:{}},
   remoteGpu:{whenFrameSettled:async()=>{},beginFrame(){},cancelFrame(){},async prepareNativeWorldFrame(meta){prepared++;if(barrierTemplate){assert.deepEqual(meta.nativeBarrierAdditionTemplate,barrierTemplate);assert.deepEqual(meta.coverage,{start:barrierTemplate.worldBoundary.effectiveTime,end:50});}else assert.deepEqual(meta.nativeFarmArrivalStopTemplate,f.preparedStop.proposal.nativeStop);return {preparedWorldBoundary:meta.boundary,valid:()=>true,abort:()=>true,commit:(boundary,proof)=>{assert(boundaries.sameNativeWorldBoundary(boundary,proof.reference.worldBoundary));return true;},presented};}},

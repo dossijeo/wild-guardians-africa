@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createConfirmedTimelinePump} from '../src/rendering/confirmed-timeline-pump.js';
 import assert from 'node:assert/strict';
 import {createConfirmedHistoricalMotionGroup} from '../src/rendering/confirmed-historical-motion-group.js';
 import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
@@ -99,4 +100,30 @@ test('resource readiness is a functional result even when historical diagnostics
  const group=createConfirmedHistoricalMotionGroup({animals:f.actor,effects,getSupport:()=>f.support,inputPolicy:'ordered-boundary'});
  assert.equal(group.certify(f.preview,f.current),null);assert.equal(group.lastRejection().preparationPending,true);
  pending=false;assert.ok(group.certify(f.preview,f.current));assert.equal(group.lastRejection(),null);
+});
+
+test('a submitted crop ticket leaves queued pre-roll to the confirmed stream',()=>{
+ const f=certificateFixture(),{preview,current,support,actor,group}=f;
+ const start=375.35,end=375.40;
+ Object.assign(current,{sequence:123,lastElapsed:start});
+ Object.assign(support,{sequence:124,start,end});
+ Object.assign(preview,{sequence:124,start,end,clockSegments:{version:1,start,end,startPauses:[],endPauses:[],complete:true,
+   segments:[{start,end,realDuration:end-start,rate:1}]}});
+ let lease=null,terrainReady=false,applied=0;
+ actor.nativeCropLease=()=>lease;actor.historicalMotionCurrent=()=>true;
+ const cached=group.certify(preview,current);assert(cached);
+ lease={start:379.55,end:395.8968};
+ const clock=createConfirmedHistoricalClock({initialElapsed:start,initialSequence:123,now:()=>0});
+ const stream={status:()=>({...current}),timelineStatus:()=>({receivedElapsed:end}),nextTimelineBoundary:()=>applied?null:{sequence:124,elapsed:end},
+   previewNextMotionBoundary:()=>preview,lastConfirmedClockSegments:()=>preview.clockSegments,
+   advanceNextTimelineBoundary(){if(!terrainReady)return false;applied++;Object.assign(current,{sequence:124,lastElapsed:end});return true;}};
+ const pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{...group,clock,canPrepareInterval:()=>true}});
+ assert.equal(pump.advance(),0);
+ assert.equal(pump.status().preparedWaiting,null,'pre-roll must never require encoding a second interval');
+ assert.equal(group.canStart(cached),false);
+ assert.equal(group.start(cached),false);
+ terrainReady=true;assert.equal(pump.advance(),1);assert.equal(applied,1);
+ assert.equal(current.sequence,124);assert.equal(clock.elapsed,end);
+ lease=null;assert(group.certify(preview,{sequence:123,lastElapsed:start,closed:false}));
+ pump.dispose();
 });

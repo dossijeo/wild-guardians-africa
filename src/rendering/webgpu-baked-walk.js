@@ -138,8 +138,8 @@ function compatibleLocomotionBakes(base,clips){
 // caller supplies the authoritative phase and selection nodes; no CPU tick is
 // introduced here. Rigid tools are the union of compatible authored channels.
 function nativeActionBakes(base,values,phaseSource){
- const names=phaseSource.clipNames;
- if(!Array.isArray(names)||names.length<1||names.length>4||new Set(names).size!==names.length||names.some(name=>!['Harvest','Plant','Water','Idle','Alert'].includes(name))||!phaseSource.clipNode?.isNode||typeof phaseSource.sampleClip!=='function')throw Error('Native action clip selector unavailable');
+ const names=phaseSource.clipNames,allowed=base.meta.schema==='wg-worker-gpu-walk/1'?['Harvest','Plant','Water','Idle','Alert']:Object.hasOwn(ANIMAL_ACTIONS.animals,base.meta.species)?['Walking','Running','Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2']:[];
+ if(!Array.isArray(names)||names.length<1||names.length>4||new Set(names).size!==names.length||names.some(name=>!allowed.includes(name))||!phaseSource.clipNode?.isNode||typeof phaseSource.sampleClip!=='function')throw Error('Native action clip selector unavailable');
  const bakes=new Map();let attachments=null;
  for(const value of values){
   if(!value?.texture?.isDataTexture||!names.includes(value.meta?.clip)||bakes.has(value.meta.clip)||value.meta.species!==base.meta.species||value.meta.source!==base.meta.source||value.meta.sourceSha256!==base.meta.sourceSha256||['boneInverses','channels'].some(key=>JSON.stringify(value.meta[key]??null)!==JSON.stringify(base.meta[key]??null)))throw Error('Incompatible baked action rig');

@@ -35,6 +35,7 @@ import {tutorialHandTarget} from '../tutorial/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
+import {nativeCropRouteSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -51,7 +52,7 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyAnimalCrop=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
@@ -118,7 +119,26 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeBoots
     nav.projectNativeGateLeaves();
    }
    if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
+   installNativeProduction();
+  }
+  function installNativeProduction(){
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,onError:error=>onNativeIntentControlError?.(error)});
+  }
+  function prepareColdNativeCrop(){
+   if(nativeBodies||restoringPhysics||physicsInitializing||physics?.actorIds.length||!session.core.wasm.nav_animal_crop_state)return;
+   const animal=game.raid?.animals[0];
+   if(!animal||!nativeCropRouteSubject(game,animal)||nativeGateOwners.length||!game.workers.every(w=>planner.nativeWorkerHomeInactive(w.id))||
+      session.core.wasm.spatial_body_count()!==0)return;
+   // This endpoint explicitly asks for native draw control. Bootstrap only an
+   // unchanged resting animal before the first advance of this saved route.
+   const bodies=createSpatialDynamicBodies(session.core.wasm);
+   try{
+    const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
+    if(!planner.requestNativeAnimalCropRoute(game,animal,body)){bodies.dispose();return;}
+    nativeBodies=bodies;
+    if(planner.commitNativeCausalClock({paused:game.pauses.length>0}).status!=='committed')throw Error('Native crop request lacks its causal clock');
+    installNativeProduction();
+   }catch(error){if(nativeBodies!==bodies)bodies.dispose();throw error;}
   }
   function admitPendingNativeBirths({force=false}={}){
    if(!nativeBodies||!nativeBirthsPending)return;
@@ -588,6 +608,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeBoots
     },
     attachNativeIntentControl(port,transportSession){
       if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));
+      if(qualifyAnimalCrop===true)prepareColdNativeCrop();
       return nativeIntentControl.attach(port,transportSession).then(ready=>{nativeProduction?.wake();return ready;});
     },
     nativeIntentControlStatus:()=>nativeIntentControl.connections(),

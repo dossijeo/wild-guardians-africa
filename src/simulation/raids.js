@@ -771,6 +771,62 @@ export function interruptAnimalAttack(s,a,nav) {
 export function retreatAnimal(s,a,reason='magic',nav={}) {
  release(s,a,nav);a.hitApplied=true;a.attackRemaining=0;beginRetreat(s,a,nav,reason);
 }
+// The first native crop cohort has one mobile body and only inactive workers.
+// A different encounter, protection or reservation requires a new admission.
+export function nativeCropRouteSubject(state,animal){
+ const raid=state.raid;
+ if(state.biome!=='sabana'||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
+    !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
+    !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||animal.approachShieldId||
+    animal.hitsRemaining<=0)return null;
+ const target=raidTarget(state,animal.targetId);
+ if(!target?.alive||animal.reservation!==targetReservationKey(target,animal)||
+    raid.reservations[animal.reservation]!==animal.id||spellAt(state,'shield',target))return null;
+ return {target,center:state.structures.find(operational)??target};
+}
+export function nativeCropCohortCurrent(state,planner){
+ const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal);
+ const native=subject&&planner?.nativeAnimalCropState?.(animal.id);
+ return !!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
+   animal.x===native.x&&animal.z===native.z&&(animal.motionPhase??0)===native.phase;
+}
+function nativeCropOwnersMatch({target,center},animal,native){
+ return animal.id==='animal-'+native.actor&&target.id==='plant-'+native.target&&
+   target.x===native.targetX&&target.z===native.targetZ&&center.id===(center===target?'plant-':'structure-')+native.center&&
+   center.x===native.centerX&&center.z===native.centerZ&&animal.radius===native.radius;
+}
+export const raidStrikeClips=Object.freeze(['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2']);
+function raidStrikeClip(roll){return roll<.45?0:roll<.75?1:roll<.9?2:3;}
+
+// Resource selection can read the persisted RNG, but only acquisition consumes
+// a draw, allocates the attack id, and starts the ordinary gameplay action.
+export function previewRaidStrike(state,animal){
+ const index=raidStrikeClip(nextRandom({rng:state.rng})),animation=raidStrikeClips[index];
+ return {index,animation,duration:ANIMAL_ACTIONS.animals[animal.species].clips[animation].duration};
+}
+function startRaidStrike(state,animal,markActive){
+ animal.status='attacking';animal.hitApplied=false;animal.attackId=`attack-${state.sequence++}`;
+ markActive?.();animal.animation=raidStrikeClips[raidStrikeClip(nextRandom(state))];
+ animal.attackDuration=ANIMAL_ACTIONS.animals[animal.species].clips[animal.animation].duration;
+ animal.attackRemaining=animal.attackDuration;
+}
+export function projectAcquiredRaidStrike(state,animal,proof){
+ const target=raidTarget(state,animal.targetId);
+ if(!target||!target.alive||!proof||animal.targetId!==`plant-${proof.target}`||animal.id!==`animal-${proof.actor}`||
+    state.raid?.reservations[animal.reservation]!==animal.id||animal.hitsRemaining<=0||
+    animal.x!==proof.x||animal.z!==proof.z||target.x!==proof.targetX||target.z!==proof.targetZ)
+  throw Error('Native crop strike has another actor, crop or terminal pose');
+ if(animal.status==='attacking'){
+  if(animal.attackId!==`attack-${proof.attackId}`||animal.animation!==raidStrikeClips[proof.clip]||animal.attackDuration!==proof.duration)
+   throw Error('Native crop strike cannot replace an active game strike');
+  return;
+ }
+ const clip=previewRaidStrike(state,animal);
+ if(!['walking','entering'].includes(animal.status)||state.pauses.length||state.sequence!==proof.attackId||state.elapsed!==proof.at||
+    clip.index!==proof.clip||clip.duration!==proof.duration)throw Error('Stale native crop strike acquisition');
+ animal.heading=proof.yaw;startRaidStrike(state,animal);
+}
+
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   // Resolve confirmed crop and barrier changes before the next attack
@@ -790,10 +846,29 @@ export function updateRaid(s,dt,nav) {
     if(a.status==='gone')continue;
     if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
     if((a.magicStunUntil??0)>s.elapsed)continue;
+    const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
+    if(crop){
+      const source=nativeCropRouteSubject(s,a);
+      if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
+        throw Error('Native crop action lost the current game source');
+      if(crop.mode!==3){
+        if(!['entering','walking'].includes(a.status))throw Error('Native crop route has another semantic action');
+        if(crop.mode===1){
+          if(a.x!==crop.x||a.z!==crop.z||(a.motionPhase??0)!==crop.phase)throw Error('Pending crop route moved before acquisition');
+        }else{
+          a.x=crop.x;a.z=crop.z;a.heading=crop.yaw;a.motionPhase=crop.phase;
+          if(!crop.running)a.status='walking';
+        }
+        continue;
+      }
+      if(a.status!=='attacking'||a.attackId!=='attack-'+crop.strike.attackId||
+         a.animation!==raidStrikeClips[crop.strike.clip]||a.attackDuration!==crop.strike.duration)
+        throw Error('Native crop strike lacks its acquired game action');
+    }
     if(a.status==='attacking'){
       a.attackDuration??=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;
-      a.attackRemaining=Math.max(0,a.attackRemaining-dt);
-      if(a.attackRemaining>1e-9)continue;
+      a.attackRemaining=crop?Math.max(0,crop.strike.endTime-s.elapsed):Math.max(0,a.attackRemaining-dt);
+      if(crop?s.elapsed<crop.strike.endTime:a.attackRemaining>1e-9)continue;
       const target=raidTarget(s,a.targetId);
       if(!a.hitApplied&&a.hitsRemaining>0){
         a.hitApplied=true;a.hitsRemaining--;observeWaitProgress(s);
@@ -986,10 +1061,7 @@ export function updateRaid(s,dt,nav) {
         // A previous committed strike releases its native lease at the damage
         // frame. Renew it only when this next strike actually begins.
         nav.intentTaskPlanner?.registerAttackIntent(s,a,target,[]);
-        a.status='attacking';a.hitApplied=false;a.attackId=`attack-${s.sequence++}`;
-        nav.intentTaskPlanner?.markAttackActive(a.id);
-        const roll=nextRandom(s);a.animation=roll<.45?'Right_Hand_Sword_Slash':roll<.75?'Charged_Upward_Slash':roll<.9?'Weapon_Combo':'Weapon_Combo_2';
-        a.attackDuration=ANIMAL_ACTIONS.animals[a.species].clips[a.animation].duration;a.attackRemaining=a.attackDuration;
+        startRaidStrike(s,a,()=>nav.intentTaskPlanner?.markAttackActive(a.id));
       } else if(!a.path){
         emit(s,'AnimalRouteUnavailable',{targetId:a.id,species:a.species,phase:'travel'});
         release(s,a,nav);

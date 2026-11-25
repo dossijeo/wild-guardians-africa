@@ -62,6 +62,8 @@ Crecimiento preparó el modelo y los efectos del Guardián, confirmó una sola a
 
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
+AttackCrops ya dibuja la marcha reservada y el primer golpe en NVIDIA con la calificación de desarrollo. Ambos tickets empezaron con edad cero, conservaron el cuerpo 1, cuatro geometrías y 78 buffers comparables, y produjeron un único golpe al cultivo. El perfil ordinario espera la continuación posterior y C4 sigue abierto. [Calificación nativa y recibos](native-attack-crops-qualification-20261125.md).
+
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
 
 Una partida con puerta de zarzas existente ya restaura y mueve Farm nativo. En NVIDIA el trabajador avanzó con el mismo cuerpo y 32 geometrías. La puerta conservó su raíz y geometría visibles. Quedan la compra de una puerta nueva, el cruce del corredor y C4. [Restauración y recibo](native-farm-restored-gate-20261121.md).

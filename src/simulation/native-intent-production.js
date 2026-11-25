@@ -15,6 +15,14 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   for(const actorId of rejectedRuins.keys())if(!state.workers.some(w=>w.id===actorId&&w.nativeRouteAdmission==='native-action'))rejectedRuins.delete(actorId);
   // Rotate the existing roster after the last attempt. A blocked native source
   // must not starve another ready agent; no duplicate request queue is retained.
+  if(state.raid?.animals.length===1&&!state.pauses.length){
+   const animal=state.raid.animals[0],actorId=animal.id;
+   if(onlyActor===null||onlyActor===actorId){
+    const r=planner.nativeAnimalCropState?.(actorId);
+    if(r?.mode===1)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
+    if(r?.mode===2&&r.arrived)return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
+   }
+  }
   const workers=state.workers,start=onlyActor===null?(workers.findIndex(w=>w.id===last?.actorId)+1)%Math.max(1,workers.length):0;
   for(let i=0;i<workers.length;i++){
    const worker=workers[(start+i)%workers.length];
@@ -76,6 +84,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
  function sourceIdentity(request){
   const actor=request.actorId;
   switch(request.kind){
+   case 'animal-crop-route':case 'animal-crop-strike':return request.requestSequence;
    case 'farm-arrival':return JSON.stringify([planner.nativeFarmArrivalRequestReference(actor),request.urgent]);
    case 'farm-arrival-continuation':{const source=planner.nativeFarmArrivalContinuationSource(actor);return source&&JSON.stringify({...source,executedThrough:0});}
    case 'task-route-stop':

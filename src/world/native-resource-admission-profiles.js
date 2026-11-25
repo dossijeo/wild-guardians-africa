@@ -1,3 +1,4 @@
+import {copyNativeAnimalCropAttestation,copyNativeAnimalCropReference,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
 import {nativeBarrierAdditionReferenceFromProposal,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from './native-barrier-addition.js';
 import {nativeFarmArrivalStopCodec,nativeIdleStrollStopCodec,nativeTaskRouteStopCodec} from './native-worker-route-stop-codec.js';
 import {nativeIdleCycleReferenceFromProposal,sameNativeIdleCycleReference} from './native-idle-cycle.js';
@@ -28,7 +29,20 @@ function projectedStopProfile(codec,name,{templateField,bindingField,releaseFiel
     }
   });
 }
+function cropProfile(kind,suffix,releaseField){
+ const templateField='preparedAnimalCrop'+suffix+'Template',bindingField='nativeAnimalCrop'+suffix+'Binding',versionField='nativeAnimalCrop'+suffix+'Version';
+ return Object.freeze({proposalKind:kind===26?'native-animal-crop-route-proposal':'native-animal-crop-strike-proposal',templateField,bindingField,releaseField,
+   reference:value=>copyNativeAnimalCropReference(value.reference,kind),sameReference:sameNativeAnimalCropReference,
+   compatible:translation=>translation.compatible===true,
+   receiptCompatible:(receipt,prepared)=>receipt[versionField]===1&&sameNativeAnimalCropReference(receipt[templateField],prepared),
+   attest(native,reference,prepared,protocol){const fact=copyNativeAnimalCropAttestation(protocol.binding(),kind);
+     if(!sameNativeAnimalCropReference(fact.reference,reference)||!sameNativeAnimalCropReference(fact.preparedReference,prepared))throw Error('Crop acquisition differs from its native resource');
+     return fact;}
+ });
+}
 const profiles=Object.freeze({
+ 'animal-crop-route':cropProfile(26,'Route','nativeAnimalCropRoutes'),
+ 'animal-crop-strike':cropProfile(27,'Strike','nativeAnimalCropStrikes'),
   'barrier-addition':Object.freeze({
     proposalKind:'native-barrier-addition-proposal',templateField:'preparedBarrierAdditionTemplate',bindingField:'nativeBarrierAdditionBinding',releaseField:'nativeBarrierAdditions',
     reference:nativeBarrierAdditionReferenceFromProposal,sameReference:sameNativeBarrierAdditionReference,compatible:translation=>translation.sameResourceOwners===true,
