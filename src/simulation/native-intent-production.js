@@ -19,7 +19,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const animal=state.raid.animals[0],actorId=animal.id;
    if(onlyActor===null||onlyActor===actorId){
     const r=planner.nativeAnimalCropState?.(actorId);
-    if(r?.mode===1)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
+    if(r?.mode===1&&planner.nativeRaidFlightMember?.(state,animal)?.nativeRouteAdmission!=='pending-farm-flight-stop')return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
     if(r?.mode===2&&!r.retreat&&r.arrived)return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
    }
   }
@@ -46,7 +46,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    }
    if(marker==='pending-idle-resources'&&planner.nativeInitialIdleRequestReference(actorId))return {actorId,kind:'initial-idle-body',operation:'startNativeInitialIdleBodyAfterGpuQuiescence',prepare:'prepareNativeInitialIdleBodyResources'};
    if(marker==='pending-stroll-resources'&&planner.nativeIdleStrollRequestReference(actorId))return {actorId,kind:'idle-stroll',operation:'startNativeIdleStrollAfterGpuQuiescence',prepare:'prepareNativeIdleStrollResources'};
-   if(marker==='pending-home-resources'&&planner.nativeHomeRequestReference(actorId)||!marker&&worker.status==='returning'&&planner.nativeTaskSettlementBinding(actorId)?.reference.home)return {actorId,kind:'home-route',operation:'startNativeHomeRouteAfterGpuQuiescence',prepare:'prepareNativeHomeRouteResources'};
+   if((marker==='pending-home-resources'||marker==='pending-raid-flight-resources'&&planner.nativeRaidFlightMember?.(state,state.raid?.animals[0])===worker)&&planner.nativeHomeRequestReference(actorId)||!marker&&worker.status==='returning'&&planner.nativeTaskSettlementBinding(actorId)?.reference.home)return {actorId,kind:'home-route',operation:'startNativeHomeRouteAfterGpuQuiescence',prepare:'prepareNativeHomeRouteResources'};
    if(marker==='native-home'&&planner.nativeHomeRouteExecution(actorId)?.arrived)return {actorId,kind:'home-arrival',operation:'startNativeHomeArrivalAfterGpuQuiescence',prepare:'prepareNativeHomeArrivalResources'};
    if(marker==='native-idle'){
     const cycle=planner.nativeIdleCycleExecution(actorId),request=cycle&&planner.nativeIdleCycleNextRequest(actorId);

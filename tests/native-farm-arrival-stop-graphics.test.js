@@ -81,3 +81,45 @@ test('confirmed raid flight keeps the original Farm rig through prepared and acq
   assert.deepEqual(f.errors,[]);
  }finally{f.close();}
 });
+
+test('delayed Stop24 stages on the confirmed moving Farm sample and adopts only its final pose',async()=>{
+ const f=await fixture({peer:false});
+ try{
+  const worker=f.worker,spawnTime=f.state.elapsed,rig=f.roster.get(f.actor);
+  const animal={id:'animal-22',species:'warthog'},raid={id:'raid-'+f.state.day+'-day',daytime:true,animals:[animal]};
+  const spawn={id:'event-45',type:'RaidSpawned',simulationTime:spawnTime,
+   raidFacts:{id:raid.id,day:f.state.day,elapsed:spawnTime,daytime:true,actors:[{...animal}]}};
+  const initialX=worker.x,initialZ=worker.z;
+  f.advance(.2);
+  const e=f.planner.nativeFarmArrivalRouteExecution(f.nativeActor);
+  assert.notDeepEqual([e.x,e.z],[initialX,initialZ]);
+  const sample={at:e.executedThrough,nativeRoute:e.nativeRoute,bodyId:e.bodyId,eventId:45,spawnTime,
+   pose:{x:e.x,z:e.z,heading:e.yaw,runPhase:e.runPhase,walkPhase:e.walkPhase,carryPhase:e.carryPhase,
+    runRemaining:e.runRemaining,running:e.running,gateWaiting:!e.arrived&&e.currentSpeed===0}};
+  Object.assign(worker,sample.pose,{status:'fleeing',nativeRouteAdmission:'pending-farm-flight-stop',
+   idleState:null,destinationId:null,path:null});
+  f.state.raid=raid;f.state.events=[spawn];f.sync();
+  await assert.rejects(f.prepare(),/changed during preparation/);
+  worker.nativeFarmFlightSample=sample;f.sync();
+  const {parts:[part]}=await f.prepare();
+  assert(part.valid());
+  for(const other of [{...sample,at:spawnTime},{...sample,eventId:46},{...sample,spawnTime:spawnTime+.01},
+   {...sample,bodyId:e.bodyId+1},{...sample,nativeRoute:{...e.nativeRoute,assignmentSequence:e.nativeRoute.assignmentSequence+1}},
+   {...sample,nativeRoute:{...e.nativeRoute,routeHandle:{...e.nativeRoute.routeHandle,generation:e.nativeRoute.routeHandle.generation+1}}},
+   {...sample,pose:{...sample.pose,walkPhase:sample.pose.walkPhase+.01}},null]){
+   worker.nativeFarmFlightSample=other;f.sync();assert.equal(part.valid(),false);
+  }
+  worker.nativeFarmFlightSample=sample;worker.x+=.01;f.sync();assert.equal(part.valid(),false);
+  worker.x=sample.pose.x;f.sync();assert(part.valid());
+  const proof=f.commitStop(),{pose}=f.source;
+  assert.equal(pose.x,e.x);assert.equal(pose.z,e.z);
+  delete worker.nativeFarmFlightSample;
+  Object.assign(worker,{nativeRouteAdmission:'pending-raid-flight-resources',running:false,gateWaiting:false});
+  f.sync();assert.equal(part.valid(),false);
+  assert(part.acceptNativeStopBinding(proof));assert(part.valid());
+  worker.walkPhase+=.01;f.sync();assert.equal(part.valid(),false);
+  worker.walkPhase=pose.walkPhase;f.sync();
+  part.activate();part.attach();const release=part.finalize();release.retire();release.notify();f.submit();f.flush();
+  assert.equal(f.roster.get(f.actor),rig);assert.equal(f.acquires,1);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});

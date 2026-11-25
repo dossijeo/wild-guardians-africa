@@ -174,7 +174,7 @@ function normalizeNativeIntentRestoration(state,wasm){
   for(const {worker,home} of strolls)if(home)Object.assign(worker,home);else worker.nativeRouteAdmission='pending-stroll-resources';
 }
 
-export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
+export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
   if(onNativeWorldResources!==null&&typeof onNativeWorldResources!=='function')throw TypeError('Invalid native world resource observer');
   if(typeof authorityEpoch!=='string'||!authorityEpoch||authorityEpoch.length>256)
     throw TypeError('Expected an authority epoch for native route handles');
@@ -238,6 +238,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     throw Error('Unsupported native prop mutation service; rebuild Wild Engine');
   if(wasm.nav_intent_terrain_mutation_version()!==1)
     throw Error('Unsupported native terrain mutation service; rebuild Wild Engine');
+  let raidFlight=null;
   let sequence=0,initialized=false,owningState=null,legacyCropHomes=false,lastIntentSequence=0,restoredWallRepairs=[];
   const controlObservers=new Set();
   // Retention is independent of the event subscription: closing a port or
@@ -312,6 +313,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       // Initial semantic absence grants no route or body permission. A reused
       // core can retain old bodies after nav_intent_reset; never bless those
       // as inactive merely because their new JS row says home.
+      raidFlight=null;
       legacyCropHomes=!!wasm.nav_animal_crop_state&&wasm.spatial_body_count()===0&&!!state.raid?.animals[0]&&
         !state.structures.some(v=>v.gate&&v.status!=='ruined')&&!!nativeCropRouteSubject(state,state.raid.animals[0]);
       if(wasm.spatial_body_count()===0)for(const worker of workers){
@@ -618,7 +620,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       const crop=readIssuedAnimalCrop(data,at);
       const pendingCrop=data[at+1]===6&&data[at+13]===4&&owningState?.raid?.animals.some(animal=>numericId(animal.id)===data[at])?
         readPendingAnimalCrop(false):null;
-      return {...(pendingCrop?.previousStrike&&pendingCrop.requestSequence===data[at+8]?{pendingAnimalCrop:pendingCrop}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
+      const birth=pendingCrop&&raidFlight?.requestSequence===pendingCrop.requestSequence?raidFlight.birth:null;
+      return {...((pendingCrop?.previousStrike||birth)&&pendingCrop.requestSequence===data[at+8]?
+        {pendingAnimalCrop:pendingCrop,...(birth?{raidFlightBirth:birth}:{})}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
         ...(pendingTaskCancellation?{pendingTaskCancellation}:{}),
@@ -730,9 +734,48 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     return Float32Array.from(new Float32Array(wasm.memory.buffer,
       wasm.nav_intent_route_ptr(handle.session,handle.slot,handle.generation),count*2));
   };
+  // Session-local provenance for the two actual bodies in the admitted spawn.
+  // Resetting or replacing the Game, raid or actor invalidates this declaration.
+  const nativeRaidFlightMember=(state,animal)=>{
+    const f=raidFlight;
+    if(!f||state!==owningState||state.raid!==f.raid||state.raid?.animals.length!==1||animal!==f.animal||
+       state.workers.length!==1||state.workers[0]!==f.worker||animal.magicDown||animal.magicStunUntil>state.elapsed)return null;
+    const w=f.worker;
+    if(w.status!=='fleeing'||w.incapacitated||w.recovery||w.recoveryExitRemaining||w.fallRemaining||w.taskId||w.crateId||w.raidReturn)return null;
+    if(w.nativeRouteAdmission==='pending-farm-flight-stop'){
+      const motion=nativeFarmArrivalRouteBinding(w.id);
+      return motion?.assignmentSequence===f.farmSequence&&motion.reference.bodyId===f.workerBody?w:null;
+    }
+    const h=w.nativeRouteAdmission==='pending-raid-flight-resources'?nativeHomeRequestReference(w.id):
+      w.nativeRouteAdmission==='native-home'?nativeHomeRouteBinding(w.id)?.reference.sourceRequest:null;
+    return h?.raidSpawnSequence===f.event&&h.bodyId===f.workerBody?w:null;
+  };
+  function declareRaidFlightPair(state,animal,worker,event,body,center,select){
+    if(!qualifyFarmFlee||state!==owningState||!state.raid?.daytime||state.raid.animals[0]!==animal||state.workers[0]!==worker||
+       animal.species!=='warthog'||!Number.isSafeInteger(event)||event<=0||!Number.isSafeInteger(body)||body<=0)return false;
+    const farm=nativeFarmArrivalRouteBinding(worker.id),home=nativeHomeRequestReference(worker.id);
+    const workerBody=farm?.reference.bodyId??home?.bodyId;
+    const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:farm?.assignmentSequence??home?.requestSequence,
+      farmTicket:farm?.reference.worldBoundary.ticket??null,raidSpawnSequence:event};
+    const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,birth,center:numericId(center.id)};
+    raidFlight=pair;
+    let selected;
+    try{
+      const result=nativeRaidFlightMember(state,animal)&&select();
+      if(!result?.native||result.shieldId||!result.target?.alive)return null;
+      const q=nativeAnimalCropState(animal.id);
+      if(q?.mode!==1||q.body!==body||q.target!==numericId(result.target.id)||pair.requestSequence!==q.requestSequence)throw Error('Raid spawn lost its pending crop body');
+      selected=result;return result;
+    }finally{if(!selected)raidFlight=null;}
+  }
+  function flightCandidateClear(session,ticket){
+    const f=raidFlight;
+    if(!f)return true;
+    return !!nativeRaidFlightMember(owningState,f.animal)&&wasm.nav_flight_crop_proposal_clear(session,ticket,numericId(f.worker.id),numericId(f.animal.id),f.event)===1;
+  }
   const requestNativeAnimalCropRoute=(state,animal,bodyId)=>{
     if(state!==owningState||!Number.isSafeInteger(bodyId)||bodyId<1||!wasm.nav_animal_route_request)return false;
-    const source=nativeCropRouteSubject(state,animal);
+    const source=nativeCropRouteSubject(state,animal,nativeRaidFlightMember(state,animal));
     if(!source||!['entering','walking'].includes(animal.status)||!Number.isFinite(animal.x)||!Number.isFinite(animal.z))return false;
     syncBoundaryTime();
     return wasm.nav_animal_route_request(numericId(animal.id),bodyId,numericId(source.center.id),
@@ -800,7 +843,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       routeBinding=nativeAnimalRouteBinding(routeHandle(row[4],row[5],row[6]));
     }
     const current=()=>{
-      if(state!==owningState||!initial||!nativeCropCohortCurrent(state,{nativeAnimalCropState})||state.pauses.length||state.result)return false;
+      if(state!==owningState||!initial||!nativeCropCohortCurrent(state,{nativeAnimalCropState,nativeRaidFlightMember})||state.pauses.length||state.result)return false;
       const now=nativeAnimalCropState(actorId);
       if(!now||now.mode!==(kind===26?1:2)||now.requestSequence!==initial.requestSequence||now.body!==initial.body)return false;
       if(kind===26)return true;
@@ -845,16 +888,27 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       capture(boundary){prepared=candidate=capture();if(!sameNativeWorldBoundary(candidate.worldBoundary,boundary))throw Error('Wrong crop preparation boundary');return candidate;},
       revalidate(session,ticket){
         if(!current()||call('_revalidate',session,ticket)!==1)return {status:'stale'};
-        candidate=capture();let compatible=nativeAnimalCropSuccessor(candidate.reference,prepared.reference);
+        candidate=capture();if(kind===26&&!flightCandidateClear(session,candidate.worldBoundary.ticket)){
+          call('_cancel',session,candidate.worldBoundary.ticket);return {status:'stale'};
+        }
+        let compatible=nativeAnimalCropSuccessor(candidate.reference,prepared.reference);
         if(kind===26){
           const ptr=call('_time_translation_ptr',session,candidate.worldBoundary.ticket);
           compatible=compatible&&!!ptr&&new Float64Array(wasm.memory.buffer,ptr,11)[9]===1&&nativeMotionPresentationMatches(prepared,candidate,[]);
         }
         translation={compatible};return {status:'revalidated',timeTranslation:translation,proposal:candidate};
       },timeTranslation:()=>translation,binding:()=>attestation};
-    return commitNativeWorldProposal(getPublication,()=>kind===26?call('_stage',actor,wasm.nav_intent_session(),initial.requestSequence):
+    return commitNativeWorldProposal(getPublication,()=>kind===26?(()=>{
+      const status=call('_stage',actor,wasm.nav_intent_session(),initial.requestSequence);
+      if(status!==1||!raidFlight||state.raid!==raidFlight.raid)return status;
+      if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Staged crop lost its native ticket');
+      const [session,ticket]=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),2);
+      if(flightCandidateClear(session,ticket))return 1;
+      call('_cancel',session,ticket);return 0;
+    })():
       call('_stage',actor,wasm.nav_intent_session(),routeBinding.assignmentSequence,selected.index,selected.duration),(mark,...boundary)=>{
       if(!current())return {status:-2};
+      if(kind===26&&!flightCandidateClear(boundary[0],boundary[1]))return {status:-2};
       const attackId=state.sequence,readyTicket=prepared.worldBoundary.ticket;
       const status=kind===26?call('_commit_bound',...boundary,readyTicket):call('_commit_bound',...boundary,readyTicket,attackId);
       if(status!==1)return {status};mark();
@@ -2306,12 +2360,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(wasm.nav_intent_initial_idle_home_request(r.actorId,r.worldBoundary.nativeSession,held.bodySequence,home.villageId,home.x,home.z)!==1)throw Error('Native initial Idle body Home request rejected');
     const request=nativeHomeRequestReference(r.actorId);if(!request)throw Error('Native initial Idle body Home lost its physical owner');return request;
   };
+  const stageFarmArrivalRoute=(actor,sessionId,sequence,flags)=>{
+    const stage=qualifyFarmFlee&&wasm.spatial_world_biome()===0?wasm.nav_farm_arrival_route_proposal_stage_savanna:wasm.nav_farm_arrival_route_proposal_stage;
+    return stage(actor,sessionId,sequence,flags);
+  };
   const prepareNativeFarmArrivalRouteProposal=(value,{urgent=false}={})=>{
     if(typeof urgent!=='boolean')throw TypeError('Invalid native farm arrival urgency');
     const source=copyNativeFarmArrivalRequestReference(value),outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
     if(source.authorityEpoch!==epoch())return outcome('stale');if(wasm.nav_farm_arrival_route_proposal_version?.()!==1)throw Error('Rebuild native farm arrival route admission');
     syncBoundaryTime();flushNativeIntentControl();if(!sameNativeFarmArrivalRequestReference(source,nativeFarmArrivalRequestReference(source.actorId)))return outcome('stale');
-    const status=wasm.nav_farm_arrival_route_proposal_stage(source.actorId,source.nativeSession,source.requestSequence,urgent?1:0);if(status!==1)return outcome(status===-4?'busy':status===-6?'unknown':status===0?'conflict':'unsupported');
+    const status=stageFarmArrivalRoute(source.actorId,source.nativeSession,source.requestSequence,urgent?1:0);if(status!==1)return outcome(status===-4?'busy':status===-6?'unknown':status===0?'conflict':'unsupported');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native farm arrival lost its ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=Object.freeze({kind:'native-farm-arrival-route-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]});
     try{const proposal=captureNativeFarmArrivalRouteProposal(ticket);if(!proposal)throw Error('Native farm arrival expired during capture');return outcome('proposed',{proposal});}catch(error){wasm.nav_farm_arrival_route_proposal_cancel(t[0],t[1]);throw error;}
   };
@@ -2321,7 +2379,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(typeof wasm.nav_farm_arrival_route_held_origin_snapshot!=='function')throw Error('Rebuild native Farm continuation');
     syncBoundaryTime();flushNativeIntentControl();const actual=nativeFarmArrivalHeldExecution(source.actorId),identity=v=>JSON.stringify({...v,executedThrough:0});
     if(!actual||source.executedThrough>actual.executedThrough||identity(actual)!==identity(source))return outcome('stale');
-    const q=source.sourceReference.sourceRequest,status=wasm.nav_farm_arrival_route_proposal_stage(source.actorId,q.nativeSession,q.requestSequence,source.sourceReference.motionFlags);
+    const q=source.sourceReference.sourceRequest,status=stageFarmArrivalRoute(source.actorId,q.nativeSession,q.requestSequence,source.sourceReference.motionFlags);
     if(status!==1)return outcome(status===-4?'busy':status===-6?'unknown':status===0?'conflict':'unsupported');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native Farm continuation lost its ticket');
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket=Object.freeze({kind:'native-farm-arrival-route-proposal-ticket',authorityEpoch:epoch(),session:a[0],ticket:a[1]});
@@ -2431,7 +2489,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native Home arrival requires retained resource preparation');
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),source=nativeHomeRouteBinding(actor),home=source&&nativeHomeRouteSource(source.reference).home,village=home&&state?.villages.find(v=>numericId(v.id)===home.villageId);
     if(!source||!worker||!village)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedConsequences:false});
-    const current=()=>{const e=nativeHomeRouteExecution(actor);return owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&worker.status==='returning'&&worker.nativeRouteAdmission==='native-home'&&!worker.taskId&&!worker.crateId&&!worker.path?.length&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z&&e?.arrived===true&&e.executedThrough===state.elapsed&&e.binding.assignmentSequence===source.assignmentSequence&&JSON.stringify(e.binding)===JSON.stringify(source)&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===e[k])&&worker.heading===e.yaw;};
+    const current=()=>{const e=nativeHomeRouteExecution(actor);return owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(source.reference.sourceRequest?.raidSpawnSequence?nativeRaidFlightMember(state,state.raid?.animals[0])===worker:worker.status==='returning')&&worker.nativeRouteAdmission==='native-home'&&!worker.taskId&&!worker.crateId&&!worker.path?.length&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z&&e?.arrived===true&&e.executedThrough===state.elapsed&&e.binding.assignmentSequence===source.assignmentSequence&&JSON.stringify(e.binding)===JSON.stringify(source)&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===e[k])&&worker.heading===e.yaw;};
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedConsequences:false});let candidate=null,prepared=null,translation=null,issued=null;
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-arrival',binding:()=>issued,
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===19;},
@@ -2443,7 +2501,9 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_home_arrival_result_ptr(),52));if(a[0]!==1||!a.every(Number.isFinite)||a[1]!==wasm.nav_intent_transition_sequence()||a[2]!==prepared.ticket.ticket||a[3]!==candidate.ticket.ticket||wasm.nav_intent_actor(actor)!==0||wasm.nav_intent_worker_inactive(actor)!==1||wasm.spatial_body_has_blockers(source.reference.bodyId,0)!==-1)throw Error('Native Home arrival did not retire its issued body');
       issued=copyNativeHomeArrivalAttestation({kind:'native-home-arrival-attestation',version:1,projectionVersion:1,retiredSequence:a[1],preparedReference:homeArrivalReference(a.slice(4,28),a[2],source),reference:homeArrivalReference(a.slice(28,52),a[3],source)});
       if(!sameNativeHomeArrivalReference(issued.reference,candidate.nativeHomeArrival)||!sameNativeHomeArrivalReference(issued.preparedReference,prepared.nativeHomeArrival))throw Error('Native Home arrival differs from the prepared consequence');
-      const pose=issued.reference.pose;Object.assign(worker,{x:home.x,z:home.z,heading:pose.yaw,runPhase:pose.runPhase,walkPhase:pose.walkPhase,carryPhase:pose.carryPhase,runRemaining:pose.runRemaining,status:'home',path:[],running:false,gateWaiting:false});delete worker.nativeRouteAdmission;notifyWorkerPlanningChange(state,worker);
+      const pose=issued.reference.pose;Object.assign(worker,{x:home.x,z:home.z,heading:pose.yaw,runPhase:pose.runPhase,walkPhase:pose.walkPhase,carryPhase:pose.carryPhase,runRemaining:pose.runRemaining,status:'home',path:[],running:false,gateWaiting:false});delete worker.nativeRouteAdmission;
+      if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event)raidFlight=null;
+      notifyWorkerPlanningChange(state,worker);
       const resources=Object.freeze({version:1,kind:19,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeHomeArrivalBinding:issued});mark({resources,nativeHomeArrivalBinding:issued});return {status:1,value:{resources,nativeHomeArrivalBinding:issued}};
     },prepareResources,signal,protocol);
   };
@@ -2466,16 +2526,18 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
   const continueNativeFarmArrivalAfterGpuQuiescence=(options,isCurrent)=>{const source=nativeFarmArrivalHeldExecution(options?.actorId);return source?acquireNativeFarmArrivalAfterGpuQuiescence(options,source,isCurrent):Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});};
   const startNativeHomeRouteAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native Home requires retained resource preparation');
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),fresh=worker?.nativeRouteAdmission==='pending-home-resources',source=fresh?nativeHomeRequestReference(actor):nativeTaskSettlementBinding(actor),r=fresh?source:source?.reference,home=r?.home,village=home&&state?.villages.find(v=>numericId(v.id)===home.villageId);
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),flight=worker?.nativeRouteAdmission==='pending-raid-flight-resources',fresh=flight||worker?.nativeRouteAdmission==='pending-home-resources',source=fresh?nativeHomeRequestReference(actor):nativeTaskSettlementBinding(actor),r=fresh?source:source?.reference,home=r?.home,village=home&&state?.villages.find(v=>numericId(v.id)===home.villageId);
     if(!source||!home||!worker||!village)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
-    const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&worker.status==='returning'&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission==='pending-home-resources'&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
+    const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(flight?nativeRaidFlightMember(state,state.raid?.animals[0])===worker&&r.raidSpawnSequence===raidFlight?.event:worker.status==='returning')&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission===(flight?'pending-raid-flight-resources':'pending-home-resources')&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});let candidate=null,translation=null,preparedTicket=null;
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-route',
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===18;},
-      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(g=>g.gateId),ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),snapshot:(session,ticket)=>wasm.nav_home_route_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_home_route_proposal_cancel(session,ticket),release(){},
+      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;if(flight&&!flightCandidateClear(session,candidate.ticket.ticket)){cancelNativeHomeRouteProposal(candidate.ticket);return {status:'stale'};}translation=result.timeTranslation;}return result;},timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(g=>g.gateId),ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),snapshot:(session,ticket)=>wasm.nav_home_route_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_home_route_proposal_cancel(session,ticket),release(){},
       capture(boundary){candidate=captureNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native Home route resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
-    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeHomeRouteProposal(source);return p.status==='proposed'?1:p.status==='busy'?-4:p.status==='conflict'?0:-2;},(mark,...boundary)=>{
-      if(!current())return {status:-2};const status=wasm.nav_home_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(fresh&&beginNativeRouteExecution().status!=='started')throw Error('Restored Home could not establish its native execution boundary');projectNativeHomeRouteExecution(state,worker,{nativeHomeRouteExecution});
+    return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeHomeRouteProposal(source);
+      if(flight&&p.status==='proposed'&&!flightCandidateClear(p.proposal.ticket.session,p.proposal.ticket.ticket)){cancelNativeHomeRouteProposal(p.proposal.ticket);return 0;}
+      return p.status==='proposed'?1:p.status==='busy'?-4:p.status==='conflict'?0:-2;},(mark,...boundary)=>{
+      if(!current()||flight&&!flightCandidateClear(boundary[0],boundary[1]))return {status:-2};const status=wasm.nav_home_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(fresh&&beginNativeRouteExecution().status!=='started')throw Error('Restored Home could not establish its native execution boundary');projectNativeHomeRouteExecution(state,worker,{nativeHomeRouteExecution});
       const binding=nativeHomeRouteBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=Object.freeze({version:1,kind:18,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeHomeRouteBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});mark({resources,nativeRoute,nativeHomeRouteBinding:binding});return {status:1,value:{resources,nativeRoute,nativeHomeRouteBinding:binding}};
     },prepareResources,signal,protocol);
   };
@@ -2818,12 +2880,14 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
       throw TypeError('Native timed AttackCrops currently requires a walking intention');
     if(!initialized||!state.raid)throw Error('No native raid intention session');
     const finished=nativeFinishedAnimalCrop(state,animal);
-    const transient=prepareAttackTransients(state,animal,!!finished);
+    const birth=raidFlight?.animal===animal&&!raidFlight.requestSequence&&nativeRaidFlightMember(state,animal)?raidFlight:null;
+    const transient=prepareAttackTransients(state,animal,!!finished||!!birth);
     if(!transient)return null;
-    const plan=finished?wasm.nav_animal_plan_finished_crop:wasm.nav_intent_plan_attack_crop;
+    const plan=birth?wasm.nav_animal_plan_flight_crop:finished?wasm.nav_animal_plan_finished_crop:wasm.nav_intent_plan_attack_crop;
     const status=plan(numericId(animal.id),
       animal.x,animal.z,animal.radius,1,transient.blockerCount,
-      transient.reservedTargetCount,timedRoute?1:0);
+      transient.reservedTargetCount,timedRoute?1:0,...(birth?[wasm.nav_intent_session(),birth.birth.workerActor,
+        birth.birth.sourceSequence,birth.animalBody,birth.center,animal.heading??0,animal.motionPhase??0]:[]));
     if(status<0)throw Error(`Native crop intention rejected: ${status}`);
     const values=new Float64Array(wasm.memory.buffer,
       wasm.nav_intent_attack_result_ptr(),13);
@@ -2837,14 +2901,16 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
         unknownCauseMask:values[7]}};
     const targetId=values[1],target=cropObjects.get(targetId);
     const handle=routeHandle(values[4],values[5],values[6]);
-    const coordinates=finished?null:routePoints(handle);
-    if(!target||!finished&&(!coordinates||coordinates.length<2||coordinates.length%2)){
+    if(birth)birth.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
+    const waiting=!!finished||!!birth;
+    const coordinates=waiting?null:routePoints(handle);
+    if(!target||!waiting&&(!coordinates||coordinates.length<2||coordinates.length%2)){
       wasm.nav_intent_attack_cancel(numericId(animal.id));
       throw Error('Native crop intention has no confirmed JS target or route');
     }
     return {status:'found',target,reservation:targetReservationKey(target,animal),
       approach:{point:{id:`native-approach-${target.id}`,
-        x:values[2],z:values[3]},path:finished?null:Array.from(
+        x:values[2],z:values[3]},path:waiting?null:Array.from(
         {length:coordinates.length/2},(_,index)=>({
           x:coordinates[index*2],z:coordinates[index*2+1]}))},
       native:true,routeHandle:handle,...(timedRoute?{motionPlan:nativeRouteTiming(handle)}:{}),groupId:values[7],
@@ -3090,7 +3156,7 @@ export function createSpatialIntentBridge(session,{authorityEpoch=globalThis.cry
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -3162,7 +3228,7 @@ function structureCondition(structure){
 export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retrySeconds=8,authorityEpoch,onNativeWorldResources=null,onNativeAnimalDeparted=null}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
-  const bridge=createSpatialIntentBridge(session,{authorityEpoch,onNativeWorldResources});
+  const bridge=createSpatialIntentBridge(session,{qualifyFarmFlee,authorityEpoch,onNativeWorldResources});
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),
@@ -4232,9 +4298,25 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(pending||held||moving.arrived&&moving.currentSpeed===0){
       requestRaidRefuge(state,worker,pending??held??moving,eventId);return;
     }
-    farmFlightStop={raid,worker,eventId,binding:moving.binding};
+    farmFlightStop={raid,worker,eventId,spawnTime:event.simulationTime,binding:moving.binding};
     worker.nativeRouteAdmission='pending-farm-flight-stop';
     pendingNativeChanges=true;
+  }
+  function projectRaidFlightStop(state,worker){
+    const pending=farmFlightStop;
+    if(!pending||pending.raid!==state.raid||pending.worker!==worker||
+       bridge.nativeRaidFlightMember(state,state.raid.animals[0])!==worker)return null;
+    const e=bridge.nativeFarmArrivalRouteExecution(worker.id);
+    if(!e||e.executedThrough!==state.elapsed||e.binding.assignmentSequence!==pending.binding.assignmentSequence)return null;
+    Object.assign(worker,{x:e.x,z:e.z,heading:e.yaw,runPhase:e.runPhase,walkPhase:e.walkPhase,carryPhase:e.carryPhase,
+      runRemaining:e.runRemaining,running:e.running,gateWaiting:!e.arrived&&e.currentSpeed===0});
+    // Only the acquired Farm may attest a moving pose while Stop24 is in flight.
+    // A renderer can receive this publication after the proposed stop instant.
+    worker.nativeFarmFlightSample={eventId:pending.eventId,spawnTime:pending.spawnTime,
+      nativeRoute:e.nativeRoute,bodyId:e.bodyId,at:e.executedThrough,
+      pose:{x:e.x,z:e.z,heading:e.yaw,runPhase:e.runPhase,walkPhase:e.walkPhase,carryPhase:e.carryPhase,
+        runRemaining:e.runRemaining,running:e.running,gateWaiting:!e.arrived&&e.currentSpeed===0}};
+    projectedPositions.set(numericId(worker.id),[e.x,e.z]);return e;
   }
   function nativeFarmFlightStopRequest(actorId){
     const pending=farmFlightStop,state=observedTaskState;
@@ -4252,6 +4334,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const result=await bridge.stopNativeFarmArrivalAfterGpuQuiescence({...options,
       sourceStillCurrent:()=>farmFlightStop===pending&&!!nativeFarmFlightStopRequest(options.actorId)});
     if(result.status==='committed'&&pending===farmFlightStop){
+      delete pending.worker.nativeFarmFlightSample;
       farmFlightStop=null;
       const held=bridge.nativeFarmArrivalHeldExecution(options.actorId);
       if(observedTaskState?.raid===pending.raid&&observedTaskState.workers.includes(pending.worker)&&
@@ -4287,6 +4370,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const stop=observeGameEvents(state,event=>{
       if(qualifyFarmFlee&&event.type==='RaidSpawned')observeFarmEvacuation(state,event);
       if(farmFlightStop&&farmFlightStop.raid!==state.raid){
+        delete farmFlightStop.worker.nativeFarmFlightSample;
         if(farmFlightStop.worker.nativeRouteAdmission==='pending-farm-flight-stop')delete farmFlightStop.worker.nativeRouteAdmission;
         farmFlightStop=null;
       }
@@ -4297,7 +4381,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     stopWorldObserver=stop;
     return ()=>{
       if(stopWorldObserver!==stop)return;
-      stop();stopWorldObserver=null;pendingWorldEvents=[];farmFlightStop=null;
+      stop();stopWorldObserver=null;pendingWorldEvents=[];
+      if(farmFlightStop)delete farmFlightStop.worker.nativeFarmFlightSample;
+      farmFlightStop=null;
       if(!stopTaskObserver)observedTaskState=null;
     };
   };
@@ -4313,7 +4399,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,
-    commitTaskBatchToState,nativeFarmFlightStopRequest,stopFarmForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
+    commitTaskBatchToState,projectRaidFlightStop,nativeFarmFlightStopRequest,stopFarmForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
       pendingNativeChanges=true;
@@ -4486,7 +4572,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       if(bridge.authorityEpoch===owner&&(result.status==='committed'||result.status==='committed-control-failed'))pendingNativeChanges=true;
       return result;
     },routePoints:bridge.routePoints,
-    startNativeAnimalCropRouteAfterGpuQuiescence:bridge.startNativeAnimalCropRouteAfterGpuQuiescence,startNativeAnimalCropStrikeAfterGpuQuiescence:bridge.startNativeAnimalCropStrikeAfterGpuQuiescence,requestNativeAnimalCropRoute:bridge.requestNativeAnimalCropRoute,nativeFinishedAnimalRetreat:bridge.nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop:bridge.nativeFinishedAnimalCrop,nativeAnimalCropState:bridge.nativeAnimalCropState,nativeAnimalRouteBinding:bridge.nativeAnimalRouteBinding,nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
+    startNativeAnimalCropRouteAfterGpuQuiescence:bridge.startNativeAnimalCropRouteAfterGpuQuiescence,startNativeAnimalCropStrikeAfterGpuQuiescence:bridge.startNativeAnimalCropStrikeAfterGpuQuiescence,requestNativeAnimalCropRoute:bridge.requestNativeAnimalCropRoute,declareRaidFlightPair:bridge.declareRaidFlightPair,nativeRaidFlightMember:bridge.nativeRaidFlightMember,nativeFinishedAnimalRetreat:bridge.nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop:bridge.nativeFinishedAnimalCrop,nativeAnimalCropState:bridge.nativeAnimalCropState,nativeAnimalRouteBinding:bridge.nativeAnimalRouteBinding,nativeRouteTiming:bridge.nativeRouteTiming,nativeRouteTimeKnots:bridge.nativeRouteTimeKnots,sampleNativeRoute:bridge.sampleNativeRoute,captureNativeRoutePresentation:bridge.captureNativeRoutePresentation,
     nativeGateRouteSweep:bridge.nativeGateRouteSweep,
     nativeGateMechanism:bridge.nativeGateMechanism,nativeGateMechanismPose:bridge.nativeGateMechanismPose,nativeGateMechanismSegment:bridge.nativeGateMechanismSegment,
     nativeGateMechanismWorldVertices:bridge.nativeGateMechanismWorldVertices,

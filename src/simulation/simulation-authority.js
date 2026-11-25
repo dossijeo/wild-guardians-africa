@@ -21,7 +21,7 @@ import {prepareNativeRuinedWallRepair,projectNativeRuinedWallRepair,advanceReal,
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
-import {permission} from './rules.js';
+import {operational,permission} from './rules.js';
 import {ensurePurchaseBudget,RESERVE_MESSAGE} from './budget.js';
 import {createSpatialGameSession} from '../world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/wild-engine/spatial-navigation-movement.js';
@@ -35,7 +35,7 @@ import {tutorialHandTarget} from '../tutorial/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
-import {nativeCropRouteSubject} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCropRouteSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -126,6 +126,25 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   function installNativeProduction(){
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,onError:error=>onNativeIntentControlError?.(error)});
   }
+  function prepareRaidFlightAnimal(event){
+   if(!qualifyFarmFlee||!qualifyAnimalCrop||!nativeBodies||game.biome!=='sabana'||nativeGateOwners.length||
+      !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
+      game.workers.length!==1||game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==1)return;
+   const [animal]=game.raid.animals,[worker]=game.workers;
+   if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering'||nativeBodies.id(animal.id)!==undefined)return;
+   const source=worker.nativeRouteAdmission==='pending-farm-flight-stop'?planner.nativeFarmFlightStopRequest(worker.id)?.binding:
+     worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null;
+   const seq=source?.assignmentSequence??source?.requestSequence;
+   if(!seq||session.core.wasm.nav_flight_crop_origin_clear(session.core.wasm.nav_intent_session(),Number(worker.id.split('-').at(-1)),seq,animal.x,animal.z,animal.radius)!==1)return;
+   const center=game.structures.find(operational);
+   if(!center)return;
+   const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
+   let selected;
+   try{
+    selected=planner.declareRaidFlightPair(game,animal,worker,Number(event.id.split('-').at(-1)),body,center,()=>targetFor(game,animal,nav,true));
+    if(selected)assignRaidTarget(game,animal,selected,nav);
+   }finally{if(!selected)nativeBodies.remove(animal.id);}
+  }
   function prepareColdNativeCrop(){
    if(nativeBodies||restoringPhysics||physicsInitializing||physics?.actorIds.length||!session.core.wasm.nav_animal_crop_state)return;
    const animal=game.raid?.animals[0];
@@ -165,7 +184,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Cinematic presentation is not restorable; do not persist its transient pause.
   function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&confirmedStateSaveAvailable(game);}
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
-  stopEvents=observeGameEvents(game,event=>{events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
+  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned')prepareRaidFlightAnimal(event);events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
   const presentationJournal=createPresentationLifecycleJournal(game,observeGameEvents);
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;

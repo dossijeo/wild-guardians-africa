@@ -124,6 +124,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
     }
   }
   for(const worker of state.workers){
+    if(worker.nativeFarmFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-farm-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
     if(worker.nativeRouteAdmission!==undefined){
       const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
@@ -140,7 +141,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
       const liveFarmFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
         !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
-        ['pending-farm-flight-stop','pending-raid-flight-resources'].includes(worker.nativeRouteAdmission);
+        ['pending-farm-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
       if(!liveFarmFlight&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){

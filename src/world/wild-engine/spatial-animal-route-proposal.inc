@@ -167,3 +167,79 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
  return mode;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_crop_state_ptr(){return state().animalCropState.data();}
+
+// Only a current 18 or 26 candidate can request the mixed encounter proof.
+// Both other intervals and an arbitrary stop must be safe. Disjoint swept
+// boxes are a conservative certificate for the latter, including delayed GO.
+static std::array<double,4> encounterBounds(const ReservationPath& path){
+ const auto* route=path.route;
+ const double x=route?route->originX:path.x,z=route?route->originZ:path.z;
+ std::array<double,4> b{x,z,x,z};
+ if(route)for(size_t i=0;i<route->points.size();i+=2){
+  const double nx=route->points[i],nz=route->points[i+1];
+  b[0]=std::min(b[0],nx);b[1]=std::min(b[1],nz);
+  b[2]=std::max(b[2],nx);b[3]=std::max(b[3],nz);
+ }
+ return b;
+}
+static bool separatedFlightRoutes(const ReservationPath& home,const ReservationPath& crop,double reach){
+ const auto h=encounterBounds(home),a=encounterBounds(crop);
+ const double x=std::max({0.,a[0]-h[2],h[0]-a[2]}),z=std::max({0.,a[1]-h[3],h[1]-a[3]});
+ const double scale=std::max({1.,std::abs(h[0]),std::abs(h[1]),std::abs(h[2]),std::abs(h[3]),
+                              std::abs(a[0]),std::abs(a[1]),std::abs(a[2]),std::abs(a[3])});
+ return std::hypot(x,z)>reach+1e-7+64*std::numeric_limits<double>::epsilon()*scale;
+}
+EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ticket,double worker,double animal,double event){
+ auto& s=state();const auto& p=s.barrierProposal;
+ if(!integer(worker)||!integer(animal)||worker==animal||!integer(event)||event<=0||spatial_world_biome()!=0||
+    !p.pending||session!=double(s.session)||session!=double(p.session)||ticket!=double(p.ticket)||
+    (p.kind!=18&&p.kind!=26)||spatial_body_count()!=2)return -2;
+ const auto w=s.activeIntents.find(uint64_t(worker)),a=s.activeIntents.find(uint64_t(animal));
+ if(w==s.activeIntents.end()||a==s.activeIntents.end()||!w->second.home||w->second.animal||!a->second.animal||a->second.retreat)return -2;
+ const auto& wi=w->second;const auto& ai=a->second;
+ const int mode=nav_animal_crop_state(animal);
+ if(mode<1||mode>3||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
+ const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
+ const RouteSlot* hr=nullptr;auto source=std::shared_ptr<const NativeHomeResourceRequest>(wi.homeRequest);
+ if(source){if(!nativeHomeRequestBodyCurrent(s,wi))return -2;}
+ else{
+  if(!nativeHomeBodyCurrent(s,wi)||wi.slot>=s.routeSlots.size())return -2;
+  hr=&s.routeSlots[wi.slot];source=hr->homeBinding->requestSource;
+ }
+ if(!source||source->actor!=uint64_t(worker)||source->raidSpawnSequence!=uint64_t(event)||double(source->body)==s.animalCropState[3])return -2;
+ ReservationPath home{hr,source->x,source->z};
+ if(p.kind==18){
+  if(!p.home||p.home->homeRequestSource!=source||p.home->route.actor!=wi.actor||p.home->body!=source->body)return -2;
+  home.route=&p.home->route;
+ }else{
+  if(!p.animalRoute||p.animalRoute->animalRouteSource!=ai.animalRouteRequest||p.animalRoute->route.actor!=ai.actor||mode!=1)return -2;
+  crop.route=&p.animalRoute->route;
+ }
+ // Game.updateWorkerEncounters uses the animal radius plus 1.1 metres
+ // for a frontal encounter and the worker radius for actual collision.
+ return separatedFlightRoutes(home,crop,s.animalCropState[8]+std::max(1.1,source->radius))?1:0;
+}
+
+// The spawn must be clear even if the acquired Farm is allowed to finish
+// its entire corridor before Stop24 arrives. A pending body remains a point.
+static int flightCropOriginClear(double session,double worker,double sequence,double x,double z,double radius,int bodies){
+ const auto& s=state();
+ if(session!=double(s.session)||!integer(worker)||!integer(sequence)||!std::isfinite(x)||!std::isfinite(z)||
+    !std::isfinite(radius)||radius!=1.1||spatial_world_biome()!=0||spatial_body_count()!=bodies)return -2;
+ const auto it=s.activeIntents.find(uint64_t(worker));if(it==s.activeIntents.end())return -2;
+ const auto& intent=it->second;ReservationPath path;double wr;
+ if(nativeFarmArrivalBodyCurrent(s,intent)){
+  const auto& route=s.routeSlots[intent.slot];
+  if(!route.workerDrySweep||intent.assignmentSequence!=uint64_t(sequence))return -2;
+  path.route=&route;wr=route.radius;
+ }else{
+  const auto& h=intent.homeRequest;
+  if(!h||!h->raidSpawnSequence||h->sequence!=uint64_t(sequence)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
+  path={nullptr,h->x,h->z};wr=h->radius;
+ }
+ return separatedFlightRoutes(path,{nullptr,x,z},radius+std::max(wr,1.1))?1:0;
+}
+
+EMSCRIPTEN_KEEPALIVE int nav_flight_crop_origin_clear(double session,double worker,double sequence,double x,double z,double radius){
+ return flightCropOriginClear(session,worker,sequence,x,z,radius,1);
+}

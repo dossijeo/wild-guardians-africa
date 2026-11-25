@@ -341,7 +341,7 @@ struct RouteSlot {
   std::vector<double> distances;
   std::vector<RouteHold> holds;
   double originX=0,originZ=0,originYaw=0,startTime=0,speed=0,radius=0;
-  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false;
+  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false,workerDrySweep=false;
   bool gateAdmitted=false;
   bool resumable=false,suspended=false;
   double suspendedAt=0;
@@ -3069,8 +3069,7 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
     if(route.timingMode){
-      const bool flight=route.homeBinding&&route.homeBinding->requestSource&&route.homeBinding->requestSource->raidSpawnSequence;
-      const int clear=flight?spatialWorkerFlightSegmentClear(x,z,nextX,nextZ,route.radius):route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
+      const int clear=route.workerDrySweep?spatialWorkerFlightSegmentClear(x,z,nextX,nextZ,route.radius):route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
         spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius);
       if(clear!=1)return false;
     }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
@@ -3740,9 +3739,10 @@ double* nav_intent_attack_reserved_targets_ptr(int count){
   IntentState& s=state();s.attackReservedTargets.resize(size_t(count));
   return s.attackReservedTargets.data();
 }
+struct AnimalCropStart { double body, center, yaw, phase; bool entering; };
 static int planAttackCrop(double actorId,double startX,double startZ,
                                 double radius,int cropsEligible,int blockerCount,
-                                int reservedTargetCount,int timingMode,const FinishedAnimalStrike* finished){
+                                int reservedTargetCount,int timingMode,const AnimalCropStart* start){
   IntentState& s=state();s.attackResult.fill(0);s.timingRejection=0;
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
@@ -3882,14 +3882,14 @@ static int planAttackCrop(double actorId,double startX,double startZ,
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
       lastRegisterResult=registerAttackSite(actorId,double(crop.id),
-        startX,startZ,count,px,pz,radius,timingMode,!finished);
+        startX,startZ,count,px,pz,radius,timingMode,!start);
       if(lastRegisterResult!=1)
         return false;
-      if(finished){
-        // This successor has no executable assignment until the renderer is ready.
+      if(start){
+        // This actor has no executable assignment until the renderer is ready.
         // Publish only the resource request, after both leases have been attached.
-        const double center=finished->center==finished->target?double(crop.id):finished->center;
-        lastRegisterResult=nav_animal_route_request(actorId,finished->body,center,0,finished->yaw,finished->phase);
+        const double center=start->center?start->center:double(crop.id);
+        lastRegisterResult=nav_animal_route_request(actorId,start->body,center,start->entering, start->yaw,start->phase);
         if(lastRegisterResult!=1){
           releaseIntent(s,actor,PlanningState::Cancelled,false);
           s.activeIntents.erase(actor);
@@ -3955,7 +3955,18 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_crop(double actor,double x,dou
   if(nav_animal_finished_strike_snapshot(actor)!=1)return -2;
   const auto& finished=*state().finishedAnimalStrike;
   if(x!=finished.x||z!=finished.z||radius!=finished.radius||timed!=0)return -2;
-  return planAttackCrop(actor,x,z,radius,cropsEligible,blockers,reserved,0,&finished);
+  const AnimalCropStart start{double(finished.body),finished.center==finished.target?0.:double(finished.center),finished.yaw,finished.phase,false};
+  return planAttackCrop(actor,x,z,radius,cropsEligible,blockers,reserved,0,&start);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_flight_crop(double actor,double x,double z,double radius,
+ int cropsEligible,int blockers,int reserved,int timed,double session,double worker,double seq,double body,double center,double yaw,double phase){
+  SpatialBodyView v;
+  if(timed!=0||!integer(actor)||actor==worker||!integer(body)||!integer(center)||!std::isfinite(yaw)||!std::isfinite(phase)||phase<0||
+     !spatialReadBody(uint64_t(body),v)||v.kind!=1||v.flags!=1||v.x!=x||v.z!=z||v.r!=radius||
+     state().finishedAnimalStrike||state().activeIntents.size()!=1||
+     flightCropOriginClear(session,worker,seq,x,z,radius,2)!=1)return -2;
+  const AnimalCropStart start{body,center,yaw,phase,true};
+  return planAttackCrop(actor,x,z,radius,cropsEligible,blockers,reserved,0,&start);
 }
 int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
                                 double radius,int cropsEligible,int blockerCount,

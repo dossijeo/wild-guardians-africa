@@ -774,10 +774,10 @@ export function retreatAnimal(s,a,reason='magic',nav={}) {
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
-export function nativeCropRouteSubject(state,animal){
+export function nativeCropRouteSubject(state,animal,flightWorker=null){
  const raid=state.raid;
  if(state.biome!=='sabana'||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
-    !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
+    !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||animal.approachShieldId||
     animal.hitsRemaining<=0)return null;
  const target=raidTarget(state,animal.targetId);
@@ -795,7 +795,7 @@ function nativeRetreatOwnersMatch(state,animal,native){
    animal.radius===native.radius&&exit?.x===native.targetX&&exit?.z===native.targetZ;
 }
 export function nativeCropCohortCurrent(state,planner){
- const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal);
+ const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal));
  if(!subject&&animal?.hitApplied&&(animal.hitsRemaining===0?
     planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
  if(!subject&&animal?.status!=='retreating')return false;
@@ -842,6 +842,14 @@ export function projectAcquiredRaidStrike(state,animal,proof){
  animal.heading=proof.yaw;startRaidStrike(state,animal);
 }
 
+export function assignRaidTarget(s,a,selected,nav){
+  const target=selected.target;
+  a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;
+  s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
+  a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
+  a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+  return target;
+}
 export function updateRaid(s,dt,nav) {
   if(!s.raid)return;
   // Resolve confirmed crop and barrier changes before the next attack
@@ -892,7 +900,7 @@ export function updateRaid(s,dt,nav) {
       continue;
     }
     if(crop){
-      const source=nativeCropRouteSubject(s,a);
+      const source=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a));
       if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
         throw Error('Native crop action lost the current game source');
       if(crop.mode!==3){
@@ -1063,12 +1071,10 @@ export function updateRaid(s,dt,nav) {
         continue;
       }
       if(a.status==='waiting')a.status='entering';leaveWait(s.raid,a);
-      target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
-      a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
-      a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      target=assignRaidTarget(s,a,selected,nav);
       if(successor){
         const request=nav.intentTaskPlanner.nativeAnimalCropState(a.id);
-        const subject=nativeCropRouteSubject(s,a);
+        const subject=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a));
         if(!request||request.mode!==1||request.body!==successor.body||!subject||!nativeCropOwnersMatch(subject,a,request))release(s,a,nav);
         continue;
       }

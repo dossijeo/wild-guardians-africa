@@ -44,7 +44,9 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    for(const byteOffset of ref.purpose==='retreat'?[0,4]:[0])
     graphics.client.registerClockBinding(buffer,{byteOffset,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
   }
-  const packet=crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
+  const peer=(kind==='home-route'||arrival)&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
+  const packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,graphics.group],
+    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record);}catch(error){packet.abort();throw error;}
   return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);if(record.committed)onCommit?.(record,data);return record.committed;},abort(){record.aborted=true;packet.abort();}};
