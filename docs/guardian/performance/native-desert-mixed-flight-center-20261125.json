@@ -750,6 +750,31 @@
       "disposed": true
     }
   },
+  "gateScout": {
+    "baseCommit": "75a8da52fdb32859594a3584f32572dd025036c8",
+    "gateId": 1000000,
+    "gatePosition": [-14, 8.2],
+    "spawnElapsed": 13.399999999999928,
+    "workerZAtSpawn": 8.77664134498411,
+    "centerApproachPoints": 43,
+    "baseline": {
+      "receiptSha256": "de7256aea2bcc4f595d4f066584db4a9ed1aa2b01a5f36611af594583b4ae28b",
+      "tickets": [2, 4],
+      "lastWorkerAdmission": "pending-raid-flight-resources",
+      "stopReason": "Native task game cohort contains an unsupported mover"
+    },
+    "isolatedControl": {
+      "receiptSha256": "b014098e694f18f3dc9ce55094599c099b626fbf38ba3aa320989c0e40f95b73",
+      "scopedGateOverrideInHarness": true,
+      "deterministicGpuQueue": true,
+      "tickets": [2, 4, 6, 8, 10],
+      "homeArrivalElapsed": 15.099999999999891,
+      "refuge": [-14, 11.8],
+      "gateOpeningAtArrival": 1,
+      "activeAnimalTarget": "structure-2",
+      "faults": []
+    }
+  },
   "cadence": {
     "refreshHz": 30,
     "accepted": false,

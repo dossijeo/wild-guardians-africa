@@ -6,6 +6,12 @@ Home18 se prepara primero. Verifica el corredor de refugio contra el corredor co
 
 Box2D une las envolventes del principio y del final antes de consultar posibles contactos. La prueba local usa las envolventes ya existentes de ambos corredores completos. Una separación superior al alcance acredita también los extremos retenidos. El caso que se solapa requiere el dueño de encuentros del plan. [Box2D 3.1, búsqueda continua](https://github.com/erincatto/box2d/blob/v3.1.0/src/solver.c#L427-L446).
 
+## Huida por un portón
+
+El contraste de CPU combina el portón certificado de `(-14, 8,2)` con el nacimiento diurno del caso sur. Farm23 adquiere la puerta y la incursión comienza con el trabajador dentro del vano. Stop24 adquiere el mismo cuerpo y declara el refugio. `prepareRaidFlightAnimal` excluye la cohorte cuando hay un motor instalado, antes de invocar la selección ordinaria. La partida queda detenida antes de Home18. El selector aplicado por separado al mismo estado encuentra `structure-2` con un corredor de 43 puntos.
+
+Un control privado dejó pasar únicamente ese portón y añadió al paquete determinista el reloj de hoja que pide el Host. Home18 adquirió el corredor por el vano y el animal adquirió su ruta al centro en el otro cuerpo. Home19 completó la ausencia a t=15,10 s, con la hoja abierta y el animal aún en marcha. Ese control emplea WASM y una cola GPU determinista. La admisión de producto sigue pendiente. Debe acreditar el motor que usa Home, mantener el filtro animal y conservar la prueba de separación de los corredores. Detour trata un portal como transitable según el filtro de cada consulta. Box2D comprueba la compatibilidad de las formas antes del contacto. [Detour 1.6.0](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/Detour/Source/DetourNavMeshQuery.cpp#L66-L94) · [Box2D 3.1](https://github.com/erincatto/box2d/blob/v3.1.0/src/contact.c#L427-L435).
+
 ## Controles
 
 Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.
