@@ -41,6 +41,33 @@ test('stable key admission invalidates object materials and supports the indepen
  try{await admission.prepare(mesh);assert.deepEqual(invalidated,[material]);const sky=uniform(1);await admission.prepareBackgroundAndPublish(sky,{},()=>{scene.backgroundNode=sky;});assert.equal(scene.backgroundNode,sky);assert.deepEqual(invalidated,[material]);}finally{admission.dispose();mesh.geometry.dispose();material.dispose();}
 });
 
+test('shadow admission restores the visibility selected while color compilation was pending',async()=>{
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),actor=new THREE.Group(),mesh=new THREE.Mesh();
+ const light=new THREE.DirectionalLight();
+ mesh.castShadow=true;light.castShadow=true;light.shadow.map=new THREE.RenderTarget(8,8);
+ actor.add(mesh);scene.add(actor,light);
+ let beginColor,beginShadow,finishColor,finishShadow;
+ const colorStarted=new Promise(resolve=>{beginColor=resolve;}),shadowStarted=new Promise(resolve=>{beginShadow=resolve;});
+ const color=new Promise(resolve=>{finishColor=resolve;}),shadow=new Promise(resolve=>{finishShadow=resolve;});
+ const renderer={backend:{isWebGPUBackend:true},compileAsync:()=>{beginColor();return color;},
+  compileShadowAsync(){assert.equal(mesh.visible,true);beginShadow();return shadow;}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,shadowLights:[light],includeShadowPass:true});
+ const prepared=admission.prepareTicket(actor,{include:[mesh]});prepared.catch(()=>{});
+ try{
+  await colorStarted;
+  mesh.visible=false;
+  finishColor();
+  await shadowStarted;
+  assert.equal(mesh.visible,false);
+  finishShadow();
+  assert((await prepared).valid());
+  assert.equal(mesh.visible,false);
+ }finally{
+  finishColor();finishShadow();admission.dispose();
+  await Promise.allSettled([prepared]);mesh.geometry.dispose();mesh.material.dispose();light.shadow.map.dispose();
+ }
+});
+
 test('default shared scene lighting is restored before asynchronous admission settles',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),object=new THREE.Group(),oldNode={},oldLights=[],node={lights:oldLights,getLights(){return this.lights;},setLights(value){this.lights=value;}},list={lightsNode:oldNode,lightsArray:[new THREE.PointLight()]};let finish;
  const renderer={backend:{isWebGPUBackend:true},_renderLists:{get:()=>list},lighting:{getNode:()=>node},compileAsync(){assert.equal(this._wgCompileSceneReference,scene);assert.equal(list.lightsNode,node);node.setLights(list.lightsArray);return new Promise(resolve=>{finish=resolve;});}},admission=createWebGpuPipelineAdmission({renderer,scene,camera});

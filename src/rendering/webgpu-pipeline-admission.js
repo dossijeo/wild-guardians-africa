@@ -257,18 +257,19 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
        if(closed||version!==generation)throw Error('Pipeline admission cancelled');
        if(lightsChanged())return execute(object,signal,version,include,requestedTarget,shadowPass,passCamera,targetScene,isCurrent,requireShadowTarget,alternatives);
        if(!light.castShadow||!light.visible)continue;
-       const target=light.shadow.map,visible=object.visible,culling=[],shadows=[];let shadowPending;
+       // The owner may change this selection while a previous pass compiles.
+       const target=light.shadow.map,visible=object.visible,shadowIncluded=[...paths].map(node=>[node,node.visible]),culling=[],shadows=[];let shadowPending;
        shadowTargets.push([light,target]);
        try{
         for(const current of lights.keys()){const shadow=current.shadow;shadows.push([shadow,shadow.autoUpdate,shadow.needsUpdate]);shadow.autoUpdate=false;shadow.needsUpdate=false;}
         object.traverse(node=>{if(node.isMesh||node.isLine||node.isPoints){culling.push([node,node.frustumCulled]);node.frustumCulled=false;}});
-        for(const [node] of included)node.visible=true;object.visible=true;
+        for(const [node] of shadowIncluded)node.visible=true;object.visible=true;
         // RenderObjects also keys shadow bindings by the scene/camera lights
         // node. Compile against the same node as ShadowNode.renderShadow.
         const compileShadow=()=>renderer.compileShadowAsync(object,targetScene,passCamera,light);
         shadowPending=withMaterialAlternatives(alternatives,()=>compileWithAdmissionSceneLighting(renderer,object,light.shadow.camera,targetScene,compileShadow));
        }finally{
-        object.visible=visible;for(const [node,value] of included)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
+        object.visible=visible;for(const [node,value] of shadowIncluded)node.visible=value;for(const [node,value] of culling)node.frustumCulled=value;
         for(const [shadow,autoUpdate,needsUpdate] of shadows){shadow.autoUpdate=autoUpdate;shadow.needsUpdate=needsUpdate;}
        }
        await waitForCompilation(shadowPending,signal,{serial:true,object});
