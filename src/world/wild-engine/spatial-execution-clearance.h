@@ -136,13 +136,12 @@ int executionSolids(ExecutionPoint a,ExecutionPoint b,double radius,bool gateCan
     for(int id:found->second){
       if(!polygons.insert(id).second)continue;
       const auto& polygon=polygonIndex().byId.at(id);
-      const bool passable=polygon.passMask&(workerNow?1:2);
-      if(passable&&!workerNow)continue;
-      if(executionInside(a,polygon)||executionInside(b,polygon))return passable?-2:0;
+      if(polygon.passMask&(workerNow?1:2))continue;
+      if(executionInside(a,polygon)||executionInside(b,polygon))return 0;
       const size_t count=polygon.xy.size()/2;
       for(size_t i=0,j=count-1;i<count;j=i++)
         if(executionEdgeDistance(a,b,{polygon.xy[i*2],polygon.xy[i*2+1]},
-             {polygon.xy[j*2],polygon.xy[j*2+1]})<radius)return passable?-2:0;
+             {polygon.xy[j*2],polygon.xy[j*2+1]})<radius)return 0;
     }
   }
   return 1;

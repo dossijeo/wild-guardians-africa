@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNativeRouteExecutionFixture as fixture} from './helpers/native-route-execution.js';
+import {spatialShieldFootprint} from '../src/world/wild-engine/spatial-shield-mirror.js';
 
 const square=(p,r=.2)=>[
  {x:p.x-r,z:p.z-r},{x:p.x+r,z:p.z-r},{x:p.x+r,z:p.z+r},{x:p.x-r,z:p.z+r},
@@ -85,6 +86,42 @@ test('continuous prospective polygon clearance catches a sub-millimetre future i
   assert(poly>0);assert.deepEqual(f.bridge.intentChanges()[0].revokedRouteHandle,a);
   assert.equal(f.bridge.nativeRouteExecution(a),null);assert.deepEqual(f.body(10),body);
   assert.equal(f.advance(12).status,'inactive');
+ }finally{f.session.dispose();}
+});
+
+test('a shield preserves the executing worker generation and retires an intersecting animal route',()=>{
+ const f=fixture();
+ try{
+  const worker=f.worker(1,f.point(-6,0),f.point(6,0));
+  const animal=f.animal(f.point(-6,3),f.point(6,3));
+  start(f);f.advance(11);
+  const workerProgram=f.bridge.nativeRouteTiming(worker),body=f.body(10);
+  const shield={kind:'shield',radius:1.95,...f.point(1,1.5)};
+  const polygon=f.session.core.addPolygon(spatialShieldFootprint(shield),1);
+  assert(polygon>0);
+  assert.deepEqual(f.bridge.intentChanges().map(change=>change.revokedRouteHandle),[animal]);
+  assert.deepEqual(f.bridge.nativeRouteTiming(worker),workerProgram);
+  assert.equal(f.advance(12).status,'advanced');
+  assert.deepEqual(f.body(10),body);
+  assert(f.bridge.nativeRouteExecution(worker));
+  assert.equal(f.session.core.removePolygon(polygon),1);
+  assert.equal(f.advance(13).status,'advanced');
+  assert.deepEqual(f.bridge.intentChanges(),[]);
+ }finally{f.session.dispose();}
+});
+
+test('a worker can acquire a new route through a resident shield',()=>{
+ const f=fixture();
+ try{
+  const shield={kind:'shield',radius:1.95,...f.point(0,0)};
+  assert(f.session.core.addPolygon(spatialShieldFootprint(shield),1)>0);
+  const from=f.point(-6,0),to=f.point(6,0);
+  const worker=f.worker(1,from,to);
+  start(f);
+  assert.equal(f.advance(13).status,'advanced');
+  assert(f.bridge.nativeRouteExecution(worker));
+  f.session.actorSectorRevision({worker:false,species:'warthog'});
+  assert.equal(f.w.spatial_execution_segment_clear(from.x,from.z,to.x,to.z,1.1),0);
  }finally{f.session.dispose();}
 });
 

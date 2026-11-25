@@ -1720,6 +1720,8 @@ SpatialStaticMutation barrierMutation(const Barrier& barrier,int affectedMask=3)
 SpatialStaticMutation polygonMutation(const PolygonObstacle& polygon){
   SpatialStaticMutation shape;
   shape.xy=polygon.xy.data();shape.count=int(polygon.xy.size()/2);shape.passMask=polygon.passMask;
+  // Static polygons, such as shields, have no moving gate leaf to certify.
+  shape.affectedMask=3&~polygon.passMask;
   shape.minX=polygon.minX;shape.maxX=polygon.maxX;shape.minZ=polygon.minZ;shape.maxZ=polygon.maxZ;
   return shape;
 }
