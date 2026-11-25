@@ -617,6 +617,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const entry = resolutionResources?.get(op.args[0][REF]) || resources.get(op.args[0][REF]);
         if (entry?.uniformShadow) entry.uniformShadow.set(new Uint8Array(op.args[2].buffer || op.args[2], op.args[2].byteOffset || 0, op.args[2].byteLength), op.args[1]);
       }
+      if (op.method === 'writeTexture' || op.method === 'copyExternalImageToTexture') {
+        const id = (op.method === 'writeTexture' ? op.args[0] : op.args[1]).texture[REF];
+        (resolutionResources?.get(id) || resources.get(id)).pixelUploadSubmitted = true;
+      }
       if (closeImage && op.method === 'copyExternalImageToTexture') op.args[0]?.source?.close?.();
     }
   }
@@ -1015,6 +1019,48 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (!owner || owner !== resources.get(id) || owner.pins <= 0) return false;
       }
     }
+    return true;
+  }
+  // A fresh VFX texture is not visible until its owner publishes the material.
+  // Only independent, standalone pixel writes can cross a staged frame here.
+  async function orderPrivateTextureUpload(key) {
+    const entry = resources.get(key);
+    if (!entry || entry.kind !== 'createTexture' || entry.pending || entry.pins ||
+        entry.retirementRequested || entry.producerReleased || admittingFrame || preparationRecoveryRequired ||
+        nativeConsumerRetirement || deviceDestroyRequested || active?.resourceSnapshot.has(key) ||
+        pending?.resourceSnapshot.has(key) || retainedPreparationSnapshot?.has(key)) return false;
+    if (!stagedOperations.length) return entry.pixelUploadSubmitted === true;
+    const uploads = [], retained = [];
+    for (const [i, op] of stagedOperations.entries()) {
+      const target = op.method === 'writeTexture' ? op.args[0].texture :
+        op.method === 'copyExternalImageToTexture' ? op.args[1].texture : null;
+      if (target?.[REF] === key) {
+        if (i < retainedPreparationOperationCount) return false;
+        uploads.push(op);
+      } else {
+        if (op.method === 'submit') {
+          // A submission may observe a texture through a view or bind group.
+          // Unclassified GPU work may also carry query or readback side effects.
+          if (!op.args[0].every(buffer => validRemoteTexturePreparation(buffer, id => resources.get(id))) ||
+              retainClosure(references(op)).has(key)) return false;
+        } else if (!target && op.method !== 'writeBuffer') return false;
+        retained.push(op);
+      }
+    }
+    if (!uploads.length) return entry.pixelUploadSubmitted === true;
+    // The serialized resource dispatcher owns this batch while an image upload
+    // yields between regions. Keep unrelated staged writes in their original order.
+    stagedOperations = retained;
+    for (const [index, op] of uploads.entries()) {
+      try {
+        if (op.method === 'copyExternalImageToTexture') await uploadExternalImage(op);
+        else resourceJob(op.method, 'queue', () => applyQueue(op));
+      } catch (error) {
+        closePreparationImages(uploads.slice(index + 1));
+        throw error;
+      }
+    }
+
     return true;
   }
   function submitRetainedCpuPreparations(){
@@ -1590,6 +1636,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if ((entry.mapMode & 2) && message.bytes) new Uint8Array(entry.mappedRange || entry.value.getMappedRange(message.offset, message.bytes.byteLength)).set(new Uint8Array(message.bytes));
         if ((entry.mapMode & 2) && entry.uniformShadow && message.bytes) entry.uniformShadow.set(new Uint8Array(message.bytes), message.offset);
         entry.value.unmap(); entry.mapMode = 0; entry.mappedRange = null; break;
+      }
+      case 'ordered-texture-upload': {
+        if (!await orderPrivateTextureUpload(message.textureId)) {
+          reply(message, null, Error('Texture upload does not have an independent unpublished generation'));
+        } else {
+          reply(message, {kind:'remote-ordered-texture-upload', textureId:message.textureId, submitted:true});
+        }
+        break;
       }
       case 'ordered-submission': {
         // The client outbox already captured asynchronous image payloads, and

@@ -2160,3 +2160,57 @@ for(const destination of ['resolve','depth','buffer-copy'])test(`texture destina
   f.client.device.queue.writeTexture({texture},new Uint8Array(16).fill(9),{bytesPerRow:8},[2,2]);await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted/);assert.equal(record.textures.length,1);assert.equal(f.host.inspect().textureForks??0,0);assert.equal(f.host.inspect().failed,false);
  }finally{receipt?.catch(()=>{});f.client.dispose();await f.host.dispose();}
 });
+
+import {prepareWebGpuTexture as preparePrivateUpload} from '../src/rendering/webgpu-texture-upload.js';
+import {createWebGpuCombatTexture as newCombatPalette} from '../src/rendering/webgpu-combat-playback.js';
+
+test('private VFX palette submits actual pixels while unrelated published storage waits for its replacement',async()=>{
+  const f=await storageFixture('storage'),queue=f.client.device.queue,record=textureCopies(f);
+  let shown=f.render();await flush();await f.host.idle();f.host.present();await shown;
+  const original=f.gpu.buffers[1],palette=newCombatPalette();
+  const gpuTexture=f.client.device.createTexture({size:[1,1],format:'rgba8unorm',usage:6});
+  const rgba=new Uint8Array([7,11,13,255]);let freed=0;
+  const renderer={backend:{isWebGPUBackend:true,device:f.client.device,get:texture=>{
+    assert.equal(texture,palette);return {texture:gpuTexture};
+  }},initTexture:texture=>{assert.equal(texture,palette);queue.writeTexture({texture:gpuTexture},rgba,{bytesPerRow:4},[1,1]);}};
+  queue.writeBuffer(f.storage,0,new Uint32Array([23]));
+  await preparePrivateUpload({renderer,texture:palette,privateUpload:true,release:()=>{freed++;}});
+  assert.deepEqual(record.textures.at(-1).levels[0],rgba);
+  assert.equal(f.gpu.buffers[1],original);assert.equal(new Uint32Array(original.data.buffer)[0],1);
+  await assert.rejects(queue.onResourceSubmissionOrdered(),/uncommitted published/);
+  await assert.rejects(queue.onSubmittedWorkDone(),/uncommitted/);
+  shown=f.render();await flush();await f.host.idle();f.host.present();await shown;
+  assert.equal(new Uint32Array(original.data.buffer)[0],23);
+  assert.equal(freed,0);assert.equal(f.host.inspect().failed,false);
+});
+
+test('private VFX upload refuses a texture in the active frame, a foreign proxy and an open encoder frame',async()=>{
+  const f=await fixture(),queue=f.client.device.queue,record=textureCopies(f);
+  const texture=f.client.device.createTexture({size:[1,1],format:'rgba8unorm',usage:6});
+  const group=f.client.device.createBindGroup({entries:[{binding:0,resource:texture.createView()}]});
+  queue.writeTexture({texture},new Uint8Array([1,2,3,4]),{bytesPerRow:4},[1,1]);
+  const unwritten=f.client.device.createTexture({size:[1,1],format:'rgba8unorm',usage:6});
+  await assert.rejects(queue.onPrivateTextureSubmissionOrdered(unwritten),/independent unpublished/);
+  f.client.beginFrame();
+  await assert.rejects(queue.onPrivateTextureSubmissionOrdered(texture),/inside a remote frame/);
+  const enc=f.client.device.createCommandEncoder(),pass=enc.beginRenderPass({});
+  pass.setBindGroup(0,group);pass.draw(3);pass.end();queue.submit([enc.finish()]);
+  const shown=f.client.endFrame();await flush();await f.host.idle();f.host.present();await shown;
+  await assert.rejects(queue.onPrivateTextureSubmissionOrdered(texture),/independent unpublished/);
+  await assert.rejects(queue.onPrivateTextureSubmissionOrdered({...texture}),/Unknown private texture/);
+  assert.deepEqual([...record.textures[0].levels[0]],[1,2,3,4]);assert.equal(f.host.inspect().failed,false);
+});
+
+test('private VFX upload cannot cross an unclassified queued encoder submission',async()=>{
+  const f=await storageFixture('storage'),queue=f.client.device.queue,record=textureCopies(f);
+  const shown=f.render();await flush();await f.host.idle();f.host.present();await shown;
+  queue.writeBuffer(f.storage,0,new Uint32Array([31]));
+  const destination=f.client.device.createBuffer({size:16,usage:12}),encoder=f.client.device.createCommandEncoder();
+  encoder.copyBufferToBuffer(f.storage,0,destination,0,4);queue.submit([encoder.finish()]);
+  const texture=f.client.device.createTexture({size:[1,1],format:'rgba8unorm',usage:6});
+  queue.writeTexture({texture},new Uint8Array([8,7,6,5]),{bytesPerRow:4},[1,1]);
+  await assert.rejects(queue.onPrivateTextureSubmissionOrdered(texture),/independent unpublished/);
+  assert.deepEqual([...record.textures[0].levels[0]],[0,0,0,0]);
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],1);
+  assert.equal(f.host.inspect().failed,false);
+});

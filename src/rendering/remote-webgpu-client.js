@@ -323,6 +323,12 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     // Remote-only admission contract: preceding payloads have crossed the
     // boundary and their writes/submits have entered the native queue. This is
     // NOT GPU completion and must never authorize readback or resource release.
+    onPrivateTextureSubmissionOrdered(texture) {
+      const key = texture?.[REF];
+      if (!key || weakResources.get(key)?.deref() !== texture) return Promise.reject(Error('Unknown private texture owner'));
+      if (frame) return Promise.reject(Error('Cannot order private texture inside a remote frame'));
+      return request({type:'ordered-texture-upload', textureId:key});
+    },
     onResourceSubmissionOrdered() {
       if (frame?.operations.length) return Promise.reject(Error('Cannot order uncommitted remote frame resources'));
       return request({ type: 'ordered-submission' });

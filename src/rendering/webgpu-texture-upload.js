@@ -28,7 +28,7 @@ export function releaseAfterWebGpuWork({renderer,admission=null,uploadsPending=f
  finish();
 }
 
-export async function prepareWebGpuTexture({renderer,texture,signal,release}={}){
+export async function prepareWebGpuTexture({renderer,texture,signal,release,privateUpload=false}={}){
  const device=renderer?.backend?.device,queue=device?.queue;if(!renderer?.backend?.isWebGPUBackend||typeof renderer.initTexture!=='function'||!texture?.isTexture||typeof queue?.onSubmittedWorkDone!=='function'||typeof release!=='function')throw TypeError('Invalid WebGPU texture preparation');
  if(signal?.aborted){release();throw new DOMException('Texture preparation cancelled','AbortError');}
  // A remote owner can acknowledge ordered writes without waiting for GPU
@@ -37,7 +37,11 @@ export async function prepareWebGpuTexture({renderer,texture,signal,release}={})
  const ordered=typeof queue.onResourceSubmissionOrdered==='function';
  let submitted=null,abortListener,transferred=false,released=false;const free=()=>{if(!released){released=true;release();}};
  try{
-  renderer.initTexture(texture);submitted=Promise.resolve(ordered?queue.onResourceSubmissionOrdered():queue.onSubmittedWorkDone());const lost=device.lost?.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));}),aborted=signal?new Promise((_,reject)=>{abortListener=()=>reject(new DOMException('Texture preparation cancelled','AbortError'));signal.addEventListener('abort',abortListener,{once:true});if(signal.aborted)abortListener();}):null;
+  renderer.initTexture(texture);
+  if(privateUpload&&typeof queue.onPrivateTextureSubmissionOrdered==='function'){
+   submitted=Promise.resolve(queue.onPrivateTextureSubmissionOrdered(renderer.backend.get(texture).texture));
+  }else submitted=Promise.resolve(ordered?queue.onResourceSubmissionOrdered():queue.onSubmittedWorkDone());
+  const lost=device.lost?.then(info=>{throw Error('WebGPU device lost: '+(info?.message||info?.reason||'unknown'));}),aborted=signal?new Promise((_,reject)=>{abortListener=()=>reject(new DOMException('Texture preparation cancelled','AbortError'));signal.addEventListener('abort',abortListener,{once:true});if(signal.aborted)abortListener();}):null;
   await Promise.race([submitted,...(lost?[lost]:[]),...(aborted?[aborted]:[])]);if(signal?.aborted)throw new DOMException('Texture preparation cancelled','AbortError');transferred=true;
  }finally{
   if(abortListener)signal.removeEventListener('abort',abortListener);
