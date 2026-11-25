@@ -1,4 +1,7 @@
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
+import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
+import {sameNativeShieldWorld} from '../world/native-shield-world.js';
+import {BALANCE} from './balance.js';
 import {centerFootprint} from '../world/centers.js';
 import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
@@ -17,7 +20,7 @@ import {deserialize} from '../persistence/snapshots.js';
 import {serializeConfirmedState,serializeConfirmedPresentationState,prepareConfirmedStateTransport,deserializeConfirmedState,confirmedStateSaveAvailable} from './confirmed-live-state.js';
 import {encodePhysicsCheckpoint} from './physics-checkpoint-codec.js';
 import {pausedAuthorityQuiescent} from './paused-authority-quiescence.js';
-import {prepareNativeRuinedWallRepair,projectNativeRuinedWallRepair,advanceReal,cast,previewSpell,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,coincidentRuins,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
+import {prepareNativeRuinedWallRepair,projectNativeRuinedWallRepair,advanceReal,cast,previewSpell,spellRadius,previewVillage,plant,PlantPlacementError,validatePlant,validatePlantPurchase,harvest,requestRepair,validateHarvest,validateRepair,hire,hireAdditional,validateHire,validateHireAdditional,openInitialHiring,wallCapacity,previewWallChain,buildWallChain,commitStructurePlacement,prepareStructurePlacement,coincidentRuins,StructurePlacementError,observeGameEvents,pause,removeWall,resume,bless,continuePostgame} from './game.js';
 import {previewBlessing} from './blessings.js';
 import {AWAKENINGS} from './awakening-config.js';
 import {awakeningState} from './awakenings.js';
@@ -86,12 +89,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   },onNativeAnimalDeparted:(actor,body)=>{
     if(nativeBodies?.id(actor)!==body||!nativeBodies.remove(actor))throw Error('Departing native animal lost its registered body');
   },onNativeWorldResources:resources=>{
-    // The published boundary carries wall occupancy and worker stops. Empty
-    // receipts for those changes do not invalidate the terrain or vegetation.
-    const preservesTerrain=[2,12,24,25].includes(resources.kind)&&resources.removed.length===0;
+    // Empty receipts for occupancy, shield polygons and worker stops retain
+    // the terrain meshes and vegetation.
+    const preservesTerrain=([2,12,24,25].includes(resources.kind)||!!resources.nativeShield)&&resources.removed.length===0;
     if(!preservesTerrain&&!resources.chunks.length)terrainGeneration++;
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
-      chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{})});
+      chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
+      ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{})});
   }});planner.resetFromState(game);
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
@@ -263,7 +267,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   }
   let nativeStructurePreparation=null,nativeStructureFailure=null;
   const structureIdentity=command=>JSON.stringify(command.kind==='buildWallChain'?{kind:command.kind,id:command.id,material:command.material,points:command.points,options:command.options,capacityLimit:command.capacityLimit}:
-    ['bless','removeWall'].includes(command.kind)?{kind:command.kind,id:command.id,targetId:command.targetId}:{kind:command.kind,id:command.id,structure:command.structure});
+    ['bless','removeWall'].includes(command.kind)?{kind:command.kind,id:command.id,targetId:command.targetId}:
+    command.kind==='castShield'?{kind:command.kind,id:command.id,x:command.x,z:command.z,selection:command.selection}:{kind:command.kind,id:command.id,structure:command.structure});
   function nativeBlessingWorkers(targetId){
     if(!nativeBodies)return [];
     const tasks=new Set(game.tasks.filter(task=>task.targetId===targetId&&task.workerId).map(task=>task.id));
@@ -562,12 +567,41 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       }
     }),{label:'Native gate removal',rejection:'La retirada cambió durante su preparación'});
   }
+  async function prepareNativeShieldCommand(owner){
+    const {command}=owner,{id,x,z,selection=null}=command;
+    if(typeof id!=='string'||!id||!Number.isFinite(x)||!Number.isFinite(z))throw TypeError('Invalid shield command');
+    owner.receipt=await nativeProduction?.quiesce()??null;
+    if(!nativeCommandOwnerCurrent(owner))throw Error('Native shield owner retired');
+    const duplicate=()=>game.commandIds.includes(id)||Object.hasOwn(game.ledger.entries,id);
+    const rejection=spellRejection(command,'shield');
+    if(duplicate()||rejection||!nativeBodies){owner.rejection=rejection;owner.ready=true;return {version:1};}
+    const nextId=game.nextId,spell={id:'spell-'+nextId,kind:'shield',x,z,radius:spellRadius('shield'),
+      remaining:BALANCE.spells.find(item=>item.id==='shield').duration_seconds};
+    const minSequence=sequence,validate=()=>nativeCommandOwnerCurrent(owner)&&!duplicate()&&game.nextId===nextId&&
+      !game.spells.some(item=>item.id===spell.id)&&!spellRejection(command,'shield');
+    return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>planner.mutateNativeWorldAfterGpuQuiescence({
+      mutation:{type:'addPolygon',points:spatialShieldFootprint(spell),passMask:1},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
+      prepareResources:async({resources,signal})=>retain(await owner.resources.prepareNativeGateResources(resources,{signal,minSequence}),signal),
+      shield:{source:{spell,polygonId:null},validate,atCommitBoundary,project:proof=>{
+        const adopt=session.prepareNativeShieldAdditionAdoption(spell,proof),sync=nav.setState;let adopted=false;
+        nav.setState=next=>{
+          const actual=next.spells.at(-1);
+          if(next!==game||adopted||actual?.kind!=='shield'||
+             !sameNativeShieldWorld({spell:actual,polygonId:proof.nativeShield.polygonId},proof.nativeShield))
+            throw Error('Native shield Game owner changed');
+          adopt();adopted=true;return sync(next);
+        };
+        try{return cast(game,id,'shield',x,z,nav,selection)===true&&adopted;}finally{nav.setState=sync;}
+      }}
+    }),{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
+  }
   async function prepareNativeStructureCommand(command){
     if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
     const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
     try{
       if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
       if(captured.kind==='removeWall')return await prepareNativeGateRemovalCommand(owner);
+      if(captured.kind==='castShield')return await prepareNativeShieldCommand(owner);
       // Dispatch is held; authority commands and native execution keep running.
       owner.receipt=await nativeProduction?.quiesce()??null;
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
@@ -592,7 +626,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Called by the existing authority Worker only after this command reaches
   // the runtime/client FIFO head. No purchase or sequence is consumed here.
   async function beginNativeStructureCommand(command){
-    if(!command||!['buildWallChain','placeStructure','bless','removeWall'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
+    if(!command||!['buildWallChain','placeStructure','bless','removeWall','castShield'].includes(command.kind)||command.sequence!==sequence+1)throw Error('Native structure command is not the FIFO head');
     const owner=nativeStructurePreparation;
     if(owner?.commandSequence!==undefined)throw Error('Native structure command already entered');
     if(!owner?.ready||owner.identity!==structureIdentity(command)||!owner.enterCommit)return;
@@ -768,7 +802,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      else{if(!physics||!physics.supports(command.targetId))throw Error('Target is not supported by worker physics');if(!game.commandIds.includes(command.id))physics.assertEnvironment(command.targetId);value=cast(game,command.id,'attack',command.x,command.z,nav,{...selection,targetId:command.targetId});}
     }else if(command.kind==='castShield'){
      if(typeof command.id!=='string'||!command.id||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid shield command');
-     rejection=spellRejection(command,'shield');value=rejection?false:cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);
+     const owner=nativeStructurePreparation,prepared=nativeBodies&&owner?.command.kind==='castShield';
+     if(prepared){
+      if(owner.identity!==structureIdentity(command)||!owner.ready||!nativeCommandOwnerCurrent(owner)){value=false;rejection='El Escudo tiene otra preparación pendiente';}
+      else if(owner.consume){const result=owner.consume();value=result.status==='committed';if(!value)rejection='El Escudo cambió durante su preparación: '+result.status;}
+      else{value=false;rejection=owner.rejection??null;}
+     }else{rejection=spellRejection(command,'shield');value=rejection?false:cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);}
     }else if(command.kind==='castAgricultural'){
      if(typeof command.id!=='string'||!command.id||!['growth','multiply'].includes(command.spell)||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid agricultural spell command');
      rejection=spellRejection(command,command.spell);value=rejection?false:cast(game,command.id,command.spell,command.x,command.z,nav,command.selection??null);

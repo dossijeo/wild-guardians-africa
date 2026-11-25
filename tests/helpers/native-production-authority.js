@@ -20,6 +20,18 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
  const {port1,port2}=new MessageChannel(),records=[];
  const clock={version:1,epoch:0,elapsed:state.elapsed,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:state.elapsed,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-state.elapsed}]};
  const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
+  if(method==='prepareNativeGateResources'&&[3,4].includes(resources.kind)){
+   const record={kind:'shield',resources,minSequence:options.minSequence,committed:false,aborted:false};records.push(record);
+   await onPrepare(record);
+   await graphics.client.whenFrameSettled();
+   if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
+   const packet=await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
+   packet.presented.catch(()=>{});record.packet=packet;
+   try{await onReady(record);}catch(error){packet.abort();throw error;}
+   return {preparedWorldBoundary:packet.preparedWorldBoundary,valid:packet.valid,
+    commit(data){record.committed=packet.commit(data.worldBoundary);if(record.committed)onCommit?.(record,data);return record.committed;},
+    abort(){record.aborted=true;packet.abort();}};
+  }
   const barrier=method==='prepareNativeBarrierAdditionResources';
   const [kind,template,clockField]=barrier?['barrier-addition']:method==='prepareNativeGateResources'&&resources.kind===12?['idle-stroll-stop']:method==='prepareNativeGateResources'&&resources.kind===25?['task-route-stop']:method==='prepareNativeGateResources'&&resources.kind===24?['farm-arrival-stop']:kinds[method],profile=nativeResourceAdmissionProfile(kind),reference=profile.reference(resources),record={kind,resources,minSequence:options.minSequence,terrainManifest:options.terrainManifest,...(barrier?{nativeBarrierWallEntities:options.nativeBarrierWallEntities}:{}),committed:false,aborted:false};records.push(record);
   await onPrepare(record);

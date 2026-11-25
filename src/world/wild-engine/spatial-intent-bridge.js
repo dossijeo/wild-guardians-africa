@@ -1,6 +1,8 @@
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
+import {copyNativeShieldWorld,nativeShieldWorldKind} from '../native-shield-world.js';
+import {spatialShieldFootprint} from './spatial-shield-mirror.js';
 import {canAttackCrop,nativeCenterAttackCohort,nativeCropRouteSubject,nativeCropCohortCurrent,previewRaidStrike,projectAcquiredRaidStrike} from '../../simulation/raids.js';
 import {captureRestoredWallRepairs} from '../restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources,nativeBarrierAdditionSuccessor} from '../native-barrier-addition.js';
@@ -1274,7 +1276,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const split=value=>[Number(BigInt(value)&0xffffffffn)|0,Math.floor(value/4294967296)];
     return [...split(h.session),...split(actorId),h.slot|0,h.generation|0,...split(assignmentSequence)];
   };
-  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null}={})=>{
+  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null,shield=null}={})=>{
     if(prepareResources!==null&&typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid native resource preparation');
     if(prepareResources&&wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resources');
     if(wasm.spatial_world_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
@@ -1336,14 +1338,32 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       };
       kind=12;integers=nativeWorkerRouteStopInput(stopSourceRoute(binding));
     }else throw TypeError('Unsupported native world mutation');
+    let protocol=null,pendingShield=null;
+    if(shield!==null){
+      if(!nativeShieldWorldKind(kind)||typeof prepareResources!=='function'||typeof shield.validate!=='function'||
+         typeof shield.project!=='function'||typeof shield.atCommitBoundary!=='function')throw TypeError('Invalid prepared shield owner');
+      pendingShield=copyNativeShieldWorld(shield.source,kind,{proposal:true});
+      if(kind===3){
+        const expected=spatialShieldFootprint(pendingShield.spell).flatMap(point=>[point.x,point.z]);
+        if(mode!==1||expected.length!==floats.length||expected.some((value,index)=>value!==floats[index]))throw Error('Native shield footprint changed');
+      }else if(pendingShield.polygonId!==integers[0])throw Error('Native shield removal uses another polygon');
+      protocol={preparedFrameRequired:true,atCommitBoundary:shield.atCommitBoundary,
+       capture:worldBoundary=>({...session.core.captureNativeWorldProposalResources(worldBoundary),worldBoundary,nativeShield:pendingShield}),
+       ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+       snapshot:(...boundary)=>wasm.spatial_world_proposal_resource_snapshot(...boundary),
+       release:(...boundary)=>wasm.spatial_world_proposal_resource_release(...boundary),
+       cancel:(...boundary)=>wasm.nav_intent_barrier_proposal_cancel(...boundary)};
+    }
     // Only serialization into the authority-owned temporary input buffers.
     return commitNativeWorldProposal(getPublication,()=>{
+      if(shield&&shield.validate()!==true)return -2;
       const fp=wasm.spatial_world_proposal_float_ptr(floats.length);if(floats.length&&!fp)throw Error('Native proposal allocation failed');
       if(floats.length)new Float32Array(wasm.memory.buffer,fp,floats.length).set(floats);
       const ip=wasm.spatial_world_proposal_int_ptr(integers.length);if(integers.length&&!ip)throw Error('Native proposal allocation failed');
       if(integers.length)new Int32Array(wasm.memory.buffer,ip,integers.length).set(integers);
       return (prepareResources?wasm.spatial_world_proposal_stage_resources:wasm.spatial_world_proposal_stage)(kind,mode,floats.length,integers.length);
     },(markCommitted,...boundary)=>{
+      if(shield&&shield.validate()!==true)return {status:-2};
       const status=wasm.spatial_world_proposal_commit(...boundary);if(status!==1)return {status};
       // Once native state changed, every failure must still retire the old GPU
       // packet. Never report/release as an aborted physical mutation.
@@ -1351,11 +1371,19 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       if(!Number.isSafeInteger(count)||count<0||count>8192)throw Error('Invalid native mutation result');
       const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));markCommitted({ids});
       if(kind===6||kind===7||kind===11)session.core.adoptNativeResidencyCommit(kind,ids);
-      const resources=session.publishNativeWorldResources(committedWorldBoundary);
+      const worldBoundary=nativeWorldBoundary();
+      let nativeShield=null;
+      if(pendingShield){
+        if(ids.length!==1||kind===4&&ids[0]!==pendingShield.polygonId)throw Error('Native shield committed another polygon');
+        nativeShield=copyNativeShieldWorld({...pendingShield,polygonId:ids[0]},kind);
+        if(shield.project({ids,worldBoundary,nativeShield})!==true)throw Error('Native shield Game projection was not synchronous and successful');
+      }
+      const published=session.publishNativeWorldResources(committedWorldBoundary);
+      const resources=nativeShield?{...published,phase:'committed',worldBoundary,nativeShield}:published;
       if(resources.kind!==kind)throw Error('Native world resource family mismatch');
-      if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary:nativeWorldBoundary()});
+      if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary});
       return {status:1,value:{ids,resources}};
-    },prepareResources,signal);
+    },prepareResources,signal,protocol);
   };
   const stopNativeWorkerRouteAfterGpuQuiescence=(kind,{actorId,getPublication,prepareResources,signal=null,sourceStillCurrent=null}={})=>{
     const {motionKind,source,matches}=workerRouteStops[kind];
