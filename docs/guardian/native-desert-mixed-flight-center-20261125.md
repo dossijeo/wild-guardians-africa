@@ -38,6 +38,12 @@ Para el golpe contra un centro, la admisión de 27 ahora prepara también los cu
 
 Durante la preparación del candidato, Surface tardó 2.440,96 ms hasta READY y el dispositivo siguió dibujando. Se registraron 73 dibujos, con un intervalo máximo de 35,70 ms a 30 Hz. En el hueco residual de 200,10 ms, cinco oportunidades rechazaron el binding del dibujo 300. La línea de tiempo del reemplazo ocupó 65,60 ms y su captura 37,10 ms. El paquete se envió a los 157,20 ms y quedó admitido a los 173,00 ms. C4 mantiene el objetivo de 16,667 ms y queda abierto el relevo del paquete ya obsoleto. [Corte residual](performance/native-desert-mixed-flight-center-20261125.json).
 
+### Cuatro golpes y regreso a 60 Hz
+
+El recorrido completo repitió los cuatro golpes, dejó el centro a 520 HP, retiró al facóquero y devolvió al civil a Idle por el mismo portón. Cada primer dibujo sin 27 usó los mismos ocho IDs de color y sombra preparados antes del primer READY. Los cuatro paquetes tuvieron espera de recursos de cero. El aviso de retirada sale después del submit y el arnés difiere la inspección detallada hasta terminar la incursión. Se conservan las 1.335 referencias y versiones comparables de la huida y el drenaje fue limpio. [Recibo a 60 Hz](performance/native-desert-mixed-flight-center-20261125.json).
+
+Los cuatro intervalos de relevo fueron 166,30, 99,80, 116,60 y 364,80 ms. En el cuarto, la captura del preparador ocupó 258,70 ms y el paquete salió a los 337,50 ms. El primer dibujo de ausencia tras Retreat llegó en un intervalo de 128,80 ms. La captura headless usa la GPU física con un viewport de 640 × 480 y la pantalla temporalmente a 4K/60 Hz. Se guardaron 4.767 intervalos, con 2.692 por encima de 16,667 ms, un recuento que incluye jitter de los callbacks. C4 sigue abierto por los saltos de relevo. La traza terminó sin pérdida y Windows volvió a 4K/30 Hz. [Cortes y restauración de pantalla](performance/native-desert-mixed-flight-center-20261125.json).
+
 ## Controles
 
 Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.

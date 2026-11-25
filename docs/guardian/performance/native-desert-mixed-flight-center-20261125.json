@@ -1811,5 +1811,153 @@
         "admittedAfterMs": 173
       }
     }
+  },
+  "gatedFullReturnAt60Hz": {
+    "commit": "04081359b3e001bed1d7e95fc25d0778abe725c4",
+    "raw": {
+      "path": ".cache/c4-return-rig/gated-incursion-return-60hz.json",
+      "sha256": "704fd3aa180767d935aa4d7b29ce401da26f7dcd17c4d1572117007632feb43a"
+    },
+    "trace": {
+      "path": ".cache/c4-return-rig/gated-incursion-return-60hz.trace.json.gz",
+      "sha256": "3476f8287251a5c83438b76b531ecd73a93a9d54f395331c30081d9f76a5aab0",
+      "dataLossOccurred": false
+    },
+    "cuts": {
+      "path": ".cache/c4-return-rig/gated-incursion-return-60hz.cuts.json",
+      "sha256": "dae29bc689d30cf4b88eacf46b116095f86495606c38756a98ff3aef9e2ca3d4"
+    },
+    "display": {
+      "before": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 30,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "temporary": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 60,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "after": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 30,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "viewport": [
+        640,
+        480
+      ],
+      "applyReceipt": {
+        "path": ".cache/native-60hz-gated-incursion-return-60hz-apply-receipt.json",
+        "sha256": "d5e4efd73b4baf9fd5ad1b604cc7f3b3d37299abe54ee20f34fe8525f7932847"
+      },
+      "restoreReceipt": {
+        "path": ".cache/native-60hz-gated-incursion-return-60hz-restore-receipt.json",
+        "sha256": "6b9764930066ff9d82091e55f6bc491fd93e199eb4ebc14805bdd2c4895a7912"
+      }
+    },
+    "adapter": "nvidia",
+    "cadencedComparison": {
+      "samples": 4767,
+      "intervalsAboveTarget": 2692,
+      "targetMs": 16.666666666666668,
+      "maxIntervalMs": 364.800048828125,
+      "retreatIntervalMs": 128.800048828125
+    },
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "elapsed": 46.950000000001374,
+        "hp": 580,
+        "strikeTicket": 13,
+        "draw": 426,
+        "intervalMs": 166.300048828125,
+        "drawMs": 4,
+        "timing": {
+          "postMs": 136.10009765625,
+          "admittedMs": 152.89990234375,
+          "resourceWaitMs": 0
+        },
+        "timelineMs": 69.5,
+        "captureMs": 27.1
+      },
+      {
+        "attackId": "attack-29212",
+        "elapsed": 50.000000000001634,
+        "hp": 560,
+        "strikeTicket": 17,
+        "draw": 452,
+        "intervalMs": 99.800048828125,
+        "drawMs": 2.400146484375,
+        "timing": {
+          "postMs": 72.300048828125,
+          "admittedMs": 87.400146484375,
+          "resourceWaitMs": 0
+        },
+        "timelineMs": 16.701,
+        "captureMs": 19.8
+      },
+      {
+        "attackId": "attack-29215",
+        "elapsed": 56.100000000002154,
+        "hp": 540,
+        "strikeTicket": 21,
+        "draw": 518,
+        "intervalMs": 116.599853515625,
+        "drawMs": 4.2001953125,
+        "timing": {
+          "postMs": 88.10009765625,
+          "admittedMs": 103.699951171875,
+          "resourceWaitMs": 0
+        },
+        "timelineMs": 16.699,
+        "captureMs": 19.801
+      },
+      {
+        "attackId": "attack-29218",
+        "elapsed": 61.42000000000261,
+        "hp": 520,
+        "strikeTicket": 25,
+        "draw": 572,
+        "intervalMs": 364.800048828125,
+        "drawMs": 3.199951171875,
+        "timing": {
+          "postMs": 337.5,
+          "admittedMs": 356.699951171875,
+          "resourceWaitMs": 0
+        },
+        "timelineMs": 16.601,
+        "captureMs": 258.7
+      }
+    ],
+    "reusedPipelineIds": [
+      "Pipeline:6201",
+      "Pipeline:6177",
+      "Pipeline:6189",
+      "Pipeline:6165",
+      "Pipeline:6125",
+      "Pipeline:6152",
+      "Pipeline:6111",
+      "Pipeline:6138"
+    ],
+    "flightBuffers": {
+      "compared": 1335,
+      "sameReference": 1335,
+      "sameVersion": 1335
+    },
+    "retreatAbsence": 681,
+    "firstReturnDraw": 682,
+    "returnedWorkerBody": 3,
+    "finalElapsed": 82.25000000000179,
+    "drained": true
   }
 }
