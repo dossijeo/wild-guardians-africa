@@ -805,7 +805,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       const actor=actors.get(ref.actorId),record=actor?.current;
       if(closed||!clock||actors.size!==1||active.size!==1||proof.gateIds.length>(kind===23?1:0)||
-         !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||
+         !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
+         kind===18&&ref.sourceRequest?.raidSpawnSequence||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:ref.expectedRouteHandle})||
          !sameNativeWorldBoundary(boundary,ref.worldBoundary)||record.startTime!==boundary.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||
@@ -816,7 +817,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       return ()=>{if(closed||actors.get(ref.actorId)!==actor||active.get(ref.actorId)!==record||
         actor.current!==record||actor.latestSequence!==proof.assignmentSequence||record.lastDrawTime!==null)
         throw Error('Recovered worker route was revoked before materialization');
-        record[profile.issuedField]=actor[profile.proofField]=proof;record[profile.admittedField]=true;};
+        actor[profile.proofField]=proof;
+        if(profile.issuedField)record[profile.issuedField]=proof;
+        if(profile.admittedField)record[profile.admittedField]=true;};
     },
     installStrolls(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);

@@ -827,7 +827,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     return Math.abs(opening-pose.opening)<=1e-9;
   }
   function recoveryExecution({kind,actorId}){
-    return kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
+    return kind===18?planner.nativeHomeRouteExecution(actorId):
+      kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
@@ -837,10 +838,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!current||pending||cohort.consumers!==1)return null;
       const worker=game.workers[0],admission=worker.nativeRouteAdmission;
-      if(admission!=='native-idle-stroll'&&admission!=='native-farm-arrival')return null;
-      const kind=admission==='native-idle-stroll'?22:23,profile=nativeWorkerRouteRecoveryProfile(kind);
-      const bindings=kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
+      if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
+      const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23,profile=nativeWorkerRouteRecoveryProfile(kind);
+      const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
       if(bindings.length!==1||!sameNativeWorldBoundary(current.worldBoundary,bindings[0].reference.worldBoundary))return null;
+      if(kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
       const route={kind,actorId:bindings[0].reference.actorId},execution=recoveryExecution(route);
       if(worker.id!=='worker-'+route.actorId||!execution||execution.arrived||!recoveryGateCurrent(kind,execution))return null;
       await nativeIntentControl.waitForTerminalDraw();

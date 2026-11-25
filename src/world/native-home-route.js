@@ -5,6 +5,8 @@ import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
 import {floorFloat32} from '../float32-time.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
+import {copyNativeRouteReference} from './native-route-reference.js';
+import {copyNativeRoutePresentation} from './native-route-presentation.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const sameHandle=(a,b)=>!!a&&!!b&&['authorityEpoch','session','slot','generation'].every(k=>a[k]===b[k]);
@@ -45,6 +47,28 @@ export function copyNativeHomeRouteAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,reference,preparedReference,assignmentSequence,gateIds:Object.freeze([...gateIds])});
 }
 export const nativeHomeRouteAttestationCovers=(proof,reference)=>sameNativeHomeRouteReference(proof?.reference,reference)||sameNativeHomeRouteReference(proof?.preparedReference,reference);
+export const sameNativeHomeRouteAttestation=(a,b)=>!!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&
+ sameNativeHomeRouteReference(a.reference,b.reference)&&sameNativeHomeRouteReference(a.preparedReference,b.preparedReference)&&
+ a.gateIds.length===b.gateIds.length&&a.gateIds.every((id,index)=>id===b.gateIds[index]);
+
+export function copyNativeHomeRouteResources(value){
+ if(value?.version!==1||value.kind!==18||value.phase!=='committed'||
+    Object.keys(value).some(key=>!['version','kind','phase','worldBoundary','nativeRoute','nativeHomeRouteBinding','presentation'].includes(key)))
+  throw TypeError('Invalid native Home route resources');
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeRoute=copyNativeRouteReference(value.nativeRoute),
+  nativeHomeRouteBinding=copyNativeHomeRouteAttestation(value.nativeHomeRouteBinding),presentation=copyNativeRoutePresentation(value.presentation);
+ const ref=nativeHomeRouteBinding.reference,source=nativeHomeRouteSource(ref),pose=source.pose,rows=presentation.rows;
+ if(!sameNativeWorldBoundary(worldBoundary,ref.worldBoundary)||!sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||
+    nativeRoute.actorId!==ref.actorId||nativeRoute.assignmentSequence!==nativeHomeRouteBinding.assignmentSequence||
+    !sameHandle(nativeRoute.routeHandle,ref.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==ref.endTime||
+    presentation.profile!==source.profile||presentation.radius!==pose.radius||presentation.motionMode!=='worker'||
+    presentation.motionFlags!==(source.raidSpawnSequence?2:0)||
+    rows[1]!==pose.x||rows[2]!==pose.z||[8,9,10,13].some((index,i)=>rows[index]!==[pose.runPhase,pose.walkPhase,pose.carryPhase,pose.runRemaining][i])||
+    presentation.gates.length!==nativeHomeRouteBinding.gateIds.length||presentation.gates.some(gate=>!nativeHomeRouteBinding.gateIds.includes(gate.gateId)))
+  throw TypeError('Native Home route resource association mismatch');
+ return Object.freeze({version:1,kind:18,phase:'committed',worldBoundary,nativeRoute,nativeHomeRouteBinding,presentation});
+}
 export function nativeHomeRoutePresentationMatches(prepared,actual,value){
  const b=copyNativeHomeRouteAttestation(value),r=b.reference,route=actual?.nativeRoute;
  return sameNativeHomeRouteReference(b.preparedReference,prepared.nativeHome)&&route?.actorId===r.actorId&&route.assignmentSequence===b.assignmentSequence&&sameHandle(route.routeHandle,r.expectedRouteHandle)&&actual.startTime===r.worldBoundary.effectiveTime&&actual.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,actual,b.gateIds);

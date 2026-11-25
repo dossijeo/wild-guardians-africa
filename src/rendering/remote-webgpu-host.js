@@ -1199,7 +1199,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          recovered.gateId!==null&&!preparedBindings.some(b=>recoveryGateMatches(b,recovered.gateId,recovered.ref.worldBoundary)&&
              b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime)))
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
-          {code:recovered.profile.kind===22?'native-idle-stroll-admission-obsolete':'native-farm-arrival-admission-obsolete'});
+          {code:recovered.profile.obsoleteCode});
       if(recovered.install){recovered.install();recovered.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);

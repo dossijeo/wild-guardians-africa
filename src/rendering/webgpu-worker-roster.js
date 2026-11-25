@@ -223,7 +223,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
 
     function prepareNativeRoute(actorId,support,options){return prepareWorkerRoute(actorId,support,options,null);}
     function prepareRecoveredWorkerRoute(source,options){
-      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23;
+      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
       const resources=profile.copyResources(source.resources),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
       if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>(farm?1:0)||
@@ -232,8 +232,17 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         const worker=entry.entity,e=source.execution;
         if(e.kind!==profile.executionKind||e.arrived||e.actorId!==r.actorId||e.bodyId!==r.bodyId||
            !profile.sameAttestation(e.binding,b)||state.elapsed!==e.executedThrough||
-           entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
+           !home&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
            worker.nativeRouteAdmission!==profile.admission)return false;
+        if(home){
+          const sourceHome=nativeHomeRouteSource(r),destination=sourceHome.home;
+          const village=state.villages.find(row=>nativeEntityNumericId(row.id)===destination.villageId),arrival=village?.entry??village;
+          return !sourceHome.raidSpawnSequence&&nativeLocomotionEntity(entry,false)&&worker.status==='returning'&&
+            !worker.taskId&&!worker.raidReturn&&worker.path===null&&nativeEntityNumericId(worker.villageId)===destination.villageId&&
+            e.villageId===destination.villageId&&arrival?.x===destination.x&&arrival.z===destination.z&&
+            worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===false&&
+            ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===e[key]);
+        }
         if(farm){
           const {pose,goal,centerId}=nativeFarmArrivalBoundState(state,worker);
           const request=r.sourceRequest,refugeMatches=request.version===2?
@@ -253,7 +262,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       if(!current())throw Error('Recovery pose or committed owner differs');
       const support=source.terrain.prepareNativeRoute(resources.presentation,{terrainManifest:source.terrainManifest});
       return prepareWorkerRoute(actorId,support,options,{resources,current,
-        binding:{[profile.bindingField]:b,[profile.clockField]:r,...(farm?
+        binding:{[profile.bindingField]:b,[profile.clockField]:r,...(home?{}:farm?
           {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
     }
     async function prepareWorkerRoute(actorId,support,{getPickTime,getPickIdleOffset,signal,isCurrent=()=>true,prepareGateParticipants=null}={},recovery){
@@ -286,7 +295,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources}):createNativeGpuMotion(motionOptions);
    let variant,binding;
    try{
-    const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset(duration):undefined)};
+    const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':actor.isBakedIdle?.()?'Idle':!(actor.isBakedWalking?.()||actor.isBakedRunning?.())?'Walk_Skip':null});
     const options={motion,getPickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};
     binding=entry.motionBinding?entry.motionBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId,resourceRegistry,staged:true,...options});

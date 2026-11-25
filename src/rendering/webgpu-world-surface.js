@@ -683,7 +683,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
 
   let firstReplacementFrame=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
-    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23;
+    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
     const actorId='worker-'+source.execution?.actorId,sequence=source.publicationSequence;
     const ref=source.resources[profile.bindingField]?.reference;
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
@@ -700,8 +700,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     nativeRoutePreparations++;
     try{
       await workers.prepareRecoveredWorkerRoute({...source,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
-        getPickTime:()=>nativePickFrame[farm?'getFarmArrivalTime':'getStrollTime'](ref),
-        getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration),
+        getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':'getStrollTime'](ref),
+        ...(home?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
         prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
           getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
       if(!current()||!workers.nativeRouteCurrent(actorId,source.resources.nativeRoute))throw Error('Replayed worker rig is no longer current');

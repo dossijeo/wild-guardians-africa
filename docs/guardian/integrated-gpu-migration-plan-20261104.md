@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Recovery ya permite reanudar un Home18 civil adquirido tras perder Draw. NVIDIA verificó los dos fences, el picking del sustituto, la retirada Home19 y el drenaje al salir. La prueba cubre un trabajador sin portón ni incursión. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-home18-civil).
+
 Escudo puede caducar mientras dos civiles con Farm23 adquirido conservan sus cuerpos y relojes. NVIDIA presentó la baja del polígono 11 a 10,526 s y confirmó el avance posterior de ambos trabajadores y el drenaje. La calificación sigue limitada a desarrollo y sin incursión. [Recorrido y recibo](webgpu-shield.md#caducidad-con-dos-trabajadores-en-farm23).
 
 El Worker de edificios prepara las esferas exactas del cuerpo dañado y de la ceniza. En el primer golpe con portón a 60 Hz, el tramo de daño bajó de 23,50 a 9,30 ms y el intervalo presentado de 134,00 a 115,30 ms. C4 sigue abierto. [Contraste y recibo](native-desert-mixed-flight-center-20261125.md#esferas-del-cuerpo-dañado-y-la-ceniza).
