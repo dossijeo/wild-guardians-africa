@@ -9,6 +9,7 @@ import {createSpatialWorld} from '../src/world/wild-engine/spatial-world.js';
 import {nativeFarmArrivalStopSourceFixture} from './helpers/native-farm-arrival-stop-source.js';
 import {copyNativeHomeRequestReference, sameNativeHomeRequestReference} from '../src/world/native-home-request-reference.js';
 import {nativeResourceAdmissionProfile} from '../src/world/native-resource-admission-profiles.js';
+import {centerServicePoint} from '../src/world/centers.js';
 
 function mixedDesertRaid() {
   const fixture = nativeFarmArrivalRouteFixture({peer:false});
@@ -122,6 +123,91 @@ test('the northern center corridor cannot acquire either motion across a possibl
   } finally {
     await world.close();
   }
+});
+
+function gatedDesertRaid(){
+  const {state,chunkKeys}=mixedDesertRaid();
+  const [worker]=state.workers;
+  const village=state.villages.find(v=>v.id===worker.villageId);
+  const start={x:-14,z:11.799999999999999};
+  const center=state.structures.find(value=>value.id===worker.centerId);
+  const service=centerServicePoint(center,state,.8);
+  Object.assign(worker,start);
+  village.entry={...start};
+  center.x+=start.x-service.x;
+  center.z+=3.2-service.z;
+  state.dayPlan.at=state.time+3.4;
+  const gateId=1000000;
+  const gate={id:'structure-'+gateId,created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,
+    maxHp:60,hp:60,status:'intact',villageId:village.id,cost:10,collapseRemaining:0};
+  state.structures.push(gate);
+  state.nextId=gateId+1;
+  return {state,chunkKeys,start,center,gate,gateId};
+}
+
+test('the Desert Farm gate remains with Home while the animal takes a different corridor', async () => {
+  const {state,chunkKeys,start,center,gate,gateId}=gatedDesertRaid();
+  const acquisitions=[];
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
+  try{
+    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
+    await untilProduction(world,()=>acquisitions.some(row=>row.kind==='farm-arrival'));
+    assert.deepEqual(acquisitions[0].data.nativeFarmArrivalBinding.gateIds,[gateId]);
+    let current,atSpawn;
+    for(let i=0;i<160;i++){
+      const result=world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
+      for(const key of result.residency.missing){const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});}
+      current=JSON.parse(result.snapshot);
+      await world.present();
+      if(current.raid&&!atSpawn){
+        atSpawn=current;
+        await untilProduction(world,()=>{world.snapshot();return acquisitions.some(row=>row.kind==='farm-arrival-stop');});
+      }
+      if(atSpawn&&current.workers[0].status==='home')break;
+    }
+    assert(atSpawn);
+    assert(Math.abs(atSpawn.workers[0].z-gate.z)<.65);
+    assert.deepEqual(acquisitions.map(row=>row.kind),['farm-arrival','farm-arrival-stop','home-route','animal-crop-route','home-arrival']);
+    const [farm, ,home,animal,absence]=acquisitions.map(row=>row.data);
+    assert.deepEqual(home.nativeHomeRouteBinding.gateIds,[gateId]);
+    assert.equal(home.nativeHomeRouteBinding.reference.bodyId,farm.nativeFarmArrivalBinding.reference.bodyId);
+    assert.notEqual(animal.nativeAnimalCropRouteBinding.reference.bodyId,home.nativeHomeRouteBinding.reference.bodyId);
+    assert.equal(animal.nativeAnimalCropRouteBinding.reference.purpose,'center');
+    assert.deepEqual(absence.nativeHomeArrivalBinding.reference.sourceHome.gateIds,[gateId]);
+    assert.equal(current.workers[0].hits,0);
+    assert.deepEqual([current.workers[0].x,current.workers[0].z],[start.x,start.z]);
+    assert.equal(current.structures.find(value=>value.id===gate.id).gateOpen,1);
+    assert.equal(current.raid.animals[0].targetId,center.id);
+    assert.deepEqual(world.faults,[]);
+  }finally{await world.close();}
+});
+
+test('a gate in an unacquired Farm proposal grants no mixed admission', async () => {
+  const {state,chunkKeys,gateId}=gatedDesertRaid();
+  let release;
+  const hold=new Promise(resolve=>{release=resolve;});
+  let farm;
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    async onReady(record){if(record.kind==='farm-arrival'){farm=record;await hold;}}});
+  try{
+    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
+    await untilProduction(world,()=>!!farm);
+    assert.deepEqual(farm.resources.gates.map(gate=>gate.gateId),[gateId]);
+    let atSpawn;
+    for(let i=0;i<90&&!atSpawn?.raid;i++){
+      const result=world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:1});
+      atSpawn=JSON.parse(result.snapshot);
+      await world.present();
+    }
+    assert.equal(atSpawn.raid?.animals[0].targetId,null);
+    release();
+    await untilProduction(world,()=>farm.aborted);
+    assert.equal(farm.committed,false);
+    assert.equal(world.snapshot().workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
+    assert.deepEqual(world.records.map(row=>row.kind),['farm-arrival']);
+    assert.deepEqual(world.faults,[]);
+  }finally{release();await world.close();}
 });
 
 for (const moving of [false, true]) {

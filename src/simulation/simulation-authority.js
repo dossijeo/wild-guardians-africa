@@ -137,7 +137,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,onError:error=>onNativeIntentControlError?.(error)});
   }
   function prepareRaidFlightAnimal(event){
-   if(!qualifyFarmFlee||!qualifyAnimalCrop||!nativeBodies||nativeGateOwners.length||
+   if(!qualifyFarmFlee||!qualifyAnimalCrop||!nativeBodies||
       !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       game.workers.length!==1||game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==1)return;
    const [animal]=game.raid.animals,[worker]=game.workers;
@@ -147,6 +147,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    if(centerAttack&&game.structures.slice(1).some(structure=>structure.kind!=='wall'))return;
    const source=worker.nativeRouteAdmission==='pending-farm-flight-stop'?planner.nativeFarmFlightStopRequest(worker.id)?.binding:
      worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null;
+   if(nativeGateOwners.length){
+    // The worker's acquired Farm corridor identifies the live gate. Home and
+    // the animal still prove their routes separately before either can move.
+    const [gate]=nativeGateOwners;
+    if(!centerAttack||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||source?.gateIds?.length!==1)return;
+    const mechanism=planner.nativeGateMechanismPose(gate.id),boundary=source.reference.worldBoundary;
+    if(!mechanism||mechanism.gateId!==source.gateIds[0]||mechanism.authorityEpoch!==boundary.authorityEpoch||
+       mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
+   }
    const seq=source?.assignmentSequence??source?.requestSequence;
    const originClear=centerAttack?session.core.wasm.nav_flight_center_origin_clear:session.core.wasm.nav_flight_crop_origin_clear;
    if(!seq||originClear?.(session.core.wasm.nav_intent_session(),Number(worker.id.split('-').at(-1)),seq,animal.x,animal.z,animal.radius)!==1)return;

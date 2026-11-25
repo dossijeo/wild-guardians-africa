@@ -60,7 +60,22 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     graphics.client.registerClockBinding(buffer,{byteOffset,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
   }
   const peer=(kind==='home-route'||arrival)&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
-  const packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,graphics.group],
+  if(kind==='home-route'&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
+   const buffer=graphics.client.device.createBuffer({size:16,usage:72});
+   graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
+   graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,
+    nativeGate:{gateId:gate.gateId,worldBoundary:resources.worldBoundary}});
+   return graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  });
+  const activeHome=records.findLast(r=>r.committed&&(r.kind==='home-route'||r.kind==='home-arrival'));
+  const gateGroups=record.gateGroups??(activeHome?.kind==='home-route'?activeHome.gateGroups:null);
+  let packet;
+  if(gateGroups?.length&&(kind==='home-route'||arrival)){
+   const groups=arrival?[...gateGroups]:[graphics.group,...gateGroups];
+   if(peer)groups.push(peer.cropGroup);
+   packet=await prepareExistingGroup(graphics,groups,
+    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal);
+  }else packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,graphics.group],
     {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record);}catch(error){packet.abort();throw error;}

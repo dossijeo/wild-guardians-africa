@@ -951,5 +951,147 @@
       "path": ".cache/native-desert-center-mixed-nvidia-20261125.cuts.json",
       "sha256": "fcaab123600a201d06962fcb7a14a6b4e0c9c7fc5453b3cf6feb2be4a89446fd"
     }
+  },
+  "gatedFlight": {
+    "baseCommit": "862c68002053c04b061b5118a4aa8784f0af545d",
+    "evidenceSHA256": "982590f2e3d69ab2d9c70c8ef11045e81c38bd52efd7b9a59b563ed5a3cfcf40",
+    "snapshotSHA256": "5d79c1ef69c50ffc053b8ecdeee74f227944fee404b3de79dead5ad1b67f440a",
+    "switches": {
+      "farm": {
+        "version": 1,
+        "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 10
+      },
+      "stop": {
+        "version": 1,
+        "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 15.949999999999873
+      },
+      "home": {
+        "version": 1,
+        "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+        "nativeSession": 1,
+        "ticket": 7,
+        "effectiveTime": 18.69999999999991
+      },
+      "animal": {
+        "version": 1,
+        "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+        "nativeSession": 1,
+        "ticket": 9,
+        "effectiveTime": 20.399999999999935
+      },
+      "arrival": {
+        "version": 1,
+        "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 21.49999999999995
+      }
+    },
+    "spawnTime": 13.399999999999928,
+    "stopPose": {
+      "x": -13.965036894834537,
+      "z": 6.022736950008003,
+      "yaw": -3.1292060741233034,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 15.14999999999981,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "refuge": [
+      -14,
+      11.799999999999999
+    ],
+    "refugeTime": 21.54999999999995,
+    "workerHits": 0,
+    "workerBody": 1,
+    "animalBody": 2,
+    "gate": {
+      "id": "structure-1000000",
+      "opening": 1,
+      "health": 60
+    },
+    "gateBindingAfterArrival": {
+      "nativeGate": {
+        "gateId": 1000000,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 15.999999999999872
+        }
+      },
+      "semantic": "relative",
+      "epoch": 15.999999999999872,
+      "elapsed": 18.573906898498407
+    },
+    "mixedDraws": {
+      "count": 9,
+      "first": {
+        "sequence": 61,
+        "homeAge": 1.6999999284744263,
+        "animalAge": 0
+      },
+      "last": {
+        "sequence": 68,
+        "homeAge": 2.573906898498535,
+        "animalAge": 1
+      }
+    },
+    "resourceReuse": {
+      "compared": 1335,
+      "sameReference": 1335,
+      "sameVersion": 1335
+    },
+    "drained": true,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 103.39999999850988
+      }
+    },
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "drawSamples": 590,
+      "opportunitiesRetained": 512,
+      "rejectedRetained": 0,
+      "peak": {
+        "at": 1795631770658.5999,
+        "sequence": 36,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "42b346be-2ec8-4675-8369-d8c321606aa2/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "intervalMs": 36.300048828125,
+        "drawMs": 2.199951171875,
+        "replay": true,
+        "clockElapsed": 12.099999999999955,
+        "safeUntil": 12.099999999999955,
+        "cameraVersion": null
+      },
+      "traceDataLoss": false
+    },
+    "scope": "Single admitted Gate/Farm owner, Home19 with animal still moving. The ordinary profile, encounters, and gated raid completion remain open."
   }
 }
