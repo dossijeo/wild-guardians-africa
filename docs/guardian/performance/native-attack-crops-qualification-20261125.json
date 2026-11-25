@@ -387,5 +387,63 @@
         "loss": false
       }
     }
-  ]
+  ],
+  "orderedTerminalPacket": {
+    "mode": "DEV qualification with hit drawn before shutdown, 30 Hz",
+    "receipt": {
+      "file": "native-attack-crops-terminal-drawn-nvidia-20261125.json",
+      "sha256": "51466a2af93c0a2d15b1d6d86f0b5434edc991d8b19c46b763d51436a9066218"
+    },
+    "trace": {
+      "file": "native-attack-crops-terminal-drawn-nvidia-20261125.trace.json.gz",
+      "sha256": "3d6434570b0d7e35a83852704bc8aa4e385181bd51ebe87170407c02da22bee0",
+      "loss": false
+    },
+    "attackId": "attack-661",
+    "body": 1,
+    "ordinaryFrame": {
+      "sequence": 245,
+      "clockElapsed": 402.0499999999825,
+      "retiredBinding": true
+    },
+    "snapshots": {
+      "comparedResidentBuffers": 78,
+      "drained": true,
+      "errorCount": 0
+    },
+    "blockedPreparer": {
+      "durationMs": 550.199951171875,
+      "totalDraws": 17,
+      "replayDraws": 15,
+      "sequence": 54,
+      "postedBeforeBlockByMs": [
+        30.699951171875
+      ],
+      "clockAdvance": 0.4666999511719041
+    },
+    "cadence": {
+      "terminalIntervalMs": 133.300048828125,
+      "staleBindingOpportunities": 3,
+      "previousDrawSequence": 244,
+      "previousDrawAt": 1795594400904.2998,
+      "retireGraphicsAt": 1795594400966.228,
+      "endFrameReturnedAt": 1795594400995.5,
+      "sendStartedAt": 1795594400996.7,
+      "drawAt": 1795594401037.5999,
+      "closedToSendMs": 1.199951171875,
+      "compile": {
+        "root": 340,
+        "source": "prepareLateHistoricalMotion",
+        "alternatives": 12,
+        "startedAt": 1795594401009.1,
+        "finishedAt": 1795594401535.126,
+        "synchronousMs": 526.02587890625
+      }
+    },
+    "regression": {
+      "tests": 343,
+      "passed": 343,
+      "buildSeconds": 57.51
+    }
+  }
 }

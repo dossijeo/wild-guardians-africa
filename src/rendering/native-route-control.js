@@ -191,6 +191,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       sameNativeWorldBoundary(preparingWorldBoundary,r.worldBoundary)&&actor.state===(r.kind===26?6:1)&&sameCropSource(r,actor));
     if(!current()&&!pending())throw Error('Animal crop preparation lacks its current native source');
     return Object.freeze({reference:r,isCurrent:current,isPrepared:()=>current()||pending(),
+      isRevoked(){
+        const record=actor?.revoked,proof=record?.cropBinding;
+        return !closed&&clock?.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch&&
+          proof?.reference.kind===27&&record.revokedSequence>proof.assignmentSequence&&
+          sameNativeAnimalCropReference(proof.preparedReference,r);
+      },
       get routeRecord(){return current()?(r.kind===26?actor.current:actor.current.cropStrikeRecord):null;},
       get executionEpoch(){return current()?actor.current.cropBinding.reference.worldBoundary.effectiveTime:null;},
       get executionEnd(){return current()?actor.current.cropBinding.reference.endTime:null;}});

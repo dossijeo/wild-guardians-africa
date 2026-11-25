@@ -1145,6 +1145,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           b.ticket>=r.worldBoundary.ticket&&b.effectiveTime>=r.worldBoundary.effectiveTime;
         if(!worldBoundaryRequired||!routeControl?.status().clock||!covers(w)||!preparing&&!covers(nativeWorldBoundary)||
            !(packet.metadata.clock?.safeUntil>=r.worldBoundary.effectiveTime))throw Error('Animal crop clock exceeds its declared world');
+        const registered=clockBindings.get(`${binding.id}:${binding.byteOffset}`);
+        const prior=registered?.acquiredCropLease;
+        if(!preparing&&prior?.isRevoked()&&sameNativeAnimalCropReference(prior.reference,r)){
+          const error=Error('The acquired crop strike was revoked before this frame arrived');
+          error.code='native-route-admission-obsolete';throw error;
+        }
         const motionRecord=admitMotion(original,'admitAnimalCrop',r);
         if(preparing&&!motionRecord.isCurrent()&&!sameNativeAnimalCropReference(r,packet.metadata.nativeAnimalCropTemplate)||
            !preparing&&!motionRecord.isCurrent())throw Error('Animal crop clock lacks its prepared or acquired owner');
@@ -1624,7 +1630,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if([nativeRoute,nativeGate,nativeSuspended,nativeResume,nativeStart,nativeAction,nativeConsequence,nativeSettlement,nativeHome,nativeAnimalCrop,nativeFarmArrival,nativeStroll,nativeInitialIdleBody,nativeIdleCycle].filter(Boolean).length>1)throw Error('Conflicting native clock references');
         if(nativeAction&&(message.binding.semantic!=='relative'||message.binding.epoch!==nativeAction.startTime||message.binding.resourceEnd!==undefined))throw Error('Invalid native action phase clock');
         clockBindings.set(key, { ...message.binding, ...(restored??{}), ...(solid?{...solid,barrierOrigin}:{}), ...(stopped?stopped:{}), ...(nativeRoute?{nativeRoute}:{}),...(nativeGate?{nativeGate}:{}),...(nativeSuspended?{nativeSuspended}:{}),...(nativeResume?{nativeResume}:{}),...(nativeStart?{nativeStart}:{}),...(nativeAction?{nativeAction}:{}),...(nativeConsequence?{nativeConsequence}:{}),...(nativeStroll?{nativeStroll}:{}),...(nativeHome?{nativeHome}:{}),...(nativeAnimalCrop?{nativeAnimalCrop}:{}),...(nativeFarmArrival?{nativeFarmArrival}:{}),...(nativeSettlement?{nativeSettlement}:{}),...(nativeInitialIdleBody?{nativeInitialIdleBody}:{}),...(nativeIdleCycle?{nativeIdleCycle}:{}),
-          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction||nativeConsequence||nativeSettlement||nativeHome||nativeAnimalCrop||nativeFarmArrival||nativeStroll||nativeInitialIdleBody||nativeIdleCycle)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeAnimalCrop?'animal-crop':nativeFarmArrival?'farm-arrival':nativeStroll?'idle-stroll':nativeHome?'home':nativeConsequence?'consequence':nativeAction?'action':nativeInitialIdleBody?'initial-idle-body':nativeIdleCycle?'idle-cycle':nativeSettlement?'settlement':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction??nativeConsequence??nativeSettlement??nativeAnimalCrop??nativeFarmArrival??nativeHome??nativeStroll??nativeInitialIdleBody??nativeIdleCycle,message.binding.semantic,message.binding.epoch,...(message.binding.semantic==='idle-offset'?[message.binding.period]:[])])}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),...(stopped?{nativeClockKey:nativeStoppedClockKey(stopped)}:{}),...(prior?.stoppedGateProjection&&stopped&&nativeStoppedClockKey(prior)===nativeStoppedClockKey(stopped)?{stoppedGateProjection:prior.stoppedGateProjection}:{}),id: message.id });
+          ...((nativeRoute||nativeGate||nativeSuspended||nativeResume||nativeStart||nativeAction||nativeConsequence||nativeSettlement||nativeHome||nativeAnimalCrop||nativeFarmArrival||nativeStroll||nativeInitialIdleBody||nativeIdleCycle)?{nativeClockKey:JSON.stringify([nativeRoute?'route':nativeGate?'gate':nativeResume?'resume':nativeStart?'start':nativeAnimalCrop?'animal-crop':nativeFarmArrival?'farm-arrival':nativeStroll?'idle-stroll':nativeHome?'home':nativeConsequence?'consequence':nativeAction?'action':nativeInitialIdleBody?'initial-idle-body':nativeIdleCycle?'idle-cycle':nativeSettlement?'settlement':'suspended',nativeRoute??nativeGate??nativeSuspended??nativeResume??nativeStart??nativeAction??nativeConsequence??nativeSettlement??nativeAnimalCrop??nativeFarmArrival??nativeHome??nativeStroll??nativeInitialIdleBody??nativeIdleCycle,message.binding.semantic,message.binding.epoch,...(message.binding.semantic==='idle-offset'?[message.binding.period]:[])])}:{}), ...(prior?.acquiredCropLease&&prior.epoch===message.binding.epoch&&prior.semantic===message.binding.semantic&&sameNativeAnimalCropReference(prior.nativeAnimalCrop,nativeAnimalCrop)?{acquiredCropLease:prior.acquiredCropLease}:{}), ...(prior?.executionEpoch!==undefined&&JSON.stringify(prior.nativeGate)===JSON.stringify(nativeGate)&&prior.epoch===message.binding.epoch?{executionEpoch:prior.executionEpoch}:{}),...(stopped?{nativeClockKey:nativeStoppedClockKey(stopped)}:{}),...(prior?.stoppedGateProjection&&stopped&&nativeStoppedClockKey(prior)===nativeStoppedClockKey(stopped)?{stoppedGateProjection:prior.stoppedGateProjection}:{}),id: message.id });
         if (!clockBindingKeys.has(message.id)) clockBindingKeys.set(message.id, new Set());
         clockBindingKeys.get(message.id).add(key); break;
       }
@@ -1900,6 +1906,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                   Object.keys(message).some(k=>k!==cropField&&k.startsWith('native')&&Array.isArray(message[k])&&message[k].length))
                  throw Error('Animal crop release differs from its retained frame');
                routeControl.installAnimalCrop(boundary,binding);
+               if(ref.kind===27)for(const b of pending.admittedClockBindings){
+                 const registered=clockBindings.get(`${b.id}:${b.byteOffset}`);
+                 if(registered&&sameNativeAnimalCropReference(registered.nativeAnimalCrop,ref)&&
+                    sameNativeAnimalCropReference(b.nativeAnimalCrop,ref)&&b.motionRecord?.isCurrent())
+                   registered.acquiredCropLease=b.motionRecord;
+               }
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
              }
              if(hold.preparedFarmArrivalTemplate){

@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createRemoteWebGpuClient} from '../src/rendering/remote-webgpu-client.js';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
@@ -567,4 +568,23 @@ test('batch tickets distinguish expected scene attachment from ownership or mate
 test('an atomic publisher can validate only its exact compiled material set after attachment',async()=>{
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),renderer={backend:{isWebGPUBackend:true},compileAsync:async()=>{}},admission=createWebGpuPipelineAdmission({renderer,scene,camera}),root=new THREE.Group(),geometry=new THREE.BoxGeometry(),original=new THREE.MeshBasicMaterial(),candidate=new THREE.MeshBasicMaterial(),other=new THREE.MeshBasicMaterial(),mesh=new THREE.Mesh(geometry,original),untouched=new THREE.Mesh(geometry,original);root.add(mesh,untouched);scene.add(root);
  try{const ticket=await admission.prepareTicket(root,{materialAlternatives:[{mesh,material:candidate}]});assert.equal(ticket.valid(),true);assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);mesh.material=candidate;assert.equal(ticket.valid(),false);assert.equal(ticket.validAfterAttach(),false);assert.equal(ticket.validAfterAttach({materialsPublished:true}),true);mesh.material=other;assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);mesh.material=candidate;candidate.side=THREE.DoubleSide;assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);candidate.side=THREE.FrontSide;assert.equal(ticket.validAfterAttach({materialsPublished:true}),true);untouched.material=other;assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);untouched.material=original;const position=geometry.attributes.position;geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(position.count*2),2));assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);geometry.setAttribute('position',position);const parent=new THREE.Group();scene.add(parent);parent.add(root);assert.equal(ticket.validAfterAttach({materialsPublished:true}),false);}finally{admission.dispose();geometry.dispose();original.dispose();candidate.dispose();other.dispose();}
+});
+
+test('an encoded frame leaves the transport before admission compiles a later rig',async()=>{
+ const order=[],port={postMessage(m){order.push(m.type);}},scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera();
+ const client=createRemoteWebGpuClient({port,capabilities:{width:20,height:10,format:'rgba8unorm',resourceTransportVersion:1}});
+ const admission=createWebGpuPipelineAdmission({scene,camera,pendingFramePost:client.pendingFramePost,
+   renderer:{backend:{isWebGPUBackend:true},compileAsync(){order.push('compile');return Promise.resolve();}}});
+ const turn=()=>new Promise(resolve=>setImmediate(resolve));
+ let postedFrame=null;
+ try{
+  for(let i=0;i<8;i++)client.device.createBuffer({size:16,usage:72});
+  await turn();assert.equal(order.length,8);
+  const rig=admission.prepare(new THREE.Group());
+  client.beginFrame();postedFrame=client.endFrame();postedFrame.catch(()=>{});
+  await turn();assert.equal(order.includes('compile'),false,'transport credit still belongs to the encoded frame');
+  port.onmessage({data:{type:'resource-dispatched',transportSequence:1}});
+  await rig;assert.deepEqual(order.slice(-2),['frame','compile']);
+  assert.equal(client.pendingFramePost(),null);
+ }finally{admission.dispose();client.dispose();await postedFrame?.catch(()=>{});}
 });

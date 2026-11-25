@@ -40,6 +40,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    const ref=reference,epoch=ref.worldBoundary.effectiveTime,resourceEnd=ref.kind===26?nativeClockResourceEnd(epoch,ref.endTime):ref.endTime;
    const buffer=graphics.client.device.createBuffer({size:16,usage:72});graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
    cropGroup=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+   record.cropGroup=cropGroup;record.cropBuffer=buffer;
    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
   }
   const packet=crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,

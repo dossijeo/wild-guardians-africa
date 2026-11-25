@@ -32,7 +32,19 @@ El arnés ejecutó un subpaso por avance y detuvo el despacho tras recibir el pr
 
 Dos ensayos en NVIDIA bloquearon el preparador durante 550 ms con la marcha admitida. En cada ventana hubo 16 dibujos del mismo ticket y de una sola secuencia del Host. El reloj avanzó 0,50 s y el mayor intervalo entre esos dibujos fue de 33,50 ms a 30 Hz. Esta prueba cubre la continuidad durante el bloqueo. La revocación durante esa misma ventana queda pendiente.
 
-Los dos ensayos llegaron al golpe. Después, Draw recibió un paquete ordinario con el binding del ticket 27 desde la secuencia de control 11. La traza del segundo ensayo registra la misma época y la secuencia de control 13, con el dueño ya retirado. La admisión del paquete tardío provocó un error del Host y el drenaje quedó pendiente en esas corridas. [Ventanas, rechazo original y hashes](performance/native-attack-crops-qualification-20261125.json).
+Los dos ensayos llegaron al golpe. Después, Draw recibió un paquete ordinario con el binding de ataque del programa 27 desde la secuencia de control 11. La traza del segundo ensayo registra la misma época y la secuencia de control 13, con el dueño ya retirado. La admisión del paquete tardío provocó un error del Host y el drenaje quedó pendiente en esas corridas. [Ventanas, rechazo original y hashes](performance/native-attack-crops-qualification-20261125.json).
+
+## Orden de envío al terminar el golpe
+
+Three.js r180 recorre la escena y construye las listas y pipelines antes de esperar las promesas de compilación. Wild Guardians conserva la precedencia de un frame ordinario que ya está codificado. El preparador espera su `postMessage` con el transporte y los créditos existentes antes de comenzar otro lote de pipelines. La confirmación de Draw y sus fences siguen el flujo habitual. [Implementación de `compileAsync`](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/Renderer.js#L797-L910).
+
+Draw conserva la prueba de retirada en el binding físico que adquirió el ataque. Si llega tarde ese mismo binding, el Host rechaza el paquete mediante la vía de obsolescencia existente y admite después los paquetes autorizados. Otra copia en un buffer que nunca adquirió la acción sigue fallando. Los controles reproducen el envío adelantado por la compilación y el cierre del Host por un paquete tardío en la base anterior.
+
+Una captura instrumentada identificó la solicitud que sigue al retiro del ataque. `prepareLateHistoricalMotion` preparó en la misma raíz 12 variantes de cuatro familias de material. La parte síncrona de una llamada a `compileAsync` duró 504,28 ms. Queda comprobar en qué momento se necesita esa preparación histórica y qué variantes puede reutilizar.
+
+Con el orden corregido, el frame 245 dibujó el golpe a 402,05 s con el binding de ataque ya retirado. El preparador inició el envío 1,20 ms después de cerrar el frame. La compilación especulativa empezó 12,40 ms después del envío y seguía ocupando el preparador al dibujar el golpe. El consumidor confirmó el drenaje y conservó los 78 buffers comparables. En ese borde se midieron 133,30 ms y tres oportunidades rechazadas por obsolescencia, frente a los 633,70 ms y 18 oportunidades del ensayo anterior. La espera previa al cierre del nuevo frame y la cadencia a 60 Hz siguen abiertas. [Captura del golpe y marcas de orden](performance/native-attack-crops-qualification-20261125.json).
+
+Esta selección pasó 343 pruebas y el build en 57,51 s, con los mismos binarios WASM. El perfil ordinario sigue pendiente del segundo objetivo.
 
 ## Regresión
 

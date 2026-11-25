@@ -66,8 +66,8 @@ function withMaterialAlternatives(alternatives,fn){
 // Serializes renderer compilation setup while allowing the draw loop to run
 // during asynchronous pipeline creation. The owner must keep objects hidden
 // until the returned promise resolves.
-export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false,sharedSceneLighting=true}){
- if(!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||typeof sharedSceneLighting!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
+export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false,sharedSceneLighting=true,pendingFramePost=null}){
+ if(pendingFramePost!==null&&typeof pendingFramePost!=='function'||!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||typeof sharedSceneLighting!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
  const lights=new Map();let lightsRevision=0,structuralRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
@@ -120,6 +120,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
   },item.reject).finally(()=>{active=false;pump();});
  }
  async function executePlan(item){
+  // compileAsync constructs render lists and shader graphs synchronously
+  // before yielding. The already encoded frame has the earlier transport
+  // position, including its resource credits and captured image uploads.
+  const post=pendingFramePost?.();
+  if(post)await post;
+  if(closed||item.version!==generation||item.signal?.aborted)throw new DOMException('Pipeline admission cancelled','AbortError');
   if(item.backgroundNode)return executeBackground(item);
   // Explicit passes (e.g. Hi-Z reduction) do not recursively prepare world
   // capture passes. World objects become publishable only after every active

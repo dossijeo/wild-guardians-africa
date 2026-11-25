@@ -39,6 +39,7 @@ try{
  }
  assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId==='attack-661').length,1);
  assert.equal(state.raid.animals[0].hitsRemaining,1);assert.deepEqual(f.faults,[]);
+ await checkLateStrikePacket(f,commits.at(-1),f.records.at(-1));
  console.log(JSON.stringify({frames,hit:'attack-661',faults:f.faults}));
 }catch(e){console.error(f.faults,f.authority.nativeIntentProductionStatus(),f.host.inspect().nativeRouteFrame);throw e;}finally{await f.close();rig.close();}
 
@@ -66,4 +67,29 @@ for(const contention of ['historical','locomotion']){
    assert.deepEqual(f.faults,[]);
   }finally{await f.close();rig.close();}
  });
+}
+
+async function checkLateStrikePacket(f,proof,record){
+ const {reference,preparedReference}=proof,metadata={nativeWorldBoundary:reference.worldBoundary,
+   clock:{...f.clock,elapsed:reference.endTime,safeUntil:reference.endTime,paused:true,segments:[]}};
+ function draw(bindGroup){
+  f.client.beginFrame(metadata);
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
+   {view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.setPipeline(f.pipeline);pass.setBindGroup(0,bindGroup);pass.draw(3);pass.end();
+  f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
+ }
+ const count=f.gpu.submitted.length;
+ const selector={byteOffset:0,semantic:'relative',epoch:preparedReference.worldBoundary.effectiveTime,
+   resourceEnd:preparedReference.endTime,nativeAnimalCrop:preparedReference};
+ f.client.registerClockBinding(record.cropBuffer,selector);
+ await assert.rejects(draw(record.cropGroup),e=>e.code==='remote-frame-native-route-obsolete');
+ await f.present();assert.equal(f.gpu.submitted.length,count);assert.deepEqual(f.errors,[]);
+ const clean=f.frame(1,metadata);await f.present();await clean;
+ assert(f.gpu.submitted.length>count);
+ // A copied reference on a different buffer never received this assignment.
+ const alien=f.client.device.createBuffer({size:16,usage:72});
+ f.client.registerClockBinding(alien,selector);
+ const forged=f.client.device.createBindGroup({entries:[{binding:0,resource:{buffer:alien}}]});
+ await assert.rejects(draw(forged),/lacks its current native source/);
 }

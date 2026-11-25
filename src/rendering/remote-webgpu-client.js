@@ -166,6 +166,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       releaseReferences(retained);
     });
     outbound.catch(fail);
+    return outbound;
   }
   function request(message) {
     const requestId = id('request');
@@ -449,11 +450,14 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       metrics.framesPublished++;
       const promise=new Promise((resolve, reject) => {
         pendingFrame = { sequence: packet.sequence, resolve, reject, retained, timing };
-        send({ type: 'frame', packet });
+        pendingFrame.post = send({ type: 'frame', packet });
         timing.endFrameReturnedAt = absoluteNow();
       });
       pendingFrame.promise=promise;return promise;
     },
+    // Covers the ordered transport prefix through postMessage. Draw ACK and
+    // execution are independent and may require further producer activity.
+    pendingFramePost:()=>pendingFrame?.timing.postCompletedAt===undefined?pendingFrame?.post??null:null,
     whenFrameSettled:()=>pendingFrame?.promise??Promise.resolve(),
     async prepareNativeWorldFrame(metadata,{signal}={}){
       if(metadata?.nativeBarrierAdditionTemplate&&capabilities.nativeBarrierAdditionVersion!==1)throw Error('Draw owner does not support native solid additions');
