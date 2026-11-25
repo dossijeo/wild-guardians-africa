@@ -75,11 +75,15 @@ segunda entrega comprueba los dos asientos y el cuerpo durante la segunda tarea.
 Home se ejecuta en un recorrido separado con `QA_NATIVE_BIRTH_FOLLOW_HOME`.
 El recorrido de cancelación en CPU usa ambos Workers y el Host de dibujo.
 Retiene READY de Carry, pausa y entrega la respuesta tardía. El cultivo y el
-saldo se conservan y la caja sigue sin aparecer hasta reanudar. La adquisición siguiente usa el mismo
-cuerpo y suma exactamente un abono. Al quitar la guarda de pausa, el primer
-READY adquiere y la prueba falla. Los [TODO de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
-conservan puertas y tráfico, el contraste físico de la cancelación y la
+saldo se conservan y la caja sigue sin aparecer hasta reanudar. La adquisición
+siguiente usa el mismo cuerpo y suma exactamente un abono. Al quitar la guarda
+de pausa, el primer READY adquiere y la prueba falla. NVIDIA confirmó cero
+dibujos del ticket cancelado y la entrega desde su sustituto. La auditoría
+detectó 16 módulos WGSL recreados en el reintento, con 587 referencias residentes
+intactas. Los [TODO de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
+conservan puertas, tráfico, reutilización y drenaje tras el reintento, y
 recuperación. [Control de cancelación](../../tests/native-production-lifecycle.test.js) ·
+[Contraste físico de Carry cancelado](native-harvest-paused-carry-20261125.md) ·
 [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 
 ## Esquema común para las demás intenciones

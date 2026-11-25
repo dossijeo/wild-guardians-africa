@@ -1,0 +1,213 @@
+{
+  "source": "717da415be33486cf2aa5cf949a14b9da2b751ea",
+  "auditor": "tools/guardian/audit_native_farm_birth_world_owner.mjs",
+  "scenario": "cancel-before-task",
+  "profile": "youngMale",
+  "capture": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 115.4699999988079
+      }
+    },
+    "browser": "158.0.4370.33",
+    "viewport": [
+      640,
+      360
+    ],
+    "displayHz": 30,
+    "traceLoss": false,
+    "traceSha256": "211da4304309194b92e13ef103d566754a22b810fde4a07a509ff19c96467255",
+    "rawFailureSha256": "99b6d98090001594254b5e7f1704bcad335a21dfe954a20d5f51d091b7b07e96"
+  },
+  "carry": {
+    "actorId": 1000001,
+    "bodyId": 2,
+    "crateId": 1000003,
+    "preparedTicket": 12,
+    "cancelRequest": 7,
+    "pausedAt": 48.16000000000206,
+    "abortToLateReadyMs": 11.9248046875,
+    "cancelledDraws": 0,
+    "replacementRequest": 8,
+    "replacementPreparedTicket": 13,
+    "acquiredTicket": 14,
+    "hardwareDraws": 94
+  },
+  "settlement": {
+    "ticket": 18,
+    "hardwareDraws": 71,
+    "bodyId": 2,
+    "entry": "deliver:crate-1000003",
+    "income": {
+      "n": "14",
+      "d": "1"
+    },
+    "balance": {
+      "n": "100000",
+      "d": "1"
+    },
+    "ledgerAdditions": [
+      "deliver:crate-1000003"
+    ]
+  },
+  "graphics": {
+    "retainedReferences": 587,
+    "invariantReferencesRetired": 0,
+    "equalSourceCreations": [
+      {
+        "previous": "ShaderModule:4147",
+        "repeated": "ShaderModule:4406",
+        "geometry": 216,
+        "label": "vertex_BakedMaterial.001",
+        "firstIndex": 3444,
+        "repeatedIndex": 3686
+      },
+      {
+        "previous": "ShaderModule:4148",
+        "repeated": "ShaderModule:4407",
+        "geometry": 216,
+        "label": "fragment_BakedMaterial.001",
+        "firstIndex": 3445,
+        "repeatedIndex": 3687
+      },
+      {
+        "previous": "ShaderModule:4161",
+        "repeated": "ShaderModule:4420",
+        "geometry": 217,
+        "label": "vertex_Kofi head continuous skin shading",
+        "firstIndex": 3457,
+        "repeatedIndex": 3699
+      },
+      {
+        "previous": "ShaderModule:4162",
+        "repeated": "ShaderModule:4421",
+        "geometry": 217,
+        "label": "fragment_Kofi head continuous skin shading",
+        "firstIndex": 3458,
+        "repeatedIndex": 3700
+      },
+      {
+        "previous": "ShaderModule:4175",
+        "repeated": "ShaderModule:4434",
+        "geometry": 215,
+        "label": "vertex_Actor eyelid original fur",
+        "firstIndex": 3470,
+        "repeatedIndex": 3712
+      },
+      {
+        "previous": "ShaderModule:4176",
+        "repeated": "ShaderModule:4435",
+        "geometry": 215,
+        "label": "fragment_Actor eyelid original fur",
+        "firstIndex": 3471,
+        "repeatedIndex": 3713
+      },
+      {
+        "previous": "ShaderModule:4189",
+        "repeated": "ShaderModule:4448",
+        "geometry": 218,
+        "label": "vertex_Worker oral tissue",
+        "firstIndex": 3483,
+        "repeatedIndex": 3725
+      },
+      {
+        "previous": "ShaderModule:4190",
+        "repeated": "ShaderModule:4449",
+        "geometry": 218,
+        "label": "fragment_Worker oral tissue",
+        "firstIndex": 3484,
+        "repeatedIndex": 3726
+      },
+      {
+        "previous": "ShaderModule:4202",
+        "repeated": "ShaderModule:4461",
+        "geometry": 191,
+        "label": "vertex_Acero mate",
+        "firstIndex": 3495,
+        "repeatedIndex": 3737
+      },
+      {
+        "previous": "ShaderModule:4203",
+        "repeated": "ShaderModule:4462",
+        "geometry": 191,
+        "label": "fragment_Acero mate",
+        "firstIndex": 3496,
+        "repeatedIndex": 3738
+      },
+      {
+        "previous": "ShaderModule:4279",
+        "repeated": "ShaderModule:4538",
+        "geometry": 216,
+        "label": "vertex_ShadowMaterial",
+        "firstIndex": 3571,
+        "repeatedIndex": 3813
+      },
+      {
+        "previous": "ShaderModule:4280",
+        "repeated": "ShaderModule:4539",
+        "geometry": 216,
+        "label": "fragment_ShadowMaterial",
+        "firstIndex": 3572,
+        "repeatedIndex": 3814
+      },
+      {
+        "previous": "ShaderModule:4303",
+        "repeated": "ShaderModule:4562",
+        "geometry": 215,
+        "label": "vertex_ShadowMaterial",
+        "firstIndex": 3593,
+        "repeatedIndex": 3835
+      },
+      {
+        "previous": "ShaderModule:4315",
+        "repeated": "ShaderModule:4574",
+        "geometry": 218,
+        "label": "vertex_ShadowMaterial",
+        "firstIndex": 3604,
+        "repeatedIndex": 3846
+      },
+      {
+        "previous": "ShaderModule:4326",
+        "repeated": "ShaderModule:4585",
+        "geometry": 191,
+        "label": "vertex_ShadowMaterial",
+        "firstIndex": 3614,
+        "repeatedIndex": 3856
+      },
+      {
+        "previous": "ShaderModule:4327",
+        "repeated": "ShaderModule:4586",
+        "geometry": 191,
+        "label": "fragment_ShadowMaterial",
+        "firstIndex": 3615,
+        "repeatedIndex": 3857
+      }
+    ],
+    "browserErrors": 0,
+    "resourceErrors": 0,
+    "drawErrors": 0
+  },
+  "cadence": {
+    "samples": 1680,
+    "maxGapMs": 42.35498046875,
+    "intervalsOver16_667Ms": 1679
+  },
+  "acceptance": {
+    "economicAndPhysicalCancellation": true,
+    "residentReferences": true,
+    "shaderModulesReused": false,
+    "completedAudit": false,
+    "drainCertified": false,
+    "c4": false
+  }
+}

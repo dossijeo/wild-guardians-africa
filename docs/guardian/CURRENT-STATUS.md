@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Harvest conserva el cultivo y el saldo al abortar Carry durante la pausa. NVIDIA registró cero dibujos del ticket cancelado, el mismo cuerpo en el reintento y un abono de 14 monedas. La auditoría conserva 587 referencias residentes y detecta 16 módulos WGSL idénticos recreados. Quedan reutilización, drenaje de esta historia y C4. [Prueba y recibo](native-harvest-paused-carry-20261125.md).
+
 Settlement17 entregó en NVIDIA la caja de Carry tras cruzar el vano y registró un solo abono de 14 monedas. Home19 retiró al trabajador después del cruce y dibujó el portón original durante otros 681,5 ms. Se conservaron 843 buffers en la entrega y 791 en Home, con siete del portón en ambos casos y cero errores de drenaje. Home también completó la retirada con el portón fuera del encuadre ampliado y conservó su reloj. Quedan las retiradas de paso que cambian el motor, los dueños del reloj retirados y C4. [Validación de Settlement17 y Home19](native-terminal-gate-retention-20261121.md).
 
 Farm cruza el vano de una puerta de zarzas restaurada en NVIDIA. El planificador usa el conector del vano si la ruta directa invade la hoja abierta. La autoridad mantiene el barrido temporal y una reserva de paso. El cuerpo, las 32 geometrías del trabajador y la malla de la puerta se conservaron durante los 142 dibujos observados. El mayor intervalo fue de 36,0 ms a 30 Hz. [Cruce, límites y recibo](native-farm-gate-aperture-20261121.md).
