@@ -2187,5 +2187,159 @@
       "sameVersion": 1335
     },
     "drained": true
+  },
+  "directCenterColorExpansion": {
+    "testedBase": "f3b0a86b5341aff55e5cf34b25719bbb1313f2cc",
+    "productDelta": {
+      "path": ".cache/c4-first-center/center-colors.patch",
+      "sha256": "d068eaf98a402469b04778d1c582ec86a979aaa3d33a1149ecc2ca8af65b3860"
+    },
+    "cpu": {
+      "paired": {
+        "path": ".cache/c4-first-center/paired.json",
+        "sha256": "db4e561d045804cb70c4bbc256a2b5f3dbf92e614ef5efb1b78e1668ed0d9267"
+      },
+      "median": {
+        "path": ".cache/c4-first-center/medians.json",
+        "sha256": "4372546ffa72f3068902e5b11567689cd22e4b93d4a5977a9a82e3aba972050d"
+      },
+      "branchTests": {
+        "path": ".cache/c4-first-center/branch-impact.tap",
+        "sha256": "de763973b97d2d8856bf918b9a711f02bb7ec1edcb3d20764ac3dc5847585369"
+      },
+      "branchPassed": 119
+    },
+    "baseline": {
+      "observedDraw": 418,
+      "intervalMs": 166.7998046875,
+      "damageMs": 29.4,
+      "previewMs": 24.399,
+      "captureMs": 28.299,
+      "cuts": {
+        "path": ".cache/c4-last-center/gated-final-running-60hz.handoff-418.json",
+        "sha256": "1b39149b522e4349bbe464a594897963f5b94852fb81400f720b6a5dea98e553"
+      }
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/c4-first-center/gated-first-colors-focal-60hz.json",
+        "sha256": "d224287f19e036c107f594b22ecb817f4298005e8ca33423a478f570b56265a1"
+      },
+      "cuts": {
+        "path": ".cache/c4-first-center/gated-first-colors-focal-60hz.owner-cut.json",
+        "sha256": "e730f4295e88147eae032f29891f2d8c10adecfb0771385075b4ea22a47e0da4"
+      },
+      "trace": {
+        "path": ".cache/c4-first-center/gated-first-colors-focal-60hz.trace.json.gz",
+        "sha256": "6917ca8e6860778a30477ae28274fa2412a2919da816922b6257f048fd678dc8",
+        "dataLossOccurred": false
+      },
+      "display": {
+        "before": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "temporary": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "restored": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "viewport": [
+          640,
+          480
+        ],
+        "applyReceipt": {
+          "path": ".cache/native-60hz-gated-first-colors-focal-60hz-apply-receipt.json",
+          "sha256": "0149e0f9fc225e4fd6a643e774d52b600c9c66888553b1c7ad180a7e03e2ffa8"
+        },
+        "restoreReceipt": {
+          "path": ".cache/native-60hz-gated-first-colors-focal-60hz-restore-receipt.json",
+          "sha256": "0c19b650d8c1b3afe25fbe09ff9b81ba7aceb1eff0d06347ac1ceac048cbb17e"
+        }
+      },
+      "hit": {
+        "id": "event-29211",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29209",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 47.95000000000146,
+          "animal": {
+            "x": -18.67253303527832,
+            "z": -0.43426570296287537,
+            "heading": -0.07756698100668953
+          },
+          "target": {
+            "x": -18.954998779296876,
+            "z": 3.2,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 47.95000000000146
+      },
+      "damageMs": 18.2,
+      "centerWorkerPreparationMs": 762.099,
+      "firstSubmitted": {
+        "at": 1795639399812.7,
+        "sequence": 406,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "e707eb34-9f06-441e-a76e-22a5ac37c06e/1",
+          "nativeSession": 1,
+          "ticket": 13,
+          "effectiveTime": 46.40000000000133
+        },
+        "intervalMs": 168.2998046875,
+        "drawMs": 2.400146484375,
+        "replay": false,
+        "clockElapsed": 48.10000000000147,
+        "safeUntil": 48.10000000000147,
+        "cameraVersion": null
+      },
+      "postMs": 154.2998046875,
+      "admittedMs": 168.099853515625,
+      "resourceWaitMs": 0,
+      "staleBindingOpportunities": 9,
+      "mixedDraws": 4,
+      "homeEnd": 22.118894781562048,
+      "animalAcquired": 21.49999999999995,
+      "damagedCenterSelectable": true,
+      "reuse": {
+        "compared": 1335,
+        "sameReference": 1335,
+        "sameVersion": 1335
+      },
+      "drained": true
+    },
+    "censoredRun": {
+      "receipt": {
+        "path": ".cache/c4-first-center/gated-first-colors-60hz.failure.json",
+        "sha256": "ba7ff6d2ff9605aab9c7e516093f57a30020e17f79c4507565bbf42f9a5ac485"
+      },
+      "homeEnd": 21.796398423322557,
+      "animalAcquired": 21.999999999999957,
+      "stop": "concurrent native clocks oracle before center impact"
+    }
   }
 }

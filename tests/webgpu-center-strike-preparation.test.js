@@ -71,3 +71,29 @@ test('the prepared center follows the original geometry generation and restores 
   assert.deepEqual(vertices(current),vertices(expected));assert.notDeepEqual(vertices(current),vertices(template));
  }finally{current.dispose();expected.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
+
+test('confirmed center damage expands the current RGBA8 colors without per-component accessor dispatch',async t=>{
+ const geometry=new THREE.BoxGeometry(),mesh=new THREE.Mesh(geometry,new MeshStandardNodeMaterial()),scene=new THREE.Group();
+ scene.add(mesh);
+ const gltf={scene},building={seed:4,roofCap:{heightRatio:.5}},renderer={library:{}};
+ const prepared=await destruction.prepareWebGpuCenterDestructionData(gltf,building,{workerAvailable:false});
+ const n=geometry.attributes.position.count;
+ const colors=new THREE.BufferAttribute(Uint8Array.from({length:n*4},(_,i)=>i*17%256),4,true);
+ const original=new THREE.InterleavedBufferAttribute(new THREE.InterleavedBuffer(new Float32Array(n*5).fill(.375),5),3,1);
+ geometry.setAttribute('color',colors);
+ geometry.setAttribute('wgOriginalColor',original);
+ const reads=t.mock.method(colors,'getComponent');
+ const template=destruction.createWebGpuCenterDestructionTemplate({gltf,building,renderer,prepared});
+ try{
+  const item=template.instantiate(0),attributes=item.group.children[0].geometry.attributes;
+  item.update({hp:580,maxHp:600,status:'intact'},1);
+  assert(prepared.data.indices.some(i=>i>=n),'roof vertices require the white fallback');
+  assert.equal(reads.mock.callCount(),0,'normalized RGBA8 should use its contiguous array');
+  for(const [name,source] of [['color',colors],['wgOriginalColor',original]]){
+   const values=attributes[name].array;
+   assert(values instanceof Float32Array);
+   for(const [i,index] of prepared.data.indices.entries())for(let j=0;j<4;j++)
+    assert.equal(values[i*4+j],index<n&&j<source.itemSize?Math.fround(source.getComponent(index,j)):1);
+  }
+ }finally{template.dispose();geometry.dispose();mesh.material.dispose();}
+});

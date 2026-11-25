@@ -33,13 +33,39 @@ export async function prepareWebGpuCenterDestructionData(gltf,building,options){
  return {data,matches};
 }
 
+function expandCenterColor(original,indices){
+ const values=new Float32Array(indices.length*4);
+ // Progressive centers use contiguous normalized RGBA8. Keep the Float32
+ // shader input and read the current colors, including after a material swap.
+ const rgba=original.array;
+ if(original.isBufferAttribute&&original.normalized&&original.itemSize===4&&rgba instanceof Uint8Array){
+  for(let i=0;i<indices.length;i++){
+   const src=indices[i]*4,dst=i*4;
+   if(src>=rgba.length){values.fill(1,dst,dst+4);continue;}
+   values[dst]=rgba[src]/255;
+   values[dst+1]=rgba[src+1]/255;
+   values[dst+2]=rgba[src+2]/255;
+   values[dst+3]=rgba[src+3]/255;
+  }
+ }else{
+  for(let i=0;i<indices.length;i++){
+   const index=indices[i];
+   for(let j=0;j<4;j++)values[i*4+j]=index<original.count&&j<original.itemSize?original.getComponent(index,j):1;
+  }
+ }
+ return new THREE.BufferAttribute(values,4);
+}
+
 export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,softDepth=null,prepared=null}={}){
  if(!gltf?.scene||!building||!renderer?.library)throw TypeError('Invalid center destruction input');
  const source=centerMesh(gltf),src=source.geometry;
  const kernel=prepared?.matches(source,building)?createNativeDestruction(building,null,prepared.data):createNativeDestruction(building,copyCenterInput(src));
  const geometry=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(kernel.vertices,12);
  for(const [name,size,offset] of [['position',3,0],['normal',3,3],['uv',2,6],['wgAnchor',3,8],['wgSeed',1,11]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
- for(const name of ['color','wgOriginalColor']){const original=src.getAttribute(name);if(!original)continue;const values=new Float32Array(kernel.indices.length*4);for(let i=0;i<kernel.indices.length;i++){const index=kernel.indices[i];for(let j=0;j<4;j++)values[i*4+j]=index<original.count&&j<original.itemSize?original.getComponent(index,j):1;}geometry.setAttribute(name,new THREE.BufferAttribute(values,4));}
+ for(const name of ['color','wgOriginalColor']){
+  const original=src.getAttribute(name);
+  if(original)geometry.setAttribute(name,expandCenterColor(original,kernel.indices));
+ }
  geometry.computeBoundingSphere();const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
  const ashGeometry=new THREE.BufferGeometry(),ashBuffer=new THREE.InterleavedBuffer(kernel.ash,12);ashGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(ashBuffer,3,0));ashGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(ashBuffer,3,3));ashGeometry.computeBoundingSphere();const ashMaterial=new THREE.MeshStandardMaterial({color:0x443b32,roughness:1,side:THREE.DoubleSide});
  let disposed=false;const instances=new Set();

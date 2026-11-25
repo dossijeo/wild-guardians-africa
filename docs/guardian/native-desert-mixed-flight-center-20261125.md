@@ -54,6 +54,14 @@ En NVIDIA a 60 Hz, los ocho estados de color y sombra de Running ya existían al
 
 El recorrido volvió a dejar al centro en 520 HP y al trabajador en Idle. Se conservaron las 1.335 referencias y versiones de buffer comparables y el drenaje cerró sin errores. El primer impacto alcanzó 166,80 ms y la ausencia tras Retreat, 133,30 ms. De los 4.784 intervalos guardados, 2.652 superaron 16,667 ms, incluido el jitter de temporización. La captura usó 640 × 480, conservó la traza completa y restauró el modo 4K/30 Hz. C4 sigue abierto. [Recibo del contraste](performance/native-desert-mixed-flight-center-20261125.json).
 
+### Colores del centro al recibir el primer golpe
+
+El daño confirmado copia los colores RGBA8 normalizados y contiguos directamente a los mismos cuatro componentes Float32 que recibe el shader. Lee el color vigente, conserva el relleno blanco de los vértices nuevos del techo y utiliza los accesores de Three para otros formatos. La plantilla mantiene la misma geometría preparada y el mismo número y tamaño de buffers. La conversión reproduce la división por 255 de Three r180 y sigue ejecutándose cuando llega el HP confirmado. [Conversión de Three](https://github.com/mrdoob/three.js/blob/r180/src/math/MathUtils.js#L386-L405).
+
+Cuatro procesos fríos por variante, alternados, midieron la plantilla de Mapungubwe con su Worker y ambos atributos de color reales. La mediana de creación de la plantilla bajó de 36,30 a 21,56 ms y la de la operación completa de daño de 44,99 a 30,02 ms. El control comprueba los componentes, la ceniza y los buffers entregados. Pasaron 119 pruebas dirigidas y el build.
+
+En NVIDIA a 60 Hz, el primer impacto dejó el centro seleccionable a 580 HP y conservó las 1.335 referencias y versiones comparables. `assets.damage` bajó de 29,40 a 18,20 ms. La captura del reemplazo ocupó 34,60 ms y el preview 22,30 ms. El intervalo completo fue de 168,30 ms frente a 166,80 ms, con nueve oportunidades rechazadas por obsolescencia y cero espera de recursos. El arnés terminó después del primer golpe y drenó. Una pasada previa se había detenido antes del impacto, cuando Home terminó a 21,796 s y el corredor del animal adquirió a 22 s. El ensayo focal comprobó el solapamiento cuando ambos programas coincidieron. Las dos pasadas restauraron la pantalla a 4K/30 Hz. [Comparaciones y límites](performance/native-desert-mixed-flight-center-20261125.json).
+
 ## Controles
 
 Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.

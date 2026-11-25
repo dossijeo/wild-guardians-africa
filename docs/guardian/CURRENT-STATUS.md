@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La conversión directa de RGBA8 del centro conserva los valores Float32 del shader. En el primer golpe de Desierto, el tramo de daño bajó de 29,40 a 18,20 ms en NVIDIA a 60 Hz. El intervalo completo quedó en 168,30 ms, frente a 166,80 ms de la referencia. C4 sigue abierto. [Tramos y recibo](native-desert-mixed-flight-center-20261125.md#colores-del-centro-al-recibir-el-primer-golpe).
+
 La calificación civil de caducidad de Escudo conserva Farm23 en marcha. En NVIDIA, kind4 retiró el polígono 10 a 10,526 s y mantuvo el cuerpo 1, la ruta y su reloj. El checkpoint 43 confirmó que Farm siguió avanzando y la cola drenó. El ensayo restauró un Escudo activo con 526 ms restantes. Quedan el menú ordinario, otras cohortes y C4. [Contraste y recibo](webgpu-shield.md#caducidad-durante-farm-en-marcha).
 
 Preparar las mallas de Running en el último Strike27 redujo el cuarto relevo de 364,80 a 116,80 ms a 60 Hz, con los ocho estados de color y sombra listos antes de READY. El primer golpe alcanzó 166,80 ms y la ausencia tras Retreat, 133,30 ms. C4 sigue abierto. [Contraste físico](native-desert-mixed-flight-center-20261125.md#mallas-de-carrera-en-el-último-golpe).
