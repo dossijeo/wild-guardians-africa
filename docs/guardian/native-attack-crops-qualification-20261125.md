@@ -1,6 +1,6 @@
 # Calificación de AttackCrops en Sabana
 
-La partida original `sabana712-d1-native-active-raid.json.gz` contiene el facóquero `animal-396` y su reserva sobre `plant-373`. La calificación cubre su aproximación, la pose terminal y el primer golpe. La autoridad admite este caso con un solo animal y los ocho trabajadores en casa sin cuerpo activo.
+La partida original `sabana712-d1-native-active-raid.json.gz` contiene el facóquero `animal-396` y su reserva sobre `plant-373`. La calificación cubre las aproximaciones y los golpes a dos cultivos. La autoridad admite este caso con un solo animal y los ocho trabajadores en casa sin cuerpo activo.
 
 ## Admisión y reloj
 
@@ -12,7 +12,7 @@ OpenRA combina movimiento hasta rango y orientación con un dueño de ataque que
 
 ## Alcance de la activación
 
-`qualifyAnimalCrop:true` se admite en el Worker de desarrollo para las pruebas. El perfil ordinario conserva su recorrido actual hasta que el cuerpo pueda adquirir el siguiente objetivo. En la calificación, un avance de dos subpasos que cruza el primer golpe alcanza la guarda de cohorte en el segundo. El control ordinario cruzó ese golpe y terminó otro avance de dos subpasos con cero propuestas 26 o 27.
+`qualifyAnimalCrop:true` se admite en el Worker de desarrollo para las pruebas. En la calificación inicial, un avance de dos subpasos que cruzaba el primer golpe alcanzaba la guarda de cohorte en el segundo. El control ordinario cruzó ese golpe y terminó otro avance de dos subpasos con cero propuestas 26 o 27.
 
 El control con Game, WASM, ambos puertos, el Host con cola determinista y el roster original validó ambos tickets con READY retenido. Verificó la continuidad de geometrías y atributos, la selección con la edad enviada y el rechazo de un cuerpo o época ajenos. Emitió un `AnimalLogicalHit` con `attack-661` y dejó un golpe disponible.
 
@@ -44,7 +44,7 @@ Una captura instrumentada identificó la solicitud que sigue al retiro del ataqu
 
 Con el orden corregido, el frame 245 dibujó el golpe a 402,05 s con el binding de ataque ya retirado. El preparador inició el envío 1,20 ms después de cerrar el frame. La compilación especulativa empezó 12,40 ms después del envío y seguía ocupando el preparador al dibujar el golpe. El consumidor confirmó el drenaje y conservó los 78 buffers comparables. En ese borde se midieron 133,30 ms y tres oportunidades rechazadas por obsolescencia, frente a los 633,70 ms y 18 oportunidades del ensayo anterior. La espera previa al cierre del nuevo frame y la cadencia a 60 Hz siguen abiertas. [Captura del golpe y marcas de orden](performance/native-attack-crops-qualification-20261125.json).
 
-Esta selección pasó 343 pruebas y el build en 57,51 s, con los mismos binarios WASM. El perfil ordinario sigue pendiente del segundo objetivo.
+Esta selección inicial pasó 343 pruebas y el build en 57,51 s, con los mismos binarios WASM.
 
 ## Preparación histórica por demanda
 
@@ -64,9 +64,23 @@ Cuando la publicación terminal retira el strike, el roster avisa a Surface. Sur
 
 Con los tres cambios, NVIDIA dibujó el paquete 242 a 402,20 s. La inspección del paquete 244 confirmó el mismo instante con el binding del ataque retirado. Se conservó el cuerpo 1, la raíz, las cuatro geometrías y los 78 buffers de atributos comparables en las cinco etapas. Hubo un solo golpe, cero pedidos y compilaciones de variantes históricas tras el retiro, y drenaje sin errores. Durante 550 ms de bloqueo del preparador, el Draw Worker presentó 17 veces, 16 con el mismo paquete retenido, y adelantó el reloj causal 0,50 s.
 
-El intervalo del relevo fue de 166,60 ms a 30 Hz, frente a 133,30 ms de la captura anterior con compilación especulativa. Hubo cuatro oportunidades que rechazaron el binding obsoleto. El preparador consumió 29,90 ms al avanzar la publicación y 22,90 ms al capturar la escena, incluidos 21,80 ms en el registro del renderer. En los 21,70 ms previos a la recepción, la traza del preparador contiene 35 pares de serialización y deserialización que ocupan 7,76 ms y siguen pendientes de atribuir a sus llamadas. El paquete se envió 0,20 ms después de cerrar la codificación. C4 y la continuación al segundo objetivo siguen abiertos. [Capturas, desglose y hashes](performance/native-attack-crops-qualification-20261125.json).
+El intervalo del relevo fue de 166,60 ms a 30 Hz, frente a 133,30 ms de la captura anterior con compilación especulativa. Hubo cuatro oportunidades que rechazaron el binding obsoleto. El preparador consumió 29,90 ms al avanzar la publicación y 22,90 ms al capturar la escena, incluidos 21,80 ms en el registro del renderer. En los 21,70 ms previos a la recepción, la traza del preparador contiene 35 pares de serialización y deserialización que ocupan 7,76 ms. El paquete se envió 0,20 ms después de cerrar la codificación. C4 sigue abierto. [Capturas, desglose y hashes](performance/native-attack-crops-qualification-20261125.json).
 
 La selección completa pasó 382 pruebas al ejecutarse sin el build concurrente. Durante la ejecución concurrente, una prueba de descargas de carrera observó el reintento de 5 ms antes de su primera comprobación y registró 381 aciertos. El build pasó en 52,34 s con los mismos binarios WASM.
+
+## Continuación al segundo cultivo
+
+Al terminar el primer golpe, la autoridad revoca su asignación y conserva un recibo de reposo con el cuerpo, la pose y la fase nativas. Game selecciona el siguiente cultivo en el mismo tick en que lo haría antes del cambio. El recibo limita la nueva solicitud a ese cuerpo y pose. El Host comprueba que la solicitud pendiente corresponde al golpe revocado y la marcha empieza tras la adquisición de sus recursos. El ejecutor de Game conserva las reglas de reserva y daño. DetourCrowd mantiene el agente al retirar un destino y procesa la nueva solicitud desde su posición actual. OpenRA comprueba el rango y la orientación antes de delegar el disparo al dueño de la acción. [DetourCrowd 1.6.0](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L568-L625) · [OpenRA Attack](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Activities/Attack.cs#L172-L234).
+
+La segunda selección mantiene el límite de daño del tutorial y espera si entra un escudo. Los controles rechazan un ticket terminal falsificado, una pose ajena y el READY cancelado. El positivo conectado adquiere cuatro tickets sobre el cuerpo 1 y confirma un golpe a cada cultivo. Tras el segundo golpe quedan cero golpes disponibles. La retirada a la salida y el perfil ordinario siguen pendientes.
+
+La primera captura del segundo objetivo confirmó su selección y la pose original. Surface llegó a la publicación 644 y el reproductor histórico abrió el intervalo siguiente antes de que la preparación nativa pudiera tomar el actor. La entrada a la preparación conserva el veto del roster y pide al pump que confirme las publicaciones sin abrir otro tramo histórico. Un tramo que ya tiene dueño termina y confirma su frontera antes del relevo. Cancelar la solicitud libera la exclusión sin consumir READY ni GO.
+
+NVIDIA completó los cuatro READY y GO con tickets adquiridos 2, 4, 6 y 8. Cada programa empezó a edad cero sobre el cuerpo 1. `attack-661` destruyó `plant-373` y `attack-665` destruyó `plant-337`, con un evento de daño por cultivo. Se conservaron la raíz, las cuatro geometrías y los 78 buffers comparables en siete etapas. El fotograma 298 mostró el tiempo del segundo golpe con el binding retirado y el cierre confirmó el drenaje sin errores. Con el preparador bloqueado 550,10 ms, Draw presentó 17 veces y adelantó 0,467 s el reloj del paquete retenido.
+
+Ambos relevos registraron 133,40 ms entre inicios de dibujo a 30 Hz y tres oportunidades rechazaron el binding obsoleto en cada uno. El avance de la publicación consumió 38,30 y 23,70 ms, incluidos 18,14 y 12,47 ms de decodificación del historial, respectivamente. El registro del renderer ocupó otros 30,90 y 19,60 ms. El tercer callback del primer relevo llegó antes del envío. En el segundo llegó 0,70 ms antes de terminar la admisión, y el dibujo esperó el siguiente callback. Las comprobaciones de recursos no registraron espera en ninguno de los dos casos. La comparación a 60 Hz sigue pendiente. [Recibo doble y traza](performance/native-attack-crops-qualification-20261125.json).
+
+Pasaron 415 pruebas de la selección final, con cinco omisiones del perfil experimental y cero fallos. Tres pruebas de contención de incursión fallaron igual en la base y el candidato en el contraste separado. El build de producto pasó en 49,00 s. Los dos WASM conservaron las firmas previas y añadieron dos funciones para acreditar el reposo y preparar el siguiente cultivo. El runtime pthread invocó ambas funciones y publicó un chunk desde memoria compartida.
 
 ## Regresión
 

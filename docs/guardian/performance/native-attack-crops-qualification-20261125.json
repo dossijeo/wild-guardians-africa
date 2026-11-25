@@ -583,5 +583,217 @@
       "buildSeconds": 52.34,
       "binariesChanged": false
     }
+  },
+  "successorQualification": {
+    "mode": "DEV qualification across two crops, NVIDIA, physical 30 Hz",
+    "preCorrection": {
+      "receipt": {
+        "file": "native-attack-crops-successor-nvidia-20261125.failure.json",
+        "sha256": "83dbadb968e37d3e02287a7bae938d4239206fdda4c1bf45f5581b483f691f39",
+        "trace": {
+          "file": "native-attack-crops-successor-nvidia-20261125.trace.json.gz",
+          "sha256": "aefa5d2bfe798ce44a5bfdf90e101b9df07460e97baf1dc6ebf8fcb4f1428fe4",
+          "loss": false
+        }
+      },
+      "requestedTicket": 5,
+      "target": "plant-337",
+      "sourceSequence": 644,
+      "armedHistoricalSequence": 645,
+      "unsealedToken": 2,
+      "error": "Animal crop source or original clip bank unavailable",
+      "previewDecodeMs": 16.233,
+      "firstRendererRecordMs": 28.101
+    },
+    "result": {
+      "receipt": {
+        "file": "native-attack-crops-successor-history-nvidia-20261125.json",
+        "sha256": "e26e5b2beb502dbd38a151f4ccbc5104eee31debd8a4bed867f02dc8e445bedf",
+        "trace": {
+          "file": "native-attack-crops-successor-history-nvidia-20261125.trace.json.gz",
+          "sha256": "14e8cfcf2ec99c9f2248f60e572af55f09ca3891ee446be5c3abb7af68f2e00e",
+          "loss": false
+        }
+      },
+      "originalRig": {
+        "root": 341,
+        "geometries": [
+          218,
+          219,
+          220,
+          221
+        ]
+      },
+      "body": 1,
+      "sourcePose": {
+        "x": 90.31144714355469,
+        "z": 9.17122745513916,
+        "phase": 20.84452945958807
+      },
+      "damage": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "elapsed": 402.09999999998246,
+          "count": 1
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "elapsed": 408.8999999999763,
+          "count": 1
+        }
+      ],
+      "tickets": [
+        {
+          "kind": 26,
+          "target": 373,
+          "prepared": 1,
+          "ticket": 2,
+          "firstAge": 0,
+          "draws": 66
+        },
+        {
+          "kind": 27,
+          "target": 373,
+          "prepared": 3,
+          "ticket": 4,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": 337,
+          "prepared": 5,
+          "ticket": 6,
+          "firstAge": 0,
+          "draws": 3
+        },
+        {
+          "kind": 27,
+          "target": 337,
+          "prepared": 7,
+          "ticket": 8,
+          "firstAge": 0,
+          "draws": 18
+        }
+      ],
+      "terminal": {
+        "sequence": 298,
+        "elapsed": 408.8999999999763,
+        "bindings": 0
+      },
+      "comparedBuffers": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorRoute",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorStrike",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "drained": true,
+      "errors": [],
+      "blockedPreparer": {
+        "durationMs": 550.10009765625,
+        "draws": 17,
+        "retainedDraws": 15,
+        "causalAdvanceSeconds": 0.46669995117184726
+      }
+    },
+    "cadence": {
+      "sampledIntervals": 1188,
+      "overTarget": 1188,
+      "targetMs": 16.666666666666668,
+      "retirementTimings": [
+        {
+          "previousSequence": 244,
+          "drawSequence": 245,
+          "intervalMs": 133.39990234375,
+          "staleBindingOpportunities": 3,
+          "phasesMs": {
+            "terminal-timeline": 38.300048828125,
+            "scene-renderer": 30.89892578125,
+            "terminal-capture": 32.5,
+            "historicalDecode": 18.136962890625
+          },
+          "sendAfterPacketClosedMs": 0.199951171875,
+          "postedAfterLastDrawMs": 106.900146484375,
+          "admittedAfterLastDrawMs": 131.5,
+          "resourcesWaitMs": 0,
+          "thirdStaleAfterLastDrawMs": 100.199951171875,
+          "admissionToDrawMs": 1.89990234375
+        },
+        {
+          "previousSequence": 297,
+          "drawSequence": 298,
+          "intervalMs": 133.39990234375,
+          "staleBindingOpportunities": 3,
+          "phasesMs": {
+            "terminal-timeline": 23.701171875,
+            "scene-renderer": 19.60009765625,
+            "terminal-capture": 20.5,
+            "historicalDecode": 12.473876953125
+          },
+          "sendAfterPacketClosedMs": 0.199951171875,
+          "postedAfterLastDrawMs": 79.60009765625,
+          "admittedAfterLastDrawMs": 102.599853515625,
+          "resourcesWaitMs": 0,
+          "thirdStaleAfterLastDrawMs": 101.89990234375,
+          "admissionToDrawMs": 30.800048828125
+        }
+      ],
+      "c4Accepted": false
+    },
+    "nativeBuild": {
+      "inputs": 66,
+      "standaloneExports": 815,
+      "pthreadRawExports": 836,
+      "pthreadPublicExports": 821,
+      "added": [
+        "nav_animal_finished_strike_snapshot",
+        "nav_animal_plan_finished_crop"
+      ],
+      "standalone": "641295591b3b4d6add4457c4c3d264440fabfb586d9e3533c3a87d5c44998721",
+      "pthread": "5849ea499cf450609bb5ab37b39816f89cbc6dbbe006a9ae34e404d0648e2d01",
+      "pthreadGlue": "a4f5d5dce4686615bde471bb6ea750e6aa1621cbf381db40d046008def1ce938",
+      "pthreadGlueCommittedLF": "453272f1b047ff4c0dd31246d36b618822b2386b8cde692bb5fb720a8db6b4b4"
+    },
+    "regression": {
+      "selected": 420,
+      "passed": 415,
+      "skippedExperimental": 5,
+      "failed": 0,
+      "knownHistoricalContentionFailures": 3,
+      "buildSeconds": 49
+    }
   }
 }

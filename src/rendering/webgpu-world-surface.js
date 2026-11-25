@@ -444,8 +444,20 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   function prepareNativeTaskSettlementResources(value,options={}){return prepareNativeResources(copyNativeTaskSettlementProposal(value),{...options,deferredStart:options.deferredStart??true});}
   function prepareNativeInitialIdleBodyResources(value,options={}){return prepareNativeResources(copyNativeInitialIdleBodyProposal(value),{...options,deferredStart:options.deferredStart??true});}
   function prepareNativeIdleCycleResources(value,options={}){return prepareNativeResources(copyNativeIdleCycleProposal(value),{...options,deferredStart:options.deferredStart??true});}
-  const prepareNativeAnimalCropRouteResources=(p,o)=>prepareNativeResources(copyNativeAnimalCropProposal(p,26),{...o,deferredStart:true});
-  const prepareNativeAnimalCropStrikeResources=(p,o)=>prepareNativeResources(copyNativeAnimalCropProposal(p,27),{...o,deferredStart:true});
+  async function prepareAnimalCropResources(input,kind,options={}){
+   const resources=copyNativeAnimalCropProposal(input,kind);
+   // A request can arrive before its source publication. Keep the pump free
+   // to commit that source, without lending the roster to another interval.
+   const prepare=async sequence=>{
+    if(Number.isSafeInteger(sequence)){
+     await waitNativePublication(sequence,options.signal??new AbortController().signal);
+    }
+    return prepareNativeResources(resources,{...options,deferredStart:true});
+   };
+   return timelinePump?timelinePump.withOrdinaryPublications(prepare):prepare(null);
+  }
+  const prepareNativeAnimalCropRouteResources=(p,o)=>prepareAnimalCropResources(p,26,o);
+  const prepareNativeAnimalCropStrikeResources=(p,o)=>prepareAnimalCropResources(p,27,o);
   function prepareNativeFarmArrivalResources(value,options={}){return prepareNativeResources(copyNativeFarmArrivalRouteProposal(value),{...options,deferredStart:options.deferredStart??true});}
   function prepareNativeIdleStrollResources(value,options={}){return prepareNativeResources(copyNativeIdleStrollProposal(value),{...options,deferredStart:options.deferredStart??true});}
   async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest,deferredStart=false}={}){

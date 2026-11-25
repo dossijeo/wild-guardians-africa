@@ -25,6 +25,11 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
     target==s.targets.end()||!target->second.active||target->second.kind>=3||center==s.targets.end()||!center->second.active||
     !(center->second.kind==4&&center->second.status==0||center->first==intent.target)||
     !spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||!std::isfinite(body.r)||body.r<=0||body.r>2)return -2;
+ if(s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==uint64_t(actor)){
+  const auto& h=*s.finishedAnimalStrike;
+  if(h.session!=s.session||h.body!=bodyId||body.x!=h.x||body.z!=h.z||body.r!=h.radius||
+     heading!=h.yaw||phase!=h.phase||entering!=0)return -2;
+ }
  auto& route=s.routeSlots[intent.slot];
  if(!route.active||route.pendingResources||route.reserved||route.suspended||route.actor!=intent.actor||route.generation!=intent.generation||route.originX!=body.x||route.originZ!=body.z||s.reservedBodies.count(uint64_t(bodyId))||s.suspendedBodies.count(uint64_t(bodyId)))return -3;
  auto request=std::make_shared<NativeAnimalRouteRequest>();
@@ -101,6 +106,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_commit_bound(double session,d
  releaseRoute(s,intent);s.routeSlots[d.slot]=std::move(d.route);s.reservedBodies.emplace(d.body,d.slot);s.residencyPinRevision++;
  auto& route=s.routeSlots[d.slot];intent.slot=d.slot;intent.generation=route.generation;intent.state=PlanningState::RouteActive;intent.topology=d.topology;intent.timingMode=1;intent.timingRadius=route.radius;intent.routeCursor=0;intent.routeStartX=float(route.originX);intent.routeStartZ=float(route.originZ);
  if(s.executionEnabled){s.executionEvaluations++;projectExecutedPose(s,route,sampleRouteTiming(route,s.effectiveTime));}
+ if(s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==intent.actor)s.finishedAnimalStrike.reset();
  binding->assignmentSequence=emitIntentChange(s,intent);route.animalRouteBinding=std::move(binding);intent.animalRouteRequest.reset();spatialRecordMotionResourceBoundary(session,ticket,time,26);return 1;
 }
 
@@ -148,6 +154,10 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
    source->centerX,source->centerZ,body.r,body.x,body.z,mode==1?source->heading:pose[4],
    mode==1?source->phase:pose[3],mode==1?0:pose[6],mode==1?0:pose[15],mode==1?0:pose[16],
    s.effectiveTime,source->targetX,source->targetZ,double(source->sequence)};
+ if(mode==1&&s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==intent.actor){
+   s.animalCropState[20]=double(s.finishedAnimalStrike->attack);
+   s.animalCropState[21]=double(s.finishedAnimalStrike->ticket);
+ }
  return mode;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_crop_state_ptr(){return state().animalCropState.data();}

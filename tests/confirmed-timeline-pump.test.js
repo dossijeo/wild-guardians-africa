@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
 import {createConfirmedTimelinePump} from '../src/rendering/confirmed-timeline-pump.js';
 import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
@@ -6,10 +7,10 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
-function preparedFixture({allow=true,certify=value=>value,lastRejection=()=>null}={}){
+function preparedFixture({allow=true,onPreview=null,certify=value=>value,lastRejection=()=>null}={}){
  let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
  f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};
- const pump=createConfirmedTimelinePump({stream:f.stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
+ const pump=createConfirmedTimelinePump({stream:f.stream,onPreview,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
  return {...f,clock,pump,setNow(value){now=value;}};
 }
 
@@ -167,4 +168,63 @@ test('historical certification cannot replace confirmed endpoint headings',()=>{
 test('remote resource preparation retains the confirmed boundary until ready instead of consuming a CPU fallback',()=>{
  let ready=false,failed=false;const f=preparedFixture({certify:value=>ready?value:null,lastRejection:()=>({reason:'resources-pending',preparationPending:!failed})});
  try{assert.equal(f.pump.advance(),0);assert.deepEqual(f.pump.status().preparationPending,{sequence:1,reason:'resources-pending'});assert.equal(f.clock.elapsed,0);assert.equal(f.seen.length,0);f.setNow(5000);assert.equal(f.pump.advance(),0);ready=true;assert.equal(f.pump.advance(),0);assert.equal(f.pump.status().preparationPending,null);assert.equal(f.pump.preparedInterval().start,0);f.pump.sealPreparedInterval(f.pump.preparedInterval().token);ready=false;failed=true;assert.equal(f.pump.advance(),2);assert.equal(f.seen.length,2);assert.equal(f.pump.status().preparationPending,null,'unsupported or failed preparation follows the conservative path');}finally{f.pump.dispose();f.clock.dispose();}
+});
+
+// Exercise the actual Surface entry against the real pump. Only the
+// resource packet and the asynchronous stream/renderer endpoints are doubles.
+function cropSurface(pump,waitForPublication,prepareResources){
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const entry=source.match(/  (?:async function prepareAnimalCropResources\b|const prepareNativeAnimalCropRouteResources\b)[\s\S]*?(?=  function prepareNativeFarmArrivalResources)/)[0];
+ return Function('timelinePump','waitNativePublication','prepareNativeResources','copyNativeAnimalCropProposal',
+  entry+';return [prepareNativeAnimalCropRouteResources,prepareNativeAnimalCropStrikeResources]')(
+  pump,waitForPublication,prepareResources,(p,kind)=>{assert.equal(p.kind,kind);return p;});
+}
+test('a native crop request keeps its source and successor on the ordinary publication stream',async()=>{
+ const previews=[],f=preparedFixture({onPreview:p=>{if(p)previews.push(p.sequence);}});
+ try{
+  let receive;
+  const source=new Promise(resolve=>{receive=resolve;});
+  const [route]=cropSurface(f.pump,()=>assert.fail('unexpected open interval'),async(_,options)=>{
+   assert.equal(options.minSequence,1);await source;
+   assert.equal(f.pump.status().historicalPending,null,'historical playback has claimed the crop source');
+   assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  });
+  const admission=route({kind:26},{minSequence:1});
+  f.pump.advance();receive();await admission;
+  assert.deepEqual(previews,[1,2]);assert.equal(f.pump.status().historicalDiagnostics.starts,0);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+test('native preparation drains an already owned historical token and releases exclusion on cancellation',async()=>{
+ const f=preparedFixture(),controller=new AbortController();let observed=false;
+ try{
+  assert.equal(f.pump.advance(),0);const token=f.pump.preparedInterval();
+  const [,strike]=cropSurface(f.pump,(sequence,signal)=>{
+   assert.equal(sequence,1);observed=true;
+   return new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(signal.reason),{once:true}));
+  },()=>assert.fail('the request is still waiting on its source'));
+  const admitted=strike({kind:27},{signal:controller.signal});
+  assert(observed);
+  assert.equal(f.pump.advance(),0);assert.equal(f.seen.length,0);
+  f.pump.sealPreparedInterval(token.token);assert.equal(f.pump.advance(1),1);
+  assert.equal(f.pump.preparedInterval(),null);assert.equal(f.seen[0].sequence,1);
+  controller.abort();await assert.rejects(admitted,{name:'AbortError'});
+  assert.equal(f.pump.advance(),0);assert.equal(f.pump.preparedInterval().sequence,2);
+ }finally{f.pump.dispose();f.clock.dispose();}
+});
+
+test('an open token finishes on its own clock before the crop roster is claimed',async()=>{
+ const f=preparedFixture();let committed,claims=0;
+ try{
+  f.pump.advance();const original=f.pump.preparedInterval();
+  const [prepare]=cropSurface(f.pump,sequence=>{
+   assert.equal(sequence,original.sequence);return new Promise(resolve=>{committed=resolve;});
+  },()=>{
+   assert.equal(f.pump.status().historicalPending,null);claims++;
+  });
+  const ready=prepare({kind:26});assert.equal(claims,0);
+  assert.deepEqual(f.pump.preparedInterval(),original);assert.equal(f.clock.elapsed,0);
+  f.pump.sealPreparedInterval(original.token);assert.equal(f.pump.advance(),2);
+  committed();await ready;assert.equal(claims,1);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.pump.status().historicalDiagnostics.starts,1);
+ }finally{f.pump.dispose();f.clock.dispose();}
 });

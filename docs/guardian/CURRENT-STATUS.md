@@ -62,9 +62,11 @@ Crecimiento preparó el modelo y los efectos del Guardián, confirmó una sola a
 
 En una partida de Sabana, el facóquero confirmó el primer golpe y un daño al cultivo. NVIDIA Turing dibujó la marcha y la acción con la misma raíz y los cuatro IDs de geometría. La marcha aún requiere publicaciones de posición. Se midió un intervalo de 48,7 ms a 30 Hz sin causa confirmada. [Control de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
-AttackCrops ya dibuja la marcha reservada y el primer golpe en NVIDIA con la calificación de desarrollo. Ambos tickets empezaron con edad cero, conservaron el cuerpo 1, cuatro geometrías y 78 buffers comparables, y produjeron un único golpe al cultivo. El perfil ordinario espera la continuación posterior y C4 sigue abierto. [Calificación nativa y recibos](native-attack-crops-qualification-20261125.md).
+AttackCrops ya dibuja la marcha reservada y el primer golpe en NVIDIA con la calificación de desarrollo. Ambos tickets empezaron con edad cero, conservaron el cuerpo 1, cuatro geometrías y 78 buffers comparables, y produjeron un único golpe al cultivo. [Calificación nativa y recibos](native-attack-crops-qualification-20261125.md).
 
-Al retirar el primer ataque, NVIDIA dibujó el relevo con las cuatro geometrías y los 78 buffers residentes. La compilación histórica del animal espera una trayectoria válida. La captura registró cero compilaciones especulativas tras el golpe y un intervalo de 166,60 ms a 30 Hz. C4 y el segundo objetivo siguen abiertos. [Preparación por demanda y retiro del ataque](native-attack-crops-qualification-20261125.md#preparación-histórica-por-demanda).
+Al retirar el primer ataque, NVIDIA dibujó el relevo con las cuatro geometrías y los 78 buffers residentes. La compilación histórica del animal espera una trayectoria válida. La captura registró cero compilaciones especulativas tras el golpe y un intervalo de 166,60 ms a 30 Hz. [Preparación por demanda y retiro del ataque](native-attack-crops-qualification-20261125.md#preparación-histórica-por-demanda).
+
+La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original. NVIDIA dibujó cuatro tickets y registró un golpe a cada cultivo. Conservó las cuatro geometrías y 78 buffers en siete etapas. Quedan la salida del animal, el perfil ordinario, las adversidades A–F y C4. [Continuación y cadencia](native-attack-crops-qualification-20261125.md#continuación-al-segundo-cultivo).
 
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
 

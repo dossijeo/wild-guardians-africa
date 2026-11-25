@@ -197,11 +197,20 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           proof?.reference.kind===27&&record.revokedSequence>proof.assignmentSequence&&
           sameNativeAnimalCropReference(proof.preparedReference,r);
       },
+      canQuiesceFor(next){
+        const last=actor?.revoked?.cropBinding,successor=actors.get(r.actorId);
+        return last?.reference.kind===27&&sameNativeAnimalCropReference(last.preparedReference,r)&&
+          successor?.state===6&&successor.cropPredecessor===last.reference&&next?.kind===26&&
+          animalCropMatchesRequest(next,successor.cropRequest);
+      },
       get routeRecord(){return current()?(r.kind===26?actor.current:actor.current.cropStrikeRecord):null;},
       get executionEpoch(){return current()?actor.current.cropBinding.reference.worldBoundary.effectiveTime:null;},
       get executionEnd(){return current()?actor.current.cropBinding.reference.endTime:null;}});
   }
 
+  // Keep only the immutable identity of the last completed strike. Its route
+  // has already been revoked and cannot authorize another draw.
+  let finishedCrop=null;
   function accept(event){
     if(closed)throw Error('Native route control is closed');
     if(event?.authorityEpoch!==authorityEpoch){counters.oldEpoch++;return false;}
@@ -243,6 +252,18 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       throw Error('Native route revocation does not match the active version');
     if(current&&assigned&&!revoked)
       throw Error('Native route assignment omitted the previous revocation');
+    const successor=event.pendingAnimalCrop==null?null:copyPendingAnimalCrop(event.pendingAnimalCrop);
+    if(successor){
+      if(!finishedCrop||event.pendingAnimalCrop.previousStrike?.attackId!==finishedCrop.attackId||
+         event.pendingAnimalCrop.previousStrike?.ticket!==finishedCrop.reference.worldBoundary.ticket||current||active.size||actors.size||event.type!=='IntentChanged'||event.state!==6||
+         revoked||handle||event.taskId||event.targetId!==successor.targetId||event.sequence!==successor.requestSequence||
+         successor.actorId!==event.actorId||successor.authorityEpoch!==authorityEpoch||
+         successor.nativeSession!==finishedCrop.reference.worldBoundary.nativeSession||event.effectiveTime<finishedCrop.reference.endTime||
+         !['actorId','bodyId','radius','x','z','phase','yaw'].every(k=>successor[k]===finishedCrop.reference[k])||
+         [event.nativeAnimalCrop,event.taskRequest,event.actionRequest,event.initialIdleRequest,event.idleStrollRequest,
+          event.homeRequest,event.farmArrivalRequest,event.idleCycle,event.idleCycleNext].some(Boolean))
+        throw Error('Crop successor lacks the completed strike body');
+    }
     const crop=event.nativeAnimalCrop;
     if(crop)validateCropChange(event,current);
     if(current&&!assigned&&!revoked&&crop?.kind!==27)
@@ -343,6 +364,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       throw Error('Native crop owner changed after its submitted time');
     if(actor?.cropRequest&&assigned&&!crop)throw Error('Native crop assignment omitted its typed source');
     if(actor&&!actors.has(event.actorId))actors.set(event.actorId,actor);
+    if(successor){actor.cropRequest=successor;actor.cropPredecessor=finishedCrop.reference;}
+    if(current?.cropBinding?.reference.kind===27&&revoked&&event.type==='RouteInvalidated'&&
+        event.effectiveTime>=current.cropBinding.reference.endTime){
+      finishedCrop=current.cropBinding;
+    }else if(!successor&&!(event.type==='IntentChanged'&&actor?.cropRequest&&event.state===5)){
+      finishedCrop=null;
+    }
     if(current&&revoked){
       current.revokedSequence=event.sequence;current.revokedState=Number.isInteger(event.state)?event.state:null;
       if(actor){actor.revoked=current;actor.current=null;actor.proof=null;}

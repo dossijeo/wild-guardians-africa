@@ -468,7 +468,7 @@ export function reachableApproach(a,target,nav,shield=null,onUnknown=null,region
   }
   return null;
 }
-function canAttackCrop(s,p){
+export function canAttackCrop(s,p){
   return p.alive&&(cropImpactDamage(p)<CROP_HIT_POINTS-1||s.raid.introCropLimit===undefined||(s.raid.introCropsDestroyed??0)<s.raid.introCropLimit);
 }
 export function raidTarget(s,id){
@@ -477,7 +477,7 @@ export function raidTarget(s,id){
   // the complete farm history for every animal and simulation step.
   return activeCrops(s.plants).find(eligible)??s.structures.find(eligible);
 }
-export function targetFor(s,a,nav) {
+export function targetFor(s,a,nav,nativeCropOnly=false) {
   nav.planningObserver?.({kind:'attackSelection',actorId:a.id,elapsed:s.elapsed});
   const stats=nav.raidSelectionStats;
   const started=stats?performance.now():0;
@@ -537,6 +537,7 @@ export function targetFor(s,a,nav) {
         if(queued)stats.nativeFrontierQueued=(stats.nativeFrontierQueued??0)+1;
       }
     }
+    if(nativeCropOnly)return null;
     let nativeWallStatus='not-requested';
     if(nav.intentTaskPlanner?.nativeWallSelectionEnabled&&
       (native?.status==='blocked'||native?.status==='unknown')){
@@ -786,6 +787,7 @@ export function nativeCropRouteSubject(state,animal){
 }
 export function nativeCropCohortCurrent(state,planner){
  const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal);
+ if(!subject&&animal?.hitApplied&&planner?.nativeFinishedAnimalCrop?.(state,animal))return true;
  const native=subject&&planner?.nativeAnimalCropState?.(animal.id);
  return !!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
    animal.x===native.x&&animal.z===native.z&&(animal.motionPhase??0)===native.phase;
@@ -847,6 +849,7 @@ export function updateRaid(s,dt,nav) {
     if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
     if((a.magicStunUntil??0)>s.elapsed)continue;
     const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
+    const successor=!crop&&a.hitApplied?nav.intentTaskPlanner?.nativeFinishedAnimalCrop?.(s,a):null;
     if(crop){
       const source=nativeCropRouteSubject(s,a);
       if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
@@ -973,7 +976,7 @@ export function updateRaid(s,dt,nav) {
     if(a.hitsRemaining<=0)continue;
     let target=raidTarget(s,a.targetId);
     if(!target) {
-      if(a.status!=='waiting')release(s,a,nav);
+      if(!successor&&a.status!=='waiting')release(s,a,nav);
       // Search independent targets before staging. Each waiting actor retries
       // its own bounded search; an unreachable queue head cannot block peers.
       if(a.status==='waiting'){
@@ -998,7 +1001,14 @@ export function updateRaid(s,dt,nav) {
         if(wait.epoch===epoch&&s.elapsed<wait.retryAt)continue;
         wait.epoch=epoch;wait.retryAt=s.elapsed+8;
       }
-      const selected=targetFor(s,a,nav);
+      if(successor&&a.raidWait?.epoch===waitEpoch(s,nav,a)&&s.elapsed<a.raidWait.retryAt)continue;
+      const selected=targetFor(s,a,nav,!!successor);
+      if(successor&&!selected){
+        // The retained native body stays at the strike endpoint while an
+        // unsupported shield or unavailable crop prevents another admission.
+        a.raidWait={since:a.raidWait?.since??s.elapsed,epoch:waitEpoch(s,nav,a),retryAt:s.elapsed+8};
+        continue;
+      }
       if(!selected||selected.unknown){
         emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
         if(selected?.unknown){
@@ -1015,6 +1025,12 @@ export function updateRaid(s,dt,nav) {
       target=selected.target;a.targetId=target.id;a.reservation=selected.reservation;s.raid.reservations[a.reservation]=a.id;s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;
       a.approach=selected.approach.point;a.approachShieldId=selected.shieldId;
       a.path=selected.approach.path;a.destinationId=a.approach.id;a.pathVersion=nav.version;
+      if(successor){
+        const request=nav.intentTaskPlanner.nativeAnimalCropState(a.id);
+        const subject=nativeCropRouteSubject(s,a);
+        if(!request||request.mode!==1||request.body!==successor.body||!subject||!nativeCropOwnersMatch(subject,a,request))release(s,a,nav);
+        continue;
+      }
       if(!selected.native)nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     // A confirmed topological event may leave the same native attack target

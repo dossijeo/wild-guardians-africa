@@ -22,7 +22,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
  assert.equal(original.length,4);
  const animal=state.raid.animals[0],savedStatus=animal.status;
  const postStrike=contention==='post-strike';let historicalAdmissions=0;
- const historical=contention==='historical'||postStrike?createConfirmedHistoricalClock({initialElapsed:state.elapsed}):null;
+ const historical=contention==='historical'||postStrike||contention==='successor-history'?createConfirmedHistoricalClock({initialElapsed:state.elapsed}):null;
  const holdWalking=contention==='locomotion';
  let releaseWalk,walkStarted,rootAdmitted=false,holdingWalk=false,lateHistory=null;
  const started=new Promise(resolve=>{walkStarted=resolve;});
@@ -45,19 +45,46 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
   renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
  const roster=createWebGpuAnimalRoster({scene,state,onNativeCropStrikeRetired,...(historical?{experimentalHistoricalMotion:{actorIds:[],clock:historical}}:{}),residency,renderer,bakedWalkBank:bank('gpu-walk'),bakedRunBank:bank('gpu-animal-run'),bakedAttackBank:bank('gpu-animal-attack',true),
    assetBank:{async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};},tick(){},dispose(){}},pipelineAdmission,onError:e=>{throw e;},onBakedWalkError:(_s,e)=>{throw e;}});
- roster.sync();let part=null,age=0;
+ roster.sync();let part=null,age=0,lastProof=null;
  const intact=()=>{for(const [mesh,g,p,n] of original){assert.equal(mesh.geometry,g);assert.equal(g.attributes.position,p);assert.equal(g.attributes.normal,n);}};
+ function historicalObservation(displacement,validSupport=true){
+   const entity=state.raid.animals[0],root=roster.get(animal.id).root;
+   const start=state.elapsed,end=start+.05,y=root.position.y;
+    const p={actorId:entity.id,startStatus:entity.status,endStatus:entity.status,continuous:true,timed:true,
+     start:{at:start,x:entity.x,z:entity.z},end:{at:end,x:entity.x+displacement,z:entity.z}};
+    p.segments=[{t0:start,t1:end,x0:p.start.x,z0:p.start.z,x1:p.end.x,z1:p.end.z}];
+    const first={...actorTickState(entity,start),yaw:root.rotation.y},last={...first,at:end,x:p.end.x,motionPhase:entity.motionPhase+displacement};
+    const clockSegments={version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:end-start,rate:1}]};
+    const preview={sequence:1,start,end,clockSegments,trace:{actors:[p],actorTickStates:{complete:true,actors:[{actorId:entity.id,samples:[first,last]}]}},certificates:{}};
+    const support={sequence:1,valid:()=>validSupport,actors:[{actorId:entity.id,startHeight:y,endHeight:y,segments:p.segments.map(s=>({...s,y0:y,y1:y}))}]};
+    return {preview,support};
+   }
+
  return {async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
    await assert.rejects(roster.prepareAnimalCrop(proposal,support,{signal:AbortSignal.abort(),getPickAge:()=>0}));
+   if(contention==='successor-history'&&proposal.reference.kind===26&&lastProof?.reference.kind===27){
+    // Same owner and target as the next admission, but the stationary
+    // historical interval already owns the original rig.
+    roster.setHistoricalActors([animal.id]);
+    const sample=historicalObservation(0),{preview}=sample;
+    preview.safeForAutonomousPlayback=true;
+    preview.certificates={sequence:preview.sequence,actorId:animal.id,animationSynchronized:true,
+     otherActorsSynchronized:true,effectsSynchronized:true,continuousCollision:true,inputSynchronized:true};
+    assert(roster.startHistoricalMotion(preview,sample.support));
+    assert(roster.historicalMotionCurrent(preview));
+    await assert.rejects(roster.prepareAnimalCrop(proposal,support,{signal:new AbortController().signal,getPickAge:()=>0}),
+     /Animal crop source or original clip bank unavailable/);
+    roster.finishHistoricalMotion(preview);assert(!roster.historicalMotionCurrent(preview));intact();
+   }
    if(proposal.reference.kind===26&&holdWalking){
     await started;animal.status=savedStatus;roster.sync();setImmediate(releaseWalk);
    }
-   if(proposal.reference.kind===26&&historical&&!postStrike){
+   if(proposal.reference.kind===26&&contention==='historical'){
     await new Promise(resolve=>setImmediate(resolve));roster.setHistoricalActors([animal.id]);
     await Promise.resolve();assert(lateHistory);assert.equal(lateHistory.signal.aborted,false);
    }
    part=await roster.prepareAnimalCrop(proposal,support,{signal:new AbortController().signal,getPickAge:()=>age});assert(part.valid());
-   if(proposal.reference.kind===26&&historical&&!postStrike){
+   if(proposal.reference.kind===26&&contention==='historical'){
     const first=lateHistory;
     assert.equal(first.signal.aborted,true);part.cancel();assert(!part.valid());
     await new Promise(resolve=>setImmediate(resolve));
@@ -70,7 +97,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    part.activate();assert(part.valid());part.rollback();assert(part.valid());part.activate();part.withSourcePresentation(()=>intact());assert(part.valid());},
   commit(proof,data){const field=proof.reference.kind===26?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
     const other=structuredClone(data);other[field].preparedReference.bodyId++;assert.throws(()=>part.validateCommit(other));
-    assert(part.validateCommit(data));part.finalize(data);if(postStrike&&proof.reference.kind===26)roster.setHistoricalActors([animal.id]);assert.deepEqual(roster.nativeCropLease(),{start:proof.reference.worldBoundary.effectiveTime,end:proof.reference.endTime});intact();age=0;part=null;
+    assert(part.validateCommit(data));part.finalize(data);lastProof=proof;if(postStrike&&proof.reference.kind===26)roster.setHistoricalActors([animal.id]);assert.deepEqual(roster.nativeCropLease(),{start:proof.reference.worldBoundary.effectiveTime,end:proof.reference.endTime});intact();age=0;part=null;
     const chunk=Math.floor((proof.reference.x+24)/48)+','+Math.floor((proof.reference.z+24)/48);
     assert.throws(()=>roster.prepareCropTerrainRetention({changedKeys:new Set([chunk]),get:()=>null}));
     const [retained]=roster.prepareCropTerrainRetention({changedKeys:new Set()});assert(retained.valid());retained.cancel();},
@@ -79,16 +106,8 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    for(let i=0;i<3;i++){roster.sync();roster.setHistoricalActors([animal.id]);}
    await new Promise(resolve=>setImmediate(resolve));
    assert.equal(historicalAdmissions,0,'release and repeated roster selection must not compile a historical rig');
-   const entity=state.raid.animals[0],root=roster.get(animal.id).root;
-   const start=state.elapsed,end=start+.05,y=root.position.y;
    function observe(displacement,{validSupport=true}={}){
-    const p={actorId:entity.id,startStatus:entity.status,endStatus:entity.status,continuous:true,timed:true,
-     start:{at:start,x:entity.x,z:entity.z},end:{at:end,x:entity.x+displacement,z:entity.z}};
-    p.segments=[{t0:start,t1:end,x0:p.start.x,z0:p.start.z,x1:p.end.x,z1:p.end.z}];
-    const first={...actorTickState(entity,start),yaw:root.rotation.y},last={...first,at:end,x:p.end.x,motionPhase:entity.motionPhase+displacement};
-    const clockSegments={version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:end-start,rate:1}]};
-    const preview={sequence:1,start,end,clockSegments,trace:{actors:[p],actorTickStates:{complete:true,actors:[{actorId:entity.id,samples:[first,last]}]}},certificates:{}};
-    const support={sequence:1,valid:()=>validSupport,actors:[{actorId:entity.id,startHeight:y,endHeight:y,segments:p.segments.map(s=>({...s,y0:y,y1:y}))}]};
+    const {preview,support}=historicalObservation(displacement,validSupport);
     return roster.prepareHistoricalMotion(preview,support);
    }
    const stationary=observe(0);assert(stationary.ok,JSON.stringify(stationary));assert.equal(historicalAdmissions,0);
@@ -99,6 +118,6 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    assert(observe(.05).ok);assert.equal(historicalAdmissions,1);intact();
   },
   presented(value){age=value;const restore=roster.get('animal-396').preparePick();assert.equal(typeof restore,'function');restore();intact();},
-  update(s){Object.assign(state,s);roster.sync();intact();if(s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
+  update(s){Object.assign(state,s);roster.sync();intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
   close(){releaseWalk();lateHistory?.resolve();part?.cancel();roster.dispose();terrain.dispose();residency.dispose();mat.dispose();for(const value of owned.values())value.dispose();session.dispose();}};
 }

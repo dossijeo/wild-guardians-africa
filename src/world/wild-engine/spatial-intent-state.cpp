@@ -470,6 +470,10 @@ struct PendingBarrierProposal {
   SpatialWorldProposalInput worldInput;
   int kind=0;
 };
+struct FinishedAnimalStrike {
+  uint64_t session,actor,body,target,center,attack,ticket;
+  double x,z,radius,phase,yaw,at;
+};
 struct IntentState {
   std::unordered_map<uint64_t,Worker> workers;
   std::unordered_map<uint64_t,Target> targets;
@@ -598,7 +602,10 @@ struct IntentState {
   uint64_t gateRevision=0,nextBarrierProposal=0;
   PendingBarrierProposal barrierProposal;
   std::array<double,24> animalStrikeResult{},animalRouteResult{};
-  std::array<double,20> animalCropState{};
+  // Only the completed native attack attests this stationary body's handoff.
+  // Keep the small terminal receipt after revoking the old route and bindings.
+  std::optional<FinishedAnimalStrike> finishedAnimalStrike;
+  std::array<double,22> animalCropState{};
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
   std::set<uint64_t> worldPreviewStoppedRoutes;
   std::array<double,6> barrierProposalResult{};
@@ -1983,7 +1990,7 @@ void nav_intent_reset(){
   s.gateSweepPairs=s.gateSweepEvaluations=s.gateSweepRejected=0;s.gateSweepResult.fill(0);
   s.session++;
   if(!s.session)s.session=1;
-  s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
+  s.finishedAnimalStrike.reset();s.activeIntents.clear();s.byTarget.clear();s.byTask.clear();
   s.routeSubscribers.clear();s.changedRouteActors.clear();
   for(auto& actors:s.profileParticipants)actors.clear();
   for(auto& actors:s.waitingSubscribers)actors.clear();
@@ -3334,9 +3341,9 @@ float* nav_intent_attack_route_input_ptr(int count){
   IntentState& s=state();s.attackRouteInput.resize(size_t(count)*2);
   return s.attackRouteInput.data();
 }
-int nav_intent_register_attack(double actorId,double targetId,
-                               double startX,double startZ,int count,int timingMode=0,
-                               double timingRadius=0){
+static int registerAttackRoute(double actorId,double targetId,
+                               double startX,double startZ,int count,int timingMode,
+                               double timingRadius,bool publish){
   if(!integer(actorId)||!integer(targetId)||!coordinate(startX)||
      !coordinate(startZ)||count<0||count>4096||(timingMode!=0&&timingMode!=1)||
      timingMode==1&&(!std::isfinite(timingRadius)||timingRadius<=0||timingRadius>2))return -1;
@@ -3396,8 +3403,13 @@ int nav_intent_register_attack(double actorId,double targetId,
   intent.timingMode=timingMode;intent.timingRadius=timingMode?timingRadius:0;
   s.activeIntents.insert_or_assign(actor,intent);
   s.byTarget[targetIdValue].insert(actor);
-  emitIntentChange(s,s.activeIntents.at(actor));
+  if(publish)emitIntentChange(s,s.activeIntents.at(actor));
   return 1;
+}
+int nav_intent_register_attack(double actorId,double targetId,
+                               double startX,double startZ,int count,int timingMode=0,
+                               double timingRadius=0){
+  return registerAttackRoute(actorId,targetId,startX,startZ,count,timingMode,timingRadius,true);
 }
 // The raid controller has already committed the retreat transition. Pin a
 // physical route to its confirmed exit without acquiring an attack lease.
@@ -3561,10 +3573,10 @@ int nav_intent_cancel_home(double actorId){
 }
 // An attack site is a dynamic lease, separate from the reusable geometric
 // route. Reject overlapping sites before replacing an existing intention.
-int nav_intent_register_attack_site(double actorId,double targetId,
+static int registerAttackSite(double actorId,double targetId,
                                     double startX,double startZ,int count,
                                     double approachX,double approachZ,
-                                    double radius,int timingMode=0){
+                                    double radius,int timingMode,bool publish){
   if(!integer(actorId)||!coordinate(approachX)||!coordinate(approachZ)||
       !std::isfinite(radius)||radius<=0||radius>2||(timingMode!=0&&timingMode!=1))return -1;
   IntentState& s=state();
@@ -3578,12 +3590,18 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                      double(intent.approachZ)-approachZ);
     if(distance<double(intent.approachRadius)+radius+0.1)return -6;
   }
-  const int result=nav_intent_register_attack(actorId,targetId,startX,startZ,count,timingMode,radius);
+  const int result=registerAttackRoute(actorId,targetId,startX,startZ,count,timingMode,radius,publish);
   if(result!=1)return result;
   ActiveIntent& intent=s.activeIntents.at(uint64_t(actorId));
   intent.approachX=float(approachX);intent.approachZ=float(approachZ);
   intent.approachRadius=float(radius);intent.approachKnown=true;
   return result;
+}
+int nav_intent_register_attack_site(double actorId,double targetId,
+                                    double startX,double startZ,int count,
+                                    double approachX,double approachZ,
+                                    double radius,int timingMode=0){
+  return registerAttackSite(actorId,targetId,startX,startZ,count,approachX,approachZ,radius,timingMode,true);
 }
 // Capture only crop groups whose interaction regions were proven unreachable
 // when this wall intention began. A later topology event can then ask whether
@@ -3674,9 +3692,9 @@ double* nav_intent_attack_reserved_targets_ptr(int count){
   IntentState& s=state();s.attackReservedTargets.resize(size_t(count));
   return s.attackReservedTargets.data();
 }
-int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
+static int planAttackCrop(double actorId,double startX,double startZ,
                                 double radius,int cropsEligible,int blockerCount,
-                                int reservedTargetCount,int timingMode=0){
+                                int reservedTargetCount,int timingMode,const FinishedAnimalStrike* finished){
   IntentState& s=state();s.attackResult.fill(0);s.timingRejection=0;
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !std::isfinite(radius)||radius<=0||radius>2||
@@ -3815,10 +3833,21 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
       if(!count)return false;
       const float* route=spatial_world_route_ptr();
       s.attackRouteInput.assign(route,route+size_t(count)*2);
-      lastRegisterResult=nav_intent_register_attack_site(actorId,double(crop.id),
-        startX,startZ,count,px,pz,radius,timingMode);
+      lastRegisterResult=registerAttackSite(actorId,double(crop.id),
+        startX,startZ,count,px,pz,radius,timingMode,!finished);
       if(lastRegisterResult!=1)
         return false;
+      if(finished){
+        // This successor has no executable assignment until the renderer is ready.
+        // Publish only the resource request, after both leases have been attached.
+        const double center=finished->center==finished->target?double(crop.id):finished->center;
+        lastRegisterResult=nav_animal_route_request(actorId,finished->body,center,0,finished->yaw,finished->phase);
+        if(lastRegisterResult!=1){
+          releaseIntent(s,actor,PlanningState::Cancelled,false);
+          s.activeIntents.erase(actor);
+          return false;
+        }
+      }
       const ActiveIntent& intent=s.activeIntents.at(actor);
       s.attackResult={1,double(crop.id),double(px),double(pz),
         double(s.session),double(intent.slot),double(intent.generation),
@@ -3872,6 +3901,18 @@ int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
   s.attackResult[7]=unknownCauses;
   s.attackResult[8]=regionQueries;s.attackResult[9]=routeQueries;
   return int(s.attackResult[0]);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_crop(double actor,double x,double z,double radius,
+                                int cropsEligible,int blockers,int reserved,int timed){
+  if(nav_animal_finished_strike_snapshot(actor)!=1)return -2;
+  const auto& finished=*state().finishedAnimalStrike;
+  if(x!=finished.x||z!=finished.z||radius!=finished.radius||timed!=0)return -2;
+  return planAttackCrop(actor,x,z,radius,cropsEligible,blockers,reserved,0,&finished);
+}
+int nav_intent_plan_attack_crop(double actorId,double startX,double startZ,
+                                double radius,int cropsEligible,int blockerCount,
+                                int reservedTargetCount,int timingMode=0){
+  return planAttackCrop(actorId,startX,startZ,radius,cropsEligible,blockerCount,reservedTargetCount,timingMode,nullptr);
 }
 #ifdef WILD_DECLARATIVE_ATTACK
 #ifdef WILD_DECLARATIVE_STATS
@@ -4168,7 +4209,14 @@ int nav_intent_attack_finished(double actorId){
   const auto found=s.activeIntents.find(actor);
   if(found==s.activeIntents.end()||!found->second.animal||
      found->second.state!=PlanningState::ActionActive)return -1;
-  if(found->second.animalStrike&&s.effectiveTime<found->second.animalStrike->header[16])return -1;
+  if(found->second.animalStrike){
+    const auto& strike=*found->second.animalStrike;
+    const auto& h=strike.header;
+    const auto& source=*strike.route->source;
+    if(s.effectiveTime<h[16]||nav_animal_strike_snapshot(actorId)!=1)return -1;
+    s.finishedAnimalStrike=FinishedAnimalStrike{s.session,actor,source.body,source.target,source.center,
+      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime};
+  }
   const int tactical=found->second.tacticalPending?1:0;
 #ifdef WILD_DECLARATIVE_ATTACK
   const auto declaration=s.attackDeclarations.find(actor);

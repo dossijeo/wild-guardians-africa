@@ -68,4 +68,16 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_snapshot(double actor){
  s.animalStrikeResult[19]=double(strike.attackId);s.animalStrikeResult[20]=std::clamp(s.effectiveTime-h[15],0.,h[8]);
  s.animalStrikeResult[21]=s.effectiveTime;s.animalStrikeResult[22]=(*strike.prepared)[17];s.animalStrikeResult[23]=(*strike.prepared)[15];return 1;
 }
+// Standstill only. This receipt authorizes no route, clock or further damage.
+EMSCRIPTEN_KEEPALIVE int nav_animal_finished_strike_snapshot(double actor){
+ auto& s=state();
+ if(!integer(actor)||!s.finishedAnimalStrike||s.activeIntents.count(uint64_t(actor)))return 0;
+ const auto& h=*s.finishedAnimalStrike;SpatialBodyView body;
+ if(h.actor!=uint64_t(actor)||h.session!=s.session||s.effectiveTime<h.at||
+    !spatialReadBody(h.body,body)||body.kind!=1||body.flags!=1||
+    body.x!=h.x||body.z!=h.z||body.r!=h.radius)return 0;
+ s.animalStrikeResult={1.,double(h.session),actor,double(h.body),double(h.attack),
+   h.x,h.z,h.radius,h.phase,h.yaw,h.at};
+ return 1;
+}
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_strike_snapshot_ptr(){return state().animalStrikeResult.data();}
