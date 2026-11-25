@@ -137,7 +137,33 @@
       "residentDomeVertexBuffer": "Buffer:2637",
       "distinctVertexBuffersUsedByDraws": 344,
       "awaitedAfterCameraChangeMs": 10000,
-      "domeBufferSubmitted": false
+      "domeBufferSubmitted": false,
+      "independentOfNativeIdleControl": {
+        "receiptSha256": "678d85078ed3af3198c7ed67a68c920581408268b7f9a9356c6f26fee831505d",
+        "traceSha256": "95659d95651d126db1c938c94edc98fc56cf79fe1da90611ec9902b07559dc23",
+        "confirmedPublication": 1,
+        "retainedSequence": 326,
+        "surfaceReady": true,
+        "compilationsPending": 0,
+        "domeMeshVisible": false,
+        "domeBufferSubmitted": false
+      }
+    },
+    "correctedDraw": {
+      "receiptSha256": "f702fed8725cb6bc37718a6ce929213837a5b58d065a396857beda07bbcc1bed",
+      "traceSha256": "d1f3357a65373a0a8a509f56fba2f635944a270218e1b2831474134c5b8bc0f2",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "confirmedPublication": 1,
+      "domeDrawSequence": 33,
+      "idleDrawSequence": 35,
+      "idleTicket": 2,
+      "sharedDomeBuffer": "Buffer:2663",
+      "bufferVersion": 1,
+      "vertexCount": 5568,
+      "domeBufferSubmitted": true,
+      "pausedPublicationAfterIdle": false,
+      "stopReason": "Native publication boundary did not arrive"
     }
   },
   "domeReuse": {

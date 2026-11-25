@@ -340,6 +340,45 @@ test('shield geometry growth invalidates only its own admitted mesh',async()=>{
  try{await vfx.prepareAssets();vfx.sync();vfx.prepare(camera);await turn();for(const request of requests.splice(0))request.resolve();await turn();vfx.prepare(camera);let shape;scene.traverse(object=>{if(object.isMesh&&object.geometry.getAttribute('vfxKind'))shape=object;});assert.ok(shape);let capacity=shape.geometry.getAttribute('vfxKind').data.array.length,grew=false;for(const time of [.1,.25,.5,1,2,4,8]){state.elapsed=time;spell.remaining=20-time;vfx.sync();vfx.prepare(camera);await turn();scene.traverse(object=>{if(object.isMesh&&object.geometry.getAttribute('vfxKind'))shape=object;});const next=shape.geometry.getAttribute('vfxKind').data.array.length;if(next>capacity){grew=true;assert.equal(shape.visible,false);assert.ok(requests.some(item=>item.mesh===shape));assert.equal(requests.filter(item=>item.mesh!==shape).length,0);for(const request of requests.splice(0))request.resolve();await turn();vfx.prepare(camera);assert.equal(shape.visible,true);break;}for(const request of requests.splice(0))request.resolve();await turn();capacity=next;}assert.equal(grew,true,'fixture must exercise a growth allocation');}finally{vfx.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
 });
 
+test('a mature restored shield becomes visible after admission without rewriting its geometry',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
+ globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const turn=()=>new Promise(resolve=>setImmediate(resolve));
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),chunk={},revision={cx:0,cz:0,epoch:1,revision:1};
+ const state={time:30,elapsed:101.2,spells:[{id:'s',kind:'shield',remaining:18.8,radius:1.95,x:0,z:0}],events:[]};
+ const requests=[],admission={
+  structuralRevision:0,
+  prepare(){throw Error('ticket required');},
+  prepareTicket(mesh){return new Promise(resolve=>requests.push({mesh,resolve:()=>resolve({valid:()=>true})}));}
+ };
+ const vfx=createWebGpuAgricultureVfx({scene,state,includeShield:true,pipelineAdmission:admission,
+  residency:{get:()=>chunk,getVisible:()=>chunk,surface:()=>0,revisionAt:()=>revision}});
+ try{
+  await vfx.prepareAssets();vfx.sync();vfx.prepare(camera);await turn();
+  const domeRequest=requests.find(({mesh})=>mesh.geometry.getAttribute('vfxKind'));
+  assert.ok(domeRequest);
+  const dome=domeRequest.mesh,buffer=dome.geometry.getAttribute('vfxKind').data,version=buffer.version;
+  assert.equal(dome.geometry.drawRange.count,5568);
+  assert.equal(dome.visible,false);
+  for(const request of requests)request.resolve();
+  await turn();vfx.prepare(camera);
+  assert.equal(dome.visible,true,'the resident dome must publish after admission');
+  assert.equal(buffer.version,version);
+  const originalRequestCount=requests.length;
+  admission.structuralRevision++;
+  vfx.prepare(camera);await turn();
+  assert.equal(dome.visible,false);
+  const readmission=requests.slice(originalRequestCount).filter(({mesh})=>mesh===dome);
+  assert.equal(readmission.length,1);
+  for(const request of requests.slice(originalRequestCount))request.resolve();
+  await turn();vfx.prepare(camera);
+  assert.equal(dome.visible,true);
+  assert.equal(dome.geometry.getAttribute('vfxKind').data,buffer);
+  assert.equal(buffer.version,version);
+ }finally{vfx.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
+
 test('a prepared shield batch retains geometry through activation, cancellation and retirement',async()=>{
  const previousFetch=globalThis.fetch,previousBitmap=globalThis.createImageBitmap;
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});

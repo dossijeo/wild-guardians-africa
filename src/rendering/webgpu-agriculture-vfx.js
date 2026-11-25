@@ -298,7 +298,12 @@ export function createWebGpuAgricultureVfx({scene,state,residency,onError=()=>{}
   const current=({cx,cz,mesh,revision})=>!!mesh&&!!revision&&residency.get(cx,cz)===mesh&&
    (residency.getVisible??residency.get).call(residency,cx,cz)===mesh&&
    sameFootstepTerrainRevision(residency.revisionAt(cx,cz),revision);
-  if(cached?.strength===strength&&cached.matrix.equals(root.matrixWorld)&&cached.terrain.every(current))return false;
+  if(cached?.strength===strength&&cached.matrix.equals(root.matrixWorld)&&cached.terrain.every(current)){
+   // The admission step may have hidden the mesh on the previous frame.
+   // Restore its draw intent so that step can publish the ready ticket.
+   shape.mesh.visible=shape.mesh.geometry.drawRange.count>0;
+   return false;
+  }
   const previous=activeWorkDependencies,missing=activeWorkMissing,dependencies=new Map();
   activeWorkDependencies=dependencies;activeWorkMissing=false;
   try{
