@@ -99,6 +99,21 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
   sequence=item.sequence;lastElapsed=item.next.elapsed;lastEvent=item.nextEvent;return {accepted:true,sequence,...(trackChangedKeys?{changedKeys}: {})};
  }
  function acceptPrepared(result){return result.accepted?commit(result.token):result;}
+ function ownHistoricalInput(item){
+  freezeOwned(item.message,new WeakSet(),true);freezeOwned(item.next);item.copy=true;
+ }
+ // An observer may first ask for the event groups while commit is notifying it.
+ // Capture the original base and only the wire fields needed by the same validator.
+ // This reader has no transaction token and cannot authorize playback.
+ function deferPreparedHistoricalGroups(token){
+  const item=pending;
+  if(fault||!item||item.token!==token||item.unchanged||item.intermediate)throw Error('Invalid prepared historical token');
+  ownHistoricalInput(item);
+  const initial=structuredClone(state),tape=item.message.historicalEventBoundaries;
+  const {elapsed,events,worldMotionTrace}=item.message;
+  const publication={elapsed,events,worldMotionTrace:{actorTickStates:worldMotionTrace?.actorTickStates}};
+  return ()=>groupHistoricalEventBoundaries(decodeHistoricalEventBoundaries(tape,initial,publication,{requireActorTicks:true}));
+ }
  function previewPreparedHistorical(token,{requireActorTicks=false}={}){
   if(typeof requireActorTicks!=='boolean')throw TypeError('Invalid historical actor validation');
   if(fault||!pending||pending.token!==token||pending.unchanged||pending.intermediate)throw Error('Invalid prepared historical token');
@@ -107,7 +122,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
   // Ownership is explicit before retaining a decoded proof. The transport may
   // commit this same snapshot as its next read-only delta base, but observers
   // must receive independent mutable presentation objects when it is applied.
-  freezeOwned(pending.message,new WeakSet(),true);freezeOwned(pending.next);pending.copy=true;
+  ownHistoricalInput(pending);
   const boundaries=decodeHistoricalEventBoundaries(pending.message.historicalEventBoundaries,state,pending.message,{requireActorTicks}),groups=freezeOwned(groupHistoricalEventBoundaries(boundaries));
   pending.historical={base,sequence,elapsed:lastElapsed,requireActorTicks,boundaries,groups};return groups;
  }
@@ -123,7 +138,7 @@ export function createConfirmedStateReceiver(state,session,{onReconciled=null,de
   item.intermediateIndex++;item.deliveredEvents+=boundary.events.length;lastElapsed=boundary.at;return {accepted:true,sequence,at:boundary.at,eventIds:boundary.events.map(event=>event.id),...(trackChangedKeys?{changedKeys}:{})};
  }
  return {
-  prepare,prepareUnchanged,prepareHistorical,previewPreparedHistorical,beginPreparedHistorical,commitIntermediate,commit,
+  prepare,prepareUnchanged,prepareHistorical,previewPreparedHistorical,deferPreparedHistoricalGroups,beginPreparedHistorical,commitIntermediate,commit,
   discard(token){if(fault||!pending||pending.token!==token||pending.intermediateIndex>0)throw Error('Invalid prepared publication token');pending=null;},
   accept(message,options){return acceptPrepared(prepare(message,options));},
   acceptUnchanged(message,options){return acceptPrepared(prepareUnchanged(message,options));},

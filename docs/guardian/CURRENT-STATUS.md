@@ -70,6 +70,8 @@ La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original
 
 El facóquero completó la retirada nativa hasta la salida en desarrollo. NVIDIA conservó el cuerpo 1, cuatro geometrías y 78 buffers durante cinco tickets. El journal registró una sola desaparición y el consumidor confirmó el drenaje. Los 1.324 atributos ajenos comparables conservaron su buffer. C4, la activación ordinaria, Flee y las adversidades A–F siguen abiertos. [Retirada y recibos](native-attack-crops-qualification-20261125.md#retirada-tras-el-segundo-cultivo).
 
+El historial de los dos golpes se materializa bajo demanda. NVIDIA registró cero decodificaciones sin lector y conservó los 78 buffers del animal. El primer relevo completo duró 200,10 ms y el segundo 99,90 ms a 30 Hz. El primer dibujo de la salida registró una edad de 2,30 ms. La comprobación estricta de esa frontera y C4 siguen abiertas. [Contraste y recibos](native-attack-crops-qualification-20261125.md#eventos-históricos-bajo-demanda).
+
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
 
 Una partida con puerta de zarzas existente ya restaura y mueve Farm nativo. En NVIDIA el trabajador avanzó con el mismo cuerpo y 32 geometrías. La puerta conservó su raíz y geometría visibles. Quedan la compra de una puerta nueva, el cruce del corredor y C4. [Restauración y recibo](native-farm-restored-gate-20261121.md).

@@ -60,7 +60,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     return {preview,support};
    }
 
- return {async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
+ return {nativeCropLease:roster.nativeCropLease,async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
    await assert.rejects(roster.prepareAnimalCrop(proposal,support,{signal:AbortSignal.abort(),getPickAge:()=>0}));
    if(contention==='successor-history'&&proposal.reference.kind===26&&lastProof?.reference.kind===27){
     // Same owner and target as the next admission, but the stationary

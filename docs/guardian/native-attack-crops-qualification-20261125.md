@@ -94,6 +94,22 @@ A 30 Hz, el mayor intervalo fue de 166,70 ms en el primer golpe. El preparador o
 
 Pasaron 417 de las 422 pruebas seleccionadas, con cinco omisiones del perfil experimental y cero fallos. El build de producto pasó en 51,29 s. Standalone y pthread añadieron dos funciones de planificación y cierre de retirada. El runtime pthread comprobó la ejecución de esas funciones y publicó un chunk desde memoria compartida.
 
+## Eventos históricos bajo demanda
+
+El pump consulta el veto de reproducción que ya aplica el certificador mientras el roster posee el programa nativo del animal. En ese caso el feed de movimiento recibe la traza y un lector que conserva el estado base y la cinta de eventos. Solo materializa los grupos si un consumidor los pide. Ese lector usa el decodificador habitual incluso durante la reconciliación. El observador genérico sigue recibiendo la vista completa y el pump vuelve a comprobar la elegibilidad si el dueño se retira durante la notificación. La publicación ordinaria confirma los hechos por el receptor habitual.
+
+Bevy evalúa las condiciones de ejecución antes de validar los parámetros del sistema. React reúne sus observadores antes de construir el evento sintético. Ambos patrones se aplican aquí con la condición del certificador y los observadores existentes. [Bevy v0.17.3](https://github.com/bevyengine/bevy/blob/v0.17.3/crates/bevy_ecs/src/schedule/executor/multi_threaded.rs#L534-L611) · [React v19.2](https://github.com/facebook/react/blob/v19.2.0/packages/react-dom-bindings/src/events/plugins/SimpleEventPlugin.js#L203-L220).
+
+El contraste con publicaciones reales de la autoridad pasó de nueve decodificaciones a cero en nueve repeticiones por golpe sin lector. La lectura explícita durante el commit recupera cuatro subestados y tres eventos en una sola decodificación. Los controles cubren también cinta inválida, disponibilidad histórica y retirada del dueño durante la notificación.
+
+NVIDIA registró un diferimiento y cero entradas al decodificador en cada golpe. La captura anterior había invertido 23,82 y 11,74 ms en decodificación. El pump pasó de 44,60 a 24,40 ms en el primer relevo y de 22,30 a 16,40 ms en el segundo. El intervalo completo del primer relevo pasó de 166,70 a 200,10 ms. En la captura nueva, el preparador ocupó 25,41 ms en un paquete intermedio y el Host lo rechazó a los 85,71 ms porque todavía llevaba la acción revocada. El reemplazo empezó a los 100,15 ms. En el segundo relevo el intervalo pasó de 133,30 a 99,90 ms. El registro del renderer ocupó 27,60 y 20,00 ms en los dos relevos nuevos.
+
+La salida registró 133,40 ms. El Host rechazó el paquete pendiente 377 después de la revocación y luego dibujó el reemplazo. Durante la marcha, un intervalo de 39,00 ms coincidió con 6,39 ms de deserialización en el hilo Draw antes del callback. La traza no identifica el contenido de ese mensaje. Los 1.481 intervalos medidos a 30 Hz superaron 16,67 ms. C4 sigue abierto.
+
+El recorrido conservó los cinco tickets, el cuerpo 1, la raíz, las cuatro geometrías y los 78 buffers comparables en ocho etapas. Los 1.324 atributos ajenos comparables conservaron su buffer. Game registró los dos golpes y una sola desaparición, y Draw confirmó el drenaje. Los primeros cuatro tickets empezaron a edad cero. El primer envío real de la salida dibujó el ticket 10 con una edad de 2,30 ms y la comprobación estricta de ese borde queda abierta.
+
+Pasaron 480 de 483 pruebas. Los tres fallos se reprodujeron con las preimágenes de la base. El build pasó en 49,31 s. [Comparación, controles, trazas y hashes](performance/native-attack-crops-qualification-20261125.json).
+
 ## Regresión
 
 Pasaron 512 de 522 pruebas seleccionadas. Cinco quedaron omitidas y cinco casos QA-100 de último golpe a trabajador reprodujeron los mismos fallos de la línea base. El build de producto con WebGPU Worker y Draw remoto pasó en 1 min 5 s. Standalone y pthread conservaron las firmas existentes y añadieron 25 funciones de los contratos de ruta, golpe y estado del animal.

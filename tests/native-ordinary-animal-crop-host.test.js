@@ -2,6 +2,7 @@ import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end
 import test from 'node:test';
 import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
 import {sameNativeWorldBoundary} from '../src/world/native-world-boundary.js';
+import {checkCropHitPreview} from './helpers/native-crop-hit-preview.js';
 import {originalRig} from './helpers/native-animal-crop-rig.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import assert from 'node:assert/strict';
@@ -158,7 +159,7 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
  const {s,manifest,chunkKeys}=fixture(),ready=[],commits=[];
  const retired=[];
  const rig=await originalRig(structuredClone(s),manifest,{contention:'successor-history',onNativeCropStrikeRetired:r=>retired.push(r)});
- const f=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest,onPrepare:r=>rig.prepare(r.resources),onReady:r=>new Promise(resolve=>ready.push(resolve)),onCommit:(r,data)=>{
+ const f=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,observeWorldMotion:!forgePreviousTicket,captureHistoricalEvents:!forgePreviousTicket,chunkKeys,getTerrainManifest:()=>manifest,onPrepare:r=>rig.prepare(r.resources),onReady:r=>new Promise(resolve=>ready.push(resolve)),onCommit:(r,data)=>{
   const proof=data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding;rig.commit(proof,data);commits.push(proof);
  }});
  let altered=false;
@@ -173,7 +174,11 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
  try{
   let state=f.snapshot(),afterHit=null;const hits=[];
   const actor=()=>state.raid.animals[0],pose=()=>[actor().x,actor().z,actor().heading,actor().motionPhase];
-  const step=async()=>{state=JSON.parse(f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false}).snapshot);rig.update(structuredClone(state));await f.present();};
+  const step=async()=>{
+   const message=f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false,captureClockSegments:!forgePreviousTicket});
+   if(!forgePreviousTicket&&message.events.some(event=>event.type==='AnimalLogicalHit'))checkCropHitPreview(state,message,rig.nativeCropLease);
+   state=JSON.parse(message.snapshot);rig.update(structuredClone(state));await f.present();
+  };
   for(const [i,kind] of [26,27,26,27].entries()){
    if(i===2){
     assert.equal(actor().targetId,null);assert.equal(actor().reservation,null);assert.equal(actor().hitsRemaining,1);
