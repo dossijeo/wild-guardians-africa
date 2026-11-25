@@ -1656,5 +1656,160 @@
         }
       }
     ]
+  },
+  "gatedFirstImpactReturnPipelines": {
+    "baseCommit": "08b9c9832910536986ec985ea9b2afd09069833f",
+    "patch": {
+      "path": ".cache/c4-return-rig/center-strike-return.patch",
+      "sha256": "e01a04522cdd72a9169f6132ffd7c77f24ee15a43a912f16e3ffead816e80e45"
+    },
+    "tests": {
+      "source": {
+        "passed": 166,
+        "artifact": {
+          "path": ".cache/c4-return-rig/final.tap",
+          "sha256": "d557923504440f2c94f8065e86873c345de0c798cd1e54927ffc13973f0b4327"
+        }
+      },
+      "branch": {
+        "passed": 73,
+        "artifact": {
+          "path": ".cache/c4-return-rig/branch-impact.tap",
+          "sha256": "5edaabdbbb6fe512b3443f664b23c51b1009773e64879fa1b2d5bdd9912d513f"
+        }
+      },
+      "buildSeconds": 49.1
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/c4-return-rig/center-return-rig-nvidia.json",
+        "sha256": "b11579edaeeeb6434ded13f5c68bd6d7522ee1d416e47ec1c5b2160be23002b0"
+      },
+      "trace": {
+        "path": ".cache/c4-return-rig/center-return-rig-nvidia.trace.json.gz",
+        "sha256": "173f41771a2ec1ef60a4ee50d9f89fa45b3c9b87d73927b6d057d7b3bcca3a70",
+        "dataLossOccurred": false
+      },
+      "comparison": {
+        "path": ".cache/c4-return-rig/center-return-rig-nvidia.comparison.json",
+        "sha256": "d5e2269af003493d53d341b0ad6ea554fb2f2e2b71a8c359eeceb9f34adfc23d"
+      },
+      "displayHz": 30,
+      "firstHitHp": 580,
+      "firstImpactWithoutStrikeBinding": true,
+      "damagedCenterSelectable": true,
+      "drained": true,
+      "before": {
+        "sequence": 297,
+        "intervalMs": 967,
+        "rendererMs": 267.8,
+        "nodeBuildMs": 237.69999999552965,
+        "nodeBuildCalls": 8,
+        "resourceWaitMs": 445.60009765625,
+        "firstImpactPipelineJobs": 8,
+        "surfaceToReadyMs": 2369.794189453125,
+        "preparationDraws": 68,
+        "maxIntervalDuringPreparationMs": 125.89990234375
+      },
+      "after": {
+        "sequence": 302,
+        "intervalMs": 200.10009765625,
+        "rendererMs": 23.6,
+        "nodeBuildMs": 0,
+        "nodeBuildCalls": 0,
+        "resourceWaitMs": 0,
+        "firstImpactPipelineJobs": 0,
+        "surfaceToReadyMs": 2440.9599609375,
+        "preparationDraws": 73,
+        "maxIntervalDuringPreparationMs": 35.7001953125
+      },
+      "resources": {
+        "common": 1575,
+        "sameReference": 1575,
+        "sameVersion": 1497
+      },
+      "reusedPipelines": [
+        {
+          "id": "Pipeline:6102",
+          "pass": "shadow",
+          "mesh": 866,
+          "geometry": 366,
+          "material": 296,
+          "source": 377,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6078",
+          "pass": "shadow",
+          "mesh": 864,
+          "geometry": 364,
+          "material": 296,
+          "source": 375,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6090",
+          "pass": "shadow",
+          "mesh": 865,
+          "geometry": 365,
+          "material": 296,
+          "source": 376,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6066",
+          "pass": "shadow",
+          "mesh": 863,
+          "geometry": 363,
+          "material": 296,
+          "source": 374,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6026",
+          "pass": "color",
+          "mesh": 864,
+          "geometry": 364,
+          "material": 375,
+          "source": null,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6053",
+          "pass": "color",
+          "mesh": 866,
+          "geometry": 366,
+          "material": 377,
+          "source": null,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6012",
+          "pass": "color",
+          "mesh": 863,
+          "geometry": 363,
+          "material": 374,
+          "source": null,
+          "preparedBeforeReady": true
+        },
+        {
+          "id": "Pipeline:6039",
+          "pass": "color",
+          "mesh": 865,
+          "geometry": 365,
+          "material": 376,
+          "source": null,
+          "preparedBeforeReady": true
+        }
+      ],
+      "residual": {
+        "path": ".cache/c4-return-rig/center-return-rig-nvidia.residual-cut.json",
+        "sha256": "1b81cc061559ac37f0b5a448878d5882b85f5e63e19b3aa98aeecb4e5d5f4242",
+        "staleOpportunities": 5,
+        "previousSequence": 300,
+        "postedAfterMs": 157.2001953125,
+        "admittedAfterMs": 173
+      }
+    }
   }
 }

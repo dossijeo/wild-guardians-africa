@@ -174,6 +174,12 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     finalize(data){owner.proof=part.validateCommit(data);entry.cropOwner=owner;admittedCrop=owner;entry.cropPending=null;finished=true;signal.removeEventListener('abort',cancel);
       if(previous)retireCrop(previous);else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};pipelineAdmission.deferRelease(actor.root,release);}
       onSelectableChange();}};
+   if(center&&!travel){
+    // Detaching the strike reinstalls the route binding's original materials.
+    // Admit that exact return on the live meshes before the strike can start.
+    const materialAlternatives=meshes.map(mesh=>({mesh,material:oldBinding.originalMaterial(mesh)}));
+    part.requests=[{object:actor.root,options:{signal,include:meshes,materialAlternatives}},part.request];
+   }
    return attachNativeSourcePresentation(part,()=>activated);
   }catch(error){cancel();throw error;}
  }

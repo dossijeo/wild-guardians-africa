@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+El primer dibujo tras el golpe al centro usa los ocho pipelines admitidos antes de READY de Strike27. En NVIDIA, la espera de esos recursos bajó de 445,60 ms a cero y el render de 267,80 a 23,60 ms. El intervalo quedó en 200,10 ms, con cinco oportunidades rechazadas por obsolescencia. C4 queda abierto en el relevo al paquete nuevo. [Tramos y recibo](native-desert-mixed-flight-center-20261125.md#materiales-del-facóquero-al-cerrar-el-golpe).
+
 La calificación de Escudo con el reloj en marcha reutiliza el lote de la cúpula y captura kind3 al alcanzar la cabeza del FIFO. NVIDIA confirma que Game avanza con la geometría retenida, adquiere el polígono 10 a 11,60 s, conserva el cuerpo 1 de Farm y drena. La captura tarda 104,60 ms hasta GO en esa sesión. Quedan el menú ordinario, otras cohortes y C4. [Corte de reloj y recibo](webgpu-shield.md#alta-con-el-reloj-en-marcha).
 
 El primer daño de un centro residente en Desierto usa el Worker de edificios. En NVIDIA, el trabajo síncrono del impacto bajó de 647,80 a 30,70 ms. El preparador conservó las 1.539 referencias comparables y el intervalo completo fue de 967 ms. Siguen abiertos el coste de render y la espera de pipelines. La preparación anterior a READY tarda más y mantiene los dibujos durante la espera. [Contraste y alcance](native-desert-mixed-flight-center-20261125.md#preparación-de-la-geometría-del-primer-daño).

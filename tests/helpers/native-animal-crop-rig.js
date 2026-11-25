@@ -47,6 +47,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    assetBank:{async acquire(){return {model,clips:prepareAnimalClips(asset.animations),release(){}};},tick(){},dispose(){}},pipelineAdmission,onError:e=>{throw e;},onBakedWalkError:(_s,e)=>{throw e;}});
  roster.sync();let part=null,age=0,lastProof=null;
  const intact=()=>{for(const [mesh,g,p,n] of original){assert.equal(mesh.geometry,g);assert.equal(g.attributes.position,p);assert.equal(g.attributes.normal,n);}};
+ let preparedReturn=null,centerReturns=0;
  function historicalObservation(displacement,validSupport=true){
    const entity=state.raid.animals[0],root=roster.get(animal.id).root;
    const start=state.elapsed,end=start+.05,y=root.position.y;
@@ -94,6 +95,19 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     assert(lateHistory.signal.aborted);lateHistory.resolve();
     await new Promise(resolve=>setImmediate(resolve));assert(part.valid());
    }
+   if(proposal.reference.kind===27&&proposal.reference.purpose==='center'){
+    const requests=part.requests??[part.request],root=roster.get(animal.id).root;
+    preparedReturn=new Map();
+    for(const request of requests){
+     const {object,options}=request;
+     assert.equal(object,root);
+     for(const {mesh,material} of options.materialAlternatives){
+      assert(options.include.includes(mesh));
+      assert.notEqual(mesh.material,material,'preparation must leave the route visible');
+      if(request!==part.request)preparedReturn.set(mesh,material);
+     }
+    }
+   }else assert.equal(part.requests,undefined);
    part.activate();assert(part.valid());part.rollback();assert(part.valid());part.activate();part.withSourcePresentation(()=>intact());assert(part.valid());},
   commit(proof,data){const field=proof.reference.kind===26?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
     const other=structuredClone(data);other[field].preparedReference.bodyId++;assert.throws(()=>part.validateCommit(other));
@@ -118,6 +132,14 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    assert(observe(.05).ok);assert.equal(historicalAdmissions,1);intact();
   },
   presented(value){age=value;const restore=roster.get(animal.id).preparePick();assert.equal(typeof restore,'function');restore();intact();},
-  update(s){Object.assign(state,s);roster.sync();if(!s.raid){assert.equal(roster.get(animal.id),null);assert.equal(roster.nativeCropLease(),null);return;}intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
+  get centerReturns(){return centerReturns;},
+  update(s){const lease=roster.nativeCropLease();Object.assign(state,s);roster.sync();
+   if(preparedReturn&&lease&&!roster.nativeCropLease()&&s.raid){
+    const actor=roster.get(animal.id),visible=[];
+    actor.root.traverseVisible(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)visible.push(mesh);});
+    assert(actor.isBakedWalking());assert.equal(visible.length,4);
+    for(const mesh of visible)assert(preparedReturn.get(mesh)===mesh.material,'first ordinary draw needs the exact prepared return material');
+    preparedReturn=null;centerReturns++;
+   }if(!s.raid){assert.equal(roster.get(animal.id),null);assert.equal(roster.nativeCropLease(),null);return;}intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
   close(){releaseWalk();lateHistory?.resolve();part?.cancel();roster.dispose();terrain.dispose();residency.dispose();mat.dispose();for(const value of owned.values())value.dispose();session.dispose();}};
 }

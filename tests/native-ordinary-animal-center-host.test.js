@@ -239,6 +239,7 @@ test('the Desert center route, both strikes and retreat keep one acquired animal
     assert.equal(new Set(acquired.map(({reference}) => reference.bodyId)).size, 1);
     assert.equal(acquired[2].reference.endTime, acquired[2].reference.worldBoundary.effectiveTime);
     assert.deepEqual([acquired[2].reference.x,acquired[2].reference.z], pose(terminal).slice(0,2));
+    assert.equal(rig.centerReturns,2);
     const structureHits = final.events.filter(event => event.type === 'StructureHit');
     assert.deepEqual(structureHits.map(({targetId,structureHit}) => [targetId,structureHit.previousHp,structureHit.hp]),
       [['structure-2',600,580],['structure-2',580,560]]);
