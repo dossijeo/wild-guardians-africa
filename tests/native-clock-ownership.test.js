@@ -15,33 +15,53 @@ const blockers=section('function remotePresentationBlockers(){','\n');
 const nativeLease=section('function nativeResourceLease(){','\n');
 const remoteLease=section('function remoteClockLease(','  function renderScene(');
 const preparation=section('canPrepareInterval:()=>{','},certify:group.certify').slice('canPrepareInterval:'.length)+'}';
-const select=new Function('workers','settlements','crops','visualClock','remoteMotionGroup',`${nativeLease}\n${blockers}\n${remoteLease}\nconst group=remoteMotionGroup,historicalClock=visualClock;return {prepare:${preparation},clock:remoteClockLease,blockers:remotePresentationBlockers};`);
+const select=new Function('workers','settlements','crops','roster','visualClock','remoteMotionGroup',`${nativeLease}\n${blockers}\n${remoteLease}\nconst group=remoteMotionGroup,historicalClock=visualClock;return {prepare:${preparation},clock:remoteClockLease,blockers:remotePresentationBlockers};`);
 
-function fixture({gate=null,worker=null,provisional=0}={}){
+function fixture({gate=null,worker=null,animal=null,provisional=0}={}){
  let now=0,sequence=0,lastElapsed=0,committed=null;
  const clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
  const support={sequence:1,start:0,end:.1,valid:()=>true,actors:[]};
- const animals={historicalActorIds:()=>[],prepareHistoricalMotion:()=>({ok:true,remoteAutonomous:true}),startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){}};
- const group=createConfirmedHistoricalMotionGroup({animals,getSupport:()=>support,inputPolicy:'ordered-boundary'});
- const owners={gate,worker},surface=select({nativeRouteLease:()=>owners.worker},{nativeGateLease:()=>owners.gate,status:()=>({provisional})},null,clock,group);
+ const owners={gate,worker,animal};
+ const animals={nativeCropLease:()=>owners.animal,historicalActorIds:()=>[],prepareHistoricalMotion:()=>({ok:true,remoteAutonomous:true}),startHistoricalMotion:()=>true,historicalMotionCurrent:()=>true,finishHistoricalMotion(){},abortHistoricalMotion(){}};
+ const group=createConfirmedHistoricalMotionGroup({animals,getSupport:()=>support,inputPolicy:'ordered-boundary',diagnostics:true});
+ const surface=select({nativeRouteLease:()=>owners.worker},{nativeGateLease:()=>owners.gate,status:()=>({provisional})},null,animals,clock,group);
  const segments={version:1,start:0,end:.1,startPauses:[],endPauses:[],complete:true,segments:[{start:0,end:.1,realDuration:.1,rate:1}]};
  const preview={sequence:1,start:0,end:.1,safeForAutonomousPlayback:false,reasons:['visual-time-and-support-unverified'],trace:{actors:[],spatialEvidence:{},separationEvidence:{},physicsActivity:{samplesComplete:true,observed:false},actorTickStates:{complete:true}},clockSegments:segments};
  const stream={status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:.1}),lastConfirmedClockSegments:()=>committed,nextTimelineBoundary:()=>sequence?null:{sequence:1,elapsed:.1},previewNextMotionBoundary:()=>sequence?null:preview,advanceNextTimelineBoundary(){sequence=1;lastElapsed=.1;committed=segments;return true;}};
- const pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify:group.certify,start:group.start,isCurrent:group.isCurrent,finish:group.finish,abort:group.abort,canPrepareInterval:surface.prepare}});
+ const pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify:group.certify,lastRejection:group.lastRejection,start:group.start,isCurrent:group.isCurrent,finish:group.finish,abort:group.abort,canPrepareInterval:surface.prepare}});
  return {owners,clock,pump,surface,advance(ms){now=ms;return pump.advance();},metadata:()=>({preparedInterval:pump.preparedInterval(),clock:surface.clock()}),close(){pump.dispose();clock.dispose();}};
 }
 
-for(const owner of ['gate','worker'])test(`${owner} ownership prevents a historical interval from claiming the native clock`,()=>{
+for(const owner of ['gate','worker','animal'])test(`${owner} ownership prevents a historical interval from claiming the native clock`,()=>{
  const lease=Object.freeze({start:0,end:7}),f=fixture({[owner]:lease});
  try{
-  f.pump.advance();assert.equal(f.pump.preparedInterval(),null);
+  const committed=f.pump.advance();assert.equal(f.pump.preparedInterval(),null);
   assert(f.surface.prepare().remoteBlockers.includes('native-resource-clock'));
   assert(!f.surface.blockers().includes('native-resource-clock'),'native clock ownership must not disable the independent camera');
   const metadata=f.metadata();assert.equal(metadata.clock.paused,true);assert.equal(metadata.clock.safeUntil,7);assert.deepEqual(metadata.clock.segments,[]);
   assert.equal(scheduleRemoteFrame({metadata,receivedAt:0,now:0}).metadata,metadata);
-  assert.equal(f.pump.status().historicalDiagnostics.preparationBlockers['native-resource-clock'],1);
-  assert.equal(f.advance(150),1,'confirmed fallback still commits its real endpoint');assert.equal(f.clock.elapsed,.1);
+  const diagnostics=f.pump.status().historicalDiagnostics;
+  if(owner==='animal'){
+   assert.equal(diagnostics.lastRejection.reason,'animal-native-crop-owner');
+   assert.equal(committed,1,'animal ownership commits directly through the confirmed stream');
+  }else{
+   assert.equal(diagnostics.preparationBlockers['native-resource-clock'],1);
+   assert.equal(f.advance(150),1,'confirmed fallback still commits its real endpoint');
+  }
+  assert.equal(f.clock.elapsed,.1);
   assert.equal(f.owners[owner],lease,'owner and its exact coverage are retained');
+ }finally{f.close();}
+});
+
+test('a mixed native frame retains the animal clock after the worker reaches refuge',()=>{
+ const worker={start:0,end:2},animal={start:1,end:7},f=fixture({worker,animal});
+ try{
+  assert.equal(f.metadata().clock.elapsed,1);
+  assert.equal(f.metadata().clock.safeUntil,7);
+  f.owners.worker=null;
+  assert(f.surface.prepare().remoteBlockers.includes('native-resource-clock'));
+  assert.equal(f.metadata().clock.safeUntil,7);
+  assert.equal(f.owners.animal,animal);
  }finally{f.close();}
 });
 
