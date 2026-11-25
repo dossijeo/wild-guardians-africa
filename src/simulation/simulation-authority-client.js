@@ -91,7 +91,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
    }
    pump();return true;
   }
-  const nativeIntentControlApi={prepareNativeStructureCommand:command=>nativeStructureRequest('prepare',command),finishNativeStructureCommand:command=>nativeStructureRequest('finish',command),quiesceNativeIntentProduction(id,options){return nativeProductionRequest('quiesce',id,id,options);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port,{recoveryHold}={}){
+  const nativeIntentControlApi={qualifiesRunningShield:import.meta.env?.DEV===true&&qualifyRunningShield===true,prepareNativeStructureCommand:command=>nativeStructureRequest('prepare',command),finishNativeStructureCommand:command=>nativeStructureRequest('finish',command),quiesceNativeIntentProduction(id,options){return nativeProductionRequest('quiesce',id,id,options);},resumeNativeIntentProduction(holdId,id){return nativeProductionRequest('resume',id,holdId);},attachNativeResourcePreparation(port,{recoveryHold}={}){
    if(state!=='ready'||nativeResourceAttachment||!port||typeof port.postMessage!=='function')return Promise.reject(Error('Native resource attachment unavailable'));
    return new Promise((resolve,reject)=>{nativeResourceAttachment={port,resolve,reject};try{worker.postMessage({kind:'attachNativeResourcePreparation',session,port,...(recoveryHold===undefined?{}:{recoveryHold})},[port]);}catch(error){rejectNativeResourceAttachment(error);}});
   },attachNativeIntentControl(port,{recoveryHold}={}){

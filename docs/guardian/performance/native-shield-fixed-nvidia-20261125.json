@@ -523,5 +523,87 @@
       "samples": 899,
       "maxIntervalMs": 38.89990234375
     }
+  },
+  "qualifiedHostedPickedShield": {
+    "baseCommit": "54eef5a082db87a6ecebcffe502d81d31e082e25",
+    "scope": "DEV qualification only, actual host module without a command override, empty dynamic physics driver",
+    "tests": {
+      "branch": {
+        "passed": 48,
+        "artifact": {
+          "path": ".cache/shield-empty-driver/hosted-gesture-branch.tap",
+          "sha256": "4564da114d3693ae0bd09aaa07db11c3cd39d2e652b2c9a69e2b02ca987d5158"
+        }
+      },
+      "buildSeconds": 50.74
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-empty-driver/hosted-confirmed-pick-nvidia.json",
+        "sha256": "76b3301823c5c44c0dab81093d5b0edda5bfc0cf7adf87d373906a39ff2101a5"
+      },
+      "trace": {
+        "path": ".cache/shield-empty-driver/hosted-confirmed-pick-nvidia.trace.json.gz",
+        "sha256": "f414f3ae49e10028fb53086b76049ef8c0bae22fd1461fba138f11abeba8b873",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "pick": {
+        "entityId": null,
+        "hitPoint": {
+          "x": -13.243911396373443,
+          "y": 17.507015228271484,
+          "z": 11.375572135231572
+        },
+        "point": {
+          "x": -13.243911396373443,
+          "z": 11.375572135231572
+        },
+        "sequence": 5
+      },
+      "command": {
+        "kind": "castShield",
+        "id": "shield-across-native-farm",
+        "x": -13.243911396373443,
+        "z": 11.375572135231572,
+        "selection": {
+          "origin": {
+            "x": -12.549049814455323,
+            "y": 19.207015228271484,
+            "z": 14.293990779287672
+          },
+          "contact": {
+            "x": -13.243911396373443,
+            "y": 17.507015228271484,
+            "z": 11.375572135231572
+          }
+        }
+      },
+      "elapsedWhileGeometryHeld": [
+        11.749999999999963,
+        12.049999999999956
+      ],
+      "configuredHoldMs": 300,
+      "firstDraw": 34,
+      "elapsed": 12.149999999999954,
+      "ticket": 3,
+      "captureToGoMs": 164.199951171875,
+      "resultSequence": 46,
+      "firstIntervalMs": 33.39990234375,
+      "farmBodyId": 1,
+      "checkpoint": {
+        "sequence": 54,
+        "elapsed": 12.499999999999947
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "drained": true,
+      "maxIntervalMs": 36.800048828125,
+      "samples": 339
+    }
   }
 }
