@@ -745,6 +745,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     try {
       const startedAt = absoluteNow();
       currentTexture = null; currentViews = new Map();
+      // The intent port can revoke a submitted program after validation and
+      // before its first RAF. Its producer is waiting for this packet's ACK.
+      if(pending&&!pending.preparedWorldBoundary&&pending.admittedClockBindings.some(b=>
+          b.nativeAnimalCrop&&b.motionRecord?.isRevoked())){
+        const obsolete=pending;pending=null;
+        rejectPreparedFrame(obsolete,'Acquired animal program ended before its first presentation',true,'native-route');
+        releaseSnapshot(obsolete.resourceSnapshot);
+      }
       let next = pending;
       if(next?.preparedWorldBoundary&&!frameWorldCurrent(next))next=null;
       if (next) {
@@ -1933,7 +1941,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                   Object.keys(message).some(k=>k!==cropField&&k.startsWith('native')&&Array.isArray(message[k])&&message[k].length))
                  throw Error('Animal crop release differs from its retained frame');
                routeControl.installAnimalCrop(boundary,binding);
-               if(ref.kind===27)for(const b of pending.admittedClockBindings){
+               if(ref.kind===27||ref.purpose==='retreat')for(const b of pending.admittedClockBindings){
                  const registered=clockBindings.get(`${b.id}:${b.byteOffset}`);
                  if(registered&&sameNativeAnimalCropReference(registered.nativeAnimalCrop,ref)&&
                     sameNativeAnimalCropReference(b.nativeAnimalCrop,ref)&&b.motionRecord?.isCurrent())

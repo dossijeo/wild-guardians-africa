@@ -6,6 +6,10 @@ const common=['actorId','bodyId','targetId','centerId','requestSequence','slot',
 const strike=['routeTicket','routeAssignment','clip','duration'];
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const validTime=n=>Number.isFinite(n)&&n>=0;
+function validDestination(value,kind){
+ if(value.purpose==='retreat')return kind===26&&value.targetId===null&&value.centerId===null&&value.centerX===null&&value.centerZ===null;
+ return value.purpose===undefined&&id(value.targetId)&&id(value.centerId)&&Number.isFinite(value.centerX)&&Number.isFinite(value.centerZ);
+}
 const fields=kind=>kind===26?common:[...common,...strike];
 
 // A resource identifies the escrowed program. Only the release from the
@@ -13,19 +17,19 @@ const fields=kind=>kind===26?common:[...common,...strike];
 export function copyNativeAnimalCropReference(value,kind){
  if(![26,27].includes(kind)||value?.kind!==kind||value.version!==1)throw TypeError('Invalid native crop resource family');
  const boundary=copyNativeWorldBoundary(value.worldBoundary);
- if(!boundary||!['actorId','bodyId','targetId','centerId','requestSequence','generation','sourceControlSequence'].every(key=>id(value[key]))||
+ if(!boundary||!validDestination(value,kind)||!['actorId','bodyId','requestSequence','generation','sourceControlSequence'].every(key=>id(value[key]))||
     !Number.isSafeInteger(value.slot)||value.slot<0||value.slot>0xffffffff||value.generation>0xffffffff||
     value.sourceControlSequence<value.requestSequence||!Number.isFinite(value.radius)||value.radius<=0||
-    !['x','z','yaw','targetX','targetZ','centerX','centerZ'].every(k=>Number.isFinite(value[k]))||!validTime(value.phase)||
+    !['x','z','yaw','targetX','targetZ'].every(k=>Number.isFinite(value[k]))||!validTime(value.phase)||
     !validTime(value.endTime)||value.endTime<boundary.effectiveTime)throw TypeError('Invalid native crop resource owner');
  if(kind===27&&(!id(value.routeTicket)||value.routeTicket>=boundary.ticket||!id(value.routeAssignment)||
     value.routeAssignment<=value.requestSequence||value.routeAssignment>value.sourceControlSequence||
     !Number.isInteger(value.clip)||value.clip<0||value.clip>3||!Number.isFinite(value.duration)||value.duration<=0||
     value.endTime!==boundary.effectiveTime+value.duration))throw TypeError('Invalid native strike source');
  return Object.freeze({version:1,kind,worldBoundary:boundary,sourceControlSequence:value.sourceControlSequence,endTime:value.endTime,
-  ...Object.fromEntries(fields(kind).map(key=>[key,value[key]]))});
+  ...(value.purpose?{purpose:value.purpose}:{}),...Object.fromEntries(fields(kind).map(key=>[key,value[key]]))});
 }
-const sameOwner=(a,b)=>!!a&&!!b&&[26,27].includes(a.kind)&&a.kind===b.kind&&
+const sameOwner=(a,b)=>!!a&&!!b&&[26,27].includes(a.kind)&&a.kind===b.kind&&a.purpose===b.purpose&&
  a.worldBoundary.authorityEpoch===b.worldBoundary.authorityEpoch&&a.worldBoundary.nativeSession===b.worldBoundary.nativeSession&&
  fields(a.kind).every(key=>a[key]===b[key]);
 export const sameNativeAnimalCropReference=(a,b)=>sameOwner(a,b)&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&
@@ -54,6 +58,7 @@ export function copyNativeAnimalCropProposal(value,kind){
  if(value.startTime!==reference.worldBoundary.effectiveTime||value.endTime!==reference.endTime||
     value.motionMode!=='animal'||value.motionFlags!==0||value.radius!==reference.radius||!Number.isSafeInteger(value.profile)||value.profile<0||
     rows[1]!==reference.x||rows[2]!==reference.z||rows[4]!==reference.phase||rows.at(-9)!==1||
+    reference.purpose==='retreat'&&(rows.at(-15)!==Math.fround(reference.targetX)||rows.at(-14)!==Math.fround(reference.targetZ))||
     !Array.isArray(value.gates)||value.gates.length)throw TypeError('Native crop route program lost its source or arrival');
  return Object.freeze({...base,startTime:value.startTime,endTime:value.endTime,rowWidth:16,rows,motionFlags:0,
    radius:value.radius,profile:value.profile,motionMode:'animal',gates:Object.freeze([])});
@@ -62,13 +67,13 @@ export function copyNativeAnimalCropProposal(value,kind){
 const requestFields=common.filter(key=>key!=='slot'&&key!=='generation');
 export function copyPendingAnimalCrop(value){
  if(value?.version!==1||!value.authorityEpoch||typeof value.authorityEpoch!=='string'||!id(value.nativeSession)||
-    !['actorId','bodyId','targetId','centerId','requestSequence'].every(key=>id(value[key]))||
-    !requestFields.every(key=>Number.isFinite(value[key]))||value.phase<0||value.radius<=0)
+    !validDestination(value,26)||!['actorId','bodyId','requestSequence'].every(key=>id(value[key]))||
+    !['x','z','yaw','targetX','targetZ','radius','phase'].every(key=>Number.isFinite(value[key]))||value.phase<0||value.radius<=0)
    throw TypeError('Invalid resting crop request');
  return Object.freeze({version:1,authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,
-   ...Object.fromEntries(requestFields.map(key=>[key,value[key]]))});
+   ...(value.purpose?{purpose:value.purpose}:{}),...Object.fromEntries(requestFields.map(key=>[key,value[key]]))});
 }
 export function animalCropMatchesRequest(r,q){
- return !!q&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&
+ return !!q&&r.purpose===q.purpose&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&
    requestFields.every(key=>r[key]===q[key]);
 }

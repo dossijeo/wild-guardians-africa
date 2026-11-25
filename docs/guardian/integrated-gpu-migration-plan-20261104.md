@@ -6,7 +6,7 @@ Action15 ya se publica en la recarga pausada de Repair. NVIDIA conservó 22 segu
 
 El guardado público durante Farm conserva la pose y apertura parcial del portón. Al recargar en NVIDIA, Farm obtiene un corredor nuevo y llega a Idle con el mismo cuerpo y los buffers residentes. El relevo posterior de Farm a Flee durante una incursión sigue pendiente y depende de conectar la locomoción causal de AttackCrops. [Guardado de Farm](native-farm-public-checkpoint-handoff-20261123.md), [Línea base de AttackCrops](native-ordinary-attack-crops-20261121.md).
 
-La calificación de desarrollo de AttackCrops une las marchas y los golpes a dos cultivos de Sabana. En NVIDIA conservó el cuerpo, sus cuatro geometrías y 78 buffers comparables. La activación ordinaria espera la salida del animal y las adversidades A–F. Quedan Flee y C4. [Calificación y evidencia](native-attack-crops-qualification-20261125.md).
+La calificación de desarrollo de AttackCrops une las marchas, los golpes a dos cultivos de Sabana y la retirada hasta la salida. En NVIDIA conservó el cuerpo, sus cuatro geometrías y 78 buffers comparables. Quedan la activación ordinaria, las adversidades A–F, Flee y C4. [Calificación y evidencia](native-attack-crops-qualification-20261125.md).
 
 El Host ya puede aislar una escritura CPU de textura entre dos publicaciones sin reconstruir recursos ajenos. La colocación individual de centro y muro activó una copia de 1×64 en NVIDIA Turing y terminó sin errores WebGPU. El contraste físico del Host reprodujo el rechazo anterior y verificó los texels, los IDs y el fence después del cambio. Pasaron las 337 pruebas seleccionadas y el build. La latencia del gesto y C4 siguen abiertas. [Implementación y evidencia](native-standalone-texture-upload-20261121.md).
 

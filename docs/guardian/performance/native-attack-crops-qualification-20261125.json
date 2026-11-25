@@ -795,5 +795,303 @@
       "knownHistoricalContentionFailures": 3,
       "buildSeconds": 49
     }
+  },
+  "retreatQualification": {
+    "mode": "DEV qualification with two crops and completed retreat, NVIDIA, physical 30 Hz",
+    "firstPhysicalAttempt": {
+      "receipt": {
+        "file": "native-attack-crops-retreat-nvidia-20261125.failure.json",
+        "sha256": "270c1681113916a3556b30ba3cd06e18b4e2351565b8e550399cac6492ae0fc4",
+        "trace": {
+          "file": "native-attack-crops-retreat-nvidia-20261125.trace.json.gz",
+          "sha256": "125552b8264a4b2db80a364dca48f979e3c86300685a53bdb61be93ccb02e359",
+          "loss": false
+        }
+      },
+      "error": "Native resource preparation timed out",
+      "preparationTicket": 5,
+      "sourcePublication": 738,
+      "surfacePublication": 697,
+      "pendingPublications": 32,
+      "lastReceivedPublication": 729,
+      "waitMs": 10001.5,
+      "prepCallbacksAfterRequest": 300,
+      "drawCallsAfterRequest": 0,
+      "exactPacketOrderKnown": false
+    },
+    "result": {
+      "receipt": {
+        "file": "native-attack-crops-retreat-pending-nvidia-20261125.json",
+        "sha256": "8d879451aec7b7af9fd469e7e8e13e8c6378773358f31add74898f091e379984",
+        "trace": {
+          "file": "native-attack-crops-retreat-pending-nvidia-20261125.trace.json.gz",
+          "sha256": "c80cc030ab5f3b400e3b55de1649775738e81ca6e0178c96f831cc3cdd601fa2",
+          "loss": false
+        }
+      },
+      "body": 1,
+      "damage": [
+        {
+          "attackId": "attack-661",
+          "target": "plant-373",
+          "elapsed": 401.99999999998255,
+          "count": 1
+        },
+        {
+          "attackId": "attack-665",
+          "target": "plant-337",
+          "elapsed": 408.8499999999763,
+          "count": 1
+        }
+      ],
+      "preparedAndAcquired": [
+        {
+          "kind": 26,
+          "target": 373,
+          "prepared": 1,
+          "ticket": 2,
+          "firstAge": 0,
+          "draws": 66
+        },
+        {
+          "kind": 27,
+          "target": 373,
+          "prepared": 3,
+          "ticket": 4,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": 337,
+          "prepared": 5,
+          "ticket": 6,
+          "firstAge": 0,
+          "draws": 3
+        },
+        {
+          "kind": 27,
+          "target": 337,
+          "prepared": 7,
+          "ticket": 8,
+          "firstAge": 0,
+          "draws": 18
+        },
+        {
+          "kind": 26,
+          "target": null,
+          "prepared": 9,
+          "ticket": 10,
+          "firstAge": 0,
+          "draws": 33
+        }
+      ],
+      "originalRig": {
+        "root": 341,
+        "geometries": [
+          259,
+          260,
+          261,
+          262
+        ]
+      },
+      "retainedAnimalAttributes": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorRoute",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "successorStrike",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "retreat",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "retainedOtherAttributes": {
+        "comparable": 1324,
+        "sameBuffer": 1324,
+        "sameVersion": 1259,
+        "updatedInPlace": 65,
+        "formerEntriesAbsent": 13,
+        "replaced": 0,
+        "uniqueRetainedBuffers": 1182
+      },
+      "exit": {
+        "ticket": 10,
+        "start": {
+          "time": 408.8999999999763,
+          "x": 89.74946594238281,
+          "z": 8.652749061584473,
+          "phase": 21.3542756775147,
+          "running": true,
+          "speed": 3.8
+        },
+        "last": {
+          "time": 417.1247352977074,
+          "x": 96.83492279052734,
+          "z": 39.09113693237305,
+          "phase": 29.579010975245797,
+          "running": false,
+          "speed": 0
+        },
+        "expectedArrival": 418.27473529770634,
+        "gone": {
+          "sequence": 986,
+          "kind": "animalGone",
+          "actorId": "animal-396",
+          "at": 418.28999999996773
+        },
+        "rendered": {
+          "sequence": 381,
+          "clockElapsed": 418.33999999996774,
+          "presentationElapsed": 418.3399963378906,
+          "worldBoundary": {
+            "version": 1,
+            "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+            "nativeSession": 1,
+            "ticket": 10,
+            "effectiveTime": 410.0499999999752
+          },
+          "bindings": []
+        },
+        "raidEnded": {
+          "id": "event-670",
+          "type": "RaidEnded",
+          "simulationTime": 418.28999999996773
+        }
+      },
+      "drained": true,
+      "blockedPreparer": {
+        "duration": 550,
+        "draws": 16,
+        "stable": 16,
+        "advance": 0.49989990234377046
+      },
+      "obsoletes": [
+        {
+          "at": 1795601614333.046,
+          "sequence": 379,
+          "wasPending": false,
+          "lastReceived": 379,
+          "activeSequence": 378,
+          "reason": "The acquired crop strike was revoked before this frame arrived"
+        }
+      ]
+    },
+    "pendingOrderControl": {
+      "reproducedInDeterministicHost": true,
+      "observedInPositivePhysicalRun": false
+    },
+    "cadence": {
+      "sampledIntervals": 1476,
+      "overTarget": 1476,
+      "targetMs": 16.666666666666668,
+      "maximum": {
+        "at": 1795601598171.5999,
+        "sequence": 245,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 397.4499999999867
+        },
+        "intervalMs": 166.699951171875,
+        "drawMs": 4.60009765625,
+        "replay": false,
+        "clockElapsed": 401.99999999998255,
+        "safeUntil": 401.99999999998255,
+        "cameraVersion": null
+      },
+      "runMaximum": {
+        "at": 1795601607976.2,
+        "sequence": 316,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 410.0499999999752
+        },
+        "intervalMs": 38,
+        "drawMs": 3.099853515625,
+        "replay": true,
+        "clockElapsed": 411.8908000488352,
+        "safeUntil": 411.9499999999735,
+        "cameraVersion": null
+      },
+      "exitMaximum": {
+        "at": 1795601614405.0999,
+        "sequence": 380,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "523cf434-32e1-463e-9aa2-a3c1b68f43a4/1",
+          "nativeSession": 1,
+          "ticket": 10,
+          "effectiveTime": 410.0499999999752
+        },
+        "intervalMs": 96.099853515625,
+        "drawMs": 4.60009765625,
+        "replay": false,
+        "clockElapsed": 418.33999999996774,
+        "safeUntil": 418.33999999996774,
+        "cameraVersion": null
+      },
+      "c4Accepted": false
+    },
+    "nativeBuild": {
+      "inputs": 66,
+      "standaloneExports": 817,
+      "pthreadRawExports": 838,
+      "pthreadPublicExports": 823,
+      "added": [
+        "nav_animal_plan_finished_retreat",
+        "nav_animal_finish_retreat"
+      ],
+      "standalone": "4ad348a2369ef5187b172fe2ce172830e7815f690463739c3677d42859928a3e",
+      "pthread": "e10672265f7fa52ab61be5750dea45aa53d108d168778f5c330b89cbc482d9ca",
+      "pthreadGlue": "ce25e8aef9d10b56cdd274256d107b191e9e809f08192999a6b7fb7a7878c18c",
+      "pthreadGlueCommittedLF": "f6cf9f70c544557368aa47983e7157c59f7fe2efd65ebb0201b033926869c902"
+    },
+    "regression": {
+      "selected": 422,
+      "passed": 417,
+      "skippedExperimental": 5,
+      "failed": 0,
+      "buildSeconds": 51.29
+    }
   }
 }

@@ -1,12 +1,20 @@
 // AttackCrops uses the existing route slot, reservation and mutation ticket.
 // Preparation cannot move the body or publish an execution assignment.
+static bool animalRouteDestinationCurrent(const IntentState& s,const ActiveIntent& intent,const NativeAnimalRouteRequest& q){
+ if(intent.retreat)return !intent.lease&&!intent.target&&!q.target&&!q.center&&intent.approachKnown&&
+   intent.approachX==float(q.targetX)&&intent.approachZ==float(q.targetZ);
+ const auto target=s.targets.find(q.target),center=s.targets.find(q.center);
+ return intent.lease&&target!=s.targets.end()&&target->second.active&&target->second.kind<3&&
+   target->second.x==q.targetX&&target->second.z==q.targetZ&&center!=s.targets.end()&&center->second.active&&
+   center->second.x==q.centerX&&center->second.z==q.centerZ;
+}
 static bool animalRouteRequestCurrent(const IntentState& s,const ActiveIntent& intent){
  const auto& q=intent.animalRouteRequest;SpatialBodyView body;
- if(!q||!intent.animal||intent.retreat||intent.home||intent.task||!intent.lease||!intent.requiresResources||intent.state!=PlanningState::AwaitingResources||intent.slot>=s.routeSlots.size())return false;
- const auto& route=s.routeSlots[intent.slot];const auto target=s.targets.find(intent.target),center=s.targets.find(q->center);
+ if(!q||!intent.animal||intent.home||intent.task||!intent.requiresResources||intent.state!=PlanningState::AwaitingResources||intent.slot>=s.routeSlots.size())return false;
+ const auto& route=s.routeSlots[intent.slot];
  return route.active&&route.pendingResources&&!route.reserved&&!route.suspended&&route.actor==intent.actor&&route.generation==intent.generation&&
   q->actor==intent.actor&&q->target==intent.target&&q->sequence==intent.resourceRequestSequence&&q->at==intent.resourceRequestedAt&&
-  target!=s.targets.end()&&target->second.active&&target->second.kind<3&&target->second.x==q->targetX&&target->second.z==q->targetZ&&center!=s.targets.end()&&center->second.active&&center->second.x==q->centerX&&center->second.z==q->centerZ&&
+  animalRouteDestinationCurrent(s,intent,*q)&&
   spatialReadBody(q->body,body)&&body.kind==1&&body.flags==1&&body.x==q->x&&body.z==q->z&&body.r==q->radius&&
   !s.reservedBodies.count(q->body)&&!s.suspendedBodies.count(q->body);
 }
@@ -66,7 +74,8 @@ static int stageAnimalRoute(double actor,double session,double requestSequence){
  int result=prepareRouteTiming(d.route,intent.actor,q->x,q->z,s.effectiveTime,q->radius,1,0,0,false,true);d.topology=lazy_route_revision();
  if(previous!=intent.profile)spatial_select_nav_profile_index(previous);recordTimingResult(s,result);if(result!=1)return -7;
  d.route.originYaw=q->heading;d.route.motionOffset[1]=q->phase;
- result=animalRunDistance(d.route,*q,d.route.runDistance);if(result!=1)return result;
+ if(intent.retreat)d.route.runDistance=d.route.distances.empty()?0:d.route.distances.back();
+ else{result=animalRunDistance(d.route,*q,d.route.runDistance);if(result!=1)return result;}
  d.route.runSpeed=d.route.runDistance>0?3.8:0;result=routeTimingRepresentable(d.route);if(result!=1){recordTimingResult(s,result);return -7;}
  SpatialBodyView body;if(!spatialReadBody(q->body,body))return -3;
  s.reservationChecks++;if(!reserveRouteClear(s,intent,d.route,q->body,body))return 0;
@@ -139,11 +148,8 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
  const auto binding=route.animalRouteBinding;
  const auto source=intent.animalRouteRequest?intent.animalRouteRequest:binding?binding->source:nullptr;
  if(!source)return 0;
- if(!intent.lease||source->actor!=intent.actor||source->target!=intent.target||
+ if(!animalRouteDestinationCurrent(s,intent,*source)||source->actor!=intent.actor||source->target!=intent.target||
     !route.active||route.actor!=intent.actor||route.generation!=intent.generation)return -1;
- const auto center=s.targets.find(source->center),target=s.targets.find(source->target);
- if(center==s.targets.end()||!center->second.active||center->second.x!=source->centerX||center->second.z!=source->centerZ||
-    target==s.targets.end()||!target->second.active||target->second.x!=source->targetX||target->second.z!=source->targetZ)return -1;
  const int mode=intent.animalRouteRequest?1:intent.animalStrike?3:2;
  SpatialBodyView body;if(!spatialReadBody(source->body,body)||body.kind!=1||body.flags!=1||body.r!=source->radius)return -1;
  if(mode==1){if(!animalRouteRequestCurrent(s,intent))return -1;}

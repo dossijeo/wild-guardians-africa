@@ -3414,14 +3414,15 @@ int nav_intent_register_attack(double actorId,double targetId,
 // The raid controller has already committed the retreat transition. Pin a
 // physical route to its confirmed exit without acquiring an attack lease.
 // A missing or unresolved route leaves JS's existing exit recovery available.
-int nav_intent_plan_retreat(double actorId,double startX,double startZ,
+static int planAnimalRetreat(const FinishedAnimalStrike* source,double actorId,double startX,double startZ,
                             double exitX,double exitZ){
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !coordinate(exitX)||!coordinate(exitZ))return -1;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
+  if(!source&&s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==actor)return -2;
   const auto prior=s.activeIntents.find(actor);
   if(prior!=s.activeIntents.end()){
-    if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+    if(source||prior->second.requiresResources||!prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -2;
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
@@ -3430,12 +3431,22 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   const int count=spatial_world_route_cached(float(startX),float(startZ),
     float(exitX),float(exitZ));
   if(count<=0)return count<0?3:0;
+  const float* points=spatial_world_route_ptr();
+  if(source){
+    if(points[2*count-2]!=float(exitX)||points[2*count-1]!=float(exitZ))return 0;
+    double x=startX,z=startZ;
+    for(int i=0;i<count;i++){
+      const double nx=points[2*i],nz=points[2*i+1];
+      const int clear=spatial_animal_attack_segment_clear(x,z,nx,nz,source->radius);
+      if(clear!=1)return clear==-1?3:0;
+      x=nx;z=nz;
+    }
+  }
   uint32_t slot=uint32_t(s.routeSlots.size());
   for(uint32_t i=0;i<s.routeSlots.size();i++)
     if(!s.routeSlots[i].active){slot=i;break;}
   if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
   RouteSlot& route=s.routeSlots[slot];
-  const float* points=spatial_world_route_ptr();
   route.points.assign(points,points+size_t(count)*2);
   route.actor=actor;route.originX=startX;route.originZ=startZ;
   route.active=true;route.generation++;
@@ -3447,8 +3458,41 @@ int nav_intent_plan_retreat(double actorId,double startX,double startZ,
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
-  s.activeIntents.insert_or_assign(actor,intent);
-  emitIntentChange(s,s.activeIntents.at(actor));
+  if(source){
+    auto request=std::make_shared<NativeAnimalRouteRequest>();
+    request->actor=actor;request->body=source->body;request->at=s.effectiveTime;
+    request->x=startX;request->z=startZ;request->heading=source->yaw;
+    request->phase=source->phase;request->radius=source->radius;
+    request->targetX=exitX;request->targetZ=exitZ;
+    intent.requiresResources=true;route.pendingResources=true;
+    intent.state=PlanningState::AwaitingResources;intent.resourceRequestedAt=s.effectiveTime;
+    intent.animalRouteRequest=request;
+    auto& installed=s.activeIntents.insert_or_assign(actor,intent).first->second;
+    request->sequence=emitIntentChange(s,installed);installed.resourceRequestSequence=request->sequence;
+  }else{
+    s.activeIntents.insert_or_assign(actor,intent);
+    emitIntentChange(s,s.activeIntents.at(actor));
+  }
+  return 1;
+}
+
+int nav_intent_plan_retreat(double actor,double x,double z,double exitX,double exitZ){
+  return planAnimalRetreat(nullptr,actor,x,z,exitX,exitZ);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_retreat(double actor,double attack,double exitX,double exitZ){
+  auto& s=state();
+  if(s.proposalOpen||s.barrierProposal.pending||s.worldMutationPreview||
+     nav_animal_finished_strike_snapshot(actor)!=1||s.finishedAnimalStrike->attack!=attack)return -2;
+  const auto& source=*s.finishedAnimalStrike;
+  return planAnimalRetreat(&source,actor,source.x,source.z,exitX,exitZ);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_finish_retreat(double actor,double assignment){
+  if(nav_animal_crop_state(actor)!=2)return 0;
+  auto& s=state();const auto& intent=s.activeIntents.at(uint64_t(actor));
+  const auto& route=s.routeSlots[intent.slot];const auto& binding=route.animalRouteBinding;
+  if(!intent.retreat||!binding||binding->assignmentSequence!=assignment||route.executionPose[6]!=1||
+     route.executionPose[0]!=float(binding->source->targetX)||route.executionPose[1]!=float(binding->source->targetZ))return 0;
+  releaseIntent(s,intent.actor,PlanningState::Cancelled);s.activeIntents.erase(uint64_t(actor));
   return 1;
 }
 // Restore a saved continuous route verbatim when its remaining points are
@@ -3458,6 +3502,7 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !coordinate(exitX)||!coordinate(exitZ)||count<=0||count>4096)return -1;
   IntentState& s=state();
+  if(s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==uint64_t(actorId))return -2;
   if(s.attackRouteInput.size()<size_t(count)*2)return -1;
   float x=float(startX),z=float(startZ);
   for(int i=0;i<count;i++){
@@ -3471,7 +3516,7 @@ int nav_intent_restore_retreat(double actorId,double startX,double startZ,
   const uint64_t actor=uint64_t(actorId);
   const auto prior=s.activeIntents.find(actor);
   if(prior!=s.activeIntents.end()){
-    if(!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+    if(prior->second.requiresResources||!prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -2;
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
@@ -4233,7 +4278,7 @@ int nav_intent_attack_cancel(double actorId){
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
   const auto found=s.activeIntents.find(actor);
   if(found==s.activeIntents.end()||!found->second.animal||
-     found->second.state==PlanningState::ActionActive)return 0;
+     (found->second.retreat&&found->second.requiresResources)||found->second.state==PlanningState::ActionActive)return 0;
   releaseIntent(s,actor,PlanningState::Cancelled);
   s.activeIntents.erase(actor);
   return 1;

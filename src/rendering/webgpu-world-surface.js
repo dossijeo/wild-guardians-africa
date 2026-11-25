@@ -244,7 +244,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   const nativeFrameState=()=>({closed,prepared:preparedNativeWorldBoundary,required:remoteGpu?.requiredNativeWorldBoundary()??null,proposal:nativeGateProposal?.descriptor??terrain?.status().nativeProposal??null,resumeTarget:nativeResumeTarget});
   const nativeDrawReadiness=()=>{if(timelineRecovering||nativeRoutePreparations||nativeRouteRejected)return 'waiting';const result=nativeFrameReadiness(nativeFrameState());return result==='ready'&&nativeRejectedFrame!==null&&renderer.info.frame<=nativeRejectedFrame?'next-frame':result;};
   function onNativeCropStrikeRetired(reference){
-   if(closed||reference?.kind!==27||!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary))return;
+   if(closed||!(reference?.kind===27||reference?.kind===26&&reference.purpose==='retreat')||!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary))return;
    // The confirmed roster has detached the acquired strike. A late packet
    // from before that change must not hold its replacement behind the veto.
    nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();
@@ -559,6 +559,8 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
        if(crop){const r=binding.reference;
          onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,()=>{
            const a=state.raid?.animals.find(v=>v.id==='animal-'+r.actorId);
+           if(r.purpose==='retreat')return a?.species==='warthog'&&a.status==='retreating'&&!a.targetId&&a.hitsRemaining===0&&
+             (a.exit??a.spawn)?.x===r.targetX&&(a.exit??a.spawn)?.z===r.targetZ;
            return !!a&&a.species==='warthog'&&a.targetId==='plant-'+r.targetId&&
              (crop===26?['entering','walking'].includes(a.status):a.status==='attacking'&&a.attackId==='attack-'+binding.attackId);
          });if(nativeGateProposal===item)nativeGateProposal=null;

@@ -99,7 +99,10 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  async function prepareAnimalCrop(packet,support,{signal,getPickAge}){
   const ref=packet.reference,id='animal-'+ref.actorId,entry=entries.get(id),previous=entry?.cropOwner,travel=ref.kind===26;
   const names=travel?['Walking','Running']:[raidStrikeClips[ref.clip]],key=travel?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
-  const source=()=>entry?.entity?.id===id&&entry.entity.species==='warthog'&&entry.entity.targetId==='plant-'+ref.targetId&&
+  const source=()=>entry?.entity?.id===id&&entry.entity.species==='warthog'&&(ref.purpose==='retreat'?
+    entry.entity.status==='retreating'&&entry.entity.hitsRemaining===0&&!entry.entity.targetId&&
+    (entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&(entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ:
+    entry.entity.targetId==='plant-'+ref.targetId)&&
     !entry.entity.magicDown&&!poses.has(id)&&!provisional.byTarget.has(id)&&!historyRun&&
     (travel?!previous:previous?.proof?.assignmentSequence===ref.routeAssignment&&previous.proof.reference.worldBoundary.ticket===ref.routeTicket&&previous.proof.reference.bodyId===ref.bodyId);
   if(!source()||entry.cropPending||!support?.valid()||signal?.aborted||!pipelineAdmission||!bakedWalkBank||!bakedRunBank||!travel&&!bakedAttackBank)
@@ -175,7 +178,10 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  function remove(id,entry){entry.cropPending?.cancel?.();releaseCropOwner(entry);walkRetries.cancel(id);runRetries.cancel(id);reconciling.delete(entry);entry.motionPreparing?.controller.abort();if(historyRun?.entries.has(id))historyRun.invalid=true;finishTarget(id);onSelectableChange();entries.delete(id);entry.entity=null;entry.controller.abort();releaseRosterMotion(entry,pipelineAdmission);releaseRosterActor(entry.actor,pipelineAdmission);disposePendingRosterActor(entry,pipelineAdmission);}
  function sync(){
   if(closed)return;const desired=new Map();for(const entity of state.raid?.animals??[]){if(entity.status==='gone'||onlyActorId!==null&&entity.id!==onlyActorId)continue;if(typeof entity.id!=='string'||!entity.id||desired.has(entity.id))throw Error('Invalid confirmed animal roster');desired.set(entity.id,entity);}
-  for(const [id,entry] of entries){const entity=desired.get(id);if(!entity||entity.species!==entry.species)remove(id,entry);}
+  for(const [id,entry] of entries){const entity=desired.get(id);if(!entity||entity.species!==entry.species){
+    const reference=entry.cropOwner?.proof?.reference;remove(id,entry);
+    if(!entity&&reference?.purpose==='retreat'&&state.elapsed>=reference.endTime)onNativeCropStrikeRetired(reference);
+  }}
   for(const [id,entity] of desired){let entry=entries.get(id);if(entry){const statusChanged=entry.lastStatus!==entity.status;entry.lastStatus=entity.status;entry.entity=entity;
     if(entry.cropOwner?.proof?.reference.kind===27&&(entity.attackId!==('attack-'+entry.cropOwner.proof.attackId)||entity.status!=='attacking'&&entity.hitApplied===true)&&
        state.elapsed>=entry.cropOwner.proof.reference.endTime){

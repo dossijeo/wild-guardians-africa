@@ -1,3 +1,4 @@
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import test from 'node:test';
 import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
 import {sameNativeWorldBoundary} from '../src/world/native-world-boundary.js';
@@ -30,20 +31,39 @@ try{
   await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===commits.at(-1).reference.worldBoundary.ticket);
   const ref=commits.at(-1).preparedReference,proof=commits.at(-1).reference,first=f.host.inspect().nativeRouteFrame;
   assert(first.bindings.some(b=>b.nativeAnimalCrop?.kind===kind&&b.executionEpoch===proof.worldBoundary.effectiveTime));
-  const ages=[];
+  const ages=[];let testedQueuedRetirement=false;
   for(let i=0;i<400;i++){
-   state=advance();rig.update(structuredClone(state));await f.present();const fact=f.host.inspect().nativeRouteFrame?.bindings.find(b=>b.nativeAnimalCrop?.kind===kind);
+   let queued=null,outcome=null,count=0;
+   if(kind===27&&state.raid.animals[0].status==='attacking'&&state.elapsed+.05>=proof.endTime){
+    const group=f.records.at(-1).cropGroup;
+    const metadata={nativeWorldBoundary:proof.worldBoundary,
+      clock:{...f.clock,elapsed:state.elapsed,safeUntil:proof.endTime,paused:true,segments:[]}};
+    queued=submitAnimalFrame(f,group,metadata).then(()=>{outcome='drawn';},error=>{outcome=error;});
+    for(let wait=0;wait<100&&f.host.inspect().pendingSequence===null&&!outcome;wait++)
+      await new Promise(resolve=>setImmediate(resolve));
+    assert(f.host.inspect().pendingSequence!==null,'strike packet admitted before direct retirement');
+    assert.equal(outcome,null);count=f.gpu.submitted.length;
+   }
+   state=advance();rig.update(structuredClone(state));await f.present();
+   if(queued){
+    testedQueuedRetirement=true;assert.equal(state.raid.animals[0].hitApplied,true);
+    assert.equal(f.host.inspect().pendingSequence,null,'revoked pending packet must release producer');
+    await queued;assert.equal(outcome?.code,'remote-frame-native-route-obsolete');
+    assert.equal(outcome.resourcePreparationsRetained,true);assert.equal(f.gpu.submitted.length,count);
+   }
+   const fact=f.host.inspect().nativeRouteFrame?.bindings.find(b=>b.nativeAnimalCrop?.kind===kind);
    if(fact){if(!ages.length){const bad=structuredClone(f.host.inspect());bad.nativeRouteFrame.bindings.find(b=>b.nativeAnimalCrop).nativeAnimalCrop.worldBoundary.authorityEpoch='obsolete';assert.throws(()=>captureNativeRoutePickFrame(bad));}
      if(ages.length%45===0&&state.raid.animals[0].targetId)rig.presented(fact.relativeTime);assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getAnimalCropAge(ref),fact.relativeTime);assert.deepEqual(fact.nativeAnimalCrop,ref);ages.push(fact.relativeTime);}
    if(kind===26&&f.records.length===2||kind===27&&state.events.some(e=>e.type==='AnimalLogicalHit'))break;
   }
+  assert.equal(testedQueuedRetirement,kind===27);
   assert(ages.some(age=>age>.1));assert(ages.every((age,i)=>!i||age>=ages[i-1]));
   frames.push({kind,ticket:proof.worldBoundary.ticket,first:first.clockElapsed,ages:ages.length,last:ages.at(-1)});
  }
  assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId==='attack-661').length,1);
  assert.equal(state.raid.animals[0].hitsRemaining,1);assert.deepEqual(f.faults,[]);
  await rig.checkHistoricalDemand();
- await checkLateStrikePacket(f,commits.at(-1),f.records.at(-1),retired);
+ await checkLateAnimalPacket(f,commits.at(-1),f.records.at(-1),retired);
  console.log(JSON.stringify({frames,hit:'attack-661',faults:f.faults}));
 }catch(e){console.error(f.faults,f.authority.nativeIntentProductionStatus(),f.host.inspect().nativeRouteFrame);throw e;}finally{await f.close();rig.close();}
 
@@ -93,25 +113,27 @@ function terminalSurfaceGate(world){
  return build(world,nativeFrameReadiness,sameNativeWorldBoundary);
 }
 
-async function checkLateStrikePacket(f,proof,record,retired){
+function submitAnimalFrame(f,bindGroup,metadata){
+ f.client.beginFrame(metadata);
+ const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
+   {view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+ pass.setPipeline(f.pipeline);pass.setBindGroup(0,bindGroup);pass.draw(3);pass.end();
+ f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
+}
+
+async function checkLateAnimalPacket(f,proof,record,retired){
  const {reference,preparedReference}=proof,metadata={nativeWorldBoundary:reference.worldBoundary,
    clock:{...f.clock,elapsed:reference.endTime,safeUntil:reference.endTime,paused:true,segments:[]}};
- function draw(bindGroup){
-  f.client.beginFrame(metadata);
-  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
-   {view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
-  pass.setPipeline(f.pipeline);pass.setBindGroup(0,bindGroup);pass.draw(3);pass.end();
-  f.client.device.queue.submit([encoder.finish()]);return f.client.endFrame();
- }
+ const draw=group=>submitAnimalFrame(f,group,metadata);
  const count=f.gpu.submitted.length;
  const selector={byteOffset:0,semantic:'relative',epoch:preparedReference.worldBoundary.effectiveTime,
-   resourceEnd:preparedReference.endTime,nativeAnimalCrop:preparedReference};
+   resourceEnd:reference.kind===26?nativeClockResourceEnd(preparedReference.worldBoundary.effectiveTime,preparedReference.endTime):preparedReference.endTime,nativeAnimalCrop:preparedReference};
  f.client.registerClockBinding(record.cropBuffer,selector);
  let rejection;
  await assert.rejects(draw(record.cropGroup),e=>{rejection=e;return e.code==='remote-frame-native-route-obsolete'&&e.resourcePreparationsRetained;});
  const gate=terminalSurfaceGate(reference.worldBoundary),captured={nativeRouteResourceRevision:gate.revision()};
  assert(gate.reject(rejection,captured));assert.equal(gate.readiness(),'waiting');
- for(const other of [{...reference,kind:26},{...reference,worldBoundary:{...reference.worldBoundary,authorityEpoch:'other'}}]){
+ for(const other of [{...reference,kind:26,purpose:undefined},{...reference,worldBoundary:{...reference.worldBoundary,authorityEpoch:'other'}}]){
   gate.notify(other);assert.equal(gate.readiness(),'waiting');assert.equal(gate.wakes(),0);
  }
  for(const event of retired)gate.notify(event);
@@ -134,7 +156,8 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
  'second native crop rejects a request naming another completed strike':
  'second native crop uses the terminal body and ordinary selection on the following step',async()=>{
  const {s,manifest,chunkKeys}=fixture(),ready=[],commits=[];
- const rig=await originalRig(structuredClone(s),manifest,{contention:'successor-history'});
+ const retired=[];
+ const rig=await originalRig(structuredClone(s),manifest,{contention:'successor-history',onNativeCropStrikeRetired:r=>retired.push(r)});
  const f=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest,onPrepare:r=>rig.prepare(r.resources),onReady:r=>new Promise(resolve=>ready.push(resolve)),onCommit:(r,data)=>{
   const proof=data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding;rig.commit(proof,data);commits.push(proof);
  }});
@@ -191,8 +214,33 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
   const drawn=f.frame(1,{nativeWorldBoundary:commits.at(-1).reference.worldBoundary,clock});await f.present();await drawn;
   assert.equal(f.host.inspect().nativeRouteFrame.bindings.some(b=>b.nativeAnimalCrop),false);
   assert.deepEqual(f.faults,[]);
-  console.log(JSON.stringify({hits,body:1,tickets:commits.map(p=>[p.preparedReference.worldBoundary.ticket,p.reference.worldBoundary.ticket]),
-   remaining:actor().hitsRemaining,phase:actor().motionPhase,status:actor().status,target:actor().targetId,elapsed:state.elapsed}));
+  await step();assert.equal(actor().status,'retreating');assert.equal(actor().targetId,null);assert.deepEqual(pose(),afterHit);
+  await untilProduction(f,()=>ready.length===1);
+  for(let hold=0;hold<4;hold++){await step();assert.deepEqual(pose(),afterHit);}
+  ready.shift()();await untilProduction(f,()=>commits.length===5);
+  const depart=commits.at(-1),exit=actor().exit;
+  assert.equal(depart.reference.purpose,'retreat');assert.equal(depart.reference.bodyId,1);
+  assert.equal(depart.reference.targetId,null);assert.equal(depart.reference.centerId,null);
+  assert.deepEqual([depart.reference.targetX,depart.reference.targetZ],[exit.x,exit.z]);
+  assert.equal(depart.reference.phase,afterHit[3]);
+  await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===depart.reference.worldBoundary.ticket);
+  const lifecycle=[];let moving=false;
+  for(let n=0;n<300&&state.raid;n++){
+    const result=f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});state=JSON.parse(result.snapshot);
+    lifecycle.push(...(result.presentationJournal??[]).filter(x=>x.kind==='animalGone'));
+    if(state.elapsed<depart.reference.endTime){assert.equal(actor().status,'retreating');moving ||= actor().motionPhase>afterHit[3];}
+    rig.update(structuredClone(state));await f.present();
+  }
+  assert(moving);assert.equal(state.raid,null);assert.equal(state.events.filter(e=>e.type==='RaidEnded').length,1);
+  assert.equal(lifecycle.length,1);assert.equal(lifecycle[0].actorId,'animal-396');
+  assert(lifecycle[0].at>=depart.reference.endTime&&lifecycle[0].at<depart.reference.endTime+.051);
+  assert.equal(commits.length,5);assert.deepEqual(f.faults,[]);
+  const afterExit=f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+  assert.equal(JSON.parse(afterExit.snapshot).raid,null);
+  assert.equal(afterExit.presentationJournal?.filter(x=>x.kind==='animalGone').length??0,0);
+  await checkLateAnimalPacket(f,depart,f.records.at(-1),retired.filter(r=>r.purpose==='retreat'));
+  assert.equal(f.host.inspect().nativeRouteFrame.bindings.some(b=>b.nativeAnimalCrop),false);
+  console.log(JSON.stringify({hits,body:1,depart:depart.reference.worldBoundary.ticket,end:depart.reference.endTime,gone:lifecycle}));
  }finally{for(const release of ready)release();await f.close();rig.close();}
 });
 
@@ -270,5 +318,46 @@ try{
  assert.notEqual(w.nav_animal_route_proposal_commit_bound(...acquiredNext.slice(0,5),stale[1]),1);
  assert.equal(w.nav_animal_route_proposal_commit_bound(...acquiredNext.slice(0,5),valid[1]),1);
  assert.equal(planner.beginNativeRouteExecution().status,'started');planner.commitNativeCausalClock();assert.equal(planner.nativeAnimalCropState(animal.id).body,body);
+ const handle2=planner.intentChanges().at(-1).routeHandle;
+ for(let n=0;n<400&&!planner.nativeAnimalCropState(animal.id).arrived;n++)step();
+ assert(planner.nativeAnimalCropState(animal.id).arrived);
+ const second=previewRaidStrike(s,animal),assignment2=planner.nativeAnimalRouteBinding(handle2).assignmentSequence;
+ assert.equal(w.nav_animal_strike_proposal_stage(actor,sid,assignment2,second.index,second.duration),1);
+ const prep2=tuple();step();assert.equal(w.nav_animal_strike_proposal_revalidate(sid,prep2[1]),1);
+ const t2=tuple();assert.equal(w.nav_animal_strike_proposal_commit_bound(...t2.slice(0,5),prep2[1],s.sequence),1);
+ assert.equal(w.nav_animal_strike_snapshot(actor),1);const secondRow=new Float64Array(w.memory.buffer,w.nav_animal_strike_snapshot_ptr(),24);
+ projectAcquiredRaidStrike(s,animal,{actor:secondRow[1],body:secondRow[2],target:secondRow[3],clip:secondRow[7],duration:secondRow[8],targetX:secondRow[9],targetZ:secondRow[10],x:secondRow[11],z:secondRow[12],yaw:secondRow[14],at:secondRow[15],attackId:secondRow[19]});
+ while(animal.status==='attacking')step();
+ assert.equal(animal.hitsRemaining,0);assert.equal(w.nav_animal_finished_strike_snapshot(actor),1);
+
+ const originalExit=animal.exit,atExitHold=pose();
+ const absent={x:202,z:96},cx=Math.floor((absent.x+24)/48),cz=Math.floor((absent.z+24)/48);
+ assert(session.core.selectChunk(cx,cz)<0,'negative requires a missing destination chunk');
+ assert.equal(w.nav_intent_plan_retreat(actor,animal.x,animal.z,originalExit.x,originalExit.z),-2);
+ assert.equal(w.nav_intent_restore_retreat(actor,animal.x,animal.z,originalExit.x,originalExit.z,1),-2);
+ animal.exit=absent;
+ assert.equal(planner.requestNativeRetreat(s,animal),'unknown');
+ assert.equal(w.nav_animal_plan_finished_retreat(actor,661,absent.x,absent.z),-2);
+ step();
+ assert(animal.retreatRouteUnknown);assert.equal(w.nav_intent_actor(actor),0);
+ const attempts=w.nav_intent_actor_planning_calls(actor);
+ for(let i=0;i<4;i++){step();assert.deepEqual(pose(),atExitHold);assert.equal(animal.status,'walking');}
+ assert.equal(w.nav_intent_actor_planning_calls(actor),attempts);
+ animal.exit=originalExit;
+ step();const request=planner.nativeAnimalCropState(animal.id);assert(request.retreat);assert.equal(request.body,body);
+ assert.equal(w.nav_animal_route_proposal_stage(actor,sid,request.requestSequence),1);
+ const cancelled=tuple();assert.equal(w.nav_animal_route_proposal_cancel(sid,cancelled[1]),1);
+ assert.equal(w.nav_animal_route_proposal_stage(actor,sid,request.requestSequence),1);const retained=tuple();
+ const oldX=animal.exit.x;animal.exit.x+=1;
+ assert.equal(nativeCropCohortCurrent(s,planner),false);animal.exit.x=oldX;
+ step();assert.deepEqual(pose(),atExitHold);
+ assert.equal(w.nav_animal_route_proposal_revalidate(sid,retained[1]),1);const acquiredExit=tuple();
+ assert.notEqual(w.nav_animal_route_proposal_commit_bound(...acquiredExit.slice(0,5),cancelled[1]),1);
+ assert.equal(w.nav_animal_route_proposal_commit_bound(...acquiredExit.slice(0,5),retained[1]),1);
+ assert.equal(planner.beginNativeRouteExecution().status,'started');planner.commitNativeCausalClock();
+ const binding=planner.nativeAnimalRouteBinding(planner.intentChanges().at(-1).routeHandle);
+ assert.equal(w.nav_animal_finish_retreat(actor,binding.assignmentSequence),0);
+ assert.equal(w.nav_intent_attack_cancel(actor),0);
+ assert(s.raid);assert.equal(animal.status,'retreating');
  }finally{session.dispose();}
 });

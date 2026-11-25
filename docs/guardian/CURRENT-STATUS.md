@@ -66,7 +66,9 @@ AttackCrops ya dibuja la marcha reservada y el primer golpe en NVIDIA con la cal
 
 Al retirar el primer ataque, NVIDIA dibujó el relevo con las cuatro geometrías y los 78 buffers residentes. La compilación histórica del animal espera una trayectoria válida. La captura registró cero compilaciones especulativas tras el golpe y un intervalo de 166,60 ms a 30 Hz. [Preparación por demanda y retiro del ataque](native-attack-crops-qualification-20261125.md#preparación-histórica-por-demanda).
 
-La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original. NVIDIA dibujó cuatro tickets y registró un golpe a cada cultivo. Conservó las cuatro geometrías y 78 buffers en siete etapas. Quedan la salida del animal, el perfil ordinario, las adversidades A–F y C4. [Continuación y cadencia](native-attack-crops-qualification-20261125.md#continuación-al-segundo-cultivo).
+La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original. NVIDIA dibujó cuatro tickets y registró un golpe a cada cultivo. Conservó las cuatro geometrías y 78 buffers en siete etapas. [Continuación y cadencia](native-attack-crops-qualification-20261125.md#continuación-al-segundo-cultivo).
+
+El facóquero completó la retirada nativa hasta la salida en desarrollo. NVIDIA conservó el cuerpo 1, cuatro geometrías y 78 buffers durante cinco tickets. El journal registró una sola desaparición y el consumidor confirmó el drenaje. Los 1.324 atributos ajenos comparables conservaron su buffer. C4, la activación ordinaria, Flee y las adversidades A–F siguen abiertos. [Retirada y recibos](native-attack-crops-qualification-20261125.md#retirada-tras-el-segundo-cultivo).
 
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
 

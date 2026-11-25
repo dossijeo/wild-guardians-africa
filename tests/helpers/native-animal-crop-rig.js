@@ -118,6 +118,6 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    assert(observe(.05).ok);assert.equal(historicalAdmissions,1);intact();
   },
   presented(value){age=value;const restore=roster.get('animal-396').preparePick();assert.equal(typeof restore,'function');restore();intact();},
-  update(s){Object.assign(state,s);roster.sync();intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
+  update(s){Object.assign(state,s);roster.sync();if(!s.raid){assert.equal(roster.get('animal-396'),null);assert.equal(roster.nativeCropLease(),null);return;}intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},
   close(){releaseWalk();lateHistory?.resolve();part?.cancel();roster.dispose();terrain.dispose();residency.dispose();mat.dispose();for(const value of owned.values())value.dispose();session.dispose();}};
 }

@@ -79,7 +79,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyAnim
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{onNativeWorldResources:resources=>{
+  const planner=createEventDrivenTaskPlanner(session,{onNativeAnimalDeparted:(actor,body)=>{
+    if(nativeBodies?.id(actor)!==body||!nativeBodies.remove(actor))throw Error('Departing native animal lost its registered body');
+  },onNativeWorldResources:resources=>{
     // The published boundary carries wall occupancy and worker stops. Empty
     // receipts for those changes do not invalidate the terrain or vegetation.
     const preservesTerrain=[2,12,24,25].includes(resources.kind)&&resources.removed.length===0;

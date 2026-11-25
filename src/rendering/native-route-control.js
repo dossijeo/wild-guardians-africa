@@ -129,7 +129,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function validateCropChange(event,current){
     const issued=event.nativeAnimalCrop,actor=actors.get(event.actorId),q=actor?.cropRequest;
     if(!q||event.actorId!==issued.actorId||event.taskId||event.targetId!==q.targetId||
-       issued.bodyId!==q.bodyId||issued.targetId!==q.targetId||event.revokedRouteHandle||
+       issued.purpose!==q.purpose||issued.bodyId!==q.bodyId||issued.targetId!==q.targetId||event.revokedRouteHandle||
        [event.nativeFarmArrival,event.nativeIdleStroll,event.taskRequest,event.actionRequest,event.idleCycle].some(Boolean))
       throw Error('Animal crop change has a different owner');
     if(issued.kind===26){
@@ -138,6 +138,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          issued.requestSequence!==q.requestSequence||issued.assignmentSequence!==event.sequence||!sameHandle(event.routeHandle,issued.routeHandle)||
          w.authorityEpoch!==authorityEpoch||w.nativeSession!==q.nativeSession||w.effectiveTime!==event.effectiveTime||
          issued.centerId!==q.centerId||issued.center.x!==q.centerX||issued.center.z!==q.centerZ||issued.radius!==q.radius||
+         q.purpose==='retreat'&&(t?.x!==Math.fround(q.targetX)||t?.z!==Math.fround(q.targetZ))||
          !['x','z','phase','yaw'].every(k=>o[k]===q[k])||![t?.x,t?.z,t?.phase,issued.endTime].every(Number.isFinite))
         throw Error('Crop assignment lost its request or end pose');
     }else{
@@ -194,7 +195,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       isRevoked(){
         const record=actor?.revoked,proof=record?.cropBinding;
         return !closed&&clock?.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch&&
-          proof?.reference.kind===27&&record.revokedSequence>proof.assignmentSequence&&
+          (proof?.reference.kind===27||proof?.reference.purpose==='retreat'&&record.safeUntil>=proof.reference.endTime)&&record.revokedSequence>proof.assignmentSequence&&
           sameNativeAnimalCropReference(proof.preparedReference,r);
       },
       canQuiesceFor(next){
