@@ -313,5 +313,36 @@
         "traceDataLoss": false
       }
     }
+  },
+  "runningCastNegative": {
+    "baseCommit": "87dee38ca11a6b45a98a8e4f04834acf222907b2",
+    "rawReceipt": {
+      "path": ".cache/shield-kind4-clock-cut/running-fifo-nvidia.failure.json",
+      "sha256": "8580681341efe1f9fecdf952578564ee88ffad977579bdd3014eda6cb9ac45cc"
+    },
+    "trace": {
+      "path": ".cache/shield-kind4-clock-cut/running-fifo-nvidia.trace.json.gz",
+      "sha256": "2625344f51dbc1675badd28b179776cb40c868e828c757ddf0ebfb53e1ee7ce1",
+      "dataLossOccurred": false
+    },
+    "runtime": "hosted worker, native cast preparation enabled by harness allowlist",
+    "clockArmedBeforeCommand": true,
+    "requestId": 2,
+    "preparedTicket": 3,
+    "preparedElapsed": 10.149999999999997,
+    "readyMs": 506.199951171875,
+    "readyHoldConfiguredMs": 300,
+    "heldSurface": {
+      "sequence": 5,
+      "elapsed": 10.149999999999997,
+      "receivedSequence": 22,
+      "receivedElapsed": 10.999999999999979
+    },
+    "lastGameElapsed": 36.10000000000045,
+    "observedGo": false,
+    "spells": 0,
+    "gpuErrors": 0,
+    "commandResultRecorded": false,
+    "stoppedAt": "timeout waiting for Shield GO"
   }
 }
