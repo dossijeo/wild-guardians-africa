@@ -76,6 +76,24 @@ El repro posterior guardó los datos tipados de esa frontera. La parada propuest
 
 Al continuar ambos cruces con Host determinista, el primer trabajador alcanzó Action15 de Harvest y el segundo terminó su desplazamiento Farm. Desde ese punto se alternaron intentos bloqueados de Carry y de Idle22 hasta el segundo 67. Carry también quedó bloqueado en la prueba sin puerta. Con un solo trabajador, el mismo cultivo produjo una caja y una entrega en el segundo 26,7. La posición final del segundo cuerpo quedó a 0,40 m del punto de liquidación del control individual. La suma de radios es 0,56 m. Queda resolver la ocupación compartida conservando la comprobación de colisiones. [Recibo extendido](performance/native-ordinary-farm-gate-traffic-20261121.json).
 
+El contraste en `1aae63960` reproduce el bloqueo con y sin portón. WASM
+identifica la ruta del cuerpo 2, actor 900012, slot 0 y generación 5 como
+primer conflicto, en el segundo 25,803. El recorrido de 570 avances registra
+232 propuestas de Carry sin admisión. La cifra cuenta propuestas y queda
+pendiente medir su coste.
+
+En el control con turnos distintos, el cuerpo 2 cede el espacio al iniciar
+Home18 al final de su jornada. Harvest conserva el cultivo y el saldo mientras
+el otro cuerpo ocupa el destino. Carry16 y Settlement17 adquieren el cuerpo 1
+y entregan una sola caja en el segundo 38,20, con un único abono. El control
+termina al confirmar esa entrega. Queda resolver el conflicto si el trabajador
+que ocupa el destino sigue de turno. [Control de autoridad](../../tests/native-intent-production-authority.test.js).
+
+OpenRA pospone la búsqueda de otro camino si el bloqueador ya está
+saliendo. En Wild Guardians, el mismo punto de
+entrega sigue ocupado hasta que la reserva de Home permite acreditar el
+recorrido de Carry. [OpenRA, decisión de espera y desvío](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Activities/Move/Move.cs#L231-L305).
+
 ## Dos trabajadores en sentidos opuestos
 
 Dos trabajadores con centros distintos llegaron desde z=11,8 y z=4,2. Con la salida del primer cuerpo desplazada hacia el oeste, los dos cruzaron en NVIDIA el mismo vano de zarzas por x=-13,9496 con la hoja completamente abierta. El cuerpo 1 cruzó hacia el sur a los 13,95 s. El cuerpo 2 aguardó y cruzó hacia el norte a los 20,85 s. Los tickets 2 y 4 se dibujaron con las raíces y las 32 geometrías de cada trabajador. El consumidor drenó sin errores.

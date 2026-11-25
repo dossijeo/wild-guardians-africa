@@ -3,14 +3,70 @@ import assert from 'node:assert/strict';
 import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {nativeIdleCycleGameFixture} from './helpers/native-idle-cycle-game.js';
+import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {awakeningState} from '../src/simulation/awakenings.js';
 import {rational} from '../src/simulation/money.js';
 import {cropSpec} from '../src/simulation/rules.js';
+import {centerDeliveryPoint,centerServicePoint} from '../src/world/centers.js';
 import {PROFILES} from '../src/simulation/workforce.js';
 import {nativeActionSave} from './helpers/native-task-action-restoration.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
 import {copyNativeInitialIdleBodyReference,nativeInitialIdleBodySuccessor} from '../src/world/native-initial-idle-body.js';
+
+test('Harvest retains the crop while its center is occupied and settles once after the Farm peer leaves for Home',async()=>{
+ const fixture=nativeFarmArrivalRouteFixture({peer:false});
+ const saved=structuredClone(fixture.state);fixture.close();
+ const [worker]=saved.workers,center=saved.structures.find(row=>row.id===worker.centerId);
+ worker.profile='youngFemale';saved.people.find(row=>row.id===worker.personId).profile=worker.profile;
+ Object.assign(worker,{x:-14,z:11.8});
+ const person={id:'person-991001',profile:'youngMale',recoveryUntil:0};
+ const peer={...structuredClone(worker),id:'worker-900012',personId:person.id,profile:person.profile,z:13.4};
+ saved.people.push(person);saved.workers.push(peer);
+ const service=centerServicePoint(center,saved,.8);
+ center.x+=-14-service.x;center.z+=3.2-service.z;
+ saved.villages.find(row=>row.id===worker.villageId).entry={x:-14,z:14.5};
+ const gate={id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,
+  maxHp:60,hp:60,status:'intact',villageId:worker.villageId,cost:10,collapseRemaining:0};
+ saved.structures.push(gate);saved.time=226;saved.nextId=Math.max(saved.nextId,1000001);
+ const crop=createPlant('plant-'+saved.nextId++,'mijo',-10.6,5.3,center.id);
+ crop.growth=cropSpec(crop.species).growth_seconds-9;
+ for(const water of crop.water)water.status='manual';
+ saved.plants.push(crop);
+ const destination=centerDeliveryPoint(center,crop,saved),ledger=structuredClone(saved.ledger),acquired=[];
+ const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
+ const f=await nativeProductionAuthority(saved,{chunkKeys,onCommit(record,data){acquired.push({kind:record.kind,data});}});
+ try{
+  let view,occupied=false;
+  for(let i=0;i<400;i++){
+   view=f.advance();await f.present();
+   assert.deepEqual(f.faults,[]);
+   const current=view.workers.find(row=>row.id===worker.id),blocking=view.workers.find(row=>row.id===peer.id);
+   if(current.nativeRouteAdmission==='native-action'&&current.actionRemaining===0&&
+      blocking.nativeRouteAdmission==='native-farm-arrival'&&!blocking.running&&
+      Math.hypot(blocking.x-destination.x,blocking.z-destination.z)<current.radius+blocking.radius){
+    occupied=true;
+    assert(!acquired.some(row=>row.kind==='task-consequence'));
+    assert(view.plants.find(row=>row.id===crop.id).alive);
+    assert(!view.crates.some(row=>row.sourcePlantId===crop.id));
+    assert.deepEqual(view.ledger,ledger);
+   }
+   if(view.events.some(row=>row.type==='CrateDelivered'&&row.workerId===worker.id))break;
+  }
+  assert(occupied);
+  const home=acquired.find(row=>row.kind==='home-route'),carry=acquired.find(row=>row.kind==='task-consequence'),
+    settled=acquired.find(row=>row.kind==='task-settlement');
+  assert(home&&carry&&settled);
+  assert(acquired.indexOf(home)<acquired.indexOf(carry));
+  assert.equal(home.data.nativeHomeRouteBinding.reference.bodyId,2);
+  assert.equal(carry.data.nativeTaskConsequenceBinding.reference.bodyId,1);
+  assert.equal(settled.data.nativeTaskSettlementBinding.reference.bodyId,1);
+  const [crate]=view.crates.filter(row=>row.sourcePlantId===crop.id);
+  assert.equal(crate.delivered,true);
+  assert.equal(view.events.filter(row=>row.type==='CrateDelivered'&&row.targetId===crate.id).length,1);
+  assert.deepEqual(Object.keys(view.ledger.entries).filter(id=>!Object.hasOwn(ledger.entries,id)),['deliver:'+crate.id]);
+ }finally{await f.close();}
+});
 
 for(const profile of PROFILES)test(`${profile.id} ordinary authority binds a restored22 once and admits it automatically through both existing ports`,async()=>{
  const saved=nativeIdleStrollGameSave({profile:profile.id}),old=structuredClone(saved.state.workers[0]);const f=await nativeProductionAuthority(saved.state,{attach:false});try{
