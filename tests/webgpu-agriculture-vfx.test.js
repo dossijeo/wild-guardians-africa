@@ -9,6 +9,7 @@ import {WorkVfx} from '../src/rendering/work-vfx.js';
 import {VfxLibrary} from '../src/rendering/vfx.js';
 import {BuildingDestructionPass} from '../src/rendering/buildings.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+import {createChunkPublicationCoordinator} from '../src/rendering/webgpu-chunk-publication.js';
 import {createWebGpuLocomotionWater} from '../src/rendering/webgpu-locomotion-water.js';
 const catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
 test('authoritative watering checkpoint retries transient resources without another render',async()=>{
@@ -337,6 +338,52 @@ test('water-contact admission retries on demand and revalidates structural chang
 test('shield geometry growth invalidates only its own admitted mesh',async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});const turn=()=>new Promise(resolve=>setImmediate(resolve)),scene=new THREE.Scene(),spell={id:'s',kind:'shield',remaining:19.999,radius:2,x:0,z:0},state={time:30,elapsed:0,spells:[spell],events:[]},requests=[],admission={prepare(){throw Error('ticket required');},prepareTicket(mesh,{signal}){return new Promise(resolve=>requests.push({mesh,signal,resolve:()=>resolve({valid:()=>true})}));}},vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>null,surface:()=>0},includeShield:true,pipelineAdmission:admission}),camera=new THREE.PerspectiveCamera();camera.position.set(2,3,7);camera.lookAt(0,0,0);
  try{await vfx.prepareAssets();vfx.sync();vfx.prepare(camera);await turn();for(const request of requests.splice(0))request.resolve();await turn();vfx.prepare(camera);let shape;scene.traverse(object=>{if(object.isMesh&&object.geometry.getAttribute('vfxKind'))shape=object;});assert.ok(shape);let capacity=shape.geometry.getAttribute('vfxKind').data.array.length,grew=false;for(const time of [.1,.25,.5,1,2,4,8]){state.elapsed=time;spell.remaining=20-time;vfx.sync();vfx.prepare(camera);await turn();scene.traverse(object=>{if(object.isMesh&&object.geometry.getAttribute('vfxKind'))shape=object;});const next=shape.geometry.getAttribute('vfxKind').data.array.length;if(next>capacity){grew=true;assert.equal(shape.visible,false);assert.ok(requests.some(item=>item.mesh===shape));assert.equal(requests.filter(item=>item.mesh!==shape).length,0);for(const request of requests.splice(0))request.resolve();await turn();vfx.prepare(camera);assert.equal(shape.visible,true);break;}for(const request of requests.splice(0))request.resolve();await turn();capacity=next;}assert.equal(grew,true,'fixture must exercise a growth allocation');}finally{vfx.dispose();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
+});
+
+test('a prepared shield batch retains geometry through activation, cancellation and retirement',async()=>{
+ const previousFetch=globalThis.fetch,previousBitmap=globalThis.createImageBitmap;
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
+ globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),state={time:30,elapsed:0,spells:[],events:[]};
+ const issues=[],compiled=[],chunk={};
+ const renderer={backend:{isWebGPUBackend:true},async compileAsync(object){
+  compiled.push({object,leaves:object.children.filter(mesh=>mesh.isMesh&&mesh.visible)});
+ }};
+ const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>issues.push(error)});
+ const coordinator=createChunkPublicationCoordinator({admission,onError:error=>issues.push(error)});
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>chunk,getVisible:()=>chunk,surface:()=>0},includeShield:true,pipelineAdmission:admission});
+ const spell={id:'spell-21',kind:'shield',x:0,z:0,radius:1.95,remaining:20};
+ const prepare=async({removing=false}={})=>{
+  const controller=new AbortController(),part=await vfx.prepareNativeShield(spell,{camera,signal:controller.signal,removing});
+  return {part,batch:await coordinator.prepareBatch([],{scene,signal:controller.signal,dependents:[part]}),controller};
+ };
+ const age=elapsed=>{state.elapsed=elapsed;state.spells=[{...spell,remaining:20-elapsed}];vfx.sync();vfx.prepare(camera);};
+ try{
+  const cancelled=await prepare();cancelled.batch.capturePresentation(()=>assert.equal(cancelled.part.object.visible,true));
+  assert.equal(cancelled.part.object.visible,false);assert.equal(vfx.status().effects,0);
+  cancelled.controller.abort();assert.equal(cancelled.batch.valid(),false);
+  const added=await prepare(),root=added.part.object,[,sprites,dome]=added.part.include;
+  const geometry=dome.geometry,buffer=geometry.getAttribute('position').data;
+  assert(compiled.some(item=>item.object===root&&item.leaves.includes(dome)));
+  added.batch.capturePresentation(()=>assert(root.visible));
+  assert.equal(root.visible,false);assert.equal(added.batch.commit(),true);
+  vfx.sync();assert(root.visible);assert.equal(vfx.status().effects,1);
+  state.spells=[spell];vfx.sync();const initialAdmissions=compiled.length;
+  for(const elapsed of [.1,.5,1,4,19.8]){age(elapsed);assert.deepEqual(root.children,[sprites,dome]);assert.equal(dome.geometry,geometry);assert.equal(geometry.getAttribute('position').data,buffer);}
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(compiled.length,initialAdmissions);assert.equal(vfx.status().active[0].geometryVertices,5568);
+  const abortedRemoval=await prepare({removing:true});
+  abortedRemoval.batch.capturePresentation(()=>assert.equal(root.visible,false));
+  abortedRemoval.batch.abort();assert(root.visible);assert.equal(vfx.status().effects,1);
+  const removed=await prepare({removing:true});
+  removed.batch.capturePresentation(()=>assert.equal(root.visible,false));
+  assert(root.visible);assert.equal(removed.batch.commit(),true);
+  vfx.sync();assert.equal(root.visible,false);assert.equal(vfx.status().effects,0);
+  state.spells=[];vfx.sync();assert.deepEqual(issues,[]);
+ }finally{
+  coordinator.dispose();vfx.dispose();admission.dispose();
+  globalThis.fetch=previousFetch;globalThis.createImageBitmap=previousBitmap;
+ }
 });
 
 test('terrain depth is requested only by visible soft sprites and remains disabled until capture is ready',async()=>{

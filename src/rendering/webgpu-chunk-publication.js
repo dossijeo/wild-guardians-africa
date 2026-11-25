@@ -76,7 +76,10 @@ export function createChunkPublicationCoordinator({admission,onError=()=>{},boot
      for(const object of hidden)object.visible=false;
      for(const [object,position] of placements){object.position.fromArray(position);object.updateWorldMatrix(true,true);}
      if([...shown].some(object=>{let root=object;while(root.parent)root=root.parent;return root!==scene;}))throw Error('Prepared chunk presentation is detached from its scene');
-     let capture=record;for(const part of parts)if(typeof part.capturePresentation==='function'){const next=capture;capture=()=>part.capturePresentation(next);}
+     let capture=record;for(const part of parts)if(typeof part.capturePresentation==='function'){
+      const next=capture,ticket=tickets[requests.findIndex(request=>request.part===part&&request.object===part.object)];
+      capture=()=>part.capturePresentation(next,ticket);
+     }
      result=capture();if(result&&typeof result.then==='function')throw Error('Chunk presentation capture must be synchronous');
      if([...placements].some(([object,position])=>!object.position.toArray().every((value,index)=>value===position[index])))throw Error('Prepared placement changed while recording');
     }catch(error){failure=error;}

@@ -30,6 +30,7 @@ import {sameNativeGatePresentations} from '../world/native-gate-presentation.js'
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeShieldWorld,nativeShieldWorldKind,sameNativeShieldWorld} from '../world/native-shield-world.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
 import {installWebGpuTextureBindingInitialization} from './webgpu-texture-binding-initialization.js';
@@ -197,20 +198,22 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    }else parts.push(...(workers?.prepareNativeTerrainRetention(view)??[]));return parts;}catch(error){for(const part of parts.reverse())part.cancel();throw error;}
   }
   async function prepareNativeTerrainProposal(messages,options){
-   const {signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null,proposalOwner=null}=options;
+   const {signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null,proposalOwner=null,nativeShieldProposal=null}=options;
    const stopProtocol=terrainStopWireProtocol(options,'Native stopped Surface mixes source families');
    const stopTemplate=stopProtocol?stopProtocol.codec.copyReference(options[stopProtocol.wireTemplateField]):null;
    const barrierTemplate=options.nativeBarrierAdditionTemplate?copyNativeBarrierAdditionReference(options.nativeBarrierAdditionTemplate):null;
    if(barrierTemplate&&(stopTemplate||messages.length||!retainsNativeAssignments||!sameNativeWorldBoundary(barrierTemplate.worldBoundary,proposedWorldBoundary)))throw Error('Native solid additions require their geometry-only proposal');
+   if(nativeShieldProposal&&(barrierTemplate||stopTemplate||messages.length||!retainsNativeAssignments))throw Error('Native shield requires its retained geometry-only proposal');
    if(stopTemplate&&messages.length)throw Error('Native moving stop cannot prepare terrain geometry');
    if(stopEffects?.gateEffects.rows.length&&!stopEffects?.routeEffects.rows.length)throw Error('Native stop requires a coordinated terrain/body/motor batch');
    const routesRetainable=()=>{const status=workers?.status();return !status?.nativePreparing&&(!status?.native||retainsNativeAssignments||!!stopEffects?.routeEffects.rows.length);};
    if(remoteGpu&&(nativeGateProposal&&nativeGateProposal!==proposalOwner||nativeRoutePreparations||!routesRetainable()))throw Error('Native terrain commands require projected route assignments before recording moving actors');
    const routeRevision=nativeRouteResourceRevision,suppressed=[...(state.suppressed??[])],unchanged=()=>!closed&&!proposalSignal.aborted&&nativeRouteResourceRevision===routeRevision&&(!remoteGpu||routesRetainable())&&JSON.stringify(state.suppressed??[])===JSON.stringify(suppressed);
    let stoppedParts=[];let raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),prepareDependents:(view,options)=>prepareNativeTerrainDependents(view,{...options,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}}),...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
-   if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate)){
+   if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate||nativeShieldProposal)){
     const view={get:(cx,cz)=>(residency.getVisible??residency.get).call(residency,cx,cz),changedKeys:new Set()};
-    const parts=barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
+    const parts=nativeShieldProposal?[await agricultureVfx.prepareNativeShield(nativeShieldProposal.nativeShield.spell,{camera,signal:proposalSignal,removing:nativeShieldProposal.kind===4})]:
+     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
     stoppedParts=parts;try{assertNativeTerrainPresentationSupport({state,residency,view,participants:parts});raw=await chunkCoordinator.prepareBatch([],{signal:proposalSignal,scene,dependents:parts});}
     catch(error){for(const part of parts.reverse())try{part.cancel();}catch{}throw error;}
    }
@@ -229,7 +232,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
      // A pending solid addition describes the retained graph at the proposal
      // time. Surface may already display a later Game publication. Draw still
      // takes execution time from the independently acquired native clock.
-     const coverage=barrierTemplate?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
+     const coverage=barrierTemplate||nativeShieldProposal?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
      preparedFrame=await remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,coverage),...(stopTemplate?{[stopProtocol.wireTemplateField]:stopTemplate}:{}),...(barrierTemplate?{nativeBarrierAdditionTemplate:barrierTemplate}:{})},{signal:proposalSignal});
     }catch(error){remoteGpu.cancelFrame();throw error;}
    }}catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
@@ -262,8 +265,8 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    if(!temporal||recoveringPublication)return;
    const admitted=terrain.admittedBoundary(message.sequence),next=reconcileNativeWorldResources({publication:message,admitted,previous:preparedNativeWorldBoundary});
    if(!sameNativeWorldBoundary(next,preparedNativeWorldBoundary)){
-    const direct=acquiredDirectWorldPublication(message,admitted,next),solidAddition=message.nativeWorldResources?.some(record=>record.kind===2);
-    if(solidAddition?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
+    const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind));
+    if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
     preparedNativeWorldBoundary=next;
    }
   }
@@ -374,8 +377,16 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
    }finally{nativeRoutePreparations--;onPresentationReady();}
   }
   async function prepareDirectNativeWorldResources(resources,stop,{signal:callerSignal,minSequence=-1,nativeBarrierWallEntities}={}){
-   const barrier=stop===null,proposal=barrier?copyNativeBarrierAdditionProposal(resources):stop.codec.copyProposal(resources),boundary=proposal.worldBoundary,template=barrier?proposal.nativeBarrierAddition:proposal.nativeStop;
-   const preparedField=barrier?'preparedBarrierAdditionTemplate':stop.preparedTemplateField;
+   const shield=nativeShieldWorldKind(resources?.kind),barrier=stop===null&&!shield;
+   const proposal=shield?{...resources,worldBoundary:copyNativeWorldBoundary(resources.worldBoundary),nativeShield:copyNativeShieldWorld(resources.nativeShield,resources.kind,{proposal:true})}:
+    barrier?copyNativeBarrierAdditionProposal(resources):stop.codec.copyProposal(resources);
+   const boundary=proposal.worldBoundary,template=barrier?proposal.nativeBarrierAddition:proposal.nativeStop;
+   const preparedField=barrier?'preparedBarrierAdditionTemplate':stop?.preparedTemplateField;
+   const emptyResources=(value,kind,world)=>!!world&&value?.version===1&&value.kind===kind&&
+    value.nativeSession===world.nativeSession&&value.ticket===world.ticket&&value.effectiveTime===world.effectiveTime&&
+    Array.isArray(value.chunks)&&!value.chunks.length&&Array.isArray(value.removed)&&!value.removed.length;
+   if(shield&&(!emptyResources(proposal,proposal.kind,boundary)||proposal.phase!=='proposal'||proposal.retainsNativeAssignments!==true||
+      proposal.routeEffects?.rows?.length!==0||proposal.gateEffects?.rows?.length!==0))throw Error('Native shield changed unprepared terrain or routes');
    if(barrier){
     const gate=template.gate,removal=template.removal,targets=removal?[removal]:gate?[gate]:template.additions;
     if(!Array.isArray(nativeBarrierWallEntities)||nativeBarrierWallEntities.length!==targets.length||nativeBarrierWallEntities.some((wall,index)=>{
@@ -404,21 +415,25 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     const status=terrain.status();
     if(closed||finished||callerSignal?.aborted||nativeGateProposal||nativeRoutePreparations||status.closed||status.nativeProposal||status.pending||status.presentationPending)throw Error('Direct native resource surface unavailable');
     nativeGateProposal=item;stream.holdPresentation({releaseOnInput:false});publicationHeld=true;preparedSequence=stream.status().sequence;
-    raw=await prepareNativeTerrainProposal([],{signal:controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:barrier,...(barrier?{nativeBarrierAdditionTemplate:template,nativeBarrierWallEntities}:{stopEffects:proposal,[stop.wireTemplateField]:template}),proposalOwner:item});
+    raw=await prepareNativeTerrainProposal([],{signal:controller.signal,proposedWorldBoundary:boundary,retainsNativeAssignments:barrier||shield,
+     ...(shield?{nativeShieldProposal:proposal}:barrier?{nativeBarrierAdditionTemplate:template,nativeBarrierWallEntities}:{stopEffects:proposal,[stop.wireTemplateField]:template}),proposalOwner:item});
     if(!current()||!raw.valid()){raw.abort();throw Error('Direct native resources became stale');}
     item.descriptor.phase='ready';
-    return {canonicalPropsUnmasked:true,preparedWorldBoundary:raw.preparedWorldBoundary,[preparedField]:template,valid:()=>current()&&item.descriptor.phase==='ready'&&raw.valid(),abort:cancel,
+    return {canonicalPropsUnmasked:true,preparedWorldBoundary:raw.preparedWorldBoundary,...(preparedField?{[preparedField]:template}:{}),valid:()=>current()&&item.descriptor.phase==='ready'&&raw.valid(),abort:cancel,
      commit(data){
       if(!current()||!raw.valid())throw Error('Direct native resources not retained');
       if(hasOtherTerrainStopField(data,'bindingField',stop))throw Error('Native stopped Surface mixes final source families');
-      const proof=barrier?copyNativeBarrierAdditionAttestation(data?.nativeBarrierAdditionBinding):stop.codec.copyAttestation(data?.[stop.bindingField]),actual=proof.reference.worldBoundary,r=data.resources;
+      const r=data.resources,proof=shield?copyNativeShieldWorld(r?.nativeShield,proposal.kind):barrier?copyNativeBarrierAdditionAttestation(data?.nativeBarrierAdditionBinding):stop.codec.copyAttestation(data?.[stop.bindingField]);
+      const actual=shield?boundary:proof.reference.worldBoundary;
       if(barrier?(!sameNativeWorldBoundary(data.worldBoundary,actual)||!nativeBarrierAdditionPresentationMatches(proposal,r,proof)):data?.nativeBarrierAdditionBinding!==undefined)throw Error('Native solid addition commit differs from its prepared walls');
-      if(!barrier&&(!proof.projection||!stop.codec.sameReference(proof.preparedReference,template)||!sameNativeWorldBoundary(data.worldBoundary,actual)||!r||r.version!==1||r.kind!==stop.codec.kind||r.nativeSession!==actual.nativeSession||r.ticket!==actual.ticket||r.effectiveTime!==actual.effectiveTime||!Array.isArray(r.chunks)||r.chunks.length||!Array.isArray(r.removed)||r.removed.length))throw Error('Native stopped commit differs from its acquired body-only proposal');
+      if(shield&&(!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,proposal.kind,actual)||r.phase!=='committed'||
+         !sameNativeShieldWorld(proof,proposal.nativeShield,{addition:proposal.kind===3})))throw Error('Native shield differs from its prepared spell or polygon');
+      if(stop&&(!proof.projection||!stop.codec.sameReference(proof.preparedReference,template)||!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,stop.codec.kind,actual)))throw Error('Native stopped commit differs from its acquired body-only proposal');
       try{if(raw.commit(data)!==true)throw Error('Direct native commands not retained');}catch(error){cancel();throw error;}
-      finished=true;callerSignal?.removeEventListener('abort',abort);item.descriptor={phase:'adopting',worldBoundary:actual};item.acquiredWorld={kind:barrier?2:stop.codec.kind,proof};
+      finished=true;callerSignal?.removeEventListener('abort',abort);item.descriptor={phase:'adopting',worldBoundary:actual};item.acquiredWorld={kind:shield?proposal.kind:barrier?2:stop.codec.kind,proof,worldBoundary:actual};
       // The actual empty terrain publication must adopt this exact acquired
       // packet. It cannot borrow a motor boundary or bypass terrain history.
-      if(!barrier)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
+      if(stop)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
       void raw.presented.then(async()=>{
        if(nativePickPresentation===raw.presented)nativePickPresentation=null;releasePublication();onPresentationReady();
        await waitNativePublication(preparedSequence+1,controller.signal,()=>sameNativeWorldBoundary(preparedNativeWorldBoundary,actual));
@@ -429,11 +444,18 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
   }
   function acquiredDirectWorldPublication(message,admitted,next){
    const acquired=nativeGateProposal?.descriptor.phase==='adopting'&&nativeGateProposal.acquiredWorld,records=message.nativeWorldResources;
-   if(!acquired||!sameNativeWorldBoundary(acquired.proof.reference.worldBoundary,next)||admitted?.empty!==true||admitted.changes?.length!==0||!Array.isArray(records)||records.length!==1)return false;
-   const record=records[0];return record.kind===acquired.kind&&sameNativeWorldBoundary(record.worldBoundary,next)&&record.chunks.length===0&&record.removed.length===0&&(record.kind!==2||JSON.stringify(copyNativeBarrierAdditionAttestation(record.nativeBarrierAdditionBinding))===JSON.stringify(acquired.proof));
+   if(!acquired||!sameNativeWorldBoundary(acquired.worldBoundary,next)||admitted?.empty!==true||admitted.changes?.length!==0||!Array.isArray(records)||records.length!==1)return false;
+   const record=records[0];if(record.kind!==acquired.kind||!sameNativeWorldBoundary(record.worldBoundary,next)||record.chunks.length||record.removed.length)return false;
+   if(record.kind===2)return JSON.stringify(copyNativeBarrierAdditionAttestation(record.nativeBarrierAdditionBinding))===JSON.stringify(acquired.proof);
+   if(nativeShieldWorldKind(record.kind)){
+    const shield=copyNativeShieldWorld(record.nativeShield,record.kind),confirmed=state.spells.find(spell=>spell.id===shield.spell.id);
+    return sameNativeShieldWorld(shield,acquired.proof)&&(record.kind===4?!confirmed:
+      confirmed?.kind==='shield'&&sameNativeShieldWorld({spell:confirmed,polygonId:shield.polygonId},shield));
+   }
+   return true;
   }
 
-  function prepareNativeGateResources(value,options){const stop=terrainStopProposalProtocol(value);return stop?prepareDirectNativeWorldResources(value,stop,options):prepareNativeResources(copyNativeGateMotionResources(value),options);}
+  function prepareNativeGateResources(value,options){const stop=terrainStopProposalProtocol(value);return stop||nativeShieldWorldKind(value?.kind)?prepareDirectNativeWorldResources(value,stop,options):prepareNativeResources(copyNativeGateMotionResources(value),options);}
   function prepareNativeBarrierAdditionResources(value,options){return prepareDirectNativeWorldResources(value,null,options);}
   function prepareNativeResumeResources(value,options){return prepareNativeResources(copyNativeResumeProposal(value),options);}
   function prepareNativeTaskStartResources(value,options={}){return prepareNativeResources(copyNativeTaskStartProposal(value),{...options,deferredStart:options.deferredStart??true});}

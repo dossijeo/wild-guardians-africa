@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {Group} from 'three';
+import {Group,PerspectiveCamera} from 'three';
 import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
 const surfaceSource=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
 import * as stops from '../src/simulation/terrain-stop-reservation.js';
 import * as boundaries from '../src/world/native-world-boundary.js';
+import * as shieldCodec from '../src/world/native-shield-world.js';
 import {copyNativeGateMotionResources} from '../src/world/native-gate-motion-resources.js';
 import {assertNativeTerrainPresentationSupport} from '../src/rendering/native-terrain-presentation-support.js';
 import {createChunkPublicationCoordinator} from '../src/rendering/webgpu-chunk-publication.js';
@@ -13,11 +14,12 @@ import {createWebGpuReplacementSlot} from '../src/rendering/webgpu-replacement-s
 import {spatialStructureBarriers} from '../src/world/wild-engine/spatial-wall-bridge.js';
 import * as barrierCodec from '../src/world/native-barrier-addition.js';
 import {nativeFarmArrivalStopGraphicsFixture as fixture} from './helpers/native-farm-arrival-stop-graphics.js';
+import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vfx.js';
 
 // Execute the actual nested Surface entry and terrain preparation functions.
 // Assets, native source, roster and batch coordinator are real; GPU submission,
 // compilation and publication transport are doubles. This is not GPU evidence.
-function surface(f,{barrierTemplate,prepareNativeWallAdditions}={}){
+function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false}={}){
  const source=surfaceSource;
  const span=(a,b)=>{const start=source.indexOf(a),end=source.indexOf(b,start);assert(start>=0&&end>start);return source.slice(start,end);};
  const code=span('  async function prepareNativeTerrainDependents','  const nativeFrameState=')+span('  function acceptPreparedNativeTerrain','  if(state&&pipelineAdmission)')+span('  async function prepareDirectNativeWorldResources','  function prepareNativeFarmArrivalResources');
@@ -25,11 +27,12 @@ function surface(f,{barrierTemplate,prepareNativeWallAdditions}={}){
  const presented=new Promise(resolve=>{present=resolve;});
  const admission={...f.admission,prepareManyAndPublish(){throw Error('Unexpected eager publication');},prepareTicket:async()=>({valid:()=>true}),completePreparation:async()=>{}};
  const coordinator=createChunkPublicationCoordinator({admission,onError:e=>errors.push(e)});
- const injected={...stops,...boundaries,...barrierCodec,spatialStructureBarriers,copyNativeGateMotionResources,assertNativeTerrainPresentationSupport,
+ const camera=new PerspectiveCamera(),agricultureVfx=shield&&createWebGpuAgricultureVfx({scene:f.scene,state:f.state,residency:f.residency,pipelineAdmission:admission,includeShield:true,onError:error=>errors.push(error)});
+ const injected={...stops,...boundaries,...barrierCodec,...shieldCodec,spatialStructureBarriers,copyNativeGateMotionResources,assertNativeTerrainPresentationSupport,camera,agricultureVfx,
   state:f.state,roster:null,workers:f.roster,scene:f.scene,residency:f.residency,terrainSupport:f.terrain,
   settlements:{prepareVillageTerrain:()=>[],prepareNativeGateMotors:()=>[],prepareNativeWallAdditions},crops:null,crates:null,
   chunkCoordinator:coordinator,pipelineAdmission:admission,renderer:{shadowMap:{}},sun:{shadow:{}},
-  remoteGpu:{whenFrameSettled:async()=>{},beginFrame(){},cancelFrame(){},async prepareNativeWorldFrame(meta){prepared++;if(barrierTemplate){assert.deepEqual(meta.nativeBarrierAdditionTemplate,barrierTemplate);assert.deepEqual(meta.coverage,{start:barrierTemplate.worldBoundary.effectiveTime,end:50});}else assert.deepEqual(meta.nativeFarmArrivalStopTemplate,f.preparedStop.proposal.nativeStop);return {preparedWorldBoundary:meta.boundary,valid:()=>true,abort:()=>true,commit:(boundary,proof)=>{assert(boundaries.sameNativeWorldBoundary(boundary,proof.reference.worldBoundary));return true;},presented};}},
+  remoteGpu:{whenFrameSettled:async()=>{},beginFrame(){},cancelFrame(){},async prepareNativeWorldFrame(meta){prepared++;if(shield){assert.deepEqual(meta.coverage,{start:meta.boundary.effectiveTime,end:50});}else if(barrierTemplate){assert.deepEqual(meta.nativeBarrierAdditionTemplate,barrierTemplate);assert.deepEqual(meta.coverage,{start:barrierTemplate.worldBoundary.effectiveTime,end:50});}else assert.deepEqual(meta.nativeFarmArrivalStopTemplate,f.preparedStop.proposal.nativeStop);return {preparedWorldBoundary:meta.boundary,valid:()=>true,abort:()=>true,commit:(boundary,proof)=>{assert(boundaries.sameNativeWorldBoundary(boundary,shield?meta.boundary:proof.reference.worldBoundary));return true;},presented};}},
   remoteClockLease:()=>({elapsed:20,safeUntil:50}),remoteFrameMetadata:(boundary,coverage)=>({boundary,coverage}),renderScene:()=>{captures++;return true;},
   stream:{status:()=>({sequence,holding,closed:false}),holdPresentation(){assert(!holding);holding=true;},releasePresentation(){assert(holding);holding=false;}},
   terrain:{status:()=>({}),admittedBoundary:seq=>({version:1,sequence:seq,epoch:'test',canonicalPropsUnmasked:true,empty:true,changes:[]})},
@@ -37,9 +40,9 @@ function surface(f,{barrierTemplate,prepareNativeWallAdditions}={}){
   prepareNativeResources(){throw Error('Motor entry reached');}
  };
  const build=new Function(...Object.keys(injected),`let closed=false,nativeGateProposal=null,nativeRoutePreparations=0,nativeRouteResourceRevision=0,nativeRouteRejected=false,nativePickPresentation=null,nativePickFrame=null,preparedNativeWorldBoundary=null;const temporal=true,recoveringPublication=false;${code}\nreturn {prepareNativeGateResources,prepareNativeBarrierAdditionResources,acceptPreparedNativeTerrain,wakeNativePublications,status:()=>({proposal:nativeGateProposal?.descriptor,owner:nativeGateProposal?.descriptor.phase,boundary:preparedNativeWorldBoundary,preparing:nativeRoutePreparations}),close(){closed=true;nativeGateProposal?.cancel();wakeNativePublications(Error('closed'));}};`);
- const api=build(...Object.values(injected));return {...api,errors,stats:()=>({prepared,captures,holding}),present,
+ const api=build(...Object.values(injected));return {...api,errors,agricultureVfx,stats:()=>({prepared,captures,holding}),present,
   publish(message){sequence=message.sequence;api.acceptPreparedNativeTerrain(message);api.wakeNativePublications();},
-  close(){api.close();coordinator.dispose();}};
+  close(){api.close();coordinator.dispose();agricultureVfx?.dispose?.();}};
 }
 const flush=()=>new Promise(r=>setImmediate(r));
 const dataFor=proof=>{const worldBoundary=proof.reference.worldBoundary;return {worldBoundary,nativeFarmArrivalStopBinding:proof,resources:{version:1,kind:24,nativeSession:worldBoundary.nativeSession,ticket:worldBoundary.ticket,effectiveTime:worldBoundary.effectiveTime,chunks:[],removed:[]}};};
@@ -94,4 +97,34 @@ test('Surface solid additions hold the first wall slot and publish only its acqu
   s.present();await flush();s.publish(message);await flush();
   assert.equal(s.status().owner,undefined);assert.deepEqual(s.status().boundary,worldBoundary);assert.equal(f.roster.get(f.actor),actor);assert.deepEqual([...s.errors,...f.errors],[]);
  }finally{s.close();slot.dispose();f.close();}
+});
+
+test('Surface publishes a prepared Shield only with the matching spell and polygon receipt',async()=>{
+ const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;
+ const catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
+ globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
+ globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
+ const f=await fixture({peer:false}),s=surface(f,{shield:true});
+ try{
+  const actor=f.roster.get(f.actor),worldBoundary=f.preparedStop.proposal.worldBoundary;
+  const spell={id:'spell-88',kind:'shield',x:f.worker.x,z:f.worker.z,radius:1.95,remaining:20};
+  const resources={version:1,kind:3,worldBoundary,nativeSession:worldBoundary.nativeSession,ticket:worldBoundary.ticket,effectiveTime:worldBoundary.effectiveTime,chunks:[],removed:[]};
+  const proposal={...resources,phase:'proposal',retainsNativeAssignments:true,nativeShield:{spell,polygonId:null},
+   routeEffects:{rows:new Float64Array()},gateEffects:{rows:new Float64Array()}};
+  await assert.rejects(s.prepareNativeGateResources({...proposal,retainsNativeAssignments:false}),/unprepared terrain or routes/);
+  const handle=await s.prepareNativeGateResources(proposal,{minSequence:10});
+  assert(handle.valid());assert.equal(s.agricultureVfx.status().effects,0);assert.equal(s.stats().holding,true);
+  const nativeShield={spell,polygonId:157},committed={...resources,phase:'committed',nativeShield};
+  assert.throws(()=>handle.commit({worldBoundary,resources:{...committed,nativeShield:{spell:{...spell,x:spell.x+1},polygonId:157}}}),/prepared spell/);
+  assert.equal(s.agricultureVfx.status().effects,0);
+  assert(handle.commit({worldBoundary,resources:committed}));assert.equal(s.agricultureVfx.status().effects,1);
+  const record={version:1,kind:3,worldBoundary,chunks:[],removed:[],nativeShield};
+  const message={sequence:11,elapsed:worldBoundary.effectiveTime,nativeWorldResources:[record]};
+  assert.throws(()=>s.acceptPreparedNativeTerrain(message),/prepared proposal/);
+  f.state.spells=[spell];
+  assert.throws(()=>s.acceptPreparedNativeTerrain({...message,nativeWorldResources:[{...record,nativeShield:{spell,polygonId:158}}]}),/prepared proposal/);
+  s.present();await flush();s.publish(message);await flush();
+  assert.equal(s.stats().holding,false);assert.deepEqual(s.status().boundary,worldBoundary);
+  assert.equal(f.roster.get(f.actor),actor);assert.deepEqual([...s.errors,...f.errors],[]);
+ }finally{s.close();f.close();globalThis.fetch=oldFetch;globalThis.createImageBitmap=oldBitmap;}
 });
