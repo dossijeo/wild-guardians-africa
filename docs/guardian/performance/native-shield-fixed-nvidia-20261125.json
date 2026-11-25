@@ -429,5 +429,27 @@
       "activationObserved": true,
       "physicalCompletionRequiredSecondRun": true
     }
+  },
+  "runningCastWithEmptyPhysics": {
+    "commit": "ddcfe91651438156c8f8e66be4c8fdbf18488ce0",
+    "backend": "real Rapier driver, Game and WASM with deterministic WebGPU Host",
+    "fixture": {
+      "path": ".cache/shield-running-cast/empty-physics-control.test.mjs",
+      "sha256": "38283aaa2a6ad765d1a7279f818e150f8b9e9cf89621b93b4a406475ac941d48"
+    },
+    "result": {
+      "path": ".cache/shield-running-cast/empty-physics-control.tap",
+      "sha256": "bc1b5e2f354426a164936f53c6a5171002499662417c1e75252cc23417999662"
+    },
+    "qualificationRequested": true,
+    "raidPresent": false,
+    "preparedGeometry": false,
+    "preparedTicket": 3,
+    "elapsedBefore": 10.279999999999994,
+    "elapsedAfter": 10.379999999999992,
+    "rejection": "stale",
+    "committed": false,
+    "spells": 0,
+    "errors": 0
   }
 }
