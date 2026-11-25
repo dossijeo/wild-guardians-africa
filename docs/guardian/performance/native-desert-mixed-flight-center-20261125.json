@@ -1494,5 +1494,167 @@
         }
       }
     }
+  },
+  "gatedFirstImpactPipelines": {
+    "commit": "2e4a80e59f488e8d2a6ac3b10cead5681ae27cd3",
+    "raw": {
+      "path": ".cache/flee-return/gated-first-impact-pipeline-nvidia.json",
+      "sha256": "61ae29379eca3b357b0ad56595c8456218ae5d6aa7a07b51fe0c711f0b18fe13"
+    },
+    "trace": {
+      "path": ".cache/flee-return/gated-first-impact-pipeline-nvidia.trace.json.gz",
+      "sha256": "1f41eb21fc8d12952e798183d56570bb8c63f249071086c955bc32c0700fae62",
+      "dataLossOccurred": false
+    },
+    "analysis": {
+      "path": ".cache/flee-return/gated-first-impact-pipeline-nvidia.comparison.json",
+      "sha256": "d92a72d0e607cf4b6b776678d41e1a617f36eaf9c1d2475287f1ef78605023c5"
+    },
+    "scope": "instrumented contrast at 30 Hz, same gated fixture and first center hit",
+    "cut": {
+      "sequence": 297,
+      "ticket": 13,
+      "intervalMs": 967,
+      "rendererMs": 267.8,
+      "nodeBuildMs": 237.69999999552965,
+      "nodeBuildCalls": 8,
+      "resourceWaitMs": 445.60009765625
+    },
+    "resources": {
+      "common": 1557,
+      "sameReference": 1557,
+      "sameVersion": 1479
+    },
+    "drained": true,
+    "matchedPipelines": [
+      {
+        "id": "Pipeline:6180",
+        "label": "renderPipeline_ShadowMaterial_296",
+        "mesh": 866,
+        "geometry": 366,
+        "pass": "shadow",
+        "material": 296,
+        "source": 377,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 296,
+          "source": 397
+        }
+      },
+      {
+        "id": "Pipeline:6191",
+        "label": "renderPipeline_ShadowMaterial_296",
+        "mesh": 864,
+        "geometry": 364,
+        "pass": "shadow",
+        "material": 296,
+        "source": 375,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 296,
+          "source": 395
+        }
+      },
+      {
+        "id": "Pipeline:6202",
+        "label": "renderPipeline_ShadowMaterial_296",
+        "mesh": 865,
+        "geometry": 365,
+        "pass": "shadow",
+        "material": 296,
+        "source": 376,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 296,
+          "source": 396
+        }
+      },
+      {
+        "id": "Pipeline:6213",
+        "label": "renderPipeline_ShadowMaterial_296",
+        "mesh": 863,
+        "geometry": 363,
+        "pass": "shadow",
+        "material": 296,
+        "source": 374,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 296,
+          "source": 394
+        }
+      },
+      {
+        "id": "Pipeline:6226",
+        "label": "renderPipeline_Mane repairs_375",
+        "mesh": 864,
+        "geometry": 364,
+        "pass": "color",
+        "material": 375,
+        "source": null,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 395,
+          "source": null
+        }
+      },
+      {
+        "id": "Pipeline:6239",
+        "label": "renderPipeline_Actor eyelid original fur_377",
+        "mesh": 866,
+        "geometry": 366,
+        "pass": "color",
+        "material": 377,
+        "source": null,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 397,
+          "source": null
+        }
+      },
+      {
+        "id": "Pipeline:6252",
+        "label": "renderPipeline_Material_0_374",
+        "mesh": 863,
+        "geometry": 363,
+        "pass": "color",
+        "material": 374,
+        "source": null,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 394,
+          "source": null
+        }
+      },
+      {
+        "id": "Pipeline:6264",
+        "label": "renderPipeline_Warthog oral tissue_376",
+        "mesh": 865,
+        "geometry": 365,
+        "pass": "color",
+        "material": 376,
+        "source": null,
+        "nodes": "first-observed-build",
+        "pipeline": "first-generated-shaders",
+        "earlierSameOwner": 0,
+        "beforeStrikeRetirement": {
+          "material": 396,
+          "source": null
+        }
+      }
+    ]
   }
 }
