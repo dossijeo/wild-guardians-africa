@@ -2,6 +2,7 @@ import {copyNativeIdleStrollResources as copyRecoveredStrollResources} from '../
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
 import {sameNativeShieldWorld} from '../world/native-shield-world.js';
+import {sameNativeFarmArrivalRouteAttestation} from '../world/native-farm-arrival-route.js';
 import {BALANCE} from './balance.js';
 import {centerFootprint} from '../world/centers.js';
 import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
@@ -347,10 +348,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(shieldAdvance)throw Error('Native shield expiry already active');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
     shieldAdvance=owner;
-    const civilIdle=()=>civilShieldPhysicsAvailable()&&!game.raid&&game.workers.length===1&&
-      game.workers[0].nativeRouteAdmission==='native-idle'&&game.workers[0].status==='idle';
+    const worker=game.workers[0],farm=worker?.nativeRouteAdmission==='native-farm-arrival'&&worker.status==='arriving'?
+      planner.nativeFarmArrivalRouteBinding(worker.id):null;
+    const civil=()=>civilShieldPhysicsAvailable()&&!game.raid&&game.workers.length===1&&game.workers[0]===worker&&
+      (farm?worker.nativeRouteAdmission==='native-farm-arrival'&&worker.status==='arriving'&&
+        sameNativeFarmArrivalRouteAttestation(farm,planner.nativeFarmArrivalRouteBinding(worker.id)):
+        worker.nativeRouteAdmission==='native-idle'&&worker.status==='idle');
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
-       !nativeIntentControl||!civilIdle()||
+       !nativeIntentControl||!civil()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
        ['suspended','quiescing'].includes(nativeProduction.status().phase))
       throw Error('Native shield expiry requires an isolated civil worker and its resource owner');
@@ -360,14 +365,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       owner.resources===nativeResourcePreparation&&owner.control===nativeIntentControl&&
       game.spells.includes(spell)&&session.shieldPolygonId(spell.id)===polygonId;
     owner.receipt=await nativeProduction.quiesce();
-    if(!current()||!civilIdle())throw Error('Native shield expiry source changed');
-    // Workers pass through this polygon. This profile excludes beasts and
-    // civil movement. Finish the normal substep and its real causal watermark
-    // before preparing the removal. The enclosing advance owns publication.
+    if(!current()||!civil())throw Error('Native shield expiry source changed');
+    // Workers pass through this polygon. Finish the normal substep and its
+    // causal watermark before preparing removal. Keep the acquired Farm
+    // association if present. The enclosing advance owns publication.
     advanceToExpiry();
     const at=game.elapsed;
     const validate=()=>current()&&spell.remaining<=1e-9&&game.elapsed===at&&
-      civilIdle()&&
+      civil()&&
       planner.nativeCausalClock()?.committedThrough===at;
     if(!validate())throw Error('Native shield expiry lost its clock or polygon at the cut');
     const result=await planner.mutateNativeWorldAfterGpuQuiescence({

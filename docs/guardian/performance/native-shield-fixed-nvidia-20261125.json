@@ -605,5 +605,113 @@
       "maxIntervalMs": 36.800048828125,
       "samples": 339
     }
+  },
+  "movingFarmExpiry": {
+    "testedBase": "efff36867f2c60db6610dec64a1c2a2d651073ab",
+    "receipt": {
+      "path": ".cache/shield-farm-expiry/moving-farm-expiry-nvidia.json",
+      "sha256": "89f2341359ca282fb561be90862bb977f8dbeb3415f12ced17536a5aac536c9e"
+    },
+    "trace": {
+      "path": ".cache/shield-farm-expiry/moving-farm-expiry-nvidia.trace.json.gz",
+      "sha256": "d8c98250d9954884604f9e96e7ff3505821a2374cc307381a8af253f6ff58215",
+      "dataLossOccurred": false
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 129.70000000298023
+      }
+    },
+    "fixture": {
+      "restoredRemainingSeconds": 0.526,
+      "physics": "empty registry",
+      "developmentQualification": "qualifyShieldExpiry"
+    },
+    "held": {
+      "configuredMs": 300,
+      "publicationElapsed": 10.49999999999999,
+      "drawCursorElapsed": 10.52599999999999
+    },
+    "acquired": {
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 10.52599999999999
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "draw": {
+        "at": 1795639034709.2,
+        "sequence": 28,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10.52599999999999
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 3,
+        "replay": false,
+        "clockElapsed": 10.599999999999987,
+        "safeUntil": 10.599999999999987,
+        "cameraVersion": null
+      }
+    },
+    "farm": {
+      "bodyId": 1,
+      "handle": {
+        "authorityEpoch": "745a1a77-96bc-4307-bdba-ff69b80a7958/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 2
+      },
+      "executionEpoch": 10,
+      "relativeTimes": [
+        0,
+        0.5259999632835388,
+        0.699999988079071,
+        1.649999976158142
+      ],
+      "heldZ": 11.260000000000012,
+      "finalZ": 10.018000000000038,
+      "finalAdmission": "native-farm-arrival"
+    },
+    "checkpoint": {
+      "sequence": 43,
+      "elapsed": 11.649999999999965
+    },
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "samples": 325,
+      "maxIntervalMs": 36.7001953125
+    },
+    "cpu": {
+      "baseline": {
+        "path": ".cache/shield-farm-expiry/before.tap",
+        "sha256": "4726c05db82acb8e938d82d01cf2ac6d010b8b473a44bb50cf635ab679b4f485"
+      },
+      "impact": {
+        "path": ".cache/shield-farm-expiry/impact.tap",
+        "sha256": "1f5e9558f172e33ba0eeaa050dd3eb8b8970c64f15472c596abeb23ac94500f8"
+      },
+      "passed": 28
+    }
   }
 }

@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+La calificación civil de caducidad de Escudo conserva Farm23 en marcha. En NVIDIA, kind4 retiró el polígono 10 a 10,526 s y mantuvo el cuerpo 1, la ruta y su reloj. El checkpoint 43 confirmó que Farm siguió avanzando y la cola drenó. El ensayo restauró un Escudo activo con 526 ms restantes. Quedan el menú ordinario, otras cohortes y C4. [Contraste y recibo](webgpu-shield.md#caducidad-durante-farm-en-marcha).
+
 Preparar las mallas de Running en el último Strike27 redujo el cuarto relevo de 364,80 a 116,80 ms a 60 Hz, con los ocho estados de color y sombra listos antes de READY. El primer golpe alcanzó 166,80 ms y la ausencia tras Retreat, 133,30 ms. C4 sigue abierto. [Contraste físico](native-desert-mixed-flight-center-20261125.md#mallas-de-carrera-en-el-último-golpe).
 
 A 60 Hz, los cuatro golpes del recorrido completo de Desierto reutilizan los mismos ocho pipelines y el trabajador vuelve a Idle. El cuarto relevo conserva un intervalo de 364,80 ms, con 258,70 ms dentro de la captura y cero espera de recursos. C4 sigue abierto. [Cortes del recorrido](native-desert-mixed-flight-center-20261125.md#cuatro-golpes-y-regreso-a-60-hz).
