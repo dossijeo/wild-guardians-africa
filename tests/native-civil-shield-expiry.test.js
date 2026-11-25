@@ -4,7 +4,9 @@ import {rational} from '../src/simulation/money.js';
 import {advanceReal,newGame,resume} from '../src/simulation/game.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {Navigation} from '../src/world/navigation.js';
+import {nativeResourceAdmissionProfile} from '../src/world/native-resource-admission-profiles.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
+import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 
 const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
@@ -131,21 +133,39 @@ for(const closing of [false,true])test(closing?'disposing during kind4 READY can
   }finally{release();await f.close();}
 });
 
-test('civil Shield expiry keeps the acquired Farm route and its draw clock across kind4',async()=>{
+async function restoredStrollShield(options){
+  const {state}=nativeIdleStrollGameSave();
+  const worker=state.workers[0],expiry=state.elapsed+.126;
+  state.spells.push({kind:'shield',id:'stroll-expiry',x:worker.x,z:worker.z,radius:1.95,remaining:.126});
+  const f=await nativeProductionAuthority(state,{chunkKeys,...options});
+  try{
+    await untilProduction(f,()=>f.records.some(row=>row.kind==='idle-stroll'&&row.committed));
+    await f.present();
+    let now=f.snapshot();
+    while(now.elapsed<expiry-.027){now=f.advance(.001);await f.present();}
+    assert.equal(now.workers[0].nativeRouteAdmission,'native-idle-stroll');
+    return f;
+  }catch(error){await f.close();throw error;}
+}
+
+for(const [label,create,kind,field] of [
+  ['Farm',options=>restoredCivilShield(options,{duringFarm:true}),'farm-arrival','nativeFarmArrival'],
+  ['Idle22',restoredStrollShield,'idle-stroll','nativeStroll']
+])test(`civil Shield expiry keeps the acquired ${label} route and its draw clock across kind4`,async()=>{
   const options={emptyBeastPhysics:true};
-  const old=await restoredCivilShield(options,{duringFarm:true});
+  const old=await create(options);
   let legacy;
   try{checkpoint(old);legacy=old.command(advance);}finally{await old.close();}
   let release;
   const held=new Promise(resolve=>{release=resolve;});
-  const f=await restoredCivilShield({...options,qualifyShieldExpiry:true,
-    onReady:row=>row.resources?.kind===4?held:undefined},{duringFarm:true});
+  const f=await create({...options,qualifyShieldExpiry:true,
+    onReady:row=>row.resources?.kind===4?held:undefined});
   try{
     const before=checkpoint(f),state=JSON.parse(before.snapshot),spell=state.spells[0];
-    const farm=f.records.find(row=>row.kind==='farm-arrival'&&row.committed);
-    const farmClock=()=>f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeFarmArrival);
-    const beforeClock=farmClock();
-    assert.deepEqual(beforeClock.nativeFarmArrival,farm.resources.nativeFarmArrival);
+    const motion=f.records.find(row=>row.kind===kind&&row.committed);
+    const drawClock=()=>f.host.inspect().nativeRouteFrame.bindings.find(row=>row[field]);
+    const beforeClock=drawClock();
+    assert.deepEqual(beforeClock[field],nativeResourceAdmissionProfile(kind).reference(motion.resources));
     assert(spell.remaining>.02&&spell.remaining<.04);
     let settled=false,failed=false;
     const pending=f.command({...advance,visualTerrain:true}).finally(()=>{settled=true;});
@@ -166,15 +186,16 @@ test('civil Shield expiry keeps the acquired Farm route and its draw clock acros
     await frame;
     const shown=f.host.inspect().nativeRouteFrame;
     assert.deepEqual(shown.worldBoundary,row.resources.worldBoundary);
-    assert.deepEqual(farmClock().nativeFarmArrival,beforeClock.nativeFarmArrival);
-    assert.equal(farmClock().executionEpoch,beforeClock.executionEpoch);
-    assert(farmClock().relativeTime>beforeClock.relativeTime);
+    const afterClock=drawClock();
+    assert.deepEqual(afterClock[field],beforeClock[field]);
+    assert.equal(afterClock.executionEpoch,beforeClock.executionEpoch);
+    assert(afterClock.relativeTime>beforeClock.relativeTime);
     assert.equal(result.stepsExecuted,2);
     assert.deepEqual(result.clockSegments,legacy.clockSegments);
     assert.deepEqual(result.events,legacy.events);
     assert.deepEqual(JSON.parse(result.snapshot),JSON.parse(legacy.snapshot));
     assert.deepEqual(checkpoint(f).nativeAuthorityCheckpoint.shieldOwners,[]);
-    assert.equal(f.records.filter(record=>record.kind==='farm-arrival').length,1);
+    assert.equal(f.records.filter(record=>record.kind===kind).length,1);
     assert.deepEqual(f.faults,[]);
   }finally{release();await f.close();}
 });

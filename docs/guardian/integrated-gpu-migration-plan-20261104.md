@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Escudo también caduca durante Idle22 y conserva su corredor adquirido. En NVIDIA, kind4 retiró el polígono 10 a 10,796 s, el dibujo 26 presentó ese ticket y el trabajador siguió avanzando con el cuerpo 1. Quedan el menú ordinario, la caducidad durante incursiones y C4. [Contraste](webgpu-shield.md#caducidad-durante-idle22).
+
 La conversión directa de RGBA8 del centro conserva los valores Float32 del shader. En el primer golpe de Desierto, el tramo de daño bajó de 29,40 a 18,20 ms en NVIDIA a 60 Hz. El intervalo completo quedó en 168,30 ms, frente a 166,80 ms de la referencia. C4 sigue abierto. [Tramos y recibo](native-desert-mixed-flight-center-20261125.md#colores-del-centro-al-recibir-el-primer-golpe).
 
 La calificación civil de caducidad de Escudo conserva Farm23 en marcha. En NVIDIA, kind4 retiró el polígono 10 a 10,526 s y mantuvo el cuerpo 1, la ruta y su reloj. El checkpoint 43 confirmó que Farm siguió avanzando y la cola drenó. El ensayo restauró un Escudo activo con 526 ms restantes. Quedan el menú ordinario, otras cohortes y C4. [Contraste y recibo](webgpu-shield.md#caducidad-durante-farm-en-marcha).

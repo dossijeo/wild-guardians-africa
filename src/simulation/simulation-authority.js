@@ -1,4 +1,4 @@
-import {copyNativeIdleStrollResources as copyRecoveredStrollResources} from '../world/native-idle-stroll.js';
+import {copyNativeIdleStrollResources as copyRecoveredStrollResources,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
 import {sameNativeShieldWorld} from '../world/native-shield-world.js';
@@ -348,12 +348,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(shieldAdvance)throw Error('Native shield expiry already active');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
     shieldAdvance=owner;
-    const worker=game.workers[0],farm=worker?.nativeRouteAdmission==='native-farm-arrival'&&worker.status==='arriving'?
-      planner.nativeFarmArrivalRouteBinding(worker.id):null;
+    const worker=game.workers[0],admission=worker?.nativeRouteAdmission;
+    let motionCurrent=()=>admission==='native-idle'&&worker.status==='idle';
+    if(admission==='native-farm-arrival'){
+      const binding=planner.nativeFarmArrivalRouteBinding(worker.id);
+      motionCurrent=()=>worker.status==='arriving'&&sameNativeFarmArrivalRouteAttestation(binding,planner.nativeFarmArrivalRouteBinding(worker.id));
+    }else if(admission==='native-idle-stroll'){
+      const binding=planner.nativeIdleStrollBinding(worker.id);
+      motionCurrent=()=>worker.status==='idle'&&sameNativeIdleStrollAttestation(binding,planner.nativeIdleStrollBinding(worker.id));
+    }
     const civil=()=>civilShieldPhysicsAvailable()&&!game.raid&&game.workers.length===1&&game.workers[0]===worker&&
-      (farm?worker.nativeRouteAdmission==='native-farm-arrival'&&worker.status==='arriving'&&
-        sameNativeFarmArrivalRouteAttestation(farm,planner.nativeFarmArrivalRouteBinding(worker.id)):
-        worker.nativeRouteAdmission==='native-idle'&&worker.status==='idle');
+      worker.nativeRouteAdmission===admission&&motionCurrent();
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!civil()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
@@ -367,7 +372,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     owner.receipt=await nativeProduction.quiesce();
     if(!current()||!civil())throw Error('Native shield expiry source changed');
     // Workers pass through this polygon. Finish the normal substep and its
-    // causal watermark before preparing removal. Keep the acquired Farm
+    // causal watermark before preparing removal. Keep the acquired route
     // association if present. The enclosing advance owns publication.
     advanceToExpiry();
     const at=game.elapsed;
