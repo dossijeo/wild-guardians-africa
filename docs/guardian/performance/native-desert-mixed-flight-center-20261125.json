@@ -1977,5 +1977,215 @@
       "absenceConfirmedAt": "successful remote Host submit"
     },
     "drained": true
+  },
+  "finalCenterRunningAt60Hz": {
+    "testedBase": "72016b9defa4ef6a28c965744b40b619a2a7d085",
+    "productDelta": {
+      "path": ".cache/c4-last-center/terminal-strike-running.patch",
+      "sha256": "946ea53e583ce61c25f3521696c8d763369c538ad69ffb0c2854961586b681fb"
+    },
+    "raw": {
+      "path": ".cache/c4-last-center/gated-final-running-60hz.json",
+      "sha256": "cdb7c9b65319b54b0a1626be781cabcd0527c686add1897b864b577b2af64819"
+    },
+    "trace": {
+      "path": ".cache/c4-last-center/gated-final-running-60hz.trace.json.gz",
+      "sha256": "fa6a13fe8df9d73b942efce1cf7d366fec070e201e4d42a3acc2e6228568030a",
+      "dataLossOccurred": false
+    },
+    "cuts": {
+      "path": ".cache/c4-last-center/gated-final-running-60hz.nodes-cuts.json",
+      "sha256": "0bb15d21392d20f8d8b7836b2d82c39124f5abc849f251ef1c1e25a1d9d90b7b"
+    },
+    "baselineCuts": {
+      "path": ".cache/c4-last-center/baseline-with-preparation.json",
+      "sha256": "2cbd700afc92687c0890d46c1722934aa6c3d2a65fd1a4747d2537b82e1d11cd"
+    },
+    "display": {
+      "before": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 30,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "temporary": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 60,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "after": {
+        "width": 3840,
+        "height": 2160,
+        "hz": 30,
+        "bpp": 32,
+        "x": 0,
+        "y": 0
+      },
+      "viewport": [
+        640,
+        480
+      ],
+      "applyReceipt": {
+        "path": ".cache/native-60hz-gated-final-running-60hz-apply-receipt.json",
+        "sha256": "20197a41993a8ad125f9493d37c511801ee4a256a5d5683741f8ff9609f7b26f"
+      },
+      "restoreReceipt": {
+        "path": ".cache/native-60hz-gated-final-running-60hz-restore-receipt.json",
+        "sha256": "9be2035d6c719ef256b4c4d561799af429d31253af8df7aa954164617454167e"
+      }
+    },
+    "cadence": {
+      "samples": 4784,
+      "intervalsAboveTarget": 2652,
+      "targetMs": 16.666666666666668,
+      "maxIntervalMs": 166.7998046875
+    },
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "hp": 580,
+        "draw": 418,
+        "ticket": 13,
+        "intervalMs": 166.7998046875
+      },
+      {
+        "attackId": "attack-29212",
+        "hp": 560,
+        "draw": 446,
+        "ticket": 17,
+        "intervalMs": 100.10009765625
+      },
+      {
+        "attackId": "attack-29215",
+        "hp": 540,
+        "draw": 516,
+        "ticket": 21,
+        "intervalMs": 116.800048828125
+      },
+      {
+        "attackId": "attack-29218",
+        "hp": 520,
+        "draw": 573,
+        "ticket": 25,
+        "intervalMs": 116.800048828125
+      }
+    ],
+    "fourth": {
+      "before": {
+        "intervalMs": 364.800048828125,
+        "captureMs": 258.7,
+        "preparation": {
+          "requestToReadyMs": 830.2001953125,
+          "draws": 50,
+          "maxIntervalMs": 21.199951171875
+        }
+      },
+      "after": {
+        "intervalMs": 116.800048828125,
+        "captureMs": 19.801,
+        "publication": 1060,
+        "preparation": {
+          "requestToReadyMs": 1048.300048828125,
+          "draws": 63,
+          "maxIntervalMs": 19.599853515625
+        },
+        "timing": {
+          "postMs": 88.699951171875,
+          "admittedMs": 103.10009765625,
+          "resourceWaitMs": 0
+        },
+        "activePipelines": [
+          {
+            "id": "Pipeline:6172",
+            "mesh": 861,
+            "context": 2,
+            "source": 360,
+            "preparedBeforeReady": null,
+            "nodeKey": 12969007665156528,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6148",
+            "mesh": 859,
+            "context": 2,
+            "source": 358,
+            "preparedBeforeReady": null,
+            "nodeKey": 5753678046615260,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6160",
+            "mesh": 860,
+            "context": 2,
+            "source": 359,
+            "preparedBeforeReady": null,
+            "nodeKey": 4482148198302132,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6136",
+            "mesh": 858,
+            "context": 2,
+            "source": 357,
+            "preparedBeforeReady": null,
+            "nodeKey": 8202106764598092,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6096",
+            "mesh": 859,
+            "context": 1,
+            "source": null,
+            "preparedBeforeReady": null,
+            "nodeKey": 5983271108825354,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6123",
+            "mesh": 861,
+            "context": 1,
+            "source": null,
+            "preparedBeforeReady": null,
+            "nodeKey": 4717494192392349,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6082",
+            "mesh": 858,
+            "context": 1,
+            "source": null,
+            "preparedBeforeReady": null,
+            "nodeKey": 10734472632510710,
+            "nodeBeforeReady": true
+          },
+          {
+            "id": "Pipeline:6109",
+            "mesh": 860,
+            "context": 1,
+            "source": null,
+            "preparedBeforeReady": null,
+            "nodeKey": 9010250337438566,
+            "nodeBeforeReady": true
+          }
+        ]
+      }
+    },
+    "retreat": {
+      "draw": 681,
+      "intervalMs": 133.300048828125
+    },
+    "returnDraw": 682,
+    "finalElapsed": 82.2000000000018,
+    "flightBuffers": {
+      "compared": 1335,
+      "sameReference": 1335,
+      "sameVersion": 1335
+    },
+    "drained": true
   }
 }

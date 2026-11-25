@@ -1,3 +1,4 @@
+import {originalRig} from './helpers/native-animal-crop-rig.js';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
@@ -148,13 +149,36 @@ function gatedDesertRaid(){
 test('the Desert Farm gate remains with Home while the animal takes a different corridor', async () => {
   const {state,chunkKeys,start,center,gate,gateId}=gatedDesertRaid();
   const acquisitions=[];
+  const manifest={epoch:'desert-gated',chunks:chunkKeys.map(key=>{
+    const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+  })};
+  let rig,rigReady;
+  async function ensureRig(current){
+    rigReady??=originalRig(structuredClone(current),manifest);
+    rig=await rigReady;
+  }
   const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
-    onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
+    getTerrainManifest:()=>manifest,
+    async onPrepare(record){
+      if(!record.kind.startsWith('animal-crop-'))return;
+      const current=world.snapshot();
+      if(!rig)await ensureRig(current);
+      rig.update(current);
+      await rig.prepare(record.resources);
+    },
+    onCommit(record,data){
+      const proof=data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding;
+      if(proof)rig.commit(proof,data);
+      acquisitions.push({kind:record.kind,data});
+    }});
   async function step(){
     const result=world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
     for(const key of result.residency.missing){const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});}
+    const current=JSON.parse(result.snapshot);
+    if(current.raid&&!rig)await ensureRig(current);
+    rig?.update(current);
     await world.present();
-    return JSON.parse(result.snapshot);
+    return current;
   }
   try{
     world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
@@ -198,8 +222,9 @@ test('the Desert Farm gate remains with Home while the animal takes a different 
     assert.equal(returnFarm.reference.sourceRequest.refugeSequence,absence.nativeHomeArrivalBinding.retiredSequence);
     assert.equal(returnFarm.reference.motionFlags,0);
     assert.deepEqual(returnFarm.gateIds,[gateId]);
+    assert.equal(rig.centerReturns,4);assert.equal(rig.runningReturns,1);
     assert.deepEqual(world.faults,[]);
-  }finally{await world.close();}
+  }finally{await world.close();rig?.close();}
 });
 
 test('a gate in an unacquired Farm proposal grants no mixed admission', async () => {

@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Preparar las mallas de Running en el último Strike27 redujo el cuarto relevo de 364,80 a 116,80 ms a 60 Hz, con los ocho estados de color y sombra listos antes de READY. El primer golpe alcanzó 166,80 ms y la ausencia tras Retreat, 133,30 ms. C4 sigue abierto. [Contraste físico](native-desert-mixed-flight-center-20261125.md#mallas-de-carrera-en-el-último-golpe).
+
 A 60 Hz, los cuatro golpes del recorrido completo de Desierto reutilizan los mismos ocho pipelines y el trabajador vuelve a Idle. El cuarto relevo conserva un intervalo de 364,80 ms, con 258,70 ms dentro de la captura y cero espera de recursos. C4 sigue abierto. [Cortes del recorrido](native-desert-mixed-flight-center-20261125.md#cuatro-golpes-y-regreso-a-60-hz).
 
 El primer dibujo tras el golpe al centro usa los ocho pipelines admitidos antes de READY de Strike27. En NVIDIA, la espera de esos recursos bajó de 445,60 ms a cero y el render de 267,80 a 23,60 ms. El intervalo quedó en 200,10 ms, con cinco oportunidades rechazadas por obsolescencia. C4 queda abierto en el relevo al paquete nuevo. [Tramos y recibo](native-desert-mixed-flight-center-20261125.md#materiales-del-facóquero-al-cerrar-el-golpe).

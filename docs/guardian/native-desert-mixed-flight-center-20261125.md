@@ -46,6 +46,14 @@ Los cuatro intervalos de relevo fueron 166,30, 99,80, 116,60 y 364,80 ms. En el 
 
 El cuarto golpe y `AnimalRetreating` llegaron en la misma publicación 1032. En su captura, `Nodes.getForRender` dedicó 235,40 ms a ocho estados nuevos de las mallas 858–861 y los materiales 357–360. Esas mallas utilizaron los mismos IDs de pipeline que las mallas 863–866 de los tres golpes anteriores. El paquete 572 salió después de esa captura y el Host tuvo los pipelines disponibles. La preparación pendiente corresponde a los estados de las mallas que entran al retirarse el facóquero. [Identidades y tiempos](performance/native-desert-mixed-flight-center-20261125.json).
 
+### Mallas de carrera en el último golpe
+
+Con un solo golpe restante contra el centro, Strike27 prepara las cuatro mallas de Running ya instaladas junto con las de Walking en la misma solicitud de retorno. Walking cubre la publicación en que el animal aún conserva ese estado. Los tres primeros golpes solo preparan Walking. El selector del rig conserva la elección en cada publicación y la retirada mantiene su orden. [Selección del lote](../../src/rendering/webgpu-animal-roster.js) · [Construcción y reutilización de estados de nodo en Three r180](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/nodes/Nodes.js).
+
+En NVIDIA a 60 Hz, los ocho estados de color y sombra de Running ya existían al llegar el cuarto READY. El dibujo 573 de retirada del último Strike27 reutilizó esas claves. La captura correspondiente a la publicación 1060 bajó de 258,70 a 19,80 ms y el intervalo bajó de 364,80 a 116,80 ms. La espera de recursos siguió en cero. La preparación del cuarto ticket pasó de 830,20 a 1.048,30 ms. Durante ella se registraron 63 dibujos, con un intervalo máximo de 19,60 ms frente a 21,20 ms en la referencia.
+
+El recorrido volvió a dejar al centro en 520 HP y al trabajador en Idle. Se conservaron las 1.335 referencias y versiones de buffer comparables y el drenaje cerró sin errores. El primer impacto alcanzó 166,80 ms y la ausencia tras Retreat, 133,30 ms. De los 4.784 intervalos guardados, 2.652 superaron 16,667 ms, incluido el jitter de temporización. La captura usó 640 × 480, conservó la traza completa y restauró el modo 4K/30 Hz. C4 sigue abierto. [Recibo del contraste](performance/native-desert-mixed-flight-center-20261125.json).
+
 ## Controles
 
 Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.
