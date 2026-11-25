@@ -69,15 +69,13 @@ abiertos hasta su evidencia específica; no impiden toda adaptación independien
 Para consultar las pruebas históricas de componente, `lab --scenario harvest` muestra su selección;
 `gates`, `obstacles`, `concurrent`, `pause`, `invalidation`, `preparation` y
 `recovery` preparan las adversidades. Instrucciones en [operaciones](MIGRATION-OPERATIONS.md).
-El catálogo CLI y los TODO de [aceptación pendiente](../../tests/migration-harvest-acceptance.pending.test.js)
-son anteriores a parte de la evidencia ordinaria anterior: sus rótulos pendientes
-no son el estado funcional vigente. Sol debe reconciliarlos con las aserciones de
-los harnesses existentes; no basta borrarlos ni poner una marca de capacidad.
-El recorrido completo usa tools/guardian/audit_native_farm_birth_world_owner.mjs;
-los informes enlazados conservan comandos, configuración y recibos. Siguiente Task
-usa QA_NATIVE_BIRTH_FOLLOW_NEXT_TASK; Home se ejecuta por separado con
-QA_NATIVE_BIRTH_FOLLOW_HOME, sobre las continuaciones Action/Consequence/Settlement
-exigidas por el runner. No crear otra fixture ni ejecutar ambas alternativas juntas.
+El escenario CLI `harvest` selecciona el auditor existente de alta y sus
+continuaciones Action, Carry, Settlement y siguiente Task. El recibo de la
+segunda entrega comprueba los dos asientos y el cuerpo durante la segunda tarea.
+Home se ejecuta en un recorrido separado con `QA_NATIVE_BIRTH_FOLLOW_HOME`.
+Los [TODO de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
+conservan puertas y tráfico, la cancelación de una consecuencia ordinaria y la
+recuperación. [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 
 ## Esquema común para las demás intenciones
 

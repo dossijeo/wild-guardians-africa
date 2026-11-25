@@ -69,7 +69,8 @@ async function main(){
     return run(tests,jobs,'lab',{pending,requiredGpu:jobs.length>0});
   }
   if(mode==='check'){
-    const paths=[...authority,...guards,...integrationTests,...Object.values(scenarios).flatMap(s=>s.browser?[s.browser]:[])];
+    const paths=[...authority,...guards,...integrationTests,
+      ...Object.values(scenarios).flatMap(s=>[s.browser,s.evidence].filter(Boolean))];
     for(const file of paths)if(!existsSync(path.join(root,file)))throw Error(`Missing catalog reference: ${file}`);
     for(const file of ['MIGRATION-OPERATIONS.md','MIGRATION-VERTICALS.md','MIGRATION-RESEARCH.md','MIGRATION-SUPPORT-HANDOFF.md']){
       const full=path.join(root,'docs/guardian',file),text=readFileSync(full,'utf8');

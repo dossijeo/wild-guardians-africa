@@ -21,7 +21,16 @@ test('missing mandatory safety test fails instead of silently reducing coverage'
   assert.throws(()=>selectTests(['src/a.js'],'focused',inventory.filter(p=>p!==guards[0]),()=>''),/Required test missing/);
 });
 test('browser scenarios deduplicate the same harness invocation but preserve different variations',()=>{
-  const jobs=browserJobs(['harvest','concurrent','preparation','gates','recovery'],scenarios);assert.equal(jobs.length,3);assert.equal(jobs[0].env.QA_NATIVE_ACTION,'true');assert.equal(jobs[1].env.QA_GATE_MOTOR,'true');assert.throws(()=>browserJobs(['typo'],scenarios),/Unknown scenario/);
+  const jobs=browserJobs(['harvest','concurrent','preparation','gates','recovery'],scenarios);
+  assert.deepEqual(jobs.map(job=>job.name),['harvest','concurrent','gates','recovery']);
+  assert.equal(jobs[0].script,'tools/guardian/audit_native_farm_birth_world_owner.mjs');
+  assert.equal(jobs[0].env.QA_NATIVE_BIRTH_SCENARIO,'cancel-before-task');
+  for(const suffix of ['ACTION','CONSEQUENCE','SETTLEMENT','NEXT_TASK'])
+    assert.equal(jobs[0].env['QA_NATIVE_BIRTH_FOLLOW_'+suffix],'true');
+  assert.equal(jobs[0].env.QA_NATIVE_BIRTH_FOLLOW_HOME,undefined);
+  assert.equal(jobs[1].env.QA_NATIVE_ACTION,'true');
+  assert.equal(jobs[2].env.QA_GATE_MOTOR,'true');
+  assert.throws(()=>browserJobs(['typo'],scenarios),/Unknown scenario/);
 });
 test('broad tier does not drop unrelated tests',()=>assert(select(['docs/example.md'],'broad').tests.includes('tests/unrelated.test.js')));
 

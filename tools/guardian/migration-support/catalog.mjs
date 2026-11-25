@@ -20,10 +20,18 @@ const first = 'tools/guardian/audit_native_first_task_world_owner.mjs';
 const worker = 'tools/guardian/audit_native_worker_world_owner.mjs';
 export const scenarios = {
   harvest: {
-    description: 'Asignación real → ruta → GPU original → llegada → Harvest admitido. Consecuencia/siguiente tarea todavía pendientes.',
-    tests: ['native-task-resource-requests', 'native-task-start-graphics', 'native-task-game-execution', 'native-task-action-graphics', 'native-task-action-game-execution'],
-    browser: first, env: {QA_NATIVE_ACTION:'true'},
-    pending: ['Productor ordinario de partida', 'Consecuencia preparada real exactamente una vez', 'Siguiente tarea admitida desde esa consecuencia'],
+    description: 'Contratación y dos cosechas con Carry y entrega sobre el mismo cuerpo en el recorrido ordinario.',
+    tests: ['native-task-resource-requests', 'native-task-start-graphics', 'native-task-game-execution',
+      'native-task-action-graphics', 'native-task-action-game-execution', 'native-intent-production-authority'],
+    browser: 'tools/guardian/audit_native_farm_birth_world_owner.mjs',
+    env: {
+      QA_NATIVE_BIRTH_SCENARIO:'cancel-before-task',QA_NATIVE_EXISTING_PROFILE:'youngMale',QA_NATIVE_NEWBORN_PROFILE:'youngMale',
+      QA_NATIVE_BIRTH_FOLLOW_ACTION:'true',QA_NATIVE_BIRTH_FOLLOW_CONSEQUENCE:'true',
+      QA_NATIVE_BIRTH_FOLLOW_SETTLEMENT:'true',QA_NATIVE_BIRTH_FOLLOW_NEXT_TASK:'true',
+    },
+    evidence: 'docs/guardian/performance/native-post-settlement-second-delivery-20261121.json',
+    pending: ['Puertas y tráfico en el recorrido completo', 'Cancelación de una consecuencia ordinaria preparada',
+      'Guardado y recuperación en ruta, acción y consecuencia', 'Activación ordinaria y C4 a 60 FPS'],
   },
   obstacles: {description:'Muro/props: invalidación dirigida y veto previo; componente nativo.', tests:['spatial-native-static-mutations','spatial-native-prop-mutations'], pending:['Combinar obstáculo con el ciclo Harvest completo']},
   gates: {description:'Dos puertas, suspensión, obstáculo, reanudación determinista; personaje original en ensayo GPU separado.', tests:['spatial-native-gate-route-acceptance','spatial-native-gate-crossings'], browser:worker, env:{QA_GATE_WAIT:'true',QA_GATE_MOTOR:'true'}, pending:['Puertas dentro de la misma partida Harvest ordinaria']},
@@ -35,4 +43,7 @@ export const scenarios = {
 };
 export const testPath = name => `tests/${name}.test.js`;
 export const integrationTests = [...new Set(Object.values(scenarios).flatMap(s=>s.tests.map(testPath)))];
-export const isolationKeys = ['QA_NATIVE_ACTION','QA_RESTORE_ACTION','QA_RUNNING_TRANSITION','QA_CARRYING','QA_DEFERRED_RESUME','QA_RESUME_SUSPENSION','QA_TERRAIN_SUSPENSION','QA_GATE_WAIT','QA_GATE_MOTOR','QA_AUDIT'];
+export const isolationKeys = ['QA_NATIVE_ACTION','QA_RESTORE_ACTION','QA_RUNNING_TRANSITION','QA_CARRYING','QA_DEFERRED_RESUME','QA_RESUME_SUSPENSION','QA_TERRAIN_SUSPENSION','QA_GATE_WAIT','QA_GATE_MOTOR','QA_AUDIT',
+  'QA_NATIVE_BIRTH_SCENARIO','QA_NATIVE_BIRTH_COUNT','QA_NATIVE_EXISTING_PROFILE','QA_NATIVE_NEWBORN_PROFILE',
+  'QA_NATIVE_BIRTH_FOLLOW_ACTION','QA_NATIVE_BIRTH_FOLLOW_CONSEQUENCE','QA_NATIVE_BIRTH_FOLLOW_SETTLEMENT',
+  'QA_NATIVE_BIRTH_FOLLOW_HOME','QA_NATIVE_BIRTH_FOLLOW_NEXT_TASK'];

@@ -170,11 +170,10 @@ Variaciones reproducibles: `obstacles`, `gates`, `concurrent`, `pause`,
 existentes y sus parámetros exactos. `all` ejecuta la unión sin repetir archivos
 Node ni invocaciones GPU idénticas. Obstáculos/pausa/invalidation tienen cobertura
 de componente; no se presentan como variaciones ya conectadas al ciclo completo.
-El escenario Harvest GPU enlaza asignación, ruta, movimiento, llegada y acción en
-la misma ejecución. Puertas/recovery siguen siendo harnesses complementarios.
-Las fases aún sin productor están en
-[aceptación pendiente](../../tests/migration-harvest-acceptance.pending.test.js),
-con TODO explícito; no tests vacíos aprobados. Usar `--require-complete` para que
+El escenario Harvest GPU enlaza el alta, dos acciones y dos entregas sobre el
+mismo cuerpo mediante el auditor de partida existente. Los escenarios de puertas
+y recuperación conservan sus propios arneses. El [archivo de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
+conserva los TODO de las adversidades pendientes. Usar `--require-complete` para que
 la falta de la vertical completa produzca código 2 incluso si los componentes pasan.
 
 | Nivel | Selección y obligación |
