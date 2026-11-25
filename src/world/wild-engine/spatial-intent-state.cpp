@@ -1837,8 +1837,12 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double sessi
 }
 
 static bool collapseRetreatCurrent(IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
-  if(s.activeIntents.size()!=1||s.reservedBodies.size()!=1||spatial_body_count()!=1||!s.gates.empty()||
+  if(s.activeIntents.size()!=1||s.reservedBodies.size()!=1||spatial_body_count()!=1||s.gateMotionProposal.pending||
      c.slot>=s.routeSlots.size()||!s.executionEnabled||s.clockPaused||!s.causalClock)return false;
+  for(const auto& [id,gate]:s.gates)
+    if(!gate.defined||!gate.mesh||gate.status!=0||gate.occupied||!gate.crossings.empty()||
+       gateMotionPending(gate,s.clockThrough)||gateMotionEnd(gate)>s.clockThrough||
+       gateOpening(gate,s.clockThrough)!=gate.target)return false;
   const auto it=s.activeIntents.find(c.actor);
   if(it==s.activeIntents.end()||!it->second.retreat||it->second.slot!=c.slot||it->second.generation!=c.generation)return false;
   const auto& r=s.routeSlots[c.slot];

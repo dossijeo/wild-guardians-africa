@@ -142,7 +142,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
  if(!Number.isSafeInteger(resourcePressureBytes)||resourcePressureBytes<0||!Number.isSafeInteger(resourceIdleBytes)||resourceIdleBytes<0)throw TypeError('Invalid resource pressure policy');
  if(signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid WebGPU startup signal');
  let grassOwner=null,grassTimeline=null,farCoverage=null,farShadow=null,farAbort=null,farShadowSuspended=false,farCoveragePhase=farVisualQueries?'waiting':'disabled',farCoverageError=null,farCoverageDetail=null,groundDepth=null,softDepth=null,depthController=null,blessingGlow=null;
- let preparedNativeWorldBoundary=null,nativeWorldFrameAdmission=null,nativeResumeTarget=null,nativeRejectedFrame=null,nativeRouteRejected=false,nativeRoutePreparations=0,nativePickFrame=null,nativePickPresentation=null,nativeRouteResourceRevision=0,nativeGateProposal=null;
+ let preparedNativeWorldBoundary=null,nativeWorldFrameAdmission=null,nativeResumeTarget=null,nativeRejectedFrame=null,nativeRouteRejected=false,nativeRoutePreparations=0,nativePickFrame=null,nativePickPresentation=null,nativeRouteResourceRevision=0,nativeGateProposal=null,retainedCenterRuin=null;
  let remoteTexturePreparation=null,textureBindingInitialization=null,remoteClockBindings=null,remoteCameraBindings=null,remoteMotionGroup=null,remoteCameraEnvelope=null,remoteEnvelope=null,remoteCameraCompatible=true;let waterReflectionFrames=0;let renderer,scene,camera,vfxWorldLights,material,waterMaterial,waterAssetMaterial,waterEnvironment,waterReflection,residency,terrain,stream,roster,workers,crates,settlements,crops,agricultureVfx,blessingVfx,guardianAttack,sky,biomeProps,motionFeed,beastStyle,bakedWalk,bakedWalkBank,bakedAnimalRunBank,bakedAnimalAttackBank,bakedWorkerWalkBank,bakedWorkerRunBank,bakedWorkerHarvestBank,bakedWorkerIdleBank,bakedWorkerAlertBank,bakedWorkerWaterBank,bakedWorkerPlantBank,bakedWorkerCarryBank,bakedWorkerFallBank,bakedWorkerGetUpBank,visualClock,historicalClock=null,historicalActorIds=null,historicalWorkerIds=null,terrainSupport=null,ground,groundContacts=null,mudMaterial=null,mudPreparer=null,temporalShadow=null,timelinePump=null,historicalPreviewSupport=null,groundError=null,lightingNight=0,closed=false,recoveringPublication=false,timelineRecovering=experimentalTimelineRecovery,recoveryTransportPending=false,cameraStructureEpoch=null,cameraStructureSequence=initialSequence,guardianCaptureRevision=0,selectableGeneration=0,pipelineAdmission=null,workerAssetBank=null,idleAssetBudget=null,resourceRegistry=null,rendererLease=null,biomePropsLease=null,characterData=null,biomePackAbort=null,chunkCoordinator=null,visibleCameraTerrain=null;
  const closeBakedResources=()=>closeBakedWalkResources({bank:bakedWalkBank,animalRunBank:bakedAnimalRunBank,animalAttackBank:bakedAnimalAttackBank,workerBank:bakedWorkerWalkBank,workerRunBank:bakedWorkerRunBank,workerHarvestBank:bakedWorkerHarvestBank,workerIdleBank:bakedWorkerIdleBank,workerAlertBank:bakedWorkerAlertBank,workerWaterBank:bakedWorkerWaterBank,workerPlantBank:bakedWorkerPlantBank,workerCarryBank:bakedWorkerCarryBank,workerFallBank:bakedWorkerFallBank,workerGetUpBank:bakedWorkerGetUpBank,bake:bakedWalk,admission:pipelineAdmission});
  const surfaceLeases=new Map(),releasedSurfaceResources=new WeakSet();let nextSurfaceResource=0;
@@ -257,9 +257,15 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   const nativeFrameState=()=>({closed,prepared:preparedNativeWorldBoundary,required:remoteGpu?.requiredNativeWorldBoundary()??null,proposal:nativeGateProposal?.descriptor??terrain?.status().nativeProposal??null,resumeTarget:nativeResumeTarget});
   const nativeDrawReadiness=()=>{if(timelineRecovering||nativeRoutePreparations||nativeRouteRejected)return 'waiting';const result=nativeFrameReadiness(nativeFrameState());return result==='ready'&&nativeRejectedFrame!==null&&renderer.info.frame<=nativeRejectedFrame?'next-frame':result;};
   function onNativeCropStrikeRetired(reference){
-   if(closed||!(reference?.kind===27||reference?.kind===26&&reference.purpose==='retreat')||!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary))return;
-   // The confirmed roster has detached the acquired strike. A late packet
-   // from before that change must not hold its replacement behind the veto.
+   if(closed||!(reference?.kind===27||reference?.kind===26&&reference.purpose==='retreat'))return;
+   if(!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary)){
+    if(reference.kind!==26||!retainedCenterRuin||
+       !sameNativeWorldBoundary(retainedCenterRuin.worldBoundary,preparedNativeWorldBoundary)||
+       !sameNativeAnimalCropReference(reference,retainedCenterRuin.retreat.reference))return;
+    retainedCenterRuin=null;
+   }
+   // The confirmed roster detached the acquired program. Wake its replacement
+   // even if the center ruin already advanced the world this Retreat retained.
    nativeRouteResourceRevision++;nativeRouteRejected=false;onPresentationReady();
   }
   function retainRejectedNativeFrame(error,metadata){
@@ -277,6 +283,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(!sameNativeWorldBoundary(next,preparedNativeWorldBoundary)){
     const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind));
     if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
+    const ruin=nativeGateProposal?.acquiredWorld?.centerRuin;
+    retainedCenterRuin=direct&&ruin?{worldBoundary:next,retreat:ruin.retreat}:null;
     preparedNativeWorldBoundary=next;
    }
   }

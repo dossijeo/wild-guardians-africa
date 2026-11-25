@@ -96,3 +96,18 @@ El mapa de centros conserva el ID del polígono en el WASM y su procedencia en l
 La selección de regresión pasó 218 de 218 pruebas con los WASM instalados. Incluye la misma huella capturada antes del corte, los bytes de ambos efectos y la caducidad de Escudo. La compilación de producción terminó en 55,63 s.
 
 SHA-256 del recibo gzip `ba573966195b14cfbb8271b51fb725ff79ed87ba9be445d8d9231406d97f7529`. SHA-256 del snapshot de entrada `027e34ca72b5994b5654805027f74da684e269e532696ed03bd218314ec39514`.
+
+
+### Ruina con el trabajador refugiado y el portón abierto
+
+La partida de Desierto 983 conserva el trabajador contratado, el portón original y los muros. El centro parte de 200 HP para que los cuatro golpes lleguen a 180, 160, 140 y 120 HP. Home19 ya ha acreditado la ausencia física del trabajador antes de la ruina. La condición nativa exige una única ruta en ejecución y verifica que cada motor instalado esté asentado, sin propuesta, ocupación ni reserva de cruce. Revalida la misma topología y revisiones al consumir la reserva.
+
+Home19 adquirió el ticket 11. El refugiado conservó su posición y el portón siguió abierto con 60 HP. La ruina preparó el ticket 28 a 62,850 s, retiró el polígono 9 a 62,870 s y lo presentó en el dibujo 440 con el cuerpo 2 aún en Retreat. El dibujo 490 confirmó la ausencia del animal después de RaidEnded a 68,140 s. El trabajador siguió refugiado, el último centro cayó y Game aplicó su condición de derrota. Draw drenó sin avisos. [Recibo de Edge con NVIDIA](performance/native-desert-gated-center-ruin-retreat-20261125.json.gz).
+
+El dibujo de ruina registró 33,400 ms entre inicios de dibujos. El máximo de las 1973 muestras retenidas en la inspección final fue de 200,000 ms a 30 Hz. C4 y los casos de motor activo u otro actor móvil siguen abiertos.
+
+El arranque del arnés esperó el primer Farm23 adquirido antes de activar el reloj. En la salida, el Host rechazó el paquete 489 con la ruta revocada, conservó sus preparaciones y presentó el paquete 490. Surface abrió la captura una vez al comprobar el enlace exacto de Retreat 27 con la ruina 28.
+
+Pasaron 53 de 53 pruebas dirigidas y la compilación web terminó en 47,88 s. Las dos pruebas mixtas fallaron con la guarda anterior. La regresión del retiro cubre el rechazo antes y después de confirmar la ausencia y descarta una generación ajena.
+
+SHA-256 del recibo gzip `c2f0632563e234658558a7a99c0612f97fa67c5e890a62fb8e544067471cdd5d`. SHA-256 del snapshot de entrada `9eea11bd2ffa33e9c442019f66a884098008e7a450cd734c503554d5bc75792f`.

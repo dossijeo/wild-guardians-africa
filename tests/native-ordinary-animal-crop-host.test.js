@@ -102,7 +102,7 @@ function terminalSurfaceGate(world){
  const roster=source.slice(source.indexOf('roster=createWebGpuAnimalRoster(')).split('});roster.sync()')[0];
  const options=roster.slice(roster.indexOf('onlyActorId:'));
  const build=new Function('world','nativeFrameReadiness','sameNativeWorldBoundary',`
-  let closed=false,nativeGateProposal=null,terrain=null,nativeResumeTarget=null,nativeRejectedFrame=null;
+  let closed=false,nativeGateProposal=null,terrain=null,nativeResumeTarget=null,nativeRejectedFrame=null,retainedCenterRuin=null;
   let timelineRecovering=false,nativeRoutePreparations=0,nativeRouteRejected=false,nativeRouteResourceRevision=1,wakes=0;
   const remoteGpu={requiredNativeWorldBoundary:()=>world},preparedNativeWorldBoundary=world,onPresentationReady=()=>wakes++;
   const experimentalAllActors=true,onSelectableChange=()=>{},onError=()=>{},onActorReady=()=>{};

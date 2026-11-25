@@ -348,11 +348,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   let shieldAdvance=null,centerRuinAdvance=null;
   async function prepareCenterRuin(center,span,advanceSubstep){
     const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
-      civilShieldPhysicsAvailable()&&game.workers.length===0&&game.structures.length===1&&game.structures[0]===center&&
+      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&game.structures[0]===center&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&
       game.raid.animals[0].status==='retreating'&&nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
-    if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires its isolated Retreat and substep');
+    if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified Retreat substep');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,receipt:null};
     centerRuinAdvance=owner;
     const at=game.elapsed,end=at+span,signal=owner.controller.signal;

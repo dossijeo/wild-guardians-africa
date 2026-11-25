@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El recorrido de ruina del centro también conserva al trabajador refugiado por Home19 y el portón abierto que usó al volver. NVIDIA confirmó cuatro golpes, retirada del polígono, dibujo con Retreat vigente, derrota por pérdida del último centro y drenaje. [Caso mixto con portón](native-desert-mixed-flight-center-20261125.md#ruina-con-el-trabajador-refugiado-y-el-portón-abierto).
+
 El Host reutiliza comprobaciones de la misma identidad dentro de cada llamada. Las comprobaciones dirigidas pasaron de 72/72/24 a 3/3/1 y la regresión de 738 pruebas y la compilación aprobaron. C4 sigue abierto tras dos capturas a 60 Hz. El primer hold fue de 23,170 y 24,505 ms y el máximo de arranque fue de 188,545 y 206,190 ms. [Contraste y validación](native-binding-cadence-20261120.md).
 
 El roster conserva la pose y el actor durante el relevo Task25 a Home18. La prueba cubre los dos órdenes de llegada del estado de Game y del recibo. Pasaron 483 pruebas y la compilación. Quedan el disparo ordinario, los motores y la validación de cadencia en GPU física. [Adopción gráfica](native-task-stop-home-graphics-20261120.md).
