@@ -232,8 +232,9 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     if((routeEffects.rows.length===0)!==(retention===1))throw Error('Native mutation retention/effect mismatch');
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
     const stop=h[4]===12||h[4]===24||h[4]===25;
-    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||(h[4]<6&&h[4]!==2)||(h[4]>12&&!stop)||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
-    if(h[4]===2&&(count!==0||retention!==1||routeEffects.rows.length||gateEffects.rows.length))throw Error('Native wall preview cannot change terrain or route owners');
+    const overlay=h[4]===2||h[4]===3||h[4]===4;
+    if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||(h[4]<6&&!overlay)||(h[4]>12&&!stop)||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
+    if(overlay&&(count!==0||retention!==1||routeEffects.rows.length||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');
     if(stop&&(count!==0||retention!==0||!routeEffects.rows.length))throw Error('Native route stop lacks its body-only effects');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
     for(let index=0;index<count;index++){

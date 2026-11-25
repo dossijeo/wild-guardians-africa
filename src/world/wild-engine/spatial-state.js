@@ -39,6 +39,23 @@ export function validateSpatialTerrainState(state){
   return state;
 }
 
+export function captureSpatialPolygons(wasm,id=null){
+  const polygonCount=wasm.spatial_polygon_state_count();
+  const polygonPointer=wasm.spatial_polygon_state_ptr();
+  const records=new DataView(wasm.memory.buffer,polygonPointer,polygonCount*528);
+  const polygons=[];
+  for(let i=0;i<polygonCount;i++){
+    const at=i*528,polygonId=records.getInt32(at,true);
+    if(id!==null&&id!==polygonId)continue;
+    const count=records.getInt32(at+4,true),points=[];
+    for(let j=0;j<count;j++)points.push({x:records.getFloat32(at+16+j*8,true),
+      z:records.getFloat32(at+20+j*8,true)});
+    polygons.push({id:polygonId,passMask:records.getInt32(at+8,true),points});
+    if(id!==null)break;
+  }
+  return polygons;
+}
+
 // Compact, versioned QA snapshot of the C++ spatial authority. Residency and
 // route trees are derived data; only the seed and authorized topology persist.
 export function captureSpatialState(wasm){
@@ -54,17 +71,7 @@ export function captureSpatialState(wasm){
       halfZ:records.getFloat32(at+16,true),yaw:records.getFloat32(at+20,true),
       passMask:records.getInt32(at+24,true)});
   }
-  const polygons=[];
-  const polygonCount=wasm.spatial_polygon_state_count();
-  const polygonPointer=wasm.spatial_polygon_state_ptr();
-  const polygonRecords=new DataView(wasm.memory.buffer,polygonPointer,polygonCount*528);
-  for(let i=0;i<polygonCount;i++){
-    const at=i*528,count=polygonRecords.getInt32(at+4,true),points=[];
-    for(let j=0;j<count;j++)points.push({x:polygonRecords.getFloat32(at+16+j*8,true),
-      z:polygonRecords.getFloat32(at+20+j*8,true)});
-    polygons.push({id:polygonRecords.getInt32(at,true),
-      passMask:polygonRecords.getInt32(at+8,true),points});
-  }
+  const polygons=captureSpatialPolygons(wasm);
   const removedProps=[],removedCount=wasm.spatial_removed_prop_count();
   const removed=new Int32Array(wasm.memory.buffer,wasm.spatial_removed_prop_state_ptr(),removedCount*3);
   for(let i=0;i<removedCount;i++)removedProps.push({group:removed[i*3],gx:removed[i*3+1],gz:removed[i*3+2]});

@@ -1573,7 +1573,7 @@ int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const Spatial
   auto& p=state().barrierProposal;
   if(requireRetained&&(!p.retainsRoutes||!p.routeEffects.empty()||!p.gateEffects.empty())){clearWorldMutationProposal(p);return 0;}
   p.kind=input.kind;p.worldInput=input;
-  if(requireRetained)p.barrierAddition=PendingBarrierProposal::BarrierAdditionDraft{p.ticket,p.at,{}};
+  if(requireRetained&&input.kind==2)p.barrierAddition=PendingBarrierProposal::BarrierAdditionDraft{p.ticket,p.at,{}};
   if(input.kind==12||input.kind==24||input.kind==25)p.workerRouteStop=PendingBarrierProposal::WorkerRouteStopDraft{p.ticket,p.at,p.routeEffects,p.gateEffects,{}};
   return 1;
 }

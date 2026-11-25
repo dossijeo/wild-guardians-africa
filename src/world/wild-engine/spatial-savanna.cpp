@@ -2989,9 +2989,10 @@ EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return 
 // 2â€“5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
 // 12/24/25 explicitly stop a native Idle stroll/Farm arrival/Task route without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
-  if(captureResources&&kind<6&&kind!=2)return -2;
-  // First structure class: additions of intact, solid wall barriers only.
-  // No removals, gate masks, polygons, props or implicit route stops.
+  if(captureResources&&kind<6&&kind!=2&&kind!=3&&kind!=4)return -2;
+  // Prepared overlay edits retain every route and gate owner. The polygon
+  // path is restricted to the worker-passable shape used by Shield.
+  if(captureResources&&kind==3&&mode!=1)return -2;
   if(captureResources&&kind==2&&(mode||intCount||floatCount<6||floatCount>256*6))return -1;
   WorldResourcePreview candidate;
   struct CaptureGuard {WorldResourcePreview* previous;
@@ -3027,7 +3028,10 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     if(maxX-minX>100||maxZ-minZ>100||!std::isfinite(area)||std::abs(area)<1e-4)return -1;
     polygons.push_back({0,uint8_t(mode),minX,minZ,maxX,maxZ,f});shapes.push_back(polygonMutation(polygons.back()));
   }else if(kind==4){
-    if(floatCount||intCount!=1||mode||!polygonIndex().byId.count(ids[0]))return -1;
+    if(floatCount||intCount!=1||mode)return -1;
+    const auto found=polygonIndex().byId.find(ids[0]);
+    if(found==polygonIndex().byId.end())return -1;
+    if(captureResources&&found->second.passMask!=1)return -2;
   }else if(kind==5){
     if(floatCount||intCount!=1||mode<0||mode>3)return -1;
     const auto found=barrierIndex().byId.find(ids[0]);if(found==barrierIndex().byId.end()||found->second.passMask==mode)return -1;
@@ -3062,7 +3066,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     const int result=applyWorldProposalInput(input);worldProposalResult.clear();
     if(result!=1)return 0;
   }
-  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind==2);
+  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind>=2&&kind<=4);
   if(staged==1&&captureResources){
     std::array<double,6> identity{};
     if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
@@ -3196,6 +3200,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   if((gateBound||removalBound)&&result!=1)return result;
   if(removalBound&&result==1)worldProposalResult.assign(input.integers.begin(),input.integers.end());
   if(result==1){
+    if(input.kind==4&&hasPrepared)worldProposalResult.push_back(input.integers[0]);
     if(input.kind==6||input.kind==11)recordWorldResourceChunk(worldProposalResult[0],worldProposalResult[1]);
     if(input.kind==7)for(size_t i=0;i<worldProposalResult.size();i+=2)
       resources.insert_or_assign({worldProposalResult[i],worldProposalResult[i+1]},2);

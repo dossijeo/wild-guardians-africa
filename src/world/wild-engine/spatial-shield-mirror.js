@@ -1,3 +1,5 @@
+import {captureSpatialPolygons} from './spatial-state.js';
+
 const SIDES=64;
 
 // A circumscribed regular polygon contains the game's circular shield. Its
@@ -43,6 +45,30 @@ export function createSpatialShieldMirror(core){
     if(removed||added)revision++;
     return {count:installed.size,added};
   }
+  function prepareNativeAdoption(shield,{worldBoundary,ids},removing){
+    const points=spatialShieldFootprint(shield),shape=signature(shield),previous=installed.get(shield.id);
+    if(typeof shield.id!=='string'||!shield.id||!Array.isArray(ids)||ids.length!==1||
+       !Number.isInteger(ids[0])||ids[0]<=0||ids[0]>0x7fffffff)
+      throw Error('Invalid native shield receipt');
+    const [polygonId]=ids,resources=core.captureNativeWorldResources(worldBoundary),{wasm}=core;
+    if(resources.kind!==(removing?4:3)||resources.chunks.length||resources.removed.length||
+       wasm.spatial_world_proposal_result_count()!==1||
+       new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),1)[0]!==polygonId)
+      throw Error('Native shield receipt names another polygon');
+    const [polygon]=captureSpatialPolygons(wasm,polygonId);
+    if(removing?polygon||previous?.polygonId!==polygonId||previous.signature!==shape:
+       previous||!polygon||polygon.passMask!==1||polygon.points.length!==points.length||
+       points.some((point,index)=>polygon.points[index].x!==Math.fround(point.x)||polygon.points[index].z!==Math.fround(point.z)))
+      throw Error('Native shield topology does not match its spell');
+    const prior=revision;
+    return ()=>{
+      if(revision!==prior||installed.get(shield.id)!==previous)throw Error('Native shield adoption is stale');
+      if(removing)installed.delete(shield.id);
+      else installed.set(shield.id,{signature:shape,polygonId});
+      revision++;
+      return true;
+    };
+  }
   function clear(){
     for(const [id,record] of installed){
       if(core.removePolygon(record.polygonId)!==1)
@@ -50,5 +76,7 @@ export function createSpatialShieldMirror(core){
     }
     installed.clear();
   }
-  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null};
+  return {sync,clear,revision:()=>revision,polygonId:id=>installed.get(id)?.polygonId??null,
+    prepareNativeAdditionAdoption:(shield,receipt)=>prepareNativeAdoption(shield,receipt,false),
+    prepareNativeRemovalAdoption:(shield,receipt)=>prepareNativeAdoption(shield,receipt,true)};
 }

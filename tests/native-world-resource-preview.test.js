@@ -5,9 +5,12 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {createNativeRouteExecutionFixture} from './helpers/native-route-execution.js';
 import {createNativeIntentControlPublication} from '../src/simulation/native-intent-control-publication.js';
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
+import {spatialShieldFootprint} from '../src/world/wild-engine/spatial-shield-mirror.js';
 
-async function setup(options={}){
- const f=createNativeRouteExecutionFixture(options);f.worker(1,f.point(-6,0),f.point(6,0));f.bridge.beginNativeRouteExecution();f.bridge.commitNativeCausalClock();
+async function setup({animal=false,...options}={}){
+ const f=createNativeRouteExecutionFixture(options);f.worker(1,f.point(-6,0),f.point(6,0));
+ if(animal)f.animal(f.point(-6,6),f.point(6,6));
+ f.bridge.beginNativeRouteExecution();f.bridge.commitNativeCausalClock();
  const {port1,port2}=new MessageChannel(),messages=[];
  port2.onmessage=({data:m})=>{messages.push(m);
   if(m.type==='IntentBaseline')port2.postMessage({type:'intent-control-applied',session:m.session,authorityEpoch:m.authorityEpoch,sequence:m.sequence,accepted:true,clockSequence:m.clock.clockSequence,clockIntentSequence:m.clock.intentSequence,clockCommittedThrough:m.clock.committedThrough});
@@ -94,6 +97,72 @@ test('solid wall resource preview refuses affected route owners and unsupported 
   const crossing=await f.mutate({type:'barriers',additions:[{x:cross.x,z:cross.z,halfX:.3,halfZ:2,yaw:0}]},options);assert.equal(crossing.status,'blocked');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
   const masked=await f.mutate({type:'barriers',additions:[{x:away.x,z:away.z,halfX:1,halfZ:.3,yaw:0,passMask:1}]},options);assert.equal(masked.status,'invalid');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
   const polygon=await f.mutate({type:'addPolygon',points:[away,{x:away.x+1,z:away.z},{x:away.x,z:away.z+1}]},options);assert.equal(polygon.status,'unsupported');assert.equal(preparations,0);assert.deepEqual(f.session.core.snapshot(),before);
+ }finally{f.close();}
+});
+test('prepared shield polygons retain moving workers and their mirror adopts only the committed polygon',async()=>{
+ const f=await setup();try{
+  const p=f.point(0,0),shield={id:'spell-1',kind:'shield',...p,radius:1.95,remaining:20};
+  const initial=f.session.core.snapshot(),state=f.state,worker=f.body(1);
+  let preview;
+  const prepare=({resources})=>{
+   preview=resources;assert.equal(resources.retainsNativeAssignments,true);
+   assert.deepEqual(resources.routeEffects.rows,new Float64Array());
+   assert.deepEqual(resources.gateEffects.rows,new Float64Array());
+   assert.deepEqual(resources.chunks,[]);assert.deepEqual(resources.removed,[]);
+   return prepared();
+  };
+  const addition=await f.mutate({type:'addPolygon',points:spatialShieldFootprint(shield),passMask:1},{
+   prepareResources:args=>{
+    assert.deepEqual(f.session.core.snapshot(),initial);assert.equal(f.session.shieldPolygonId(shield.id),null);
+    return prepare(args);
+   }
+  });
+  assert.equal(addition.status,'committed',JSON.stringify(addition));assert.equal(preview.kind,3);
+  assert.deepEqual(f.body(1),worker);matches(preview,addition.resources);
+  const [id]=addition.ids;
+  assert.throws(()=>f.session.prepareNativeShieldAdditionAdoption(shield,{...addition,ids:[id+1]}),/another polygon/);
+  assert.throws(()=>f.session.prepareNativeShieldAdditionAdoption({...shield,radius:2},addition),/topology/);
+  const adopt=f.session.prepareNativeShieldAdditionAdoption(shield,addition);assert.equal(adopt(),true);
+  assert.throws(()=>adopt(),/stale/);assert.equal(f.session.shieldPolygonId(shield.id),id);
+  state.spells=[shield];f.session.syncState(state);
+  assert.deepEqual(f.session.core.snapshot().polygons.map(p=>p.id),[...initial.polygons.map(p=>p.id),id]);
+  const removal=await f.mutate({type:'removePolygon',id},{prepareResources:args=>{
+   assert.equal(f.session.shieldPolygonId(shield.id),id);
+   assert(f.session.core.snapshot().polygons.some(p=>p.id===id));return prepare(args);
+  }});
+  assert.equal(removal.status,'committed',JSON.stringify(removal));assert.equal(preview.kind,4);
+  matches(preview,removal.resources);assert.deepEqual(removal.ids,[id]);
+  assert.throws(()=>f.session.prepareNativeShieldRemovalAdoption({...shield,id:'spell-2'},removal),/topology/);
+  const retire=f.session.prepareNativeShieldRemovalAdoption(shield,removal);assert.equal(retire(),true);
+  assert.throws(()=>retire(),/stale/);
+  state.spells=[];f.session.syncState(state);
+  assert.equal(f.session.shieldPolygonId(shield.id),null);
+  assert.deepEqual(f.session.core.snapshot().polygons,initial.polygons);assert.deepEqual(f.body(1),worker);
+ }finally{f.close();}
+});
+test('cancelling a prepared shield removal preserves its installed polygon',async()=>{
+ const f=await setup(),controller=new AbortController();try{
+  const p=f.point(0,0),shield={id:'spell-1',kind:'shield',...p,radius:1.95,remaining:20};
+  f.state.spells=[shield];f.session.syncState(f.state);const id=f.session.shieldPolygonId(shield.id);
+  let ready;
+  const pending=f.mutate({type:'removePolygon',id},{signal:controller.signal,prepareResources:async()=>{
+   await new Promise(resolve=>{ready=resolve;});return prepared();
+  }});
+  for(let i=0;i<100&&!ready;i++)await delay(1);assert(ready);
+  controller.abort();assert.equal((await pending).status,'control-failed');ready();await delay(0);
+  assert.equal(f.session.shieldPolygonId(shield.id),id);
+  assert(f.session.core.snapshot().polygons.some(p=>p.id===id));
+  assert.equal(f.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
+ }finally{f.close();}
+});
+test('a prepared shield cannot silently revoke a moving animal',async()=>{
+ const f=await setup({animal:true});try{
+  const shield={kind:'shield',...f.point(0,6),radius:1.95},before=f.session.core.snapshot();
+  const result=await f.mutate({type:'addPolygon',points:spatialShieldFootprint(shield),passMask:1},
+   {prepareResources:()=>assert.fail('An affected animal needs its own prepared handoff')});
+  assert.equal(result.status,'blocked');
+  assert.deepEqual(f.session.core.snapshot(),before);
+  assert.equal(f.messages.some(m=>m.type==='IntentMutationQuiesce'),false);
  }finally{f.close();}
 });
 test('solid wall preview still rejects clock advancement without a native deferred association',async()=>{
