@@ -1,0 +1,621 @@
+{
+  "base": "f4e0ee7ba76565e71edce08b5e4a777ff33cb860",
+  "scope": "Desierto 983 con portón. Primer daño al centro y primer envío sin binding de golpe.",
+  "inputSHA256": "5d79c1ef69c50ffc053b8ecdeee74f227944fee404b3de79dead5ad1b67f440a",
+  "configuration": {
+    "hardware": "NVIDIA GeForce GTX 1660, Turing",
+    "browser": "Edge 158.0.4370.33",
+    "options": {
+      "qualifyFarmFlee": true,
+      "qualifyAnimalCrop": true
+    },
+    "cadenceBudgetMs": 16.666666666666668
+  },
+  "recipe": {
+    "physical": ".cache/c4-center-bounds/run-physical.ps1 -Variant three|worker",
+    "extract": ".cache/c4-center-bounds/extract.py",
+    "cpu": ".cache/c4-center-bounds/worker-pairs.mjs"
+  },
+  "cpu": {
+    "pairedColdProcesses": 6,
+    "reference": "Three r180 BufferGeometry.computeBoundingSphere",
+    "msMinMedianMax": {
+      "three": {
+        "prep": [
+          1144.847,
+          1157.126,
+          1166.328
+        ],
+        "dispatch": [
+          12.01,
+          12.185,
+          13.152
+        ],
+        "match": [
+          0.089,
+          0.097,
+          0.104
+        ],
+        "create": [
+          22.565,
+          22.96,
+          23.706
+        ],
+        "register": [
+          0.261,
+          0.266,
+          0.279
+        ],
+        "instantiate": [
+          8.288,
+          8.547,
+          8.84
+        ],
+        "apply": [
+          0.937,
+          0.965,
+          1.11
+        ],
+        "total": [
+          32.382,
+          32.794,
+          33.237
+        ],
+        "sphereTotal": [
+          13.58,
+          13.906,
+          14.132
+        ]
+      },
+      "direct": {
+        "prep": [
+          1153.319,
+          1167.702,
+          1184.708
+        ],
+        "dispatch": [
+          11.931,
+          12.049,
+          12.861
+        ],
+        "match": [
+          0.093,
+          0.097,
+          0.099
+        ],
+        "create": [
+          9.114,
+          9.255,
+          9.584
+        ],
+        "register": [
+          0.248,
+          0.44,
+          0.493
+        ],
+        "instantiate": [
+          7.913,
+          8.019,
+          8.149
+        ],
+        "apply": [
+          0.994,
+          1.05,
+          1.157
+        ],
+        "total": [
+          18.466,
+          18.761,
+          19.109
+        ],
+        "sphereTotal": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    "rawSHA256": "fde5167793b71b2b62ee28b007d2fc6750c878db653f5a80d740788048d856ef"
+  },
+  "runs": {
+    "three": {
+      "captureSHA256": "3dc08e138a717bd291505db36b8454e31bd316664dc6eb87e965aed849a573a1",
+      "sampleCount": 2671,
+      "trace": {
+        "dataLossOccurred": false,
+        "traceFormat": "json",
+        "streamCompression": "gzip",
+        "browserVersion": "158.0.4370.33",
+        "options": {
+          "traceConfig": {
+            "recordMode": "recordUntilFull",
+            "traceBufferSizeInKb": 524288,
+            "includedCategories": [
+              "toplevel",
+              "blink",
+              "blink.user_timing",
+              "devtools.timeline",
+              "v8.execute",
+              "gpu",
+              "viz",
+              "cc",
+              "disabled-by-default-gpu.dawn",
+              "gpu.dawn",
+              "gpu.dawn.validation",
+              "gpu.dawn.recording"
+            ]
+          },
+          "transferMode": "ReturnAsStream",
+          "streamFormat": "json",
+          "streamCompression": "gzip",
+          "bufferUsageReportingInterval": 1000
+        },
+        "peakBufferUsage": 0.24787244200706482,
+        "usageReports": 51,
+        "collectionComplete": true,
+        "tracePath": ".cache/c4-center-bounds/first-three-60hz.trace.json.gz",
+        "exportedBytes": 46385859,
+        "sha256": "ca49f8ea303401f523c3f61cbdfb7264cffa55116c274a2bd93835132b1e62c8"
+      },
+      "display": {
+        "applied": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "restored": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "registryPersisted": false
+      },
+      "result": {
+        "hit": {
+          "id": "event-29211",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-29209",
+          "targetId": "structure-2",
+          "species": "warthog",
+          "presentation": {
+            "version": 1,
+            "elapsed": 46.65000000000135,
+            "animal": {
+              "x": -18.67253303527832,
+              "z": -0.43426570296287537,
+              "heading": -0.07756698100668953
+            },
+            "target": {
+              "x": -18.954998779296876,
+              "z": 3.2,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          },
+          "simulationTime": 46.65000000000135
+        },
+        "hp": 580,
+        "absence": {
+          "kind": "submitted-center-strike-absence",
+          "sequence": 439,
+          "clockElapsed": 46.75000000000136,
+          "at": 1795647021436.8,
+          "intervalMs": 134,
+          "previous": {
+            "actorId": 1000001,
+            "bodyId": 2,
+            "ticket": 13,
+            "endTime": 43.991666705162324
+          },
+          "drawMs": 2.699951171875
+        },
+        "submitted": {
+          "at": 1795647021436.8,
+          "sequence": 439,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "4c289278-4c8f-4643-b6ef-70dfa2e3ad9f/1",
+            "nativeSession": 1,
+            "ticket": 13,
+            "effectiveTime": 45.10000000000122
+          },
+          "intervalMs": 134,
+          "drawMs": 2.699951171875,
+          "replay": false,
+          "clockElapsed": 46.75000000000136,
+          "safeUntil": 46.75000000000136,
+          "cameraVersion": null
+        },
+        "selectable": true,
+        "resourceReuse": {
+          "compared": 1335,
+          "sameReference": 1335,
+          "sameVersion": 1335
+        }
+      },
+      "centerPreparation": {
+        "startMs": -3268.737,
+        "name": "WG-C4-center-bounds-ready",
+        "detail": {
+          "duration": 711.8999999999069,
+          "ready": false
+        }
+      },
+      "transport": {
+        "sequence": 12725,
+        "postMs": 117.661,
+        "receiveMs": 120.998,
+        "hostTiming": {
+          "sequence": 439,
+          "endFrameCalledAt": 1795647021418.2,
+          "endFrameReturnedAt": 1795647021419.4,
+          "sendStartedAt": 1795647021420.4,
+          "postedAt": 1795647021420.4,
+          "workerReceivedAt": 1795647021423.9,
+          "admissionStartedAt": 1795647021428,
+          "resourcesWaitStartedAt": 1795647021433.3,
+          "resourcesReadyAt": 1795647021433.3,
+          "admittedAt": 1795647021436.7,
+          "firstDrawStartedAt": 1795647021436.8,
+          "firstDrawCompletedAt": 1795647021439.5
+        }
+      },
+      "stages": [
+        {
+          "name": "WG-desert-timeline-preview",
+          "startMs": -16.792,
+          "durationMs": 3.4,
+          "detail": {
+            "sequence": 734
+          }
+        },
+        {
+          "name": "WG-civil-preparer-timeline",
+          "startMs": -16.792,
+          "durationMs": 12.799,
+          "detail": {
+            "sourceSequence": 733,
+            "sequence": 735
+          }
+        },
+        {
+          "name": "WG-civil-preparer-capture",
+          "startMs": -3.892,
+          "durationMs": 15.2,
+          "detail": {
+            "sequence": 735,
+            "ticket": 13
+          }
+        },
+        {
+          "name": "WG-civil-surface-render",
+          "startMs": -2.493,
+          "durationMs": 13.701,
+          "detail": {
+            "sequence": 735,
+            "ticket": 13,
+            "preparedTerrain": false
+          }
+        },
+        {
+          "name": "WG-desert-timeline-preview",
+          "startMs": 33.108,
+          "durationMs": 12.5,
+          "detail": {
+            "sequence": 736
+          }
+        },
+        {
+          "name": "WG-civil-preparer-timeline",
+          "startMs": 33.108,
+          "durationMs": 45.1,
+          "detail": {
+            "sourceSequence": 735,
+            "sequence": 736
+          }
+        },
+        {
+          "name": "WG-desert-surface-confirmed",
+          "startMs": 50.507,
+          "durationMs": 27.5,
+          "detail": {
+            "sequence": 736,
+            "unchanged": false,
+            "events": [
+              "StructureHit",
+              "AnimalLogicalHit"
+            ]
+          }
+        },
+        {
+          "name": "WG-desert-first-center-damage",
+          "startMs": 51.208,
+          "durationMs": 23.5,
+          "detail": {
+            "id": "structure-2",
+            "culture": "mapungubwe",
+            "hp": 580,
+            "maxHp": 600
+          }
+        },
+        {
+          "name": "WG-civil-preparer-capture",
+          "startMs": 78.408,
+          "durationMs": 36.8,
+          "detail": {
+            "sequence": 736,
+            "ticket": 13
+          }
+        },
+        {
+          "name": "WG-civil-surface-render",
+          "startMs": 91.507,
+          "durationMs": 23.701,
+          "detail": {
+            "sequence": 736,
+            "ticket": 13,
+            "preparedTerrain": false
+          }
+        }
+      ]
+    },
+    "worker": {
+      "captureSHA256": "1035f58cf52219eccfeb0c25c67246eb4e53ab30770378299b55b3cbcdc49bcc",
+      "sampleCount": 2683,
+      "trace": {
+        "dataLossOccurred": false,
+        "traceFormat": "json",
+        "streamCompression": "gzip",
+        "browserVersion": "158.0.4370.33",
+        "options": {
+          "traceConfig": {
+            "recordMode": "recordUntilFull",
+            "traceBufferSizeInKb": 524288,
+            "includedCategories": [
+              "toplevel",
+              "blink",
+              "blink.user_timing",
+              "devtools.timeline",
+              "v8.execute",
+              "gpu",
+              "viz",
+              "cc",
+              "disabled-by-default-gpu.dawn",
+              "gpu.dawn",
+              "gpu.dawn.validation",
+              "gpu.dawn.recording"
+            ]
+          },
+          "transferMode": "ReturnAsStream",
+          "streamFormat": "json",
+          "streamCompression": "gzip",
+          "bufferUsageReportingInterval": 1000
+        },
+        "peakBufferUsage": 0.24967971444129944,
+        "usageReports": 51,
+        "collectionComplete": true,
+        "tracePath": ".cache/c4-center-bounds/first-worker-60hz.trace.json.gz",
+        "exportedBytes": 46753219,
+        "sha256": "37197781656a0bb18cc8ffdd1dba402313c0396212e4ad0ffb9bc2c0dcbde95f"
+      },
+      "display": {
+        "applied": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 60,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "restored": {
+          "width": 3840,
+          "height": 2160,
+          "hz": 30,
+          "bpp": 32,
+          "x": 0,
+          "y": 0
+        },
+        "registryPersisted": false
+      },
+      "result": {
+        "hit": {
+          "id": "event-29211",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-29209",
+          "targetId": "structure-2",
+          "species": "warthog",
+          "presentation": {
+            "version": 1,
+            "elapsed": 46.75000000000136,
+            "animal": {
+              "x": -18.67253303527832,
+              "z": -0.43426570296287537,
+              "heading": -0.07756698100668953
+            },
+            "target": {
+              "x": -18.954998779296876,
+              "z": 3.2,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          },
+          "simulationTime": 46.75000000000136
+        },
+        "hp": 580,
+        "absence": {
+          "kind": "submitted-center-strike-absence",
+          "sequence": 447,
+          "clockElapsed": 46.80000000000136,
+          "at": 1795647105702.7,
+          "intervalMs": 115.300048828125,
+          "previous": {
+            "actorId": 1000001,
+            "bodyId": 2,
+            "ticket": 13,
+            "endTime": 44.141666705162336
+          },
+          "drawMs": 2.300048828125
+        },
+        "submitted": {
+          "at": 1795647105702.7,
+          "sequence": 447,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "98faadc9-a186-4671-b938-60a4cf1a611c/1",
+            "nativeSession": 1,
+            "ticket": 13,
+            "effectiveTime": 45.200000000001225
+          },
+          "intervalMs": 115.300048828125,
+          "drawMs": 2.300048828125,
+          "replay": false,
+          "clockElapsed": 46.80000000000136,
+          "safeUntil": 46.80000000000136,
+          "cameraVersion": null
+        },
+        "selectable": true,
+        "resourceReuse": {
+          "compared": 1335,
+          "sameReference": 1335,
+          "sameVersion": 1335
+        }
+      },
+      "centerPreparation": {
+        "startMs": -3313.697,
+        "name": "WG-C4-center-bounds-ready",
+        "detail": {
+          "duration": 723.3999999999069,
+          "ready": true
+        }
+      },
+      "transport": {
+        "sequence": 12863,
+        "postMs": 98.545,
+        "receiveMs": 102.17,
+        "hostTiming": {
+          "sequence": 447,
+          "endFrameCalledAt": 1795647105684,
+          "endFrameReturnedAt": 1795647105685.1,
+          "sendStartedAt": 1795647105685.6,
+          "postedAt": 1795647105685.6,
+          "workerReceivedAt": 1795647105689.4,
+          "admissionStartedAt": 1795647105692,
+          "resourcesWaitStartedAt": 1795647105697.3,
+          "resourcesReadyAt": 1795647105697.3,
+          "admittedAt": 1795647105699.8,
+          "firstDrawStartedAt": 1795647105702.7,
+          "firstDrawCompletedAt": 1795647105705
+        }
+      },
+      "stages": [
+        {
+          "name": "WG-civil-preparer-capture",
+          "startMs": -28.55,
+          "durationMs": 23.3,
+          "detail": {
+            "sequence": 737,
+            "ticket": 13
+          }
+        },
+        {
+          "name": "WG-civil-surface-render",
+          "startMs": -18.351,
+          "durationMs": 13.101,
+          "detail": {
+            "sequence": 737,
+            "ticket": 13,
+            "preparedTerrain": false
+          }
+        },
+        {
+          "name": "WG-civil-preparer-timeline",
+          "startMs": 34.45,
+          "durationMs": 32.599,
+          "detail": {
+            "sourceSequence": 737,
+            "sequence": 738
+          }
+        },
+        {
+          "name": "WG-desert-timeline-preview",
+          "startMs": 34.549,
+          "durationMs": 12.401,
+          "detail": {
+            "sequence": 738
+          }
+        },
+        {
+          "name": "WG-desert-surface-confirmed",
+          "startMs": 51.75,
+          "durationMs": 15,
+          "detail": {
+            "sequence": 738,
+            "unchanged": false,
+            "events": [
+              "StructureHit",
+              "AnimalLogicalHit"
+            ]
+          }
+        },
+        {
+          "name": "WG-desert-first-center-damage",
+          "startMs": 52.35,
+          "durationMs": 9.299,
+          "detail": {
+            "id": "structure-2",
+            "culture": "mapungubwe",
+            "hp": 580,
+            "maxHp": 600
+          }
+        },
+        {
+          "name": "WG-civil-preparer-capture",
+          "startMs": 67.25,
+          "durationMs": 29.299,
+          "detail": {
+            "sequence": 738,
+            "ticket": 13
+          }
+        },
+        {
+          "name": "WG-civil-surface-render",
+          "startMs": 69.85,
+          "durationMs": 26.699,
+          "detail": {
+            "sequence": 738,
+            "ticket": 13,
+            "preparedTerrain": false
+          }
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Un recorrido físico por variante con el mismo guardado y comandos. El tiempo efectivo del ataque varía entre pasadas.",
+    "El intervalo de envío incluye preparación, transporte y espera de presentación. No mide ejecución de GPU.",
+    "Escena acotada con flags de desarrollo. No acredita el presupuesto de 16,667 ms ni la matriz de aceptación C4."
+  ],
+  "validation": {
+    "directedTests": {
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0
+    },
+    "viteBuild": {
+      "completed": true,
+      "seconds": 49.59
+    }
+  }
+}

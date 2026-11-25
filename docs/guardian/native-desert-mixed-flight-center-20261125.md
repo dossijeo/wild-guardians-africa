@@ -70,6 +70,14 @@ En el control CPU, 24 repeticiones alternadas por variante usaron la publicació
 
 En NVIDIA a 60 Hz, el preview del golpe pasó de 22,30 a 14,60 ms y el intervalo de 168,30 a 150,20 ms. La captura ocupó 31,40 ms, el daño 21,30 ms y la espera de recursos fue cero. Ocho oportunidades rechazaron el binding obsoleto antes del dibujo 398. El centro quedó seleccionable a 580 HP, las 1.335 referencias y versiones comparables se conservaron y la cola drenó. La traza terminó sin pérdida y se restauró 4K/30 Hz. El relevo sigue por encima de 16,667 ms. [Recibo y medidas](performance/native-desert-mixed-flight-center-20261125.json).
 
+### Esferas del cuerpo dañado y la ceniza
+
+La preparación del Strike27 solicita las dos esferas al Worker de edificios junto con los datos de la malla. El centro y el radio coinciden exactamente con `BufferGeometry.computeBoundingSphere` de Three r180. Las esferas viajan como dos tuplas y se usan con la misma geometría y versión de atributos que las produjo. El cuerpo y la ceniza conservan sus vértices originales. [Cálculo de Three r180](https://github.com/mrdoob/three.js/blob/r180/src/core/BufferGeometry.js#L691-L795).
+
+En seis pares de procesos fríos con Mapungubwe, la mediana de creación de la plantilla bajó de 22,96 a 9,26 ms y la operación local de daño de 32,79 a 18,76 ms. La preparación del Worker pasó de 1.157,13 a 1.167,70 ms. Las dos esferas y los datos de las dos mallas coincidieron en los doce ensayos.
+
+En dos pasadas emparejadas a 4K/60 Hz, NVIDIA presentó el primer daño del mismo centro y la ausencia de Strike27. `assets.damage` pasó de 23,50 a 9,30 ms y la preparación del centro de 712,20 a 723,80 ms. El intervalo entre envíos pasó de 134,00 a 115,30 ms. Ambas pasadas dejaron el centro seleccionable con 580 HP, conservaron las 1.335 referencias y versiones comparables durante la huida y terminaron sin errores registrados. Las trazas terminaron sin pérdida y la pantalla volvió a 4K/30 Hz. El relevo supera todavía 16,667 ms. La variante conserva 12,40 ms de preview y 26,70 ms de render en su paquete de reemplazo. [Recibo de los dos recorridos](performance/native-center-first-hit-bounds-20261125.json).
+
 ## Controles
 
 Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.

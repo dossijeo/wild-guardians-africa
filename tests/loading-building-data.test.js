@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {BufferGeometry,InterleavedBuffer,InterleavedBufferAttribute} from 'three';
 import {createNativeDestruction} from '../src/rendering/destruction-native.js';
 import {prepareBuildingDataAsync} from '../src/rendering/prepare-building-data.js';
 const building={seed:712};
@@ -16,6 +17,19 @@ test('actual worker handler includes transferable face policy alongside unchange
   assert.equal(message.facePolicy.length,message.vertices.length/12);
   assert.ok(transfers.includes(message.facePolicy.buffer));
   assert.deepEqual(message.vertices,createNativeDestruction(building,input()).vertices);
+  assert.equal(message.centerBounds,undefined);
+  const original=message;
+  globalThis.self.onmessage({data:{building,input:input(),centerBounds:true}});
+  assert.equal(message.error,undefined);
+  for(const [name,vertices] of [['body','vertices'],['ash','ash']]){
+   assert.deepEqual(message[vertices],original[vertices]);
+   const geometry=new BufferGeometry(),buffer=new InterleavedBuffer(message[vertices],12);
+   geometry.setAttribute('position',new InterleavedBufferAttribute(buffer,3,0));
+   geometry.computeBoundingSphere();
+   const {center,radius}=geometry.boundingSphere;
+   assert.deepEqual(message.centerBounds?.[name],[...center.toArray(),radius]);
+   geometry.dispose();
+  }
  }finally{if(previous===undefined)delete globalThis.self;else globalThis.self=previous;}
 });
 test('transferred building data retains byte-identical geometry, seeded groups and native damage/picking closures',()=>{

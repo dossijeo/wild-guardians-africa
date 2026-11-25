@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import {attribute,clamp,cos,cross,dot,float,length,max,min,normalize,positionLocal,select,sin,smoothstep,texture3D,uniform,varying,vec3,vec4} from 'three/tsl';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS} from './destruction-native.js';
 import {prepareBuildingDataAsync} from './prepare-building-data.js';
+import {centerGeometrySphere} from './center-geometry-sphere.js';
 import {createWebGpuDestructionEffects} from './webgpu-destruction-effects.js';
 
 export function confirmedCenterDamage(entity){return entity.status==='ruined'?1:entity.status==='collapsing'?COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*Math.max(0,Math.min(1,1-entity.collapseRemaining/COLLAPSE_SECONDS)):Math.max(0,Math.min(1,1-entity.hp/entity.maxHp));}
@@ -29,7 +30,7 @@ export async function prepareWebGpuCenterDestructionData(gltf,building,options){
  const versions=inputs.map(version);
  const matches=(mesh,descriptor)=>mesh===source&&descriptor===building&&mesh.geometry===geometry&&
   attributes().every((attribute,i)=>attribute===inputs[i]&&version(attribute)===versions[i]);
- const data=await prepareBuildingDataAsync(building,copyCenterInput(geometry),options);
+ const data=await prepareBuildingDataAsync(building,copyCenterInput(geometry),{...options,centerBounds:true});
  return {data,matches};
 }
 
@@ -56,18 +57,27 @@ function expandCenterColor(original,indices){
  return new THREE.BufferAttribute(values,4);
 }
 
+function centerBoundingSphere(geometry,buffer,prepared){
+ const sphere=Array.isArray(prepared)&&prepared.length===4&&prepared.every(Number.isFinite)&&prepared[3]>=0?
+  prepared:centerGeometrySphere(buffer.array,buffer.stride);
+ if(!sphere){geometry.computeBoundingSphere();return;}
+ const [x,y,z,radius]=sphere;
+ geometry.boundingSphere=new THREE.Sphere(new THREE.Vector3(x,y,z),radius);
+}
+
 export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,softDepth=null,prepared=null}={}){
  if(!gltf?.scene||!building||!renderer?.library)throw TypeError('Invalid center destruction input');
  const source=centerMesh(gltf),src=source.geometry;
- const kernel=prepared?.matches(source,building)?createNativeDestruction(building,null,prepared.data):createNativeDestruction(building,copyCenterInput(src));
+ const preparedData=prepared?.matches(source,building)?prepared.data:null;
+ const kernel=preparedData?createNativeDestruction(building,null,preparedData):createNativeDestruction(building,copyCenterInput(src));
  const geometry=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(kernel.vertices,12);
  for(const [name,size,offset] of [['position',3,0],['normal',3,3],['uv',2,6],['wgAnchor',3,8],['wgSeed',1,11]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
  for(const name of ['color','wgOriginalColor']){
   const original=src.getAttribute(name);
   if(original)geometry.setAttribute(name,expandCenterColor(original,kernel.indices));
  }
- geometry.computeBoundingSphere();const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
- const ashGeometry=new THREE.BufferGeometry(),ashBuffer=new THREE.InterleavedBuffer(kernel.ash,12);ashGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(ashBuffer,3,0));ashGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(ashBuffer,3,3));ashGeometry.computeBoundingSphere();const ashMaterial=new THREE.MeshStandardMaterial({color:0x443b32,roughness:1,side:THREE.DoubleSide});
+ centerBoundingSphere(geometry,buffer,preparedData?.centerBounds?.body);const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;
+ const ashGeometry=new THREE.BufferGeometry(),ashBuffer=new THREE.InterleavedBuffer(kernel.ash,12);ashGeometry.setAttribute('position',new THREE.InterleavedBufferAttribute(ashBuffer,3,0));ashGeometry.setAttribute('normal',new THREE.InterleavedBufferAttribute(ashBuffer,3,3));centerBoundingSphere(ashGeometry,ashBuffer,preparedData?.centerBounds?.ash);const ashMaterial=new THREE.MeshStandardMaterial({color:0x443b32,roughness:1,side:THREE.DoubleSide});
  let disposed=false;const instances=new Set();
  function instantiate(initialDamage=null){if(disposed)throw Error('Center destruction template disposed');const recipe=authoredDeformationRecipe('center-destruction',source.material),material=recipe.structural.nodeMaterial?cloneWebGpuNodeMaterial(source.material):renderer.library.fromMaterial(source.material);if(!material)throw Error('Unsupported center material');const damage=uniform(0),holes=Array.from({length:8},()=>uniform(new THREE.Vector4())),seed=attribute('wgSeed','float'),anchor=attribute('wgAnchor','vec3'),orig=varying(attribute('position','vec3'));
   const c=smoothstep(.79,1,damage),start=float(1).sub(clamp(anchor.y.div(8),0,1)).mul(.20).add(seed.mul(.12)),t=clamp(c.sub(start).div(float(1).sub(start)),0,1),axis=normalize(vec3(sin(seed.mul(47.8)),.12,cos(seed.mul(32.9)))),angle=t.mul(t).mul(seed.sub(.5)).mul(2.8),q=positionLocal.sub(anchor),cs=cos(angle),sn=sin(angle),rot=q.mul(cs).add(cross(axis,q).mul(sn)).add(axis.mul(dot(axis,q)).mul(float(1).sub(cs))).add(anchor),tt=t.mul(t);
