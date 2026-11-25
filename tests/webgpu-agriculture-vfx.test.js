@@ -345,13 +345,14 @@ test('a prepared shield batch retains geometry through activation, cancellation 
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
  globalThis.createImageBitmap=async()=>({width:4096,height:2048,close(){}});
  const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(),state={time:30,elapsed:0,spells:[],events:[]};
- const issues=[],compiled=[],chunk={};
+ const issues=[],compiled=[],chunk={};let height=0,revision=1;
  const renderer={backend:{isWebGPUBackend:true},async compileAsync(object){
   compiled.push({object,leaves:object.children.filter(mesh=>mesh.isMesh&&mesh.visible)});
  }};
  const admission=createWebGpuPipelineAdmission({renderer,scene,camera,onFatal:error=>issues.push(error)});
  const coordinator=createChunkPublicationCoordinator({admission,onError:error=>issues.push(error)});
- const vfx=createWebGpuAgricultureVfx({scene,state,residency:{get:()=>chunk,getVisible:()=>chunk,surface:()=>0},includeShield:true,pipelineAdmission:admission});
+ const residency={get:()=>chunk,getVisible:()=>chunk,surface:()=>height,revisionAt:(cx,cz)=>({cx,cz,epoch:'test',revision})};
+ const vfx=createWebGpuAgricultureVfx({scene,state,residency,includeShield:true,pipelineAdmission:admission});
  const spell={id:'spell-21',kind:'shield',x:0,z:0,radius:1.95,remaining:20};
  const prepare=async({removing=false}={})=>{
   const controller=new AbortController(),part=await vfx.prepareNativeShield(spell,{camera,signal:controller.signal,removing});
@@ -369,7 +370,15 @@ test('a prepared shield batch retains geometry through activation, cancellation 
   assert.equal(root.visible,false);assert.equal(added.batch.commit(),true);
   vfx.sync();assert(root.visible);assert.equal(vfx.status().effects,1);
   state.spells=[spell];vfx.sync();const initialAdmissions=compiled.length;
-  for(const elapsed of [.1,.5,1,4,19.8]){age(elapsed);assert.deepEqual(root.children,[sprites,dome]);assert.equal(dome.geometry,geometry);assert.equal(geometry.getAttribute('position').data,buffer);}
+  for(const elapsed of [.1,.5,1]){age(elapsed);assert.deepEqual(root.children,[sprites,dome]);assert.equal(dome.geometry,geometry);assert.equal(geometry.getAttribute('position').data,buffer);}
+  const formed=buffer.version,flat=buffer.array[1];
+  camera.position.set(1,3,5);age(4);vfx.prepare(camera);
+  assert.equal(buffer.version,formed,'moving the camera or a stable shield clock cannot rewrite the dome');
+  assert.equal(dome._wgVfxGeometryTime,vfx.status().active[0].time);
+  assert(Math.abs(dome._wgVfxGeometryTime-4)<1e-8);
+  height=.3;revision++;vfx.prepare(camera);
+  assert.equal(buffer.version,formed+1);assert.notEqual(buffer.array[1],flat);
+  age(19.8);assert.equal(buffer.version,formed+2);
   await new Promise(resolve=>setImmediate(resolve));
   assert.equal(compiled.length,initialAdmissions);assert.equal(vfx.status().active[0].geometryVertices,5568);
   const abortedRemoval=await prepare({removing:true});

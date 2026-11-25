@@ -108,5 +108,47 @@
     "coordinatedExpiry": false,
     "hardwareGpuDuration": false,
     "c4Passed": false
+  },
+  "domeReuse": {
+    "baseCommit": "9b6c5e1845084fb7b877ce7e7ee5e2045288860b",
+    "receiptSha256": "66fa2c2525555a2458c81169eb983b407776a9cc61e262cf7e47c4b44e3f81cf",
+    "traceSha256": "b43d162a865be5153b220c1926e1b97449b87db47a0d5c617a6ebddd4037c389",
+    "collectionComplete": true,
+    "dataLossOccurred": false,
+    "cameraDelta": {
+      "x": 2,
+      "z": -1
+    },
+    "ages": [
+      1.1000000000000019,
+      2.449999999999997
+    ],
+    "geometry": [
+      {
+        "reference": "Buffer:2858",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 7,
+        "hash": null
+      },
+      {
+        "reference": "Buffer:2858",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 7,
+        "hash": null
+      }
+    ],
+    "intervals": 339,
+    "maxIntervalMs": 37.2998046875,
+    "maxWithShieldIntervalMs": 35.099853515625,
+    "drained": true,
+    "errors": []
   }
 }

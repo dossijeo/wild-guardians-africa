@@ -15,6 +15,7 @@ def section(start, end):
     return code[a:code.index(end, a)]
 
 helpers = 'const TAU=Math.PI*2;\n'+section('const clamp=', 'let seed=')
+helpers += 'export const shieldBarrierGeometryStrength=(time,duration)=>smooth(.35,.9,time)*(1-smooth(duration-.5,duration,time));\n'
 random = section('let seed=', 'const settings=')
 settings = section('const settings=', 'const canvas=')
 definitions = section('const definitions=', 'let current=')
@@ -51,7 +52,7 @@ combat = section('const DUST_TEXTURES=', 'const paths=')
 combat = combat.replace("if(!isSeeking)window.dispatchEvent(new CustomEvent('wgvfx:impact',{detail:{...lastImpact}}));", 'contacts.push({...lastImpact});')
 # Production Shield reuses the original mesh, rings, stars and block particles.
 # Its lifetime and actual contacts are domain facts, not the lab's timed attack.
-geometry = geometry.replace("const vis=smooth(.35,.9,t)*(1-smooth(3.65,4.65,t)),r=1.65*smooth(.35,.92,t);shieldDome(r,vis*.65);", "const vis=shieldMode==='contact'?0:smooth(.35,.9,t)*(1-smooth(shieldMode==='barrier'?shieldDuration-.5:3.65,shieldMode==='barrier'?shieldDuration:4.65,t)),r=1.65*(shieldMode==='barrier'?1:smooth(.35,.92,t));shieldDome(r,vis*.65);")
+geometry = geometry.replace("const vis=smooth(.35,.9,t)*(1-smooth(3.65,4.65,t)),r=1.65*smooth(.35,.92,t);shieldDome(r,vis*.65);", "const vis=shieldMode==='contact'?0:shieldMode==='barrier'?shieldBarrierGeometryStrength(t,shieldDuration):smooth(.35,.9,t)*(1-smooth(3.65,4.65,t)),r=1.65*(shieldMode==='barrier'?1:smooth(.35,.92,t));shieldDome(r,vis*.65);")
 geometry = geometry.replace('const u=attackWindow(1.85,.7);', "const u=shieldMode==='barrier'?null:attackWindow(shieldMode==='contact'?0:1.85,.7);")
 geometry = geometry.replace('p:V.add(center,[n[0]*radius,n[1]*radius*1.2,n[2]*radius])', "p:V.add(center,[n[0]*radius,n[1]*radius*1.2+(shieldMode==='barrier'&&surface?floorAt([n[0]*radius,0,n[2]*radius]):0),n[2]*radius])")
 combat = combat.replace("at(.54,()=>twinkle([0,.7,0],7,'#9bdbc6'));", "if(shieldMode!=='contact')at(.54,()=>twinkle([0,.7,0],7,'#9bdbc6'));")
@@ -107,6 +108,13 @@ export function createNativeVfx(id,spriteRects,{density=1,wind=.3,layers={},surf
  current=definitions.find(d=>d.id===id);if(!current)throw new Error('Composición VFX desconocida');restartEffect(false);
  return {
   get definition(){return current;},get time(){return clock;},get parts(){return parts;},get rigids(){return rigids;},get wetness(){return wetness;},contacts,
+  // An in-memory rollback belongs to this instance and never transports
+  // callbacks or terrain. The caller must validate those dependencies first.
+  beginCombatTransaction(){
+   if(!['rhino','lion','buffalo','warthog','hyena'].includes(current.id))throw Error('Unsupported combat VFX transaction');
+   const saved=structuredClone({id:current.id,clock,seed,eventIndex,parts,rigids,wetness,hitTime,paused,wallVisible,lastImpact,contacts,lightPos0,lightPos1,lightCol0,lightCol1}),eventList=events,eventCount=events.length;let active=true;
+   return {commit(){if(!active)throw Error('Combat VFX transaction closed');active=false;},rollback(){if(!active||current.id!==saved.id||events!==eventList||events.length!==eventCount)throw Error('Invalid combat VFX transaction');active=false;const copy=structuredClone(saved);clock=copy.clock;seed=copy.seed;eventIndex=copy.eventIndex;parts=copy.parts;rigids=copy.rigids;wetness=copy.wetness;hitTime=copy.hitTime;paused=copy.paused;wallVisible=copy.wallVisible;lastImpact=copy.lastImpact;contacts.splice(0,contacts.length,...copy.contacts);lightPos0=copy.lightPos0;lightPos1=copy.lightPos1;lightCol0=copy.lightCol0;lightCol1=copy.lightCol1;toolPose();}};
+  },
   // Work-only checkpoint: callbacks and terrain belong to the destination, not
   // to the serialized state. Callers must provide matching historical inputs.
   exportWorkCheckpoint(){
