@@ -28,6 +28,12 @@ En NVIDIA Turing, la partida sin modificar dibujó dos tickets adquiridos tras r
 
 El arnés ejecutó un subpaso por avance y detuvo el despacho tras recibir el primer golpe. La captura a 30 Hz conservó 1.000 intervalos de inicio de dibujo. El máximo durante la marcha fue 40,60 ms. Cerca del cierre del ataque hubo 633,70 ms entre envíos. En ese intervalo se recibieron 18 callbacks y los 18 rechazaron el paquete anterior por `stale-binding`. El paquete siguiente esperó 515,0 ms entre el cierre del frame en el preparador y el inicio de su envío. En ese hilo, `pump` de `webgpu-pipeline-admission.js` ocupó 514,34 ms de pared y 508,17 ms de CPU justo antes del envío. Queda identificar qué solicitud genera ese coste, completar la continuación del mismo cuerpo y verificar las adversidades A–F. C4 sigue abierto. [Recibos, picos y hashes](performance/native-attack-crops-qualification-20261125.json).
 
+## Preparador bloqueado
+
+Dos ensayos en NVIDIA bloquearon el preparador durante 550 ms con la marcha admitida. En cada ventana hubo 16 dibujos del mismo ticket y de una sola secuencia del Host. El reloj avanzó 0,50 s y el mayor intervalo entre esos dibujos fue de 33,50 ms a 30 Hz. Esta prueba cubre la continuidad durante el bloqueo. La revocación durante esa misma ventana queda pendiente.
+
+Los dos ensayos llegaron al golpe. Después, Draw recibió un paquete ordinario con el binding del ticket 27 desde la secuencia de control 11. La traza del segundo ensayo registra la misma época y la secuencia de control 13, con el dueño ya retirado. La admisión del paquete tardío provocó un error del Host y el drenaje quedó pendiente en esas corridas. [Ventanas, rechazo original y hashes](performance/native-attack-crops-qualification-20261125.json).
+
 ## Regresión
 
 Pasaron 512 de 522 pruebas seleccionadas. Cinco quedaron omitidas y cinco casos QA-100 de último golpe a trabajador reprodujeron los mismos fallos de la línea base. El build de producto con WebGPU Worker y Draw remoto pasó en 1 min 5 s. Standalone y pthread conservaron las firmas existentes y añadieron 25 funciones de los contratos de ruta, golpe y estado del animal.

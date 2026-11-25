@@ -319,5 +319,73 @@
     "productBuildSecondsReported": 65,
     "previousWasmSignaturesPreserved": true,
     "addedFunctions": 25
-  }
+  },
+  "preparerBlock": [
+    {
+      "receipt": {
+        "file": "native-attack-crops-blocked-preparer-nvidia-20261125.failure.json",
+        "sha256": "c505a11a9fe737084e1337f4b74a214d1531dd80d8fb23bc48eb8c104f371e8a"
+      },
+      "block": {
+        "start": 1795593411277.7002,
+        "end": 1795593411827.7002,
+        "durationMs": 550
+      },
+      "route": {
+        "ticket": 2,
+        "sequence": 52,
+        "draws": 16,
+        "fromClock": 379.91210009766337,
+        "toClock": 380.41210009766337,
+        "maxDrawIntervalMs": 33.5
+      },
+      "events": [
+        "CropHit",
+        "AnimalLogicalHit"
+      ],
+      "firstTerminalError": "Animal crop preparation lacks its current native source"
+    },
+    {
+      "receipt": {
+        "file": "native-attack-crops-terminal-pipeline-nvidia-20261125.failure.json",
+        "sha256": "c941076af7380f55ebe14f6b9c3f7117f2ecf55618fbf3812d24041feb67ba1f"
+      },
+      "block": {
+        "start": 1795593549843,
+        "end": 1795593550393.1,
+        "durationMs": 550.10009765625
+      },
+      "route": {
+        "ticket": 2,
+        "sequence": 51,
+        "draws": 16,
+        "fromClock": 379.8795002441477,
+        "toClock": 380.3794001464915,
+        "maxDrawIntervalMs": 33.400146484375
+      },
+      "events": [
+        "CropHit",
+        "AnimalLogicalHit"
+      ],
+      "firstTerminalError": "Animal crop preparation lacks its current native source",
+      "rejectedOrdinaryBinding": {
+        "kind": 27,
+        "actor": 396,
+        "body": 1,
+        "sourceSequence": 11,
+        "controlSequence": 13,
+        "preparedTicket": 3,
+        "preparingTicket": null,
+        "matchingEpoch": true,
+        "actorState": null,
+        "active": false,
+        "clockThrough": 401.99999999998255
+      },
+      "trace": {
+        "file": "native-attack-crops-terminal-pipeline-nvidia-20261125.trace.json.gz",
+        "sha256": "1d79fcb85e98e5ee382619997e856460ed319cd71ce3522ca1363d87f30c5a22",
+        "loss": false
+      }
+    }
+  ]
 }
