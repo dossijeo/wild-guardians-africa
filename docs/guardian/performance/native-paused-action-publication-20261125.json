@@ -274,7 +274,19 @@
       "rosterMs": 1759.900146484375,
       "pipelineMs": 716.39990234375
     },
-    "scope": "One physical run per order. Delaying attachment moves startup work outside the preparation deadline. The authority sequence may still be ahead of Surface."
+    "afterExactPublication": {
+      "file": "native-solid-repair-v1-after-pinned-seq-20261125.json",
+      "sha256": "70e30869e3a29b9743ca08762967de610f61e0acf119c699d6467c8f062936bb",
+      "traceSha256": "09c49b49aa7ee4114c98a6fff650090a2446cc5bef4116f5bb1a632bd62dfb74",
+      "requestSequence": 2,
+      "observedSequenceAtEntry": 2,
+      "requestToReadyMs": 3861.800048828125,
+      "anchorToReadyMs": 13097.7001953125,
+      "sourceWaitMs": 0.199951171875,
+      "rosterMs": 3071.60009765625,
+      "pipelineMs": 716.400146484375
+    },
+    "scope": "One physical run per order. Drawing an explicitly requested snapshot while dispatch is suspended matches the requested and visible sequences before starting preparation."
   },
   "cadence": {
     "acceptance": false,
