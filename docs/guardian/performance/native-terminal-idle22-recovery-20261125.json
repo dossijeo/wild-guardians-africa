@@ -409,10 +409,221 @@
       }
     }
   },
+  "heldPicking": {
+    "evidenceSha256": "519f48308902306cadc8487b8d1a8c5f6f87c6b78e5cb1a13cf217569da8b5b9",
+    "initialFence": {
+      "holdId": 22,
+      "actorId": 900011,
+      "fenceId": 1,
+      "effectiveTime": 10.66999999999999,
+      "authorityTime": 10.66999999999999,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.3999999761581421,
+      "pose": {
+        "x": -18,
+        "z": 0.4083572875253698,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.084999999999985,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "finalFence": {
+      "holdId": 22,
+      "actorId": 900011,
+      "fenceId": 2,
+      "effectiveTime": 10.66999999999999,
+      "authorityTime": 10.66999999999999,
+      "submittedSequence": 1,
+      "assignment": 3,
+      "bodyId": 1,
+      "ageFloat32": 0.3999999761581421,
+      "pose": {
+        "x": -18,
+        "z": 0.4083572875253698,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.084999999999985,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "intermediateFrame": {
+      "sequence": 3,
+      "publishedSequence": 92,
+      "elapsed": 10.66999999999999,
+      "bodyId": 1,
+      "ageFloat32": 0.3999999761581421
+    },
+    "resumed": {
+      "elapsed": 11.56999999999997,
+      "sequence": 113
+    },
+    "framebuffer": {
+      "width": 640,
+      "height": 480,
+      "region": {
+        "minX": 160,
+        "maxX": 448,
+        "minY": 120,
+        "maxY": 326
+      },
+      "differingPixels": 59257,
+      "minimum": 500,
+      "ok": true,
+      "blankControlRejected": true,
+      "sha256": "8e37f005586639009f09030d50d44416dbcdbf5561701daae519ee36859cf256"
+    },
+    "saveableSequence": 260,
+    "deviceLoss": [
+      "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+    ],
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "traced": false,
+      "beforeLoss": {
+        "samples": 325,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795631872374.375,
+          "sequence": 22,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3db7d9ef-781b-4855-8663-4b1f0ef56c20/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 376.969970703125,
+          "drawMs": 8.005126953125,
+          "replay": true,
+          "clockElapsed": 10.269999999999998,
+          "safeUntil": 10.269999999999998,
+          "cameraVersion": 5
+        },
+        "overTarget": 321
+      },
+      "replacement": {
+        "samples": 58,
+        "targetMs": 16.666666666666668,
+        "peak": {
+          "at": 1795631890259.6948,
+          "sequence": 6,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3db7d9ef-781b-4855-8663-4b1f0ef56c20/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10.269999999999998
+          },
+          "intervalMs": 36.52001953125,
+          "drawMs": 3.695068359375,
+          "replay": true,
+          "clockElapsed": 10.869999999999985,
+          "safeUntil": 10.869999999999985,
+          "cameraVersion": null
+        },
+        "overTarget": 58
+      }
+    },
+    "owner": {
+      "before": {
+        "binding": 1,
+        "client": 2,
+        "canvas": 3,
+        "pending": false,
+        "status": {
+          "phase": "running",
+          "backend": "WebGPU",
+          "firstFrameRendered": true,
+          "failure": null,
+          "cameraTerrainFailure": null,
+          "cameraTreesFailure": null
+        },
+        "hasCurrent": true,
+        "frame": {
+          "sequence": 82,
+          "terrainGeneration": 25,
+          "selectableGeneration": 469,
+          "cameraVersion": 5,
+          "viewportVersion": 1
+        }
+      },
+      "after": {
+        "binding": 4,
+        "client": 5,
+        "canvas": 6,
+        "pending": false,
+        "status": {
+          "phase": "running",
+          "backend": "WebGPU",
+          "firstFrameRendered": true,
+          "failure": null,
+          "cameraTerrainFailure": null,
+          "cameraTreesFailure": null
+        },
+        "hasCurrent": true,
+        "frame": {
+          "sequence": 94,
+          "terrainGeneration": 1,
+          "selectableGeneration": 324,
+          "cameraVersion": 3,
+          "viewportVersion": 1
+        }
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "isFallbackAdapter": null
+      }
+    },
+    "hit": {
+      "stage": "replacement held pick",
+      "actorId": "worker-900011",
+      "pose": {
+        "x": -18,
+        "z": 0.4083572875253698,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 8.084999999999985,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "ground": 15.312259153524113,
+      "publication": 92,
+      "frameSequence": 3,
+      "attempts": [
+        {
+          "height": 1,
+          "coordinate": {
+            "x": 0,
+            "y": -6.050271383847595e-16
+          },
+          "entityId": "worker-900011",
+          "hitPoint": {
+            "x": -17.925060039478844,
+            "y": 16.39790482269119,
+            "z": 0.5261200826299326
+          }
+        }
+      ]
+    }
+  },
   "limitations": [
     "One recovered Idle22 actor with no gate motor.",
     "The two fences acknowledge the first submitted lease. An ordinary intermediate draw uses that same lease.",
-    "Physical picking has yet to confirm a hit. The explicit mapped loss case passed through the application; skipping a dispatched unmap is verified in the deterministic transport tests.",
+    "The explicit mapped loss case passed through the application; skipping a dispatched unmap is verified in deterministic transport tests.",
     "Presentation samples are partial and captured at 30 Hz without a CDP trace."
   ]
 }
