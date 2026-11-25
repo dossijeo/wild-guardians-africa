@@ -512,6 +512,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const gateOwners=arrival||settling?{gates:terminalGateIds.map(gateId=>({gateId,entityId:`structure-${gateId}`}))}:resources;
    const gateOwnersReady=gateOwners.gates?.length?settlements.nativeGatePreparationReadiness(gateOwners):()=>true;
    await waitNativePublication(minSequence,callerSignal??new AbortController().signal,gateOwnersReady);
+   if(crop===27&&resources.reference.purpose==='center')await settlements.prepareCenterStrike(resources.reference.targetId,callerSignal);
    if(closed||!remoteGpu||!state||nativeGateProposal||!resumed&&resources.phase!=='proposal'||callerSignal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1||terrain.status().nativeProposal||terrain.status().pending||terrain.status().presentationPending)throw Error('Native gate resource surface unavailable');
    // Deferred tasks capture the same immutable packet as locomotion. Keep
    // their source publication stable through draw, then adopt the issued

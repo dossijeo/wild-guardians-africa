@@ -3,20 +3,41 @@ import {cloneWebGpuNodeMaterial} from './webgpu-clone-node-material.js';
 import * as THREE from 'three';
 import {attribute,clamp,cos,cross,dot,float,length,max,min,normalize,positionLocal,select,sin,smoothstep,texture3D,uniform,varying,vec3,vec4} from 'three/tsl';
 import {createNativeDestruction,COLLAPSE_THRESHOLD,COLLAPSE_SECONDS} from './destruction-native.js';
+import {prepareBuildingDataAsync} from './prepare-building-data.js';
 import {createWebGpuDestructionEffects} from './webgpu-destruction-effects.js';
 
 export function confirmedCenterDamage(entity){return entity.status==='ruined'?1:entity.status==='collapsing'?COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*Math.max(0,Math.min(1,1-entity.collapseRemaining/COLLAPSE_SECONDS)):Math.max(0,Math.min(1,1-entity.hp/entity.maxHp));}
 
-// Experimental WebGPU presentation of confirmed center damage. The original
-// native kernel remains responsible for deterministic fragment anchors, hole
-// locations and ash footprint; no simulation or collision state is modified.
-export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,softDepth=null}={}){
- if(!gltf?.scene||!building||!renderer?.library)throw TypeError('Invalid center destruction input');
+function centerMesh(gltf){
  const meshes=[];gltf.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});if(meshes.length!==1)throw Error('Expected one center mesh');
- const source=meshes[0],src=source.geometry,pos=src.getAttribute('position'),normal=src.getAttribute('normal'),uv=src.getAttribute('uv');if(!pos||!normal||!uv||!src.index)throw Error('Invalid center geometry');
+ return meshes[0];
+}
+function copyCenterInput(src){
+ const pos=src.getAttribute('position'),normal=src.getAttribute('normal'),uv=src.getAttribute('uv');if(!pos||!normal||!uv||!src.index)throw Error('Invalid center geometry');
  const positions=new Float32Array(pos.count*3),normals=new Float32Array(pos.count*3),uvs=new Float32Array(pos.count*2),bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};for(let i=0;i<pos.count;i++){for(let j=0;j<3;j++){const v=pos.getComponent(i,j);positions[i*3+j]=v;normals[i*3+j]=normal.getComponent(i,j);bounds.min[j]=Math.min(bounds.min[j],v);bounds.max[j]=Math.max(bounds.max[j],v);}uvs[i*2]=uv.getX(i);uvs[i*2+1]=uv.getY(i);}
  const center=[(bounds.min[0]+bounds.max[0])/2,bounds.min[1],(bounds.min[2]+bounds.max[2])/2];for(let i=0;i<positions.length;i++)positions[i]-=center[i%3];for(let j=0;j<3;j++){bounds.min[j]-=center[j];bounds.max[j]-=center[j];}
- const indices=new src.index.array.constructor(src.index.array),kernel=createNativeDestruction(building,{positions,normals,uv:uvs,indices,bounds}),geometry=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(kernel.vertices,12);
+ const indices=new src.index.array.constructor(src.index.array);
+ return {positions,normals,uv:uvs,indices,bounds};
+}
+
+// Only copies go to the worker. Progressive texturing can still change the
+// intact mesh's material before the confirmed hit creates its instance.
+export async function prepareWebGpuCenterDestructionData(gltf,building,options){
+ const source=centerMesh(gltf),geometry=source.geometry;
+ const attributes=()=>[geometry.index,geometry.attributes.position,geometry.attributes.normal,geometry.attributes.uv];
+ const inputs=attributes(),version=attribute=>attribute?.data?.version??attribute?.version;
+ const versions=inputs.map(version);
+ const matches=(mesh,descriptor)=>mesh===source&&descriptor===building&&mesh.geometry===geometry&&
+  attributes().every((attribute,i)=>attribute===inputs[i]&&version(attribute)===versions[i]);
+ const data=await prepareBuildingDataAsync(building,copyCenterInput(geometry),options);
+ return {data,matches};
+}
+
+export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,softDepth=null,prepared=null}={}){
+ if(!gltf?.scene||!building||!renderer?.library)throw TypeError('Invalid center destruction input');
+ const source=centerMesh(gltf),src=source.geometry;
+ const kernel=prepared?.matches(source,building)?createNativeDestruction(building,null,prepared.data):createNativeDestruction(building,copyCenterInput(src));
+ const geometry=new THREE.BufferGeometry(),buffer=new THREE.InterleavedBuffer(kernel.vertices,12);
  for(const [name,size,offset] of [['position',3,0],['normal',3,3],['uv',2,6],['wgAnchor',3,8],['wgSeed',1,11]])geometry.setAttribute(name,new THREE.InterleavedBufferAttribute(buffer,size,offset));
  for(const name of ['color','wgOriginalColor']){const original=src.getAttribute(name);if(!original)continue;const values=new Float32Array(kernel.indices.length*4);for(let i=0;i<kernel.indices.length;i++){const index=kernel.indices[i];for(let j=0;j<4;j++)values[i*4+j]=index<original.count&&j<original.itemSize?original.getComponent(index,j):1;}geometry.setAttribute(name,new THREE.BufferAttribute(values,4));}
  geometry.computeBoundingSphere();const noise=new THREE.Data3DTexture(kernel.noiseBytes,32,32,32);noise.format=THREE.RedFormat;noise.type=THREE.UnsignedByteType;noise.minFilter=noise.magFilter=THREE.LinearFilter;noise.wrapS=noise.wrapT=noise.wrapR=THREE.RepeatWrapping;noise.unpackAlignment=1;noise.needsUpdate=true;

@@ -1399,5 +1399,100 @@
         }
       }
     ]
+  },
+  "gatedCenterDamagePreparation": {
+    "baseCommit": "c329db35717305a81dde683501df3ed6cddee691",
+    "patch": {
+      "path": ".cache/c4-center-strike/center-strike.patch",
+      "sha256": "07d294d01f5bc0150a0ec7399e825d383143ddcea821df6c5c5ba177466d4761"
+    },
+    "kernel": {
+      "path": ".cache/c4-center-strike/kernel-pair.json",
+      "sha256": "3e9942db80a73da72e653680725383abe4d0d54272dba4f055a3c1e9d70168a2"
+    },
+    "tests": {
+      "sourceComparison": {
+        "passed": 47,
+        "failed": 0,
+        "artifact": {
+          "path": ".cache/c4-center-strike/final.tap",
+          "sha256": "d5976c7988a4ef54b5fd3a158bb4d7ea6d98b36421aaa8c8cbabbeec89d0ca9f"
+        }
+      },
+      "branch": {
+        "passed": 27,
+        "failed": 0,
+        "artifact": {
+          "path": ".cache/c4-center-strike/branch-impact.tap",
+          "sha256": "3a8e73d43e2e8453d639b3d5c2e73b266f0adaaf0fb1fe7c78bd1bc8e120bbb7"
+        }
+      },
+      "buildSeconds": 78
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/flee-return/gated-first-impact-worker-nvidia.json",
+        "sha256": "1ee0910f968800043c132e4fd3f1006d29f058b4af8586168d28e71cc2a2c1a7"
+      },
+      "trace": {
+        "path": ".cache/flee-return/gated-first-impact-worker-nvidia.trace.json.gz",
+        "sha256": "29129c5ec48978684035e84df8a74fea178c21af3ae73d623f1b46ee26784eb0",
+        "dataLossOccurred": false
+      },
+      "comparison": {
+        "path": ".cache/flee-return/gated-first-impact-worker-nvidia.comparison.json",
+        "sha256": "146f73425d6ee8eb4ac205325eb59686a9df61dcb0f9562a12b7326eca761fbd"
+      },
+      "adapter": "nvidia",
+      "architecture": "turing",
+      "displayHz": 30,
+      "structure": "structure-2",
+      "hitTime": 45.85000000000128,
+      "hpAfter": 580,
+      "damagedSelectable": true,
+      "drained": true,
+      "resources": {
+        "common": 1539,
+        "sameReference": 1539,
+        "sameVersion": 1461
+      },
+      "baseline": {
+        "sequence": 279,
+        "ticket": 13,
+        "intervalMs": 1600.5,
+        "drawMs": 10.599853515625,
+        "timelineMs": 685.5,
+        "centerDamageMs": 647.801,
+        "captureMs": 290.6,
+        "rendererMs": 288.701,
+        "resourceWaitMs": 462.5
+      },
+      "candidate": {
+        "sequence": 304,
+        "ticket": 13,
+        "intervalMs": 967,
+        "drawMs": 2.800048828125,
+        "timelineMs": 79.701,
+        "centerDamageMs": 30.699,
+        "captureMs": 261.799,
+        "rendererMs": 258.799,
+        "resourceWaitMs": 407.199951171875
+      },
+      "strikePreparation": {
+        "requestedToReadyMs": 1777.699951171875,
+        "workerWallMs": 729.699,
+        "dispatchMs": 7,
+        "baseline": {
+          "surfaceToReadyMs": 1126.16015625,
+          "draws": 34,
+          "maxIntervalMs": 35.099853515625
+        },
+        "candidate": {
+          "surfaceToReadyMs": 1777.511962890625,
+          "draws": 53,
+          "maxIntervalMs": 36.89990234375
+        }
+      }
+    }
   }
 }
