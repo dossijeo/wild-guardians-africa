@@ -445,5 +445,143 @@
       "passed": 343,
       "buildSeconds": 57.51
     }
+  },
+  "historicalDemandRetirement": {
+    "mode": "DEV qualification, NVIDIA, physical 30 Hz",
+    "demandOnly": {
+      "receipt": {
+        "file": "native-attack-crops-on-demand-nvidia-20261125.failure.json",
+        "sha256": "b796a1abdaab068bf38deaa2492886998c27427d1181d39863f7621d8cd08ffd",
+        "trace": {
+          "file": "native-attack-crops-on-demand-nvidia-20261125.trace.json.gz",
+          "sha256": "405dc2c57b688b48712c5596e7e6238c7bd194b9189f559ee4d5e40843fa5923",
+          "loss": false
+        }
+      },
+      "firstError": "uncommitted-published-resources",
+      "publishedVertex": "Buffer:7023"
+    },
+    "demandAndFence": {
+      "receipt": {
+        "file": "native-attack-crops-demand-retirement-nvidia-20261125.failure.json",
+        "sha256": "71281bd4f4afd107c281568d622d9286651faba9e4917ded0d55d1cfd87fcf14",
+        "trace": {
+          "file": "native-attack-crops-demand-retirement-nvidia-20261125.trace.json.gz",
+          "sha256": "3c2dd8c5206d724ebcf909e82dc648d8bec6edb254d8854ab64f881b2a93af15",
+          "loss": false
+        }
+      },
+      "hitPublication": 688,
+      "terminalPacketNotDrawn": 237,
+      "lastDraw": 236,
+      "retirementFence": {
+        "requestId": "request:7294",
+        "retainedOperations": 70,
+        "throughSequence": 237,
+        "completionMs": 0.7
+      },
+      "staleBindingOpportunities": 298,
+      "staleWindowMs": 9932.6
+    },
+    "completedRetirement": {
+      "receipt": {
+        "file": "native-attack-crops-demand-wake-nvidia-20261125.json",
+        "sha256": "a8225b14150d2e0caa3e76943e3a917b82ec793ce105dc2a482491b3f0f49001",
+        "trace": {
+          "file": "native-attack-crops-demand-wake-nvidia-20261125.trace.json.gz",
+          "sha256": "462b947e936b3dabfaf9711f0d277cc8e66024f3feddc7127ecbdc2dc2f4295e",
+          "loss": false
+        }
+      },
+      "attackId": "attack-661",
+      "crop": "plant-373",
+      "body": 1,
+      "retiredStrikeTicket": 4,
+      "terminalPacket": {
+        "sequence": 242,
+        "elapsed": 402.19999999998237,
+        "previousSequence": 240
+      },
+      "inspectedFrame": {
+        "sequence": 244,
+        "elapsed": 402.19999999998237,
+        "bindings": 0
+      },
+      "originalRig": {
+        "root": 338,
+        "geometries": [
+          218,
+          219,
+          220,
+          221
+        ]
+      },
+      "residentBuffers": [
+        {
+          "stage": "route",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "walking",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "terminal",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "attack",
+          "compared": 78,
+          "retained": 78
+        },
+        {
+          "stage": "afterHit",
+          "compared": 78,
+          "retained": 78
+        }
+      ],
+      "postRetirementHistoricalAdmissions": 0,
+      "postRetirementHistoricalCompiles": 0,
+      "drained": true,
+      "errors": [],
+      "blockedPreparer": {
+        "durationMs": 550,
+        "draws": 17,
+        "replayDraws": 16,
+        "clockAdvanceSeconds": 0.5
+      },
+      "cadence": {
+        "terminalIntervalMs": 166.599853515625,
+        "retireToDrawMs": 74.438232421875,
+        "closedToSendMs": 0.199951171875,
+        "staleBindingOpportunities": 4,
+        "preparerPhasesMs": {
+          "timeline": 29.901123046875,
+          "capture": 22.89990234375,
+          "encode": 1.39990234375,
+          "rendererInCapture": 21.801,
+          "beforeReceive": 21.7
+        },
+        "retirementFence": {
+          "requestId": "request:7125",
+          "producerRequestedAt": 1795596737605.4,
+          "workerReceivedAt": 1795596737608.9001,
+          "startedAt": 1795596737631.9001,
+          "caller": null,
+          "finishedAt": 1795596737632.4001
+        },
+        "c4Accepted": false
+      }
+    },
+    "regression": {
+      "selection": 382,
+      "passed": 382,
+      "failedWhileBuildConcurrent": 1,
+      "buildSeconds": 52.34,
+      "binariesChanged": false
+    }
   }
 }

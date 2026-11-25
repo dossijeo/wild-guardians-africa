@@ -1,5 +1,7 @@
 import {pair,fakeGpu,flush,fixture,preparedWorldDraw} from './helpers/remote-webgpu-fixture.js';
 import test from 'node:test';
+import {Group,PerspectiveCamera,Scene} from 'three';
+import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import { createRemoteWebGpuClient } from '../src/rendering/remote-webgpu-client.js';
@@ -1990,6 +1992,75 @@ test('a retained published vertex buffer remains protected from admission fence 
   const nativeVertex=f.gpu.buffers[1];await f.commit();await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),e=>e.resourcePreparationsRetained===true);
   const buffers=f.gpu.buffers.length;await assert.rejects(f.client.device.queue.onSubmittedWorkDone(),/uncommitted changes/);
   assert.equal(new Uint32Array(nativeVertex.data.buffer)[0],3);assert.equal(f.gpu.buffers.length,buffers);assert.equal(f.host.inspect().failed,false);assert(f.host.inspect().stagedOperations>0);
+ }finally{f.close();}
+});
+
+for(const closeWithoutFrame of [false,true])test('retirement fences preserve the retained vertex generation through '+(closeWithoutFrame?'consumer shutdown':'replacement'),async()=>{
+ const f=await nativePreparationFixture(),queue=f.client.device.queue;
+ const completions=[],errors=[];
+ const physicalFence=f.gpu.device.queue.onSubmittedWorkDone;
+ const renderer={backend:{isWebGPUBackend:true,device:f.client.device},compileAsync:async()=>{}};
+ const admission=createWebGpuPipelineAdmission({renderer,scene:new Scene(),camera:new PerspectiveCamera(),onFatal:error=>errors.push(error)});
+ async function waitForFence(){
+  const deadline=performance.now()+2000;
+  while(!completions.length&&!errors.length&&performance.now()<deadline)await new Promise(resolve=>setTimeout(resolve,1));
+  assert.ifError(errors[0]);assert(completions.length,'expected an actual GPU completion fence');
+ }
+ try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});
+  queue.writeBuffer(vertex,0,new Uint32Array([3]));
+  const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});
+  await flush();await f.host.idle();f.host.present();await first;
+  const displayed=f.gpu.buffers[1],committed=await f.commit();
+  await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),error=>error.resourcePreparationsRetained===true);
+  const staged=f.host.inspect().stagedOperations;
+  assert(staged>0);await assert.rejects(queue.onSubmittedWorkDone(),/uncommitted/);
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>completions.push(resolve));
+  let released=false;
+  const retiring=new Promise(resolve=>admission.deferRelease(new Group(),()=>{released=true;vertex.destroy();resolve();}));
+  await waitForFence();
+  await flush();await f.host.idle();await flush();
+  assert.equal(completions.length,1);assert.equal(released,false);
+  completions.shift()();await flush();await f.host.idle();
+  assert.equal(released,false);
+  assert.equal(new Uint32Array(displayed.data.buffer)[0],3);
+  assert.equal(displayed.destroyed,false);assert.equal(f.host.inspect().stagedOperations,staged);
+  if(closeWithoutFrame){
+   admission.dispose();await waitForFence();assert.equal(released,false);completions.shift()();await retiring;await flush();await f.host.idle();
+   assert.equal(displayed.destroyed,false);
+   const shutdown=f.client.disposeAsync();await waitForFence();
+   assert.equal(displayed.destroyed,false);assert(completions.length>0);
+   for(const complete of completions.splice(0))complete();await shutdown;
+  }else{
+   await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},101),error=>error.resourcePreparationsRetained===true);
+   f.host.present();await flush();assert.equal(released,false);
+   assert.equal(new Uint32Array(displayed.data.buffer)[0],3);assert.equal(completions.length,0);
+   const next=f.frame(3,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});
+   await flush();await f.host.idle();
+   assert.equal(displayed.destroyed,false);
+   assert.equal(released,false);f.host.present();await next;await waitForFence();await f.host.idle();
+   assert.equal(displayed.destroyed,false);assert(completions.length>0);
+   for(const complete of completions.splice(0))complete();await retiring;await flush();await f.host.idle();
+   assert.equal(displayed.destroyed,false);assert(completions.length>0);
+   for(const complete of completions.splice(0))complete();await flush();
+  }
+  assert.equal(displayed.destroyed,true);assert.deepEqual(f.errors,[]);
+ }finally{admission.dispose();f.gpu.device.queue.onSubmittedWorkDone=physicalFence;for(const complete of completions)complete();f.close();}
+});
+
+
+test('a retirement request cannot cover a later upload outside the retained generation set',async()=>{
+ const f=await nativePreparationFixture(),queue=f.client.device.queue;
+ try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});queue.writeBuffer(vertex,0,new Uint32Array([3]));
+  const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  await f.commit();await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),error=>error.resourcePreparationsRetained===true);
+  const other=f.client.device.createBuffer({size:16,usage:44});
+  queue.writeBuffer(other,0,new Uint32Array([11]));
+  await assert.rejects(queue.onRetirementWorkDone(),/uncommitted changes/);
+  assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],3);
+  assert.equal(new Uint32Array(f.gpu.buffers.at(-1).data.buffer)[0],0);
+  assert.deepEqual(f.errors,[]);
  }finally{f.close();}
 });
 

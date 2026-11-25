@@ -1,4 +1,6 @@
 import test from 'node:test';
+import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
+import {sameNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 import {originalRig} from './helpers/native-animal-crop-rig.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import assert from 'node:assert/strict';
@@ -14,7 +16,8 @@ return {s,manifest,chunkKeys};
 }
 test('prepared warthog retains its original rig across the issued crop route and strike',async()=>{
 const {s,manifest,chunkKeys}=fixture();
-const rig=await originalRig(structuredClone(s),manifest);const ready=[],commits=[],frames=[];
+const retired=[];
+const rig=await originalRig(structuredClone(s),manifest,{contention:'post-strike',onNativeCropStrikeRetired:ref=>retired.push(ref)});const ready=[],commits=[],frames=[];
 const f=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest,onPrepare:r=>rig.prepare(r.resources),onReady:r=>new Promise(resolve=>ready.push(resolve)),
  onCommit:(r,data)=>{const proof=data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding;rig.commit(proof,data);commits.push(proof);}});
 try{
@@ -39,7 +42,8 @@ try{
  }
  assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId==='attack-661').length,1);
  assert.equal(state.raid.animals[0].hitsRemaining,1);assert.deepEqual(f.faults,[]);
- await checkLateStrikePacket(f,commits.at(-1),f.records.at(-1));
+ await rig.checkHistoricalDemand();
+ await checkLateStrikePacket(f,commits.at(-1),f.records.at(-1),retired);
  console.log(JSON.stringify({frames,hit:'attack-661',faults:f.faults}));
 }catch(e){console.error(f.faults,f.authority.nativeIntentProductionStatus(),f.host.inspect().nativeRouteFrame);throw e;}finally{await f.close();rig.close();}
 
@@ -69,7 +73,27 @@ for(const contention of ['historical','locomotion']){
  });
 }
 
-async function checkLateStrikePacket(f,proof,record){
+// Exercise the Surface functions and the options wired to its real roster.
+// The fixture supplies only the single acquired world and the capture wake.
+function terminalSurfaceGate(world){
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const functions=source.slice(source.indexOf('const nativeFrameState='),source.indexOf('function acceptPreparedNativeTerrain('));
+ const roster=source.slice(source.indexOf('roster=createWebGpuAnimalRoster(')).split('});roster.sync()')[0];
+ const options=roster.slice(roster.indexOf('onlyActorId:'));
+ const build=new Function('world','nativeFrameReadiness','sameNativeWorldBoundary',`
+  let closed=false,nativeGateProposal=null,terrain=null,nativeResumeTarget=null,nativeRejectedFrame=null;
+  let timelineRecovering=false,nativeRoutePreparations=0,nativeRouteRejected=false,nativeRouteResourceRevision=1,wakes=0;
+  const remoteGpu={requiredNativeWorldBoundary:()=>world},preparedNativeWorldBoundary=world,onPresentationReady=()=>wakes++;
+  const experimentalAllActors=true,onSelectableChange=()=>{},onError=()=>{},onActorReady=()=>{};
+  ${functions}
+  const options={${options}};
+  return {reject:retainRejectedNativeFrame,readiness:nativeDrawReadiness,notify:r=>options.onNativeCropStrikeRetired?.(r),
+   wakes:()=>wakes,revision:()=>nativeRouteResourceRevision};
+ `);
+ return build(world,nativeFrameReadiness,sameNativeWorldBoundary);
+}
+
+async function checkLateStrikePacket(f,proof,record,retired){
  const {reference,preparedReference}=proof,metadata={nativeWorldBoundary:reference.worldBoundary,
    clock:{...f.clock,elapsed:reference.endTime,safeUntil:reference.endTime,paused:true,segments:[]}};
  function draw(bindGroup){
@@ -83,7 +107,19 @@ async function checkLateStrikePacket(f,proof,record){
  const selector={byteOffset:0,semantic:'relative',epoch:preparedReference.worldBoundary.effectiveTime,
    resourceEnd:preparedReference.endTime,nativeAnimalCrop:preparedReference};
  f.client.registerClockBinding(record.cropBuffer,selector);
- await assert.rejects(draw(record.cropGroup),e=>e.code==='remote-frame-native-route-obsolete');
+ let rejection;
+ await assert.rejects(draw(record.cropGroup),e=>{rejection=e;return e.code==='remote-frame-native-route-obsolete'&&e.resourcePreparationsRetained;});
+ const gate=terminalSurfaceGate(reference.worldBoundary),captured={nativeRouteResourceRevision:gate.revision()};
+ assert(gate.reject(rejection,captured));assert.equal(gate.readiness(),'waiting');
+ for(const other of [{...reference,kind:26},{...reference,worldBoundary:{...reference.worldBoundary,authorityEpoch:'other'}}]){
+  gate.notify(other);assert.equal(gate.readiness(),'waiting');assert.equal(gate.wakes(),0);
+ }
+ for(const event of retired)gate.notify(event);
+ assert.equal(gate.readiness(),'ready','the confirmed roster release must wake the Surface capture');
+ assert.deepEqual(retired,[reference]);assert.equal(gate.wakes(),1);
+ // The same recording can be rejected after the confirmed roster event.
+ assert(gate.reject(rejection,captured));assert.equal(gate.readiness(),'ready');
+ assert.equal(gate.revision(),captured.nativeRouteResourceRevision+1);
  await f.present();assert.equal(f.gpu.submitted.length,count);assert.deepEqual(f.errors,[]);
  const clean=f.frame(1,metadata);await f.present();await clean;
  assert(f.gpu.submitted.length>count);

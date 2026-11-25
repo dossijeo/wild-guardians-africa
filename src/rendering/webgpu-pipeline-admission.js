@@ -68,6 +68,7 @@ function withMaterialAlternatives(alternatives,fn){
 // until the returned promise resolves.
 export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=>{},shadowLights=null,includeShadowPass=false,sharedSceneLighting=true,pendingFramePost=null}){
  if(pendingFramePost!==null&&typeof pendingFramePost!=='function'||!renderer?.backend?.isWebGPUBackend||typeof renderer.compileAsync!=='function'||!scene?.isScene||!camera?.isCamera||typeof onFatal!=='function'||shadowLights!==null&&!Array.isArray(shadowLights)||typeof includeShadowPass!=='boolean'||typeof sharedSceneLighting!=='boolean'||includeShadowPass&&typeof renderer.compileShadowAsync!=='function')throw TypeError('Invalid pipeline admission');
+ const retirementOwner=new AbortController();
  const lights=new Map();let lightsRevision=0,structuralRevision=0;
  function addLight(light){if(!light?.isLight||!light.shadow)throw TypeError('Invalid admission shadow light');const count=lights.get(light)??0;lights.set(light,count+1);if(count===0){lightsRevision++;structuralRevision++;}}
  if(shadowLights===null)scene.traverse(node=>{if(node.isLight&&node.shadow)addLight(node);});else for(const light of shadowLights)addLight(light);
@@ -84,9 +85,12 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
  // child or retire its parent after compilation has started.
  function relatedNodes(object){const members=new Set();if(object?.isObject3D){object.traverse(node=>members.add(node));for(let parent=object.parent;parent;parent=parent.parent)members.add(parent);}else members.add(object);return members;}
  function trackUploads(object,members=null){if(typeof renderer.backend.device?.queue?.onSubmittedWorkDone!=='function')return;let record=uploadingObjects.get(object);if(!record){record={count:0,releases:[],members:new Set()};uploadingObjects.set(object,record);}for(const member of members??relatedNodes(object))record.members.add(member);if(uploadBatch.has(object))return;record.count++;uploadBatch.add(object);scheduleUploads();}
- function flushUploads(){uploadScheduled=false;if(uploadActive||!uploadBatch.size)return;uploadActive=true;const batch=[...uploadBatch];uploadBatch.clear();let submitted;try{submitted=Promise.resolve(renderer.backend.device.queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}const loss=renderer.backend.device.lost?.then(()=>null,()=>null);Promise.race([submitted,...(loss?[loss]:[])]).catch(error=>{if(!closed)retire(error);}).finally(()=>{for(const object of batch){const record=uploadingObjects.get(object);if(!record||--record.count)continue;uploadingObjects.delete(object);for(const release of record.releases){try{release();}catch(error){retire(error);}}}uploadActive=false;scheduleUploads();});}
+ function flushUploads(){uploadScheduled=false;if(uploadActive||!uploadBatch.size)return;uploadActive=true;const batch=[...uploadBatch];uploadBatch.clear();let submitted;try{const queue=renderer.backend.device.queue;
+   // Only disposal callbacks use this batch. A remote consumer retains
+   // exact generations still owned by a displayed or rejected frame.
+   submitted=Promise.resolve(queue.onRetirementWorkDone?queue.onRetirementWorkDone(retirementOwner.signal):queue.onSubmittedWorkDone());}catch(error){submitted=Promise.reject(error);}const loss=renderer.backend.device.lost?.then(()=>null,()=>null);Promise.race([submitted,...(loss?[loss]:[])]).catch(error=>{if(!closed)retire(error);}).finally(()=>{for(const object of batch){const record=uploadingObjects.get(object);if(!record||--record.count)continue;uploadingObjects.delete(object);for(const release of record.releases){try{release();}catch(error){retire(error);}}}uploadActive=false;scheduleUploads();});}
  function rejectWaiting(error){for(const item of queue.splice(0)){if(item.onAbort)item.signal.removeEventListener('abort',item.onAbort);item.reject(error);}}
- function retire(error){if(!closed){closed=true;generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
+ function retire(error){if(!closed){closed=true;retirementOwner.abort();generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission closed'));try{onFatal(error);}catch{}}}
  function notifyShadowTargets(){for(const waiter of targetWaiters)if(waiter.ready())waiter.resolve();}
  function enqueue(item){
   if(closed||item.version!==generation){item.reject(Error('Pipeline admission cancelled'));return;}
@@ -361,6 +365,6 @@ export function createWebGpuPipelineAdmission({renderer,scene,camera,onFatal=()=
     if(tickets.every(ticket=>ticket.valid())){publish();return;}
    }
   },
-  dispose(){if(closed)return;closed=true;generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
+  dispose(){if(closed)return;closed=true;retirementOwner.abort();generation++;cancel();lights.clear();auxiliaryTargets.clear();rejectWaiting(Error('Pipeline admission cancelled'));},
  };
 }

@@ -46,6 +46,28 @@ Con el orden corregido, el frame 245 dibujó el golpe a 402,05 s con el binding 
 
 Esta selección pasó 343 pruebas y el build en 57,51 s, con los mismos binarios WASM. El perfil ordinario sigue pendiente del segundo objetivo.
 
+## Preparación histórica por demanda
+
+Después del golpe, la admisión histórica especulativa de la misma raíz registró 14 módulos WGSL de fuente distinta a las anteriores y ocho pipelines. Algunas etapas compartieron módulos por referencia. El coste de esa admisión solo corresponde al movimiento histórico que use las variantes. Three.js r180 crea el estado de nodos cuando se solicita para un objeto renderizable y lo comparte por clave del objeto. [Selección de nodos en Three.js](https://github.com/mrdoob/three.js/blob/r180/src/renderers/common/nodes/Nodes.js#L171-L214).
+
+Tras el retiro del ataque, el mismo rig admite las observaciones estacionarias con sus recursos residentes. La primera observación de movimiento con trayectoria, apoyo y fase válidos solicita la variante mediante el controlador de preparación existente. Las solicitudes concurrentes comparten esa preparación. El control anterior preparaba una variante sin desplazamiento y el corregido verifica cero admisiones en ese caso.
+
+La primera captura del candidato llegó al golpe sin iniciar el lote histórico. Al retirar el ataque, la admisión pidió una confirmación de la GPU mientras el Draw Worker aún retenía escrituras de un paquete obsoleto. Una escritura afectaba a un vértice publicado. La guarda de la cola rechazó el fence y el paquete posterior quedó sin dibujar.
+
+La retirada usa el fence del trabajo ya enviado y mantiene las generaciones que el Host tiene fijadas. Si quedan escrituras retenidas, el preparador espera una presentación nueva y su confirmación física antes de liberar el recurso. Un paquete descartado o una repetición del anterior mantienen la espera. Al cerrar el preparador, el Host conserva las generaciones hasta completar su propio fence de último uso. La cola ordinaria sigue rechazando una solicitud que exija confirmar escrituras aún sin publicar. Godot procesa liberaciones diferidas al completar la ranura del frame. Dawn asocia las tareas de finalización al número de ejecución de la cola. [Godot 4.5](https://github.com/godotengine/godot/blob/4.5-stable/servers/rendering/rendering_device.cpp#L5803-L5828) · [Dawn QueueBase](https://dawn.googlesource.com/dawn/+/refs/heads/main/src/dawn/native/Queue.cpp#260).
+
+Los controles del Host mantienen en 3 el valor del vértice dibujado pese a la escritura retenida de 99. Comprueban la liberación tras un reemplazo confirmado y durante un cierre sin otro dibujo. Una escritura posterior en una generación ajena sigue rechazándose. Pasaron las 382 pruebas seleccionadas.
+
+La segunda captura con el fence corregido confirmó el prefijo en 0,70 ms y retuvo 70 escrituras hasta la secuencia gráfica 237. La última secuencia dibujada fue 236. Game confirmó el golpe en la publicación 688, y antes del vencimiento se registraron 298 oportunidades con el binding obsoleto durante 9.932,60 ms. El preparador aún esperaba la sustitución gráfica. En ambas capturas se registraron cero pedidos de compilación histórica tras el golpe.
+
+Cuando la publicación terminal retira el strike, el roster avisa a Surface. Surface comprueba el tipo y la frontera nativa adquirida, avanza la revisión gráfica y habilita la captura. El mismo control cubre la llegada del rechazo antes y después de confirmarse la publicación. Otro tipo de ruta o una frontera de otra época mantiene la espera. Las referencias forjadas continúan rechazándose en el Host.
+
+Con los tres cambios, NVIDIA dibujó el paquete 242 a 402,20 s. La inspección del paquete 244 confirmó el mismo instante con el binding del ataque retirado. Se conservó el cuerpo 1, la raíz, las cuatro geometrías y los 78 buffers de atributos comparables en las cinco etapas. Hubo un solo golpe, cero pedidos y compilaciones de variantes históricas tras el retiro, y drenaje sin errores. Durante 550 ms de bloqueo del preparador, el Draw Worker presentó 17 veces, 16 con el mismo paquete retenido, y adelantó el reloj causal 0,50 s.
+
+El intervalo del relevo fue de 166,60 ms a 30 Hz, frente a 133,30 ms de la captura anterior con compilación especulativa. Hubo cuatro oportunidades que rechazaron el binding obsoleto. El preparador consumió 29,90 ms al avanzar la publicación y 22,90 ms al capturar la escena, incluidos 21,80 ms en el registro del renderer. En los 21,70 ms previos a la recepción, la traza del preparador contiene 35 pares de serialización y deserialización que ocupan 7,76 ms y siguen pendientes de atribuir a sus llamadas. El paquete se envió 0,20 ms después de cerrar la codificación. C4 y la continuación al segundo objetivo siguen abiertos. [Capturas, desglose y hashes](performance/native-attack-crops-qualification-20261125.json).
+
+La selección completa pasó 382 pruebas al ejecutarse sin el build concurrente. Durante la ejecución concurrente, una prueba de descargas de carrera observó el reintento de 5 ms antes de su primera comprobación y registró 381 aciertos. El build pasó en 52,34 s con los mismos binarios WASM.
+
 ## Regresión
 
 Pasaron 512 de 522 pruebas seleccionadas. Cinco quedaron omitidas y cinco casos QA-100 de último golpe a trabajador reprodujeron los mismos fallos de la línea base. El build de producto con WebGPU Worker y Draw remoto pasó en 1 min 5 s. Standalone y pthread conservaron las firmas existentes y añadieron 25 funciones de los contratos de ruta, golpe y estado del animal.

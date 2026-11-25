@@ -114,7 +114,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   function fail(error) {
     const reason = error instanceof Error ? error : new Error(String(error));
     if (fatalError || disposed) return;
-    fatalError = reason;
+    fatalError = reason; wakeRetirements();
     stopTransport(reason);
     for (const entry of pending.values()) entry.reject(reason);
     pending.clear(); pendingFrame?.reject(reason);
@@ -261,6 +261,39 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     };
     return result;
   }
+  function requestQueueFence(forRetirement = false) {
+    const caller = new Error('Remote queue fence requested').stack;
+    const timing = recordTiming(fenceTimings, { requestedAt: absoluteNow(), frameSequence: frame?.sequence || null, localRejected: !!frame?.operations.length, caller: caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
+    if (frame?.operations.length) {
+      timing.finishedAt = absoluteNow(); timing.error = 'Cannot fence uncommitted remote frame';
+      return Promise.reject(Error(timing.error));
+    }
+    return request({ type: 'fence', ...(forRetirement ? {purpose:'resource-retirement'} : {}), caller, producerRequestedAt: timing.requestedAt }).then(result => {
+      timing.finishedAt = absoluteNow(); timing.consumer = result?.timing || null; return timing.consumer;
+    }, error => { timing.finishedAt = absoluteNow(); timing.error = error.message; throw error; });
+  }
+  // Wait only when the consumer proved that a rejected frame still pins
+  // unfinished uploads. A replay cannot replace it. Producer shutdown ends
+  // the wait for another image; the consumer keeps its pins and native fence.
+  let lastPresentedSequence = 0;
+  const retirementWaiters = new Set();
+  function wakeRetirements() {
+    for (const wake of retirementWaiters) wake();
+  }
+  function waitForReplacement(after, closing) {
+    return new Promise((resolve, reject) => {
+      const wake = () => {
+        if (!fatalError && !disposed && !closing?.aborted && lastPresentedSequence <= after) return;
+        retirementWaiters.delete(wake);
+        closing?.removeEventListener('abort', wake);
+        if (fatalError || disposed) reject(fatalError ?? Error('Remote GPU disposed'));
+        else resolve();
+      };
+      retirementWaiters.add(wake);
+      closing?.addEventListener('abort', wake, {once:true});
+      wake();
+    });
+  }
   const queue = {
     writeBuffer(buffer, bufferOffset, data, dataOffset = 0, size) {
       const bytes = copyBytes(data, dataOffset, size); metrics.bytesWritten += bytes.byteLength;
@@ -294,16 +327,14 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if (frame?.operations.length) return Promise.reject(Error('Cannot order uncommitted remote frame resources'));
       return request({ type: 'ordered-submission' });
     },
-    onSubmittedWorkDone() {
-      const caller = new Error('Remote queue fence requested').stack;
-      const timing = recordTiming(fenceTimings, { requestedAt: absoluteNow(), frameSequence: frame?.sequence || null, localRejected: !!frame?.operations.length, caller: caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
-      if (frame?.operations.length) {
-        timing.finishedAt = absoluteNow(); timing.error = 'Cannot fence uncommitted remote frame';
-        return Promise.reject(Error(timing.error));
+    async onSubmittedWorkDone() { await requestQueueFence(); },
+    async onRetirementWorkDone(closing) {
+      for (;;) {
+        const receipt = await requestQueueFence(true);
+        if (receipt?.retainedThroughSequence === undefined || closing?.aborted) return;
+        await waitForReplacement(receipt.retainedThroughSequence, closing);
+        // Fence again after the replacement or the close decision.
       }
-      return request({ type: 'fence', caller, producerRequestedAt: timing.requestedAt }).then(result => {
-        timing.finishedAt = absoluteNow(); timing.consumer = result?.timing || null;
-      }, error => { timing.finishedAt = absoluteNow(); timing.error = error.message; throw error; });
     },
   };
   const device = {
@@ -395,6 +426,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       metrics.framesPresented++;
       if (pendingFrame?.sequence === message.sequence) {
         Object.assign(pendingFrame.timing, { ackReceivedAt: absoluteNow(), consumer: message.transportTiming || null });
+        lastPresentedSequence = message.sequence; wakeRetirements();
         pendingFrame.resolve(message); releaseReferences(pendingFrame.retained); pendingFrame = null;
       }
       onPresented(message);
@@ -409,7 +441,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       resolveLost(message.info);
       if(disposalPromise)return; // The close RPC still requires its real queue-drain receipt.
       fatalError = Error(`WebGPU device lost: ${message.info?.reason || 'unknown'}: ${message.info?.message || ''}`);
-      stopTransport(fatalError);
+      wakeRetirements(); stopTransport(fatalError);
       pendingFrame?.reject(fatalError);
       releaseReferences(pendingFrame?.retained); releaseReferences(frame?.retained);
       closeUnsentImages(frame);pendingFrame = null; frame = null;
@@ -569,7 +601,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     disposeAsync(){if(disposalPromise)return disposalPromise;if(disposed)return Promise.reject(Error('Remote GPU already disposed without a drain receipt'));if(fatalError)return Promise.reject(fatalError);disposalPromise=request({type:'dispose'}).then(result=>{if(result?.disposed!==true)throw Error('Remote GPU close lacks its drain receipt');api.dispose();return result;});return disposalPromise;},
     dispose() {
       if (disposed) return;
-      port.postMessage({ type: 'dispose' }); disposed = true;
+      port.postMessage({ type: 'dispose' }); disposed = true; wakeRetirements();
       const error = Error('Remote GPU disposed');
       stopTransport(error);
       closeUnsentImages(frame);frame=null;

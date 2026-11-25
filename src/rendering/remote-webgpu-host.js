@@ -979,6 +979,24 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // that image or changing the last good generation. Reuse the existing COW
   // buffers/textures and rebuild their immutable views/bindings; every byte is
   // submitted before a real queue fence is acknowledged.
+  function retainedUploadsOwnedForRetirement() {
+    if (!retainedPreparationSnapshot || preparationRecoveryRequired || nativeMutationHold || nativeConsumerRetirement || pending || admittingFrame) return false;
+    // The rejected packet already pins its complete prefix, including images
+    // and dependencies. A later operation may use a different generation.
+    // Only acknowledge retirement when it, too, has the exact same owner.
+    for (const [id, owner] of retainedPreparationSnapshot) {
+      if (owner.pins <= 0 || owner !== resources.get(id)) return false;
+    }
+    for (let i = retainedPreparationOperationCount; i < stagedOperations.length; i++) {
+      const operation = stagedOperations[i];
+      if (!['writeBuffer', 'writeTexture', 'copyExternalImageToTexture'].includes(operation.method)) return false;
+      for (const id of references(operation)) {
+        const owner = retainedPreparationSnapshot.get(id);
+        if (!owner || owner !== resources.get(id) || owner.pins <= 0) return false;
+      }
+    }
+    return true;
+  }
   function submitRetainedCpuPreparations(){
     if(!retainedPreparationSnapshot||!stagedOperations.length||pending||admittingFrame||nativeMutationHold||nativeConsumerRetirement||preparationRecoveryRequired)return false;
     const keys=new Set(),textures=new Set(),nonUniformKeys=new Set();
@@ -1566,7 +1584,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'fence': {
         const timing = recordTiming(fenceTimings, { requestId: message.requestId || null, producerRequestedAt: message.producerRequestedAt ?? null, workerReceivedAt: message.receivedAt ?? absoluteNow(), startedAt: absoluteNow(), caller: message.caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
         submitRetainedCpuPreparations();
-        if (stagedOperations.length) {
+        // Producer-side retirement covers the submitted prefix. The Host
+        // independently pins retained generations until replacement/discard,
+        // then fences their last native use in scheduleNativeRetirement().
+        const pinnedRetirement = message.purpose === 'resource-retirement' && stagedOperations.length > 0 && retainedUploadsOwnedForRetirement();
+        if (pinnedRetirement) {
+          timing.retainedUploadCount = stagedOperations.length;
+          timing.retainedThroughSequence = lastReceivedFrameSequence;
+        }
+        if (stagedOperations.length && !pinnedRetirement) {
           timing.finishedAt = absoluteNow(); timing.rejected = 'uncommitted-published-resources';
           const details = stagedOperations.slice(0, 8).map(op => ({ method: op.method, resources: [...writtenResources(op)].map(id => ({ id, kind: resources.get(id)?.kind, label: resources.get(id)?.descriptor?.label, usage: resources.get(id)?.descriptor?.usage, size: resources.get(id)?.descriptor?.size })) }));
           reply(message, null, Error(`A fence cannot cover uncommitted changes to a published frame; publish the next frame first. State: ${JSON.stringify({retained:!!retainedPreparationSnapshot,pending:!!pending,admitting:!!admittingFrame,hold:!!nativeMutationHold,retiring:!!nativeConsumerRetirement,recovery:preparationRecoveryRequired,block:metrics.retainedFenceBlock})}. Deferred: ${JSON.stringify(details)}\n${message.caller || ''}`));
