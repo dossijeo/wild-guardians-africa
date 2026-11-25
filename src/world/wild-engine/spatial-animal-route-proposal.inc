@@ -1,10 +1,14 @@
-// AttackCrops uses the existing route slot, reservation and mutation ticket.
+// An animal's prepared approach uses the existing route slot, reservation and mutation ticket.
 // Preparation cannot move the body or publish an execution assignment.
+static bool intactAttackCenter(const Target& target){
+ return target.active&&target.kind==4&&target.damageKnown&&target.status==0;
+}
 static bool animalRouteDestinationCurrent(const IntentState& s,const ActiveIntent& intent,const NativeAnimalRouteRequest& q){
  if(intent.retreat)return !intent.lease&&!intent.target&&!q.target&&!q.center&&intent.approachKnown&&
    intent.approachX==float(q.targetX)&&intent.approachZ==float(q.targetZ);
  const auto target=s.targets.find(q.target),center=s.targets.find(q.center);
- return intent.lease&&target!=s.targets.end()&&target->second.active&&target->second.kind<3&&
+ return intent.lease&&target!=s.targets.end()&&target->second.active&&
+   (q.attackCenter?(q.target==q.center&&intactAttackCenter(target->second)):target->second.kind<3)&&
    target->second.x==q.targetX&&target->second.z==q.targetZ&&center!=s.targets.end()&&center->second.active&&
    center->second.x==q.centerX&&center->second.z==q.centerZ;
 }
@@ -18,7 +22,7 @@ static bool animalRouteRequestCurrent(const IntentState& s,const ActiveIntent& i
   spatialReadBody(q->body,body)&&body.kind==1&&body.flags==1&&body.x==q->x&&body.z==q->z&&body.r==q->radius&&
   !s.reservedBodies.count(q->body)&&!s.suspendedBodies.count(q->body);
 }
-EMSCRIPTEN_KEEPALIVE int nav_animal_route_version(){return 1;}
+EMSCRIPTEN_KEEPALIVE int nav_animal_route_version(){return 2;}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,double centerId,double entering,double heading,double phase){
  auto& s=state();if(!integer(actor)||!integer(bodyId)||!integer(centerId)||(entering!=0&&entering!=1)||!std::isfinite(heading)||!std::isfinite(phase)||phase<0)return -1;
  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
@@ -29,8 +33,9 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
   return animalRouteRequestCurrent(s,intent)&&bodyId==double(request.body)&&centerId==double(request.center)&&
     (entering==1)==request.entering&&heading==request.heading&&phase==request.phase?1:-2;
  }
+ const bool attackCenter=target!=s.targets.end()&&target->first==uint64_t(centerId)&&intactAttackCenter(target->second);
  if(!intent.animal||intent.retreat||intent.home||intent.requiresResources||!intent.lease||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size()||
-    target==s.targets.end()||!target->second.active||target->second.kind>=3||center==s.targets.end()||!center->second.active||
+    target==s.targets.end()||!target->second.active||(!attackCenter&&target->second.kind>=3)||center==s.targets.end()||!center->second.active||
     !(center->second.kind==4&&center->second.status==0||center->first==intent.target)||
     !spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||!std::isfinite(body.r)||body.r<=0||body.r>2)return -2;
  if(s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==uint64_t(actor)){
@@ -41,7 +46,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
  auto& route=s.routeSlots[intent.slot];
  if(!route.active||route.pendingResources||route.reserved||route.suspended||route.actor!=intent.actor||route.generation!=intent.generation||route.originX!=body.x||route.originZ!=body.z||s.reservedBodies.count(uint64_t(bodyId))||s.suspendedBodies.count(uint64_t(bodyId)))return -3;
  auto request=std::make_shared<NativeAnimalRouteRequest>();
- *request={intent.actor,intent.target,uint64_t(bodyId),uint64_t(centerId),0,s.effectiveTime,body.x,body.z,heading,body.r,phase,center->second.x,center->second.z,entering==1,target->second.x,target->second.z};
+ *request={intent.actor,intent.target,uint64_t(bodyId),uint64_t(centerId),0,s.effectiveTime,body.x,body.z,heading,body.r,phase,center->second.x,center->second.z,entering==1,target->second.x,target->second.z,attackCenter};
  intent.animalRouteRequest=request;intent.requiresResources=true;intent.state=PlanningState::AwaitingResources;route.pendingResources=true;intent.resourceRequestedAt=s.effectiveTime;
  request->sequence=emitIntentChange(s,intent);intent.resourceRequestSequence=request->sequence;s.entityRevision++;return 1;
 }
@@ -133,7 +138,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_binding(double session,double slot,dou
  const auto& ready=binding->prepared;
  s.animalRouteResult={1,session,slot,generation,double(q.actor),double(q.body),double(q.target),double(q.center),
    double(q.sequence),q.at,double(binding->assignmentSequence),double(actual.ticket),actual.header[10],actual.header[11],
-   double(ready.ticket),ready.header[10],ready.header[11],q.centerX,q.centerZ,q.radius,q.x,q.z,q.phase,q.heading};
+   double(ready.ticket),ready.header[10],ready.header[11],q.centerX,q.centerZ,q.radius,q.x,q.z,q.phase,q.heading,q.attackCenter?1.:0.};
  return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_route_binding_ptr(){return state().animalRouteResult.data();}
@@ -164,6 +169,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
    s.animalCropState[20]=double(s.finishedAnimalStrike->attack);
    s.animalCropState[21]=double(s.finishedAnimalStrike->ticket);
  }
+ s.animalCropState[22]=source->attackCenter?1.:0.;
  return mode;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_crop_state_ptr(){return state().animalCropState.data();}

@@ -1,0 +1,224 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import test from 'node:test';
+import {deserialize, serialize} from '../src/persistence/snapshots.js';
+import {tick} from '../src/simulation/game.js';
+import {previewRaidStrike} from '../src/simulation/raids.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
+import {nativeAnimalCropPublicationMatches} from '../src/world/native-animal-crop-resource.js';
+import {originalRig} from './helpers/native-animal-crop-rig.js';
+import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
+
+const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/spatial-savanna.wasm', import.meta.url);
+const module = new WebAssembly.Module(readFileSync(binary));
+const recording = new URL('../docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json', import.meta.url);
+const recorded = JSON.parse(readFileSync(recording)).timing.navigationContext;
+const {activeBounds} = recorded;
+const view = {bounds: activeBounds, ...recorded.raidView};
+const chunkCoordinate = value => Math.floor((value + 24) / 48);
+const chunkKeys = [];
+for (let z = chunkCoordinate(activeBounds[1]); z <= chunkCoordinate(activeBounds[3]); z++) {
+  for (let x = chunkCoordinate(activeBounds[0]); x <= chunkCoordinate(activeBounds[2]); x++) {
+    chunkKeys.push(x + ',' + z);
+  }
+}
+
+function residentSession(state) {
+  const loaded = new Map();
+  const session = createSpatialGameSession(module, state, {loaded: () => loaded});
+  for (const key of chunkKeys) {
+    const [cx, cz] = key.split(',').map(Number);
+    if (session.core.selectChunk(cx, cz) < 0) assert(session.core.addChunk(cx, cz) >= 0);
+    loaded.set(key, session.core.chunkPayload());
+  }
+  return session;
+}
+
+function savedAttack() {
+  const state = deserialize(recorded.state);
+  assert.equal(state.biome, 'desierto');
+  assert.equal(state.workers.length, 0);
+  assert.equal(state.plants.length, 0);
+  const session = residentSession(state);
+  try {
+    const nav = createSpatialNavigationMovement(session, state);
+    nav.setActiveBounds(activeBounds);
+    nav.raidView = recorded.raidView;
+    nav.intentTaskPlanner = createEventDrivenTaskPlanner(session);
+    nav.intentTaskPlanner.resetFromState(state);
+    state.dayPlan = {done:false, at:state.time+.05, group:['warthog']};
+    for (let i = 0; i < 5 && !state.raid?.animals[0]?.targetId; i++) tick(state, .05, nav);
+    assert.equal(state.raid.animals[0].targetId, 'structure-2');
+    assert.equal(state.structures[0].hp, 600);
+    return serialize(state);
+  } finally {
+    session.dispose();
+  }
+}
+
+const snapshot = savedAttack();
+
+test('the graphical publication after GO must confirm the typed target and attack', () => {
+  const animal = {id:'animal-3',species:'warthog',targetId:'plant-2',status:'walking'};
+  const raid = {animals:[animal]};
+  const reference = {kind:26,purpose:'center',actorId:3,targetId:2};
+  assert.equal(nativeAnimalCropPublicationMatches(raid,{reference}),false);
+  animal.targetId = 'structure-2';
+  assert.equal(nativeAnimalCropPublicationMatches(raid,{reference}),true);
+  const strike = {reference:{...reference,kind:27},attackId:8};
+  animal.status = 'attacking';
+  animal.attackId = 'attack-5';
+  assert.equal(nativeAnimalCropPublicationMatches(raid,strike),false);
+  animal.attackId = 'attack-8';
+  assert.equal(nativeAnimalCropPublicationMatches(raid,strike),true);
+});
+
+test('the Desert center route, both strikes and retreat keep one acquired animal body', async () => {
+  const initial = deserialize(snapshot);
+  const manifest = {epoch:'desert-center',chunks:chunkKeys.map(key => {
+    const [cx,cz] = key.split(',').map(Number);
+    return {cx,cz,revision:1};
+  })};
+  const rig = await originalRig(structuredClone(initial), manifest);
+  let firstRoute, firstStrike, releaseRoute, releaseStrike;
+  const routeReady = new Promise(resolve => { releaseRoute = resolve; });
+  const strikeReady = new Promise(resolve => { releaseStrike = resolve; });
+  const acquired = [];
+  let world;
+  try {
+    world = await nativeProductionAuthority(initial, {
+      chunkKeys, qualifyAnimalCrop:true, getTerrainManifest:() => manifest,
+      onPrepare:record => rig.prepare(record.resources),
+      async onReady(record) {
+        if (record.kind === 'animal-crop-route' && !firstRoute) {
+          firstRoute = record;
+          await routeReady;
+        } else if (record.kind === 'animal-crop-strike' && !firstStrike) {
+          firstStrike = record;
+          await strikeReady;
+        }
+      },
+      onCommit(record, data) {
+        const proof = data.nativeAnimalCropRouteBinding ?? data.nativeAnimalCropStrikeBinding;
+        rig.commit(proof, data);
+        acquired.push(proof);
+      },
+    });
+    const visible = state => {
+      rig.update(structuredClone(state));
+      return state;
+    };
+    world.command({kind:'setNavigationView', view});
+    await untilProduction(world, () => !!firstRoute);
+    const pose = ({x,z,motionPhase}) => [x,z,motionPhase];
+    const source = world.snapshot().raid.animals[0];
+    assert.equal(firstRoute.resources.reference.purpose, 'center');
+    assert.deepEqual([firstRoute.resources.reference.targetId, firstRoute.resources.reference.centerId], [2,2]);
+    for (let i = 0; i < 6; i++) {
+      const retained = visible(world.advance());
+      await world.present();
+      assert.deepEqual(pose(retained.raid.animals[0]), pose(source));
+      assert.equal(retained.structures[0].hp, 600);
+      assert.equal(acquired.length, 0);
+    }
+    releaseRoute();
+    const waitDrawn = async (record,index) => {
+      await untilProduction(world, () => record.committed && acquired[index] &&
+        world.host.inspect().nativeRouteFrame?.worldBoundary?.ticket === acquired[index].reference.worldBoundary.ticket);
+      await record.packet.presented;
+      const age = captureNativeRoutePickFrame(world.host.inspect()).getAnimalCropAge(acquired[index].preparedReference);
+      assert.equal(age,0);
+      rig.presented(age);
+    };
+    await waitDrawn(firstRoute,0);
+
+    async function advance() {
+      const next = world.command({kind:'advance', seconds:.05, nightFastForward:false, steps:1});
+      for (const key of next.residency?.missing ?? []) {
+        const [cx, cz] = key.split(',').map(Number);
+        world.command({kind:'addChunk', cx, cz});
+      }
+      const state = visible(JSON.parse(next.snapshot));
+      await world.present();
+      assert.deepEqual(world.faults, []);
+      return state;
+    }
+
+    for (let i = 0; i < 1000 && !firstStrike; i++) await advance();
+    assert(firstStrike);
+    const terminal = world.snapshot().raid.animals[0];
+    assert.equal(firstStrike.resources.reference.purpose, 'center');
+    assert.equal(firstStrike.resources.reference.bodyId, acquired[0].reference.bodyId);
+    for (let i = 0; i < 6; i++) {
+      const retained = await advance();
+      assert.deepEqual(pose(retained.raid.animals[0]), pose(terminal));
+      assert.equal(retained.raid.animals[0].hitsRemaining, source.hitsRemaining);
+      assert.equal(retained.structures[0].hp, 600);
+      assert.equal(acquired.length, 1);
+    }
+    releaseStrike();
+    await waitDrawn(firstStrike,1);
+    let final = world.snapshot();
+    for (let i = 0; i < 1000 && final.raid; i++) final = await advance();
+    assert.equal(final.raid, null);
+    assert.deepEqual(acquired.map(({reference}) => [reference.kind, reference.purpose]),
+      [[26,'center'],[27,'center'],[26,'center'],[27,'center'],[26,'retreat']]);
+    assert.equal(new Set(acquired.map(({reference}) => reference.bodyId)).size, 1);
+    assert.equal(acquired[2].reference.endTime, acquired[2].reference.worldBoundary.effectiveTime);
+    assert.deepEqual([acquired[2].reference.x,acquired[2].reference.z], pose(terminal).slice(0,2));
+    const structureHits = final.events.filter(event => event.type === 'StructureHit');
+    assert.deepEqual(structureHits.map(({targetId,structureHit}) => [targetId,structureHit.previousHp,structureHit.hp]),
+      [['structure-2',600,580],['structure-2',580,560]]);
+    const logical = final.events.filter(event => event.type === 'AnimalLogicalHit');
+    assert.deepEqual(logical.map(event => event.attackId), [acquired[1],acquired[3]].map(row => 'attack-' + row.attackId));
+    assert.deepEqual(logical.map(event => event.simulationTime), structureHits.map(event => event.simulationTime));
+    assert.equal(final.events.filter(event => event.type === 'RaidEnded').length, 1);
+  } finally {
+    releaseRoute();
+    releaseStrike();
+    await world?.close();
+    rig.close();
+  }
+});
+
+test('a center that becomes ruined while its strike is prepared cannot acquire or spend that strike', () => {
+  const state = deserialize(snapshot);
+  const [animal] = state.raid.animals, [center] = state.structures;
+  const session = residentSession(state);
+  try {
+    const planner = createEventDrivenTaskPlanner(session);
+    const wasm = session.core.wasm;
+    assert.equal(planner.resetFromState(state).restoredAnimalRoutes, 1);
+    assert.equal(wasm.spatial_body_upsert(1, animal.x, animal.z, animal.radius, 1, 1), 1);
+    assert.equal(planner.requestNativeAnimalCropRoute(state, animal, 1), true);
+    planner.commitNativeCausalClock();
+    const request = planner.nativeAnimalCropState(animal.id);
+    const nativeSession = wasm.nav_intent_session();
+    const ticket = () => {
+      assert.equal(wasm.nav_intent_barrier_proposal_ticket(), 1);
+      return Array.from(new Float64Array(wasm.memory.buffer, wasm.nav_intent_barrier_proposal_ticket_ptr(), 6));
+    };
+    assert.equal(wasm.nav_animal_route_proposal_stage(request.actor, nativeSession, request.requestSequence), 1);
+    const route = ticket();
+    assert.equal(wasm.nav_animal_route_proposal_commit_bound(...route.slice(0,5), route[1]), 1);
+    assert.equal(planner.beginNativeRouteExecution().status, 'started');
+    const assignment = planner.intentChanges().at(-1);
+    state.elapsed = planner.nativeAnimalRouteBinding(assignment.routeHandle).endTime;
+    assert.equal(planner.advanceNativeRouteExecution(state.elapsed).status, 'advanced');
+    planner.commitNativeCausalClock();
+    const {index, duration} = previewRaidStrike(state, animal);
+    const before = [state.rng, state.sequence, animal.hitsRemaining, animal.attackId];
+    assert.equal(wasm.nav_animal_strike_proposal_stage(request.actor, nativeSession, assignment.sequence, index, duration), 1);
+    const stale = ticket();
+    planner.applyEvents(state, [{type:'structureDamage', entity:{...center, status:'ruined', hp:0}}]);
+    assert.equal(wasm.nav_animal_strike_proposal_revalidate(nativeSession, stale[1]), -2);
+    assert.notEqual(wasm.nav_animal_strike_proposal_commit_bound(...stale.slice(0,5), stale[1], state.sequence), 1);
+    assert.equal(wasm.nav_animal_strike_snapshot(request.actor), 0);
+    assert.deepEqual([state.rng, state.sequence, animal.hitsRemaining, animal.attackId], before);
+  } finally {
+    session.dispose();
+  }
+});

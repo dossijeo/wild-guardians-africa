@@ -98,13 +98,16 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
  }
  async function prepareAnimalCrop(packet,support,{signal,getPickAge}){
   const ref=packet.reference,id='animal-'+ref.actorId,entry=entries.get(id),previous=entry?.cropOwner,travel=ref.kind===26;
+  const center=ref.purpose==='center',targetId=(center?'structure-':'plant-')+ref.targetId;
   const names=travel?['Walking','Running']:[raidStrikeClips[ref.clip]],key=travel?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
   const source=()=>entry?.entity?.id===id&&entry.entity.species==='warthog'&&(ref.purpose==='retreat'?
     entry.entity.status==='retreating'&&entry.entity.hitsRemaining===0&&!entry.entity.targetId&&
     (entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&(entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ:
-    entry.entity.targetId==='plant-'+ref.targetId)&&
+    entry.entity.targetId===targetId&&(!center||state.structures.some(target=>target.id===targetId&&
+      target.kind==='center'&&target.status==='intact'&&target.x===ref.targetX&&target.z===ref.targetZ)))&&
     !entry.entity.magicDown&&!poses.has(id)&&!provisional.byTarget.has(id)&&!historyRun&&
-    (travel?!previous:previous?.proof?.assignmentSequence===ref.routeAssignment&&previous.proof.reference.worldBoundary.ticket===ref.routeTicket&&previous.proof.reference.bodyId===ref.bodyId);
+    (travel?!previous:previous?.proof?.assignmentSequence===ref.routeAssignment&&previous.proof.reference.worldBoundary.ticket===ref.routeTicket&&
+      previous.proof.reference.bodyId===ref.bodyId&&previous.proof.reference.purpose===ref.purpose);
   if(!source()||entry.cropPending||!support?.valid()||signal?.aborted||!pipelineAdmission||!bakedWalkBank||!bakedRunBank||!travel&&!bakedAttackBank)
     throw Error('Animal crop source or original clip bank unavailable');
   const pending={};let oldBinding,oldMotion;

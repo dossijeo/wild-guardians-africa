@@ -163,7 +163,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       return animalCropMatchesRequest(r,actor.cropRequest);
     }
     const rec=actor.current,b=rec?.cropBinding,source=b?.reference,t=rec?.issuedCrop?.terminal;
-    return source?.kind===26&&b.assignmentSequence===r.routeAssignment&&source.worldBoundary.ticket===r.routeTicket&&
+    return source?.kind===26&&source.purpose===r.purpose&&b.assignmentSequence===r.routeAssignment&&source.worldBoundary.ticket===r.routeTicket&&
       source.endTime<=r.worldBoundary.effectiveTime&&t&&['x','z','phase'].every(k=>r[k]===t[k])&&
       ['bodyId','targetId','centerId','slot','generation','radius','requestSequence','targetX','targetZ','centerX','centerZ'].every(k=>r[k]===source[k]);
   }

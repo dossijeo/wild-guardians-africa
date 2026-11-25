@@ -1,4 +1,4 @@
-import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
+import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropPublicationMatches,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
 import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
@@ -556,14 +556,10 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
       finished=true;nativePickPresentation=preparedFrame.presented;if(!holdsPublication)nativeGateProposal=null;else item.descriptor.phase='adopting';callerSignal?.removeEventListener('abort',abort);preparedNativeWorldBoundary=committedBoundary;nativeRouteResourceRevision++;nativeRouteRejected=false;onSelectableChange();
       void preparedFrame.presented.then(async()=>{if(nativePickPresentation===preparedFrame.presented)nativePickPresentation=null;
        for(const participant of participants)participant.retire?.();releasePublication();
-       if(crop){const r=binding.reference;
-         onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,()=>{
-           const a=state.raid?.animals.find(v=>v.id==='animal-'+r.actorId);
-           if(r.purpose==='retreat')return a?.species==='warthog'&&a.status==='retreating'&&!a.targetId&&a.hitsRemaining===0&&
-             (a.exit??a.spawn)?.x===r.targetX&&(a.exit??a.spawn)?.z===r.targetZ;
-           return !!a&&a.species==='warthog'&&a.targetId==='plant-'+r.targetId&&
-             (crop===26?['entering','walking'].includes(a.status):a.status==='attacking'&&a.attackId==='attack-'+binding.attackId);
-         });if(nativeGateProposal===item)nativeGateProposal=null;
+       if(crop){
+         onPresentationReady();
+         await waitNativePublication(preparedSequence+1,controller.signal,()=>nativeAnimalCropPublicationMatches(state.raid,binding));
+         if(nativeGateProposal===item)nativeGateProposal=null;
        }
        if(farm){const q=binding.reference.sourceRequest,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);

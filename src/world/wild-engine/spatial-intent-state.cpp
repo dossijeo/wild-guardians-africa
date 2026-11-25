@@ -266,6 +266,7 @@ struct NativeFarmArrivalRouteBinding {
 struct NativeAnimalRouteRequest {
  uint64_t actor=0,target=0,body=0,center=0,sequence=0;
  double at=0,x=0,z=0,heading=0,radius=0,phase=0,centerX=0,centerZ=0;bool entering=false;double targetX=0,targetZ=0;
+ bool attackCenter=false;
 };
 struct NativeAnimalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeAnimalRouteBinding {NativeAnimalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;std::shared_ptr<const NativeAnimalRouteRequest> source;};
@@ -604,11 +605,12 @@ struct IntentState {
   uint64_t nextGateMotionTicket=0;
   uint64_t gateRevision=0,nextBarrierProposal=0;
   PendingBarrierProposal barrierProposal;
-  std::array<double,24> animalStrikeResult{},animalRouteResult{};
+  std::array<double,25> animalStrikeResult{};
+  std::array<double,25> animalRouteResult{};
   // Only the completed native attack attests this stationary body's handoff.
   // Keep the small terminal receipt after revoking the old route and bindings.
   std::optional<FinishedAnimalStrike> finishedAnimalStrike;
-  std::array<double,22> animalCropState{};
+  std::array<double,23> animalCropState{};
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
   std::set<uint64_t> worldPreviewStoppedRoutes;
   std::array<double,6> barrierProposalResult{};
@@ -3650,6 +3652,29 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                     double approachX,double approachZ,
                                     double radius,int timingMode=0){
   return registerAttackSite(actorId,targetId,startX,startZ,count,approachX,approachZ,radius,timingMode,true);
+}
+// A center can survive a strike. Its next action starts at the same validated
+// site, with a fresh preparation and the previous action's same physical body.
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double attackId,double targetId,double approachX,double approachZ){
+  auto& s=state();
+  if(!integer(actorId)||!integer(attackId)||!integer(targetId)||
+     !coordinate(approachX)||!coordinate(approachZ))return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  if(nav_animal_finished_strike_snapshot(actorId)!=1)return 0;
+  const auto& finished=*s.finishedAnimalStrike;
+  const auto target=s.targets.find(finished.target);
+  if(finished.attack!=attackId||finished.target!=targetId||finished.target!=finished.center||
+     target==s.targets.end()||!intactAttackCenter(target->second)||
+     finished.x!=float(approachX)||finished.z!=float(approachZ))return -2;
+  const int site=registerAttackSite(actorId,targetId,finished.x,finished.z,0,
+    approachX,approachZ,finished.radius,0,false);
+  if(site!=1)return site;
+  const int request=nav_animal_route_request(actorId,double(finished.body),targetId,0,finished.yaw,finished.phase);
+  if(request!=1){
+    releaseIntent(s,finished.actor,PlanningState::Cancelled,false);
+    s.activeIntents.erase(finished.actor);
+  }
+  return request;
 }
 // Capture only crop groups whose interaction regions were proven unreachable
 // when this wall intention began. A later topology event can then ask whether

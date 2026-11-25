@@ -9,8 +9,7 @@ static const RouteSlot* animalStrikeRoute(const IntentState& s,uint64_t actor,ui
  const auto& route=s.routeSlots[intent.slot];const auto& binding=route.animalRouteBinding;
  if(!binding||binding->assignmentSequence!=assignment||!executionBindingCoherent(s,route.reservationBody,intent.slot)||
     !route.hasExecution||route.executionPose[6]!=1||!s.executionEnabled||binding->source->target!=intent.target)return nullptr;
- const auto target=s.targets.find(intent.target);
- if(target==s.targets.end()||!target->second.active||target->second.kind>=3)return nullptr;
+ if(!animalRouteDestinationCurrent(s,intent,*binding->source))return nullptr;
  SpatialBodyView body;
  if(!spatialReadBody(route.reservationBody,body)||body.kind!=1||body.flags!=1||body.x!=route.executionPose[0]||
     body.z!=route.executionPose[1]||body.r!=route.radius)return nullptr;
@@ -66,7 +65,8 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_snapshot(double actor){
  if(intent.slot>=s.routeSlots.size()||s.routeSlots[intent.slot].animalRouteBinding!=strike.route)return 0;
  const auto& h=strike.header;std::copy(h.begin(),h.end(),s.animalStrikeResult.begin());
  s.animalStrikeResult[19]=double(strike.attackId);s.animalStrikeResult[20]=std::clamp(s.effectiveTime-h[15],0.,h[8]);
- s.animalStrikeResult[21]=s.effectiveTime;s.animalStrikeResult[22]=(*strike.prepared)[17];s.animalStrikeResult[23]=(*strike.prepared)[15];return 1;
+ s.animalStrikeResult[21]=s.effectiveTime;s.animalStrikeResult[22]=(*strike.prepared)[17];s.animalStrikeResult[23]=(*strike.prepared)[15];
+ s.animalStrikeResult[24]=strike.route->source->attackCenter?1.:0.;return 1;
 }
 // Standstill only. This receipt authorizes no route, clock or further damage.
 EMSCRIPTEN_KEEPALIVE int nav_animal_finished_strike_snapshot(double actor){

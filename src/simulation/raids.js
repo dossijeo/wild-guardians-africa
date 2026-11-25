@@ -774,20 +774,25 @@ export function retreatAnimal(s,a,reason='magic',nav={}) {
 }
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
+export function nativeCenterAttackCohort(state){
+ return state.biome==='desierto'&&state.workers.length===0&&state.structures.length===1&&
+   state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
+}
 export function nativeCropRouteSubject(state,animal,flightWorker=null){
  const raid=state.raid;
- if(state.biome!=='sabana'||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
+ const centerAttack=nativeCenterAttackCohort(state);
+ if((state.biome!=='sabana'&&!centerAttack)||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||animal.approachShieldId||
     animal.hitsRemaining<=0)return null;
  const target=raidTarget(state,animal.targetId);
- if(!target?.alive||animal.reservation!==targetReservationKey(target,animal)||
+ if((centerAttack?target!==state.structures[0]:!target?.alive)||animal.reservation!==targetReservationKey(target,animal)||
     raid.reservations[animal.reservation]!==animal.id||spellAt(state,'shield',target))return null;
- return {target,center:state.structures.find(operational)??target};
+ return centerAttack?{target,center:target,purpose:'center'}:{target,center:state.structures.find(operational)??target};
 }
 function nativeRetreatOwnersMatch(state,animal,native){
  const exit=animal.exit??animal.spawn;
- return native.retreat&&state.biome==='sabana'&&state.raid.animals.length===1&&animal.species==='warthog'&&
+ return native.retreat&&(state.biome==='sabana'||nativeCenterAttackCohort(state))&&state.raid.animals.length===1&&animal.species==='warthog'&&
    animal.id==='animal-'+native.actor&&animal.status==='retreating'&&animal.hitsRemaining===0&&animal.hitApplied&&
    !animal.targetId&&!animal.reservation&&!animal.magicDown&&!(animal.magicStunUntil>state.elapsed)&&
    state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)&&
@@ -796,7 +801,7 @@ function nativeRetreatOwnersMatch(state,animal,native){
 }
 export function nativeCropCohortCurrent(state,planner){
  const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal));
- if(!subject&&animal?.hitApplied&&(animal.hitsRemaining===0?
+ if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(animal.hitsRemaining===0?
     planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
  if(!subject&&animal?.status!=='retreating')return false;
  const native=planner?.nativeAnimalCropState?.(animal.id);
@@ -805,9 +810,9 @@ export function nativeCropCohortCurrent(state,planner){
  return !!subject&&!!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
    animal.x===native.x&&animal.z===native.z&&(animal.motionPhase??0)===native.phase;
 }
-function nativeCropOwnersMatch({target,center},animal,native){
- return animal.id==='animal-'+native.actor&&target.id==='plant-'+native.target&&
-   target.x===native.targetX&&target.z===native.targetZ&&center.id===(center===target?'plant-':'structure-')+native.center&&
+function nativeCropOwnersMatch({target,center,purpose},animal,native){
+ return purpose===native.purpose&&animal.id==='animal-'+native.actor&&target.id===(purpose==='center'?'structure-':'plant-')+native.target&&
+   target.x===native.targetX&&target.z===native.targetZ&&center.id===(center===target&&purpose!=='center'?'plant-':'structure-')+native.center&&
    center.x===native.centerX&&center.z===native.centerZ&&animal.radius===native.radius;
 }
 export const raidStrikeClips=Object.freeze(['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2']);
@@ -827,7 +832,10 @@ function startRaidStrike(state,animal,markActive){
 }
 export function projectAcquiredRaidStrike(state,animal,proof){
  const target=raidTarget(state,animal.targetId);
- if(!target||!target.alive||!proof||animal.targetId!==`plant-${proof.target}`||animal.id!==`animal-${proof.actor}`||
+ const center=proof?.purpose==='center';
+ if(!target||!proof||(center?target.kind!=='center'||target.status!=='intact'||
+    Math.fround(animal.approach?.x)!==proof.x||Math.fround(animal.approach?.z)!==proof.z:!target.alive)||
+    animal.targetId!==(center?'structure-':'plant-')+proof.target||animal.id!=='animal-'+proof.actor||
     state.raid?.reservations[animal.reservation]!==animal.id||animal.hitsRemaining<=0||
     animal.x!==proof.x||animal.z!==proof.z||target.x!==proof.targetX||target.z!==proof.targetZ)
   throw Error('Native crop strike has another actor, crop or terminal pose');
@@ -871,6 +879,10 @@ export function updateRaid(s,dt,nav) {
     if((a.magicStunUntil??0)>s.elapsed)continue;
     const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
     const successor=!crop&&a.hitApplied&&a.hitsRemaining>0?nav.intentTaskPlanner?.nativeFinishedAnimalCrop?.(s,a):null;
+    if(successor?.purpose==='center'){
+      if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor))throw Error('Native center strike lost its next stationary source');
+      continue;
+    }
     if(!crop&&a.hitsRemaining===0&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){
       const exit=a.exit??a.spawn,prior=a.retreatRouteUnknown;
       const sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
@@ -959,7 +971,7 @@ export function updateRaid(s,dt,nav) {
       }
       const reconsider=nav.intentTaskPlanner?.finishAttackIntent(a.id);
       a.status='walking';a.path=null;
-      if(reconsider>0||!target||target.alive===false||
+      if(reconsider>0||!target||target.alive===false||crop?.purpose==='center'&&a.hitsRemaining===0||
         target.status&&target.status!=='intact')release(s,a,nav);
       else if(nav.intentTaskPlanner&&a.approach){
         if(dist(a,a.approach)>.1)release(s,a,nav);

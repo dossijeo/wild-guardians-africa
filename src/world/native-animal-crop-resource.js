@@ -8,6 +8,8 @@ const id=n=>Number.isSafeInteger(n)&&n>0;
 const validTime=n=>Number.isFinite(n)&&n>=0;
 function validDestination(value,kind){
  if(value.purpose==='retreat')return kind===26&&value.targetId===null&&value.centerId===null&&value.centerX===null&&value.centerZ===null;
+ if(value.purpose==='center')return id(value.targetId)&&value.centerId===value.targetId&&
+  Number.isFinite(value.centerX)&&Number.isFinite(value.centerZ)&&value.centerX===value.targetX&&value.centerZ===value.targetZ;
  return value.purpose===undefined&&id(value.targetId)&&id(value.centerId)&&Number.isFinite(value.centerX)&&Number.isFinite(value.centerZ);
 }
 const fields=kind=>kind===26?common:[...common,...strike];
@@ -76,4 +78,14 @@ export function copyPendingAnimalCrop(value){
 export function animalCropMatchesRequest(r,q){
  return !!q&&r.purpose===q.purpose&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&
    requestFields.every(key=>r[key]===q[key]);
+}
+
+export function nativeAnimalCropPublicationMatches(raid,{reference,attackId}){
+ const animal=raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
+ if(animal?.species!=='warthog')return false;
+ if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&animal.hitsRemaining===0&&
+  (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
+ const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
+ return animal.targetId===targetId&&(reference.kind===26?['entering','walking'].includes(animal.status):
+  animal.status==='attacking'&&animal.attackId==='attack-'+attackId);
 }

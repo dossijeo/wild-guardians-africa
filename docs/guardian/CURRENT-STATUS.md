@@ -70,6 +70,8 @@ La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original
 
 El facóquero completó la retirada nativa hasta la salida en desarrollo. NVIDIA conservó el cuerpo 1, cuatro geometrías y 78 buffers durante cinco tickets. El journal registró una sola desaparición y el consumidor confirmó el drenaje. Los 1.324 atributos ajenos comparables conservaron su buffer. C4, la activación ordinaria, Flee y las adversidades A–F siguen abiertos. [Retirada y recibos](native-attack-crops-qualification-20261125.md#retirada-tras-el-segundo-cultivo).
 
+AttackCenter completó en NVIDIA dos golpes al centro y la retirada en una partida guardada de Desierto sin trabajadores, con la calificación de desarrollo. Los cinco relevos conservaron el cuerpo, las cuatro geometrías y 26 referencias de atributos comparables. Quedan el nacimiento ordinario, la cohorte con un trabajador y C4. [AttackCenter aislado y evidencia](native-desert-attack-center-20261125.md).
+
 El historial de los dos golpes se materializa bajo demanda. NVIDIA registró cero decodificaciones sin lector y conservó los 78 buffers del animal. El primer relevo completo duró 200,10 ms y el segundo 99,90 ms a 30 Hz. La primera captura registró 2,30 ms de edad en el dibujo inicial de la salida. [Contraste y recibos](native-attack-crops-qualification-20261125.md#eventos-históricos-bajo-demanda).
 
 El primer dibujo de cada GO del animal empieza a edad cero. NVIDIA retrasó el primer dibujo de la retirada durante 133,31 ms y verificó el escalar cero con el reloj general ya en avance. Pasaron las 413 pruebas seleccionadas. El segundo golpe aún registró 200,00 ms, antes de la demora controlada. C4 sigue abierto. [Origen del GO y traza](native-attack-crops-qualification-20261125.md#primer-dibujo-del-go).
