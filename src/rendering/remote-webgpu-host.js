@@ -351,9 +351,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     for (const key of initial) visit(key,source?.get(key)||resources.get(key));
     return result;
   }
-  function pinSnapshot(snapshot) {
+  function pinSnapshot(snapshot, frameOwned = false) {
     for (const entry of snapshot.values()) {
       entry.pins = (entry.pins || 0) + 1;
+      if (frameOwned && entry.kind === 'createTexture') entry.frameOwned = true;
       if (entry.currentView) entry.retirementRequested = true;
     }
   }
@@ -1030,14 +1031,33 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }
     return disposition;
   }
-  // A fresh VFX texture is not visible until its owner publishes the material.
-  // Only independent, standalone pixel writes can cross a staged frame here.
-  async function orderPrivateTextureUpload(key) {
+  function privateTexture(key) {
     const entry = resources.get(key);
     if (!entry || entry.kind !== 'createTexture' || entry.pending || entry.pins ||
         entry.retirementRequested || entry.producerReleased || admittingFrame || preparationRecoveryRequired ||
         nativeConsumerRetirement || deviceDestroyRequested || active?.resourceSnapshot.has(key) ||
-        pending?.resourceSnapshot.has(key) || retainedPreparationSnapshot?.has(key)) return false;
+        pending?.resourceSnapshot.has(key) || retainedPreparationSnapshot?.has(key)) return null;
+    return entry;
+  }
+  function privateMipmapsAfterMutation(buffers) {
+    if (!buffers.length || !buffers.every(buffer => buffer.texturePreparation?.operation === 'mipmaps')) return false;
+    return buffers.every(buffer => {
+      const target = buffer.texturePreparation.texture?.[REF], entry = privateTexture(target);
+      // A commit can drop the prior pending packet while this operation waits.
+      // Its texture is still a world resource even after the final pin drops.
+      if (!entry || entry.frameOwned ||
+          stagedOperations.some(op => op.method === 'submit' && retainClosure(references(op)).has(target))) return false;
+      // Resolve views and bind groups through the generation captured when
+      // each was created. The producer's texture ID alone can survive a fork.
+      const dependencies = snapshotResources(references(buffer.__remoteCommands));
+      return dependencies.get(target) === entry; // drawCommandsCurrent also validates the filter's commands.
+    });
+  }
+  // A fresh VFX texture is not visible until its owner publishes the material.
+  // Only independent, standalone pixel writes can cross a staged frame here.
+  async function orderPrivateTextureUpload(key) {
+    const entry = privateTexture(key);
+    if (!entry) return false;
     if (!stagedOperations.length) return entry.pixelUploadSubmitted === true;
     const uploads = [], retained = [];
     for (const [i, op] of stagedOperations.entries()) {
@@ -1404,8 +1424,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           // drawing. They cannot slip between the captured drain and release.
           await waitMutationSubmission();
           const yielding=resourceBudget();if(yielding)await yielding;
+          while(nativeMutationHold)await waitMutationSubmission();
           if(stopped||failed||nativeConsumerRetirement)throw nativeRetiringError();
-          if(message.nativeMutationEpoch!==nativeMutationEpoch)
+          if(message.nativeMutationEpoch!==nativeMutationEpoch&&!privateMipmapsAfterMutation(message.op.args[0]))
             throw Error('Native mutation invalidated a pending standalone GPU submission');
           if(!drawCommandsCurrent(message.op,nativeWorldBoundary))throw Error('Standalone drawing resources do not match the committed native world');
         }
@@ -1503,7 +1524,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         packet.resourceSnapshot = snapshotResources(packet.references);
         // Admission owns the inspected generations across every subsequent
         // yield, independently of the producer and the currently drawn packet.
-        inspectionSnapshot=packet.resourceSnapshot;pinSnapshot(inspectionSnapshot);
+        inspectionSnapshot=packet.resourceSnapshot;pinSnapshot(inspectionSnapshot, true);
         {const pause=checkpoint();if(pause)await pause;}
         const nativeBindings=Array.from(clockBindings.values()).filter(binding=>
           packet.resourceSnapshot.has(binding.id)&&binding.nativeRoute);
@@ -1559,7 +1580,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           packet.preparedClockBindings=packet.admittedClockBindings;
           packet.preparedCameraBindings=Array.from(cameraBindings.values()).filter(binding=>packet.resourceSnapshot.has(binding.id));
         }
-        pinSnapshot(packet.resourceSnapshot);
+        pinSnapshot(packet.resourceSnapshot, true);
         releaseSnapshot(inspectionSnapshot);inspectionSnapshot=null;
         closePreparationImages(stagedOperations.filter(op=>!packet.operations.includes(op)));
         stagedOperations = [];retainedPreparationOperationCount=0;const retained=retainedPreparationSnapshot;retainedPreparationSnapshot=null;releaseSnapshot(retained);
