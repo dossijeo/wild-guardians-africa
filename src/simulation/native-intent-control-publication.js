@@ -148,7 +148,12 @@ export function createNativeIntentControlPublication({port,session,observe,
          draw.kind!==recoveryProfile.kind||
          draw.assignmentSequence!==recoveryBaseline.proof.assignmentSequence||!Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||
          !recoveryProfile.sameReference(draw[recoveryProfile.clockField],recoveryBaseline.proof.reference)||draw.elapsed!==fence.effectiveTime||
-         !Number.isFinite(draw.relativeTime)||draw.relativeTime<0)){
+         !Number.isFinite(draw.relativeTime)||draw.relativeTime<0||
+         (recoveryBaseline.proof.gateIds.length===1?
+           draw.nativeGate?.gateId!==recoveryBaseline.proof.gateIds[0]||
+           !sameNativeWorldBoundary(draw.nativeGate.worldBoundary,recoveryBaseline.proof.reference.worldBoundary)||
+           draw.gateElapsed!==recoveryBaseline.proof.reference.worldBoundary.effectiveTime+draw.relativeTime:
+           draw.nativeGate!==undefined||draw.gateElapsed!==undefined))){
         fail(Error('Invalid recovered frame at native fence'));return;
       }
       gpuFences.delete(data.fenceId);clearTimeout(fence.timer);

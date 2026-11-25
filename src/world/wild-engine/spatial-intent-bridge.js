@@ -706,7 +706,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       if(count!==1||strolls.length+farmCount!==1)throw Error('Expected one bound worker route at recovery');
       const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
       const execution=profile.kind===22?nativeIdleStrollExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
-      if(!execution||execution.arrived||execution.binding.gateIds.length||
+      if(!execution||execution.arrived||execution.binding.gateIds.length>(profile.kind===23?1:0)||
          !profile.sameAttestation(execution.binding,recoveredWorkerRoute.proof))
         throw Error('Held native worker route changed before bootstrap');
     }else{

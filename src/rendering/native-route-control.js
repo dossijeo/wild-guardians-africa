@@ -804,7 +804,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     prepareRecoveredWorkerRoute(kind,input,boundary) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       const actor=actors.get(ref.actorId),record=actor?.current;
-      if(closed||!clock||actors.size!==1||active.size!==1||proof.gateIds.length||
+      if(closed||!clock||actors.size!==1||active.size!==1||proof.gateIds.length>(kind===23?1:0)||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:ref.expectedRouteHandle})||
          !sameNativeWorldBoundary(boundary,ref.worldBoundary)||record.startTime!==boundary.effectiveTime||

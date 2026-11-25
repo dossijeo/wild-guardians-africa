@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+NVIDIA verificó la recuperación de Farm23 mientras abría un portón. Trabajador y hoja conservaron el mismo reloj a 10,50 s en ambos fences. Tras seleccionar al trabajador, reanudar y cruzar, recuperó Idle y drenó al salir. La corrección de visibilidad entre pases de color y sombra queda cubierta por regresión. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-de-farm23-mientras-abre-un-portón).
+
 La recuperación tras perder el dispositivo ya cubre un Farm23 en marcha con un solo civil sin portón. NVIDIA verificó el mismo cuerpo y corredor, selección a 10,75 s durante la suspensión, dos fences, regreso a Idle y drenaje al salir. C4 y las otras cohortes de Recovery siguen abiertos. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-farm23).
 
 El preview del primer golpe conserva la publicación histórica y evita crear un mapa de descriptores por objeto. En NVIDIA a 60 Hz, el preview pasó de 22,30 a 14,60 ms y el intervalo de 168,30 a 150,20 ms. El relevo sigue por encima de 16,667 ms. [Desglose](native-desert-mixed-flight-center-20261125.md#coste-del-preview-de-la-publicación-confirmada).

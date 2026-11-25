@@ -226,7 +226,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23;
       const resources=profile.copyResources(source.resources),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
-      if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length||resources.presentation.gates.length||
+      if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>(farm?1:0)||
          typeof options.isCurrent!=='function')throw Error('Recovery requires a fresh worker');
       const current=()=>{try{
         const worker=entry.entity,e=source.execution;
@@ -276,7 +276,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    if(recovery&&entry.motionPreparing?.ready){await entry.motionPreparing.ready;check();}
    await entry.runRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeResourcePromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();await entry.idleRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();
    if(carrying){requestBakedCarry(actorId,entry);await entry.carryRequestPromise;check();requestBakedWalk(actorId,entry);await entry.bakeRequestPromise;check();}
-   if((carrying?!entry.actor?.hasBakedCarrying?.():!(entry.actor?.isBakedWalking?.()||entry.actor?.isBakedRunning?.()||entry.actor?.isBakedIdle?.()||entry.nativeState&&entry.actor?.hasBakedWalking?.()))||entry.motionPreparing||entry.bakePending||entry.bakeLoading||entry.runPending||entry.carryPending||entry.idlePending)throw Error('Native worker locomotion materials not ready');
+   if((carrying?!entry.actor?.hasBakedCarrying?.():!(entry.actor?.isBakedWalking?.()||entry.actor?.isBakedRunning?.()||entry.actor?.isBakedIdle?.()||(entry.nativeState||recovery)&&entry.actor?.hasBakedWalking?.()))||entry.motionPreparing||entry.bakePending||entry.bakeLoading||entry.runPending||entry.carryPending||entry.idlePending)throw Error('Native worker locomotion materials not ready');
    const needsRunning=!carrying&&(requiresRun||entry.actor.isBakedRunning?.()||previous?.preparedRun),needsIdle=!carrying&&(requiresIdle||entry.actor.isBakedIdle?.()||previous?.preparedIdle);if(needsIdle&&!bakedIdleBank)throw Error('Native worker idle resource unavailable');if(needsRunning&&!bakedRunBank)throw Error('Native worker running resource unavailable');
    const clipBakes=carrying?[]:await Promise.all([bakedWalkBank.get(entry.profile),...(needsRunning?[bakedRunBank.get(entry.profile)]:[]),...(needsIdle?[bakedIdleBank.get(entry.profile)]:[])]);check();
    pending.stage='preparing';entry.motionPreparing=pending;

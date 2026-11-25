@@ -666,12 +666,18 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),ref.worldBoundary);
     if(!ref||!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||!workers||ownerSignal?.aborted||!current())
       throw Error('Worker route recovery needs its replayed publication and current Draw');
+    const {presentation}=source.resources;
+    const gates=presentation.gates.map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
+    const gateOwnersReady=gates.length?settlements?.nativeGatePreparationReadiness({gates}):null;
+    if(gates.length&&gateOwnersReady?.()!==true)throw Error('Recovered gate wall is not resident');
     terrainSupport??=createConfirmedTerrainSupport({residency});
     nativeRoutePreparations++;
     try{
       await workers.prepareRecoveredWorkerRoute({...source,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
         getPickTime:()=>nativePickFrame[farm?'getFarmArrivalTime':'getStrollTime'](ref),
-        getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)});
+        getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration),
+        prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
+          getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
       if(!current()||!workers.nativeRouteCurrent(actorId,source.resources.nativeRoute))throw Error('Replayed worker rig is no longer current');
       // The static replay may already have admitted the scene without the typed rig.
       // Re-establish the full-scene proof against the newly installed materials.
