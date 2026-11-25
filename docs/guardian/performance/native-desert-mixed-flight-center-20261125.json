@@ -1093,5 +1093,130 @@
       "traceDataLoss": false
     },
     "scope": "Single admitted Gate/Farm owner, Home19 with animal still moving. The ordinary profile, encounters, and gated raid completion remain open."
+  },
+  "gatedFullRaid": {
+    "baseCommit": "7e416ce61d4e927305bb7bc101c9eaa503b823c1",
+    "evidenceSHA256": "4d6d578c9b43e2d7dcdd48d3c03ef6d36b661dc1d16d07ad6b5ec300755ec3f9",
+    "snapshotSHA256": "5d79c1ef69c50ffc053b8ecdeee74f227944fee404b3de79dead5ad1b67f440a",
+    "hits": [
+      {
+        "id": "event-29210",
+        "target": "structure-2",
+        "hp": 580,
+        "elapsed": 45.95000000000129
+      },
+      {
+        "id": "event-29213",
+        "target": "structure-2",
+        "hp": 560,
+        "elapsed": 51.15000000000173
+      },
+      {
+        "id": "event-29216",
+        "target": "structure-2",
+        "hp": 540,
+        "elapsed": 57.150000000002244
+      },
+      {
+        "id": "event-29219",
+        "target": "structure-2",
+        "hp": 520,
+        "elapsed": 62.27000000000268
+      }
+    ],
+    "attackIds": [
+      "attack-29209",
+      "attack-29212",
+      "attack-29215",
+      "attack-29218"
+    ],
+    "raidEnd": 70.99000000000242,
+    "retreatAbsenceSequence": 489,
+    "civilDrawSequence": 490,
+    "idle": {
+      "id": "worker-900011",
+      "body": 3,
+      "elapsed": 81.50000000000183,
+      "gateIds": [
+        1000000
+      ],
+      "motionFlags": 0,
+      "refugeSequence": 9,
+      "workerHits": 0,
+      "sameLedger": true
+    },
+    "drained": true,
+    "resourceReuse": {
+      "compared": 1335,
+      "sameReference": 1335,
+      "sameVersion": 1335
+    },
+    "mixedDraws": 8,
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "uniqueRetainedDrawSamples": 2342,
+      "intervals": [
+        {
+          "previousSequence": 294,
+          "sequence": 296,
+          "ticket": 13,
+          "intervalMs": 1766.599853515625,
+          "drawMs": 2.800048828125,
+          "postAfterMs": 1330.2001953125,
+          "endFrameAfterMs": 1250.7001953125,
+          "resourceWaitMs": 389.5
+        },
+        {
+          "previousSequence": 408,
+          "sequence": 410,
+          "ticket": 25,
+          "intervalMs": 399.900146484375,
+          "drawMs": 2.800048828125,
+          "postAfterMs": 365.400390625,
+          "endFrameAfterMs": 353.600341796875,
+          "resourceWaitMs": 0
+        },
+        {
+          "previousSequence": 318,
+          "sequence": 320,
+          "ticket": 17,
+          "intervalMs": 200.099853515625,
+          "drawMs": 4.400146484375,
+          "postAfterMs": 152.300048828125,
+          "endFrameAfterMs": 148.800048828125,
+          "resourceWaitMs": 0
+        },
+        {
+          "previousSequence": 367,
+          "sequence": 369,
+          "ticket": 21,
+          "intervalMs": 166.599853515625,
+          "drawMs": 2.60009765625,
+          "postAfterMs": 146.60009765625,
+          "endFrameAfterMs": 145.2001953125,
+          "resourceWaitMs": 0
+        }
+      ],
+      "traceDataLoss": false,
+      "cutsSHA256": "86ee1e7f0257f669651c54e5976e2063af385b80511765cee3b3c1e42fb68548",
+      "stages": [
+        {
+          "sequence": 296,
+          "timelineMs": 868.3,
+          "captureMs": 247.5,
+          "rendererMs": 244.1,
+          "resourceWaitMs": 389.5,
+          "pipelines": 8
+        },
+        {
+          "sequence": 410,
+          "timelineMs": 22,
+          "captureMs": 231.4,
+          "rendererMs": 229.9,
+          "resourceWaitMs": 0
+        }
+      ]
+    }
   }
 }
