@@ -425,3 +425,44 @@ test('hosted cold Repair without its binding retains exactly the old ceiling',as
   await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);await until(()=>f.native.records.some(r=>r.packet),()=>f.native.present());for(const reason of state.pauses)await f.runtime.submit({kind:'resume',reason});let now=performance.now();f.host.now=()=>now;await f.runtime.activateClock();now+=300;await until(()=>f.state.elapsed>=at+.29,()=>f.native.present());await f.native.present();assert.equal(f.native.host.inspect().nativeRouteFrame.clockElapsed,at);assert.equal(f.native.host.inspect().nativeRouteFrame.presentationElapsed,floorFloat32(at));
  }finally{release?.();await f?.close();}
 });
+
+test('paused restored terminal Repair publishes the acquired Action15 before resuming gameplay',async t=>{
+ const state=await terminalRepairSave(.10),at=state.elapsed;
+ let releaseIdle,firstIdle;
+ const heldIdle=new Promise(resolve=>{releaseIdle=resolve;});
+ const f=await fullFixture({state,...savedNativeAuthorityOptions(JSON.stringify(state)),compactPausedAcks:true,
+  onReady(record){if(record.kind==='initial-idle-body'&&!firstIdle){firstIdle=record;return heldIdle;}}
+ });
+ try{
+  assert(state.pauses.length);
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);
+  await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  await until(()=>f.native.records.some(r=>r.kind==='task-action'&&r.committed),()=>f.native.present());
+  const action=f.native.records[0],worker=state.workers[0],task=state.tasks.find(t=>t.id===worker.taskId);
+  const pose=w=>[w.x,w.z,w.heading,w.walkPhase,w.runPhase,w.carryPhase];
+  for(let i=0;i<5;i++){
+   await f.runtime.submit({kind:'snapshot',visualTerrain:true});await f.native.present();
+   const current=f.state.workers.find(w=>w.id===worker.id);
+   assert.equal(current.nativeRouteAdmission,'native-action');assert.equal(current.status,'acting');
+   assert.equal(current.taskId,task.id);assert.equal(f.state.tasks.find(t=>t.id===task.id).workerId,current.id);
+   assert.equal(current.nativeTaskAction.kind,action.resources.request.actionKind);
+   assert.deepEqual(current.nativeTaskAction,worker.nativeTaskAction);assert.deepEqual(pose(current),pose(worker));
+   assert.deepEqual(f.state.ledger,state.ledger);assert.equal(f.state.elapsed,at);assert.deepEqual(f.state.pauses,state.pauses);
+   assert.deepEqual(f.native.records.map(r=>r.kind),['task-action']);
+  }
+  for(const reason of state.pauses)await f.runtime.submit({kind:'resume',reason});
+  let now=performance.now();f.host.now=()=>now;await f.runtime.activateClock();
+  await until(()=>firstIdle,async()=>{now+=50;await f.native.present();});
+  await f.runtime.submit({kind:'pause',reason:'menu'});releaseIdle();
+  await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='idle',()=>f.native.present());
+  await f.runtime.submit({kind:'snapshot',visualTerrain:true});
+  assert.equal(firstIdle.committed,false);assert.equal(f.state.workers[0].nativeRouteAdmission,'native-action');
+  assert.deepEqual(f.state.ledger,state.ledger);
+  await f.runtime.submit({kind:'resume',reason:'menu'});
+  await until(()=>f.native.records.some(r=>r.kind==='initial-idle-body'&&r.committed),async()=>{now+=50;await f.native.present();});
+  await f.runtime.submit({kind:'snapshot',visualTerrain:true});
+  assert.equal(f.state.workers[0].nativeRouteAdmission,'native-idle');
+  assert.deepEqual(f.state.ledger,state.ledger);assert.deepEqual(f.native.faults,[]);
+  t.diagnostic(JSON.stringify({at,task:task.id,body:action.resources.request.bodyId,actionTicket:action.resources.worldBoundary.ticket}));
+ }finally{releaseIdle();await f.close();}
+});

@@ -57,7 +57,9 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if((marker==='native-task'||marker==='pending-action-resources')&&!planner.nativeTaskActionBinding(actorId)){
     const request=planner.nativeTaskActionRequest(actorId);if(request)return {actorId,kind:'task-action',operation:'startNativeTaskActionAfterGpuQuiescence',prepare:'prepareNativeTaskActionResources',request};
    }
-   if(marker==='native-action'){
+   // The acquired pose is publishable while paused. Its automatic successor
+   // changes gameplay and waits for the authority to resume.
+   if(marker==='native-action'&&!state.pauses?.length){
     const action=planner.nativeTaskActionExecution(actorId);
     if(action?.completed){
      const {actionKind:kind,targetId}=action.binding.reference.request;

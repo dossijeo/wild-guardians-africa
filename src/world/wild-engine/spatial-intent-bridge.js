@@ -4195,7 +4195,12 @@ export function createEventDrivenTaskPlanner(session,{retrySeconds=8,authorityEp
     nativeGameExecutionState:bridge.nativeGameExecutionState,advanceNativeGameExecution:bridge.advanceNativeGameExecution,nativeTaskExecution:bridge.nativeTaskExecution,nativeTaskCancellationSource:bridge.nativeTaskCancellationSource,nativeTaskCancellationSupported:bridge.nativeTaskCancellationSupported,cancelNativePendingTaskForBlessing,projectNativeTaskExecution,requestNativeTaskActionResources:bridge.requestNativeTaskActionResources,nativeTaskActionRequest:bridge.nativeTaskActionRequest,
     async startNativeTaskActionAfterGpuQuiescence(options){
       const owner=bridge.authorityEpoch,result=await bridge.startNativeTaskActionAfterGpuQuiescence(options);
-      if(bridge.authorityEpoch===owner&&(result.status==='committed'||result.status==='committed-control-failed'))pendingNativeChanges=true;
+      if(bridge.authorityEpoch===owner&&result.resources){
+        pendingNativeChanges=true;
+        const request=result.nativeTaskActionBinding.reference.request,state=sourceState??observedTaskState;
+        const worker=state?.workers.find(w=>numericId(w.id)===nativeTaskActionActor(request));
+        if(worker)projectNativeTaskActionExecution(state,worker);
+      }
       return result;
     },prepareNativeTaskActionProposal:bridge.prepareNativeTaskActionProposal,captureNativeTaskActionProposal:bridge.captureNativeTaskActionProposal,revalidateNativeTaskActionProposal:bridge.revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal:bridge.cancelNativeTaskActionProposal,
     nativeTaskActionBinding:bridge.nativeTaskActionBinding,nativeTaskActionBindings:bridge.nativeTaskActionBindings,nativeTaskActionExecution:bridge.nativeTaskActionExecution,nativeTaskActionRestoreReferences:bridge.nativeTaskActionRestoreReferences,projectNativeTaskActionExecution,

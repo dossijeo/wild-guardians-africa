@@ -1,0 +1,302 @@
+{
+  "date": "2026-11-25",
+  "adapter": "NVIDIA GTX 1660 (Turing)",
+  "boot": {
+    "checkpoint": "native-ruined-solid-wall-disk-save-early-20261123.json",
+    "sha256": "099a5167ec0d79c710830cd18f5edd362d51d82f0df20739cfec7fad96eda63a"
+  },
+  "physical": {
+    "file": "native-solid-repair-v1-paused-action-instrumented-20261125.json",
+    "sha256": "7127b18f2c65012387795f520a043e9d37e944a8d06aab0ab57d2234e9fc131e",
+    "pause": {
+      "configuredMs": 22000,
+      "elapsed": 30.850000000000083,
+      "age": 0.09999999403953552,
+      "heldReady": false,
+      "actionTicket": 2,
+      "idleTicket": null,
+      "nativeRouteAdmission": "native-action",
+      "action": {
+        "version": 1,
+        "kind": "repair",
+        "duration": 0,
+        "elapsed": 0
+      },
+      "repairEvents": 1
+    },
+    "restored": {
+      "savedAt": 30.850000000000083,
+      "timeline": {
+        "from": 0,
+        "to": 1,
+        "at": 30.75000000000008
+      },
+      "initialMeshes": 4,
+      "retainedAttributeChanges": 0,
+      "repairEvents": 1,
+      "actionBody": 1,
+      "idleBody": 1
+    },
+    "graphics": {
+      "comparedOwners": 734,
+      "retainedBuffers": 734,
+      "replaced": []
+    },
+    "drained": true,
+    "trace": {
+      "file": "native-solid-repair-v1-paused-action-instrumented-20261125.trace.json.gz",
+      "sha256": "404e5ea45e4fb95759ec4087947a37b4e759a6a194d435a53274d6dc8b000719",
+      "dataLossOccurred": false
+    }
+  },
+  "preparation": {
+    "id": 1,
+    "minSequence": 1,
+    "proposalTicket": 1,
+    "fromRequestToReadyMs": 9654.699951171875,
+    "awaitingPublicationMs": 4860.400146484375,
+    "rosterMs": 3862.7998046875,
+    "pipelineMs": 846.2001953125,
+    "frameCaptureMs": 51.60009765625,
+    "stages": [
+      {
+        "stage": "request",
+        "id": 1,
+        "minSequence": 1,
+        "ticket": 1,
+        "fromRequestMs": 0
+      },
+      {
+        "stage": "accept",
+        "id": 1,
+        "minSequence": 1,
+        "ticket": 1,
+        "fromRequestMs": 12.699951171875
+      },
+      {
+        "stage": "entry",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 0,
+        "holding": false,
+        "fromRequestMs": 15
+      },
+      {
+        "stage": "wait-source",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 0,
+        "holding": false,
+        "fromRequestMs": 16.699951171875
+      },
+      {
+        "stage": "source-available",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": false,
+        "fromRequestMs": 4877.10009765625
+      },
+      {
+        "stage": "wait-gate-owners",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": false,
+        "fromRequestMs": 4877.199951171875
+      },
+      {
+        "stage": "gate-owners-available",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": false,
+        "fromRequestMs": 4879.39990234375
+      },
+      {
+        "stage": "wait-publication",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": false,
+        "fromRequestMs": 4879.60009765625
+      },
+      {
+        "stage": "claim-publication",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": false,
+        "fromRequestMs": 4879.89990234375
+      },
+      {
+        "stage": "roster-start",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 4880.10009765625
+      },
+      {
+        "stage": "roster-complete",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 8742.89990234375
+      },
+      {
+        "stage": "pipelines-start",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 8743.300048828125
+      },
+      {
+        "stage": "pipeline-request",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "index": 0,
+        "count": 1,
+        "fromRequestMs": 8743.89990234375
+      },
+      {
+        "stage": "pipeline-received",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "index": 0,
+        "valid": true,
+        "fromRequestMs": 9590.10009765625
+      },
+      {
+        "stage": "frame-settle-start",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 9596.300048828125
+      },
+      {
+        "stage": "frame-capture-start",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 9602.5
+      },
+      {
+        "stage": "frame-capture-ready",
+        "ticket": 1,
+        "minSequence": 1,
+        "stream": 1,
+        "holding": true,
+        "fromRequestMs": 9654.10009765625
+      },
+      {
+        "stage": "nativeGateResourcesResult",
+        "id": 1,
+        "message": null,
+        "fromRequestMs": 9654.699951171875
+      },
+      {
+        "stage": "commitNativeGateResources",
+        "id": 1,
+        "fromRequestMs": 9679
+      }
+    ]
+  },
+  "controls": {
+    "original": {
+      "file": "native-solid-repair-v1-long-pause-ready-forwarded-20261123.failure.json",
+      "sha256": "b4524091c69a0fc23d92d3211e83760c0341b89e79b201ccf4af388f696e76be",
+      "elapsed": 30.850000000000083,
+      "publicationSequence": 490,
+      "marker": "pending-action-resources",
+      "error": "Error: Error: Native publication boundary did not arrive",
+      "acquired": [
+        2
+      ],
+      "heldByHarness": false
+    },
+    "postChangePreparationTimeout": {
+      "file": "native-solid-repair-v1-paused-action-physical-20261125.failure.json",
+      "sha256": "115f867800d3d8ad4b7c648a6a01acdb6bd7b768ddada490887172e1e6db9ffd",
+      "elapsed": 30.850000000000083,
+      "publicationSequence": 128,
+      "marker": "pending-action-resources",
+      "error": "{\"kind\":\"nativeIntentControlFailure\",\"session\":\"ruined-wall-hosted-83e1be77-8d42-46ff-9cd4-ecad4ad72191\",\"sequence\":null,\"message\":\"Native resource preparation timed out\"}",
+      "acquired": [],
+      "heldByHarness": false
+    },
+    "artificialReadyHold": {
+      "file": "native-solid-repair-v1-long-cold-pause-20261123.failure.json",
+      "sha256": "b04ab09a3ce1c9cc1cc817c4669f86622d014e892f4a9da0f4f4610781700ede",
+      "elapsed": 30.850000000000083,
+      "publicationSequence": 128,
+      "marker": "pending-action-resources",
+      "error": "{\"kind\":\"nativeIntentControlFailure\",\"session\":\"ruined-wall-hosted-6f02c2d3-073d-4416-b073-1d6a0d0ce9d4\",\"sequence\":null,\"message\":\"Native resource preparation timed out\"}",
+      "acquired": [],
+      "heldByHarness": true
+    },
+    "node": {
+      "publicV1Case": 1,
+      "selectedPass": 356,
+      "failures": 0
+    }
+  },
+  "cadence": {
+    "acceptance": false,
+    "peaks": [
+      {
+        "at": 1795587364912,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 38,
+        "drawMs": 0.599853515625,
+        "trigger": "raf",
+        "replay": false
+      },
+      {
+        "at": 1795587391312.0999,
+        "sequence": 260,
+        "ticket": 2,
+        "intervalMs": 37.89990234375,
+        "drawMs": 5.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795587365577.9,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 36.800048828125,
+        "drawMs": 0.199951171875,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795587365510.5999,
+        "sequence": 2,
+        "ticket": null,
+        "intervalMs": 36.699951171875,
+        "drawMs": 0.300048828125,
+        "trigger": "raf",
+        "replay": true
+      },
+      {
+        "at": 1795587368443.2998,
+        "sequence": 21,
+        "ticket": null,
+        "intervalMs": 36,
+        "drawMs": 2,
+        "trigger": "raf",
+        "replay": true
+      }
+    ]
+  }
+}
