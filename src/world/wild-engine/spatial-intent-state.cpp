@@ -176,6 +176,7 @@ struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
 };
 // Semantic arrival goal on the existing owner; no route or Idle history.
 struct NativeFarmArrivalResourceRequest:NativeWorkerPoseResourceRequest {
+ uint64_t refugeSequence=0;
  uint64_t center=0;int workerProfile=0;double targetX=0,targetZ=0,centerX=0,centerZ=0;
 };
 struct NativeInitialIdleResourceRequest:NativeWorkerPoseResourceRequest {
@@ -576,7 +577,7 @@ struct IntentState {
   std::array<double,52> homeArrivalResult{};
   std::array<double,19> homeRequestResult{};
   std::vector<double> homeRequestsResult;
-  std::array<double,23> farmArrivalRequestResult{};std::vector<double> farmArrivalRequestsResult;
+  std::array<double,24> farmArrivalRequestResult{};std::vector<double> farmArrivalRequestsResult;
   std::array<double,25> initialIdleRequestResult{};
   std::array<double,30> strollRequestResult{};std::vector<double> strollRequestsResult;
   std::array<double,9> strollFailedRestResult{};
@@ -783,7 +784,7 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
 bool nativeFarmArrivalRequestCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.farmArrivalRequest||intent.home||intent.task||intent.target||intent.lease||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.actionBinding||intent.restoredActionSource||intent.settlementBinding||intent.initialIdleRequest||intent.initialIdleBodyBinding||intent.idleCycle||intent.strollRequest||intent.homeRequest||intent.heldIdleTaskSource||intent.state!=PlanningState::AwaitingResources||intent.generation)return false;
  const auto& r=*intent.farmArrivalRequest;const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(r.center);SpatialBodyView body;
- if(r.actor!=intent.actor||r.session!=s.session||r.sequence!=intent.resourceRequestSequence||r.profile!=intent.profile||worker==s.workers.end()||worker->second.center!=r.center||!worker->second.eligible||worker->second.actionActive||worker->second.inactiveSequence||worker->second.x!=r.x||worker->second.z!=r.z||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0||!center->second.serviceKnown||center->second.serviceX!=r.targetX||center->second.serviceZ!=r.targetZ||center->second.x!=r.centerX||center->second.z!=r.centerZ)return false;
+ if(r.actor!=intent.actor||r.session!=s.session||r.sequence!=intent.resourceRequestSequence||r.profile!=intent.profile||worker==s.workers.end()||worker->second.center!=r.center||worker->second.eligible==bool(r.refugeSequence)||worker->second.actionActive||worker->second.inactiveSequence||worker->second.x!=r.x||worker->second.z!=r.z||center==s.targets.end()||!center->second.active||center->second.kind!=4||center->second.status!=0||!center->second.serviceKnown||center->second.serviceX!=r.targetX||center->second.serviceZ!=r.targetZ||center->second.x!=r.centerX||center->second.z!=r.centerZ)return false;
  if(!r.body)return !worker->second.bodyBound&&!worker->second.body;
  return worker->second.bodyBound&&worker->second.body==r.body&&spatialReadBody(r.body,body)&&body.x==r.x&&body.z==r.z&&body.r==r.radius&&body.kind==0&&body.flags==r.bodyFlags&&!s.reservedBodies.count(r.body)&&!s.suspendedBodies.count(r.body);
 }

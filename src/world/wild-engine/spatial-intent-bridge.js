@@ -238,7 +238,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     throw Error('Unsupported native prop mutation service; rebuild Wild Engine');
   if(wasm.nav_intent_terrain_mutation_version()!==1)
     throw Error('Unsupported native terrain mutation service; rebuild Wild Engine');
-  let raidFlight=null;
+  let raidFlight=null,refuge=null;
   let sequence=0,initialized=false,owningState=null,legacyCropHomes=false,lastIntentSequence=0,restoredWallRepairs=[];
   const controlObservers=new Set();
   // Retention is independent of the event subscription: closing a port or
@@ -313,7 +313,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       // Initial semantic absence grants no route or body permission. A reused
       // core can retain old bodies after nav_intent_reset; never bless those
       // as inactive merely because their new JS row says home.
-      raidFlight=null;
+      raidFlight=null;refuge=null;
       legacyCropHomes=!!wasm.nav_animal_crop_state&&wasm.spatial_body_count()===0&&!!state.raid?.animals[0]&&
         !state.structures.some(v=>v.gate&&v.status!=='ruined')&&!!nativeCropRouteSubject(state,state.raid.animals[0]);
       if(wasm.spatial_body_count()===0)for(const worker of workers){
@@ -1795,16 +1795,16 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   };
   const farmArrivalSourceReference=(a,actor,bound)=>{
     if(a[0]!==1||a[1]!==actor||!a.every(Number.isFinite))throw Error('Invalid native farm arrival snapshot');
-    return (bound?copyNativeFarmArrivalRequestReference:copyNativeFarmArrivalDeclarationReference)({kind:bound?'native-farm-arrival-request-reference':'native-farm-arrival-declaration-reference',version:1,authorityEpoch:epoch(),nativeSession:a[2],actorId:a[1],requestSequence:a[3],requestedAt:a[4],centerId:a[5],...(bound?{bodyId:a[6],bodyFlags:a[8]}:{}),profile:a[7],workerProfile:PROFILES[a[17]]?.id,
+    return (bound?copyNativeFarmArrivalRequestReference:copyNativeFarmArrivalDeclarationReference)({kind:bound?'native-farm-arrival-request-reference':'native-farm-arrival-declaration-reference',version:a[23]?2:1,...(a[23]?{refugeSequence:a[23]}:{}),authorityEpoch:epoch(),nativeSession:a[2],actorId:a[1],requestSequence:a[3],requestedAt:a[4],centerId:a[5],...(bound?{bodyId:a[6],bodyFlags:a[8]}:{}),profile:a[7],workerProfile:PROFILES[a[17]]?.id,
       pose:{x:a[9],z:a[10],yaw:a[11],...(bound?{radius:a[12]}:{}),runPhase:a[13],walkPhase:a[14],carryPhase:a[15],runRemaining:a[16]},goal:{x:a[18],z:a[19],centerX:a[20],centerZ:a[21],arrivalRadius:a[22]}});
   };
   const readNativeFarmArrivalReference=(actorId,bound)=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),snapshot=bound?wasm.nav_farm_arrival_request_snapshot:wasm.nav_farm_arrival_declaration_snapshot;if(snapshot?.(actor)!==1)return null;
-    return farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),23)),actor,bound);
+    return farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),wasm.nav_intent_return_to_farm?24:23)),actor,bound);
   };
   const nativeFarmArrivalRouteSourceRequestReference=(actorId,ticket=0)=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId);if(wasm.nav_farm_arrival_route_source_snapshot?.(actor,ticket)!==1)return null;
-    return farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),23)),actor,true);
+    return farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),wasm.nav_intent_return_to_farm?24:23)),actor,true);
   };
   const nativeFarmArrivalRequestReference=actor=>readNativeFarmArrivalReference(actor,true),nativeFarmArrivalDeclarationReference=actor=>readNativeFarmArrivalReference(actor,false);
   const nativeFarmArrivalRequestReferences=()=>{
@@ -1815,9 +1815,25 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const semantic=nativeFarmArrivalState(owningState,worker,options);if(wasm.nav_farm_arrival_request_version?.()!==1)throw Error('Rebuild native farm arrival source');
     session.actorSectorRevision({worker:true});syncBoundaryTime();if(wasm.nav_farm_arrival_goal_snapshot?.(numericId(worker.id))!==1)throw Error('Native farm arrival goal unavailable');
     const goal=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),9));if(goal[0]!==1||!goal.every(Number.isFinite)||goal[1]!==semantic.centerId||goal[7]!==semantic.pose.x||goal[8]!==semantic.pose.z||['x','z','centerX','centerZ','arrivalRadius'].some((key,i)=>goal[i+2]!==semantic.goal[key]))throw Error('Native farm arrival goal or pose differs from Game');
-    if(wasm.nav_intent_request_farm_arrival(...semantic.args)!==1)throw Error('Native farm arrival declaration rejected');
+    const declared=options?.retiredSequence?wasm.nav_intent_return_to_farm(wasm.nav_intent_session(),options.retiredSequence,...semantic.args):wasm.nav_intent_request_farm_arrival(...semantic.args);
+    if(declared!==1)throw Error('Native farm arrival declaration rejected');
     return {...semantic,request:nativeFarmArrivalRequestReference(worker.id),declaration:nativeFarmArrivalDeclarationReference(worker.id)};
   };
+  function takeRefugeReturn(state,endedRaid,event){
+    const saved=refuge;
+    refuge=null;
+    if(!saved||endedRaid!==saved.raid)return null;
+    const {worker,issued}=saved,r=issued.reference,home=nativeHomeRouteSource(r.sourceHome.reference).home;
+    if(!qualifyFarmFlee||state!==owningState||state.raid||!endedRaid.daytime||state.workers.length!==1||
+       state.workers[0]!==worker||worker.status!=='arriving'||worker.raidReturn!==true||worker.nativeRouteAdmission||
+       worker.contractDay!==saved.contractDay||worker.centerId!==saved.centerId||contractExpired(worker,state)||
+       state.time>=(profileEnd.get(worker.profile)??0)||event?.type!=='RaidEnded'||event.simulationTime!==state.elapsed||
+       !state.events.includes(event)||endedRaid.animals.some(a=>a.status!=='gone')||worker.x!==home.x||worker.z!==home.z||
+       numericId(worker.villageId)!==home.villageId||r.worldBoundary.authorityEpoch!==epoch()||
+       wasm.nav_intent_worker_inactive(r.actorId)!==1||worker.heading!==r.pose.yaw||
+       ['runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==r.pose[k]))return null;
+    return {worker,retiredSequence:issued.retiredSequence,bodyId:r.bodyId};
+  }
   const readNativeInitialIdleReference=(actorId,bound,sourceTicket=null)=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),snapshot=sourceTicket!==null?value=>wasm.nav_initial_idle_body_source_snapshot?.(value,sourceTicket):bound?wasm.nav_initial_idle_request_snapshot:wasm.nav_initial_idle_declaration_snapshot;if(snapshot?.(actor)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_initial_idle_request_ptr(),25));if(a[0]!==1||a[1]!==actor||!a.every(Number.isFinite))throw Error('Invalid initial native Idle source snapshot');
@@ -2410,7 +2426,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(wasm.nav_intent_farm_arrival_held_execution(actor)!==1)return null;
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_farm_arrival_execution_ptr(),30));
     if(wasm.nav_farm_arrival_held_source_snapshot(actor)!==1)throw Error('Native held farm arrival lost its source');
-    const b=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_route_binding_ptr(),29)),q=farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),23)),actor,true);
+    const b=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_route_binding_ptr(),29)),q=farmArrivalSourceReference(Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_farm_arrival_request_ptr(),wasm.nav_intent_return_to_farm?24:23)),actor,true);
     if(b[0]!==1||!b.every(Number.isFinite)||!Number.isSafeInteger(b[21])||b[21]<0||b[21]>4096)throw Error('Invalid native held farm arrival source header');
     const origin=farmArrivalHeldOrigin(actor,0,q,b[23]),r=farmArrivalRouteReference(b.slice(3,27),b[2],q,[1,b[27],b[28],b[21]],origin);
     if(a[0]!==1||!a.every(Number.isFinite)||a[1]!==r.actorId||a[2]!==r.bodyId||a[3]!==q.centerId||a[4]!==q.nativeSession||a[5]!==r.expectedRouteHandle.slot||a[7]!==b[1]||a[8]<a[19]||a[9]!==q.goal.x||a[10]!==q.goal.z||a[11]!==q.requestSequence||a[18]!==0||a[27]!==0||a[28]!==0||a[29]!==2)throw Error('Invalid native held farm arrival execution');
@@ -2502,7 +2518,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       issued=copyNativeHomeArrivalAttestation({kind:'native-home-arrival-attestation',version:1,projectionVersion:1,retiredSequence:a[1],preparedReference:homeArrivalReference(a.slice(4,28),a[2],source),reference:homeArrivalReference(a.slice(28,52),a[3],source)});
       if(!sameNativeHomeArrivalReference(issued.reference,candidate.nativeHomeArrival)||!sameNativeHomeArrivalReference(issued.preparedReference,prepared.nativeHomeArrival))throw Error('Native Home arrival differs from the prepared consequence');
       const pose=issued.reference.pose;Object.assign(worker,{x:home.x,z:home.z,heading:pose.yaw,runPhase:pose.runPhase,walkPhase:pose.walkPhase,carryPhase:pose.carryPhase,runRemaining:pose.runRemaining,status:'home',path:[],running:false,gateWaiting:false});delete worker.nativeRouteAdmission;
-      if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event)raidFlight=null;
+      if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event){
+        refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId};
+        raidFlight=null;
+      }
       notifyWorkerPlanningChange(state,worker);
       const resources=Object.freeze({version:1,kind:19,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeHomeArrivalBinding:issued});mark({resources,nativeHomeArrivalBinding:issued});return {status:1,value:{resources,nativeHomeArrivalBinding:issued}};
     },prepareResources,signal,protocol);
@@ -3156,7 +3175,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     structureFor:id=>structuresById.get(numericId(id))??null,
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
-    intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    takeRefugeReturn,intentChanges,routePoints,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -3225,7 +3244,7 @@ function structureCondition(structure){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retrySeconds=8,authorityEpoch,onNativeWorldResources=null,onNativeAnimalDeparted=null}={}){
+export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retrySeconds=8,authorityEpoch,onNativeWorldResources=null,onNativeAnimalDeparted=null,onNativeRefugeReturn=null}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
   const bridge=createSpatialIntentBridge(session,{qualifyFarmFlee,authorityEpoch,onNativeWorldResources});
@@ -3789,6 +3808,18 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     Object.assign(worker,{heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,nativeRouteAdmission:'pending-farm-arrival-resources',running:false,gateWaiting:false,destinationId:null,idleState:null});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;
     return {status:'requested',request:semantic.request,declaration:semantic.declaration};
   };
+  function returnFromRaidRefuge(state,endedRaid,event){
+    if(!onNativeRefugeReturn)return false;
+    const source=bridge.takeRefugeReturn(state,endedRaid,event);
+    if(!source)return false;
+    const {worker,retiredSequence,bodyId}=source;
+    const readmit=onNativeRefugeReturn(worker.id,bodyId);
+    const result=requestNativeFarmArrivalResources(state,worker,{canonical:true,retiredSequence});
+    if(result.declaration?.refugeSequence!==retiredSequence||result.request)throw Error('Civil Farm return must begin without a body');
+    worker.nativeRefugeSequence=retiredSequence;
+    readmit();
+    return true;
+  }
   const projectInitialIdleSource=(state,worker,bound)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native initial Idle projection belongs to another game');
     if(worker.nativeRouteAdmission!=='pending-idle-resources')return null;
@@ -3970,10 +4001,12 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
   };
   const requestNativeFarmHome=(state,worker)=>{
     if(state!==sourceState&&state!==observedTaskState)throw Error('Native Farm Home belongs to another game');
-    if(!state.workers.includes(worker)||worker.status!=='arriving'||!['pending-farm-arrival-resources','native-farm-arrival-held','native-farm-arrival'].includes(worker.nativeRouteAdmission)||worker.taskId||worker.crateId||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Farm Home requires a finished arriving contract and actual held body');
+    if(!state.workers.includes(worker)||worker.status!=='arriving'||!['pending-farm-arrival-resources','native-farm-arrival-held','native-farm-arrival'].includes(worker.nativeRouteAdmission)||worker.taskId||worker.crateId||worker.path?.length||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn&&!worker.nativeRefugeSequence||state.raid||!contractExpired(worker,state)&&state.time<(profileEnd.get(worker.profile)??0))throw Error('Native Farm Home requires a finished arriving contract and actual held body');
     const pending=worker.nativeRouteAdmission==='pending-farm-arrival-resources',execution=pending?(projectNativeFarmArrivalRequest(state,worker)??projectNativeFarmArrivalDeclaration(state,worker)):projectNativeFarmArrivalExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
     if(!home||!execution||!pending&&execution?.kind!=='native-farm-arrival-held-execution'&&(execution?.kind!=='native-farm-arrival-route-execution'||!execution.arrived||execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.binding.reference.endTime))throw Error('Native Farm Home requires its actual completed or stopped source');
-    const request=bridge.requestNativeFarmArrivalHome(execution,{villageId:numericId(village.id),x:home.x,z:home.z});cancelIdle(worker);Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
+    const request=bridge.requestNativeFarmArrivalHome(execution,{villageId:numericId(village.id),x:home.x,z:home.z});
+    if(worker.nativeRefugeSequence){worker.raidReturn=false;delete worker.nativeRefugeSequence;}
+    cancelIdle(worker);Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };
   // Cancellation retains the executed Task until its existing stop25 has an
   // acquired resource receipt. The producer selects it from the actor itself.
@@ -4399,7 +4432,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,
-    commitTaskBatchToState,projectRaidFlightStop,nativeFarmFlightStopRequest,stopFarmForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
+    commitTaskBatchToState,returnFromRaidRefuge,projectRaidFlightStop,nativeFarmFlightStopRequest,stopFarmForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
       pendingNativeChanges=true;

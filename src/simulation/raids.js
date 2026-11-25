@@ -1143,7 +1143,9 @@ export function updateRaid(s,dt,nav) {
     const pending=s.raid.pendingWavePlan??nextPressureWave(s.raid,s.time);
     if(pending){s.raid.pendingWavePlan=pending;return;}
     nav.intentTaskPlanner?.retireRaidActors?.(s.raid.animals);
+    const endedRaid=s.raid;
     s.raid=null;nav.setState(s);emit(s,'RaidEnded');
+    const endEvent=s.events.at(-1);
     if(!s.structures.some(operational)&&compare(s.ledger.balance,rational(B.work_center.cost))<0){s.result='defeat';notice(s,'Cayó el último centro; faltan monedas para que otro nazca.');emit(s,'GameOver');retireFarmHistory(s);return;}
     for(const w of s.workers) {
       if(w.incapacitated||contractExpired(w,s)||s.time>=PROFILES_END(w.profile))continue;
@@ -1152,6 +1154,7 @@ export function updateRaid(s,dt,nav) {
       else {w.displacedDay=s.day;w.status='returning';w.path=null;}
       notifyWorkerPlanningChange(s,w);
     }
+    nav.intentTaskPlanner?.returnFromRaidRefuge?.(s,endedRaid,endEvent);
     recoverDisplacedWorkers(s);
     rebuildTasks(s);
   }

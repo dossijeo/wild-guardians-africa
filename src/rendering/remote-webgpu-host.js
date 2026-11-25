@@ -1789,7 +1789,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               !Number.isSafeInteger(message.holdId)||message.holdId!==lastNativeMutationFence+1||
               active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedCompletedEndpoint(binding,message.effectiveTime)&&
-                !binding.motionRecord?.canQuiesceFor?.(message.preparedAnimalCropRouteTemplate)))
+                !binding.motionRecord?.canQuiesceFor?.(message.preparedAnimalCropRouteTemplate)&&
+                !binding.motionRecord?.canQuiesceForRefugeReturn?.(message.preparedFarmArrivalTemplate)))
              throw Error('Invalid or unsafe native mutation quiescence boundary');
            const preparedWorldBoundary=copyNativeWorldBoundary(message.preparedWorldBoundary??null);
            if(preparedWorldBoundary&&(!pending?.preparedUploadsComplete||!sameNativeWorldBoundary(pending.preparedWorldBoundary,preparedWorldBoundary))){

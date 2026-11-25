@@ -206,6 +206,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           (proof?.reference.kind===27||proof?.reference.purpose==='retreat'&&record.safeUntil>=proof.reference.endTime)&&record.revokedSequence>proof.assignmentSequence&&
           sameNativeAnimalCropReference(proof.preparedReference,r);
       },
+      canQuiesceForRefugeReturn(next){
+        const request=next?.sourceRequest,peer=request&&actors.get(request.actorId),retired=actor?.revoked;
+        return r.purpose==='retreat'&&this.isRevoked()&&!active.has(r.actorId)&&!actors.has(r.actorId)&&
+          request?.version===2&&request.refugeSequence<retired.revokedSequence&&retired.revokedSequence<request.requestSequence&&
+          r.actorId!==request.actorId&&r.bodyId!==request.bodyId&&peer?.pendingFarmArrivalRequest&&farmArrivalRequestCurrent(peer.pendingFarmArrivalRequest,peer)&&
+          sameNativeFarmArrivalRequestReference(request,peer.pendingFarmArrivalRequest);
+      },
       canQuiesceFor(next){
         const last=actor?.revoked?.cropBinding,successor=actors.get(r.actorId);
         return last?.reference.kind===27&&sameNativeAnimalCropReference(last.preparedReference,r)&&
@@ -219,7 +226,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
 
   // Keep only the immutable identity of the last completed strike. Its route
   // has already been revoked and cannot authorize another draw.
-  let finishedCrop=null;
+  let finishedCrop=null,retiredRefuge=null;
   function accept(event){
     if(closed)throw Error('Native route control is closed');
     if(event?.authorityEpoch!==authorityEpoch){counters.oldEpoch++;return false;}
@@ -299,6 +306,16 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId,false):actors.get(event.actorId);
+    if(farmArrivalRequest?.version===2){
+      const previous=retiredRefuge?.reference,goal=previous?.sourceHome.reference.sourceRequest?.home;
+      if(!goal||retiredRefuge.retiredSequence!==farmArrivalRequest.refugeSequence||
+         previous.worldBoundary.authorityEpoch!==farmArrivalRequest.authorityEpoch||
+         previous.worldBoundary.nativeSession!==farmArrivalRequest.nativeSession||previous.actorId!==farmArrivalRequest.actorId||
+         previous.bodyId===farmArrivalRequest.bodyId||farmArrivalRequest.pose.x!==goal.x||farmArrivalRequest.pose.z!==goal.z||
+         previous.worldBoundary.effectiveTime>farmArrivalRequest.requestedAt||
+         ['yaw','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>previous.pose[k]!==farmArrivalRequest.pose[k]))
+        throw Error('Civil Farm request lacks its acquired Home absence');
+    }
     if(farmArrivalRequest&&(current||actor.closed||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingFarmArrivalRequest||actor.pendingIdleStrollRequest||actor.pendingInitialIdleRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.idleCycleSource||actor.strollProof||actor.revoked||actor.initialIdleBodySource||actor.settlementSource||actor.actionProof))throw Error('Native farm arrival request cannot replace an existing owner');
     if(farmArrivalRequest&&[...actors.values()].some(other=>other!==actor&&[other.pendingFarmArrivalRequest,other.pendingInitialIdleRequest,other.pendingIdleStrollRequest,other.pendingHomeRequest,other.idleCycleSource?.binding.reference].some(q=>q?.bodyId===farmArrivalRequest.bodyId)))throw Error('Native farm arrival request aliases an existing body');
     // Route acquisition, Idle and Home from this source still require their
@@ -433,6 +450,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(actor.actionRecord)actor.actionRecord.safeUntil=Math.min(actor.actionRecord.safeUntil,event.effectiveTime);actor.actionSourceRequest=event.state===2?actor.pendingActionRequest:null;actor.pendingActionRequest=actionRequest;actor.actionProof=null;actor.actionRecord=null;if(!completedTaskHome)actor.startProof=null;actor.consequenceProof=null;actor.homeProof=null;if(!completedStrollHome)actor.strollProof=null;if(!completedFarmGoal)actor.farmArrivalProof=null;actor.pendingTaskRequest=taskRequest;actor.resumeProof=null;if(!keepStoppedBody)actor.stoppedProjection=null;actor.latestSequence=event.sequence;actor.state=assigned?1:Number.isInteger(event.state)?event.state:null;
       // NeedsPlan retains its existing intent and revoked record, never a draw clock.
       if(!actor.current&&actor.state!==0&&actor.state!==2&&actor.state!==4&&actor.state!==6&&actor.state!==7){actor.closed=true;actors.delete(event.actorId);}}
+    if(farmArrivalRequest&&retiredRefuge?.reference.actorId===event.actorId)retiredRefuge=null;
     if(actor){actor.pendingTaskCancellation=pendingTaskCancellation;actor.pendingHomeRequest=homeRequest;actor.pendingInitialIdleRequest=initialIdleRequest;actor.pendingIdleStrollRequest=idleStrollRequest;actor.pendingFarmArrivalRequest=farmArrivalRequest;actor.taskId=event.taskId??null;actor.targetId=event.targetId??null;}
     sequence=event.sequence;effectiveTime=event.effectiveTime;counters.accepted++;
     return true;
@@ -761,7 +779,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       // lease validates a single retirement at release, never movement/draw time.
       const validateCommitted=value=>{
         const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference,at=r.worldBoundary.effectiveTime;
-        if(closed||!clock||!sameNativeHomeArrivalReference(proof.preparedReference,reference)||proof.retiredSequence!==sequence||clock.intentSequence!==sequence||clock.committedThrough!==at||r.worldBoundary.nativeSession!==clock.nativeSession||actors.has(reference.actorId)||active.has(reference.actorId)||!actor.closed||actor.current!==null||actor.latestSequence!==proof.retiredSequence||actor.state!==5||actor.revoked!==record||record.revokedSequence!==proof.retiredSequence||record.revokedState!==5||record.safeUntil!==at||record.assignmentSequence!==home.assignmentSequence||!sameHandle(record.handle,home.reference.expectedRouteHandle))throw Error('Native Home absence lacks its issued retirement');return proof;
+        if(closed||!clock||!sameNativeHomeArrivalReference(proof.preparedReference,reference)||proof.retiredSequence!==sequence||clock.intentSequence!==sequence||clock.committedThrough!==at||r.worldBoundary.nativeSession!==clock.nativeSession||actors.has(reference.actorId)||active.has(reference.actorId)||!actor.closed||actor.current!==null||actor.latestSequence!==proof.retiredSequence||actor.state!==5||actor.revoked!==record||record.revokedSequence!==proof.retiredSequence||record.revokedState!==5||record.safeUntil!==at||record.assignmentSequence!==home.assignmentSequence||!sameHandle(record.handle,home.reference.expectedRouteHandle))throw Error('Native Home absence lacks its issued retirement');
+        if(home.reference.sourceRequest?.raidSpawnSequence)retiredRefuge=proof;
+        return proof;
       };
       counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },

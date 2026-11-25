@@ -45,6 +45,7 @@ static int stageFarmArrivalRoute(double actor,double session,double sourceSequen
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return -2;
  const bool held=nativeHeldFarmArrivalBodyCurrent(s,found->second);
  if(!held&&!nativeFarmArrivalRequestBodyCurrent(s,found->second))return -2;
+ if(urgent&&found->second.farmArrivalRequest&&found->second.farmArrivalRequest->refugeSequence)return -2;
  PendingNativeMotionDraft d;
  if(held){
   const auto& old=s.routeSlots[found->second.slot];if(!s.workers.at(uint64_t(actor)).eligible||urgent!=double(old.motionFlags))return -2;

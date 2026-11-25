@@ -567,7 +567,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
        }
        if(farm){const q=binding.reference.sourceRequest,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
-        try{const semantic=nativeFarmArrivalExecutionState(state,worker);return worker.profile===q.workerProfile&&semantic.centerId===q.centerId&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}
+        try{const semantic=nativeFarmArrivalExecutionState(state,worker);return (!worker.raidReturn||q.refugeSequence===worker.nativeRefugeSequence)&&worker.profile===q.workerProfile&&semantic.centerId===q.centerId&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}
        };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
        if(stroll){const r=binding.reference,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);if(worker?.nativeRouteAdmission!=='native-idle-stroll')return false;

@@ -79,7 +79,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,onNativeAnimalDeparted:(actor,body)=>{
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,onNativeRefugeReturn:(actor,body)=>{
+    if(nativeBodies?.id(actor)!==body||session.core.wasm.spatial_body_has_blockers(body,0)!==-1)throw Error('Civil return lost its retired Home body');
+    return ()=>{if(!nativeBodies.forgetRetired(actor,body))throw Error('Civil return body identity changed');nativeBirthsPending=true;};
+  },onNativeAnimalDeparted:(actor,body)=>{
     if(nativeBodies?.id(actor)!==body||!nativeBodies.remove(actor))throw Error('Departing native animal lost its registered body');
   },onNativeWorldResources:resources=>{
     // The published boundary carries wall occupancy and worker stops. Empty

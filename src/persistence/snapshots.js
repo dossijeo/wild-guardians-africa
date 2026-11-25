@@ -124,6 +124,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
     }
   }
   for(const worker of state.workers){
+    if(worker.nativeRefugeSequence!==undefined&&(!livePhysics||worker.raidReturn!==true||!Number.isSafeInteger(worker.nativeRefugeSequence)||worker.nativeRefugeSequence<1||!['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission)))throw Error('Invalid live Farm return');
     if(worker.nativeFarmFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-farm-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
     if(worker.nativeRouteAdmission!==undefined){
       const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,

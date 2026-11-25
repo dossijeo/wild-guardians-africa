@@ -241,3 +241,88 @@ for (const tampered of [null, 'body', 'event']) {
     } finally { release();await f.close(); }
   });
 }
+import {copyNativeFarmArrivalRequestReference as copyFarmRequest} from '../src/world/native-farm-arrival-request-reference.js';
+
+for(const order of ['retired-active','absence-first','foreign-retirement']){
+ test('paid civilian returns after the actual RaidEnded: '+order,async()=>{
+  const initial=source(),original=initial.workers[0],receipts=new Map();
+  let release,ready,absent=false,firstHome,retreat,heldState;
+  const wait=new Promise(resolve=>{release=resolve;});
+  const f=await nativeProductionAuthority(initial,{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+   onCommit(record,data){receipts.set(record,data);},
+   async onPrepare(record){
+    if(record.kind!=='farm-arrival'||!firstHome||order!=='absence-first')return;
+    // The ordinary render stream can remove the departed animal before the new 23.
+    const at=f.snapshot().elapsed;
+    f.client.beginFrame({nativeWorldBoundary:retreat.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}});
+    const encoder=f.client.device.createCommandEncoder();
+    const pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+    pass.end();f.client.device.queue.submit([encoder.finish()]);
+    const drawn=f.client.endFrame();await f.present();await drawn;
+    assert.equal(f.host.inspect().nativeRouteFrame.bindings.length,0);absent=true;
+   },
+   async onReady(record){
+    if(record.kind==='farm-arrival'&&firstHome){ready=record;await wait;}
+   }
+  });
+  try{
+   const committed=kind=>f.records.findLast(r=>r.kind===kind&&r.committed);
+   await untilProduction(f,()=>committed('farm-arrival'));
+   const hire=receipts.get(committed('farm-arrival')).nativeFarmArrivalBinding.reference;
+   f.command({kind:'setNavigationView',view:{bounds:[24,-72,168,72],eye:{x:83,z:24},target:{x:83,z:0}}});
+   const post=f.controlPort.postMessage;
+   f.controlPort.postMessage=e=>{
+    if(order==='foreign-retirement'&&e.farmArrivalRequest?.version===2)e={...e,farmArrivalRequest:{...e.farmArrivalRequest,refugeSequence:e.farmArrivalRequest.refugeSequence-1}};
+    post(e);
+   };
+   let state,advanceCount=0,atHome=false,ended,secondFarm,seenCivilDraw=false;
+   for(;advanceCount<2400;advanceCount++){
+    await f.present();
+    if(order==='foreign-retirement'&&f.host.inspect().failed)break;
+    if(committed('home-arrival'))firstHome=receipts.get(committed('home-arrival')).nativeHomeArrivalBinding;
+    const crop=committed('animal-crop-route');
+    if(crop){
+     const binding=receipts.get(crop).nativeAnimalCropRouteBinding;
+     if(binding.reference.purpose==='retreat')retreat=binding.reference;
+    }
+    if(ready&&heldState===undefined){
+     heldState=f.snapshot();assert.equal(heldState.workers[0].nativeRouteAdmission,'pending-farm-arrival-resources');
+     assert.equal(heldState.workers[0].nativeRefugeSequence,firstHome.retiredSequence);
+     assert.equal(heldState.workers[0].raidReturn,true);
+     assert.deepEqual([heldState.workers[0].x,heldState.workers[0].z],[60,0]);
+     assert.throws(()=>validateSnapshot(heldState),/Invalid live Farm return/);
+     for(let i=0;i<2;i++){const w=f.advance(.05).workers[0];assert.deepEqual([w.x,w.z,w.walkPhase],[60,0,heldState.workers[0].walkPhase]);}
+     release();
+    }
+    if(ready?.committed){
+     secondFarm=receipts.get(ready).nativeFarmArrivalBinding;
+     const frame=f.host.inspect().nativeRouteFrame;
+     if(frame?.worldBoundary?.ticket===secondFarm.reference.worldBoundary.ticket)seenCivilDraw=true;
+    }
+    if(seenCivilDraw&&state.workers[0].nativeRouteAdmission==='native-idle'&&committed('idle-cycle'))break;
+    const step=f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});state=JSON.parse(step.snapshot);
+    for(const key of step.residency?.missing??[]){const [cx,cz]=key.split(',').map(Number);f.command({kind:'addChunk',cx,cz});}
+    if(state.workers[0].status==='home')atHome=true;
+    ended??=state.events.find(e=>e.type==='RaidEnded');
+   }
+   if(order==='foreign-retirement'){
+    assert.match(f.host.inspect().errors.join('\n'),/Civil Farm request lacks its acquired Home absence/);
+    assert.equal(f.records.filter(r=>r.kind==='farm-arrival'&&r.committed).length,1);return;
+   }
+   assert(atHome&&ended&&retreat&&seenCivilDraw&&secondFarm);
+   assert.equal(absent,order==='absence-first');assert.equal(f.records.filter(r=>r.kind==='farm-arrival'&&r.committed).length,2);
+   const r=secondFarm.reference,q=r.sourceRequest;
+   assert.throws(()=>copyFarmRequest({...hire.sourceRequest,refugeSequence:undefined}),/Invalid native farm arrival source/);
+   assert.throws(()=>copyFarmRequest({...q,refugeSequence:q.requestSequence}),/Invalid native farm arrival source/);
+   assert.equal(q.version,2);assert.equal(q.refugeSequence,firstHome.retiredSequence);
+   assert.equal(q.actorId,hire.actorId);assert.notEqual(r.bodyId,hire.bodyId);assert.notEqual(r.bodyId,retreat.bodyId);
+   assert(q.requestedAt>=ended.simulationTime);assert.equal(r.motionFlags,0);
+   assert.deepEqual([q.pose.x,q.pose.z],[60,0]);
+   for(const key of ['yaw','walkPhase','runPhase','carryPhase','runRemaining'])assert.equal(q.pose[key],firstHome.reference.pose[key]);
+   const last=state.workers[0];assert.equal(last.status,'idle');assert.equal(last.raidReturn,false);
+   assert.equal(last.nativeRouteAdmission,'native-idle');assert.equal(last.nativeRefugeSequence,undefined);
+   assert.equal(last.contractDay,original.contractDay);assert.equal(last.personId,original.personId);
+   assert.deepEqual(state.ledger,initial.ledger);assert.deepEqual(f.faults,[]);
+  }finally{release();await f.close();}
+ });
+}
