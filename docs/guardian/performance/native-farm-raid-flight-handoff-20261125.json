@@ -310,6 +310,54 @@
       }
     }
   ],
+  "cadenceAttribution": {
+    "refreshHz": 30,
+    "extractor": {
+      "path": ".cache/cut-flee-trace.py",
+      "sha256": "c683a87ec102517ee26a5636993f59b90e3a1f908502df72d1588fa8e839d435"
+    },
+    "active": {
+      "cut": {
+        "path": ".cache/native-farm-flee-acquired-clock-nvidia-20261125.cuts.json",
+        "sha256": "4e8bf1b4f30fa71d12a9280c9e6f393a5d5aa26bc2bdce7d169f710cab8b7303"
+      },
+      "sequence": 29,
+      "intervalMs": 36.699951171875,
+      "replay": true,
+      "opportunities": 1,
+      "vizBeginFrameMsFromPreviousDraw": 33.144,
+      "drawBeginFrameMsFromPreviousDraw": 36.608,
+      "drawPresentMsFromPreviousDraw": 36.649,
+      "drawWorkerMicrotask": {
+        "startMsFromPreviousDraw": 33.14,
+        "wallMs": 3.439,
+        "cpuMs": 3.43
+      }
+    },
+    "pending": {
+      "cut": {
+        "path": ".cache/native-farm-flee-pending-handoff-nvidia-20261125.cuts.json",
+        "sha256": "5cd707c84cadd71f784526f9baa679d3bdd97df13b2614a5cb397f5c8b2283c3"
+      },
+      "sequence": 6,
+      "intervalMs": 35.5,
+      "replay": true,
+      "opportunities": 1,
+      "vizBeginFrameMsFromPreviousDraw": 33.19,
+      "drawBeginFrameMsFromPreviousDraw": 35.544,
+      "drawPresentMsFromPreviousDraw": 35.626,
+      "drawWorkerMicrotask": {
+        "startMsFromPreviousDraw": 32.46,
+        "wallMs": 3.054,
+        "cpuMs": 2.901,
+        "writePixels": {
+          "startMsFromPreviousDraw": 33.011,
+          "wallMs": 2.362,
+          "cpuMs": 2.288
+        }
+      }
+    }
+  },
   "nativeRegression": {
     "passed": 364,
     "failed": 0,

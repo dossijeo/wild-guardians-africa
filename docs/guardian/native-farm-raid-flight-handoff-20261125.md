@@ -22,6 +22,12 @@ NVIDIA dibujó Stop24 con el ticket adquirido 4 en la secuencia 32, a 10,80 s. L
 
 Pasaron 364 pruebas de la selección nativa y, con el ajuste final del reloj, 109 pruebas de la selección de relevo y gráficos. El build de producto pasó en 52,04 s.
 
+## Cadencia de los dos relevos
+
+El máximo del caso activo corresponde a una repetición de la secuencia 29. Viz entregó BeginFrame a los 33,144 ms del dibujo previo. En ese momento el Draw Worker ejecutaba una microtarea de 3,439 ms de duración y 3,430 ms de CPU. El BeginFrame del mismo hilo llegó a los 36,608 ms e inició el dibujo a los 36,649 ms. La traza permite aislar esa ocupación del hilo. Queda por identificar la operación dentro de la microtarea.
+
+El caso de Farm pendiente alcanzó 35,50 ms en una repetición de la secuencia 6. La microtarea que coincidió con la entrega de Viz contenía una llamada de subida de textura `WritePixels` de 2,362 ms de duración y 2,288 ms de CPU en el Draw Worker. Ambos máximos contienen una sola oportunidad de presentación y un envío. Son medidas a 30 Hz tomadas en el hilo de dibujo. [Cortes y trazas](performance/native-farm-raid-flight-handoff-20261125.json).
+
 ## Trabajo pendiente
 
 El escenario de desierto carece de cultivos y el selector ordinario elige un centro en una consulta independiente sobre el estado de nacimiento. El corte llega a la solicitud de refugio y reserva el GO de huida hasta comprobar la ejecución del animal. La cohorte mixta necesita validar la residencia, la separación durante ambos corredores y el margen de encuentro de Game. La marcha hasta la aldea, el ataque al centro, Recovery, la activación ordinaria y C4 continúan abiertos.
