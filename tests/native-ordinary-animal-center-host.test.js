@@ -37,11 +37,17 @@ function residentSession(state) {
   return session;
 }
 
-function savedAttack() {
+function beforeRaid() {
   const state = deserialize(recorded.state);
   assert.equal(state.biome, 'desierto');
   assert.equal(state.workers.length, 0);
   assert.equal(state.plants.length, 0);
+  state.dayPlan = {done:false, at:state.time+.05, group:['warthog']};
+  return state;
+}
+
+function savedAttack() {
+  const state = beforeRaid();
   const session = residentSession(state);
   try {
     const nav = createSpatialNavigationMovement(session, state);
@@ -49,7 +55,6 @@ function savedAttack() {
     nav.raidView = recorded.raidView;
     nav.intentTaskPlanner = createEventDrivenTaskPlanner(session);
     nav.intentTaskPlanner.resetFromState(state);
-    state.dayPlan = {done:false, at:state.time+.05, group:['warthog']};
     for (let i = 0; i < 5 && !state.raid?.animals[0]?.targetId; i++) tick(state, .05, nav);
     assert.equal(state.raid.animals[0].targetId, 'structure-2');
     assert.equal(state.structures[0].hp, 600);
@@ -60,6 +65,71 @@ function savedAttack() {
 }
 
 const snapshot = savedAttack();
+
+test('the live Desert raid publishes a pending center approach and keeps the newborn still until GO', async () => {
+  const initial = beforeRaid();
+  let route, binding, release;
+  const hold = new Promise(resolve => { release = resolve; });
+  const world = await nativeProductionAuthority(initial, {
+    chunkKeys, qualifyAnimalCrop:true,
+    async onReady(record) {
+      if (record.kind === 'animal-crop-route' && !route) {
+        route = record;
+        await hold;
+      }
+    },
+    onCommit(_record, data) { binding ??= data.nativeAnimalCropRouteBinding; },
+  });
+  try {
+    world.command({kind:'setNavigationView', view});
+    assert.equal(world.snapshot().raid, null);
+    const emptyClock = world.host.inspect().nativeCausalClock;
+    assert.equal(emptyClock.committedThrough, initial.elapsed);
+    const newborn = world.advance().raid.animals[0];
+    const spawned = world.snapshot().events.filter(event => event.type === 'RaidSpawned');
+    assert.equal(spawned.length, 1);
+    assert.equal(newborn.id, spawned[0].raidFacts.actors[0].id);
+    assert.equal(newborn.targetId, 'structure-2');
+    assert.deepEqual([newborn.x,newborn.z], [newborn.spawn.x,newborn.spawn.z]);
+    await untilProduction(world, () => !!route);
+    assert.equal(route.resources.reference.purpose, 'center');
+    for (let i = 0; i < 4; i++) {
+      const retained = world.advance().raid.animals[0];
+      await world.present();
+      assert.deepEqual([retained.x,retained.z,retained.motionPhase], [newborn.x,newborn.z,newborn.motionPhase]);
+      assert.equal(binding, undefined);
+    }
+    release();
+    await untilProduction(world, () => binding &&
+      world.host.inspect().nativeRouteFrame?.worldBoundary?.ticket === binding.reference.worldBoundary.ticket);
+    const acquiredClock = world.host.inspect().nativeCausalClock;
+    assert.deepEqual([acquiredClock.authorityEpoch,acquiredClock.nativeSession],
+      [emptyClock.authorityEpoch,emptyClock.nativeSession]);
+    assert(acquiredClock.intentSequence > emptyClock.intentSequence);
+    assert.equal(captureNativeRoutePickFrame(world.host.inspect()).getAnimalCropAge(binding.preparedReference),0);
+    const moving = world.advance().raid.animals[0];
+    assert.notDeepEqual([moving.x,moving.z], [newborn.x,newborn.z]);
+    assert.deepEqual(world.faults, []);
+  } finally {
+    release();
+    await world.close();
+  }
+});
+
+test('a live Desert raid without qualification keeps its ordinary approach', async () => {
+  const world = await nativeProductionAuthority(beforeRaid(), {chunkKeys});
+  try {
+    world.command({kind:'setNavigationView', view});
+    const animal = world.advance().raid.animals[0];
+    assert.equal(animal.targetId, 'structure-2');
+    assert.notDeepEqual([animal.x,animal.z], [animal.spawn.x,animal.spawn.z]);
+    await world.present();
+    assert.deepEqual(world.records, []);
+    assert.deepEqual(world.faults, []);
+  } finally {
+    await world.close();
+  }
+});
 
 test('the graphical publication after GO must confirm the typed target and attack', () => {
   const animal = {id:'animal-3',species:'warthog',targetId:'plant-2',status:'walking'};

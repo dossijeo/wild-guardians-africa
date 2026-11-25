@@ -91,6 +91,25 @@ test('bootstrap accepts current native permissions without replaying retired ass
 
 const clock=(clockSequence=1,committedThrough=10,extra={})=>({protocolVersion:2,clockVersion:1,authorityEpoch:'authority-a',
  nativeSession:1,clockSequence,intentSequence:1,committedThrough,rate:1,paused:false,reanchor:true,anchorLogicalTime:10,anchorAbsoluteMs:1000,...extra});
+test('a live center birth requires a fresh actor in the same empty causal cohort',()=>{
+  const config={authorityEpoch:'authority-a',initialTime:10};
+  const request={version:1,purpose:'center',actorId:7,bodyId:2,targetId:4,centerId:4,
+    centerX:60,centerZ:0,targetX:60,targetZ:0,x:110,z:10,radius:1.1,yaw:0,phase:0,
+    authorityEpoch:'authority-a',nativeSession:1,requestSequence:1};
+  const birth={...assigned(),type:'IntentChanged',state:6,targetId:4,routeHandle:null,pendingAnimalCrop:request};
+  const empty=createNativeRouteControl(config);
+  assert.throws(()=>empty.accept(birth),/empty causal cohort/);
+  empty.acceptClock(clock(1,10,{intentSequence:0}));
+  for(const change of [{nativeSession:2},{actorId:8},{requestSequence:2}]){
+    const before=empty.status();
+    assert.throws(()=>empty.accept({...birth,pendingAnimalCrop:{...request,...change}}),/empty causal cohort/);
+    assert.deepEqual(empty.status(),before);
+  }
+  assert.equal(empty.accept(birth),true);
+  assert.equal(empty.status().sequence,1);
+  assert.equal(empty.status().active,0);
+  assert.throws(()=>empty.accept({...birth,sequence:2,pendingAnimalCrop:{...request,requestSequence:2}}),/empty causal cohort/);
+});
 test('causal control bounds time independently of prepared clocks and accepts pause/rate at non-rewinding native boundaries',()=>{
  const c=createNativeRouteControl({authorityEpoch:'authority-a'});c.accept(assigned());c.acceptClock(clock());
  assert.equal(evaluateRemoteClock(c.clockLease(0),9000),10);

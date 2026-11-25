@@ -3653,6 +3653,35 @@ int nav_intent_register_attack_site(double actorId,double targetId,
                                     double radius,int timingMode=0){
   return registerAttackSite(actorId,targetId,startX,startZ,count,approachX,approachZ,radius,timingMode,true);
 }
+static int requestAttackCenterRoute(double actor,double target,const SpatialBodyView& origin,
+                                   double body,int count,double approachX,double approachZ,
+                                   double entering,double yaw,double phase){
+  const int site=registerAttackSite(actor,target,origin.x,origin.z,count,
+    approachX,approachZ,origin.r,0,false);
+  if(site!=1)return site;
+  const int request=nav_animal_route_request(actor,body,target,entering,yaw,phase);
+  if(request!=1){
+    auto& s=state();
+    releaseIntent(s,uint64_t(actor),PlanningState::Cancelled,false);
+    s.activeIntents.erase(uint64_t(actor));
+  }
+  return request;
+}
+// A live birth publishes the initial resource request without an executable route.
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_birth(double session,double actor,double targetId,double bodyId,
+    int count,double approachX,double approachZ,double yaw,double phase){
+  auto& s=state();
+  if(!integer(session)||!integer(actor)||!integer(targetId)||!integer(bodyId)||
+     count<=0||!coordinate(approachX)||!coordinate(approachZ)||
+     !std::isfinite(yaw)||!std::isfinite(phase)||phase<0)return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  const auto target=s.targets.find(uint64_t(targetId));
+  SpatialBodyView origin;
+  if(s.session!=session||!s.activeIntents.empty()||s.finishedAnimalStrike||
+     target==s.targets.end()||!intactAttackCenter(target->second)||spatial_body_count()!=1||
+     !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1)return -2;
+  return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
+}
 // A center can survive a strike. Its next action starts at the same validated
 // site, with a fresh preparation and the previous action's same physical body.
 EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double attackId,double targetId,double approachX,double approachZ){
@@ -3666,15 +3695,10 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double a
   if(finished.attack!=attackId||finished.target!=targetId||finished.target!=finished.center||
      target==s.targets.end()||!intactAttackCenter(target->second)||
      finished.x!=float(approachX)||finished.z!=float(approachZ))return -2;
-  const int site=registerAttackSite(actorId,targetId,finished.x,finished.z,0,
-    approachX,approachZ,finished.radius,0,false);
-  if(site!=1)return site;
-  const int request=nav_animal_route_request(actorId,double(finished.body),targetId,0,finished.yaw,finished.phase);
-  if(request!=1){
-    releaseIntent(s,finished.actor,PlanningState::Cancelled,false);
-    s.activeIntents.erase(finished.actor);
-  }
-  return request;
+  SpatialBodyView origin;
+  if(!spatialReadBody(finished.body,origin))return -2;
+  return requestAttackCenterRoute(actorId,targetId,origin,double(finished.body),0,
+    approachX,approachZ,0,finished.yaw,finished.phase);
 }
 // Capture only crop groups whose interaction regions were proven unreachable
 // when this wall intention began. A later topology event can then ask whether

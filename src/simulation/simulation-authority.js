@@ -35,7 +35,7 @@ import {tutorialHandTarget} from '../tutorial/tutorial-hand-target.js';
 import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
-import {assignRaidTarget,targetFor,nativeCropRouteSubject} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropRouteSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -63,6 +63,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
+  let liveCenterClockArmed=false;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
@@ -164,6 +165,36 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     installNativeProduction();
    }catch(error){if(nativeBodies!==bodies)bodies.dispose();throw error;}
   }
+  function prepareLiveCenterAttack(event){
+   if(!liveCenterClockArmed||nativeBodies||physicsInitializing||physics?.actorIds.length||!nativeCenterAttackCohort(game)||
+      !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
+      game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==0)return;
+   const [animal]=game.raid.animals,[center]=game.structures;
+   if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering')return;
+   const selected=targetFor(game,animal,nav);
+   if(selected?.target!==center||selected.shieldId||selected.native||!selected.approach.path?.length)return;
+   const bodies=createSpatialDynamicBodies(session.core.wasm);
+   try{
+    const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
+    if(!planner.requestNativeCenterBirth(game,animal,selected,body))return;
+    assignRaidTarget(game,animal,{...selected,approach:{point:selected.approach.point,path:null}},nav);
+    nativeBodies=bodies;
+    if(planner.commitNativeCausalClock({paused:game.pauses.length>0}).status!=='committed')throw Error('Native center birth lacks its causal clock');
+    installNativeProduction();
+   }finally{if(nativeBodies!==bodies)bodies.dispose();}
+  }
+  function armLiveCenterClock(){
+   const plan=game.dayPlan;
+   if(liveCenterClockArmed||nativeBodies||game.raid||game.result||restoringPhysics||physicsInitializing||physics?.actorIds.length||
+      !session.core.wasm.nav_animal_plan_center_birth||!nativeCenterAttackCohort(game)||
+      !operational(game.structures[0])||
+      !plan||plan.done||plan.group?.length!==1||plan.group[0]!=='warthog')return;
+   // The Draw consumer needs the causal clock in its first baseline, while
+   // the cohort is still empty. RaidSpawned will add the first route request.
+   if(!['committed','unchanged'].includes(planner.commitNativeCausalClock({paused:!!game.pauses.length||!!game.result}).status))
+    throw Error('Native center birth cannot establish its initial clock');
+   liveCenterClockArmed=true;
+  }
   function admitPendingNativeBirths({force=false}={}){
    if(!nativeBodies||!nativeBirthsPending)return;
    const dependency=()=>`${nativeBodies.revision()}:${session.core.wasm.nav_intent_transition_sequence()}`;
@@ -187,7 +218,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Cinematic presentation is not restorable; do not persist its transient pause.
   function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&confirmedStateSaveAvailable(game);}
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
-  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned')prepareRaidFlightAnimal(event);events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
+  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
   const presentationJournal=createPresentationLifecycleJournal(game,observeGameEvents);
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;
@@ -632,7 +663,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     attachNativeIntentControl(port,transportSession){
       if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));
-      if(qualifyAnimalCrop===true)prepareColdNativeCrop();
+      if(qualifyAnimalCrop===true){prepareColdNativeCrop();armLiveCenterClock();}
       return nativeIntentControl.attach(port,transportSession).then(ready=>{nativeProduction?.wake();return ready;});
     },
     nativeIntentControlStatus:()=>nativeIntentControl.connections(),

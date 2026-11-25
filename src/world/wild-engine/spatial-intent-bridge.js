@@ -622,7 +622,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       const pendingCrop=data[at+1]===6&&data[at+13]===4&&owningState?.raid?.animals.some(animal=>numericId(animal.id)===data[at])?
         readPendingAnimalCrop(false):null;
       const birth=pendingCrop&&raidFlight?.requestSequence===pendingCrop.requestSequence?raidFlight.birth:null;
-      return {...((pendingCrop?.previousStrike||birth)&&pendingCrop.requestSequence===data[at+8]?
+      return {...((pendingCrop?.previousStrike||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
         {pendingAnimalCrop:pendingCrop,...(birth?{raidFlightBirth:birth}:{})}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
@@ -2823,10 +2823,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     wasm.nav_intent_replan_pending_routes();
     return true;
   };
-  const registerAttackIntent=(state,animal,target,path)=>{
-    if(!initialized||!state.raid||animal.targetId!==target.id||
-      !animal.reservation||state.raid.reservations[animal.reservation]!==animal.id)
-      throw Error('Animal attack must be confirmed before native registration');
+  const writeAttackRouteInput=(animal,path)=>{
     if(!Array.isArray(path)||path.length>4096||
       path.some(point=>!Number.isFinite(point.x)||!Number.isFinite(point.z)))
       throw TypeError('Expected a finite confirmed animal route');
@@ -2839,6 +2836,21 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         points[index*2]=path[index].x;points[index*2+1]=path[index].z;
       }
     }
+  };
+  const requestNativeCenterBirth=(state,animal,{target,approach},body)=>{
+    if(state!==owningState||!animalRouteV2||!nativeCenterAttackCohort(state)||target!==state.structures[0]||
+       state.raid?.animals[0]!==animal||animal.status!=='entering'||!approach.path?.length)return false;
+    syncBoundaryTime();
+    writeAttackRouteInput(animal,approach.path);
+    return wasm.nav_animal_plan_center_birth(wasm.nav_intent_session(),numericId(animal.id),
+      numericId(target.id),body,approach.path.length,approach.point.x,approach.point.z,
+      animal.heading??0,animal.motionPhase??0)===1;
+  };
+  const registerAttackIntent=(state,animal,target,path)=>{
+    if(!initialized||!state.raid||animal.targetId!==target.id||
+      !animal.reservation||state.raid.reservations[animal.reservation]!==animal.id)
+      throw Error('Animal attack must be confirmed before native registration');
+    writeAttackRouteInput(animal,path);
     if(!animal.approach||!Number.isFinite(animal.approach.x)||
        !Number.isFinite(animal.approach.z))
       throw Error('Confirmed animal attack has no finite approach point');
@@ -3207,7 +3219,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     startNativeTaskSettlementAfterGpuQuiescence,nativeTaskSettlementBinding,nativeTaskSettlementBindings,nativeSettledWorkerExecution,prepareNativeTaskSettlementProposal,captureNativeTaskSettlementProposal,revalidateNativeTaskSettlementProposal,cancelNativeTaskSettlementProposal,
     nativeTaskConsequenceBinding,nativeDeliveryExecution,startNativeTaskConsequenceAfterGpuQuiescence,prepareNativeTaskConsequenceProposal,captureNativeTaskConsequenceProposal,revalidateNativeTaskConsequenceProposal,cancelNativeTaskConsequenceProposal,
     projectRouteProgress,processEventBoundary,requestReroute,
-    registerAttackIntent,planAttackCrop,planAttackWall,replanAttackRoute,
+    registerAttackIntent,requestNativeCenterBirth,planAttackCrop,planAttackWall,replanAttackRoute,
     planRetreatRoute,planHomeRoute,
     cancelHomeIntent:actorId=>wasm.nav_intent_cancel_home(numericId(actorId))===1,
     reconsiderWallOpportunity,wallOpportunityCandidates,
@@ -4453,6 +4465,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       pendingNativeChanges=true;
       pendingAttackRoutes.delete(numericId(args[1].id));
       return result;
+    },
+    requestNativeCenterBirth:(state,animal,selection,body)=>{
+      if(!bridge.requestNativeCenterBirth(state,animal,selection,body))return false;
+      pendingNativeChanges=true;
+      return true;
     },
     planAttackCrop:(state,animal)=>{
       if(state!==observedTaskState&&state!==sourceState)return null;
