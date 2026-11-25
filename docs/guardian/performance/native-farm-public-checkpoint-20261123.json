@@ -624,7 +624,29 @@
       ],
       "drawWorkerDeliveryAtMs": 46.379638671875
     },
-    "scope": "Swap and SyncToken scheduler flow. Shader CPU spans overlap the interval. Why the release job waited in the queue and its producer identity remain open."
+    "releaseQueueWork": {
+      "extraction": {
+        "file": "farm-begin-frame-critical-work.json",
+        "sha256": "431210f68b0514db3c45dddc6835f102d7c7b41e220e6c7140dfc8891af7bc8a"
+      },
+      "thread": "CrGpuMain",
+      "intervalMs": 76.942138671875,
+      "levels": {
+        "Scheduler::RunTask": {
+          "spans": 25,
+          "overlapMs": 76.65771484375
+        },
+        "WebGPUDecoderImpl::HandleDawnCommands": {
+          "spans": 26,
+          "overlapMs": 75.921142578125
+        },
+        "DeviceBase::APICreateShaderModule": {
+          "spans": 7,
+          "overlapMs": 70.377197265625
+        }
+      }
+    },
+    "scope": "Swap and SyncToken scheduler flow along with measured occupancy on the same CPU thread. Work levels are nested. Shader producer identity remains open."
   },
   "firstAttempt": {
     "file": "native-moving-farm-checkpoint-physical-20261123.failure.json",
