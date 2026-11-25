@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Escudo puede caducar mientras dos civiles con Farm23 adquirido conservan sus cuerpos y relojes. NVIDIA presentó la baja del polígono 11 a 10,526 s y confirmó el avance posterior de ambos trabajadores y el drenaje. La calificación sigue limitada a desarrollo y sin incursión. [Recorrido y recibo](webgpu-shield.md#caducidad-con-dos-trabajadores-en-farm23).
+
 El Worker de edificios prepara las esferas exactas del cuerpo dañado y de la ceniza. En el primer golpe con portón a 60 Hz, el tramo de daño bajó de 23,50 a 9,30 ms y el intervalo presentado de 134,00 a 115,30 ms. C4 sigue abierto. [Contraste y recibo](native-desert-mixed-flight-center-20261125.md#esferas-del-cuerpo-dañado-y-la-ceniza).
 
 La incursión con portón también conserva al trabajador cuando RaidSpawned cancela Farm23 antes de adquirirlo. Home19 acredita el refugio con la hoja cerrada. NVIDIA confirmó el READY tardío, la ruina, la ausencia tras Retreat y el drenaje. [Recibo del caso pendiente](native-desert-mixed-flight-center-20261125.md#farm-pendiente-al-nacer-la-incursión).

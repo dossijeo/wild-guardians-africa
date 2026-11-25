@@ -1,4 +1,6 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
+import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
+import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
 import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
@@ -391,26 +393,46 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
   }
   function civilShieldPhysicsAvailable(){return !restoringPhysics&&!physicsInitializing&&!physics?.actorIds.length;}
+  function captureShieldExpiryWorker(worker){
+    const {id,nativeRouteAdmission:admission}=worker,bodyId=nativeBodies.id(id);
+    if(bodyId===undefined)return null;
+    let read,same,status;
+    if(admission==='native-farm-arrival'){
+      read=()=>planner.nativeFarmArrivalRouteBinding(id);
+      same=sameNativeFarmArrivalRouteAttestation;
+      status='arriving';
+    }else if(admission==='native-idle-stroll'){
+      read=()=>planner.nativeIdleStrollBinding(id);
+      same=sameNativeIdleStrollAttestation;
+      status='idle';
+    }else if(admission==='native-idle'){
+      const cycle=planner.nativeIdleCycleBinding(id);
+      if(cycle){
+        read=()=>planner.nativeIdleCycleBinding(id);
+        same=sameNativeIdleCycleAttestation;
+      }else{
+        read=()=>planner.nativeInitialIdleBodyState(id)?.binding;
+        same=(a,b)=>a.bodySequence===b?.bodySequence&&sameNativeInitialIdleBodyReference(a.reference,b.reference)&&
+          sameNativeInitialIdleBodyReference(a.preparedReference,b.preparedReference);
+      }
+      status='idle';
+    }else return null;
+    const binding=read();
+    if(binding?.reference.bodyId!==bodyId)return null;
+    return ()=>worker.status===status&&worker.nativeRouteAdmission===admission&&nativeBodies.id(id)===bodyId&&same(binding,read());
+  }
   async function expireCivilShield(spell,advanceToExpiry){
     if(shieldAdvance)throw Error('Native shield expiry already active');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
     shieldAdvance=owner;
-    const worker=game.workers[0],admission=worker?.nativeRouteAdmission;
-    let motionCurrent=()=>admission==='native-idle'&&worker.status==='idle';
-    if(admission==='native-farm-arrival'){
-      const binding=planner.nativeFarmArrivalRouteBinding(worker.id);
-      motionCurrent=()=>worker.status==='arriving'&&sameNativeFarmArrivalRouteAttestation(binding,planner.nativeFarmArrivalRouteBinding(worker.id));
-    }else if(admission==='native-idle-stroll'){
-      const binding=planner.nativeIdleStrollBinding(worker.id);
-      motionCurrent=()=>worker.status==='idle'&&sameNativeIdleStrollAttestation(binding,planner.nativeIdleStrollBinding(worker.id));
-    }
-    const civil=()=>civilShieldPhysicsAvailable()&&!game.raid&&game.workers.length===1&&game.workers[0]===worker&&
-      worker.nativeRouteAdmission===admission&&motionCurrent();
+    const workers=game.workers.slice(),motion=workers.map(captureShieldExpiryWorker);
+    const civil=()=>civilShieldPhysicsAvailable()&&!game.raid&&workers.length>0&&game.workers.length===workers.length&&
+      workers.every((worker,index)=>game.workers[index]===worker&&motion[index]?.());
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!civil()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
        ['suspended','quiescing'].includes(nativeProduction.status().phase))
-      throw Error('Native shield expiry requires an isolated civil worker and its resource owner');
+      throw Error('Native shield expiry requires acquired civil workers and their resource owner');
     const polygonId=session.shieldPolygonId(spell.id);
     if(!polygonId)throw Error('Native shield expiry lacks its polygon');
     const current=()=>!closed&&!owner.controller.signal.aborted&&shieldAdvance===owner&&

@@ -13,11 +13,12 @@ const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepare
 
 // Actual authority and both production ports, existing remote draw Host and
 // retained packets; the GPU queue is deterministic, not hardware/visual QA.
-export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
+export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,drawAllFarmActors=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{qualifyFarmFlee,qualifyAnimalCrop,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
  const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  const {port1,port2}=new MessageChannel(),records=[];
+ const farmGroups=new Map();
  const clock={version:1,epoch:0,elapsed:state.elapsed,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:state.elapsed,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-state.elapsed}]};
  const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
   if(method==='prepareNativeShieldGeometry'){
@@ -51,7 +52,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
    const lastActorPacket=records.findLast(item=>item.committed&&item.kind!=='shield');
-   const packet=lastActorPacket?.kind==='home-arrival'?
+   const packet=drawAllFarmActors?await prepareExistingGroup(graphics,[...farmGroups.values()],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):lastActorPacket?.kind==='home-arrival'?
     await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):
     await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
    packet.presented.catch(()=>{});record.packet=packet;
@@ -70,7 +71,16 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   const stationary=['initial-idle-body','idle-cycle','task-settlement'].includes(kind),acting=kind==='task-action',arrival=kind==='home-arrival';
   const stopped=['farm-arrival-stop','task-route-stop','idle-stroll-stop'].includes(kind);
   const crop=kind.startsWith("animal-crop-");
-  if(!crop&&!arrival&&!stopped&&!barrier)graphics.client.registerClockBinding(graphics.buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
+  let farmGroup=null;
+  if(!crop&&!arrival&&!stopped&&!barrier){
+   let buffer=graphics.buffer;
+   if(drawAllFarmActors&&kind==='farm-arrival'){
+    buffer=graphics.client.device.createBuffer({size:16,usage:72});
+    graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
+    farmGroup=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+   }
+   graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:stationary?resources.worldBoundary.effectiveTime:resources.startTime,...(stationary||acting?{}:{resourceEnd:resources.endTime}),[clockField]:reference});
+  }
   const metadata=barrier?{nativeBarrierAdditionTemplate:reference}:undefined;
   const previousStop=barrier?records.findLast(prior=>prior.kind==='farm-arrival-stop'&&prior.committed):null;
   if(previousStop)await previousStop.packet.presented;
@@ -95,7 +105,10 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   const activeHome=records.findLast(r=>r.committed&&(r.kind==='home-route'||r.kind==='home-arrival'));
   const gateGroups=record.gateGroups??(activeHome?.kind==='home-route'?activeHome.gateGroups:null);
   let packet;
-  if(gateGroups?.length&&(kind==='home-route'||arrival)){
+  if(farmGroup){
+   const groups=new Map(farmGroups);groups.set(reference.actorId,farmGroup);
+   packet=await prepareExistingGroup(graphics,[...groups.values()],{clock,nativeWorldBoundary:resources.worldBoundary,nativeFarmArrivalTemplate:reference},options.signal);
+  }else if(gateGroups?.length&&(kind==='home-route'||arrival)){
    const groups=arrival?[...gateGroups]:[graphics.group,...gateGroups];
    if(peer)groups.push(peer.cropGroup);
    packet=await prepareExistingGroup(graphics,groups,
@@ -104,7 +117,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record);}catch(error){packet.abort();throw error;}
-  return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);if(record.committed)onCommit?.(record,data);return record.committed;},abort(){record.aborted=true;packet.abort();}};
+  return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);if(record.committed){if(farmGroup)farmGroups.set(reference.actorId,farmGroup);onCommit?.(record,data);}return record.committed;},abort(){record.aborted=true;packet.abort();}};
  }});
  let sequence=0;
  const result={retireResourceEndpoint:()=>endpoint.dispose(),authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,

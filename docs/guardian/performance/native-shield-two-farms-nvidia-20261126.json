@@ -1,0 +1,499 @@
+{
+  "base": "6beeafe92c2955b2661ba501a1aaa843a94bb723",
+  "scope": "Caducidad civil con dos Farm23 adquiridas, driver de bestias sin actores; qualifyShieldExpiry de desarrollo.",
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 112.39999999990687
+    }
+  },
+  "observedDisplayHz": 30,
+  "recipe": ".cache/native-shield-two-farms-physical.mjs con QA_NATIVE_TRACE=true",
+  "sourceSHA256": "701c314477c4854fe060a11925f7bcd35614735f315aa88a8d8d07e0dfe505fd",
+  "physicalTrace": {
+    "dataLossOccurred": false,
+    "traceFormat": "json",
+    "streamCompression": "gzip",
+    "browserVersion": "158.0.4370.33",
+    "options": {
+      "traceConfig": {
+        "recordMode": "recordUntilFull",
+        "traceBufferSizeInKb": 524288,
+        "includedCategories": [
+          "toplevel",
+          "blink",
+          "blink.user_timing",
+          "devtools.timeline",
+          "v8.execute",
+          "gpu",
+          "viz",
+          "cc",
+          "disabled-by-default-gpu.dawn",
+          "gpu.dawn",
+          "gpu.dawn.validation",
+          "gpu.dawn.recording"
+        ]
+      },
+      "transferMode": "ReturnAsStream",
+      "streamFormat": "json",
+      "streamCompression": "gzip",
+      "bufferUsageReportingInterval": 1000
+    },
+    "peakBufferUsage": 0.1163448616862297,
+    "usageReports": 17,
+    "collectionComplete": true,
+    "tracePath": ".cache/shield-two-farms/physical-prepared-ref.trace.json.gz",
+    "exportedBytes": 19040326,
+    "sha256": "770b039b09bc845102d6868d0485821a3c0c9ab1043f10ce01a0e3995fe064fc"
+  },
+  "control": {
+    "firstRunFailureSHA256": "d268f96dcb7419ee1f241a600a67ab9457c69c51db22c0de10d15d5f7a117bf9",
+    "diagnosis": "La primera sonda comparaba la referencia adquirida con la referencia preparada escrita por Draw. El control corregido coteja preparedReference sin omitir las adquisiciones."
+  },
+  "bodyIds": [
+    1,
+    2
+  ],
+  "acquisitions": [
+    {
+      "kind": "native-farm-arrival-route-attestation",
+      "version": 1,
+      "projectionVersion": 1,
+      "assignmentSequence": 3,
+      "reference": {
+        "kind": "native-farm-arrival-route-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "sourceRequest": {
+          "kind": "native-farm-arrival-request-reference",
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "bodyFlags": 1,
+          "requestSequence": 2,
+          "requestedAt": 10,
+          "centerId": 2,
+          "profile": 1,
+          "workerProfile": "youngFemale",
+          "pose": {
+            "x": -17.8,
+            "z": 0.2,
+            "yaw": 0.37,
+            "radius": 0.28,
+            "runPhase": 23.25,
+            "walkPhase": 7.125,
+            "carryPhase": 9.5,
+            "runRemaining": 40
+          },
+          "goal": {
+            "x": -5.7999999999999945,
+            "z": 0.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 0.2,
+            "arrivalRadius": 2
+          }
+        },
+        "destination": {
+          "x": -6,
+          "z": 2.189974784851074
+        },
+        "motionFlags": 0,
+        "distance": 16.092867927623544,
+        "expectedRouteHandle": {
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 2
+        },
+        "sourceControlSequence": 2,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 10
+        },
+        "endTime": 24.900803636688465
+      },
+      "preparedReference": {
+        "kind": "native-farm-arrival-route-reference",
+        "version": 1,
+        "actorId": 900011,
+        "bodyId": 1,
+        "sourceRequest": {
+          "kind": "native-farm-arrival-request-reference",
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "actorId": 900011,
+          "bodyId": 1,
+          "bodyFlags": 1,
+          "requestSequence": 2,
+          "requestedAt": 10,
+          "centerId": 2,
+          "profile": 1,
+          "workerProfile": "youngFemale",
+          "pose": {
+            "x": -17.8,
+            "z": 0.2,
+            "yaw": 0.37,
+            "radius": 0.28,
+            "runPhase": 23.25,
+            "walkPhase": 7.125,
+            "carryPhase": 9.5,
+            "runRemaining": 40
+          },
+          "goal": {
+            "x": -5.7999999999999945,
+            "z": 0.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 0.2,
+            "arrivalRadius": 2
+          }
+        },
+        "destination": {
+          "x": -6,
+          "z": 2.189974784851074
+        },
+        "motionFlags": 0,
+        "distance": 16.092867927623544,
+        "expectedRouteHandle": {
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "session": 1,
+          "slot": 0,
+          "generation": 2
+        },
+        "sourceControlSequence": 2,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 10
+        },
+        "endTime": 24.900803636688465
+      },
+      "gateIds": []
+    },
+    {
+      "kind": "native-farm-arrival-route-attestation",
+      "version": 1,
+      "projectionVersion": 1,
+      "assignmentSequence": 6,
+      "reference": {
+        "kind": "native-farm-arrival-route-reference",
+        "version": 1,
+        "actorId": 1000001,
+        "bodyId": 2,
+        "sourceRequest": {
+          "kind": "native-farm-arrival-request-reference",
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "actorId": 1000001,
+          "bodyId": 2,
+          "bodyFlags": 1,
+          "requestSequence": 5,
+          "requestedAt": 10,
+          "centerId": 900097,
+          "profile": 1,
+          "workerProfile": "olderMale",
+          "pose": {
+            "x": -17.8,
+            "z": 6.2,
+            "yaw": 0,
+            "radius": 0.28,
+            "runPhase": 0,
+            "walkPhase": 0,
+            "carryPhase": 0,
+            "runRemaining": 105.80409353316266
+          },
+          "goal": {
+            "x": -5.7999999999999945,
+            "z": 16.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 16.2,
+            "arrivalRadius": 2
+          }
+        },
+        "destination": {
+          "x": -5.981071472167969,
+          "z": 14.208213806152344
+        },
+        "motionFlags": 0,
+        "distance": 14.354036191498201,
+        "expectedRouteHandle": {
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 2
+        },
+        "sourceControlSequence": 5,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 10
+        },
+        "endTime": 23.290774251387223
+      },
+      "preparedReference": {
+        "kind": "native-farm-arrival-route-reference",
+        "version": 1,
+        "actorId": 1000001,
+        "bodyId": 2,
+        "sourceRequest": {
+          "kind": "native-farm-arrival-request-reference",
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "actorId": 1000001,
+          "bodyId": 2,
+          "bodyFlags": 1,
+          "requestSequence": 5,
+          "requestedAt": 10,
+          "centerId": 900097,
+          "profile": 1,
+          "workerProfile": "olderMale",
+          "pose": {
+            "x": -17.8,
+            "z": 6.2,
+            "yaw": 0,
+            "radius": 0.28,
+            "runPhase": 0,
+            "walkPhase": 0,
+            "carryPhase": 0,
+            "runRemaining": 105.80409353316266
+          },
+          "goal": {
+            "x": -5.7999999999999945,
+            "z": 16.2,
+            "centerX": -10.75499877929687,
+            "centerZ": 16.2,
+            "arrivalRadius": 2
+          }
+        },
+        "destination": {
+          "x": -5.981071472167969,
+          "z": 14.208213806152344
+        },
+        "motionFlags": 0,
+        "distance": 14.354036191498201,
+        "expectedRouteHandle": {
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "session": 1,
+          "slot": 1,
+          "generation": 2
+        },
+        "sourceControlSequence": 5,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 10
+        },
+        "endTime": 23.290774251387223
+      },
+      "gateIds": []
+    }
+  ],
+  "owner": {
+    "spellId": "two-farm-expiry",
+    "polygonId": 11
+  },
+  "heldGameElapsed": 10.49999999999999,
+  "expiryReady": {
+    "kind": "shield-expiry-ready-held",
+    "id": 3,
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 10.52599999999999
+    },
+    "at": 1795647715983.5
+  },
+  "removal": {
+    "kind": "shield-expiry-commit",
+    "id": 3,
+    "data": {
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 10.52599999999999
+      },
+      "resources": {
+        "version": 1,
+        "nativeSession": 1,
+        "ticket": 5,
+        "effectiveTime": 10.52599999999999,
+        "kind": 4,
+        "chunks": [],
+        "removed": [],
+        "phase": "committed",
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+          "nativeSession": 1,
+          "ticket": 5,
+          "effectiveTime": 10.52599999999999
+        },
+        "nativeShield": {
+          "spell": {
+            "id": "two-farm-expiry",
+            "kind": "shield",
+            "x": -17.8,
+            "z": 0.2,
+            "radius": 1.95,
+            "remaining": 0
+          },
+          "polygonId": 11
+        }
+      }
+    },
+    "at": 1795647716357.4
+  },
+  "firstSubmitted": {
+    "at": 1795647716371,
+    "sequence": 29,
+    "trigger": "raf",
+    "nativeWorldBoundary": {
+      "version": 1,
+      "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+      "nativeSession": 1,
+      "ticket": 5,
+      "effectiveTime": 10.52599999999999
+    },
+    "intervalMs": 33.199951171875,
+    "drawMs": 2.300048828125,
+    "replay": false,
+    "clockElapsed": 10.549999999999988,
+    "safeUntil": 10.549999999999988,
+    "cameraVersion": null
+  },
+  "clocks": {
+    "before": [
+      {
+        "actor": 900011,
+        "body": 1,
+        "executionEpoch": 10,
+        "relativeTime": 0
+      },
+      {
+        "actor": 1000001,
+        "body": 2,
+        "executionEpoch": 10,
+        "relativeTime": 0
+      }
+    ],
+    "held": [
+      {
+        "actor": 900011,
+        "body": 1,
+        "executionEpoch": 10,
+        "relativeTime": 0.5259999632835388
+      },
+      {
+        "actor": 1000001,
+        "body": 2,
+        "executionEpoch": 10,
+        "relativeTime": 0.5259999632835388
+      }
+    ],
+    "after": [
+      {
+        "actor": 900011,
+        "body": 1,
+        "executionEpoch": 10,
+        "relativeTime": 0.6499999761581421
+      },
+      {
+        "actor": 1000001,
+        "body": 2,
+        "executionEpoch": 10,
+        "relativeTime": 0.6499999761581421
+      }
+    ],
+    "finalView": [
+      {
+        "actor": 900011,
+        "body": 1,
+        "executionEpoch": 10,
+        "relativeTime": 1.4999998807907104
+      },
+      {
+        "actor": 1000001,
+        "body": 2,
+        "executionEpoch": 10,
+        "relativeTime": 1.4999998807907104
+      }
+    ]
+  },
+  "checkpoint": {
+    "sequence": 42,
+    "elapsed": 11.499999999999968
+  },
+  "finalWorkers": [
+    {
+      "id": "worker-900011",
+      "x": -16.662842712474653,
+      "z": 0,
+      "nativeRouteAdmission": "native-farm-arrival"
+    },
+    {
+      "id": "worker-1000001",
+      "x": -16.448564937073115,
+      "z": 7.093321482273705,
+      "nativeRouteAdmission": "native-farm-arrival"
+    }
+  ],
+  "drain": {
+    "kind": "drained",
+    "receipt": {
+      "disposed": true
+    }
+  },
+  "sampleCount": 382,
+  "highestInterval": {
+    "at": 1795647715908.7,
+    "sequence": 27,
+    "trigger": "raf",
+    "nativeWorldBoundary": {
+      "version": 1,
+      "authorityEpoch": "dde222c0-674c-46ab-86f6-e1503519f713/1",
+      "nativeSession": 1,
+      "ticket": 4,
+      "effectiveTime": 10
+    },
+    "intervalMs": 37.699951171875,
+    "drawMs": 1.400146484375,
+    "replay": true,
+    "clockElapsed": 10.52599999999999,
+    "safeUntil": 10.52599999999999,
+    "cameraVersion": null
+  },
+  "limits": "Solo dos civiles en granja sin portón o incursión, pantalla 30 Hz. C4 y activación ordinaria pendientes.",
+  "regression": {
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "viteBuildSeconds": 47.79
+  }
+}

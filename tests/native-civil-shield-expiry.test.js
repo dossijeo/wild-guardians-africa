@@ -2,10 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {rational} from '../src/simulation/money.js';
 import {advanceReal,newGame,resume} from '../src/simulation/game.js';
+import {createPlant} from '../src/simulation/crops.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {Navigation} from '../src/world/navigation.js';
 import {nativeResourceAdmissionProfile} from '../src/world/native-resource-admission-profiles.js';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
+import {nativeFarmAuthoritySave} from './helpers/native-farm-authority-save.js';
 import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 
@@ -198,4 +200,102 @@ for(const [label,create,kind,field] of [
     assert.equal(f.records.filter(record=>record.kind===kind).length,1);
     assert.deepEqual(f.faults,[]);
   }finally{release();await f.close();}
+});
+
+const targetCenter='structure-900097';
+function twoFarmShieldState(){
+  return nativeFarmAuthoritySave({profile:'youngFemale',approach:true,configureState(s){
+    const worker=s.workers[0],original=s.structures.find(center=>center.id===worker.centerId);
+    const second={...original,id:targetCenter,z:original.z+16};
+    s.structures.push(second);
+    const point=centerServicePoint(second,s,.8),crop=createPlant('plant-900099','mijo',point.x+5,point.z,second.id);
+    for(const water of crop.water)water.status='manual';
+    s.plants.push(crop);
+    s.hiringPaidDay=s.day;
+    s.ledger.balance=rational(100000);
+    s.villages.find(village=>village.id===worker.villageId).entry={x:worker.x,z:worker.z+6};
+    s.spells.push({kind:'shield',id:'two-farm-expiry',x:worker.x,z:worker.z,radius:1.95,remaining:.126});
+  }}).state;
+}
+
+test('civil Shield expiry keeps both paid Farm workers on their acquired routes',async()=>{
+  const state=twoFarmShieldState();
+  let release;
+  const held=new Promise(resolve=>{release=resolve;});
+  const f=await nativeProductionAuthority(state,{chunkKeys,emptyBeastPhysics:true,qualifyShieldExpiry:true,drawAllFarmActors:true,
+    onReady:row=>row.resources?.kind===4?held:undefined});
+  try{
+    const farmRoutes=()=>f.records.filter(row=>row.kind==='farm-arrival'&&row.committed);
+    await untilProduction(f,()=>farmRoutes().length===1);
+    const hired=f.command({kind:'hireAdditional',id:'hire-before-shield-expiry',selection:{olderMale:1},centerId:targetCenter});
+    assert.equal(hired.value,true,hired.rejection);
+    await untilProduction(f,()=>farmRoutes().length===2);
+    let now=f.snapshot();
+    while(now.spells[0].remaining>.027){now=f.advance(.001);await f.present();}
+    const before=checkpoint(f),current=JSON.parse(before.snapshot),spell=current.spells[0];
+    const routes=farmRoutes().map(row=>row.resources.nativeFarmArrival);
+    const drawClocks=()=>f.host.inspect().nativeRouteFrame.bindings.filter(row=>row.nativeFarmArrival).sort((a,b)=>a.nativeFarmArrival.bodyId-b.nativeFarmArrival.bodyId);
+    const beforeClocks=drawClocks();
+    assert.deepEqual(beforeClocks.map(row=>row.nativeFarmArrival),routes);
+    assert.deepEqual(routes.map(route=>route.bodyId),[1,2]);
+    assert(current.workers.every(worker=>worker.nativeRouteAdmission==='native-farm-arrival'));
+    assert(spell.remaining>.02&&spell.remaining<.04);
+    let settled=false;
+    const pending=f.command({...advance,visualTerrain:true}).finally(()=>{settled=true;});
+    pending.catch(()=>{});
+    let ready;
+    await pump(f,()=>settled||!!(ready=f.records.find(row=>row.resources?.kind===4&&row.packet)));
+    if(settled)await pending;
+    assert(ready);
+    assert.equal(ready.committed,false);
+    assert.deepEqual(drawClocks().map(row=>row.nativeFarmArrival),routes);
+    assert.equal(ready.resources.effectiveTime,current.elapsed+spell.remaining);
+    assert.equal(ready.resources.nativeShield.polygonId,before.nativeAuthorityCheckpoint.shieldOwners[0].polygonId);
+    release();
+    let presented=false;
+    ready.packet.presented.then(()=>{presented=true;});
+    await pump(f,()=>presented);
+    const result=await pending,after=JSON.parse(result.snapshot);
+    assert.equal(result.stepsExecuted,2);
+    assert.equal(result.nativeWorldResources.length,1);
+    assert.equal(result.nativeWorldResources[0].kind,4);
+    assert.deepEqual(f.host.inspect().nativeRouteFrame.worldBoundary,ready.resources.worldBoundary);
+    const clocks=drawClocks();
+    assert.deepEqual(clocks.map(row=>row.nativeFarmArrival),routes);
+    assert.deepEqual(clocks.map(row=>row.executionEpoch),beforeClocks.map(row=>row.executionEpoch));
+    assert(clocks.every((row,i)=>row.relativeTime>beforeClocks[i].relativeTime));
+    assert.deepEqual(after.ledger,current.ledger);
+    assert.deepEqual(after.spells,[]);
+    for(const [index,worker] of after.workers.entries()){
+      const previous=current.workers[index];
+      assert.equal(worker.id,previous.id);
+      assert.equal(worker.nativeRouteAdmission,'native-farm-arrival');
+      assert(Math.hypot(worker.x-previous.x,worker.z-previous.z)>0);
+    }
+    assert.deepEqual(farmRoutes().map(row=>row.resources.nativeFarmArrival),routes);
+    assert.deepEqual(checkpoint(f).nativeAuthorityCheckpoint.shieldOwners,[]);
+    assert.deepEqual(f.faults,[]);
+  }finally{release();await f.close();}
+});
+
+test('Shield expiry cannot adopt an unacquired Farm worker into the civil cohort',async()=>{
+  const state=twoFarmShieldState();
+  let release;
+  const held=new Promise(resolve=>{release=resolve;});
+  const f=await nativeProductionAuthority(state,{chunkKeys,qualifyShieldExpiry:true,
+    onReady:row=>row.kind==='farm-arrival'&&row.resources.nativeFarmArrival.bodyId===2?held:undefined});
+  try{
+    await untilProduction(f,()=>f.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+    const hired=f.command({kind:'hireAdditional',id:'hire-with-shield-expiring',selection:{olderMale:1},centerId:targetCenter});
+    assert.equal(hired.value,true,hired.rejection);
+    let birth;
+    await pump(f,()=>!!(birth=f.records.find(row=>row.resources.nativeFarmArrival?.bodyId===2&&row.packet)));
+    let now=f.snapshot();
+    while(now.spells[0].remaining>.027){now=f.advance(.001);await f.present();}
+    assert.deepEqual(now.workers.map(worker=>worker.nativeRouteAdmission),['native-farm-arrival','pending-farm-arrival-resources']);
+    await assert.rejects(f.command(advance),/requires acquired civil workers/);
+    assert(!birth.committed);
+    assert(!f.records.some(row=>row.resources.kind===4));
+    assert.deepEqual(f.faults,[]);
+  }finally{f.authority.dispose();release();await f.close();}
 });
