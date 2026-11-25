@@ -57,7 +57,7 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
@@ -631,10 +631,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       remaining:BALANCE.spells.find(item=>item.id==='shield').duration_seconds};
     const minSequence=sequence,validate=()=>nativeCommandOwnerCurrent(owner)&&!duplicate()&&game.nextId===nextId&&
       !game.spells.some(item=>item.id===spell.id)&&!spellRejection(command,'shield');
-    return prepareNativeCommandCommit(owner,({retain,atCommitBoundary})=>planner.mutateNativeWorldAfterGpuQuiescence({
+    const civil=()=>!physics&&game.workers.length===1&&!game.raid&&['native-farm-arrival','native-idle'].includes(game.workers[0].nativeRouteAdmission);
+    const running=qualifyRunningShield&&civil();
+    const stage=(atCommitBoundary,prepareResources)=>planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'addPolygon',points:spatialShieldFootprint(spell),passMask:1},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
-      prepareResources:async({resources,signal})=>retain(await owner.resources.prepareNativeGateResources(resources,{signal,minSequence}),signal),
-      shield:{source:{spell,polygonId:null},validate,atCommitBoundary,project:proof=>{
+      prepareResources,
+      shield:{source:{spell,polygonId:null},validate:()=>validate()&&(!running||civil()),atCommitBoundary,project:proof=>{
         const adopt=session.prepareNativeShieldAdditionAdoption(spell,proof),sync=nav.setState;let adopted=false;
         nav.setState=next=>{
           const actual=next.spells.at(-1);
@@ -645,7 +647,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         };
         try{return cast(game,id,'shield',x,z,nav,selection)===true&&adopted;}finally{nav.setState=sync;}
       }}
-    }),{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
+    });
+    return prepareNativeCommandCommit(owner,async({retain,atCommitBoundary})=>{
+      if(!running)return stage(atCommitBoundary,async({resources,signal})=>retain(await owner.resources.prepareNativeGateResources(resources,{signal,minSequence}),signal));
+      // Only the hidden dome is retained while time advances. The FIFO head
+      // stages a new native preflight and records the whole scene at that time.
+      const geometry=await owner.resources.prepareNativeShieldGeometry({spell,polygonId:null},{signal:owner.controller.signal,minSequence});
+      try{
+        await retain(geometry,owner.controller.signal);
+        if(!validate()||!civil())return {status:'stale'};
+        return await stage(atCommitBoundary,({resources,signal})=>geometry.capture(resources,{signal,minSequence:sequence}));
+      }catch(error){
+        if(owner.controller.signal.aborted&&error?.name==='AbortError')return {status:'cancelled'};
+        throw error;
+      }finally{geometry.abort();}
+    },{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
   }
   async function prepareNativeStructureCommand(command){
     if(closed||shieldAdvance||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');

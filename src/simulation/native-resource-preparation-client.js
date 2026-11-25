@@ -1,3 +1,4 @@
+import {copyNativeShieldWorld,sameNativeShieldWorld} from '../world/native-shield-world.js';
 import {terrainStopProposalProtocol,hasOtherTerrainStopField} from './terrain-stop-reservation.js';
 import {nativeResourceAdmissionProfile} from '../world/native-resource-admission-profiles.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
@@ -22,7 +23,31 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
  function prepareNativeInitialIdleBodyResources(resources,options={}){if(resources?.kind!=='native-initial-idle-body-proposal')return Promise.reject(TypeError('Expected native initial Idle body proposal'));return prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true},'initial-idle-body');}
  function prepareNativeIdleCycleResources(resources,options={}){if(resources?.kind!=='native-idle-cycle-proposal')return Promise.reject(TypeError('Expected native Idle cycle proposal'));return prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true},'idle-cycle');}
  function prepareNativeIdleStrollResources(resources,options={}){if(resources?.kind!=='native-idle-stroll-proposal')return Promise.reject(TypeError('Expected native Idle stroll proposal'));return prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true},'idle-stroll');}
- async function prepareNativeResources(resources,{signal,minSequence=-1,terrainManifest,deferredStart=false,nativeBarrierWallEntities}={},resourceKind=null){
+ async function prepareNativeShieldGeometry(source,{signal,minSequence}){
+  const shield=copyNativeShieldWorld(source,3,{proposal:true});
+  if(!isRunning()||!hasDirectControl()||signal.aborted||!Number.isSafeInteger(minSequence)||minSequence<0)throw Error('Native Shield geometry unavailable');
+  const id=allocateId();let active=true;
+  function abort(){
+   if(!active)return;
+   active=false;signal.removeEventListener('abort',abort);
+   const item=pending.get(id);pending.delete(id);item?.reject(new DOMException('Shield geometry cancelled','AbortError'));
+   postMessage({kind:'abortNativeGateResources',id});
+  }
+  signal.addEventListener('abort',abort,{once:true});
+  try{
+   const ack=await request(id,{kind:'prepareNativeShieldGeometry',id,resources:shield,minSequence});
+   if(!active||ack?.version!==1||!sameNativeShieldWorld(shield,copyNativeShieldWorld(ack.shieldGeometry,3,{proposal:true})))throw Error('Invalid native Shield geometry receipt');
+   return {abort,valid:()=>active&&!signal.aborted,async capture(resources,options){
+    if(!active||signal.aborted||resources.kind!==3||!sameNativeShieldWorld(shield,resources.nativeShield))throw Error('Shield geometry belongs to another proposal');
+    // Transfer cancellation to the fresh packet on this same request.
+    const capturing=prepareNativeResources(resources,options,null,id);
+    const handle=await capturing;
+    if(!active){handle.abort();throw Error('Shield geometry cancelled during capture');}
+    active=false;signal.removeEventListener('abort',abort);return handle;
+   }};
+  }catch(error){abort();throw error;}
+ }
+ async function prepareNativeResources(resources,{signal,minSequence=-1,terrainManifest,deferredStart=false,nativeBarrierWallEntities}={},resourceKind=null,geometryId=null){
   const resumed=resourceKind!==null,stop=resumed?null:terrainStopProposalProtocol(resources);
   const barrier=resourceKind==='barrier-addition';
   const profile=stop?null:nativeResourceAdmissionProfile(resourceKind??'resume');
@@ -32,10 +57,10 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
   if(!isRunning()||!hasDirectControl()||signal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Native gate resources require direct draw control');
   if(barrier?!Array.isArray(nativeBarrierWallEntities):nativeBarrierWallEntities!==undefined)throw TypeError('Invalid native wall presentation declaration');
   if(typeof deferredStart!=='boolean'||deferredStart&&!resumed||resumed&&resourceKind!=='resume'&&!deferredStart)throw TypeError('Invalid native deferred start');
-  const id=allocateId();let stage='preparing';
+  const id=geometryId??allocateId();let stage='preparing';
   const abort=()=>{if(stage==='committed'||stage==='aborted')return;stage='aborted';signal?.removeEventListener('abort',abort);const request=pending.get(id);pending.delete(id);request?.reject(new DOMException('Native gate preparation cancelled','AbortError'));try{postMessage({kind:'abortNativeGateResources',id});}catch{}};
   signal?.addEventListener('abort',abort,{once:true});
-  try{let prepared=await request(id,{kind:resumed?`prepareNative${resourceClass}Resources`:'prepareNativeGateResources',id,resources,minSequence,...(resumed?{terrainManifest,...(deferredStart?{deferredStart:true}:{})}: {}),...(barrier?{nativeBarrierWallEntities}:{})});
+  try{let prepared=await request(id,{kind:geometryId!==null?'captureNativeShieldResources':resumed?`prepareNative${resourceClass}Resources`:'prepareNativeGateResources',id,resources,minSequence,...(resumed?{terrainManifest,...(deferredStart?{deferredStart:true}:{})}: {}),...(barrier?{nativeBarrierWallEntities}:{})});
    if(stage==='aborted')throw new DOMException('Native gate preparation cancelled','AbortError');
    if(hasOtherTerrainStopField(prepared,'preparedTemplateField',stop))throw Error('Native stop receipt has another family');if(barrier!==(prepared.preparedBarrierAdditionTemplate!==undefined))throw Error('Native solid addition receipt has another family');if(!prepared.preparedWorldBoundary||!sameNativeWorldBoundary(copyNativeWorldBoundary(prepared.preparedWorldBoundary),copyNativeWorldBoundary(resources.worldBoundary)))throw Error('Native gate lacks its prepared command receipt');stage='ready';if((deferredStart||stop)&&!same(prepared[templateKey],preparedStop??preparedBarrier??reference(resources)))throw Error('Native resume lacks its prepared template receipt');
    return {get [templateKey](){return deferredStart||stop?prepared[templateKey]:undefined;},get preparedWorldBoundary(){return prepared.preparedWorldBoundary;},...(resumed&&!barrier?{invalidate(){if(!isRunning()||stage==='committed'||stage==='aborted'||signal?.aborted)return false;if(stage==='invalidated')return true;if(stage!=='ready')return false;stage='invalidated';postMessage({kind:`invalidateNative${resourceClass}Resources`,id});return true;},async refresh(next,{terrainManifest:manifest=terrainManifest}={}){
@@ -51,5 +76,5 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
    },abort(){abort();signal?.removeEventListener('abort',abort);}};
   }catch(error){abort();signal?.removeEventListener('abort',abort);throw error;}
  }
- return {prepareNativeAnimalCropRouteResources,prepareNativeAnimalCropStrikeResources,prepareNativeFarmArrivalResources,prepareNativeIdleStrollResources,prepareNativeHomeArrivalResources,prepareNativeGateResources,prepareNativeBarrierAdditionResources,prepareNativeResumeResources,prepareNativeTaskStartResources,prepareNativeTaskActionResources,prepareNativeTaskConsequenceResources,prepareNativeTaskSettlementResources,prepareNativeInitialIdleBodyResources,prepareNativeIdleCycleResources,prepareNativeHomeRouteResources};
+ return {prepareNativeShieldGeometry,prepareNativeAnimalCropRouteResources,prepareNativeAnimalCropStrikeResources,prepareNativeFarmArrivalResources,prepareNativeIdleStrollResources,prepareNativeHomeArrivalResources,prepareNativeGateResources,prepareNativeBarrierAdditionResources,prepareNativeResumeResources,prepareNativeTaskStartResources,prepareNativeTaskActionResources,prepareNativeTaskConsequenceResources,prepareNativeTaskSettlementResources,prepareNativeInitialIdleBodyResources,prepareNativeIdleCycleResources,prepareNativeHomeRouteResources};
 }

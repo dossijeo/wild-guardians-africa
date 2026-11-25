@@ -25,6 +25,43 @@ function setup({prepare,timeoutMs=1000}={}){
  return {connection,endpoint,calls,errors,port1,port2,close(){connection.dispose();endpoint.dispose();port1.close();port2.close();live=false;}};
 }
 
+test('private Shield geometry cannot commit, and a different spell cannot claim its captured slot',async()=>{
+ const source={spell:{id:'spell-7',kind:'shield',x:1,z:2,radius:1.95,remaining:20},polygonId:null};
+ let aborted=0;
+ const f=setup({prepare:async kind=>{
+  assert.equal(kind,'prepareNativeShieldGeometry');
+  return {abort(){aborted++;}};
+ }});
+ try{
+  const signal=new AbortController().signal;
+  const warm=await f.connection.prepareNativeShieldGeometry(source,{minSequence:1,signal});
+  assert.equal(warm.preparedWorldBoundary,undefined);assert.equal(warm.commit({worldBoundary:boundary}),false);
+  const other={...source,spell:{...source.spell,id:'spell-8'}};
+  await assert.rejects(warm.capture({kind:3,phase:'proposal',worldBoundary:boundary,nativeShield:other},{minSequence:2,signal}),/another proposal/);
+  await f.connection.flush();assert.equal(aborted,1);assert.deepEqual(f.calls,[]);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
+test('closing a Shield capture discards a late packet and waits for the actual preparation callback',async()=>{
+ const source={spell:{id:'spell-7',kind:'shield',x:1,z:2,radius:1.95,remaining:20},polygonId:null};
+ const started=deferred(),finish=deferred();let warmAborts=0,packetAborts=0;
+ const f=setup({prepare:async kind=>{
+  if(kind==='prepareNativeShieldGeometry')return {abort(){warmAborts++;}};
+  started.resolve();await finish.promise;
+  return {abort(){packetAborts++;},preparedWorldBoundary:boundary};
+ }});
+ try{
+  const controller=new AbortController(),options={minSequence:1,signal:controller.signal};
+  const warm=await f.connection.prepareNativeShieldGeometry(source,options);
+  const capture=warm.capture({kind:3,phase:'proposal',worldBoundary:boundary,nativeShield:source},options);
+  capture.catch(()=>{});await started.promise;
+  f.endpoint.dispose();await assert.rejects(capture);
+  const retired=f.connection.settleForRecovery();finish.resolve();
+  assert.equal((await retired).callbacksSettled,true);assert.equal(packetAborts,1);
+  assert.equal(warmAborts,1);assert.equal(f.connection.status().retained,0);
+ }finally{finish.resolve();f.close();}
+});
+
 test('a genuine first-task declaration crosses the retained endpoint while independent native execution advances',async()=>{
  const native=nativeTaskRequestFixture({bindBodies:true}),started=deferred(),finish=deferred();native.claim();
  const request=native.planner.pendingTaskRoute(native.state.tasks[0].workerId),proposal=native.planner.prepareNativeTaskStartProposal(request,{bodyId:1,radius:.28,runPhase:4,walkPhase:7}).proposal,reference=nativeTaskStartReferenceFromProposal(proposal);

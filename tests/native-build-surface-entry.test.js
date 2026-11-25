@@ -22,10 +22,10 @@ import {createWebGpuAgricultureVfx} from '../src/rendering/webgpu-agriculture-vf
 function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false}={}){
  const source=surfaceSource;
  const span=(a,b)=>{const start=source.indexOf(a),end=source.indexOf(b,start);assert(start>=0&&end>start);return source.slice(start,end);};
- const code=span('  async function prepareNativeTerrainDependents','  const nativeFrameState=')+span('  function acceptPreparedNativeTerrain','  if(state&&pipelineAdmission)')+span('  async function prepareDirectNativeWorldResources','  function prepareNativeFarmArrivalResources');
- let sequence=10,holding=false,present,prepared=0,captures=0;const errors=[];
+ const code=span('  async function prepareNativeTerrainDependents','  const nativeFrameState=')+span('  function acceptPreparedNativeTerrain','  if(state&&pipelineAdmission)')+span('  async function prepareNativeShieldGeometry','  function prepareNativeFarmArrivalResources');
+ let sequence=10,holding=false,present,prepared=0,captures=0,compiled=0;const errors=[];
  const presented=new Promise(resolve=>{present=resolve;});
- const admission={...f.admission,prepareManyAndPublish(){throw Error('Unexpected eager publication');},prepareTicket:async()=>({valid:()=>true}),completePreparation:async()=>{}};
+ const admission={...f.admission,prepareManyAndPublish(){throw Error('Unexpected eager publication');},prepareTicket:async()=>{compiled++;return {valid:()=>true};},completePreparation:async()=>{}};
  const coordinator=createChunkPublicationCoordinator({admission,onError:e=>errors.push(e)});
  const camera=new PerspectiveCamera(),agricultureVfx=shield&&createWebGpuAgricultureVfx({scene:f.scene,state:f.state,residency:f.residency,pipelineAdmission:admission,includeShield:true,onError:error=>errors.push(error)});
  const injected={...stops,...boundaries,...barrierCodec,...shieldCodec,spatialStructureBarriers,copyNativeGateMotionResources,assertNativeTerrainPresentationSupport,camera,agricultureVfx,
@@ -39,8 +39,8 @@ function surface(f,{barrierTemplate,prepareNativeWallAdditions,shield=false}={})
   onPresentationReady(){},onSelectableChange(){},onError:e=>errors.push(e),
   prepareNativeResources(){throw Error('Motor entry reached');}
  };
- const build=new Function(...Object.keys(injected),`let closed=false,nativeGateProposal=null,nativeRoutePreparations=0,nativeRouteResourceRevision=0,nativeRouteRejected=false,nativePickPresentation=null,nativePickFrame=null,preparedNativeWorldBoundary=null;const temporal=true,recoveringPublication=false;${code}\nreturn {prepareNativeGateResources,prepareNativeBarrierAdditionResources,acceptPreparedNativeTerrain,wakeNativePublications,status:()=>({proposal:nativeGateProposal?.descriptor,owner:nativeGateProposal?.descriptor.phase,boundary:preparedNativeWorldBoundary,preparing:nativeRoutePreparations}),close(){closed=true;nativeGateProposal?.cancel();wakeNativePublications(Error('closed'));}};`);
- const api=build(...Object.values(injected));return {...api,errors,agricultureVfx,stats:()=>({prepared,captures,holding}),present,
+ const build=new Function(...Object.keys(injected),`let closed=false,nativeGateProposal=null,nativeRoutePreparations=0,nativeRouteResourceRevision=0,nativeRouteRejected=false,nativePickPresentation=null,nativePickFrame=null,preparedNativeWorldBoundary=null;const temporal=true,recoveringPublication=false;${code}\nreturn {prepareNativeShieldGeometry,prepareNativeGateResources,prepareNativeBarrierAdditionResources,acceptPreparedNativeTerrain,wakeNativePublications,status:()=>({proposal:nativeGateProposal?.descriptor,owner:nativeGateProposal?.descriptor.phase,boundary:preparedNativeWorldBoundary,preparing:nativeRoutePreparations}),close(){closed=true;nativeGateProposal?.cancel();wakeNativePublications(Error('closed'));}};`);
+ const api=build(...Object.values(injected));return {...api,errors,agricultureVfx,compiled:()=>compiled,stats:()=>({prepared,captures,holding}),present,
   publish(message){sequence=message.sequence;api.acceptPreparedNativeTerrain(message);api.wakeNativePublications();},
   close(){api.close();coordinator.dispose();agricultureVfx?.dispose?.();}};
 }
@@ -99,7 +99,7 @@ test('Surface solid additions hold the first wall slot and publish only its acqu
  }finally{s.close();slot.dispose();f.close();}
 });
 
-test('Surface publishes a prepared Shield only with the matching spell and polygon receipt',async()=>{
+for(const warm of [false,true])test('Surface publishes the Shield with its exact spell and polygon '+(warm?'after private geometry preparation':'at fixed time'),async()=>{
  const oldFetch=globalThis.fetch,oldBitmap=globalThis.createImageBitmap;
  const catalogue=JSON.parse(readFileSync('public/content/vfx.json'));
  globalThis.fetch=async()=>({ok:true,json:async()=>catalogue,blob:async()=>new Blob(['x'])});
@@ -108,11 +108,21 @@ test('Surface publishes a prepared Shield only with the matching spell and polyg
  try{
   const actor=f.roster.get(f.actor),worldBoundary=f.preparedStop.proposal.worldBoundary;
   const spell={id:'spell-88',kind:'shield',x:f.worker.x,z:f.worker.z,radius:1.95,remaining:20};
+  const controller=new AbortController();
+  const shieldGeometry=warm?await s.prepareNativeShieldGeometry({spell,polygonId:null},{minSequence:10,signal:controller.signal}):null;
+  if(warm){
+   assert.equal(s.stats().prepared,0);assert.equal(s.stats().holding,false);assert.equal(s.agricultureVfx.status().effects,0);
+   assert.equal(shieldGeometry.part.object.visible,false);assert(shieldGeometry.batch.valid());
+   f.advance(.1);f.sync();
+  }
+  const compiled=s.compiled();
   const resources={version:1,kind:3,worldBoundary,nativeSession:worldBoundary.nativeSession,ticket:worldBoundary.ticket,effectiveTime:worldBoundary.effectiveTime,chunks:[],removed:[]};
   const proposal={...resources,phase:'proposal',retainsNativeAssignments:true,nativeShield:{spell,polygonId:null},
    routeEffects:{rows:new Float64Array()},gateEffects:{rows:new Float64Array()}};
   await assert.rejects(s.prepareNativeGateResources({...proposal,retainsNativeAssignments:false}),/unprepared terrain or routes/);
-  const handle=await s.prepareNativeGateResources(proposal,{minSequence:10});
+  if(warm)await assert.rejects(s.prepareNativeGateResources({...proposal,nativeShield:{spell:{...spell,x:spell.x+1},polygonId:null}},{minSequence:10,shieldGeometry}),/differs from the FIFO proposal/);
+  const handle=await s.prepareNativeGateResources(proposal,{minSequence:10,shieldGeometry});
+  if(warm)assert.equal(s.compiled(),compiled,'FIFO capture must use the already admitted dome');
   assert(handle.valid());assert.equal(s.agricultureVfx.status().effects,0);assert.equal(s.stats().holding,true);
   const nativeShield={spell,polygonId:157},committed={...resources,phase:'committed',nativeShield};
   assert.throws(()=>handle.commit({worldBoundary,resources:{...committed,nativeShield:{spell:{...spell,x:spell.x+1},polygonId:157}}}),/prepared spell/);

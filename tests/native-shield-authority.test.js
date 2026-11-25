@@ -86,6 +86,67 @@ test('a Shield READY for an older native clock cannot commit a polygon or an act
  }finally{release();await f.close();}
 });
 
+test('a running civil Shield keeps geometry private, then captures the approved cast at the actual FIFO head',async()=>{
+ let release;const wait=new Promise(resolve=>{release=resolve;});
+ const f=await fixture({qualifyRunningShield:true,onReady:record=>record.kind==='shield-geometry'?wait:undefined});
+ try{
+  const before=f.snapshot(),preparing=f.authority.prepareNativeStructureCommand(command);
+  preparing.catch(()=>{});
+  await untilProduction(f,()=>f.records.some(item=>item.kind==='shield-geometry'));
+  const first=f.advance(.05),advanced=f.advance(.05);
+  assert.notEqual(first.workers[0].z,before.workers[0].z);
+  assert(!f.records.some(item=>item.kind==='shield'));
+  assert.deepEqual(advanced.spells,[]);assert.deepEqual(advanced.ledger,before.ledger);
+  release();await pump(f,preparing);
+  const head=f.advance(.05);
+  const result=await pump(f,f.structureCommand(command));await f.authority.finishNativeStructureCommand(command);
+  assert.equal(result.value,true,result.rejection);assert.equal(result.events.filter(e=>e.type==='SpellActivated').length,1);
+  const record=f.records.find(item=>item.kind==='shield'),receipt=result.nativeWorldResources[0],game=JSON.parse(result.snapshot);
+  assert(record.committed);assert.equal(receipt.worldBoundary.effectiveTime,head.elapsed);
+  assert.equal(receipt.worldBoundary.ticket,record.resources.ticket);
+  assert.deepEqual(game.workers,head.workers);assert.deepEqual(game.spells,[receipt.nativeShield.spell]);
+  assert.deepEqual(game.ledger,before.ledger);assert.equal(game.commandIds.filter(id=>id===command.id).length,1);
+  let shown=false;record.packet.presented.then(()=>{shown=true;});await untilProduction(f,()=>shown);
+  assert(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true}).nativeAuthorityCheckpoint.spatialState.polygons.some(p=>p.id===receipt.nativeShield.polygonId));
+  assert.deepEqual(f.faults,[]);
+ }finally{release();await f.close();}
+});
+
+test('a paid placement before the Shield FIFO head invalidates the reserved spell identity',async()=>{
+ const f=await fixture({qualifyRunningShield:true});
+ try{
+  await pump(f,f.authority.prepareNativeStructureCommand(command));
+  const bought=f.command({kind:'plant',id:'other-paid-plant',species:'mijo',x:-5,z:8});
+  assert.equal(bought.value,true,bought.rejection);
+  const afterPurchase=JSON.parse(bought.snapshot);
+  const result=await pump(f,f.structureCommand(command));await f.authority.finishNativeStructureCommand(command);
+  assert.equal(result.value,false);assert.match(result.rejection,/stale/);
+  const after=JSON.parse(result.snapshot);
+  assert.deepEqual(after.spells,[]);assert.deepEqual(after.ledger,afterPurchase.ledger);
+  assert(!f.records.some(record=>record.kind==='shield'));assert(!after.commandIds.includes(command.id));assert.deepEqual(f.faults,[]);
+ }finally{await f.close();}
+});
+
+test('retiring an unclaimed Shield geometry at the FIFO leaves no spell or polygon and permits a new request',async()=>{
+ const f=await fixture({qualifyRunningShield:true});
+ try{
+  const initial=f.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
+  await pump(f,f.authority.prepareNativeStructureCommand(command));
+  const old=f.records.find(record=>record.kind==='shield-geometry');assert(old);
+  await f.authority.finishNativeStructureCommand(command);
+  await untilProduction(f,()=>old.aborted);
+  const after=f.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
+  assert.deepEqual(after.nativeAuthorityCheckpoint.spatialState.polygons,initial.nativeAuthorityCheckpoint.spatialState.polygons);
+  assert(!f.records.some(record=>record.kind==='shield'));assert.deepEqual(f.snapshot().spells,[]);
+  await pump(f,f.authority.prepareNativeStructureCommand(command));
+  f.advance(.05);
+  const result=await pump(f,f.structureCommand(command));await f.authority.finishNativeStructureCommand(command);
+  assert.equal(result.value,true,result.rejection);assert.equal(result.events.filter(e=>e.type==='SpellActivated').length,1);
+  assert.equal(f.records.filter(record=>record.kind==='shield'&&record.committed).length,1);
+  assert.deepEqual(f.faults,[]);
+ }finally{await f.close();}
+});
+
 test('cold Shield bootstrap keeps the second acquired polygon and the next allocation',async()=>{
  const f=await fixture();
  let restored;

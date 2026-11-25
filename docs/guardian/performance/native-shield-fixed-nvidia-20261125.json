@@ -344,5 +344,90 @@
     "gpuErrors": 0,
     "commandResultRecorded": false,
     "stoppedAt": "timeout waiting for Shield GO"
+  },
+  "runningCastQualified": {
+    "baseCommit": "8327d18a53da41398579f7a6021c4b98d16b0ef2",
+    "qualification": "qualifyRunningShield in DEV, one civil native Farm or Idle, no raid or beast physics",
+    "tests": {
+      "sourceComparison": {
+        "passed": 112,
+        "artifact": {
+          "path": ".cache/shield-running-cast/final.tap",
+          "sha256": "e57d20e0c2bbd6364828bb85cac6565be1dfc2818ddc8f2d8c971a67e3009823"
+        }
+      },
+      "branch": {
+        "passed": 98,
+        "artifact": {
+          "path": ".cache/shield-running-cast/branch-impact.tap",
+          "sha256": "45e9f9deac66e32d237305cb87a3f234b581dc4a9e02fefa73173916931a4313"
+        }
+      },
+      "buildSeconds": 51.36
+    },
+    "preparationPatch": {
+      "path": ".cache/shield-running-cast/running-shield.patch",
+      "sha256": "af736373f894af59840331569bd98ee01c77a9b0bb12fb3330a00b0aa46a9458"
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-running-cast/split-running-verified-nvidia.json",
+        "sha256": "cf750b650367e8aa28281a09a2157cacd30c1e6b9e9e0566e27417b9dc65eea9"
+      },
+      "trace": {
+        "path": ".cache/shield-running-cast/split-running-verified-nvidia.trace.json.gz",
+        "sha256": "0298ae332c7508991471a227e8b3c66489977d4948244af203339e8a346d04c1",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "requestId": 2,
+      "gestureElapsed": 10.149999999999997,
+      "privateGeometry": {
+        "durationMs": 1082.599853515625,
+        "configuredHoldMs": 300,
+        "readyElapsed": 11.249999999999973,
+        "releaseElapsed": 11.549999999999967,
+        "ticket": null
+      },
+      "fifo": {
+        "expectedSequence": 34,
+        "commandSequence": 35,
+        "elapsed": 11.599999999999966,
+        "ticket": 3,
+        "captureToReadyMs": 80,
+        "captureToGoMs": 104.60009765625,
+        "captureToDrawMs": 119.900146484375,
+        "success": true
+      },
+      "firstDraw": {
+        "sequence": 37,
+        "intervalMs": 34.099853515625,
+        "drawMs": 3.5
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "farmBody": 1,
+      "checkpoint": {
+        "sequence": 41,
+        "elapsed": 11.84999999999996
+      },
+      "matureVertices": 5568,
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "samples": 337,
+      "maxIntervalMs": 38.2001953125,
+      "drained": true
+    },
+    "instrumentationCorrection": {
+      "raw": {
+        "path": ".cache/shield-running-cast/split-running-nvidia.failure.json",
+        "sha256": "95ae8f3713c8973fd5932fb1531c1448e56ca7214595a0bdfc86c6d6e4393d6c"
+      },
+      "reason": "GO probe omitted the request id",
+      "activationObserved": true,
+      "physicalCompletionRequiredSecondRun": true
+    }
   }
 }

@@ -233,7 +233,8 @@ export function createWebGpuAgricultureVfx({scene,state,residency,onError=()=>{}
   let effect=previous,active=true,armed=false,attached=false,finalized=false,captured=false;
   const finish=()=>{active=false;if(nativeShieldPart===part)nativeShieldPart=null;};
   const valid=()=>active&&!closed&&!signal.aborted&&nativeShieldPart===part&&effects.get(key)===previous&&
-    (removing?sameShield(source(),spell):!source())&&[...support.values()].every(({cx,cz,mesh})=>
+    (removing?sameShield(source(),spell):!source())&&[...support.values()].every(({cx,cz,mesh,revision})=>
+      sameFootstepTerrainRevision(residency.revisionAt?.(cx,cz),revision)&&
       mesh&&mesh===residency.get(cx,cz)&&mesh===(residency.getVisible??residency.get).call(residency,cx,cz));
   const check=()=>{if(!valid())throw Error('Native shield resources changed');};
   const restore=()=>{if(attached){effect.root.visible=originalVisibility;attached=false;}};
@@ -248,6 +249,7 @@ export function createWebGpuAgricultureVfx({scene,state,residency,onError=()=>{}
     if(!removing){
      if(typeof ticket?.valid!=='function'||!ticket.valid())throw Error('Native shield admission ticket is stale');
      for(const object of [effect.mesh,effect.shape.mesh])effect.admissions.set(object,{controller:new AbortController(),ready:true,published:true,ticket,structuralRevision:pipelineAdmission.structuralRevision});
+     effect.uParticle.value.fromArray(vfxEnvironment(state.time>=300?1:0).particle);
      camera.updateWorldMatrix(true,false);
      prepareEffect(camera,effect);
     }
@@ -283,7 +285,7 @@ export function createWebGpuAgricultureVfx({scene,state,residency,onError=()=>{}
      effect.uParticle.value.fromArray(vfxEnvironment(state.time>=300?1:0).particle);
      // Reserve the mature dome before capturing the age-zero presentation.
      effect.native.seek(.9);effect.shape.update(effect.native.geometry());effect.native.seek(plan.time);
-     for(const [cell,{cx,cz}] of terrainCells)support.set(cell,{cx,cz,mesh:residency.get(cx,cz)});
+     for(const [cell,{cx,cz}] of terrainCells)support.set(cell,{cx,cz,mesh:residency.get(cx,cz),revision:residency.revisionAt?.(cx,cz)});
      if(activeWorkMissing)throw Error('Native shield requires visible terrain');
     }finally{activeWorkDependencies=null;}
    }

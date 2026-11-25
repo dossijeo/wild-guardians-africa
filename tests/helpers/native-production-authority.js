@@ -13,15 +13,22 @@ const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepare
 
 // Actual authority and both production ports, existing remote draw Host and
 // retained packets; the GPU queue is deterministic, not hardware/visual QA.
-export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
+export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
- const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{qualifyFarmFlee,qualifyAnimalCrop,qualifyShieldExpiry,nativeBootstrap,getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
+ const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{qualifyFarmFlee,qualifyAnimalCrop,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
  const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  const {port1,port2}=new MessageChannel(),records=[];
  const clock={version:1,epoch:0,elapsed:state.elapsed,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:state.elapsed,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-state.elapsed}]};
  const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
+  if(method==='prepareNativeShieldGeometry'){
+   const record={kind:'shield-geometry',resources,committed:false,aborted:false};records.push(record);
+   await onReady(record);
+   return {shield:resources,abort(){record.aborted=true;}};
+  }
   if(method==='prepareNativeGateResources'&&[3,4].includes(resources.kind)){
-   const record={kind:'shield',resources,minSequence:options.minSequence,committed:false,aborted:false};records.push(record);
+   const record={kind:'shield',resources,minSequence:options.minSequence,committed:false,aborted:false};
+   if(options.shieldGeometry&&(options.shieldGeometry.shield.spell.id!==resources.nativeShield.spell.id||resources.kind!==3))throw Error('Invalid fixture Shield geometry');
+   records.push(record);
    await onPrepare(record);
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');

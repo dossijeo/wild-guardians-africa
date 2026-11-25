@@ -1,6 +1,7 @@
+import {copyNativeShieldWorld,sameNativeShieldWorld} from '../world/native-shield-world.js';
 import {terrainStopProposalProtocol,hasOtherTerrainStopField} from '../simulation/terrain-stop-reservation.js';
 
-const prepareKinds=new Set(['prepareNativeAnimalCropRouteResources','prepareNativeAnimalCropStrikeResources','prepareNativeFarmArrivalResources','prepareNativeIdleStrollResources','prepareNativeGateResources','prepareNativeBarrierAdditionResources','prepareNativeResumeResources','prepareNativeTaskStartResources','prepareNativeTaskActionResources','prepareNativeTaskConsequenceResources','prepareNativeTaskSettlementResources','prepareNativeInitialIdleBodyResources','prepareNativeIdleCycleResources','prepareNativeHomeRouteResources','prepareNativeHomeArrivalResources']);
+const prepareKinds=new Set(['prepareNativeShieldGeometry','prepareNativeAnimalCropRouteResources','prepareNativeAnimalCropStrikeResources','prepareNativeFarmArrivalResources','prepareNativeIdleStrollResources','prepareNativeGateResources','prepareNativeBarrierAdditionResources','prepareNativeResumeResources','prepareNativeTaskStartResources','prepareNativeTaskActionResources','prepareNativeTaskConsequenceResources','prepareNativeTaskSettlementResources','prepareNativeInitialIdleBodyResources','prepareNativeIdleCycleResources','prepareNativeHomeRouteResources','prepareNativeHomeArrivalResources']);
 const refreshKinds=new Set(['refreshNativeAnimalCropRouteResources','refreshNativeAnimalCropStrikeResources','invalidateNativeAnimalCropRouteResources','invalidateNativeAnimalCropStrikeResources','invalidateNativeFarmArrivalResources','refreshNativeFarmArrivalResources','invalidateNativeIdleStrollResources','refreshNativeIdleStrollResources','invalidateNativeResumeResources','refreshNativeResumeResources','invalidateNativeTaskStartResources','refreshNativeTaskStartResources','invalidateNativeTaskActionResources','refreshNativeTaskActionResources','invalidateNativeTaskConsequenceResources','refreshNativeTaskConsequenceResources','invalidateNativeTaskSettlementResources','invalidateNativeInitialIdleBodyResources','invalidateNativeIdleCycleResources','refreshNativeTaskSettlementResources','refreshNativeInitialIdleBodyResources','refreshNativeIdleCycleResources','invalidateNativeHomeRouteResources','refreshNativeHomeRouteResources','invalidateNativeHomeArrivalResources','refreshNativeHomeArrivalResources']);
 
 // Retained handles stay in the existing graphical owner. An endpoint carries
@@ -12,7 +13,7 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
  function abortHandle(item){try{item.controller.abort();item.handle?.abort();}catch(cause){closed=true;const error=Error('Native resource cleanup failed: '+String(cause?.message??cause),{cause});onError(error);throw error;}}
  function cancel(){const old=entry;entry=null;if(old)abortHandle(old);}
  function accept(data){
-  if(!prepareKinds.has(data?.kind)&&!refreshKinds.has(data?.kind)&&!['commitNativeGateResources','abortNativeGateResources','flushNativeResources'].includes(data?.kind))return false;
+  if(!prepareKinds.has(data?.kind)&&!refreshKinds.has(data?.kind)&&!['captureNativeShieldResources','commitNativeGateResources','abortNativeGateResources','flushNativeResources'].includes(data?.kind))return false;
   if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid native resource request');
   if(data.kind==='flushNativeResources'){
    // A retained failed renderer can drain the original endpoint while new
@@ -29,16 +30,30 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
     if((data.kind==='prepareNativeFarmArrivalResources')!==(data.resources?.kind==='native-farm-arrival-route-proposal')&&(data.kind==='prepareNativeFarmArrivalResources'||data.resources?.kind==='native-farm-arrival-route-proposal'))throw Error('Native farm arrival resource request class mismatch');
     if((data.kind==='prepareNativeAnimalCropRouteResources')!==(data.resources?.kind==='native-animal-crop-route-proposal'))throw Error('Native crop resource request class mismatch');
     if((data.kind==='prepareNativeAnimalCropStrikeResources')!==(data.resources?.kind==='native-animal-crop-strike-proposal'))throw Error('Native crop resource request class mismatch');
+    item.geometry=data.kind==='prepareNativeShieldGeometry'?copyNativeShieldWorld(data.resources,3,{proposal:true}):null;
     item.barrier=data.kind==='prepareNativeBarrierAdditionResources';
     if(item.barrier!==(data.resources?.kind==='native-barrier-addition-proposal')||(item.barrier?!Array.isArray(data.nativeBarrierWallEntities):data.nativeBarrierWallEntities!==undefined))throw Error('Native solid addition resource request class mismatch');
     item.stop=terrainStopProposalProtocol(data.resources);
     if(item.stop&&data.kind!=='prepareNativeGateResources')throw Error('Native stop resource request class mismatch');
     item.handle=await prepare(data.kind,data.resources,{signal:item.controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest,deferredStart:data.deferredStart,...(item.barrier?{nativeBarrierWallEntities:data.nativeBarrierWallEntities}:{})});
     if(closed||item.controller.signal.aborted||entry!==item)throw new DOMException('Native gate preparation cancelled','AbortError');
-    postMessage({kind:'nativeGateResourcesResult',id:data.id,result:receipt(item)});
+    postMessage({kind:'nativeGateResourcesResult',id:data.id,result:item.geometry?{version:1,shieldGeometry:item.geometry}:receipt(item)});
    }catch(error){if(entry===item)entry=null;abortHandle(item);if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}finally{if(tracked)callbackFinished();}
   })();
   const item=entry;if(!item||item.id!==data.id){if(data.id>lastId)throw Error('Unknown native resource request');return true;}
+  if(data.kind==='captureNativeShieldResources')return (async()=>{
+   let tracked=false;
+   try{
+    const resources=data.resources;
+    if(!item.geometry||!item.handle||item.capturing||resources?.kind!==3||resources.phase!=='proposal'||
+       !sameNativeShieldWorld(item.geometry,copyNativeShieldWorld(resources.nativeShield,3,{proposal:true})))throw Error('Shield capture requires its own prepared geometry');
+    item.capturing=true;inflight++;tracked=true;
+    const handle=await prepare('prepareNativeGateResources',resources,{signal:item.controller.signal,minSequence:data.minSequence,shieldGeometry:item.handle});
+    if(closed||item.controller.signal.aborted||entry!==item){handle.abort();throw new DOMException('Shield capture cancelled','AbortError');}
+    item.handle=handle;item.resources=resources;item.geometry=null;
+    postMessage({kind:'nativeGateResourcesResult',id:data.id,result:receipt(item)});
+   }catch(error){if(entry===item)entry=null;if(!item.controller.signal.aborted)abortHandle(item);if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}finally{if(tracked)callbackFinished();}
+  })();
   if(refreshKinds.has(data.kind))return (async()=>{
    let tracked=false;
    try{
@@ -55,7 +70,7 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
   })();
   entry=null;
   if(data.kind==='abortNativeGateResources'){abortHandle(item);return true;}
-  try{if(hasOtherTerrainStopField(data.commit,'bindingField',item.stop))throw Error('Native stop resource commit has another family');if(item.barrier!==(data.commit?.nativeBarrierAdditionBinding!==undefined))throw Error('Native solid addition commit has another family');if(item.handle?.commit(data.commit)!==true)throw Error('Native gate resources not committed');onCommit();}
+  try{if(item.geometry)throw Error('Shield geometry alone cannot commit a world');if(hasOtherTerrainStopField(data.commit,'bindingField',item.stop))throw Error('Native stop resource commit has another family');if(item.barrier!==(data.commit?.nativeBarrierAdditionBinding!==undefined))throw Error('Native solid addition commit has another family');if(item.handle?.commit(data.commit)!==true)throw Error('Native gate resources not committed');onCommit();}
   catch(error){closed=true;abortHandle(item);onError(error);}return true;
  }
  function receipt(item){

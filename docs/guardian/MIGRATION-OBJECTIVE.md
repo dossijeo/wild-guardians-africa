@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La calificación de Escudo con el reloj en marcha reutiliza el lote de la cúpula y captura kind3 al alcanzar la cabeza del FIFO. NVIDIA confirma que Game avanza con la geometría retenida, adquiere el polígono 10 a 11,60 s, conserva el cuerpo 1 de Farm y drena. La captura tarda 104,60 ms hasta GO en esa sesión. Quedan el menú ordinario, otras cohortes y C4. [Corte de reloj y recibo](webgpu-shield.md#alta-con-el-reloj-en-marcha).
+
 El primer daño de un centro residente en Desierto usa el Worker de edificios. En NVIDIA, el trabajo síncrono del impacto bajó de 647,80 a 30,70 ms. El preparador conservó las 1.539 referencias comparables y el intervalo completo fue de 967 ms. Siguen abiertos el coste de render y la espera de pipelines. La preparación anterior a READY tarda más y mantiene los dibujos durante la espera. [Contraste y alcance](native-desert-mixed-flight-center-20261125.md#preparación-de-la-geometría-del-primer-daño).
 
 El cuerpo de una Task detenida ya da origen a una solicitud nativa de Home. Se libera la asignación anterior y Home18 adquiere el mismo cuerpo. La selección dirigida pasó 293 pruebas y la compilación aprobó. Quedan el disparo ordinario desde Game y el relevo por el canal real hasta GPU. [Transferencia nativa y validación](native-task-stopped-home-source-20261120.md).

@@ -402,6 +402,11 @@ test('a prepared shield batch retains geometry through activation, cancellation 
   const cancelled=await prepare();cancelled.batch.capturePresentation(()=>assert.equal(cancelled.part.object.visible,true));
   assert.equal(cancelled.part.object.visible,false);assert.equal(vfx.status().effects,0);
   cancelled.controller.abort();assert.equal(cancelled.batch.valid(),false);
+  const changed=await prepare();
+  revision++;height=.15;
+  assert.equal(changed.batch.valid(),false,'the same mesh now carries a different support revision');
+  assert.throws(()=>changed.batch.capturePresentation(()=>assert.fail('stale dome was captured')),/unavailable/);
+  changed.batch.abort();assert.equal(vfx.status().effects,0);
   const added=await prepare(),root=added.part.object,[,sprites,dome]=added.part.include;
   const geometry=dome.geometry,buffer=geometry.getAttribute('position').data;
   assert(compiled.some(item=>item.object===root&&item.leaves.includes(dome)));

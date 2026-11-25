@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+La calificación de Escudo con el reloj en marcha reutiliza el lote de la cúpula y captura kind3 al alcanzar la cabeza del FIFO. NVIDIA confirma que Game avanza con la geometría retenida, adquiere el polígono 10 a 11,60 s, conserva el cuerpo 1 de Farm y drena. La captura tarda 104,60 ms hasta GO en esa sesión. Quedan el menú ordinario, otras cohortes y C4. [Corte de reloj y recibo](webgpu-shield.md#alta-con-el-reloj-en-marcha).
+
 El primer daño de un centro residente en Desierto usa el Worker de edificios. En NVIDIA, el trabajo síncrono del impacto bajó de 647,80 a 30,70 ms. El preparador conservó las 1.539 referencias comparables y el intervalo completo fue de 967 ms. Siguen abiertos el coste de render y la espera de pipelines. La preparación anterior a READY tarda más y mantiene los dibujos durante la espera. [Contraste y alcance](native-desert-mixed-flight-center-20261125.md#preparación-de-la-geometría-del-primer-daño).
 
 La calificación de Desierto incluye una incursión por un portón acreditado por Farm, con retorno civil por la misma hoja. C3 acredita el reemplazo, picking y drenaje de un único Idle22 sin portón. Quedan otras cohortes, el encuentro físico y la activación ordinaria. Escudo retira el polígono cuando la caducidad corta un paso civil. El próximo límite es adquirir el alta desde el menú con el reloj en marcha. C4 mantiene abierto el primer impacto al centro. [Estado y recibos por vertical](MIGRATION-VERTICALS.md).
