@@ -2,6 +2,8 @@
 
 El arranque WebGPU remoto espera el primer dibujo de la publicación confirmada antes de abrir el puerto de recursos. NVIDIA verificó la secuencia 1 con 25 regiones desde el menú y el primer Farm23 del guardado pagado de Sabana. READY tardó 3,327 s desde la solicitud y el cuerpo adquirido se dibujó con drenaje limpio. [Prueba de arranque](native-sabana-flee-crop-physical-20261125.md#preparación-de-farm-y-stop24).
 
+El paquete web conserva los GLB optimizados de personaje y marca los archivos decodificados como procedencia del repositorio. El build y las siete pruebas de empaquetado pasan. La validación integral llega al límite de distribución y rechaza 1.443 archivos frente a los 1.000 exigidos por el verificador.
+
 Harvest conserva el cultivo y el saldo al abortar Carry durante la pausa. NVIDIA registró cero dibujos del ticket cancelado, el mismo cuerpo en el reintento y un abono de 14 monedas. La retención temporal del material redujo de 16 a cero los módulos WGSL recreados, conservó 588 referencias residentes y completó el drenaje. C4 sigue abierto. [Prueba y recibos](native-harvest-paused-carry-20261125.md).
 
 Settlement17 entregó en NVIDIA la caja de Carry tras cruzar el vano y registró un solo abono de 14 monedas. Home19 retiró al trabajador después del cruce y dibujó el portón original durante otros 681,5 ms. Se conservaron 843 buffers en la entrega y 791 en Home, con siete del portón en ambos casos y cero errores de drenaje. Home también completó la retirada con el portón fuera del encuadre ampliado y conservó su reloj. Quedan las retiradas de paso que cambian el motor, los dueños del reloj retirados y C4. [Validación de Settlement17 y Home19](native-terminal-gate-retention-20261121.md).

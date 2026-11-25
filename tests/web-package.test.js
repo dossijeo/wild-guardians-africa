@@ -44,3 +44,18 @@ test('editable facial sources remain repository provenance, never runtime downlo
  }
  assert.equal(count,4);
 });
+
+test('character LOD reports identify decoded authoring inputs as repository provenance',()=>{
+ const directory=new URL('../public/content/character-lod/',import.meta.url);
+ const reports=readdirSync(directory).filter(name=>name.endsWith('.json'));
+ assert(reports.includes('buffalo.json'));
+ for(const name of reports){
+  const original=readFileSync(new URL(name,directory),'utf8'),report=JSON.parse(original);
+  const packed=JSON.parse(publicText(original,'content/character-lod/'+name,manifest));
+  assert(report.decoded.startsWith('content/source/character-lod/'));
+  assert.equal(packed.decoded,'repository:'+report.decoded);
+  assert.equal(packed.url,report.url.slice(1));
+  assert.equal(packed.triangles,report.triangles);
+  assert(readFileSync(new URL(name.replace(/\.json$/,'.glb'),directory)).length>0);
+ }
+});
