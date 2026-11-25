@@ -17,6 +17,8 @@ import {deserializeConfirmedState} from '../src/simulation/confirmed-live-state.
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
 import {nativeProductionAuthority} from './helpers/native-production-authority.js';
+import {createPlant} from '../src/simulation/crops.js';
+import {cropSpec} from '../src/simulation/rules.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate,pump=flush){const end=Date.now()+8000;while(!predicate()){if(Date.now()>end)throw Error('Native production lifecycle fixture timed out');await pump();await flush();}}
@@ -465,4 +467,69 @@ test('paused restored terminal Repair publishes the acquired Action15 before res
   assert.deepEqual(f.state.ledger,state.ledger);assert.deepEqual(f.native.faults,[]);
   t.diagnostic(JSON.stringify({at,task:task.id,body:action.resources.request.bodyId,actionTicket:action.resources.worldBoundary.ticket}));
  }finally{releaseIdle();await f.close();}
+});
+
+test('paused ordinary Harvest discards late Carry READY and settles the original crop once after resume',async()=>{
+ const fixture=nativeIdleCycleGameFixture({mode:'rest',remaining:5,peer:false});
+ let f,firstCarry,releaseCarry;
+ const held=new Promise(resolve=>{releaseCarry=resolve;});
+ const acquired=[];
+ try{
+  const state=structuredClone(fixture.state),[worker]=state.workers;
+  const center=state.structures.find(value=>value.id===worker.centerId);
+  Object.assign(center,{x:worker.x-6,z:worker.z+6});
+  const {x,z}=fixture.point(-4,6),crop=createPlant(`plant-${state.nextId++}`,'mijo',x,z,center.id);
+  crop.growth=cropSpec(crop.species).growth_seconds-.1;
+  for(const water of crop.water)water.status='manual';
+  state.plants.push(crop);
+  f=await fullFixture({state,
+   onReady(record){if(record.kind==='task-consequence'&&!firstCarry){firstCarry=record;return held;}},
+   onCommit(record,data){acquired.push({kind:record.kind,data});},
+  });
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);
+  await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  await until(()=>acquired.some(row=>row.kind==='initial-idle-body'),()=>f.native.present());
+  let now=performance.now();f.host.now=()=>now;await f.runtime.activateClock();
+  const advance=async()=>{now+=50;await f.native.present();};
+  await until(()=>firstCarry,advance);
+  const action=acquired.find(row=>row.kind==='task-action').data.nativeTaskActionBinding;
+  const start=acquired.find(row=>row.kind==='task-start').data.nativeTaskStartBinding;
+  assert.equal(start.reference.bodyId,action.reference.request.bodyId);
+  await f.runtime.submit({kind:'pause',reason:'menu'});
+  const at=f.state.elapsed,ledger=structuredClone(f.state.ledger);
+  releaseCarry();
+  await until(()=>f.native.authority.nativeIntentProductionStatus().phase==='idle',()=>f.native.present());
+  await f.runtime.submit({kind:'snapshot'});
+  assert.equal(firstCarry.committed,false);
+  await assert.rejects(firstCarry.packet.presented,/abort|cancel|obsolete/i);
+  assert(!acquired.some(row=>row.kind==='task-consequence'));
+  assert.equal(f.state.elapsed,at);
+  assert.equal(f.state.workers[0].nativeRouteAdmission,'native-action');
+  assert(f.state.plants.find(value=>value.id===crop.id).alive);
+  assert.equal(f.state.crates.length,0);
+  assert.deepEqual(f.state.ledger,ledger);
+  assert(!f.state.events.some(e=>e.type==='CropPicked'&&e.targetId===crop.id));
+  await f.runtime.submit({kind:'resume',reason:'menu'});
+  await until(()=>acquired.some(row=>row.kind==='task-settlement'),advance);
+  await f.runtime.submit({kind:'snapshot'});
+  const carries=acquired.filter(row=>row.kind==='task-consequence');
+  assert.equal(carries.length,1);
+  const carry=carries[0].data.nativeTaskConsequenceBinding.reference;
+  const settled=acquired.find(row=>row.kind==='task-settlement').data.nativeTaskSettlementBinding.reference;
+  assert.equal(carry.bodyId,start.reference.bodyId);
+  assert.equal(settled.bodyId,carry.bodyId);
+  assert(carry.worldBoundary.ticket>firstCarry.resources.worldBoundary.ticket);
+  await until(()=>f.native.host.inspect().samples.some(row=>row.nativeWorldBoundary?.ticket===settled.worldBoundary.ticket),
+   ()=>f.native.present());
+  assert.equal(f.state.crates.length,1);
+  const [crate]=f.state.crates;
+  assert.equal(crate.sourcePlantId,crop.id);
+  assert.equal(crate.delivered,true);
+  assert.equal(f.state.events.filter(e=>e.type==='CropPicked'&&e.targetId===crop.id).length,1);
+  const [deliveryEntry]=Object.keys(f.state.ledger.entries).filter(id=>!Object.hasOwn(ledger.entries,id));
+  assert.equal(deliveryEntry,'deliver:'+crate.id);
+  assert.deepEqual(Object.keys(f.state.ledger.entries).filter(id=>!Object.hasOwn(ledger.entries,id)),[deliveryEntry]);
+  assert.equal(f.created(),1);
+  assert.deepEqual(f.native.faults,[]);
+ }finally{releaseCarry();await f?.close();fixture.close();}
 });
