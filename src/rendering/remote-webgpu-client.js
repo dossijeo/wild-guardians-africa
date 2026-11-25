@@ -261,20 +261,21 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     };
     return result;
   }
-  function requestQueueFence(forRetirement = false) {
+  function requestQueueFence(forRetirement = false, deferUntilReplacement = false) {
     const caller = new Error('Remote queue fence requested').stack;
     const timing = recordTiming(fenceTimings, { requestedAt: absoluteNow(), frameSequence: frame?.sequence || null, localRejected: !!frame?.operations.length, caller: caller?.split('\n').find(line => line.includes('.js:') && !line.includes('remote-webgpu-client')) || null }, 128);
     if (frame?.operations.length) {
       timing.finishedAt = absoluteNow(); timing.error = 'Cannot fence uncommitted remote frame';
       return Promise.reject(Error(timing.error));
     }
-    return request({ type: 'fence', ...(forRetirement ? {purpose:'resource-retirement'} : {}), caller, producerRequestedAt: timing.requestedAt }).then(result => {
+    return request({ type: 'fence', ...(forRetirement ? {purpose:'resource-retirement', ...(deferUntilReplacement ? {deferUntilReplacement:true,endOfFrames:frameProductionEnded.signal.aborted} : {})} : {}), caller, producerRequestedAt: timing.requestedAt }).then(result => {
       timing.finishedAt = absoluteNow(); timing.consumer = result?.timing || null; return timing.consumer;
     }, error => { timing.finishedAt = absoluteNow(); timing.error = error.message; throw error; });
   }
   // Wait only when the consumer proved that a rejected frame still pins
   // unfinished uploads. A replay cannot replace it. Producer shutdown ends
   // the wait for another image; the consumer keeps its pins and native fence.
+  const frameProductionEnded = new AbortController();
   let lastPresentedSequence = 0;
   const retirementWaiters = new Set();
   function wakeRetirements() {
@@ -334,9 +335,13 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       return request({ type: 'ordered-submission' });
     },
     async onSubmittedWorkDone() { await requestQueueFence(); },
-    async onRetirementWorkDone(closing) {
+    async onRetirementWorkDone(closing, {deferUntilReplacement=false} = {}) {
       for (;;) {
-        const receipt = await requestQueueFence(true);
+        const receipt = await requestQueueFence(true, deferUntilReplacement);
+        if (receipt?.retryAfterPresentation !== undefined) {
+          await waitForReplacement(receipt.retryAfterPresentation, frameProductionEnded.signal);
+          continue;
+        }
         if (receipt?.retainedThroughSequence === undefined || closing?.aborted) return;
         await waitForReplacement(receipt.retainedThroughSequence, closing);
         // Fence again after the replacement or the close decision.
@@ -470,7 +475,12 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       try {const result=callback();if(result?.then)throw TypeError('Remote texture preparation must be synchronous');return result;}
       finally {texturePreparation=previous;}
     },
+    endFrameProduction() {
+      if (frame) api.cancelFrame();
+      frameProductionEnded.abort();
+    },
     beginFrame(metadata = {}) {
+      if (frameProductionEnded.signal.aborted) throw Error('Renderer has ended frame production');
       if (disposed || fatalError) throw fatalError || Error('Remote GPU is disposed');
       if (frame || pendingFrame) throw Error('Remote GPU frame backpressure: one generation already pending');
       frame = { sequence: ++sequence, metadata: structuredClone(metadata), operations: [], retained: new Set() };

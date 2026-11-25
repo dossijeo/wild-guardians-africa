@@ -2214,3 +2214,41 @@ test('private VFX upload cannot cross an unclassified queued encoder submission'
   assert.equal(new Uint32Array(f.gpu.buffers[1].data.buffer)[0],1);
   assert.equal(f.host.inspect().failed,false);
 });
+
+for(const ending of ['present','end-frame-production'])test('deferred retirement protects an unrelated unowned uniform through '+ending,async()=>{
+ const f=await nativePreparationFixture(),queue=f.client.device.queue;
+ const completions=[],errors=[],physicalFence=f.gpu.device.queue.onSubmittedWorkDone;
+ const admission=createWebGpuPipelineAdmission({renderer:{backend:{isWebGPUBackend:true,device:f.client.device},compileAsync:async()=>{}},scene:new Scene(),camera:new PerspectiveCamera(),onFatal:e=>errors.push(e)});
+ try{
+  const vertex=f.client.device.createBuffer({size:16,usage:44});
+  const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},3);
+  await flush();await f.host.idle();f.host.present();await first;
+  const displayed=f.gpu.buffers[1],committed=await f.commit();
+  await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),e=>e.resourcePreparationsRetained===true);
+  const unrelated=f.client.device.createBuffer({size:112,usage:76,label:'bindingBuffer_object'});
+  queue.writeBuffer(unrelated,0,new Uint32Array([57]));
+  await assert.rejects(queue.onRetirementWorkDone(),/uncommitted changes/);
+  await assert.rejects(queue.onSubmittedWorkDone(),/uncommitted changes/);
+  let released=false;
+  f.gpu.device.queue.onSubmittedWorkDone=()=>new Promise(resolve=>completions.push(resolve));
+  const release=new Promise(resolve=>admission.deferRelease(new Group(),()=>{released=true;resolve();}));
+  const until=async predicate=>{const end=performance.now()+1500;while(!predicate()&&!errors.length&&performance.now()<end)await new Promise(r=>setTimeout(r,1));assert.ifError(errors[0]);assert(predicate());};
+  await until(()=>f.host.inspect().fenceTimings.some(t=>t.retryAfterPresentation!==undefined));
+  f.host.present();await flush();await f.host.idle();
+  assert.equal(completions.length,0);assert.equal(released,false);assert.equal(new Uint32Array(displayed.data.buffer)[0],3);
+  const extra=f.gpu.buffers[2];assert.equal(new Uint32Array(extra.data.buffer)[0],0);
+  if(ending==='present'){
+   const next=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock,nativeWorldBoundary:committed.worldBoundary});
+   await flush();await f.host.idle();f.host.present();await next;
+   assert.equal(new Uint32Array(extra.data.buffer)[0],57);
+  }else{
+   admission.dispose();await flush();assert.equal(released,false);
+   f.client.endFrameProduction();
+   assert.throws(()=>f.client.beginFrame(),/ended frame production/);
+  }
+  await until(()=>completions.length>0);assert.equal(released,false);
+  for(const complete of completions.splice(0))complete();await release;
+  if(ending!=='present'){assert.equal(new Uint32Array(displayed.data.buffer)[0],3);assert.equal(new Uint32Array(extra.data.buffer)[0],0);}
+  assert.deepEqual(errors,[]);assert.equal(f.host.inspect().failed,false);
+ }finally{admission.dispose();f.gpu.device.queue.onSubmittedWorkDone=physicalFence;for(const done of completions)done();f.close();}
+});

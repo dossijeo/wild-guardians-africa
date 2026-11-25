@@ -1003,7 +1003,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // that image or changing the last good generation. Reuse the existing COW
   // buffers/textures and rebuild their immutable views/bindings; every byte is
   // submitted before a real queue fence is acknowledged.
-  function retainedUploadsOwnedForRetirement() {
+  let producerEndedFrames = false;
+  function retainedRetirementDisposition() {
     if (!retainedPreparationSnapshot || preparationRecoveryRequired || nativeMutationHold || nativeConsumerRetirement || pending || admittingFrame) return false;
     // The rejected packet already pins its complete prefix, including images
     // and dependencies. A later operation may use a different generation.
@@ -1011,15 +1012,23 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     for (const [id, owner] of retainedPreparationSnapshot) {
       if (owner.pins <= 0 || owner !== resources.get(id)) return false;
     }
+    let disposition = 'pinned';
     for (let i = retainedPreparationOperationCount; i < stagedOperations.length; i++) {
       const operation = stagedOperations[i];
       if (!['writeBuffer', 'writeTexture', 'copyExternalImageToTexture'].includes(operation.method)) return false;
       for (const id of references(operation)) {
         const owner = retainedPreparationSnapshot.get(id);
-        if (!owner || owner !== resources.get(id) || owner.pins <= 0) return false;
+        if (owner) {
+          if (owner !== resources.get(id) || owner.pins <= 0) return false;
+        } else {
+          const buffer = resources.get(id);
+          if (operation.method !== 'writeBuffer' || buffer?.kind !== 'createBuffer' ||
+              buffer.pending || buffer.retired || buffer.nativeDestroyed || buffer.retirementRequested || buffer.producerReleased) return false;
+          disposition = 'uncommitted-buffer';
+        }
       }
     }
-    return true;
+    return disposition;
   }
   // A fresh VFX texture is not visible until its owner publishes the material.
   // Only independent, standalone pixel writes can cross a staged frame here.
@@ -1424,6 +1433,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       case 'prepare-world-frame':
       case 'frame': {
         if(['preparedClockBindings','preparedCameraBindings','preparedWorldBoundary','preparedUploadsComplete','initializedPreparation','drawnPipelines','firstUseTracked','preparedHomeArrivalLease','admittedActionRecord','admittedWorldBoundary','admittedResumeBinding','admittedMotionBinding','admittedClockBindings','admittedClockCoverageEnd','admittedBarrierAdditionBinding','admittedBarrierClockCoverageEnd','admittedRestoredRepairCoverageEnd'].some(key=>Object.hasOwn(message.packet??{},key)))throw Error('A producer cannot supply native execution bindings');
+        if (producerEndedFrames) throw Error('Renderer has ended frame production');
         const preparing=message.type==='prepare-world-frame';
         if(preparing&&message.version!==1)throw Error('Unsupported prepared world frame version');
         if(!Number.isSafeInteger(message.packet?.sequence)||message.packet.sequence<=lastReceivedFrameSequence)throw Error('Stale remote frame');
@@ -1661,7 +1671,25 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // Producer-side retirement covers the submitted prefix. The Host
         // independently pins retained generations until replacement/discard,
         // then fences their last native use in scheduleNativeRetirement().
-        const pinnedRetirement = message.purpose === 'resource-retirement' && stagedOperations.length > 0 && retainedUploadsOwnedForRetirement();
+        const retirement = message.purpose === 'resource-retirement';
+        const disposition = retirement && stagedOperations.length && retainedRetirementDisposition();
+        // A queued CPU write outside the rejected frame has no retirement proof.
+        // Hold the producer's disposal callback. Do not submit writes or take pins.
+        if (retirement && message.deferUntilReplacement === true && disposition === 'uncommitted-buffer') {
+          if (message.endOfFrames !== true) {
+            timing.rejected = 'uncommitted-published-resources';
+            timing.retryAfterPresentation = lastReceivedFrameSequence;
+            timing.finishedAt = absoluteNow();
+            reply(message, {kind:'retirement-deferred', timing});
+            break;
+          }
+          // Only the final Surface owner ends this stream. No future frame may
+          // adopt these unpublished bytes. The actual queue fence below still
+          // protects every prior submit, and displayed generations stay pinned.
+          producerEndedFrames = true;
+          discardRetainedPreparations();
+        }
+        const pinnedRetirement = disposition === 'pinned' && stagedOperations.length > 0;
         if (pinnedRetirement) {
           timing.retainedUploadCount = stagedOperations.length;
           timing.retainedThroughSequence = lastReceivedFrameSequence;

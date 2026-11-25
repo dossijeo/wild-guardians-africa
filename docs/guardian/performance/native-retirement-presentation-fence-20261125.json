@@ -1,0 +1,694 @@
+{
+  "base": "476e61b592bd182567ace408d5a07493aefb0363",
+  "sources": {
+    "patch": {
+      "path": ".cache/vfx-retire-defer/deferred-retirement.patch",
+      "sha256": "d9e129a99b09b8071a335120be5c87df7f09f38b23599853ae2f0a4b5ff8ec12"
+    },
+    "manifest": {
+      "path": ".cache/vfx-retire-defer/manifest.json",
+      "sha256": "d14e55df28a42a065af3456a585cb928ea2c5a235fdb07215e99220f5dd92363"
+    },
+    "nativeStandalone": {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "801ee674fa99aaa0329b04f52fc0507c98c15c2c470d643b651c3a89ce926046"
+    },
+    "nativePthread": {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "39ca84143b5a331b2cda984c962a829aa71c4d8f2c7670263695c2dd638d6e90"
+    }
+  },
+  "validation": {
+    "baseline": {
+      "path": ".cache/vfx-retire-defer/before.tap",
+      "sha256": "b727aedbd2d0ac952152684691a887fa814cf5956022d3e6d846caac8f653764"
+    },
+    "regression": {
+      "path": ".cache/vfx-retire-defer/root-regression.tap",
+      "sha256": "01607b2e7e1ef95ecf25d4e36ec1302bb794af5e6dd7a3bb1ff683fb5b91a4a1",
+      "passed": 301,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": {
+      "path": ".cache/vfx-retire-defer/root-build.log",
+      "sha256": "d113a0cac19b78851b5d20eeb0d3a10fa1731b01c36a4e5b6e8a8eeb4a6bbdea"
+    }
+  },
+  "rejection": {
+    "receipt": {
+      "path": ".cache/native-flee-sabana-civil-retirement-owner-nvidia-20261125.failure.json",
+      "sha256": "71961cd5e32f1cddca944de2b7a431bebf9afc299f3686ebbe485fc1b1bffd8d"
+    },
+    "trace": {
+      "path": ".cache/native-flee-sabana-civil-retirement-owner-nvidia-20261125.trace.json.gz",
+      "sha256": "e5ac3f700381e099f6a4ec9b1ee86f04853cbd8e04895fd7aa81e82be7693910"
+    },
+    "marks": {
+      "path": ".cache/native-flee-sabana-civil-retirement-owner-nvidia-20261125.civil-stages.json",
+      "sha256": "bc96af941f4dd7e363b06ccbb4d5a1f107b4fdbe9f94c66b04b5211b667360bc"
+    },
+    "missingOwner": {
+      "id": "request:11061",
+      "first": {
+        "id": "Buffer:11052",
+        "op": "writeBuffer",
+        "i": 59,
+        "reason": "suffix-generation",
+        "kind": "createBuffer",
+        "label": "bindingBuffer_object",
+        "usage": 76,
+        "size": 112,
+        "inActive": false,
+        "activeExact": false,
+        "inRetained": false,
+        "retainedExact": false,
+        "currentPins": 0,
+        "released": false,
+        "retired": false,
+        "destroyed": false
+      },
+      "active": 422,
+      "prefix": 59,
+      "total": 64,
+      "blocked": {
+        "key": "Buffer:1164",
+        "uniform": false
+      }
+    }
+  },
+  "hardware": {
+    "receipt": {
+      "path": ".cache/native-flee-sabana-civil-deferred-retirement-nvidia-20261125.json",
+      "sha256": "246e7803d0370176264429bdc4db7ef5f1d7611a1d3a2c88471f44d2b61c20fc"
+    },
+    "trace": {
+      "path": ".cache/native-flee-sabana-civil-deferred-retirement-nvidia-20261125.trace.json.gz",
+      "sha256": "3ef9b8520b9b26876c8d1e2853eb396e43090b8973196e92a24d672d50574e97"
+    },
+    "stages": {
+      "path": ".cache/native-flee-sabana-civil-deferred-retirement-nvidia-20261125.civil-stages.json",
+      "sha256": "3c0f9fd31c62de793f37259d4bc6f4eb976786dd8bcc0dd16b33f05722a2ff90"
+    },
+    "cuts": {
+      "path": ".cache/native-flee-sabana-civil-deferred-retirement-nvidia-20261125.cuts.json",
+      "sha256": "e5708130a9f62059b17862f1c30621c52ff108e9cafa382d285d5b8ac54f6b41"
+    },
+    "scenario": {
+      "pendingFarm": false,
+      "expectAnimal": true,
+      "currentFrameBeforeAttach": true,
+      "expectCivilReturn": true,
+      "collectResourceErrors": false,
+      "measureCivilStages": true,
+      "measurePrivateVfx": true,
+      "measureRetirementRefusal": true,
+      "measureDeferredRetirement": true,
+      "measureStrikeThree": true,
+      "qualification": {
+        "qualifyFarmFlee": true,
+        "qualifyAnimalCrop": true
+      },
+      "handoffOnly": false
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 132.20000000298023
+      }
+    },
+    "initialFrame": {
+      "sequence": 3,
+      "terrainGeneration": 25,
+      "selectableGeneration": 186,
+      "cameraVersion": 0
+    },
+    "deferred": {
+      "name": "WG-retirement-unowned-deferred",
+      "ts": 29781834076,
+      "durationMs": 0,
+      "pid": 9468,
+      "tid": 21664,
+      "detail": {
+        "request": "request:10613",
+        "after": 406,
+        "active": 405,
+        "prefix": 59,
+        "suffix": 5,
+        "unowned": [
+          {
+            "id": "Buffer:10604",
+            "kind": "createBuffer",
+            "usage": 76,
+            "size": 112,
+            "label": "bindingBuffer_object",
+            "pins": 0
+          },
+          {
+            "id": "Buffer:10605",
+            "kind": "createBuffer",
+            "usage": 76,
+            "size": 352,
+            "label": "bindingBuffer_object",
+            "pins": 0
+          },
+          {
+            "id": "Buffer:10603",
+            "kind": "createBuffer",
+            "usage": 44,
+            "size": 22528,
+            "pins": 0
+          },
+          {
+            "id": "Buffer:10609",
+            "kind": "createBuffer",
+            "usage": 76,
+            "size": 112,
+            "label": "bindingBuffer_object",
+            "pins": 0
+          },
+          {
+            "id": "Buffer:10610",
+            "kind": "createBuffer",
+            "usage": 76,
+            "size": 352,
+            "label": "bindingBuffer_object",
+            "pins": 0
+          }
+        ]
+      },
+      "absoluteMs": 1795616275431.899
+    },
+    "resolved": {
+      "name": "WG-retirement-resolved",
+      "ts": 29782968406,
+      "durationMs": 0,
+      "pid": 9468,
+      "tid": 11204,
+      "detail": {
+        "request": "request:10613",
+        "after": 406,
+        "fence": "request:10820",
+        "finishedAt": 1795616276470.7,
+        "presented": 407,
+        "ended": false
+      },
+      "absoluteMs": 1795616276566.229
+    },
+    "hits": [
+      {
+        "id": "event-51",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-48",
+        "targetId": "plant-5",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 657.9999999999372,
+          "animal": {
+            "x": 88.70540618896484,
+            "z": -5.325719833374023,
+            "heading": 2.9674229229780287
+          },
+          "target": {
+            "x": 89,
+            "z": -7
+          },
+          "shield": null
+        },
+        "simulationTime": 657.9999999999372
+      },
+      {
+        "id": "event-55",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-52",
+        "targetId": "plant-7",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 662.1999999999334,
+          "animal": {
+            "x": 89.626708984375,
+            "z": -5.997962474822998,
+            "heading": 2.201153197944249
+          },
+          "target": {
+            "x": 91,
+            "z": -7
+          },
+          "shield": null
+        },
+        "simulationTime": 662.1999999999334
+      }
+    ],
+    "raidEnd": {
+      "id": "event-57",
+      "type": "RaidEnded",
+      "simulationTime": 673.0899999999235
+    },
+    "finalRetreat": {
+      "sequence": 493,
+      "at": 1795616290578.2,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+        "nativeSession": 1,
+        "ticket": 19,
+        "effectiveTime": 663.2999999999324
+      },
+      "clockElapsed": 673.0999999999235,
+      "previous": {
+        "actorId": 22,
+        "bodyId": 2,
+        "executionEpoch": 663.2999999999324,
+        "sequence": 491,
+        "at": 1795616290378.0999
+      }
+    },
+    "firstFarm": {
+      "at": 1795616293146.0999,
+      "sequence": 494,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+        "nativeSession": 1,
+        "ticket": 21,
+        "effectiveTime": 675.799999999921
+      },
+      "intervalMs": 34.5,
+      "drawMs": 7.10009765625,
+      "replay": false,
+      "clockElapsed": 675.799999999921,
+      "safeUntil": 675.799999999921,
+      "cameraVersion": null
+    },
+    "firstIdle": {
+      "version": 1,
+      "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+      "nativeSession": 1,
+      "ticket": 23,
+      "effectiveTime": 708.6499999998912
+    },
+    "return": {
+      "bodyId": 3,
+      "refugeSequence": 9,
+      "id": "worker-21",
+      "personId": "person-9",
+      "contractDay": 2,
+      "x": 88,
+      "z": 1.9994935989379883,
+      "balance": {
+        "n": "190",
+        "d": "1"
+      }
+    },
+    "reusedToHome": {
+      "compared": 2974,
+      "sameReference": 2974,
+      "sameVersion": 2973
+    },
+    "errorCount": 0,
+    "resourceWarnings": 0,
+    "drained": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "refreshHz": 30,
+    "targetMs": 16.666666666666668,
+    "accepted": false,
+    "slowest": [
+      {
+        "sample": {
+          "at": 1795616276311.4,
+          "sequence": 407,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+            "nativeSession": 1,
+            "ticket": 13,
+            "effectiveTime": 656.4499999999387
+          },
+          "intervalMs": 1000,
+          "drawMs": 6.89990234375,
+          "replay": false,
+          "clockElapsed": 658.0999999999372,
+          "safeUntil": 658.0999999999372,
+          "cameraVersion": null
+        },
+        "transport": {
+          "endFrameCalledAt": 436.2,
+          "endFrameReturnedAt": 440.8,
+          "sendStartedAt": 460.2,
+          "postedAt": 460.2,
+          "workerReceivedAt": 479.3,
+          "admissionStartedAt": 505.4,
+          "resourcesWaitStartedAt": 543.7,
+          "resourcesReadyAt": 972.4,
+          "admittedAt": 980,
+          "firstDrawStartedAt": 1000,
+          "firstDrawCompletedAt": 1006.9
+        }
+      },
+      {
+        "sample": {
+          "at": 1795616290578.2,
+          "sequence": 493,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+            "nativeSession": 1,
+            "ticket": 19,
+            "effectiveTime": 663.2999999999324
+          },
+          "intervalMs": 200.10009765625,
+          "drawMs": 6.699951171875,
+          "replay": false,
+          "clockElapsed": 673.0999999999235,
+          "safeUntil": 673.0999999999235,
+          "cameraVersion": null
+        },
+        "transport": {
+          "endFrameCalledAt": 112.9,
+          "endFrameReturnedAt": 115.9,
+          "sendStartedAt": 117.6,
+          "postedAt": 117.6,
+          "workerReceivedAt": 129.2,
+          "admissionStartedAt": 144.6,
+          "resourcesWaitStartedAt": 162.5,
+          "resourcesReadyAt": 162.5,
+          "admittedAt": 171,
+          "firstDrawStartedAt": 200.1,
+          "firstDrawCompletedAt": 206.8
+        }
+      },
+      {
+        "sample": {
+          "at": 1795616279711.2998,
+          "sequence": 425,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+            "nativeSession": 1,
+            "ticket": 17,
+            "effectiveTime": 660.6499999999348
+          },
+          "intervalMs": 195.5,
+          "drawMs": 5.800048828125,
+          "replay": false,
+          "clockElapsed": 662.1999999999334,
+          "safeUntil": 662.1999999999334,
+          "cameraVersion": null
+        },
+        "transport": {
+          "endFrameCalledAt": 132.3,
+          "endFrameReturnedAt": 139.8,
+          "sendStartedAt": 140.8,
+          "postedAt": 140.8,
+          "workerReceivedAt": 151.7,
+          "admissionStartedAt": 165.9,
+          "resourcesWaitStartedAt": 182.5,
+          "resourcesReadyAt": 182.5,
+          "admittedAt": 190.2,
+          "firstDrawStartedAt": 195.5,
+          "firstDrawCompletedAt": 201.3
+        }
+      },
+      {
+        "sample": {
+          "at": 1795616273467.5999,
+          "sequence": 396,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "00992faa-a8a7-4b74-b759-5a8e7dfa9a2e/1",
+            "nativeSession": 1,
+            "ticket": 11,
+            "effectiveTime": 614.249999999977
+          },
+          "intervalMs": 122.300048828125,
+          "drawMs": 11.5,
+          "replay": true,
+          "clockElapsed": 655.0999999999399,
+          "safeUntil": 655.0999999999399,
+          "cameraVersion": null
+        },
+        "transport": {
+          "endFrameCalledAt": -827.8,
+          "endFrameReturnedAt": -824.2,
+          "sendStartedAt": -822.5,
+          "postedAt": -822.5,
+          "workerReceivedAt": -808.3,
+          "admissionStartedAt": -792.1,
+          "resourcesWaitStartedAt": -774.6,
+          "resourcesReadyAt": -774.6,
+          "admittedAt": -767.7,
+          "firstDrawStartedAt": -767.1,
+          "firstDrawCompletedAt": -755
+        }
+      }
+    ],
+    "pipelineWait": [
+      {
+        "name": "WG-civil-host-resources-wait",
+        "ts": 29782257307,
+        "durationMs": 428.5,
+        "pid": 9468,
+        "tid": 21664,
+        "detail": {
+          "sequence": 407,
+          "ticket": 13,
+          "total": 8,
+          "jobs": [
+            {
+              "id": "Pipeline:10626",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_186",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10637",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_186",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10648",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_186",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10659",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_186",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10672",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Mane repairs_268",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10685",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Actor eyelid original fur_270",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10698",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Material_0_267",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:10710",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Warthog oral tissue_269",
+              "stillPending": false
+            }
+          ]
+        },
+        "absoluteMs": 1795616275855.13
+      }
+    ],
+    "three": [
+      {
+        "name": "WG-civil-strike-three",
+        "ts": 29781868401,
+        "durationMs": 281.201,
+        "pid": 9468,
+        "tid": 11204,
+        "detail": {
+          "attack": "attack-48",
+          "sequence": 1165,
+          "count": 1,
+          "rows": {
+            "project": {
+              "calls": 2,
+              "ms": 1.3999999985098839,
+              "max": 0.8000000007450581,
+              "largest": {
+                "material": null,
+                "object": "",
+                "type": "Scene"
+              }
+            },
+            "nodes": {
+              "calls": 8,
+              "ms": 218.4999999962747,
+              "max": 42.599999997764826,
+              "largest": {
+                "material": "Actor eyelid original fur",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "bindings": {
+              "calls": 632,
+              "ms": 7.899999994784594,
+              "max": 0.4000000022351742,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "geometry": {
+              "calls": 632,
+              "ms": 4.600000005215406,
+              "max": 0.10000000149011612,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "pipeline": {
+              "calls": 8,
+              "ms": 0.6999999955296516,
+              "max": 0.19999999925494194,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "setup": {
+              "calls": 2,
+              "ms": 0.19999999925494194,
+              "max": 0.10000000149011612,
+              "largest": {
+                "material": null,
+                "object": null,
+                "type": null
+              }
+            },
+            "draw": {
+              "calls": 632,
+              "ms": 11.100000001490116,
+              "max": 0.30000000074505806,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            }
+          }
+        },
+        "absoluteMs": 1795616275466.2239
+      },
+      {
+        "name": "WG-civil-strike-three",
+        "ts": 29786159102,
+        "durationMs": 259.399,
+        "pid": 9468,
+        "tid": 11204,
+        "detail": {
+          "attack": "attack-52",
+          "sequence": 1251,
+          "count": 2,
+          "rows": {
+            "project": {
+              "calls": 2,
+              "ms": 0.6999999955296516,
+              "max": 0.3999999985098839,
+              "largest": {
+                "material": null,
+                "object": "",
+                "type": "Scene"
+              }
+            },
+            "nodes": {
+              "calls": 8,
+              "ms": 211.80000000074506,
+              "max": 41.80000000074506,
+              "largest": {
+                "material": "Actor eyelid original fur",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "bindings": {
+              "calls": 630,
+              "ms": 6.399999983608723,
+              "max": 0.5,
+              "largest": {
+                "material": "Mane repairs",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "geometry": {
+              "calls": 630,
+              "ms": 3.1000000089406967,
+              "max": 0.10000000149011612,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            },
+            "pipeline": {
+              "calls": 0,
+              "ms": 0,
+              "max": 0,
+              "largest": null
+            },
+            "setup": {
+              "calls": 2,
+              "ms": 0,
+              "max": 0,
+              "largest": null
+            },
+            "draw": {
+              "calls": 630,
+              "ms": 9.200000029057264,
+              "max": 0.30000000074505806,
+              "largest": {
+                "material": "ShadowMaterial",
+                "object": "",
+                "type": "Mesh"
+              }
+            }
+          }
+        },
+        "absoluteMs": 1795616279756.9248
+      }
+    ]
+  }
+}
