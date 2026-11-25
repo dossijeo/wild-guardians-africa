@@ -38,7 +38,7 @@ int appendRouteGateHold(RouteSlot& route,uint64_t gate,double distance,double un
 }
 int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
     double time,double radius,int mode,int motionFlags=0,double runBudget=0,
-    bool gateCandidate=false,bool animalAttack=false){
+    bool gateCandidate=false,bool animalAttack=false,bool workerFlight=false){
   if(mode==0)return 1;
   if((mode!=1&&mode!=2)||!std::isfinite(radius)||radius<=0||radius>2||
      motionFlags<0||motionFlags>63||!std::isfinite(runBudget)||runBudget<0||runBudget>1e9||
@@ -52,6 +52,7 @@ int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
   route.distances.clear();route.distances.reserve(route.points.size()/2);
   double travelled=0;
   const auto clearSegment=[&](double ax,double az,double bx,double bz){
+    if(workerFlight)return spatialWorkerFlightSegmentClear(ax,az,bx,bz,radius);
     if(animalAttack)return spatial_animal_attack_segment_clear(ax,az,bx,bz,radius);
     return gateCandidate?spatialGateCandidateSegmentClear(ax,az,bx,bz,radius):
       spatial_execution_segment_clear(ax,az,bx,bz,radius);};

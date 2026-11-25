@@ -320,6 +320,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext&&pendingTaskCancellation?.owner.kind!==21)throw Error('Native Idle cycle event omitted its typed source');
     const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival||actor.revoked.taskStopBodyId);
     const heldHomeSource=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+      throw Error('Native raid flight requires the original Farm source');
     const heldTaskHome=homeRequest&&stoppedTaskHomeMatches(actor,homeRequest);
     if(homeRequest&&stoppedRouteSourceRequired&&!heldTaskHome&&(!heldHomeSource||!nativeHomeRequestContinuesHeldWorker(homeRequest,heldHomeSource)))throw Error('Native Home differs from its actual stopped worker body');
     const heldTaskSource=taskRequest?stoppedHomeSource(actor):null;

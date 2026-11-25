@@ -25,7 +25,9 @@ bool nativeDeliveryBodyCurrent(const IntentState& s,const ActiveIntent& intent){
 bool nativeHomeBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.home||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.task||intent.lease||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return false;
  const auto& route=s.routeSlots[intent.slot];const auto& b=route.homeBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
- if(!b||!route.hasExecution||route.motionFlags||worker==s.workers.end())return false;
+ if(!b||!route.hasExecution||worker==s.workers.end())return false;
+ const int expectedFlags=b->requestSource&&b->requestSource->raidSpawnSequence?2:0;
+ if(route.motionFlags!=expectedFlags||b->actual.header[6]!=expectedFlags)return false;
  const auto source=homeRouteSourceView(b->source.get(),b->requestSource.get());if(!source.village||source.actor!=intent.actor)return false;const auto& h=b->actual.header;
  return b->assignmentSequence==intent.assignmentSequence&&double(route.generation)==h[4]&&double(intent.slot)==h[20]&&route.startTime==h[10]&&
   intent.approachKnown&&intent.approachX==float(source.homeX)&&intent.approachZ==float(source.homeZ)&&worker->second.bodyBound&&!worker->second.eligible&&

@@ -29,6 +29,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const actorId=worker.id,marker=worker.nativeRouteAdmission;
    if(onlyActor!==null&&actorId!==onlyActor)continue;
    if(marker==='pending-farm-arrival-resources'&&planner.nativeFarmArrivalRequestReference?.(actorId))return {actorId,kind:'farm-arrival',operation:'startNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources',urgent:urgentWork(state,worker)};
+   if(marker==='pending-farm-flight-stop'){
+    const stopRequest=planner.nativeFarmFlightStopRequest(actorId);
+    if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopFarmForRaidFlight',prepare:'prepareNativeGateResources',stopRequest};
+   }
    if(marker==='native-farm-arrival'){
     const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);
     if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeGateResources',stopRequest};

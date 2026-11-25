@@ -18,7 +18,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_request(double actor,double vil
 }
 static bool snapshotHomeRequest(IntentState& s,const NativeHomeResourceRequest* r){
  s.homeRequestResult.fill(0);if(!r||!r->body||r->session!=s.session)return false;
- s.homeRequestResult={1,double(r->actor),double(r->session),double(r->sequence),r->at,double(r->village),r->homeX,r->homeZ,r->x,r->z,r->yaw,r->runPhase,r->walkPhase,r->carryPhase,r->runRemaining,double(r->profile),double(r->body),r->radius,double(r->bodyFlags)};return true;
+ s.homeRequestResult={r->raidSpawnSequence?2.:1.,double(r->actor),double(r->session),double(r->sequence),r->at,double(r->village),r->homeX,r->homeZ,r->x,r->z,r->yaw,r->runPhase,r->walkPhase,r->carryPhase,r->runRemaining,double(r->profile),double(r->body),r->radius,double(r->bodyFlags)};return true;
 }
 // Retarget a genuine live Idle. The immutable preceding settlement keeps its
 // body association while the new semantic request awaits prepared resources.
@@ -61,12 +61,14 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_cycle_home_request(double actor,double 
 }
 // The existing prepared suspension has already revoked moving22/23. Retarget
 // its held native pose without creating a rest cycle or releasing its slot.
-static int requestHeldWorkerHome(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ,bool farm){
+static int requestHeldWorkerHome(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ,bool farm,uint64_t raidSpawnSequence=0){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(assignmentSequence)||!integer(generation)||generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  const auto& pending=s.barrierProposal;
  const bool farmContinuation=farm&&pending.pending&&pending.kind==23&&pending.farmArrivalRoute&&pending.farmArrivalRoute->header[1]==actor&&pending.farmArrivalRoute->farmArrivalHeldBinding;
  if(pending.pending&&!farmContinuation||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
+ if(intent.homeRequest&&intent.homeRequest->raidSpawnSequence!=raidSpawnSequence)return -2;
+ if(raidSpawnSequence&&intent.homeRequest&&(intent.homeRequest->farmArrivalSourceSequence!=uint64_t(assignmentSequence)||intent.homeRequest->farmArrivalSourceGeneration!=uint32_t(generation)))return -2;
  // A completed route owns a final pose, not a synthetic suspension. Its same
  // request remains idempotent after the executable corridor has been released.
  if(intent.homeRequest&&(farm?intent.homeRequest->completedFarmArrival:intent.homeRequest->completedIdleStroll)){const auto& r=*intent.homeRequest;if((farm?r.farmArrivalSourceSequence:r.idleStrollSourceSequence)!=uint64_t(assignmentSequence)||(farm?r.farmArrivalSourceGeneration:r.idleStrollSourceGeneration)!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
@@ -83,6 +85,7 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=intent.actor;request->session=s.session;request->body=route.reservationBody;request->profile=intent.profile;request->bodyFlags=body.flags;request->radius=route.radius;request->at=s.effectiveTime;
  request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
  if(farm){request->farmArrivalSourceSequence=uint64_t(assignmentSequence);request->farmArrivalSourceGeneration=uint32_t(generation);}else{request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);}
+ request->raidSpawnSequence=raidSpawnSequence;
  request->completedFarmArrival=completed&&farm;request->completedIdleStroll=completed&&!farm;
  if(completed)releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
  intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
@@ -187,12 +190,12 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,doubl
 }
 // A pending13 owns an intent and possibly its first body, not a Farm corridor.
 // Retarget that exact source as for a restored WALK, without inventing Idle.
-EMSCRIPTEN_KEEPALIVE int nav_intent_pending_farm_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+static int requestPendingFarmHome(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;const auto worker=s.workers.find(uint64_t(actor));if(worker==s.workers.end())return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;
   const bool current=r.body?nativeHomeRequestBodyCurrent(s,intent):intent.home&&intent.state==PlanningState::AwaitingResources&&!intent.task&&!intent.target&&!intent.generation&&intent.requiresResources&&!intent.lease&&r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&!worker->second.bodyBound&&!worker->second.body&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z;
-  if(!current||r.farmRequestSourceSequence!=uint64_t(sourceSequence))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
+  if(!current||r.raidSpawnSequence!=raidSpawnSequence||r.farmRequestSourceSequence!=uint64_t(sourceSequence))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
  }
  if(!nativeFarmArrivalRequestCurrent(s,intent)||intent.farmArrivalRequest->sequence!=uint64_t(sourceSequence))return -2;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
@@ -202,9 +205,20 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_pending_farm_home_request(double actor,doubl
   clearWorldMutationProposal(s.barrierProposal);
  }
  auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*intent.farmArrivalRequest;
- request->farmRequestSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+ request->raidSpawnSequence=raidSpawnSequence;request->farmRequestSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
  intent.farmArrivalRequest.reset();intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);worker->second.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+
+EMSCRIPTEN_KEEPALIVE int nav_intent_pending_farm_home_request(double actor,double session,double sequence,double village,double x,double z){
+ return requestPendingFarmHome(actor,session,sequence,village,x,z,0);
+}
+// Game supplies the confirmed RaidSpawned event. Only the named pending Farm
+// or its acquired stationary endpoint may lend this request its actual body.
+EMSCRIPTEN_KEEPALIVE int nav_intent_farm_flight_request(double actor,double session,double sequence,double generation,double village,double x,double z,double raidSpawnSequence){
+ if(!integer(raidSpawnSequence)||!integer(generation,true)||generation>double(UINT32_MAX))return -1;
+ if(!generation)return requestPendingFarmHome(actor,session,sequence,village,x,z,uint64_t(raidSpawnSequence));
+ return requestHeldWorkerHome(actor,session,sequence,generation,village,x,z,true,uint64_t(raidSpawnSequence));
 }
 // A genuine initial Idle may expire before graphics, or even its first body,
 // have been admitted. Retarget that semantic source on the same intent owner.
@@ -240,7 +254,17 @@ EMSCRIPTEN_KEEPALIVE int nav_home_declaration_snapshot(double actor){
  auto& s=state();s.homeRequestResult.fill(0);if(!integer(actor))return 0;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!nativeUnboundFarmHomeCurrent(s,found->second))return 0;
  const auto& r=*found->second.homeRequest;
- s.homeRequestResult={1,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.village),r.homeX,r.homeZ,r.x,r.z,r.yaw,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.profile),0,0,0};return 1;
+ s.homeRequestResult={r.raidSpawnSequence?2.:1.,double(r.actor),double(r.session),double(r.sequence),r.at,double(r.village),r.homeX,r.homeZ,r.x,r.z,r.yaw,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining,double(r.profile),0,0,0};return 1;
+}
+// Same ownership checks as the associated 19-field pose snapshot. Legacy
+// requests keep their original wire format. A zero return grants no flight.
+EMSCRIPTEN_KEEPALIVE double nav_home_flight_event(double actor,double ticket){
+ if(nav_home_request_snapshot(actor,ticket)!=1&&(ticket||nav_home_declaration_snapshot(actor)!=1))return 0;
+ const auto& s=state();
+ if(ticket)return double(s.barrierProposal.home->homeRequestSource->raidSpawnSequence);
+ const auto& intent=s.activeIntents.at(uint64_t(actor));
+ const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
+ return request?double(request->raidSpawnSequence):0;
 }
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;

@@ -566,12 +566,39 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     const executionFields=new Set(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']),strollSource=previous.nativeIdleStrollBinding?.reference,farmSource=previous.nativeFarmArrivalBinding?.reference;
     const taskRoot=task&&previous.nativeRoute.actorId===template.sourceRoute.actorId;
     if(taskRoot){executionFields.add('running');executionFields.add('gateWaiting');}
+    // A daytime raid cancels the Game goal before the moving Farm can stop.
+    // Its confirmed spawn and the existing 23 body must identify the same
+    // transition. This only stages 24. The acquired pose is checked below.
+    const flightStop=farm&&farmSource&&sameNativeReference(previous.nativeRoute,template.sourceRoute)&&
+      reference.bodyId===farmSource.bodyId&&entity.nativeRouteAdmission==='pending-farm-flight-stop';
+    const spawn=flightStop&&state.raid?.daytime===true&&previous.farmTaskPolicy===farmTaskPolicy(entity)?state.events?.findLast(e=>e.type==='RaidSpawned'&&e.simulationTime===state.elapsed&&
+      e.raidFacts?.id===state.raid?.id&&e.raidFacts.day===state.day&&e.raidFacts.daytime===true&&
+      e.raidFacts.elapsed===e.simulationTime&&e.raidFacts.actors?.length===1&&e.raidFacts.actors[0].species==='warthog'):null;
     let idlePolicy=null,validatingFarmSource=null,validatingTaskSource=null;
     const policy=value=>{
      // Ordinary Task assignment cancels only these semantic fields. Both
      // stopped families retain their acquired final pose and all other policy.
      const stoppedTask=candidate?.nativeHeldTaskRoute??validatingTaskSource;
      const source=stoppedTask??candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival,p=source?.pose;
+     if(flightStop){
+      const pending=value.nativeRouteAdmission==='pending-farm-flight-stop',requested=value.nativeRouteAdmission==='pending-raid-flight-resources';
+      const held=(candidate?.nativeHeldFarmArrival??validatingFarmSource)?.pose;
+      const animal=state.raid?.animals?.[0];
+      if(!spawn||state.day!==spawn.raidFacts.day||state.raid?.id!==spawn.raidFacts.id||state.raid.daytime!==true||state.raid.animals.length!==1||
+         animal.id!==spawn.raidFacts.actors[0].id||animal.species!=='warthog'||state.workers.length!==1||
+         state.workers[0].id!==id||value.status!=='fleeing'||(!pending&&!requested)||!farmPathMetadataCurrent(value)||
+         value.taskId||value.crateId||value.idleState!==null||value.destinationId!==null||value.path!==null||
+         value.recovery||value.incapacitated||value.fallRemaining||value.recoveryExitRemaining||value.raidReturn||
+         value.profile!==farmSource.sourceRequest.workerProfile||nativeEntityNumericId(value.centerId)!==farmSource.sourceRequest.centerId)return null;
+      // The confirmed request may arrive before the direct acquisition proof.
+      // It becomes usable only at the exact final stopped pose attested by 24.
+      if(requested&&(!held||value.running!==false||value.gateWaiting!==false))return null;
+      const fields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
+      const indices=[0,1,4,9,10,11,14];
+      if(fields.some((k,i)=>value[k==='yaw'?'heading':k]!==(requested?held[k]:pose[indices[i]])))return null;
+      return JSON.stringify({...Object.fromEntries(Object.entries(value).filter(([key])=>!executionFields.has(key))),
+       nativeRouteAdmission:'pending-farm-flight-stop',running:false,gateWaiting:false});
+     }
      const task=source&&state.tasks?.find(t=>t.id===value.taskId);
      if(task&&task.workerId===id&&value.status==='waiting-task'&&value.nativeRouteAdmission==='pending-resources'&&value.idleState===null&&value.destinationId===null&&value.taskApproach===null&&Number.isFinite(value.pathVersion)&&value.path===null&&value.running===false&&value.gateWaiting===false&&!value.nativeTaskAction&&value.heading===p.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>value[k]===p[k])){
       const normalized=Object.fromEntries(Object.entries(value).filter(([key])=>!executionFields.has(key)));

@@ -45,3 +45,39 @@ test('ordinary picking keeps the stopped original Farm body while its Idle clip 
 test('pthread Farm stop retains the original actor/bank and exact held native source',async()=>{
  const {default:factory}=await import('../public/wild-engine/spatial-threaded.mjs'),runtime=await createThreadedSpatialWorld(factory);let f;try{f=await fixture({core:runtime.core,urgent:true});const actor=f.roster.get(f.actor),{parts}=await f.prepare();f.advance(.2);f.sync();adopt(f,parts);assert.equal(f.roster.get(f.actor),actor);assert.equal(f.worker.nativeRouteAdmission,'native-farm-arrival-held');assert.equal(f.acquires,1);assert.deepEqual(f.errors,[]);}finally{f?.close();await runtime.dispose();}
 });
+
+test('confirmed raid flight keeps the original Farm rig through prepared and acquired Stop24',async()=>{
+ const f=await fixture({peer:false});
+ try{
+  const actor=f.roster.get(f.actor),resources=owned(f),worker=f.worker;
+  const raid={id:'raid-'+f.state.day+'-day',daytime:true,animals:[{id:'animal-1000000',species:'warthog'}]};
+  const spawn={id:'event-29208',type:'RaidSpawned',simulationTime:f.state.elapsed,
+   raidFacts:{id:raid.id,day:f.state.day,elapsed:f.state.elapsed,daytime:true,actors:structuredClone(raid.animals)}};
+  Object.assign(worker,{status:'fleeing',nativeRouteAdmission:'pending-farm-flight-stop',idleState:null,destinationId:null,path:null});
+  f.state.raid=raid;f.state.events=[];f.sync();
+  await assert.rejects(f.prepare(),/changed during preparation/);
+  f.state.events=[spawn];
+  const {parts}=await f.prepare(),part=parts[0];
+  assert(part.valid());
+  function rejectsChange(object,key,bad){
+   const original=object[key];object[key]=bad;f.sync();assert.equal(part.valid(),false,key);
+   object[key]=original;f.sync();assert(part.valid(),key);
+  }
+  rejectsChange(raid,'id','raid-other');
+  rejectsChange(raid.animals[0],'id','animal-99');
+  for(const [key,bad] of Object.entries({x:worker.x+.01,contractDay:worker.contractDay+1,taskId:'task-99',villageId:'village-99'}))
+   rejectsChange(worker,key,bad);
+  const proof=f.commitStop();
+  const pose=f.source.pose;
+  Object.assign(worker,{nativeRouteAdmission:'pending-raid-flight-resources',x:pose.x,z:pose.z,
+   heading:pose.yaw,runPhase:pose.runPhase,walkPhase:pose.walkPhase,carryPhase:pose.carryPhase,
+   runRemaining:pose.runRemaining,running:false,gateWaiting:false});f.sync();
+  assert.equal(part.valid(),false);
+  assert(part.acceptNativeStopBinding(proof));assert(part.valid());
+  rejectsChange(worker,'walkPhase',worker.walkPhase+.01);
+  part.activate();part.attach();const release=part.finalize();release.retire();release.notify();
+  f.submit();f.flush();
+  assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);assert.deepEqual(owned(f),resources);
+  assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});

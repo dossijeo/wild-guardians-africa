@@ -24,7 +24,9 @@ static int stageHomeRoute(double actor,double session,double sourceSequence){
  if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);
   if(d.route.points[size_t(count)*2-2]!=float(h.homeX)||d.route.points.back()!=float(h.homeZ))result=0;
  }
- if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),h.x,h.z,s.effectiveTime,h.radius,2,0,h.runRemaining,true);
+ if(result==1){
+  const bool flight=d.homeRequestSource&&d.homeRequestSource->raidSpawnSequence;
+  result=prepareRouteTiming(d.route,uint64_t(actor),h.x,h.z,s.effectiveTime,h.radius,2,flight?2:0,h.runRemaining,true,false,flight);
   if(result==1){d.route.motionOffset[2]=h.runPhase;d.route.motionOffset[3]=h.walkPhase;d.route.motionOffset[4]=h.carryPhase;}
  }
  d.topology=lazy_route_revision();if(previous!=h.profile)spatial_select_nav_profile_index(previous);

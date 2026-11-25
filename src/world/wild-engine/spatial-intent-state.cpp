@@ -41,6 +41,7 @@ int32_t* spatial_region_batch_output_ptr();
 int spatial_world_segment_clear(float,float,float,float);
 int spatial_execution_segment_clear(double,double,double,double,double);
 int spatial_execution_profile_kind();
+int spatialWorkerFlightSegmentClear(double,double,double,double,double);
 int spatial_animal_attack_segment_clear(double,double,double,double,double);
 uint64_t spatial_execution_revision(int);
 uint32_t lazy_route_revision();
@@ -164,6 +165,7 @@ struct NativeWorkerPoseResourceRequest {
 };
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
+ uint64_t raidSpawnSequence=0;
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
  uint64_t strollRequestSourceSequence=0,farmRequestSourceSequence=0,farmArrivalSourceSequence=0;uint32_t idleStrollSourceGeneration=0,farmArrivalSourceGeneration=0;double homeX=0,homeZ=0;
  uint64_t completedTaskSourceSequence=0;
@@ -3067,7 +3069,8 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
     if(route.timingMode){
-      const int clear=route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
+      const bool flight=route.homeBinding&&route.homeBinding->requestSource&&route.homeBinding->requestSource->raidSpawnSequence;
+      const int clear=flight?spatialWorkerFlightSegmentClear(x,z,nextX,nextZ,route.radius):route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
         spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius);
       if(clear!=1)return false;
     }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;

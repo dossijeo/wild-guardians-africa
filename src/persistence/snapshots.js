@@ -138,7 +138,10 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       // A live projection does not declare a loadable checkpoint. An approach
       // retains its actual WALK remaining/anchor; loading requires a fresh declaration.
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
-      if(!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+      const liveFarmFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
+        !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
+        ['pending-farm-flight-stop','pending-raid-flight-resources'].includes(worker.nativeRouteAdmission);
+      if(!liveFarmFlight&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;

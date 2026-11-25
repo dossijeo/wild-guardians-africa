@@ -165,13 +165,14 @@ int executionSavannaAnimalDry(ExecutionPoint a,ExecutionPoint b,double radius){
   }
   return 1;
 }
-int executionSegmentClear(double x,double z,double nx,double nz,double radius,bool gateCandidate=false,bool animalAttack=false){
+int executionSegmentClear(double x,double z,double nx,double nz,double radius,bool gateCandidate=false,bool animalAttack=false,bool workerFlight=false){
   executionClearanceChecks++;
   if(!navReady||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(nx)||!std::isfinite(nz)||
      std::max({std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})>=2147483000.0||
      !std::isfinite(radius)||radius<=0||radius>2||std::abs(radius-radiusNow)>1e-6)return -3;
   const bool savannaAnimal=animalAttack&&worldBiome==0&&!workerNow;
-  if(worldBiome!=1&&!savannaAnimal)return -2;
+  const bool savannaFlight=workerFlight&&workerNow&&worldBiome==0;
+  if(worldBiome!=1&&!savannaAnimal&&!savannaFlight)return -2;
   if(!gateCandidate&&spatialIntentGateUnsupported(x,z,nx,nz,radius))return -2;
   const double length=std::hypot(nx-x,nz-z);if(length>10000)return -2;
   const float coordinate=float(std::max({1.0,std::abs(x),std::abs(z),std::abs(nx),std::abs(nz)})+radius+3);
@@ -182,7 +183,7 @@ int executionSegmentClear(double x,double z,double nx,double nz,double radius,bo
   for(int i=0;i<pieces;i++){
     const double from=double(i)/pieces,to=double(i+1)/pieces;
     const ExecutionPoint a{x+(nx-x)*from,z+(nz-z)*from},b{x+(nx-x)*to,z+(nz-z)*to};
-    if(savannaAnimal){const int dry=executionSavannaAnimalDry(a,b,effectiveRadius);if(dry!=1)return dry;}
+    if(savannaAnimal||savannaFlight){const int dry=executionSavannaAnimalDry(a,b,effectiveRadius);if(dry!=1)return dry;}
     const int solid=executionSolids(a,b,effectiveRadius,gateCandidate);if(solid!=1)return solid;
     const int terrain=executionTerrain(a,b,radius,rounding);if(terrain!=1)return terrain;
   }

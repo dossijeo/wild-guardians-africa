@@ -1889,6 +1889,12 @@ void spatialGateSupportChanged(){++overlayRevision;}
 bool spatialGatePlanningClear(double x,double z,double nx,double nz){
  return !workerNow||spatialIntentGatePlanningClear(x,z,nx,nz,radiusNow);
 }
+extern "C" int spatialWorkerFlightSegmentClear(double x,double z,double nx,double nz,double radius){
+  if(!workerNow)return -2;
+  // Savanna gate mechanisms have a distinct sweep. A flight cannot borrow
+  // a Desert gate permit. Ordinary registered gates retain their Desert path.
+  return executionSegmentClear(x,z,nx,nz,radius,worldBiome==1,false,true);
+}
 int spatialGateCandidateSegmentClear(double x,double z,double nx,double nz,double radius){
   return executionSegmentClear(x,z,nx,nz,radius,true);
 }
@@ -2978,7 +2984,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_resource_snapshot(){
 }
 EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return worldResourcePublication?worldResourcePublication->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
-// 2–5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
+// 2â€“5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
 // 12/24/25 explicitly stop a native Idle stroll/Farm arrival/Task route without changing world geometry.
 int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
   if(captureResources&&kind<6&&kind!=2)return -2;
