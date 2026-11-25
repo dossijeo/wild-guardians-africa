@@ -1218,5 +1218,186 @@
         }
       ]
     }
+  },
+  "gatedFirstImpactProfile": {
+    "baseCommit": "87dee38ca11a6b45a98a8e4f04834acf222907b2",
+    "receiptSHA256": "060c5bb4d521e376399c282e3422cd0991139916ced0dca260f5613650f0250f",
+    "cutSHA256": "8aeb62876e60ea62f883f1e00e12363973374b11414a216c03128dae5b9f2d1c",
+    "attack": {
+      "id": "attack-29209",
+      "time": 46.80000000000136,
+      "hp": 580
+    },
+    "displayHz": 30,
+    "traceDataLoss": false,
+    "drained": true,
+    "sample": {
+      "at": 1795634008600.8,
+      "sequence": 279,
+      "trigger": "raf",
+      "nativeWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "b17d237c-94ce-4f92-816a-9d51dc3f67ba/1",
+        "nativeSession": 1,
+        "ticket": 13,
+        "effectiveTime": 45.25000000000123
+      },
+      "intervalMs": 1600.5,
+      "drawMs": 10.599853515625,
+      "replay": false,
+      "clockElapsed": 48.4000000000015,
+      "safeUntil": 48.4000000000015,
+      "cameraVersion": null
+    },
+    "cut": [
+      {
+        "at": 42.596923828125,
+        "duration": 685.5,
+        "name": "WG-civil-preparer-timeline",
+        "detail": {
+          "sourceSequence": 738,
+          "sequence": 739
+        }
+      },
+      {
+        "at": 42.596923828125,
+        "duration": 25.1,
+        "name": "WG-desert-timeline-preview",
+        "detail": {
+          "sequence": 739
+        }
+      },
+      {
+        "at": 68.096923828125,
+        "duration": 659.799,
+        "name": "WG-desert-timeline-publication",
+        "detail": {
+          "sequence": 739
+        }
+      },
+      {
+        "at": 68.096923828125,
+        "duration": 659.799,
+        "name": "WG-desert-stream-receive",
+        "detail": {
+          "sequence": 739
+        }
+      },
+      {
+        "at": 68.495849609375,
+        "duration": 659.4,
+        "name": "WG-desert-stream-commit",
+        "detail": {
+          "sequence": 739,
+          "events": [
+            "StructureHit",
+            "AnimalLogicalHit"
+          ]
+        }
+      },
+      {
+        "at": 74.697021484375,
+        "duration": 653.1,
+        "name": "WG-desert-surface-confirmed",
+        "detail": {
+          "sequence": 739,
+          "unchanged": false,
+          "events": [
+            "StructureHit",
+            "AnimalLogicalHit"
+          ]
+        }
+      },
+      {
+        "at": 76.995849609375,
+        "duration": 647.801,
+        "name": "WG-desert-first-center-damage",
+        "detail": {
+          "id": "structure-2",
+          "culture": "mapungubwe",
+          "hp": 580,
+          "maxHp": 600
+        }
+      },
+      {
+        "at": 728.096923828125,
+        "duration": 290.6,
+        "name": "WG-civil-preparer-capture",
+        "detail": {
+          "sequence": 739,
+          "ticket": 13
+        }
+      },
+      {
+        "at": 729.995849609375,
+        "duration": 288.701,
+        "name": "WG-civil-surface-render",
+        "detail": {
+          "sequence": 739,
+          "ticket": 13,
+          "preparedTerrain": false
+        }
+      },
+      {
+        "at": 1105.77783203125,
+        "duration": 462.3,
+        "name": "WG-civil-host-resources-wait",
+        "detail": {
+          "sequence": 279,
+          "ticket": 13,
+          "total": 8,
+          "jobs": [
+            {
+              "id": "Pipeline:6298",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_278",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6309",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_278",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6320",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_278",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6331",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_ShadowMaterial_278",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6344",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Mane repairs_375",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6357",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Actor eyelid original fur_377",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6370",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Material_0_374",
+              "stillPending": false
+            },
+            {
+              "id": "Pipeline:6382",
+              "kind": "createRenderPipeline",
+              "label": "renderPipeline_Warthog oral tissue_376",
+              "stillPending": false
+            }
+          ]
+        }
+      }
+    ]
   }
 }
