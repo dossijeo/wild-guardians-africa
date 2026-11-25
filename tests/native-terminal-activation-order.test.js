@@ -35,7 +35,7 @@ for(const reject of [false,true])test('terminal activation preserves one capture
     await f.send({kind:'attachVisualRecovery',id:34,terrainPort:{},presentationPort:next,recoveryPort:stream.port1,intentControlPort:control.port1});
     await untilNativeRecovery(()=>f.messages.some(m=>m.id===34));
     assert.equal(f.messages.find(m=>m.id===34).kind,'visualRecoveryAttached',f.messages.find(m=>m.id===34).message);
-    const restored=f.messages.find(m=>m.id===34&&m.kind==='visualRecoveryAttached').recoveredStroll;
+    const restored=f.messages.find(m=>m.id===34&&m.kind==='visualRecoveryAttached').recoveredWorkerRoute;
     f.hello(next);
     const ref=restored.execution.binding.reference,epoch=ref.worldBoundary.effectiveTime;
     replacement.client.registerClockBinding(replacement.buffer,{byteOffset:0,epoch,semantic:'relative',
@@ -85,7 +85,7 @@ for(const reject of [false,true])test('terminal activation preserves one capture
     await activate;
     assert.equal(f.controls.filter(c=>c.kind==='resume'&&c.holdId===hold).length,1);
     if(reject){
-      assert(f.messages.some(m=>m.kind==='visualRecoveryFailed'&&m.id===38&&m.message.includes('Missing submitted Idle22')));
+      assert(f.messages.some(m=>m.kind==='visualRecoveryFailed'&&m.id===38&&m.message.includes('Missing submitted worker route')));
       assert.equal(f.runtime.status().pendingSteps,1);
       assert.deepEqual(f.commands.slice(start),[]);
     }else{

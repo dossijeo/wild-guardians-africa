@@ -19,12 +19,12 @@ export async function nativeRecoveryHost({inactive=false,holdPreparation=false,f
   ready:Promise.resolve(),terrainBlocked:()=>false,
   submit(command){const p=native.command(command);sequence=p.sequence;commands.push({...command,sequence});if(p.terrainCheckpoint){manifest={epoch:'native-recovery-host',chunks:p.terrainCheckpoint.chunks.map(c=>({cx:c.cx,cz:c.cz,revision:1}))};p.terrainCheckpoint.terrainManifest=manifest;}return {accepted:true,sequence,result:Promise.resolve({...p,session:'s'})};},
   async quiesceNativeIntentProduction(id,options){if(!Number.isSafeInteger(id)||id<=lastControlId||held)throw Error('Native recovery fixture control identity or hold invalid');lastControlId=id;controls.push({kind:'quiesce',id,options});const item={id,receipt:null};held=item;item.receipt=await native.authority.quiesceNativeIntentProduction();const drained=await native.authority.flushNativeResourcePreparation({allowRetired:options?.forLostDraw===true});
-   if(drained?.terminal&&options?.forLostDraw)item.actor=await native.authority.terminalIdleStrollActor();
+   if(drained?.terminal&&options?.forLostDraw)item.actor=await native.authority.terminalWorkerRoute();
    return {version:1,holdId:id,...(item.actor?{terminal:true}:{}),publicationFloor:item.receipt===null?null:native.authority.nativeIntentProductionStatus().publicationSequence};},
   async resumeNativeIntentProduction(holdId,id){if(!held||held.id!==holdId||!Number.isSafeInteger(id)||id<=lastControlId)throw Error('Native recovery fixture release identity invalid');lastControlId=id;controls.push({kind:'resume',id,holdId});if(releaseError)throw releaseError;
    if(held.actor)await native.authority.checkHeldDraw(holdId,held.receipt,held.actor);
    native.authority.resumeNativeIntentProduction(held.receipt);held=null;if(releaseGate)await releaseGate;return {version:1,holdId};},
-  attachNativeIntentControl:(port,options)=>options?.recoveryHold?native.authority.attachHeldStroll(port,'production-control',options.recoveryHold,held.receipt,held.actor):native.authority.attachNativeIntentControl(port,'production-control'),
+  attachNativeIntentControl:(port,options)=>options?.recoveryHold?native.authority.attachHeldWorkerRoute(port,'production-control',options.recoveryHold,held.receipt,held.actor):native.authority.attachNativeIntentControl(port,'production-control'),
   async attachNativeResourcePreparation(port,options){if(options?.recoveryHold)await native.authority.checkHeldDraw(options.recoveryHold,held.receipt,held.actor);return native.authority.attachNativeResourcePreparation(port,'production-resources');},
   inspectTerrainRecoveryHandoff:through=>Promise.resolve({epoch:manifest.epoch,lastSequence:through,chunks:manifest.chunks}),reattachTerrain:()=>terrainGate??Promise.resolve(),dispose(){native.authority.dispose();},status:()=>({state:'ready',inflight:null,queued:0})
  };}};

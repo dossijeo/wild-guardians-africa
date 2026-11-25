@@ -1,3 +1,4 @@
+import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
@@ -66,6 +67,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       opportunityId:request.opportunityId,accepted,...(reason?{reason}:{})});
   }
   let recovered=null,recoveredSubmission=null;
+  function recoveryBindingMatches(binding,profile,reference){
+    return binding.semantic==='relative'&&!!binding[profile.clockField]&&profile.sameReference(binding[profile.clockField],reference);
+  }
   let nativeWorldBoundary=null,worldBoundaryRequired=false;
   const frameBoundary=packet=>packet.admittedWorldBoundary??packet.metadata?.nativeWorldBoundary??null;
   const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(frameBoundary(packet),nativeWorldBoundary);
@@ -857,12 +861,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
-      if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at&&
-        nativeRouteFrame.bindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref))){
-        const row=nativeRouteFrame.bindings.find(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref));
-        recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
-          assignmentSequence:recovered.assignmentSequence,nativeStroll:row.nativeStroll,elapsed:recovered.at,relativeTime:row.relativeTime};
-        recovered=null;
+      if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at){
+        const {profile}=recovered,row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,recovered.ref));
+        if(row){
+          recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
+            assignmentSequence:recovered.assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],
+            elapsed:recovered.at,relativeTime:row.relativeTime};
+          recovered=null;
+        }
       }
       frameTime.consume(timeTicket);
       if (!next) metrics.replayFrames++;
@@ -1172,9 +1178,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(recovered) {
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
-         !preparedBindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recovered.ref)
+         !preparedBindings.some(b=>recoveryBindingMatches(b,recovered.profile,recovered.ref)
              &&b.epoch===recovered.ref.worldBoundary.effectiveTime&&b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime)))
-        throw Object.assign(Error('Replacement requires its bound Idle22 clock at the loss cut'),{code:'native-idle-stroll-admission-obsolete'});
+        throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
+          {code:recovered.profile.kind===22?'native-idle-stroll-admission-obsolete':'native-farm-arrival-admission-obsolete'});
       if(recovered.install){recovered.install();recovered.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
@@ -2176,7 +2183,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock?.clockSequence||
               message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
             throw Error('Invalid native GPU fence boundary');
-          lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&nativeRouteFrame?.bindings.some(b=>b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,recoveredSubmission.nativeStroll))?recoveredSubmission:null;
+          lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
+          const recoveryProfile=recoveredSubmission?nativeWorkerRouteRecoveryProfile(recoveredSubmission.kind):null;
+          const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&nativeRouteFrame?.bindings.some(b=>
+            recoveryBindingMatches(b,recoveryProfile,recoveredSubmission[recoveryProfile.clockField]))?recoveredSubmission:null;
           // Snapshot the already-submitted GPU work now, outside the resource
           // FIFO. Future draws read the revoked records; late preparations must
           // still pass native admission. This is not a new clock/mutation permit.
@@ -2227,15 +2237,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(nativeWorldBoundary&&(nativeWorldBoundary.authorityEpoch!==message.authorityEpoch||
               nativeWorldBoundary.nativeSession!==message.clock?.nativeSession||
               nativeWorldBoundary.effectiveTime>message.clock.committedThrough))throw Error('Invalid native world resource baseline');
-           if(message.recoveredStroll!==undefined){
+           if(message.recoveredWorkerRoute!==undefined){
              // Only a fresh receiver created for this exact recovery attempt.
-             const q=message.recoveredStroll;
+             const q=message.recoveredWorkerRoute;
              if(!Number.isSafeInteger(intentControl.recoveryHold)||intentControl.recoveryHold<1||
                 q.holdId!==intentControl.recoveryHold||!nativeConsumerToken||q.consumerToken!==nativeConsumerToken||
-                !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered stroll attachment');
-             const proof=copyNativeIdleStrollAttestation(q.proof);
-             recovered={holdId:q.holdId,consumerToken:q.consumerToken,assignmentSequence:proof.assignmentSequence,ref:proof.reference,at:message.clock.committedThrough,
-               install:routeControl.prepareRecoveredStroll(proof,nativeWorldBoundary)};
+                !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered worker route attachment');
+             const profile=nativeWorkerRouteRecoveryProfile(q.kind),proof=profile.copyAttestation(q.proof);
+             recovered={holdId:q.holdId,consumerToken:q.consumerToken,profile,assignmentSequence:proof.assignmentSequence,
+               ref:proof.reference,at:message.clock.committedThrough,
+               install:routeControl.prepareRecoveredWorkerRoute(profile.kind,proof,nativeWorldBoundary)};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

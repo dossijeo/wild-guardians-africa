@@ -1,3 +1,4 @@
+import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -142,9 +143,11 @@ export function createNativeIntentControlPublication({port,session,observe,
         fail(Error('Invalid native GPU fence acknowledgement'));return;
       }
       const draw=data.recoveredSubmission;
-      if(draw&&(!recoveryBaseline||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
+      const recoveryProfile=draw&&recoveryBaseline?nativeWorkerRouteRecoveryProfile(recoveryBaseline.kind):null;
+      if(draw&&(!recoveryProfile||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
+         draw.kind!==recoveryProfile.kind||
          draw.assignmentSequence!==recoveryBaseline.proof.assignmentSequence||!Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||
-         !sameNativeIdleStrollReference(draw.nativeStroll,recoveryBaseline.proof.reference)||draw.elapsed!==fence.effectiveTime||
+         !recoveryProfile.sameReference(draw[recoveryProfile.clockField],recoveryBaseline.proof.reference)||draw.elapsed!==fence.effectiveTime||
          !Number.isFinite(draw.relativeTime)||draw.relativeTime<0)){
         fail(Error('Invalid recovered frame at native fence'));return;
       }
@@ -184,8 +187,8 @@ export function createNativeIntentControlPublication({port,session,observe,
         const initial=baseline.clock?prepareClock(baseline.clock,{baseline:true}):null;
         if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
           throw Error('Native world resources precede their causal baseline');
-        baselineClockSequence=initial?.clockSequence??null;recoveryBaseline=baseline.recoveredStroll??null;
-        port.postMessage({...baseline,...(baseline.recoveredStroll?{recoveredStroll:{...baseline.recoveredStroll,consumerToken}}:{}),...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
+        baselineClockSequence=initial?.clockSequence??null;recoveryBaseline=baseline.recoveredWorkerRoute??null;
+        port.postMessage({...baseline,...(baseline.recoveredWorkerRoute?{recoveredWorkerRoute:{...baseline.recoveredWorkerRoute,consumerToken}}:{}),...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
       },
       onClock(record){
         if(closed||retirement)return;

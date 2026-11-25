@@ -1,4 +1,6 @@
-import {copyNativeIdleStrollResources as copyRecoveredStrollResources,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
+import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
+import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
 import {sameNativeShieldWorld} from '../world/native-shield-world.js';
@@ -736,22 +738,29 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   function setGuardianMetadataFailure(error){if(closed||typeof error!=='string'||!error)throw TypeError('Invalid guardian metadata failure');guardianMetadata=null;guardianMetadataFailure=error;}
   function requireGuardianMetadata(){if(!guardianMetadata)throw Error(guardianMetadataFailure?`Guardian metadata unavailable: ${guardianMetadataFailure}`:'Guardian metadata unavailable');}
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
+  function recoveryExecution({kind,actorId}){
+    return kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
+  }
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
 
-    async terminalIdleStrollActor(){
+    async terminalWorkerRoute(){
       if(nativeProduction?.status().phase!=='suspended'||game.raid||game.workers.length!==1)return null;
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!current||pending||cohort.consumers!==1)return null;
-      const bindings=planner.nativeIdleStrollBindings();
-      if(bindings.length!==1||bindings[0].gateIds.length)return null;
-      const id=bindings[0].reference.actorId,e=planner.nativeIdleStrollExecution(id);
-      if(game.workers[0].id!=='worker-'+id||game.workers[0].nativeRouteAdmission!=='native-idle-stroll'||!e||e.arrived)return null;
+      const worker=game.workers[0],admission=worker.nativeRouteAdmission;
+      if(admission!=='native-idle-stroll'&&admission!=='native-farm-arrival')return null;
+      const kind=admission==='native-idle-stroll'?22:23,profile=nativeWorkerRouteRecoveryProfile(kind);
+      const bindings=kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
+      if(bindings.length!==1||bindings[0].gateIds.length||
+         !sameNativeWorldBoundary(current.worldBoundary,bindings[0].reference.worldBoundary))return null;
+      const route={kind,actorId:bindings[0].reference.actorId},execution=recoveryExecution(route);
+      if(worker.id!=='worker-'+route.actorId||!execution||execution.arrived)return null;
       await nativeIntentControl.waitForTerminalDraw();
-      const live=planner.nativeIdleStrollExecution(id);
-      if(nativeProduction.status().phase!=='suspended'||!live||live.arrived||live.binding.assignmentSequence!==e.binding.assignmentSequence)
-        throw Error('Idle22 source changed while waiting for terminal draw');
-      return id;
+      const live=recoveryExecution(route);
+      if(nativeProduction.status().phase!=='suspended'||!live||live.arrived||!profile.sameAttestation(live.binding,execution.binding))
+        throw Error('Worker route changed while waiting for terminal draw');
+      return route;
     },
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
@@ -794,39 +803,41 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(closed||!nativeResourcePreparation)return Promise.reject(Error('Native resource preparation unavailable'));
       return nativeResourcePreparation.prepareNativeTaskStartResources(resources,options);
     },
-    async attachHeldStroll(port,transportSession,holdId,receipt,actorId){
+    async attachHeldWorkerRoute(port,transportSession,holdId,receipt,route){
       if(!Number.isSafeInteger(holdId)||holdId<1||closed||nativeProduction?.status().phase!=='suspended'||
          await nativeProduction.quiesce()!==receipt)throw Error('Exact active native hold required');
       const terminal=await nativeResourcePreparation.settleForRecovery();
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!terminal?.terminal||!terminal.callbacksSettled||!current?.closed||!current.drained||pending||cohort.consumers!==1||
          nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
-      const execution=planner.nativeIdleStrollExecution(actorId);
-      if(!execution||execution.arrived)throw Error('Expected current moving Idle22');
+      const profile=nativeWorkerRouteRecoveryProfile(route.kind),execution=recoveryExecution(route);
+      if(!execution||execution.arrived)throw Error('Expected current moving worker route');
 
-      const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,proof:execution.binding});
-      const liveExecution=planner.nativeIdleStrollExecution(actorId);
+      const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,kind:profile.kind,proof:execution.binding});
+      const liveExecution=recoveryExecution(route);
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
         !liveExecution||liveExecution.arrived||JSON.stringify(liveExecution)!==JSON.stringify(execution))
         throw Error('Held source changed while installing replacement');
       const binding=liveExecution.binding,boundary=binding.reference.worldBoundary;
       const presentation=planner.captureNativeRoutePresentation(binding.reference.expectedRouteHandle);
-      const resources=copyRecoveredStrollResources({version:1,kind:22,phase:'committed',worldBoundary:boundary,
-        nativeRoute:presentation.nativeRoute,nativeIdleStrollBinding:binding,presentation});
+      const resources=profile.copyResources({version:1,kind:profile.kind,phase:'committed',worldBoundary:boundary,
+        nativeRoute:presentation.nativeRoute,[profile.bindingField]:binding,presentation});
       const manifest=getTerrainManifest?.();
       if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
-      return {...attachment,recoveredStroll:{version:1,holdId,publicationSequence:sequence,execution:liveExecution,resources,terrainManifest:manifest}};
+      return {...attachment,recoveredWorkerRoute:{version:1,holdId,publicationSequence:sequence,execution:liveExecution,resources,terrainManifest:manifest}};
     },
-    async checkHeldDraw(holdId,receipt,actorId){
+    async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
-      const previous=planner.nativeIdleStrollExecution(actorId);
+      const profile=nativeWorkerRouteRecoveryProfile(route.kind),previous=recoveryExecution(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
       if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
-         !sameHeld(previous,planner.nativeIdleStrollExecution(actorId),draw))throw Error('Missing submitted Idle22 at recovery cut');
+         !sameHeld(previous,recoveryExecution(route),draw))throw Error('Missing submitted worker route at recovery cut');
       return draw;
       function sameHeld(before,after,row){
-        if(!before||!after||JSON.stringify(before)!==JSON.stringify(after)||row.assignmentSequence!==after.binding.assignmentSequence)return false;
+        if(!before||!after||JSON.stringify(before)!==JSON.stringify(after)||row.kind!==profile.kind||
+           row.assignmentSequence!==after.binding.assignmentSequence||
+           !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
         const age=row.elapsed-after.binding.reference.worldBoundary.effectiveTime;
         return row.elapsed===planner.nativeCausalClock().committedThrough&&row.relativeTime===recoveryFloorFloat32(age);
       }

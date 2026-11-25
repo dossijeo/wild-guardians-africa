@@ -1,3 +1,4 @@
+import {nativeWorkerRouteRecoveryProfile} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
@@ -695,24 +696,30 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       at:s[15],endTime:s[16],ticket:s[17],session:s[18],attackId:s[19],preparedTicket:s[22],preparedAt:s[23]};
   }
 
-  const nativeIntentControlBaseline=(recoveredStroll=null)=>{
+  const nativeIntentControlBaseline=(recoveredWorkerRoute=null)=>{
     syncBoundaryTime();
     const count=wasm.nav_intent_control_snapshot();
     if(count<0)throw Error('Native intent control baseline is incoherent');
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6));
-    const strolls=nativeIdleStrollBindings();
-    if(recoveredStroll!==null){
-      if(count!==1||strolls.length!==1||!sameNativeIdleStrollAttestation(strolls[0],recoveredStroll.proof)||
-         strolls[0].gateIds.length||!nativeIdleStrollExecution(strolls[0].reference.actorId))throw Error('Held native stroll changed before bootstrap');
-    }else if(strolls.length)throw Error('Native Idle strolls require prepared graphical admission');
-    if((wasm.nav_farm_arrival_route_binding_actors?.()??0)!==0)throw Error('Native farm arrival routes require prepared graphical admission');
+    const strolls=nativeIdleStrollBindings(),farmCount=wasm.nav_farm_arrival_route_binding_actors?.()??0;
+    if(recoveredWorkerRoute!==null){
+      if(count!==1||strolls.length+farmCount!==1)throw Error('Expected one bound worker route at recovery');
+      const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
+      const execution=profile.kind===22?nativeIdleStrollExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
+      if(!execution||execution.arrived||execution.binding.gateIds.length||
+         !profile.sameAttestation(execution.binding,recoveredWorkerRoute.proof))
+        throw Error('Held native worker route changed before bootstrap');
+    }else{
+      if(strolls.length)throw Error('Native Idle strolls require prepared graphical admission');
+      if(farmCount!==0)throw Error('Native farm arrival routes require prepared graphical admission');
+    }
     if((wasm.nav_farm_arrival_held_actors?.()??0)!==0)throw Error('Native held farm arrival bodies require prepared graphical admission');
     const clock=nativeCausalClock();
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
     const pendingTaskRequests=nativeTaskRequestReferences(),pendingActionRequests=nativeTaskActionRestoreReferences(),pendingHomeRequests=nativeHomeRequestReferences(),pendingInitialIdleRequests=nativeInitialIdleRequestReferences(),pendingIdleStrollRequests=nativeIdleStrollRequestReferences(),pendingFarmArrivalRequests=nativeFarmArrivalRequestReferences(),nativeIdleCycles=nativeIdleCycleBindings(),cycleActors=new Set(nativeIdleCycles.map(value=>value.reference.actorId)),pendingIdleCycleRequests=nativeIdleCycles.map(value=>nativeIdleCycleNextRequest(value.reference.actorId)).filter(Boolean),nativeInitialIdleBodies=nativeInitialIdleBodyBindings().filter(value=>!cycleActors.has(value.reference.actorId)),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean),nativeActions=nativeTaskActionBindings(),nativeHomes=nativeHomeRouteBindings(),nativeSettlements=nativeTaskSettlementBindings(),nativeConsequences=Array.from({length:count},(_,i)=>nativeTaskConsequenceBinding(data[i*6])).filter(Boolean);
     const pendingAnimalCrop=readPendingAnimalCrop();
-    return {...(recoveredStroll?{recoveredStroll}:{}),...(pendingAnimalCrop?{pendingAnimalCrop}:{}),type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(restoredWallRepairs.length?{restoredWallRepairs}:{}),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
+    return {...(recoveredWorkerRoute?{recoveredWorkerRoute}:{}),...(pendingAnimalCrop?{pendingAnimalCrop}:{}),type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(restoredWallRepairs.length?{restoredWallRepairs}:{}),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
       sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(pendingActionRequests.length?{pendingActionRequests}:{}),...(pendingHomeRequests.length?{pendingHomeRequests}:{}),...(pendingInitialIdleRequests.length?{pendingInitialIdleRequests}:{}),...(pendingIdleStrollRequests.length?{pendingIdleStrollRequests}:{}),...(pendingFarmArrivalRequests.length?{pendingFarmArrivalRequests}:{}),...(nativeInitialIdleBodies.length?{nativeInitialIdleBodies}:{}),...(nativeIdleCycles.length?{nativeIdleCycles}:{}),...(pendingIdleCycleRequests.length?{pendingIdleCycleRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),...(nativeActions.length?{nativeActions}:{}),...(nativeConsequences.length?{nativeConsequences}:{}),...(nativeSettlements.length?{nativeSettlements}:{}),...(nativeHomes.length?{nativeHomes}:{}),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
@@ -720,12 +727,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
           assignmentSequence:data[at+4],startTime:data[at+5]};
       })};
   };
-  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null,gpuConsumer=null,recoveredStroll=null}={})=>{
+  const observeNativeIntentControl=({onBaseline,onChanges,onClosed=()=>{},onClock=null,gpuConsumer=null,recoveredWorkerRoute=null}={})=>{
     if(typeof onBaseline!=='function'||typeof onChanges!=='function'||typeof onClosed!=='function'||onClock!==null&&typeof onClock!=='function')
       throw TypeError('Expected native intent control observers');
     if(gpuConsumer!==null&&(!gpuConsumer.publication||typeof gpuConsumer.publication!=='object'||
        !gpuConsumer.owner||typeof gpuConsumer.owner!=='object'))throw TypeError('Expected native GPU consumer ownership');
-    const baseline=nativeIntentControlBaseline(recoveredStroll),observer={
+    const baseline=nativeIntentControlBaseline(recoveredWorkerRoute),observer={
       authorityEpoch:baseline.authorityEpoch,sequence:baseline.sequence,clockSequence:baseline.clock?.clockSequence??0,onChanges,onClosed,onClock};
     controlObservers.add(observer);
     try{onBaseline(baseline);}catch(error){controlObservers.delete(observer);throw error;}

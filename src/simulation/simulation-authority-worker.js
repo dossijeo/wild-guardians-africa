@@ -78,17 +78,17 @@ self.onmessage=async ({data})=>{
       if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');
 
       if(data.forLostDraw&&receipt!==null&&settled?.terminal===true&&settled.callbacksSettled===true)
-        createdHold.terminalActor=await source.terminalIdleStrollActor();
+        createdHold.terminalRoute=await source.terminalWorkerRoute();
       if(authority!==source||nativeProductionHold!==createdHold)return;
       createdHold.settled=true;
-      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(createdHold.terminalActor?{terminal:true}:{}),...(data.withPublicationFloor===true?{publicationFloor}:{})});
+      postMessage({kind:'nativeIntentProductionQuiesced',session,id:data.id,version:1,holdId:createdHold.id,...(createdHold.terminalRoute?{terminal:true}:{}),...(data.withPublicationFloor===true?{publicationFloor}:{})});
      }else{
       const hold=nativeProductionHold;
       if(!hold?.settled||data.holdId!==hold.id||!Number.isSafeInteger(data.holdId)||data.holdId<1||data.holdId>=data.id)throw Error('Native production hold is stale or unavailable');
 
-      if(hold.terminalActor){
+      if(hold.terminalRoute){
         if(!hold.replacement||source.nativeResourcePreparationStatus()?.phase!=='running')throw Error('Replacement is not ready for resume');
-        await source.checkHeldDraw(hold.id,hold.receipt,hold.terminalActor);
+        await source.checkHeldDraw(hold.id,hold.receipt,hold.terminalRoute);
         if(authority!==source||nativeProductionHold!==hold||source.nativeResourcePreparationStatus()?.phase!=='running')throw Error('Replacement changed during resume');
       }
       if(source.resumeNativeIntentProduction(hold.receipt)!==true)throw Error('Native production did not resume');
@@ -100,10 +100,10 @@ self.onmessage=async ({data})=>{
    if(data.kind==='attachNativeResourcePreparation'){
     try{
     const held=nativeProductionHold,source=authority;
-    if(data.recoveryHold!==undefined||held?.terminalActor){
-      if(!held?.terminalActor||!held.settled||!held.replacement||held.id!==data.recoveryHold)
+    if(data.recoveryHold!==undefined||held?.terminalRoute){
+      if(!held?.terminalRoute||!held.settled||!held.replacement||held.id!==data.recoveryHold)
         throw Error('Invalid terminal replacement resource attachment');
-      await source.checkHeldDraw(held.id,held.receipt,held.terminalActor);
+      await source.checkHeldDraw(held.id,held.receipt,held.terminalRoute);
       if(held!==nativeProductionHold||source!==authority)throw Error('Terminal replacement changed during fence');
     }
     const result=await source.attachNativeResourcePreparation(data.port,session);postMessage({kind:'nativeResourcePreparationAttached',session,...result});}
@@ -116,11 +116,11 @@ self.onmessage=async ({data})=>{
       const hold=nativeProductionHold;
       let result;
       if(data.recoveryHold!==undefined){
-       if(!hold?.terminalActor||!hold.settled||data.recoveryHold!==hold.id)throw Error('Invalid replacement hold');
+       if(!hold?.terminalRoute||!hold.settled||data.recoveryHold!==hold.id)throw Error('Invalid replacement hold');
        // A retry keeps its original hold. The previous replacement must itself
        // have completed the direct retirement before a new Draw can take it.
        if(hold.replacement&&!authority.nativeIntentControlStatus().current?.drained)throw Error('Previous replacement is still live');
-        result=await authority.attachHeldStroll(data.port,session,hold.id,hold.receipt,hold.terminalActor);
+        result=await authority.attachHeldWorkerRoute(data.port,session,hold.id,hold.receipt,hold.terminalRoute);
         if(nativeProductionHold!==hold)throw Error('Stale replacement hold');
         hold.replacement=true;
       }else result=await authority.attachNativeIntentControl(data.port,session);

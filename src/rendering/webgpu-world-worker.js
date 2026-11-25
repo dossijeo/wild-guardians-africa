@@ -69,11 +69,11 @@ self.onmessage=async({data})=>{try{if(data?.kind!=='initialize')updateSharedCame
  if(data?.kind==='dispose'){cancelNativeGatePreparations();settleNativeRouteFrames(Error('World worker disposed'));temporalRecovery?.dispose();cancelDraw();phase='closed';surface=null;try{await owner.close();}finally{postMessage({kind:'disposed'});close();}return;}
  if(data?.kind==='recovery-rebind'){await rebindRecovery(data);return;}
  if(data?.kind==='flushNativeResources'&&phase==='failed'&&canFlushNativeResources()){await nativeResources.accept(data);return;}
- if(recoveryEnabled&&data.kind==='recovery-live'){const temporal=temporalRecovery?.status();if(phase!=='recovering'||(data.recoveryId??0)!==recoveryGeneration||recoveryStaged.length||temporal&&(temporal.busy||temporal.failed||temporal.cursor===null||surface.stream?.status().sequence!==temporal.cursor))throw Error('Recovery is not ready');if(data.recoveredStroll!==undefined){
-     if(!temporal||!remoteGpu||typeof surface.prepareRecoveredStroll!=='function')throw Error('Recovered Idle22 requires fresh temporal Surface');
-     await surface.prepareRecoveredStroll(data.recoveredStroll,owner.signal);
-     if(phase!=='recovering'||owner.signal.aborted||surface.stream?.status().sequence!==data.recoveredStroll.publicationSequence)
-       throw Error('Recovered Idle22 preparation was superseded');
+ if(recoveryEnabled&&data.kind==='recovery-live'){const temporal=temporalRecovery?.status();if(phase!=='recovering'||(data.recoveryId??0)!==recoveryGeneration||recoveryStaged.length||temporal&&(temporal.busy||temporal.failed||temporal.cursor===null||surface.stream?.status().sequence!==temporal.cursor))throw Error('Recovery is not ready');if(data.recoveredWorkerRoute!==undefined){
+     if(!temporal||!remoteGpu||typeof surface.prepareRecoveredWorkerRoute!=='function')throw Error('Worker route recovery requires fresh temporal Surface');
+     await surface.prepareRecoveredWorkerRoute(data.recoveredWorkerRoute,owner.signal);
+     if(phase!=='recovering'||owner.signal.aborted||surface.stream?.status().sequence!==data.recoveredWorkerRoute.publicationSequence)
+       throw Error('Worker route recovery preparation was superseded');
    }
    if(temporal){if(surface.finishTimelineRecovery?.()!==true)throw Error('Temporal recovery handoff failed');temporalRecovery.dispose();temporalRecovery=null;}phase='running';scheduleDraw();postMessage({kind:'recoveryLive',...(recoveryGeneration?{recoveryId:recoveryGeneration}:{})});return;}
  if(phase!=='initializing'&&phase!=='running'&&phase!=='recovering'&&phase!=='rebinding')throw Error('World worker not running');

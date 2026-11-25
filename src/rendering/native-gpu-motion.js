@@ -3,7 +3,8 @@ import {prepareAnimalCropGpuTable} from './native-route-gpu-table.js';
 import {nativeFarmIdlePhaseOffset} from './native-farm-idle-phase.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeStoppedBodySelector} from './native-stopped-clock.js';
-import {copyNativeIdleStrollResources,nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
+import {nativeIdleStrollSuccessor} from '../world/native-idle-stroll.js';
+import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
 import {nativeHomeRouteSuccessor} from '../world/native-home-route.js';
 import {nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
@@ -53,16 +54,16 @@ function routeData(table,resourceRegistry){
 }
 // Creates graphical data only. The direct authority channel must separately
 // authorize presentation on the new consumer before the runtime releases hold.
-export function createRecoveredIdleStrollGpuMotion({resources,terrain,terrainManifest,...options}) {
-  const source = copyNativeIdleStrollResources(resources);
-  const support = terrain.prepareNativeRoute(source.presentation, {terrainManifest});
-  if (!support?.valid()) throw Error('Recovered Idle22 corridor is not resident');
+export function createRecoveredWorkerRouteGpuMotion({resources,support,...options}) {
+  const profile = nativeWorkerRouteRecoveryProfile(resources?.kind);
+  const source = profile.copyResources(resources);
+  if (!support?.valid()) throw Error('Recovered worker corridor is not resident');
   const {nativeRoute, ...table} = prepareNativeRouteGpuTable(support);
-  const ref = source.nativeIdleStrollBinding.reference;
-  if (nativeRoute.assignmentSequence !== source.nativeIdleStrollBinding.assignmentSequence) {
-    throw Error('Recovered Idle22 assignment changed');
+  const binding = source[profile.bindingField],ref=binding.reference;
+  if (nativeRoute.assignmentSequence !== binding.assignmentSequence) {
+    throw Error('Recovered worker route assignment changed');
   }
-  const restored = createMotion({...options,support}, null, null, {...table,nativeStroll:ref});
+  const restored = createMotion({...options,support}, null, null, {...table,[profile.clockField]:ref});
   restored.seal();
   return restored;
 }

@@ -21,6 +21,7 @@ import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration
 import {nativeProductionAuthority} from './helpers/native-production-authority.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
+import {centerServicePoint} from '../src/world/centers.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate,pump=flush){const end=Date.now()+8000;while(!predicate()){if(Date.now()>end)throw Error('Native production lifecycle fixture timed out');await pump();await flush();}}
@@ -536,11 +537,28 @@ test('paused ordinary Harvest discards late Carry READY and settles the original
  }finally{releaseCarry();await f?.close();fixture.close();}
 });
 
-test('a terminal Idle22 hold resumes only from the first matching submit on its replacement Draw',async()=>{
- const f=await sourceFixture();
+function movingFarmForRecovery(){
+ const origin=buildFarmFixture({peer:false});
+ try{
+  const state=structuredClone(origin.state),worker=state.workers[0],center=state.structures.find(row=>row.id===worker.centerId);
+  const service=centerServicePoint(center,state,.8),start={x:-14,z:11.8};
+  center.x+=-14-service.x;center.z+=3.2-service.z;
+  Object.assign(worker,start);state.villages.find(row=>row.id===worker.villageId).entry=start;
+  return state;
+ }finally{origin.close();}
+}
+
+for(const [kind,fixtureName,clockField,bindingField,capability] of [
+ [22,'Idle22','nativeStroll','nativeIdleStrollBinding','nativeIdleStrollVersion'],
+ [23,'Farm23','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion']
+])test(`a terminal ${fixtureName} hold resumes only from the first matching submit on its replacement Draw`,async()=>{
+ const chunkKeys=Array.from({length:9},(_,i)=>(i%3-1)+','+(Math.floor(i/3)-1));
+ if(kind===23)chunkKeys.push('2,-1','2,0','2,1');
+ const f=await sourceFixture(kind===23?{state:movingFarmForRecovery(),chunkKeys}:{chunkKeys});
+ const capabilities={width:20,height:10,format:'rgba8unorm',[capability]:1};
  const terrain=new MessageChannel(),control=new MessageChannel(),resources=new MessageChannel();
  const client=createSimulationAuthorityClient({session:'s',snapshot:f.snapshot,terrainPort:terrain.port1,
-   chunkKeys:Array.from({length:9},(_,i)=>(i%3-1)+','+(Math.floor(i/3)-1)),workerFactory:()=>f.sourceWorker});
+   chunkKeys,workerFactory:()=>f.sourceWorker});
  const interruptedControl=new MessageChannel();
  let interrupted,replacement,endpoint;
  try{
@@ -549,7 +567,10 @@ test('a terminal Idle22 hold resumes only from the first matching submit on its 
    await client.attachNativeResourcePreparation(f.native.resourcePort);
    await until(()=>f.native.records.some(r=>r.committed),()=>f.native.present());
    await client.submit({kind:'resume',reason:'menu'}).result;
-   const at=(await client.submit({kind:'advance',steps:2,seconds:.05,nightFastForward:false}).result).elapsed;
+   const before=await client.submit({kind:'advance',steps:2,seconds:.05,nightFastForward:false}).result,at=before.elapsed;
+   const moving=()=>f.native.host.inspect().nativeRouteFrame?.bindings.find(b=>b[clockField]&&b.relativeTime>0);
+   await until(()=>!!moving(),()=>f.native.present());
+   const bodyId=moving()[clockField].bodyId;
    const live=await client.quiesceNativeIntentProduction(30,{withPublicationFloor:true,forLostDraw:true});
    assert.equal(live.terminal,undefined);await client.resumeNativeIntentProduction(30,31);
    f.native.gpu.device.destroy();
@@ -558,7 +579,7 @@ test('a terminal Idle22 hold resumes only from the first matching submit on its 
    const cut=await client.quiesceNativeIntentProduction(32,{withPublicationFloor:true,forLostDraw:true});
    assert.equal(cut.terminal,true);
    await assert.rejects(client.resumeNativeIntentProduction(32,33),/Replacement is not ready/);
-   interrupted=await createRemoteFixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeIdleStrollVersion:1}},
+   interrupted=await createRemoteFixture({capabilities},
       {intentControl:{port:interruptedControl.port2,session:'s',recoveryHold:cut.holdId}});
    await client.attachNativeIntentControl(interruptedControl.port1,{recoveryHold:cut.holdId});
    const competing=new MessageChannel();
@@ -566,20 +587,22 @@ test('a terminal Idle22 hold resumes only from the first matching submit on its 
    finally{competing.port1.close();competing.port2.close();}
    interrupted.gpu.device.destroy();
    await until(()=>f.native.authority.nativeIntentControlStatus().current?.drained);
-   replacement=await createRemoteFixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeIdleStrollVersion:1}},
+   replacement=await createRemoteFixture({capabilities},
       {intentControl:{port:control.port2,session:'s',recoveryHold:cut.holdId}});
-   const {recoveredStroll:q}=await client.attachNativeIntentControl(control.port1,{recoveryHold:cut.holdId});
+   const {recoveredWorkerRoute:q}=await client.attachNativeIntentControl(control.port1,{recoveryHold:cut.holdId});
    assert.equal(q.holdId,cut.holdId);assert.equal(q.execution.executedThrough,at);
-   const ref=q.resources.nativeIdleStrollBinding.reference,epoch=ref.worldBoundary.effectiveTime;
+   assert.equal(q.resources.kind,kind);
+   const ref=q.resources[bindingField].reference,epoch=ref.worldBoundary.effectiveTime;
+   assert.equal(ref.bodyId,bodyId);
    const early=new MessageChannel();
    try{await assert.rejects(client.attachNativeResourcePreparation(early.port1,{recoveryHold:cut.holdId}),/Missing submitted/);}
    finally{early.port1.close();early.port2.close();}
    replacement.client.registerClockBinding(replacement.buffer,{byteOffset:0,epoch,semantic:'relative',
-     nativeStroll:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+     [clockField]:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
    const frame=replacement.frame(77,{nativeWorldBoundary:ref.worldBoundary,
      clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
    await flush();await replacement.host.idle();replacement.host.present();await frame;
-   assert.equal(replacement.host.inspect().nativeRouteFrame.bindings.find(b=>b.nativeStroll)?.relativeTime,floorFloat32(at-epoch));
+   assert.equal(replacement.host.inspect().nativeRouteFrame.bindings.find(b=>b[clockField])?.relativeTime,floorFloat32(at-epoch));
    endpoint=attachNativeResourcePreparationEndpoint({port:resources.port2,session:'s',isRunning:()=>true,
      prepare:async()=>{throw Error('Unexpected preparation during hold');}});
    await client.attachNativeResourcePreparation(resources.port1,{recoveryHold:cut.holdId});

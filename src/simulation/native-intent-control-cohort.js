@@ -20,9 +20,9 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
     for(const member of members)member.dispose('cohort-failed');
     try{onError(error instanceof Error?error:Error(fault));}catch{}
   }
-  async function attach(port,session,recoveredStroll=null){
+  async function attach(port,session,recoveredWorkerRoute=null){
     if(status().closed||pending||boundary)throw Error('Native intent control attachment unavailable');
-    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe:recoveredStroll===null?observe:observers=>observe({...observers,recoveredStroll}),controlOwner:api,onError:fail});
+    const candidate=createNativeIntentControlPublication({...publicationOptions,port,session,observe:recoveredWorkerRoute===null?observe:observers=>observe({...observers,recoveredWorkerRoute}),controlOwner:api,onError:fail});
     members.add(candidate);pending=candidate;
     try{
       const result=await candidate.ready;

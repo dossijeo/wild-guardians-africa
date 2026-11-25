@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La recuperación tras perder el dispositivo ya cubre un Farm23 en marcha con un solo civil sin portón. NVIDIA verificó el mismo cuerpo y corredor, selección a 10,75 s durante la suspensión, dos fences, regreso a Idle y drenaje al salir. C4 y las otras cohortes de Recovery siguen abiertos. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-farm23).
+
 El preview del primer golpe conserva la publicación histórica y evita crear un mapa de descriptores por objeto. En NVIDIA a 60 Hz, el preview pasó de 22,30 a 14,60 ms y el intervalo de 168,30 a 150,20 ms. El relevo sigue por encima de 16,667 ms. [Desglose](native-desert-mixed-flight-center-20261125.md#coste-del-preview-de-la-publicación-confirmada).
 
 Escudo también caduca durante Idle22 y conserva su corredor adquirido. En NVIDIA, kind4 retiró el polígono 10 a 10,796 s, el dibujo 26 presentó ese ticket y el trabajador siguió avanzando con el cuerpo 1. Quedan el menú ordinario, la caducidad durante incursiones y C4. [Contraste](webgpu-shield.md#caducidad-durante-idle22).

@@ -19,10 +19,11 @@ for(const cancel of [false,true])test(cancel?'replayed Idle22 rechecks cancellat
    f.gpu.device.destroy();f.retireResourceEndpoint();
    const receipt=await f.authority.quiesceNativeIntentProduction();
    await f.authority.flushNativeResourcePreparation({allowRetired:true});
-   const actorNum=await f.authority.terminalIdleStrollActor();
+   const route=await f.authority.terminalWorkerRoute();
+   assert.equal(route.kind,22);
    replacement=await fixture({capabilities:{width:20,height:10,format:'rgba8unorm',nativeIdleStrollVersion:1}},
      {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
-   const {recoveredStroll}=await f.authority.attachHeldStroll(ports.port1,'production-control',30,receipt,actorNum);
+   const {recoveredWorkerRoute}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,receipt,route);
    const payloads=new Map();f.authority.publishResidentTerrainForQa(p=>payloads.set(p.cx+','+p.cz,p));
    let selected;
    const clock=createConfirmedPresentationClock(view.elapsed);
@@ -32,7 +33,7 @@ for(const cancel of [false,true])test(cancel?'replayed Idle22 rechecks cancellat
    const root=rig.roster.get(actor).root;
    const controller=new AbortController();
    const options={signal:controller.signal,isCurrent:()=>true,getPickTime:()=>view.elapsed,getPickIdleOffset:()=>0};
-   const source={...recoveredStroll,terrain:rig.terrain,terrainManifest:rig.manifest};
+   const source={...recoveredWorkerRoute,terrain:rig.terrain,terrainManifest:rig.manifest};
    const original=rig.admission.prepareAndPublish.bind(rig.admission);
    let entered,settled=false;
    const order=[];
@@ -46,7 +47,7 @@ for(const cancel of [false,true])test(cancel?'replayed Idle22 rechecks cancellat
    rig.roster.setHistoricalActors([actor]);await started;
    assert.equal(rig.roster.get(actor).hasBakedWalking(),true);
    assert.equal(rig.roster.get(actor).isBakedWalking(),true);
-   const pending=rig.roster.prepareRecoveredStroll(source,options);
+   const pending=rig.roster.prepareRecoveredWorkerRoute(source,options);
    const settlement=pending.then(value=>({value}),error=>({error})).finally(()=>{settled=true;});
    await new Promise(r=>setImmediate(r));
    if(settled){const early=await settlement;throw early.error??Error('Replayed rig became current ahead of its historical admission');}
@@ -57,7 +58,7 @@ for(const cancel of [false,true])test(cancel?'replayed Idle22 rechecks cancellat
    if(cancel){
      assert.equal(result.error?.name,'AbortError');assert.deepEqual(order,['historical']);
      assert.equal(rig.roster.status().native,0);
-     await rig.roster.prepareRecoveredStroll(source,{...options,signal:new AbortController().signal});
+     await rig.roster.prepareRecoveredWorkerRoute(source,{...options,signal:new AbortController().signal});
    }else if(result.error)throw result.error;
    assert.deepEqual(order,['historical','native']);
    assert.equal(rig.roster.get(actor).root,root);

@@ -383,7 +383,7 @@ async function installWorkerGame(owner,ownerState,navigation,{visualRecovery=nul
         owner.pendingQualityClient=client;if(import.meta.env.DEV)owner.qaRecoveryClient=client;
         await client.ready;if(!current())throw Error('World changed during visual recovery');
         client.setQuality(owner.quality??'media');client.setAwakeningSelection(owner.awakeningSelecting===true,owner.awakeningTargetId??null);client.setPresentationVisibility?.(document.hidden);
-        attachStarted=true;const attached=await runtime.attachVisualRecovery(transport),dispatchToken=runtime.visualRecoveryDispatchToken();if(!current())throw Error('World changed during visual recovery');client.finishRecovery(attached.recoveredStroll);
+        attachStarted=true;const attached=await runtime.attachVisualRecovery(transport),dispatchToken=runtime.visualRecoveryDispatchToken();if(!current())throw Error('World changed during visual recovery');client.finishRecovery(attached.recoveredWorkerRoute);
         await handoffWebGpuSurface({client,canvas,previous,retainPrevious:retained,isCurrent:current,readCamera:camera,readSize:()=>({width:owner.canvas.width,height:owner.canvas.height}),bind:()=>bindWebGpuWorld(client,canvas),commit:next=>{owner.webGpuWorld=next;},beforeCommit:async()=>{
           finishStarted=true;
           if(prepared.terminalHoldId!==undefined){

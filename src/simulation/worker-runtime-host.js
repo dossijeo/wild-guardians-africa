@@ -140,7 +140,7 @@ self.onmessage=async({data})=>{
    assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);
    postMessage({kind:'visualRecoveryPrepared',session,id:data.id,checkpoint:recoveryBase,...(nativeRecoveryHold?.terminal?{terminalHoldId:nativeRecoveryHold.holdId}:{})});}catch(error){if(!runtime)return;if(!retry&&error?.code!=='recovery-incomplete'&&error?.code!=='native-recovery-busy'){try{if(nativeRecoveryHold&&!recoveryAttachStarted)await releaseNativeRecoveryHold();}catch(releaseError){error=releaseError;}if(!recoveryFault){recoveryFrozen=false;resumeRecoveryClock();resumeHostedDispatch();}}postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;
   }
-  if(recoveryEnabled&&data.kind==='attachVisualRecovery'){let attempt=null,recoveredStroll=null;try{
+  if(recoveryEnabled&&data.kind==='attachVisualRecovery'){let attempt=null,recoveredWorkerRoute=null;try{
    if(!recoveryFrozen||recoveryReplay||!data.presentationPort||!data.terrainPort||!data.recoveryPort||!Number.isSafeInteger(data.id))throw Error('Invalid visual recovery attachment');
    const retained=data.retainedCheckpoint??null;if(retained!==null&&(!presentationTimeline||!workRecovery||data.intentControlPort||!retained||typeof retained!=='object'||Array.isArray(retained)||Object.keys(retained).some(key=>!['sequence','presentationCheckpoint','workCheckpoint'].includes(key))))throw Error('Invalid retained visual recovery attachment');
    recoveryAttachStarted=true;attempt=++recoveryAttempt;
@@ -152,19 +152,19 @@ self.onmessage=async({data})=>{
     if(assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence)!==result.sequence)throw Error('Recovery replay did not reach authority boundary');
     if(recoveryTimer!==null)clearTimeout(recoveryTimer);recoveryTimer=null;recoveryWatchdog?.dispose();recoveryWatchdog=null;
     recoveryReplay.dispose();recoveryReplay=null;visualStream?.close();visualStream=openHostedVisualStream(data.presentationPort);
-    postMessage({kind:'visualRecoveryAttached',session,id:data.id,sequence:result.sequence,...(recoveredStroll?{recoveredStroll}:{})});
+    postMessage({kind:'visualRecoveryAttached',session,id:data.id,sequence:result.sequence,...(recoveredWorkerRoute?{recoveredWorkerRoute}:{})});
    },onError:failRecovery});
    const terrainSwitch=presentationTimeline?(async()=>{const boundary=sequence,handoff=await authorityClient.inspectTerrainRecoveryHandoff(boundary);if(!recoveryFrozen||!recoverySwitching||runtime.status().busy||sequence!==boundary)throw Error('Historical terrain authority boundary changed');validateHistoricalTerrainRecovery({journal:recoveryJournal,checkpoint:recoveryBase,handoff});recoveryReplay=prepareReplay(retained===null?null:{...retained,handoff});if(!recoveryFrozen||!recoverySwitching||runtime.status().busy||sequence!==boundary)throw Error('Historical terrain authority boundary changed');await authorityClient.reattachTerrain(data.terrainPort,{historicalHandoff:handoff});})():(recoveryReplay=prepareReplay(null),authorityClient.reattachTerrain(data.terrainPort));pendingTerrainSwitch=terrainSwitch;try{await terrainSwitch;}finally{if(pendingTerrainSwitch===terrainSwitch)pendingTerrainSwitch=null;}
     if(recoveryFault||attempt!==recoveryAttempt)return;
 
     if(nativeRecoveryHold?.terminal){
       const hold=nativeRecoveryHold;
-      if(retained!==null||!data.intentControlPort)throw Error('Terminal Idle22 requires a fresh Draw');
+      if(retained!==null||!data.intentControlPort)throw Error('Worker route recovery requires a fresh Draw');
       const result=await authorityClient.attachNativeIntentControl(data.intentControlPort,{recoveryHold:hold.holdId});
       if(recoveryFault||attempt!==recoveryAttempt)return;
-      recoveredStroll=result?.recoveredStroll;
-      if(nativeRecoveryHold!==hold||recoveredStroll?.holdId!==hold.holdId||
-         recoveredStroll.publicationSequence!==sequence)throw Error('Replacement source differs from frozen publication');
+      recoveredWorkerRoute=result?.recoveredWorkerRoute;
+      if(nativeRecoveryHold!==hold||recoveredWorkerRoute?.holdId!==hold.holdId||
+         recoveredWorkerRoute.publicationSequence!==sequence)throw Error('Replacement source differs from frozen publication');
       hold.attachment=attempt;hold.resources=false;
     }else if(data.intentControlPort)await authorityClient.attachNativeIntentControl(data.intentControlPort);
     if(recoveryFault||attempt!==recoveryAttempt)return;
@@ -192,7 +192,7 @@ self.onmessage=async({data})=>{
     }
     recoveryVisibilityFlushing=true;await awaitRecoveryProgress({...recoveryTimeouts,readProgress:()=>{const channel=visualStream?.status(),journal=recoveryJournal?.status();return [sequence,channel?.acknowledged,channel?.lastReceived,journal?.base,journal?.candidate].join(':');},run:async signal=>{await runtime.queueBarrier({signal});while(!signal.aborted){const version=recoveryVisibilityVersion,hidden=recoveryVisibility;if(runtime.hasPauseReason('hidden')!==hidden)await runtime.submit({kind:hidden?'pause':'resume',reason:'hidden'});while(!signal.aborted&&recoveryJournal.status().candidate!==null)await new Promise(resolve=>setTimeout(resolve,10));if(signal.aborted||version===recoveryVisibilityVersion)return;}}});if(!recoveryFrozen||recoveryFault)throw Error('Visual recovery activation invalidated');assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);await releaseNativeRecoveryHold();resumeRecoveryClock();recoveryFrozen=false;recoveryAttachStarted=false;recoveryResumed=true;recoveryReadyForActivation=false;postMessage({kind:'visualRecoveryActivated',session,id:data.id,sequence});}finally{recoveryVisibilityFlushing=false;recoveryActivating=false;resumeHostedDispatch();}}catch(error){postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;}
   if(recoveryEnabled&&data.kind==='finishVisualRecoveryConfirmed'){try{if(nativeRecoveryHold?.terminal&&!nativeRecoveryHold.resources)throw Error('Visual recovery not caught up');if(!Number.isSafeInteger(data.id)||!recoveryFrozen||recoveryReplay||recoveryFault)throw Error('Visual recovery not caught up');assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);if(recoveryJournal.status().saturated&&!recoveryJournal.retryAfterRecovery())throw Error('Cannot renew recovery checkpoint');recoveryReadyForActivation=true;postMessage({kind:'visualRecoveryFinished',session,id:data.id,sequence});}catch(error){postMessage({kind:'visualRecoveryFailed',session,id:data.id,message:String(error?.message??error)});}return;}
-  if(recoveryEnabled&&data.kind==='finishVisualRecovery'){if(nativeRecoveryHold?.terminal)throw Error('Terminal Idle22 requires confirmed replacement');if(!recoveryFrozen||recoveryReplay||recoveryFault)throw Error('Visual recovery not caught up');assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);if(recoveryJournal.status().saturated&&!recoveryJournal.retryAfterRecovery())throw Error('Cannot renew recovery checkpoint');await releaseNativeRecoveryHold();resumeRecoveryClock();recoveryFrozen=false;recoveryAttachStarted=false;resumeHostedDispatch();return;}
+  if(recoveryEnabled&&data.kind==='finishVisualRecovery'){if(nativeRecoveryHold?.terminal)throw Error('Worker route recovery requires confirmed replacement');if(!recoveryFrozen||recoveryReplay||recoveryFault)throw Error('Visual recovery not caught up');assertPresentationRecoveryBoundary(recoveryJournal,visualStream,recoveryBase,sequence);if(recoveryJournal.status().saturated&&!recoveryJournal.retryAfterRecovery())throw Error('Cannot renew recovery checkpoint');await releaseNativeRecoveryHold();resumeRecoveryClock();recoveryFrozen=false;recoveryAttachStarted=false;resumeHostedDispatch();return;}
   if(data.kind==='speed'){runtime.setNightFastForward(data.value);return;}
   if(data.kind==='view'){if(!outbox||data.command?.kind!=='setNavigationView')throw Error('Invalid background view');try{if(recoveryFault)throw Error(recoveryFault);await runtime.submit(data.command,{backgroundView:true});}catch(error){postMessage({kind:'viewFailure',session,message:String(error?.message??error)});}return;}
   if(data.kind==='command'){

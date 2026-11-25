@@ -1,4 +1,4 @@
-import {copyNativeIdleStrollResources,sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
+import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
 // One ordered asynchronous authority. The caller must retain commands rejected
@@ -72,21 +72,23 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
     const error=Error('Invalid native intent control attachment');item.reject(error);fail(error);
    }else{
       try{
-        let recoveredStroll;
-        if(item.recoveryHold!==undefined||data.recoveredStroll!==undefined){
-          const q=data.recoveredStroll,b=q?.execution;
+        let recoveredWorkerRoute;
+        if(item.recoveryHold!==undefined||data.recoveredWorkerRoute!==undefined){
+          const q=data.recoveredWorkerRoute,execution=q?.execution;
           if(q?.version!==1||item.recoveryHold===undefined||q.holdId!==item.recoveryHold||
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
-             b?.kind!=='native-idle-stroll-execution'||b.arrived!==false||!Number.isFinite(b.executedThrough)||
+             execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
-          const resources=copyNativeIdleStrollResources(q.resources),ref=resources.nativeIdleStrollBinding.reference;
-          if(resources.worldBoundary.authorityEpoch!==data.authorityEpoch||ref.actorId!==b.actorId||ref.bodyId!==b.bodyId||
-             b.executedThrough<ref.worldBoundary.effectiveTime||b.executedThrough>=ref.endTime||
-             !sameNativeIdleStrollAttestation(resources.nativeIdleStrollBinding,b.binding))
+          const profile=nativeWorkerRouteRecoveryProfile(q.resources?.kind),resources=profile.copyResources(q.resources);
+          const binding=resources[profile.bindingField],ref=binding.reference;
+          if(execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
+             ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||
+             execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
+             !profile.sameAttestation(binding,execution.binding))
             throw Error('Invalid replacement committed assignment');
-          recoveredStroll={...q,resources};
+          recoveredWorkerRoute={...q,resources};
         }
-        item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredStroll?{recoveredStroll}:{})});
+        item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredWorkerRoute?{recoveredWorkerRoute}:{})});
       }catch(error){item.reject(error);fail(error);return true;}
    }
    pump();return true;
