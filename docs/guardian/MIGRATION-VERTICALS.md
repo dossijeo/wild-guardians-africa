@@ -78,11 +78,11 @@ Retiene READY de Carry, pausa y entrega la respuesta tardía. El cultivo y el
 saldo se conservan y la caja sigue sin aparecer hasta reanudar. La adquisición
 siguiente usa el mismo cuerpo y suma exactamente un abono. Al quitar la guarda
 de pausa, el primer READY adquiere y la prueba falla. NVIDIA confirmó cero
-dibujos del ticket cancelado y la entrega desde su sustituto. La auditoría
-detectó 16 módulos WGSL recreados en el reintento, con 587 referencias residentes
-intactas. Los [TODO de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
-conservan puertas, tráfico, reutilización y drenaje tras el reintento, y
-recuperación. [Control de cancelación](../../tests/native-production-lifecycle.test.js) ·
+dibujos del ticket cancelado y la entrega desde su sustituto. El reintento con
+materiales residentes redujo de 16 a cero los módulos WGSL recreados, conservó
+588 referencias y drenó sin errores. Los [TODO de aceptación](../../tests/migration-harvest-acceptance.pending.test.js)
+conservan puertas con el egreso ocupado, tráfico y recuperación.
+[Control de cancelación](../../tests/native-production-lifecycle.test.js) ·
 [Contraste físico de Carry cancelado](native-harvest-paused-carry-20261125.md) ·
 [Recibo de la segunda entrega](performance/native-post-settlement-second-delivery-20261121.json).
 

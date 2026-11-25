@@ -11,3 +11,46 @@ test('the native consequence prepares original Carry and nine crate pieces on it
 test('a foreign consequence proof cannot finalize the Carry candidate and cancelling preserves its native action actor',async()=>{
  const f=await nativeTaskConsequenceGraphicsFixture();let part;try{const actor=f.roster.get(f.actor);part=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});part.activate();const data=f.commit(),foreign=structuredClone(data);foreign.nativeTaskConsequenceBinding.reference.crateId++;foreign.nativeTaskConsequenceBinding.preparedReference.crateId++;assert.throws(()=>part.validateCommit(foreign),/committed resources/);assert(part.valid());part.rollback();assert(part.cancel());f.flush();assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.isBakedCarrying(),false);assert.equal(f.roster.status().native,1);assert.deepEqual(f.errors,[]);}finally{part?.cancel();f.close();}
 });
+
+test('only a prepared Carry leaves its compiled materials resident while a fresh binding is admitted',async()=>{
+ const f=await nativeTaskConsequenceGraphicsFixture();let early,ready,next;
+ try{
+  const actor=f.roster.get(f.actor),options={getPickTime:f.getPickTime};
+  const observe=part=>{
+   const seen=new Map();
+   for(const {material} of part.request.options.materialAlternatives){
+    for(const value of [material].flat()){
+     if(seen.has(value))continue;
+     seen.set(value,0);
+     value.addEventListener('dispose',()=>seen.set(value,seen.get(value)+1));
+    }
+   }
+   assert(seen.size>0);
+   return seen;
+  };
+  early=await f.roster.prepareNativeTaskConsequenceProposal(f.support,options);
+  const unprepared=observe(early);
+  assert.throws(()=>early.markReady(),/Carry frame is unavailable/);
+  assert(early.cancel());f.flush();
+  assert([...unprepared.values()].every(count=>count===1));
+
+  ready=await f.roster.prepareNativeTaskConsequenceProposal(f.support,options);
+  const resident=observe(ready);
+  ready.activate();ready.markReady();assert(ready.cancel());f.flush();
+  assert([...resident.values()].every(count=>count===0));
+  assert.equal(actor.isBakedCarrying(),false);
+  assert.equal(ready.valid(),false);
+  assert.equal(f.roster.get(f.actor),actor);
+
+  next=await f.roster.prepareNativeTaskConsequenceProposal(f.support,options);
+  assert([...observe(next).keys()].every(material=>!resident.has(material)));
+  next.activate();next.markReady();next.finalize(f.commit());
+  assert.equal(actor.isBakedCarrying(),true);
+  assert([...resident.values()].every(count=>count===0));
+  f.flush();
+  assert([...resident.values()].every(count=>count===1));
+  f.state.workers=[];f.roster.sync();f.flush();
+  assert([...resident.values()].every(count=>count===1));
+  assert.deepEqual(f.errors,[]);
+ }finally{next?.cancel();ready?.cancel();early?.cancel();f.close();}
+});

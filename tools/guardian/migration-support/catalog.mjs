@@ -30,7 +30,7 @@ export const scenarios = {
       QA_NATIVE_BIRTH_FOLLOW_SETTLEMENT:'true',QA_NATIVE_BIRTH_FOLLOW_NEXT_TASK:'true',
     },
     evidence: 'docs/guardian/performance/native-post-settlement-second-delivery-20261121.json',
-    pending: ['Puertas y tráfico en el recorrido completo', 'Cancelación de una consecuencia preparada en GPU física',
+    pending: ['Puertas con egreso ocupado y resolución de tráfico en el recorrido completo',
       'Guardado y recuperación en ruta, acción y consecuencia', 'Activación ordinaria y C4 a 60 FPS'],
   },
   obstacles: {description:'Muro/props: invalidación dirigida y veto previo; componente nativo.', tests:['spatial-native-static-mutations','spatial-native-prop-mutations'], pending:['Combinar obstáculo con el ciclo Harvest completo']},

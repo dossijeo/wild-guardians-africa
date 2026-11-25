@@ -209,5 +209,101 @@
     "completedAudit": false,
     "drainCertified": false,
     "c4": false
+  },
+  "retryWithResidentMaterials": {
+    "source": "8e54724d51845a9c07531a5d98511a6384cbf284",
+    "scope": "Ordinary Carry retry on physical draw with resident materials from the cancelled preparation.",
+    "receiptSha256": "ec3edaff44bdc39851f9c362c707f2a4b4882b8ffd153b6cabda32fa54e12ec7",
+    "traceSha256": "4b282ca9d210f6772692a660a407e27c084163c87d90cc72e4f6574f3be3d33a",
+    "traceLoss": false,
+    "browser": "158.0.4370.33",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 128.02499999850988
+      }
+    },
+    "displayHz": 30,
+    "viewport": [
+      640,
+      360
+    ],
+    "cancelled": {
+      "request": 7,
+      "ticket": 12,
+      "at": 48.26000000000207,
+      "lateByMs": 14.8701171875,
+      "draws": 0
+    },
+    "carry": {
+      "request": 8,
+      "preparedTicket": 13,
+      "acquiredTicket": 14,
+      "bodyId": 2,
+      "draws": 54
+    },
+    "settlement": {
+      "ticket": 18,
+      "entry": "deliver:crate-1000003",
+      "income": {
+        "n": "14",
+        "d": "1"
+      },
+      "bodyId": 2,
+      "draws": 55
+    },
+    "resources": {
+      "retained": 588,
+      "retired": 0,
+      "duplicateModules": 0,
+      "drained": true,
+      "gpuErrors": 0,
+      "sourceAliveUntilGraphicClose": true
+    },
+    "cadence": {
+      "draws": 1695,
+      "intervalsOver16_667Ms": 1694,
+      "maxGapMs": 74.455078125,
+      "maxima": [
+        {
+          "ms": 74.455078125,
+          "sequence": 217,
+          "ticket": 7,
+          "previousDrawWallMs": 73.76513671875,
+          "replayedSamePacket": true
+        },
+        {
+          "ms": 38.6201171875,
+          "sequence": 270,
+          "ticket": 11
+        },
+        {
+          "ms": 37.31005859375,
+          "sequence": 39,
+          "ticket": 5
+        },
+        {
+          "ms": 35.7548828125,
+          "sequence": 270,
+          "ticket": 11
+        },
+        {
+          "ms": 35.68994140625,
+          "sequence": 112,
+          "ticket": 7
+        }
+      ],
+      "c4": false
+    },
+    "implementationDeltaSha256": "2926bafc40e19fae8c37651a27b44c34a22c46d37821cb59b01060cf26bfa342"
   }
 }

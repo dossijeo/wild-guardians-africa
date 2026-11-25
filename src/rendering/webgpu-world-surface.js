@@ -531,6 +531,7 @@ export async function createWebGpuWorldSurface({signal,canvas,remoteGpu=null,cam
     for(const participant of participants)participant.activate();
     remoteGpu.beginFrame({nativeWorldBoundary:boundary});
     try{if(!renderScene())throw Error('Native prepared scene is not ready');preparedSequence=stream.status().sequence;const capturing=remoteGpu.prepareNativeWorldFrame({...remoteFrameMetadata(boundary,resumed?{start:crop?resources.worldBoundary.effectiveTime:cycle||initialBody||arrival||settling?motionRef(resources).worldBoundary.effectiveTime:resources.startTime,end:crop?resources.reference.endTime:cycle||initialBody||arrival||settling?Number.MAX_SAFE_INTEGER:resources.endTime}:null),nativeRouteResourceRevision:nativeRouteResourceRevision+1,...(deferredStart?{[templateKey]:motionRef(resources)}:{})},{signal:controller.signal});capturing.catch(()=>{});for(const participant of participants)participant.afterCapture?.();preparedFrame=await capturing;}catch(error){remoteGpu.cancelFrame();throw error;}
+    if(consequence)participants[0].markReady();
     item.descriptor.phase='ready';
     }
     function invalidate(){if(!resumed||!current())return false;if(item.descriptor.phase==='invalidated')return true;preparedFrame?.abort();preparedFrame=null;for(const participant of [...participants].reverse())participant.rollback();item.descriptor.phase='invalidated';return true;}
