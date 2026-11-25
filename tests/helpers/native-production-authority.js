@@ -41,7 +41,8 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    const buffer=graphics.client.device.createBuffer({size:16,usage:72});graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
    cropGroup=graphics.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
    record.cropGroup=cropGroup;record.cropBuffer=buffer;
-   graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
+   for(const byteOffset of ref.purpose==='retreat'?[0,4]:[0])
+    graphics.client.registerClockBinding(buffer,{byteOffset,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
   }
   const packet=crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;

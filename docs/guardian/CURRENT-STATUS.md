@@ -70,7 +70,9 @@ La calificación de AttackCrops llegó al segundo cultivo con el cuerpo original
 
 El facóquero completó la retirada nativa hasta la salida en desarrollo. NVIDIA conservó el cuerpo 1, cuatro geometrías y 78 buffers durante cinco tickets. El journal registró una sola desaparición y el consumidor confirmó el drenaje. Los 1.324 atributos ajenos comparables conservaron su buffer. C4, la activación ordinaria, Flee y las adversidades A–F siguen abiertos. [Retirada y recibos](native-attack-crops-qualification-20261125.md#retirada-tras-el-segundo-cultivo).
 
-El historial de los dos golpes se materializa bajo demanda. NVIDIA registró cero decodificaciones sin lector y conservó los 78 buffers del animal. El primer relevo completo duró 200,10 ms y el segundo 99,90 ms a 30 Hz. El primer dibujo de la salida registró una edad de 2,30 ms. La comprobación estricta de esa frontera y C4 siguen abiertas. [Contraste y recibos](native-attack-crops-qualification-20261125.md#eventos-históricos-bajo-demanda).
+El historial de los dos golpes se materializa bajo demanda. NVIDIA registró cero decodificaciones sin lector y conservó los 78 buffers del animal. El primer relevo completo duró 200,10 ms y el segundo 99,90 ms a 30 Hz. La primera captura registró 2,30 ms de edad en el dibujo inicial de la salida. [Contraste y recibos](native-attack-crops-qualification-20261125.md#eventos-históricos-bajo-demanda).
+
+El primer dibujo de cada GO del animal empieza a edad cero. NVIDIA retrasó el primer dibujo de la retirada durante 133,31 ms y verificó el escalar cero con el reloj general ya en avance. Pasaron las 413 pruebas seleccionadas. El segundo golpe aún registró 200,00 ms, antes de la demora controlada. C4 sigue abierto. [Origen del GO y traza](native-attack-crops-qualification-20261125.md#primer-dibujo-del-go).
 
 El control de cruce de una puerta restaurada preparó en WASM una ruta de 18,75 m que solicita su motor. Con doce regiones visuales publicadas, la adquisición gráfica devolvió `Native gate motor wall not resident` antes de dibujar la ruta. [Recibo del cruce](performance/native-farm-restored-gate-crossing-baseline-20261121.json).
 

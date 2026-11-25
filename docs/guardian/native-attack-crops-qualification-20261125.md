@@ -106,9 +106,21 @@ NVIDIA registró un diferimiento y cero entradas al decodificador en cada golpe.
 
 La salida registró 133,40 ms. El Host rechazó el paquete pendiente 377 después de la revocación y luego dibujó el reemplazo. Durante la marcha, un intervalo de 39,00 ms coincidió con 6,39 ms de deserialización en el hilo Draw antes del callback. La traza no identifica el contenido de ese mensaje. Los 1.481 intervalos medidos a 30 Hz superaron 16,67 ms. C4 sigue abierto.
 
-El recorrido conservó los cinco tickets, el cuerpo 1, la raíz, las cuatro geometrías y los 78 buffers comparables en ocho etapas. Los 1.324 atributos ajenos comparables conservaron su buffer. Game registró los dos golpes y una sola desaparición, y Draw confirmó el drenaje. Los primeros cuatro tickets empezaron a edad cero. El primer envío real de la salida dibujó el ticket 10 con una edad de 2,30 ms y la comprobación estricta de ese borde queda abierta.
+El recorrido conservó los cinco tickets, el cuerpo 1, la raíz, las cuatro geometrías y los 78 buffers comparables en ocho etapas. Los 1.324 atributos ajenos comparables conservaron su buffer. Game registró los dos golpes y una sola desaparición, y Draw confirmó el drenaje. Los primeros cuatro tickets empezaron a edad cero. El primer envío real de la salida dibujó el ticket 10 con una edad de 2,30 ms y esa captura dejó sin aprobar la comprobación estricta del origen.
 
 Pasaron 480 de 483 pruebas. Los tres fallos se reprodujeron con las preimágenes de la base. El build pasó en 49,31 s. [Comparación, controles, trazas y hashes](performance/native-attack-crops-qualification-20261125.json).
+
+## Primer dibujo del GO
+
+La autoridad puede publicar cobertura posterior al GO antes del primer dibujo del paquete adquirido. En el control determinista, el Host escribía 0,049999997 s en el primer envío del ticket de retirada con cobertura hasta GO + 0,05 s. El resultado era el mismo antes y después del ajuste que difiere los eventos.
+
+El Host usa el registro de la adquisición para dibujar a edad cero hasta el primer envío efectivo. En el instante inicial, los bindings preparados y ordinarios de la adquisición comparten el escalar. El testigo de picking se publica con el valor enviado a los buffers. El registro acredita el primer dibujo tras el envío y conserva la pose si se repite el mismo instante en pausa. El reloj general sigue dentro de la cobertura causal. La conversión de Chromium mantiene el tiempo local al inicio de una animación mientras su tiempo externo puede avanzar. [Chromium KeyframeModel](https://github.com/chromium/chromium/blob/main/ui/gfx/animation/keyframe/keyframe_model.cc#L251-L267).
+
+En NVIDIA el arnés demoró 133,31 ms las oportunidades de dibujo del primer paquete de retirada tras adquirirlo. La secuencia 301 dibujó con el reloj general en 410,44540 s, después del GO a 410,30 s. El escalar físico fue cero y el testigo posterior avanzó a 278,60 ms. Los otros cuatro tickets también empezaron con cero. Se conservaron el cuerpo, la raíz, las cuatro geometrías, los 78 buffers del animal y los 1.324 buffers ajenos comparables. Game confirmó dos golpes y una sola desaparición, y el consumidor confirmó el drenaje.
+
+El segundo golpe, anterior a la demora intencional, registró 200,00 ms. El preparador empezó por un paquete que el Host rechazó a los 80,10 ms. El reemplazo empezó a los 100,11 ms y quedó admitido a los 179,80 ms. También se rechazó un paquete anterior en el primer golpe y en la salida completada, con intervalos de 166,10 y 166,80 ms. Un replay de marcha de 40,40 ms coincidió con 3,06 ms de recolección y 4,14 ms de deserialización en el hilo Draw antes de recibir el callback. C4 sigue abierto.
+
+Pasaron las 413 pruebas seleccionadas. El build de producto pasó en 48,23 s. [Recibo, marcas y comprobaciones](performance/native-attack-crops-qualification-20261125.json).
 
 ## Regresión
 

@@ -1618,5 +1618,265 @@
         "displayPayloadIdentified": false
       }
     }
+  },
+  "firstGoOrigin": {
+    "base": "65dccf8d56cca81dc03c88dc5829794e75adeb70",
+    "patchSHA256": "737ef1524dd7023a847a171f1589bc2691dfe6c79ce9142b8b07634373bba146",
+    "receipt": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.json",
+      "sha256": "bf310d85c53de2b67936a67af485a0134768682ff9850b253bc0868410ca57c6"
+    },
+    "trace": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.trace.json.gz",
+      "sha256": "2aa4bf9b2b7f0b7625412160e54f46ebdbbc16c848e4e62cc3d9e5991c8f0bc8"
+    },
+    "markers": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.probe-marks.json",
+      "sha256": "e00846d437ebe6365843881c3cf036e3acbfd4851832e828195d633f9aff28e7"
+    },
+    "originCheck": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.origin.json",
+      "sha256": "c003bf3a629435cf0c9a16ba496f1f7e8c7107b2d768736ba2094262b128f213"
+    },
+    "physicalCheck": {
+      "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.summary.json",
+      "sha256": "d1c163cbf62ab6c639e27af640d58ea73b3902c7c1d5c15699c9d7d99d52338c"
+    },
+    "harness": {
+      "path": ".cache/native-raid-first-go-clock-physical.mjs",
+      "sha256": "ca7ab54e566eabdd2724effd017d09af962700a666c6898305f7c6e08db30b21"
+    },
+    "negativeBeforeDeferral": {
+      "path": ".cache/crop-first-go/pre-c4.tap",
+      "sha256": "fae7669f1356fadbc4da8a8e4caea90bf998bd2ffcf697ab1247531a4066cc9a"
+    },
+    "negativeBeforeOriginFix": {
+      "path": ".cache/crop-first-go/final-base.tap",
+      "sha256": "9b142bd07e4b1204dc2fb0f15161d9c0b78c5e3127eb780eb181299bc6d86247"
+    },
+    "negativeRelativeTime": 0.04999999701976776,
+    "deliberateHold": {
+      "requestedMs": 125,
+      "observedMs": 133.30517578125
+    },
+    "origin": {
+      "ticket": 10,
+      "sequence": 301,
+      "executionEpoch": 410.299999999975,
+      "globalElapsedAtFirstDraw": 410.44539990235086,
+      "admittedCoverage": 410.4999999999748,
+      "physicalRelativeTime": 0,
+      "laterRelativeWitness": 0.2786000967025757
+    },
+    "fiveAcquiredTickets": [
+      {
+        "kind": 26,
+        "target": 373,
+        "prepared": 1,
+        "ticket": 2,
+        "firstAge": 0,
+        "draws": 66
+      },
+      {
+        "kind": 27,
+        "target": 373,
+        "prepared": 3,
+        "ticket": 4,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": 337,
+        "prepared": 5,
+        "ticket": 6,
+        "firstAge": 0,
+        "draws": 3
+      },
+      {
+        "kind": 27,
+        "target": 337,
+        "prepared": 7,
+        "ticket": 8,
+        "firstAge": 0,
+        "draws": 18
+      },
+      {
+        "kind": 26,
+        "target": null,
+        "prepared": 9,
+        "ticket": 10,
+        "firstAge": 0,
+        "draws": 33
+      }
+    ],
+    "hits": [
+      [
+        "attack-661",
+        "plant-373",
+        402.2999999999823
+      ],
+      [
+        "attack-665",
+        "plant-337",
+        409.199999999976
+      ]
+    ],
+    "exit": {
+      "expectedArrival": 418.5247352977061,
+      "event": {
+        "sequence": 989,
+        "kind": "animalGone",
+        "actorId": "animal-396",
+        "at": 418.5399999999675
+      },
+      "drawSequence": 382
+    },
+    "geometry": [
+      218,
+      219,
+      220,
+      221
+    ],
+    "comparedBuffersByStage": [
+      [
+        "route",
+        78,
+        78
+      ],
+      [
+        "walking",
+        78,
+        78
+      ],
+      [
+        "terminal",
+        78,
+        78
+      ],
+      [
+        "attack",
+        78,
+        78
+      ],
+      [
+        "successorRoute",
+        78,
+        78
+      ],
+      [
+        "successorStrike",
+        78,
+        78
+      ],
+      [
+        "afterHit",
+        78,
+        78
+      ],
+      [
+        "retreat",
+        78,
+        78
+      ]
+    ],
+    "otherBuffers": {
+      "comparable": 1324,
+      "samePhysicalBuffer": 1324,
+      "sameVersion": 1259
+    },
+    "drained": true,
+    "cadence": {
+      "displayHz": 30,
+      "targetMs": 16.666666666666668,
+      "sampled": 1471,
+      "overTarget": 1471,
+      "maximum": {
+        "at": 1795603899815.7,
+        "sequence": 300,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "2fc7caf1-16a3-4100-ae97-7eb6c7312fe0/1",
+          "nativeSession": 1,
+          "ticket": 8,
+          "effectiveTime": 404.64999999998014
+        },
+        "intervalMs": 200,
+        "drawMs": 4.10009765625,
+        "replay": false,
+        "clockElapsed": 409.2999999999759,
+        "safeUntil": 409.2999999999759,
+        "cameraVersion": null
+      },
+      "includesIntentionalHold": true,
+      "targetPassed": false
+    },
+    "correlation": {
+      "traceCuts": {
+        "path": ".cache/native-attack-crops-first-go-clock-nvidia-20261125.astra-cuts.json",
+        "sha256": "92374740e7f1e6e8dc63a82de9d23381d696ea3ca8e3e5c2d572dc923b9ea46e"
+      },
+      "recipe": {
+        "path": ".cache/crop-first-go/cuts.py",
+        "sha256": "4078d88f2411f0bf45406404938fdef2394737a310bad3c89e9ced6bec349009"
+      },
+      "naturalIntervals": [
+        {
+          "sequence": 300,
+          "intervalMs": 200,
+          "preceding": 299,
+          "rejectedMs": 80.097,
+          "wasPending": false,
+          "replacementDrawMs": 100.106,
+          "postedMs": 151.3,
+          "admittedMs": 179.8
+        },
+        {
+          "sequence": 245,
+          "intervalMs": 166.1,
+          "preceding": 244,
+          "rejectedMs": 32.97,
+          "wasPending": true,
+          "replacementDrawMs": 66.16,
+          "postedMs": 123.8,
+          "admittedMs": 157.6
+        },
+        {
+          "sequence": 381,
+          "intervalMs": 166.8,
+          "preceding": 380,
+          "rejectedMs": 59.84,
+          "wasPending": false,
+          "replacementDrawMs": 79.718,
+          "postedMs": 109.9,
+          "admittedMs": 140
+        },
+        {
+          "sequence": 139,
+          "intervalMs": 40.4,
+          "drawMajorGcWallMs": 3.056,
+          "drawDeserializeWallMs": 4.139,
+          "vizBeginFrameMs": 33.056,
+          "drawBeginFrameMs": 40.311,
+          "payloadIdentified": false
+        }
+      ]
+    },
+    "regression": {
+      "tests": 413,
+      "passed": 413,
+      "failures": 0,
+      "skipped": 0,
+      "tap": {
+        "path": ".cache/crop-first-go/root-regression.tap",
+        "sha256": "ac6fe50783209863b40bbd1cf49cd6f6c6e7880d1d158cc5104e86d65f9b9874"
+      },
+      "buildSeconds": 48.23,
+      "build": {
+        "path": ".cache/crop-first-go/root-build.log",
+        "sha256": "fcc44bb6b16767cddfa61d3fcc7a41f7a34c450328ed3abfc8a47003c5c2ca7c"
+      }
+    }
   }
 }

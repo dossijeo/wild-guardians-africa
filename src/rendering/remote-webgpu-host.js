@@ -670,7 +670,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // Installed Farm/Stroll endpoint data remains drawable while the same body
   // waits for its next prepared owner. This is not permission to execute past the route end.
   function retainedCompletedEndpoint(binding,at){return !!(binding.nativeFarmArrival||binding.nativeStroll||binding.nativeStart)&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
-  function patchPresentation(elapsed, camera, nativeTimes) {
+  function patchPresentation(elapsed, camera, nativeTimes, cropDraws) {
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
         if (!active?.retained?.has(binding.id)) continue;
@@ -680,7 +680,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const scoped=!!(binding.nativeRestoredWallRepair||binding.nativeBarrierAddition||binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&(active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??Infinity;
         const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalRoute=idleRoute??binding.nativeStart,terminalIdle=retainedCompletedEndpoint(binding,bindingTime);
-        const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling);
+        // Prepared and ordinary aliases resolve to the same acquired route (or strike).
+        // Hold its local origin until a frame actually submits it.
+        const cropRecord=binding.nativeAnimalCrop?binding.motionRecord.routeRecord:null;
+        const cropCeiling=cropRecord&&(cropRecord.lastDrawTime===null||cropRecord.originDrawClock===elapsed)?executionEpoch:Infinity;
+        const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling,cropCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
         // Finite actions retain their declared duration. Do not add the age to
@@ -707,7 +711,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(binding.semantic!=='idle-offset'&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-cycle-watch-knot'&&(binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle))nativeTimes.set(binding.nativeClockKey,{
           ...(binding.nativeRoute?{nativeRoute:binding.nativeRoute}:binding.nativeGate?{nativeGate:binding.nativeGate}:binding.nativeResume?{nativeResume:binding.nativeResume}:binding.nativeStart?{nativeStart:binding.nativeStart}:binding.nativeStroll?{nativeStroll:binding.nativeStroll,relativeTime:submittedValue}:binding.nativeAnimalCrop?{nativeAnimalCrop:binding.nativeAnimalCrop,relativeTime:submittedValue}:binding.nativeFarmArrival?{nativeFarmArrival:binding.nativeFarmArrival,relativeTime:submittedValue}:binding.nativeHome?{nativeHome:binding.nativeHome,relativeTime:submittedValue}:binding.nativeConsequence?{nativeConsequence:binding.nativeConsequence}:binding.nativeInitialIdleBody?{nativeInitialIdleBody:binding.nativeInitialIdleBody,relativeTime:submittedValue}:binding.nativeIdleCycle?{nativeIdleCycle:binding.nativeIdleCycle,relativeTime:submittedValue}:binding.nativeSettlement?{nativeSettlement:binding.nativeSettlement,relativeTime:submittedValue}:binding.nativeAction?{nativeAction:binding.nativeAction,relativeTime:submittedValue}:{nativeSuspended:binding.nativeSuspended}),semantic:binding.semantic,epoch:binding.epoch,...((binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle)?{executionEpoch}:{}),
           elapsed:binding.semantic==='relative'?submittedValue+binding.epoch:submittedValue});
-        if(binding.routeRecord&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-offset')binding.routeRecord.lastDrawTime=Math.max(
+        if(cropRecord){
+          cropDraws??=new Map();
+          cropDraws.set(cropRecord,Math.min(routeTime,executionEpoch+submittedValue));
+        }else if(binding.routeRecord&&binding.semantic!=='origin-modulo'&&binding.semantic!=='idle-offset')binding.routeRecord.lastDrawTime=Math.max(
           binding.routeRecord.lastDrawTime??-Infinity,
           Math.min(routeTime,idleRoute?binding.motionRecord.executionEnd:Infinity,binding.semantic==='relative'?submittedValue+executionEpoch:submittedValue));
         if(binding.initialIdleBodyRecord&&binding.semantic!=='origin-modulo')binding.initialIdleBodyRecord.lastDrawTime=Math.max(binding.initialIdleBodyRecord.lastDrawTime??-Infinity,Math.min(routeTime,executionEpoch+submittedValue));
@@ -722,6 +729,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (!value) throw Error(`Unknown remote camera semantic ${binding.semantic}`);
       device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, value);
     }
+    return cropDraws;
   }
   function present() {
     if (stopped || failed) return;
@@ -829,13 +837,17 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (!next||active.initializedPreparation) for (const baseline of active.baselineWrites) device.queue.writeBuffer(resolve({ [REF]: baseline.id }), 0, baseline.bytes);
       // Preserve the original queue order (a buffer can change between passes).
       // Only the generation boundary is atomic, never reorder WebGPU operations.
-      const nativeTimes=new Map();let submitted=false;
+      const nativeTimes=new Map();let submitted=false,cropDraws=null;
       for (const op of active.operations) {
-        if (op.method === 'submit') patchPresentation(clockElapsed, camera, nativeTimes);
+        if (op.method === 'submit') cropDraws=patchPresentation(clockElapsed,camera,nativeTimes,cropDraws);
         if(applyQueue(op, !next,active.initializedPreparation)===true)submitted=true;
       }
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
+      if(submitted&&cropDraws)for(const [record,at] of cropDraws){
+        if(record.lastDrawTime===null)record.originDrawClock=clockElapsed;
+        record.lastDrawTime=Math.max(record.lastDrawTime??-Infinity,at);
+      }
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;

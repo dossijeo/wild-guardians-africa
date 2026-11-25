@@ -114,6 +114,10 @@ function terminalSurfaceGate(world){
  return build(world,nativeFrameReadiness,sameNativeWorldBoundary);
 }
 
+async function waitForCropCommitWithoutDraw(done){
+ for(let i=0;i<2000&&!done();i++)await new Promise(resolve=>setImmediate(resolve));
+ assert(done(),'expected acquired crop receipt while RAF is withheld');
+}
 function submitAnimalFrame(f,bindGroup,metadata){
  f.client.beginFrame(metadata);
  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
@@ -193,7 +197,16 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
    await untilProduction(f,()=>ready.length>0);
    const oldPose=pose(),budget=actor().hitsRemaining;
    for(let hold=0;hold<3;hold++){await step();assert.deepEqual(pose(),oldPose);assert.equal(actor().hitsRemaining,budget);}
-   ready.shift()();await untilProduction(f,()=>commits.length===i+1);
+   ready.shift()();
+   if(forgePreviousTicket)await untilProduction(f,()=>commits.length===i+1);
+   else{
+    await waitForCropCommitWithoutDraw(()=>commits.length===i+1);
+    await step();
+    const proof=commits[i],frame=f.host.inspect().nativeRouteFrame;
+    assert.equal(frame.worldBoundary.ticket,proof.reference.worldBoundary.ticket);
+    assert(frame.clockElapsed>proof.reference.worldBoundary.effectiveTime);
+    assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getAnimalCropAge(proof.preparedReference),0);
+   }
    const proof=commits[i],ref=proof.reference;
    assert.equal(ref.kind,kind);assert.equal(ref.bodyId,1);assert.equal(ref.targetId,i<2?373:337);assert(ref.worldBoundary.ticket>proof.preparedReference.worldBoundary.ticket);
    await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===ref.worldBoundary.ticket);
@@ -222,13 +235,54 @@ for(const forgePreviousTicket of [false,true])test(forgePreviousTicket?
   await step();assert.equal(actor().status,'retreating');assert.equal(actor().targetId,null);assert.deepEqual(pose(),afterHit);
   await untilProduction(f,()=>ready.length===1);
   for(let hold=0;hold<4;hold++){await step();assert.deepEqual(pose(),afterHit);}
-  ready.shift()();await untilProduction(f,()=>commits.length===5);
+  ready.shift()();
+  // Keep RAF pending after GO. Let the direct causal channel advance first.
+  await waitForCropCommitWithoutDraw(()=>commits.length===5);
   const depart=commits.at(-1),exit=actor().exit;
   assert.equal(depart.reference.purpose,'retreat');assert.equal(depart.reference.bodyId,1);
   assert.equal(depart.reference.targetId,null);assert.equal(depart.reference.centerId,null);
   assert.deepEqual([depart.reference.targetX,depart.reference.targetZ],[exit.x,exit.z]);
   assert.equal(depart.reference.phase,afterHit[3]);
-  await untilProduction(f,()=>f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===depart.reference.worldBoundary.ticket);
+  const origin=depart.reference.worldBoundary.effectiveTime,ticket=depart.reference.worldBoundary.ticket;
+  assert.notEqual(f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket,ticket);
+  state=JSON.parse(f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false}).snapshot);
+  rig.update(structuredClone(state));
+  const count=f.gpu.submitted.length;
+  f.host.setVisibility(true);
+  f.command({kind:'pause',reason:'menu'});
+  await f.present();
+  assert.equal(f.gpu.submitted.length,count,'hidden opportunity never consumes first use');
+  assert.notEqual(f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket,ticket);
+  const writes=[],queue=f.gpu.device.queue,write=queue.writeBuffer;
+  queue.writeBuffer=(buffer,offset,data)=>{if(data instanceof Float32Array&&data.length===1)writes.push({buffer,offset,value:data[0]});return write.call(queue,buffer,offset,data);};
+  f.host.setVisibility(false);
+  try{await f.present();}finally{queue.writeBuffer=write;}
+  const first=f.host.inspect().nativeRouteFrame,binding=first.bindings.find(row=>row.nativeAnimalCrop);
+  assert.equal(first.worldBoundary.ticket,ticket);
+  assert(first.clockElapsed>origin,'direct causal clock already covers the first sample');
+  assert.equal(binding.relativeTime,0,'first submitted local age of the acquired retreat');
+  assert.equal(captureNativeRoutePickFrame(f.host.inspect()).getAnimalCropAge(depart.preparedReference),0);
+  const alias=writes.find(row=>row.offset===4);
+  assert(alias&&alias.value===0);
+  assert(writes.some(row=>row.offset===0&&row.buffer===alias.buffer&&row.value===0));
+  const age=()=>captureNativeRoutePickFrame(f.host.inspect()).getAnimalCropAge(depart.preparedReference);
+  const firstSeq=first.sequence;
+  await f.present();
+  assert.equal(f.host.inspect().nativeRouteFrame.sequence,firstSeq);
+  assert.equal(age(),0,'paused replay holds its submitted origin');
+  f.command({kind:'resume',reason:'menu'});
+  await step();
+  const runningAge=age();assert(runningAge>0);
+  const readSlot=offset=>new Float32Array(alias.buffer.data.buffer,alias.buffer.data.byteOffset+offset,1)[0];
+  assert.equal(readSlot(0),runningAge);assert.equal(readSlot(4),runningAge);
+  f.command({kind:'pause',reason:'menu'});await f.present();
+  const pausedAge=age();await f.present();assert.equal(age(),pausedAge);
+  const ordinary=submitAnimalFrame(f,f.records.at(-1).cropGroup,{clock:{...f.clock,elapsed:state.elapsed,safeUntil:state.elapsed,paused:true,segments:[]},nativeWorldBoundary:depart.reference.worldBoundary});
+  await f.present();await ordinary;
+  assert(f.host.inspect().nativeRouteFrame.sequence>firstSeq);
+  assert.equal(age(),pausedAge,'new packet referencing the same GO cannot restart its motion');
+  assert.equal(readSlot(0),pausedAge);assert.equal(readSlot(4),pausedAge);
+  f.command({kind:'resume',reason:'menu'});
   const lifecycle=[];let moving=false;
   for(let n=0;n<300&&state.raid;n++){
     const result=f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});state=JSON.parse(result.snapshot);
@@ -365,4 +419,23 @@ try{
  assert.equal(w.nav_intent_attack_cancel(actor),0);
  assert(s.raid);assert.equal(animal.status,'retreating');
  }finally{session.dispose();}
+});
+
+test('an acquired animal route that fails GPU submission publishes no first pose',async()=>{
+ const {s,manifest,chunkKeys}=fixture(),ready=[],commits=[];
+ const f=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest,
+  onReady:()=>new Promise(resolve=>ready.push(resolve)),onCommit:(_r,data)=>commits.push(data.nativeAnimalCropRouteBinding)});
+ try{
+  await untilProduction(f,()=>ready.length===1);
+  ready.shift()();
+  await waitForCropCommitWithoutDraw(()=>commits.length===1);
+  const before=f.host.inspect().nativeRouteFrame,submitted=f.gpu.submitted.length;
+  f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+  f.gpu.device.queue.submit=()=>{throw Error('first crop submit failed');};
+  await f.present();
+  assert.equal(f.host.inspect().failed,true);
+  assert.equal(f.gpu.submitted.length,submitted);
+  assert.deepEqual(f.host.inspect().nativeRouteFrame,before);
+  assert(f.errors.some(message=>String(message).includes('first crop submit failed')));
+ }finally{for(const release of ready)release();await f.close();}
 });
