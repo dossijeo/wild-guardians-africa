@@ -1943,7 +1943,7 @@ function prepareClockEvents(s,nav){
   if(s.dayPlan&&!s.dayPlan.done&&s.time>=s.dayPlan.at){s.dayPlan.done=s.postgame||spawnRaid(s,s.dayPlan,nav,true)!==false;}
   if(s.nightPlan&&!s.nightPlan.done&&s.time>=s.nightPlan.at&&(!s.dayPlan||activeRaidEntryPlan(s)!==s.dayPlan)){s.nightPlan.done=!s.nightPlan.group?.length||spawnRaid(s,s.nightPlan,nav)!==false;}
 }
-export function tick(s,seconds,nav,{clockRate=1}={}) {
+export function tick(s,seconds,nav,{clockRate=1,expiringShield=null}={}) {
   if(!Number.isFinite(seconds)||seconds<0)throw new Error('Paso temporal inválido');
   if(!Number.isFinite(clockRate)||clockRate<=0||clockRate>1000000)throw TypeError('Invalid native game clock rate');
   if(seconds>1e-9&&!s.pauses.length&&!s.result&&!nav.intentTaskPlanner&&s.workers.some(worker=>worker.nativeRouteAdmission!==undefined))throw Error('Native task state requires resource admission before legacy movement');
@@ -2008,7 +2008,10 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     const shieldsBefore=s.spells.filter(a=>a.kind==='shield').length;
     for(const spell of s.spells)spell.remaining=Math.max(0,spell.remaining-step);
     for(const a of s.spells)if(a.remaining<=1e-9&&a.targetPlantId!==undefined)emit(s,'AgriculturalSpellEnded',{spellId:a.id,kind:a.kind,targetPlantId:a.targetPlantId,growthSecondsAdded:a.growthSecondsAdded??0,remainingSeconds:0});
-    s.spells=s.spells.filter(a=>a.remaining>1e-9);
+    // The qualified civil advance retains this exact polygon owner until GO.
+    // Shield gameplay still observes its natural remaining time of zero.
+    if(expiringShield&&expiringShield.remaining<=1e-9)expiringShield.remaining=0;
+    s.spells=s.spells.filter(a=>a.remaining>1e-9||a===expiringShield);
     if(s.spells.filter(a=>a.kind==='shield').length!==shieldsBefore)nav.setState(s);
     if(nav.projectNativeGateLeaves)nav.projectNativeGateLeaves();else advanceGateLeaves(s,step);
     // A restored or event-invalidated animal route must be published before
@@ -2029,7 +2032,8 @@ export function tick(s,seconds,nav,{clockRate=1}={}) {
     if(nativeExecution===1&&!['committed','unchanged'].includes(nav.intentTaskPlanner.commitNativeCausalClock({rate:clockRate,paused:!!s.pauses.length||!!s.result}).status))throw Error('Native task step could not commit its causal boundary');
   }
 }
-export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onClockSegment=null}={}) {
+export function advanceReal(s,seconds,nav,options={}) {
+  const {nightFastForward=true,onTick=null,onClockSegment=null,expireShield=null}=options;
   if(onClockSegment!==null&&typeof onClockSegment!=='function')throw TypeError('Invalid simulation clock observer');
   let left=seconds;
   while(left>1e-9 && !s.pauses.length&&!s.result) {
@@ -2037,7 +2041,25 @@ export function advanceReal(s,seconds,nav,{nightFastForward=true,onTick=null,onC
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
     const real=Math.min(left,.02,untilBoundary);left-=real;
-    const start=onClockSegment?s.elapsed:0;tick(s,real*speed,nav,{clockRate:speed});
+    const start=onClockSegment?s.elapsed:0;
+    if(expireShield){
+      const span=real*speed;
+      const shield=s.spells.find(spell=>spell.kind==='shield'&&spell.remaining-span<=1e-9);
+      if(shield){
+        const prefix=Math.min(span,shield.remaining);
+        return expireShield(shield,()=>{
+          if(!(prefix>0)||clockBoundaries(s).some(edge=>edge>s.time&&edge<=s.time+prefix+1e-9))
+            throw Error('Native shield expiry coincides with another simulation boundary');
+          tick(s,prefix,nav,{clockRate:speed,expiringShield:shield});
+        }).then(()=>{
+          if(span>prefix)tick(s,span-prefix,nav,{clockRate:speed});
+          if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
+          if(onTick)onTick();
+          if(left>1e-9)return advanceReal(s,left,nav,options);
+        });
+      }
+    }
+    tick(s,real*speed,nav,{clockRate:speed});
     if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
     if(onTick)onTick();
   }

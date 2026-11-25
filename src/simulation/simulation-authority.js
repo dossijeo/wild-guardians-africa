@@ -57,7 +57,7 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
@@ -341,6 +341,47 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   const nativeCommandOwnerCurrent=owner=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&
     owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
 
+  let shieldAdvance=null;
+  async function expireCivilShield(spell,advanceToExpiry){
+    if(shieldAdvance)throw Error('Native shield expiry already active');
+    const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
+    shieldAdvance=owner;
+    const civilIdle=()=>!physics&&!game.raid&&game.workers.length===1&&
+      game.workers[0].nativeRouteAdmission==='native-idle'&&game.workers[0].status==='idle';
+    if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
+       !nativeIntentControl||!civilIdle()||
+       game.spells.filter(item=>item.kind==='shield').length!==1||
+       ['suspended','quiescing'].includes(nativeProduction.status().phase))
+      throw Error('Native shield expiry requires an isolated civil worker and its resource owner');
+    const polygonId=session.shieldPolygonId(spell.id);
+    if(!polygonId)throw Error('Native shield expiry lacks its polygon');
+    const current=()=>!closed&&!owner.controller.signal.aborted&&shieldAdvance===owner&&
+      owner.resources===nativeResourcePreparation&&owner.control===nativeIntentControl&&
+      game.spells.includes(spell)&&session.shieldPolygonId(spell.id)===polygonId;
+    owner.receipt=await nativeProduction.quiesce();
+    if(!current()||!civilIdle())throw Error('Native shield expiry source changed');
+    // Workers pass through this polygon. This profile excludes beasts and
+    // civil movement. Finish the normal substep and its real causal watermark
+    // before preparing the removal. The enclosing advance owns publication.
+    advanceToExpiry();
+    const at=game.elapsed;
+    const validate=()=>current()&&spell.remaining<=1e-9&&game.elapsed===at&&
+      civilIdle()&&
+      planner.nativeCausalClock()?.committedThrough===at;
+    if(!validate())throw Error('Native shield expiry lost its clock or polygon at the cut');
+    const result=await planner.mutateNativeWorldAfterGpuQuiescence({
+      mutation:{type:'removePolygon',id:polygonId},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
+      prepareResources:({resources,signal})=>owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence}),
+      shield:{source:{spell,polygonId},validate,atCommitBoundary:consume=>consume(),project:proof=>{
+        if(!validate())throw Error('Native shield expiry source changed before adoption');
+        session.prepareNativeShieldRemovalAdoption(spell,proof)();
+        game.spells=game.spells.filter(item=>item!==spell);
+        nav.setState(game);
+        return true;
+      }}
+    });
+    if(result.status!=='committed')throw Error('Native shield expiry '+result.status+(result.error?': '+result.error:''));
+  }
   function prepareNativeCommandCommit(owner,operation,{label,rejection}){
     return new Promise((ready,reject)=>{
       let commitReady;
@@ -607,7 +648,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }),{label:'Native shield',rejection:'El Escudo cambió durante su preparación'});
   }
   async function prepareNativeStructureCommand(command){
-    if(closed||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
+    if(closed||shieldAdvance||nativeStructurePreparation||nativeStructureFailure)throw Error('Native structure preparation unavailable');
     const captured=structuredClone(command),owner={command:captured,identity:structureIdentity(captured),receipt:null,ready:false,controller:new AbortController(),control:nativeIntentControl,resources:nativeResourcePreparation};nativeStructurePreparation=owner;
     try{
       if(captured.kind==='bless')return await prepareNativeBlessingCommand(owner);
@@ -700,7 +741,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction(){
-      if(nativeStructurePreparation)return Promise.reject(Error('Native production is held by a structure command'));
+      if(shieldAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce()??Promise.resolve(null);
     },
@@ -795,6 +836,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    async enableBeastPhysics(actorId,{actorIds=undefined,structureTemplates=null,allowEmpty=false,checkpoint=null,shareSpeciesClips=false,shareSpeciesRigs=false,shareAdmissionSource=false}={}){if(closed||physics||physicsInitializing)throw Error('Worker physics unavailable');physicsInitializing=true;try{const {createWorkerBeastPhysics}=await import('./worker-beast-physics.js');const driver=await createWorkerBeastPhysics(game,nav,{actorId,actorIds,structureTemplates,allowEmpty,checkpoint,shareSpeciesClips,shareSpeciesRigs,shareAdmissionSource});if(closed){driver.dispose();throw Error('Simulation authority closed during physics initialization');}physics=driver;}finally{physicsInitializing=false;}},
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
+    if(shieldAdvance)throw shieldAdvance.failure??Error('Native shield expiry owns this advance');
     if(closed)throw Error('Simulation authority is closed');if(nativeProduction?.status().fault)throw Error('Native intent production failed: '+nativeProduction.status().fault);if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
     if(nativeStructurePreparation?.commandSequence!==undefined){
@@ -816,7 +858,40 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(command.kind==='advance'){
      if(!Number.isFinite(command.seconds)||command.seconds<=0||command.seconds>1||typeof command.nightFastForward!=='boolean'||command.steps!==undefined&&(!Number.isSafeInteger(command.steps)||command.steps<1||command.steps>256))throw TypeError('Invalid real-time interval');
      const start=trackedActor&&!nativeBoundaryPending?{at:game.elapsed,x:trackedActor.x,z:trackedActor.z}:null;if(start){motionSegments=[];motionTopologyBefore=nav.version;}const peerCapture=start&&trackMotionPeers?captureMotionPeers(game,trackedActor):null,worldCapture=trackWorldMotion&&!nativeBoundaryPending?captureWorldMotion(game,()=>({topology:nav.version,chunks:session.core.chunkRevision(),terrain:session.horizonSource.revision(),payloads:terrainGeneration}),()=>workerPhysicsActivity(physics),{...(command.captureClockSegments===true?{spatialNavigation:nav,...(physics?{readPhysicsPoses:()=>physics.postStepPoses()}:{})}:{}),includeHyenaSamples:captureHyenaDiagnostics}):null;
-     const steps=command.steps??1;activeHistoricalCapture=eventBoundaries;try{for(let i=0;i<steps;i++){advanceReal(game,command.seconds,nav,{nightFastForward:command.nightFastForward,...(clockCapture?{onClockSegment:segment=>{if(!clockCapture.complete)return;const previous=clockCapture.segments.at(-1);if(previous&&previous.rate===segment.rate&&previous.end===segment.start){previous.end=segment.end;previous.realDuration+=segment.realDuration;}else if(clockCapture.segments.length<256)clockCapture.segments.push(segment);else{clockCapture.complete=false;clockCapture.segments=[];}}}:{}),...(worldCapture||eventBoundaries?{onTick:()=>{if(worldCapture)try{worldCapture.sampleTick();}catch{worldCapture.invalidateSamples();}if(eventBoundaries)try{eventBoundaries.sample(game,events);}catch{eventBoundaries.invalidate();}}}:{})});peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;if(i+1<steps&&residency().missing.length)break;}}finally{activeHistoricalCapture=null;if(clockCapture){clockCapture.end=game.elapsed;clockCapture.endPauses=[...game.pauses];}if(worldCapture)worldMotionTrace=worldCapture.finish();if(start){const end={at:game.elapsed,x:trackedActor.x,z:trackedActor.z},segments=motionSegments;motionSegments=null;let x=start.x,z=start.z,continuous=true,timed=true,lastTime=start.at;for(const segment of segments){if(segment.x0!==x||segment.z0!==z)continuous=false;x=segment.x1;z=segment.z1;if(!Number.isFinite(segment.t0)||!Number.isFinite(segment.t1)||segment.t0<lastTime-1e-8||segment.t1<segment.t0||segment.t1>end.at+1e-8)timed=false;else lastTime=segment.t1;}if(end.x!==x||end.z!==z||!(game.raid?.animals??[]).includes(trackedActor)&&!game.workers.includes(trackedActor))continuous=false;motionTrace={actorId:trackedActor.id,start,end,segments,continuous,timed,...(peerCapture?peerCapture.finish():{})};}}
+     const steps=command.steps??1,options={nightFastForward:command.nightFastForward,...(clockCapture?{onClockSegment:segment=>{if(!clockCapture.complete)return;const previous=clockCapture.segments.at(-1);if(previous&&previous.rate===segment.rate&&previous.end===segment.start){previous.end=segment.end;previous.realDuration+=segment.realDuration;}else if(clockCapture.segments.length<256)clockCapture.segments.push(segment);else{clockCapture.complete=false;clockCapture.segments=[];}}}:{}),...(worldCapture||eventBoundaries?{onTick:()=>{if(worldCapture)try{worldCapture.sampleTick();}catch{worldCapture.invalidateSamples();}if(eventBoundaries)try{eventBoundaries.sample(game,events);}catch{eventBoundaries.invalidate();}}}:{})};
+     if(qualifyShieldExpiry&&nativeBodies&&
+        game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
+       options.expireShield=expireCivilShield;
+     const completeStep=i=>{
+       peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);
+       nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
+       return stepsExecuted<steps&&!residency().missing.length;
+     };
+     const runSteps=first=>{
+       for(let i=first;i<steps;i++){
+         const boundary=advanceReal(game,command.seconds,nav,options);
+         if(boundary)return boundary.then(()=>{if(completeStep(i))return runSteps(i+1);});
+         if(!completeStep(i))break;
+       }
+     };
+     const finishCapture=()=>{activeHistoricalCapture=null;if(clockCapture){clockCapture.end=game.elapsed;clockCapture.endPauses=[...game.pauses];}if(worldCapture)worldMotionTrace=worldCapture.finish();if(start){const end={at:game.elapsed,x:trackedActor.x,z:trackedActor.z},segments=motionSegments;motionSegments=null;let x=start.x,z=start.z,continuous=true,timed=true,lastTime=start.at;for(const segment of segments){if(segment.x0!==x||segment.z0!==z)continuous=false;x=segment.x1;z=segment.z1;if(!Number.isFinite(segment.t0)||!Number.isFinite(segment.t1)||segment.t0<lastTime-1e-8||segment.t1<segment.t0||segment.t1>end.at+1e-8)timed=false;else lastTime=segment.t1;}if(end.x!==x||end.z!==z||!(game.raid?.animals??[]).includes(trackedActor)&&!game.workers.includes(trackedActor))continuous=false;motionTrace={actorId:trackedActor.id,start,end,segments,continuous,timed,...(peerCapture?peerCapture.finish():{})};}};
+     activeHistoricalCapture=eventBoundaries;
+     let pending;
+     try{pending=runSteps(0);}catch(error){finishCapture();throw error;}
+     if(pending){
+       return pending.finally(finishCapture).then(()=>{
+         const result=publishResult();
+         nativeProduction.resume(shieldAdvance.receipt);
+         shieldAdvance=null;
+         return result;
+       }).catch(error=>{
+         // Never serialize the private partial advance as a successful command.
+         // Closing the authority aborts the retained resource through its owner.
+         if(shieldAdvance)shieldAdvance.failure=error;
+         throw error;
+       });
+     }
+     finishCapture();
     }else if(command.kind==='trackPathMotion'){
      if(command.actorId!==null&&(typeof command.actorId!=='string'||!command.actorId)||command.includePeers!==undefined&&typeof command.includePeers!=='boolean'||command.world!==undefined&&typeof command.world!=='boolean'||command.world===true&&(command.actorId!==null||command.includePeers===true))throw TypeError('Invalid motion actor');
      const next=command.actorId===null?null:[...(game.raid?.animals??[]),...game.workers].find(a=>a.id===command.actorId)??null;
@@ -968,6 +1043,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       else{const result=owner.consume();if(result.status==='committed-control-failed')throw Error(result.error);value=result.status==='committed';if(!value)rejection='La retirada cambió durante su preparación: '+result.status;}
      }else value=rejection?false:removeWall(game,command.id,command.targetId,nav);
     }else if(command.kind!=='snapshot')throw TypeError('Unknown simulation command');
+    return publishResult();
+    function publishResult(){
      admitPendingNativeBirths();planner.flushNativeIntentControl();
      const tutorialOnly=['tutorialStart','tutorialCommand','tutorialActionPause','tutorialGuideTarget'].includes(command.kind),suspensionChanged=wasSuspended!==(game.pauses.length>0||!!game.result);
     const invalidated=previousTrackedActor&&command.kind!=='advance'&&!['snapshot','setNavigationView','raidCameraFocus','previewVillage'].includes(command.kind)&&(command.kind!=='trackPathMotion'||value===true)&&(!tutorialOnly||suspensionChanged);
@@ -1004,9 +1081,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true?{version:3,wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(game,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(game):serializeConfirmedState(game)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;nativeProduction?.wake();return result;
+    }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;shieldAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
 }

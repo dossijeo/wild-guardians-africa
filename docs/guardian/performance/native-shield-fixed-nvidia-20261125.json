@@ -232,5 +232,86 @@
     "maxWithShieldIntervalMs": 35.099853515625,
     "drained": true,
     "errors": []
+  },
+  "civilExpiry": {
+    "baseCommit": "bcdbc82950cc280d648a124edaf076c8314632e4",
+    "qualification": "DEV clientOptions.qualifyShieldExpiry, one civil worker in native-idle, no raid or beast physics at expiry",
+    "deterministic": {
+      "sha256": "88cbe13b3a43057cb7fc496200203ab9279a94091300a80aae52ba60daa75233",
+      "before": 29.97399999999979,
+      "expiry": 30.000000000000128,
+      "steps": 2,
+      "elapsed": 30.01399999999979,
+      "remainder": 0.013999999999661839,
+      "polygonId": 10,
+      "shieldOwners": []
+    },
+    "physical": {
+      "sha256": "f3259c2529d44c2d9e6774f013ef5333bca81b009dfe33b5ec72b95cd96c9732",
+      "lastVisibleDuringReady": 29.95000000000007,
+      "worker": "native-idle",
+      "spell": "spell-1000000",
+      "polygonId": 10,
+      "ready": {
+        "version": 1,
+        "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 30.00000000000007
+      },
+      "firstDraw": {
+        "at": 1795633670398.5,
+        "sequence": 260,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 30.00000000000007
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 3.5,
+        "replay": false,
+        "clockElapsed": 30.05000000000007,
+        "safeUntil": 30.05000000000007,
+        "cameraVersion": null
+      },
+      "postCheckpoint": {
+        "sequence": 420,
+        "elapsed": 30.60000000000008
+      },
+      "postFrame": {
+        "sequence": 420,
+        "terrainGeneration": 12,
+        "selectableGeneration": 1064,
+        "cameraVersion": 0
+      },
+      "drained": true,
+      "cadence": {
+        "displayHz": 30,
+        "targetMs": 16.666666666666668,
+        "retainedDrawSamples": 902,
+        "peak": {
+          "at": 1795633649002.5,
+          "sequence": 17,
+          "trigger": "raf",
+          "nativeWorldBoundary": {
+            "version": 1,
+            "authorityEpoch": "3094ddaa-ae75-4914-96f5-44a155452b19/1",
+            "nativeSession": 1,
+            "ticket": 2,
+            "effectiveTime": 10
+          },
+          "intervalMs": 37.400146484375,
+          "drawMs": 1.5,
+          "replay": true,
+          "clockElapsed": 10,
+          "safeUntil": 10,
+          "cameraVersion": null
+        },
+        "traceDataLoss": false
+      }
+    }
   }
 }

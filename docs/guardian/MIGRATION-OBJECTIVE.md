@@ -802,7 +802,7 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 ## Próximo bloqueo
 
-El siguiente límite reproducido es la caducidad de Escudo dentro de un avance de dos pasos. El control parte de 29,974 s, llega a la frontera de 30 s dentro del segundo paso y deja 14 ms pendientes. Tiene que adquirir exactamente la retirada del polígono y continuar esos 14 ms una sola vez. Para C4 queda la investigación del coste común del primer impacto al centro con y sin portón. La evidencia y el alcance de Flee y Recovery figuran en el [estado por vertical](MIGRATION-VERTICALS.md).
+La [caducidad civil de Escudo](webgpu-shield.md#caducidad-civil-preparada) adquiere la retirada y consume una vez la fracción pendiente del avance. El siguiente límite es revalidar el alta desde el menú cuando Game avanza mientras espera READY. Para C4 queda la investigación del coste común del primer impacto al centro con y sin portón. La evidencia y el alcance de Flee y Recovery figuran en el [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
