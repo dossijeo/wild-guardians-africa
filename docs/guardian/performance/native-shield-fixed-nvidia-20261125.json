@@ -109,6 +109,37 @@
     "hardwareGpuDuration": false,
     "c4Passed": false
   },
+  "coldRestore": {
+    "baseCommit": "8fff4044457cbcdf1184eac8eb1e267e918f31b3",
+    "saveSha256": "0bf0efd24920c37f882119092101215a759a4f10b72c5405ce171aa5e146246d",
+    "receiptSha256": "f31241c34506c54b8ca1cd043882b469a5d3fea4c97af933da56b3b430a37dc8",
+    "traceSha256": "ee10b509d727f920a49b395e44da662d8cb61b1a197bf7fad2ac7457b61d2cf7",
+    "collectionComplete": true,
+    "dataLossOccurred": false,
+    "checkpointVersion": 3,
+    "elapsed": 101.19999999999784,
+    "spellId": "spell-1000001",
+    "polygonId": 11,
+    "spellAge": 1.1999999999999815,
+    "matchingSpatialStateAndLedger": true,
+    "extraActivations": 0,
+    "confirmedPublication": 1,
+    "nextCheckpoint": 2,
+    "residentDomeVertexCount": 5568,
+    "drained": true,
+    "drawControl": {
+      "receiptSha256": "21533cbea121667fa78d31add003c0c7029cfe3e551c665eaa7e22b53562baeb",
+      "traceSha256": "496ae741738b3a57afbf74d395db6930abe079113bb1d0a44078925eb9e64bb0",
+      "collectionComplete": true,
+      "dataLossOccurred": false,
+      "retainedSequence": 14,
+      "retainedTicket": 2,
+      "residentDomeVertexBuffer": "Buffer:2637",
+      "distinctVertexBuffersUsedByDraws": 344,
+      "awaitedAfterCameraChangeMs": 10000,
+      "domeBufferSubmitted": false
+    }
+  },
   "domeReuse": {
     "baseCommit": "9b6c5e1845084fb7b877ce7e7ee5e2045288860b",
     "receiptSha256": "66fa2c2525555a2458c81169eb983b407776a9cc61e262cf7e47c4b44e3f81cf",
