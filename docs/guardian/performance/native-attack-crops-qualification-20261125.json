@@ -1878,5 +1878,20 @@
         "sha256": "fcc44bb6b16767cddfa61d3fcc7a41f7a34c450328ed3abfc8a47003c5c2ca7c"
       }
     }
+  },
+  "historicalFixtureValidation": {
+    "base": "b3e6b0caeb09caff76bc6d9f088d380ace967d75",
+    "corrected": [
+      "confirmed-motion-preview",
+      "historical recovery direct",
+      "historical recovery prepared early"
+    ],
+    "tests": 484,
+    "passed": 484,
+    "failed": 0,
+    "tap": {
+      "path": ".cache/migration-test-fixtures-root-regression.tap",
+      "sha256": "88186551cb4be0d52e838df5e3795c3510c6920813fdff4f2cc20bf68a295a55"
+    }
   }
 }

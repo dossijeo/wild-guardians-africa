@@ -124,4 +124,6 @@ Pasaron las 413 pruebas seleccionadas. El build de producto pasó en 48,23 s. [R
 
 ## Regresión
 
+Se recuperaron las tres comprobaciones de la selección anterior. La prueba de preview envía su publicación sin segmentos antes de que el stream la prepare. Los dos arneses de recuperación incluyen la proyección de supresiones exigida por el canal y comprueban que la autoridad reciba la pausa antes de perder terreno. Las 484 pruebas de la selección ampliada pasaron. [Recibo de regresión](performance/native-attack-crops-qualification-20261125.json).
+
 Pasaron 512 de 522 pruebas seleccionadas. Cinco quedaron omitidas y cinco casos QA-100 de último golpe a trabajador reprodujeron los mismos fallos de la línea base. El build de producto con WebGPU Worker y Draw remoto pasó en 1 min 5 s. Standalone y pthread conservaron las firmas existentes y añadieron 25 funciones de los contratos de ruta, golpe y estado del animal.
