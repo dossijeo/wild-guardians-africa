@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "commit": "9a8fe20044fa9a5cef37a9758f239a99aa49207a",
+  "scenario": "prepared Shield over acquired Farm23 with hosted clock suspended at the cast boundary",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 113
+    }
+  },
+  "resolution": [
+    640,
+    480
+  ],
+  "displayHz": 30,
+  "trace": {
+    "receiptSha256": "8a9a64b5442614d3cbe550b5314cca9b38351c1bd5aae82ea894a445275e05b4",
+    "traceSha256": "63d4e9e604f4a269258e46dc6974ec83433eed2e534ed8d6f7f40fa9c9a8a84c",
+    "collectionComplete": true,
+    "dataLossOccurred": false
+  },
+  "cast": {
+    "sequence": 3,
+    "ticket": 3,
+    "elapsed": 10,
+    "spell": "spell-1000000",
+    "polygonId": 10,
+    "farmBodyId": 1,
+    "readyMs": 496.2001953125,
+    "readyHoldConfiguredMs": 300,
+    "spellActivated": 1,
+    "firstDraw": {
+      "sequence": 25,
+      "ticket": 3,
+      "intervalMs": 33.199951171875,
+      "drawMs": 2.800048828125,
+      "replay": false,
+      "clockElapsed": 10
+    },
+    "checkpoint": {
+      "sequence": 4,
+      "elapsed": 10
+    }
+  },
+  "effect": {
+    "age": 1.1500000000000017,
+    "vertices": 5568,
+    "initialGeometry": [
+      {
+        "reference": "Buffer:2850",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 1,
+        "hash": null
+      }
+    ],
+    "matureGeometry": [
+      {
+        "reference": "Buffer:2850",
+        "mesh": 636,
+        "name": "",
+        "geometry": 266,
+        "attribute": "vfxKind",
+        "bytes": 360448,
+        "version": 8,
+        "hash": null
+      }
+    ]
+  },
+  "cadence": {
+    "targetMs": 16.666666666666668,
+    "intervals": 308,
+    "aboveTarget": 308,
+    "max": {
+      "sequence": 6,
+      "ticket": null,
+      "intervalMs": 36.699951171875,
+      "drawMs": 0.300048828125,
+      "replay": true,
+      "clockElapsed": 10
+    },
+    "maxWithShield": {
+      "sequence": 30,
+      "ticket": 3,
+      "intervalMs": 35.300048828125,
+      "drawMs": 1.800048828125,
+      "replay": true,
+      "clockElapsed": 10.299999999999994
+    }
+  },
+  "drained": true,
+  "errors": [],
+  "scope": {
+    "fixedClockCast": true,
+    "liveMenu": false,
+    "coordinatedExpiry": false,
+    "hardwareGpuDuration": false,
+    "c4Passed": false
+  }
+}

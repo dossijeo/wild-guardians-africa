@@ -56,7 +56,7 @@ Despertar confirma sobre el mismo cuerpo si el cultivo tiene una Task14 provisio
 
 Despertar confirma un cultivo elegido con la cámara, muestra el ritual y dibuja el resplandor con una captura hecha durante el mismo dibujo. NVIDIA conservó el cuerpo y las 32 geometrías de Farm. La orden duplicada dejó una sola fuente y el cierre drenó. La validación del relevo sobre el cultivo asignado sigue su propio recibo. [Cambios y validación](native-ordinary-awakening-boundary-20261121.md).
 
-WASM respeta la máscara del Escudo. Farm conserva el mismo cuerpo y corredor tanto dentro como fuera de la huella, y el Escudo sigue bloqueando a los animales. La publicación con terreno y checkpoint todavía falla tras el alta. Quedan pendientes el alta y la caducidad coordinadas con el consumidor gráfico. [Controles de Escudo](webgpu-shield.md#máscara-nativa-del-escudo).
+Escudo ya tiene alta preparada a tiempo fijo en NVIDIA. El mismo ticket adquiere el polígono y el VFX, conserva el cuerpo de Farm23 y permite capturar terreno y checkpoint. La cúpula abre en el mismo buffer. El menú ordinario necesita revalidación con reloj en marcha y la caducidad necesita adquirir su retirada en el paso exacto. [Controles de Escudo](webgpu-shield.md#alta-desde-la-autoridad).
 
 Multiplicar precedió una cosecha y entrega ordinarias sobre el mismo cuerpo. La caja conservó la potencia, liquidó 10 monedas adicionales y generó un solo abono de 24 tras el redondeo. NVIDIA dibujó el efecto de ocho haces y la entrega con el mismo cuerpo y 32 geometrías originales. Las dos ventanas registraron 34,7 ms y 34,8 ms a 30 Hz. [Recibo físico](performance/native-ordinary-guardian-multiply-20261121.json).
 
