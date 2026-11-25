@@ -86,9 +86,9 @@ test('a Shield READY for an older native clock cannot commit a polygon or an act
  }finally{release();await f.close();}
 });
 
-test('a running civil Shield keeps geometry private, then captures the approved cast at the actual FIFO head',async()=>{
+test('a running civil Shield with the empty beast driver keeps geometry private until the actual FIFO head',async()=>{
  let release;const wait=new Promise(resolve=>{release=resolve;});
- const f=await fixture({qualifyRunningShield:true,onReady:record=>record.kind==='shield-geometry'?wait:undefined});
+ const f=await fixture({qualifyRunningShield:true,emptyBeastPhysics:true,onReady:record=>record.kind==='shield-geometry'?wait:undefined});
  try{
   const before=f.snapshot(),preparing=f.authority.prepareNativeStructureCommand(command);
   preparing.catch(()=>{});

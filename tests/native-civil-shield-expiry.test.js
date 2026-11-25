@@ -77,8 +77,8 @@ async function pump(f,predicate){
 }
 
 for(const closing of [false,true])test(closing?'disposing during kind4 READY cancels the actual two-step advance and its retained draw':
-  'civil Shield expires on its committed clock inside the second step and publishes the entire advance once',async()=>{
-  const options={observeWorldMotion:true,captureHistoricalEvents:true};
+  'civil Shield with the empty beast driver expires inside the second step and publishes the entire advance once',async()=>{
+  const options={observeWorldMotion:true,captureHistoricalEvents:true,emptyBeastPhysics:true};
   let legacy;
   if(!closing){
     const old=await restoredCivilShield(options);

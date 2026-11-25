@@ -7,6 +7,22 @@ import {createWorkerBeastPhysics} from '../src/simulation/worker-beast-physics.j
 import {BeastRecoveryExit} from '../src/rendering/beast-recovery-exit.js';
 import {confirmedAnimalPoses} from '../src/rendering/confirmed-animal-poses.js';
 
+test('a scheduled impact keeps its registered actor without an active physics pose',async()=>{
+ const animal={id:'animal-1',species:'warthog',status:'walking',heading:0,x:3,z:0,magicImpact:{at:10,impactAt:12}};
+ const game={elapsed:10,raid:{animals:[animal]},structures:[]};
+ const previousFetch=globalThis.fetch;
+ globalThis.fetch=async path=>new Response(await readFile(new URL('../public'+path,import.meta.url)));
+ let physics;
+ try{
+  physics=await createWorkerBeastPhysics(game,{actorSurface:()=>0},{allowEmpty:true});
+  assert.deepEqual(physics.poses({activeOnly:true}),[]);
+  game.raid=null;
+  assert.deepEqual(physics.poses({activeOnly:true}),[]);
+  assert.deepEqual(physics.actorIds,[animal.id]);
+  assert(physics.supports(animal.id));
+ }finally{physics?.dispose();globalThis.fetch=previousFetch;}
+});
+
 test('failed worker physics initialization releases each rig resource once',async()=>{
  const originalFetch=globalThis.fetch,types=[BufferGeometry,Material,Skeleton],originalDispose=types.map(type=>type.prototype.dispose),disposals=new Map();
  for(const [i,type] of types.entries())type.prototype.dispose=function(){disposals.set(this,(disposals.get(this)??0)+1);return originalDispose[i].call(this);};

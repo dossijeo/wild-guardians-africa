@@ -342,11 +342,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
 
   let shieldAdvance=null;
+  function civilShieldPhysicsAvailable(){return !restoringPhysics&&!physicsInitializing&&!physics?.actorIds.length;}
   async function expireCivilShield(spell,advanceToExpiry){
     if(shieldAdvance)throw Error('Native shield expiry already active');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,control:nativeIntentControl,receipt:null};
     shieldAdvance=owner;
-    const civilIdle=()=>!physics&&!game.raid&&game.workers.length===1&&
+    const civilIdle=()=>civilShieldPhysicsAvailable()&&!game.raid&&game.workers.length===1&&
       game.workers[0].nativeRouteAdmission==='native-idle'&&game.workers[0].status==='idle';
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!civilIdle()||
@@ -631,7 +632,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       remaining:BALANCE.spells.find(item=>item.id==='shield').duration_seconds};
     const minSequence=sequence,validate=()=>nativeCommandOwnerCurrent(owner)&&!duplicate()&&game.nextId===nextId&&
       !game.spells.some(item=>item.id===spell.id)&&!spellRejection(command,'shield');
-    const civil=()=>!physics&&game.workers.length===1&&!game.raid&&['native-farm-arrival','native-idle'].includes(game.workers[0].nativeRouteAdmission);
+    const civil=()=>civilShieldPhysicsAvailable()&&game.workers.length===1&&!game.raid&&['native-farm-arrival','native-idle'].includes(game.workers[0].nativeRouteAdmission);
     const running=qualifyRunningShield&&civil();
     const stage=(atCommitBoundary,prepareResources)=>planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'addPolygon',points:spatialShieldFootprint(spell),passMask:1},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,

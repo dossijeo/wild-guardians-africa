@@ -451,5 +451,77 @@
     "committed": false,
     "spells": 0,
     "errors": 0
+  },
+  "runningAndExpiringWithEmptyPhysics": {
+    "baseCommit": "73cc90276d57916d1391de03a3ade47c11b3ee60",
+    "qualifications": [
+      "qualifyRunningShield",
+      "qualifyShieldExpiry"
+    ],
+    "driver": {
+      "dynamicPhysics": true,
+      "registeredActors": 0
+    },
+    "tests": {
+      "branch": {
+        "passed": 33,
+        "artifact": {
+          "path": ".cache/shield-empty-driver/branch-impact.tap",
+          "sha256": "240eed99dd433f6ee210fab5dc709ad965936c57669ab8dc7e132d1898a87460"
+        }
+      },
+      "buildSeconds": 49.76
+    },
+    "physical": {
+      "raw": {
+        "path": ".cache/shield-empty-driver/dynamic-physics-nvidia.json",
+        "sha256": "b67fb570f9303e8b66b3435ad9cc1f22ea263b96bfa17d37e57b9fc197bf3def"
+      },
+      "trace": {
+        "path": ".cache/shield-empty-driver/dynamic-physics-nvidia.trace.json.gz",
+        "sha256": "eb3a9bcbe6d6d706987df6f7e1e55ca71587f3f7e598209f507230237daa31b8",
+        "dataLossOccurred": false
+      },
+      "displayHz": 30,
+      "cast": {
+        "elapsedWhileGeometryHeld": [
+          11.149999999999975,
+          11.449999999999969
+        ],
+        "plannedHoldMs": 300,
+        "ticket": 3,
+        "elapsed": 11.499999999999968,
+        "captureToGoMs": 194.7998046875,
+        "firstDraw": 35,
+        "firstIntervalMs": 33.300048828125,
+        "farmBodyId": 1,
+        "checkpoint": {
+          "sequence": 39,
+          "elapsed": 11.749999999999963
+        }
+      },
+      "shield": {
+        "spellId": "spell-1000000",
+        "polygonId": 10
+      },
+      "expiry": {
+        "heldElapsed": 31.45000000000009,
+        "plannedHoldMs": 300,
+        "workerState": "native-idle",
+        "elapsed": 31.500000000000092,
+        "ticket": 6,
+        "firstDraw": 283,
+        "firstIntervalMs": 33.39990234375,
+        "checkpoint": {
+          "sequence": 449,
+          "elapsed": 32.050000000000104
+        }
+      },
+      "spellActivated": 1,
+      "unchangedLedger": true,
+      "drained": true,
+      "samples": 899,
+      "maxIntervalMs": 38.89990234375
+    }
   }
 }

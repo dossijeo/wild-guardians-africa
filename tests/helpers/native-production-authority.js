@@ -13,7 +13,7 @@ const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepare
 
 // Actual authority and both production ports, existing remote draw Host and
 // retained packets; the GPU queue is deterministic, not hardware/visual QA.
-export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
+export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{qualifyFarmFlee,qualifyAnimalCrop,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
  const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
@@ -98,7 +98,15 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   async present(){await flush();await new Promise(resolve=>setImmediate(resolve));await graphics.host.idle();graphics.host.present();await flush();},
   async close(){authority.dispose();endpoint.dispose();port1.close();port2.close();graphics.client.dispose();await graphics.host.dispose();}
  };
- try{if(attach)await result.attach();return result;}catch(error){await result.close();throw error;}
+ try{
+  if(emptyBeastPhysics){
+   const fetchOriginal=globalThis.fetch;
+   globalThis.fetch=async path=>new Response(readFileSync(new URL('../../public'+path,import.meta.url)));
+   try{await authority.enableBeastPhysics(undefined,{allowEmpty:true});}finally{globalThis.fetch=fetchOriginal;}
+  }
+  if(attach)await result.attach();
+  return result;
+ }catch(error){await result.close();throw error;}
 }
 
 // Same stopped-value packet as native-farm-arrival-stop-remote.js. The real
