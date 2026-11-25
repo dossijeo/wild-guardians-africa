@@ -249,6 +249,33 @@
       "failures": 0
     }
   },
+  "preparationContrast": {
+    "beforeCurrent": {
+      "file": "native-solid-repair-v1-paused-action-instrumented-20261125.json",
+      "sha256": "7127b18f2c65012387795f520a043e9d37e944a8d06aab0ab57d2234e9fc131e",
+      "traceSha256": "404e5ea45e4fb95759ec4087947a37b4e759a6a194d435a53274d6dc8b000719",
+      "requestSequence": 1,
+      "observedSequenceAtEntry": 0,
+      "requestToReadyMs": 9654.699951171875,
+      "anchorToReadyMs": 14178.099853515625,
+      "sourceWaitMs": 4860.400146484375,
+      "rosterMs": 3862.7998046875,
+      "pipelineMs": 846.2001953125
+    },
+    "afterCurrent": {
+      "file": "native-solid-repair-v1-after-current-contrast-20261125.json",
+      "sha256": "060b8c96f6ba77e839b9da8e74ad346d8957addf4dfc1615e196ebec56d55073",
+      "traceSha256": "6848b578bd015bafb22c42dc59563e16f17e0d2cc482dea8a9d987b76b5f733e",
+      "requestSequence": 94,
+      "observedSequenceAtEntry": 1,
+      "requestToReadyMs": 4243.699951171875,
+      "anchorToReadyMs": 13400.60009765625,
+      "sourceWaitMs": 1695.7001953125,
+      "rosterMs": 1759.900146484375,
+      "pipelineMs": 716.39990234375
+    },
+    "scope": "One physical run per order. Delaying attachment moves startup work outside the preparation deadline. The authority sequence may still be ahead of Surface."
+  },
   "cadence": {
     "acceptance": false,
     "peaks": [
