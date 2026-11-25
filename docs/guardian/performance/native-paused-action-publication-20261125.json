@@ -284,7 +284,105 @@
       "anchorToReadyMs": 13097.7001953125,
       "sourceWaitMs": 0.199951171875,
       "rosterMs": 3071.60009765625,
-      "pipelineMs": 716.400146484375
+      "pipelineMs": 716.400146484375,
+      "cadence": {
+        "scope": "Time origin is the previous draw start in each interval. Host draw starts at approximately 30 Hz. The trace identifies CPU work and scheduling; it does not measure physical GPU execution, scanout or WGSL source equality.",
+        "traceComplete": true,
+        "recordedDraws": 867,
+        "medianCallbackHz": 29.999414073943868,
+        "deferredSwap": {
+          "sequence": 20,
+          "intervalMs": 47.5,
+          "displayTraceId": "6955451868012911219",
+          "swapSentAtMs": -29.372,
+          "waitFlowId": 22294,
+          "waitStartedAtMs": -29.355,
+          "syncTokenReleasedAtMs": 46.68,
+          "releaseTaskFlowId": 22292,
+          "releaseTaskEnqueuedAtMs": -29.998,
+          "releaseTaskDispatchedAtMs": 46.658,
+          "releaseTaskQueueMs": 76.656,
+          "swapTaskUnblockedAtMs": 46.682,
+          "vSyncAtMs": 32.983,
+          "swapFinishedAtMs": 47.272,
+          "swapAckAtMs": 47.3,
+          "vizBeginAtMs": 47.309,
+          "drawBeginAtMs": 47.424,
+          "drawRafAtMs": 47.457,
+          "shaderModules": {
+            "thread": "CrGpuMain",
+            "count": 8,
+            "wallInsideQueueMs": 71.578,
+            "items": [
+              {
+                "atMs": -44.408,
+                "wallMs": 16.948,
+                "cpuMs": 16.937,
+                "label": "vertex_BakedMaterial.001"
+              },
+              {
+                "atMs": -27.431,
+                "wallMs": 6.862,
+                "cpuMs": 6.845,
+                "label": "fragment_BakedMaterial.001"
+              },
+              {
+                "atMs": -19.594,
+                "wallMs": 12.034,
+                "cpuMs": 11.985,
+                "label": "vertex_Kofi head continuous skin shading"
+              },
+              {
+                "atMs": -7.531,
+                "wallMs": 6.152,
+                "cpuMs": 6.097,
+                "label": "fragment_Kofi head continuous skin shading"
+              },
+              {
+                "atMs": -0.341,
+                "wallMs": 16.464,
+                "cpuMs": 16.371,
+                "label": "vertex_Actor eyelid original fur"
+              },
+              {
+                "atMs": 16.16,
+                "wallMs": 6.373,
+                "cpuMs": 6.328,
+                "label": "fragment_Actor eyelid original fur"
+              },
+              {
+                "atMs": 23.678,
+                "wallMs": 14.919,
+                "cpuMs": 14.842,
+                "label": "vertex_Worker oral tissue"
+              },
+              {
+                "atMs": 38.625,
+                "wallMs": 6.236,
+                "cpuMs": 6.154,
+                "label": "fragment_Worker oral tissue"
+              }
+            ]
+          }
+        },
+        "qaInspection": {
+          "sequence": 285,
+          "intervalMs": 38.39990234375,
+          "vizBeginAtMs": 33.031,
+          "qaInspectStartedAtMs": 34.064,
+          "qaInspectFinishedAtMs": 38.165,
+          "qaReplyCounts": {
+            "samples": 825,
+            "opportunities": 512
+          },
+          "serialization": {
+            "startedAtMs": 34.239,
+            "wallMs": 3.932,
+            "cpuMs": 3.926
+          },
+          "drawBeginAtMs": 38.339
+        }
+      }
     },
     "scope": "One physical run per order. Drawing an explicitly requested snapshot while dispatch is suspended matches the requested and visible sequences before starting preparation."
   },
