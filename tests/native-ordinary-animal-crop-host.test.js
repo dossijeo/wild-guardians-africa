@@ -8,7 +8,9 @@ import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-fr
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
-import {deserialize} from '../src/persistence/snapshots.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 function fixture(){
 const s=deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d1-native-active-raid.json.gz')).toString());
@@ -16,6 +18,60 @@ const {chunkKeys}=JSON.parse(readFileSync('docs/guardian/performance/native-ordi
 const manifest={epoch:'crop',chunks:chunkKeys.map(k=>{const [cx,cz]=k.split(',').map(Number);return {cx,cz,revision:1};})};
 return {s,manifest,chunkKeys};
 }
+for(const legacy of [false,true])test(`an AttackCrops checkpoint resumes after a fresh READY (${legacy?'legacy path':'native suffix'})`,async()=>{
+ const {s,chunkKeys}=fixture();
+ const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys});
+ let restored;
+ const animals=state=>state.raid.animals[0];
+ const pose=({x,z,heading,motionPhase})=>({x,z,heading,motionPhase});
+ try{
+  await untilProduction(source,()=>source.records[0]?.committed);
+  for(let i=0;i<35;i++){source.advance();await source.present();}
+  const before=animals(source.snapshot()),program=source.records[0].resources;
+  assert.equal(before.status,'walking');
+  assert.equal(before.targetId,'plant-373');
+  assert.ok(before.z<22);
+  assert.deepEqual(before.path[0],{x:84,z:30});
+  const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const stored=prepareWorkerCheckpoint(checkpoint,{slotId:s.slotId,policy:{nativeAuthority:true},savedAt:1795663080000});
+  assert.equal(stored.saved,true);
+  assert.deepEqual(animals(stored.state).path[0],{x:84,z:21});
+  assert.deepEqual(animals(source.snapshot()).path,before.path);
+  if(legacy)animals(stored.state).path=before.path;
+  const {nativeBootstrap,chunkKeys:restoredChunks}=savedNativeAuthorityOptions(serialize(stored.state));
+  let ready;
+  restored=await nativeProductionAuthority(stored.state,{qualifyAnimalCrop:true,nativeBootstrap,chunkKeys:restoredChunks,
+   onReady:r=>r.kind==='animal-crop-route'?new Promise(resolve=>{ready=resolve;}):undefined});
+  await untilProduction(restored,()=>ready);
+  const route=restored.records[0].resources;
+  assert.equal(route.reference.targetId,program.reference.targetId);
+  assert.notEqual(route.worldBoundary.authorityEpoch,program.worldBoundary.authorityEpoch);
+  assert.deepEqual(pose(animals(restored.snapshot())),pose(before));
+  assert.deepEqual(Array.from(route.rows.slice(1,6)),[before.x,before.z,0,before.motionPhase,before.heading]);
+  assert.deepEqual(Array.from(route.rows.slice(17,19)),[84,21]);
+  assert.ok(Math.abs(route.endTime-program.endTime)<1e-9);
+  const held=restored.advance();
+  assert.deepEqual(pose(animals(held)),pose(before));
+  ready();
+  await untilProduction(restored,()=>restored.records[0]?.committed);
+  assert.deepEqual(pose(animals(restored.snapshot())),pose(before));
+  const moving=animals(restored.advance());
+  assert.ok(moving.z<before.z);
+  assert.ok(moving.motionPhase>before.motionPhase);
+  const hits=[];
+  for(let i=0;i<400&&!hits.length;i++){
+   const step=restored.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+   hits.push(...step.events.filter(event=>event.type==='AnimalLogicalHit'));
+   await restored.present();
+  }
+  assert.equal(hits.length,1);
+  const strike=restored.records.find(record=>record.kind==='animal-crop-strike');
+  assert.ok(strike?.committed);
+  assert.equal(strike.resources.reference.bodyId,route.reference.bodyId);
+  assert.equal(strike.resources.reference.targetId,route.reference.targetId);
+  assert.equal(restored.snapshot().plants.find(plant=>plant.id===before.targetId).alive,false);
+ }finally{await restored?.close();await source.close();}
+});
 test('prepared warthog retains its original rig across the issued crop route and strike',async()=>{
 const {s,manifest,chunkKeys}=fixture();
 const retired=[];

@@ -122,6 +122,14 @@ El segundo golpe, anterior a la demora intencional, registró 200,00 ms. El prep
 
 Pasaron las 413 pruebas seleccionadas. El build de producto pasó en 48,23 s. [Recibo, marcas y comprobaciones](performance/native-attack-crops-qualification-20261125.json).
 
+## Recarga en plena aproximación
+
+El guardado a t=378,50 conservaba la pose y la fase, pero volvía a escribir el recorrido completo. Tras recargar, el facóquero regresaba de z=21,91 a z=30 antes de seguir hacia el mismo cultivo. La llegada se desplazaba de t=391,3468 a t=402,1271.
+
+Al crear un checkpoint nativo, la autoridad consulta el primer punto restante del recorrido adquirido y escribe solo ese tramo en el campo `path` de la partida. La sesión nueva valida los puntos y exige su propia preparación gráfica. En un guardado anterior, se recorta un prefijo recto si la pose está exactamente sobre ese tramo y el rumbo confirma su dirección. Los demás recorridos pasan por la validación y replanificación habituales. Detour vincula el nuevo inicio del corredor con una posición comprobada sobre la malla. Aquí esa posición y su cursor proceden de la ejecución WASM. [Detour v1.6.0, movePosition](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourPathCorridor.cpp#L438-L475).
+
+En NVIDIA Turing, el Worker recargó el archivo público. La pose, el objetivo y la fase permanecieron fijos durante los 300 ms de retención de READY. El primer submit del GO, secuencia 40, escribió edad cero. El siguiente punto era (84, 21) y la llegada prevista coincidió con la marcha ininterrumpida. A t=378,70 la posición era (84, 21,61), con saldo y cuota de golpes intactos. El consumidor confirmó el drenaje. Pasaron 21 controles dirigidos. En CPU, las dos variantes de recarga llegaron y aplicaron un solo golpe a `plant-373`. En la selección amplia se reprodujeron en la base los cinco fallos observados. Quedan el resto de la secuencia física y el guardado en plena acción o retirada. [Recibo de recarga](performance/native-attack-crops-reload-20261126.json).
+
 ## Regresión
 
 Se recuperaron las tres comprobaciones de la selección anterior. La prueba de preview envía su publicación sin segmentos antes de que el stream la prepare. Los dos arneses de recuperación incluyen la proyección de supresiones exigida por el canal y comprueban que la autoridad reciba la pausa antes de perder terreno. Las 484 pruebas de la selección ampliada pasaron. [Recibo de regresión](performance/native-attack-crops-qualification-20261125.json).

@@ -3344,6 +3344,22 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       {length:points.length/2},(_,index)=>({
         x:points[index*2],z:points[index*2+1]}))};
   };
+  // Older moving AttackCrops saves included the waypoints already traversed.
+  // Recover a straight retrace only when the pose is exactly on that initial
+  // run, facing forward. The normal native registration validates the suffix.
+  const restoredCropPath=animal=>{
+    const {path,x,z,heading}=animal;
+    if(animal.species!=='warthog'||!animal.targetId.startsWith('plant-')||path.length<2)return path;
+    const first=path[0],next=path[1],dx=next.x-first.x,dz=next.z-first.z;
+    if((x-first.x)*dx+(z-first.z)*dz<=0||heading!==Math.atan2(dx,dz))return path;
+    for(let i=1;i<path.length;i++){
+      const a=path[i-1],b=path[i],sx=b.x-a.x,sz=b.z-a.z;
+      if(dx*sz!==dz*sx||dx*sx+dz*sz<=0)break;
+      const t=Math.abs(sx)>=Math.abs(sz)?(x-a.x)/sx:(z-a.z)/sz;
+      if(t>=0&&t<1&&x===a.x+sx*t&&z===a.z+sz*t)return path.slice(i);
+    }
+    return path;
+  };
   const restoreAttackIntents=state=>{
     let committed=0,travelling=0,staleRoutes=0;
     const pendingAttackRouteIds=[],pendingAttackRouteResults=[];
@@ -3391,7 +3407,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         }
         continue;
       }
-      try{registerAttackIntent(state,animal,target,animal.path);travelling++;}
+      try{
+        const path=restoredCropPath(animal);
+        registerAttackIntent(state,animal,target,path);
+        animal.path=path;travelling++;
+      }
       catch(error){
         if(!/Native attack intention rejected: -5/.test(String(error)))throw error;
         animal.path=null;staleRoutes++;
