@@ -231,4 +231,14 @@ El control determinista retiene también el READY de Home18 durante tres pasos y
 
 Pasaron 784 pruebas de regresión y cuatro comparaciones de compatibilidad WASM. La variante pthread arrancó con memoria compartida. La compilación de producción terminó en 54,93 s con los mismos binarios WASM de la captura.
 
-Idle20 sigue pendiente en dos controles. El avance posterior a `RaidSpawned` rechaza el cuerpo tanto con el primer READY de Idle20 retenido como con Idle20 adquirido y el primer READY de Idle21 retenido.
+## RaidSpawned durante la admisión inicial de Idle20
+
+El avance posterior a `RaidSpawned` fallaba tanto con el primer READY de Idle20 retenido como con Idle20 adquirido y el primer READY de Idle21 retenido. WASM ahora transfiere a Home la solicitud pendiente o el cuerpo estacionario adquirido y cancela solo la propuesta de ese dueño. Draw comprueba la secuencia original, el cuerpo, el perfil y la pose completa. Los controles de los dos órdenes rechazan la misma solicitud con la secuencia de origen adulterada.
+
+En NVIDIA Turing, la incursión nació a t=10,30 en `event-29208` en ambas capturas. Con Idle20 pendiente se canceló el ticket 1. Home18 adquirió el ticket 3, confirmado por el envío 19. Con Idle20 adquirido por el ticket 2, se canceló el primer READY de Idle21, ticket 3. Home18 adquirió el ticket 5, confirmado por el envío 23. Ambos recorridos entregaron el READY antiguo después de cancelarlo. Home18 conservó el cuerpo 1, la posición (−14, 5), la orientación, las fases y el presupuesto de carrera, y acreditó su propio cruce del portón 1000000. [Recibo físico de ambos recorridos](performance/native-mixed-raid-initial-idle-20261126.json).
+
+Home19 retiró el cuerpo 1. El centro recibió cuatro débitos de 20 HP en cada recorrido. Volvió el mismo trabajador con el cuerpo 3 y conservó su saldo hasta Idle. Draw drenó sin errores. En el primer intento del caso adquirido, el arnés mantuvo el reloj suspendido después del GO20 y venció la espera de publicación antes de la incursión. La captura válida dio un paso ordinario de 0,05 s antes de esperar el READY de Idle21. Los controles deterministas también retienen Home18 durante tres pasos y comprueban que las poses del trabajador y del animal quedan fijas. La evidencia se limita a la cohorte de desarrollo de Desierto con un trabajador, un facóquero y un portón. La aceptación de cadencia sigue abierta.
+
+Pasaron 1.062 pruebas de regresión, incluidas las cuatro pruebas nuevas que fallan en la preimagen. Las dos variantes WASM se reconstruyeron y pasaron cuatro comparaciones de compatibilidad. El módulo pthread arrancó con memoria compartida y expuso las dos funciones nuevas. La compilación de producción terminó en 55,07 s y sus tres artefactos nativos coinciden con los usados en las capturas.
+
+El siguiente bloqueo reproducido es Task14 en marcha. Una orden ordinaria de Repair obtuvo GO14 y el trabajador caminó hasta que `RaidSpawned` llegó a t=11,40. Game liberó entonces la tarea y el siguiente avance rechazó la cohorte. El mismo fallo se reprodujo dentro de un comando con dos subpasos. Queda pendiente la parada de esa marcha adquirida.

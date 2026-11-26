@@ -639,11 +639,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         readPendingAnimalCrop(false):null;
       const birth=pendingCrop&&raidFlight?.requestSequence===pendingCrop.requestSequence?raidFlight.birth:null;
       const home=homeRequestReferences.get(data[at]);
-      const strollFlightSequence=home?.version===2&&home.requestSequence===data[at+8]?
-        wasm.nav_home_pending_idle_stroll_flight_source?.(home.actorId,home.requestSequence,home.raidSpawnSequence):0;
+      const homeFlight=home?.version===2&&home.requestSequence===data[at+8];
+      const strollFlightSequence=homeFlight?wasm.nav_home_pending_idle_stroll_flight_source?.(home.actorId,home.requestSequence,home.raidSpawnSequence):0;
+      const initialIdleFlightSequence=homeFlight?wasm.nav_home_initial_idle_flight_source?.(home.actorId,home.requestSequence,home.raidSpawnSequence):0;
       const stopped=issuedShieldCropStop,shieldCropStop=stopped?.actorId===data[at]&&data[at+13]===2&&data[at+1]===0&&
         stopped.worldBoundary.effectiveTime===data[at+9]&&stopped.slot===data[at+11]&&stopped.generation===data[at+12]?stopped:null;
-      return {...(strollFlightSequence?{strollFlightSequence}:{}),...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
+      return {...(strollFlightSequence?{strollFlightSequence}:{}),...(initialIdleFlightSequence?{initialIdleFlightSequence}:{}),...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
         {pendingAnimalCrop:pendingCrop,...(birth?{raidFlightBirth:birth}:{})}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
@@ -2820,12 +2821,21 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(status!==1)throw Error('Native Idle cycle Home request rejected');
     const request=nativeHomeRequestReference(r.actorId);if(!nativeHomeRequestContinuesIdleCycle(request,held))throw Error('Native Idle cycle Home lost its current body');return request;
   };
-  const requestNativeInitialIdleHome=(source,home)=>{
-    const r=copyNativeInitialIdleDeclarationReference(source);
-    if(r.authorityEpoch!==epoch()||JSON.stringify(nativeInitialIdleDeclarationReference(r.actorId))!==JSON.stringify(r))throw Error('Native initial Idle Home source is not current');
-    if(typeof wasm.nav_intent_initial_idle_home_request!=='function')throw Error('Rebuild native initial Idle Home request');syncBoundaryTime();
-    if(wasm.nav_intent_initial_idle_home_request(r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native initial Idle Home request rejected');
-    return nativeHomeRequestReference(r.actorId);
+  const issueInitialIdleHome=(r,sequence,home,raidSpawnSequence)=>{
+    if(typeof wasm.nav_intent_initial_idle_home_request!=='function')throw Error('Rebuild native initial Idle Home request');
+    syncBoundaryTime();
+    const args=[r.actorId,r.nativeSession,sequence,home.villageId,home.x,home.z];
+    const status=raidSpawnSequence?wasm.nav_intent_initial_idle_flight_request?.(...args,raidSpawnSequence):wasm.nav_intent_initial_idle_home_request(...args);
+    if(status!==1)throw Error('Native initial Idle Home request rejected');
+    const request=nativeHomeRequestReference(r.actorId);
+    if(r.bodyId&&!nativeHomeRequestContinuesInitialIdle(request,r))throw Error('Native initial Idle Home lost its physical source');
+    return request;
+  };
+  const requestNativeInitialIdleHome=(source,home,raidSpawnSequence=0)=>{
+    const r=(raidSpawnSequence?copyNativeInitialIdleRequestReference:copyNativeInitialIdleDeclarationReference)(source);
+    const current=(raidSpawnSequence?nativeInitialIdleRequestReference:nativeInitialIdleDeclarationReference)(r.actorId);
+    if(r.authorityEpoch!==epoch()||JSON.stringify(current)!==JSON.stringify(r))throw Error('Native initial Idle Home source is not current');
+    return issueInitialIdleHome(r,r.requestSequence,home,raidSpawnSequence);
   };
   const requestNativeRestoredIdleStrollHome=(source,home,raidSpawnSequence=0)=>{
     const declared=source?.kind==='native-idle-stroll-declaration-reference',r=(declared?copyNativeIdleStrollDeclarationReference:copyNativeIdleStrollRequestReference)(source),current=declared?nativeIdleStrollDeclarationReference(r.actorId):nativeIdleStrollRequestReference(r.actorId);
@@ -2838,12 +2848,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(!declared&&!nativeHomeRequestContinuesInitialIdle(request,r))throw Error('Native restored stroll Home lost its physical source');
     return request;
   };
-  const requestNativeInitialIdleBodyHome=(source,home)=>{
+  const requestNativeInitialIdleBodyHome=(source,home,raidSpawnSequence=0)=>{
     const held=copyNativeInitialIdleBodyAttestation(source),r=held.reference;
     if(r.worldBoundary.authorityEpoch!==epoch()||JSON.stringify(nativeInitialIdleBodyBinding(r.actorId))!==JSON.stringify(held))throw Error('Native initial Idle body Home source is not current');
-    syncBoundaryTime();
-    if(wasm.nav_intent_initial_idle_home_request(r.actorId,r.worldBoundary.nativeSession,held.bodySequence,home.villageId,home.x,home.z)!==1)throw Error('Native initial Idle body Home request rejected');
-    const request=nativeHomeRequestReference(r.actorId);if(!request)throw Error('Native initial Idle body Home lost its physical owner');return request;
+    return issueInitialIdleHome(r.sourceRequest,held.bodySequence,home,raidSpawnSequence);
   };
   const stageFarmArrivalRoute=(actor,sessionId,sequence,flags)=>{
     const stage=qualifyFarmFlee&&wasm.spatial_world_biome()===0?wasm.nav_farm_arrival_route_proposal_stage_savanna:wasm.nav_farm_arrival_route_proposal_stage;
@@ -4360,7 +4368,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!state.workers.includes(worker)||view.executedThrough!==state.elapsed||worker.profile!==q.workerProfile||numericId(worker.centerId)!==q.centerId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||
       ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==q.pose[k])||worker.heading!==q.pose.yaw)throw Error('Native initial Idle body is not the retained game boundary');
     const pending=worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&worker.path===null&&!!worker.taskId&&bridge.pendingTaskRoute(worker.id)?.taskId===numericId(worker.taskId);
-    const home=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&nativeHomeRequestContinuesInitialIdle(bridge.nativeHomeRequestReference(worker.id),q)&&!!projectNativeHomeExecution(state,worker);
+    const pendingHome=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'||
+      worker.status==='fleeing'&&worker.nativeRouteAdmission==='pending-raid-flight-resources'&&bridge.nativeRaidFlightMember(state,state.raid?.animals[0])===worker;
+    const home=pendingHome&&nativeHomeRequestContinuesInitialIdle(bridge.nativeHomeRequestReference(worker.id),q)&&!!projectNativeHomeExecution(state,worker);
     if(!pending&&!home){
       const semantic=nativeInitialIdleRetainedState(state,worker,{canonical:true});
       if(JSON.stringify(semantic.idleState)!==JSON.stringify(q.idleState))throw Error('Native initial Idle pose differs from its retained private state');
@@ -4837,6 +4847,8 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!goal)return false;
     const home={villageId:numericId(village.id),x:goal.x,z:goal.z};
     const request=source.kind==='native-idle-cycle-attestation'?bridge.requestNativeIdleCycleHome(source,home,eventId):
+      source.kind==='native-initial-idle-request-reference'?bridge.requestNativeInitialIdleHome(source,home,eventId):
+      source.kind==='native-initial-idle-body-attestation'?bridge.requestNativeInitialIdleBodyHome(source,home,eventId):
       source.kind==='native-idle-stroll-request-reference'?bridge.requestNativeRestoredIdleStrollHome(source,home,eventId):
       ['native-idle-stroll-execution','native-idle-stroll-held-execution'].includes(source.kind)?bridge.requestNativeIdleStrollHome(source,home,eventId):
       bridge.requestNativeFarmArrivalHome(source,home,eventId);
@@ -4860,16 +4872,20 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const pendingStroll=idleSource?bridge.nativeIdleStrollRequestReference(worker.id):null;
     const stroll=idleSource&&!pendingStroll?bridge.nativeIdleStrollExecution(worker.id):null;
     const cycle=!pending&&!held&&!moving&&!stroll&&!pendingStroll?bridge.nativeIdleCycleExecution(worker.id):null;
+    const initialSource=!pending&&!held&&!moving&&!stroll&&!pendingStroll&&!cycle;
+    const pendingInitial=initialSource?bridge.nativeInitialIdleRequestReference(worker.id):null;
+    const initial=initialSource&&!pendingInitial?bridge.nativeInitialIdleBodyState(worker.id):null;
     if(cycle&&cycle.executedThrough!==state.elapsed)return;
     if(stroll&&stroll.executedThrough!==state.elapsed)return;
+    if(initial&&initial.executedThrough!==state.elapsed)return;
     const original=pending??pendingStroll??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest??
-      stroll?.binding.reference??(cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
+      stroll?.binding.reference??pendingInitial??initial?.binding.reference.sourceRequest??(cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
     if(!original||original.centerId!==numericId(worker.centerId)||original.workerProfile!==worker.profile)return;
     const pose=pending?.pose??held?.pose??moving??stroll?.pose??original.pose;
     if(['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==worker[key])||pose.yaw!==worker.heading)return;
     const eventId=numericId(event.id);
-    if(cycle||pending||pendingStroll||held||moving?.arrived&&moving.currentSpeed===0){
-      requestRaidRefuge(state,worker,cycle?.binding??pending??pendingStroll??held??moving,eventId);return;
+    if(cycle||pending||pendingStroll||pendingInitial||initial||held||moving?.arrived&&moving.currentSpeed===0){
+      requestRaidRefuge(state,worker,cycle?.binding??pending??pendingStroll??pendingInitial??initial?.binding??held??moving,eventId);return;
     }
     const marker=stroll?'pending-idle-flight-stop':'pending-farm-flight-stop',
       sample=stroll?'nativeIdleFlightSample':'nativeFarmFlightSample';

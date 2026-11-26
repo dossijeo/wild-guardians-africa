@@ -494,13 +494,18 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         birth.sourceSequence===strollFlightSource.assignmentSequence&&birth.strollTicket===strollFlightSource.reference.worldBoundary.ticket&&
         birth.workerBody===homeRequest.bodyId;
     });
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
-      throw Error('Native raid flight requires its Farm or Idle source');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingIdleStrollRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');
-    if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');
-    const initialBodyRequest=actor?.initialIdleBodySource?.request;
+    const pendingInitialIdle=actor?.pendingInitialIdleRequest,initialBody=actor?.initialIdleBodySource;
+    if(homeRequest&&pendingInitialIdle&&!nativeHomeRequestContinuesInitialIdle(homeRequest,pendingInitialIdle))throw Error('Native Home request differs from its pending initial Idle body');
+    const initialBodyRequest=initialBody?.request;
     if(homeRequest&&initialBodyRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,initialBodyRequest))throw Error('Native Home request differs from its held initial Idle body');
+    const initialIdleFlight=homeRequest?.version===2&&event.type==='IntentChanged'&&!current&&!handle&&!revoked&&
+      (pendingInitialIdle&&actor.state===6&&actor.latestSequence===pendingInitialIdle.requestSequence&&event.initialIdleFlightSequence===pendingInitialIdle.requestSequence||
+       initialBody&&actor.state===7&&stationarySequenceCurrent(actor,20,initialBody.bodySequence)&&event.initialIdleFlightSequence===initialBody.bodySequence);
+    if(event.initialIdleFlightSequence!==undefined&&!initialIdleFlight)throw Error('Native Home flight lacks its initial Idle source');
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&!initialIdleFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+      throw Error('Native raid flight requires its Farm or Idle source');
     const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===20||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(actor?.pendingInitialIdleRequest&&event.state===7&&(event.type!=='IntentChanged'||current||handle||revoked||event.taskId||event.targetId||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest))throw Error('Native initial Idle body acquisition conflicts with its pending source');
     const completedInitialBody=actor?.pendingInitialIdleRequest&&!current&&event.type==='IntentChanged'&&event.state===7&&!handle&&!revoked&&!event.taskId&&!event.targetId?{request:actor.pendingInitialIdleRequest,bodySequence:event.sequence,at:event.effectiveTime}:null;

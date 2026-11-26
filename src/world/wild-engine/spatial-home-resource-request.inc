@@ -247,13 +247,13 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_farm_flight_request(double actor,double sess
 }
 // A genuine initial Idle may expire before graphics, or even its first body,
 // have been admitted. Retarget that semantic source on the same intent owner.
-EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+static int requestInitialIdleHome(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
  const auto worker=s.workers.find(uint64_t(actor));if(worker==s.workers.end())return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;
   const bool current=r.body?nativeHomeRequestBodyCurrent(s,intent):intent.home&&intent.state==PlanningState::AwaitingResources&&!intent.task&&!intent.target&&!intent.generation&&intent.requiresResources&&!intent.lease&&r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&!worker->second.bodyBound&&!worker->second.body&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z;
-  if(!current||r.initialIdleSourceSequence!=uint64_t(sourceSequence))return -2;
+  if(!current||r.initialIdleSourceSequence!=uint64_t(sourceSequence)||r.raidSpawnSequence!=raidSpawnSequence)return -2;
   return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
  }
  const NativeWorkerPoseResourceRequest* held=nullptr;
@@ -261,10 +261,31 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,doubl
  else if(nativeInitialIdleBodyCurrent(s,intent)&&intent.state==PlanningState::StationaryActive&&intent.initialIdleBodyBinding->bodySequence==uint64_t(sourceSequence))held=intent.initialIdleBodyBinding->source.get();
  if(!held)return -2;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
+ if(raidSpawnSequence){
+  if(!held->body)return -2;
+  if(s.worldMutationPreview||s.proposalOpen)return -4;
+  auto& p=s.barrierProposal;
+  if(p.pending){
+   const bool pendingBody=intent.initialIdleRequest&&p.kind==20&&p.initialIdleBody&&
+     p.initialIdleBody->source==intent.initialIdleRequest&&!p.initialIdleBody->cancellationSource;
+   const bool firstCycle=intent.initialIdleBodyBinding&&p.kind==21&&p.idleCycle&&
+     p.idleCycle->body==intent.initialIdleBodyBinding&&!p.idleCycle->previousCycle&&
+     p.idleCycle->source.kind==20&&p.idleCycle->source.sequence==uint64_t(sourceSequence);
+   if(!pendingBody&&!firstCycle)return -4;
+   clearWorldMutationProposal(p);
+  }
+ }
  auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*held;
- request->initialIdleSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+ request->initialIdleSourceSequence=uint64_t(sourceSequence);request->raidSpawnSequence=raidSpawnSequence;request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
  intent.initialIdleRequest.reset();intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);worker->second.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+ return requestInitialIdleHome(actor,session,sourceSequence,village,homeX,homeZ,0);
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_initial_idle_flight_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,double event){
+ if(!integer(event))return -1;
+ return requestInitialIdleHome(actor,session,sourceSequence,village,homeX,homeZ,uint64_t(event));
 }
 EMSCRIPTEN_KEEPALIVE int nav_home_request_snapshot(double actor,double ticket){
  auto& s=state();s.homeRequestResult.fill(0);if(!integer(actor)||!integer(ticket,true))return 0;
@@ -310,6 +331,10 @@ EMSCRIPTEN_KEEPALIVE int nav_home_flight_from_acquired_idle(double actor,double 
 EMSCRIPTEN_KEEPALIVE double nav_home_pending_idle_stroll_flight_source(double actor,double sequence,double event){
  const auto* request=currentHomeFlightSource(actor,sequence,event);
  return request?double(request->strollRequestSourceSequence):0;
+}
+EMSCRIPTEN_KEEPALIVE double nav_home_initial_idle_flight_source(double actor,double sequence,double event){
+ const auto* request=currentHomeFlightSource(actor,sequence,event);
+ return request&&!request->idleCycleSourceSequence?double(request->initialIdleSourceSequence):0;
 }
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;

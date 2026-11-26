@@ -1,0 +1,247 @@
+{
+  "scenario": "RaidSpawned retargets the same restored stationary worker from Idle20 to Home18 before the first GO20 or before the first GO21.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "baseline": {
+    "commit": "30d3e2f6f926245b7e31d2c41f2ee9ae09d654eb",
+    "failure": "Native task game cohort contains an unsupported mover",
+    "tapSha256": "797a349c5bdb41c33887e685a839444f36be61bbb6096b4994b9388885e08d0f"
+  },
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "2c52e3a0df9cf8efb710b284a772a3f973416d58fbe13cecffb184ac67a84671",
+    "public/wild-engine/spatial-threaded.wasm": "b9467291cb73c46fc27b13d046083c7e1d61663d8ef9ef8968bae0aa7a232cb8",
+    "public/wild-engine/spatial-threaded.mjs": "35648a05a2547033277eabc71a213a196cad9b07de0e46ad4890d21ff108d56c"
+  },
+  "cases": [
+    {
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "edge": "158.0.4370.33"
+      },
+      "idle": {
+        "body": 1,
+        "actor": 900011,
+        "sourceSequence": 2,
+        "pendingKind": 20,
+        "initialGoTicket": null,
+        "request": 1,
+        "preparedTicket": 1,
+        "wireOrder": [
+          1,
+          2,
+          3,
+          6
+        ],
+        "pose": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        }
+      },
+      "spawn": {
+        "event": "event-29208",
+        "elapsed": 10.299999999999994
+      },
+      "home": {
+        "body": 1,
+        "ticket": 3,
+        "assignment": 5,
+        "sourceRequestSequence": 3,
+        "preparedTicket": 2,
+        "drawWorldTicket": 3,
+        "drawSequence": 19,
+        "drawElapsed": 16.249999999999876,
+        "gateIds": [
+          1000000
+        ],
+        "origin": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        }
+      },
+      "animal": {
+        "ticket": 5,
+        "body": 2,
+        "actor": 1000001
+      },
+      "refuge": {
+        "ticket": 7,
+        "retiredSequence": 7,
+        "body": 1
+      },
+      "events": {
+        "centerDebits": [
+          {
+            "at": 45.200000000001225,
+            "hp": 580
+          },
+          {
+            "at": 48.10000000000147,
+            "hp": 560
+          },
+          {
+            "at": 54.100000000001984,
+            "hp": 540
+          },
+          {
+            "at": 59.47000000000244,
+            "hp": 520
+          }
+        ],
+        "raidEndedAt": 67.8900000000026
+      },
+      "civilian": {
+        "ticket": 25,
+        "actor": 900011,
+        "body": 3,
+        "refugeSequence": 7,
+        "worker": "worker-900011",
+        "admission": "native-idle",
+        "ledgerPreserved": true
+      },
+      "outcome": {
+        "drawDrained": true,
+        "webGpuMessages": 0
+      },
+      "evidence": {
+        "receiptSha256": "90e020abb7b035e3c916d08c8e923cd3eacede866dceaa9c09680910fefacbf9",
+        "traceSha256": "ec536e605f5db391973aca90b6b50408e315fb74d2284dc0af9d5dfe091e22d5",
+        "traceBytes": 44798750,
+        "dataLossOccurred": false,
+        "baselineSha256": "3dd427b445e0ede65834c5c48142f8ccb962c8e40660d8907e4c41553d194d5d"
+      }
+    },
+    {
+      "hardware": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "edge": "158.0.4370.33"
+      },
+      "idle": {
+        "body": 1,
+        "actor": 900011,
+        "sourceSequence": 3,
+        "pendingKind": 21,
+        "initialGoTicket": 2,
+        "request": 2,
+        "preparedTicket": 3,
+        "wireOrder": [
+          4,
+          5,
+          7,
+          9
+        ],
+        "pose": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        }
+      },
+      "spawn": {
+        "event": "event-29208",
+        "elapsed": 10.299999999999994
+      },
+      "home": {
+        "body": 1,
+        "ticket": 5,
+        "assignment": 6,
+        "sourceRequestSequence": 4,
+        "preparedTicket": 4,
+        "drawWorldTicket": 5,
+        "drawSequence": 23,
+        "drawElapsed": 13.599999999999923,
+        "gateIds": [
+          1000000
+        ],
+        "origin": {
+          "x": -14,
+          "z": 5,
+          "yaw": 0.37,
+          "radius": 0.28,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "runRemaining": 40
+        }
+      },
+      "animal": {
+        "ticket": 7,
+        "body": 2,
+        "actor": 1000001
+      },
+      "refuge": {
+        "ticket": 9,
+        "retiredSequence": 8,
+        "body": 1
+      },
+      "events": {
+        "centerDebits": [
+          {
+            "at": 42.150000000000965,
+            "hp": 580
+          },
+          {
+            "at": 45.200000000001225,
+            "hp": 560
+          },
+          {
+            "at": 51.20000000000174,
+            "hp": 540
+          },
+          {
+            "at": 56.6200000000022,
+            "hp": 520
+          }
+        ],
+        "raidEndedAt": 65.09000000000276
+      },
+      "civilian": {
+        "ticket": 27,
+        "actor": 900011,
+        "body": 3,
+        "refugeSequence": 8,
+        "worker": "worker-900011",
+        "admission": "native-idle",
+        "ledgerPreserved": true
+      },
+      "outcome": {
+        "drawDrained": true,
+        "webGpuMessages": 0
+      },
+      "evidence": {
+        "receiptSha256": "af0ce04f867e5b133959861217e0ca6cbc9cfb416f281ac845477ebf12620199",
+        "traceSha256": "26e180afc0ce3c56e502be3a1a971aaf5e4f9724ba28fa0d6bace8f98a2da201",
+        "traceBytes": 43616735,
+        "dataLossOccurred": false,
+        "baselineSha256": "809e30126f226aea6d37f15fbff709b3c69b77308ec8ceec9d0da55028a83673"
+      }
+    }
+  ]
+}

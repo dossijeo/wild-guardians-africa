@@ -382,14 +382,26 @@ for(const finishWalk of [false,true])test('RaidSpawned transfers acquired Idle22
   }finally{releaseStop();await world.close();}
 });
 
-for(const tampered of [false,true])test('RaidSpawned replaces pending Idle22 '+(tampered?'only with its native source sequence':'with the original stationary body'),async()=>{
-  const {state,chunkKeys,start,center,gateId}=restoredGatedDesertStroll(),initial=state.workers[0];
+function restoredGatedDesertInitialIdle(){
+  const fixture=gatedDesertRaid(),{state,start,center}=fixture;
+  Object.assign(state.workers[0],{x:start.x,z:5,status:'idle',nativeRouteAdmission:'native-idle',running:false,gateWaiting:false,destinationId:null,
+    idleState:{anchorId:'farm-'+center.id,mode:'rest',elapsed:0,remaining:2.3,rng:1,approachRetry:0}});
+  state.dayPlan.at=state.time+.3;
+  return {...fixture,state:deserialize(serialize(state))};
+}
+
+for(const {label,holdKind,flightField,restore,negative} of [
+  {label:'replaces pending Idle22',holdKind:'idle-stroll',flightField:'strollFlightSequence',restore:restoredGatedDesertStroll,negative:/Native Home flight lacks its pending restored stroll source/},
+  {label:'replaces pending Idle20',holdKind:'initial-idle-body',flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native Home flight lacks its initial Idle source/},
+  {label:'takes acquired Idle20 with pending Idle21',holdKind:'idle-cycle',flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native Home flight lacks its initial Idle source/},
+])for(const tampered of [false,true])test('RaidSpawned '+label+(tampered?' only with its native source sequence':' with the original stationary body'),async()=>{
+  const {state,chunkKeys,start,center,gateId}=restore(),initial=state.workers[0];
   let idle,idleSignal,homeReady,releaseIdle,releaseHome;
   const oldReady=new Promise(resolve=>{releaseIdle=resolve;}),newReady=new Promise(resolve=>{releaseHome=resolve;});
   const events=[],acquisitions=[];
   const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
     async onReady(record,{signal}){
-      if(record.kind==='idle-stroll'&&!idle){idle=record;idleSignal=signal;await oldReady;}
+      if(record.kind===holdKind&&!idle){idle=record;idleSignal=signal;await oldReady;}
       if(record.kind==='home-route'&&!homeReady){homeReady=record;await newReady;}
     },
     onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
@@ -398,7 +410,7 @@ for(const tampered of [false,true])test('RaidSpawned replaces pending Idle22 '+(
   world.controlPort.postMessage=change=>{
     if(change.homeRequest?.version===2){
       handoff=change;
-      if(tampered)change={...change,strollFlightSequence:change.strollFlightSequence+1};
+      if(tampered)change={...change,[flightField]:change[flightField]+1};
     }
     if(change.raidFlightBirth)birth=change.raidFlightBirth;
     post(change);
@@ -415,7 +427,10 @@ for(const tampered of [false,true])test('RaidSpawned replaces pending Idle22 '+(
   try{
     world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
     await untilProduction(world,()=>!!idle);
-    const request=idle.resources.nativeIdleStroll.sourceRequest;
+    const installed=acquisitions.find(r=>r.kind==='initial-idle-body')?.data.nativeInitialIdleBodyBinding;
+    assert.equal(!!installed,holdKind==='idle-cycle');
+    const request=installed?.reference.sourceRequest??nativeResourceAdmissionProfile(holdKind).reference(idle.resources).sourceRequest;
+    const sourceSequence=installed?.bodySequence??request.requestSequence;
     let current;
     for(let i=0;i<5;i++)current=await step();
     assert.equal(current.raid,null);
@@ -424,7 +439,7 @@ for(const tampered of [false,true])test('RaidSpawned replaces pending Idle22 '+(
     const spawn=events.find(e=>e.type==='RaidSpawned');
     assert(spawn);
     if(tampered){
-      await assert.rejects(untilProduction(world,()=>false),/Native Home flight lacks its pending restored stroll source/);
+      await assert.rejects(untilProduction(world,()=>false),negative);
       assert(!world.records.some(r=>r.kind==='home-route'&&r.committed));
       return;
     }
@@ -432,7 +447,7 @@ for(const tampered of [false,true])test('RaidSpawned replaces pending Idle22 '+(
     assert.equal(current.raid.animals[0].targetId,center.id);
     assert.equal(confirmedStateSaveAvailable(current),false);
     await untilProduction(world,()=>idleSignal.aborted&&!!handoff&&!!birth);
-    assert.equal(handoff.strollFlightSequence,request.requestSequence);
+    assert.equal(handoff[flightField],sourceSequence);
     assert.equal(handoff.homeRequest.bodyId,request.bodyId);
     assert.equal(handoff.homeRequest.raidSpawnSequence,Number(spawn.id.split('-').at(-1)));
     assert.deepEqual(handoff.homeRequest.pose,request.pose);

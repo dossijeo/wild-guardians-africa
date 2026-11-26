@@ -177,6 +177,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if((source.pose.x!==source.home.x||source.pose.z!==source.home.z)&&
          session.core.wasm.nav_home_flight_from_completed_farm?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
          session.core.wasm.nav_home_flight_from_acquired_idle?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
+         !(session.core.wasm.nav_home_initial_idle_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0)&&
          !(session.core.wasm.nav_home_pending_idle_stroll_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0))return;
       pose=source.pose;bodyId=source.bodyId;
      }
