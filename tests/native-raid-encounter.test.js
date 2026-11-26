@@ -740,6 +740,110 @@ for(const order of ['preparer closing first','hold requested first','an ordinary
  }finally{release();await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
 });
 
+for(const closeFirst of [true,false])test(`wounded Home19 READY is recovered with ${closeFirst?'preparer retirement':'production hold'} first`,{timeout:35000},async()=>{
+ let first,release,draw,rig;
+ const ready=new Promise(resolve=>release=resolve),ports=new MessageChannel();
+ const world=await setup(true,{captureHistoricalEvents:true,onReady(record){
+  if(!first&&record.kind==='home-arrival'&&record.resources.nativeHomeArrival.sourceHome.reference.sourceRequest.recoveryHit){
+   first=record;return ready;
+  }
+ }});
+ try{
+  const before=await reachSecondHit(world),impact=before.elapsed+.02,advancing=advance(world,2);
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===impact&&world.host.inspect().pendingSequence!==null);
+  await world.present();
+  let snapshot=JSON.parse((await advancing).snapshot);
+  while(!snapshot.workers[0].recoveryExitRemaining){
+   assert(snapshot.elapsed<19);
+   snapshot=JSON.parse((await advance(world)).snapshot);
+   await world.present();
+   if(!snapshot.raid)await presentDepartedEncounter(world,snapshot);
+  }
+  const original=await until(()=>world.records.find(r=>r.kind==='home-route'&&r.resources.sourceRequest.recoveryHit));
+  await untilProduction(world,()=>original.committed);
+  while(snapshot.elapsed<=original.resources.endTime){
+   snapshot=JSON.parse((await world.command({kind:'advance',seconds:.25,nightFastForward:false})).snapshot);
+   await world.present();
+  }
+  const worker=snapshot.workers[0],at=snapshot.elapsed;
+  await until(()=>first);
+  const arrival=first.resources.nativeHomeArrival;
+  assert.equal(first.committed,false);
+  assert.equal(worker.nativeRouteAdmission,'native-home');
+  assert.equal(worker.running,false);
+  const retire=()=>{world.retireResourceEndpoint();release();};
+  if(closeFirst){
+   retire();
+   await until(()=>world.authority.nativeIntentProductionStatus().active===null);
+  }
+  const holding=world.authority.quiesceNativeIntentProduction({forLostDraw:true});
+  if(!closeFirst)retire();
+  const hold=await holding;
+  await world.host.dispose();
+  assert.equal((await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true,lossHoldId:30})).terminal,true);
+  await assert.rejects(first.packet.presented);
+  assert.equal(world.authority.nativeIntentProductionStatus().last.status,'cancelled');
+  const route=await world.authority.terminalWorkerRoute();
+  assert.deepEqual(route,{kind:18,actorId:900011});
+  draw=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
+   {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const binding=q.resources.nativeHomeRouteBinding,ref=binding.reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime;
+  assert.deepEqual(binding,arrival.sourceHome);
+  assert.equal(q.execution.arrived,true);
+  assert.equal(q.execution.executedThrough,at);
+  assert.equal(q.execution.bodyId,arrival.bodyId);
+  for(const key of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])assert.equal(q.execution[key],worker[key]);
+  assert.equal(q.execution.yaw,worker.heading);
+  const resourceEnd=nativeClockResourceEnd(epoch,ref.endTime),age=floorFloat32(resourceEnd-epoch);
+  const metadata={nativeWorldBoundary:boundary,clock:{...world.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}};
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeHome:ref,resourceEnd});
+  const frame=draw.frame(3,metadata);
+  await flush();await draw.host.idle();
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  draw.host.present();await frame;
+  const submitted=await world.authority.checkHeldDraw(30,hold,route);
+  assert.equal(submitted.elapsed,at);
+  assert.equal(submitted.relativeTime,age);
+  assert.ok(age<at-epoch);
+  if(closeFirst){
+   const payloads=new Map();
+   world.authority.publishResidentTerrainForQa(payload=>payloads.set(payload.cx+','+payload.cz,payload));
+   let selected;
+   const session={core:{selectChunk(x,z){selected=payloads.get(x+','+z);assert(selected);},chunkPayload:()=>selected}};
+   rig=await nativeWorkerGraphicsFixture({state:snapshot,worker,actor:worker.id,session,close(){}},
+    {clips:['Walk_Skip','Run','Idle'],idle:true});
+   const source={...q,terrain:rig.terrain,terrainManifest:rig.manifest};
+   let picks=0;
+   const options={isCurrent:()=>true,getPickTime:()=>{picks++;return epoch+submitted.relativeTime;}};
+   assert.throws(()=>rig.roster.prepareRecoveredWorkerRoute({...source,execution:{...q.execution,bodyId:2}},options),/Recovery pose or committed owner differs/);
+   await rig.roster.prepareRecoveredWorkerRoute(source,options);
+   assert(rig.roster.nativeRouteCurrent(worker.id,q.resources.nativeRoute));
+   const restorePick=rig.roster.get(worker.id).preparePick();
+   try{assert(picks>0);}finally{restorePick();}
+  }
+  await world.attachRecoveredResources(draw);
+  assert.equal(world.authority.resumeNativeIntentProduction(hold),true);
+  assert.deepEqual(world.snapshot().workers[0],worker);
+  const retry=await until(()=>world.records.find(record=>record!==first&&record.kind==='home-arrival'&&record.resources.nativeHomeArrival.sourceHome.reference.sourceRequest.recoveryHit));
+  await untilProduction(world,()=>retry.committed);
+  await world.present();
+  const acquired=retry.resources.nativeHomeArrival;
+  assert.deepEqual(acquired.sourceHome,arrival.sourceHome);
+  assert.deepEqual(acquired.pose,arrival.pose);
+  assert.notEqual(acquired.worldBoundary.ticket,arrival.worldBoundary.ticket);
+  assert.equal(first.committed,false);
+  assert.equal(world.records.filter(record=>record.kind==='home-arrival'&&record.committed&&record.resources.nativeHomeArrival.sourceHome.reference.sourceRequest.recoveryHit).length,1);
+  const complete=JSON.parse((await advance(world)).snapshot);
+  assert.equal(complete.elapsed,at+.02);
+  assert.equal(complete.workers[0].status,'home');
+  assert.equal(complete.workers[0].hits,2);
+  assert.deepEqual(complete.ledger,snapshot.ledger);
+  assert.deepEqual([...world.faults,...draw.errors],[]);
+ }finally{release();rig?.close();await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
+});
+
 test('the ordinary Desert qualifications still withhold contact corridors without encounter qualification',async()=>{
  const world=await setup(false);
  try{

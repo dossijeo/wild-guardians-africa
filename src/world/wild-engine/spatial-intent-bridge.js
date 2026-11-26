@@ -1,5 +1,5 @@
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
-import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter} from '../native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {centerFootprint} from '../centers.js';
@@ -800,7 +800,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
       const execution=strike?nativeAnimalCropStrikeExecution('animal-'+recoveredWorkerRoute.proof?.reference?.actorId):
         crop?nativeAnimalCropRouteExecution('animal-'+data[0]):profile.kind===18?nativeHomeRouteExecution(data[0]):
         profile.kind===22?nativeIdleStrollExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
-      if(!execution||execution.arrived||execution.binding.gateIds.length>profile.maxGates||
+      const endpoint=profile.kind===18&&qualifyRaidEncounter&&owningState?.workers.length===1&&
+        woundedHomeExecutionAtEndpoint(owningState,owningState.workers[0],execution);
+      if(!execution||execution.arrived&&!endpoint||execution.binding.gateIds.length>profile.maxGates||
          profile.kind===18&&execution.binding.reference.sourceRequest?.raidSpawnSequence||
          !profile.sameAttestation(execution.binding,recoveredWorkerRoute.proof))
         throw Error('Held native route changed before bootstrap');

@@ -1,7 +1,8 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
-import {nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
@@ -1046,6 +1047,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       kind===18?planner.nativeHomeRouteExecution(actorId):
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
+  function recoverableExecution(kind,execution){
+    return (!execution.arrived||kind===18&&qualifyRaidEncounter&&game.workers.length===1&&
+      woundedHomeExecutionAtEndpoint(game,game.workers[0],execution))&&recoveryGateCurrent(kind,execution);
+  }
   function recoveryRoute(){
     if(encounterDraftAdvance?.published){
       const source=planner.nativeEncounterFallRecovery('retreat');
@@ -1118,12 +1123,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const cut=planner.nativeWorldResourceBoundary(),routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions;
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
-         executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))return null;
+         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution)))return null;
       await nativeIntentControl.waitForTerminalDraw();
       const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||!sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
          !live||JSON.stringify(live)!==JSON.stringify(group)||
-         live.executions.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
+         live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution)))
         throw Error('Native assignments changed while waiting for terminal draw');
       return route;
     },
@@ -1171,8 +1176,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     quiesceNativeIntentProduction({forLostDraw=false}={}){
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      const cancelHome=forLostDraw?planner.nativeStationaryEncounterRecovery()?.home??null:null;
-      return nativeProduction?.quiesce({cancelHome})??Promise.resolve(null);
+      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
@@ -1214,7 +1218,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions,cut=planner.nativeWorldResourceBoundary();
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
-         executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))
+         executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution)))
         throw Error('Expected current native recovery assignments');
       const members=executions.map((execution,i)=>{
         const {kind}=routes[i],profile=nativeWorkerRouteRecoveryProfile(kind);
@@ -1267,9 +1271,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         if(row.kind!==profile.kind||
            row.assignmentSequence!==after.binding.assignmentSequence||
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
-        const age=elapsed-after.binding.reference.worldBoundary.effectiveTime;
-        return row.relativeTime===recoveryFloorFloat32(age)&&
-          recoveryGateCurrent(profile.kind,after);
+        const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
+        const time=profile.kind===18&&after.arrived?nativeClockResourceEnd(start,reference.endTime):elapsed;
+        return row.relativeTime===recoveryFloorFloat32(time-start)&&recoverableExecution(profile.kind,after);
       }
     },
     attachNativeIntentControl(port,transportSession){

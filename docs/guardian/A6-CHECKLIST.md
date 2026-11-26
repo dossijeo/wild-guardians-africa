@@ -4,6 +4,8 @@ Después de RaidEnded, el sustituto acredita el cuerpo inmóvil y el uniforme de
 
 Con READY de Home18 retenido, la pérdida cancela el ticket del preparador original. El sustituto acredita Idle a fase cero y la autoridad reintenta la misma solicitud sobre el cuerpo y la pose confirmados. NVIDIA confirmó una sola adquisición, Home19 y drenaje. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#sustitución-de-draw-con-home18-pendiente).
 
+Con READY de Home19 retenido, NVIDIA confirmó la recuperación del mismo Home18 y su última muestra en el refugio. El sustituto dibujó antes de reabrir el despacho. Una sola adquisición nueva de Home19 confirmó la ausencia del cuerpo y el sustituto drenó. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#sustitución-de-draw-con-home19-pendiente).
+
 Game prepara la consecuencia del encuentro antes de aplicar el RNG, el golpe y el empuje. El contraste CPU conserva el estado completo en 2.048 casos y deja intacto el encuentro cuyo barrido falla. El relevo de Home18 a caída ya se califica en la rama para la colisión de Desierto descrita abajo. [Contraste de encuentros](native-desert-mixed-flight-center-20261125.md#consecuencia-y-frontera-del-encuentro).
 
 Fall y GetUp conservan su fase si la consulta de terreno falla. NVIDIA acredita el relevo del trabajador incapacitado a Home18 y su retirada por Home19 en la colisión de Desierto. Siguen abiertos los contactos adicionales durante Fall. [Regreso al refugio](native-desert-mixed-flight-center-20261125.md#regreso-del-trabajador-incapacitado-al-refugio).

@@ -505,4 +505,14 @@ El sustituto presenta el cuerpo inmóvil en Idle a fase cero, que corresponde a 
 
 En NVIDIA Turing, la pérdida ocurrió a 18,92 s con READY del ticket 12 retenido. El journal reprodujo desde la base 391 hasta la publicación 454. El primer paquete del sustituto presentó el cuerpo 1 con fase Idle cero y peso de reloj cero. El reintento preparó el ticket 13 para la misma solicitud y el GO del ticket 14 adquirió Home18 una sola vez. Home19 retiró el cuerpo a 34,70 s y el sustituto drenó tras avanzar a 34,78 s. El build web local terminó en 49,92 s. [Recibo de NVIDIA](performance/native-pending-wounded-home-recovery-nvidia-20261126.json).
 
-Pasaron 318 pruebas dirigidas de encuentro, Home, suspensión, callbacks de recursos y transporte. El contraste de Home19 pendiente reproduce un fallo distinto a 34,65 s, con el cuerpo ya en el refugio y la retirada aún por adquirir. Ese corte sigue abierto.
+Pasaron 318 pruebas dirigidas de encuentro, Home, suspensión, callbacks de recursos y transporte.
+
+### Sustitución de Draw con Home19 pendiente
+
+El READY retenido de Home19 dejaba el cuerpo en el refugio bajo su Home18 adquirido. La preimagen fallaba al cerrar el preparador. El reintento cancela esa preparación cuando la retirada está acreditada o cuando la autoridad suspende la producción por pérdida. Ambos órdenes conservan el cuerpo y su pose hasta que una nueva ausencia preparada se adquiere.
+
+El sustituto vuelve a preparar el mismo corredor y su rig, somete su muestra final y confirma el fence en el reloj del corte. La autoridad comprueba por separado la edad limitada a la cobertura de los recursos de Home18. Los controles usan Game y WASM reales, cola GPU determinista y el rig original para comprobar picking. Un cuerpo ajeno o un paquete que todavía espera dibujo no acredita el relevo.
+
+En NVIDIA Turing, el retiro comenzó a 34,54 s con el READY 14 retenido y Home18 en el ticket 13. Se reprodujo el journal desde la publicación 781 hasta la 845. El dibujo 1 del sustituto presentó el cuerpo 1 con edad relativa 15,589214324951172 s y el reloj siguió en 34,54 s al reabrir el despacho. Home19 volvió con READY 15, se adquirió una sola vez con GO 16 y el dibujo 3 confirmó la ausencia. El sustituto avanzó a 34,58 s y drenó. El recorrido corresponde al perfil DEV de Desierto, un trabajador incapacitado y sin portón. El picking se comprobó en CPU y la cadencia queda pendiente. [Recibo de NVIDIA](performance/native-pending-wounded-home19-recovery-nvidia-20261126.json).
+
+El control dirigido se reproduce con `node --test --test-name-pattern="wounded Home19 READY" tests/native-raid-encounter.test.js`. Pasaron 287 pruebas de encuentro, Home18/19, recuperación alojada, vida de los recursos y transporte. El build web del checkout local terminó en 47,08 s.

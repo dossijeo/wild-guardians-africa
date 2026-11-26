@@ -25,7 +25,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {copyRecoveredEncounterFall,copyRecoveredEncounterPose,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyRecoveredEncounterFall,copyRecoveredEncounterPose,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -1100,13 +1100,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const handle=kind===26?{authorityEpoch:ref.worldBoundary.authorityEpoch,session:ref.worldBoundary.nativeSession,
         slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
       const source=ref.worldBoundary;
+      const endpoint=kind===18&&cohortSize===1&&woundedHomeEndpoint(proof,clock?.committedThrough);
       if(closed||!clock||actors.size!==cohortSize||active.size!==cohortSize||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||
-         clock.committedThrough<record.startTime||clock.committedThrough>ref.endTime)
+         clock.committedThrough<record.startTime||clock.committedThrough>ref.endTime&&!endpoint)
         throw Error('Recovered worker route conflicts with the fresh control baseline');
       // While this source is waiting, an ordinary route selector cannot use the slot.
       record.recoveringWorkerRoute=true;
@@ -1122,6 +1123,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           return;
         }
         actor[profile.proofField]=proof;
+        if(endpoint)record.recoveredHomeEndpoint=true;
         if(profile.issuedField)record[profile.issuedField]=proof;
         if(profile.admittedField)record[profile.admittedField]=true;};
     },

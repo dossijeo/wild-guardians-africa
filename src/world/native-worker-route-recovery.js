@@ -7,8 +7,25 @@ import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
-import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY} from '../simulation/worker-recovery.js';
+import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY,woundedHomeSourceCurrent} from '../simulation/worker-recovery.js';
 import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
+
+export function woundedHomeEndpoint(binding,at){
+ const {reference,gateIds}=binding??{},request=reference?.sourceRequest;
+ return !!request?.recoveryHit&&!request.raidSpawnSequence&&gateIds?.length===0&&at>=reference.endTime;
+}
+
+export function woundedHomeExecutionAtEndpoint(state,worker,execution){
+ if(execution?.arrived!==true||execution.executedThrough!==state.elapsed||
+    !woundedHomeEndpoint(execution.binding,state.elapsed))return false;
+ const {reference}=execution.binding;
+ return worker?.id==='worker-'+reference.actorId&&worker.nativeRouteAdmission==='native-home'&&
+   execution.actorId===reference.actorId&&execution.bodyId===reference.bodyId&&
+   woundedHomeSourceCurrent(state,worker,reference.sourceRequest,state.elapsed-reference.worldBoundary.effectiveTime)&&
+   !worker.taskId&&!worker.crateId&&!worker.raidReturn&&worker.path===null&&
+   worker.running===false&&worker.gateWaiting===false&&worker.heading===execution.yaw&&
+   ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===execution[key]);
+}
 
 // Recovery carries the acquired program independently of the original Draw.
 // The terminal sample is also needed for the next strike's source validation.

@@ -1,4 +1,4 @@
-import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
@@ -85,10 +85,12 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
             const binding=resources[profile.bindingField],ref=binding.reference;
-            if(execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
+            const endpoint=!grouped&&qualifyRaidEncounter&&profile.kind===18&&execution?.arrived===true&&
+              woundedHomeEndpoint(binding,execution.executedThrough);
+            if(!endpoint&&execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
                execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
                ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||
-               execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
+               execution.executedThrough<ref.worldBoundary.effectiveTime||!endpoint&&execution.executedThrough>=ref.endTime||
                !profile.sameAttestation(binding,execution.binding))
               throw Error('Invalid replacement committed assignment');
             return {execution,resources};

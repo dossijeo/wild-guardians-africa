@@ -10,7 +10,7 @@ import {createNativeIdleCycleGpuMotion} from './native-idle-cycle-gpu-motion.js'
 import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,nativeHomeArrivalSuccessor,nativeHomeArrivalPresentationMatches} from '../world/native-home-arrival.js';
 import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,nativeFarmArrivalRoutePresentationMatches} from '../world/native-farm-arrival-route.js';
 import {nativeFarmArrivalState,nativeFarmArrivalHeldState,nativeFarmArrivalBoundState} from '../world/native-farm-arrival-state.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {nativeWorkerRouteRecoveryProfile,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {createNativeFarmArrivalGpuMotion} from './native-gpu-motion.js';
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteAttestation,sameNativeHomeRouteReference,nativeHomeRoutePresentationMatches,nativeHomeRouteSource} from '../world/native-home-route.js';
 import {createNativeHomeRouteGpuMotion} from './native-gpu-motion.js';
@@ -248,7 +248,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
          typeof options.isCurrent!=='function')throw Error('Recovery requires a fresh worker');
       const current=()=>{try{
         const worker=entry.entity,e=source.execution;
-        if(e.kind!==profile.executionKind||e.arrived||e.actorId!==r.actorId||e.bodyId!==r.bodyId||
+        const endpoint=home&&state.workers.length===1&&woundedHomeExecutionAtEndpoint(state,worker,e);
+        if(e.kind!==profile.executionKind||e.arrived&&!endpoint||e.actorId!==r.actorId||e.bodyId!==r.bodyId||
            !profile.sameAttestation(e.binding,b)||state.elapsed!==e.executedThrough||
            !home&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
            worker.nativeRouteAdmission!==profile.admission)return false;
@@ -264,7 +265,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
           return validWorker&&
             !worker.taskId&&!worker.raidReturn&&worker.path===null&&nativeEntityNumericId(worker.villageId)===destination.villageId&&
             e.villageId===destination.villageId&&arrival?.x===destination.x&&arrival.z===destination.z&&
-            worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===(e.currentSpeed===0)&&
+            worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===(!e.arrived&&e.currentSpeed===0)&&
             ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===e[key]);
         }
         if(farm){

@@ -2,6 +2,7 @@ import {WORKER_SPATIAL_PROFILE} from '../world/wild-engine/spatial-movement-prof
 import {urgentWork} from './locomotion.js';
 import {contractExpired,PROFILES} from './workforce.js';
 import {isIntactRepairTarget} from './rules.js';
+import {woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
 const flightStopMarkers=new Set(['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop']);
 
@@ -134,7 +135,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
-  const home=request.kind==='home-route'?planner.nativeStationaryEncounterRecovery?.()?.home:null;
+  const home=protectedHomeSource(request.kind,request.actorId);
   let retiredBeforeReady=false;
   if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
@@ -144,8 +145,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
       const preparing=resources[prepare](proposal,{signal,...(nativeBarrierWallEntities?{nativeBarrierWallEntities}:{}),...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest});
       return home?preparing.catch(error=>{
        // Only an explicit retirement before READY can dispose this unacquired ticket.
-       // The held Home request still owns the original body and pose.
-       retiredBeforeReady=resources.retirementObserved()&&sourceIdentity(request)===transaction.source;
+       // The held request or acquired endpoint still owns the body and pose.
+       retiredBeforeReady=resources.retirementObserved()&&protectedHomeSource(request.kind,request.actorId)===transaction.source;
        throw error;
       }):preparing;
      }});
@@ -166,7 +167,19 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise.then(()=>{if(!closed&&transaction.obsolete)wake();});
   return transaction.promise;
  }
- function quiesce({cancelTask=null,cancelCrop=null,cancelHome=null}={}){
+ function protectedHomeSource(kind,actorId){
+  if(kind==='home-route'){
+   const home=planner.nativeStationaryEncounterRecovery?.()?.home;
+   return home&&actorId==='worker-'+home.actorId?JSON.stringify(home):null;
+  }
+  if(kind==='home-arrival'&&state.workers.length===1){
+   const [worker]=state.workers;
+   const execution=planner.nativeHomeRouteExecution(actorId);
+   if(actorId===worker.id&&woundedHomeExecutionAtEndpoint(state,worker,execution))return JSON.stringify(execution.binding);
+  }
+  return null;
+ }
+ function quiesce({cancelTask=null,cancelCrop=null,cancelWoundedHome=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -175,7 +188,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
-     cancelHome&&active?.kind==='home-route'&&active.actorId==='worker-'+cancelHome.actorId&&active.source===JSON.stringify(cancelHome)){
+     cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source){
    active.obsolete=true;active.controller.abort();
   }
   hold.promise=Promise.resolve(active?.promise).then(()=>{
