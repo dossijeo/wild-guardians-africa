@@ -1,0 +1,42 @@
+{
+  "scenario": "Sabana 714 desde el menú, perfil nativo explícito y reloj normal de Hosted",
+  "revision": "01c0ef41b89752936a788a1981b90fbe6c49b63e",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "source": {"name": "native-menu-campaign-714-recovery-cuts-extended.json", "sha256": "0b8e8624506c182a9b8f7c4070a6a4854a6f9161c4c0112b6387cbac6cffcc09"},
+  "completedNights": ["warthog", "hyena"],
+  "firstFailure": {
+    "owner": "WebGPU Preparer",
+    "error": "Invalid observed actor tick start",
+    "stage": "confirmed-presentation-stream.previewNextMotionBoundary",
+    "actorAndFieldKnown": false,
+    "day": 3,
+    "lastAuthorityElapsed": 1668.5512117580615,
+    "buffalo": "animal-22",
+    "centerHp": 485
+  },
+  "requestAtFailure": {
+    "id": 82,
+    "kind": "prepareNativeAnimalCropStrikeResources",
+    "ticket": 160,
+    "elapsed": 1666.851211758063,
+    "minimumPublication": 24212,
+    "surfaceAppliedAtAbort": 24180,
+    "surfaceReceivedAtAbort": 24212,
+    "ready": false,
+    "commit": false,
+    "authorityErrorAfterSurfaceAbort": "Native resource preparer closed"
+  },
+  "lastNewTicketDraw": {"ticket": 159, "frame": 3409, "elapsed": 1648.9012117580794},
+  "coldCpuContrast": {
+    "source": {"name": "buffalo-observed-start-cpu.json", "sha256": "971c753c7f95b3b4263fc7fb718d72aaafcc408950983568d0b93424f966f1d0"},
+    "fromElapsed": 1642.9999999990332,
+    "heldFirstStrikeForAdvanceBatches": 11,
+    "checkedMotionPublications": 474,
+    "structureHits": 4,
+    "raidEnded": true,
+    "reproduced": false
+  },
+  "recoveryActivationErrorReproduced": false,
+  "reachedFourthNight": false,
+  "drainVerified": false
+}

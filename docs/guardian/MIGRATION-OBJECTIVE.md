@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La última campaña continua superó el fallo de Recovery del primer turno y llegó a la tercera noche. Surface rechazó la muestra inicial de una publicación de movimiento mientras esperaba el primer Strike27 del búfalo. El contraste CPU desde el checkpoint previo completó la incursión y no reprodujo la discrepancia. [Recibo y límite](native-cold-worker-admission-20261126.md#publicaciones-durante-la-aproximación-del-búfalo).
+
 NVIDIA recargó la aproximación y Strike27 al centro de Sabana. Cada pasada acreditó la pose guardada, un solo impacto, la retirada en el mismo cuerpo y una derrota antes de drenar. Los controles CPU incluyen READY retenido y WASM standalone y pthread. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-de-un-golpe-al-centro-adquirido).
 
 Una repetición de la campaña continua presentó Home19 y se detuvo antes de la primera incursión en la activación de Recovery, con un checkpoint pendiente. El recibo conserva el corte del diario y el bloqueo del despacho. [Recibo](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
