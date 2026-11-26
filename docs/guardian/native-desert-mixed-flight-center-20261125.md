@@ -387,4 +387,12 @@ A 12,60 s el trabajador ya estaba en Fall. El control privado prepara sus cuatro
 
 En el avance de dos subpasos el primer RAF autorizado somete el paquete 6 con Retreat a edad cero y Fall a fase Float32 de 0,460000008 s. Game verifica el mismo cuerpo y posición del trabajador, con 3,081666508 s restantes de Fall. Omitir la captura temporal deja en el paquete la fase anterior de 0,44 s y el control detecta la misma geometría de picking anterior al golpe. Las publicaciones siguientes llevan el rig a GetUp a 15,72 s y completan su desplazamiento a 18,92 s con 0,24 s de mezcla de salida. Pasaron 19 pruebas dirigidas. [Recibo de Fall y GetUp](performance/native-raid-encounter-worker-fall-20261126.json).
 
-El arnés escribe la fase de las mallas en un buffer del pase de prueba. Quedan por acreditar el grupo de uniformes del renderer en una captura completa de Surface, el acuse por el puerto de recursos, la integración en producto y la validación en GPU física.
+El arnés escribe la fase de las mallas en un buffer del pase de prueba. Queda por acreditar el grupo de uniformes del renderer en una captura completa de Surface.
+
+### Acuse del primer envío por el puerto de recursos
+
+En el control privado, la preparación cruza un MessagePort y devuelve la secuencia del mismo paquete que confirma el hold directo. El Host acredita el envío de la asignación 12 a 12,62 s, con edad cero para Retreat. El receptor comprueba la secuencia, la adquisición y el tiempo, y devuelve el acuse por el puerto de recursos.
+
+El primer dibujo deja a la autoridad en 12,62 s mientras el acuse permanece retenido. Cuando llega, la misma orden completa los dos subpasos a 12,64 s y conserva un único `AnimalRetreating`. Seis controles impiden el segundo subpaso si se altera la secuencia, el ticket, la hora o la asignación, si se omite el testigo de GPU o si falla el envío. En el último caso el dibujo 5 sigue siendo el último sometido. Pasaron 67 pruebas dirigidas de los canales existentes. [Recibo del puerto de recursos](performance/native-raid-encounter-resource-ack-20261126.json).
+
+Quedan pendientes el participante de Surface, el comportamiento con Draw oculto o perdido durante la espera, la integración en producto y la validación en GPU física.
