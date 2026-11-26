@@ -13,6 +13,7 @@ import {centerFootprint} from '../world/centers.js';
 import {gateScale,nativeGateModelId} from '../world/gate-passages.js';
 import {createHistoricalEventBoundaryCapture} from './historical-event-boundaries.js';
 import {floorFloat32 as recoveryFloorFloat32} from '../float32-time.js';
+import {woundedHomeSourceCurrent} from './worker-recovery.js';
 import {createNativeIntentControlCohort} from './native-intent-control-cohort.js';
 import {createNativeResourcePreparationConnection} from './native-resource-preparation-connection.js';
 import {createNativeIntentProduction} from './native-intent-production.js';
@@ -1069,10 +1070,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
     const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
-    if(bindings.length!==1||worker.id!=='worker-'+bindings[0].reference.actorId||
-       kind===18&&(bindings[0].reference.sourceRequest?.raidSpawnSequence||
-         bindings[0].reference.sourceRequest?.recoveryHit))return null;
-    return {kind,actorId:bindings[0].reference.actorId};
+    if(bindings.length!==1)return null;
+    const [{reference,gateIds}]=bindings,request=reference.sourceRequest;
+    if(worker.id!=='worker-'+reference.actorId||kind===18&&request?.raidSpawnSequence)return null;
+    if(kind===18&&request?.recoveryHit&&(!qualifyRaidEncounter||gateIds.length||
+       !woundedHomeSourceCurrent(game,worker,request,game.elapsed-reference.worldBoundary.effectiveTime)))return null;
+    return {kind,actorId:reference.actorId};
   }
   function recoveryGroup(route){
     if(route.version!==2){

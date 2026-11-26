@@ -1,0 +1,122 @@
+{
+  "version": 1,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 75.5
+    }
+  },
+  "scope": "Desierto sin portón. Recarga durante Fall seguida de pérdida definitiva durante la mezcla de salida de GetUp en Home18.",
+  "actorId": 900011,
+  "bodyId": 1,
+  "hit": 29210,
+  "worldBoundary": {
+    "version": 1,
+    "authorityEpoch": "774f8a44-49f1-40c8-a8f3-6f4bccba6be7/1",
+    "nativeSession": 1,
+    "ticket": 4,
+    "effectiveTime": 18.91999999999981
+  },
+  "replay": {
+    "base": 261,
+    "publication": 318,
+    "elapsed": 18.93999999999981,
+    "pendingSteps": 0
+  },
+  "oldDraw": {
+    "sequence": 217,
+    "age": 0.019999999552965164,
+    "expectedLoss": [
+      "Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5286/src/rendering/webgpu-world-surface.js:177:833\n    at worker.onmessage (http://127.0.0.1:5286/src/rendering/webgpu-world-client.js:31:760)"
+    ]
+  },
+  "replacement": {
+    "sequence": 1,
+    "clockElapsed": 18.93999999999981,
+    "relativeTime": 0.019999999552965164,
+    "held": {
+      "id": "worker-900011",
+      "x": -14.795391656386068,
+      "z": 2.2314982912660457,
+      "heading": -0.260206984596688,
+      "runPhase": 24.516999999999975,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "incapacitated": true,
+      "hits": 2,
+      "nativeRouteAdmission": "native-home",
+      "recoveryExitRemaining": 0.22000000000000042,
+      "status": "incapacitated"
+    },
+    "firstStep": {
+      "id": "worker-900011",
+      "x": -14.799713970033025,
+      "z": 2.247732748594128,
+      "heading": -0.260206984596688,
+      "runPhase": 24.523999999999972,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "incapacitated": true,
+      "hits": 2,
+      "nativeRouteAdmission": "native-home",
+      "recoveryExitRemaining": 0.20000000000000084,
+      "status": "incapacitated"
+    }
+  },
+  "home19": {
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "774f8a44-49f1-40c8-a8f3-6f4bccba6be7/1",
+      "nativeSession": 1,
+      "ticket": 6,
+      "effectiveTime": 34.839999999999975
+    },
+    "retiredSequence": 7,
+    "absence": {
+      "sequence": 112,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "774f8a44-49f1-40c8-a8f3-6f4bccba6be7/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 34.839999999999975
+      }
+    },
+    "worker": {
+      "id": "worker-900011",
+      "x": -5.800000000000001,
+      "z": 0.2,
+      "heading": 0.7853976791094822,
+      "runPhase": 29.96621490506065,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40,
+      "incapacitated": true,
+      "hits": 2,
+      "recoveryExitRemaining": 0,
+      "status": "home"
+    }
+  },
+  "final": {
+    "elapsed": 34.91999999999999,
+    "drained": true,
+    "unexpectedErrors": [],
+    "hitCount": 1
+  },
+  "evidence": {
+    "raw": "a887320de002cdff6cd421a26faa81f5712a8244a2a5776ac43db91e1a01c54d",
+    "wasm": "8f60a17f04ccb2dd5252e62b0e5933ae4ddaea802d59a388e0cf36508561cb59",
+    "mismatchedReplay": "b0e089c17dd86d95726c64b6aae2d33afd87423e2b7e00ac70fdeb2cfd1371c8"
+  }
+}

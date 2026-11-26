@@ -761,7 +761,9 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // A motion-only GO can postdate the retained terrain checkpoint without
     // writing a terrain record into the journal. The frozen source, current
     // Draw and terrain support must all attest the route before publishing it.
-    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||members.some(member=>member.crop)&&
+    const woundedHome=members.length===1&&members[0].profile.kind===18&&
+      members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(woundedHome||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&

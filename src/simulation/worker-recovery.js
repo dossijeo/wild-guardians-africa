@@ -1,6 +1,15 @@
 import bank from '../../content/manifests/worker-recovery.json' with {type:'json'};
 export const WORKER_RECOVERY=bank.profiles;
 export const RECOVERY_EXIT_SECONDS=.24;
+export const workerRecoveryExitRemaining=age=>Math.max(0,RECOVERY_EXIT_SECONDS-age);
+
+export function woundedHomeSourceCurrent(state,worker,{recoveryHit,requestedAt},age){
+ return !!recoveryHit&&age>=0&&!state.raid&&worker?.status==='incapacitated'&&
+  worker.incapacitated===true&&worker.hits===2&&!worker.recovery&&!worker.fallRemaining&&
+  worker.recoveryExitRemaining===workerRecoveryExitRemaining(age)&&
+  state.events?.some(event=>event.type==='WorkerIncapacitated'&&event.targetId===worker.id&&
+    event.id==='event-'+recoveryHit&&event.simulationTime<=requestedAt)===true;
+}
 
 function rootOffset(spec,heading){
  const c=Math.cos(heading),s=Math.sin(heading),[x,,z]=spec.finalOffset;

@@ -1,5 +1,5 @@
 import {nativeCropCohortCurrent} from './raids.js';
-import {advanceWorkerRecovery,prepareWorkerRecovery,applyWorkerRecovery,RECOVERY_EXIT_SECONDS} from './worker-recovery.js';
+import {advanceWorkerRecovery,prepareWorkerRecovery,applyWorkerRecovery,RECOVERY_EXIT_SECONDS,workerRecoveryExitRemaining} from './worker-recovery.js';
 import {nativeHomeWorkerStatus} from '../world/native-home-request-reference.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
 import {copyNativeTaskConsequenceAttestation} from '../world/native-task-consequence.js';
@@ -1342,7 +1342,7 @@ export function projectNativeHomeRouteExecution(s,w,native){
     (source.recoveryHit?!w.incapacitated||w.hits!==2:w.incapacitated||w.recoveryExitRemaining)||
     w.recovery||w.fallRemaining||w.raidReturn||w.taskId||w.crateId||w.nativeRouteAdmission!==undefined&&!['native-home',source.raidSpawnSequence?'pending-raid-flight-resources':'pending-home-resources'].includes(w.nativeRouteAdmission)||execution.actorId!==nativeEntityNumericId(w.id)||execution.bodyId!==r.bodyId||execution.executedThrough!==s.elapsed||execution.villageId!==home.villageId||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||r.sourceSettlement&&(!crate?.delivered||crate.carrierId))throw Error('Native Home projection is not the executed game boundary');
   const changed=w.nativeRouteAdmission!=='native-home';Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,path:null,nativeRouteAdmission:'native-home'});
-  if(source.recoveryHit)w.recoveryExitRemaining=Math.max(0,RECOVERY_EXIT_SECONDS-(s.elapsed-r.worldBoundary.effectiveTime));
+  if(source.recoveryHit)w.recoveryExitRemaining=workerRecoveryExitRemaining(s.elapsed-r.worldBoundary.effectiveTime);
   if(changed)notifyWorkerPlanningChange(s,w);return execution;
 }
 // Semantic mirror of the current native cache. It does not execute a route,

@@ -6,6 +6,8 @@ import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {floorFloat32} from '../src/rendering/float32-time.js';
+import {nativeWorkerGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
 
 const chunkKeys=Array.from({length:25},(_,i)=>[i%5-2,Math.floor(i/5)-2].join(','));
 const eventLoop=()=>new Promise(resolve=>setImmediate(resolve));
@@ -54,7 +56,7 @@ async function presentDepartedEncounter(world,snapshot){
  await world.present();
  await frame;
 }
-async function finishWoundedHome(world,snapshot){
+async function finishWoundedHome(world,snapshot,afterFirstStep){
  const worker=snapshot.workers[0],elapsed=snapshot.elapsed;
  assert.equal(worker.status,'incapacitated');
  assert.equal(worker.nativeRouteAdmission,'pending-home-resources');
@@ -77,8 +79,10 @@ async function finishWoundedHome(world,snapshot){
  assert.equal(next.walkPhase,start.walkPhase);
  assert.ok(Math.abs(next.runPhase-start.runPhase-.007)<1e-12);
  assert.ok(Math.abs(Math.hypot(next.x-start.x,next.z-start.z)-.0168)<1e-8);
+ await afterFirstStep?.(route);
  for(let i=0;i<100;i++){
   const step=await world.command({kind:'advance',seconds:.25,nightFastForward:false});
+  await world.present();
   if(step.elapsed>route.resources.endTime)break;
  }
  await untilProduction(world,()=>world.records.some(record=>record.kind==='home-arrival'&&record.committed));
@@ -95,6 +99,80 @@ async function finishWoundedHome(world,snapshot){
  assert.equal((await advance(world,2)).stepsExecuted,2);
  assert.deepEqual([...world.errors,...world.faults],[]);
 }
+
+test('terminal Draw recovery retains wounded Home and its GetUp exit age',async()=>{
+ const world=await setup(true),ports=new MessageChannel();
+ let draw,rig;
+ try{
+  let snapshot=await reachSecondHit(world);
+  const at=snapshot.elapsed+.02,advancing=advance(world,2);
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===at&&world.host.inspect().pendingSequence!==null);
+  await world.present();
+  snapshot=JSON.parse((await advancing).snapshot);
+  while(!snapshot.workers[0].recoveryExitRemaining){
+   snapshot=JSON.parse((await advance(world)).snapshot);
+   await world.present();
+   if(!snapshot.raid)await presentDepartedEncounter(world,snapshot);
+  }
+  await finishWoundedHome(world,snapshot,async()=>{
+   const frozen=world.snapshot(),worker=frozen.workers[0];
+   assert.ok(Math.abs(worker.recoveryExitRemaining-.22)<1e-12);
+   world.gpu.device.destroy();
+   world.retireResourceEndpoint();
+   const receipt=await world.authority.quiesceNativeIntentProduction();
+   assert.equal((await world.authority.flushNativeResourcePreparation({allowRetired:true})).terminal,true);
+   const route=await world.authority.terminalWorkerRoute();
+   assert.deepEqual(route,{kind:18,actorId:900011});
+   draw=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
+    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+   const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,receipt,route);
+   const ref=q.resources.nativeHomeRouteBinding.reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime;
+   assert.equal(ref.sourceRequest.recoveryHit,29210);
+   assert.equal(q.execution.bodyId,1);
+   assert.equal(q.execution.executedThrough,frozen.elapsed);
+   for(const key of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])assert.equal(q.execution[key],worker[key]);
+   assert.equal(q.execution.yaw,worker.heading);
+
+   const payloads=new Map();
+   world.authority.publishResidentTerrainForQa(payload=>payloads.set(payload.cx+','+payload.cz,payload));
+   let selected;
+   const session={core:{selectChunk(x,z){selected=payloads.get(x+','+z);assert(selected);},chunkPayload:()=>selected}};
+   rig=await nativeWorkerGraphicsFixture({state:frozen,worker,actor:worker.id,session,close(){}},
+    {clips:['Walk_Skip','Run','Idle'],idle:true});
+   const age=floorFloat32(frozen.elapsed-epoch);
+   const source={...q,terrain:rig.terrain,terrainManifest:rig.manifest};
+   let pickReads=0;
+   const options={isCurrent:()=>true,getPickTime:()=>{pickReads++;return epoch+age;}};
+   rig.state.workers[0].recoveryExitRemaining=.24;
+   rig.roster.sync();
+   assert.throws(()=>rig.roster.prepareRecoveredWorkerRoute(source,options),/Recovery pose or committed owner differs/);
+   rig.state.workers[0].recoveryExitRemaining=worker.recoveryExitRemaining;
+   rig.roster.sync();
+   await rig.roster.prepareRecoveredWorkerRoute(source,options);
+   assert(rig.roster.nativeRouteCurrent(worker.id,q.resources.nativeRoute));
+   assert.equal(pickReads,0,'Preparing the replacement must not sample a never-submitted frame');
+   await assert.rejects(world.authority.checkHeldDraw(30,receipt,route),/Missing submitted/);
+
+   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',
+    nativeHome:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+   const frame=draw.frame(3,{nativeWorldBoundary:boundary,
+    clock:{...world.clock,elapsed:frozen.elapsed,safeUntil:frozen.elapsed,paused:true,segments:[]}});
+   await flush();await draw.host.idle();draw.host.present();await frame;
+   const submitted=await world.authority.checkHeldDraw(30,receipt,route);
+   assert.equal(submitted.relativeTime,age);
+   const restorePick=rig.roster.get(worker.id).preparePick();
+   try{assert(pickReads>0);}finally{restorePick();}
+   await world.attachRecoveredResources(draw);
+   assert.equal(world.authority.resumeNativeIntentProduction(receipt),true);
+   assert.deepEqual(world.snapshot().workers[0],worker);
+   const resumed=JSON.parse((await advance(world)).snapshot).workers[0];
+   assert.ok(Math.abs(resumed.recoveryExitRemaining-.20)<1e-12);
+   assert.ok(Math.abs(Math.hypot(resumed.x-worker.x,resumed.z-worker.z)-.0168)<1e-8);
+   assert.equal(resumed.runRemaining,worker.runRemaining);
+  });
+  assert.deepEqual(draw.errors,[]);
+ }finally{rig?.close();await world.close();ports.port1.close();ports.port2.close();}
+});
 
 test('the qualified Desert encounter waits for its submitted Retreat before the next substep',async()=>{
  const world=await setup(true);
