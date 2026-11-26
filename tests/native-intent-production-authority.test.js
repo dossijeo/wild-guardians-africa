@@ -13,14 +13,15 @@ import {PROFILES} from '../src/simulation/workforce.js';
 import {nativeActionSave} from './helpers/native-task-action-restoration.js';
 import {createNativeTaskGameFixture} from './helpers/native-task-game-execution.js';
 import {copyNativeInitialIdleBodyReference,nativeInitialIdleBodySuccessor} from '../src/world/native-initial-idle-body.js';
+import {copyNativeIdleStrollReference} from '../src/world/native-idle-stroll.js';
 
-test('Harvest retains the crop while its center is occupied and settles once after the Farm peer leaves for Home',async()=>{
+function farmDeliveryAtOccupiedCenter({gate:withGate,endOfShift=false}){
  const fixture=nativeFarmArrivalRouteFixture({peer:false});
  const saved=structuredClone(fixture.state);fixture.close();
  const [worker]=saved.workers,center=saved.structures.find(row=>row.id===worker.centerId);
- worker.profile='youngFemale';saved.people.find(row=>row.id===worker.personId).profile=worker.profile;
+ if(endOfShift){worker.profile='youngFemale';saved.people.find(row=>row.id===worker.personId).profile=worker.profile;saved.time=226;}
  Object.assign(worker,{x:-14,z:11.8});
- const person={id:'person-991001',profile:'youngMale',recoveryUntil:0};
+ const person={id:'person-991001',profile:endOfShift?'youngMale':'youngFemale',recoveryUntil:0};
  const peer={...structuredClone(worker),id:'worker-900012',personId:person.id,profile:person.profile,z:13.4};
  saved.people.push(person);saved.workers.push(peer);
  const service=centerServicePoint(center,saved,.8);
@@ -28,14 +29,24 @@ test('Harvest retains the crop while its center is occupied and settles once aft
  saved.villages.find(row=>row.id===worker.villageId).entry={x:-14,z:14.5};
  const gate={id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,
   maxHp:60,hp:60,status:'intact',villageId:worker.villageId,cost:10,collapseRemaining:0};
- saved.structures.push(gate);saved.time=226;saved.nextId=Math.max(saved.nextId,1000001);
+ if(withGate)saved.structures.push(gate);
+ saved.nextId=Math.max(saved.nextId,1000001);
  const crop=createPlant('plant-'+saved.nextId++,'mijo',-10.6,5.3,center.id);
  crop.growth=cropSpec(crop.species).growth_seconds-9;
  for(const water of crop.water)water.status='manual';
  saved.plants.push(crop);
- const destination=centerDeliveryPoint(center,crop,saved),ledger=structuredClone(saved.ledger),acquired=[];
  const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
- const f=await nativeProductionAuthority(saved,{chunkKeys,onCommit(record,data){acquired.push({kind:record.kind,data});}});
+ return {saved,worker,peer,crop,gate,chunkKeys,destination:centerDeliveryPoint(center,crop,saved),ledger:structuredClone(saved.ledger)};
+}
+
+test('Harvest retains the crop while its center is occupied and settles once after the Farm peer leaves for Home',async()=>{
+ const {saved,worker,peer,crop,chunkKeys,destination,ledger}=farmDeliveryAtOccupiedCenter({gate:true,endOfShift:true});
+ const acquired=[];
+ let release,held;
+ const wait=new Promise(resolve=>{release=resolve;});
+ const f=await nativeProductionAuthority(saved,{chunkKeys,onReady(record){
+  if(record.resources.nativeIdleStroll?.version===3){held=record;return wait;}
+ },onCommit(record,data){acquired.push({kind:record.kind,data});}});
  try{
   let view,occupied=false;
   for(let i=0;i<400;i++){
@@ -52,11 +63,13 @@ test('Harvest retains the crop while its center is occupied and settles once aft
     assert.deepEqual(view.ledger,ledger);
    }
    if(view.events.some(row=>row.type==='CrateDelivered'&&row.workerId===worker.id))break;
+   if(view.time>=250)release();
   }
   assert(occupied);
   const home=acquired.find(row=>row.kind==='home-route'),carry=acquired.find(row=>row.kind==='task-consequence'),
     settled=acquired.find(row=>row.kind==='task-settlement');
   assert(home&&carry&&settled);
+  assert(held?.aborted&&!held.committed);
   assert(acquired.indexOf(home)<acquired.indexOf(carry));
   assert.equal(home.data.nativeHomeRouteBinding.reference.bodyId,2);
   assert.equal(carry.data.nativeTaskConsequenceBinding.reference.bodyId,1);
@@ -65,7 +78,57 @@ test('Harvest retains the crop while its center is occupied and settles once aft
   assert.equal(crate.delivered,true);
   assert.equal(view.events.filter(row=>row.type==='CrateDelivered'&&row.targetId===crate.id).length,1);
   assert.deepEqual(Object.keys(view.ledger.entries).filter(id=>!Object.hasOwn(ledger.entries,id)),['deliver:'+crate.id]);
- }finally{await f.close();}
+ }finally{release();await f.close();}
+});
+
+for(const gate of [true,false])test(`same-shift Harvest delivers once after its Farm peer yields within a crop anchor (${gate?'gate':'open'})`,async()=>{
+ const {saved,worker,peer,crop,chunkKeys,destination,ledger}=farmDeliveryAtOccupiedCenter({gate});
+ let release,held;
+ const wait=new Promise(resolve=>{release=resolve;});
+ const acquired=[];
+ const f=await nativeProductionAuthority(saved,{chunkKeys,onReady(record){
+  if(record.resources.nativeIdleStroll?.version===3&&!held){held=record;return wait;}
+ },onCommit(record,data){acquired.push({kind:record.kind,data});}});
+ try{
+  for(let i=0;i<290&&!held;i++){f.advance();await f.present();assert.deepEqual(f.faults,[]);}
+  assert(held,'a lateral step must use the prepared Walk22');
+  const ref=held.resources.nativeIdleStroll,prior=f.snapshot(),holder=prior.workers.find(row=>row.id===peer.id);
+  assert.equal(ref.bodyId,2);
+  assert.equal(ref.actorId,Number(peer.id.split('-').at(-1)));
+  assert.equal(ref.sourceFarm.bodyId,ref.bodyId);
+  assert.equal(holder.nativeRouteAdmission,'native-farm-arrival');
+  assert.equal(prior.workers.find(row=>row.id===worker.id).actionRemaining,0);
+  assert.equal(prior.plants.find(row=>row.id===crop.id).alive,true);
+  assert(!prior.crates.some(row=>row.sourcePlantId===crop.id));
+  assert.deepEqual(prior.ledger,ledger);
+  assert.deepEqual([holder.x,holder.z],[ref.pose.x,ref.pose.z]);
+  assert(Math.hypot(holder.x-destination.x,holder.z-destination.z)<2*ref.pose.radius);
+  assert.deepEqual(ref.anchor,{...ref.anchor,id:Number(crop.id.split('-').at(-1)),x:crop.x,z:crop.z});
+  assert(Math.hypot(ref.destination.x-ref.anchor.x,ref.destination.z-ref.anchor.z)<=ref.anchor.radius);
+  assert(Math.hypot(ref.destination.x-destination.x,ref.destination.z-destination.z)>2*ref.pose.radius);
+  assert.throws(()=>copyNativeIdleStrollReference({...ref,version:1}),/actual Farm source/);
+  assert.throws(()=>copyNativeIdleStrollReference({...ref,destination:{x:ref.anchor.x,z:ref.anchor.z}}),/lateral Farm destination/);
+  assert.throws(()=>copyNativeIdleStrollReference({...ref,sourceFarm:undefined}));
+  assert(!held.committed);
+  release();await untilProduction(f,()=>held.committed);
+  let view;
+  for(let i=0;i<570;i++){
+   view=f.advance();await f.present();assert.deepEqual(f.faults,[]);
+   if(view.events.some(row=>row.type==='CrateDelivered')&&view.workers.every(row=>row.nativeRouteAdmission==='native-idle'))break;
+  }
+  const carry=acquired.find(row=>row.kind==='task-consequence'),settlement=acquired.find(row=>row.kind==='task-settlement');
+  assert(carry&&settlement);
+  assert.equal(carry.data.nativeTaskConsequenceBinding.reference.bodyId,1);
+  assert.deepEqual(carry.data.nativeTaskConsequenceBinding.reference.destination,{x:destination.x,z:destination.z});
+  assert.equal(settlement.data.nativeTaskSettlementBinding.reference.bodyId,1);
+  assert(!acquired.some(row=>row.kind==='home-route'));
+  assert(view.workers.every(row=>row.nativeRouteAdmission==='native-idle'&&row.contractDay===holder.contractDay));
+  const [crate]=view.crates.filter(row=>row.sourcePlantId===crop.id);
+  assert.equal(crate.delivered,true);
+  assert.equal(view.events.filter(row=>row.type==='CrateDelivered'&&row.targetId===crate.id).length,1);
+  assert.deepEqual(Object.keys(view.ledger.entries).filter(id=>!Object.hasOwn(ledger.entries,id)),['deliver:'+crate.id]);
+  assert.deepEqual(f.errors,[]);
+ }finally{release();await f.close();}
 });
 
 for(const profile of PROFILES)test(`${profile.id} ordinary authority binds a restored22 once and admits it automatically through both existing ports`,async()=>{

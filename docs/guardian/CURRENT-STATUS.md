@@ -1,8 +1,10 @@
 # Current delivery status (2026-10-29)
 
-Walk22 ya puede adoptar un nuevo ancla al llegar si se recogió su cultivo. Host determinista confirma la misma pose, cuerpo y geometrías al pasar a Rest21 o preparar otro acercamiento. El contraste de dos trabajadores completó una entrega con el desvío lateral fijo del prototipo. Quedan la selección lateral ordinaria y la prueba física. [Relevo y límites](native-farm-gate-aperture-20261121.md#relevo-tras-retirar-el-cultivo).
+WASM ya elige un paso lateral de Walk22 cuando Farm ocupa el punto de entrega y el Harvest terminado bloquea la ida directa al cultivo. El control con y sin portón conserva ambos cuerpos y el punto de entrega, abona una caja y devuelve a los dos trabajadores a Idle en el mismo turno. NVIDIA confirmó el paso lateral, la entrega y el retorno a Idle con las geometrías residentes. [Recorrido y controles](native-farm-gate-aperture-20261121.md#dos-trabajadores-en-el-mismo-turno).
 
-Cuando el portador sigue de turno, Settlement17 ya puede pasar a Rest21 o Walk22 sobre el mismo cuerpo. NVIDIA confirmó Rest21 con picking, un solo abono y drenaje. El Host determinista confirmó también Walk22. El bloqueo de dos trabajadores sigue abierto en el cambio de ancla del que cede el paso. [Relevo y validación](native-post-settlement-idle-consumer-20261120.md#productor-ordinario-tras-entregar) · [Prototipo de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
+Walk22 ya puede adoptar un nuevo ancla al llegar si se recogió su cultivo. Host determinista confirma la misma pose, cuerpo y geometrías al pasar a Rest21 o preparar otro acercamiento. El contraste de dos trabajadores completó una entrega con el desvío lateral fijo del prototipo. [Relevo y límites](native-farm-gate-aperture-20261121.md#relevo-tras-retirar-el-cultivo).
+
+Cuando el portador sigue de turno, Settlement17 ya puede pasar a Rest21 o Walk22 sobre el mismo cuerpo. NVIDIA confirmó Rest21 con picking, un solo abono y drenaje. El Host determinista confirmó también Walk22. [Relevo y validación](native-post-settlement-idle-consumer-20261120.md#productor-ordinario-tras-entregar) · [Prototipo de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
 
 NVIDIA confirmó también el caso en que el golpe termina dentro del mismo subpaso que vence Escudo. Game registra un único fallo, Draw conserva la pose sin el reloj del golpe y el nuevo corredor llega al mismo cultivo. [Recorrido y recibo](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
 

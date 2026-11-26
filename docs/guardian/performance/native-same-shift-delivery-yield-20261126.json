@@ -1,0 +1,559 @@
+{
+  "baseCommit": "101b2b591ea747b080419564b3573ecaa377ab13",
+  "regression": {
+    "baselineWasm": {
+      "tests": 26,
+      "pass": 0,
+      "fail": 2,
+      "skipped": 24
+    },
+    "focal": {
+      "tests": 26,
+      "pass": 3,
+      "fail": 0,
+      "skipped": 23
+    },
+    "impact": {
+      "tests": 1348,
+      "pass": 1348,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "wasm": {
+    "src/world/wild-engine/spatial-savanna.wasm": "8d9352b0b1a9c23cbc88f75e0c03e87b7676fcc908a77e615fb9c175f0c71aea",
+    "public/wild-engine/spatial-threaded.wasm": "0985eb6863311227a8bf401b6c053c0c8f294b4d4bc2e30e9d91e73bc0e34a9b",
+    "public/wild-engine/spatial-threaded.mjs": "1ce4c9da37af1cd5ced81e12cf79c18a3e8ed9870db62df7af639a328ba6c970"
+  },
+  "deterministicHost": {
+    "actors": [
+      "worker-900011",
+      "worker-900012"
+    ],
+    "records": [
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [
+          1000000
+        ],
+        "ticket": 1
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 3
+      },
+      {
+        "kind": "farm-arrival",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [
+          1000000
+        ],
+        "ticket": 5
+      },
+      {
+        "kind": "idle-stroll-stop",
+        "committed": true,
+        "aborted": false,
+        "ticket": 7
+      },
+      {
+        "kind": "task-start",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 9
+      },
+      {
+        "kind": "task-action",
+        "committed": true,
+        "aborted": false,
+        "ticket": 11
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 13
+      },
+      {
+        "kind": "task-consequence",
+        "committed": true,
+        "aborted": false,
+        "actor": 900011,
+        "body": 1,
+        "gates": [],
+        "ticket": 15
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 17
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 19
+      },
+      {
+        "kind": "task-settlement",
+        "committed": true,
+        "aborted": false,
+        "ticket": 21
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 23
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 25
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 27
+      },
+      {
+        "kind": "idle-stroll",
+        "committed": true,
+        "aborted": false,
+        "actor": 900012,
+        "body": 2,
+        "gates": [],
+        "ticket": 29
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 31
+      },
+      {
+        "kind": "idle-cycle",
+        "committed": true,
+        "aborted": false,
+        "ticket": 33
+      }
+    ],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "HarvestRequested",
+        "targetId": "plant-1000001",
+        "count": 1,
+        "automatic": true,
+        "simulationTime": 18.999999999999915
+      },
+      {
+        "id": "event-29210",
+        "type": "CropPicked",
+        "workerId": "worker-900011",
+        "targetId": "plant-1000001",
+        "crateId": "crate-1000003",
+        "simulationTime": 26.000000000000014,
+        "presentation": {
+          "x": -10.6,
+          "z": 5.3
+        }
+      },
+      {
+        "id": "event-29211",
+        "type": "CrateDelivered",
+        "workerId": "worker-900011",
+        "targetId": "crate-1000003",
+        "species": "mijo",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 29.500000000000064
+      }
+    ],
+    "final": {
+      "elapsed": 67.00000000000266,
+      "opening": 1,
+      "workers": [
+        {
+          "id": "worker-900011",
+          "status": "idle",
+          "admission": "native-idle",
+          "x": -14.23367977142334,
+          "z": 4.891669750213623,
+          "idle": {
+            "anchorId": "farm-structure-2",
+            "mode": "rest",
+            "elapsed": 1.899999999999892,
+            "remaining": 13.299999809265245,
+            "rng": 3100410858,
+            "approachRetry": 0
+          },
+          "task": null,
+          "contractDay": 15
+        },
+        {
+          "id": "worker-900012",
+          "status": "idle",
+          "admission": "native-idle",
+          "x": -12.28612995147705,
+          "z": 4.23084831237793,
+          "idle": {
+            "anchorId": "farm-structure-2",
+            "mode": "watch",
+            "elapsed": 3.5000001907360314,
+            "remaining": 0.541666793822074,
+            "rng": 1627281348,
+            "approachRetry": 0
+          },
+          "task": null,
+          "contractDay": 15
+        }
+      ]
+    }
+  },
+  "physical": {
+    "rawSha256": "b646594a5415fbfee3157bd81692599665b15fa30541befd8cffac71cd7fafcb",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 117.39999999850988
+      }
+    },
+    "clockStartedAfterFirstFarm": true,
+    "firstFarm": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 10
+      },
+      "route": {
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 2
+      },
+      "endTime": 16.711994271585404,
+      "destination": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195
+      },
+      "gates": [
+        1000000
+      ]
+    },
+    "secondFarm": {
+      "actorId": 900012,
+      "bodyId": 2,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 18.949999999999914
+      },
+      "route": {
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 5
+      },
+      "endTime": 26.54321038757198,
+      "destination": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195
+      },
+      "gates": [
+        1000000
+      ]
+    },
+    "ready": {
+      "actorId": 900012,
+      "bodyId": 2,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 13,
+        "effectiveTime": 26.550000000000022
+      },
+      "route": {
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 10
+      },
+      "endTime": 27.3974120261269,
+      "destination": {
+        "x": -13.509800910949707,
+        "z": 5.987866401672363
+      },
+      "pose": {
+        "x": -13.97523021697998,
+        "z": 5.199846267700195,
+        "yaw": -3.1292060741233034,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 18.5148155813581,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "version": 3,
+      "anchor": {
+        "kind": 1,
+        "id": 1000001,
+        "x": -10.6,
+        "z": 5.3,
+        "radius": 3
+      },
+      "sourceFarmSequence": 7
+    },
+    "held": {
+      "at": 27.05000000000003,
+      "position": [
+        -13.97523021697998,
+        5.199846267700195
+      ],
+      "admission": "native-farm-arrival",
+      "carrier": "native-action"
+    },
+    "lateral": {
+      "actorId": 900012,
+      "bodyId": 2,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 14,
+        "effectiveTime": 27.10000000000003
+      },
+      "route": {
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "session": 1,
+        "slot": 1,
+        "generation": 10
+      },
+      "endTime": 27.94741202612691,
+      "destination": {
+        "x": -13.509800910949707,
+        "z": 5.987866401672363
+      },
+      "assignmentSequence": 12
+    },
+    "carry": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 16,
+        "effectiveTime": 30.450000000000077
+      },
+      "route": {
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 8
+      },
+      "endTime": 33.84637678918134,
+      "destination": {
+        "x": -14.233679632493326,
+        "z": 4.8916696066412415
+      },
+      "sourceActionSequence": 11
+    },
+    "settlement": {
+      "actorId": 900011,
+      "bodyId": 1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+        "nativeSession": 1,
+        "ticket": 20,
+        "effectiveTime": 34.80000000000034
+      },
+      "pose": {
+        "x": -14.23367977142334,
+        "z": 4.891669750213623,
+        "yaw": -1.6192569145391624,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 21.03489846366577,
+        "carryPhase": 14.594565183771893,
+        "runRemaining": 40
+      },
+      "sequence": 16
+    },
+    "crate": {
+      "id": "crate-1000003",
+      "sourcePlantId": "plant-1000001",
+      "species": "mijo",
+      "x": -14.23367977142334,
+      "z": 4.891669750213623,
+      "value": {
+        "n": "66",
+        "d": "5"
+      },
+      "multiplyPower": null,
+      "profile": "youngMale",
+      "carrierId": null,
+      "delivered": true,
+      "centerId": "structure-2",
+      "multiplyIncome": {
+        "n": "0",
+        "d": "1"
+      }
+    },
+    "credit": {
+      "n": "14",
+      "d": "1"
+    },
+    "workers": [
+      {
+        "id": "worker-900011",
+        "x": -14.23367977142334,
+        "z": 4.891669750213623,
+        "admission": "native-idle",
+        "contractDay": 15
+      },
+      {
+        "id": "worker-900012",
+        "x": -13.509800910949707,
+        "z": 5.987866401672363,
+        "admission": "native-idle",
+        "contractDay": 15
+      }
+    ],
+    "actors": [
+      {
+        "root": 725,
+        "retainedInitialMeshes": 32,
+        "meshes": 45
+      },
+      {
+        "root": 794,
+        "retainedInitialMeshes": 32,
+        "meshes": 32
+      }
+    ],
+    "gate": {
+      "root": 515,
+      "id": 1000000
+    },
+    "samples": {
+      "initial": [
+        2
+      ],
+      "lateral": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14
+      ],
+      "settlement": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "final": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22
+      ],
+      "firstLateral": {
+        "at": 1795661575004.9,
+        "sequence": 165,
+        "trigger": "raf",
+        "nativeWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "0cd9ece3-ec14-4409-a0df-a6a7e88d978b/1",
+          "nativeSession": 1,
+          "ticket": 14,
+          "effectiveTime": 27.10000000000003
+        },
+        "intervalMs": 33.300048828125,
+        "drawMs": 2.699951171875,
+        "replay": false,
+        "clockElapsed": 27.10000000000003,
+        "safeUntil": 27.10000000000003,
+        "cameraVersion": null
+      }
+    },
+    "drain": {
+      "disposed": true
+    },
+    "errors": [],
+    "failed": false,
+    "gpuErrors": 0
+  },
+  "excludedPhysicalRuns": [
+    {
+      "stage": "two ordinary Farms through one aperture",
+      "elapsed": 62.800000000002726,
+      "unexpectedHeldVersion": null
+    },
+    {
+      "stage": "two ordinary Farms through one aperture",
+      "elapsed": 62.40000000000269,
+      "unexpectedHeldVersion": 1
+    }
+  ],
+  "productionBuild": true
+}

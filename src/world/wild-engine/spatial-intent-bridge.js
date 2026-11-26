@@ -2220,20 +2220,38 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   // Read the discriminator inside the legacy bounds before the extra scalar.
   const idleStrollSemantic=ptr=>{
     const schema=new Float64Array(wasm.memory.buffer,ptr,1)[0];
-    if(![1,2].includes(schema)||schema===2&&wasm.nav_idle_stroll_cycle_approach_version?.()!==1)throw Error('Rebuild native selected Idle approach decoder');
+    if(![1,2,3].includes(schema)||schema===2&&wasm.nav_idle_stroll_cycle_approach_version?.()!==1||schema===3&&typeof wasm.nav_idle_stroll_farm_yield_proposal_stage!=='function')throw Error('Rebuild native selected Idle approach decoder');
     return Array.from(new Float64Array(wasm.memory.buffer,ptr,schema===2?21:20));
   };
   const idleStrollReference=(h,m,ticket)=>{
-    if(h[0]!==1||![1,2].includes(m[0])||m.length!==(m[0]===2?21:20)||!h.every(Number.isFinite)||!m.every(Number.isFinite))throw Error('Invalid native Idle stroll source');const farm=m[1]===0?idleStrollFarmSource(h[1],ticket):null,settlement=m[1]===0?idleStrollSettlementSource(h[1],ticket):null;
+    if(h[0]!==1||![1,2,3].includes(m[0])||m.length!==(m[0]===2?21:20)||!h.every(Number.isFinite)||!m.every(Number.isFinite))throw Error('Invalid native Idle stroll source');const farm=m[1]===0?idleStrollFarmSource(h[1],ticket):null,settlement=m[1]===0?idleStrollSettlementSource(h[1],ticket):null;
     return copyNativeIdleStrollReference({kind:'native-idle-stroll-reference',version:m[0],...(m[0]===2?{walkRemaining:m[20]}:{}),...(farm?{sourceFarm:farm}:settlement?{sourceSettlement:settlement}:m[1]===0?{sourceRequest:nativeIdleStrollSourceRequestReference(h[1])}:{}),actorId:h[1],bodyId:h[2],centerId:m[3],profile:h[5],workerProfile:PROFILES[m[2]]?.id,bodyFlags:m[4],pose:{x:h[8],z:h[9],yaw:m[5],radius:h[7],runPhase:m[6],walkPhase:m[7],carryPhase:m[8],runRemaining:m[9]},anchor:{kind:m[10],id:m[11],x:m[12],z:m[13],radius:m[14]},sourceCycleSequence:m[1],sourceDecisionSequence:h[21],requestedAt:h[22],walkRng:m[15],approachRetry:m[16],idleSeconds:m[17],destination:{x:m[18],z:m[19]},expectedRouteHandle:routeHandle(wasm.nav_intent_session(),h[20],h[4]),sourceControlSequence:h[23],worldBoundary:{version:1,authorityEpoch:epoch(),nativeSession:wasm.nav_intent_session(),ticket,effectiveTime:h[10]},endTime:h[11]});
   };
   const captureNativeIdleStrollProposal=ticket=>captureNativeMotionProposal(ticket,'stroll');
+  const stageFarmHarvestYield=(actor,source)=>{
+    const [reason,body]=new Float64Array(wasm.memory.buffer,wasm.nav_intent_route_reservation_result_ptr(),2);
+    if(reason!==1)return 0;
+    const a=source.anchor;
+    for(const worker of source.state.workers){
+      if(worker.status!=='acting'||worker.nativeRouteAdmission!=='native-action'||worker.centerId!==source.worker.centerId)continue;
+      const execution=nativeTaskActionExecution(worker.id),action=execution?.binding,request=action?.reference.request;
+      if(!execution?.completed||request.bodyId!==body||request.actionKind!=='harvest'||request.targetId!==a.id)continue;
+      const harvest=nativeHarvestDeliverySource(numericId(worker.id),action);
+      if(!harvest)return 0;
+      const {destination}=harvest;
+      return wasm.nav_idle_stroll_farm_yield_proposal_stage(actor,wasm.nav_intent_session(),source.sequence,a.id,a.x,a.z,a.radius,source.calibration.idleSeconds,source.body.idleState.rng,numericId(worker.id),action.actionSequence,destination.x,destination.z);
+    }
+    return 0;
+  };
   const prepareNativeIdleStrollProposal=actorId=>{
     const actor=typeof actorId==='number'?actorId:numericId(actorId),outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedPassage:false,...extra});
     if(wasm.nav_idle_stroll_proposal_version?.()!==1)throw Error('Rebuild native Idle stroll admission');syncBoundaryTime();flushNativeIntentControl();const request=nativeIdleStrollRequestReference(actor),source=request?null:idleCycleSource(actor,true);
     if(request?!restoredStrollRequestCurrent(request):!source?.sourceFarm&&!source?.sourceSettlement&&(!source?.next||source.next.idleState.mode!=='walk'))return outcome('unsupported');
     const selected=source?.next?.approach===true;if(selected&&(wasm.nav_idle_stroll_cycle_approach_version?.()!==1||typeof wasm.nav_idle_stroll_cycle_approach_proposal_stage!=='function'))throw Error('Rebuild native selected Idle approach admission');
-    const a=source?.anchor,status=selected?wasm.nav_idle_stroll_cycle_approach_proposal_stage(actor,wasm.nav_intent_session(),source.next.requestSequence):source?.sourceSettlement?wasm.nav_idle_stroll_settlement_proposal_stage?.(actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,source.calibration.idleSeconds,source.body.idleState.rng,PROFILES.findIndex(p=>p.id===source.body.workerProfile)):source?.sourceFarm?wasm.nav_idle_stroll_farm_proposal_stage?.(actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,source.calibration.idleSeconds,source.body.idleState.rng):wasm.nav_idle_stroll_proposal_stage(actor,wasm.nav_intent_session(),request?.requestSequence??source.next.requestSequence);if(status!==1)return outcome(status===-4?'busy':status===-6?'unknown':status===-7?'blocked':status===0?'conflict':'stale');
+    const a=source?.anchor;
+    let status=selected?wasm.nav_idle_stroll_cycle_approach_proposal_stage(actor,wasm.nav_intent_session(),source.next.requestSequence):source?.sourceSettlement?wasm.nav_idle_stroll_settlement_proposal_stage?.(actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,source.calibration.idleSeconds,source.body.idleState.rng,PROFILES.findIndex(p=>p.id===source.body.workerProfile)):source?.sourceFarm?wasm.nav_idle_stroll_farm_proposal_stage?.(actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,source.calibration.idleSeconds,source.body.idleState.rng):wasm.nav_idle_stroll_proposal_stage(actor,wasm.nav_intent_session(),request?.requestSequence??source.next.requestSequence);
+    if(status===0&&source?.sourceFarm&&a.kind===1&&typeof wasm.nav_idle_stroll_farm_yield_proposal_stage==='function')status=stageFarmHarvestYield(actor,source);
+    if(status!==1)return outcome(status===-4?'busy':status===-6?'unknown':status===-7?'blocked':status===0?'conflict':'stale');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native Idle stroll lost its ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-idle-stroll-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]};
     try{const proposal=captureNativeIdleStrollProposal(ticket);if(!proposal||!(request?nativeIdleStrollContinuesRestoredRequest(proposal.nativeIdleStroll,request):source.sourceSettlement?JSON.stringify(proposal.nativeIdleStroll.sourceSettlement)===JSON.stringify(source.body):source.sourceFarm?JSON.stringify(proposal.nativeIdleStroll.sourceFarm)===JSON.stringify(source.body):nativeIdleStrollContinuesNext(proposal.nativeIdleStroll,source.next)))throw Error('Native Idle stroll changed its selected source');return outcome('proposed',{proposal});}catch(error){wasm.nav_idle_stroll_proposal_cancel(t[0],t[1]);throw error;}
   };
@@ -2589,6 +2607,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const handle=completed?actual.binding.reference.expectedRouteHandle:held.resumeHandle,sequence=completed?actual.binding.assignmentSequence:held.assignmentSequence;
     syncBoundaryTime();
     const status=raidSpawnSequence?wasm.nav_intent_farm_flight_request(held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z,raidSpawnSequence):wasm.nav_intent_farm_arrival_home_request(held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z);
+    // A retained successor can still own the proposal slot at shift end.
+    // The producer cancels it at publication, leaving Home to the next tick.
+    if(completed&&!raidSpawnSequence&&status===-4)return null;
     if(status!==1)throw Error('Native Farm Home request rejected');
     const request=nativeHomeRequestReference(held.actorId);if(!(completed?nativeHomeRequestContinuesCompletedFarmArrival:nativeHomeRequestContinuesHeldFarmArrival)(request,held))throw Error('Native Farm Home lost its actual body');return request;
   };
@@ -2953,11 +2974,17 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       mark({resources,nativeTaskSettlementBinding:binding});return {status:1,value:{resources,nativeTaskSettlementBinding:binding}};
     },prepareResources,signal,protocol);
   };
+  const nativeHarvestDeliverySource=(actor,source=nativeTaskActionBinding(actor))=>{
+    const state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),task=state?.tasks.find(t=>t.id===worker?.taskId),target=state?.plants.find(p=>p.id===task?.targetId),center=state?.structures.find(c=>c.id===worker?.centerId),preview=prepareHarvestConsequence(state,worker,task,target);
+    if(!preview||!source||center?.kind!=='center'||center.status!=='intact')return null;
+    return {state,worker,task,target,center,preview,source,destination:centerDeliveryPoint(center,target,state)};
+  };
   const startNativeTaskConsequenceAfterGpuQuiescence=({actorId,getPublication,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native consequence requires retained resource preparation');
-    const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),task=state?.tasks.find(t=>t.id===worker?.taskId),target=state?.plants.find(p=>p.id===task?.targetId),center=state?.structures.find(c=>c.id===worker?.centerId),preview=prepareHarvestConsequence(state,worker,task,target),source=nativeTaskActionBinding(actor);
-    if(!preview||!source||center?.kind!=='center'||center.status!=='intact')return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedConsequences:false});
-    const destination=centerDeliveryPoint(center,target,state),centerOrigin={x:center.x,z:center.z,yaw:center.yaw,status:center.status},current=()=>owningState===state&&worker.status==='acting'&&worker.nativeRouteAdmission==='native-action'&&state.workers.includes(worker)&&state.tasks.includes(task)&&state.plants.includes(target)&&state.structures.includes(center)&&worker.centerId===center.id&&['x','z','yaw','status'].every(k=>center[k]===centerOrigin[k])&&harvestConsequenceCurrent(state,worker,task,target,preview);
+    const actor=typeof actorId==='number'?actorId:numericId(actorId),harvest=nativeHarvestDeliverySource(actor);
+    if(!harvest)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedConsequences:false});
+    const {state,worker,task,target,center,preview,source,destination}=harvest;
+    const centerOrigin={x:center.x,z:center.z,yaw:center.yaw,status:center.status},current=()=>owningState===state&&worker.status==='acting'&&worker.nativeRouteAdmission==='native-action'&&state.workers.includes(worker)&&state.tasks.includes(task)&&state.plants.includes(target)&&state.structures.includes(center)&&worker.centerId===center.id&&['x','z','yaw','status'].every(k=>center[k]===centerOrigin[k])&&harvestConsequenceCurrent(state,worker,task,target,preview);
     let candidate=null,translation=null,preparedTicket=null;
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'task-consequence',
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const t=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return t[0]===session&&t[1]===ticket&&t[5]===16;},
@@ -4306,6 +4333,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const pending=worker.nativeRouteAdmission==='pending-farm-arrival-resources',execution=pending?(projectNativeFarmArrivalRequest(state,worker)??projectNativeFarmArrivalDeclaration(state,worker)):projectNativeFarmArrivalExecution(state,worker),village=state.villages.find(v=>v.id===worker.villageId),home=village?.entry??village;
     if(!home||!execution||!pending&&execution?.kind!=='native-farm-arrival-held-execution'&&(execution?.kind!=='native-farm-arrival-route-execution'||!execution.arrived||execution.running||execution.currentSpeed!==0||execution.executedThrough<execution.binding.reference.endTime))throw Error('Native Farm Home requires its actual completed or stopped source');
     const request=bridge.requestNativeFarmArrivalHome(execution,{villageId:numericId(village.id),x:home.x,z:home.z});
+    if(!request)return null;
     if(worker.nativeRefugeSequence){worker.raidReturn=false;delete worker.nativeRefugeSequence;}
     cancelIdle(worker);Object.assign(worker,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});notifyWorkerPlanningChange(state,worker);pendingNativeChanges=true;return request;
   };

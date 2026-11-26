@@ -142,14 +142,42 @@ dirigidas y el build de producción.
 Al combinar este relevo con el destino lateral fijo del prototipo, el
 cuerpo 2 adquirió la marcha inicial, el relevo y un nuevo acercamiento al
 centro. El cuerpo 1 entregó una sola caja en el punto original. Ambos
-llegaron a Idle en el mismo turno a los 67 s. La selección lateral
-ordinaria y la captura en hardware siguen pendientes.
+llegaron a Idle en el mismo turno a los 67 s.
 [Recibo y límites](performance/native-idle-stroll-reanchor-20261126.json).
 
 OpenRA pospone la búsqueda de otro camino si el bloqueador ya está
 saliendo. En Wild Guardians, el mismo punto de
 entrega sigue ocupado hasta que la reserva de Home permite acreditar el
 recorrido de Carry. [OpenRA, decisión de espera y desvío](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Activities/Move/Move.cs#L231-L305).
+
+### Dos trabajadores en el mismo turno
+
+Cuando un Farm23 terminado ocupa el punto de entrega y el cuerpo del
+Harvest15 terminado bloquea la ida directa al cultivo, WASM busca un punto
+lateral dentro del radio de Idle de ese cultivo. Solo lo hace si la
+reserva de la ida identifica el cuerpo estacionario del Harvest15. El
+destino elegido debe dejar libre el corredor original de Carry y su propia
+marcha debe superar el barrido y la reserva completos de Walk22. Al
+revalidar READY se comprueban el Harvest y el mismo destino lateral.
+
+Con y sin portón, el control de los dos puertos retuvo READY mientras
+el cultivo seguía vivo y el saldo y las poses no cambiaban. Después, el
+cuerpo 2 cedió el espacio, el cuerpo 1 entregó una caja en el punto
+original y ambos volvieron a Idle dentro del turno. Si vence el turno
+mientras espera READY, se cancela el paso lateral y Home se acredita
+desde el último Farm terminado. El abono llega una sola vez después de
+liberarse el punto de entrega.
+
+En NVIDIA, ambos Farm cruzaron el mismo vano abierto con los cuerpos 1 y
+2. El arnés inició el reloj después de que el primer Farm adquiriera sus
+recursos. El READY lateral quedó retenido en el ticket 13. Draw presentó
+el Walk22 del cuerpo 2 con el ticket 14 y Settlement17 del cuerpo 1 con
+el ticket 20. El portador recibió un solo abono de 14 y ambos volvieron
+a Idle en el turno 15. Se conservaron las raíces y las 32 geometrías
+iniciales de cada actor. El Host drenó con cero errores. En una pasada
+previa, el arnés retuvo un Walk22 anterior a la cosecha. La pasada válida
+retuvo exclusivamente el READY lateral. Pasaron 1.348
+pruebas dirigidas. [Recibo y controles](performance/native-same-shift-delivery-yield-20261126.json).
 
 ## Dos trabajadores en sentidos opuestos
 

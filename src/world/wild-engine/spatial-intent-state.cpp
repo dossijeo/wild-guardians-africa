@@ -249,6 +249,10 @@ struct NativeHomeRouteBinding {
 // Bounded causal source: the preceding cycle/decision are named by sequence,
 // not retained as an ever-growing chain of movement/Idle histories.
 struct NativeIdleStrollOrigin {std::array<double,24> header{};uint64_t ticket=0;};
+struct FarmHarvestYield {
+ uint64_t carrier=0,actionSequence=0;
+ double deliveryX=0,deliveryZ=0,x=0,z=0;
+};
 struct NativeIdleStrollBinding {
  NativeIdleStrollOrigin prepared,actual;uint64_t assignmentSequence=0;
  std::array<double,21> semantic{};
@@ -402,6 +406,7 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeIdleStrollResourceRequest> strollRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> strollFarmSource;
   std::optional<NativeIdleCycleBodySource> strollFarmPose,strollSettlementPose;
+  std::optional<FarmHarvestYield> farmHarvestYield;
   std::shared_ptr<const NativeTaskSettlementBinding> strollSettlementSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;

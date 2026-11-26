@@ -16,6 +16,19 @@ static bool taskConsequenceSourceCurrent(const IntentState& s,const PendingTaskC
  if(owners!=s.byTarget.end())for(uint64_t actor:owners->second)if(actor!=found->first)return false;
  return true;
 }
+static int prepareTaskDeliveryTiming(RouteSlot& route,uint64_t actor,const std::array<double,24>& h,double x,double z,double at,uint32_t& topology){
+ const int previous=lazy_selected_context();if(previous!=int(h[22]))spatial_select_nav_profile_index(int(h[22]));
+ const int count=spatial_world_route_cached(float(h[12]),float(h[13]),float(x),float(z));
+ int result=count<0?-6:count==0?0:1;
+ if(result==1){const auto points=spatial_world_route_ptr();route.points.assign(points,points+size_t(count)*2);
+  if(std::hypot(double(route.points[count*2-2])-x,double(route.points[count*2-1])-z)>.00001)result=0;
+ }
+ if(result==1){result=prepareRouteTiming(route,actor,h[12],h[13],at,h[14],2,8,h[20],true);
+  if(result==1){route.motionOffset[2]=h[17];route.motionOffset[3]=h[18];route.motionOffset[4]=h[19];}
+ }
+ topology=lazy_route_revision();if(previous!=int(h[22]))spatial_select_nav_profile_index(previous);
+ return result;
+}
 static int stageTaskConsequence(double actorId,double session,double actionSequence,double crateId,double centerId,double x,double z){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actorId)||session!=double(s.session)||!integer(actionSequence)||!integer(crateId)||!integer(centerId)||!coordinate(x)||!coordinate(z))return -1;
@@ -26,17 +39,8 @@ static int stageTaskConsequence(double actorId,double session,double actionSeque
  auto& motion=draft.motion;motion.body=uint64_t(h[4]);motion.slot=uint32_t(s.routeSlots.size());
  for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){motion.slot=i;break;}
  motion.generation=motion.slot<s.routeSlots.size()?s.routeSlots[motion.slot].generation:0;
- const int previous=lazy_selected_context();if(previous!=int(h[22]))spatial_select_nav_profile_index(int(h[22]));
- const int count=spatial_world_route_cached(float(h[12]),float(h[13]),float(x),float(z));
- int result=count<0?-6:count==0?0:1;
- if(result==1){const auto points=spatial_world_route_ptr();motion.route.points.assign(points,points+size_t(count)*2);
-  // A consequence cannot trade the requested destination for a partial route.
-  if(std::hypot(double(motion.route.points[count*2-2])-x,double(motion.route.points[count*2-1])-z)>.00001)result=0;
- }
- if(result==1){result=prepareRouteTiming(motion.route,uint64_t(actorId),h[12],h[13],s.effectiveTime,h[14],2,8,h[20],true);
-  if(result==1){motion.route.motionOffset[2]=h[17];motion.route.motionOffset[3]=h[18];motion.route.motionOffset[4]=h[19];}
- }
- motion.topology=lazy_route_revision();if(previous!=int(h[22]))spatial_select_nav_profile_index(previous);
+ // Both consequence admission and Farm yielding prove the original full delivery path.
+ int result=prepareTaskDeliveryTiming(motion.route,uint64_t(actorId),h,x,z,s.effectiveTime,motion.topology);
  if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(motion.body,body))return -3;
  s.reservationResult.fill(0);motion.gates=s.gates;result=proveGateRouteAdmission(s,found->second,motion.route,motion.body,body,motion.gates,motion.boundaries,false,draft.source.get());if(result!=1)return result;
