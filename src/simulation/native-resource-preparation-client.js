@@ -1,3 +1,4 @@
+import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {centerSource,sameCenter,matchesCenterRuinCommit} from '../world/native-center-ruin-source.js';
 import {copyNativeShieldWorld,sameNativeShieldWorld} from '../world/native-shield-world.js';
 import {terrainStopProposalProtocol,hasOtherTerrainStopField} from './terrain-stop-reservation.js';
@@ -48,7 +49,7 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
    }};
   }catch(error){abort();throw error;}
  }
- async function prepareNativeResources(resources,{signal,minSequence=-1,terrainManifest,deferredStart=false,nativeBarrierWallEntities}={},resourceKind=null,geometryId=null){
+ async function prepareNativeResources(resources,{signal,minSequence=-1,terrainManifest,deferredStart=false,nativeBarrierWallEntities,encounterRetreat}={},resourceKind=null,geometryId=null){
   const resumed=resourceKind!==null,stop=resumed?null:terrainStopProposalProtocol(resources);
   const barrier=resourceKind==='barrier-addition';
   const ruin=resources?.kind==='native-center-ruin-proposal';
@@ -61,18 +62,37 @@ export function createNativeResourcePreparationClient({allocateId,pending,postMe
   if(!isRunning()||!hasDirectControl()||signal?.aborted||!Number.isSafeInteger(minSequence)||minSequence< -1)throw Error('Native gate resources require direct draw control');
   if(barrier?!Array.isArray(nativeBarrierWallEntities):nativeBarrierWallEntities!==undefined)throw TypeError('Invalid native wall presentation declaration');
   if(typeof deferredStart!=='boolean'||deferredStart&&!resumed||resumed&&resourceKind!=='resume'&&!deferredStart)throw TypeError('Invalid native deferred start');
+  if(encounterRetreat&&(resourceKind!=='animal-crop-route'||resources.reference.purpose!=='retreat'))
+    throw Error('Encounter preparation requires a Retreat route');
   const id=geometryId??allocateId();let stage='preparing';
   const abort=()=>{if(stage==='committed'||stage==='aborted')return;stage='aborted';signal?.removeEventListener('abort',abort);const request=pending.get(id);pending.delete(id);request?.reject(new DOMException('Native gate preparation cancelled','AbortError'));try{postMessage({kind:'abortNativeGateResources',id});}catch{}};
   signal?.addEventListener('abort',abort,{once:true});
-  try{let prepared=await request(id,{kind:geometryId!==null?'captureNativeShieldResources':resumed?`prepareNative${resourceClass}Resources`:'prepareNativeGateResources',id,resources,minSequence,...(resumed?{terrainManifest,...(deferredStart?{deferredStart:true}:{})}: {}),...(barrier?{nativeBarrierWallEntities}:{})});
+  try{let prepared=await request(id,{kind:geometryId!==null?'captureNativeShieldResources':resumed?`prepareNative${resourceClass}Resources`:'prepareNativeGateResources',id,resources,minSequence,...(resumed?{terrainManifest,...(deferredStart?{deferredStart:true}:{})}: {}),...(barrier?{nativeBarrierWallEntities}:{}),...(encounterRetreat?{encounterRetreat}:{})});
    if(stage==='aborted')throw new DOMException('Native gate preparation cancelled','AbortError');
    if(ruin!==(prepared?.preparedCenterRuin!==undefined)||ruin&&!sameCenter(center,prepared.preparedCenterRuin))throw Error('Invalid center ruin resource receipt');
    if(hasOtherTerrainStopField(prepared,'preparedTemplateField',stop))throw Error('Native stop receipt has another family');if(barrier!==(prepared.preparedBarrierAdditionTemplate!==undefined))throw Error('Native solid addition receipt has another family');if(!prepared.preparedWorldBoundary||!sameNativeWorldBoundary(copyNativeWorldBoundary(prepared.preparedWorldBoundary),copyNativeWorldBoundary(resources.worldBoundary)))throw Error('Native gate lacks its prepared command receipt');stage='ready';if((deferredStart||stop)&&!same(prepared[templateKey],preparedStop??preparedBarrier??reference(resources)))throw Error('Native resume lacks its prepared template receipt');
-   return {get preparedCenterRuin(){return prepared.preparedCenterRuin;},get [templateKey](){return deferredStart||stop?prepared[templateKey]:undefined;},get preparedWorldBoundary(){return prepared.preparedWorldBoundary;},...(resumed&&!barrier?{invalidate(){if(!isRunning()||stage==='committed'||stage==='aborted'||signal?.aborted)return false;if(stage==='invalidated')return true;if(stage!=='ready')return false;stage='invalidated';postMessage({kind:`invalidateNative${resourceClass}Resources`,id});return true;},async refresh(next,{terrainManifest:manifest=terrainManifest}={}){
+   if(encounterRetreat&&(!Number.isSafeInteger(prepared.preparedFrameSequence)||prepared.preparedFrameSequence<1))
+     throw Error('Encounter READY lacks the consumer packet');
+   return {...(encounterRetreat?{get preparedFrameSequence(){return prepared.preparedFrameSequence;},async commitAndWaitForSubmission(commit){
+    if(!isRunning()||stage!=='ready'||signal?.aborted)throw Error('Encounter resource commit unavailable');
+    const binding=copyNativeAnimalCropAttestation(commit.nativeAnimalCropRouteBinding,26);
+    const boundary=copyNativeWorldBoundary(commit.worldBoundary);
+    if(!sameNativeAnimalCropReference(binding.preparedReference,resources.reference)||
+       !sameNativeWorldBoundary(binding.reference.worldBoundary,boundary)||boundary.effectiveTime!==encounterRetreat.source.at)
+      throw Error('Encounter commit differs from its retained packet');
+    stage='submitting';
+    try{
+      const value=await request(id,{kind:'commitEncounterRetreatResources',id,commit});
+      if(stage!=='submitting'||signal?.aborted||value?.version!==1||value.sequence!==prepared.preparedFrameSequence||value.assignment!==binding.assignmentSequence||
+         !sameNativeWorldBoundary(copyNativeWorldBoundary(value.worldBoundary),boundary)||value.elapsed!==boundary.effectiveTime)
+        throw Error('Invalid encounter submission receipt');
+      stage='committed';signal?.removeEventListener('abort',abort);return value;
+    }catch(error){abort();throw error;}
+   }}:{}),get preparedCenterRuin(){return prepared.preparedCenterRuin;},get [templateKey](){return deferredStart||stop?prepared[templateKey]:undefined;},get preparedWorldBoundary(){return prepared.preparedWorldBoundary;},...(resumed&&!barrier?{invalidate(){if(!isRunning()||stage==='committed'||stage==='aborted'||signal?.aborted)return false;if(stage==='invalidated')return true;if(stage!=='ready')return false;stage='invalidated';postMessage({kind:`invalidateNative${resourceClass}Resources`,id});return true;},async refresh(next,{terrainManifest:manifest=terrainManifest}={}){
     if(!isRunning()||!['ready','invalidated'].includes(stage)||signal?.aborted||next?.kind!==profile.proposalKind)throw Error('Native resume resource refresh unavailable');stage='refreshing';
     try{const result=await request(id,{kind:`refreshNative${resourceClass}Resources`,id,resources:next,terrainManifest:manifest});if(stage==='aborted'||signal?.aborted)throw new DOMException('Native resume refresh cancelled','AbortError');if(hasOtherTerrainStopField(result,'preparedTemplateField'))throw Error('Native stop receipt has another family');if(result.reusable===false){stage='aborted';signal?.removeEventListener('abort',abort);return false;}if(!sameNativeWorldBoundary(copyNativeWorldBoundary(result.preparedWorldBoundary),copyNativeWorldBoundary(next.worldBoundary)))throw Error('Native refreshed packet names another proposal');if(deferredStart&&!same(result[templateKey],reference(next)))throw Error('Native refreshed packet lacks its deferred template');prepared=result;resources=next;terrainManifest=manifest;stage='ready';return true;}catch(error){abort();throw error;}
    }}:{}),valid:()=>isRunning()&&stage==='ready'&&!signal?.aborted,commit(commit){
-    if(!isRunning()||stage!=='ready'||signal?.aborted)return false;
+    if(encounterRetreat||!isRunning()||stage!=='ready'||signal?.aborted)return false;
     if(ruin!==(commit?.nativeCenterRuin!==undefined)||ruin&&!matchesCenterRuinCommit(center,commit))throw Error('Invalid center ruin resource commit');
     if(hasOtherTerrainStopField(commit,'bindingField',stop))throw Error('Native stop resource commit has another family');
     if(stop){const proof=stop.codec.copyAttestation(commit?.[stop.bindingField]);if(!proof.projection||!same(proof.preparedReference,preparedStop)||!sameNativeWorldBoundary(proof.reference.worldBoundary,copyNativeWorldBoundary(commit.worldBoundary)))throw Error('Native stop resource commit differs from retained template');}

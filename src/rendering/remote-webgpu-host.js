@@ -902,7 +902,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         active.transportTiming.firstDrawStartedAt = startedAt;
         active.transportTiming.firstDrawCompletedAt = absoluteNow();
         recordTiming(frameTimings, active.transportTiming);
-        port.postMessage({ type: 'presented', sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
+        const encounter=active.metadata?.encounterRetreatDraft,crop=encounter?active.admittedMotionBinding:null;
+        const nativeSubmission=submitted&&crop&&clockElapsed===encounter.at&&
+          nativeRouteFrame.bindings.some(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,crop.preparedReference)&&
+            row.executionEpoch===clockElapsed&&row.relativeTime===0)?
+          {version:1,sequence:active.sequence,worldBoundary:frameBoundary(active),elapsed:clockElapsed,assignment:crop.assignmentSequence}:null;
+        port.postMessage({ type: 'presented', ...(nativeSubmission?{nativeSubmission}:{}), sequence: active.sequence, metadata: active.metadata, transportTiming: active.transportTiming, absoluteTime: absoluteNow(), backend: 'webgpu', replayFrames: metrics.replayFrames });
         releaseSnapshot(previous?.resourceSnapshot);
       }
       return submitted ? 'submitted' : 'no-submission';
@@ -1209,10 +1214,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(packet.metadata.nativeTaskSettlementTemplate){const ref=packet.metadata.nativeTaskSettlementTemplate=copyNativeTaskSettlementReference(packet.metadata.nativeTaskSettlementTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native settlement template');assertTerminalGateClocks(ref,Array.from(clockBindings.values()).filter(b=>resources.has(b.id)));routeControl.admitSettlement(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeHomeArrivalTemplate){const ref=copyNativeHomeArrivalReference(packet.metadata.nativeHomeArrivalTemplate);assertTerminalGateClocks(ref,Array.from(clockBindings.values()).filter(b=>resources.has(b.id)));if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home absence template');packet.preparedHomeArrivalLease=routeControl.admitHomeArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeIdleStrollTemplate){const ref=copyNativeIdleStrollReference(packet.metadata.nativeIdleStrollTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Idle stroll template');routeControl.admitStroll(ref,{preparingWorldBoundary:boundary});}
+    if(packet.metadata.encounterRetreatDraft&&!packet.metadata.nativeAnimalCropTemplate)throw Error('Encounter draft lacks its retained animal template');
     if(packet.metadata.nativeAnimalCropTemplate){
       const ref=packet.metadata.nativeAnimalCropTemplate;
       if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native crop frame boundary');
-      routeControl.admitAnimalCrop(ref,{preparingWorldBoundary:boundary});
+      routeControl.admitAnimalCrop(ref,{preparingWorldBoundary:boundary,encounterRetreatDraft:packet.metadata.encounterRetreatDraft});
     }
     if(packet.metadata.nativeFarmArrivalTemplate){const ref=copyNativeFarmArrivalRouteReference(packet.metadata.nativeFarmArrivalTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native farm arrival template');routeControl.admitFarmArrival(ref,{preparingWorldBoundary:boundary});}
     if(packet.metadata.nativeHomeRouteTemplate){const ref=copyNativeHomeRouteReference(packet.metadata.nativeHomeRouteTemplate);if(!sameNativeWorldBoundary(ref.worldBoundary,boundary))throw Error('Invalid native Home template');routeControl.admitHome(ref,{preparingWorldBoundary:boundary});}
@@ -1261,7 +1267,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const admitMotion=(binding,method,reference)=>{
       const key=binding.nativeClockKey?method+':'+binding.nativeClockKey:null;
       if(key&&leases.has(key))return leases.get(key);
-      const lease=routeControl[method](reference,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null});
+      const lease=routeControl[method](reference,{preparingWorldBoundary:preparing?packet.metadata.nativeWorldBoundary:null,...(preparing&&method==='admitAnimalCrop'?{encounterRetreatDraft:packet.metadata.encounterRetreatDraft}:{})});
       if(key)leases.set(key,lease);return lease;
     };
     packet.admittedBarrierClockCoverageEnd=null;packet.admittedRestoredRepairCoverageEnd=null;
@@ -2042,6 +2048,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.preparedTaskSettlementTemplate)try{const ref=copyNativeTaskSettlementReference(message.preparedTaskSettlementTemplate);if(!sameNativeTaskSettlementReference(ref,pending?.metadata?.nativeTaskSettlementTemplate))throw Error('Native quiescence lacks its settlement template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeSettlement&&sameNativeTaskSettlementReference(b.nativeSettlement,ref)))throw Error('Native settlement has no prepared clock binding');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedHomeArrivalTemplate)try{const ref=copyNativeHomeArrivalReference(message.preparedHomeArrivalTemplate);if(!sameNativeHomeArrivalReference(ref,pending?.metadata?.nativeHomeArrivalTemplate)||!pending?.preparedHomeArrivalLease?.isPrepared())throw Error('Native quiescence lacks its current Home absence template');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedIdleStrollTemplate)try{const ref=copyNativeIdleStrollReference(message.preparedIdleStrollTemplate);if(!sameNativeIdleStrollReference(ref,pending?.metadata?.nativeIdleStrollTemplate))throw Error('Native quiescence lacks its Idle stroll template');const bindings=quiescenceBindings();if(!bindings.some(b=>b.semantic==='relative'&&b.nativeStroll&&sameNativeIdleStrollReference(b.nativeStroll,ref)))throw Error('Native Idle stroll has no prepared relative clock');}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
+           const encounterDraft=pending?.metadata?.encounterRetreatDraft;
+           if(encounterDraft||message.preparedEncounterRetreatDraft)try{
+             if(!encounterDraft||JSON.stringify(encounterDraft)!==JSON.stringify(message.preparedEncounterRetreatDraft))
+               throw Error('Encounter hold lost its retained source');
+             routeControl.admitAnimalCrop(message.preparedAnimalCropRouteTemplate,
+               {preparingWorldBoundary:preparedWorldBoundary,encounterRetreatDraft:encounterDraft});
+           }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            const cropTemplate=message.preparedAnimalCropRouteTemplate??message.preparedAnimalCropStrikeTemplate;
            if(cropTemplate||pending?.metadata.nativeAnimalCropTemplate)try{
              const ref=copyNativeAnimalCropReference(cropTemplate,message.preparedAnimalCropRouteTemplate?26:27);
@@ -2062,7 +2075,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
              if(stopped||failed||nativeMutationHold?.holdId!==message.holdId)return;
              nativeMutationHold.quiesced=true;metrics.nativeMutationQuiescedAt=absoluteNow();
-             intentControl.port.postMessage({type:'intent-mutation-quiesced',fenceVersion:1,session:intentControl.session,
+             intentControl.port.postMessage({type:'intent-mutation-quiesced',...(encounterDraft?{preparedEncounterRetreatDraft:encounterDraft}:{}),fenceVersion:1,session:intentControl.session,
                authorityEpoch:message.authorityEpoch,holdId:message.holdId,sequence:message.sequence,
                effectiveTime:message.effectiveTime,clockSequence:message.clockSequence,accepted:true,
                ...(message.preparedInitialIdleBodyTemplate?{nativeInitialIdleBodyVersion:1,preparedInitialIdleBodyTemplate:copyNativeInitialIdleBodyReference(message.preparedInitialIdleBodyTemplate)}:{}),...(message.preparedIdleCycleTemplate?{nativeIdleCycleVersion:1,preparedIdleCycleTemplate:copyNativeIdleCycleReference(message.preparedIdleCycleTemplate)}:{}),...(message.preparedTaskSettlementTemplate?{nativeTaskSettlementVersion:1,preparedTaskSettlementTemplate:copyNativeTaskSettlementReference(message.preparedTaskSettlementTemplate)}:{}),
@@ -2096,6 +2109,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.nativeBarrierAdditions!==undefined&&(!Array.isArray(message.nativeBarrierAdditions)||message.nativeBarrierAdditions.length!==1||!message.committed||!hold.preparedBarrierAdditionTemplate))throw Error('Uncommitted or unsolicited native solid addition');
            if(message.nativeFarmArrivalStops!==undefined&&(!Array.isArray(message.nativeFarmArrivalStops)||!message.committed))throw Error('Uncommitted native Farm stop attestation');
            if(message.nativeStrolls!==undefined&&(!Array.isArray(message.nativeStrolls)||!message.committed||message.nativeStrolls.some(v=>v?.reference?.sourceControlSequence!==hold.sequence)))throw Error('Uncommitted or mismatched native Idle stroll attestation');
+
+           const encounter=hold.preparedEncounterRetreatDraft;
+           if(message.acquiredEncounterRetreatHit!==undefined||message.committed&&encounter){
+             if(!encounter||!message.committed||!Number.isSafeInteger(message.acquiredEncounterRetreatHit)||
+                status.sequence!==hold.sequence+3||status.clock.clockSequence!==hold.clockSequence+2||
+                status.clock.committedThrough!==encounter.at||message.worldBoundary?.effectiveTime!==encounter.at)
+               throw Error('Encounter GO differs from the held substep');
+           }
            const cropField=hold.preparedAnimalCropRouteTemplate?'nativeAnimalCropRoutes':hold.preparedAnimalCropStrikeTemplate?'nativeAnimalCropStrikes':null;
            for(const field of ['nativeAnimalCropRoutes','nativeAnimalCropStrikes']){
              if(message[field]!==undefined&&(field!==cropField||!message.committed||!Array.isArray(message[field])||message[field].length!==1))
@@ -2172,10 +2193,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(cropField){
                const ref=hold.preparedAnimalCropRouteTemplate??hold.preparedAnimalCropStrikeTemplate;
                const binding=copyNativeAnimalCropAttestation(message[cropField]?.[0],ref.kind);
-               if(!pending||pending.sequence!==hold.preparedFrameSequence||binding.reference.sourceControlSequence!==hold.sequence||
+               if(!pending||pending.sequence!==hold.preparedFrameSequence||binding.reference.sourceControlSequence!==(encounter?hold.sequence+2:hold.sequence)||
                   !sameNativeAnimalCropReference(ref,binding.preparedReference)||
                   Object.keys(message).some(k=>k!==cropField&&k.startsWith('native')&&Array.isArray(message[k])&&message[k].length))
                  throw Error('Animal crop release differs from its retained frame');
+               if(encounter&&!routeControl.verifyEncounterRetreatGo(encounter,binding,message.acquiredEncounterRetreatHit))
+                 throw Error('Encounter GO lacks the issued revocation and request');
                routeControl.installAnimalCrop(boundary,binding);
                retainAcquiredCropClock(pending,ref);
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;

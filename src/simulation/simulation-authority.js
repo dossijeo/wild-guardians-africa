@@ -63,7 +63,7 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
@@ -92,7 +92,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,repairFlightTicket:source=>{
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,
+    qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
       repair.boundary?.nativeSession===source.nativeSession?repair.boundary.ticket:0;
@@ -275,7 +276,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   if(navigationView!==null)setNavigationView(navigationView);
   function residency(){const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();return {required,missing:required.filter(key=>!loaded.has(key))};}
   // Cinematic presentation is not restorable; do not persist its transient pause.
-  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&confirmedStateSaveAvailable(game);}
+  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&!planner.encounterCheckpointBlocked()&&confirmedStateSaveAvailable(game);}
   function nativeAnimalCheckpointState(){
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
@@ -399,7 +400,47 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   const nativeCommandOwnerCurrent=owner=>!closed&&nativeStructurePreparation===owner&&!owner.controller.signal.aborted&&
     owner.control===nativeIntentControl&&owner.resources===nativeResourcePreparation&&!!owner.control&&!owner.control.status().closed&&owner.resources?.status().phase==='running';
 
-  let shieldAdvance=null,centerRuinAdvance=null;
+
+  let shieldAdvance=null,centerRuinAdvance=null,encounterDraftAdvance=null;
+  function prepareEncounterDraft(span){
+    if(!nativeProduction||!nativeResourcePreparation||nativeStructurePreparation||shieldAdvance||centerRuinAdvance||encounterDraftAdvance)return null;
+    const candidate=planner.prepareEncounterRetreat(game,game.elapsed+span,nav,span);
+    if(!candidate)return null;
+    const at=game.elapsed,events=game.sequence,owner={receipt:null};
+    const consumer=nativeIntentControl,resources=nativeResourcePreparation,minSequence=sequence;
+    let prepared,hold,released=false;
+    function abort(){
+      if(hold&&!released){
+        released=true;
+        try{consumer.releaseGpuAfterMutation(hold,{committed:false});}catch{}
+      }
+      prepared?.abort();
+    }
+    encounterDraftAdvance=owner;
+    return nativeProduction.quiesce().then(async receipt=>{
+      owner.receipt=receipt;
+      if(closed||game.elapsed!==at||game.sequence!==events)throw Error('Encounter source changed before READY');
+      planner.flushNativeIntentControl();
+      prepared=await resources.prepareNativeAnimalCropRouteResources(candidate.proposal,{
+        encounterRetreat:{source:candidate.source,workerFall:candidate.workerFall},terrainManifest:getTerrainManifest?.(),minSequence});
+      hold=await consumer.quiesceGpuForMutation({preparedWorldBoundary:prepared.preparedWorldBoundary,
+        preparedAnimalCropRouteTemplate:prepared.preparedAnimalCropRouteTemplate,preparedEncounterRetreatDraft:candidate.source});
+      if(hold.preparedFrameSequence!==prepared.preparedFrameSequence)throw Error('Encounter READY and hold name different packets');
+      if(closed||game.elapsed!==at||game.sequence!==events||consumer!==nativeIntentControl||resources!==nativeResourcePreparation)
+        throw Error('Encounter owner changed during READY');
+      return {abort,async finish(){
+        if(closed||encounterDraftAdvance!==owner||game.elapsed!==candidate.source.at||!prepared.valid())
+          throw Error('Encounter no longer owns its READY at the substep');
+        const result=planner.acquireEncounterRetreat(candidate,hold);
+        const submitted=prepared.commitAndWaitForSubmission({worldBoundary:result.worldBoundary,resources:result.resources,nativeAnimalCropRouteBinding:result.binding});
+        submitted.catch(()=>{});
+        consumer.releaseGpuAfterMutation(hold,{committed:true,worldBoundary:result.worldBoundary,
+          nativeAnimalCropRoutes:[result.binding],acquiredEncounterRetreatHit:result.hit});
+        released=true;
+        await submitted;
+      }};
+    }).catch(error=>{abort();throw error;});
+  }
   async function prepareCenterRuin(center,span,advanceSubstep){
     const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
       civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&game.structures[0]===center&&
@@ -1163,6 +1204,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    async prepareBeastAttack(command){if(closed||physicsInitializing||!physics)throw Error('Worker physics unavailable');if(!command||command.kind!=='castAttack'||command.sequence!==sequence+1||typeof command.id!=='string'||!command.id||typeof command.targetId!=='string'||!command.targetId||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid attack command');if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id)||spellRejection(command,'attack'))return false;if(!physics.supports(command.targetId)){physicsInitializing=true;try{return await physics.admit(command.targetId);}finally{physicsInitializing=false;}}return false;},
    execute(command){
     if(shieldAdvance)throw shieldAdvance.failure??Error('Native shield expiry owns this advance');
+    if(encounterDraftAdvance)throw encounterDraftAdvance.failure??Error('Native encounter draft owns this advance');
     if(centerRuinAdvance)throw centerRuinAdvance.failure??Error('Native center ruin owns this advance');
     if(closed)throw Error('Simulation authority is closed');if(nativeProduction?.status().fault)throw Error('Native intent production failed: '+nativeProduction.status().fault);if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
@@ -1190,6 +1232,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
        options.expireShield=expireNativeShield;
      if(qualifyAnimalCrop&&nativeBodies)options.prepareCenterRuin=prepareCenterRuin;
+     if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;
      const completeStep=i=>{
        peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
@@ -1209,13 +1252,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      if(pending){
        return pending.finally(finishCapture).then(()=>{
          const result=publishResult();
-         nativeProduction.resume((shieldAdvance??centerRuinAdvance).receipt);
-         shieldAdvance=centerRuinAdvance=null;
+         nativeProduction.resume((shieldAdvance??centerRuinAdvance??encounterDraftAdvance).receipt);
+         shieldAdvance=centerRuinAdvance=encounterDraftAdvance=null;
          return result;
        }).catch(error=>{
          // Never serialize the private partial advance as a successful command.
          // Closing the authority aborts the retained resource through its owner.
-         const owner=shieldAdvance??centerRuinAdvance;if(owner)owner.failure=error;
+         const owner=shieldAdvance??centerRuinAdvance??encounterDraftAdvance;if(owner)owner.failure=error;
          throw error;
        });
      }
@@ -1408,7 +1451,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
     const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true?{version:3,wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
+    const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked()?{version:3,wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
     const snapshotState=nativeAuthorityCheckpoint?nativeAnimalCheckpointState():game;
     const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(snapshotState,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(snapshotState):serializeConfirmedState(snapshotState)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;nativeProduction?.wake();return result;

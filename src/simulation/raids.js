@@ -815,8 +815,9 @@ export function nativeRetreatSubject(state,animal){
  const exit=animal.exit??animal.spawn;
  return Number.isFinite(exit?.x)&&Number.isFinite(exit?.z)?exit:null;
 }
-function nativeRetreatOwnersMatch(state,animal,native){
- const exit=nativeRetreatSubject(state,animal);
+
+function nativeRetreatOwnersMatch(state,animal,native,planner){
+ const exit=nativeRetreatSubject(state,animal)??planner?.encounterRetreatOwner?.(state,animal,native)?.exit;
  return native.retreat&&!!exit&&animal.id==='animal-'+native.actor&&
    (!native.previousStrike||animal.attackId==='attack-'+native.previousStrike.attackId)&&
    animal.radius===native.radius&&exit.x===native.targetX&&exit.z===native.targetZ;
@@ -826,8 +827,10 @@ export function nativeCropCohortCurrent(state,planner){
  const subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal),native);
  if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(animal.hitsRemaining===0?
     planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
+
+ if(!native&&planner?.encounterRetreatOwner?.(state,animal,null))return true;
  if(!subject&&animal?.status!=='retreating')return false;
- if(native?.retreat)return native.executedThrough===state.elapsed&&nativeRetreatOwnersMatch(state,animal,native)&&
+ if(native?.retreat)return native.executedThrough===state.elapsed&&nativeRetreatOwnersMatch(state,animal,native,planner)&&
    animal.x===native.x&&animal.z===native.z&&animal.motionPhase===native.phase;
  return !!subject&&!!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
    animal.x===native.x&&animal.z===native.z&&(animal.motionPhase??0)===native.phase;
@@ -907,6 +910,11 @@ export function updateRaid(s,dt,nav) {
     if(a.status==='gone')continue;
     if(a.magicDown){if(s.elapsed<a.magicDown.until)continue;delete a.magicDown;}
     if((a.magicStunUntil??0)>s.elapsed)continue;
+    if(nav.intentTaskPlanner?.hasRetreatEncounter?.(s,a)){
+      if(a.targetId||a.reservation)release(s,a);
+      publishRetreat(s,a,'budget-exhausted');
+      nav.intentTaskPlanner.applyRetreatEncounter(s,a);
+    }
     const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
     const successor=!crop&&a.hitApplied&&a.hitsRemaining>0?nav.intentTaskPlanner?.nativeFinishedAnimalCrop?.(s,a):null;
     if(successor?.shieldPolygon){
@@ -931,8 +939,22 @@ export function updateRaid(s,dt,nav) {
       publishRetreat(s,a,'budget-exhausted');
       continue;
     }
+
+    if(!crop&&nav.intentTaskPlanner?.encounterRetreatOwner?.(s,a,null)){
+      if(a.targetId||a.reservation)release(s,a);
+      const exit=a.exit??a.spawn,prior=a.retreatRouteUnknown,sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
+      if(prior&&prior.sectors===sectors&&prior.topology===nav.version&&prior.exitX===exit.x&&prior.exitZ===exit.z)continue;
+      const result=nav.intentTaskPlanner.requestEncounterRetreat(s,a);
+      if(result==='blocked'||result==='unknown'){
+        a.retreatRouteUnknown={sectors,topology:nav.version,exitX:exit.x,exitZ:exit.z};
+        if(result==='unknown')nav.requestRaidConnectivity?.(a,exit,a.radius);
+        continue;
+      }
+      if(result!=='pending')throw Error('Encounter retreat lost its current body');
+      continue;
+    }
     if(crop?.retreat){
-      if(!nativeRetreatOwnersMatch(s,a,crop)||crop.executedThrough!==s.elapsed)throw Error('Native retreat changed its exit or actor');
+      if(!nativeRetreatOwnersMatch(s,a,crop,nav.intentTaskPlanner)||crop.executedThrough!==s.elapsed)throw Error('Native retreat changed its exit or actor');
       if(crop.mode===1){
         if(a.x!==crop.x||a.z!==crop.z||a.motionPhase!==crop.phase)throw Error('Pending retreat moved before acquisition');
       }else{

@@ -1,3 +1,4 @@
+import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {centerSource,sameCenter,matchesCenterRuinCommit} from '../world/native-center-ruin-source.js';
 import {copyNativeShieldWorld,sameNativeShieldWorld} from '../world/native-shield-world.js';
 import {terrainStopProposalProtocol,hasOtherTerrainStopField} from '../simulation/terrain-stop-reservation.js';
@@ -9,13 +10,13 @@ const refreshKinds=new Set(['refreshNativeAnimalCropRouteResources','refreshNati
 // Retained handles stay in the existing graphical owner. An endpoint carries
 // only resource declarations, receipts and lifecycle commands, never functions.
 export function createNativeResourcePreparationReceiver({prepare,isRunning,canFlush=isRunning,postMessage,onCommit=()=>{},onError=()=>{}}){
- let entry=null,lastId=0,closed=false,inflight=0,flushId=null,callbacksSettled=null;
+ let entry=null,submission=null,lastId=0,closed=false,inflight=0,flushId=null,callbacksSettled=null;
  function whenCallbacksSettled(){if(!inflight)return Promise.resolve();if(!callbacksSettled){let resolve;const promise=new Promise(done=>{resolve=done;});callbacksSettled={promise,resolve};}return callbacksSettled.promise;}
  function callbackFinished(){if(--inflight===0){const wait=callbacksSettled;callbacksSettled=null;wait?.resolve();}}
  function abortHandle(item){try{item.controller.abort();item.handle?.abort();}catch(cause){closed=true;const error=Error('Native resource cleanup failed: '+String(cause?.message??cause),{cause});onError(error);throw error;}}
  function cancel(){const old=entry;entry=null;if(old)abortHandle(old);}
  function accept(data){
-  if(!prepareKinds.has(data?.kind)&&!refreshKinds.has(data?.kind)&&!['captureNativeShieldResources','commitNativeGateResources','abortNativeGateResources','flushNativeResources'].includes(data?.kind))return false;
+  if(!prepareKinds.has(data?.kind)&&!refreshKinds.has(data?.kind)&&!['captureNativeShieldResources','commitNativeGateResources','commitEncounterRetreatResources','abortNativeGateResources','flushNativeResources'].includes(data?.kind))return false;
   if(!Number.isSafeInteger(data.id)||data.id<1)throw TypeError('Invalid native resource request');
   if(data.kind==='flushNativeResources'){
    // A retained failed renderer can drain the original endpoint while new
@@ -28,7 +29,7 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
   if(prepareKinds.has(data.kind))return (async()=>{
    const item={id:data.id,controller:new AbortController(),handle:null,resources:data.resources};let tracked=false;
    try{
-    if(closed||!isRunning()||entry||flushId!==null||data.id<=lastId)throw Error('Native gate preparation unavailable');lastId=data.id;entry=item;inflight++;tracked=true;
+    if(closed||!isRunning()||entry||submission||flushId!==null||data.id<=lastId)throw Error('Native gate preparation unavailable');lastId=data.id;entry=item;inflight++;tracked=true;
     if((data.kind==='prepareNativeFarmArrivalResources')!==(data.resources?.kind==='native-farm-arrival-route-proposal')&&(data.kind==='prepareNativeFarmArrivalResources'||data.resources?.kind==='native-farm-arrival-route-proposal'))throw Error('Native farm arrival resource request class mismatch');
     if((data.kind==='prepareNativeAnimalCropRouteResources')!==(data.resources?.kind==='native-animal-crop-route-proposal'))throw Error('Native crop resource request class mismatch');
     if((data.kind==='prepareNativeAnimalCropStrikeResources')!==(data.resources?.kind==='native-animal-crop-strike-proposal'))throw Error('Native crop resource request class mismatch');
@@ -40,12 +41,20 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
     if(item.center&&(data.kind!=='prepareNativeGateResources'||data.resources.version!==1||item.stop||item.barrier||data.deferredStart!==undefined||
       !sameNativeWorldBoundary(item.center.boundary,data.resources.worldBoundary)))throw Error('Center ruin resource request class mismatch');
     if(item.stop&&data.kind!=='prepareNativeGateResources')throw Error('Native stop resource request class mismatch');
-    item.handle=await prepare(data.kind,data.resources,{signal:item.controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest,deferredStart:data.deferredStart,...(item.barrier?{nativeBarrierWallEntities:data.nativeBarrierWallEntities}:{})});
+    if(data.encounterRetreat&&(data.kind!=='prepareNativeAnimalCropRouteResources'||data.resources.reference.purpose!=='retreat'||
+       !sameNativeAnimalCropReference(data.encounterRetreat.source.reference,data.resources.reference)))
+      throw Error('Encounter resource request lost its Retreat template');
+    item.encounter=data.encounterRetreat;
+    item.handle=await prepare(data.kind,data.resources,{...(item.encounter?{encounterRetreat:item.encounter}:{}),signal:item.controller.signal,minSequence:data.minSequence,terrainManifest:data.terrainManifest,deferredStart:data.deferredStart,...(item.barrier?{nativeBarrierWallEntities:data.nativeBarrierWallEntities}:{})});
     if(closed||item.controller.signal.aborted||entry!==item)throw new DOMException('Native gate preparation cancelled','AbortError');
     postMessage({kind:'nativeGateResourcesResult',id:data.id,result:item.geometry?{version:1,shieldGeometry:item.geometry}:receipt(item)});
    }catch(error){if(entry===item)entry=null;abortHandle(item);if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});}finally{if(tracked)callbackFinished();}
   })();
-  const item=entry;if(!item||item.id!==data.id){if(data.id>lastId)throw Error('Unknown native resource request');return true;}
+  if(submission?.id===data.id){
+    if(data.kind!=='abortNativeGateResources')throw Error('Encounter submission request is already pending');
+    submission.cancel();return true;
+   }
+   const item=entry;if(!item||item.id!==data.id){if(data.id>lastId)throw Error('Unknown native resource request');return true;}
   if(data.kind==='captureNativeShieldResources')return (async()=>{
    let tracked=false;
    try{
@@ -77,6 +86,29 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
   entry=null;
   if(data.kind==='abortNativeGateResources'){abortHandle(item);return true;}
   try{
+   if(!!item.encounter!==(data.kind==='commitEncounterRetreatResources'))throw Error('Encounter commit class mismatch');
+   if(item.encounter){
+    const binding=copyNativeAnimalCropAttestation(data.commit.nativeAnimalCropRouteBinding,26);
+    const boundary=binding.reference.worldBoundary,sequence=item.handle.preparedFrameSequence;
+    if(!sameNativeWorldBoundary(boundary,data.commit.worldBoundary)||boundary.effectiveTime!==item.encounter.source.at||
+       !sameNativeAnimalCropReference(binding.preparedReference,item.resources.reference)||
+       !Number.isSafeInteger(sequence)||sequence<1||!item.handle.presented?.then)
+      throw Error('Encounter commit lacks the retained consumer packet');
+    if(item.handle.commit(data.commit)!==true)throw Error('Encounter resource commit failed');
+    let cancel;
+    const cancelled=new Promise(resolve=>{cancel=()=>resolve(null);});
+    submission={id:item.id,cancel};inflight++;onCommit();
+    return Promise.race([item.handle.presented,cancelled]).then(draw=>{
+      if(draw===null||closed)return;
+      const value=draw.nativeSubmission;
+      if(draw.sequence!==sequence||value?.version!==1||value.sequence!==sequence||value.assignment!==binding.assignmentSequence||
+         value.elapsed!==boundary.effectiveTime||!sameNativeWorldBoundary(value.worldBoundary,boundary))
+        throw Error('Encounter draw did not submit the acquired packet');
+      if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesResult',id:data.id,result:value});
+    }).catch(error=>{
+      if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesError',id:data.id,message:String(error?.message??error)});
+    }).finally(()=>{submission=null;callbackFinished();});
+   }
    if(!!item.center!==(data.commit?.nativeCenterRuin!==undefined)||
       item.center&&!matchesCenterRuinCommit(item.center,data.commit))throw Error('Center ruin resource commit differs from retained template');
    if(item.geometry)throw Error('Shield geometry alone cannot commit a world');if(hasOtherTerrainStopField(data.commit,'bindingField',item.stop))throw Error('Native stop resource commit has another family');if(item.barrier!==(data.commit?.nativeBarrierAdditionBinding!==undefined))throw Error('Native solid addition commit has another family');if(item.handle?.commit(data.commit)!==true)throw Error('Native gate resources not committed');onCommit();}
@@ -88,8 +120,8 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
   if(item.barrier!==(item.handle.preparedBarrierAdditionTemplate!==undefined))throw Error('Native solid addition receipt has another family');
   if(!!item.center!==(item.handle.preparedCenterRuin!==undefined)||item.center&&(!sameCenter(item.center,item.handle.preparedCenterRuin)||
      !sameNativeWorldBoundary(item.center.boundary,item.handle.preparedWorldBoundary)))throw Error('Center ruin resource receipt differs from retained template');
-  return {...(item.center?{preparedCenterRuin:item.handle.preparedCenterRuin}:{}),...(item.handle.preparedAnimalCropRouteTemplate?{preparedAnimalCropRouteTemplate:item.handle.preparedAnimalCropRouteTemplate}:{}),...(item.handle.preparedAnimalCropStrikeTemplate?{preparedAnimalCropStrikeTemplate:item.handle.preparedAnimalCropStrikeTemplate}:{}),...(item.barrier?{preparedBarrierAdditionTemplate:item.handle.preparedBarrierAdditionTemplate}:{}),...(field&&item.handle[field]?{[field]:item.handle[field]}:{}),...(item.handle.preparedFarmArrivalTemplate?{preparedFarmArrivalTemplate:item.handle.preparedFarmArrivalTemplate}:{}),...(item.handle.preparedIdleStrollTemplate?{preparedIdleStrollTemplate:item.handle.preparedIdleStrollTemplate}:{}),...(item.handle.preparedHomeArrivalTemplate?{preparedHomeArrivalTemplate:item.handle.preparedHomeArrivalTemplate}:{}),...(item.handle.preparedHomeRouteTemplate?{preparedHomeRouteTemplate:item.handle.preparedHomeRouteTemplate}:{}),worldBoundary:item.resources.worldBoundary,preparedWorldBoundary:item.handle.preparedWorldBoundary,...(item.handle.preparedResumeTemplate?{preparedResumeTemplate:item.handle.preparedResumeTemplate}:{}),...(item.handle.preparedTaskStartTemplate?{preparedTaskStartTemplate:item.handle.preparedTaskStartTemplate}:{}),...(item.handle.preparedTaskActionTemplate?{preparedTaskActionTemplate:item.handle.preparedTaskActionTemplate}:{}),...(item.handle.preparedTaskSettlementTemplate?{preparedTaskSettlementTemplate:item.handle.preparedTaskSettlementTemplate}:{}),...(item.handle.preparedInitialIdleBodyTemplate?{preparedInitialIdleBodyTemplate:item.handle.preparedInitialIdleBodyTemplate}:{}),...(item.handle.preparedIdleCycleTemplate?{preparedIdleCycleTemplate:item.handle.preparedIdleCycleTemplate}:{}),...(item.handle.preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate:item.handle.preparedTaskConsequenceTemplate}:{})};}
- return {accept,whenCallbacksSettled,dispose(){if(closed)return;closed=true;cancel();},status:()=>({closed,pending:entry?.id??null,lastId,inflight,flushing:flushId})};
+  return {...(item.encounter?{preparedFrameSequence:item.handle.preparedFrameSequence}:{}),...(item.center?{preparedCenterRuin:item.handle.preparedCenterRuin}:{}),...(item.handle.preparedAnimalCropRouteTemplate?{preparedAnimalCropRouteTemplate:item.handle.preparedAnimalCropRouteTemplate}:{}),...(item.handle.preparedAnimalCropStrikeTemplate?{preparedAnimalCropStrikeTemplate:item.handle.preparedAnimalCropStrikeTemplate}:{}),...(item.barrier?{preparedBarrierAdditionTemplate:item.handle.preparedBarrierAdditionTemplate}:{}),...(field&&item.handle[field]?{[field]:item.handle[field]}:{}),...(item.handle.preparedFarmArrivalTemplate?{preparedFarmArrivalTemplate:item.handle.preparedFarmArrivalTemplate}:{}),...(item.handle.preparedIdleStrollTemplate?{preparedIdleStrollTemplate:item.handle.preparedIdleStrollTemplate}:{}),...(item.handle.preparedHomeArrivalTemplate?{preparedHomeArrivalTemplate:item.handle.preparedHomeArrivalTemplate}:{}),...(item.handle.preparedHomeRouteTemplate?{preparedHomeRouteTemplate:item.handle.preparedHomeRouteTemplate}:{}),worldBoundary:item.resources.worldBoundary,preparedWorldBoundary:item.handle.preparedWorldBoundary,...(item.handle.preparedResumeTemplate?{preparedResumeTemplate:item.handle.preparedResumeTemplate}:{}),...(item.handle.preparedTaskStartTemplate?{preparedTaskStartTemplate:item.handle.preparedTaskStartTemplate}:{}),...(item.handle.preparedTaskActionTemplate?{preparedTaskActionTemplate:item.handle.preparedTaskActionTemplate}:{}),...(item.handle.preparedTaskSettlementTemplate?{preparedTaskSettlementTemplate:item.handle.preparedTaskSettlementTemplate}:{}),...(item.handle.preparedInitialIdleBodyTemplate?{preparedInitialIdleBodyTemplate:item.handle.preparedInitialIdleBodyTemplate}:{}),...(item.handle.preparedIdleCycleTemplate?{preparedIdleCycleTemplate:item.handle.preparedIdleCycleTemplate}:{}),...(item.handle.preparedTaskConsequenceTemplate?{preparedTaskConsequenceTemplate:item.handle.preparedTaskConsequenceTemplate}:{})};}
+ return {accept,whenCallbacksSettled,dispose(){if(closed)return;closed=true;submission?.cancel();cancel();},status:()=>({closed,pending:entry?.id??null,lastId,inflight,flushing:flushId})};
 }
 
 // A direct authority connection uses the very same receiver as the ordinary

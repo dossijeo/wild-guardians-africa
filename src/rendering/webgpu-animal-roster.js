@@ -197,11 +197,22 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
    if(!adopted)throw Error('Recovered crop rig was not admitted');
   }finally{if(!adopted)part?.cancel();}
  }
- async function prepareAnimalCrop(packet,support,{signal,getPickAge,recovery=null}){
+ async function prepareAnimalCrop(packet,support,{signal,getPickAge,recovery=null,encounterRetreat=null}){
   const ref=packet.reference,id='animal-'+ref.actorId,entry=entries.get(id),previous=entry?.cropOwner,travel=ref.kind===26;
   const center=ref.purpose==='center',targetId=(center?'structure-':'plant-')+ref.targetId;
   const names=travel?['Walking','Running']:[raidStrikeClips[ref.clip]],key=travel?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
-  const source=()=>entry?.entity?.id===id&&entry.entity.species==='warthog'&&(ref.purpose==='retreat'?
+  const heldApproach=encounterRetreat?.approach;
+  const isEncounterRetreat=()=>!!heldApproach&&travel&&ref.purpose==='retreat'&&!recovery&&
+    encounterRetreat.version===1&&sameNativeAnimalCropReference(encounterRetreat.reference,ref)&&
+    sameNativeAnimalCropReference(heldApproach.reference,previous?.proof?.reference)&&
+    sameNativeAnimalCropReference(heldApproach.preparedReference,previous?.proof?.preparedReference)&&
+    heldApproach.assignmentSequence===previous.proof.assignmentSequence&&entry.cropOwner===previous&&
+    heldApproach.reference.purpose==='center'&&heldApproach.reference.bodyId===ref.bodyId&&
+    state.elapsed===ref.worldBoundary.effectiveTime&&encounterRetreat.at>state.elapsed&&encounterRetreat.at-state.elapsed<=.020000001&&
+    entry.entity.targetId==='structure-'+heldApproach.reference.targetId&&['walking','entering'].includes(entry.entity.status)&&
+    entry.entity.hitsRemaining===1&&(entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&
+    (entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ;
+  const source=()=>entry?.entity?.id===id&&entry.entity.species==='warthog'&&(encounterRetreat?isEncounterRetreat():ref.purpose==='retreat'?
     entry.entity.status==='retreating'&&entry.entity.hitsRemaining===0&&!entry.entity.targetId&&
     (entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&(entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ:
     entry.entity.targetId===targetId&&(!center||state.structures.some(target=>target.id===targetId&&
@@ -212,7 +223,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
       entry.entity.motionPhase===recovery.execution.phase&&['x','z'].every(k=>entry.entity[k]===recovery.execution[k])&&
       (travel||entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&
        entry.entity.attackRemaining===recovery.execution.attackRemaining&&entry.entity.hitApplied===false):
-      travel?!previous:
+      travel?(encounterRetreat?isEncounterRetreat():!previous):
       ref.restore?!previous&&entry.entity.status==='attacking'&&entry.entity.attackId==='attack-'+ref.restore.attackId&&
       entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&entry.entity.attackRemaining===ref.restore.remaining&&
       entry.entity.hitApplied===false&&entry.entity.x===ref.x&&entry.entity.z===ref.z&&entry.entity.heading===ref.yaw&&entry.entity.motionPhase===ref.phase:
@@ -281,7 +292,9 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     rollback(){check();restore();},activate(){if(!valid()||activated)throw Error('Animal crop activation changed');variant.activate();
       try{binding.activate();}catch(error){variant.rollbackActivation();throw error;}activated=true;entry.motion=motion;entry.motionBinding=binding;},
     validateCommit(data){const proof=copyNativeAnimalCropAttestation(data[key],ref.kind);
-      if(!activated||!valid()||!sameNativeAnimalCropReference(recovery?proof.reference:proof.preparedReference,ref))throw Error('Animal crop lost its acquired rig');return proof;},
+      if(!activated||!valid()||!sameNativeAnimalCropReference(recovery?proof.reference:proof.preparedReference,ref)||
+         encounterRetreat&&(proof.reference.worldBoundary.effectiveTime!==encounterRetreat.at||proof.assignmentSequence!==encounterRetreat.intent+3))
+        throw Error('Animal crop lost its acquired rig');return proof;},
     finalize(data){owner.proof=part.validateCommit(data);entry.cropOwner=owner;admittedCrop=owner;entry.cropPending=null;finished=true;signal.removeEventListener('abort',cancel);
       if(previous)retireCrop(previous);else if(entry.cropStopOwner){const held=entry.cropStopOwner;entry.cropStopOwner=heldCrop=null;retireCrop(held);}
       else if(oldBinding||oldMotion){const release=()=>{oldBinding?.dispose();oldMotion?.dispose();};pipelineAdmission.deferRelease(actor.root,release);}

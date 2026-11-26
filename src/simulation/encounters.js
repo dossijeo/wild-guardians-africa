@@ -92,10 +92,16 @@ export function updateWorkerEncounters(state,nav){
         worker.incapacitated=true;worker.status='incapacitated';
         notifyWorkerPlanningChange(state,worker);
         const person=state.people.find(p=>p.id===worker.personId);if(person)person.recoveryUntil=state.day+1;
+
+        const sequence=state.sequence;
         emit(state,'WorkerIncapacitated',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
+        nav.intentTaskPlanner?.observeRetreatEncounter?.(state,worker,animal,sequence,{collision,pushed,presentation});
       }else{
         notifyWorkerPlanningChange(state,worker);
-        emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation});
+
+        const nativeHomeImpact=worker.nativeRouteAdmission==='native-home'?
+          nav.intentTaskPlanner?.consumeHomeEncounterImpact?.(state,worker,animal,{collision,pushed,presentation}):null;
+        emit(state,'WorkerHit',{targetId:worker.id,animalId:animal.id,collision,pushed,presentation,...(nativeHomeImpact?{nativeHomeImpact}:{})});
       }
       if(distance(animal,worker)>=contact.range)active.delete(pair);
     }
