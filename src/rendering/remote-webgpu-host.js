@@ -1060,10 +1060,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if (owner) {
           if (owner !== resources.get(id) || owner.pins <= 0) return false;
         } else {
-          const buffer = resources.get(id);
-          if (operation.method !== 'writeBuffer' || buffer?.kind !== 'createBuffer' ||
-              buffer.pending || buffer.retired || buffer.nativeDestroyed || buffer.retirementRequested || buffer.producerReleased) return false;
-          disposition = 'uncommitted-buffer';
+          const resource = resources.get(id);
+          if (!resource || resource.pending || resource.retired || resource.nativeDestroyed ||
+              resource.retirementRequested || resource.producerReleased) return false;
+          const bufferWrite = operation.method === 'writeBuffer' && resource.kind === 'createBuffer';
+          const textureWrite = operation.method === 'writeTexture' && !resource.frameOwned && privateTexture(id) === resource;
+          if (!bufferWrite && !textureWrite) return false;
+          disposition = 'uncommitted-upload';
         }
       }
     }
@@ -1778,7 +1781,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const disposition = retirement && stagedOperations.length && retainedRetirementDisposition();
         // A queued CPU write outside the rejected frame has no retirement proof.
         // Hold the producer's disposal callback. Do not submit writes or take pins.
-        if (retirement && message.deferUntilReplacement === true && disposition === 'uncommitted-buffer') {
+        if (retirement && message.deferUntilReplacement === true && disposition === 'uncommitted-upload') {
           if (message.endOfFrames !== true) {
             timing.rejected = 'uncommitted-published-resources';
             timing.retryAfterPresentation = lastReceivedFrameSequence;
