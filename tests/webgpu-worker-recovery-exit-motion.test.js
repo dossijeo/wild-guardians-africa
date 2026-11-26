@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {webcrypto} from 'node:crypto';
 import {AnimationMixer,Group,Scene,Vector3,PerspectiveCamera} from 'three';
-import {MeshStandardNodeMaterial,WebGPURenderer} from 'three/webgpu';
-import {uniform} from 'three/tsl';
+import {MeshStandardNodeMaterial,NodeMaterial,WebGPURenderer} from 'three/webgpu';
+import {uniform,vec4} from 'three/tsl';
+import Renderer from '../node_modules/three/src/renderers/common/Renderer.js';
 import {actorAsset} from './helpers/actor-geometry.js';
 import {prepareWorkerClips} from '../src/rendering/worker-clips.js';
 import {applyWorkerPose} from '../src/rendering/worker-actions.js';
@@ -13,6 +14,86 @@ import {createWebGpuConfirmedWorker} from '../src/rendering/webgpu-confirmed-wor
 import {createConfirmedGpuAnimationPhase} from '../src/rendering/confirmed-gpu-animation-phase.js';
 import {createConfirmedPresentationClock} from '../src/rendering/confirmed-presentation-clock.js';
 const fetcher=async url=>{const data=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(data),arrayBuffer:async()=>data.buffer.slice(data.byteOffset,data.byteOffset+data.byteLength)};};
+
+test('native locomotion uses one recovery exit for combined color, shadow and picking',async()=>{
+ const profile='youngMale';
+ const [walk,run,idle]=await Promise.all(['Walk_Skip','Run','Idle'].map(clip=>
+  loadBakedWorkerWalkAsset(profile,{clip,fetcher,subtle:webcrypto.subtle})));
+ const library=JSON.parse(await readFile('public/content/worker-actions.json'))[profile];
+ const [cpuAsset,gpuAsset]=await Promise.all([actorAsset(walk.meta.source),actorAsset(walk.meta.source)]);
+ const cpuRoot=new Group();
+ cpuRoot.add(cpuAsset.scene);
+ const cpu={model:cpuAsset.scene,mixer:new AnimationMixer(cpuAsset.scene),clips:prepareWorkerClips(cpuAsset.animations)};
+ const worker={id:'w',profile,status:'returning',running:false,x:0,z:0,heading:0,walkPhase:.35,runPhase:.35};
+ const state={workers:[worker],tasks:[],elapsed:0},scene=new Scene();
+ const renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
+ const actor=await createWebGpuConfirmedWorker({scene,residency:{get:()=>null},state,actorId:'w',renderer,
+  assetBank:{async acquire(){return {model:gpuAsset.scene,clips:prepareWorkerClips(gpuAsset.animations),library,release(){}};}}});
+ const gpu=new WebGPURenderer({canvas:{width:1,height:1,style:{},addEventListener(){},removeEventListener(){},getContext(){return null;}}});
+ gpu.hasFeature=()=>true;
+ const camera=new PerspectiveCamera(),phase=uniform(.35).setName('testLocomotionPhase'),runningNode=uniform(0),idleNode=uniform(false),
+  weight=uniform(1).setName('testRecoveryExitWeight');
+ let clip='Walk_Skip',remaining=.24,samples=0,variant;
+ try{
+  await actor.installBakedWalk(walk,{pipelineAdmission:{prepare:async()=>{}}});
+  variant=actor.prepareNativeMotionVariant({runningNode,idleNode,resolve:()=>phase,resolveExit:()=>weight,
+   sampleClip:()=>clip,sampleForClip:()=>phase.value,sampleExit(){samples++;return remaining;},status:()=>({exit:true})},
+  {clipBakes:[walk,run,idle]});
+  const [{mesh,material}]=variant.materialAlternatives;
+  const checkGraph=(object,selected,stage)=>{
+   const prior=object.material;
+   try{
+    object.material=selected;
+    const builder=gpu.backend.createNodeBuilder(object,gpu);
+    builder.scene=stage;builder.camera=camera;builder.build();
+    assert.match(builder.vertexShader,/textureLoad/);
+    const uniforms=builder.getBindings().flatMap(group=>group.bindings.flatMap(binding=>binding.uniforms??[]));
+    assert.ok(uniforms.some(binding=>binding.nodeUniform?.node===weight),'Combined shader must use the supplied exit');
+   }finally{object.material=prior;}
+  };
+  checkGraph(mesh,material,scene);
+  const shadowScene=new Scene(),shadow=new NodeMaterial();
+  shadow.isShadowPassMaterial=true;shadow.colorNode=vec4(0,0,0,1);shadowScene.overrideMaterial=shadow;
+  let shadowChecked=false;
+  Renderer.prototype.renderObject.call({_handleObjectFunction(object,selected){
+   assert.equal(selected.positionNode,material.positionNode);
+   checkGraph(object,selected,shadowScene);shadowChecked=true;
+  }},mesh,shadowScene,{},mesh.geometry,material,null,null);
+  assert.equal(shadowChecked,true);
+
+  variant.activate();
+  const sources=[];
+  cpuAsset.scene.traverse(node=>{if(node.isSkinnedMesh)sources.push(node);});
+  for(const name of ['Walk_Skip','Run','Idle'])for(const exit of [.24,.12,0]){
+   clip=name;remaining=exit;weight.value=exit/.24;runningNode.value=clip==='Run'?1:0;idleNode.value=clip==='Idle';
+   const entity={...worker,status:clip==='Idle'?'idle':'returning',idleState:clip==='Idle'?{mode:'rest',elapsed:phase.value}:null,
+    running:clip==='Run',walkPhase:phase.value,runPhase:phase.value,recoveryExitRemaining:exit};
+   applyWorkerPose(cpu,entity,null,0,library);
+   cpuRoot.updateMatrixWorld(true);actor.root.updateMatrixWorld(true);
+   samples=0;
+   const restore=actor.preparePick();
+   try{
+    assert.equal(samples,1,'Picking reads the submitted exit once for the whole rig');
+    const proxies=variant.materialAlternatives.map(({mesh:body})=>body.parent.children.find(node=>
+     node.userData.wgCpuPickProxy&&node.visible&&node.geometry.index===body.geometry.index));
+    assert.equal(proxies.length,sources.length);
+    assert.ok(proxies.every(Boolean));
+    let maximum=0;
+    for(const [index,source] of sources.entries()){
+     const proxy=proxies[index],position=source.geometry.attributes.position;
+     for(let vertex=0;vertex<position.count;vertex+=Math.max(1,Math.floor(position.count/50))){
+      const expected=source.getVertexPosition(vertex,new Vector3()).applyMatrix4(source.matrixWorld);
+      const sampled=new Vector3().fromBufferAttribute(proxy.geometry.attributes.position,vertex).applyMatrix4(proxy.matrixWorld);
+      maximum=Math.max(maximum,sampled.distanceTo(expected));
+     }
+    }
+    assert.ok(maximum<.05,`${clip} at ${exit}s, maximum pose error ${maximum}`);
+   }finally{restore();}
+  }
+ }finally{
+  variant?.dispose();actor.dispose();walk.dispose();run.dispose();idle.dispose();cpu.mixer.stopAllAction();cpu.mixer.uncacheRoot(cpu.model);
+ }
+});
 test('recovery exit blends walking and running on GPU with the original rigs',async()=>{
  let maximum=0;const libraries=JSON.parse(await readFile('public/content/worker-actions.json'));
  for(const profile of ['youngMale','olderMale','olderFemale','youngFemale'])for(const clip of ['Walk_Skip','Run']){

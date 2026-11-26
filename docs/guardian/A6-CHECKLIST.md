@@ -4,6 +4,8 @@ Game prepara la consecuencia del encuentro antes de aplicar el RNG, el golpe y e
 
 Fall y GetUp conservan su fase si la consulta de terreno falla. En el ensayo CPU privado, el golpe frontal completa GetUp y conserva el cuerpo hasta la pose final con 0,24 s de mezcla de salida. El sucesor Home, los contactos adicionales durante Fall y el dibujo físico siguen abiertos. [Corte de GetUp](native-desert-mixed-flight-center-20261125.md#pose-final-de-getup).
 
+El material combinado de marcha nativa ya compone la mezcla de salida para Walk, Run e Idle. El control CPU usa el rig original y comprueba color, sombra y vértices de picking. Home18 conserva su reloj y textura al retimar en un ensayo de componentes. La autoridad todavía debe acreditar GetUp como origen de esa ruta. [Controles de la mezcla](native-desert-mixed-flight-center-20261125.md#mezcla-de-salida-durante-la-marcha).
+
 La admisión del nacimiento de Desierto comprueba el itinerario Farm restante si la caja de su ruta contiene un posible encuentro. Así admite al animal estacionario en el encuadre cercano cuando la ruta real deja más de 2,2 m y sigue rechazando el nacimiento solapado. El contacto durante la marcha todavía requiere su relevo nativo. [Contrastes del nacimiento](native-desert-mixed-flight-center-20261125.md#nacimiento-cerca-de-farm).
 
 En el encuadre norte de Desierto, Home18 sale con el facóquero todavía en su pose de nacimiento. La marcha al centro espera hasta que cualquier parada en el corredor restante del trabajador conserve la separación. NVIDIA confirmó ambas marchas en el mismo envío antes de Home19, cuatro golpes al centro y el regreso a Idle. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#huida-por-el-corredor-norte).
