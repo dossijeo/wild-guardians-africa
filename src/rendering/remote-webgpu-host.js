@@ -93,7 +93,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // Its ceiling is admitted with the actual bindings, including replacements;
   // direct causal time, pauses and native body revocations still bound drawing.
   const baseFrameClock=packet=>packet?.admittedBarrierAdditionBinding?{...packet.metadata.clock,safeUntil:Math.max(packet.metadata.clock.safeUntil,packet.admittedBarrierAdditionBinding.reference.worldBoundary.effectiveTime)}:packet?.admittedClockBindings?.some(b=>b.semantic==='idle-offset'&&b.motionRecord.isCurrent())?{...packet.metadata.clock,safeUntil:Number.MAX_SAFE_INTEGER}:packet?.admittedMotionBinding?{...packet.metadata.clock,safeUntil:packet.admittedClockCoverageEnd??Math.max(packet.metadata.clock.safeUntil,(packet.admittedMotionBinding.reference.endTime??packet.metadata.clock.safeUntil))}:packet?.metadata?.clock;
-  const frameClock=packet=>{const clock=baseFrameClock(packet),end=Math.max(packet?.admittedBarrierClockCoverageEnd??0,packet?.admittedRestoredRepairCoverageEnd??0);return clock&&end?{...clock,safeUntil:Math.max(clock.safeUntil,end)}:clock;};
+  const frameClock=packet=>{
+    const clock=baseFrameClock(packet),end=Math.max(packet?.admittedBarrierClockCoverageEnd??0,packet?.admittedRestoredRepairCoverageEnd??0);
+    if(!clock)return clock;
+    if(packet.replacementClockCeiling!==undefined)return {...clock,safeUntil:packet.replacementClockCeiling};
+    return end?{...clock,safeUntil:Math.max(clock.safeUntil,end)}:clock;
+  };
   const drawCommandsCurrent=(op,boundary)=>op.method!=='submit'||op.args[0].every(buffer=>{
     if(buffer.texturePreparation)return validRemoteTexturePreparation(buffer,key=>resolutionResources?.get(key)||resources.get(key));
     return !worldBoundaryRequired||!buffer.__remoteCommands.some(command=>command.method==='beginRenderPass')||sameNativeWorldBoundary(buffer.nativeWorldBoundary??null,boundary);
@@ -696,6 +701,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // Installed Farm/Stroll endpoint data remains drawable while the same body
   // waits for its next prepared owner. This is not permission to execute past the route end.
   function retainedCompletedEndpoint(binding,at){return !!(binding.nativeFarmArrival||binding.nativeStroll||binding.nativeStart)&&binding.motionRecord.isCurrent()&&at>=binding.motionRecord.executionEnd&&(binding.routeRecord?.safeUntil??Infinity)>=binding.motionRecord.executionEnd;}
+  const nativePresentationBinding=binding=>!!(binding.nativeRestoredWallRepair||binding.nativeBarrierAddition||binding.nativeStopped||
+    binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||
+    binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||
+    binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle);
   function patchPresentation(elapsed, camera, nativeTimes, cropDraws) {
     if (elapsed !== null) {
       for (const binding of active.clockBindings) {
@@ -703,7 +712,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // A scene can contain long-lived independent motors and a finite
         // resumed body. Each binding retains its own data and revocation cap.
         const executionEpoch=binding.barrierOrigin?.proof?.reference.worldBoundary.effectiveTime??binding.motionRecord?.executionEpoch??binding.executionEpoch??binding.epoch;
-        const scoped=!!(binding.nativeRestoredWallRepair||binding.nativeBarrierAddition||binding.nativeStopped||binding.nativeRoute||binding.nativeGate||binding.nativeSuspended||binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.nativeAction||binding.nativeSettlement||binding.nativeInitialIdleBody||binding.nativeIdleCycle),bindingTime=!scoped&&(active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
+        const bindingTime=!nativePresentationBinding(binding)&&(active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(elapsed,active.metadata.clock.safeUntil):elapsed;
         const resumeCeiling=(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll)&&binding.resourceEnd!==undefined?executionEpoch+(binding.resourceEnd-binding.epoch):binding.motionRecord?.executionEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??Infinity;
         const idleRoute=binding.nativeFarmArrival??binding.nativeStroll,terminalRoute=idleRoute??binding.nativeStart,terminalIdle=retainedCompletedEndpoint(binding,bindingTime);
         // Prepared and ordinary aliases resolve to the same acquired route (or strike).
@@ -810,7 +819,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // active frame or widen this packet's lease to admit it.
         if(presented.elapsed!==null&&coverage?.epoch===presented.epoch&&coverage.safeUntil<presented.elapsed){
           const obsolete=pending;pending=null;next=null;
-          rejectPreparedFrame(obsolete,'Prepared clock coverage precedes the presented frame',true,'native-clock');
+          const retained=rejectPreparedFrame(obsolete,'Prepared clock coverage precedes the presented frame',true,'native-clock',{
+            epoch:presented.epoch,safeUntil:coverage.safeUntil,presentedThrough:presented.elapsed,
+          });
+          // A submitted Home absence has no native clocks to keep moving.
+          // Hold its last time so recapture can catch up to it.
+          if(retained&&obsolete.metadata.preparedInterval&&active?.admittedMotionBinding?.reference?.kind==='native-home-arrival-reference'&&
+             frameWorldCurrent(active)&&sameNativeWorldBoundary(frameBoundary(active),frameBoundary(obsolete))&&
+             !active.admittedClockBindings.some(nativePresentationBinding))active.replacementClockCeiling=presented.elapsed;
           releaseSnapshot(obsolete.resourceSnapshot);
         }
       }
@@ -1019,7 +1035,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(closeImages)closePreparationImages(stagedOperations);stagedOperations=[];retainedPreparationOperationCount=0;releaseSnapshot(old);
     for(const entry of pendingRetirement)tryRetire(entry);
   }
-  function rejectPreparedFrame(packet,reason,wasPending=false,cause='native-world'){
+  function rejectPreparedFrame(packet,reason,wasPending=false,cause='native-world',clockRejection=null){
     if(!wasPending)validateOperations(packet.operations);
     const groups=wasPending?[{operations:packet.operations,source:packet.resourceSnapshot},{operations:stagedOperations,source:retainedPreparationSnapshot}]:
       [{operations:stagedOperations,source:retainedPreparationSnapshot},{operations:packet.operations,source:null}];
@@ -1041,7 +1057,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       closePreparationImages(groups.flatMap(group=>group.operations));
       discardRetainedPreparations(false);
     }
-    port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason,cause,resourcePreparationsRetained:retained});
+    port.postMessage({type:'frame-obsolete',sequence:packet.sequence,reason,cause,resourcePreparationsRetained:retained,
+      ...(clockRejection?{clockRejection}:{})});
+    return retained;
   }
   function retainedPreparationsFor(operations){
     if(!retainedPreparationSnapshot)return stagedOperations;

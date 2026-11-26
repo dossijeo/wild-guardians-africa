@@ -447,6 +447,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         const error=Error(message.reason || 'Remote frame invalidated by a native world mutation');
         error.code=message.cause==='native-clock'?'remote-frame-native-clock-obsolete':message.cause==='native-route'?'remote-frame-native-route-obsolete':'remote-frame-native-mutation-obsolete';
         error.resourcePreparationsRetained=message.resourcePreparationsRetained===true;
+        if(message.cause==='native-clock')error.clockRejection=message.clockRejection;
         pendingFrame.reject(error);releaseReferences(pendingFrame.retained);pendingFrame=null;
       }
     } else if (message.type === 'lost') {

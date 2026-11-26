@@ -7,10 +7,10 @@ import {confirmedEventsAtEndpoint} from '../src/rendering/confirmed-endpoint-eve
 
 function fixture(items){let sequence=0,lastElapsed=0,ready=true,lastClock=null;const seen=[];return {seen,setReady(value){ready=value;},stream:{status:()=>({closed:false,sequence,lastElapsed}),timelineStatus:()=>({receivedElapsed:items.at(-1)?.elapsed??lastElapsed}),lastConfirmedClockSegments:()=>lastClock,nextTimelineBoundary:()=>items[0]??null,advanceNextTimelineBoundary(){if(!ready)return false;const item=items.shift();sequence=item.sequence;lastElapsed=item.elapsed;lastClock=item.clock??null;seen.push(item);return true;}}};}
 
-function preparedFixture({allow=true,onPreview=null,certify=value=>value,lastRejection=()=>null}={}){
+function preparedFixture({allow=true,onPreview=null,certify=value=>value,lastRejection=()=>null,cancel}={}){
  let now=0;const items=[1,2].map(sequence=>{const start=(sequence-1)/10,end=sequence/10;return {sequence,elapsed:end,clock:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments:[{start,end,realDuration:.1,rate:1}]}};}),f=fixture(items),clock=createConfirmedHistoricalClock({initialElapsed:0,now:()=>now,timeOrigin:0});
  f.stream.previewNextMotionBoundary=()=>{const item=items[0];return item?{sequence:item.sequence,start:item.clock.start,end:item.elapsed,reasons:[],safeForAutonomousPlayback:true,clockSegments:item.clock}:null;};
- const pump=createConfirmedTimelinePump({stream:f.stream,onPreview,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){}}});
+ const pump=createConfirmedTimelinePump({stream:f.stream,onPreview,preparedIntervals:true,historicalPlayback:{clock,now:()=>now,certify,lastRejection,start(){now+=250;return true;},isCurrent:()=>true,canPrepareInterval:()=>allow,finish(){},abort(){},cancel}});
  return {...f,clock,pump,setNow(value){now=value;}};
 }
 
@@ -21,6 +21,30 @@ test('prepared intervals survive expensive preparation and require retained pack
  assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1]);const second=f.pump.preparedInterval();assert.equal(second.start,.1);assert.equal(second.end,.2);assert.notEqual(first.token,second.token);assert.equal(f.clock.elapsed,.1);
  f.pump.sealPreparedInterval(second.token);assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);assert.equal(f.pump.status().historicalDiagnostics.finishedSameTurn,0);
  f.pump.dispose();f.clock.dispose();
+});
+
+test('an expired unsubmitted interval relinquishes ownership and commits through the ordinary stream',()=>{
+ const cancelled=[],confirmed=[];
+ const f=preparedFixture({cancel:preview=>cancelled.push(preview.sequence)});
+ try{
+  assert.equal(f.pump.advance(),0);const first=f.pump.preparedInterval();
+  f.pump.deferUntilBoundary('first',()=>confirmed.push(f.stream.status().sequence));
+  assert.equal(f.pump.discardExpiredPreparedInterval({...first,token:first.token+1},.15),false);
+  assert.equal(f.pump.discardExpiredPreparedInterval({...first,end:.08},.15),false);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,first.end),false);
+  assert.deepEqual(f.pump.preparedInterval(),first);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,.15),true);
+  assert.deepEqual(cancelled,[1]);assert.deepEqual(confirmed,[]);assert.equal(f.clock.elapsed,0);
+  assert.equal(f.pump.discardExpiredPreparedInterval(first,.15),false);
+  f.setReady(false);assert.equal(f.pump.advance(),0);assert.deepEqual(confirmed,[]);
+  f.setReady(true);assert.equal(f.pump.advance(1),1);assert.deepEqual(confirmed,[1]);
+  assert.equal(f.pump.preparedInterval(),null);
+  f.pump.finishOrdinaryContinuation();assert.equal(f.pump.advance(),0);
+  const second=f.pump.preparedInterval();assert.equal(second.sequence,2);assert.equal(f.clock.elapsed,.1);
+  f.pump.sealPreparedInterval(second.token);
+  assert.equal(f.pump.discardExpiredPreparedInterval(second,.3),false);
+  assert.equal(f.pump.advance(),1);assert.deepEqual(f.seen.map(value=>value.sequence),[1,2]);
+ }finally{f.pump.dispose();f.clock.dispose();}
 });
 
 test('confirmed progress remains publishable when the next boundary awaits GPU preparation',()=>{

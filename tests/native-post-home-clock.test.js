@@ -1,10 +1,23 @@
 import test from 'node:test';import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {nativeHomeArrivalRemoteFixture,prepareHomeAbsenceDraw} from './helpers/native-home-arrival-remote.js';
 import {flush} from './helpers/remote-webgpu-fixture.js';
-import {rejectedNativeFrameTarget,isPreparedFrameInvalidation} from '../src/rendering/webgpu-frame-recovery.js';
+import {rejectedNativeFrameTarget,rejectedHistoricalIntervalTarget,isPreparedFrameInvalidation} from '../src/rendering/webgpu-frame-recovery.js';
+import {createConfirmedTimelinePump} from '../src/rendering/confirmed-timeline-pump.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
 
-test('Home19 checks clock coverage for ordinary frames and prepared intervals',async()=>{
- const f=await nativeHomeArrivalRemoteFixture();let prepared;
+function surfaceContinuation(pump,readState){
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const entry=source.match(/function retainRejectedNativeFrame\(error,metadata\)\{[\s\S]*?(?=  function acceptPreparedNativeTerrain)/)[0];
+ const renderer={info:{frame:1},shadowMap:{}},sun={shadow:{}};
+ const retain=Function('remoteGpu','temporal','renderer','sun','nativeFrameState','timelinePump','rejectedNativeFrameTarget','rejectedHistoricalIntervalTarget',
+  `let nativeResumeTarget,nativeRejectedFrame; ${entry} return retainRejectedNativeFrame;`)(
+  {},{},renderer,sun,readState,pump,rejectedNativeFrameTarget,rejectedHistoricalIntervalTarget);
+ return {retain,renderer,sun};
+}
+
+test('Home19 continues after Draw rejects an expired prepared interval in the same world',async()=>{
+ const f=await nativeHomeArrivalRemoteFixture();let prepared,pump,historicalClock;
  try{
   const result=await f.native.planner.startNativeHomeArrivalAfterGpuQuiescence({actorId:f.native.actor,getPublication:()=>f.source,prepareResources:async({resources})=>{
    prepared=await prepareHomeAbsenceDraw(f,resources);return {preparedWorldBoundary:prepared.preparedWorldBoundary,preparedHomeArrivalTemplate:resources.nativeHomeArrival,valid:prepared.valid,commit:d=>prepared.commit(d.worldBoundary,d.nativeHomeArrivalBinding),abort:prepared.abort};
@@ -23,18 +36,48 @@ test('Home19 checks clock coverage for ordinary frames and prepared intervals',a
   assert.equal(new Float32Array(gpuBuffer.data.buffer)[0],0,'obsolete uploads are retained without execution');assert.equal(gpuBuffer.destroyed,false);
   const metadata={clock:clock(at),nativeWorldBoundary:boundary},state={prepared:boundary,required:boundary};
   assert(isPreparedFrameInvalidation(error));assert.deepEqual(rejectedNativeFrameTarget(error,metadata,state),boundary);
-  const start=at+.01,end=at+.02,segments=[{start,end,rate:1,realDuration:end-start}];
-  const historical={clock:{...clock(start),safeUntil:end,paused:false,consumerAnchored:true,segments},
-   preparedInterval:{token:1,sequence:2,start,end,segments}};
-  const expired=record(start,101,historical),refused=assert.rejects(expired,{code:'remote-frame-native-clock-obsolete',resourcePreparationsRetained:true});
-  await flush();await f.host.idle();f.host.present();await refused;
+  let applied=0,elapsed=at,cancelled=0,certified=0;
+  const ends=[at+.02,at+.04,at+.05],stream={status:()=>({sequence:applied,lastElapsed:elapsed}),timelineStatus:()=>({receivedElapsed:ends.at(-1)}),
+   nextTimelineBoundary:()=>applied<ends.length?{sequence:applied+1,elapsed:ends[applied]}:null,
+   lastConfirmedClockSegments:()=>null,advanceNextTimelineBoundary(){elapsed=ends[applied++];return true;},
+   previewNextMotionBoundary(){
+    if(applied>=ends.length-1)return null;
+    const start=elapsed,end=ends[applied],segments=[{start,end,rate:1,realDuration:end-start}];
+    return {sequence:applied+1,start,end,reasons:[],safeForAutonomousPlayback:true,
+     clockSegments:{version:1,start,end,startPauses:[],endPauses:[],complete:true,segments}};
+   }};
+  historicalClock=createConfirmedHistoricalClock({initialElapsed:at,now:()=>0,timeOrigin:0});
+  pump=createConfirmedTimelinePump({stream,preparedIntervals:true,historicalPlayback:{clock:historicalClock,certify(value){certified++;return value;},
+   start:()=>true,isCurrent:()=>true,canPrepareInterval:()=>true,cancel(){cancelled++;},finish(){},abort(){}}});
+  assert.equal(pump.advance(),0);
+  const historical={clock:{...historicalClock.remoteLease({allowAdvance:true}),epoch:f.clock.epoch},preparedInterval:pump.preparedInterval()};
+  const expired=record(at,101,historical),refused=expired.catch(reason=>reason);
+  await flush();await f.host.idle();f.host.present();
+  const rejection=await refused;
+  assert.equal(rejection.code,'remote-frame-native-clock-obsolete',rejection.message);
+  assert.equal(rejection.resourcePreparationsRetained,true);
+  assert.deepEqual(rejection.clockRejection,{epoch:0,safeUntil:ends[0],presentedThrough:at+.05});
   assert.equal(f.host.inspect().activeSequence,before.activeSequence);assert.equal(f.host.inspect().pendingSequence,null);
   assert.equal(new Float32Array(gpuBuffer.data.buffer)[0],0);
+  f.native.advance(.05);await flush();f.host.present();
+  assert.equal(f.host.inspect().frameTime.elapsed,at+.05,'absence replay leaves an attainable replacement boundary');
   assert.equal(rejectedNativeFrameTarget(error,{...metadata,...historical},state),null);
+  let world=state;
+  const surface=surfaceContinuation(pump,()=>world);
+  const rejectedMetadata={...metadata,...historical};
+  world={...state,required:{...boundary,ticket:boundary.ticket+1}};
+  assert.equal(surface.retain(rejection,rejectedMetadata),false);
+  world=state;
+  assert.equal(surface.retain({...rejection,code:rejection.code,clockRejection:{...rejection.clockRejection,presentedThrough:ends[0]}},rejectedMetadata),false);
+  assert.equal(surface.retain(rejection,{...rejectedMetadata,preparedInterval:{...historical.preparedInterval,token:2}}),false);
+  assert.equal(cancelled,0);assert.equal(applied,0);
+  assert.equal(surface.retain(rejection,rejectedMetadata),true);
+  assert.equal(cancelled,1);assert.equal(applied,0);assert.equal(surface.sun.shadow.needsUpdate,true);
+  assert.equal(pump.advance(),3);assert.equal(elapsed,at+.05);assert.equal(certified,1);
   const fresh=record(at+.05,7);await flush();await f.host.idle();f.host.present();await fresh;
   assert.equal(new Float32Array(gpuBuffer.data.buffer)[0],7);assert.equal(f.host.inspect().resources,resourceCount);assert.equal(gpuBuffer.destroyed,false);
   assert(f.host.inspect().activeSequence>before.activeSequence);assert.equal(f.host.inspect().frameTime.elapsed,at+.05);assert.deepEqual(f.errors,[]);
- }finally{await f.close();}
+ }finally{pump?.dispose();historicalClock?.dispose();await f.close();}
 });
 
 test('clock obsolescence cannot retain a missing owner, different world, interval or unretained preparation',()=>{

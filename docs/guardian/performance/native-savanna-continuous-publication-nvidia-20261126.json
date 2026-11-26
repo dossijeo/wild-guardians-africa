@@ -7,7 +7,8 @@
     "nvidia-continuous-draw-gate.json": "e2c7abe78faa3dae247ab413739418d2abde49fde250dbc3489740f7fa328306",
     "nvidia-continuous-real-clock.json": "435fef10fadff2dbbfacfeed9fd0c57dee7187bb71924d870f9aa89ea72c72ec",
     "nvidia-home-retirement-clock-operands.json": "dec0be701892236f95cc70b89038e6af178ad4e118078e978e0df3bc11f5619a",
-    "nvidia-home-retirement-continuation.json": "535e80d297d226f63306e45b4e70894b0b05b3c8d500fd2c2cb974c7e35dfa62"
+    "nvidia-home-retirement-continuation.json": "535e80d297d226f63306e45b4e70894b0b05b3c8d500fd2c2cb974c7e35dfa62",
+    "nvidia-continuous-retirement-fixed.json": "c2bbbc4fb059a8da2e13504fd2bbd9922310ce9ea6e04afbaa260f68dfd22285"
   },
   "request": {
     "kind": "prepareNativeIdleStrollResources",
@@ -89,6 +90,32 @@
     "receivedSequence": 1930,
     "recoveryTarget": null,
     "elapsedAtFailure": 290.8399999999714
+  },
+  "correctedContinuousRun": {
+    "preimage": "af0f19671072159c6007c854f0418e48a2ac749e",
+    "clock": "Hosted monotonic",
+    "worker": "worker-6",
+    "bodyId": 1,
+    "hireCount": 1,
+    "wateringEvents": ["event-7", "event-9", "event-11"],
+    "firstTask": {"ticket": 3, "frame": 28},
+    "firstStroll": {"ticket": 11, "frame": 622},
+    "home": {"ticket": 55, "frame": 2371, "clockElapsed": 250.74000000000038},
+    "homeArrival": {"ticket": 57, "frame": 2773, "effectiveTime": 291.1599999999711},
+    "rejection": {
+      "frame": 2774,
+      "interval": {"token": 1, "sequence": 13749, "end": 291.19999999997106},
+      "presentedThrough": 291.259999999971,
+      "appliedSequence": 13748,
+      "retainedWorld": 57
+    },
+    "firstOrdinary": {"frame": 2775, "clockElapsed": 291.31999999997095},
+    "laterFrame": {"frame": 2797, "clockElapsed": 291.7799999999705},
+    "refuge": {"x": 60, "z": 0},
+    "expiredPackets": 1,
+    "continuedPackets": 1,
+    "elapsedAtDrain": 292.9999999999694,
+    "drained": true
   },
   "result": {
     "elapsed": 123.07999999999265,

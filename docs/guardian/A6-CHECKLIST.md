@@ -2,7 +2,7 @@
 
 La frontera de autoridad fecha la pose congelada de Stop24 tras comprobar el cuerpo. NVIDIA confirmó Farm23 adquirido, READY retenido, parada y Task14 con el mismo cuerpo en Sabana. [Pruebas y recibo](native-cold-worker-admission-20261126.md#parada-de-farm23-ya-adquirido-para-la-primera-tarea).
 
-Idle22 y Home18 usan en Sabana la prueba continua de terreno seco. El turno completo pasa en CPU. NVIDIA acredita por separado el dibujo de la primera marcha y Home19 tras recargar el fin del turno. [Pruebas y recibos](native-cold-worker-admission-20261126.md#marcha-idle-y-regreso-al-final-del-turno-en-sabana).
+Idle22 y Home18 usan en Sabana la prueba continua de terreno seco. NVIDIA acreditó el turno continuo desde la contratación, con retirada Home19, recaptura tras un intervalo histórico vencido y drenaje. [Pruebas y recibos](native-cold-worker-admission-20261126.md#continuación-después-de-home19).
 
 El arranque explícito de Sabana conserva el primer cuerpo pagado desde Task14 hasta Action15 e Idle20. NVIDIA verificó los dibujos de marcha y riego, el único efecto sobre el cultivo y el drenaje. [Pruebas y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).
 
