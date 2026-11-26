@@ -121,6 +121,76 @@ async function restoreShelteredRetreat(checkpoint,manifest,source){
  }finally{releaseReady?.();await restored.close();}
 }
 
+async function restoreShelteredRetreatBeforeRuin(checkpoint,manifest,source){
+ const saved=JSON.parse(checkpoint.snapshot);
+ const stored=prepareWorkerCheckpoint(checkpoint,{slotId:saved.slotId,policy:{nativeAuthority:true},savedAt:0});
+ assert.equal(stored.saved,true);
+ const options=savedNativeAuthorityOptions(serialize(stored.state)),[animal]=stored.state.raid.animals;
+ assert.equal(options.nativeWorkerLifecycle,true);
+ assert.ok(animal.path?.length);
+ assert.equal(saved.structures[0].status,'collapsing');
+ let releaseRoute,releaseRuin;
+ const restored=await nativeProductionAuthority(stored.state,{...options,getTerrainManifest:()=>manifest,
+  onReady:row=>new Promise(resolve=>{
+   if(row.kind==='animal-crop-route')releaseRoute=resolve;
+   else if(row.kind==='center-ruin')releaseRuin=resolve;
+   else resolve();
+  })});
+ let settled=false,failure;
+ const wait=async condition=>{
+  for(let i=0;i<1000;i++){
+   if(failure)throw failure;
+   assert.deepEqual(restored.faults,[]);
+   if(condition())return;
+   await restored.present();
+  }
+  assert.fail('restored Retreat did not reach its graphical boundary');
+ };
+ try{
+  restored.command({kind:'setNavigationView',view:options.navigationView});
+  await wait(()=>releaseRoute);
+  const [route]=restored.records,{reference,rows}=route.resources;
+  assert.equal(route.committed,false);
+  assert.equal(reference.purpose,'retreat');
+  assert.equal(reference.worldBoundary.effectiveTime,saved.elapsed);
+  assert.deepEqual(Array.from(rows.slice(1,5)),[animal.x,animal.z,0,animal.motionPhase]);
+  const before=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.deepEqual(before.nativeAuthorityCheckpoint.spatialState,checkpoint.nativeAuthorityCheckpoint.spatialState);
+  const advancing=restored.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+  assert(advancing instanceof Promise);
+  advancing.then(()=>{settled=true;},error=>{failure=error;});
+  await restored.present();
+  assert.equal(settled,false);
+  assert.equal(restored.records.length,1);
+  assert.equal(restored.host.inspect().nativeCausalClock.committedThrough,saved.elapsed);
+
+  releaseRoute();
+  await wait(()=>releaseRuin);
+  const [,ruin]=restored.records;
+  const proof=ruin.resources.nativeCenterRuin;
+  assert.equal(route.committed,true);
+  await route.packet.presented;
+  assert.equal(ruin.committed,false);
+  assert.equal(settled,false);
+  assert.equal(proof.polygon,source.polygon);
+  assert.equal(proof.end,source.end);
+  assert.notEqual(proof.boundary.authorityEpoch,source.boundary.authorityEpoch);
+  releaseRuin();
+  await wait(()=>ruin.committed);
+  await restored.present();
+  await ruin.packet.presented;
+  const result=await advancing,state=JSON.parse(result.snapshot);
+  assert.equal(result.stepsExecuted,2);
+  assert.deepEqual(result.events.map(event=>[event.type,event.simulationTime]),[['StructureRuined',source.end]]);
+  assert.equal(state.structures[0].status,'ruined');
+  assert.equal(state.raid.animals[0].hitsRemaining,animal.hitsRemaining);
+  assert.deepEqual(state.ledger,saved.ledger);
+  const after=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert(!after.nativeAuthorityCheckpoint.spatialState.polygons.some(polygon=>polygon.id===source.polygon));
+  assert.deepEqual(restored.host.inspect().nativeRouteFrame.worldBoundary,ruin.commit.worldBoundary);
+ }finally{releaseRoute?.();releaseRuin?.();await restored.close();}
+}
+
 for(const savanna of [false,true])test(`center ruin spends its retained ticket inside the ordinary ${savanna?'Savanna':'Desert'} Retreat substep`, {timeout:90000}, async()=>{
  const snapshot=savanna?gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString():savedAttack();
  const initial=deserialize(snapshot);
@@ -140,10 +210,11 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
   fixture.command({kind:'setNavigationView',view:options.navigationView});
   if(!savanna)await untilProduction(fixture,()=>fixture.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
   const intact=checkpoint();
-  let previous=JSON.parse(intact.snapshot),result,steps;
+  let previous=JSON.parse(intact.snapshot),result,steps,beforeRuin;
   const events=[];
   for(let command=0;command<1100;command++){
    const collapsing=previous.structures[0].status==='collapsing';
+   if(savanna&&collapsing&&previous.structures[0].collapseRemaining<=.10)beforeRuin=checkpoint();
    steps=fixture.command({kind:'advance',seconds:collapsing?.05:.10,steps:2,nightFastForward:false,visualTerrain:collapsing});
    if(steps instanceof Promise)break;
    events.push(...steps.events);
@@ -233,6 +304,7 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
    {...record,nativeCenterRuin:{...record.nativeCenterRuin,polygon:source.polygon+1}},
   ]},source.previous),/differs from its committed boundary/);
   if(savanna){
+   await restoreShelteredRetreatBeforeRuin(beforeRuin,manifest,source);
    await restoreShelteredRetreat(checkpoint(),manifest,source);
    // Destroy the original Draw only after it submitted the kind4 packet.
    replacement=await recoverRetreatAfterRuin(fixture,retention.commit.nativeCenterRuin,state.elapsed,state);

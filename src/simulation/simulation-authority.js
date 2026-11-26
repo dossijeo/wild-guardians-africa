@@ -68,9 +68,10 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-function shelteredRetreatAfterRuin(state){
+function shelteredCenterRetreat(state){
  const [animal]=state.raid?.animals??[],center=state.structures[0];
- if(center?.status!=='ruined'||center.hp!==0||!nativeShelteredSavannaCenterActor(state,animal)||
+ const collapse=center?.status==='collapsing'&&center.hp>0&&center.collapseRemaining>0;
+ if((!collapse&&(center?.status!=='ruined'||center.hp!==0))||!nativeShelteredSavannaCenterActor(state,animal)||
     !nativeRetreatSubject(state,animal))return null;
  return animal;
 }
@@ -96,7 +97,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   const savedWorkerLifecycle=savedCheckpoint?.workerLifecycle;
   if(savedWorkerLifecycle!==undefined&&(savedWorkerLifecycle!==1||savedCheckpoint.version!==3||!nativeWorkerLifecycle||nativeBootstrap?.version!==3||restoringPhysics))
    throw Error('Invalid native worker lifecycle restoration');
-  const savedRetreat=savedWorkerLifecycle===1?shelteredRetreatAfterRuin(game):null;
+  const savedRetreat=savedWorkerLifecycle===1?shelteredCenterRetreat(game):null;
   if(savedRetreat&&(!savedRetreat.path?.length||savedEncounter))throw Error('Saved native Retreat has no restorable corridor');
   // Home19 and Dawn can both leave the authority without a live body. Restore
   // its clock and registry before the next raid or hiring request is emitted.
@@ -1410,6 +1411,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           throw Error('Saved encounter requires an acquired approach before advancing');
         return authority.execute(command);
       });
+    if(command.kind==='advance'&&!game.pauses.length&&savedRetreat&&game.structures[0].status==='collapsing'&&
+       planner.nativeAnimalCropState(savedRetreat.id)?.mode===1)
+      return nativeProduction.wake().then(result=>{
+        if(closed||result?.status!=='committed')throw Error('Saved collapse requires an acquired Retreat before advancing');
+        return authority.execute(command);
+      });
     if(nativeStructurePreparation?.commandSequence!==undefined){
       if(command.sequence!==nativeStructurePreparation.commandSequence||nativeStructurePreparation.identity!==structureIdentity(command))throw Error('Native structure FIFO head is occupied');
       if(!nativeStructurePreparation.commitBoundarySettled)throw Error('Native structure command boundary is not ready');
@@ -1677,7 +1684,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const encounter=command.kind==='snapshot'?planner.encounterCheckpoint(command.nativeAuthorityCheckpoint===true):null;
     const captureNativeCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked();
     const snapshotState=captureNativeCheckpoint?nativeAnimalCheckpointState():game;
-    const retreat=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?shelteredRetreatAfterRuin(snapshotState):null;
+    const retreat=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?shelteredCenterRetreat(snapshotState):null;
     const restorableRetreat=retreat&&(snapshotState!==game||retreat===savedRetreat&&retreat.path?.length&&
       planner.nativeAnimalCropState(retreat.id)?.mode===1);
     const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRetreat)&&game.workers.every(worker=>
