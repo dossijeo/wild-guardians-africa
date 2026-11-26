@@ -371,4 +371,12 @@ El control posterior conserva el paquete 6 desde READY a 12,60 s. A 12,62 s el g
 
 En el avance de dos subpasos, se retiene el primer RAF tras GO. El reloj causal ya está en 12,62 s y el último dibujo sigue siendo el paquete 5. Tras el acuse del paquete 6 se ejecuta el segundo subpaso. La respuesta completa cuenta dos pasos y alcanza 12,64 s con otros 0,076 m de desplazamiento y un solo `AnimalRetreating`. Ambos recorridos completan la retirada y GetUp. La cancelación sigue funcionando y cinco controles rechazan el GO prematuro o adulterado y la retención de otra fuente. [Recibo del GO](performance/native-raid-encounter-retreat-go-20261126.json).
 
-El paquete del ensayo usa el Host real y una cola GPU determinista. Quedan pendientes el paquete de Surface con los rigs de ambos actores, la integración de este contrato en producto, la validación en GPU física y la activación ordinaria.
+El paquete del ensayo usa el Host real y una cola GPU determinista.
+
+### Relevo del rig original del facóquero
+
+La preimagen del roster rechaza el candidato mientras la aproximación aún posee el rig. El prototipo admite la preparación si coincide la asignación de aproximación, el destino de salida y el cuerpo. Conserva la raíz y las cuatro mallas con sus geometrías originales. La captura activa los materiales de retirada de forma reversible. Picking durante la preparación puede consultar la aproximación y la cancelación devuelve esos mismos materiales. El reintento conserva el dueño anterior hasta GO y rechaza un comprobante con otra asignación.
+
+El arnés registra el uniforme del rig mediante el adaptador de relojes remoto y sube su tabla Float32 de 720 bytes al paquete retenido. Los recorridos de uno y dos subpasos producen la misma tabla. A 12,62 s el Host somete el paquete 6 con edad cero y picking devuelve la pose y la fase iniciales. A 12,68 s el mismo reloj muestrea Running a 3,8 m/s. Pasan los dos recorridos con el rig, el rechazo de la preimagen y 96 pruebas de regresión. [Recibo del rig](performance/native-raid-encounter-retreat-rig-20261126.json).
+
+La prueba usa el glTF y las animaciones baked originales, con un pase de prueba y una cola GPU determinista. Quedan pendientes el paquete completo de Surface con el rig del trabajador, la integración de este contrato en producto, la validación en GPU física y la activación ordinaria.
