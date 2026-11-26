@@ -559,7 +559,18 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   function prepareNativeGateResources(value,options){const stop=terrainStopProposalProtocol(value);return stop||nativeShieldWorldKind(value?.kind)||value?.kind==='native-center-ruin-proposal'?prepareDirectNativeWorldResources(value,stop,options):prepareNativeResources(copyNativeGateMotionResources(value),options);}
   function prepareNativeBarrierAdditionResources(value,options){return prepareDirectNativeWorldResources(value,null,options);}
   function prepareNativeResumeResources(value,options){return prepareNativeResources(copyNativeResumeProposal(value),options);}
-  function prepareNativeTaskStartResources(value,options={}){return prepareNativeResources(copyNativeTaskStartProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareFirstNativeWorkerResources(resources,options){
+   const prepare=()=>prepareNativeResources(resources,{...options,deferredStart:options.deferredStart??true});
+   const behind=Number.isSafeInteger(options.minSequence)&&(stream?.status().sequence??-1)<options.minSequence;
+   if(!timelinePump||!behind||state.workers.length||state.raid?.animals.some(animal=>animal.status!=='gone'))return prepare();
+   // While the confirmed view still has no actors, let its current interval
+   // finish and apply following publications through the ordinary stream.
+   return timelinePump.withOrdinaryPublications(async sequence=>{
+    if(Number.isSafeInteger(sequence))await waitNativePublication(sequence,options.signal??new AbortController().signal);
+    return prepare();
+   });
+  }
+  function prepareNativeTaskStartResources(value,options={}){return prepareFirstNativeWorkerResources(copyNativeTaskStartProposal(value),options);}
   function prepareNativeTaskConsequenceResources(value,options={}){return prepareNativeResources(copyNativeTaskConsequenceProposal(value),{...options,deferredStart:options.deferredStart??true});}
   function prepareNativeTaskActionResources(value,options={}){return prepareNativeResources(copyNativeTaskActionProposal(value),{...options,deferredStart:options.deferredStart??true});}
   function prepareNativeHomeArrivalResources(value,options={}){return prepareNativeResources(copyNativeHomeArrivalProposal(value),{...options,deferredStart:options.deferredStart??true});}
@@ -581,7 +592,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   }
   const prepareNativeAnimalCropRouteResources=(p,o)=>prepareAnimalCropResources(p,26,o);
   const prepareNativeAnimalCropStrikeResources=(p,o)=>prepareAnimalCropResources(p,27,o);
-  function prepareNativeFarmArrivalResources(value,options={}){return prepareNativeResources(copyNativeFarmArrivalRouteProposal(value),{...options,deferredStart:options.deferredStart??true});}
+  function prepareNativeFarmArrivalResources(value,options={}){return prepareFirstNativeWorkerResources(copyNativeFarmArrivalRouteProposal(value),options);}
   function prepareNativeIdleStrollResources(value,options={}){return prepareNativeResources(copyNativeIdleStrollProposal(value),{...options,deferredStart:options.deferredStart??true});}
   async function prepareNativeResources(resources,{signal:callerSignal,minSequence=-1,terrainManifest,deferredStart=false,encounterRetreat=null}={}){
    const crop=['native-animal-crop-route-proposal','native-animal-crop-strike-proposal'].includes(resources.kind)?resources.reference.kind:null;

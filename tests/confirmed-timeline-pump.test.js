@@ -23,6 +23,41 @@ test('prepared intervals survive expensive preparation and require retained pack
  f.pump.dispose();f.clock.dispose();
 });
 
+for(const family of ['TaskStart','FarmArrival'])test('Surface reaches the first '+family+' source without opening more empty historical intervals',async()=>{
+ const f=preparedFixture(),state={workers:[],raid:null},controller=new AbortController();
+ const source=readFileSync(new URL('../src/rendering/webgpu-world-surface.js',import.meta.url),'utf8');
+ const start=source.indexOf('  function prepareNativeResumeResources'),end=source.indexOf('  function prepareNativeIdleStrollResources',start);
+ assert(start>=0&&end>start);
+ const waits=[],calls=[];
+ const waitNativePublication=(sequence,signal)=>new Promise((resolve,reject)=>{
+  if(f.stream.status().sequence>=sequence){resolve();return;}
+  const abort=()=>reject(new DOMException('Cancelled','AbortError'));
+  signal.addEventListener('abort',abort,{once:true});
+  waits.push({sequence,finish(){signal.removeEventListener('abort',abort);resolve();}});
+ });
+ const resource={family},identity=value=>value;
+ const build=new Function('state','stream','timelinePump','waitNativePublication','prepareNativeResources',
+  'copyNativeTaskStartProposal','copyNativeFarmArrivalRouteProposal',
+  `${source.slice(start,end)}\nreturn prepareNative${family}Resources;`);
+ const prepare=build(state,f.stream,f.pump,waitNativePublication,(value,options)=>{
+  calls.push(value);return waitNativePublication(options.minSequence,options.signal).then(()=>value);
+ },identity,identity);
+ try{
+  assert.equal(f.pump.advance(),0);
+  const first=f.pump.preparedInterval(),pending=prepare(resource,{minSequence:2,signal:controller.signal});
+  pending.catch(()=>{});
+  assert.deepEqual(f.pump.preparedInterval(),first);
+  assert.equal(f.pump.advance(),0,'the existing overlapping interval remains authoritative until submitted');
+  f.pump.sealPreparedInterval(first.token);
+  assert.equal(f.pump.advance(),2);
+  assert.deepEqual(f.seen.map(item=>item.sequence),[1,2]);
+  assert.equal(f.pump.preparedInterval(),null);
+  for(const wait of waits)if(wait.sequence<=2)wait.finish();
+  assert.equal(await pending,resource);
+  assert.deepEqual(calls,[resource]);
+ }finally{controller.abort();f.pump.dispose();f.clock.dispose();}
+});
+
 test('an expired unsubmitted interval relinquishes ownership and commits through the ordinary stream',()=>{
  const cancelled=[],confirmed=[];
  const f=preparedFixture({cancel:preview=>cancelled.push(preview.sequence)});

@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-La propuesta de construcción kind 3 conserva el dueño de la huella del centro y los props del mismo ticket. WASM acredita la colocación y rechaza un corredor afectado. La unión con Game y Draw sigue pendiente. [Control y límites](native-cold-worker-admission-20261126.md#propuesta-nativa-de-colocación-de-centro).
+La propuesta de construcción kind 3 conserva el dueño de la huella del centro y los props del mismo ticket. NVIDIA confirmó el primer centro de Sabana con un cobro y un dibujo ligados al mismo polígono. WASM rechaza un corredor afectado. Quedan la activación ordinaria y la validación gráfica del caso que suprime props. [Control y límites](native-cold-worker-admission-20261126.md#colocación-de-centro-con-una-autoridad-civil-activa).
 
 El checkpoint civil mantiene el perfil nativo cuando ya se retiró el último cuerpo. La recarga de amanecer en NVIDIA conserva el reloj pausado y presenta Farm23 y Task14 tras una contratación pagada. [Recorrido y límites](native-cold-worker-admission-20261126.md#recarga-después-de-home19-y-al-amanecer).
 

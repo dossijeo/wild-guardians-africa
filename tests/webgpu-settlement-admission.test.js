@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import {createWebGpuPicker,webGpuPickerReady} from '../src/rendering/webgpu-picker.js';
 import {createWebGpuSettlements} from '../src/rendering/webgpu-settlements.js';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
+import {createChunkPublicationCoordinator} from '../src/rendering/webgpu-chunk-publication.js';
 import {readFile} from 'node:fs/promises';
 
 const turn=()=>new Promise(resolve=>setImmediate(resolve));
@@ -102,6 +103,58 @@ test('center preview admits the actual instance and cancels stale preparation',a
  const pipelineAdmission={prepare(){throw Error('non-atomic admission used');},prepareAndPublish(group,{signal},publish){return new Promise(resolve=>requests.push({group,signal,resolve:()=>{publish();resolve();}}));}},view=createWebGpuSettlements({scene,state:{culture:'mapungubwe',elapsed:0,villages:[],structures:[]},residency:{get:()=>current},renderer:{backend:{isWebGPUBackend:true}},pipelineAdmission,enableStructurePreviews:true,loadProgressiveCenter:async()=>({preview:{scene:root},start(){},tick(){},dispose(){}})});
  try{await view.preparePreview('center','mapungubwe');assert.equal(requests.length,0);assert.equal(view.beginPreview({id:'p',kind:'center',culture:'mapungubwe',x:0,z:0}),true);assert.equal(view.status().provisional,1);assert.equal(scene.children.length,1);const first=scene.children[0];assert.equal(first.visible,false);await turn();assert.equal(requests[0].group,first);const paint=first.children[0].children[0].material;assert.equal(paint.transparent,true);current=replacement;view.terrainChanged();assert.equal(first.visible,false);assert.equal(first.children[0].children[0].material,paint);assert.equal(first.children[0].children[0].geometry,geometry);assert.ok(Math.abs(first.position.y-2.025)<1e-6);assert.equal(requests.length,1);view.rejectPreview('p');assert.equal(requests[0].signal.aborted,true);assert.equal(scene.children.length,0);requests[0].resolve();await turn();assert.equal(first.parent,null);assert.equal(first.visible,false);assert.equal(view.beginPreview({id:'q',kind:'center',culture:'mapungubwe',x:0,z:0}),true);const second=scene.children[0];assert.equal(second.visible,false);await turn();assert.equal(requests[1].group,second);requests[1].resolve();await turn();assert.equal(second.visible,true);view.rejectPreview('q');assert.equal(scene.children.length,0);
  }finally{view.dispose();terrain.geometry.dispose();terrain.material.dispose();geometry.dispose();material.dispose();globalThis.fetch=previousFetch;}
+});
+
+test('capturing a native center replaces only the matching provisional mesh',async()=>{
+ const previousFetch=globalThis.fetch;
+ globalThis.fetch=async url=>({ok:true,json:async()=>String(url).includes('destruction')?{buildings:[{culture:'mapungubwe',url:'/center.glb'}]}:[]});
+ const scene=new THREE.Scene(),root=new THREE.Group(),geometry=new THREE.BoxGeometry(),material=new THREE.MeshBasicMaterial();
+ root.add(new THREE.Mesh(geometry,material));
+ const ground=new THREE.Mesh(new THREE.PlaneGeometry(20,20),new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));
+ ground.rotation.x=-Math.PI/2;ground.updateMatrixWorld(true);
+ const state={culture:'mapungubwe',elapsed:0,villages:[],structures:[]},residency={get:()=>ground};
+ const admission={
+  async prepare(){},
+  async prepareAndPublish(object,options,publish){publish();},
+  async prepareTicket(){return {valid:()=>true};},
+  async prepareManyAndPublish(){throw Error('Unexpected standalone publication');}
+ };
+ const view=createWebGpuSettlements({scene,state,residency,renderer:{backend:{isWebGPUBackend:true}},pipelineAdmission:admission,
+  enableStructurePreviews:true,loadProgressiveCenter:async()=>({preview:{scene:root},start(){},tick(){},dispose(){}})});
+ const coordinator=createChunkPublicationCoordinator({admission});
+ const entity={id:'structure-2',kind:'center',status:'intact',culture:'mapungubwe',villageId:'village-1',x:0,z:0,yaw:0,hp:600,maxHp:600};
+ const placement={version:1,commandId:'purchase',entity,suppressed:[]},signal=new AbortController().signal;
+ const prepare=async()=>{
+  const part=await view.prepareNativeCenterPlacement(placement,residency,{signal});
+  const batch=await coordinator.prepareBatch([],{scene,signal,dependents:[part]});
+  return {part,batch};
+ };
+ try{
+  await view.preparePreview('center',entity.culture);
+  view.beginPreview({id:placement.commandId,kind:'center',culture:entity.culture,x:0,z:0});
+  view.beginPreview({id:'other',kind:'center',culture:entity.culture,x:4,z:0});
+  await turn();
+  const [original,other]=scene.children;
+  assert.equal(original.visible,true);assert.equal(other.visible,true);
+  const {part,batch}=await prepare();
+  assert.deepEqual(batch.capturePresentation(()=>[original.visible,other.visible,part.object.visible]),[false,true,true]);
+  assert.equal(original.visible,true);
+  assert.equal(part.object.parent,null);
+  assert.throws(()=>batch.capturePresentation(()=>{throw Error('Recording failed');}),/Recording failed/);
+  assert.deepEqual(scene.children,[original,other]);
+  assert.equal(original.visible,true);
+  const next=await prepare();
+  state.structures.push(entity);
+  next.part.acceptCenterPlacement({...placement,polygonId:9});
+  assert.equal(next.batch.commit(),true);
+  view.sync([{type:'PlacementCommitted',commandId:placement.commandId,targetId:entity.id}]);
+  assert.equal(original.parent,null);
+  assert.deepEqual(scene.children,[other,next.part.object]);
+  assert.equal(next.part.object.visible,true);
+ }finally{
+  coordinator.dispose();view.dispose();ground.geometry.dispose();ground.material.dispose();
+  geometry.dispose();material.dispose();globalThis.fetch=previousFetch;
+ }
 });
 
 test('wall preview admits its real instanced mesh and defers disposal after cancellation',async()=>{

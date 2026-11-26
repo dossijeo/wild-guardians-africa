@@ -184,8 +184,13 @@ export function createWebGpuSettlements({scene,state,residency,renderer=null,pip
    preparedCenters.delete(id);group.removeFromParent();return true;
   }};
   preparedCenters.set(id,record);
-  return {object:group,signal,valid,cancel:record.cancel,eventRoots:()=>[group],
-   presentation:()=>({show:[group],hide:[]}),
+  // The retained packet shows the acquired center in place of its input preview.
+  // The ordinary scene keeps the preview until the placement is confirmed.
+  const provisional=()=>previewMeshes.get(source.commandId)?.object;
+  return {object:group,signal,valid,cancel:record.cancel,eventRoots:()=>{
+    const preview=provisional();return preview?[group,preview]:[group];
+   },
+   presentation:()=>{const preview=provisional();return {show:[group],hide:preview?[preview]:[]};},
    acceptCenterPlacement(value){
     const proof=copyNativeCenterPlacement(value,{committed:true}),live=state.structures.find(item=>item.id===entity.id);
     if(receipt||!valid()||!live||!sameNativeCenterPlacement(source,proof))throw Error('Confirmed center differs from its prepared graphic owner');
