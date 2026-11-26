@@ -51,7 +51,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -72,6 +72,12 @@ function shelteredCenterApproach(state){
  const animal=state.raid?.animals[0];
  if(!nativeShelteredSavannaCenterActor(state,animal)||!['entering','walking'].includes(animal.status)||
     nativeCropRouteSubject(state,animal)?.purpose!=='center')return null;
+ return animal;
+}
+function shelteredCenterStrike(state){
+ const animal=state.raid?.animals[0];
+ if(!nativeShelteredSavannaCenterActor(state,animal)||nativeCropRouteSubject(state,animal)?.purpose!=='center'||
+    !savedRaidStrike(animal))return null;
  return animal;
 }
 function shelteredCenterRetreat(state){
@@ -112,12 +118,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(endpoint.x!==Math.fround(savedApproach.approach.x)||endpoint.z!==Math.fround(savedApproach.approach.z))
     throw Error('Saved native center approach corridor ends at another site');
   }
+  const savedStrike=savedWorkerLifecycle===1?shelteredCenterStrike(game):null;
+  if(savedStrike&&savedEncounter)throw Error('Saved native center strike has another owner');
   const savedRaidRoute=savedRetreat??savedApproach;
+  const savedRaidAnimal=savedRaidRoute??savedStrike;
   // Home19 and Dawn can both leave the authority without a live body. Restore
   // its clock and registry before the next raid or hiring request is emitted.
   const inactiveNativeRoster=nativeWorkerLifecycle&&(game.biome==='desierto'||game.biome==='sabana')&&!restoringPhysics&&
     (game.workers.length===0||savedWorkerLifecycle===1&&game.workers.every(worker=>worker.status==='home'));
-  const nativeRosterSupported=(nativeRestoration||inactiveNativeRoster)&&(!game.raid||savedRaidRoute)&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  const nativeRosterSupported=(nativeRestoration||inactiveNativeRoster)&&(!game.raid||savedRaidAnimal)&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  if(nativeWorkerLifecycle&&!nativeRosterSupported)throw Error('Native worker lifecycle cannot bootstrap this roster');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
@@ -184,12 +193,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
    }
-   if(savedRaidRoute){
+   if(savedRaidAnimal){
     if(savedApproach&&savedApproach.path!==savedApproachPath)throw Error('Saved native center approach lost its corridor');
-    const {id,x,z,radius}=savedRaidRoute;
+    const {id,x,z,radius}=savedRaidAnimal;
     const body=nativeBodies.publish(id,{x,z,radius,kind:1,flags:1});
-    const requested=savedRetreat?planner.requestRestoredAnimalRetreat(game,savedRetreat,body):planner.requestNativeAnimalCropRoute(game,savedApproach,body);
-    if(!requested)throw Error('Saved native raid route request rejected');
+    const requested=savedStrike?planner.requestRestoredAnimalStrike(game,savedStrike,body):
+     savedRetreat?planner.requestRestoredAnimalRetreat(game,savedRetreat,body):planner.requestNativeAnimalCropRoute(game,savedApproach,body);
+    if(!requested)throw Error('Saved native animal request rejected');
    }
    if(planner.commitNativeCausalClock({paused:inactiveNativeRoster&&(!!game.pauses.length||!!game.result)}).status!=='committed')throw Error('Native worker bootstrap clock unavailable');
    installNativeProduction();
@@ -1709,7 +1719,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       shelteredCenterRetreat(snapshotState)??shelteredCenterApproach(snapshotState):null;
     const restorableRaidRoute=raidAnimal&&(snapshotState!==game||raidAnimal===savedRaidRoute&&
       raidAnimal.path?.length&&planner.nativeAnimalCropState(raidAnimal.id)?.mode===1);
-    const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute)&&game.workers.every(worker=>
+    const strike=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?shelteredCenterStrike(game):null;
+    const strikeSource=strike&&planner.nativeAnimalCropState(strike.id);
+    const restorableStrike=strikeSource?.purpose==='center'&&(strikeSource.mode===3&&strike.attackId==='attack-'+strikeSource.strike.attackId||
+      strike===savedStrike&&strikeSource.mode===5&&strike.attackId==='attack-'+strikeSource.restore.attackId);
+    const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute||restorableStrike)&&game.workers.every(worker=>
       nativeMarkers.has(worker.nativeRouteAdmission)||planner.nativeWorkerHomeInactive(worker.id));
     const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));

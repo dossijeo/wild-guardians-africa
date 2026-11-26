@@ -23,8 +23,9 @@ static bool restoredAnimalStrikeCurrent(const IntentState& s,const ActiveIntent&
  const auto target=s.targets.find(q.target),center=s.targets.find(q.center);
  SpatialBodyView body;
  return q.actor==intent.actor&&q.target==intent.target&&q.sequence==intent.resourceRequestSequence&&
-   q.at==intent.resourceRequestedAt&&target!=s.targets.end()&&target->second.kind<3&&
-   (acquired||target->second.active)&&target->second.x==q.targetX&&target->second.z==q.targetZ&&
+   q.at==intent.resourceRequestedAt&&target!=s.targets.end()&&
+   (q.attackCenter?(q.target==q.center&&target->second.kind==4&&(acquired||intactAttackCenter(target->second))):
+    (target->second.kind<3&&(acquired||target->second.active)))&&target->second.x==q.targetX&&target->second.z==q.targetZ&&
    center!=s.targets.end()&&(acquired||center->second.active)&&center->second.x==q.centerX&&center->second.z==q.centerZ&&
    spatialReadBody(q.body,body)&&body.kind==1&&body.flags==1&&body.r==q.radius&&body.x==q.x&&body.z==q.z&&
    !s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body);
@@ -43,16 +44,17 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_strike_restore_request(double actor,double s
  if(found==end||s.activeIntents.size()!=1||spatial_body_count()!=1)return -2;
  auto& intent=found->second;
  const auto center=s.targets.find(uint64_t(centerId)),target=s.targets.find(intent.target);
+ const bool attackCenter=target!=s.targets.end()&&target->first==uint64_t(centerId)&&intactAttackCenter(target->second);
  SpatialBodyView body;
  if(!intent.animal||!intent.lease||!intent.approachKnown||intent.state!=PlanningState::ActionActive||
     intent.generation||intent.requiresResources||intent.restoredAnimalStrike||intent.animalStrike||
-    target==s.targets.end()||!target->second.active||target->second.kind>=3||center==s.targets.end()||!center->second.active||
+    target==s.targets.end()||!target->second.active||(!attackCenter&&target->second.kind>=3)||center==s.targets.end()||!center->second.active||
     !spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||!(body.r>0&&body.r<=2)||
     body.x!=intent.approachX||body.z!=intent.approachZ||float(body.r)!=intent.approachRadius||
     !s.reservedBodies.empty()||!s.suspendedBodies.empty())return -2;
  const auto q=std::make_shared<NativeAnimalRouteRequest>(NativeAnimalRouteRequest{
   intent.actor,intent.target,uint64_t(bodyId),uint64_t(centerId),0,s.effectiveTime,body.x,body.z,yaw,body.r,phase,
-  center->second.x,center->second.z,false,target->second.x,target->second.z});
+  center->second.x,center->second.z,false,target->second.x,target->second.z,attackCenter});
  intent.restoredAnimalStrike=std::make_shared<RestoredAnimalStrike>(RestoredAnimalStrike{q,uint64_t(attackId),int(clip),duration,remaining});
  intent.state=PlanningState::AwaitingResources;intent.requiresResources=true;
  q->sequence=emitIntentChange(s,intent);

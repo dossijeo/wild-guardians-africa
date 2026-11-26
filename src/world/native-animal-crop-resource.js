@@ -39,7 +39,7 @@ export function copyNativeAnimalCropReference(value,kind){
     value.sourceControlSequence<value.requestSequence||!Number.isFinite(value.radius)||value.radius<=0||
     !['x','z','yaw','targetX','targetZ'].every(k=>Number.isFinite(value[k]))||!validTime(value.phase)||
     !validTime(value.endTime)||value.endTime<boundary.effectiveTime)throw TypeError('Invalid native crop resource owner');
- if(restore&&(kind!==27||value.purpose!==undefined||['slot','generation','routeTicket','routeAssignment'].some(key=>value[key]!==undefined)||
+ if(restore&&(kind!==27||['slot','generation','routeTicket','routeAssignment'].some(key=>value[key]!==undefined)||
     value.clip!==restore.clip||value.duration!==restore.duration||restore.requestedAt>boundary.effectiveTime||
     value.endTime!==boundary.effectiveTime+restore.remaining||value.endTime<=boundary.effectiveTime))
   throw TypeError('Saved animal strike cannot use a route or another clip');
@@ -93,7 +93,7 @@ export function copyPendingAnimalCrop(value){
     !['x','z','yaw','targetX','targetZ','radius','phase'].every(key=>Number.isFinite(value[key]))||value.phase<0||value.radius<=0)
    throw TypeError('Invalid resting crop request');
  const restore=value.restore===undefined?null:copyRestoredStrike(value.restore);
- if(restore&&value.purpose!==undefined)throw TypeError('Only a crop strike can be restored');
+ if(restore&&!validDestination(value,27))throw TypeError('A restored strike requires a crop or center destination');
  const impact=value.restoredWorkerImpact;
  if(impact!==undefined&&(!impact||Object.keys(impact).length!==6||impact.version!==1||value.purpose!=='center'||
     ![impact.actorId,impact.bodyId,impact.spawn,impact.hit].every(id)||impact.hit!==impact.spawn+1||

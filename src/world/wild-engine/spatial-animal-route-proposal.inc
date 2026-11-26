@@ -395,7 +395,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
   if(!restoredAnimalStrikeCurrent(s,intent,mode==3))return -1;
   s.animalCropState={1,double(mode),actor,double(q.body),double(q.target),double(q.center),q.centerX,q.centerZ,
    q.radius,q.x,q.z,q.heading,q.phase,double(mode==3),0,0,s.effectiveTime,q.targetX,q.targetZ,double(q.sequence),
-   0,0,0,0,double(restored->attackId),double(restored->clip),restored->duration,restored->remaining,q.at};
+   0,0,q.attackCenter?1.:0.,0,double(restored->attackId),double(restored->clip),restored->duration,restored->remaining,q.at};
   return mode;
  }
  if(intent.stoppedShieldCrop&&intent.state==PlanningState::NeedsPlan){

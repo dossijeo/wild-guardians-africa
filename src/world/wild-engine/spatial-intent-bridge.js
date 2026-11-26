@@ -1358,7 +1358,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   const requestRestoredAnimalStrike=(state,animal,bodyId)=>{
     if(state!==owningState||!wasm.nav_animal_strike_restore_request||!Number.isSafeInteger(bodyId)||bodyId<1)return false;
     const subject=nativeCropRouteSubject(state,animal),saved=savedRaidStrike(animal);
-    if(!subject||subject.purpose||!saved||saved.attackId>=state.sequence||
+    if(!subject||subject.purpose==='center'&&!nativeShelteredSavannaCenterActor(state,animal)||!saved||saved.attackId>=state.sequence||
        !Number.isFinite(animal.heading)||!Number.isFinite(animal.motionPhase))return false;
     syncBoundaryTime();
     return wasm.nav_animal_strike_restore_request(numericId(animal.id),wasm.nav_intent_session(),bodyId,numericId(subject.center.id),
