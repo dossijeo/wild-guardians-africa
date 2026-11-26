@@ -1,0 +1,136 @@
+{
+  "baseline": "bfa775ad1ca1895c0a581c6d42e4248a3bc9d6cf",
+  "scope": "Game, standalone WASM privado, dos rigs glTF con bakes originales y Host real con cola GPU determinista. El pase de prueba escribe el escalar de Fall en un buffer privado vinculado al paquete de Retreat.",
+  "device": "CPU con doble de WebGPU",
+  "ready": {
+    "cutoff": 12.599999999999945,
+    "at": 12.619999999999944,
+    "ticket": 10,
+    "hold": 6,
+    "packet": 6,
+    "old": 5
+  },
+  "beforeRaf": {
+    "clock": 12.619999999999944,
+    "pending": 6,
+    "active": 5
+  },
+  "fall": {
+    "id": "worker-900011",
+    "body": 1,
+    "fromTime": 12.599999999999945,
+    "at": 12.619999999999944,
+    "span": 0.02,
+    "x": -14.520928903743672,
+    "z": 2.5523155738541687,
+    "heading": 0,
+    "from": 3.101666507720947,
+    "remaining": 3.081666507720947,
+    "frame": 6,
+    "ticket": 11,
+    "meshes": 4,
+    "pose": [
+      -14.520928903743672,
+      16.26512756347656,
+      2.5523155738541687,
+      0
+    ],
+    "sourcePhase": 0.4400000000000004,
+    "sourcePick": "fece86575dfdc438c06f818c45d3c0b2f919c47cca405ee2c4c05d1284783fb3",
+    "preparedPhase": 0.4600000000000004,
+    "preparedPick": "66aa08a3e4cccb7caaf2ab381d4c2a954d0771db4374f75cc8940bdeab273f5a",
+    "submittedFall": 0.46000000834465027,
+    "animalAge": 0
+  },
+  "tail": {
+    "stepsExecuted": 2,
+    "at": 12.639999999999944,
+    "pose": [
+      -16.798109984199314,
+      2,
+      -1.5707963267948966,
+      1.6799999999999642
+    ],
+    "worker": {
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "fall": 3.061666507720947,
+      "exit": null,
+      "recovery": null,
+      "status": "incapacitated",
+      "incapacitated": true,
+      "hits": 2
+    },
+    "events": [
+      "event-29211"
+    ]
+  },
+  "getUp": {
+    "first": 15.719999999999878,
+    "firstPhase": 0.01833349227905561,
+    "firstPick": "af84af3e89ab03455cdec1c312f0a1b32a6062a3cfc0e3fa71663f3c62228fde",
+    "meshes": 4,
+    "last": 18.89999999999981,
+    "lastPhase": 3.198333492279058,
+    "ended": 18.91999999999981,
+    "exit": 0.24,
+    "pose": [
+      -14.791069342739112,
+      2.2152638339379633,
+      0
+    ]
+  },
+  "result": {
+    "centerHp": 600,
+    "worker": {
+      "x": -14.791069342739112,
+      "z": 2.2152638339379633,
+      "fall": 0,
+      "exit": 0.24,
+      "recovery": null,
+      "status": "incapacitated",
+      "incapacitated": true,
+      "hits": 2
+    },
+    "recoveryUntil": 16,
+    "raidEndedAt": 14.339999999999907,
+    "errors": [],
+    "faults": []
+  },
+  "negative": {
+    "mutation": "grabación de la fase visible anterior sin captura temporal",
+    "at": 12.599999999999945,
+    "assertion": "AssertionError [ERR_ASSERTION]: prepared packet recorded the old Fall pose"
+  },
+  "assertions": [
+    "Mismos rig, mallas, geometrías y materiales de Fall antes y después de capturar",
+    "La captura restaura la fase anterior en caso de error y la geometría de picking anterior tras grabar",
+    "Actor ajeno, restante adulterado y fase histórica instalada impiden la captura",
+    "El último envío de la aproximación precede al primer RAF del paquete retenido"
+  ],
+  "regression": {
+    "passed": 19,
+    "failed": 0,
+    "command": "node --test --test-concurrency=1 tests/webgpu-worker-baked-fall.test.js tests/webgpu-worker-baked-getup.test.js tests/native-route-control.test.js"
+  },
+  "reproduction": [
+    "& .cache/flee-mixed/run-encounter-worker.ps1",
+    "& .cache/flee-mixed/run-encounter-worker.ps1 -Variant base -Output encounter-retreat-worker-final-negative.log"
+  ],
+  "sha256": {
+    ".cache/flee-mixed/run-encounter-worker.ps1": "cceb2a2a00b7735093558c17098b7b962cb27b0e7f3988f5b14ba778094d669d",
+    ".cache/flee-mixed/encounter-retreat-worker-loader.mjs": "49a2b8739d2ab9a2e8c1b44aa237e38c3e435b3379f39edfc869871553b6672c",
+    ".cache/flee-mixed/encounter-worker-rig.mjs": "6c8d7eb5a05bdb9428275a9cbfbb6c02ee432b2c1ab382b357623226b60bb5d7",
+    ".cache/flee-mixed/encounter-retreat-rig-loader.mjs": "cfa68426b763c3b4f5834a351290721ec8e88b429d7e96c2193fccc23f2a827c",
+    ".cache/flee-mixed/record-encounter-worker.mjs": "91881cd5da4d5324c7ebf9f138b9b8783db3d6ec3ebf70e6e82e7125bb04b237",
+    ".cache/flee-mixed/encounter-retreat-worker-final.log": "e12ecf41e4ba7ab27e07aa9212423a8e11d31255f814359fc00ff69c696340b5",
+    ".cache/flee-mixed/encounter-retreat-worker-final-negative.log": "2057d5c8974b7a9f69e75683b600715600dc12919342d1eb2db39a8b193945c2",
+    ".cache/flee-mixed/encounter-worker-impact.tap": "045fa44c7690febaebbc982ca4895c476d78a42e4fa3fdccc903b81e0a8bd43f",
+    "E:/wild-guardians-qa/encounter-retreat-go-5b5ba3f6/build/standalone/spatial-savanna.wasm": "6cd961fa4530e0228b68ac478a6c60ddfc5673db324ada1f3a0c63fee8b802c8"
+  },
+  "pending": [
+    "Captura completa de Surface con el grupo de uniformes que genera Three",
+    "Acuse de submit a la autoridad por el puerto de recursos",
+    "Integración canónica y validación WebGPU física"
+  ]
+}

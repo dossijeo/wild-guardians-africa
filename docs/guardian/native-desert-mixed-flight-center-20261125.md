@@ -379,4 +379,12 @@ La preimagen del roster rechaza el candidato mientras la aproximación aún pose
 
 El arnés registra el uniforme del rig mediante el adaptador de relojes remoto y sube su tabla Float32 de 720 bytes al paquete retenido. Los recorridos de uno y dos subpasos producen la misma tabla. A 12,62 s el Host somete el paquete 6 con edad cero y picking devuelve la pose y la fase iniciales. A 12,68 s el mismo reloj muestrea Running a 3,8 m/s. Pasan los dos recorridos con el rig, el rechazo de la preimagen y 96 pruebas de regresión. [Recibo del rig](performance/native-raid-encounter-retreat-rig-20261126.json).
 
-La prueba usa el glTF y las animaciones baked originales, con un pase de prueba y una cola GPU determinista. Quedan pendientes el paquete completo de Surface con el rig del trabajador, la integración de este contrato en producto, la validación en GPU física y la activación ordinaria.
+La prueba usa el glTF y las animaciones baked originales, con un pase de prueba y una cola GPU determinista.
+
+### Fall del trabajador en el primer envío de Retreat
+
+A 12,60 s el trabajador ya estaba en Fall. El control privado prepara sus cuatro mallas baked para 12,62 s con el mismo rig, geometrías y materiales. El participante devuelve la fase anterior después de grabar, incluso si la grabación falla. El picking de la fuente vuelve a su geometría anterior. Los controles rechazan actor ajeno, restante adulterado y una fase histórica que aún posee el rig.
+
+En el avance de dos subpasos el primer RAF autorizado somete el paquete 6 con Retreat a edad cero y Fall a fase Float32 de 0,460000008 s. Game verifica el mismo cuerpo y posición del trabajador, con 3,081666508 s restantes de Fall. Omitir la captura temporal deja en el paquete la fase anterior de 0,44 s y el control detecta la misma geometría de picking anterior al golpe. Las publicaciones siguientes llevan el rig a GetUp a 15,72 s y completan su desplazamiento a 18,92 s con 0,24 s de mezcla de salida. Pasaron 19 pruebas dirigidas. [Recibo de Fall y GetUp](performance/native-raid-encounter-worker-fall-20261126.json).
+
+El arnés escribe la fase de las mallas en un buffer del pase de prueba. Quedan por acreditar el grupo de uniformes del renderer en una captura completa de Surface, el acuse por el puerto de recursos, la integración en producto y la validación en GPU física.
