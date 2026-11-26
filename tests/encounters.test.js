@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {updateWorkerEncounters,pushWorker,sweptDistance} from '../src/simulation/encounters.js';
+import {classifyWorkerEncounter,prepareWorkerEncounter,updateWorkerEncounters,pushWorker,sweptDistance} from '../src/simulation/encounters.js';
 import * as Game from '../src/simulation/game.js';
 import {serialize,deserialize} from '../src/persistence/snapshots.js';
 import {observeTaskChanges} from '../src/simulation/tasks.js';
@@ -15,6 +15,42 @@ function fixture(){
   s.workers=[worker];s.raid={id:'raid',animals:[animal],encounters:[],reservations:{}};
   return {s,worker,animal};
 }
+test('An encounter preview preserves the source and predicts the next RNG, pose and effect',()=>{
+  for(const scenario of [
+    {rng:1,z:1,hits:0,fall:0,accepted:true},
+    {rng:123456789,z:1,hits:0,fall:0,accepted:false},
+    {rng:1,z:.3,hits:0,fall:0,accepted:true},
+    {rng:1,z:.3,hits:1,fall:.5,accepted:true},
+  ]){
+    const {s,worker,animal}=fixture();
+    s.rng=scenario.rng;
+    Object.assign(worker,{z:scenario.z,hits:scenario.hits,fallRemaining:scenario.fall});
+    const before=structuredClone(s);
+    const contact=classifyWorkerEncounter(animal,worker,{},false,false);
+    assert(contact.eligible);
+    const prepared=prepareWorkerEncounter(s,nav,animal,worker,contact.collision);
+    assert.deepEqual(s,before);
+    assert.equal(!!prepared.hit,scenario.accepted);
+    updateWorkerEncounters(s,nav);
+    assert.equal(s.rng,prepared.rng);
+    assert.equal(animal.hitsRemaining,4-Number(scenario.accepted));
+    assert.equal(worker.hits,scenario.hits+Number(scenario.accepted));
+    if(!prepared.hit){assert.equal(s.events.length,0);continue;}
+    const {hit}=prepared,expected=hit.push??before.workers[0],event=s.events.at(-1);
+    assert.deepEqual([worker.x,worker.z],[expected.x,expected.z]);
+    assert.equal(worker.fallRemaining,hit.fall??scenario.fall);
+    assert.equal(event.type,hit.incapacitated?'WorkerIncapacitated':'WorkerHit');
+    assert.deepEqual(event.presentation,hit.presentation);
+    assert.equal(event.pushed,hit.push?.distance??0);
+  }
+});
+test('A failed collision sweep leaves the encounter consequence untouched',()=>{
+  const {s,worker}=fixture();
+  worker.z=.3;
+  const before=structuredClone(s);
+  assert.throws(()=>updateWorkerEncounters(s,{walkable(){throw Error('Terrain unavailable');}}),/Terrain unavailable/);
+  assert.deepEqual(s,before);
+});
 test('A rejected frontal encounter rolls once, but later physical overlap makes the hit mandatory',()=>{
   const {s,worker,animal}=fixture();s.rng=123456789;
   updateWorkerEncounters(s,nav);assert.equal(worker.hits,0);const rng=s.rng;
