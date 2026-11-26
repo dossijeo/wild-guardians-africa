@@ -134,13 +134,23 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
+  const home=request.kind==='home-route'?planner.nativeStationaryEncounterRecovery?.()?.home:null;
+  let retiredBeforeReady=false;
   if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
    try{
     const {operation,prepare,...options}=request,result=await (request.kind==='ruined-wall-repair'?restoreRuinedWall:planner[operation])({...options,getPublication,signal:transaction.controller.signal,
-     prepareResources:({resources:proposal,signal,deferredStart,nativeBarrierWallEntities})=>resources[prepare](proposal,{signal,...(nativeBarrierWallEntities?{nativeBarrierWallEntities}:{}),...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest})});
+     prepareResources({resources:proposal,signal,deferredStart,nativeBarrierWallEntities}){
+      const preparing=resources[prepare](proposal,{signal,...(nativeBarrierWallEntities?{nativeBarrierWallEntities}:{}),...(prepare==='prepareNativeGateResources'?{}:{deferredStart}),minSequence:transaction.minSequence,terrainManifest:manifest});
+      return home?preparing.catch(error=>{
+       // Only an explicit retirement before READY can dispose this unacquired ticket.
+       // The held Home request still owns the original body and pose.
+       retiredBeforeReady=resources.retirementObserved()&&sourceIdentity(request)===transaction.source;
+       throw error;
+      }):preparing;
+     }});
     if(closed)return null;
-    if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
+    if((transaction.obsolete||retiredBeforeReady)&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
     if(wakeKey!==undefined&&['unsupported','blocked'].includes(result.status))rejectedRuins.set(request.actorId,wakeKey);else rejectedRuins.delete(request.actorId);
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};
     if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control: '+result.error);
@@ -156,7 +166,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise.then(()=>{if(!closed&&transaction.obsolete)wake();});
   return transaction.promise;
  }
- function quiesce({cancelTask=null,cancelCrop=null}={}){
+ function quiesce({cancelTask=null,cancelCrop=null,cancelHome=null}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -164,7 +174,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   // settlement can certify a stable source; its errors remain terminal.
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
-     cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence){
+     cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
+     cancelHome&&active?.kind==='home-route'&&active.actorId==='worker-'+cancelHome.actorId&&active.source===JSON.stringify(cancelHome)){
    active.obsolete=true;active.controller.abort();
   }
   hold.promise=Promise.resolve(active?.promise).then(()=>{

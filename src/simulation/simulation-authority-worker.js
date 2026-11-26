@@ -67,7 +67,7 @@ self.onmessage=async ({data})=>{
      if(data.kind==='quiesceNativeIntentProduction'){
       if(nativeProductionHold)throw Error('Native production suspension already held');
       createdHold={id:data.id,receipt:null,settled:false};nativeProductionHold=createdHold;
-      const receipt=await source.quiesceNativeIntentProduction();
+      const receipt=await source.quiesceNativeIntentProduction({forLostDraw:data.forLostDraw===true});
       if(authority!==source||nativeProductionHold!==createdHold)return;
       createdHold.receipt=receipt;
       // The checkpoint recovery path may consume a terminal callback receipt;

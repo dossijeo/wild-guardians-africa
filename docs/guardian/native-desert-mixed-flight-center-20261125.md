@@ -495,4 +495,14 @@ El control CPU retiene el primer envío, altera el valor del uniforme y comprueb
 
 En NVIDIA Turing, las pérdidas se provocaron a 14,34 s durante Fall y a 15,86 s durante GetUp. El replay partió de la base 196 y alcanzó las publicaciones 227 y 301. En cada caso, el sustituto presentó el cuerpo 1 en el paquete 1 con peso de reloj cero. La fase leída del uniforme fue 2,1800001 s en Fall y 0,1583335 s en GetUp. Ambos recorridos dieron el siguiente paso de 20 ms después de los fences, conservaron un solo segundo golpe y presentaron la retirada Home19. Los sustitutos drenaron a 34,94 y 34,86 s. [Recibos de NVIDIA](performance/native-stationary-encounter-recovery-nvidia-20261126.json).
 
-Pasaron 279 pruebas dirigidas. El build web del checkout local terminó en 1 min 12 s. La prueba cubre el perfil DEV de Desierto, un trabajador sin portón y la autoridad que ya completó la retirada del animal. Quedan pendientes el corte con Home18 todavía en preparación, los demás perfiles y la aceptación de cadencia.
+Pasaron 279 pruebas dirigidas. El build web del checkout local terminó en 1 min 12 s. La prueba cubre el perfil DEV de Desierto, un trabajador sin portón y la autoridad que ya completó la retirada del animal. Los demás perfiles y la aceptación de cadencia siguen abiertos.
+
+### Sustitución de Draw con Home18 pendiente
+
+Al terminar GetUp, la autoridad conserva la solicitud de Home18 sobre el cuerpo y la pose confirmados. Si el preparador se retira antes de entregar READY, se cancela el ticket de preparación. El cierre de callbacks y el drenaje de Draw se acreditan por sus puertos respectivos. Un error ordinario de preparación conserva su resultado de fallo.
+
+El sustituto presenta el cuerpo inmóvil en Idle a fase cero, que corresponde a la mezcla de salida completa de GetUp. Después del fence, la autoridad reanuda la solicitud original y genera un ticket de preparación nuevo. El GO de ese ticket transfiere la pose al Home18 adquirido. Los controles CPU cubren ambos órdenes de cierre y suspensión, conservan el presupuesto de carrera y recorren Home19.
+
+En NVIDIA Turing, la pérdida ocurrió a 18,92 s con READY del ticket 12 retenido. El journal reprodujo desde la base 391 hasta la publicación 454. El primer paquete del sustituto presentó el cuerpo 1 con fase Idle cero y peso de reloj cero. El reintento preparó el ticket 13 para la misma solicitud y el GO del ticket 14 adquirió Home18 una sola vez. Home19 retiró el cuerpo a 34,70 s y el sustituto drenó tras avanzar a 34,78 s. El build web local terminó en 49,92 s. [Recibo de NVIDIA](performance/native-pending-wounded-home-recovery-nvidia-20261126.json).
+
+Pasaron 318 pruebas dirigidas de encuentro, Home, suspensión, callbacks de recursos y transporte. El contraste de Home19 pendiente reproduce un fallo distinto a 34,65 s, con el cuerpo ya en el refugio y la retirada aún por adquirir. Ese corte sigue abierto.

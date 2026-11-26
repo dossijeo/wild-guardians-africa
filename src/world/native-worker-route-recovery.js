@@ -7,7 +7,8 @@ import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
-import {WORKER_RECOVERY} from '../simulation/worker-recovery.js';
+import {RECOVERY_EXIT_SECONDS,WORKER_RECOVERY} from '../simulation/worker-recovery.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './native-home-request-reference.js';
 
 // Recovery carries the acquired program independently of the original Draw.
 // The terminal sample is also needed for the next strike's source validation.
@@ -143,7 +144,8 @@ export function copyRecoveredEncounterFall(value){
 export function sameRecoveredEncounter(a,b){
  if(a?.version===3||b?.version===3)return a?.version===3&&b?.version===3&&
   ['workerId','workerBody','animalId','profile','hit','impactAt','raidEnded','endedAt','at','x','z','heading','remaining','phase']
-   .every(key=>a[key]===b[key])&&(a.getUp===null?b.getUp===null:!!a.getUp&&!!b.getUp&&
+   .every(key=>a[key]===b[key])&&(a.home===undefined?b.home===undefined:sameNativeHomeRequestReference(a.home,b.home))&&
+   (a.getUp===null?b.getUp===null:!!a.getUp&&!!b.getUp&&
     ['duration','elapsed','heading','dx','dz','fraction','travelLimit'].every(key=>a.getUp[key]===b.getUp[key]));
  return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining','spawn','impactAt','workerAssignment']
   .every(key=>a[key]===b[key]);
@@ -156,8 +158,13 @@ export function copyRecoveredEncounterPose(value){
     animalId===workerId||raidEnded<=hit+1||![impactAt,endedAt,at,x,z,heading,remaining,duration].every(Number.isFinite)||
     impactAt<0||endedAt<impactAt||at<endedAt||remaining<0||remaining>duration)
   throw Error('Invalid stationary encounter source');
+ const home=value.home===undefined?null:copyNativeHomeRequestReference(value.home);
  let recovery=null;
- if(remaining===0){
+ if(home){
+  if(remaining!==0||getUp!==null||home.version!==3||home.recoveryHit!==hit||home.bodyId!==workerBody||
+     home.actorId!==workerId||home.requestedAt<endedAt||home.requestedAt>at||(home.recoveryExit??RECOVERY_EXIT_SECONDS)!==RECOVERY_EXIT_SECONDS||
+     home.pose.x!==x||home.pose.z!==z||home.pose.yaw!==heading)throw Error('Invalid pending wounded Home source');
+ }else if(remaining===0){
   const {duration,elapsed,heading:yaw,dx,dz,fraction,travelLimit}=getUp??{};
   if(duration!==WORKER_RECOVERY[profile]?.duration||![duration,elapsed,yaw,dx,dz,fraction].every(Number.isFinite)||
      elapsed<0||elapsed>=duration||yaw!==heading||fraction<0||fraction>1||
@@ -165,9 +172,9 @@ export function copyRecoveredEncounterPose(value){
    throw Error('Invalid stationary GetUp source');
   recovery=Object.freeze({duration,elapsed,heading:yaw,dx,dz,fraction,...(travelLimit===undefined?{}:{travelLimit})});
  }else if(getUp!==null)throw Error('Recovered Fall overlaps GetUp');
- const phase=Math.fround(recovery?.elapsed??duration-remaining);
+ const phase=home?0:Math.fround(recovery?.elapsed??duration-remaining);
  if(value.phase!==undefined&&value.phase!==phase)throw Error('Invalid stationary encounter phase');
- return Object.freeze({version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp:recovery,phase});
+ return Object.freeze({version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp:recovery,phase,...(home?{home}:{})});
 }
 
 // The current world can include an exact later mutation that retained the
@@ -180,7 +187,8 @@ export function copyNativeRecoveryGroup(value,world){
    if(value.encounter?.version===3){
      const encounter=copyRecoveredEncounterPose(value.encounter);
      if(value.refuge!==undefined||value.ruin!==undefined||value.members.length||
-        !world||world.effectiveTime>encounter.at)throw Error('Stationary encounter recovery cannot supply a moving route');
+        !world||world.effectiveTime>encounter.at||encounter.home&&(encounter.home.authorityEpoch!==world.authorityEpoch||
+          encounter.home.nativeSession!==world.nativeSession))throw Error('Stationary encounter recovery cannot supply a moving route');
      return {members:[],encounter};
    }
    if(value.refuge!==undefined||value.ruin!==undefined||value.members.length!==1||value.members[0]?.kind!==26)

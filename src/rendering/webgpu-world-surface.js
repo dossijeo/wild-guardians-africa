@@ -1,4 +1,4 @@
-import {nativeHomeWorkerStatus} from '../world/native-home-request-reference.js';
+import {nativeHomeWorkerStatus,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
 import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropPublicationMatches,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
@@ -663,6 +663,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      commit(data){const confirmed=farm?copyNativeFarmArrivalRouteResources(data.resources):stroll?copyNativeIdleStrollResources(data.resources):arrival?copyNativeHomeArrivalResources(data.resources):cycle?copyNativeIdleCycleResources(data.resources):initialBody?copyNativeInitialIdleBodyResources(data.resources):settling?copyNativeTaskSettlementResources(data.resources):acting?copyNativeTaskActionResources(data.resources):resumed?data.resources:copyNativeGateMotionResources(data.resources),binding=deferredStart?copyBinding(data[crop?cropKey:farm?'nativeFarmArrivalBinding':stroll?'nativeIdleStrollBinding':arrival?'nativeHomeArrivalBinding':home?'nativeHomeRouteBinding':cycle?'nativeIdleCycleBinding':initialBody?'nativeInitialIdleBodyBinding':settling?'nativeTaskSettlementBinding':consequence?'nativeTaskConsequenceBinding':acting?'nativeTaskActionBinding':starting?'nativeTaskStartBinding':'nativeResumeBinding']):null,committedBoundary=binding?.reference.worldBoundary??boundary;if(deferredStart&&!matches(resources,crop||cycle||initialBody||arrival||acting||settling?confirmed:confirmed.presentation,binding))throw Error('Deferred native resources differ from their issued motion');if(confirmed.phase!=='committed'||!sameNativeWorldBoundary(confirmed.worldBoundary,committedBoundary)||!resumed&&!sameNativeGatePresentations(confirmed.gates,resources.gates)||!current()||!sameNativeWorldBoundary(data.worldBoundary,committedBoundary)||participants.some(participant=>!participant.valid()))throw Error('Native graphical resources not retained');
       for(const participant of participants)participant.validateCommit?.(data);
       try{if(stream.status().sequence!==preparedSequence||!preparedFrame.commit(committedBoundary,binding))throw Error('Native prepared command packet unavailable');for(const participant of participants)participant.finalize(data);}catch(error){cancel();throw error;}
+      if(home&&recoveredFall?.sample.home&&sameNativeHomeRequestReference(recoveredFall.sample.home,binding.reference.sourceRequest))
+        recoveredFall=null;
       finished=true;nativePickPresentation=preparedFrame.presented;if(!holdsPublication)nativeGateProposal=null;else item.descriptor.phase='adopting';callerSignal?.removeEventListener('abort',abort);preparedNativeWorldBoundary=committedBoundary;nativeRouteResourceRevision++;nativeRouteRejected=false;onSelectableChange();
       void preparedFrame.presented.then(async()=>{if(nativePickPresentation===preparedFrame.presented)nativePickPresentation=null;
        for(const participant of participants)participant.retire?.();releasePublication();
@@ -846,9 +848,10 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   }
   function remoteFrameMetadata(boundary=preparedNativeWorldBoundary,preparedNative=null){const cameraBlockers=remoteCameraBlockers();
    retireRecoveredPose();
-   if(recoveredFall&&!recoveredFall.current())throw Error('Recovered frame lost its Fall pose');
-   return {nativeWorldBoundary:boundary,...(recoveredFall?{recoveredEncounterFall:recoveredFall.sample}:{}),
-    ...(recoveredFall?.witness?{recoveryPoseWitness:recoveredFall.witness}:{}),nativeRouteResourceRevision,preparedInterval:timelinePump?.preparedInterval?.()??null,clock:remoteClockLease(preparedNative),cameraSafe:cameraBlockers.length===0,cameraBlockers,cameraEnvelope:remoteEnvelope};}
+   const pose=recoveredFall?.sample.home&&!sameNativeWorldBoundary(boundary,preparedNativeWorldBoundary)?null:recoveredFall;
+   if(pose&&!pose.current())throw Error('Recovered frame lost its encounter pose');
+   return {nativeWorldBoundary:boundary,...(pose?{recoveredEncounterFall:pose.sample}:{}),
+    ...(pose?.witness?{recoveryPoseWitness:pose.witness}:{}),nativeRouteResourceRevision,preparedInterval:timelinePump?.preparedInterval?.()??null,clock:remoteClockLease(preparedNative),cameraSafe:cameraBlockers.length===0,cameraBlockers,cameraEnvelope:remoteEnvelope};}
   function renderCurrentScene(){
    retireRecoveredPose();
    if(recoveredFall?.sample.version!==3)return renderScene();

@@ -1064,8 +1064,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     },
     installRecoveredEncounterPose(value){
       const pose=copyRecoveredEncounterPose(value);
-      if(closed||clock?.committedThrough!==pose.at||actors.size||active.size)
+      const pending=actors.get(pose.workerId);
+      if(closed||clock?.committedThrough!==pose.at||active.size||
+         (pose.home?actors.size!==1||pending?.state!==6||!sameNativeHomeRequestReference(pending.pendingHomeRequest,pose.home):actors.size))
         throw Error('Recovered encounter pose conflicts with the fresh baseline');
+      if(pose.home)return;
       const worker=actorContext(pose.workerId);
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};

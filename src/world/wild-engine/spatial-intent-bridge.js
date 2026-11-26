@@ -1517,16 +1517,35 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
     const state=owningState;
     if(!qualifyRaidEncounter||!state||state.raid||state.workers.length!==1)return null;
     const worker=state.workers[0];
-    if(worker.nativeRouteAdmission||!encounterRecoveryCurrent(state,worker)||worker.recoveryExitRemaining)return null;
-    const marker=encounterCheckpoint(),workerBody=restoredEncounter?.workerBody??encounterImpact?.body;
+    const home=worker.nativeRouteAdmission==='pending-home-resources'?nativeHomeRequestReference(worker.id):null;
+    let marker,workerBody;
+    if(home){
+      const q=encounterExhaustion;
+      marker=q?.confirmed&&raidFlight?.worker===worker?{version:1,workerId:q.worker,animalId:q.animal,hit:q.hit}:
+        restoredEncounter?.worker===worker?restoredEncounter.marker:null;
+      workerBody=restoredEncounter?.workerBody??encounterImpact?.body;
+      const refuge=state.villages.find(v=>v.id===worker.villageId),destination=refuge?.entry??refuge;
+      if(!marker||home.actorId!==marker.workerId||home.bodyId!==workerBody||home.recoveryHit!==marker.hit||
+         (home.recoveryExit??RECOVERY_EXIT_SECONDS)!==RECOVERY_EXIT_SECONDS||!woundedHomeSourceCurrent(state,worker,home,0)||
+         worker.status!=='incapacitated'||worker.running!==false||worker.gateWaiting!==false||worker.heading!==home.pose.yaw||
+         worker.taskId||worker.crateId||worker.path!==null||worker.raidReturn||
+         !['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===home.pose[key])||
+         !destination||numericId(refuge.id)!==home.home.villageId||destination.x!==home.home.x||destination.z!==home.home.z||
+         state.structures.some(s=>s.gate&&s.status!=='ruined'))return null;
+    }else{
+      if(worker.nativeRouteAdmission||!encounterRecoveryCurrent(state,worker)||worker.recoveryExitRemaining)return null;
+      marker=encounterCheckpoint();workerBody=restoredEncounter?.workerBody??encounterImpact?.body;
+    }
     if(marker?.version!==1||!Number.isSafeInteger(workerBody)||workerBody<1)return null;
     const {workerId,animalId,hit}=marker;
-    const fact=state.events.find(event=>event.id==='event-'+hit);
+    const fact=state.events.find(event=>event.id==='event-'+hit&&event.type==='WorkerIncapacitated'&&event.targetId===worker.id&&event.animalId==='animal-'+animalId);
+    if(!fact)return null;
     const ended=state.events.find(event=>event.type==='RaidEnded'&&event.simulationTime>=fact.simulationTime);
     if(!ended||ended.simulationTime>state.elapsed)return null;
     return copyRecoveredEncounterPose({version:3,workerId,workerBody,animalId,profile:worker.profile,hit,
       impactAt:fact.simulationTime,raidEnded:numericId(ended.id),endedAt:ended.simulationTime,at:state.elapsed,
-      x:worker.x,z:worker.z,heading:worker.downHeading,remaining:worker.fallRemaining??0,getUp:worker.recovery??null});
+      x:worker.x,z:worker.z,heading:home?worker.heading:worker.downHeading,remaining:worker.fallRemaining??0,getUp:worker.recovery??null,
+      ...(home?{home}:{})});
   }
   function nativeRaidFlightRecoveryExecutions(){
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);

@@ -1070,7 +1070,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
-    const encounter=!admission&&qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
+    const encounter=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
       planner.nativeStationaryEncounterRecovery();
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
@@ -1168,10 +1168,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       return (allowRetired?nativeResourcePreparation?.settleForRecovery():nativeResourcePreparation?.flush())??Promise.resolve(null);
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
-    quiesceNativeIntentProduction(){
+    quiesceNativeIntentProduction({forLostDraw=false}={}){
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      return nativeProduction?.quiesce()??Promise.resolve(null);
+      const cancelHome=forLostDraw?planner.nativeStationaryEncounterRecovery()?.home??null:null;
+      return nativeProduction?.quiesce({cancelHome})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
