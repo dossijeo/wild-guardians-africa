@@ -1,0 +1,33 @@
+{
+  "scenario": "Sabana 714, contratación pagada, riego e Idle22 hacia Home, recorrido continuo acelerado con NVIDIA Turing",
+  "base": "22ec41bc7353af5089d8c735d33e8723db2f7e21",
+  "artifacts": {
+    "nvidia-continuous-diagnostic.json": "1fa7625da2e91083ed6c4222e65f3863ca58aab8757f14e0d09a968b8c80340f",
+    "nvidia-continuous-publications.json": "878bbb77538b94fdcf285cfa4ed7803a9608664cc8f107161c62dfeb81009f3b"
+  },
+  "request": {
+    "kind": "prepareNativeIdleStrollResources",
+    "id": 8,
+    "ticket": 14,
+    "effectiveTime": 116.37999999999398,
+    "minSequence": 1946
+  },
+  "sampleColumns": ["wallMillisecondsAfterSurfaceEntry", "appliedSequence", "receivedSequence"],
+  "samples": [
+    [0, 1829, 1861],
+    [336.8, 1837, 1861],
+    [5079.8, 1877, 1909],
+    [7580.1, 1902, 1934],
+    [9001, 1918, 1950],
+    [10000.3, 1926, 1958]
+  ],
+  "result": {
+    "elapsed": 123.07999999999265,
+    "firstError": "Native resource preparation timed out",
+    "firstWaitExitedNormally": false,
+    "abortedRequest": 8,
+    "historicalHoldInSamples": false,
+    "historicalPreparationInSamples": false,
+    "pageErrorCount": 0
+  }
+}
