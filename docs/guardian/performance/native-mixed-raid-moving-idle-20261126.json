@@ -1,0 +1,221 @@
+{
+  "scenario": "RaidSpawned while a restored and reacquired Idle22 is already walking on the work side of the Desert gate.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "idle": {
+    "ticket": 2,
+    "body": 1,
+    "actor": 900011,
+    "assignment": 3,
+    "route": {
+      "authorityEpoch": "7d3aa653-053b-42e6-b9e9-22f21c6cc61f/1",
+      "session": 1,
+      "slot": 0,
+      "generation": 2
+    },
+    "endTime": 12.962963007114551
+  },
+  "spawn": {
+    "event": "event-29208",
+    "elapsed": 10.299999999999994,
+    "pose": [
+      -14,
+      5.676000000000007,
+      3.141592653589793,
+      7.57499999999999
+    ]
+  },
+  "retained": {
+    "request": 2,
+    "preparedTicket": 3,
+    "through": 10.44999999999999,
+    "pose": [
+      -14,
+      5.51400000000001,
+      3.141592653589793,
+      7.799999999999986
+    ],
+    "wireOrder": [
+      4,
+      5,
+      9
+    ],
+    "aborted": true
+  },
+  "stop": {
+    "ticket": 5,
+    "preparedTicket": 4,
+    "at": 10.49999999999999,
+    "drawSequence": 33,
+    "submittedPose": {
+      "age": 0.4999999701976776,
+      "x": -14,
+      "z": 5.460000038146973,
+      "yaw": 3.1415927410125732,
+      "phase": 0.5,
+      "runPhase": 23.25,
+      "walkPhase": 7.875,
+      "carryPhase": 9.5,
+      "arrived": 0
+    },
+    "body": 1,
+    "origin": {
+      "x": -14,
+      "z": 5.4600000000000115,
+      "yaw": 3.141592653589793,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.874999999999984,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "home": {
+    "ticket": 7,
+    "at": 12.449999999999948,
+    "body": 1,
+    "assignment": 7,
+    "gateIds": [
+      1000000
+    ],
+    "raidSpawnSequence": 29208
+  },
+  "animal": {
+    "ticket": 9,
+    "body": 2,
+    "actor": 1000001
+  },
+  "refuge": {
+    "ticket": 11,
+    "retiredSequence": 9,
+    "body": 1
+  },
+  "events": {
+    "centerDebits": [
+      {
+        "at": 40.30000000000081,
+        "hp": 580
+      },
+      {
+        "at": 43.40000000000107,
+        "hp": 560
+      },
+      {
+        "at": 49.45000000000159,
+        "hp": 540
+      },
+      {
+        "at": 54.77000000000204,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 63.19000000000276
+  },
+  "civilian": {
+    "ticket": 29,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 9,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "drawDrained": true,
+    "webGpuMessages": 0
+  },
+  "evidence": {
+    "receiptSha256": "0a6bcd381346dc24fbdee4fd9a50d083b5d4ebc15608894649cd615a1399b21d",
+    "traceSha256": "3237033a46b8d09ebe9b595e3ba8f5da9e19a3f1d6f03205d9d93bf863373bfc",
+    "traceBytes": 43342738,
+    "dataLossOccurred": false,
+    "artifacts": {
+      "src/world/wild-engine/spatial-savanna.wasm": "6913d47ca119fa0ab7e09151f6914f7656d669e43b6a22bddabcd46b39468c61",
+      "public/wild-engine/spatial-threaded.wasm": "7deb1df506580830385952e6e285c96bd4803984b3ffa7acedc99d4933d0c5eb",
+      "public/wild-engine/spatial-threaded.mjs": "3c12710a98b0c383f4a0e2cee004360f7f9a15237ccc94ce1699ec33b3221029"
+    },
+    "priorCommit": "b317da66e2d906691c0d20b3b97eacdd274ace9b",
+    "originalMovingIdleControlSha256": "d9128a1f33ef2de5978f4c0a9b32dea0b3f78c4de74eaa8d421cb46cac2570c2",
+    "priorRegression": {
+      "failed": 2,
+      "reason": "Native task game cohort contains an unsupported mover",
+      "tapSha256": "419f0ad8aa434b138fd447c1d9aa88305af0170dfc3b4c5bdf9c4330200e4f4a"
+    },
+    "flightGuardRegression": {
+      "case": "completed WALK rejects a forged Home raid without revoking its installed source",
+      "passed": true,
+      "tapSha256": "bfed7b430ecd45de71df8b923c89bab0cbfc96ca694d20121e6cc8e6a9337e15"
+    }
+  },
+  "arrivalBeforeStop": {
+    "idleTicket": 2,
+    "parentBody": 1,
+    "assignment": 3,
+    "spawn": {
+      "id": "event-29208",
+      "elapsed": 10.299999999999994
+    },
+    "terminalTime": 12.962963007114551,
+    "abortedAt": 12.999999999999936,
+    "cancelledStop": {
+      "id": 2,
+      "preparedTicket": 3,
+      "wireOrder": [
+        4,
+        5,
+        7,
+        9
+      ],
+      "acquired": false
+    },
+    "home": {
+      "ticket": 5,
+      "origin": {
+        "x": -14,
+        "z": 3.200000047683716,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 11.569444510671827,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      },
+      "gateIds": [
+        1000000
+      ],
+      "body": 1
+    },
+    "refugeSequence": 8,
+    "civilian": {
+      "body": 3,
+      "admission": "native-idle"
+    },
+    "raidEndedAt": 66.74000000000267,
+    "centerDebits": [
+      580,
+      560,
+      540,
+      520
+    ],
+    "drawDrained": true,
+    "ledgerPreserved": true,
+    "receiptSha256": "cccf17fecb8fbd59aefc40cd51026450d70432c487241228c60cd3ed1a10c24d",
+    "traceSha256": "caa3ebf478c5957122f3d083648c4b3693aa66b109027223fd4381711f624083",
+    "traceBytes": 44171030
+  }
+}

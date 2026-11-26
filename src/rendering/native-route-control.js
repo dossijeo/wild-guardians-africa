@@ -352,11 +352,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const birth=event.raidFlightBirth;
     const centerBirth=successor?.purpose==='center'&&!event.pendingAnimalCrop.previousStrike;
     if(birth!==undefined){
-      const peer=actors.get(birth?.workerActor),farm=peer?.current?.issuedFarmArrival,home=peer?.pendingHomeRequest;
-      const peerCurrent=birth?.farmTicket!=null?
-        !!farm&&farm.assignmentSequence===birth.sourceSequence&&farm.reference.worldBoundary.ticket===birth.farmTicket&&farm.reference.bodyId===birth.workerBody:
+      const peer=actors.get(birth?.workerActor),farm=peer?.current?.issuedFarmArrival,stroll=peer?.current?.issuedStroll,home=peer?.pendingHomeRequest;
+      const prior=birth?.strollTicket!=null?stroll:farm;
+      const ticket=birth?.strollTicket??birth?.farmTicket;
+      const peerCurrent=ticket!=null?
+        !!prior&&prior.assignmentSequence===birth.sourceSequence&&prior.reference.worldBoundary.ticket===ticket&&prior.reference.bodyId===birth.workerBody:
         home?.version===2&&home.requestSequence===birth?.sourceSequence&&home.raidSpawnSequence===birth.raidSpawnSequence&&home.bodyId===birth.workerBody;
-      if(!birth||!id(birth.raidSpawnSequence)||!id(birth.sourceSequence)||!id(birth.workerBody)||!peer||peer.closed||
+      if(!birth||birth.strollTicket!=null&&(birth.farmTicket!=null||!centerBirth)||!id(birth.raidSpawnSequence)||!id(birth.sourceSequence)||!id(birth.workerBody)||!peer||peer.closed||
          peer.latestSequence!==birth.sourceSequence||!peerCurrent||actors.size!==1||actors.has(event.actorId)||!successor||
          successor.bodyId===birth.workerBody||successor.purpose&&successor.purpose!=='center'||event.pendingAnimalCrop.previousStrike||successor.actorId!==event.actorId||
          successor.nativeSession!==clock?.nativeSession||successor.authorityEpoch!==authorityEpoch||successor.requestSequence!==event.sequence||
@@ -479,7 +481,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
     const idleFlight=keepIdleCycle&&actor.state===7&&event.state===6&&!assigned&&!handle&&!revoked&&
       !actor.pendingHomeRequest&&cycleState(actor,actor.idleCycleSource.binding);
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+    const strollFlightSource=homeRequest?.version===2?
+      (completedStrollHome?current.issuedStroll:heldHomeSource?.kind==='native-idle-stroll-held-execution'?actor.revoked.issuedStroll:null):null;
+    const strollFlight=strollFlightSource&&[...actors.values()].some(peer=>{
+      const birth=peer.raidFlightBirth;
+      return birth?.workerActor===event.actorId&&birth.raidSpawnSequence===homeRequest.raidSpawnSequence&&
+        birth.sourceSequence===strollFlightSource.assignmentSequence&&birth.strollTicket===strollFlightSource.reference.worldBoundary.ticket&&
+        birth.workerBody===homeRequest.bodyId;
+    });
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
       throw Error('Native raid flight requires its Farm or acquired Idle source');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingIdleStrollRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');

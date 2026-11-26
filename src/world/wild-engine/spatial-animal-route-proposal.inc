@@ -417,8 +417,8 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  return separatedFlightRoutes(home,crop,s.animalCropState[8]+std::max(1.1,source->radius))?1:0;
 }
 
-// The spawn must be clear even if the acquired Farm is allowed to finish
-// its entire corridor before Stop24 arrives. A pending body remains a point.
+// The spawn must be clear even if the acquired worker finishes its entire
+// corridor before the prepared stop arrives. A pending body remains a point.
 static int flightCropOriginClear(double session,double worker,double sequence,double x,double z,double radius,int bodies,int biome=0){
  const auto& s=state();
  if(session!=double(s.session)||!integer(worker)||!integer(sequence)||!std::isfinite(x)||!std::isfinite(z)||
@@ -428,6 +428,10 @@ static int flightCropOriginClear(double session,double worker,double sequence,do
  if(nativeFarmArrivalBodyCurrent(s,intent)){
   const auto& route=s.routeSlots[intent.slot];
   if((biome==0&&!route.workerDrySweep)||intent.assignmentSequence!=uint64_t(sequence))return -2;
+  path.route=&route;wr=route.radius;
+ }else if(biome==1&&currentIdleStroll(worker)){
+  if(intent.assignmentSequence!=uint64_t(sequence))return -2;
+  const auto& route=s.routeSlots[intent.slot];
   path.route=&route;wr=route.radius;
  }else{
   const auto& h=intent.homeRequest;

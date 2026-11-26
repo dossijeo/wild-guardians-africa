@@ -77,7 +77,11 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  if(pending.pending&&!farmContinuation&&!farmIdle||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
  if(intent.homeRequest&&intent.homeRequest->raidSpawnSequence!=raidSpawnSequence)return -2;
- if(raidSpawnSequence&&intent.homeRequest&&(intent.homeRequest->farmArrivalSourceSequence!=uint64_t(assignmentSequence)||intent.homeRequest->farmArrivalSourceGeneration!=uint32_t(generation)))return -2;
+ if(raidSpawnSequence&&intent.homeRequest){
+  const auto& r=*intent.homeRequest;
+  if((farm?r.farmArrivalSourceSequence:r.idleStrollSourceSequence)!=uint64_t(assignmentSequence)||
+     (farm?r.farmArrivalSourceGeneration:r.idleStrollSourceGeneration)!=uint32_t(generation))return -2;
+ }
  // A completed route owns a final pose, not a synthetic suspension. Its same
  // request remains idempotent after the executable corridor has been released.
  if(intent.homeRequest&&(farm?intent.homeRequest->completedFarmArrival:intent.homeRequest->completedIdleStroll)){const auto& r=*intent.homeRequest;if((farm?r.farmArrivalSourceSequence:r.idleStrollSourceSequence)!=uint64_t(assignmentSequence)||(farm?r.farmArrivalSourceGeneration:r.idleStrollSourceGeneration)!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;}
@@ -111,6 +115,10 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  s.workers.at(intent.actor).eligible=false;intent.homeRequest->sequence=s.intentSequence+1;emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,false);}
+EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_flight_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ,double event){
+ if(!integer(event))return -1;
+ return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,false,uint64_t(event));
+}
 EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,true);}
 // A genuinely completed Task can transfer its final native pose to the same
 // Home request used by completed Farm/Idle. It is never a fabricated stop25.

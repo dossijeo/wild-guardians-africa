@@ -20,7 +20,7 @@ import {copyNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec} from '../native-worker-route-stop-codec.js';
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
 import {copyNativeIdleCycleBodySource,isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
-import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollHeldExecution,sameNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollContinuesRestoredRequest,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../native-idle-stroll.js';
+import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollHeldExecution,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference,nativeIdleStrollContinuesNext,nativeIdleStrollContinuesRestoredRequest,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../native-idle-stroll.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../native-home-arrival.js';
 import {createNativeResourceAdmission} from '../native-resource-admission.js';
 import {nativeTaskStartReferenceFromProposal} from '../native-task-start-reference.js';
@@ -832,6 +832,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       const motion=nativeFarmArrivalRouteBinding(w.id);
       return motion?.assignmentSequence===f.farmSequence&&motion.reference.bodyId===f.workerBody?w:null;
     }
+    if(w.nativeRouteAdmission==='pending-idle-flight-stop'){
+      const motion=nativeIdleStrollBinding(w.id);
+      const held=motion?null:nativeIdleStrollHeldExecution(w.id);
+      return (motion??held)?.assignmentSequence===f.strollSequence&&(motion?.reference.bodyId??held?.bodyId)===f.workerBody?w:null;
+    }
     const h=w.nativeRouteAdmission==='pending-raid-flight-resources'?nativeHomeRequestReference(w.id):
       w.nativeRouteAdmission==='native-home'?nativeHomeRouteBinding(w.id)?.reference.sourceRequest:null;
     return h?.raidSpawnSequence===f.event&&h.bodyId===f.workerBody?w:null;
@@ -839,12 +844,14 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   function declareRaidFlightPair(state,animal,worker,event,body,center,select){
     if(!qualifyFarmFlee||state!==owningState||!state.raid?.daytime||state.raid.animals[0]!==animal||state.workers[0]!==worker||
        animal.species!=='warthog'||!Number.isSafeInteger(event)||event<=0||!Number.isSafeInteger(body)||body<=0)return false;
-    const farm=nativeFarmArrivalRouteBinding(worker.id),home=nativeHomeRequestReference(worker.id);
-    const workerBody=farm?.reference.bodyId??home?.bodyId;
-    const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:farm?.assignmentSequence??home?.requestSequence,
-      farmTicket:farm?.reference.worldBoundary.ticket??null,raidSpawnSequence:event};
+    const farm=nativeFarmArrivalRouteBinding(worker.id),home=nativeHomeRequestReference(worker.id),
+      stroll=worker.nativeRouteAdmission==='pending-idle-flight-stop'?nativeIdleStrollBinding(worker.id):null;
+    const workerBody=farm?.reference.bodyId??stroll?.reference.bodyId??home?.bodyId;
+    const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:farm?.assignmentSequence??stroll?.assignmentSequence??home?.requestSequence,
+      farmTicket:farm?.reference.worldBoundary.ticket??null,...(stroll?{strollTicket:stroll.reference.worldBoundary.ticket}:{}),raidSpawnSequence:event};
     const centerAttack=nativeCenterAttackCohort(state,worker);
-    const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
+    const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,
+      strollSequence:stroll?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
     raidFlight=pair;
     let selected;
     try{
@@ -2729,13 +2736,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(wasm.nav_intent_idle_home_request(r.actorId,r.worldBoundary.nativeSession,held.settlementSequence,home.villageId,home.x,home.z)!==1)throw Error('Native Idle Home request rejected');
     const request=nativeHomeRequestReference(r.actorId);if(!request)throw Error('Native Idle Home lost its physical owner');return request;
   };
-  const requestNativeIdleStrollHome=(source,home)=>{
+  const requestNativeIdleStrollHome=(source,home,raidSpawnSequence=0)=>{
     const completed=source?.kind==='native-idle-stroll-execution',held=completed?source:copyNativeIdleStrollHeldExecution(source),actual=completed?nativeIdleStrollExecution(held.actorId):nativeIdleStrollHeldExecution(held.actorId);
     const identity=value=>JSON.stringify({...value,executedThrough:0});
     if(!actual||!Number.isFinite(held.executedThrough)||held.executedThrough>actual.executedThrough||identity(held)!==identity(actual)||completed&&(!actual.arrived||actual.executedThrough<actual.binding.reference.endTime))throw Error('Native Idle stroll Home source is not current');
     if(typeof wasm.nav_intent_idle_stroll_home_request!=='function')throw Error('Rebuild native held Idle stroll Home request');
     syncBoundaryTime();
-    const handle=completed?actual.binding.reference.expectedRouteHandle:held.resumeHandle,sequence=completed?actual.binding.assignmentSequence:held.assignmentSequence,status=wasm.nav_intent_idle_stroll_home_request(held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z);
+    const handle=completed?actual.binding.reference.expectedRouteHandle:held.resumeHandle,sequence=completed?actual.binding.assignmentSequence:held.assignmentSequence;
+    const args=[held.actorId,handle.session,sequence,handle.generation,home.villageId,home.x,home.z];
+    const status=raidSpawnSequence?wasm.nav_intent_idle_stroll_flight_request?.(...args,raidSpawnSequence):wasm.nav_intent_idle_stroll_home_request(...args);
     // An obsolete in-flight stop must settle through its existing controller.
     // Neither a pending proposal nor a peer reservation is ours to revoke here.
     if(completed&&(status===-4||status===0))return null;
@@ -4401,7 +4410,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!state.workers.includes(worker)||view.executedThrough!==state.elapsed||view.actorId!==actor||view.bodyId!==r.bodyId||worker.profile!==r.workerProfile||numericId(worker.centerId)!==r.centerId||previous&&(worker.x!==previous[0]||worker.z!==previous[1]))throw Error('Native Idle stroll is not the executed game boundary');
     // The held physical source survives while Home acquires resources. Keep
     // its genuine semantic Home owner instead of reinstating the old WALK.
-    if(worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&nativeHomeRequestContinuesHeldIdleStroll(bridge.nativeHomeRequestReference(worker.id),view)&&projectNativeHomeExecution(state,worker))return view;
+    const pendingHome=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'||
+      worker.status==='fleeing'&&worker.nativeRouteAdmission==='pending-raid-flight-resources'&&bridge.nativeRaidFlightMember(state,state.raid?.animals[0])===worker;
+    if(pendingHome&&nativeHomeRequestContinuesHeldIdleStroll(bridge.nativeHomeRequestReference(worker.id),view)&&projectNativeHomeExecution(state,worker))return view;
     if(worker.nativeRouteAdmission==='pending-stroll-resources'){
       if(!r.sourceRequest||!restoredStrollMatchesWorker(state,worker,r.sourceRequest))throw Error('Native restored stroll has no matching saved Game source');
     }else if(worker.status==='idle'&&worker.nativeRouteAdmission===undefined){
@@ -4605,6 +4616,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     for(const change of latest.values()){
       const worker=workers.get(change.actorId);
       if(worker&&bridge.nativeHomeRouteExecution(worker.id)){projectNativeHomeExecution(state,worker);continue;}
+      if(worker?.nativeRouteAdmission==='pending-idle-flight-stop'&&projectRaidFlightStop(state,worker))continue;
       if(worker&&bridge.nativeIdleStrollHeldExecution(worker.id)){projectNativeIdleStroll(state,worker);continue;}
       if(worker&&bridge.nativeIdleCycleExecution(worker.id)){projectNativeIdleCycle(state,worker);continue;}
       if(worker&&bridge.nativeInitialIdleBodyState?.(worker.id)){projectNativeInitialIdleBody(state,worker);continue;}
@@ -4811,13 +4823,15 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
   };
   // Only a RaidSpawned delivered by this observed Game can transfer a worker
   // source. A restored status string or a similar event in another Game cannot.
-  let farmFlightStop=null;
+  let raidFlightStop=null;
   function requestRaidRefuge(state,worker,source,eventId){
     const village=state.villages.find(v=>v.id===worker.villageId),goal=village?.entry??village;
     if(!goal)return false;
     const home={villageId:numericId(village.id),x:goal.x,z:goal.z};
     const request=source.kind==='native-idle-cycle-attestation'?bridge.requestNativeIdleCycleHome(source,home,eventId):
+      ['native-idle-stroll-execution','native-idle-stroll-held-execution'].includes(source.kind)?bridge.requestNativeIdleStrollHome(source,home,eventId):
       bridge.requestNativeFarmArrivalHome(source,home,eventId);
+    if(!request)return null;
     if(request.raidSpawnSequence!==eventId)throw Error('Home flight lost its raid source');
     // This is a stationary request. Continuous mixed traffic owns any later GO.
     worker.nativeRouteAdmission='pending-raid-flight-resources';
@@ -4833,71 +4847,82 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const pending=bridge.nativeFarmArrivalRequestReference(worker.id);
     const held=bridge.nativeFarmArrivalHeldExecution(worker.id);
     const moving=bridge.nativeFarmArrivalRouteExecution(worker.id);
-    const cycle=!pending&&!held&&!moving?bridge.nativeIdleCycleExecution(worker.id):null;
+    const stroll=state.biome==='desierto'&&!pending&&!held&&!moving?bridge.nativeIdleStrollExecution(worker.id):null;
+    const cycle=!pending&&!held&&!moving&&!stroll?bridge.nativeIdleCycleExecution(worker.id):null;
     if(cycle&&cycle.executedThrough!==state.elapsed)return;
+    if(stroll&&stroll.executedThrough!==state.elapsed)return;
     const original=pending??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest??
-      (cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
+      stroll?.binding.reference??(cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
     if(!original||original.centerId!==numericId(worker.centerId)||original.workerProfile!==worker.profile)return;
-    const pose=pending?.pose??held?.pose??moving??original.pose;
+    const pose=pending?.pose??held?.pose??moving??stroll?.pose??original.pose;
     if(['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==worker[key])||pose.yaw!==worker.heading)return;
     const eventId=numericId(event.id);
-    if(cycle||pending||held||moving.arrived&&moving.currentSpeed===0){
+    if(cycle||pending||held||moving?.arrived&&moving.currentSpeed===0){
       requestRaidRefuge(state,worker,cycle?.binding??pending??held??moving,eventId);return;
     }
-    farmFlightStop={raid,worker,eventId,spawnTime:event.simulationTime,binding:moving.binding};
-    worker.nativeRouteAdmission='pending-farm-flight-stop';
+    const marker=stroll?'pending-idle-flight-stop':'pending-farm-flight-stop',
+      sample=stroll?'nativeIdleFlightSample':'nativeFarmFlightSample';
+    raidFlightStop={raid,worker,eventId,spawnTime:event.simulationTime,binding:(stroll??moving).binding,stroll:!!stroll,marker,sample};
+    worker.nativeRouteAdmission=marker;
     pendingNativeChanges=true;
   }
   function projectRaidFlightStop(state,worker){
-    const pending=farmFlightStop;
+    const pending=raidFlightStop;
     if(!pending||pending.raid!==state.raid||pending.worker!==worker||
        bridge.nativeRaidFlightMember(state,state.raid.animals[0])!==worker)return null;
-    const e=bridge.nativeFarmArrivalRouteExecution(worker.id);
-    if(!e||e.executedThrough!==state.elapsed||e.binding.assignmentSequence!==pending.binding.assignmentSequence)return null;
-    Object.assign(worker,{x:e.x,z:e.z,heading:e.yaw,runPhase:e.runPhase,walkPhase:e.walkPhase,carryPhase:e.carryPhase,
-      runRemaining:e.runRemaining,running:e.running,gateWaiting:!e.arrived&&e.currentSpeed===0});
-    // Only the acquired Farm may attest a moving pose while Stop24 is in flight.
-    // A renderer can receive this publication after the proposed stop instant.
-    worker.nativeFarmFlightSample={eventId:pending.eventId,spawnTime:pending.spawnTime,
-      nativeRoute:e.nativeRoute,bodyId:e.bodyId,at:e.executedThrough,
-      pose:{x:e.x,z:e.z,heading:e.yaw,runPhase:e.runPhase,walkPhase:e.walkPhase,carryPhase:e.carryPhase,
-        runRemaining:e.runRemaining,running:e.running,gateWaiting:!e.arrived&&e.currentSpeed===0}};
-    projectedPositions.set(numericId(worker.id),[e.x,e.z]);return e;
+    const e=pending.stroll?bridge.nativeIdleStrollExecution(worker.id)??bridge.nativeIdleStrollHeldExecution(worker.id):bridge.nativeFarmArrivalRouteExecution(worker.id);
+    if(!e||e.executedThrough!==state.elapsed||(e.binding?.assignmentSequence??e.assignmentSequence)!==pending.binding.assignmentSequence||
+       e.bodyId!==pending.binding.reference.bodyId)return null;
+    const p=e.pose??e,pose={x:p.x,z:p.z,heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,
+      runRemaining:p.runRemaining,running:e.running??false,gateWaiting:!e.arrived&&e.currentSpeed===0};
+    Object.assign(worker,pose);
+    // The renderer may receive this exact native sample after the proposed stop instant.
+    worker[pending.sample]={eventId:pending.eventId,spawnTime:pending.spawnTime,
+      nativeRoute:e.nativeRoute??{actorId:e.actorId,assignmentSequence:pending.binding.assignmentSequence,routeHandle:pending.binding.reference.expectedRouteHandle},
+      bodyId:e.bodyId,at:e.executedThrough,pose};
+    projectedPositions.set(numericId(worker.id),[pose.x,pose.z]);return e;
   }
-  function nativeFarmFlightStopRequest(actorId){
-    const pending=farmFlightStop,state=observedTaskState;
+  function nativeRaidFlightStopRequest(actorId){
+    const pending=raidFlightStop,state=observedTaskState;
     if(!pending||pending.raid!==state?.raid||pending.worker.id!==actorId||
        !state.workers.includes(pending.worker)||pending.worker.status!=='fleeing'||
-       pending.worker.nativeRouteAdmission!=='pending-farm-flight-stop')return null;
-    const actual=bridge.nativeFarmArrivalRouteBinding(actorId);
-    if(!actual||actual.assignmentSequence!==pending.binding.assignmentSequence||
-       !sameNativeFarmArrivalRouteReference(actual.reference,pending.binding.reference))return null;
-    return {reason:'raid-flight',eventId:pending.eventId,binding:actual};
+       pending.worker.nativeRouteAdmission!==pending.marker)return null;
+    const actual=pending.stroll?bridge.nativeIdleStrollBinding(actorId):bridge.nativeFarmArrivalRouteBinding(actorId);
+    const same=pending.stroll?sameNativeIdleStrollAttestation:sameNativeFarmArrivalRouteAttestation;
+    if(!actual||!same(actual,pending.binding))return null;
+    return {reason:'raid-flight',eventId:pending.eventId,binding:actual,stroll:pending.stroll,
+      ...(pending.stroll?{arrived:bridge.nativeIdleStrollExecution(actorId)?.arrived===true}:{})};
   }
-  async function stopFarmForRaidFlight(options){
-    const pending=farmFlightStop;
-    if(!nativeFarmFlightStopRequest(options.actorId))return {status:'stale'};
-    const result=await bridge.stopNativeFarmArrivalAfterGpuQuiescence({...options,
-      sourceStillCurrent:()=>farmFlightStop===pending&&!!nativeFarmFlightStopRequest(options.actorId)});
-    if(result.status==='committed'&&pending===farmFlightStop){
-      delete pending.worker.nativeFarmFlightSample;
-      farmFlightStop=null;
-      const held=bridge.nativeFarmArrivalHeldExecution(options.actorId);
+  async function stopForRaidFlight(options){
+    const pending=raidFlightStop;
+    if(!nativeRaidFlightStopRequest(options.actorId))return {status:'stale'};
+    const stop=pending.stroll?bridge.stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence;
+    const strollEnd=()=>pending.stroll&&bridge.nativeIdleStrollExecution(options.actorId);
+    const result=strollEnd()?.arrived?{status:'stale'}:await stop({...options,
+      sourceStillCurrent:()=>raidFlightStop===pending&&!!nativeRaidFlightStopRequest(options.actorId)&&!strollEnd()?.arrived});
+    if(pending===raidFlightStop){
+      const held=result.status==='committed'?(pending.stroll?bridge.nativeIdleStrollHeldExecution(options.actorId):bridge.nativeFarmArrivalHeldExecution(options.actorId)):null;
+      const arrived=!held&&strollEnd();
+      if(!held&&!arrived?.arrived)return result;
+      const matchesHeld=pending.stroll?sameNativeIdleStrollReference:sameNativeFarmArrivalRouteReference;
       if(observedTaskState?.raid===pending.raid&&observedTaskState.workers.includes(pending.worker)&&
-         pending.worker.status==='fleeing'&&pending.worker.nativeRouteAdmission==='pending-farm-flight-stop'&&
-         held&&sameNativeFarmArrivalRouteReference(held.sourceReference,pending.binding.reference)){
+         pending.worker.status==='fleeing'&&pending.worker.nativeRouteAdmission===pending.marker&&
+         (held?held.assignmentSequence===pending.binding.assignmentSequence&&matchesHeld(held.sourceReference,pending.binding.reference):
+           sameNativeIdleStrollAttestation(arrived.binding,pending.binding))){
         // The native stop sampled position and phases at acquisition.
-        const pose=held.pose;
+        const source=held??arrived,pose=source.pose;
         Object.assign(pending.worker,{x:pose.x,z:pose.z,heading:pose.yaw,runPhase:pose.runPhase,
           walkPhase:pose.walkPhase,carryPhase:pose.carryPhase,runRemaining:pose.runRemaining,running:false,gateWaiting:false});
-        const request=requestRaidRefuge(observedTaskState,pending.worker,held,pending.eventId);
+        const request=requestRaidRefuge(observedTaskState,pending.worker,source,pending.eventId);
         if(request){
-          // This successor is issued after the Stop24 GO clock. Publish its
+          delete pending.worker[pending.sample];
+          raidFlightStop=null;
+          // This successor is issued after the stop GO clock. Publish its
           // watermark at the same native instant, including while paused.
           const clock=bridge.nativeCausalClock();
           const receipt=bridge.commitNativeCausalClock({rate:clock.rate,paused:clock.paused});
           if(!['committed','unchanged'].includes(receipt.status)||receipt.clock.intentSequence<request.requestSequence)
-            throw Error('Native Farm flight request lacks its causal clock');
+            throw Error('Native flight request lacks its causal clock');
         }
       }
     }
@@ -4915,10 +4940,10 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       'StructureRuined','RepairApplied']);
     const stop=observeGameEvents(state,event=>{
       if(qualifyFarmFlee&&event.type==='RaidSpawned')observeRaidEvacuation(state,event);
-      if(farmFlightStop&&farmFlightStop.raid!==state.raid){
-        delete farmFlightStop.worker.nativeFarmFlightSample;
-        if(farmFlightStop.worker.nativeRouteAdmission==='pending-farm-flight-stop')delete farmFlightStop.worker.nativeRouteAdmission;
-        farmFlightStop=null;
+      if(raidFlightStop&&raidFlightStop.raid!==state.raid){
+        delete raidFlightStop.worker[raidFlightStop.sample];
+        if(raidFlightStop.worker.nativeRouteAdmission===raidFlightStop.marker)delete raidFlightStop.worker.nativeRouteAdmission;
+        raidFlightStop=null;
       }
       if(!relevant.has(event.type))return;
       pendingWorldEvents.push(event);
@@ -4928,8 +4953,8 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     return ()=>{
       if(stopWorldObserver!==stop)return;
       stop();stopWorldObserver=null;pendingWorldEvents=[];
-      if(farmFlightStop)delete farmFlightStop.worker.nativeFarmFlightSample;
-      farmFlightStop=null;
+      if(raidFlightStop)delete raidFlightStop.worker[raidFlightStop.sample];
+      raidFlightStop=null;
       if(!stopTaskObserver)observedTaskState=null;
     };
   };
@@ -4945,7 +4970,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     flushTaskEvents,flushWorldEvents,reconcileNavigationRevision,requestReroute,
     reconcileWorkerRoutes,planIfNeeded,
     hasPendingAt,needsReconciliation,metrics,
-    commitTaskBatchToState,returnFromRaidRefuge,projectRaidFlightStop,nativeFarmFlightStopRequest,stopFarmForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
+    commitTaskBatchToState,returnFromRaidRefuge,projectRaidFlightStop,nativeRaidFlightStopRequest,stopForRaidFlight,nativeFarmArrivalContinuationSource,nativeFarmArrivalStopRequest,nativeIdleStrollStopRequest,nativeWorkerTaskEligible:actorId=>eligible.has(typeof actorId==='number'?actorId:numericId(actorId)),
     registerAttackIntent:(...args)=>{
       const result=bridge.registerAttackIntent(...args);
       pendingNativeChanges=true;

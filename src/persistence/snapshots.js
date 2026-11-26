@@ -126,6 +126,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
   for(const worker of state.workers){
     if(worker.nativeRefugeSequence!==undefined&&(!livePhysics||worker.raidReturn!==true||!Number.isSafeInteger(worker.nativeRefugeSequence)||worker.nativeRefugeSequence<1||!['pending-farm-arrival-resources','native-farm-arrival'].includes(worker.nativeRouteAdmission)))throw Error('Invalid live Farm return');
     if(worker.nativeFarmFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-farm-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
+    if(worker.nativeIdleFlightSample!==undefined&&(!livePhysics||worker.nativeRouteAdmission!=='pending-idle-flight-stop'))throw Error('Muestra de evacuación fuera de su ejecución nativa');
     if(worker.nativeRouteAdmission!==undefined){
       const pending=['pending-resources','pending-action-resources'].includes(worker.nativeRouteAdmission)&&worker.status==='waiting-task'&&worker.path===null,
         executing=worker.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&Array.isArray(worker.path)&&worker.path.length===0,
@@ -140,10 +141,10 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       // A live projection does not declare a loadable checkpoint. An approach
       // retains its actual WALK remaining/anchor; loading requires a fresh declaration.
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
-      const liveFarmFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
+      const liveRaidFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
         !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
-        ['pending-farm-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
-      if(!liveFarmFlight&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+        ['pending-farm-flight-stop','pending-idle-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
+      if(!liveRaidFlight&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;

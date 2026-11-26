@@ -152,8 +152,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    const centerAttack=nativeCenterAttackCohort(game,worker);
    if(game.biome!=='sabana'&&!centerAttack)return;
    if(centerAttack&&game.structures.slice(1).some(structure=>structure.kind!=='wall'))return;
-   const source=worker.nativeRouteAdmission==='pending-farm-flight-stop'?planner.nativeFarmFlightStopRequest(worker.id)?.binding:
-     worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null;
+   const stopRequest=planner.nativeRaidFlightStopRequest(worker.id);
+   const source=stopRequest?.binding??(worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null);
    if(nativeGateOwners.length){
     const [gate]=nativeGateOwners;
     if(!centerAttack||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||!source)return;
@@ -162,13 +162,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
        mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
     if(source.gateIds?.length!==1||mechanism.gateId!==source.gateIds[0]){
      let pose,bodyId;
-     if(worker.nativeRouteAdmission==='pending-farm-flight-stop'&&source.gateIds?.length===0){
-      // Farm on the work side can be stopped without owning the gate. The
-      // later Home proposal must establish its own crossing and motor timing.
-      const execution=planner.nativeFarmArrivalRouteExecution(worker.id);
+     if(stopRequest&&(stopRequest.stroll||source.gateIds?.length===0)){
+      // An acquired worker can stop on the work side without owning the gate.
+      // Home must establish its own crossing and motor timing.
+      const execution=stopRequest.stroll?planner.nativeIdleStrollExecution(worker.id):planner.nativeFarmArrivalRouteExecution(worker.id);
+      const sampled=execution?.pose??execution;
       if(!execution||execution.binding.assignmentSequence!==source.assignmentSequence||execution.bodyId!==source.reference.bodyId||
-         execution.executedThrough!==game.elapsed||execution.x!==worker.x||execution.z!==worker.z)return;
-      pose=execution;bodyId=execution.bodyId;
+         execution.executedThrough!==game.elapsed||sampled.x!==worker.x||sampled.z!==worker.z)return;
+      pose=sampled;bodyId=execution.bodyId;
      }else{
       // Home may start at the refuge or a certified acquired stationary owner.
       if(source.kind!=='native-home-request-reference'||source.version!==2||source.requestedAt!==game.elapsed||

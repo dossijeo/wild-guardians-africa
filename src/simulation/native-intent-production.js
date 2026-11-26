@@ -20,7 +20,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(onlyActor===null||onlyActor===actorId){
     const r=planner.nativeAnimalCropState?.(actorId);
     const flight=planner.nativeRaidFlightMember?.(state,animal);
-    const waitingForHome=flight?.nativeRouteAdmission==='pending-farm-flight-stop'||
+    const waitingForHome=['pending-farm-flight-stop','pending-idle-flight-stop'].includes(flight?.nativeRouteAdmission)||
       r?.purpose==='center'&&flight?.nativeRouteAdmission==='pending-raid-flight-resources';
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
     if(r?.mode===5||r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
@@ -32,9 +32,9 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const actorId=worker.id,marker=worker.nativeRouteAdmission;
    if(onlyActor!==null&&actorId!==onlyActor)continue;
    if(marker==='pending-farm-arrival-resources'&&planner.nativeFarmArrivalRequestReference?.(actorId))return {actorId,kind:'farm-arrival',operation:'startNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources',urgent:!worker.raidReturn&&urgentWork(state,worker)};
-   if(marker==='pending-farm-flight-stop'){
-    const stopRequest=planner.nativeFarmFlightStopRequest(actorId);
-    if(stopRequest)return {actorId,kind:'farm-arrival-stop',operation:'stopFarmForRaidFlight',prepare:'prepareNativeGateResources',stopRequest};
+   if(marker==='pending-farm-flight-stop'||marker==='pending-idle-flight-stop'){
+    const stopRequest=planner.nativeRaidFlightStopRequest(actorId);
+    if(stopRequest)return {actorId,kind:stopRequest.stroll?'idle-stroll-stop':'farm-arrival-stop',operation:'stopForRaidFlight',prepare:'prepareNativeGateResources',stopRequest};
    }
    if(marker==='native-farm-arrival'){
     const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);
