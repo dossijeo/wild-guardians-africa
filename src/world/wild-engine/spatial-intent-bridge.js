@@ -973,14 +973,16 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   };
   function nativeAnimalCropRouteExecution(actorId){
     const proof=activeAnimalRoute,r=proof?.reference;
-    if(!r||r.purpose!==undefined||actorId!=='animal-'+r.actorId||
+    if(!r||r.purpose==='center'||actorId!=='animal-'+r.actorId||
        !sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary()))return null;
     const animal=owningState?.raid?.animals.find(row=>row.id===actorId);
+    const exit=r.purpose==='retreat'?nativeRetreatSubject(owningState,animal):null;
+    const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
+      animal?.targetId==='plant-'+r.targetId&&['entering','walking'].includes(animal.status);
     const live=animal&&nativeAnimalCropState(actorId),binding=live&&nativeAnimalRouteBinding(actorId);
-    if(animal?.species!=='warthog'||animal.targetId!=='plant-'+r.targetId||animal.magicDown||
-       !['entering','walking'].includes(animal.status)||live?.mode!==2||live.arrived||
+    if(animal?.species!=='warthog'||!expected||animal.magicDown||live?.mode!==2||live.arrived||
        live.executedThrough!==owningState.elapsed||live.executedThrough>=r.endTime||
-       live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
+       live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
        live.x!==animal.x||live.z!==animal.z||live.phase!==animal.motionPhase||live.yaw!==animal.heading||
        binding?.assignmentSequence!==proof.assignmentSequence||binding.routeHandle.slot!==r.slot||
        binding.routeHandle.generation!==r.generation||binding.bodyId!==r.bodyId||

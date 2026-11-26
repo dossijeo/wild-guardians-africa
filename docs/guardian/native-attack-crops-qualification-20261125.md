@@ -162,7 +162,13 @@ La recuperación de la marcha usa el relevo terminal que ya sirve Farm, Home e I
 
 En NVIDIA Turing, la destrucción real del dispositivo dejó viva la autoridad. El sustituto reprodujo el diario desde la publicación 1 hasta la 21. Conservó la ranura 0, generación 3, cuerpo 1, asignación 11 y los 31 nudos. Su primer envío usó el ticket adquirido 2 y la edad 0,949999988 s en el corte de t=375,95. La autoridad aceptó los fences del sustituto y la marcha continuó hasta t=376,35 con el mismo binding. El Strike27 posterior usó el mismo cuerpo y certificó el final de esa asignación. Hubo un solo golpe de `attack-661` sobre `plant-373`, ledger intacto y drenaje confirmado. El arnés llamó a los puertos de recuperación de producción desde una página de prueba. [Recibo físico](performance/native-attack-crops-draw-loss-20261126.json).
 
-La prueba dirigida en CPU rechaza el fence prematuro y un extremo alterado. Después del envío compara el escalar de la cola con el que usa picking. La recuperación queda calificada para una aproximación AttackCrops en el perfil de desarrollo, con los trabajadores en casa y el terreno del corredor residente. Las pérdidas durante Strike27, Retreat y cohortes mixtas siguen pendientes.
+La prueba dirigida en CPU rechaza el fence prematuro y un extremo alterado. Después del envío compara el escalar de la cola con el que usa picking. La recuperación queda calificada para una aproximación AttackCrops en el perfil de desarrollo, con los trabajadores en casa y el terreno del corredor residente.
+
+## Pérdida de Draw durante Retreat
+
+El relevo terminal valida la salida semántica de Game y el último nudo Float32 del corredor que WASM ya ejecuta. El sustituto prepara los tres nudos restantes del programa adquirido tras la recarga. La prueba de Host rechaza un extremo desplazado aunque coincidan entre sí la fila final y el testigo adulterado.
+
+En NVIDIA Turing, Draw se perdió después de cargar la [partida pública de Retreat](performance/native-attack-crops-retreat-reload-20261126.json) y reanudar la marcha. La autoridad congeló la publicación 15 a t=402,65. El primer envío del sustituto conservó el ticket 2, el cuerpo 1, la asignación 11 y la edad 0,649999976 s. Después del relevo la edad avanzó hasta 0,999999940 s con la misma generación. No hubo una segunda adquisición. `animalGone` y `RaidEnded` ocurrieron una sola vez a t=409,54, el mismo subpaso de la recarga sin pérdida. Draw mostró el paquete 71 sin el binding retirado y confirmó el drenaje. La validación cubre la retirada de un facóquero en Sabana sin mutaciones intermedias de topología. Las pérdidas durante Strike27 y las cohortes mixtas siguen pendientes. [Recibo físico](performance/native-retreat-draw-loss-20261126.json).
 
 ## Regresión
 

@@ -21,16 +21,23 @@ const {chunkKeys}=JSON.parse(readFileSync('docs/guardian/performance/native-ordi
 const manifest={epoch:'crop',chunks:chunkKeys.map(k=>{const [cx,cz]=k.split(',').map(Number);return {cx,cz,revision:1};})};
 return {s,manifest,chunkKeys};
 }
-test('an acquired crop route needs a new sealed Draw at the loss cut',async()=>{
+for(const retreat of [false,true])test(`an acquired ${retreat?'Retreat':'crop route'} needs a new sealed Draw at the loss cut`,async()=>{
  const {s,manifest,chunkKeys}=fixture();
  const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest});
  const ports=new MessageChannel();
  let draw;
  try{
   await untilProduction(source,()=>source.records[0]?.committed);
+  const step=()=>source.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+  if(retreat){
+   const acquired=()=>source.records.find(r=>r.committed&&r.resources.reference.purpose==='retreat');
+   for(let i=0;i<1800&&!acquired();i++){step();await source.present();}
+   assert.ok(acquired());
+  }
   for(let i=0;i<7;i++){source.advance();await source.present();}
   const old=source.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeAnimalCrop?.kind===26);
   assert(old?.relativeTime>0);
+  assert.equal(old.nativeAnimalCrop.purpose,retreat?'retreat':undefined);
   const frozen=source.snapshot(),animal=frozen.raid.animals[0];
   source.gpu.device.destroy();source.retireResourceEndpoint();
   const hold=await source.authority.quiesceNativeIntentProduction();
@@ -54,18 +61,21 @@ test('an acquired crop route needs a new sealed Draw at the loss cut',async()=>{
   const forged=structuredClone(resources);
   forged.presentation.rows[forged.presentation.rows.length-12]+=.5;
   assert.throws(()=>nativeWorkerRouteRecoveryProfile(26).copyResources(forged),/differs from the acquired route/);
+  if(retreat){
+   assert.deepEqual([ref.targetX,ref.targetZ],[animal.exit.x,animal.exit.z]);
+   assert.equal(ref.targetId,null);
+   const shifted=structuredClone(resources);
+   shifted.nativeAnimalCropRouteBinding.terminal.x+=.25;
+   shifted.presentation.rows[shifted.presentation.rows.length-15]+=.25;
+   assert.throws(()=>nativeWorkerRouteRecoveryProfile(26).copyResources(shifted),/Retreat has another exit/);
+  }
   const metadata={nativeWorldBoundary:ref.worldBoundary,
     clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}};
-  async function submit(){
-   const pending=draw.frame(3,metadata).catch(error=>error);
-   await flush();await draw.host.idle();draw.host.present();
-   return pending;
-  }
-  const mark=reference=>draw.client.registerClockBinding(draw.buffer,
-    {byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:reference,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
   await assert.rejects(source.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
-  mark(ref);
-  assert(!(await submit() instanceof Error));
+  draw.client.registerClockBinding(draw.buffer,
+    {byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+  const pending=draw.frame(3,metadata);
+  await flush();await draw.host.idle();draw.host.present();await pending;
   const submitted=await source.authority.checkHeldDraw(30,hold,route);
   assert.equal(submitted.relativeTime,old.relativeTime);
   assert.equal(submitted.elapsed,at);
@@ -73,9 +83,26 @@ test('an acquired crop route needs a new sealed Draw at the loss cut',async()=>{
   assert.equal(new Float32Array(draw.gpu.buffers[0].data.buffer)[0],old.relativeTime);
   const pick=captureNativeRoutePickFrame({nativeRouteFrame:draw.host.inspect().nativeRouteFrame});
   assert.equal(pick.getAnimalCropAge(ref),old.relativeTime);
+  const admissions=source.records.filter(row=>row.committed).length;
   assert.equal(source.authority.resumeNativeIntentProduction(hold),true);
-  assert(source.advance().elapsed>at);
-  assert.equal(source.records.filter(row=>row.committed).length,1);
+  if(retreat){
+   const ended=[],departures=[];
+   const advance=()=>{
+    const result=step();
+    ended.push(...result.events.filter(e=>e.type==='RaidEnded'));
+    departures.push(...result.presentationJournal.filter(e=>e.kind==='animalGone'));
+    return JSON.parse(result.snapshot);
+   };
+   let state=advance();
+   for(let i=0;i<650&&state.raid;i++)state=advance();
+   assert.equal(state.raid,null);
+   assert.equal(advance().raid,null);
+   assert.equal(ended.length,1);
+   assert.equal(departures.length,1);
+   assert.equal(departures[0].actorId,animal.id);
+   assert(ended[0].simulationTime>=ref.endTime&&ended[0].simulationTime-ref.endTime<=.05+1e-9);
+  }else assert(source.advance().elapsed>at);
+  assert.equal(source.records.filter(row=>row.committed).length,admissions);
  }finally{
   draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();
   await source.close();

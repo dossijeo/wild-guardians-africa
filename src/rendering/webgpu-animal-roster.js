@@ -5,7 +5,7 @@ import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
 import {raidStrikeClips} from '../simulation/raids.js';
-import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
+import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge,nativeAnimalCropPublicationMatches} from '../world/native-animal-crop-resource.js';
 import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor,releaseRosterMotion} from './webgpu-roster-admission.js';
@@ -205,7 +205,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
       target.kind==='center'&&target.status==='intact'&&target.x===ref.targetX&&target.z===ref.targetZ)))&&
     !entry.entity.magicDown&&!poses.has(id)&&!provisional.byTarget.has(id)&&!historyRun&&
     (travel?!previous&&(!recovery||recovery.isCurrent()&&state.elapsed===recovery.execution.executedThrough&&
-      ['entering','walking'].includes(entry.entity.status)&&entry.entity.heading===recovery.execution.yaw&&
+      nativeAnimalCropPublicationMatches(state.raid,{reference:ref})&&entry.entity.heading===recovery.execution.yaw&&
       entry.entity.motionPhase===recovery.execution.phase&&['x','z'].every(k=>entry.entity[k]===recovery.execution[k])):
       ref.restore?!previous&&entry.entity.status==='attacking'&&entry.entity.attackId==='attack-'+ref.restore.attackId&&
       entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&entry.entity.attackRemaining===ref.restore.remaining&&
