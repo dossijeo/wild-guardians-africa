@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La incursión mixta de Desierto se recupera tras una pérdida de Draw con Home18 vigente y otra después de Home19. NVIDIA confirmó los tres relojes del primer relevo, los cuatro golpes al centro y el regreso civil del trabajador a Idle. Es evidencia parcial de E con el portón asentado y la cohorte de desarrollo. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-la-huida-y-tras-home19).
+
 La aproximación a un centro y su Strike27 recuperan sus adquisiciones tras dos pérdidas de Draw en la misma incursión. NVIDIA confirmó las edades en ambos sustitutos, un solo débito de 20 HP y el drenaje. Es evidencia parcial de E para un facóquero sin civiles en Desierto. [Recuperación y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-el-ataque-aislado).
 
 Después de Home19, AttackCrops26 recupera su asignación original aunque el ticket mundial ya sea el del refugio. NVIDIA confirmó el primer dibujo con el trabajador ausente, el golpe único del facóquero y el drenaje. Es evidencia parcial de E en el perfil de desarrollo de Sabana. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-después-de-home19).

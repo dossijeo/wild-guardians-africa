@@ -126,7 +126,7 @@ export function copyNativeRecoveryGroup(value,world){
    const crop=copyCropAttestation(value.members[0].proof),ref=crop.reference;
    if(!sameNativeWorldBoundary(world,home.worldBoundary)||!nativeRecoveryCovers(world,ref.worldBoundary)||
       sameNativeWorldBoundary(world,ref.worldBoundary)||!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||
-      ref.purpose!==undefined||ref.actorId===home.actorId||ref.bodyId===home.bodyId||
+      ref.purpose==='retreat'||ref.actorId===home.actorId||ref.bodyId===home.bodyId||
       crop.assignmentSequence>=refuge.retiredSequence)
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind:26,proof:crop}],refuge};
@@ -135,7 +135,7 @@ export function copyNativeRecoveryGroup(value,world){
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
  const [home,crop]=members.map(member=>member.proof.reference);
- if(!home.sourceRequest?.raidSpawnSequence||crop.purpose!==undefined||
+ if(!home.sourceRequest?.raidSpawnSequence||crop.purpose==='retreat'||
     home.actorId===crop.actorId||home.bodyId===crop.bodyId||
     members[0].proof.assignmentSequence===members[1].proof.assignmentSequence||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||

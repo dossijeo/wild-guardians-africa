@@ -984,14 +984,14 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       x:h[9],z:h[10],yaw:h[11],phase:h[12],arrived:h[13]===1,running:h[14]===1,speed:h[15],
       executedThrough:h[16],targetX:h[17],targetZ:h[18],requestSequence:h[19],...(h[20]>0?{previousStrike:{attackId:h[20],ticket:h[21]}}:{})};
   };
-  function recoveredCenterCurrent(reference,animal,live){
-    const target=nativeCropRouteSubject(owningState,animal,null,live)?.target;
+  function recoveredCenterCurrent(reference,animal,live,flightWorker=null){
+    const target=nativeCropRouteSubject(owningState,animal,flightWorker,live)?.target;
     return target?.kind==='center'&&target.status==='intact'&&target.id==='structure-'+reference.targetId&&
       target.x===reference.targetX&&target.z===reference.targetZ&&
       live?.center===reference.centerId&&live.centerX===target.x&&live.centerZ===target.z&&
       live.targetX===target.x&&live.targetZ===target.z;
   }
-  function nativeAnimalCropRouteExecution(actorId,sharedCut=false){
+  function nativeAnimalCropRouteExecution(actorId,{sharedCut=false,flightWorker=null}={}){
     const proof=activeAnimalRoute,r=proof?.reference;
     if(!r||actorId!=='animal-'+r.actorId||
        !(sharedCut?nativeRecoveryCovers(nativeWorldBoundary(),r.worldBoundary):sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary())))return null;
@@ -1000,7 +1000,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const exit=r.purpose==='retreat'?nativeRetreatSubject(owningState,animal):null;
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?
-        recoveredCenterCurrent(r,animal,live):animal.targetId==='plant-'+r.targetId);
+        recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId==='plant-'+r.targetId);
     if(animal?.species!=='warthog'||!expected||animal.magicDown||live?.mode!==2||live.arrived||
        live.executedThrough!==owningState.elapsed||live.executedThrough>=r.endTime||
        live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
@@ -1018,9 +1018,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
   function nativeRaidFlightRecoveryExecutions(){
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);
     if(!worker||worker.nativeRouteAdmission!=='native-home')return null;
-    const home=nativeHomeRouteExecution(worker.id),crop=nativeAnimalCropRouteExecution(animal.id,true);
+    const home=nativeHomeRouteExecution(worker.id);
+    const crop=nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker});
     const cut=nativeWorldBoundary(),homeWorld=home?.binding.reference.worldBoundary,cropWorld=crop?.binding.reference.worldBoundary;
-    if(!home||home.arrived||home.executedThrough!==game.elapsed||!crop||crop.binding.reference.purpose!==undefined||
+    if(!home||home.arrived||home.executedThrough!==game.elapsed||!crop||crop.binding.reference.purpose==='retreat'||
        !nativeRecoveryCovers(cut,homeWorld)||!nativeRecoveryCovers(cut,cropWorld)||
        sameNativeWorldBoundary(cut,homeWorld)===sameNativeWorldBoundary(cut,cropWorld))return null;
     return [home,crop];
@@ -1038,8 +1039,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const actual=new Float64Array(wasm.memory.buffer,wasm.nav_home_arrival_result_ptr(),52);
     if(actual[0]!==1||actual[1]!==issued.retiredSequence||actual[3]!==cut.ticket||
        actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==cut.effectiveTime)return null;
-    const execution=nativeAnimalCropRouteExecution(raid.animals[0].id,true),source=execution?.binding.reference;
-    if(!source||source.purpose!==undefined||source.worldBoundary.ticket>=cut.ticket||
+    const execution=nativeAnimalCropRouteExecution(raid.animals[0].id,{sharedCut:true}),source=execution?.binding.reference;
+    if(!source||source.purpose==='retreat'||source.worldBoundary.ticket>=cut.ticket||
        execution.binding.assignmentSequence>=issued.retiredSequence)return null;
     return {execution,refuge:issued};
   }

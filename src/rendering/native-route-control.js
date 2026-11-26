@@ -902,6 +902,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },
 
+    installRecoveredRefuge(value,boundary){
+      const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference;
+      if(closed||!clock||retiredRefuge||!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
+         !sameNativeWorldBoundary(r.worldBoundary,boundary)||boundary.authorityEpoch!==authorityEpoch||
+         boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime>clock.committedThrough||
+         proof.retiredSequence>clock.intentSequence||actors.has(r.actorId)||active.has(r.actorId))
+        throw Error('Recovered Home absence conflicts with the fresh control baseline');
+      // Its body stays retired. The receipt is consumed by the same civil
+      // Farm request as it would have been on the original Draw.
+      retiredRefuge=proof;
+    },
     prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===27){

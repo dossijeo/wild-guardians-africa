@@ -886,6 +886,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             ...(gate?{nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}:{})};
         });
         if(members.every(Boolean)){
+          if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active));
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
@@ -1230,8 +1231,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       });
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
-         recovered.retiredActor!==null&&preparedBindings.some(({nativeHome,nativeRoute})=>
-           (nativeHome?.actorId??nativeRoute?.actorId)===recovered.retiredActor)||
+         recovered.refuge&&preparedBindings.some(({nativeHome,nativeRoute})=>
+           (nativeHome?.actorId??nativeRoute?.actorId)===recovered.refuge.reference.actorId)||
          missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
           {code:(missing??recovered.members[0]).profile.obsoleteCode});
@@ -2350,7 +2351,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                  {cohortSize:source.members.length,sharedCut:grouped})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
-               retiredActor:source.refuge?.reference.actorId??null};
+               refuge:source.refuge};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

@@ -16,11 +16,13 @@ const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepare
 export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,drawAllFarmActors=false,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{qualifyFarmFlee,qualifyAnimalCrop,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,getTerrainManifest,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
- const [sourcePort,drawPort]=pair(),graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
- const {port1,port2}=new MessageChannel(),records=[];
+ const [sourcePort,drawPort]=pair();
+ let graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+ const originalGraphics=graphics,records=[];
+ let resourcePorts=new MessageChannel();
  const farmGroups=new Map();
  const clock={version:1,epoch:0,elapsed:state.elapsed,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:false,segments:[{start:state.elapsed,end:Number.MAX_SAFE_INTEGER,rate:1,realDuration:Number.MAX_SAFE_INTEGER-state.elapsed}]};
- const endpoint=attachNativeResourcePreparationEndpoint({port:port2,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
+ const openEndpoint=port=>attachNativeResourcePreparationEndpoint({port,session:resourceSession,isRunning:()=>true,onError:e=>faults.push(String(e)),prepare:async(method,resources,options)=>{
   if(method==='prepareNativeShieldGeometry'){
    const record={kind:'shield-geometry',resources,committed:false,aborted:false};records.push(record);
    await onReady(record);
@@ -123,15 +125,26 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   try{await onReady(record);}catch(error){packet.abort();throw error;}
   return {...(stopped?{canonicalPropsUnmasked:true}:{}),preparedWorldBoundary:packet.preparedWorldBoundary,[profile.templateField]:reference,valid:packet.valid,commit(data){record.committed=packet.commit(data.worldBoundary,data[profile.bindingField]);if(record.committed){if(farmGroup)farmGroups.set(reference.actorId,farmGroup);onCommit?.(record,data);}return record.committed;},abort(){record.aborted=true;packet.abort();}};
  }});
- let sequence=0;
- const result={retireResourceEndpoint:()=>endpoint.dispose(),authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:port1,
+ let endpoint=openEndpoint(resourcePorts.port2),sequence=0;
+ const result={retireResourceEndpoint:()=>endpoint.dispose(),authority,...graphics,records,faults,clock,controlPort:sourcePort,resourcePort:resourcePorts.port1,
   command(command){return authority.execute({...command,sequence:++sequence});},
   async structureCommand(command){const captured={...command,sequence:++sequence};await authority.beginNativeStructureCommand(captured);return authority.execute(captured);},
   snapshot(){return JSON.parse(authority.execute({kind:'snapshot',sequence:++sequence}).snapshot);},
   advance(seconds=.05){return JSON.parse(authority.execute({kind:'advance',sequence:++sequence,seconds,nightFastForward:false,steps:2}).snapshot);},
-  async attach(){result.snapshot();await authority.attachNativeIntentControl(sourcePort,controlSession);await authority.attachNativeResourcePreparation(port1,resourceSession);},
+  async attach(){result.snapshot();await authority.attachNativeIntentControl(sourcePort,controlSession);await authority.attachNativeResourcePreparation(resourcePorts.port1,resourceSession);},
+  async attachRecoveredResources(replacement){
+   const ports=new MessageChannel(),nextEndpoint=openEndpoint(ports.port2),previous=graphics;
+   graphics=replacement;
+   try{await authority.attachNativeResourcePreparation(ports.port1,resourceSession);}
+   catch(error){graphics=previous;nextEndpoint.dispose();ports.port1.close();ports.port2.close();throw error;}
+   resourcePorts.port1.close();resourcePorts.port2.close();resourcePorts=ports;endpoint=nextEndpoint;
+  },
   async present(){await flush();await new Promise(resolve=>setImmediate(resolve));await graphics.host.idle();graphics.host.present();await flush();},
-  async close(){authority.dispose();endpoint.dispose();port1.close();port2.close();graphics.client.dispose();await graphics.host.dispose();}
+  async close(){
+   authority.dispose();endpoint.dispose();resourcePorts.port1.close();resourcePorts.port2.close();
+   originalGraphics.client.dispose();await originalGraphics.host.dispose();
+   if(graphics!==originalGraphics){graphics.client.dispose();await graphics.host.dispose();}
+  }
  };
  try{
   if(emptyBeastPhysics){
