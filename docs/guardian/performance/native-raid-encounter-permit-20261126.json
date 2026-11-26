@@ -1,0 +1,527 @@
+{
+  "baseline": "0365b3dbc090307c2b67defb09b86d5c0f7fc0ed",
+  "scope": "Private standalone, two occupants in Desert, no gate. The production Host uses a deterministic GPU submission double. No production WASM installed. First contact only.",
+  "canonical": {
+    "elapsed": 15.19999999999989,
+    "acquired": [
+      {
+        "kind": "farm-arrival",
+        "ticket": 2,
+        "at": 10
+      },
+      {
+        "kind": "farm-arrival-stop",
+        "ticket": 5,
+        "at": 10.859999999999982
+      },
+      {
+        "kind": "home-route",
+        "ticket": 7,
+        "at": 10.89999999999998,
+        "end": 18.248702205077777,
+        "body": 1
+      },
+      {
+        "kind": "animal-crop-route",
+        "ticket": 9,
+        "at": 13.579999999999924,
+        "end": 16.098509836547617,
+        "body": 2
+      }
+    ],
+    "events": [
+      {
+        "id": "event-29208",
+        "type": "RaidSpawned",
+        "at": 10.799999999999983
+      }
+    ],
+    "faults": [],
+    "errors": []
+  },
+  "privateStandaloneSha256": "bc3e5831381fbca7ba4d172b89255fe85331da67edf1365a14f971671eda7f54",
+  "ordinaryReentry": {
+    "baselineUninstrumentedFailures": 10,
+    "publishedFixture": {
+      "spawnView": {
+        "eye": {
+          "x": 15.9,
+          "z": 2
+        },
+        "target": {
+          "x": 24,
+          "z": 2
+        }
+      },
+      "seeds": [
+        21,
+        152
+      ],
+      "cultures": 5,
+      "passed": 10
+    },
+    "totalTargetedPasses": 45,
+    "totalTargetedFailures": 0,
+    "targetedLogSha256": "c628261ee6ba26fc9373fa2beb3545c5cbaafd6b3d3cd87ebc34c8fd18a6debb"
+  },
+  "front": {
+    "home": {
+      "kind": "home-route",
+      "ticket": 7,
+      "at": 10.89999999999998,
+      "end": 18.248702205077777,
+      "body": 1
+    },
+    "animal": {
+      "kind": "animal-crop-route",
+      "ticket": 9,
+      "at": 10.95999999999998,
+      "end": 13.478509836547673,
+      "body": 2
+    },
+    "proofs": [
+      {
+        "stage": "prepared",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 10.91999999999998,
+        "reach": 11.780081084665872,
+        "collision": 12.117165971999517,
+        "ticket": 8,
+        "session": 1
+      },
+      {
+        "stage": "revalidated",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 10.95999999999998,
+        "reach": 11.799455356227874,
+        "collision": 12.144094184955026,
+        "ticket": 9,
+        "session": 1
+      }
+    ],
+    "foreign": {
+      "worker": -2,
+      "assignment": -2,
+      "spawn": -2,
+      "request": -2
+    },
+    "missing": {
+      "at": 10.979999999999979,
+      "missing": -6,
+      "spawn": -2,
+      "decision": -2
+    },
+    "wrongStep": {
+      "foreignTime": -6,
+      "at": 10.979999999999979,
+      "from": 10.95999999999998
+    },
+    "independentCrossings": {
+      "reach": 11.799455395240393,
+      "physical": 12.144094232893908
+    },
+    "impact": {
+      "at": 11.819999999999961,
+      "previousClock": 11.799999999999962,
+      "held": [
+        -16,
+        0.8059572875253171
+      ],
+      "result": [
+        -16,
+        0.8059572875253171
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 3,
+      "rng": 149829618
+    },
+    "revoked": {
+      "sequence": 9,
+      "clockBefore": 11.799999999999962,
+      "clockAfter": 11.819999999999961
+    },
+    "getUp": {
+      "at": 18.559999999999818,
+      "previousClock": 18.539999999999818,
+      "from": [
+        -16,
+        0.8059572875253171
+      ],
+      "dest": {
+        "x": -16.27014043899544,
+        "z": 0.46890554760911174,
+        "heading": 0
+      },
+      "body": 1,
+      "foreign": {
+        "actor": -2,
+        "clock": -2
+      },
+      "phase": {
+        "elapsed": 3.1999999999999997,
+        "duration": 3.1999999999999997,
+        "heading": 0,
+        "dx": -0.2701404389954405,
+        "dz": -0.3370517399162054,
+        "fraction": 1
+      }
+    },
+    "preparedHold": [],
+    "final": {
+      "elapsed": 18.559999999999818,
+      "x": -16.27014043899544,
+      "z": 0.46890554760911174,
+      "fall": 0,
+      "recovery": null,
+      "exit": 0.24,
+      "admission": null,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "nextBoundary": null
+  },
+  "late": {
+    "home": {
+      "kind": "home-route",
+      "ticket": 7,
+      "at": 10.89999999999998,
+      "end": 18.248702205077777,
+      "body": 1
+    },
+    "animal": {
+      "kind": "animal-crop-route",
+      "ticket": 9,
+      "at": 11.059999999999977,
+      "end": 13.57850983654767,
+      "body": 2
+    },
+    "proofs": [
+      {
+        "stage": "prepared",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 10.91999999999998,
+        "reach": 11.780081084665872,
+        "collision": 12.117165971999517,
+        "ticket": 8,
+        "session": 1
+      },
+      {
+        "stage": "revalidated",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 11.059999999999977,
+        "reach": 11.850387598286897,
+        "collision": 12.219293196177464,
+        "ticket": 9,
+        "session": 1
+      }
+    ],
+    "foreign": {
+      "worker": -2,
+      "assignment": -2,
+      "spawn": -2,
+      "request": -2
+    },
+    "missing": {
+      "at": 11.079999999999977,
+      "missing": -6,
+      "spawn": -2,
+      "decision": -2
+    },
+    "wrongStep": {
+      "foreignTime": -6,
+      "at": 11.079999999999977,
+      "from": 11.059999999999977
+    },
+    "independentCrossings": {
+      "reach": 11.85038763860764,
+      "physical": 12.219293251348283
+    },
+    "impact": {
+      "at": 11.87999999999996,
+      "previousClock": 11.85999999999996,
+      "held": [
+        -16,
+        0.9499572875253142
+      ],
+      "result": [
+        -16,
+        0.9499572875253142
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 3,
+      "rng": 149829618
+    },
+    "revoked": {
+      "sequence": 9,
+      "clockBefore": 11.85999999999996,
+      "clockAfter": 11.87999999999996
+    },
+    "getUp": {
+      "at": 18.619999999999816,
+      "previousClock": 18.599999999999817,
+      "from": [
+        -16,
+        0.9499572875253142
+      ],
+      "dest": {
+        "x": -16.27014043899544,
+        "z": 0.6129055476091088,
+        "heading": 0
+      },
+      "body": 1,
+      "foreign": {
+        "actor": -2,
+        "clock": -2
+      },
+      "phase": {
+        "elapsed": 3.1999999999999997,
+        "duration": 3.1999999999999997,
+        "heading": 0,
+        "dx": -0.2701404389954405,
+        "dz": -0.3370517399162054,
+        "fraction": 1
+      }
+    },
+    "preparedHold": [
+      {
+        "at": 10.93999999999998,
+        "worker": [
+          -17.25804271247464,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      },
+      {
+        "at": 10.95999999999998,
+        "worker": [
+          -17.21004271247464,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      },
+      {
+        "at": 10.979999999999979,
+        "worker": [
+          -17.16204271247464,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      },
+      {
+        "at": 10.999999999999979,
+        "worker": [
+          -17.114042712474642,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      },
+      {
+        "at": 11.019999999999978,
+        "worker": [
+          -17.066042712474644,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      },
+      {
+        "at": 11.039999999999978,
+        "worker": [
+          -17.018042712474646,
+          0
+        ],
+        "animal": [
+          -19.01890775019956,
+          2.104411808379897
+        ]
+      }
+    ],
+    "final": {
+      "elapsed": 18.619999999999816,
+      "x": -16.27014043899544,
+      "z": 0.6129055476091088,
+      "fall": 0,
+      "recovery": null,
+      "exit": 0.24,
+      "admission": null,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "nextBoundary": null
+  },
+  "push": {
+    "home": {
+      "kind": "home-route",
+      "ticket": 7,
+      "at": 10.89999999999998,
+      "end": 18.248702205077777,
+      "body": 1
+    },
+    "animal": {
+      "kind": "animal-crop-route",
+      "ticket": 9,
+      "at": 10.95999999999998,
+      "end": 13.478509836547673,
+      "body": 2
+    },
+    "proofs": [
+      {
+        "stage": "prepared",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 10.91999999999998,
+        "reach": 11.780081084665872,
+        "collision": 12.117165971999517,
+        "ticket": 8,
+        "session": 1
+      },
+      {
+        "stage": "revalidated",
+        "worker": 900011,
+        "workerBody": 1,
+        "workerAssignment": 7,
+        "slot": 2,
+        "generation": 2,
+        "animal": 1000000,
+        "animalBody": 2,
+        "request": 4,
+        "spawn": 29208,
+        "at": 10.95999999999998,
+        "reach": 11.799455356227874,
+        "collision": 12.144094184955026,
+        "ticket": 9,
+        "session": 1
+      }
+    ],
+    "foreign": {
+      "worker": -2,
+      "assignment": -2,
+      "spawn": -2,
+      "request": -2
+    },
+    "missing": {
+      "at": 10.979999999999979,
+      "missing": -6,
+      "spawn": -2,
+      "decision": -2
+    },
+    "wrongStep": {
+      "foreignTime": -6,
+      "at": 10.979999999999979,
+      "from": 10.95999999999998
+    },
+    "independentCrossings": {
+      "reach": 11.799455395240393,
+      "physical": 12.144094232893908
+    },
+    "impact": {
+      "at": 12.179999999999954,
+      "previousClock": 12.159999999999954,
+      "held": [
+        -16,
+        1.6699572875252988
+      ],
+      "result": [
+        -14.520928903743672,
+        2.5523155738541687
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 1,
+      "rng": 1909268553
+    },
+    "revoked": {
+      "sequence": 9,
+      "clockBefore": 12.159999999999954,
+      "clockAfter": 12.179999999999954
+    },
+    "getUp": null,
+    "preparedHold": [],
+    "final": {
+      "elapsed": 12.599999999999945,
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "fall": 3.101666507720947,
+      "recovery": null,
+      "exit": null,
+      "admission": null,
+      "rng": 1909268553,
+      "hits": 1,
+      "budget": 1
+    },
+    "nextBoundary": {
+      "time": 12.619999999999944,
+      "worker": "incapacitated",
+      "budget": 0
+    }
+  },
+  "localEvidenceSha256": {
+    ".cache/flee-mixed/prepare-encounter-phase.mjs": "7702ec3c750e7c06c0a0f1d84bf30577346e65f3e6cf2ec3de9a2f08cf5e8395",
+    ".cache/flee-mixed/install-encounter-permit.mjs": "fa8181a7fb2ceb7ccee6bf7a6cfa9b72ff389322a0a237be1651f913634ad917",
+    ".cache/flee-mixed/encounter-phase-loader.mjs": "6a30a240ebbdd46ad656e915929456a9d74e096ee453135ec457f632fa800ef9",
+    ".cache/flee-mixed/encounter-desert-native.mjs": "3d94b51c5a7aca7bc5357f5ac234a0fa96739c2bb0e93856a731235b71a55e11",
+    ".cache/flee-mixed/verify-center-encounter-permit.mjs": "197e99f15b69632fe2dc3e7b7ef49b1b882b54371dd6e4e0f75a7e6443ff7cea",
+    ".cache/flee-mixed/center-encounter-exact.log": "07e82a64391642956d295fb3d558b27d3e70665780ba9ed72ea353eeb64f970b",
+    ".cache/flee-mixed/center-encounter-late.log": "ed17e4fdf574d4bd63a5bfd660d4c4240460e22d05eca293b26774b00350a257",
+    ".cache/flee-mixed/center-encounter-physical-cut.log": "4833c34c650acf0641fcffc0d580f1e3121944658b8229307129ea3caa86c1a5",
+    ".cache/flee-mixed/center-encounter-canonical.log": "14c0420838ee3771d1bb98721ee927c63d3ce2e11c8b14e1e9c8b25c5bf8776b",
+    ".cache/flee-mixed/center-encounter-reservations.tap": "7c5bbee7bf1bc9ee7294b89535311eb5ad8d0128b85cb2e92dfcb8f06ea5bf14"
+  }
+}
