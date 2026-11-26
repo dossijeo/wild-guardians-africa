@@ -39,6 +39,78 @@ function farmDeliveryAtOccupiedCenter({gate:withGate,endOfShift=false}){
  return {saved,worker,peer,crop,gate,chunkKeys,destination:centerDeliveryPoint(center,crop,saved),ledger:structuredClone(saved.ledger)};
 }
 
+function opposedFarmAtGate(reverseFirst){
+ const fixture=nativeFarmArrivalRouteFixture({peer:false});
+ const saved=structuredClone(fixture.state);fixture.close();
+ const [first]=saved.workers,center=saved.structures.find(row=>row.id===first.centerId);
+ const service=centerServicePoint(center,saved,.8);
+ center.x+=-14-service.x;center.z+=3.2-service.z;
+ Object.assign(first,{x:-14,z:11.8});
+ const gate={id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,
+  maxHp:60,hp:60,status:'intact',villageId:first.villageId,cost:10,collapseRemaining:0};
+ const otherCenter={...structuredClone(center),id:'structure-1000002',z:center.z+9.8};
+ const person={id:'person-1000001',profile:'youngFemale',recoveryUntil:0};
+ const second={...structuredClone(first),id:'worker-900012',personId:person.id,profile:person.profile,centerId:otherCenter.id,z:4.2};
+ saved.structures.push(gate,otherCenter);saved.people.push(person);saved.workers.push(second);saved.nextId=1000003;
+ saved.villages.find(v=>v.id===first.villageId).entry={x:first.x,z:first.z};
+ if(reverseFirst)saved.workers.reverse();
+ const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
+ return {saved,gate,chunkKeys};
+}
+
+for(const reverseFirst of [false,true])test(`opposed Farms leave the shared gate exit free (${reverseFirst?'south':'north'} first)`,async()=>{
+ const {saved,gate,chunkKeys}=opposedFarmAtGate(reverseFirst),[first,second]=saved.workers;
+ let ready,release;
+ const wait=new Promise(resolve=>{release=resolve;});
+ const acquired=[];
+ const f=await nativeProductionAuthority(saved,{chunkKeys,onReady(record){
+  if(record.kind==='farm-arrival'&&!ready){ready=record;return wait;}
+ },onCommit(record,data){if(record.kind==='farm-arrival')acquired.push(data.nativeFarmArrivalBinding);}});
+ try{
+  await untilProduction(f,()=>ready!==undefined);
+  const prepared=ready.resources.nativeFarmArrival;
+  assert.equal(prepared.actorId,Number(first.id.split('-').at(-1)));
+  assert.deepEqual(ready.resources.gates.map(g=>g.gateId),[1000000]);
+  assert(Math.abs(prepared.destination.x-gate.x)>.56,'the parked body must leave the central lane');
+  for(let i=0;i<3;i++){
+   const held=f.advance();await f.present();
+   assert.deepEqual(held.workers.map(w=>[w.x,w.z]),saved.workers.map(w=>[w.x,w.z]));
+   assert(!acquired.length);
+  }
+  release();await untilProduction(f,()=>ready.committed);
+  let view;const passages=new Set();
+  for(let i=0;i<420;i++){
+   view=f.advance();await f.present();
+   const leaf=view.structures.find(row=>row.id===gate.id);
+   for(const w of view.workers)if(Math.abs(w.z-gate.z)<.25&&leaf.gateOpen===1)passages.add(w.id);
+   if(acquired.length===2&&view.workers.every(row=>row.nativeRouteAdmission==='native-idle'))break;
+  }
+  assert.equal(acquired.length,2);
+  assert.deepEqual(acquired[0].reference.destination,prepared.destination);
+  assert.equal(acquired[0].preparedReference.worldBoundary.ticket,prepared.worldBoundary.ticket);
+  assert.notEqual(acquired[0].reference.bodyId,acquired[1].reference.bodyId);
+  assert.equal(acquired[1].reference.actorId,Number(second.id.split('-').at(-1)));
+  assert(acquired.every(binding=>binding.gateIds.length===1&&binding.gateIds[0]===1000000));
+  assert.equal(passages.size,2);
+  assert(view.workers.every(row=>row.nativeRouteAdmission==='native-idle'));
+  assert.deepEqual(view.ledger,saved.ledger);
+  assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{release();await f.close();}
+});
+
+test('a Farm alone keeps the ordinary central arrival at the same gate',async()=>{
+ const {saved,chunkKeys}=opposedFarmAtGate(false);
+ saved.workers.pop();
+ const f=await nativeProductionAuthority(saved,{chunkKeys});
+ try{
+  await untilProduction(f,()=>f.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  const [{resources}]=f.records;
+  assert.deepEqual(resources.nativeFarmArrival.destination,{x:-13.97523021697998,z:5.199846267700195});
+  assert.deepEqual(resources.gates.map(row=>row.gateId),[1000000]);
+  assert.deepEqual(f.faults,[]);
+ }finally{await f.close();}
+});
+
 test('Harvest retains the crop while its center is occupied and settles once after the Farm peer leaves for Home',async()=>{
  const {saved,worker,peer,crop,chunkKeys,destination,ledger}=farmDeliveryAtOccupiedCenter({gate:true,endOfShift:true});
  const acquired=[];

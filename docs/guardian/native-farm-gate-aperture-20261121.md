@@ -185,4 +185,30 @@ Dos trabajadores con centros distintos llegaron desde z=11,8 y z=4,2. Con la sal
 
 Se conservaron 779 buffers únicos de malla, incluidos los siete del portón. Las 875 relaciones de malla y atributo de la primera muestra seguían usando los mismos IDs. El máximo en 240 oportunidades fue de 38,0 ms a 30 Hz. Las 240 enviaron dibujos. C4 sigue abierto.
 
-Con el primer destino alineado, el segundo trabajador permaneció en espera hasta los 55,95 s en NVIDIA. El contraste con WASM y Host determinista mantuvo el mismo bloqueo hasta los 75,10 s. Desde el mismo origen, el segundo trabajador sí cruzó por el centro cuando estaba solo. Al desplazar 1,8 m al oeste el primer centro, los dos volvieron a cruzar en ese Host. El recorrido de salida ocupado queda pendiente. [Recibo físico y controles](performance/native-ordinary-farm-opposite-gate-traffic-20261121.json).
+Con el primer destino alineado, el segundo trabajador permaneció en espera hasta los 55,95 s en NVIDIA. El contraste con WASM y Host determinista mantuvo el mismo bloqueo hasta los 75,10 s. Desde el mismo origen, el segundo trabajador sí cruzó por el centro cuando estaba solo. Al desplazar 1,8 m al oeste el primer centro, los dos volvieron a cruzar en ese Host. [Recibo inicial y controles](performance/native-ordinary-farm-opposite-gate-traffic-20261121.json).
+
+### Dos solicitudes opuestas antes de adquirir Farm
+
+Si ambos trabajadores ya han solicitado el cruce, WASM comprueba sus
+corredores contra el mismo portón. Cuando el extremo normal del primer
+Farm ocuparía el corredor contrario, prueba una extensión lateral dentro
+del radio de llegada al mismo centro. El extremo debe dejar libre el
+corredor contrario completo. Para admitir la extensión, el primer Farm
+vuelve a probar terreno, hoja, cuerpos y reservas. El segundo conserva
+su petición y espera su propio READY y GO. Un trabajador solo conserva
+el extremo habitual.
+
+Los controles retuvieron el primer READY y confirmaron que ambos cuerpos
+seguían en su pose de origen. Al liberarlo, los dos órdenes cruzaron el
+portón abierto y llegaron a Idle con los centros y los cuerpos originales.
+También se comprobó una contratación pagada después de que el primer
+cuerpo ya hubiera llegado y quedado en Idle. Ese cuerpo permanece en el
+corredor y el nuevo Farm sigue esperando. Ese relevo queda pendiente.
+
+En NVIDIA, con los dos centros alineados del caso bloqueado, el primer
+Farm aparcó en x=-13,29627, z=5,06142. Draw presentó ambos cruces con
+los tickets 2 y 4 y el portón abierto. Los dos trabajadores llegaron a
+Idle a los 25,70 s con sus raíces y geometrías originales. El consumidor
+drenó sin errores. El recorrido acredita el cruce, la llegada y el relevo
+a Idle. En la ventana de 240 oportunidades a 30 Hz, el mayor intervalo
+registrado fue de 35,70 ms. C4 sigue abierto. [Recibo y controles](performance/native-opposed-farm-egress-20261126.json).

@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Cuando dos Farm solicitan el mismo portón en sentidos opuestos, WASM puede elegir un extremo lateral dentro del radio de llegada del primer centro. NVIDIA confirmó ambos cruces, los dos cuerpos y la llegada a Idle sin errores de drenaje. El segundo trabajador aún puede quedar bloqueado si se contrata después de que el primero ya esté aparcado. [Recorrido y controles](native-farm-gate-aperture-20261121.md#dos-solicitudes-opuestas-antes-de-adquirir-farm).
+
 WASM ya elige un paso lateral de Walk22 cuando Farm ocupa el punto de entrega y el Harvest terminado bloquea la ida directa al cultivo. El control con y sin portón conserva ambos cuerpos y el punto de entrega, abona una caja y devuelve a los dos trabajadores a Idle en el mismo turno. NVIDIA confirmó el paso lateral, la entrega y el retorno a Idle con las geometrías residentes. [Recorrido y controles](native-farm-gate-aperture-20261121.md#dos-trabajadores-en-el-mismo-turno).
 
 Walk22 ya puede adoptar un nuevo ancla al llegar si se recogió su cultivo. Host determinista confirma la misma pose, cuerpo y geometrías al pasar a Rest21 o preparar otro acercamiento. El contraste de dos trabajadores completó una entrega con el desvío lateral fijo del prototipo. [Relevo y límites](native-farm-gate-aperture-20261121.md#relevo-tras-retirar-el-cultivo).
