@@ -4,7 +4,7 @@ import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {centerFootprint} from '../centers.js';
 import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
-import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal} from '../native-shield-world.js';
+import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
 import {canAttackCrop,nativeCenterAttackCohort,nativeCropRouteSubject,nativeCropCohortCurrent,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike} from '../../simulation/raids.js';
 import {captureRestoredWallRepairs} from '../restored-wall-repair-reference.js';
@@ -861,11 +861,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const covered=border&&session.shieldPolygonId(stop.spell.id)===polygon&&
       !!nativeCropRouteSubject(state,animal,null,{mode:1,shieldContact:stop.spell,shieldPolygon:polygon});
     const crop=border&&raidTarget(state,animal.targetId);
+    const finishedInShield=e=>stop.expiredSuccessor?.attackId===attackId&&e.type==='AnimalLogicalHit'&&
+      e.presentation?.shield?.id===stop.spell.id&&['x','z','radius'].every(k=>e.presentation.shield[k]===stop.spell[k]);
     const expired=!!wasm.nav_animal_reapproach_expired_crop&&crop?.alive&&
       state.raid.reservations[animal.reservation]===animal.id&&!session.shieldPolygonId(stop.spell.id)&&
       !state.spells.some(s=>s.kind==='shield'&&(s.id===stop.spell.id||s.remaining>0&&Math.hypot(s.x-crop.x,s.z-crop.z)<=s.radius))&&
-      state.events.some(e=>e.type==='AnimalLogicalMiss'&&e.reason==='shield-expired'&&e.attackId===animal.attackId&&
-        e.targetId===crop.id&&e.simulationTime===at);
+      state.events.some(e=>e.attackId===animal.attackId&&e.targetId===crop.id&&e.simulationTime===at&&
+        (e.type==='AnimalLogicalMiss'&&e.reason==='shield-expired'||finishedInShield(e)));
     if(!covered&&!expired&&(center&&!retreat?nativeCropRouteSubject(state,animal)?.purpose!=='center':animal.targetId||animal.reservation))return null;
     if(version!==1||nativeSession!==wasm.nav_intent_session()||actor!==numericId(animal.id)||
        animal.attackId!=='attack-'+attackId||animal.x!==x||animal.z!==z||animal.heading!==yaw||
@@ -1482,7 +1484,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       };
       kind=12;integers=nativeWorkerRouteStopInput(stopSourceRoute(binding));
     }else throw TypeError('Unsupported native world mutation');
-    let protocol=null,pendingShield=null,cropStop=null;
+    let protocol=null,pendingShield=null,cropStop=null,cropExpiry=null;
+    const supersededStrike=shield?.expiredRequest?.previousStrike;
     if(shield!==null){
       if(!nativeShieldWorldKind(kind)||typeof prepareResources!=='function'||typeof shield.validate!=='function'||
          typeof shield.project!=='function'||typeof shield.atCommitBoundary!=='function')throw TypeError('Invalid prepared shield owner');
@@ -1492,8 +1495,18 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         if(mode!==1||expected.length!==floats.length||expected.some((value,index)=>value!==floats[index]))throw Error('Native shield footprint changed');
       }else if(pendingShield.polygonId!==integers[0])throw Error('Native shield removal uses another polygon');
       protocol={preparedFrameRequired:true,atCommitBoundary:shield.atCommitBoundary,
+       get preparedShieldCropExpiry(){return cropExpiry;},
        capture:worldBoundary=>{
         const captured={...session.core.captureNativeWorldProposalResources(worldBoundary,shield.crop),worldBoundary,nativeShield:pendingShield};
+         if(supersededStrike){
+           const q=nativeAnimalCropState(shield.expiredRequest.actorId);
+           if(kind!==4||q?.mode!==1||q.shieldPolygon!==pendingShield.polygonId||q.requestSequence!==shield.expiredRequest.requestSequence||
+              q.previousStrike?.attackId!==supersededStrike.attackId||q.previousStrike.ticket!==supersededStrike.ticket)
+             throw Error('Shield expiry has another pending protected strike successor');
+           cropExpiry=copyNativeShieldCropExpiry({version:1,worldBoundary,actorId:q.actor,bodyId:q.body,targetId:q.target,
+             requestSequence:q.requestSequence,polygonId:q.shieldPolygon,attackId:supersededStrike.attackId,strikeTicket:supersededStrike.ticket});
+           return {...captured,nativeShieldCropExpiry:cropExpiry};
+         }
         const running=kind===4&&shield.crop?nativeAnimalCropState('animal-'+shield.crop.actorId)?.running:undefined;
         cropStop=shield.crop?shieldCropStopFromProposal(captured,shield.crop,running):null;
         return cropStop?{...captured,nativeShieldCropStop:cropStop}:captured;
@@ -1552,25 +1565,36 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
           const animal=owningState.raid?.animals.find(item=>item.id===actorId);
           if(!stop||!animal||stop.actorId!==numericId(actorId)||stop.polygonId!==ids[0]||animal.approachShieldId!==nativeShield.spell.id)
             throw Error('Native Shield expiry lost the protected approach source');
-          if(shield.expiredRequest){
+          if(supersededStrike){
+            if(wasm.nav_animal_retire_expired_shield_request(stop.actorId,worldBoundary.nativeSession,ids[0],
+              shield.expiredRequest.requestSequence)!==1)
+              throw Error('Native Shield expiry could not retire the completed strike successor');
+            stop.expiredSuccessor=supersededStrike;
+            const finished=nativeFinishedAnimalCrop(owningState,animal);
+            if(!finished?.shieldExpired||finished.attackId!==supersededStrike.attackId)
+              throw Error('Native Shield expiry lost the completed protected impact');
+            requestNativeProtectedSuccessor(owningState,animal,finished,shield.nav);
+          }else if(shield.expiredRequest){
             const sequence=shield.expiredRequest.requestSequence;
             if(wasm.nav_animal_retire_expired_shield_request(stop.actorId,worldBoundary.nativeSession,ids[0],sequence)!==1)
               throw Error('Native Shield expiry could not retire the pending route');
             stop.replacesRequestSequence=sequence;
           }
-          stop.removed=true;animal.approachShieldId=null;animal.path=null;
+          if(!supersededStrike){stop.removed=true;animal.approachShieldId=null;animal.path=null;}
         }
         if(kind===4&&issuedShieldCropStop?.polygonId===ids[0]&&issuedShieldCropStop.spell?.id===nativeShield.spell.id){
           const q=nativeAnimalCropState('animal-'+issuedShieldCropStop.actorId);
           if(q?.mode===3&&q.shieldPolygon===ids[0])issuedShieldCropStop.expiredStrike=q.strike;
         }
-        if(cropStop||shield.expiredRequest)replanNativeShieldCrop(cropStop?'animal-'+cropStop.actorId:shield.expiredRequest.actorId,shield.nav);
+        if(cropStop||shield.expiredRequest&&!supersededStrike)
+          replanNativeShieldCrop(cropStop?'animal-'+cropStop.actorId:shield.expiredRequest.actorId,shield.nav);
       }
       const published=session.publishNativeWorldResources(committedWorldBoundary);
       const resources=nativeShield?{...published,phase:'committed',worldBoundary,nativeShield}:published;
       if(resources.kind!==kind)throw Error('Native world resource family mismatch');
       if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary});
-      return {status:1,value:{ids,resources:cropStop?{...resources,nativeShieldCropStop:cropStop}:resources}};
+      return {status:1,value:{ids,resources:cropStop?{...resources,nativeShieldCropStop:cropStop}:
+        cropExpiry?{...resources,nativeShieldCropExpiry:cropExpiry}:resources}};
     },prepareResources,signal,protocol);
   };
   const stopNativeWorkerRouteAfterGpuQuiescence=(kind,{actorId,getPublication,prepareResources,signal=null,sourceStillCurrent=null}={})=>{

@@ -166,8 +166,8 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_replan_expired_shield_crop(double actor,doub
  const std::array<double,2> direct{approachX,approachZ};
  return replanStoppedShieldCrop(actor,session,polygon,nullptr,&direct);
 }
-// The expired pending program has no acquired route to revoke. The original
-// stop remains the physical source. Discard only its exact uncommitted request.
+// The expired pending program has no acquired route to revoke. Preserve its
+// original stop or completed strike and discard only the uncommitted request.
 EMSCRIPTEN_KEEPALIVE int nav_animal_retire_expired_shield_request(double actor,double session,double polygon,double sequence){
  auto& s=state();
  if(!integer(actor)||session!=s.session||!integer(polygon)||polygon>std::numeric_limits<int>::max()||!integer(sequence)||
@@ -176,8 +176,19 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_retire_expired_shield_request(double actor,d
  if(i==s.activeIntents.end())return -2;
  auto& intent=i->second;
  const auto& q=intent.animalRouteRequest;
- if(!intent.stoppedShieldCrop||!q||q->shieldPolygon!=polygon||q->sequence!=sequence||
-    intent.stoppedShieldCrop->polygon!=polygon||!animalRouteRequestCurrent(s,intent,false))return -2;
+ if(!q||q->shieldPolygon!=polygon||q->sequence!=sequence||!animalRouteRequestCurrent(s,intent,false))return -2;
+ if(!intent.stoppedShieldCrop){
+  const auto& h=s.finishedAnimalStrike;
+  if(!h||h->session!=s.session||h->actor!=uint64_t(actor)||h->body!=q->body||h->target!=q->target||h->center!=q->center||
+     h->at>q->at||!h->covered||h->covered->shieldPolygon!=polygon||h->covered->shieldX!=q->shieldX||
+     h->covered->shieldZ!=q->shieldZ||h->covered->shieldRadius!=q->shieldRadius||q->entering||
+     h->x!=q->x||h->z!=q->z||h->yaw!=q->heading||h->phase!=q->phase||h->radius!=q->radius)return -2;
+  releaseIntent(s,intent.actor,PlanningState::Cancelled);
+  s.activeIntents.erase(i);
+  s.entityRevision++;
+  return 1;
+ }
+ if(intent.stoppedShieldCrop->polygon!=polygon)return -2;
  auto hold=std::move(*intent.stoppedShieldCrop);
  releaseRoute(s,intent);
  intent.state=PlanningState::NeedsPlan;

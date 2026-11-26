@@ -92,7 +92,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     };
     return {commit,abort:()=>batcher.dispose()};
    }
-   return {prepareStop,nativeCropLease:roster.nativeCropLease,async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
+   return {prepareStop,nativeCropLease:roster.nativeCropLease,async prepare(proposal,signal=new AbortController().signal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
    await assert.rejects(roster.prepareAnimalCrop(proposal,support,{signal:AbortSignal.abort(),getPickAge:()=>0}));
    if(contention==='successor-history'&&proposal.reference.kind===26&&lastProof?.reference.kind===27){
     // Same owner and target as the next admission, but the stationary
@@ -115,7 +115,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     await new Promise(resolve=>setImmediate(resolve));roster.setHistoricalActors([animal.id]);
     await Promise.resolve();assert(lateHistory);assert.equal(lateHistory.signal.aborted,false);
    }
-   part=await roster.prepareAnimalCrop(proposal,support,{signal:new AbortController().signal,getPickAge:()=>age});assert(part.valid());
+   part=await roster.prepareAnimalCrop(proposal,support,{signal,getPickAge:()=>age});assert(part.valid());
    if(proposal.reference.kind===26&&contention==='historical'){
     const first=lateHistory;
     assert.equal(first.signal.aborted,true);part.cancel();assert(!part.valid());

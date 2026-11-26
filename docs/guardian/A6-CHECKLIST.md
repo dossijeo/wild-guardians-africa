@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La calificación AttackCrops de Sabana conserva un golpe ya consumado cuando caduca Escudo y cancela su marcha sucesora pendiente. NVIDIA confirmó el primer dibujo sin el permiso anterior, la marcha al mismo cultivo, el único daño posterior y el drenaje. Es evidencia parcial de aplicación gráfica en f-R4. [Recorrido y límites](webgpu-shield.md#caducidad-entre-dos-golpes).
+
 El recorrido de ruina del centro también conserva al trabajador refugiado por Home19 y el portón abierto que usó al volver. NVIDIA confirmó cuatro golpes, retirada del polígono, dibujo con Retreat vigente, derrota por pérdida del último centro y drenaje. [Caso mixto con portón](native-desert-mixed-flight-center-20261125.md#ruina-con-el-trabajador-refugiado-y-el-portón-abierto).
 
 El Host reutiliza comprobaciones de la misma identidad dentro de cada llamada. Las comprobaciones dirigidas pasaron de 72/72/24 a 3/3/1 y la regresión de 738 pruebas y la compilación aprobaron. C4 sigue abierto tras dos capturas a 60 Hz. El primer hold fue de 23,170 y 24,505 ms y el máximo de arranque fue de 188,545 y 206,190 ms. [Contraste y validación](native-binding-cadence-20261120.md).

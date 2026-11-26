@@ -223,6 +223,20 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }
     return null;
   }
+  function shieldCropExpirySource(proof){
+    const actor=actors.get(proof.actorId),last=finishedCrop,ref=last?.reference,request=actor?.cropRequest;
+    if(closed||!clock||active.size||actors.size!==1||!actor||actor.closed||actor.state!==6||
+       !ref||ref.kind!==27||ref.purpose||actor.cropPredecessor!==ref||
+       !request||actor.latestSequence!==proof.requestSequence||request.requestSequence!==proof.requestSequence||
+       !['actorId','bodyId','targetId'].every(k=>request[k]===proof[k]&&ref[k]===proof[k])||
+       last.attackId!==proof.attackId||ref.worldBoundary.ticket!==proof.strikeTicket||
+       clock.intentSequence!==proof.requestSequence||proof.worldBoundary.authorityEpoch!==authorityEpoch||
+       clock.nativeSession!==proof.worldBoundary.nativeSession||proof.worldBoundary.effectiveTime!==clock.committedThrough||
+       ref.endTime>clock.committedThrough)return null;
+    return Object.freeze({matches:previous=>sameNativeAnimalCropReference(previous,last.preparedReference),
+      retired:()=>!closed&&finishedCrop===last&&actor.closed&&actor.state===5&&
+        actor.latestSequence===proof.requestSequence+1&&!active.has(proof.actorId)});
+  }
   function admitAnimalCrop(input,{preparingWorldBoundary=null}={}){
     const r=copyNativeAnimalCropReference(input,input?.kind),actor=actors.get(r.actorId);
     const live=()=>!closed&&!!clock&&actor&&!actor.closed&&actors.get(r.actorId)===actor&&clock.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch;
@@ -772,7 +786,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     pendingFarmArrivalRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingFarmArrivalRequest;return request&&farmArrivalRequestCurrent(request,actor)?request:null;},
     pendingIdleStrollRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingIdleStrollRequest;return request&&idleStrollRequestCurrent(request,actor)?request:null;},
     pendingIdleCycleRequest(actorId){const actor=actors.get(actorId),request=actor?.pendingIdleCycleRequest;return !closed&&!!clock&&!!request&&!actor.closed&&actor.state===7&&actor.current===null&&actor.latestSequence===request.requestSequence&&request.requestSequence<=clock.intentSequence?request:null;},
-    accept,admitAnimalCrop,installAnimalCrop,shieldCropStopCurrent,shieldCropStopAtBoundary,
+    accept,admitAnimalCrop,installAnimalCrop,shieldCropStopCurrent,shieldCropStopAtBoundary,shieldCropExpirySource,
     installIdleCycles(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
       if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Native Idle cycle requires prepared admission at its current boundary');

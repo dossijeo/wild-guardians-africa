@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+NVIDIA confirmó la caducidad de Escudo entre dos golpes. El primer impacto protegido permanece registrado una sola vez, se descarta el READY de la siguiente marcha al borde y el nuevo corredor conserva cuerpo y pose. Solo el golpe posterior daña el cultivo. Retreat y drenaje verificados. [Recorrido y recibo](webgpu-shield.md#caducidad-entre-dos-golpes).
+
 Escudo ya puede caducar antes de adquirir el primer golpe de un facóquero contra un cultivo protegido. NVIDIA confirmó el relevo en marcha y al llegar al borde con el golpe aún pendiente. La nueva ruta conserva cuerpo, reserva, pose y fase, y la cola drena. El caso con la primera ruta pendiente se verificó en CPU. [Recorridos y recibos](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe).
 
 Escudo ya conserva un golpe adquirido al caducar sobre un cultivo protegido. NVIDIA confirmó el fallo del primer golpe, el nuevo acercamiento con el mismo cuerpo, el único impacto posterior, Retreat y el drenaje. Un hueco de 666,80 ms al cambiar de golpe a marcha sigue abierto en C4. [Recorrido, controles y recibo](webgpu-shield.md#golpes-al-borde-y-caducidad-del-escudo).

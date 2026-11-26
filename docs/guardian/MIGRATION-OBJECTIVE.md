@@ -1,6 +1,6 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-La caducidad antes del primer golpe protegido conserva cuerpo y reserva en la calificación AttackCrops de Sabana. CPU cubre el primer corredor pendiente. NVIDIA confirma el cambio durante la marcha y con el golpe aún pendiente en el borde. Quedan el sucesor pendiente tras un golpe protegido, el menú ordinario y C4. [Evidencia](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe).
+La caducidad antes del primer golpe protegido conserva cuerpo y reserva en la calificación AttackCrops de Sabana. CPU cubre el primer corredor pendiente. NVIDIA confirma el cambio durante la marcha y con el golpe aún pendiente en el borde. También se verificó la cancelación del sucesor pendiente entre golpes, con un único daño posterior al cultivo, Retreat y drenaje. El menú ordinario y C4 siguen abiertos. [Evidencia antes del primer golpe](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe) · [Evidencia entre golpes](webgpu-shield.md#caducidad-entre-dos-golpes).
 
 Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).
 

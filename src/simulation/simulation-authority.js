@@ -470,7 +470,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||!nativeCropCohortCurrent(game,planner))return null;
       const q=planner.nativeAnimalCropState(stopped.id);
       if(!q||q.shieldContact?.id!==spell.id||q.shieldPolygon!==polygonId||q.body!==nativeBodies.id(stopped.id))return null;
-      if(q.mode===1)return q.previousStrike?null:{requestSequence:q.requestSequence,binding:null};
+      if(q.mode===1){
+        if(q.previousStrike&&(!stopped.hitApplied||stopped.attackId!=='attack-'+q.previousStrike.attackId))return null;
+        return {requestSequence:q.requestSequence,binding:null,previousStrike:q.previousStrike};
+      }
       if(q.mode!==2)return null;
       const binding=planner.nativeAnimalRouteBinding(stopped.id);
       return binding?{requestSequence:q.requestSequence,binding}:null;
@@ -480,7 +483,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const now=readProtectedApproach();
       return !!now&&now.requestSequence===approach.requestSequence&&
         (approach.binding?now.binding?.assignmentSequence===approach.binding.assignmentSequence&&
-          sameNativeWorldBoundary(now.binding.worldBoundary,approach.binding.worldBoundary):now.binding===null);
+          sameNativeWorldBoundary(now.binding.worldBoundary,approach.binding.worldBoundary):now.binding===null&&
+          now.previousStrike?.attackId===approach.previousStrike?.attackId&&now.previousStrike?.ticket===approach.previousStrike?.ticket);
     };
     const strikeCurrent=()=>{
       const q=readStrike();
@@ -499,7 +503,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const current=()=>!closed&&!owner.controller.signal.aborted&&shieldAdvance===owner&&
       owner.resources===nativeResourcePreparation&&owner.control===nativeIntentControl&&
       game.spells.includes(spell)&&session.shieldPolygonId(spell.id)===polygonId;
-    const expiredRequest=approach&&!approach.binding?{actorId:stopped.id,requestSequence:approach.requestSequence}:null;
+    const expiredRequest=approach&&!approach.binding?{actorId:stopped.id,requestSequence:approach.requestSequence,
+      previousStrike:approach.previousStrike}:null;
     const cancelCrop=approach?{actorId:stopped.id,requestSequence:approach.requestSequence,
       kind:approach.binding?'animal-crop-strike':'animal-crop-route'}:null;
     owner.receipt=await nativeProduction.quiesce({cancelCrop});

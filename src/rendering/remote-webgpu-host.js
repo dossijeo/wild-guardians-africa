@@ -35,7 +35,7 @@ import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
 import { evaluateRemoteClock } from './remote-presentation-clock.js';
-import {copyNativeShieldCropStop} from '../world/native-shield-world.js';
+import {copyNativeShieldCropStop,copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import { createNativeRouteControl } from './native-route-control.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
@@ -1162,6 +1162,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         throw Error('Invalid retained Shield crop stop');
       packet.metadata.preparedShieldCropStop=stop;
     }
+    if(packet.metadata.preparedShieldCropExpiry){
+      const proof=copyNativeShieldCropExpiry(packet.metadata.preparedShieldCropExpiry);
+      if(packet.metadata.preparedCenterRuin||packet.metadata.preparedShieldCropStop||Object.keys(packet.metadata).some(key=>key.endsWith('Template'))||
+         !sameNativeWorldBoundary(proof.worldBoundary,boundary)||!routeControl.shieldCropExpirySource(proof))
+        throw Error('Invalid retained Shield expiry after a crop strike');
+      packet.metadata.preparedShieldCropExpiry=proof;
+    }
     if(packet.metadata.preparedCenterRuin){
       const ruin=centerSource(packet.metadata.preparedCenterRuin);
       if(Object.keys(packet.metadata).some(key=>key.endsWith('Template'))||
@@ -1941,11 +1948,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            // Reuse only within this synchronous control event; never across an await or authority change.
            let checkedBindings;const quiescenceBindings=()=>checkedBindings??=admitClockBindings(pending,true);
            const status=routeControl?.status();
+           const cropExpiry=message.preparedShieldCropExpiry&&copyNativeShieldCropExpiry(message.preparedShieldCropExpiry);
+           const expirySource=cropExpiry&&routeControl?.shieldCropExpirySource(cropExpiry);
            if(!status?.clock||status.closed||nativeMutationHold||message.protocolVersion!==2||message.fenceVersion!==1||
               message.authorityEpoch!==status.authorityEpoch||message.sequence!==status.sequence||
               message.effectiveTime!==status.effectiveTime||message.clockSequence!==status.clock.clockSequence||
               !Number.isSafeInteger(message.holdId)||message.holdId!==lastNativeMutationFence+1||
+              cropExpiry&&(!expirySource||!sameNativeWorldBoundary(cropExpiry.worldBoundary,message.preparedWorldBoundary)||
+                !sameNativeShieldCropExpiry(cropExpiry,pending?.metadata?.preparedShieldCropExpiry))||
               active?.clockBindings?.some(binding=>binding.routeRecord&&binding.routeRecord.safeUntil<message.effectiveTime&&!retainedCompletedEndpoint(binding,message.effectiveTime)&&
+                !expirySource?.matches(binding.nativeAnimalCrop)&&
                 !binding.motionRecord?.canQuiesceFor?.(message.preparedAnimalCropRouteTemplate)&&
                 !binding.motionRecord?.canQuiesceForRefugeReturn?.(message.preparedFarmArrivalTemplate)))
              throw Error('Invalid or unsafe native mutation quiescence boundary');
@@ -1954,6 +1966,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});
              throw Error('Native mutation lacks its retained prepared command packet');
            }
+           if(preparedWorldBoundary&&!!cropExpiry!==!!pending?.metadata?.preparedShieldCropExpiry||
+              cropExpiry&&(message.preparedCenterRuin||Object.keys(message).some(k=>k.endsWith('Template'))||
+                quiescenceBindings().some(binding=>binding.nativeAnimalCrop)))
+             throw Error('Shield expiry hold lacks its prescribed stationary packet');
            if(message.preparedCenterRuin||pending?.metadata?.preparedCenterRuin&&preparedWorldBoundary)try{
              const ruin=centerSource(message.preparedCenterRuin);
              if(!sameCenter(ruin,pending?.metadata?.preparedCenterRuin)||
@@ -2017,7 +2033,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw Error('Native quiescence lacks its deferred template');
            }
            if(message.preparedTaskRouteStopTemplate||message.preparedFarmArrivalStopTemplate||message.preparedIdleStrollStopTemplate||message.preparedResumeTemplate||message.preparedTaskStartTemplate||message.preparedTaskActionTemplate||message.preparedTaskConsequenceTemplate||message.preparedTaskSettlementTemplate||message.preparedInitialIdleBodyTemplate||message.preparedIdleCycleTemplate||message.preparedFarmArrivalTemplate||message.preparedHomeRouteTemplate||message.preparedIdleStrollTemplate||message.preparedHomeArrivalTemplate)try{quiescenceBindings();}catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
-           lastNativeMutationFence=message.holdId;nativeMutationHold={...message,quiesced:false};
+           lastNativeMutationFence=message.holdId;nativeMutationHold={...message,quiesced:false,shieldCropExpirySource:expirySource};
            if(preparedWorldBoundary)nativeMutationHold.preparedFrameSequence=pending.sequence;
            Promise.resolve(device.queue.onSubmittedWorkDone()).then(()=>{
              if(stopped||failed||nativeMutationHold?.holdId!==message.holdId)return;
@@ -2038,7 +2054,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                ...(message.preparedHomeRouteTemplate?{nativeHomeRouteVersion:1,preparedHomeRouteTemplate:copyNativeHomeRouteReference(message.preparedHomeRouteTemplate)}:{}),
                ...(message.preparedTaskStartTemplate?{nativeTaskStartVersion:1,preparedTaskStartTemplate:copyNativeTaskStartReference(message.preparedTaskStartTemplate)}:{}),
                ...(message.preparedTaskConsequenceTemplate?{nativeTaskConsequenceVersion:1,preparedTaskConsequenceTemplate:copyNativeTaskConsequenceReference(message.preparedTaskConsequenceTemplate)}:{}),
-               ...(message.preparedCenterRuin?{preparedCenterRuin:message.preparedCenterRuin}:{}),...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
+               ...(cropExpiry?{preparedShieldCropExpiry:cropExpiry}:{}),...(message.preparedCenterRuin?{preparedCenterRuin:message.preparedCenterRuin}:{}),...(preparedWorldBoundary?{preparedWorldBoundary,preparedFrameSequence:nativeMutationHold.preparedFrameSequence}:{})});
            }).catch(error=>fail(error));return;
          }
          if(message?.type==='IntentMutationRelease'){
@@ -2201,6 +2217,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                 !routeControl.shieldCropStopCurrent(shieldStop,{revoked:true})||
                 pending.admittedClockBindings.some(binding=>!!binding.nativeAnimalCrop)))
                throw Error('Native Shield GO lacks its prescribed stationary packet');
+             if(hold.preparedShieldCropExpiry&&(!hold.shieldCropExpirySource?.retired()||
+                !sameNativeShieldCropExpiry(hold.preparedShieldCropExpiry,pending?.metadata?.preparedShieldCropExpiry)||
+                pending.sequence!==hold.preparedFrameSequence||pending.admittedClockBindings.some(binding=>binding.nativeAnimalCrop)))
+               throw Error('Native Shield GO lacks the retired crop successor');
              routeControl.installSuspendedBodies(boundary,message.nativeSuspendedBodies??[]);
              routeControl.installResumedRoutes(boundary,message.nativeResumedRoutes??[]);
              routeControl.installStartedRoutes(boundary,message.nativeStartedRoutes??[]);

@@ -55,6 +55,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    const stopped=records.findLastIndex(item=>item.committed&&item.resources.nativeShieldCropStop)>records.indexOf(lastActorPacket);
    const packet=resources.nativeShieldCropStop?
     await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary,preparedShieldCropStop:resources.nativeShieldCropStop},options.signal):
+    resources.nativeShieldCropExpiry?await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary,preparedShieldCropExpiry:resources.nativeShieldCropExpiry},options.signal):
     stopped?await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):lastActorPacket?.cropGroup?await prepareExistingGroup(graphics,lastActorPacket.cropGroup,{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):drawAllFarmActors?await prepareExistingGroup(graphics,[...farmGroups.values()],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):lastActorPacket?.kind==='home-arrival'?
     await prepareExistingGroup(graphics,[],{clock,nativeWorldBoundary:resources.worldBoundary},options.signal):
     await preparedWorldDraw({...graphics,clock},resources.worldBoundary,0,options.signal);
@@ -66,7 +67,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   }
   const barrier=method==='prepareNativeBarrierAdditionResources';
   const [kind,template,clockField]=barrier?['barrier-addition']:method==='prepareNativeGateResources'&&resources.kind===12?['idle-stroll-stop']:method==='prepareNativeGateResources'&&resources.kind===25?['task-route-stop']:method==='prepareNativeGateResources'&&resources.kind===24?['farm-arrival-stop']:kinds[method],profile=nativeResourceAdmissionProfile(kind),reference=profile.reference(resources),record={kind,resources,minSequence:options.minSequence,terrainManifest:options.terrainManifest,...(barrier?{nativeBarrierWallEntities:options.nativeBarrierWallEntities}:{}),committed:false,aborted:false};records.push(record);
-  await onPrepare(record);
+  await onPrepare(record,options);
   if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
   // Same single-generation backpressure used by the real WorldSurface.
   await graphics.client.whenFrameSettled();

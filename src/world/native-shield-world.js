@@ -20,6 +20,17 @@ export function sameNativeShieldCropStop(a,b){
  return !!a&&!!b&&a.slot===b.slot&&a.removal===b.removal&&a.running===b.running&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&
   [...cropStopIds,...cropStopPose].every(k=>a[k]===b[k]);
 }
+const cropExpiryFields=['actorId','bodyId','targetId','attackId','strikeTicket','requestSequence','polygonId'];
+export function copyNativeShieldCropExpiry(value){
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ if(!worldBoundary||value.version!==1||!cropExpiryFields.every(k=>Number.isSafeInteger(value[k])&&value[k]>0)||
+    value.strikeTicket>=worldBoundary.ticket||value.polygonId>0x7fffffff)
+   throw Error('Invalid native Shield expiry after a crop strike');
+ return Object.freeze({version:1,worldBoundary,...Object.fromEntries(cropExpiryFields.map(k=>[k,value[k]]))});
+}
+export function sameNativeShieldCropExpiry(a,b){
+ return a?.version===1&&b?.version===1&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&cropExpiryFields.every(k=>a[k]===b[k]);
+}
 export function shieldCropStopFromProposal(resources,source,running){
  const row=resources.routeEffects.rows;
  if(!row.length)return null;

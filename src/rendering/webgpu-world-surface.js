@@ -32,7 +32,7 @@ import {sameNativeGatePresentations} from '../world/native-gate-presentation.js'
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {copyNativeShieldWorld,nativeShieldWorldKind,sameNativeShieldWorld,copyNativeShieldCropStop,sameNativeShieldCropStop} from '../world/native-shield-world.js';
+import {copyNativeShieldWorld,nativeShieldWorldKind,sameNativeShieldWorld,copyNativeShieldCropStop,sameNativeShieldCropStop,copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
 import {installWebGpuTextureBindingInitialization} from './webgpu-texture-binding-initialization.js';
@@ -247,6 +247,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      const coverage=barrierTemplate||nativeShieldProposal?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
      const metadata=remoteFrameMetadata(boundary,coverage);
      if(shieldCropPart)metadata.preparedShieldCropStop=nativeShieldProposal.nativeShieldCropStop;
+     if(nativeShieldProposal?.nativeShieldCropExpiry)metadata.preparedShieldCropExpiry=nativeShieldProposal.nativeShieldCropExpiry;
      if(nativeCenterRuin){
       const start=boundary.effectiveTime,end=nativeCenterRuin.end;
       metadata.preparedCenterRuin=nativeCenterRuin;
@@ -426,6 +427,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(ruin&&(proposal.version!==1||stop||shieldGeometry||!sameNativeWorldBoundary(ruin.boundary,boundary)))throw Error('Invalid center ruin Surface proposal');
    if(shieldGeometry&&(proposal.kind!==3||!sameNativeShieldWorld(shieldGeometry.shield,proposal.nativeShield)||!shieldGeometry.batch.valid()))throw Error('Shield geometry differs from the FIFO proposal');
    const shieldStop=shield&&proposal.nativeShieldCropStop?copyNativeShieldCropStop(proposal.nativeShieldCropStop):null;
+   const cropExpiry=shield&&proposal.nativeShieldCropExpiry?copyNativeShieldCropExpiry(proposal.nativeShieldCropExpiry):null;
+   if(cropExpiry){
+    if(proposal.kind!==4||shieldStop||cropExpiry.polygonId!==proposal.nativeShield.polygonId||
+       !sameNativeWorldBoundary(cropExpiry.worldBoundary,boundary))throw Error('Invalid Shield expiry after a crop strike');
+    proposal.nativeShieldCropExpiry=cropExpiry;
+   }
    if(shieldStop){
     const row=proposal.routeEffects?.rows;
     if(shieldGeometry||!!shieldStop.removal!==(proposal.kind===4)||!sameNativeWorldBoundary(boundary,shieldStop.worldBoundary)||
@@ -480,12 +487,14 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       if(barrier?(!sameNativeWorldBoundary(data.worldBoundary,actual)||!nativeBarrierAdditionPresentationMatches(proposal,r,proof)):data?.nativeBarrierAdditionBinding!==undefined)throw Error('Native solid addition commit differs from its prepared walls');
       if(shield&&(!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,proposal.kind,actual)||r.phase!=='committed'||
          !sameNativeShieldWorld(proof,proposal.nativeShield,{addition:proposal.kind===3})||!!r.nativeShieldCropStop!==!!shieldStop||shieldStop&&!sameNativeShieldCropStop(shieldStop,copyNativeShieldCropStop(r.nativeShieldCropStop))))throw Error('Native shield differs from its prepared spell or polygon');
+      if(shield&&(!!r.nativeShieldCropExpiry!==!!cropExpiry||cropExpiry&&
+         !sameNativeShieldCropExpiry(cropExpiry,r.nativeShieldCropExpiry)))throw Error('Shield expiry lost the completed crop strike');
       if(stop&&(!proof.projection||!stop.codec.sameReference(proof.preparedReference,template)||!sameNativeWorldBoundary(data.worldBoundary,actual)||!emptyResources(r,stop.codec.kind,actual)))throw Error('Native stopped commit differs from its acquired body-only proposal');
       try{if(raw.commit(data)!==true)throw Error('Direct native commands not retained');}catch(error){cancel();throw error;}
       finished=true;callerSignal?.removeEventListener('abort',abort);item.descriptor={phase:'adopting',worldBoundary:actual};item.acquiredWorld={kind:ruin?4:shield?proposal.kind:barrier?2:stop.codec.kind,proof,worldBoundary:actual,centerRuin:ruin};
       // The actual empty terrain publication must adopt this exact acquired
       // packet. It cannot borrow a motor boundary or bypass terrain history.
-      if(stop||shieldStop)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
+      if(stop||shieldStop||cropExpiry)nativeRouteResourceRevision++;nativeRouteRejected=false;nativePickPresentation=raw.presented;onSelectableChange();
       void raw.presented.then(async()=>{
        if(nativePickPresentation===raw.presented)nativePickPresentation=null;releasePublication();onPresentationReady();
        await waitNativePublication(preparedSequence+1,controller.signal,()=>sameNativeWorldBoundary(preparedNativeWorldBoundary,actual));

@@ -1,6 +1,7 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {nativeSuspendedBodiesFromProposal} from './native-suspended-body-reference.js';
 import {nativeResourceAdmissionProfile} from './native-resource-admission-profiles.js';
+import {sameNativeShieldCropExpiry} from './native-shield-world.js';
 
 // Shared vertical: stage -> prepare -> drain -> current native validation ->
 // synchronous native commit -> retain -> publish/release. The bridge supplies
@@ -81,7 +82,9 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
       if(epoch()!==owner||getPublication()!==source||source.status().closed||!coversGpuConsumers(source))return outcome('control-replaced');
       if(preparationController.signal.aborted||preparedResources&&preparedResources.valid()!==true)throw Error('Native prepared resources became stale');
       const quiescence=protocol?.deferred?source.status():{sentSequence:sequence,sentTime:time,clockSequence};
-      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,...(preparedMotionTemplate?{[templateField]:preparedMotionTemplate}:{})}:undefined);
+      const preparedShieldCropExpiry=protocol?.preparedShieldCropExpiry;
+      receipt=await source.quiesceGpuForMutation(preparedWorldBoundary?{preparedWorldBoundary,
+        ...(preparedMotionTemplate?{[templateField]:preparedMotionTemplate}:{}),...(preparedShieldCropExpiry?{preparedShieldCropExpiry}:{})}:undefined);
       let consumed=false,commitWindowOpen=true;
       const consumeCommit=()=>{
         if(!commitWindowOpen||consumed)throw Error('Native command commit already consumed or retired');
@@ -94,6 +97,7 @@ export function createNativeResourceAdmission({wasm,isReady,simulationTime,epoch
       else if(receipt.authorityEpoch!==owner||receipt.session!==control.session||receipt.sequence!==quiescence.sentSequence||
          receipt.effectiveTime!==quiescence.sentTime||receipt.clockSequence!==quiescence.clockSequence||!Number.isSafeInteger(receipt.holdId)||receipt.holdId<1||
          preparedWorldBoundary&&(!sameNativeWorldBoundary(receipt.preparedWorldBoundary,preparedWorldBoundary)||!Number.isSafeInteger(receipt.preparedFrameSequence)||receipt.preparedFrameSequence<1)||
+         preparedShieldCropExpiry&&!sameNativeShieldCropExpiry(preparedShieldCropExpiry,receipt.preparedShieldCropExpiry)||
          motion.receiptCompatible&&motion.receiptCompatible(receipt,preparedMotionTemplate)!==true)
         answer=outcome('invalid-receipt');
       else{
