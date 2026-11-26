@@ -23,7 +23,7 @@ static int prepareTaskDeliveryTiming(RouteSlot& route,uint64_t actor,const std::
  if(result==1){const auto points=spatial_world_route_ptr();route.points.assign(points,points+size_t(count)*2);
   if(std::hypot(double(route.points[count*2-2])-x,double(route.points[count*2-1])-z)>.00001)result=0;
  }
- if(result==1){result=prepareRouteTiming(route,actor,h[12],h[13],at,h[14],2,8,h[20],true);
+ if(result==1){result=prepareRouteTiming(route,actor,h[12],h[13],at,h[14],2,8,h[20],true,false,spatial_world_biome()==0);
   if(result==1){route.motionOffset[2]=h[17];route.motionOffset[3]=h[18];route.motionOffset[4]=h[19];}
  }
  topology=lazy_route_revision();if(previous!=int(h[22]))spatial_select_nav_profile_index(previous);

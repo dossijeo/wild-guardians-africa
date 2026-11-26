@@ -2,6 +2,33 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeTaskConsequenceGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
 
+test('Carry can prepare from the authored rig while rendering still retains the retired historical materials',async()=>{
+ const f=await nativeTaskConsequenceGraphicsFixture({historicalSource:true});
+ let part;
+ try{
+  const actor=f.roster.get(f.actor),retirement=f.historicalMaterials;
+  assert(retirement.size>0);
+  assert([...retirement.values()].every(count=>count===0));
+  assert(f.historicalMeshes.every(({mesh,material})=>mesh.material!==material));
+  // Reproduce an original source still showing a previously composed material
+  // while the current scoped action owns only its baked meshes.
+  const [{mesh,material}]=f.historicalMeshes,authored=mesh.material;
+  mesh.material=material;
+  part=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});
+  assert(part.valid());
+  assert.equal(mesh.material,material);
+  assert.equal(f.roster.get(f.actor),actor);
+  assert.equal(f.state.crates.length,0);
+  assert.equal(part.request.options.include.filter(mesh=>mesh._wgWalkAttachmentIndex!==undefined).length,9);
+  assert([...retirement.values()].every(count=>count===0));
+  part.activate();part.rollback();assert(part.valid());
+  f.flush();
+  assert([...retirement.values()].every(count=>count===1));
+  assert.equal(mesh.material,authored);
+  assert(part.valid());
+ }finally{part?.cancel();f.close();}
+});
+
 test('the native consequence prepares original Carry and nine crate pieces on its resident action actor, and can roll back before commit',async()=>{
  const f=await nativeTaskConsequenceGraphicsFixture();let part;try{const actor=f.roster.get(f.actor),root=actor.root,oldRootMeshes=[];root.traverse(mesh=>{if(mesh.isMesh)oldRootMeshes.push({mesh,geometry:mesh.geometry,material:mesh.material,visible:mesh.visible});});assert.equal(f.carries,0);assert.equal(actor.hasBakedCarrying(),false);part=await f.roster.prepareNativeTaskConsequenceProposal(f.support,{getPickTime:f.getPickTime});assert.equal(f.carries,1);assert.equal(f.acquires,1);assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.root,root);assert.equal(f.state.crates.length,0);assert(part.valid());
   const pieces=part.request.options.include.filter(mesh=>mesh._wgWalkAttachmentIndex!==undefined);assert.equal(pieces.length,9);assert(pieces.every(mesh=>!mesh.visible));part.activate();assert(actor.isBakedCarrying());assert(pieces.every(mesh=>mesh.visible));part.rollback();assert(part.valid());assert.equal(actor.isBakedCarrying(),false);assert(pieces.every(mesh=>!mesh.visible));for(const item of oldRootMeshes){assert.equal(item.mesh.geometry,item.geometry);assert.equal(item.mesh.material,item.material);assert.equal(item.mesh.visible,item.visible);}part.activate();const data=f.commit();part.finalize(data);f.flush();assert(actor.isBakedCarrying());assert.equal(f.roster.get(f.actor),actor);assert.equal(f.roster.status().nativePreparing,0);assert.deepEqual(f.errors,[]);

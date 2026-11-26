@@ -13,6 +13,7 @@ import {loadBakedWorkerWalkAsset} from '../../src/rendering/baked-worker-walk-ca
 import {prepareWorkerClips} from '../../src/rendering/worker-clips.js';
 import {actorAsset} from './actor-geometry.js';
 import {createWebGpuResourceRegistry} from '../../src/rendering/webgpu-resource-registry.js';
+import {createConfirmedHistoricalClock} from '../../src/rendering/confirmed-historical-clock.js';
 
 const fetcher=async url=>{const bytes=await readFile('public'+url);return {ok:true,json:async()=>JSON.parse(bytes),arrayBuffer:async()=>bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)};};
 // Actual authored assets/terrain and real native proposal; the renderer/admission
@@ -31,14 +32,31 @@ export async function nativeWorkerGraphicsFixture(f,{idle=false,alert=false,init
 
 // The preceding action is specific to this consequence fixture. Other native
 // owners reuse the resident authored actor without inventing action history.
-export async function nativeTaskConsequenceGraphicsFixture({idle=false,alert=false,...nativeOptions}={}){
+export async function nativeTaskConsequenceGraphicsFixture({idle=false,alert=false,historicalSource=false,...nativeOptions}={}){
  const native=nativeTaskConsequenceFixture(nativeOptions),initialState=structuredClone(native.state);
  Object.assign(initialState.workers.find(w=>w.id===native.actor),{status:'waiting-task',nativeRouteAdmission:'pending-action-resources',path:null});
- const f=await nativeWorkerGraphicsFixture(native,{idle,alert,initialState});
+ const historicalMotion=historicalSource?{actorIds:[native.actor],clock:createConfirmedHistoricalClock({initialElapsed:initialState.elapsed})}:null;
+ const f=await nativeWorkerGraphicsFixture(native,{idle,alert,initialState,historicalMotion,coldWalk:historicalSource});
  try{
-  const action=await f.roster.prepareNativeTaskActionProposal(f.terrain.prepareNativeTaskAction(f.source.reference),{getPickAge:()=>0,nativeTaskActionBinding:f.source});action.activate();action.finalize({nativeTaskActionBinding:f.source});f.state.workers[0]=structuredClone(f.worker);f.roster.sync();f.flush();
+  const historicalMaterials=new Map(),historicalMeshes=[];
+  if(historicalSource)f.roster.get(f.actor).root.traverse(mesh=>{
+   if(!mesh.isSkinnedMesh)return;
+   const material=mesh.material;
+   assert(material.positionNode);
+   historicalMeshes.push({mesh,material});
+   if(!historicalMaterials.has(material)){
+    historicalMaterials.set(material,0);
+    material.addEventListener('dispose',()=>historicalMaterials.set(material,historicalMaterials.get(material)+1));
+   }
+  });
+  const action=await f.roster.prepareNativeTaskActionProposal(f.terrain.prepareNativeTaskAction(f.source.reference),{getPickAge:()=>0,nativeTaskActionBinding:f.source});
+  if(historicalSource){
+   action.activate();action.rollback();
+   for(const {mesh,material} of historicalMeshes)assert.equal(mesh.material,material);
+  }
+  action.activate();action.finalize({nativeTaskActionBinding:f.source});f.state.workers[0]=structuredClone(f.worker);f.roster.sync();if(!historicalSource)f.flush();
   const prepared=f.prepare();assert.equal(prepared.status,'proposed');const support=f.terrain.prepareNativeTaskConsequenceProposal(prepared.proposal,{terrainManifest:f.manifest});assert(support?.valid());
-  return {...f,support,proposal:prepared.proposal,get carries(){return f.carries;},get acquires(){return f.acquires;},
+  return {...f,support,proposal:prepared.proposal,historicalMaterials,historicalMeshes,get carries(){return f.carries;},get acquires(){return f.acquires;},
    commit(){assert.equal(f.commitSourceOnly(prepared.proposal),1);return {nativeTaskConsequenceBinding:f.planner.nativeTaskConsequenceBinding(f.actor),resources:{kind:16,phase:'committed',presentation:f.planner.captureNativeRoutePresentation(prepared.proposal.expectedRouteHandle)}};}};
  }catch(error){f.close();throw error;}
 }

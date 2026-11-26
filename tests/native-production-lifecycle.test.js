@@ -739,7 +739,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const center=state.structures.find(s=>s.kind==='center');
   assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
  }finally{opening.dispose();}
- let releaseFarm,releaseStroll,releaseHome,releaseRaid,secondNightRig,qualifySecondNight=false;
+ let releaseFarm,releaseStroll,releaseHome,releaseRaid,releaseCarry,secondNightRig,qualifySecondNight=false;
  const holds=new Map([
   ['farm-arrival',new Promise(resolve=>releaseFarm=resolve)],
   ['idle-stroll',new Promise(resolve=>releaseStroll=resolve)],
@@ -787,6 +787,15 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
    do {s=await advance(fast);} while(!predicate(s)&&s.elapsed<deadline);
    assert(predicate(s),JSON.stringify(f.authority.nativeIntentProductionStatus()));
    return s;
+  };
+  // The deterministic Host needs the ordinary replacement packet which
+  // Surface draws when Game removes the animal from its roster.
+  const presentRetreatAbsence=async retreat=>{
+   const at=f.snapshot().elapsed;
+   f.client.beginFrame({nativeWorldBoundary:retreat.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}});
+   const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+   pass.end();f.client.device.queue.submit([encoder.finish()]);const absent=f.client.endFrame();await f.present();await absent;
+   assert.equal(f.host.inspect().nativeRouteFrame.bindings.length,0);
   };
   await drive(s=>s.workers[0].nativeRouteAdmission==='pending-resources',12);
   releaseFarm();
@@ -862,12 +871,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(new Set(events.filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId)).size,2);
   assert.equal(events.filter(event=>event.type==='CropDestroyed').length,0);
 
-  // Submit the ordinary absence when Game removes the animal from the roster.
-  const retreat=routes.at(-1),at=f.snapshot().elapsed;
-  f.client.beginFrame({nativeWorldBoundary:retreat.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}});
-  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
-  pass.end();f.client.device.queue.submit([encoder.finish()]);const absent=f.client.endFrame();await f.present();await absent;
-  assert.equal(f.host.inspect().nativeRouteFrame.bindings.length,0);
+  await presentRetreatAbsence(routes.at(-1));
   const dawn=await drive(s=>s.day===2,601,true);
   assert.equal(dawn.result,null);assert.deepEqual(dawn.pauses,['hiring']);assert.equal(dawn.workers.length,0);
   assert.equal(events.filter(event=>event.type==='Dawn').length,1);
@@ -932,7 +936,49 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(afterHyena.workers[0].status,'home');
   assert.equal(secondNightRig.centerReturns,3);
   assert.equal(secondNightRig.runningReturns,1);
- }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();try{await f.close();}finally{secondNightRig?.close();}}
+  await presentRetreatAbsence(receipts.get(acquired.at(-1)).nativeAnimalCropRouteBinding.reference);
+
+  const thirdDawn=await drive(s=>s.day===3,1201,true);
+  assert.deepEqual(thirdDawn.pauses,['hiring']);
+  assert.equal(thirdDawn.workers.length,0);
+  const harvestStart=f.records.length,harvestEvents=events.length;
+  holds.set('task-consequence',new Promise(resolve=>releaseCarry=resolve));
+  f.command({kind:'hire',id:'savanna-third-hire',selection:{youngMale:1}});
+  const thirdWorker=f.snapshot().workers[0].id;
+  const harvest=()=>f.records.slice(harvestStart).find(row=>row.kind==='task-consequence'&&row.packet);
+  const beforeCarry=await drive(()=>!!harvest(),1255);
+  const carry=harvest(),crop=beforeCarry.plants[0];
+  assert.equal(beforeCarry.workers[0].nativeTaskAction.kind,'harvest');
+  assert.equal(beforeCarry.workers[0].actionRemaining,0);
+  assert.equal(crop.alive,true);
+  assert.equal(beforeCarry.crates.length,0);
+  assert.equal(carry.committed,false);
+  const carryHeld=await advance();
+  assert.deepEqual(pose(carryHeld.workers[0]),pose(beforeCarry.workers[0]));
+  assert.deepEqual(carryHeld.ledger,beforeCarry.ledger);
+  assert.equal(carryHeld.crates.length,0);
+  assert.equal(carryHeld.plants[0].alive,true);
+  releaseCarry();
+  await drive(()=>carry.committed&&f.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeConsequence?.bodyId===5),1260);
+  const carryBinding=receipts.get(carry).nativeTaskConsequenceBinding;
+  assert.equal(carryBinding.reference.bodyId,5);
+  assert.equal(carryBinding.reference.actorId,Number(thirdWorker.slice(7)));
+  assert.equal(carryBinding.reference.sourceAction.reference.request.bodyId,5);
+  const deliveries=()=>events.slice(harvestEvents).filter(event=>event.type==='CrateDelivered');
+  const delivered=await drive(()=>deliveries().length===1,1275);
+  const [crate]=delivered.crates;
+  assert.equal(crate.sourcePlantId,crop.id);
+  assert.equal(crate.carrierId,null);
+  assert.equal(crate.delivered,true);
+  assert.equal(delivered.plants[0].alive,false);
+  assert.equal(deliveries()[0].workerId,thirdWorker);
+  assert.deepEqual(crate.value,{n:'1602',d:'5'});
+  assert.deepEqual(delivered.ledger.entries[`deliver:${crate.id}`],{n:'321',d:'1'});
+  assert.equal(events.slice(harvestEvents).filter(event=>event.type==='CropPicked'&&event.targetId===crop.id).length,1);
+  assert.equal(f.records.slice(harvestStart).filter(row=>row.kind==='task-settlement'&&row.committed).length,1);
+  assert.equal((await advance()).ledger.balance.n,delivered.ledger.balance.n);
+  assert.equal(deliveries().length,1);
+ }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();releaseCarry?.();try{await f.close();}finally{secondNightRig?.close();}}
 });
 
 for(const [kind,fixtureName,clockField,bindingField,capability] of [

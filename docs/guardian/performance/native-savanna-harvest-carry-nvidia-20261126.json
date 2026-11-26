@@ -1,0 +1,185 @@
+{
+  "seed": "714",
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "restored nativeWorkerLifecycle",
+  "clock": "live Hosted",
+  "checkpoint": {
+    "source": "sabana-second-night-dawn-three-save.json",
+    "sha256": "3967fe33273cff57dd7f4a0b1e1b5470836949d6ae4cb0555ce972578288f15e",
+    "day": 3,
+    "elapsed": 1199.999999999463,
+    "version": 3
+  },
+  "before": {
+    "timing": {
+      "source": "sabana-second-night-harvest-base.json",
+      "sha256": "dfb85b480c60f755d8ee583885ccfa8c0be50614de3be36535b05b71ca762f35",
+      "nativeResult": -2,
+      "status": "blocked",
+      "elapsed": 1263.9999999994047,
+      "worker": "worker-16"
+    },
+    "graphics": {
+      "source": "nvidia-material-diagnostic.json",
+      "sha256": "75a66c6c6cd9e041c4fa5f677961fbb47480f84f2c6116f916302981a3044100",
+      "ticket": 9
+    }
+  },
+  "after": {
+    "source": "nvidia-final.json",
+    "sha256": "316f69ca9fa808e105c495cde3d2db993ed2cd800bfd8df95a84ae3d9fa8559a",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 97.40000000596046
+      }
+    },
+    "worker": "worker-16",
+    "bodyId": 1,
+    "harvest": {
+      "version": 1,
+      "authorityEpoch": "2a4275f3-d21d-47bf-b2e2-606807bb7716/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 1236.0599999994301
+    },
+    "held": {
+      "version": 1,
+      "authorityEpoch": "2a4275f3-d21d-47bf-b2e2-606807bb7716/1",
+      "nativeSession": 1,
+      "ticket": 9,
+      "effectiveTime": 1238.479999999428,
+      "wallMs": 320.20000000298023,
+      "logicalAt": 1240.2999999994263,
+      "logicalThrough": 1240.2999999994263,
+      "frozen": {
+        "x": 87,
+        "z": -7,
+        "heading": 0,
+        "walkPhase": 47.83709974219215,
+        "carryPhase": 0
+      }
+    },
+    "scopedMaterialSources": [
+      {
+        "mesh": "ActorFacialLids",
+        "name": "Actor eyelid original fur",
+        "source": 134,
+        "live": 179,
+        "sourcePosition": false,
+        "livePosition": true
+      },
+      {
+        "mesh": "Mesh0001_1",
+        "name": "BakedMaterial.001",
+        "source": 135,
+        "live": 180,
+        "sourcePosition": false,
+        "livePosition": true
+      },
+      {
+        "mesh": "Mesh0001_2",
+        "name": "Kofi head continuous skin shading",
+        "source": 136,
+        "live": 181,
+        "sourcePosition": false,
+        "livePosition": true
+      },
+      {
+        "mesh": "WorkerOralAnatomy",
+        "name": "Worker oral tissue",
+        "source": 137,
+        "live": 182,
+        "sourcePosition": false,
+        "livePosition": true
+      }
+    ],
+    "carry": {
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "2a4275f3-d21d-47bf-b2e2-606807bb7716/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 1240.2999999994263
+      },
+      "draw": 337
+    },
+    "settlement": {
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "2a4275f3-d21d-47bf-b2e2-606807bb7716/1",
+        "nativeSession": 1,
+        "ticket": 12,
+        "effectiveTime": 1245.3999999994217
+      },
+      "draw": 365
+    },
+    "crop": "plant-3",
+    "crate": "crate-18",
+    "events": [
+      {
+        "id": "event-54",
+        "type": "CropPicked",
+        "workerId": "worker-16",
+        "targetId": "plant-3",
+        "crateId": "crate-18",
+        "simulationTime": 1240.2999999994263,
+        "presentation": {
+          "x": 87,
+          "z": -7
+        }
+      },
+      {
+        "id": "event-55",
+        "type": "CrateDelivered",
+        "workerId": "worker-16",
+        "targetId": "crate-18",
+        "species": "platano",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 1245.3999999994217
+      }
+    ],
+    "ledger": {
+      "opening": {
+        "n": "470",
+        "d": "1"
+      },
+      "beforeCarry": {
+        "n": "430",
+        "d": "1"
+      },
+      "debit": {
+        "n": "-40",
+        "d": "1"
+      },
+      "value": {
+        "n": "1602",
+        "d": "5"
+      },
+      "credit": {
+        "n": "321",
+        "d": "1"
+      },
+      "closing": {
+        "n": "751",
+        "d": "1"
+      }
+    },
+    "drained": true,
+    "errors": []
+  },
+  "scope": "Day three after restoring the preceding Dawn. GPU queue and draws on NVIDIA, no frame-rate measurement."
+}
