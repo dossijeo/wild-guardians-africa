@@ -127,12 +127,32 @@ export function matchesNativeRefugeRecovery(world,{reference:home,retiredSequenc
    nativeRecoveryCovers(world,animal.worldBoundary)&&assignmentSequence<retiredSequence;
 }
 
+export function copyRecoveredEncounterFall(value){
+ const {version,workerId,workerBody,hit,x,z,heading,remaining}=value??{};
+ if(version!==1||![workerId,workerBody,hit].every(id=>Number.isSafeInteger(id)&&id>0)||
+    ![x,z,heading,remaining].every(Number.isFinite)||remaining<=0)throw Error('Invalid recovered encounter Fall');
+ return Object.freeze({version,workerId,workerBody,hit,x,z,heading,remaining});
+}
+
+export function sameRecoveredEncounterFall(a,b){
+ return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining'].every(key=>a[key]===b[key]);
+}
+
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world){
- if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined)
+ if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined&&value.encounter===undefined)
    return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
+ if(value.encounter!==undefined){
+   if(value.refuge!==undefined||value.ruin!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
+     throw Error('Encounter recovery requires its Retreat and Fall');
+   const proof=copyCropAttestation(value.members[0].proof),encounter=copyRecoveredEncounterFall(value.encounter),ref=proof.reference;
+   if(ref.purpose!=='retreat'||ref.actorId===encounter.workerId||ref.bodyId===encounter.workerBody||
+      !sameNativeWorldBoundary(ref.worldBoundary,world))
+     throw Error('Encounter Fall belongs to another acquisition');
+   return {members:[{kind:26,proof}],encounter};
+ }
  if(value.ruin!==undefined){
    if(value.refuge!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
      throw Error('Center ruin recovery requires its surviving Retreat');

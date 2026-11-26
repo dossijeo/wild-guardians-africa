@@ -62,6 +62,49 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
+test('an encounter recovery cut preserves the split timestep and later FIFO work',async()=>{
+ let now=0,wake,allow=true,confirmed=0;
+ const sent=[],publications=[];
+ const client={ready:Promise.resolve(),submit(command){
+  let resolve;
+  const result=new Promise(done=>{resolve=done;});
+  sent.push({command,resolve});
+  return {accepted:true,result};
+ },dispose(){}};
+ const world={createConfirmedReceiver(){return {
+  accept(message){confirmed=message.sequence;publications.push(message);return {accepted:true};},
+  status(){return {sequence:confirmed,lastElapsed:publications.at(-1)?.elapsed??0};}
+ };}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',stepSeconds:.05,maxBatchSteps:3,
+  now:()=>now,schedule:callback=>(wake=callback,1),cancel(){},canDispatch:()=>allow,
+  acceptEncounterRecoveryCut(cut,sequence){
+   assert.equal(sequence,2);assert.equal(cut.holdId,7);
+   allow=false;runtime.suspendClockCapture();return true;
+  }});
+ const complete=async(index,extra={})=>{
+  sent[index].resolve({sequence:index+1,events:[],residency:{missing:[]},...extra});
+  await flush();
+ };
+ try{
+  const started=runtime.start();await flush();await complete(0);await started;
+  now=150;wake();assert.equal(sent[1].command.steps,3);
+  const pause=runtime.submit({kind:'pause',reason:'menu'});
+  const worldBoundary={version:1,authorityEpoch:'authority',nativeSession:1,ticket:11,effectiveTime:.02};
+  await complete(1,{elapsed:.02,stepsExecuted:0,encounterRecoveryCut:{version:1,holdId:7,worldBoundary,remainingSeconds:.03}});
+  assert.equal(runtime.status().confirmedElapsed,.02);
+  assert.equal(runtime.status().pendingSteps,3);
+  assert.equal(publications[1].encounterRecoveryCut,undefined);
+  now=5000;wake();assert.equal(sent.length,2);
+  allow=true;runtime.resumeClockCapture();runtime.resumeDispatch();
+  assert.deepEqual(sent[2].command,{kind:'advance',seconds:.03,nightFastForward:true});
+  await complete(2,{elapsed:.05});
+  assert.deepEqual(sent[3].command,{kind:'advance',seconds:.05,steps:2,nightFastForward:true});
+  await complete(3,{elapsed:.15,stepsExecuted:2});
+  assert.equal(sent[4].command.kind,'pause');
+  await complete(4,{elapsed:.15});await pause;
+  assert.equal(runtime.status().pendingSteps,0);
+ }finally{runtime.dispose();}
+});
 test('batch window groups elapsed steps and commands flush earlier without losing order',async()=>{
  let time=0,seq=0,wake,delay;const sent=[],client={ready:Promise.resolve(),submit(command){let resolve;const result=new Promise(r=>{resolve=r;});sent.push({command,resolve,sequence:++seq});return {accepted:true,result};},dispose(){}};
  const world={createConfirmedReceiver(){let sequence=0;return {accept(message){sequence=message.sequence;return {accepted:true};},status(){return {sequence,lastElapsed:0};}};}};

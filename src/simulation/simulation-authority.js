@@ -1,7 +1,7 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {nativeWorkerRouteRecoveryProfile,sameRecoveredEncounterFall} from '../world/native-worker-route-recovery.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
@@ -63,7 +63,7 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
@@ -438,7 +438,20 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
           nativeAnimalCropRoutes:[result.binding],acquiredEncounterRetreatHit:result.hit});
         released=true;
         owner.acquired={consumer,resources,boundary:result.worldBoundary};
-        await submitted;
+        try{await submitted;}catch(error){
+          if(!owner.lossClaim&&recoverEncounterLoss&&
+             (resources.retirementObserved()||consumer.connections().current?.drained)){
+            await new Promise((resolve,reject)=>{
+              const finish=reason=>{clearTimeout(timer);owner.waitingForLossClaim=null;reason?reject(reason):resolve();};
+              const timer=setTimeout(()=>finish(error),10000);
+              timer.unref?.();
+              owner.waitingForLossClaim=finish;
+            });
+          }
+          if(!owner.lossClaim)throw error;
+          await owner.lossClaim.retirement;
+          return true;
+        }
       }};
     }).catch(error=>{abort();throw error;});
   }
@@ -1009,6 +1022,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
   function recoveryRoute(){
+    if(encounterDraftAdvance?.published){
+      const source=planner.nativeEncounterRetreatRecovery();
+      return source?{version:2,encounter:true,members:[{kind:26,actorId:source.execution.actorId}]}:null;
+    }
     if(game.raid){
       const [animal]=game.raid.animals;
       if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
@@ -1038,10 +1055,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const execution=recoveryExecution(route);
       return execution?{executions:[execution]}:null;
     }
-    if(route.refuge||route.ruin){
+    if(route.refuge||route.ruin||route.encounter){
       const [member]=route.members;
       if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
-      const source=route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
+      const source=route.encounter?planner.nativeEncounterRetreatRecovery():route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
       if(!source||member.actorId!==source.execution.actorId)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
@@ -1078,20 +1095,35 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       try{const ready=await connection.ready;nativeProduction?.wake();return ready;}catch(error){if(nativeResourcePreparation===connection)nativeResourcePreparation=null;connection.dispose();throw error;}
     },
     nativeResourcePreparationStatus:()=>nativeResourcePreparation?.status()??null,
-    async flushNativeResourcePreparation({allowRetired=false,forLostDraw=false}={}){
+    async flushNativeResourcePreparation({allowRetired=false,forLostDraw=false,lossHoldId=null}={}){
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       if(typeof allowRetired!=='boolean'||typeof forLostDraw!=='boolean'||forLostDraw&&!allowRetired)
         throw TypeError('Invalid native resource recovery mode');
+      if(lossHoldId!==null&&(!forLostDraw||!Number.isSafeInteger(lossHoldId)||lossHoldId<1))
+        throw TypeError('Invalid encounter recovery hold');
       if(allowRetired&&nativeProduction&&nativeProduction.status().phase!=='suspended')return Promise.reject(Error('Native resource retirement requires suspended production'));
       const encounter=forLostDraw&&encounterDraftAdvance?.acquired;
       if(encounter){
+        const owner=encounterDraftAdvance;
         const {consumer,resources,boundary}=encounter;
-        const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),consumer.waitForTerminalDraw()]);
-        if(closed||encounterDraftAdvance?.acquired!==encounter||consumer!==nativeIntentControl||
-           resources!==nativeResourcePreparation||nativeProduction.status().phase!=='suspended'||
-           !sameNativeWorldBoundary(boundary,consumer.connections().current?.worldBoundary)||
-           !sameNativeWorldBoundary(boundary,planner.nativeWorldResourceBoundary()))
-          throw Error('Encounter retirement changed its native cut');
+        if(owner.lossClaim)throw Error('Encounter loss is already owned');
+        const retirement=(async()=>{
+          const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),consumer.waitForTerminalDraw()]);
+          if(closed||encounterDraftAdvance!==owner||consumer!==nativeIntentControl||
+             resources!==nativeResourcePreparation||nativeProduction.status().phase!=='suspended'||
+             !sameNativeWorldBoundary(boundary,consumer.connections().current?.worldBoundary)||
+             !sameNativeWorldBoundary(boundary,planner.nativeWorldResourceBoundary()))
+            throw Error('Encounter retirement changed its native cut');
+          return retired;
+        })();
+        if(lossHoldId===null)return retirement;
+        let resolve,reject;
+        const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});
+        promise.catch(()=>{});
+        owner.lossClaim={holdId:lossHoldId,retirement,resolve,reject};
+        owner.waitingForLossClaim?.();
+        const retired=await retirement;
+        await promise;
         return retired;
       }
       return (allowRetired?nativeResourcePreparation?.settleForRecovery():nativeResourcePreparation?.flush())??Promise.resolve(null);
@@ -1104,8 +1136,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
-      if(encounterDraftAdvance)throw Error('Encounter advance still owns native production');
-      if(nativeProduction)return nativeProduction.resume(receipt);
+      const encounter=encounterDraftAdvance;
+      if(encounter&&(encounter.receipt!==receipt||!encounter.replacementProved))
+        throw Error('Encounter advance still owns native production');
+      if(nativeProduction){
+        const resumed=nativeProduction.resume(receipt);
+        if(resumed&&encounter)encounterDraftAdvance=null;
+        return resumed;
+      }
       if(receipt!==null)throw TypeError('Invalid native production quiescence receipt');
       return true;
     },
@@ -1127,6 +1165,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     async attachHeldWorkerRoute(port,transportSession,holdId,receipt,route){
       if(!Number.isSafeInteger(holdId)||holdId<1||closed||nativeProduction?.status().phase!=='suspended'||
+         route.encounter&&encounterDraftAdvance?.published?.holdId!==holdId||
          await nativeProduction.quiesce()!==receipt)throw Error('Exact active native hold required');
       const terminal=await nativeResourcePreparation.settleForRecovery();
       const {current,pending,cohort}=nativeIntentControl.connections();
@@ -1149,7 +1188,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       });
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
-      const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{})};
+      const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
+        ...(group.encounter?{encounter:group.encounter}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
         route.members?{version:2,holdId,members:proofs,...evidence}:{holdId,...proofs[0]});
       const live=recoveryGroup(route);
@@ -1166,6 +1206,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
+      if(route.encounter&&encounterDraftAdvance)encounterDraftAdvance.replacementProved=false;
       const routes=route.members??[route],previous=recoveryGroup(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
@@ -1173,8 +1214,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
          draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
+         route.encounter&&!sameRecoveredEncounterFall(draw.encounter,live.encounter)||
          !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))
         throw Error('Missing submitted worker route at recovery cut');
+      if(route.encounter){
+        if(encounterDraftAdvance?.published?.holdId!==holdId||encounterDraftAdvance.receipt!==receipt)
+          throw Error('Invalid encounter replacement proof');
+        encounterDraftAdvance.replacementProved=true;
+      }
       return draw;
       function sameHeld(profile,after,row,elapsed){
         if(row.kind!==profile.kind||
@@ -1252,10 +1299,21 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
        return stepsExecuted<steps&&!residency().missing.length;
      };
+     let recoveryCut=null;
      const runSteps=first=>{
        for(let i=first;i<steps;i++){
          const boundary=advanceReal(game,command.seconds,nav,options);
-         if(boundary)return boundary.then(()=>{if(completeStep(i))return runSteps(i+1);});
+         if(boundary)return boundary.then(stopped=>{
+           if(stopped){
+             const {lossClaim,acquired}=encounterDraftAdvance;
+             completeStep(i);
+             const remainingSeconds=stopped.remainingSeconds>1e-9?stopped.remainingSeconds:0;
+             if(remainingSeconds)stepsExecuted=i;
+             recoveryCut={version:1,holdId:lossClaim.holdId,worldBoundary:acquired.boundary,remainingSeconds};
+             return;
+           }
+           if(completeStep(i))return runSteps(i+1);
+         });
          if(!completeStep(i))break;
        }
      };
@@ -1266,13 +1324,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      if(pending){
        return pending.finally(finishCapture).then(()=>{
          const result=publishResult();
-         nativeProduction.resume((shieldAdvance??centerRuinAdvance??encounterDraftAdvance).receipt);
-         shieldAdvance=centerRuinAdvance=encounterDraftAdvance=null;
+         const owner=encounterDraftAdvance;
+         if(recoveryCut){
+           result.encounterRecoveryCut=recoveryCut;
+           result.stepsExecuted=stepsExecuted;
+           owner.published=recoveryCut;
+         }else{
+           nativeProduction.resume((shieldAdvance??centerRuinAdvance??owner).receipt);
+           shieldAdvance=centerRuinAdvance=encounterDraftAdvance=null;
+         }
+         owner?.lossClaim?.resolve();
          return result;
        }).catch(error=>{
          // Never serialize the private partial advance as a successful command.
          // Closing the authority aborts the retained resource through its owner.
          const owner=shieldAdvance??centerRuinAdvance??encounterDraftAdvance;if(owner)owner.failure=error;
+         encounterDraftAdvance?.lossClaim?.reject(error);
          throw error;
        });
      }
@@ -1472,7 +1539,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;encounterDraftAdvance?.waitingForLossClaim?.(Error('Simulation authority closed'));shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
 }

@@ -1,5 +1,5 @@
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounterFall} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
@@ -890,7 +890,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
-            elapsed:recovered.at,...(recovered.grouped?{members}:members[0])};
+            elapsed:recovered.at,...(recovered.grouped?{members}:members[0]),
+            ...(recovered.encounter?{encounter:recovered.encounter}:{})};
           recovered=null;
         }
       }
@@ -1242,6 +1243,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
          recovered.refuge&&preparedBindings.some(({nativeHome,nativeRoute})=>
            (nativeHome?.actorId??nativeRoute?.actorId)===recovered.refuge.reference.actorId)||
+         recovered.encounter&&(!sameRecoveredEncounterFall(packet.metadata.recoveredEncounterFall,recovered.encounter)||
+           preparedBindings.some(({nativeHome,nativeRoute})=>
+             (nativeHome?.actorId??nativeRoute?.actorId)===recovered.encounter.workerId))||
          missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
           {code:(missing??recovered.members[0]).profile.obsoleteCode});
@@ -2305,7 +2309,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             throw Error('Invalid native GPU fence boundary');
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
           const rows=recoveredSubmission?.members??[recoveredSubmission];
-          const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&rows.every(row=>{
+          const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&
+            (!recoveredSubmission.encounter||sameRecoveredEncounterFall(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
             return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime)&&
               (!row.nativeGate||nativeRouteFrame.bindings.some(b=>
@@ -2377,7 +2382,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                  {cohortSize:source.members.length,sharedCut:grouped})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
-               refuge:source.refuge};
+               refuge:source.refuge,encounter:source.encounter};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

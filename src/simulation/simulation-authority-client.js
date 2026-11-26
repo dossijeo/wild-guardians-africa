@@ -96,8 +96,8 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            const {refuge,ruin}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin},cut);
-            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{})};
+            const {refuge,ruin,encounter}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
+            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(encounter?{encounter}:{})};
             const at=members[0].execution.executedThrough;
             if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');

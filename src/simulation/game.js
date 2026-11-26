@@ -2074,12 +2074,14 @@ export function advanceReal(s,seconds,nav,options={}) {
 
     const encounterDraft=options.prepareEncounterDraft?.(real*speed);
     if(encounterDraft)return encounterDraft.then(async preparation=>{
+      let retired;
       try{
         tick(s,real*speed,nav,{clockRate:speed});
-        await preparation.finish();
+        retired=await preparation.finish();
       }catch(error){preparation.abort();throw error;}
       if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
       if(onTick)onTick();
+      if(retired)return {remainingSeconds:left};
       if(left>1e-9)return advanceReal(s,left,nav,options);
     });
     if(prepareCenterRuin){

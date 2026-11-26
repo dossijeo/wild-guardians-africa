@@ -1,7 +1,8 @@
 import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
+import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 // Coordinates one authoritative Worker with a presentation-only WorldScene.
 // Its timer is independent of rendering; it never advances the game locally.
-export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true}){
+export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,acceptEncounterRecoveryCut=null}){
  if(!client?.ready||typeof client.submit!=='function'||typeof world?.createConfirmedReceiver!=='function'||typeof canDispatch!=='function'||typeof session!=='string'||!session||!Number.isFinite(stepSeconds)||stepSeconds<=0||stepSeconds>1||typeof nightFastForward!=='boolean'||typeof captureClockSegments!=='boolean'||!Number.isSafeInteger(maxCommands)||maxCommands<1||!Number.isSafeInteger(controlReserve)||controlReserve<1||!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||maxBatchSteps>256||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1||batchWindowSteps>maxBatchSteps||batchWindowSteps>1&&batchWindowSteps*stepSeconds>.25)throw TypeError('Invalid worker game runtime');
  if(typeof startupSuspended!=='boolean')throw TypeError('Invalid startup clock policy');
  if(startupCommand!==null&&(!['pause','resume'].includes(startupCommand?.kind)||startupCommand.reason!=='hidden'||Object.keys(startupCommand).length!==2))throw TypeError('Invalid startup visibility command');
@@ -10,7 +11,7 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
  function fail(error){if(fault||closed)return;fault=error instanceof Error?error:Error(String(error));running=false;if(timer!==null)cancel(timer);timer=null;if(activeItem?.kind==='command')activeItem.reject(fault);for(const item of queue)if(item.kind==='command'||item.kind==='barrier')item.reject(fault);queue.length=0;try{onError(fault);}catch{}client.dispose();}
  function enqueueElapsed(at){
   if(!Number.isFinite(at)||last!==null&&at<last)throw RangeError('Runtime clock must be monotonic');
-  if(last!==null){const total=fraction+(at-last)/1000,steps=Math.floor((total+1e-10)/stepSeconds);if(!Number.isSafeInteger(steps))throw RangeError('Runtime clock overflow');fraction=Math.max(0,total-steps*stepSeconds);if(steps){const previous=queue.at(-1);if(previous?.kind==='steps'&&previous.fast===fast){previous.count+=steps;if(!Number.isSafeInteger(previous.count))throw RangeError('Runtime backlog overflow');}else queue.push({kind:'steps',count:steps,fast});}}
+  if(last!==null){const total=fraction+(at-last)/1000,steps=Math.floor((total+1e-10)/stepSeconds);if(!Number.isSafeInteger(steps))throw RangeError('Runtime clock overflow');fraction=Math.max(0,total-steps*stepSeconds);if(steps){const previous=queue.at(-1);if(previous?.kind==='steps'&&previous.seconds===undefined&&previous.fast===fast){previous.count+=steps;if(!Number.isSafeInteger(previous.count))throw RangeError('Runtime backlog overflow');}else queue.push({kind:'steps',count:steps,fast});}}
   last=at;
  }
  function addDemands(result){
@@ -20,14 +21,31 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
  }
  function pump(){
   if(!running||busy||closed||fault||!queue.length)return;
-  const item=queue[0];if(item.kind==='barrier'){queue.shift();item.resolve();return;}const planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:stepSeconds,nightFastForward:item.fast,...(captureClockSegments?{captureClockSegments:true}:{}),...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
+  const item=queue[0];if(item.kind==='barrier'){queue.shift();item.resolve();return;}const planned=item.kind==='steps'?Math.min(item.count,maxBatchSteps):0,command=item.kind==='steps'?{kind:'advance',seconds:item.seconds??stepSeconds,nightFastForward:item.fast,...(captureClockSegments?{captureClockSegments:true}:{}),...(planned>1?{steps:planned}:{})}:item.kind==='chunk'?{kind:'addChunk',key:item.key}:item.command;
   if(!canDispatch(command))return;
   if(item.kind==='steps'){item.count-=planned;if(!item.count)queue.shift();}else queue.shift();
   let request;try{request=client.submit(command);if(!request.accepted)throw Error('Worker command not admitted: '+request.reason);busy=true;activeItem=item;activeSteps=planned;}
   catch(error){if(item.kind==='command')item.reject(error);fail(error);return;}
   request.result.then(result=>{
-   if(closed||fault)return;if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length))throw Error('Invalid worker batch result');const quiet=result.pausedQuiescent===true;if(result.pausedQuiescent!==undefined&&(result.pausedQuiescent!==true||!Array.isArray(result.pauses)||!result.pauses.length))throw TypeError('Invalid paused quiescence certificate');delete result.pausedQuiescent;if(result.unchanged===true&&command.kind!=='setNavigationView'&&!(command.kind==='advance'&&result.pausedAdvance===true))throw Error('Unexpected unchanged publication');const meta={kind:command.kind,backgroundView:item.backgroundView===true,...(item.presentationInput===undefined?{}:{presentationInput:item.presentationInput})};const accepted=result.unchanged===true?receiver.acceptUnchanged(result,meta):receiver.accept(result,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
-   if(planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
+   if(closed||fault)return;
+   if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);
+   const cut=result.encounterRecoveryCut;
+   if(cut!==undefined){
+    const boundary=copyNativeWorldBoundary(cut?.worldBoundary),remaining=cut?.remainingSeconds,done=result.stepsExecuted;
+    if(item.kind!=='steps'||cut?.version!==1||!Number.isSafeInteger(cut.holdId)||cut.holdId<1||
+       !boundary||boundary.effectiveTime!==result.elapsed||!Number.isFinite(remaining)||remaining<0||remaining>=command.seconds||
+       !Number.isSafeInteger(done)||done<(remaining?0:1)||done>planned-(remaining?1:0)||result.unchanged||
+       acceptEncounterRecoveryCut?.(cut,result.sequence)!==true)
+      throw Error('Invalid encounter recovery cut');
+    const full=planned-done-(remaining?1:0);
+    if(full)queue.unshift({kind:'steps',count:full,fast:item.fast});
+    if(remaining)queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
+    delete result.encounterRecoveryCut;
+   }else if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length)){
+    throw Error('Invalid worker batch result');
+   }
+   const quiet=result.pausedQuiescent===true;if(result.pausedQuiescent!==undefined&&(result.pausedQuiescent!==true||!Array.isArray(result.pauses)||!result.pauses.length))throw TypeError('Invalid paused quiescence certificate');delete result.pausedQuiescent;if(result.unchanged===true&&command.kind!=='setNavigationView'&&!(command.kind==='advance'&&result.pausedAdvance===true))throw Error('Unexpected unchanged publication');const meta={kind:command.kind,backgroundView:item.backgroundView===true,...(item.presentationInput===undefined?{}:{presentationInput:item.presentationInput})};const accepted=result.unchanged===true?receiver.acceptUnchanged(result,meta):receiver.accept(result,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
+   if(cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
    if(diagnostics){const label=command.kind==='tutorialCommand'?`${command.kind}:${command.action}`:command.kind;completedKinds[label]=(completedKinds[label]??0)+1;if(result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;}
    confirmed=result;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
   }).catch(error=>{busy=false;if(item.kind==='command')item.reject(error);activeItem=null;fail(error);});
