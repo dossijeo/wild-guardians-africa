@@ -174,7 +174,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   };
  }
  async function prepareRecoveredCrop(source,terrain,{signal,isCurrent,getPickAge}){
-  const profile=nativeWorkerRouteRecoveryProfile(source.resources.kind),resources=profile.copyResources(source.resources);
+  const profile=nativeWorkerRouteRecoveryProfile(source.resources.kind),resources=profile.copyResources(source.resources,source.recoveryCut);
   const proof=resources[profile.bindingField],ref=proof.reference,execution=source.execution;
   if(execution?.kind!==profile.executionKind||execution.arrived!==false||execution.actorId!==ref.actorId||
      execution.bodyId!==ref.bodyId||!profile.sameAttestation(proof,execution.binding)||

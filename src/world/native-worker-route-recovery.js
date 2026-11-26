@@ -23,13 +23,13 @@ function sameCropAttestation(a,b){
    !!a.terminal&&!!b.terminal&&['x','z','phase'].every(key=>a.terminal[key]===b.terminal[key])&&
    sameNativeAnimalCropReference(a.reference,b.reference)&&sameNativeAnimalCropReference(a.preparedReference,b.preparedReference);
 }
-function copyCropResources(value){
+function copyCropResources(value,cut=null){
  const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
  const binding=copyCropAttestation(value?.nativeAnimalCropRouteBinding),r=binding.reference;
  const presentation=copyNativeRoutePresentation(value.presentation),nativeRoute=presentation.nativeRoute;
  const h=nativeRoute.routeHandle,p=value.nativeRoute,k=p?.routeHandle;
  if(value.version!==1||value.kind!==26||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
-    !sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||
+    !sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||
     nativeRoute.assignmentSequence!==binding.assignmentSequence||nativeRoute.actorId!==r.actorId||
     h.session!==worldBoundary.nativeSession||h.authorityEpoch!==worldBoundary.authorityEpoch||h.slot!==r.slot||h.generation!==r.generation||
     p?.actorId!==nativeRoute.actorId||p.assignmentSequence!==nativeRoute.assignmentSequence||
@@ -106,4 +106,26 @@ export function nativeWorkerRouteRecoveryProfile(kind){
  const profile=profiles.get(kind);
  if(!profile)throw TypeError('Unsupported worker route recovery kind');
  return profile;
+}
+
+export function nativeRecoveryCovers(world,source){
+ return !!world&&!!source&&world.authorityEpoch===source.authorityEpoch&&world.nativeSession===source.nativeSession&&
+   (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
+}
+
+// A pair is one recovery transaction with two independently acquired clocks.
+export function copyNativeRecoveryMembers(value,world){
+ if(value.version===undefined&&value.members===undefined)
+   return [{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}];
+ if(value.version!==2||!Array.isArray(value.members)||value.members.length!==2||
+    value.members[0]?.kind!==18||value.members[1]?.kind!==26)throw Error('Invalid mixed recovery membership');
+ const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
+ const [home,crop]=members.map(member=>member.proof.reference);
+ if(!home.sourceRequest?.raidSpawnSequence||crop.purpose!==undefined||
+    home.actorId===crop.actorId||home.bodyId===crop.bodyId||
+    members[0].proof.assignmentSequence===members[1].proof.assignmentSequence||
+    !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
+    members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
+   throw Error('Mixed recovery requires two current assignments at one world cut');
+ return members;
 }

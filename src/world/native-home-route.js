@@ -51,14 +51,14 @@ export const sameNativeHomeRouteAttestation=(a,b)=>!!a&&!!b&&a.assignmentSequenc
  sameNativeHomeRouteReference(a.reference,b.reference)&&sameNativeHomeRouteReference(a.preparedReference,b.preparedReference)&&
  a.gateIds.length===b.gateIds.length&&a.gateIds.every((id,index)=>id===b.gateIds[index]);
 
-export function copyNativeHomeRouteResources(value){
+export function copyNativeHomeRouteResources(value,cut=null){
  if(value?.version!==1||value.kind!==18||value.phase!=='committed'||
     Object.keys(value).some(key=>!['version','kind','phase','worldBoundary','nativeRoute','nativeHomeRouteBinding','presentation'].includes(key)))
   throw TypeError('Invalid native Home route resources');
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeRoute=copyNativeRouteReference(value.nativeRoute),
   nativeHomeRouteBinding=copyNativeHomeRouteAttestation(value.nativeHomeRouteBinding),presentation=copyNativeRoutePresentation(value.presentation);
  const ref=nativeHomeRouteBinding.reference,source=nativeHomeRouteSource(ref),pose=source.pose,rows=presentation.rows;
- if(!sameNativeWorldBoundary(worldBoundary,ref.worldBoundary)||!sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||
+ if(!sameNativeWorldBoundary(worldBoundary,ref.worldBoundary)||!sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||
     nativeRoute.actorId!==ref.actorId||nativeRoute.assignmentSequence!==nativeHomeRouteBinding.assignmentSequence||
     !sameHandle(nativeRoute.routeHandle,ref.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||
     presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==ref.endTime||

@@ -54,9 +54,9 @@ function routeData(table,resourceRegistry){
 }
 // Creates graphical data only. The direct authority channel must separately
 // authorize presentation on the new consumer before the runtime releases hold.
-export function createRecoveredWorkerRouteGpuMotion({resources,support,...options}) {
+export function createRecoveredWorkerRouteGpuMotion({resources,support,recoveryCut=null,...options}) {
   const profile = nativeWorkerRouteRecoveryProfile(resources?.kind);
-  const source = profile.copyResources(resources);
+  const source = profile.copyResources(resources,recoveryCut);
   if (!support?.valid()) throw Error('Recovered worker corridor is not resident');
   const {nativeRoute, ...table} = prepareNativeRouteGpuTable(support);
   const binding = source[profile.bindingField],ref=binding.reference;

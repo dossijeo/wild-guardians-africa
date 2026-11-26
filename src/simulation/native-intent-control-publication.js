@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -40,7 +40,7 @@ export function createNativeIntentControlPublication({port,session,observe,
   let mutationOpportunityVersion=0,nextMutationOpportunity=0,mutationOpportunity=null;
   const consumerToken=crypto.randomUUID();
   let retirement=null,drained=false,consumerDrainReceipt=null,terminalWait=null;
-  let worldBoundary=null,recoveryBaseline=null;
+  let worldBoundary=null,recoveryBaseline=null,recoveryMembers=null;
   let clock=null,appliedClockSequence=null,baselineClockSequence=null;const clockReceipts=new Map();
   function prepareClock(record,{baseline=false}={}){
     if(record?.protocolVersion!==2||record.clockVersion!==1||record.authorityEpoch!==authorityEpoch||record.intentSequence!==sentSequence||
@@ -147,18 +147,22 @@ export function createNativeIntentControlPublication({port,session,observe,
         fail(Error('Invalid native GPU fence acknowledgement'));return;
       }
       const draw=data.recoveredSubmission;
-      const recoveryProfile=draw&&recoveryBaseline?nativeWorkerRouteRecoveryProfile(recoveryBaseline.kind):null;
-      if(draw&&(!recoveryProfile||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
-         draw.kind!==recoveryProfile.kind||
-         draw.assignmentSequence!==recoveryBaseline.proof.assignmentSequence||!Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||
-         !recoveryProfile.sameReference(draw[recoveryProfile.clockField],recoveryBaseline.proof.reference)||draw.elapsed!==fence.effectiveTime||
-         !Number.isFinite(draw.relativeTime)||draw.relativeTime<0||
-         (recoveryBaseline.proof.gateIds.length===1?
-           draw.nativeGate?.gateId!==recoveryBaseline.proof.gateIds[0]||
-           !sameNativeWorldBoundary(draw.nativeGate.worldBoundary,recoveryBaseline.proof.reference.worldBoundary)||
-           draw.gateElapsed!==recoveryBaseline.proof.reference.worldBoundary.effectiveTime+draw.relativeTime:
-           draw.nativeGate!==undefined||draw.gateElapsed!==undefined))){
-        fail(Error('Invalid recovered frame at native fence'));return;
+      if(draw){
+        const members=recoveryMembers;
+        const rows=recoveryBaseline?.version===2?draw.members:[draw];
+        if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
+           !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
+           !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof},i)=>{
+             const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
+             return row?.kind===kind&&row.assignmentSequence===proof.assignmentSequence&&
+               profile.sameReference(row[profile.clockField],proof.reference)&&Number.isFinite(row.relativeTime)&&row.relativeTime>=0&&
+               (proof.gateIds.length===1?row.nativeGate?.gateId===proof.gateIds[0]&&
+                 sameNativeWorldBoundary(row.nativeGate.worldBoundary,proof.reference.worldBoundary)&&
+                 row.gateElapsed===proof.reference.worldBoundary.effectiveTime+row.relativeTime:
+                 row.nativeGate===undefined&&row.gateElapsed===undefined);
+           })){
+          fail(Error('Invalid recovered frame at native fence'));return;
+        }
       }
       gpuFences.delete(data.fenceId);clearTimeout(fence.timer);
        fence.resolve({...(draw?{recoveredSubmission:draw}:{}),authorityEpoch,sequence:fence.sequence,effectiveTime:fence.effectiveTime,fenceId:data.fenceId,
@@ -197,6 +201,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
           throw Error('Native world resources precede their causal baseline');
         baselineClockSequence=initial?.clockSequence??null;recoveryBaseline=baseline.recoveredWorkerRoute??null;
+        recoveryMembers=recoveryBaseline&&copyNativeRecoveryMembers(recoveryBaseline,worldBoundary);
         port.postMessage({...baseline,...(baseline.recoveredWorkerRoute?{recoveredWorkerRoute:{...baseline.recoveredWorkerRoute,consumerToken}}:{}),...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
       },
       onClock(record){

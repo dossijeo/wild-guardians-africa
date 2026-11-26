@@ -1,4 +1,5 @@
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
 // One ordered asynchronous authority. The caller must retain commands rejected
@@ -74,19 +75,31 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
       try{
         let recoveredWorkerRoute;
         if(item.recoveryHold!==undefined||data.recoveredWorkerRoute!==undefined){
-          const q=data.recoveredWorkerRoute,execution=q?.execution;
-          if(q?.version!==1||item.recoveryHold===undefined||q.holdId!==item.recoveryHold||
+          const q=data.recoveredWorkerRoute;
+          if(![1,2].includes(q?.version)||item.recoveryHold===undefined||q.holdId!==item.recoveryHold||
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
-             execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
-          const profile=nativeWorkerRouteRecoveryProfile(q.resources?.kind),resources=profile.copyResources(q.resources);
-          const binding=resources[profile.bindingField],ref=binding.reference;
-          if(execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
-             ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||
-             execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
-             !profile.sameAttestation(binding,execution.binding))
-            throw Error('Invalid replacement committed assignment');
-          recoveredWorkerRoute={...q,resources};
+          const mixed=q.version===2,cut=mixed?copyNativeWorldBoundary(q.worldBoundary):null;
+          if(mixed&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||q.members.length!==2))
+            throw Error('Invalid replacement world cut');
+          const members=(mixed?q.members:[q]).map(({execution,resources:input})=>{
+            const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
+            const binding=resources[profile.bindingField],ref=binding.reference;
+            if(execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
+               execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
+               ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||
+               execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
+               !profile.sameAttestation(binding,execution.binding))
+              throw Error('Invalid replacement committed assignment');
+            return {execution,resources};
+          });
+          if(mixed){
+            const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
+            copyNativeRecoveryMembers({version:2,members:proofs},cut);
+            const at=members[0].execution.executedThrough;
+            if(at<cut.effectiveTime||members[1].execution.executedThrough!==at)throw Error('Replacement samples span different times');
+          }
+          recoveredWorkerRoute=mixed?{...q,worldBoundary:cut,members}:{...q,...members[0]};
         }
         item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredWorkerRoute?{recoveredWorkerRoute}:{})});
       }catch(error){item.reject(error);fail(error);return true;}

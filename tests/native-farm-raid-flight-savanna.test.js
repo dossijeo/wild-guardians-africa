@@ -6,6 +6,9 @@ import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-int
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
+import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {floorFloat32} from '../src/rendering/float32-time.js';
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 
 // Day two of the paid sabana712 microevent opening. The ordinary first night
 // left two living crops and zero tasks. The second hire cost 30.
@@ -15,6 +18,88 @@ function source() {
   return state;
 }
 const chunkKeys = Array.from({length: 25}, (_, i) => [i % 5, Math.floor(i / 5) - 2].join(','));
+
+for(const complete of [false,true])test('terminal Draw loss requires both Flight Home and crop clocks: '+complete, async () => {
+  const receipts=new Map();
+  const f=await nativeProductionAuthority(source(),{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+    onCommit(record,receipt){receipts.set(record.kind,receipt);}});
+  const ports=new MessageChannel();
+  let replacement;
+  try{
+    await untilProduction(f,()=>f.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+    f.command({kind:'setNavigationView',view:{bounds:[24,-72,168,72],eye:{x:83,z:24},target:{x:83,z:0}}});
+    const fields=['nativeHome','nativeAnimalCrop'];
+    let original,rows;
+    for(let i=0;i<165;i++){
+      const step=f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+      for(const key of step.residency?.missing??[]){
+        const [cx,cz]=key.split(',').map(Number);
+        f.command({kind:'addChunk',cx,cz});
+      }
+      await f.present();
+      original=f.host.inspect().nativeRouteFrame;
+      rows=fields.map(field=>original?.bindings.find(row=>row[field]));
+      if(rows.every(row=>row?.relativeTime>0))break;
+    }
+    assert(rows.every(row=>row?.relativeTime>0),'expected two clocks in the last original frame');
+    const bindingFields=['nativeHomeRouteBinding','nativeAnimalCropRouteBinding'];
+    const originals=['home-route','animal-crop-route'].map((kind,i)=>receipts.get(kind)[bindingFields[i]]);
+    assert.notEqual(originals[0].reference.worldBoundary.ticket,originals[1].reference.worldBoundary.ticket);
+    const before=f.snapshot();
+    f.gpu.device.destroy();
+    f.retireResourceEndpoint();
+    const receipt=await f.authority.quiesceNativeIntentProduction();
+    const retired=await f.authority.flushNativeResourcePreparation({allowRetired:true});
+    assert(retired.terminal&&retired.callbacksSettled);
+    const route=await f.authority.terminalWorkerRoute();
+    assert.deepEqual(route,{version:2,members:[{kind:18,actorId:21},{kind:26,actorId:22}]});
+    replacement=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1}},
+      {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+    const {recoveredWorkerRoute:q}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,receipt,route);
+    assert.deepEqual(q.worldBoundary,original.worldBoundary);
+    const at=before.elapsed;
+    const ages=q.members.map(({execution,resources},i)=>{
+      assert.equal(execution.executedThrough,at);
+      assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
+      const ref=resources[bindingFields[i]].reference,epoch=ref.worldBoundary.effectiveTime;
+      assert.deepEqual(ref,originals[i].reference);
+      if(complete||i===0)replacement.client.registerClockBinding(replacement.buffer,{byteOffset:i*4,epoch,semantic:'relative',
+        resourceEnd:nativeClockResourceEnd(epoch,ref.endTime),[fields[i]]:ref});
+      return floorFloat32(at-epoch);
+    });
+    await assert.rejects(f.authority.checkHeldDraw(30,receipt,route),/Missing submitted/);
+    const submit=replacement.frame(0,{nativeWorldBoundary:q.worldBoundary,
+      clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(error=>error);
+    await flush();await replacement.host.idle();replacement.host.present();
+    const rendered=await submit;
+    if(!complete){
+      assert.match(rendered.message,/Replacement requires its bound worker clock/);
+      assert.equal(replacement.host.inspect().nativeRouteFrame,null);
+      await assert.rejects(f.authority.checkHeldDraw(30,receipt,route),/Missing submitted|Native GPU fence closed: consumer-retired/);
+      assert.equal(f.snapshot().elapsed,at);
+      return;
+    }
+    assert(!(rendered instanceof Error),rendered.message);
+    const witness=await f.authority.checkHeldDraw(30,receipt,route);
+    assert.deepEqual(witness.members.map(row=>row.relativeTime),ages);
+    assert.deepEqual(witness.members.map(row=>row.assignmentSequence),q.members.map(({execution})=>execution.binding.assignmentSequence));
+    assert.deepEqual([...new Float32Array(replacement.gpu.buffers[0].data.buffer).subarray(0,2)],ages);
+    f.authority.resumeNativeIntentProduction(receipt);
+    f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+    const after=f.snapshot();
+    assert.equal(after.elapsed,at+.05);
+    assert.equal(after.workers[0].nativeRouteAdmission,'native-home');
+    assert.notDeepEqual(after.workers.map(({x,z})=>[x,z]),before.workers.map(({x,z})=>[x,z]));
+    assert.notDeepEqual(after.raid.animals.map(({x,z})=>[x,z]),before.raid.animals.map(({x,z})=>[x,z]));
+    assert.deepEqual(after.raid.reservations,before.raid.reservations);
+    assert.deepEqual(f.faults,[]);
+  }finally{
+    replacement?.client.dispose();
+    await replacement?.host.dispose();
+    ports.port1.close();ports.port2.close();
+    await f.close();
+  }
+});
 for (const enabled of [false, true]) {
   test('Savanna Farm admission ' + (enabled ? 'retains the original body through the daytime Stop' : 'stays gated in the ordinary profile'), async () => {
     const initial = source();

@@ -1,5 +1,5 @@
 import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropPublicationMatches,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
 import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
@@ -718,36 +718,47 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
 
   let firstReplacementFrame=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
-    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,crop=profile.kind===26||profile.kind===27;
-    const actorId=(crop?'animal-':'worker-')+source.execution?.actorId,sequence=source.publicationSequence;
-    const ref=source.resources[profile.bindingField]?.reference;
-    const replayed=preparedNativeWorldBoundary,boundary=ref?.worldBoundary;
+    const mixed=source?.version===2,inputs=mixed?source.members:[source],sequence=source?.publicationSequence;
+    const members=inputs.map(({resources,execution})=>{
+      const profile=nativeWorkerRouteRecoveryProfile(resources?.kind),crop=profile.kind===26||profile.kind===27;
+      const ref=resources[profile.bindingField].reference;
+      return {resources,execution,profile,crop,ref,actorId:(crop?'animal-':'worker-')+execution.actorId};
+    });
+    const replayed=preparedNativeWorldBoundary,boundary=mixed?source.worldBoundary:members[0].ref.worldBoundary;
+    const at=members[0].execution.executedThrough;
     // A motion-only GO can postdate the retained terrain checkpoint without
     // writing a terrain record into the journal. The frozen source, current
     // Draw and terrain support must all attest the route before publishing it.
-    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||crop&&(!replayed||
-      replayed.authorityEpoch===boundary?.authorityEpoch&&replayed.nativeSession===boundary.nativeSession&&
-      replayed.ticket<boundary.ticket&&replayed.effectiveTime<=boundary.effectiveTime);
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||members.some(member=>member.crop)&&
+      (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
-      stream.status().sequence===sequence&&state.elapsed===source.execution.executedThrough&&
+      stream.status().sequence===sequence&&state.elapsed===at&&
       replayMatches&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
-    if(!ref||!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||!(crop?roster:workers)||ownerSignal?.aborted||!current())
+    if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
+       !members.every(member=>member.execution.executedThrough===at&&(member.crop?roster:workers))||ownerSignal?.aborted||!current())
       throw Error('Route recovery needs its replayed publication and current Draw');
-    const gates=(source.resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
-    const gateOwnersReady=gates.length?settlements?.nativeGatePreparationReadiness({gates}):null;
-    if(gates.length&&gateOwnersReady?.()!==true)throw Error('Recovered gate wall is not resident');
     terrainSupport??=createConfirmedTerrainSupport({residency});
     nativeRoutePreparations++;
     try{
-      if(crop)await roster.prepareRecoveredCrop(source,terrainSupport,{signal:ownerSignal,isCurrent:current,
-        getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
-      else await workers.prepareRecoveredWorkerRoute({...source,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
-        getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':'getStrollTime'](ref),
-        ...(home?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
-        prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
-          getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
-      if(!current()||!(crop?roster.hasNativeCropOwner():workers.nativeRouteCurrent(actorId,source.resources.nativeRoute)))
+      for(const {resources,execution,profile,crop,ref} of members){
+        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:mixed?boundary:null};
+        if(crop){
+          await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
+        }else{
+          const home=profile.kind===18,farm=profile.kind===23;
+          const gates=(resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
+          if(gates.length&&settlements?.nativeGatePreparationReadiness({gates})?.()!==true)throw Error('Recovered gate wall is not resident');
+          await workers.prepareRecoveredWorkerRoute({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+            getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':'getStrollTime'](ref),
+            ...(home?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
+            prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
+              getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
+        }
+      }
+      if(!current()||!members.every(({crop,actorId,resources})=>
+        crop?roster.hasNativeCropOwner():workers.nativeRouteCurrent(actorId,resources.nativeRoute)))
         throw Error('Replayed rig is no longer current');
       // The static replay may already have admitted the scene without the typed rig.
       // Re-establish the full-scene proof against the newly installed materials.

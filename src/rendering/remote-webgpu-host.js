@@ -1,5 +1,5 @@
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
@@ -877,15 +877,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at){
-        const {profile}=recovered,row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,recovered.ref));
-        const gate=recovered.gateId===null?null:nativeRouteFrame.bindings.find(b=>
-          recoveryGateMatches(b,recovered.gateId,recovered.ref.worldBoundary)&&b.elapsed===row?.elapsed);
-        if(row&&(recovered.gateId===null||gate)){
-          if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,recovered.ref);
-          recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
-            assignmentSequence:recovered.assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],
-            elapsed:recovered.at,relativeTime:row.relativeTime,
+        const members=recovered.members.map(({profile,ref,assignmentSequence,gateId})=>{
+          const row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,ref));
+          const gate=gateId===null?null:nativeRouteFrame.bindings.find(b=>
+            recoveryGateMatches(b,gateId,ref.worldBoundary)&&b.elapsed===row?.elapsed);
+          if(!row||gateId!==null&&!gate)return null;
+          return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
             ...(gate?{nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}:{})};
+        });
+        if(members.every(Boolean)){
+          for(const {profile,ref} of recovered.members)
+            if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
+          recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
+            elapsed:recovered.at,...(recovered.mixed?{members}:members[0])};
           recovered=null;
         }
       }
@@ -1217,17 +1221,19 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(recovered) {
-      const epoch=recovered.ref.worldBoundary.effectiveTime;
-      const resourceEnd=recovered.profile.kind===27?recovered.ref.endTime:nativeClockResourceEnd(epoch,recovered.ref.endTime);
+      const missing=recovered.members.find(({profile,ref,gateId})=>{
+        const epoch=ref.worldBoundary.effectiveTime;
+        const end=profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
+        return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
+          gateId!==null&&!preparedBindings.some(b=>recoveryGateMatches(b,gateId,ref.worldBoundary)&&
+            b.resourceEnd===nativeClockResourceEnd(b.epoch,ref.endTime));
+      });
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
-         !preparedBindings.some(b=>recoveryBindingMatches(b,recovered.profile,recovered.ref)
-             &&b.epoch===epoch&&b.resourceEnd===resourceEnd)||
-         recovered.gateId!==null&&!preparedBindings.some(b=>recoveryGateMatches(b,recovered.gateId,recovered.ref.worldBoundary)&&
-             b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime)))
+         missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
-          {code:recovered.profile.obsoleteCode});
-      if(recovered.install){recovered.install();recovered.install=null;}
+          {code:(missing??recovered.members[0]).profile.obsoleteCode});
+      for(const member of recovered.members)if(member.install){member.install();member.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
     const removedGate=packet.metadata.nativeBarrierAdditionTemplate?.removal;
@@ -2269,11 +2275,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
               message.fenceId!==lastNativeGpuFence+1||nativeGpuFences.size>=64)
             throw Error('Invalid native GPU fence boundary');
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
-          const recoveryProfile=recoveredSubmission?nativeWorkerRouteRecoveryProfile(recoveredSubmission.kind):null;
-          const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&nativeRouteFrame?.bindings.some(b=>
-            recoveryBindingMatches(b,recoveryProfile,recoveredSubmission[recoveryProfile.clockField]))&&
-            (!recoveredSubmission.nativeGate||nativeRouteFrame?.bindings.some(b=>recoveryGateMatches(b,
-              recoveredSubmission.nativeGate.gateId,recoveredSubmission.nativeGate.worldBoundary)&&b.elapsed===recoveredSubmission.gateElapsed))
+          const rows=recoveredSubmission?.members??[recoveredSubmission];
+          const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&rows.every(row=>{
+            const profile=nativeWorkerRouteRecoveryProfile(row.kind);
+            return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime)&&
+              (!row.nativeGate||nativeRouteFrame.bindings.some(b=>
+                recoveryGateMatches(b,row.nativeGate.gateId,row.nativeGate.worldBoundary)&&b.elapsed===row.gateElapsed));
+          })
             ?recoveredSubmission:null;
           // Snapshot the already-submitted GPU work now, outside the resource
           // FIFO. Future draws read the revoked records; late preparations must
@@ -2331,10 +2339,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(!Number.isSafeInteger(intentControl.recoveryHold)||intentControl.recoveryHold<1||
                 q.holdId!==intentControl.recoveryHold||!nativeConsumerToken||q.consumerToken!==nativeConsumerToken||
                 !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered worker route attachment');
-             const profile=nativeWorkerRouteRecoveryProfile(q.kind),proof=profile.copyAttestation(q.proof);
-             recovered={holdId:q.holdId,consumerToken:q.consumerToken,profile,assignmentSequence:proof.assignmentSequence,
-               ref:proof.reference,at:message.clock.committedThrough,gateId:proof.gateIds[0]??null,
-               install:routeControl.prepareRecoveredWorkerRoute(profile.kind,proof,nativeWorldBoundary)};
+             const mixed=q.version===2;
+             const members=copyNativeRecoveryMembers(q,nativeWorldBoundary).map(({kind,proof})=>({
+               profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
+               ref:proof.reference,gateId:proof.gateIds[0]??null,
+               install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,{mixed})
+             }));
+             recovered={holdId:q.holdId,consumerToken:q.consumerToken,mixed,members,at:message.clock.committedThrough};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

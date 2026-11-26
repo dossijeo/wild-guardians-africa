@@ -224,7 +224,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     function prepareNativeRoute(actorId,support,options){return prepareWorkerRoute(actorId,support,options,null);}
     function prepareRecoveredWorkerRoute(source,options){
       const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
-      const resources=profile.copyResources(source.resources),b=resources[profile.bindingField],r=b.reference;
+      const resources=profile.copyResources(source.resources,source.recoveryCut),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
       if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>profile.maxGates||
          typeof options.isCurrent!=='function')throw Error('Recovery requires a fresh worker');
@@ -237,7 +237,11 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         if(home){
           const sourceHome=nativeHomeRouteSource(r),destination=sourceHome.home;
           const village=state.villages.find(row=>nativeEntityNumericId(row.id)===destination.villageId),arrival=village?.entry??village;
-          return !sourceHome.raidSpawnSequence&&nativeLocomotionEntity(entry,false,b.gateIds.length>0)&&worker.status==='returning'&&
+          const flight=Boolean(sourceHome.raidSpawnSequence),healthy=flight?
+            !!source.recoveryCut&&worker.status==='fleeing'&&!worker.crateId&&!worker.recovery&&!worker.recoveryExitRemaining&&
+              !worker.fallRemaining&&!worker.incapacitated&&(!worker.gateWaiting||b.gateIds.length>0):
+            nativeLocomotionEntity(entry,false,b.gateIds.length>0)&&worker.status==='returning';
+          return healthy&&
             !worker.taskId&&!worker.raidReturn&&worker.path===null&&nativeEntityNumericId(worker.villageId)===destination.villageId&&
             e.villageId===destination.villageId&&arrival?.x===destination.x&&arrival.z===destination.z&&
             worker.heading===e.yaw&&worker.running===e.running&&worker.gateWaiting===(e.currentSpeed===0)&&
@@ -261,7 +265,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       }catch{return false;}};
       if(!current())throw Error('Recovery pose or committed owner differs');
       const support=source.terrain.prepareNativeRoute(resources.presentation,{terrainManifest:source.terrainManifest});
-      return prepareWorkerRoute(actorId,support,options,{resources,current,
+      return prepareWorkerRoute(actorId,support,options,{resources,current,recoveryCut:source.recoveryCut,
         binding:{[profile.bindingField]:b,[profile.clockField]:r,...(home?{}:farm?
           {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
     }
@@ -292,7 +296,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const actor=entry.actor,anchor=actor.root.getWorldPosition(new Vector3()),yaw=new Quaternion();actor.root.getWorldQuaternion(yaw);
    // The root remains where its original rig was admitted, also on a suffix
    // replacement. C++'s next route origin is a separate world-space position.
-   const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources}):createNativeGpuMotion(motionOptions);
+   const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources,recoveryCut:recovery.recoveryCut}):createNativeGpuMotion(motionOptions);
    let variant,binding;
    try{
     const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};

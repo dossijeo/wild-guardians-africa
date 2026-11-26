@@ -944,8 +944,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   function recoveryRoute(){
     if(game.raid){
       const [animal]=game.raid.animals;
-      if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1||
-         !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id)))return null;
+      if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
+      if(!game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))){
+        const pair=qualifyFarmFlee&&planner.nativeRaidFlightRecoveryExecutions();
+        return pair?{version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))}:null;
+      }
       const kind=animal.status==='attacking'?27:26;
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
       return execution?{kind,actorId:execution.actorId}:null;
@@ -959,6 +962,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
        kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
     return {kind,actorId:bindings[0].reference.actorId};
   }
+  function recoveryExecutions(route){
+    if(route.version!==2){
+      const execution=recoveryExecution(route);
+      return execution?[execution]:null;
+    }
+    const pair=planner.nativeRaidFlightRecoveryExecutions();
+    return pair&&route.members.length===2&&pair.every((row,i)=>
+      row.actorId===route.members[i].actorId&&route.members[i].kind===(i===0?18:26))?pair:null;
+  }
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
 
@@ -968,13 +980,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(!current||pending||cohort.consumers!==1)return null;
       const route=recoveryRoute();
       if(!route)return null;
-      const {kind}=route,profile=nativeWorkerRouteRecoveryProfile(kind),execution=recoveryExecution(route);
-      if(!execution||execution.arrived||!sameNativeWorldBoundary(current.worldBoundary,execution.binding.reference.worldBoundary)||
-         !recoveryGateCurrent(kind,execution))return null;
+      const cut=planner.nativeWorldResourceBoundary(),routes=route.members??[route],executions=recoveryExecutions(route);
+      if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
+         !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
+         executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))return null;
       await nativeIntentControl.waitForTerminalDraw();
-      const live=recoveryExecution(route);
-      if(nativeProduction.status().phase!=='suspended'||!live||live.arrived||!profile.sameAttestation(live.binding,execution.binding)||!recoveryGateCurrent(kind,live))
-        throw Error('Worker route changed while waiting for terminal draw');
+      const live=recoveryExecutions(route);
+      if(nativeProduction.status().phase!=='suspended'||!sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
+         !live||JSON.stringify(live)!==JSON.stringify(executions)||
+         live.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
+        throw Error('Native assignments changed while waiting for terminal draw');
       return route;
     },
     async attachNativeResourcePreparation(port,transportSession){
@@ -1025,38 +1040,55 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!terminal?.terminal||!terminal.callbacksSettled||!current?.closed||!current.drained||pending||cohort.consumers!==1||
          nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
-      const profile=nativeWorkerRouteRecoveryProfile(route.kind),execution=recoveryExecution(route);
-      if(!execution||execution.arrived||!recoveryGateCurrent(profile.kind,execution))throw Error('Expected current native recovery assignment');
-      const binding=execution.binding,ref=binding.reference,boundary=ref.worldBoundary;
-      const handle=profile.kind===26?planner.nativeAnimalRouteBinding('animal-'+ref.actorId)?.routeHandle:ref.expectedRouteHandle;
-      const presentation=handle&&planner.captureNativeRoutePresentation(handle);
-      if(presentation?.gates.length&&!recoveryGateCurrent(profile.kind,execution,presentation))throw Error('Recovered gate motor has changed');
-      const resources=profile.copyResources({version:1,kind:profile.kind,phase:'committed',worldBoundary:boundary,
-        [profile.bindingField]:binding,...(profile.kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})});
+      const routes=route.members??[route],executions=recoveryExecutions(route),cut=planner.nativeWorldResourceBoundary();
+      if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
+         !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
+         executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))
+        throw Error('Expected current native recovery assignments');
+      const members=executions.map((execution,i)=>{
+        const {kind}=routes[i],profile=nativeWorkerRouteRecoveryProfile(kind);
+        const binding=execution.binding,ref=binding.reference,boundary=ref.worldBoundary;
+        const handle=kind===26?planner.nativeAnimalRouteBinding('animal-'+ref.actorId)?.routeHandle:ref.expectedRouteHandle;
+        const presentation=handle&&planner.captureNativeRoutePresentation(handle);
+        if(presentation?.gates.length&&!recoveryGateCurrent(kind,execution,presentation))throw Error('Recovered gate motor has changed');
+        const resources=profile.copyResources({version:1,kind,phase:'committed',worldBoundary:boundary,
+          [profile.bindingField]:binding,...(kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
+        return {execution,resources};
+      });
 
-      const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,kind:profile.kind,proof:execution.binding});
-      const liveExecution=recoveryExecution(route);
+      const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
+      const attachment=await nativeIntentControl.attach(port,transportSession,
+        route.members?{version:2,holdId,members:proofs}:{holdId,...proofs[0]});
+      const live=recoveryExecutions(route);
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
-        !liveExecution||liveExecution.arrived||JSON.stringify(liveExecution)!==JSON.stringify(execution)||!recoveryGateCurrent(profile.kind,liveExecution))
-        throw Error('Held source changed while installing replacement');
+         !sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
+         !live||JSON.stringify(live)!==JSON.stringify(executions)||
+         live.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
+        throw Error('Held sources changed while installing replacement');
       const manifest=getTerrainManifest?.();
       if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
-      return {...attachment,recoveredWorkerRoute:{version:1,holdId,publicationSequence:sequence,execution:liveExecution,resources,terrainManifest:manifest}};
+      const common={holdId,publicationSequence:sequence,terrainManifest:manifest};
+      return {...attachment,recoveredWorkerRoute:route.members?
+        {version:2,...common,worldBoundary:cut,members}:{version:1,...common,...members[0]}};
     },
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
-      const profile=nativeWorkerRouteRecoveryProfile(route.kind),previous=recoveryExecution(route);
+      const routes=route.members??[route],previous=recoveryExecutions(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
+      const live=recoveryExecutions(route),rows=route.members?draw?.members:draw?[draw]:null;
       if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
-         !sameHeld(previous,recoveryExecution(route),draw))throw Error('Missing submitted worker route at recovery cut');
+         draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
+         !previous||JSON.stringify(previous)!==JSON.stringify(live)||
+         !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live[i],row,draw.elapsed)))
+        throw Error('Missing submitted worker route at recovery cut');
       return draw;
-      function sameHeld(before,after,row){
-        if(!before||!after||JSON.stringify(before)!==JSON.stringify(after)||row.kind!==profile.kind||
+      function sameHeld(profile,after,row,elapsed){
+        if(row.kind!==profile.kind||
            row.assignmentSequence!==after.binding.assignmentSequence||
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
-        const age=row.elapsed-after.binding.reference.worldBoundary.effectiveTime;
-        return row.elapsed===planner.nativeCausalClock().committedThrough&&row.relativeTime===recoveryFloorFloat32(age)&&
+        const age=elapsed-after.binding.reference.worldBoundary.effectiveTime;
+        return row.relativeTime===recoveryFloorFloat32(age)&&
           recoveryGateCurrent(profile.kind,after);
       }
     },
