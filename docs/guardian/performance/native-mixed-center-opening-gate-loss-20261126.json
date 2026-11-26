@@ -1,0 +1,210 @@
+{
+  "scenario": "Terminal Draw loss during the opening motor of Home18 while AttackCenter has its acquired corridor.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "setup": {
+    "workerInitialPosition": [
+      -14,
+      6
+    ],
+    "refuge": [
+      -14,
+      11.8
+    ],
+    "gateZ": 8.2,
+    "raidSpawnOffset": 0.2,
+    "hostClock": "Controlled elapsed steps at the cut, then continued with the normal real-time scheduler.",
+    "farmTicket": 2,
+    "farmGateIds": [],
+    "workerBody": 1
+  },
+  "source": {
+    "hold": 6,
+    "checkpoint": 1,
+    "heldPublication": 19,
+    "resumedPublication": 19,
+    "sources": [
+      {
+        "kind": 18,
+        "ticket": 7,
+        "assignment": 7,
+        "body": 1,
+        "actor": 900011,
+        "elapsed": 10.799999999999983,
+        "pose": [
+          -14,
+          5.622000000000008,
+          0.03059298769239672
+        ],
+        "phase": 0
+      },
+      {
+        "kind": 26,
+        "ticket": 9,
+        "assignment": 8,
+        "body": 2,
+        "actor": 1000001,
+        "elapsed": 10.799999999999983,
+        "pose": [
+          -16.784327075027612,
+          -27.0539182312431,
+          -1.3258176636680283
+        ],
+        "phase": 0.049999999999998934
+      }
+    ]
+  },
+  "motor": {
+    "model": 1,
+    "gateId": 1000000,
+    "openingAtLoss": 0.33333333333332626,
+    "openingAtFrozenCut": 0.33333333333332643,
+    "openingAtSubmittedSample": 0.33333331346511863,
+    "openingAtHomeArrival": 1
+  },
+  "draws": {
+    "lastObservedOriginal": {
+      "sequence": 36,
+      "elapsed": 10.799999999999983,
+      "ticket": 9,
+      "clocks": [
+        {
+          "field": "nativeHome",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 6,
+          "executionEpoch": 10.599999999999987,
+          "age": 0.19999998807907104,
+          "elapsed": 10.599999988079063
+        },
+        {
+          "field": "nativeGate",
+          "gate": 1000000,
+          "ticket": 6,
+          "elapsed": 10.599999988079063
+        },
+        {
+          "field": "nativeAnimalCrop",
+          "actor": 1000001,
+          "body": 2,
+          "ticket": 8,
+          "executionEpoch": 10.749999999999984,
+          "age": 0.04999999701976776,
+          "elapsed": 10.699999997019754
+        }
+      ]
+    },
+    "firstReplacement": {
+      "sequence": 1,
+      "elapsed": 10.799999999999983,
+      "ticket": 9,
+      "clocks": [
+        {
+          "field": "nativeHome",
+          "actor": 900011,
+          "body": 1,
+          "ticket": 7,
+          "executionEpoch": 10.599999999999987,
+          "age": 0.19999998807907104,
+          "elapsed": 10.799999988079058
+        },
+        {
+          "field": "nativeGate",
+          "gate": 1000000,
+          "ticket": 7,
+          "elapsed": 10.799999988079058
+        },
+        {
+          "field": "nativeAnimalCrop",
+          "actor": 1000001,
+          "body": 2,
+          "ticket": 9,
+          "executionEpoch": 10.749999999999984,
+          "age": 0.04999999701976776,
+          "elapsed": 10.799999997019752
+        }
+      ]
+    },
+    "afterCivilReturn": {
+      "sequence": 497,
+      "elapsed": 71.70000000000239,
+      "ticket": 31,
+      "clocks": [
+        {
+          "field": "nativeGate",
+          "gate": 1000000,
+          "ticket": 28,
+          "elapsed": 66.51200571060433
+        }
+      ]
+    }
+  },
+  "refuge": {
+    "ticket": 11,
+    "sequence": 9,
+    "actor": 900011,
+    "body": 1
+  },
+  "events": {
+    "centerDebits": [
+      {
+        "elapsed": 37.100000000000534,
+        "hp": 580
+      },
+      {
+        "elapsed": 40.2500000000008,
+        "hp": 560
+      },
+      {
+        "elapsed": 46.35000000000132,
+        "hp": 540
+      },
+      {
+        "elapsed": 51.870000000001795,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 60.39000000000252
+  },
+  "civil": {
+    "ticket": 29,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 9,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "replacementDrained": true,
+    "webGpuMessages": 0,
+    "deviceLossCallbacks": 1,
+    "uncaughtDeviceLossPageErrors": 0
+  },
+  "evidence": {
+    "receiptSha256": "9bf09426ec583df7b4c91af8ecf4d530a61323b1547c8d09ed4093283316d505",
+    "traceSha256": "88197956e1aba6d8e003ffe2c57e62d5e777cab19edd92f04cf6ad382276df21",
+    "traceBytes": 62047342,
+    "dataLossOccurred": false,
+    "baseline": {
+      "commit": "6cea168b35744e327f992e1c797c71a5b5b8c42c",
+      "failure": "Native task game cohort contains an unsupported mover",
+      "controlSha256": "0bd07732e57501a8219394eeab5894137ad804e861ece07639e23b1839909c78"
+    }
+  }
+}

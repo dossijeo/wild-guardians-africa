@@ -39,8 +39,13 @@ function mixedState(gated){
  }finally{fixture.close();}
 }
 
-for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
+for(const mode of ['crossing','opening motor','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
  const initial=mixedState(true),receipts=new Map(),[authorityPort,drawPort]=pair();
+ const opening=mode==='opening motor';
+ if(opening){
+  initial.workers[0].z=6;
+  initial.dayPlan.at=initial.time+.2;
+ }
  initial.structures[0].hp=initial.structures[0].maxHp;
  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
   onCommit(record,receipt){receipts.set(record.kind,receipt);}});
@@ -61,7 +66,8 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
    await world.present();
    frame=world.host.inspect().nativeRouteFrame;
    absence=receipts.get('home-arrival')?.nativeHomeArrivalBinding;
-   if(frame?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>0)&&
+   const gateOpen=state.structures.find(row=>row.id===gateId).gateOpen;
+   if((!opening||gateOpen>0&&gateOpen<1)&&frame?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>0)&&
       (late?absence&&(laterAnimalCut||frame.worldBoundary.ticket===absence.reference.worldBoundary.ticket):
         receipts.has('home-route')&&state.workers[0].nativeRouteAdmission==='native-home'))break;
   }
@@ -79,7 +85,13 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
    assert.equal(state.structures[0].hp,retreat?520:600);
   }
   const before=world.snapshot(),at=before.elapsed;
-  assert.equal(before.structures.find(s=>s.id===gateId).gateOpen,1);
+  const openingAtCut=before.structures.find(s=>s.id===gateId).gateOpen;
+  if(opening){
+   const farm=receipts.get('farm-arrival').nativeFarmArrivalBinding;
+   assert(openingAtCut>0&&openingAtCut<1);
+   assert.deepEqual(farm.gateIds,[]);
+   assert.equal(home.reference.bodyId,farm.reference.bodyId);
+  }else assert.equal(openingAtCut,1);
   world.gpu.device.destroy();world.retireResourceEndpoint();
   const hold=await world.authority.quiesceNativeIntentProduction();
   const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
@@ -147,8 +159,8 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
     receive(event);
     if(event.data.farmArrivalRequest?.version===2)civilRequest=event.data.farmArrivalRequest;
    };
-   await world.attachRecoveredResources(draw);
   }
+  if(late)await world.attachRecoveredResources(draw);
   world.authority.resumeNativeIntentProduction(hold);
   const after=JSON.parse(step().snapshot);
   assert(Math.abs(after.elapsed-at-.05)<1e-12);
@@ -159,6 +171,7 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
   if(strike)assert.deepEqual(poses(after),poses(before));
   else assert.notDeepEqual(poses(after),poses(before));
   assert.deepEqual(after.raid.reservations,before.raid.reservations);
+  if(opening)assert(after.structures.find(s=>s.id===gateId).gateOpen>openingAtCut);
   if(late){
    let state=after;
    for(let i=0;i<1200&&!civilRequest;i++){

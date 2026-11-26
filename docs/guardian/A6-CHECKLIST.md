@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En la incursión mixta, Home18 adquiere un cruce propio cuando el Farm23 de origen está al otro lado del portón. NVIDIA confirmó la recuperación de los dos actores y la hoja a un tercio de apertura, seguida por Home19, cuatro golpes, el regreso civil a Idle y drenaje. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-la-apertura-del-portón-en-la-incursión-mixta).
+
 Retreat conserva Home19 tras perder Draw cuando el centro sigue intacto. NVIDIA confirmó el corredor recuperado y el regreso civil del mismo trabajador a Idle, con el saldo y los cuatro débitos del centro conservados. Es evidencia parcial de E para la cohorte de desarrollo de Desierto. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-retreat-con-el-centro-intacto).
 
 Strike27 recupera el golpe adquirido y la retirada de Home19 tras la pérdida de Draw en la incursión mixta. NVIDIA confirmó un único impacto del ataque recuperado y el regreso civil del mismo trabajador a Idle con un cuerpo nuevo. Es evidencia parcial de E para la cohorte de desarrollo de Desierto. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-strike27-después-de-home19).

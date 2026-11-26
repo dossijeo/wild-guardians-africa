@@ -149,7 +149,7 @@ El segundo sustituto incorpora el comprobante de Home19 a su control directo des
 
 En NVIDIA Turing, el primer relevo dibujó a t=20,00 con Home18 y el motor del portón ligados al ticket 7. Ambos usaron el mismo tiempo local. El facóquero dibujó con su ticket 9 y edad 0,299999982 s. Tras Home19, el segundo sustituto presentó únicamente ese corredor a t=20,90 con edad 1,199999928 s y el ticket mundial 11. Hubo cuatro débitos de 20 HP, de 600 a 520. Después de RaidEnded, el trabajador original volvió por el portón con el cuerpo 3 y llegó a Idle. El saldo se conservó y el Draw final confirmó el drenaje.
 
-La prueba física usa la cohorte de desarrollo con el portón abierto y asentado en el primer corte. Siguen abiertas la pérdida durante el movimiento de la hoja y la aceptación de 60 Hz. [Recibo físico](performance/native-mixed-center-draw-loss-20261126.json).
+La prueba física usa la cohorte de desarrollo con el portón abierto y asentado en el primer corte. La aceptación de 60 Hz sigue abierta. [Recibo físico](performance/native-mixed-center-draw-loss-20261126.json).
 
 ## Pérdida de Draw tras la ruina durante Retreat
 
@@ -179,4 +179,16 @@ Los controles con WASM y cola determinista ejercitan ambos Retreat. Con el centr
 
 En NVIDIA Turing, el primer envío del sustituto presentó el cuerpo 2, la asignación 25 y el ticket 27 a t=61,75 con edad local de 0,25 s. La incursión terminó a t=69,34. El centro conservó 520 HP y los cuatro débitos previos. Farm23 consumió la secuencia 9 de Home19, adquirió el cuerpo 3 para el mismo trabajador y llegó a Idle con el saldo conservado. El último dibujo carecía del reloj de Retreat y el sustituto drenó sin errores. [Recibo físico](performance/native-mixed-center-retreat-civil-loss-20261126.json).
 
-Pasaron 417 pruebas dirigidas y la compilación de producción terminó en 47,44 s. En este recorrido el portón ya estaba abierto desde Farm23. La pérdida durante el movimiento de la hoja en la cohorte mixta sigue pendiente.
+Pasaron 417 pruebas dirigidas y la compilación de producción terminó en 47,44 s. En este recorrido el portón ya estaba abierto desde Farm23.
+
+## Pérdida de Draw durante la apertura del portón en la incursión mixta
+
+El trabajador comienza en el lado de trabajo del portón cerrado y adquiere un Farm23 local. El control anterior abortaba la incursión porque ese Farm carecía de una reserva de cruce. La autoridad acredita ahora la pose y el cuerpo del Farm adquirido al nacer la incursión. WASM comprueba la pose contra el marco y la hoja vigentes y certifica la separación respecto al facóquero. Stop24 conserva el cuerpo 1. La siguiente admisión de Home18 obtiene del mismo motor su propio cruce y programa de apertura.
+
+El control con WASM y cola determinista pierde el dispositivo con ambos actores activos y la hoja en movimiento. El sustituto presenta los relojes de Home18, AttackCenter y la hoja antes de reanudar. El paso posterior conserva el corredor y sigue abriendo la hoja. La preimagen falla al cruzar `RaidSpawned` y conserva ese fallo en el registro del ensayo.
+
+En NVIDIA Turing, el primer dibujo del sustituto se envió a t=10,80. Home18 y la hoja conservaron el ticket 7 y el mismo tiempo local. El motor presentó una apertura de 0,333333313 y el facóquero conservó el cuerpo 2 y el ticket 9. El trabajador cruzó la hoja ya abierta y Home19 retiró el cuerpo 1. Hubo cuatro débitos del centro, de 600 a 520 HP. Farm23 volvió a adquirir al mismo trabajador con el cuerpo 3. Llegó a Idle con el saldo conservado y Draw drenó sin errores. [Recibo físico](performance/native-mixed-center-opening-gate-loss-20261126.json).
+
+El arnés controló el reloj del planificador para alcanzar la apertura parcial y retomó el ritmo normal después del relevo. Las primeras pasadas terminaron antes de perder Draw, durante la preparación del corte. La calificación aporta evidencia de E para esta cohorte de desarrollo y deja abierta la aceptación de cadencia.
+
+Pasaron 426 pruebas dirigidas y la compilación de producción terminó en 44,52 s. Dos controles posteriores delimitan el siguiente relevo de huida. Si la incursión nace con Farm23 completado e Idle todavía en preparación, se rechaza la petición de Home. Si Idle ya se adquirió, el avance exige una proyección nativa de esa intención.

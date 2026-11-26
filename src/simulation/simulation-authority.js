@@ -160,12 +160,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(!mechanism||mechanism.authorityEpoch!==boundary.authorityEpoch||
        mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
     if(source.gateIds?.length!==1||mechanism.gateId!==source.gateIds[0]){
-     // A Farm cancelled at the refuge never acquired a crossing. Home can
-     // keep the same body there if the existing gate owner certifies its pose.
-     if(source.kind!=='native-home-request-reference'||source.version!==2||source.requestedAt!==game.elapsed||
-        source.raidSpawnSequence!==Number(event.id.split('-').at(-1))||
-        source.pose.x!==source.home.x||source.pose.z!==source.home.z)return;
-     const stationary=planner.nativeGateMechanismSegment(gate.id,source.bodyId,source.pose,source.home);
+     let pose,bodyId;
+     if(worker.nativeRouteAdmission==='pending-farm-flight-stop'&&source.gateIds?.length===0){
+      // Farm on the work side can be stopped without owning the gate. The
+      // later Home proposal must establish its own crossing and motor timing.
+      const execution=planner.nativeFarmArrivalRouteExecution(worker.id);
+      if(!execution||execution.binding.assignmentSequence!==source.assignmentSequence||execution.bodyId!==source.reference.bodyId||
+         execution.executedThrough!==game.elapsed||execution.x!==worker.x||execution.z!==worker.z)return;
+      pose=execution;bodyId=execution.bodyId;
+     }else{
+      // A Farm cancelled at the refuge keeps the same certified pose.
+      if(source.kind!=='native-home-request-reference'||source.version!==2||source.requestedAt!==game.elapsed||
+         source.raidSpawnSequence!==Number(event.id.split('-').at(-1))||
+         source.pose.x!==source.home.x||source.pose.z!==source.home.z)return;
+      pose=source.pose;bodyId=source.bodyId;
+     }
+     const stationary=planner.nativeGateMechanismSegment(gate.id,bodyId,pose,pose);
      if(stationary.status!=='clear'||stationary.mechanism!==mechanism.mechanism||stationary.sampledAt!==game.elapsed)return;
     }
    }
