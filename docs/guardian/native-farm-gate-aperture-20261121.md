@@ -89,6 +89,23 @@ y entregan una sola caja en el segundo 38,20, con un único abono. El control
 termina al confirmar esa entrega. Queda resolver el conflicto si el trabajador
 que ocupa el destino sigue de turno. [Control de autoridad](../../tests/native-intent-production-authority.test.js).
 
+El contraste en `8f17b3bd5` separa las dos reservas. Tras la llegada de
+Farm, el final de Carry16 queda a 0,402 m del cuerpo 2 con portón y a 0,387 m
+sin portón. Idle22, a su vez, intenta terminar en el centro del mijo,
+ocupado por el cuerpo 1 al acabar Harvest15. Omitir solo la selección de
+Carry en el productor deja 416 rechazos de Idle22 por el cuerpo 1 y la
+misma pose final de los dos cuerpos. Con ambos productores operativos hubo
+208 rechazos de Idle22 en el caso con portón. Se contaron intentos del WASM.
+
+La ejecución anterior, sobre el mismo montaje y sin marcadores de admisión
+nativa, emite `CropPicked` una vez con y sin portón. A los 67 s el
+cosechador aún lleva la caja pendiente de entrega. En la ejecución nativa el
+cultivo sigue vivo porque Carry16 aún no ha sido adquirido. Ninguna de las
+cinco corridas entrega la caja. El caso sigue abierto: cualquier solución
+debe mantener la comprobación de ambos cuerpos y probar la entrega una
+sola vez mientras los dos trabajadores siguen de turno.
+[Mediciones y testigos WASM](performance/native-same-shift-delivery-block-20261126.json).
+
 OpenRA pospone la búsqueda de otro camino si el bloqueador ya está
 saliendo. En Wild Guardians, el mismo punto de
 entrega sigue ocupado hasta que la reserva de Home permite acreditar el
