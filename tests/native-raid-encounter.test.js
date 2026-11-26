@@ -38,6 +38,63 @@ async function until(read){
  }
  assert.fail('Native encounter did not reach the expected port boundary');
 }
+async function presentDepartedEncounter(world,snapshot){
+ if(!world.host.inspect().nativeRouteFrame?.bindings.some(binding=>binding.nativeAnimalCrop?.purpose==='retreat'))return;
+ const nativeWorldBoundary=world.client.requiredNativeWorldBoundary();
+ const {client}=world;
+ client.beginFrame({nativeWorldBoundary});
+ const encoder=client.device.createCommandEncoder();
+ const pass=encoder.beginRenderPass({colorAttachments:[{
+  view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'
+ }]});
+ pass.end();
+ client.device.queue.submit([encoder.finish()]);
+ const frame=client.endFrame({nativeWorldBoundary,clock:{...world.clock,elapsed:snapshot.elapsed,
+  safeUntil:snapshot.elapsed,segments:[],paused:true}});
+ await world.present();
+ await frame;
+}
+async function finishWoundedHome(world,snapshot){
+ const worker=snapshot.workers[0],elapsed=snapshot.elapsed;
+ assert.equal(worker.status,'incapacitated');
+ assert.equal(worker.nativeRouteAdmission,'pending-home-resources');
+ const route=await until(()=>world.records.find(record=>record.kind==='home-route'&&record.resources.sourceRequest.recoveryHit));
+ assert.equal(route.resources.sourceRequest.recoveryHit,29210);
+ assert.equal(route.resources.sourceRequest.bodyId,1);
+ assert.equal(route.resources.motionFlags,38);
+ assert.ok(Math.abs(route.resources.runSpeed-.84)<1e-12);
+ try{await untilProduction(world,()=>route.committed);}
+ catch(error){throw Error([error,...world.errors,...world.faults].join('\n'));}
+ await world.present();
+ const first=world.host.inspect().nativeRouteFrame?.bindings.find(row=>row.nativeHome?.sourceRequest?.recoveryHit===29210);
+ assert.equal(first?.nativeHome.bodyId,1);
+ assert.equal(first.relativeTime,0);
+ const start=world.snapshot().workers[0];
+ const next=JSON.parse((await advance(world)).snapshot).workers[0];
+ assert.equal(start.recoveryExitRemaining,.24);
+ assert.ok(Math.abs(next.recoveryExitRemaining-.22)<1e-12);
+ assert.equal(next.runRemaining,worker.runRemaining);
+ assert.equal(next.walkPhase,start.walkPhase);
+ assert.ok(Math.abs(next.runPhase-start.runPhase-.007)<1e-12);
+ assert.ok(Math.abs(Math.hypot(next.x-start.x,next.z-start.z)-.0168)<1e-8);
+ for(let i=0;i<100;i++){
+  const step=await world.command({kind:'advance',seconds:.25,nightFastForward:false});
+  if(step.elapsed>route.resources.endTime)break;
+ }
+ await untilProduction(world,()=>world.records.some(record=>record.kind==='home-arrival'&&record.committed));
+ const complete=world.snapshot();
+ assert.equal(complete.workers[0].status,'home');
+ assert.equal(complete.workers[0].incapacitated,true);
+ assert.equal(complete.workers[0].hits,2);
+ assert.equal(complete.workers[0].nativeRouteAdmission,undefined);
+ assert.equal(complete.workers[0].runRemaining,worker.runRemaining);
+ assert.equal(complete.raid,null);
+ assert.ok(complete.elapsed>elapsed);
+ assert.deepEqual(complete.ledger,snapshot.ledger);
+ assert.equal(world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,true);
+ assert.equal((await advance(world,2)).stepsExecuted,2);
+ assert.deepEqual([...world.errors,...world.faults],[]);
+}
 
 test('the qualified Desert encounter waits for its submitted Retreat before the next substep',async()=>{
  const world=await setup(true);
@@ -90,12 +147,14 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   while(snapshot.elapsed<19&&!snapshot.workers[0].recoveryExitRemaining){
    snapshot=JSON.parse((await advance(world)).snapshot);
    await world.present();
+   if(!snapshot.raid)await presentDepartedEncounter(world,snapshot);
   }
   assert.equal(snapshot.workers[0].recoveryExitRemaining,.24);
   assert.equal(snapshot.workers[0].hits,2);
   assert.equal(snapshot.raid,null);
   assert.equal(snapshot.structures[0].hp,600);
   assert.deepEqual([...world.errors,...world.faults],[]);
+  await finishWoundedHome(world,snapshot);
  }finally{await world.close();}
 });
 
@@ -314,6 +373,7 @@ for(const getUp of [false,true])test(`a disk checkpoint restores the qualified e
    facts.push(...publication.events);
    current=JSON.parse(publication.snapshot);
    await loaded.present();
+   if(!current.raid)await presentDepartedEncounter(loaded,current);
   }
   assert.equal(current.workers[0].recoveryExitRemaining,.24);
   assert.equal(current.raid,null);
@@ -322,5 +382,6 @@ for(const getUp of [false,true])test(`a disk checkpoint restores the qualified e
   assert.equal(current.structures[0].hp,600);
   assert.deepEqual(current.ledger,state.ledger);
   assert.deepEqual([...loaded.errors,...loaded.faults],[]);
+  await finishWoundedHome(loaded,current);
  }finally{await loaded?.close();await source.close();}
 });

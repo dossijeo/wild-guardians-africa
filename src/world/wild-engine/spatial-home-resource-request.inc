@@ -18,7 +18,52 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_request(double actor,double vil
 }
 static bool snapshotHomeRequest(IntentState& s,const NativeHomeResourceRequest* r){
  s.homeRequestResult.fill(0);if(!r||!r->body||r->session!=s.session)return false;
- s.homeRequestResult={r->raidSpawnSequence?2.:1.,double(r->actor),double(r->session),double(r->sequence),r->at,double(r->village),r->homeX,r->homeZ,r->x,r->z,r->yaw,r->runPhase,r->walkPhase,r->carryPhase,r->runRemaining,double(r->profile),double(r->body),r->radius,double(r->bodyFlags)};return true;
+ s.homeRequestResult={r->recoveryHit?3.:r->raidSpawnSequence?2.:1.,double(r->actor),double(r->session),double(r->sequence),r->at,double(r->village),r->homeX,r->homeZ,r->x,r->z,r->yaw,r->runPhase,r->walkPhase,r->carryPhase,r->runRemaining,double(r->profile),double(r->body),r->radius,double(r->bodyFlags)};return true;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_encounter_home_request(double session,double actor,double hit,double village,
+    double homeX,double homeZ,double yaw,double run,double walk,double carry,double budget){
+ auto& s=state();
+ if(session!=double(s.session)||!integer(actor)||!integer(hit)||!integer(village)||
+    !coordinate(homeX)||!coordinate(homeZ))return -1;
+ if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||!s.causalClock||
+    !(s.clockThrough<s.effectiveTime)||s.effectiveTime-s.clockThrough>.021||
+    s.workers.size()!=1||spatial_body_count()!=1||!s.gates.empty())return -4;
+ const auto workerId=uint64_t(actor);
+ const auto w=s.workers.find(workerId);
+ if(w==s.workers.end()||w->second.actionActive||w->second.inactiveSequence)return -2;
+ for(const auto& [id,task]:s.tasks)if(task.assigned==workerId)return -2;
+ const auto& live=s.homeEncounterImpact;
+ const auto& cut=s.encounterRetreat;
+ const auto& cold=s.restoredEncounterWorker;
+ uint64_t body=0;
+ int profile=lazy_selected_context();
+ if(live&&cut&&live->recovered&&cut->departed&&actor==double(live->worker)&&hit==double(cut->hit)&&
+    cut->worker==live->worker&&cut->workerBody==live->workerBody&&cut->spawn==live->spawn&&
+    nav_home_encounter_impact_current(actor,double(live->animal),double(live->spawn))==1&&
+    yaw==live->pose[4]&&run==live->pose[9]&&walk==live->pose[10]&&carry==live->pose[11]&&budget==live->pose[14]){
+  body=live->workerBody;
+  profile=live->priorHome->profile;
+ }else if(cold&&cold->recovered&&nav_restored_encounter_worker_current(actor,hit)==1&&
+          yaw==cold->yaw&&run==cold->runPhase&&walk==cold->walkPhase&&carry==cold->carryPhase&&budget==cold->runRemaining)
+  body=cold->body;
+ SpatialBodyView pose;
+ if(!body||!spatialReadBody(body,pose)||pose.kind!=0||pose.flags!=1||
+    pose.x!=w->second.x||pose.z!=w->second.z)return -2;
+ if(nav_gate_bind_worker(actor,double(body))!=1)return -2;
+ auto request=std::make_shared<NativeHomeResourceRequest>();
+ request->actor=workerId;request->session=s.session;request->village=uint64_t(village);
+ request->homeX=homeX;request->homeZ=homeZ;request->recoveryHit=uint64_t(hit);
+ request->at=s.effectiveTime;request->x=pose.x;request->z=pose.z;request->yaw=yaw;
+ request->runPhase=run;request->walkPhase=walk;request->carryPhase=carry;request->runRemaining=budget;
+ request->profile=profile;request->radius=pose.r;request->body=body;request->bodyFlags=pose.flags;
+ ActiveIntent intent;intent.actor=workerId;intent.home=true;intent.requiresResources=true;intent.lease=false;
+ intent.state=PlanningState::AwaitingResources;intent.profile=profile;
+ intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
+ intent.homeRequest=request;
+ w->second.eligible=false;
+ auto& stored=s.activeIntents.insert_or_assign(workerId,std::move(intent)).first->second;
+ request->sequence=emitIntentChange(s,stored);s.entityRevision++;
+ return 1;
 }
 // Retarget a genuine live Idle. The immutable preceding settlement keeps its
 // body association while the new semantic request awaits prepared resources.
@@ -364,6 +409,14 @@ EMSCRIPTEN_KEEPALIVE double nav_home_flight_event(double actor,double ticket){
  const auto& intent=s.activeIntents.at(uint64_t(actor));
  const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
  return request?double(request->raidSpawnSequence):0;
+}
+EMSCRIPTEN_KEEPALIVE double nav_home_recovery_event(double actor,double ticket){
+ if(nav_home_request_snapshot(actor,ticket)!=1)return 0;
+ const auto& s=state();
+ if(ticket)return double(s.barrierProposal.home->homeRequestSource->recoveryHit);
+ const auto& intent=s.activeIntents.at(uint64_t(actor));
+ const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
+ return request?double(request->recoveryHit):0;
 }
 static const NativeHomeResourceRequest* currentHomeFlightSource(double actor,double sequence,double event){
  const auto& s=state();

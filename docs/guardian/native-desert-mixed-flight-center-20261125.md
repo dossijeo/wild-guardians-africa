@@ -438,3 +438,11 @@ En NVIDIA Turing, el checkpoint a 12,64 s conservó 3,0617 s de Fall y la fase d
 La ventana de guardado comienza una vez resuelto el segundo golpe y, con el animal presente, después de adquirir Retreat. Siguen pendientes el guardado entre los dos golpes, la continuidad del trabajador tras la salida de GetUp y la activación ordinaria.
 
 Un contraste CPU prolongó un paso de 20 ms los controles de la sesión original, la recarga en Fall y la recarga en GetUp. Los tres llegaron al mismo corte de 18,92 s, con la incursión cerrada, el trabajador incapacitado en `(-14,7910693, 2,2152638)`, 0,24 s de mezcla de salida y el presupuesto de carrera intacto. El primer avance rechazó al trabajador antes de comprometer otro reloj. La fuente de Home debe acreditar esa pose y el cuerpo recuperado. La marcha del trabajador incapacitado usa 0,84 m/s y conserva el presupuesto de carrera durante el regreso.
+
+### Regreso del trabajador incapacitado al refugio
+
+La solicitud Home v3 identifica el segundo golpe y conserva el cuerpo y las fases que tenía al completar GetUp. El productor mantiene la pose y la mezcla de 0,24 s mientras espera recursos. Home18 adquiere la marcha de 0,84 m/s sin gastar el presupuesto de carrera. El material y el picking comparten la edad que Draw escribe para la ruta. Home19 retira el cuerpo al llegar al refugio y conserva la incapacitación.
+
+En NVIDIA Turing, la autoridad restaurada desde Fall adquirió el ticket 4 a 18,92 s. El paquete 224 presentó el cuerpo 1 a edad cero. En el paso siguiente de 20 ms, el trabajador recorrió 0,0168 m con 0,22 s de mezcla y el mismo presupuesto de 40 m. Home19 retiró el cuerpo a 34,78 s. El paquete 333 presentó su ausencia y la autoridad avanzó hasta 34,86 s. Ambos Draw confirmaron el drenaje. [Recibo de NVIDIA](performance/native-raid-encounter-home-nvidia-20261126.json).
+
+Los controles CPU recorren el mismo Home en vivo y después de recargar durante Fall o GetUp. Comprueban el primer paso, las fases, el saldo, la retirada y el guardado posterior en el refugio. La calificación se limita a este encuentro sin portón. El guardado o la sustitución de Draw durante el Home18 del trabajador incapacitado y la activación ordinaria quedan pendientes.

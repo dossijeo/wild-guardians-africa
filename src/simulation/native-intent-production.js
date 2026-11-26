@@ -143,7 +143,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if(transaction.obsolete&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
     if(wakeKey!==undefined&&['unsupported','blocked'].includes(result.status))rejectedRuins.set(request.actorId,wakeKey);else rejectedRuins.delete(request.actorId);
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};
-    if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control');
+    if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control: '+result.error);
     if(result.status==='control-failed')throw Error(result.error??'Native production control failed');
     return result;
    }catch(error){if(!closed)reportError(error);return null;}

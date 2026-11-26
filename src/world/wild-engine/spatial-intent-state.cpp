@@ -166,6 +166,7 @@ struct NativeWorkerPoseResourceRequest {
 // Binding the first physical body completes the request; it grants no route.
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t raidSpawnSequence=0;
+ uint64_t recoveryHit=0;
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
  uint64_t strollRequestSourceSequence=0,farmRequestSourceSequence=0,farmArrivalSourceSequence=0;uint32_t idleStrollSourceGeneration=0,farmArrivalSourceGeneration=0;double homeX=0,homeZ=0;
  uint64_t completedTaskSourceSequence=0;
@@ -175,6 +176,11 @@ struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t actionSourceSequence=0;
  bool completedFarmArrival=false,completedIdleStroll=false;
 };
+static int homeMotionFlags(const NativeHomeResourceRequest* request){
+ if(!request)return 0;
+ if(request->recoveryHit)return 2|4|32; // Flight budget, reduced speed, incapacitated.
+ return request->raidSpawnSequence?2:0;
+}
 // Semantic arrival goal on the existing owner; no route or Idle history.
 struct NativeFarmArrivalResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t refugeSequence=0;
@@ -558,6 +564,7 @@ struct EncounterRetreatCut {
 struct RestoredEncounterWorker {
  uint64_t actor,body,hit;
  double x,z,yaw;
+ double runPhase,walkPhase,carryPhase,runRemaining;
  bool recovered=false;
 };
 struct IntentState {

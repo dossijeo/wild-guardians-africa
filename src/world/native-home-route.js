@@ -13,6 +13,7 @@ const sameHandle=(a,b)=>!!a&&!!b&&['authorityEpoch','session','slot','generation
 const sameSource=(a,b)=>a?.settlementSequence===b?.settlementSequence&&sameNativeTaskSettlementReference(a?.reference,b?.reference)&&sameNativeTaskSettlementReference(a?.preparedReference,b?.preparedReference);
 export const nativeHomeRouteSource=value=>value.sourceRequest??value.sourceSettlement.reference;
 export const nativeHomeRouteSourceSequence=value=>value.sourceRequest?.requestSequence??value.sourceSettlement.settlementSequence;
+const homeMotionFlags=source=>source.recoveryHit?38:source.raidSpawnSequence?2:0;
 export function copyNativeHomeRouteReference(value){
  if(value?.kind!=='native-home-route-reference'||value.version!==1)throw TypeError('Invalid native Home route reference');
  if((value.sourceRequest!==undefined)===(value.sourceSettlement!==undefined))throw TypeError('Native Home requires exactly one current source');
@@ -34,7 +35,7 @@ export function nativeHomeRouteReferenceFromProposal(value){
 }
 export function copyNativeHomeRouteProposal(value){
  const nativeHome=nativeHomeRouteReferenceFromProposal(value),r=nativeHomeRouteSource(nativeHome),p=r.pose,{worldBoundary}=nativeHome;
- if(value.nativeHome!==undefined&&!sameNativeHomeRouteReference(value.nativeHome,nativeHome)||value.motionMode!=='worker'||value.motionFlags!==(r.raidSpawnSequence?2:0)||r.raidSpawnSequence&&(value.runDistance!==value.distance||value.runBudget!==p.runRemaining||Math.abs(value.runSpeed-2.4)>1e-12)||value.profile!==r.profile||value.radius!==p.radius||value.origin?.x!==p.x||value.origin?.z!==p.z||!['distance','speed','runDistance','runSpeed','runBudget'].every(k=>Number.isFinite(value[k])&&value[k]>=0)||!(value.points instanceof Float32Array)||value.points.length<2||value.points.length%2||value.points.length>8192||!value.points.every(Number.isFinite)||!Array.isArray(value.gates)||value.gates.length>1024)throw TypeError('Invalid native Home route motion');
+ if(value.nativeHome!==undefined&&!sameNativeHomeRouteReference(value.nativeHome,nativeHome)||value.motionMode!=='worker'||value.motionFlags!==homeMotionFlags(r)||(r.raidSpawnSequence||r.recoveryHit)&&(value.runDistance!==value.distance||value.runBudget!==p.runRemaining||Math.abs(value.runSpeed-(r.recoveryHit?.84:2.4))>1e-12)||value.profile!==r.profile||value.radius!==p.radius||value.origin?.x!==p.x||value.origin?.z!==p.z||!['distance','speed','runDistance','runSpeed','runBudget'].every(k=>Number.isFinite(value[k])&&value[k]>=0)||!(value.points instanceof Float32Array)||value.points.length<2||value.points.length%2||value.points.length>8192||!value.points.every(Number.isFinite)||!Array.isArray(value.gates)||value.gates.length>1024)throw TypeError('Invalid native Home route motion');
  const rows=copyNativePresentationSamples(value),gates=value.gates.map(g=>copyNativeGatePresentation(g,{worldBoundary,startTime:value.startTime,endTime:value.endTime}));
  if(rows[1]!==p.x||rows[2]!==p.z||value.points.at(-2)!==Math.fround(r.home.x)||value.points.at(-1)!==Math.fround(r.home.z)||[8,9,10,13].some((index,i)=>rows[index]!==[p.runPhase,p.walkPhase,p.carryPhase,p.runRemaining][i])||new Set(gates.map(g=>g.gateId)).size!==gates.length)throw TypeError('Native Home route changed its source pose, phases or destination');
  return Object.freeze({kind:value.kind,version:1,ticket:Object.freeze({...value.ticket}),worldBoundary,nativeHome,actorId:nativeHome.actorId,bodyId:nativeHome.bodyId,...(nativeHome.sourceRequest?{sourceRequest:nativeHome.sourceRequest}:{sourceSettlement:nativeHome.sourceSettlement}),expectedRouteHandle:nativeHome.expectedRouteHandle,sourceControlSequence:nativeHome.sourceControlSequence,
@@ -63,7 +64,7 @@ export function copyNativeHomeRouteResources(value,cut=null){
     !sameHandle(nativeRoute.routeHandle,ref.expectedRouteHandle)||JSON.stringify(presentation.nativeRoute)!==JSON.stringify(nativeRoute)||
     presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==ref.endTime||
     presentation.profile!==source.profile||presentation.radius!==pose.radius||presentation.motionMode!=='worker'||
-    presentation.motionFlags!==(source.raidSpawnSequence?2:0)||
+    presentation.motionFlags!==homeMotionFlags(source)||
     rows[1]!==pose.x||rows[2]!==pose.z||[8,9,10,13].some((index,i)=>rows[index]!==[pose.runPhase,pose.walkPhase,pose.carryPhase,pose.runRemaining][i])||
     presentation.gates.length!==nativeHomeRouteBinding.gateIds.length||presentation.gates.some(gate=>!nativeHomeRouteBinding.gateIds.includes(gate.gateId)))
   throw TypeError('Native Home route resource association mismatch');

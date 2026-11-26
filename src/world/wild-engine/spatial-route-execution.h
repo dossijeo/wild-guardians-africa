@@ -26,7 +26,7 @@ bool nativeHomeBodyCurrent(const IntentState& s,const ActiveIntent& intent){
  if(!intent.home||!intent.requiresResources||intent.animal||intent.retreat||intent.delivery||intent.task||intent.lease||intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size())return false;
  const auto& route=s.routeSlots[intent.slot];const auto& b=route.homeBinding;const auto worker=s.workers.find(intent.actor);SpatialBodyView body;
  if(!b||!route.hasExecution||worker==s.workers.end())return false;
- const int expectedFlags=b->requestSource&&b->requestSource->raidSpawnSequence?2:0;
+ const int expectedFlags=homeMotionFlags(b->requestSource.get());
  if(route.motionFlags!=expectedFlags||b->actual.header[6]!=expectedFlags)return false;
  const auto source=homeRouteSourceView(b->source.get(),b->requestSource.get());if(!source.village||source.actor!=intent.actor)return false;const auto& h=b->actual.header;
  return b->assignmentSequence==intent.assignmentSequence&&double(route.generation)==h[4]&&double(intent.slot)==h[20]&&route.startTime==h[10]&&
@@ -204,17 +204,18 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_restored_encounter_worker_current(double
 }
 
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_restore_encounter_worker(double session,double actor,double bodyId,double hit,
-    double x,double z,double yaw){
+    double x,double z,double yaw,double run,double walk,double carry,double budget){
  auto& s=state();SpatialBodyView body;
  if(session!=double(s.session)||!integer(actor)||!integer(bodyId)||!integer(hit)||
     !coordinate(x)||!coordinate(z)||!std::isfinite(yaw))return -1;
+ for(double phase:{run,walk,carry,budget})if(!std::isfinite(float(phase))||phase<0)return -1;
  const uint64_t worker=uint64_t(actor),id=uint64_t(bodyId);
  if(s.restoredEncounterWorker||s.homeEncounterImpact||s.encounterRetreat||s.executionEnabled||s.causalClock||
     s.barrierProposal.pending||s.proposalOpen||s.worldMutationPreview||s.workers.size()!=1||
     !s.workers.count(worker)||s.activeIntents.count(worker)||s.reservedBodies.count(id)||s.suspendedBodies.count(id)||
     !spatialReadBody(id,body)||body.flags!=1||body.kind!=0||body.x!=x||body.z!=z||
     spatial_execution_segment_clear(x,z,x,z,body.r)!=1)return -2;
- s.restoredEncounterWorker=RestoredEncounterWorker{worker,id,uint64_t(hit),x,z,yaw};
+ s.restoredEncounterWorker=RestoredEncounterWorker{worker,id,uint64_t(hit),x,z,yaw,run,walk,carry,budget};
  return 1;
 }
 

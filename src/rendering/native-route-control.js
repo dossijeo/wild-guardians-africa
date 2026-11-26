@@ -489,6 +489,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       error.code='native-route-revocation-late';throw error;
     }
     const actor=assigned||event.type==='IntentChanged'&&event.state===6?actorContext(event.actorId,false):actors.get(event.actorId);
+    if(homeRequest?.recoveryHit){
+      const recovery=actor?.encounterRecovery;
+      if(current||revoked||handle||event.type!=='IntentChanged'||
+         (recovery?actor.state!==0||recovery.hit!==homeRequest.recoveryHit||
+           recovery.body!==homeRequest.bodyId||event.effectiveTime<=recovery.at:actor?.latestSequence!==0))
+        throw Error('Recovered Home request differs from its encounter body');
+    }
     if(farmArrivalRequest?.version===2){
       const previous=retiredRefuge?.reference,goal=previous?.sourceHome.reference.sourceRequest?.home;
       if(!goal||retiredRefuge.retiredSequence!==farmArrivalRequest.refugeSequence||
@@ -621,6 +628,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       throw Error('Native crop owner changed after its submitted time');
     if(actor?.cropRequest&&assigned&&!crop)throw Error('Native crop assignment omitted its typed source');
     if(actor&&!actors.has(event.actorId))actors.set(event.actorId,actor);
+    if(exhaustion){
+      const worker=actors.get(exhaustion.worker);
+      worker.encounterRecovery={hit:exhaustion.hit,body:exhaustion.workerBody,at:exhaustion.at};
+    }
+    if(homeRequest?.recoveryHit)delete actor.encounterRecovery;
     if(successor){actor.cropRequest=successor;actor.encounterRetreatRequest=continuedEncounter?successor:null;actor.cropPredecessor=birth||centerBirth||continuedEncounter||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});}
     if(current?.cropBinding?.reference.kind===27&&(restoredStrikeEnd||revoked&&event.type==='RouteInvalidated')&&
         event.effectiveTime>=current.cropBinding.reference.endTime){

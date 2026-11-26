@@ -41,10 +41,17 @@ EMSCRIPTEN_KEEPALIVE int nav_home_arrival_proposal_commit_bound(double session,d
  if(!homeArrivalSourceCurrent(s,*p.homeArrival)){clearWorldMutationProposal(s.barrierProposal);return -2;}
  const auto& d=*p.homeArrival;std::array<double,24> prepared;
  if(preparedTicket==ticket)prepared=d.header;else if(d.previous&&preparedTicket==double(d.previousTicket)&&d.timeTranslation[7]==1)prepared=*d.previous;else return -9;
- const auto actual=d.header;clearWorldMutationProposal(s.barrierProposal);
+ const auto actual=d.header;
+ const auto recovery=d.source->requestSource?d.source->requestSource->recoveryHit:0;
+ clearWorldMutationProposal(s.barrierProposal);
  // The existing registry removal callback revokes this exact route, releases
  // its reservations/gates, unbinds the worker and removes its active intent.
  if(spatial_body_remove(actual[2])!=1)return -2;
+ if(recovery&&s.restoredEncounterWorker&&s.restoredEncounterWorker->hit==recovery)s.restoredEncounterWorker.reset();
+ if(recovery&&s.encounterRetreat&&s.encounterRetreat->hit==recovery){
+  s.encounterRetreat.reset();
+  s.homeEncounterImpact.reset();
+ }
  auto& worker=s.workers.at(uint64_t(actual[1]));worker.body=0;worker.inactiveSequence=s.intentSequence;worker.x=actual[17];worker.z=actual[18];s.entityRevision++;auto& out=s.homeArrivalResult;out[0]=1;out[1]=double(s.intentSequence);out[2]=preparedTicket;out[3]=ticket;
  std::copy(prepared.begin(),prepared.end(),out.begin()+4);std::copy(actual.begin(),actual.end(),out.begin()+28);
  spatialRecordMotionResourceBoundary(session,ticket,time,19);return 1;

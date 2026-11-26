@@ -145,7 +145,11 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       const liveRaidFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
         !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
         ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
-      if(!liveRaidFlight&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
+      const recoveringHome=livePhysics&&!state.raid&&worker.status==='incapacitated'&&worker.incapacitated===true&&worker.hits===2&&
+        worker.path===null&&!worker.taskId&&!worker.crateId&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
+        ['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&
+        state.events?.some(event=>event.type==='WorkerIncapacitated'&&event.targetId===worker.id&&event.simulationTime<=state.elapsed);
+      if(!liveRaidFlight&&!recoveringHome&&!farmArrival&&!strolling&&!initialIdle&&!carrying&&!returning&&(!worker.taskId||!pending&&!executing&&!acting))throw Error('Solicitud de recursos nativa inválida');
     }
     if(worker.nativeDelivery!==undefined||worker.nativeRouteAdmission==='native-delivery'){
       const delivery=worker.nativeDelivery;

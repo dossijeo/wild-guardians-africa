@@ -1070,7 +1070,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
     const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
     if(bindings.length!==1||worker.id!=='worker-'+bindings[0].reference.actorId||
-       kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
+       kind===18&&(bindings[0].reference.sourceRequest?.raidSpawnSequence||
+         bindings[0].reference.sourceRequest?.recoveryHit))return null;
     return {kind,actorId:bindings[0].reference.actorId};
   }
   function recoveryGroup(route){

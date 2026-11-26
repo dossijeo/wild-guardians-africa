@@ -100,7 +100,9 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    for(const byteOffset of ref.purpose==='retreat'?[0,4]:[0])
     graphics.client.registerClockBinding(buffer,{byteOffset,semantic:'relative',epoch,resourceEnd,nativeAnimalCrop:ref});
   }
-  const peer=(kind==='home-route'||arrival)&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
+  const recoveredHome=kind==='home-route'?reference.sourceRequest?.recoveryHit:
+   arrival?reference.sourceHome.reference.sourceRequest?.recoveryHit:null;
+  const peer=(kind==='home-route'||arrival)&&!recoveredHome&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
   if(kind==='home-route'&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
    const buffer=graphics.client.device.createBuffer({size:16,usage:72});
    graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));

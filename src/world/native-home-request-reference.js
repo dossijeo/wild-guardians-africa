@@ -6,19 +6,21 @@ const poseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','ru
 // A current semantic request in the native intent owner, not an executable
 // route, old settlement receipt, graphical permission or saved authority token.
 function copyReference(value,bound){
- const flight=value?.version===2,permitted=flight?[...fields,'raidSpawnSequence']:fields;
+ const flight=value?.version===2,recovery=bound&&value?.version===3;
+ const permitted=flight?[...fields,'raidSpawnSequence']:recovery?[...fields,'recoveryHit']:fields;
  const home=value?.home,pose=value?.pose,allowed=bound?permitted:permitted.filter(k=>!['bodyId','bodyFlags'].includes(k)),poseKeys=bound?poseFields:poseFields.filter(k=>k!=='radius');
- if(value?.kind!==(bound?'native-home-request-reference':'native-home-declaration-reference')||!(value.version===1||flight&&id(value.raidSpawnSequence))||Object.keys(value).some(k=>!allowed.includes(k))||
+ if(value?.kind!==(bound?'native-home-request-reference':'native-home-declaration-reference')||!(value.version===1||flight&&id(value.raidSpawnSequence)||recovery&&id(value.recoveryHit))||Object.keys(value).some(k=>!allowed.includes(k))||
   typeof value.authorityEpoch!=='string'||!value.authorityEpoch||value.authorityEpoch.length>256||!['nativeSession','actorId','requestSequence'].every(k=>id(value[k]))||
   !Number.isFinite(value.requestedAt)||value.requestedAt<0||!Number.isInteger(value.profile)||value.profile<0||value.profile>31||bound&&(!id(value.bodyId)||!Number.isSafeInteger(value.bodyFlags)||value.bodyFlags<0||value.bodyFlags>0x7fffffff||!(value.bodyFlags&1)||(value.bodyFlags&2))||
   !home||Object.keys(home).some(k=>!['villageId','x','z'].includes(k))||!id(home.villageId)||!['x','z'].every(k=>Number.isFinite(home[k])&&Math.abs(home[k])<2147483000)||
   !pose||Object.keys(pose).some(k=>!poseKeys.includes(k))||!poseKeys.every(k=>Number.isFinite(pose[k])&&Number.isFinite(Math.fround(pose[k])))||
   bound&&(pose.radius<=0||pose.radius>2)||!bound&&['x','z'].some(k=>Math.abs(pose[k])>=2147483000)||['runPhase','walkPhase','carryPhase','runRemaining'].some(k=>pose[k]<0))throw TypeError('Invalid fresh native Home request');
- return Object.freeze({kind:value.kind,version:value.version,...(flight?{raidSpawnSequence:value.raidSpawnSequence}:{}),authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,actorId:value.actorId,...(bound?{bodyId:value.bodyId,bodyFlags:value.bodyFlags}:{}),requestSequence:value.requestSequence,requestedAt:value.requestedAt,profile:value.profile,
+ return Object.freeze({kind:value.kind,version:value.version,...(flight?{raidSpawnSequence:value.raidSpawnSequence}:recovery?{recoveryHit:value.recoveryHit}:{}),authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,actorId:value.actorId,...(bound?{bodyId:value.bodyId,bodyFlags:value.bodyFlags}:{}),requestSequence:value.requestSequence,requestedAt:value.requestedAt,profile:value.profile,
   home:Object.freeze({villageId:home.villageId,x:home.x,z:home.z}),pose:Object.freeze(Object.fromEntries(poseKeys.map(k=>[k,pose[k]])))});
 }
 export const copyNativeHomeRequestReference=value=>copyReference(value,true);
 export const copyNativeHomeDeclarationReference=value=>copyReference(value,false);
+export const nativeHomeWorkerStatus=source=>source?.recoveryHit?'incapacitated':source?.raidSpawnSequence?'fleeing':'returning';
 export function sameNativeHomeRequestReference(a,b){try{return JSON.stringify(copyNativeHomeRequestReference(a))===JSON.stringify(copyNativeHomeRequestReference(b));}catch{return false;}}
 // Both inputs have already passed their typed boundary validation. This links
 // a new request to the actual held Idle; it grants no execution by itself.
