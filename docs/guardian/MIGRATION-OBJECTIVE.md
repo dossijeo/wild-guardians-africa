@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+El guardado durante Retreat después del derrumbe de Sabana conserva la autoridad nativa y reacredita el corredor restante en una época nueva. El control CPU recarga y confirma una sola derrota. [Prueba y alcance](native-cold-worker-admission-20261126.md#guardado-durante-la-retirada-posterior-al-derrumbe).
+
 Tras el derrumbe de Sabana, el control CPU reemplaza Draw con el Retreat del rinoceronte, verifica el primer envío del sustituto y reanuda hasta la derrota ordinaria. Queda el contraste físico de la pérdida. [Pruebas y alcance](native-cold-worker-admission-20261126.md#recuperación-tras-perder-draw-durante-la-retirada-del-rinoceronte).
 
 NVIDIA completó la quinta noche de Sabana desde el checkpoint previo. El rinoceronte derribó el último centro y se retiró con cuatro golpes disponibles. Game confirmó la derrota con saldo 671 y Draw drenó tras presentar la ausencia. [Recorrido y límites](native-cold-worker-admission-20261126.md#quinta-noche-de-sabana-y-derrota-tras-el-derrumbe).

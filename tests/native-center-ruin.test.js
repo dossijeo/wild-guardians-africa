@@ -3,9 +3,11 @@ import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import {gunzipSync} from 'node:zlib';
 import {deserialize, serialize} from '../src/persistence/snapshots.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {tick} from '../src/simulation/game.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
@@ -66,6 +68,58 @@ function savedAttack() {
 }
 
 import {copyPublishedNativeWorldBoundary} from '../src/world/native-world-boundary.js';
+
+async function restoreShelteredRetreat(checkpoint,manifest,source){
+ const state=JSON.parse(checkpoint.snapshot);
+ assert.equal(checkpoint.saveAvailable,true);
+ const stored=prepareWorkerCheckpoint(checkpoint,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+ assert.equal(stored.saved,true);
+ const [animal]=stored.state.raid.animals,options=savedNativeAuthorityOptions(serialize(stored.state));
+ assert.ok(animal.path?.length);
+ assert.equal(options.nativeWorkerLifecycle,true);
+ const missingCorridor=structuredClone(stored.state);
+ missingCorridor.raid.animals[0].path=null;
+ assert.throws(()=>createSimulationAuthority(module,serialize(missingCorridor),options.chunkKeys,options),/Saved native Retreat has no restorable corridor/);
+
+ let releaseReady;
+ const restored=await nativeProductionAuthority(stored.state,{...options,getTerrainManifest:()=>manifest,
+  onReady:()=>new Promise(resolve=>{releaseReady=resolve;})});
+ const advance=()=>restored.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+ try{
+  restored.command({kind:'setNavigationView',view:options.navigationView});
+  await untilProduction(restored,()=>releaseReady);
+  const [route]=restored.records,{reference,rows}=route.resources;
+  assert.equal(reference.purpose,'retreat');
+  assert.notEqual(reference.worldBoundary.authorityEpoch,source.retreat.reference.worldBoundary.authorityEpoch);
+  assert.deepEqual(Array.from(rows.slice(1,5)),[animal.x,animal.z,0,animal.motionPhase]);
+  assert.equal(reference.yaw,animal.heading);
+  assert.deepEqual([reference.targetX,reference.targetZ],[animal.exit.x,animal.exit.z]);
+  const rebuilt=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.deepEqual(rebuilt.nativeAuthorityCheckpoint.spatialState,checkpoint.nativeAuthorityCheckpoint.spatialState);
+  assert.equal(rebuilt.nativeAuthorityCheckpoint.workerLifecycle,1);
+  assert.deepEqual(JSON.parse(rebuilt.snapshot).raid.animals[0].path,animal.path);
+  const held=await advance();
+  assert.ok(held.elapsed>checkpoint.elapsed);
+  assert.deepEqual(JSON.parse(held.snapshot).raid.animals[0],animal);
+  assert.equal(route.committed,false);
+  releaseReady();
+  await untilProduction(restored,()=>route.committed);
+  await route.packet.presented;
+  const {bindings}=restored.host.inspect().nativeRouteFrame;
+  assert(bindings.some(row=>row.nativeAnimalCrop?.purpose==='retreat'&&row.relativeTime===0));
+
+  let final=JSON.parse(held.snapshot);
+  const facts=[];
+  for(let i=0;i<500&&!final.result;i++){
+   const next=await advance();facts.push(...next.events);final=JSON.parse(next.snapshot);await restored.present();
+  }
+  assert.equal(final.result,'defeat');
+  assert.equal(final.raid,null);
+  assert.deepEqual(final.ledger,state.ledger);
+  assert.deepEqual(facts.map(row=>row.type),['RaidEnded','GameOver']);
+  assert.deepEqual(restored.faults,[]);
+ }finally{releaseReady?.();await restored.close();}
+}
 
 for(const savanna of [false,true])test(`center ruin spends its retained ticket inside the ordinary ${savanna?'Savanna':'Desert'} Retreat substep`, {timeout:90000}, async()=>{
  const snapshot=savanna?gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString():savedAttack();
@@ -179,6 +233,7 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
    {...record,nativeCenterRuin:{...record.nativeCenterRuin,polygon:source.polygon+1}},
   ]},source.previous),/differs from its committed boundary/);
   if(savanna){
+   await restoreShelteredRetreat(checkpoint(),manifest,source);
    // Destroy the original Draw only after it submitted the kind4 packet.
    replacement=await recoverRetreatAfterRuin(fixture,retention.commit.nativeCenterRuin,state.elapsed,state);
    const step=()=>fixture.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
