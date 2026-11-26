@@ -6,7 +6,8 @@
     "nvidia-continuous-publications.json": "878bbb77538b94fdcf285cfa4ed7803a9608664cc8f107161c62dfeb81009f3b",
     "nvidia-continuous-draw-gate.json": "e2c7abe78faa3dae247ab413739418d2abde49fde250dbc3489740f7fa328306",
     "nvidia-continuous-real-clock.json": "435fef10fadff2dbbfacfeed9fd0c57dee7187bb71924d870f9aa89ea72c72ec",
-    "nvidia-home-retirement-clock-operands.json": "dec0be701892236f95cc70b89038e6af178ad4e118078e978e0df3bc11f5619a"
+    "nvidia-home-retirement-clock-operands.json": "dec0be701892236f95cc70b89038e6af178ad4e118078e978e0df3bc11f5619a",
+    "nvidia-home-retirement-continuation.json": "535e80d297d226f63306e45b4e70894b0b05b3c8d500fd2c2cb974c7e35dfa62"
   },
   "request": {
     "kind": "prepareNativeIdleStrollResources",
@@ -75,6 +76,19 @@
     "drawSideRejectionObserved": true,
     "preparerRejectionObserved": false,
     "drained": true
+  },
+  "restoredHomeContinuation": {
+    "retirementTicket": 4,
+    "activeFrame": 440,
+    "rejectedFrame": 441,
+    "packetWorldMatchesAppliedAndDirect": true,
+    "interval": {"token": 1, "sequence": 1925, "start": 290.7199999999715, "end": 290.7399999999715},
+    "presentedElapsedAtRejection": 290.7999999999714,
+    "resourcePreparationsRetained": true,
+    "appliedSequence": 1924,
+    "receivedSequence": 1930,
+    "recoveryTarget": null,
+    "elapsedAtFailure": 290.8399999999714
   },
   "result": {
     "elapsed": 123.07999999999265,
