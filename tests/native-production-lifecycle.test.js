@@ -22,7 +22,8 @@ import {nativeProductionAuthority} from './helpers/native-production-authority.j
 import {createPlant,waterPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {centerServicePoint} from '../src/world/centers.js';
-import {newGame} from '../src/simulation/game.js';
+import {newGame,plant} from '../src/simulation/game.js';
+import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate,pump=flush){const end=Date.now()+8000;while(!predicate()){if(Date.now()>end)throw Error('Native production lifecycle fixture timed out');await pump();await flush();}}
@@ -600,6 +601,61 @@ for(const initialTask of [false,true])test(`the first paid hire uses the cold na
   await f.runtime.submit(command);
   assert.equal(f.state.workers.length,1);
   assert.equal(f.state.events.filter(event=>event.type==='HiringConfirmed').length,1);
+  assert.deepEqual(f.native.faults,[]);
+ }finally{release();await f.close();}
+});
+
+test('the first paid hire in Savanna completes watering through Task14 and Action15',async()=>{
+ const opening=await createSpatialCampaignOpening();
+ const {state,nav}=opening;
+ const chunkKeys=[...opening.loaded.keys()];
+ try{
+  assert.equal(state.biome,'sabana');
+  state.tutorial.step='plant';
+  const center=state.structures.find(s=>s.kind==='center');
+  assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
+ }finally{opening.dispose();}
+ let release;
+ const ready=new Promise(resolve=>release=resolve);
+ const f=await fullFixture({state,chunkKeys,nativeWorkerLifecycle:true,onReady:record=>record.kind==='farm-arrival'?ready:undefined});
+ try{
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);
+  assert.equal(f.native.host.inspect().nativeCausalClock.committedThrough,0);
+  await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  await f.runtime.submit({kind:'openInitialHiring'});
+  const hire={kind:'hire',id:'savanna-first-hire',selection:{youngMale:1}};
+  await f.runtime.submit(hire);
+  await until(()=>f.native.records.some(row=>row.kind==='farm-arrival'&&row.packet),()=>f.native.present());
+  const farm=f.native.records.find(row=>row.kind==='farm-arrival'),[worker]=f.state.workers,[crop]=f.state.plants;
+  const origin=[worker.x,worker.z];
+  assert.equal(farm.resources.bodyId,1);
+  assert.equal(crop.water[0].status,'due');
+  let now=performance.now();f.host.now=()=>now;
+  await f.runtime.activateClock();now+=150;
+  await until(()=>f.state.workers[0].nativeRouteAdmission==='pending-resources',()=>f.native.present());
+  assert.deepEqual([f.state.workers[0].x,f.state.workers[0].z],origin);
+  release();
+  const acquired=kind=>f.native.records.find(record=>record.kind===kind&&record.committed);
+  await until(()=>acquired('task-start'),()=>f.native.present());
+  assert(farm.aborted&&!farm.committed);
+  const start=acquired('task-start');
+  assert.equal(start.resources.bodyId,1);
+  assert.equal(start.resources.targetId,Number(crop.id.split('-').at(-1)));
+  await until(()=>f.native.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeStart?.bodyId===1),()=>f.native.present());
+  const advance=async()=>{now+=50;await f.native.present();};
+  await until(()=>f.native.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeAction?.request.bodyId===1),advance);
+  await until(()=>f.state.plants[0].water[0].status==='manual',advance);
+  const action=acquired('task-action');
+  assert.equal(action?.resources.request.bodyId,1);
+  assert.equal(acquired('initial-idle-body')?.resources.nativeInitialIdleBody.bodyId,1);
+  assert.equal(f.state.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(f.state.events.filter(event=>event.type==='WaterSatisfied'&&event.targetId===crop.id).length,1);
+  const ledger=structuredClone(f.state.ledger);
+  await f.runtime.submit(hire);
+  assert.equal(f.state.workers.length,1);
+  assert.equal(f.state.events.filter(event=>event.type==='HiringConfirmed').length,1);
+  assert(Object.hasOwn(f.state.ledger.entries,hire.id));
+  assert.deepEqual(f.state.ledger,ledger);
   assert.deepEqual(f.native.faults,[]);
  }finally{release();await f.close();}
 });

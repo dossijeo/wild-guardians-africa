@@ -86,7 +86,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
   // Arm the direct clock before attaching Draw. The paid hire adds the first
   // request to that same control stream when the roster is still empty.
-  const emptyNativeRoster=nativeWorkerLifecycle&&game.biome==='desierto'&&!restoringPhysics&&game.workers.length===0;
+  const emptyNativeRoster=nativeWorkerLifecycle&&(game.biome==='desierto'||game.biome==='sabana')&&!restoringPhysics&&game.workers.length===0;
   const nativeRosterSupported=(nativeRestoration||emptyNativeRoster)&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  if(nativeWorkerLifecycle&&!nativeRosterSupported)throw Error('Native worker lifecycle cannot bootstrap this roster');
  try{
@@ -101,7 +101,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,nativeWorkerLifecycle,
     qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&

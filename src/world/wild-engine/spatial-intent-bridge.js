@@ -191,7 +191,7 @@ function normalizeNativeIntentRestoration(state,wasm){
   for(const {worker,home} of strolls)if(home)Object.assign(worker,home);else worker.nativeRouteAdmission='pending-stroll-resources';
 }
 
-export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualifyRaidEncounter=false,authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
+export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeWorkerLifecycle=false,qualifyRaidEncounter=false,authorityEpoch=globalThis.crypto.randomUUID(),onNativeWorldResources=null}={}){
   if(onNativeWorldResources!==null&&typeof onNativeWorldResources!=='function')throw TypeError('Invalid native world resource observer');
   if(typeof authorityEpoch!=='string'||!authorityEpoch||authorityEpoch.length>256)
     throw TypeError('Expected an authority epoch for native route handles');
@@ -3439,7 +3439,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
     return issueInitialIdleHome(r.sourceRequest,held.bodySequence,home,raidSpawnSequence);
   };
   const stageFarmArrivalRoute=(actor,sessionId,sequence,flags)=>{
-    const stage=qualifyFarmFlee&&wasm.spatial_world_biome()===0?wasm.nav_farm_arrival_route_proposal_stage_savanna:wasm.nav_farm_arrival_route_proposal_stage;
+    const stage=(nativeWorkerLifecycle||qualifyFarmFlee)&&wasm.spatial_world_biome()===0?wasm.nav_farm_arrival_route_proposal_stage_savanna:wasm.nav_farm_arrival_route_proposal_stage;
     return stage(actor,sessionId,sequence,flags);
   };
   const prepareNativeFarmArrivalRouteProposal=(value,{urgent=false}={})=>{
@@ -4349,10 +4349,10 @@ function structureCondition(structure){
 // deliver committed deltas at action boundaries; ordinary movement never
 // invokes the native planner. A pending physical result gets one bounded
 // recovery retry in case a dynamic obstruction produced no reliable event.
-export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,qualifyRaidEncounter=false,retrySeconds=8,authorityEpoch,onNativeWorldResources=null,onNativeAnimalDeparted=null,onNativeRefugeReturn=null,repairFlightTicket=()=>0}={}){
+export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nativeWorkerLifecycle=false,qualifyRaidEncounter=false,retrySeconds=8,authorityEpoch,onNativeWorldResources=null,onNativeAnimalDeparted=null,onNativeRefugeReturn=null,repairFlightTicket=()=>0}={}){
   if(!Number.isFinite(retrySeconds)||retrySeconds<=0)
     throw RangeError('retrySeconds must be positive');
-  const bridge=createSpatialIntentBridge(session,{qualifyFarmFlee,qualifyRaidEncounter,authorityEpoch,onNativeWorldResources});
+  const bridge=createSpatialIntentBridge(session,{qualifyFarmFlee,nativeWorkerLifecycle,qualifyRaidEncounter,authorityEpoch,onNativeWorldResources});
   const eligible=new Set(),requests=new Map(),animalRequests=new Map(),
     workerPlanCounts=new Map(),animalPlanCounts=new Map(),
     workerPeakPerMinute=new Map(),animalPeakPerMinute=new Map(),

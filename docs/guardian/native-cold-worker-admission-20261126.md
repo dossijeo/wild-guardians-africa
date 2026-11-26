@@ -13,3 +13,15 @@ NVIDIA Turing confirmó ambos recorridos con Hosted, el Worker de autoridad, Pre
 Los dos casos fallan con la autoridad de `5917a6f84` porque la conexión inicial carece de reloj nativo. La selección amplia pasó 100 de 101 pruebas. El único fallo reproduce en la preimagen el bloqueo del corredor norte de la incursión de Desierto. El productor devuelve `blocked` para el corredor del animal antes de pedir sus recursos gráficos. El build web local terminó en 47,56 s.
 
 La selección del perfil desde el arranque ordinario, las partidas con una cohorte antigua ya en marcha y la continuidad integrada de todas las incursiones siguen pendientes. Los criterios de A6/A7 y C4 conservan su alcance.
+
+## Primera tarea en Sabana
+
+El perfil explícito `nativeWorkerLifecycle` también abre el reloj antes de la primera contratación en Sabana. Farm23 usa la prueba continua de trabajador que ya existía para ese bioma. Task14 aplica esa misma prueba al corredor, conserva el tipo de prueba en la ruta y vuelve a comprobarlo si cambia la topología. El barrido exige terreno residente y seco y respeta los sólidos y el radio del trabajador. El recorrido acreditado se hace sin portón.
+
+El control arranca en el centro que selecciona Wild Engine para la semilla 712 y planta un plátano por la operación pagada de Game. Hosted ejecuta el primer contrato. Mientras Farm23 espera READY, la primera tarea de riego gana la asignación y el trabajador conserva la pose inicial. Se aborta el paquete de Farm y Task14 adquiere el cuerpo 1. Action15 conserva ese cuerpo, presenta su propio binding y riega el cultivo una sola vez. Repetir el contrato conserva el saldo y el único trabajador.
+
+La preimagen rechaza el arranque de Sabana. Al aplicar solo el cambio de arranque y reutilizar el WASM previo, Farm llega a READY y la primera tarea queda pendiente antes de su adquisición. Con ambos cambios pasa `node --test --test-name-pattern="the first paid hire" tests/native-production-lifecycle.test.js`, incluidos los dos controles de Desierto.
+
+NVIDIA Turing presentó Task14 en el dibujo 28, con el ticket 3 y el cuerpo 1. El dibujo 204 presentó Action15 en su frontera adquirida de 43,84 s, con el ticket 5 y el mismo cuerpo. Idle20 adquirió el ticket 7 a 51,64 s. El cultivo `plant-3` registró un `WaterSatisfied` del trabajador `worker-6`. El recorrido usó avance controlado. Los dos ensayos iniciales localizaron un campo erróneo de la sonda y un límite de observación que terminaba antes del GO de Idle20. La pasada final registró los dos dibujos y drenó sin errores. La continuación de Idle en Sabana, el turno completo y la cadencia siguen pendientes. [Recibo de NVIDIA](performance/native-savanna-first-task-nvidia-20261126.json).
+
+Pasaron 97 pruebas de arranque, Farm, Task14, portones y barrido continuo. El build web de producción terminó en 49,42 s e incluyó los binarios comprobados. Standalone y pthread conservan las mismas importaciones y exportaciones que la preimagen. El módulo JavaScript de pthread coincide byte a byte.

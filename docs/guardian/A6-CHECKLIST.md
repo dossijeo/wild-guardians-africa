@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El arranque explícito de Sabana conserva el primer cuerpo pagado desde Task14 hasta Action15 e Idle20. NVIDIA verificó los dibujos de marcha y riego, el único efecto sobre el cultivo y el drenaje. [Pruebas y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).
+
 Si la marcha norte pasa por el refugio, Home19 obtiene turno para retirar al trabajador. NVIDIA presentó la ausencia antes del GO de 26 y confirmó hasta Idle. El refugio original conserva su tramo seguro con ambas marchas en CPU. [Pruebas y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).
 
 La primera contratación pagada puede declarar Farm23 con el roster vacío y el reloj nativo ya conectado. NVIDIA confirmó Farm23 y la prioridad ordinaria de la primera tarea, que cancela su READY y adquiere Task14 con el mismo cuerpo. La prueba cubre un arranque explícito de Desierto. [Flujo y recibo](native-cold-worker-admission-20261126.md).

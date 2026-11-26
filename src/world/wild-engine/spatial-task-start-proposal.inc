@@ -33,7 +33,8 @@ static int stageNativeTaskStartProposal(double session,double slot,double genera
   PendingNativeMotionDraft draft;draft.slot=uint32_t(slot);draft.generation=uint32_t(generation);draft.body=uint64_t(bodyId);
   draft.taskIdentity={double(intent.task),double(intent.target)};draft.taskPhaseSeed=phaseSeed;draft.stationarySource=intent.settlementBinding;draft.initialIdleBodySource=intent.initialIdleBodyBinding;draft.idleCycleSource=intent.idleCycle;draft.heldIdleTaskSource=intent.heldIdleTaskSource;draft.route.points=source->points;
   const int previous=lazy_selected_context();if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
-  int result=prepareRouteTiming(draft.route,source->actor,body.x,body.z,s.effectiveTime,radius,2,flags,runBudget,true);
+  const bool savannaWorker=spatial_world_biome()==0;
+  int result=prepareRouteTiming(draft.route,source->actor,body.x,body.z,s.effectiveTime,radius,2,flags,runBudget,true,false,savannaWorker);
   draft.topology=lazy_route_revision();if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
   recordTimingResult(s,result);if(result!=1)return -7;
   // First admission changes ownership, not the worker's accumulated clip time.

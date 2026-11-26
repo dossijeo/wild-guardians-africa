@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Sabana ya admite el primer trabajador pagado con `nativeWorkerLifecycle`. NVIDIA presentó Task14 y Action15 sobre el mismo cuerpo, confirmó un único riego y adquirió Idle20. La continuación del turno y la selección desde el menú ordinario siguen abiertas. [Flujo y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).
+
 La cohorte norte de Desierto ya completa Home19 cuando el refugio intersecta la ruta del animal. NVIDIA confirmó el dibujo de la ausencia antes de adquirir 26, los cuatro golpes al centro y la vuelta civil a Idle. El control original del tramo seguro conserva la marcha simultánea. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).
 
 El arranque explícito del trabajador nativo admite una primera contratación desde Desierto con un centro y el roster vacío. El reloj ya existe al conectar Draw. NVIDIA verificó el pago, Farm23 con READY retenido y la alternativa ordinaria en la que la primera tarea adquiere Task14 sobre ese mismo cuerpo. La selección del perfil desde la partida ordinaria sigue abierta. [Arranque y recibo](native-cold-worker-admission-20261126.md).
