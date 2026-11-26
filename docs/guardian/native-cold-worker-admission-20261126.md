@@ -127,3 +127,13 @@ En la repetición física, la fuente de Task14 era la 377. El intervalo 263 term
 Con el HUD compacto de producto, los mismos controles llegaron al centro en el dibujo 51, a Task14 en el 165 y a Action15 en el 302, también con el cuerpo 1. La fuente 382 se aplicó en 3,214 s y READY llegó en 7,474 s. El mismo trabajador efectuó un único riego a los 67,00 s y el saldo quedó en 510. Los dos recorridos finales solo registraron avisos de `favicon.ico`. La semilla y la selección civil se fijaron en el arnés, con la ruta de HUD confirmada en la segunda ejecución. [Recibo comparado](performance/native-menu-first-worker-nvidia-20261126.json).
 
 Pasaron 178 pruebas de preparación, historial, construcción, ciclo de trabajador, recuperación y continuidad de animales. El build de WebGPU Worker con Draw remoto terminó en 54,24 s. Los controles nuevos se reproducen con `node --test tests/confirmed-timeline-pump.test.js tests/webgpu-settlement-admission.test.js`.
+
+## Del menú al segundo turno en una sola sesión
+
+La partida de Sabana 714 continuó con el HUD compacto, el perfil civil explícito y el reloj de Hosted. El trabajador `worker-6` regó `plant-3`, llegó a Home18 y conservó el cuerpo 1 en el dibujo 960. Home19 adquirió el ticket 50 a 294,90 s. Draw presentó la ausencia de su binding en el dibujo 1113 del mismo ticket.
+
+La incursión introductoria empezó a 377,54 s. El facóquero `animal-10` conservó el cuerpo 2 al adquirir ambos golpes y el Retreat del dibujo 1285. Game registró dos ataques distintos y el centro pasó de 600 a 580 y 560 HP. `RaidEnded` se publicó a 433,37 s. Al amanecer, la publicación 8905 tenía el roster vacío, la pausa de contratación y un checkpoint con `workerLifecycle:1`.
+
+El diálogo del día 2 conservó la selección anterior de un trabajador. La sonda pulsó `+` y confirmó dos en un solo `HiringConfirmed`, con un cargo de 80 y saldo 430. Draw presentó Task14 del cuerpo 3 (`worker-13`) en el dibujo 1507. El dibujo 1511 presentó ese Task14 junto con Farm23 del cuerpo 4 (`worker-15`). El control del arnés esperaba un solo trabajador y agotó su espera. La última inspección aún mostraba ambos bindings a 624,95 s. La sonda no llegó a su comprobación de drenaje. [Recibo de NVIDIA](performance/native-menu-full-shift-nvidia-20261126.json).
+
+En un control CPU separado, un único trabajador contratado desde el guardado de amanecer del arnés terminó el turno. El planificador ordinario programó la segunda noche con una hiena y tres golpes a las 353,6368 s del día 2. Al cruzar esa frontera, el avance rechazó la cohorte con `Native task game cohort contains an unsupported mover`. La última publicación válida observada fue 952,50 s de partida. La continuidad desde el menú durante la segunda noche sigue por acreditar.

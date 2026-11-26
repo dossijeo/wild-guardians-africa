@@ -1,0 +1,455 @@
+{
+  "revision": "965ffc5edb2a62af58bf8a6fcf0f11c7d9676087",
+  "source": "native-menu-full-shift-extended.json",
+  "sha256": "0af1d9ee9e19e78d7c2f00b50641bed3a8f1f03024a3ff9c99f2f10f134b5226",
+  "seed": 714,
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "explicit nativeWorkerLifecycle with compact product HUD",
+  "clock": "live Hosted",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 94.37000000476837
+    }
+  },
+  "center": {
+    "owner": {
+      "id": "structure-2",
+      "kind": "center",
+      "material": "zarzas",
+      "status": "intact",
+      "x": 83.00000011278749,
+      "z": 2.0645394727125677e-7,
+      "hp": 600,
+      "maxHp": 600,
+      "gate": false,
+      "cost": 800
+    },
+    "draw": {
+      "sequence": 43,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 1.1000000000000008
+      },
+      "clockElapsed": 1.1000000000000008,
+      "bindings": 0
+    }
+  },
+  "civil": {
+    "worker": "worker-6",
+    "balance": 510,
+    "task": {
+      "sequence": 136,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 19.749999999999794
+      },
+      "clockElapsed": 19.749999999999794,
+      "bindings": 1,
+      "binding": "nativeStart",
+      "bodyId": 1,
+      "actorId": 6
+    },
+    "action": {
+      "sequence": 287,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 6,
+        "effectiveTime": 61.200000000002454
+      },
+      "clockElapsed": 61.200000000002454,
+      "bindings": 1,
+      "binding": "nativeAction",
+      "bodyId": 1,
+      "age": 0
+    },
+    "water": {
+      "id": "event-11",
+      "type": "WaterSatisfied",
+      "workerId": "worker-6",
+      "targetId": "plant-3",
+      "simulationTime": 67.75000000000249
+    },
+    "home": {
+      "sequence": 960,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 48,
+        "effectiveTime": 252.6500000000006
+      },
+      "clockElapsed": 252.6500000000006,
+      "bindings": 1,
+      "binding": "nativeHome",
+      "bodyId": 1,
+      "actorId": 6,
+      "age": 0
+    },
+    "absence": {
+      "sequence": 1113,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 50,
+        "effectiveTime": 294.899999999966
+      },
+      "clockElapsed": 294.899999999966,
+      "bindings": 0
+    }
+  },
+  "night": {
+    "born": {
+      "id": "event-22",
+      "type": "RaidSpawned",
+      "raidFacts": {
+        "id": "raid-1-night",
+        "day": 1,
+        "daytime": false,
+        "elapsed": 377.5351831009225,
+        "waveIndex": 0,
+        "pressureFacts": {
+          "night": 1,
+          "observedValue": 267,
+          "capturedValue": 267,
+          "effectiveValue": 267,
+          "pressure": 0.03994926001041437,
+          "targetAnimals": 1,
+          "areaCap": 1,
+          "introductory": true,
+          "candidateVersion": 5,
+          "experimentId": "v1-pressure",
+          "experimentSignature": "[1500,[0.35,0.6],[0.75,0.18],[0.8,0.15]]",
+          "budget": 2,
+          "potential": 2,
+          "composition": {
+            "warthog": 1
+          },
+          "referenceEnvelope": null,
+          "compositionAdjustments": [],
+          "qRaisedForRangeSafety": false
+        },
+        "exposedLiving": 1,
+        "exposedWounded": 0,
+        "actors": [
+          {
+            "id": "animal-10",
+            "species": "warthog",
+            "hitsRemaining": 2,
+            "spawn": {
+              "x": 94.89664958143923,
+              "z": 42.458390492557335
+            },
+            "exit": {
+              "x": 96.33492619725185,
+              "z": 45.091138178228455
+            }
+          }
+        ]
+      },
+      "simulationTime": 377.5351831009225
+    },
+    "strikes": [
+      {
+        "sequence": 1261,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+          "nativeSession": 1,
+          "ticket": 54,
+          "effectiveTime": 406.8281464807072
+        },
+        "clockElapsed": 406.8281464807072,
+        "bindings": 1,
+        "binding": "nativeAnimalCrop",
+        "bodyId": 2,
+        "actorId": 10,
+        "age": 0,
+        "purpose": "center"
+      },
+      {
+        "sequence": 1270,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+          "nativeSession": 1,
+          "ticket": 58,
+          "effectiveTime": 413.2781464807013
+        },
+        "clockElapsed": 413.2781464807013,
+        "bindings": 1,
+        "binding": "nativeAnimalCrop",
+        "bodyId": 2,
+        "actorId": 10,
+        "age": 0,
+        "purpose": "center"
+      }
+    ],
+    "hits": [
+      {
+        "id": "event-27",
+        "type": "StructureHit",
+        "animalId": "animal-10",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 408.37814648070577,
+          "x": 84.0030288696289,
+          "z": 3.5797410011291504
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": 83.00000011278749,
+          "z": 2.0645394727125677e-7,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        },
+        "simulationTime": 408.37814648070577
+      },
+      {
+        "id": "event-30",
+        "type": "StructureHit",
+        "animalId": "animal-10",
+        "targetId": "structure-2",
+        "presentation": {
+          "elapsed": 416.9981464806979,
+          "x": 84.0030288696289,
+          "z": 3.5797410011291504
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": 83.00000011278749,
+          "z": 2.0645394727125677e-7,
+          "previousHp": 580,
+          "hp": 560,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": false
+        },
+        "simulationTime": 416.9981464806979
+      }
+    ],
+    "logicalHits": [
+      {
+        "id": "event-28",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-26",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 408.37814648070577,
+          "animal": {
+            "x": 84.0030288696289,
+            "z": 3.5797410011291504,
+            "heading": -2.8684022853860465
+          },
+          "target": {
+            "x": 83.00000011278749,
+            "z": 2.0645394727125677e-7,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 408.37814648070577
+      },
+      {
+        "id": "event-31",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-29",
+        "targetId": "structure-2",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 416.9981464806979,
+          "animal": {
+            "x": 84.0030288696289,
+            "z": 3.5797410011291504,
+            "heading": -2.8684022853860465
+          },
+          "target": {
+            "x": 83.00000011278749,
+            "z": 2.0645394727125677e-7,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 416.9981464806979
+      }
+    ],
+    "retreat": {
+      "sequence": 1285,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 60,
+        "effectiveTime": 418.6781464806964
+      },
+      "clockElapsed": 418.6781464806964,
+      "bindings": 1,
+      "binding": "nativeAnimalCrop",
+      "bodyId": 2,
+      "actorId": 10,
+      "age": 0,
+      "purpose": "retreat"
+    },
+    "ended": {
+      "id": "event-33",
+      "type": "RaidEnded",
+      "simulationTime": 433.36814648068304
+    }
+  },
+  "dawn": {
+    "sequence": 8905,
+    "elapsed": 599.9999999999613,
+    "workerLifecycle": 1,
+    "balance": 510,
+    "event": {
+      "id": "event-38",
+      "type": "Dawn",
+      "completedNights": 1,
+      "result": null,
+      "simulationTime": 599.9999999999613
+    },
+    "pauses": [
+      "hiring"
+    ]
+  },
+  "secondHire": {
+    "workers": [
+      {
+        "id": "worker-13",
+        "status": "walking",
+        "x": 71,
+        "z": -10.16799999998075
+      },
+      {
+        "id": "worker-15",
+        "status": "arriving",
+        "x": 71.68799999998664,
+        "z": 3
+      }
+    ],
+    "balance": 430,
+    "event": {
+      "id": "event-40",
+      "type": "HiringConfirmed",
+      "count": 2,
+      "cost": 80,
+      "simulationTime": 599.9999999999613
+    },
+    "task": {
+      "sequence": 1507,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 63,
+        "effectiveTime": 605.3499999999565
+      },
+      "clockElapsed": 605.3499999999565,
+      "bindings": 1,
+      "binding": "nativeStart",
+      "bodyId": 3,
+      "actorId": 13
+    },
+    "farm": {
+      "sequence": 1511,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+        "nativeSession": 1,
+        "ticket": 65,
+        "effectiveTime": 611.349999999951
+      },
+      "clockElapsed": 611.349999999951,
+      "bindings": 3,
+      "binding": "nativeFarmArrival",
+      "bodyId": 4,
+      "actorId": 15,
+      "age": 0
+    },
+    "simultaneous": {
+      "sequence": 1511,
+      "task": {
+        "sequence": 1511,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+          "nativeSession": 1,
+          "ticket": 65,
+          "effectiveTime": 611.349999999951
+        },
+        "clockElapsed": 611.349999999951,
+        "bindings": 3,
+        "binding": "nativeStart",
+        "bodyId": 3,
+        "actorId": 13
+      },
+      "farm": {
+        "sequence": 1511,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "3c396e27-40eb-40f6-9588-6d9a7658ef13/1",
+          "nativeSession": 1,
+          "ticket": 65,
+          "effectiveTime": 611.349999999951
+        },
+        "clockElapsed": 611.349999999951,
+        "bindings": 3,
+        "binding": "nativeFarmArrival",
+        "bodyId": 4,
+        "actorId": 15,
+        "age": 0
+      }
+    },
+    "lastObserved": {
+      "elapsed": 624.9499999999387,
+      "sequence": 1556
+    }
+  },
+  "harness": {
+    "failedAt": "day two hiring",
+    "reason": "Crew counter retained one selection at Dawn; the click incremented it to two while the test expected one.",
+    "drainWitness": false
+  },
+  "errors": [],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5298/favicon.ico"
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "url": "http://127.0.0.1:5298/favicon.ico"
+    }
+  ],
+  "httpErrors": [],
+  "scope": "Continuous menu scenario with a second-day two-worker hire; no save/reload, drain or frame-rate measurement."
+}

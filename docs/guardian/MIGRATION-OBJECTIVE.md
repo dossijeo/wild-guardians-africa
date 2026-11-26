@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En una sesión continua desde el menú, NVIDIA presentó Home19, los dos golpes de la primera incursión y Retreat. El amanecer conservó el perfil civil y, tras un cargo por dos trabajadores, un mismo dibujo presentó Task14 y Farm23 sobre los cuerpos nuevos. El control CPU de la segunda noche rechaza la cohorte de hiena. [Recorrido y límites](native-cold-worker-admission-20261126.md#del-menú-al-segundo-turno-en-una-sola-sesión).
+
 El primer centro liga su huella, su cobro y el dibujo al mismo ticket. NVIDIA verificó la transacción con READY retenido y también la colocación mediante el selector y la herramienta del menú con el perfil nativo seleccionado en el arnés. Sigue pendiente la activación ordinaria. [Control y límites](native-cold-worker-admission-20261126.md#colocación-de-centro-con-una-autoridad-civil-activa).
 
 El guardado civil conserva la selección del perfil nativo tras Home19 y al amanecer. NVIDIA recargó desde el roster vacío con el reloj pausado y presentó Farm23 y Task14 tras un solo cobro. [Pruebas y alcance](native-cold-worker-admission-20261126.md#recarga-después-de-home19-y-al-amanecer).
