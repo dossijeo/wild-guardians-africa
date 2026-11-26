@@ -1,0 +1,20 @@
+{
+  "scenario": "Sabana 714 desde el menú, repetición instrumentada para la primera ruta del león",
+  "sourceRevision": "52ca77bc1db0eda30e1ffedb3a8cadd7469ae090",
+  "source": {"name": "native-menu-campaign-714-phase-cuts-extended.json", "sha256": "2e02b924852eb7fccc4a890451bafce4122ad6eb4308f22e1d0ab4c11dd14e56"},
+  "lastNewTicketDraw": {"kind": 19, "ticket": 50, "frame": 1108, "elapsed": 294.9999999999659, "bindings": 0},
+  "lastEvent": {"id": "event-20", "type": "NightStarted", "elapsed": 299.99999999996135},
+  "failure": {
+    "messageShown": "Recovery activation idle timeout",
+    "elapsed": 328.7499999999679,
+    "day": 1,
+    "worker": {"id": "worker-6", "status": "home", "x": 60, "z": 0},
+    "balance": 510,
+    "authoritySequence": 7213,
+    "pendingStepsAtCapture": 6621,
+    "visualDispatchBlocked": true,
+    "journal": {"base": 7086, "candidate": 7151, "through": 7213, "entries": 127, "highWatermark": 128, "saturated": false},
+    "raidSpawned": false,
+    "stageWithinActivationKnown": false
+  }
+}
