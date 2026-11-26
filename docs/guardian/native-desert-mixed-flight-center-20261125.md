@@ -253,4 +253,14 @@ La calificación corresponde al perfil de desarrollo de Desierto con una Task14 
 
 Pasaron 320 pruebas de regresión y cuatro comparaciones de compatibilidad WASM. Los cuatro controles nuevos de autoridad y el control del rig fallaron en sus preimágenes. El módulo pthread arrancó con memoria compartida y rechazó una petición sin evento de incursión. La compilación de producción terminó en 58,06 s con los tres artefactos nativos de las capturas.
 
-El control con READY de Task14 retenido antes de GO14 reproduce otro bloqueo. La solicitud de Home del cuerpo estacionario se rechaza mientras la propuesta de la tarea ocupa el slot nativo. Ese relevo sigue pendiente.
+## RaidSpawned antes del GO de Task14
+
+Con el READY de Repair retenido, la preimagen rechazaba Home porque la propuesta de Task14 aún ocupaba el slot nativo. El planificador coteja ahora la baja de la tarea emitida por Game con la solicitud nativa pendiente. Reutiliza la cancelación acreditada en el [relevo de Despertar](native-watering-idle-20261120.md) y publica su prueba antes de consultar el dueño estacionario para Home18. Draw comprueba que la prueba conserve el ticket y la secuencia de ese dueño, el cuerpo y la solicitud de la tarea. Los controles con el ticket de origen adulterado rechazan el relevo, tanto para Idle20 como para Idle21.
+
+En NVIDIA Turing, el primer recorrido canceló Task14 con el ticket 4 a t=11,35. Home18 adquirió el ticket 6 y el envío 24 confirmó su cruce. En el segundo recorrido, Idle21 había terminado a t=16,392. La incursión canceló Task14 con el ticket 5 a t=17,05. Home18 adquirió el ticket 7 y el envío 32 confirmó su cruce. En ambos casos se entregó el READY antiguo después de cancelarlo. Home18 conservó el cuerpo 1, su pose y el presupuesto de carrera. Home19 retiró ese cuerpo tras cruzar el portón 1000000. El centro recibió cuatro débitos de 20 HP, la muralla siguió en ruinas y el mismo trabajador volvió a Idle con el cuerpo 3 y su saldo intacto. Draw drenó sin errores. [Recibo físico de ambos recorridos](performance/native-mixed-raid-pending-task14-20261126.json).
+
+En el primer intento de Idle21, el arnés seguía reteniendo READY14 cuando venció el plazo de preparación de 10 s, con la autoridad confirmada a t=16,20. La captura válida usó el lote existente de dos subpasos para llegar a la incursión antes de ese plazo. Los controles deterministas cubren también Idle21 antes de terminar y retienen READY18 durante tres pasos para comprobar que el trabajador y el facóquero conservan sus poses. La calificación cubre la cohorte de desarrollo de Desierto y la aceptación de cadencia sigue abierta.
+
+Pasaron 136 pruebas de regresión. Los cinco controles nuevos reproducen el rechazo de Home en la preimagen. El build WebGPU de producción terminó en 52,87 s y sus tres artefactos nativos coinciden con los de las capturas.
+
+El siguiente control mantiene retenido el READY de Action15 después de que Task14 llegue al objetivo. En ese orden, `RaidSpawned` a t=14,50 libera Repair, el facóquero queda sin objetivo y el avance posterior rechaza la cohorte. La acción pendiente se cancela sin adquirir. El relevo desde ese READY queda abierto.

@@ -498,27 +498,42 @@ for(const mode of ['stopped','arrived','foreign Task','foreign raid'])test('Raid
   }finally{releaseReady();await world.close();}
 });
 
-for(const {label,holdKind,flightField,restore,negative} of [
+for(const {label,holdKind,flightField,restore,negative,taskOwner,terminal} of [
   {label:'replaces pending Idle22',holdKind:'idle-stroll',flightField:'strollFlightSequence',restore:restoredGatedDesertStroll,negative:/Native Home flight lacks its pending restored stroll source/},
   {label:'replaces pending Idle20',holdKind:'initial-idle-body',flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native Home flight lacks its initial Idle source/},
   {label:'takes acquired Idle20 with pending Idle21',holdKind:'idle-cycle',flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native Home flight lacks its initial Idle source/},
-])for(const tampered of [false,true])test('RaidSpawned '+label+(tampered?' only with its native source sequence':' with the original stationary body'),async()=>{
-  const {state,chunkKeys,start,center,gateId}=restore(),initial=state.workers[0];
-  let idle,idleSignal,homeReady,releaseIdle,releaseHome;
-  const oldReady=new Promise(resolve=>{releaseIdle=resolve;}),newReady=new Promise(resolve=>{releaseHome=resolve;});
+  {label:'cancels pending Task14 from Idle20',holdKind:'task-start',taskOwner:20,flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native pending Task cancellation lacks its retained Idle owner/},
+  {label:'cancels pending Task14 from Idle21',holdKind:'task-start',taskOwner:21,restore:restoredGatedDesertInitialIdle,negative:/Native pending Task cancellation lacks its retained Idle owner/},
+  {label:'cancels pending Task14 from terminal Idle21',holdKind:'task-start',taskOwner:21,terminal:true,restore:restoredGatedDesertInitialIdle,negative:/Native pending Task cancellation lacks its retained Idle owner/},
+])for(const tampered of terminal?[false]:[false,true])test('RaidSpawned '+label+(tampered?' only with its native source':' with the original stationary body'),async()=>{
+  const {state,chunkKeys,start,center,gateId,gate}=restore(),initial=state.workers[0];
+  const raidDelay=terminal?7.05:.3;
+  let repairWall;
+  if(taskOwner){
+    repairWall={...gate,id:`structure-${state.nextId++}`,gate:false,x:-11,z:1,hp:0,status:'ruined'};
+    state.structures.push(repairWall);
+    state.dayPlan.at=state.time+raidDelay;
+  }
+  let old,oldSignal,homeReady,releaseOld,releaseHome;
+  const oldReady=new Promise(resolve=>{releaseOld=resolve;}),newReady=new Promise(resolve=>{releaseHome=resolve;});
   const events=[],acquisitions=[];
   const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
     async onReady(record,{signal}){
-      if(record.kind===holdKind&&!idle){idle=record;idleSignal=signal;await oldReady;}
+      if(record.kind===holdKind&&!old){old=record;oldSignal=signal;await oldReady;}
       if(record.kind==='home-route'&&!homeReady){homeReady=record;await newReady;}
     },
     onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
   const post=world.controlPort.postMessage;
-  let handoff,birth;
+  let handoff,birth,cancellation;
   world.controlPort.postMessage=change=>{
+    if(change.pendingTaskCancellation){
+      assert.equal(handoff,undefined,'cancellation must precede Home');
+      cancellation=change.pendingTaskCancellation;
+      if(tampered&&taskOwner)change={...change,pendingTaskCancellation:{...cancellation,owner:{...cancellation.owner,ticket:cancellation.owner.ticket+1}}};
+    }
     if(change.homeRequest?.version===2){
       handoff=change;
-      if(tampered)change={...change,[flightField]:change[flightField]+1};
+      if(tampered&&!taskOwner)change={...change,[flightField]:change[flightField]+1};
     }
     if(change.raidFlightBirth)birth=change.raidFlightBirth;
     post(change);
@@ -534,15 +549,24 @@ for(const {label,holdKind,flightField,restore,negative} of [
   }
   try{
     world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
-    await untilProduction(world,()=>!!idle);
-    const installed=acquisitions.find(r=>r.kind==='initial-idle-body')?.data.nativeInitialIdleBodyBinding;
-    assert.equal(!!installed,holdKind==='idle-cycle');
-    const request=installed?.reference.sourceRequest??nativeResourceAdmissionProfile(holdKind).reference(idle.resources).sourceRequest;
-    const sourceSequence=installed?.bodySequence??request.requestSequence;
     let current;
-    for(let i=0;i<5;i++)current=await step();
+    if(taskOwner){
+      await untilProduction(world,()=>acquisitions.some(row=>row.kind==='initial-idle-body'));
+      if(taskOwner===21){world.snapshot();await untilProduction(world,()=>acquisitions.some(row=>row.kind==='idle-cycle'));}
+      assert.equal(world.command({kind:'requestRepair',id:'cancel-pending-repair',targetId:repairWall.id}).value,true);
+      current=await step();
+    }
+    await untilProduction(world,()=>!!old);
+    const installed=acquisitions.find(r=>r.kind==='initial-idle-body')?.data.nativeInitialIdleBodyBinding;
+    assert.equal(!!installed,holdKind==='idle-cycle'||!!taskOwner);
+    const cycle=acquisitions.find(r=>r.kind==='idle-cycle')?.data.nativeIdleCycleBinding;
+    assert.equal(!!cycle,taskOwner===21);
+    const request=installed?.reference.sourceRequest??nativeResourceAdmissionProfile(holdKind).reference(old.resources).sourceRequest;
+    const sourceSequence=installed?.bodySequence??request.requestSequence;
+    while((current?.elapsed??state.elapsed)<state.elapsed+raidDelay-.050001)current=await step();
     assert.equal(current.raid,null);
     assert.deepEqual(pose(current.workers[0]),pose(initial));
+    const pendingTaskId=current.workers[0].taskId;
     current=await step(2);
     const spawn=events.find(e=>e.type==='RaidSpawned');
     assert(spawn);
@@ -554,16 +578,31 @@ for(const {label,holdKind,flightField,restore,negative} of [
     assert.equal(current.workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
     assert.equal(current.raid.animals[0].targetId,center.id);
     assert.equal(confirmedStateSaveAvailable(current),false);
-    await untilProduction(world,()=>idleSignal.aborted&&!!handoff&&!!birth);
-    assert.equal(handoff[flightField],sourceSequence);
+    await untilProduction(world,()=>oldSignal.aborted&&!!handoff&&!!birth);
+    if(flightField)assert.equal(handoff[flightField],sourceSequence);
+    if(taskOwner){
+      const oldRoute=nativeResourceAdmissionProfile(holdKind).reference(old.resources);
+      assert.equal(cancellation.effectiveTime,spawn.simulationTime);
+      assert.equal(cancellation.owner.kind,taskOwner);
+      assert.equal(cancellation.owner.sequence,cycle?.cycleSequence??installed.bodySequence);
+      assert.equal(cancellation.owner.ticket,(cycle??installed).reference.worldBoundary.ticket);
+      assert.equal(cancellation.owner.bodyId,request.bodyId);
+      assert.equal(cancellation.request.requestSequence,oldRoute.requestSequence);
+      assert.equal(pendingTaskId,`task-${cancellation.request.taskId}`);
+      assert.equal(cancellation.request.targetId,oldRoute.targetId);
+      assert.deepEqual(cancellation.request.requestHandle,oldRoute.sourceRequestHandle);
+      assert.equal(current.workers[0].taskId,null);
+      assert(!current.tasks.some(t=>t.id===pendingTaskId));
+      if(terminal)assert(spawn.simulationTime>cancellation.owner.endTime,`Spawn ${spawn.simulationTime} must be after Idle21 end ${cancellation.owner.endTime}`);
+    }
     assert.equal(handoff.homeRequest.bodyId,request.bodyId);
     assert.equal(handoff.homeRequest.raidSpawnSequence,Number(spawn.id.split('-').at(-1)));
     assert.deepEqual(handoff.homeRequest.pose,request.pose);
     assert.equal(birth.sourceSequence,handoff.homeRequest.requestSequence);
     assert.equal(birth.workerBody,request.bodyId);
     assert.equal(birth.raidSpawnSequence,handoff.homeRequest.raidSpawnSequence);
-    releaseIdle();
-    await untilProduction(world,()=>idle.aborted&&!!homeReady);
+    releaseOld();
+    await untilProduction(world,()=>old.aborted&&!!homeReady);
     const born=current.raid.animals[0];
     for(let i=0;i<3;i++){
       current=await step();
@@ -571,7 +610,7 @@ for(const {label,holdKind,flightField,restore,negative} of [
       assert.deepEqual(pose(current.workers[0]),pose(initial));
       assert.deepEqual([current.raid.animals[0].x,current.raid.animals[0].z],[born.x,born.z]);
     }
-    assert.equal(idle.committed,false);
+    assert.equal(old.committed,false);
     assert.equal(homeReady.committed,false);
     releaseHome();
     for(let i=0;i<200&&current.workers[0].status!=='home';i++)current=await step();
@@ -581,7 +620,7 @@ for(const {label,holdKind,flightField,restore,negative} of [
     assert.deepEqual(home.reference.sourceRequest,handoff.homeRequest);
     assert.deepEqual(home.gateIds,[gateId]);
     assert.equal(absence?.reference.bodyId,request.bodyId);
-    assert(!world.records.some(r=>r.kind==='idle-stroll-stop'||r.kind==='farm-arrival-stop'));
+    assert(!world.records.some(r=>['idle-stroll-stop','farm-arrival-stop','task-route-stop'].includes(r.kind)));
     assert.deepEqual([current.workers[0].x,current.workers[0].z],[start.x,start.z]);
     assert.equal(current.structures.find(row=>row.id==='structure-'+gateId).gateOpen,1);
     for(let i=0;i<1250&&(current.raid||current.workers[0].nativeRouteAdmission!=='native-idle');i++)current=await step();
@@ -593,7 +632,12 @@ for(const {label,holdKind,flightField,restore,negative} of [
     assert.equal(civil.reference.sourceRequest.refugeSequence,absence.retiredSequence);
     assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[580,560,540,520]);
     assert.deepEqual(current.ledger,state.ledger);
-  }finally{releaseIdle();releaseHome();await world.close();}
+    if(taskOwner){
+      assert(!world.records.some(r=>r.kind==='task-start'&&r.committed));
+      assert(!events.some(e=>e.type==='RepairApplied'));
+      assert.equal(current.structures.find(s=>s.id===repairWall.id).hp,0);
+    }
+  }finally{releaseOld();releaseHome();await world.close();}
 });
 
 test('the Desert Farm gate remains with Home while the animal takes a different corridor', async () => {

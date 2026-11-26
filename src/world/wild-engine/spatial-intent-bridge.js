@@ -4837,7 +4837,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
         {type:'task',remove:true,id:event.taskId}:
         {type:'task',entity:{id:event.taskId,centerId:event.centerId,
           targetId:event.targetId,kind:event.kind,created:event.created,
-          workerId:event.workerId},...(event.type==='released'&&event.worker?.status==='walking'?{releasedBy:event.worker.id}:{})};
+          workerId:event.workerId},...(event.type==='released'&&event.worker?{releasedWorker:event.worker}:{})};
       pendingTaskEvents.push(nativeEvent);
       if(event.worker)pendingTaskEvents.push({type:'worker',entity:event.worker});
       dirty=true;
@@ -4875,10 +4875,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
        raid.animals.length!==1||animal.species!=='warthog'||state.workers.length!==1)return;
     const worker=state.workers[0];
     if(worker.status!=='fleeing'||worker.taskId||worker.crateId||worker.incapacitated||worker.recovery||worker.fallRemaining||worker.raidReturn)return;
+    const releasedTask=(source,status)=>pendingTaskEvents.find(row=>row.releasedWorker?.id===worker.id&&row.releasedWorker.status===status&&
+      numericId(row.entity.id)===source.taskId&&numericId(row.entity.targetId)===source.targetId&&row.entity.centerId===worker.centerId);
     const task=state.biome==='desierto'?bridge.nativeTaskExecution(worker.id):null;
     if(task){
-      const released=pendingTaskEvents.find(row=>row.releasedBy===worker.id&&numericId(row.entity.id)===task.taskId&&
-        numericId(row.entity.targetId)===task.targetId&&row.entity.centerId===worker.centerId);
+      const released=releasedTask(task,'walking');
       const binding=bridge.nativeTaskStartBinding(worker.id);
       if(!released||!binding||task.executedThrough!==state.elapsed||task.bodyId!==binding.reference.bodyId||
          task.nativeRoute.assignmentSequence!==binding.assignmentSequence||
@@ -4890,6 +4891,16 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       worker.destinationId=null;
       pendingNativeChanges=true;
       return;
+    }
+    const pendingTask=state.biome==='desierto'?bridge.pendingTaskRoute(worker.id):null;
+    if(pendingTask){
+      const released=releasedTask(pendingTask,'waiting-task');
+      if(!released||released.releasedWorker.x!==worker.x||released.releasedWorker.z!==worker.z||
+         !bridge.cancelNativePendingTask(pendingTask))return;
+      // This receipt is readable only while the stationary owner is current.
+      // Publish the cancellation before reading that owner for Home.
+      bridge.flushNativeIntentControl();
+      worker.destinationId=null;
     }
     const pending=bridge.nativeFarmArrivalRequestReference(worker.id);
     const held=bridge.nativeFarmArrivalHeldExecution(worker.id);
