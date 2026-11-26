@@ -5,6 +5,7 @@ import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
 import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
+import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 
 // Recovery carries the acquired program independently of the original Draw.
 // The terminal sample is also needed for the next strike's source validation.
@@ -114,12 +115,25 @@ export function nativeRecoveryCovers(world,source){
    (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
 }
 
-// The current world is owned by one of the moving actors or by the exact
-// Home19 that retired the other actor. Each surviving clock keeps its origin.
+// The current world can include an exact later mutation that retained the
+// moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world){
- if(value.version===undefined&&value.members===undefined&&value.refuge===undefined)
+ if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined)
    return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
+ if(value.ruin!==undefined){
+   if(value.refuge!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
+     throw Error('Center ruin recovery requires its surviving Retreat');
+   const proof=copyCropAttestation(value.members[0].proof),prepared=centerSource(value.ruin?.prepared);
+   const {retreat}=prepared;
+   if(!verifiesCenter(prepared,world,value.ruin)||retreat.assignmentSequence!==proof.assignmentSequence||
+      !sameNativeAnimalCropReference(retreat.reference,proof.reference)||
+      !sameNativeAnimalCropReference(retreat.preparedReference,proof.preparedReference))
+     throw Error('Recovered Retreat differs from the acquired center ruin');
+   const ruin=Object.freeze({prepared,acquired:copyNativeWorldBoundary(world),center:prepared.center,
+     polygon:prepared.polygon,status:'ruined',revisions:Object.freeze([...value.ruin.revisions])});
+   return {members:[{kind:26,proof}],ruin};
+ }
  if(value.refuge!==undefined){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge),{reference:home}=refuge;
    if(value.members.length!==1||value.members[0]?.kind!==26)throw Error('Refuge recovery requires the surviving crop route');

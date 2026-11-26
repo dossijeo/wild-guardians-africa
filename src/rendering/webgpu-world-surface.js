@@ -726,6 +726,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     });
     const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
     const at=members[0].execution.executedThrough;
+    const ruin=source.ruin;
+    const ruinCurrent=()=>{
+      if(!ruin)return true;
+      const center=state.structures.find(row=>row.id===ruin.center);
+      return center?.kind==='center'&&center.status==='ruined'&&center.hp===0;
+    };
     const arrival=source.refuge?.reference;
     const destination=arrival&&nativeHomeRouteSource(arrival.sourceHome.reference).home;
     const refugeCurrent=()=>{
@@ -741,7 +747,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||members.some(member=>member.crop)&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
-      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&
+      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&
       replayMatches&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
@@ -776,6 +782,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state);
       if(!current())throw Error('Recovered route changed during frame admission');
       preparedNativeWorldBoundary=admitted;
+      if(ruin)retainedCenterRuin={worldBoundary:admitted,retreat:ruin.prepared.retreat};
       nativeRouteResourceRevision++;nativeRouteRejected=false;
       firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};
     }finally{nativeRoutePreparations--;onPresentationReady();}

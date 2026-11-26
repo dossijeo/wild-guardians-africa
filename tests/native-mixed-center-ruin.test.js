@@ -12,6 +12,7 @@ import {nativeShieldWorldKind} from '../src/world/native-shield-world.js';
 import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
+import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery.js';
 
 const gateId='structure-1000000';
 const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
@@ -204,10 +205,52 @@ function assertRetreatRetiresAfterRuin(publication,proof,structures){
  }
 }
 
+async function recoverRetreatAfterRuin(world,proof,at){
+ world.gpu.device.destroy();world.retireResourceEndpoint();
+ const hold=await world.authority.quiesceNativeIntentProduction();
+ const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
+ assert(retired.terminal&&retired.callbacksSettled);
+ const route=await world.authority.terminalWorkerRoute(),ref=proof.prepared.retreat.reference;
+ assert.deepEqual(route,{version:2,ruin:true,members:[{kind:26,actorId:ref.actorId}]});
+ const [authorityPort,drawPort]=pair();
+ const draw=await fixture({capabilities:{nativeAnimalCropVersion:1}},
+  {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+ try{
+  const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
+  assert.deepEqual(q.ruin,proof);
+  assert.deepEqual(q.worldBoundary,proof.acquired);
+  const [{execution,resources}]=q.members;
+  assert.equal(execution.executedThrough,at);
+  assert.deepEqual(execution.binding.reference,ref);
+  assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
+  const evidence={version:2,members:[{kind:26,proof:execution.binding}],ruin:proof};
+  assert.deepEqual(copyNativeRecoveryGroup(evidence,q.worldBoundary).ruin,proof);
+  const foreign=structuredClone(evidence);
+  foreign.ruin.revisions[1]++;
+  assert.throws(()=>copyNativeRecoveryGroup(foreign,q.worldBoundary),/differs from the acquired center ruin/);
+  assert.throws(()=>copyNativeRecoveryGroup(evidence,ref.worldBoundary),/differs from the acquired center ruin/);
+  const epoch=ref.worldBoundary.effectiveTime;
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,
+   resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  const submit=draw.frame(0,{nativeWorldBoundary:q.worldBoundary,
+   clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(e=>e);
+  await flush();await draw.host.idle();draw.host.present();
+  const rendered=await submit;
+  assert(!(rendered instanceof Error),rendered.message);
+  const witness=await world.authority.checkHeldDraw(30,hold,route);
+  assert.equal(witness.members[0].relativeTime,floorFloat32(at-epoch));
+  await world.attachRecoveredResources(draw);
+  world.authority.resumeNativeIntentProduction(hold);
+  return draw;
+ }catch(error){draw.client.dispose();await draw.host.dispose();throw error;}
+}
+
 for(const scenario of [
  {gated:false,name:'without a gate'},
  {gated:true,name:'after crossing the gate'},
  {gated:true,pendingFarm:true,name:'when RaidSpawned cancels Farm before the gate'},
+ {gated:true,recover:true,name:'through terminal Draw loss during Retreat'},
 ])test('center ruin preserves the certified refuge '+scenario.name,{timeout:90000},async()=>{
  const {gated,pendingFarm}=scenario;
  const initial=mixedState(gated),workerId=initial.workers[0].id,destroyedId=initial.structures[0].id;
@@ -217,7 +260,7 @@ for(const scenario of [
   onReady(record){if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}}});
  const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
  const events=[];
- let confirmed=initial,ruin,workerAtCut,gateAtCut,snap,ruinPublication;
+ let confirmed=initial,ruin,workerAtCut,gateAtCut,snap,ruinPublication,replacement;
  try{
   world.command({kind:'setNavigationView',view});
   await untilProduction(world,()=>pendingFarm?farmReady!==null:world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
@@ -253,6 +296,12 @@ for(const scenario of [
    }
    assert.deepEqual(world.faults,[]);
    await world.present();
+   if(scenario.recover&&ruin&&!replacement){
+    const proof=ruin.commit.nativeCenterRuin,old=world.host.inspect().nativeRouteFrame;
+    assert.equal(old.worldBoundary.ticket,proof.acquired.ticket);
+    assert(old.bindings.some(row=>row.nativeAnimalCrop?.purpose==='retreat'));
+    replacement=await recoverRetreatAfterRuin(world,proof,confirmed.elapsed);
+   }
   }
   const absence=world.records.find(row=>row.kind==='home-arrival'&&row.committed);
   assert(absence,'The original Farm worker must complete Home19 first');
@@ -289,5 +338,5 @@ for(const scenario of [
    assert.equal(confirmed.result,'defeat');
    assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
   }
- }finally{releaseFarm();await world.close();}
+ }finally{releaseFarm();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
 });

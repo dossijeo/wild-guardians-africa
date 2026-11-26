@@ -952,6 +952,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const kind=animal.status==='attacking'?27:26;
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
       if(execution)return {kind,actorId:execution.actorId};
+      const ruined=kind===26&&planner.nativeCenterRuinRetreatRecovery();
+      if(ruined)return {version:2,ruin:true,members:[{kind,actorId:ruined.execution.actorId}]};
       const sheltered=kind===26&&qualifyFarmFlee&&planner.nativeRefugeCropRecovery();
       return sheltered?{version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]}:null;
     }
@@ -969,10 +971,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const execution=recoveryExecution(route);
       return execution?{executions:[execution]}:null;
     }
-    if(route.refuge){
-      const sheltered=planner.nativeRefugeCropRecovery(),[member]=route.members;
-      return sheltered&&route.members.length===1&&member.kind===26&&member.actorId===sheltered.execution.actorId?
-        {executions:[sheltered.execution],refuge:sheltered.refuge}:null;
+    if(route.refuge||route.ruin){
+      const source=route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(),[member]=route.members;
+      if(!source||route.members.length!==1||member.kind!==26||member.actorId!==source.execution.actorId)return null;
+      const {execution,...evidence}=source;
+      return {executions:[execution],...evidence};
     }
     const pair=planner.nativeRaidFlightRecoveryExecutions();
     return pair&&route.members.length===2&&pair.every((row,i)=>
@@ -1064,9 +1067,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       });
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
-      const refuge=group.refuge?{refuge:group.refuge}:{};
+      const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
-        route.members?{version:2,holdId,members:proofs,...refuge}:{holdId,...proofs[0]});
+        route.members?{version:2,holdId,members:proofs,...evidence}:{holdId,...proofs[0]});
       const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
          !sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
@@ -1077,7 +1080,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
       const common={holdId,publicationSequence:sequence,terrainManifest:manifest};
       return {...attachment,recoveredWorkerRoute:route.members?
-        {version:2,...common,worldBoundary:cut,members,...refuge}:{version:1,...common,...members[0]}};
+        {version:2,...common,worldBoundary:cut,members,...evidence}:{version:1,...common,...members[0]}};
     },
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');

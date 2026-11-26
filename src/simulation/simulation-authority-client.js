@@ -80,7 +80,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
           const grouped=q.version===2,cut=grouped?copyNativeWorldBoundary(q.worldBoundary):null;
-          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||q.members.length!==(q.refuge===undefined?2:1)))
+          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![1,2].includes(q.members.length)))
             throw Error('Invalid replacement world cut');
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
@@ -93,15 +93,16 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
               throw Error('Invalid replacement committed assignment');
             return {execution,resources};
           });
-          let refuge;
+          let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            ({refuge}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge},cut));
+            const {refuge,ruin}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin},cut);
+            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{})};
             const at=members[0].execution.executedThrough;
             if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');
           }
-          recoveredWorkerRoute=grouped?{...q,worldBoundary:cut,members,...(refuge?{refuge}:{})}:{...q,...members[0]};
+          recoveredWorkerRoute=grouped?{...q,worldBoundary:cut,members,...evidence}:{...q,...members[0]};
         }
         item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredWorkerRoute?{recoveredWorkerRoute}:{})});
       }catch(error){item.reject(error);fail(error);return true;}
