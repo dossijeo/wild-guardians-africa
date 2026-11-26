@@ -146,7 +146,15 @@ En NVIDIA Turing el arnés retuvo READY durante 300 ms. El primer envío del tic
 
 Con el ticket 26 ya adquirido, el arnés de NVIDIA bloqueó el hilo del Preparer durante 2.500,10 ms con el bucle síncrono de la prueba existente. En los 2.333,30 ms medidos dentro del bloqueo, Draw volvió a someter 71 veces el mismo paquete 34. La edad realmente escrita en su binding pasó de 0,10 a 2,40 s. El programa cruzó la transición de 3,8 a 1,5 m/s a los 1,45653 s. La autoridad siguió avanzando por su canal causal y el consumidor confirmó el drenaje. [Recibo de bloqueo](performance/native-attack-crops-preparer-block-20261126.json).
 
-En ese corte, la autoridad registró 150 pasos, 150 evaluaciones de pose y 150 actualizaciones de cuerpo. Hubo cero llamadas al planificador y cero validaciones de ruta o segmento. La única consulta explícita de un punto de la ruta fue al extremo cuando Game leyó la asignación, como confirmó la traza de llamadas del control CPU. Este ensayo acredita continuidad de marcha sin paquetes gráficos nuevos en una cohorte de desarrollo. El máximo entre dibujos fue 33,50 ms. Quedan el veto de revocación durante el bloqueo, el tráfico, Recovery y la cadencia a 60 Hz.
+En ese corte, la autoridad registró 150 pasos, 150 evaluaciones de pose y 150 actualizaciones de cuerpo. Hubo cero llamadas al planificador y cero validaciones de ruta o segmento. La única consulta explícita de un punto de la ruta fue al extremo cuando Game leyó la asignación, como confirmó la traza de llamadas del control CPU. Este ensayo acredita continuidad de marcha sin paquetes gráficos nuevos en una cohorte de desarrollo. El máximo entre dibujos fue 33,50 ms. El tráfico, Recovery y la cadencia a 60 Hz siguen pendientes.
+
+## Revocación directa durante el bloqueo del Preparer
+
+El mismo facóquero avanzó 1,90 m por el corredor adquirido antes del corte. El arnés fijó el tiempo en 375,50 s con la pausa permitida `tutorial-action`, lanzó Escudo en (84, 21) por el FIFO ordinario y retuvo su READY. Durante la retención seguían vigentes la generación 3 y el paquete anterior. El Preparer entregó el READY y entró en el bucle síncrono en el mismo callback.
+
+En un bloqueo de 2.500,30 ms, Draw aceptó la revocación de la ranura 0, generación 3, a los 58,10 ms. El último envío del corredor anterior ocurrió a los 29,20 ms. El ticket 3 de Escudo se liberó a los 58,60 ms y el paquete 56 se sometió a los 62,50 ms con la pose estacionaria y sin binding del corredor. Draw sometió ese paquete 74 veces durante el bloqueo, con 73 replays y cero envíos de la generación revocada después del corte. El Preparer recibió el commit al regresar del bucle. La traza de Chromium registra los límites del bloqueo y el recibo del Worker de dibujo registra la aceptación directa y los envíos.
+
+Al reanudar, el ticket 5 adquirió la generación 8 para el mismo cuerpo y cultivo, desde la posición y fase de la parada. Game registró una activación de Escudo y el checkpoint conservó su asociación con el polígono 10. La cuota de golpes y el ledger se conservaron. Draw confirmó el drenaje. El caso acredita el veto directo con Escudo para la cohorte de desarrollo. La revocación con muro del criterio B, la activación ordinaria y la cadencia a 60 Hz requieren evidencia propia. [Recibo físico](performance/native-attack-crops-revocation-block-20261126.json).
 
 ## Regresión
 
