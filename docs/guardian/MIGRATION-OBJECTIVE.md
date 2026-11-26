@@ -1,6 +1,6 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-Strike27 al centro ya recupera en CPU el mismo ID, clip y tiempo restante. La prueba conserva la pose durante READY, acredita un solo impacto y admite Retreat sobre el mismo cuerpo. Pasó con WASM standalone y pthread. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-de-un-golpe-al-centro-adquirido).
+NVIDIA recargó la aproximación y Strike27 al centro de Sabana. Cada pasada acreditó la pose guardada, un solo impacto, la retirada en el mismo cuerpo y una derrota antes de drenar. Los controles CPU incluyen READY retenido y WASM standalone y pthread. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-de-un-golpe-al-centro-adquirido).
 
 Una repetición de la campaña continua presentó Home19 y se detuvo antes de la primera incursión en la activación de Recovery, con un checkpoint pendiente. El recibo conserva el corte del diario y el bloqueo del despacho. [Recibo](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
 
