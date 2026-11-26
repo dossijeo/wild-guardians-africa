@@ -3536,15 +3536,32 @@ int nav_intent_register_attack(double actorId,double targetId,
 // The raid controller has already committed the retreat transition. Pin a
 // physical route to its confirmed exit without acquiring an attack lease.
 // A missing or unresolved route leaves JS's existing exit recovery available.
-static int planAnimalRetreat(const FinishedAnimalStrike* source,double actorId,double startX,double startZ,
+static int validateNativeRetreatPath(const NativeAnimalRouteRequest& request,const float* points,int count){
+  if(count<=0||count>4096||points[count*2-2]!=float(request.targetX)||points[count*2-1]!=float(request.targetZ))return 0;
+  double x=request.x,z=request.z;
+  for(int i=0;i<count;i++){
+    const double nx=points[i*2],nz=points[i*2+1];
+    const int clear=spatial_animal_attack_segment_clear(x,z,nx,nz,request.radius);
+    if(clear!=1)return clear==-1?3:0;
+    x=nx;z=nz;
+  }
+  return 1;
+}
+static void declareNativeRetreat(IntentState& s,ActiveIntent& intent,RouteSlot& route,
+                                 const std::shared_ptr<NativeAnimalRouteRequest>& request){
+  intent.requiresResources=true;route.pendingResources=true;
+  intent.state=PlanningState::AwaitingResources;intent.animalRouteRequest=request;
+  request->sequence=emitIntentChange(s,intent);
+}
+static int planAnimalRetreat(const std::shared_ptr<NativeAnimalRouteRequest>& request,double actorId,double startX,double startZ,
                             double exitX,double exitZ){
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
      !coordinate(exitX)||!coordinate(exitZ))return -1;
   IntentState& s=state();const uint64_t actor=uint64_t(actorId);
-  if(!source&&s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==actor)return -2;
+  if(!request&&s.finishedAnimalStrike&&s.finishedAnimalStrike->actor==actor)return -2;
   const auto prior=s.activeIntents.find(actor);
   if(prior!=s.activeIntents.end()){
-    if(source||prior->second.requiresResources||!prior->second.animal||prior->second.state==PlanningState::ActionActive)
+    if(request||prior->second.requiresResources||!prior->second.animal||prior->second.state==PlanningState::ActionActive)
       return -2;
     releaseIntent(s,actor,PlanningState::Cancelled);
     s.activeIntents.erase(actor);
@@ -3554,15 +3571,9 @@ static int planAnimalRetreat(const FinishedAnimalStrike* source,double actorId,d
     float(exitX),float(exitZ));
   if(count<=0)return count<0?3:0;
   const float* points=spatial_world_route_ptr();
-  if(source){
-    if(points[2*count-2]!=float(exitX)||points[2*count-1]!=float(exitZ))return 0;
-    double x=startX,z=startZ;
-    for(int i=0;i<count;i++){
-      const double nx=points[2*i],nz=points[2*i+1];
-      const int clear=spatial_animal_attack_segment_clear(x,z,nx,nz,source->radius);
-      if(clear!=1)return clear==-1?3:0;
-      x=nx;z=nz;
-    }
+  if(request){
+    const int result=validateNativeRetreatPath(*request,points,count);
+    if(result!=1)return result;
   }
   uint32_t slot=uint32_t(s.routeSlots.size());
   for(uint32_t i=0;i<s.routeSlots.size();i++)
@@ -3580,21 +3591,9 @@ static int planAnimalRetreat(const FinishedAnimalStrike* source,double actorId,d
   intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
   intent.approachX=float(exitX);intent.approachZ=float(exitZ);
   intent.approachKnown=true;
-  if(source){
-    auto request=std::make_shared<NativeAnimalRouteRequest>();
-    request->actor=actor;request->body=source->body;request->at=s.effectiveTime;
-    request->x=startX;request->z=startZ;request->heading=source->yaw;
-    request->phase=source->phase;request->radius=source->radius;
-    request->targetX=exitX;request->targetZ=exitZ;
-    intent.requiresResources=true;route.pendingResources=true;
-    intent.state=PlanningState::AwaitingResources;intent.resourceRequestedAt=s.effectiveTime;
-    intent.animalRouteRequest=request;
-    auto& installed=s.activeIntents.insert_or_assign(actor,intent).first->second;
-    request->sequence=emitIntentChange(s,installed);installed.resourceRequestSequence=request->sequence;
-  }else{
-    s.activeIntents.insert_or_assign(actor,intent);
-    emitIntentChange(s,s.activeIntents.at(actor));
-  }
+  auto& installed=s.activeIntents.insert_or_assign(actor,intent).first->second;
+  if(request)declareNativeRetreat(s,installed,route,request);
+  else emitIntentChange(s,installed);
   return 1;
 }
 
@@ -3606,7 +3605,42 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_retreat(double actor,double at
   if(s.proposalOpen||s.barrierProposal.pending||s.worldMutationPreview||
      nav_animal_finished_strike_snapshot(actor)!=1||s.finishedAnimalStrike->attack!=attack)return -2;
   const auto& source=*s.finishedAnimalStrike;
-  return planAnimalRetreat(&source,actor,source.x,source.z,exitX,exitZ);
+  const auto request=std::make_shared<NativeAnimalRouteRequest>();
+  request->actor=source.actor;request->body=source.body;request->at=s.effectiveTime;
+  request->x=source.x;request->z=source.z;request->heading=source.yaw;
+  request->phase=source.phase;request->radius=source.radius;
+  request->targetX=exitX;request->targetZ=exitZ;
+  return planAnimalRetreat(request,actor,source.x,source.z,exitX,exitZ);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_restore_retreat_request(double actor,double session,double bodyId,
+                                                           double exitX,double exitZ,double phase,double yaw){
+  auto& s=state();SpatialBodyView body;
+  if(!integer(actor)||session!=double(s.session)||!integer(bodyId)||!coordinate(exitX)||!coordinate(exitZ)||
+     !std::isfinite(phase)||phase<0||!std::isfinite(yaw))return -1;
+  if(s.proposalOpen||s.barrierProposal.pending||s.worldMutationPreview||s.executionEnabled||
+     s.finishedAnimalStrike||!s.reservedBodies.empty()||!s.suspendedBodies.empty()||
+     spatial_body_count()!=1||!spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||
+     !(body.r>0&&body.r<=2))return -2;
+  const auto request=std::make_shared<NativeAnimalRouteRequest>();
+  request->actor=uint64_t(actor);request->body=uint64_t(bodyId);request->at=s.effectiveTime;
+  request->x=body.x;request->z=body.z;request->heading=yaw;request->phase=phase;request->radius=body.r;
+  request->targetX=exitX;request->targetZ=exitZ;
+  // A restored remaining path has passed the ordinary route importer. It
+  // still needs this body's continuous sweep before it may request resources.
+  if(s.activeIntents.empty())return planAnimalRetreat(request,actor,body.x,body.z,exitX,exitZ);
+  const auto found=s.activeIntents.find(request->actor);
+  if(s.activeIntents.size()!=1||found==s.activeIntents.end())return -2;
+  auto& intent=found->second;
+  if(!intent.animal||!intent.retreat||intent.lease||intent.target||intent.requiresResources||
+     intent.state!=PlanningState::RouteActive||intent.slot>=s.routeSlots.size()||!intent.approachKnown||
+     intent.approachX!=float(exitX)||intent.approachZ!=float(exitZ)||intent.profile!=lazy_selected_context())return -2;
+  auto& route=s.routeSlots[intent.slot];
+  if(!route.active||route.actor!=request->actor||route.generation!=intent.generation||route.originX!=body.x||route.originZ!=body.z||
+     route.pendingResources||route.suspended||route.reserved)return -2;
+  const int result=validateNativeRetreatPath(*request,route.points.data(),int(route.points.size()/2));
+  if(result!=1)return result;
+  declareNativeRetreat(s,intent,route,request);
+  return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_finish_retreat(double actor,double assignment){
   if(nav_animal_crop_state(actor)!=2)return 0;

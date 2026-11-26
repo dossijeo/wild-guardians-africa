@@ -46,7 +46,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropCohortCurrent,nativeCropRouteSubject} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -185,14 +185,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    if(nativeBodies||restoringPhysics||physicsInitializing||physics?.actorIds.length||!session.core.wasm.nav_animal_crop_state||
       game.biome==='desierto'&&game.workers.length)return;
    const animal=game.raid?.animals[0];
-   if(!animal||!nativeCropRouteSubject(game,animal)||nativeGateOwners.length||!game.workers.every(w=>planner.nativeWorkerHomeInactive(w.id))||
+   const retreat=nativeRetreatSubject(game,animal);
+   if(!animal||!retreat&&!nativeCropRouteSubject(game,animal)||nativeGateOwners.length||!game.workers.every(w=>planner.nativeWorkerHomeInactive(w.id))||
       session.core.wasm.spatial_body_count()!==0)return;
    // This endpoint explicitly asks for native draw control. Bootstrap only an
    // unchanged resting animal before the first advance of this saved route.
    const bodies=createSpatialDynamicBodies(session.core.wasm);
    try{
     const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
-    const requested=animal.status==='attacking'?planner.requestRestoredAnimalStrike(game,animal,body):
+    const requested=retreat?planner.requestRestoredAnimalRetreat(game,animal,body):
+      animal.status==='attacking'?planner.requestRestoredAnimalStrike(game,animal,body):
       planner.requestNativeAnimalCropRoute(game,animal,body);
     if(!requested){bodies.dispose();return;}
     nativeBodies=bodies;
@@ -256,7 +258,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
    const motion=planner.nativeAnimalCropState(animal.id);
-   if(motion?.mode!==2||motion.purpose||motion.arrived)return game;
+   if(motion?.mode!==2||motion.purpose==='center'||motion.arrived)return game;
    const route=planner.nativeAnimalRouteBinding(animal.id);
    const sample=route&&planner.sampleNativeRoute(route.routeHandle,game.elapsed);
    const points=route&&planner.routePoints(route.routeHandle);

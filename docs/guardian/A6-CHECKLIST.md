@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La recarga de Retreat en Sabana readmite el tramo pendiente con el ticket 26 de la nueva sesión. NVIDIA confirmó la misma frontera de salida, una desaparición, un cierre de incursión y el drenaje. Es evidencia parcial de E con la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-plena-retirada).
+
 La recarga de un golpe AttackCrops en Sabana readmite el ticket 27 con el mismo ataque, clip y edad. NVIDIA confirmó el golpe único, el dibujo posterior sin la acción y el drenaje. Es evidencia parcial de E para un ataque contra cultivo en la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-pleno-golpe).
 
 La recarga de AttackCrops durante la marcha conserva el tramo pendiente de WASM. NVIDIA confirmó READY retenido, primer dibujo a edad cero y avance hacia el cultivo. La prueba de autoridad y Host confirma también un golpe al mismo cultivo. Esta parte de E queda acreditada para un facóquero en Sabana con la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-plena-aproximación).

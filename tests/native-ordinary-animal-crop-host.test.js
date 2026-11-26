@@ -134,6 +134,89 @@ test('a saved crop strike reacquires its original rig and hits once after its re
   assert.deepEqual(restored.faults,[]);
  }finally{try{await restored?.close();rig?.close();}finally{await source.close();}}
 });
+test('a saved native Retreat reacquires its remaining corridor and ends the raid once',async()=>{
+ const {s,manifest,chunkKeys}=fixture();
+ let sourceProof;
+ const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,onCommit:(_r,data)=>{
+  if(data.nativeAnimalCropRouteBinding?.reference.purpose==='retreat')sourceProof=data.nativeAnimalCropRouteBinding;
+ }});
+ let restored,rig,releaseReady,proof;
+ const step=f=>f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+ try{
+  await untilProduction(source,()=>source.records[0]?.committed);
+  let exit;
+  for(let i=0;i<1800&&!exit;i++){
+   step(source);await source.present();
+   exit=source.records.find(r=>r.resources.reference.purpose==='retreat'&&r.committed);
+  }
+  assert.ok(exit);
+  for(let i=0;i<13;i++){step(source);await source.present();}
+  const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const stored=prepareWorkerCheckpoint(checkpoint,{slotId:s.slotId,policy:{nativeAuthority:true},savedAt:1795663080000});
+  const animal=stored.state.raid.animals[0],options=savedNativeAuthorityOptions(serialize(stored.state));
+  assert.equal(animal.status,'retreating');
+  assert.ok(animal.path?.length,'checkpoint must contain the native corridor suffix');
+  assert.equal(source.snapshot().raid.animals[0].path,null);
+  rig=await originalRig(structuredClone(stored.state),manifest);
+  restored=await nativeProductionAuthority(stored.state,{qualifyAnimalCrop:true,nativeBootstrap:options.nativeBootstrap,chunkKeys:options.chunkKeys,
+   getTerrainManifest:()=>manifest,onPrepare:r=>rig.prepare(r.resources),
+   onReady:()=>new Promise(resolve=>{releaseReady=resolve;}),
+   onCommit:(_r,data)=>{proof=data.nativeAnimalCropRouteBinding;rig.commit(proof,data);}});
+  await untilProduction(restored,()=>releaseReady);
+  const route=restored.records[0].resources,ref=route.reference;
+  assert.equal(ref.purpose,'retreat');
+  assert.equal(ref.targetId,null);
+  assert.equal(ref.centerId,null);
+  assert.notEqual(ref.worldBoundary.authorityEpoch,exit.resources.worldBoundary.authorityEpoch);
+  assert.deepEqual(Array.from(route.rows.slice(1,5)),[animal.x,animal.z,0,animal.motionPhase]);
+  assert.equal(ref.yaw,animal.heading);
+  assert.equal(Math.fround(route.rows[5]),Math.fround(animal.heading));
+  assert.deepEqual(Array.from(route.rows.slice(17,19)),[animal.path[0].x,animal.path[0].z]);
+  assert.deepEqual([ref.targetX,ref.targetZ],[animal.exit.x,animal.exit.z]);
+  assert.ok(Math.abs(route.endTime-sourceProof.reference.endTime)<1e-9);
+  const held=JSON.parse(step(restored).snapshot);
+  assert.ok(held.elapsed>checkpoint.elapsed);
+  assert.deepEqual(held.raid.animals[0],animal);
+  assert.ok(!restored.records[0].committed);
+  releaseReady();await untilProduction(restored,()=>proof);
+  await untilProduction(restored,()=>restored.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===proof.reference.worldBoundary.ticket);
+  const first=captureNativeRoutePickFrame(restored.host.inspect()).getAnimalCropAge(proof.preparedReference);
+  assert.equal(first,0);
+  rig.presented(first);
+  let state=held;
+  const ended=[],departures=[];
+  for(let i=0;i<650&&state.raid;i++){
+   const result=step(restored);
+   ended.push(...result.events.filter(e=>e.type==='RaidEnded'));
+   departures.push(...result.presentationJournal.filter(e=>e.kind==='animalGone'));
+   state=JSON.parse(result.snapshot);rig.update(structuredClone(state));await restored.present();
+  }
+  assert.equal(state.raid,null);
+  assert.equal(ended.length,1);
+  assert.equal(departures.length,1);
+  assert.equal(restored.records.length,1);
+  assert.deepEqual(restored.faults,[]);
+  for(const kind of ['legacy','wrong-end','wrong-budget']){
+   const copy=structuredClone(stored.state),loaded=copy.raid.animals[0];
+   if(kind==='legacy')loaded.path=null;
+   if(kind==='wrong-end')loaded.path.at(-1).x+=.05;
+   if(kind==='wrong-budget')loaded.hitsRemaining=1;
+   const legacy=await nativeProductionAuthority(copy,{qualifyAnimalCrop:true,nativeBootstrap:options.nativeBootstrap,chunkKeys:options.chunkKeys});
+   try{
+    if(kind==='legacy'){
+     await untilProduction(legacy,()=>legacy.records[0]?.committed);
+     const next=legacy.records[0].resources;
+     assert.equal(next.reference.purpose,'retreat');
+     assert.deepEqual(Array.from(next.rows),Array.from(route.rows));
+    }else{
+     await legacy.present();
+     assert.equal(legacy.authority.nativeIntentProductionStatus().phase,'inactive');
+     assert.equal(legacy.records.length,0);
+    }
+   }finally{await legacy.close();}
+  }
+ }finally{try{await restored?.close();rig?.close();}finally{await source.close();}}
+});
 test('prepared warthog retains its original rig across the issued crop route and strike',async()=>{
 const {s,manifest,chunkKeys}=fixture();
 const retired=[];

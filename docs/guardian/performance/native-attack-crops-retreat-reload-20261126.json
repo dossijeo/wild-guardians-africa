@@ -1,0 +1,51 @@
+{
+  "baseline": "1241bd242f33dd0c1b6aca01c660e3ab398b6613",
+  "scope": "DEV, one saved native Retreat in Sabana, civilians at home",
+  "inputSha256": "fdf60e3589c75341430de8cffc23aee7ccf4374ad9103b585695d785ad164936",
+  "standaloneSha256": "9c30e6cc530010082f7d44c7ef3dc6e4951e735fabc7d69d00784a7b9dca7fd7",
+  "pthreadSha256": "5e333a9c501cda33514bfb114c5364e0c2e86788314dd47a1ce9a8d5ef87c3b1",
+  "pthreadModuleSha256": "0b946b9c8606878e785f9dc624c10b2a8ecfb0e38d9f10995c13531bd8e08f1c",
+  "checkpoint": {
+    "actor": "animal-396",
+    "elapsed": 401.99999999998255,
+    "position": [90.36347343667882, 11.24091342980676],
+    "heading": 0.23293051558854683,
+    "phase": 22.054275677514063,
+    "firstRemainingWaypoint": [96, 35],
+    "exit": [96.83492619725185, 39.091138178228455],
+    "uninterruptedProgramEnd": 409.5247352977143,
+    "restoredProgramEnd": 409.5247352977143
+  },
+  "cpu": {
+    "regression": {"passed": 314, "failed": 0, "skipped": 0},
+    "webGpuWorkerBuildSeconds": 47.52,
+    "restoredSavedSuffix": true,
+    "legacySaveWithoutPathProducesSameKnots": true,
+    "nearbyButDifferentEndRejected": true,
+    "positiveHitsRemainingRejected": true,
+    "originalRigGeometries": 4,
+    "newEpoch": true
+  },
+  "physical": {
+    "browser": "Edge 158.0.4370.33",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "requestToReadyMs": 3819.900146484375,
+    "intentionalReadyHoldMs": 300,
+    "readyToFirstDrawMs": 396.7998046875,
+    "firstDraw": {"sequence": 42, "ticket": 2, "type": 26, "relativeAge": 0, "replay": false},
+    "laterRelativeAge": 0.19999998807907104,
+    "animalGoneCount": 1,
+    "animalGoneTime": 409.5399999999757,
+    "raidEndedCount": 1,
+    "raidEndedTime": 409.5399999999757,
+    "firstObservedDrawWithoutRetreat": {"sequence": 117, "elapsed": 409.5899999999757, "bindings": 0},
+    "ledgerUnchanged": true,
+    "drained": true,
+    "receiptSha256": "29d47b06dcd8d6c88b824c25e3fb95c9d4884fafcc0c0e3c87b1f73be76ab26e",
+    "trace": {
+      "sha256": "83e9110242b4652febfc9dc1c457ed5eb511322941f9a0589374c7c72a6ff96f",
+      "bytes": 21800485,
+      "dataLossOccurred": false
+    }
+  }
+}
