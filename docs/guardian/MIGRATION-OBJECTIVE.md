@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La calificación DEV del encuentro de Desierto conserva Fall y Retreat en una recarga y vuelve a admitir Retreat con una época nueva. NVIDIA confirma el dibujo y el drenaje de ambos consumidores. CPU también restaura GetUp después de terminar la incursión. El primer avance tras GetUp sigue rechazado tanto en vivo como tras recargar. [Evidencia y alcance](native-desert-mixed-flight-center-20261125.md#restauración-desde-disco-durante-fall-y-getup).
+
 La caducidad antes del primer golpe protegido conserva cuerpo y reserva en la calificación AttackCrops de Sabana. CPU cubre el primer corredor pendiente. NVIDIA confirma el cambio durante la marcha y con el golpe aún pendiente en el borde. También se verificó la cancelación del sucesor pendiente entre golpes, con un único daño posterior al cultivo, Retreat y drenaje. El menú ordinario y C4 siguen abiertos. [Evidencia antes del primer golpe](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe) · [Evidencia entre golpes](webgpu-shield.md#caducidad-entre-dos-golpes). El corte coincidente conserva el fallo y la pose terminal. [Evidencia del mismo subpaso](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
 
 Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).
