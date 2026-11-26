@@ -802,6 +802,34 @@ test('a later prepared packet cannot drop a native-route tag to escape the causa
  }finally{f.host.dispose();}
 });
 
+test('an ordinary frame already inside the executed horizon waits for its native clock time',async()=>{
+ const native=createNativeRouteExecutionFixture(),[sourcePort,drawPort]=pair();let now=0,source;
+ const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,session:'causal-lookahead'}});
+ const clock=elapsed=>({version:1,epoch:0,elapsed,safeUntil:elapsed,anchorAbsoluteMs:now,paused:true,segments:[]});
+ try{
+  native.worker(1,native.point(-6,0),native.point(6,0));
+  assert.equal(native.bridge.beginNativeRouteExecution().status,'started');native.bridge.commitNativeCausalClock();
+  source=createNativeIntentControlPublication({port:sourcePort,session:'causal-lookahead',observe:native.bridge.observeNativeIntentControl,absoluteNow:()=>now});
+  await source.ready;
+  const first=f.frame(0,{clock:clock(10)});await flush();await f.host.idle();f.host.present();await first;
+
+  assert.equal(native.advance(11.6).status,'advanced');native.bridge.commitNativeCausalClock();await flush();
+  assert.equal(native.bridge.nativeCausalClock().committedThrough,11.6);
+  now=50;
+  const next=f.frame(1,{clock:clock(10.8)});await flush();await f.host.idle();
+  for(const at of [50,400,799]){
+   now=at;f.host.present();
+   const status=f.host.inspect();
+   assert.equal(status.activeSequence,1);assert.equal(status.pendingSequence,2);assert.equal(status.frameTime.elapsed,10);
+   assert.equal(f.client.inspect().pendingFrame,2);
+  }
+  now=800;f.host.present();
+  assert.equal((await next).sequence,2);
+  assert.equal(f.host.inspect().frameTime.elapsed,10.8);
+  assert.deepEqual(f.errors,[]);
+ }finally{source?.dispose();f.client.dispose();f.host.dispose();native.session.dispose();}
+});
+
 test('native clock authority cannot widen the prepared resource ceiling, even when a later pause anchors beyond it',async()=>{
  const [sourcePort,drawPort]=pair();let now=0;
  const f=await fixture({}, {absoluteNow:()=>now,intentControl:{port:drawPort,authorityEpoch:'native-owner'}});

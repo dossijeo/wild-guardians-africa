@@ -3,7 +3,8 @@
   "base": "22ec41bc7353af5089d8c735d33e8723db2f7e21",
   "artifacts": {
     "nvidia-continuous-diagnostic.json": "1fa7625da2e91083ed6c4222e65f3863ca58aab8757f14e0d09a968b8c80340f",
-    "nvidia-continuous-publications.json": "878bbb77538b94fdcf285cfa4ed7803a9608664cc8f107161c62dfeb81009f3b"
+    "nvidia-continuous-publications.json": "878bbb77538b94fdcf285cfa4ed7803a9608664cc8f107161c62dfeb81009f3b",
+    "nvidia-continuous-draw-gate.json": "e2c7abe78faa3dae247ab413739418d2abde49fde250dbc3489740f7fa328306"
   },
   "request": {
     "kind": "prepareNativeIdleStrollResources",
@@ -21,6 +22,27 @@
     [9001, 1918, 1950],
     [10000.3, 1926, 1958]
   ],
+  "drawGate": {
+    "presentedPackets": 13,
+    "deferredByDirectClock": 12,
+    "rejectedOpportunitiesPerDeferredPacket": 21,
+    "millisecondRangeAfterCausalDeadline": [8.8, 9],
+    "medianMilliseconds": {
+      "timeline": 9.7,
+      "render": 15.4,
+      "resourceWait": 0,
+      "admittedToFirstDraw": 717.9,
+      "draw": 3.2
+    },
+    "firstDeferredPacket": {
+      "frame": 269,
+      "publication": 1837,
+      "packetElapsed": 105.47999999999615,
+      "directElapsedAtFirstOpportunity": 104.78890014648438,
+      "directExecutedHorizon": 116.57999999999394,
+      "packetPreparedHistoricalInterval": null
+    }
+  },
   "result": {
     "elapsed": 123.07999999999265,
     "firstError": "Native resource preparation timed out",
