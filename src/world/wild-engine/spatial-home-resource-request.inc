@@ -122,8 +122,8 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_idle_stroll_flight_request(double actor,doub
 EMSCRIPTEN_KEEPALIVE int nav_intent_farm_arrival_home_request(double actor,double session,double assignmentSequence,double generation,double village,double homeX,double homeZ){return requestHeldWorkerHome(actor,session,assignmentSequence,generation,village,homeX,homeZ,true);}
 // A genuinely completed Task can transfer its final native pose to the same
 // Home request used by completed Farm/Idle. It is never a fabricated stop25.
-EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,double session,double assignment,
-    double generation,double village,double homeX,double homeZ){
+static int requestCompletedTaskHome(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
   auto& s=state();
   if(!integer(actor)||session!=double(s.session)||!integer(assignment)||!integer(generation)||
      generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
@@ -131,7 +131,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,dou
   auto& intent=found->second;
   if(intent.homeRequest){
     const auto& r=*intent.homeRequest;
-    if(r.completedTaskSourceSequence!=uint64_t(assignment)||r.completedTaskSourceGeneration!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
+    if(r.completedTaskSourceSequence!=uint64_t(assignment)||r.completedTaskSourceGeneration!=uint32_t(generation)||r.raidSpawnSequence!=raidSpawnSequence||!nativeHomeRequestBodyCurrent(s,intent))return -2;
     return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
   }
   // The existing producer cancels an obsolete prepared25. Do not steal its
@@ -158,6 +158,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,dou
   request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];
   request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];
   request->completedTaskSourceSequence=uint64_t(assignment);request->completedTaskSourceGeneration=uint32_t(generation);
+  request->raidSpawnSequence=raidSpawnSequence;
   task->second.assigned=0;
   releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
   worker->second.eligible=false;
@@ -166,10 +167,14 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,dou
   intent.homeRequest=std::move(request);intent.homeRequest->sequence=s.intentSequence+1;
   emitIntentChange(s,intent);s.entityRevision++;return 1;
 }
+EMSCRIPTEN_KEEPALIVE int nav_intent_completed_task_home_request(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ){
+  return requestCompletedTaskHome(actor,session,assignment,generation,village,homeX,homeZ,0);
+}
 
 // Transfer the live Task claim after the prepared stop has retained its body.
-EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,double session,double assignment,
-    double generation,double village,double homeX,double homeZ){
+static int requestStoppedTaskHome(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
   auto& s=state();
   if(!integer(actor)||session!=double(s.session)||!integer(assignment)||!integer(generation)||
      generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
@@ -179,7 +184,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,doubl
   if(intent.homeRequest){
     const auto& request=*intent.homeRequest;
     if(request.stoppedTaskSourceSequence!=uint64_t(assignment)||
-       request.stoppedTaskSourceGeneration!=uint32_t(generation)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
+       request.stoppedTaskSourceGeneration!=uint32_t(generation)||request.raidSpawnSequence!=raidSpawnSequence||!nativeHomeRequestBodyCurrent(s,intent))return -2;
     return request.village==uint64_t(village)&&request.homeX==homeX&&request.homeZ==homeZ?1:-3;
   }
   if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
@@ -198,6 +203,7 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,doubl
   request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];
   request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];
   request->stoppedTaskSourceSequence=uint64_t(assignment);request->stoppedTaskSourceGeneration=uint32_t(generation);
+  request->raidSpawnSequence=raidSpawnSequence;
 
   const auto taskOwners=s.byTask.find(intent.task);
   if(taskOwners!=s.byTask.end()){taskOwners->second.erase(intent.actor);if(taskOwners->second.empty())s.byTask.erase(taskOwners);}
@@ -212,6 +218,16 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,doubl
   intent.homeRequest->sequence=s.intentSequence+1;
   emitIntentChange(s,intent);s.entityRevision++;
   return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_stopped_task_home_request(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ){
+  return requestStoppedTaskHome(actor,session,assignment,generation,village,homeX,homeZ,0);
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_task_flight_request(double actor,double session,double assignment,
+    double generation,double village,double homeX,double homeZ,double event,int stopped){
+  if(!integer(event)||spatial_world_biome()!=1||(stopped!=0&&stopped!=1))return -1;
+  const auto request=stopped?requestStoppedTaskHome:requestCompletedTaskHome;
+  return request(actor,session,assignment,generation,village,homeX,homeZ,uint64_t(event));
 }
 // A pending13 owns an intent and possibly its first body, not a Farm corridor.
 // Retarget that exact source as for a restored WALK, without inventing Idle.

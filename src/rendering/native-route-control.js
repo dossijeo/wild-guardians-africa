@@ -352,13 +352,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const birth=event.raidFlightBirth;
     const centerBirth=successor?.purpose==='center'&&!event.pendingAnimalCrop.previousStrike;
     if(birth!==undefined){
-      const peer=actors.get(birth?.workerActor),farm=peer?.current?.issuedFarmArrival,stroll=peer?.current?.issuedStroll,home=peer?.pendingHomeRequest;
-      const prior=birth?.strollTicket!=null?stroll:farm;
-      const ticket=birth?.strollTicket??birth?.farmTicket;
+      const peer=actors.get(birth?.workerActor),record=peer?.current,home=peer?.pendingHomeRequest;
+      const prior=birth?.taskTicket!=null?record?.issuedStart:birth?.strollTicket!=null?record?.issuedStroll:record?.issuedFarmArrival;
+      const ticket=birth?.taskTicket??birth?.strollTicket??birth?.farmTicket;
       const peerCurrent=ticket!=null?
         !!prior&&prior.assignmentSequence===birth.sourceSequence&&prior.reference.worldBoundary.ticket===ticket&&prior.reference.bodyId===birth.workerBody:
         home?.version===2&&home.requestSequence===birth?.sourceSequence&&home.raidSpawnSequence===birth.raidSpawnSequence&&home.bodyId===birth.workerBody;
-      if(!birth||birth.strollTicket!=null&&(birth.farmTicket!=null||!centerBirth)||!id(birth.raidSpawnSequence)||!id(birth.sourceSequence)||!id(birth.workerBody)||!peer||peer.closed||
+      if(!birth||birth.taskTicket!=null&&(birth.strollTicket!=null||birth.farmTicket!=null||!centerBirth)||
+         birth.strollTicket!=null&&(birth.farmTicket!=null||!centerBirth)||!id(birth.raidSpawnSequence)||!id(birth.sourceSequence)||!id(birth.workerBody)||!peer||peer.closed||
          peer.latestSequence!==birth.sourceSequence||!peerCurrent||actors.size!==1||actors.has(event.actorId)||!successor||
          successor.bodyId===birth.workerBody||successor.purpose&&successor.purpose!=='center'||event.pendingAnimalCrop.previousStrike||successor.actorId!==event.actorId||
          successor.nativeSession!==clock?.nativeSession||successor.authorityEpoch!==authorityEpoch||successor.requestSequence!==event.sequence||
@@ -494,6 +495,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         birth.sourceSequence===strollFlightSource.assignmentSequence&&birth.strollTicket===strollFlightSource.reference.worldBoundary.ticket&&
         birth.workerBody===homeRequest.bodyId;
     });
+    const taskFlightSource=homeRequest?.version===2?(completedTaskHome?current.issuedStart:heldTaskHome?actor.revoked.issuedStart:null):null;
+    const taskFlight=taskFlightSource&&[...actors.values()].some(peer=>{
+      const birth=peer.raidFlightBirth;
+      return birth?.workerActor===event.actorId&&birth.raidSpawnSequence===homeRequest.raidSpawnSequence&&
+        birth.sourceSequence===taskFlightSource.assignmentSequence&&birth.taskTicket===taskFlightSource.reference.worldBoundary.ticket&&
+        birth.workerBody===homeRequest.bodyId;
+    });
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingIdleStrollRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');
     const pendingInitialIdle=actor?.pendingInitialIdleRequest,initialBody=actor?.initialIdleBodySource;
@@ -504,8 +512,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       (pendingInitialIdle&&actor.state===6&&actor.latestSequence===pendingInitialIdle.requestSequence&&event.initialIdleFlightSequence===pendingInitialIdle.requestSequence||
        initialBody&&actor.state===7&&stationarySequenceCurrent(actor,20,initialBody.bodySequence)&&event.initialIdleFlightSequence===initialBody.bodySequence);
     if(event.initialIdleFlightSequence!==undefined&&!initialIdleFlight)throw Error('Native Home flight lacks its initial Idle source');
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&!initialIdleFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
-      throw Error('Native raid flight requires its Farm or Idle source');
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&!initialIdleFlight&&!taskFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+      throw Error('Native raid flight requires its Farm, Idle or Task source');
     const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===20||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(actor?.pendingInitialIdleRequest&&event.state===7&&(event.type!=='IntentChanged'||current||handle||revoked||event.taskId||event.targetId||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest))throw Error('Native initial Idle body acquisition conflicts with its pending source');
     const completedInitialBody=actor?.pendingInitialIdleRequest&&!current&&event.type==='IntentChanged'&&event.state===7&&!handle&&!revoked&&!event.taskId&&!event.targetId?{request:actor.pendingInitialIdleRequest,bodySequence:event.sequence,at:event.effectiveTime}:null;

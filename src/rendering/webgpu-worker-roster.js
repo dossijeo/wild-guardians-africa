@@ -617,7 +617,9 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   if(task){
    const entry=entries.get(`worker-${template.sourceRoute.actorId}`),source=entry?.nativeState;
    const route=source?.nativeStart??source?.nativeResume,owner=template.routes.find(row=>row.nativeRoute.actorId===template.sourceRoute.actorId);
-   if(!route||entry.entity.nativeRouteAdmission!=='native-task'||entry.entity.status!=='walking'||!entry.entity.taskId||route.bodyId!==owner.bodyId||!sameNativeReference(source.nativeRoute,template.sourceRoute))
+   const worker=entry?.entity,walking=worker?.nativeRouteAdmission==='native-task'&&worker.status==='walking'&&worker.taskId,
+     fleeing=worker?.nativeRouteAdmission==='pending-task-flight-stop'&&worker.status==='fleeing'&&!worker.taskId&&source?.nativeTaskStartBinding;
+   if(!route||!walking&&!fleeing||route.bodyId!==owner?.bodyId||!sameNativeReference(source.nativeRoute,template.sourceRoute))
     throw Error('Native Task stop lacks its original admitted source');
   }
   try{
@@ -634,12 +636,15 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     if(taskRoot){executionFields.add('running');executionFields.add('gateWaiting');}
     // RaidSpawned cancels the Game goal before the acquired route can stop.
     // The same actor and exact native pose must survive that handoff.
-    const flightSource=farm?farmSource:strollSource,flightMarker=farm?'pending-farm-flight-stop':'pending-idle-flight-stop',
-      flightSampleKey=farm?'nativeFarmFlightSample':'nativeIdleFlightSample';
+    const taskSource=taskRoot?previous.nativeTaskStartBinding?.reference:null;
+    const flightSource=farm?farmSource:taskRoot?taskSource:strollSource,
+      flightMarker=farm?'pending-farm-flight-stop':taskRoot?'pending-task-flight-stop':'pending-idle-flight-stop',
+      flightSampleKey=farm?'nativeFarmFlightSample':taskRoot?'nativeTaskFlightSample':'nativeIdleFlightSample';
     const flightStop=!!flightSource&&!!template&&sameNativeReference(previous.nativeRoute,template.sourceRoute)&&
       reference.bodyId===flightSource.bodyId&&entity.nativeRouteAdmission===flightMarker;
     const {[flightSampleKey]:initialSample,...initialPolicy}=flightStop?entity:{};
-    const spawn=flightStop&&state.raid?.daytime===true&&(farm?previous.farmTaskPolicy:previous.strollHomePolicy)===farmTaskPolicy(initialPolicy)?state.events?.findLast(e=>e.type==='RaidSpawned'&&
+    const spawn=flightStop&&state.raid?.daytime===true&&(taskRoot||
+      (farm?previous.farmTaskPolicy:previous.strollHomePolicy)===farmTaskPolicy(initialPolicy))?state.events?.findLast(e=>e.type==='RaidSpawned'&&
       (initialSample?e.id==='event-'+initialSample.eventId&&e.simulationTime===initialSample.spawnTime:e.simulationTime===entityTime)&&
       e.raidFacts?.id===state.raid?.id&&e.raidFacts.day===state.day&&e.raidFacts.daytime===true&&
       e.raidFacts.elapsed===e.simulationTime&&e.raidFacts.actors?.length===1&&e.raidFacts.actors[0].species==='warthog'):null;
@@ -651,7 +656,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      const source=stoppedTask??candidate?.nativeHeldIdleStroll??candidate?.nativeHeldFarmArrival,p=source?.pose;
      if(flightStop){
       const pending=value.nativeRouteAdmission===flightMarker,requested=value.nativeRouteAdmission==='pending-raid-flight-resources';
-      const held=(farm?candidate?.nativeHeldFarmArrival??validatingFarmSource:candidate?.nativeHeldIdleStroll??validatingStrollSource)?.pose;
+      const held=(farm?candidate?.nativeHeldFarmArrival??validatingFarmSource:taskRoot?stoppedTask:candidate?.nativeHeldIdleStroll??validatingStrollSource)?.pose;
       const workerSource=farm?flightSource.sourceRequest:flightSource;
       const animal=state.raid?.animals?.[0];
       if(!spawn||state.day!==spawn.raidFacts.day||state.raid?.id!==spawn.raidFacts.id||state.raid.daytime!==true||state.raid.animals.length!==1||
@@ -659,9 +664,10 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
          state.workers[0].id!==id||value.status!=='fleeing'||(!pending&&!requested)||!farmPathMetadataCurrent(value)||
          value.taskId||value.crateId||value.idleState!==null||value.destinationId!==null||value.path!==null||
          value.recovery||value.incapacitated||value.fallRemaining||value.recoveryExitRemaining||value.raidReturn||
-         value.profile!==workerSource.workerProfile||nativeEntityNumericId(value.centerId)!==workerSource.centerId)return null;
+         (taskRoot?value.profile!==entry.profile||value.taskApproach!==null:
+          value.profile!==workerSource.workerProfile||nativeEntityNumericId(value.centerId)!==workerSource.centerId))return null;
       // The confirmed request may arrive before the direct acquisition proof.
-      // It becomes usable only at the exact final stopped pose attested by 24.
+      // Its final pose must match the attested stop.
       if(requested&&(!held||value.running!==false||value.gateWaiting!==false))return null;
       const fields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
       const indices=[0,1,4,9,10,11,14];
@@ -675,7 +681,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       }else if(pending){
        if(sample!==undefined||at!==spawn.simulationTime||at!==reference.suspendedAt)return null;
       }else if(sample!==undefined)return null;
-      // Compare a row only at its own instant. GO24 always supplies its exact final pose.
+      // Compare a row only at its own instant.
       if((requested||at===reference.suspendedAt)&&fields.some((k,i)=>value[k==='yaw'?'heading':k]!==(requested?held[k]:pose[indices[i]])))return null;
       return JSON.stringify({...Object.fromEntries(Object.entries(value).filter(([key])=>key!==flightSampleKey&&!executionFields.has(key))),
        nativeRouteAdmission:flightMarker,running:false,gateWaiting:false});

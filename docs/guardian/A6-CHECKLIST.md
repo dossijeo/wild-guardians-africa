@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+RaidSpawned interrumpe una Task14 de Repair y conserva el corredor nativo hasta Stop25 o hasta la llegada. NVIDIA confirmó el READY obsoleto en ambos órdenes, el cruce con el mismo cuerpo y el regreso civil a Idle. [Recorridos y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-durante-task14-en-marcha).
+
 RaidSpawned transfiere el cuerpo estacionario a Home18 antes del primer GO20 o durante el primer READY de Idle21. NVIDIA confirmó ambas cancelaciones, incluida la entrega tardía, el cruce del portón y el regreso civil a Idle. [Recorridos y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-durante-la-admisión-inicial-de-idle20).
 
 Si `RaidSpawned` llega con el primer READY de Idle22 retenido, Home18 adquiere la pose restaurada del mismo cuerpo. NVIDIA confirmó la cancelación, la entrega tardía, el cruce del portón y el regreso civil. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-antes-del-primer-go-de-idle22).

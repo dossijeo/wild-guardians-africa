@@ -241,4 +241,16 @@ Home19 retiró el cuerpo 1. El centro recibió cuatro débitos de 20 HP en cada 
 
 Pasaron 1.062 pruebas de regresión, incluidas las cuatro pruebas nuevas que fallan en la preimagen. Las dos variantes WASM se reconstruyeron y pasaron cuatro comparaciones de compatibilidad. El módulo pthread arrancó con memoria compartida y expuso las dos funciones nuevas. La compilación de producción terminó en 55,07 s y sus tres artefactos nativos coinciden con los usados en las capturas.
 
-El siguiente bloqueo reproducido es Task14 en marcha. Una orden ordinaria de Repair obtuvo GO14 y el trabajador caminó hasta que `RaidSpawned` llegó a t=11,40. Game liberó entonces la tarea y el siguiente avance rechazó la cohorte. El mismo fallo se reprodujo dentro de un comando con dos subpasos. Queda pendiente la parada de esa marcha adquirida.
+## RaidSpawned durante Task14 en marcha
+
+En la preimagen, una orden ordinaria de Repair obtenía GO14 y Game liberaba la tarea en `RaidSpawned`. El siguiente avance fallaba, incluso dentro del mismo comando con dos subpasos. Ahora el espejo nativo aplica la baja de esa asignación cuando Stop25 o la llegada transfieren el cuerpo a Home18. Game sigue retirando la tarea al nacer la incursión. El facóquero queda en la pose de nacimiento hasta que Home adquiere su corredor. Draw exige el ticket de Task14, su generación, su cuerpo y el evento de incursión. El roster conserva el rig y verifica la pose de parada y el origen de Home.
+
+En NVIDIA Turing, Task14 adquirió el ticket 5 a t=10,15 y `event-29210` llegó a t=11,35. El cuerpo 1 siguió caminando durante los cuatro avances con READY25 retenido. La revalidación nativa rechazó el ticket 6 a t=11,55. Tras otro paso ordinario, Stop25 adquirió el ticket 8 a t=11,60 y el envío 54 presentó su pose. Home18 adquirió el ticket 10 con el mismo cuerpo y acreditó su propio cruce del portón 1000000.
+
+En la segunda captura, Task14 alcanzó su destino nativo a t=14,126. Al confirmar t=14,15, el productor canceló el READY de Stop25 antes de que el arnés lo entregara. Home18 tomó esa pose terminal con el ticket 8 y el envío 48 confirmó el cruce. En ambos recorridos Home19 retiró el cuerpo 1, el centro sufrió cuatro débitos de 20 HP y el trabajador volvió a Idle con el cuerpo 3. La muralla siguió en ruinas, el saldo se conservó y Draw drenó sin errores. [Recibo de las dos capturas](performance/native-mixed-raid-task14-20261126.json).
+
+La calificación corresponde al perfil de desarrollo de Desierto con una Task14 en el lado de trabajo, un trabajador y un facóquero. La aceptación de cadencia sigue abierta.
+
+Pasaron 320 pruebas de regresión y cuatro comparaciones de compatibilidad WASM. Los cuatro controles nuevos de autoridad y el control del rig fallaron en sus preimágenes. El módulo pthread arrancó con memoria compartida y rechazó una petición sin evento de incursión. La compilación de producción terminó en 58,06 s con los tres artefactos nativos de las capturas.
+
+El control con READY de Task14 retenido antes de GO14 reproduce otro bloqueo. La solicitud de Home del cuerpo estacionario se rechaza mientras la propuesta de la tarea ocupa el slot nativo. Ese relevo sigue pendiente.

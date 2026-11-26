@@ -841,6 +841,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       const held=motion?null:nativeIdleStrollHeldExecution(w.id);
       return (motion??held)?.assignmentSequence===f.strollSequence&&(motion?.reference.bodyId??held?.bodyId)===f.workerBody?w:null;
     }
+    if(w.nativeRouteAdmission==='pending-task-flight-stop'){
+      const motion=nativeTaskStartBinding(w.id),held=motion?null:nativeTaskCancellationSource(w.id);
+      return (motion?.assignmentSequence??(held?.phase===25?held.sourceSequence:null))===f.taskSequence&&
+        (motion?.reference.bodyId??held?.bodyId)===f.workerBody?w:null;
+    }
     const h=w.nativeRouteAdmission==='pending-raid-flight-resources'?nativeHomeRequestReference(w.id):
       w.nativeRouteAdmission==='native-home'?nativeHomeRouteBinding(w.id)?.reference.sourceRequest:null;
     return h?.raidSpawnSequence===f.event&&h.bodyId===f.workerBody?w:null;
@@ -849,13 +854,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(!qualifyFarmFlee||state!==owningState||!state.raid?.daytime||state.raid.animals[0]!==animal||state.workers[0]!==worker||
        animal.species!=='warthog'||!Number.isSafeInteger(event)||event<=0||!Number.isSafeInteger(body)||body<=0)return false;
     const farm=nativeFarmArrivalRouteBinding(worker.id),home=nativeHomeRequestReference(worker.id),
-      stroll=worker.nativeRouteAdmission==='pending-idle-flight-stop'?nativeIdleStrollBinding(worker.id):null;
-    const workerBody=farm?.reference.bodyId??stroll?.reference.bodyId??home?.bodyId;
-    const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:farm?.assignmentSequence??stroll?.assignmentSequence??home?.requestSequence,
-      farmTicket:farm?.reference.worldBoundary.ticket??null,...(stroll?{strollTicket:stroll.reference.worldBoundary.ticket}:{}),raidSpawnSequence:event};
+      stroll=worker.nativeRouteAdmission==='pending-idle-flight-stop'?nativeIdleStrollBinding(worker.id):null,
+      task=worker.nativeRouteAdmission==='pending-task-flight-stop'?nativeTaskStartBinding(worker.id):null;
+    const motion=farm??stroll??task,workerBody=motion?.reference.bodyId??home?.bodyId;
+    const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:motion?.assignmentSequence??home?.requestSequence,
+      farmTicket:farm?.reference.worldBoundary.ticket??null,...(stroll?{strollTicket:stroll.reference.worldBoundary.ticket}:{}),
+      ...(task?{taskTicket:task.reference.worldBoundary.ticket}:{}),raidSpawnSequence:event};
     const centerAttack=nativeCenterAttackCohort(state,worker);
     const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,
-      strollSequence:stroll?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
+      strollSequence:stroll?.assignmentSequence,taskSequence:task?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
     raidFlight=pair;
     let selected;
     try{
@@ -2776,14 +2783,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(status!==1)throw Error('Native Farm Home request rejected');
     const request=nativeHomeRequestReference(held.actorId);if(!(completed?nativeHomeRequestContinuesCompletedFarmArrival:nativeHomeRequestContinuesHeldFarmArrival)(request,held))throw Error('Native Farm Home lost its actual body');return request;
   };
-  const requestNativeTaskHomeFromCompletion=(actorId,taskId,targetId,source,home)=>{
+  const requestNativeTaskHomeFromCompletion=(actorId,taskId,targetId,source,home,raidSpawnSequence=0)=>{
     const actor=numericId(actorId),actual=nativeTaskExecution(actor);
     if(!actual||!actual.arrived||actual.running||actual.currentSpeed!==0||actual.executedThrough<actual.at||
        actual.taskId!==numericId(taskId)||actual.targetId!==numericId(targetId)||
        JSON.stringify({...actual,executedThrough:0})!==JSON.stringify({...source,executedThrough:0}))throw Error('Completed Task Home source is not current');
     if(typeof wasm.nav_intent_completed_task_home_request!=='function')throw Error('Rebuild native completed Task Home request');
     syncBoundaryTime();
-    const handle=actual.nativeRoute.routeHandle,result=wasm.nav_intent_completed_task_home_request(actor,handle.session,actual.nativeRoute.assignmentSequence,handle.generation,home.villageId,home.x,home.z);
+    const handle=actual.nativeRoute.routeHandle,args=[actor,handle.session,actual.nativeRoute.assignmentSequence,handle.generation,home.villageId,home.x,home.z];
+    const result=raidSpawnSequence?wasm.nav_intent_task_flight_request(...args,raidSpawnSequence,0):wasm.nav_intent_completed_task_home_request(...args);
     if(result===-4||result===0)return null;
     if(result!==1)throw Error('Completed Task Home request rejected');
     const request=nativeHomeRequestReference(actor);
@@ -2791,7 +2799,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     return request;
   };
 
-  const requestNativeTaskHomeFromStop=(actorId,taskId,targetId,stop,home)=>{
+  const requestNativeTaskHomeFromStop=(actorId,taskId,targetId,stop,home,raidSpawnSequence=0)=>{
     if(stop?.kind!==nativeTaskRouteStopCodec.attestationKind||stop.version!==1||stop.projectionVersion!==1||!stop.projection)
       throw Error('Native Task stop receipt is required for Home');
     syncBoundaryTime();
@@ -2803,7 +2811,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(nativeTask!==numericId(taskId)||nativeTarget!==numericId(targetId))throw Error('Native Task stop differs from the Game assignment');
     const held=nativeSuspendedGateRoute(actor),handle=held.resumeHandle;
     if(typeof wasm.nav_intent_stopped_task_home_request!=='function')throw Error('Rebuild native Task stop Home request');
-    const status=wasm.nav_intent_stopped_task_home_request(actor,handle.session,proof.reference.sourceRoute.assignmentSequence,handle.generation,home.villageId,home.x,home.z);
+    const args=[actor,handle.session,proof.reference.sourceRoute.assignmentSequence,handle.generation,home.villageId,home.x,home.z];
+    const status=raidSpawnSequence?wasm.nav_intent_task_flight_request(...args,raidSpawnSequence,1):wasm.nav_intent_stopped_task_home_request(...args);
     if(status!==1)throw Error('Native Task stop Home request rejected');
     const request=nativeHomeRequestReference(actor);
     if(!request||request.bodyId!==held.bodyId||request.pose.radius!==held.radius||
@@ -4634,7 +4643,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     for(const change of latest.values()){
       const worker=workers.get(change.actorId);
       if(worker&&bridge.nativeHomeRouteExecution(worker.id)){projectNativeHomeExecution(state,worker);continue;}
-      if(worker?.nativeRouteAdmission==='pending-idle-flight-stop'&&projectRaidFlightStop(state,worker))continue;
+      if(['pending-idle-flight-stop','pending-task-flight-stop'].includes(worker?.nativeRouteAdmission)&&projectRaidFlightStop(state,worker))continue;
       if(worker&&bridge.nativeIdleStrollHeldExecution(worker.id)){projectNativeIdleStroll(state,worker);continue;}
       if(worker&&bridge.nativeIdleCycleExecution(worker.id)){projectNativeIdleCycle(state,worker);continue;}
       if(worker&&bridge.nativeInitialIdleBodyState?.(worker.id)){projectNativeInitialIdleBody(state,worker);continue;}
@@ -4795,7 +4804,8 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
         if(worker?.nativeRouteAdmission&&(worker.x!==point[0]||worker.z!==point[1]))throw Error('Native worker planning notice differs from the executed Game pose');
         const notice=worker?.nativeRouteAdmission?{...event,entity:{...event.entity,x:point[0],z:point[1]}}:event;
         workerEvents.set(id,notice);
-      }else taskEvents.push(event);
+      }else if(raidFlightStop?.task?.id===(event.id??event.entity.id))raidFlightStop.task.deltas.push(event);
+      else taskEvents.push(event);
     }
     const events=[...taskEvents,...[...workerEvents]
       .sort(([a],[b])=>numericId(a)-numericId(b)).map(([,event])=>event)];
@@ -4827,7 +4837,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
         {type:'task',remove:true,id:event.taskId}:
         {type:'task',entity:{id:event.taskId,centerId:event.centerId,
           targetId:event.targetId,kind:event.kind,created:event.created,
-          workerId:event.workerId}};
+          workerId:event.workerId},...(event.type==='released'&&event.worker?.status==='walking'?{releasedBy:event.worker.id}:{})};
       pendingTaskEvents.push(nativeEvent);
       if(event.worker)pendingTaskEvents.push({type:'worker',entity:event.worker});
       dirty=true;
@@ -4865,6 +4875,22 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
        raid.animals.length!==1||animal.species!=='warthog'||state.workers.length!==1)return;
     const worker=state.workers[0];
     if(worker.status!=='fleeing'||worker.taskId||worker.crateId||worker.incapacitated||worker.recovery||worker.fallRemaining||worker.raidReturn)return;
+    const task=state.biome==='desierto'?bridge.nativeTaskExecution(worker.id):null;
+    if(task){
+      const released=pendingTaskEvents.find(row=>row.releasedBy===worker.id&&numericId(row.entity.id)===task.taskId&&
+        numericId(row.entity.targetId)===task.targetId&&row.entity.centerId===worker.centerId);
+      const binding=bridge.nativeTaskStartBinding(worker.id);
+      if(!released||!binding||task.executedThrough!==state.elapsed||task.bodyId!==binding.reference.bodyId||
+         task.nativeRoute.assignmentSequence!==binding.assignmentSequence||
+         ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>task[key]!==worker[key])||task.yaw!==worker.heading)return;
+      const marker='pending-task-flight-stop';
+      raidFlightStop={raid,worker,eventId:numericId(event.id),spawnTime:event.simulationTime,binding,marker,sample:'nativeTaskFlightSample',
+        task:{id:released.entity.id,targetId:released.entity.targetId,deltas:[]}};
+      worker.nativeRouteAdmission=marker;
+      worker.destinationId=null;
+      pendingNativeChanges=true;
+      return;
+    }
     const pending=bridge.nativeFarmArrivalRequestReference(worker.id);
     const held=bridge.nativeFarmArrivalHeldExecution(worker.id);
     const moving=bridge.nativeFarmArrivalRouteExecution(worker.id);
@@ -4895,10 +4921,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
   }
   function projectRaidFlightStop(state,worker){
     const pending=raidFlightStop;
-    if(!pending||pending.raid!==state.raid||pending.worker!==worker||
+    if(!pending||pending.raid!==state.raid||pending.worker!==worker||worker.nativeRouteAdmission!==pending.marker||
        bridge.nativeRaidFlightMember(state,state.raid.animals[0])!==worker)return null;
-    const e=pending.stroll?bridge.nativeIdleStrollExecution(worker.id)??bridge.nativeIdleStrollHeldExecution(worker.id):bridge.nativeFarmArrivalRouteExecution(worker.id);
-    if(!e||e.executedThrough!==state.elapsed||(e.binding?.assignmentSequence??e.assignmentSequence)!==pending.binding.assignmentSequence||
+    const e=pending.task?bridge.nativeTaskExecution(worker.id):pending.stroll?
+      bridge.nativeIdleStrollExecution(worker.id)??bridge.nativeIdleStrollHeldExecution(worker.id):bridge.nativeFarmArrivalRouteExecution(worker.id);
+    if(!e||e.executedThrough!==state.elapsed||(e.binding?.assignmentSequence??e.assignmentSequence??e.nativeRoute?.assignmentSequence)!==pending.binding.assignmentSequence||
        e.bodyId!==pending.binding.reference.bodyId)return null;
     const p=e.pose??e,pose={x:p.x,z:p.z,heading:p.yaw,runPhase:p.runPhase,walkPhase:p.walkPhase,carryPhase:p.carryPhase,
       runRemaining:p.runRemaining,running:e.running??false,gateWaiting:!e.arrived&&e.currentSpeed===0};
@@ -4914,6 +4941,11 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!pending||pending.raid!==state?.raid||pending.worker.id!==actorId||
        !state.workers.includes(pending.worker)||pending.worker.status!=='fleeing'||
        pending.worker.nativeRouteAdmission!==pending.marker)return null;
+    if(pending.task){
+      const actual=bridge.nativeTaskStartBinding(actorId),execution=bridge.nativeTaskExecution(actorId);
+      if(!actual||!execution||JSON.stringify(actual)!==JSON.stringify(pending.binding))return null;
+      return {reason:'raid-flight',eventId:pending.eventId,binding:actual,task:true,arrived:execution.arrived};
+    }
     const actual=pending.stroll?bridge.nativeIdleStrollBinding(actorId):bridge.nativeFarmArrivalRouteBinding(actorId);
     const same=pending.stroll?sameNativeIdleStrollAttestation:sameNativeFarmArrivalRouteAttestation;
     if(!actual||!same(actual,pending.binding))return null;
@@ -4923,6 +4955,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
   async function stopForRaidFlight(options){
     const pending=raidFlightStop;
     if(!nativeRaidFlightStopRequest(options.actorId))return {status:'stale'};
+    if(pending.task)return stopTaskForRaidFlight(pending,options);
     const stop=pending.stroll?bridge.stopNativeIdleStrollAfterGpuQuiescence:bridge.stopNativeFarmArrivalAfterGpuQuiescence;
     const strollEnd=()=>pending.stroll&&bridge.nativeIdleStrollExecution(options.actorId);
     const result=strollEnd()?.arrived?{status:'stale'}:await stop({...options,
@@ -4955,6 +4988,38 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     }
     return result;
   }
+  async function stopTaskForRaidFlight(pending,options){
+    const execution=()=>bridge.nativeTaskExecution(options.actorId);
+    const result=execution()?.arrived?{status:'stale'}:await bridge.stopNativeTaskRouteAfterGpuQuiescence({...options,
+      sourceStillCurrent:()=>raidFlightStop===pending&&!!nativeRaidFlightStopRequest(options.actorId)&&!execution()?.arrived});
+    const state=observedTaskState,{task,worker,eventId}=pending,arrived=execution();
+    if(raidFlightStop!==pending||state?.raid!==pending.raid||!state.workers.includes(worker)||worker.nativeRouteAdmission!==pending.marker||
+       bridge.nativeRaidFlightMember(state,state.raid.animals[0])!==worker||
+       result.status!=='committed'&&(!arrived?.arrived||!nativeRaidFlightStopRequest(options.actorId)))return result;
+    const village=state.villages.find(value=>value.id===worker.villageId),home=village?.entry??village;
+    if(!home)throw Error('Native Task flight lost its village');
+    const goal={villageId:numericId(village.id),x:home.x,z:home.z};
+    const request=result.status==='committed'?
+      bridge.requestNativeTaskHomeFromStop(worker.id,task.id,task.targetId,result.nativeTaskRouteStopBinding,goal,eventId):
+      bridge.requestNativeTaskHomeFromCompletion(worker.id,task.id,task.targetId,arrived,goal,eventId);
+    if(!request)return result;
+    const {x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining}=request.pose;
+    Object.assign(worker,{x,z,heading:yaw,runPhase,walkPhase,carryPhase,runRemaining,running:false,gateWaiting:false,
+      nativeRouteAdmission:'pending-raid-flight-resources'});
+    delete worker[pending.sample];
+    projectedPositions.set(numericId(worker.id),[x,z]);
+    raidFlightStop=null;
+    pendingNativeChanges=true;
+    // Game already released the assignment at the spawn. Its native mirror can
+    // consume the queued deltas once Home owns the same physical body.
+    pendingTaskEvents.unshift(...task.deltas);
+    flushTaskEvents();
+    const clock=bridge.nativeCausalClock();
+    const receipt=bridge.commitNativeCausalClock({rate:clock.rate,paused:clock.paused});
+    if(!['committed','unchanged'].includes(receipt.status)||receipt.clock.intentSequence<request.requestSequence)
+      throw Error('Native Task flight request lacks its causal clock');
+    return result;
+  }
   const observeWorld=state=>{
     if(!initialized)throw Error('Reset the native intent session before observing events');
     if(stopWorldObserver)throw Error('A world event observer is already attached');
@@ -4968,6 +5033,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const stop=observeGameEvents(state,event=>{
       if(qualifyFarmFlee&&event.type==='RaidSpawned')observeRaidEvacuation(state,event);
       if(raidFlightStop&&raidFlightStop.raid!==state.raid){
+        if(raidFlightStop.task)pendingTaskEvents.unshift(...raidFlightStop.task.deltas);
         delete raidFlightStop.worker[raidFlightStop.sample];
         if(raidFlightStop.worker.nativeRouteAdmission===raidFlightStop.marker)delete raidFlightStop.worker.nativeRouteAdmission;
         raidFlightStop=null;

@@ -433,6 +433,9 @@ static int flightCropOriginClear(double session,double worker,double sequence,do
   if(intent.assignmentSequence!=uint64_t(sequence))return -2;
   const auto& route=s.routeSlots[intent.slot];
   path.route=&route;wr=route.radius;
+ }else if(const auto* task=biome==1?executedTaskRoute(s,uint64_t(worker)):nullptr){
+  if(!task->startBinding||intent.assignmentSequence!=uint64_t(sequence)||intent.actionBinding)return -2;
+  path.route=task;wr=task->radius;
  }else{
   const auto& h=intent.homeRequest;
   if(!h||!h->raidSpawnSequence||h->sequence!=uint64_t(sequence)||!nativeHomeRequestBodyCurrent(s,intent))return -2;

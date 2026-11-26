@@ -3,6 +3,7 @@ import {urgentWork} from './locomotion.js';
 import {contractExpired,PROFILES} from './workforce.js';
 import {isIntactRepairTarget} from './rules.js';
 const profileEnd=new Map(PROFILES.map(p=>[p.id,p.end]));
+const flightStopMarkers=new Set(['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop']);
 
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
@@ -20,7 +21,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(onlyActor===null||onlyActor===actorId){
     const r=planner.nativeAnimalCropState?.(actorId);
     const flight=planner.nativeRaidFlightMember?.(state,animal);
-    const waitingForHome=['pending-farm-flight-stop','pending-idle-flight-stop'].includes(flight?.nativeRouteAdmission)||
+    const waitingForHome=flightStopMarkers.has(flight?.nativeRouteAdmission)||
       r?.purpose==='center'&&flight?.nativeRouteAdmission==='pending-raid-flight-resources';
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
     if(r?.mode===5||r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
@@ -32,9 +33,9 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    const actorId=worker.id,marker=worker.nativeRouteAdmission;
    if(onlyActor!==null&&actorId!==onlyActor)continue;
    if(marker==='pending-farm-arrival-resources'&&planner.nativeFarmArrivalRequestReference?.(actorId))return {actorId,kind:'farm-arrival',operation:'startNativeFarmArrivalAfterGpuQuiescence',prepare:'prepareNativeFarmArrivalResources',urgent:!worker.raidReturn&&urgentWork(state,worker)};
-   if(marker==='pending-farm-flight-stop'||marker==='pending-idle-flight-stop'){
+   if(flightStopMarkers.has(marker)){
     const stopRequest=planner.nativeRaidFlightStopRequest(actorId);
-    if(stopRequest)return {actorId,kind:stopRequest.stroll?'idle-stroll-stop':'farm-arrival-stop',operation:'stopForRaidFlight',prepare:'prepareNativeGateResources',stopRequest};
+    if(stopRequest)return {actorId,kind:stopRequest.task?'task-route-stop':stopRequest.stroll?'idle-stroll-stop':'farm-arrival-stop',operation:'stopForRaidFlight',prepare:'prepareNativeGateResources',stopRequest};
    }
    if(marker==='native-farm-arrival'){
     const stopRequest=planner.nativeFarmArrivalStopRequest?.(actorId);

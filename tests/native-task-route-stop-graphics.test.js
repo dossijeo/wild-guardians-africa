@@ -11,6 +11,46 @@ function meshes(root){
  return result;
 }
 
+test('Task25 admits the original rig after the confirmed raid releases its Task14',async()=>{
+ const f=await nativeFarmArrivedTaskGraphicsFixture();
+ let task,stopped;
+ try{
+  task=await f.roster.prepareNativeTaskStartProposal(f.support,{getPickTime:f.getPickTime});
+  task.activate();task.finalize(f.commitTask());
+  f.planner.reconcileWorkerRoutes(f.nativeState,{navVersion:1});
+  f.advance(.04);
+  assert(f.planner.projectNativeTaskExecution(f.nativeState,f.worker));
+  f.sync();f.flush();
+  const staged=f.planner.prepareNativeTaskRouteStopProposal(f.nativeActor);
+  assert.equal(staged.status,'proposed');
+  const p=staged.proposal,at=f.state.elapsed,entity=f.state.workers[0],actor=f.roster.get(f.actor);
+  const raid={id:'raid-1-day',daytime:true,animals:[{id:'animal-911',species:'warthog'}]};
+  const spawn={id:'event-198',type:'RaidSpawned',simulationTime:at,
+   raidFacts:{id:raid.id,day:f.state.day,daytime:true,elapsed:at,actors:raid.animals}};
+  const pose=Object.fromEntries(['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining','running','gateWaiting'].map(key=>[key,entity[key]]));
+  const sample={eventId:198,spawnTime:at,nativeRoute:p.nativeStop.sourceRoute,
+   bodyId:p.nativeStop.routes[0].bodyId,at,pose};
+  f.state.raid=raid;
+  Object.assign(entity,{status:'fleeing',taskId:null,taskApproach:null,idleState:null,destinationId:null,path:null,
+   nativeRouteAdmission:'pending-task-flight-stop',nativeTaskFlightSample:sample});
+  f.roster.sync();
+  const view={get:(x,z)=>f.residency.get(x,z),changedKeys:new Set()},prepare=()=>f.roster.prepareNativeTerrainStops(view,{
+   stopEffects:p,boundary:p.worldBoundary,nativeTaskRouteStopTemplate:p.nativeStop,
+   prepareBodySupport:(reference,pose)=>f.terrain.prepareNativeBody(reference,pose),getPickTime:f.getPickTime,
+   getStoppedProjection(){throw Error('A prepared stop is not yet submitted');}});
+  f.state.events=[{...spawn,id:'event-199'}];
+  await assert.rejects(prepare(),/Native stopped worker changed during preparation/);
+  f.state.events=[spawn];
+  const prepared=await prepare();
+  [stopped]=prepared.parts;
+  assert(stopped.valid());
+  assert.equal(f.roster.get(f.actor),actor);
+  entity.nativeTaskFlightSample={...sample,bodyId:sample.bodyId+1};
+  f.roster.sync();
+  assert.equal(stopped.valid(),false);
+ }finally{stopped?.cancel();task?.cancel();f.close();}
+});
+
 for(const homeBeforeReceipt of [false,true])test(`Task25 retains the existing rig through Home when the Game mirror comes ${homeBeforeReceipt?'before':'after'} the stop receipt`,async()=>{
  const f=await nativeFarmArrivedTaskGraphicsFixture();
  let task,stopped,returning;

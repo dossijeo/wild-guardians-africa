@@ -165,9 +165,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
      if(stopRequest&&(stopRequest.stroll||source.gateIds?.length===0)){
       // An acquired worker can stop on the work side without owning the gate.
       // Home must establish its own crossing and motor timing.
-      const execution=stopRequest.stroll?planner.nativeIdleStrollExecution(worker.id):planner.nativeFarmArrivalRouteExecution(worker.id);
+      const execution=stopRequest.task?planner.nativeTaskExecution(worker.id):stopRequest.stroll?planner.nativeIdleStrollExecution(worker.id):planner.nativeFarmArrivalRouteExecution(worker.id);
       const sampled=execution?.pose??execution;
-      if(!execution||execution.binding.assignmentSequence!==source.assignmentSequence||execution.bodyId!==source.reference.bodyId||
+      if(!execution||(execution.binding?.assignmentSequence??execution.nativeRoute?.assignmentSequence)!==source.assignmentSequence||execution.bodyId!==source.reference.bodyId||
          execution.executedThrough!==game.elapsed||sampled.x!==worker.x||sampled.z!==worker.z)return;
       pose=sampled;bodyId=execution.bodyId;
      }else{
