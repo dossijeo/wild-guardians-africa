@@ -126,6 +126,27 @@
       "centerHp": 600
     }
   },
+  "ordinaryFirstStep": {
+    "scope": "Game y planificador canónico desde el estado capturado tras WorkerIncapacitated, antes de solicitar Retreat.",
+    "substepSeconds": 0.02,
+    "elapsed": 12.619999999999944,
+    "movementMetres": 0.07600000000000051,
+    "pose": {
+      "x": -16.72210998419932,
+      "z": 2,
+      "heading": -1.5707963267948966,
+      "motionPhase": 1.659999999999965
+    },
+    "firstPrototypeStep": {
+      "elapsed": 12.679999999999943,
+      "x": -16.722109984199317,
+      "z": 2,
+      "heading": -1.5707963267948966,
+      "motionPhase": 1.6599999999999646
+    },
+    "retreatEvent": "event-29211",
+    "positionDeltaMetres": 3.552713678800501e-15
+  },
   "nativeRejections": {
     "assignment": -2,
     "event": -2,
@@ -180,6 +201,12 @@
     "center-encounter-retreat-other-worker.log": "720c1ec9890f66ce281b9d7335f0b66df396ead4be396373d435a5f5c74b8459",
     "center-encounter-retreat-omit-hit.log": "d2e8b7c7575b665cd4c5c56bd94913491d3fa3743b37cf802e1996b54207b0b1",
     "center-encounter-retreat-vite.log": "d9e090f033cde9331cc8ff207b2114fbc9c5bb12900fb0bc7438ccea86bbc12f",
-    "center-encounter-retreat-regression.tap": "f1fc4f658f0118222eee9872ab846aa51db4b6517a14150889a95c649685ea01"
+    "center-encounter-retreat-regression.tap": "f1fc4f658f0118222eee9872ab846aa51db4b6517a14150889a95c649685ea01",
+    "encounter-retreat-oracle-loader.mjs": "a38332956375d04129340381d0fe4231b3bc0402ecaa57389aad90c01c0b579d",
+    "save-retreat-oracle.mjs": "e6b1608d15bc89567120e158eb6b0223faed1a8bfd8f7925863299b7ea1d92e9",
+    "run-retreat-oracle.mjs": "cee924e5cc942b70debd8e473f8819faf65c5c6557fde6afddcc63cb0da31628",
+    "center-encounter-retreat-oracle-input.json": "804d0a65e4e9543605f1b092c21478f8b796ddd1ce88042fb390bcd47c9779b7",
+    "center-encounter-retreat-oracle-native-step.json": "ddb9a7077b8052aa0d3daa55fc2f806f25578726d1444209625118963567c2bc",
+    "center-encounter-retreat-oracle.json": "c2806747b214c5d06722e407ff03f9e3f6cd01530e24984f2ad510dc3beba1ae"
   }
 }
