@@ -36,6 +36,16 @@ El control de CPU conserva la decisión, el destino y la pose durante READY de I
 
 En NVIDIA Turing, después de la primera contratación y el riego, el ticket 11 adquirió Idle22 a 84,08 s. El dibujo 253 presentó el cuerpo 1 con edad de 0,004 s y el destino de la decisión original. El recorrido corto drenó. Otra pasada cargó el checkpoint del final de ese mismo turno a 250 s. El dibujo 42 presentó Home18 con el cuerpo 1 y el dibujo 101 confirmó su ausencia al adquirir Home19 a 290,48 s. El mismo trabajador quedó en casa en (60, 0) y Draw drenó. Durante esta prueba se detuvo el avance del reloj al alcanzar la entrada para observar el GO de Home19. [Recibos de NVIDIA](performance/native-savanna-idle-home-nvidia-20261126.json).
 
-En la pasada acelerada continua, una preparación posterior a la primera marcha agotó el plazo a 123,08 s. Quedan abiertas esa continuidad gráfica y la cadencia. También queda pendiente el orden en que Farm23 adquiere el cuerpo antes de la primera tarea. En ese orden, la fila de Stop24 reconstruye el tiempo de la pose con un ULP de diferencia respecto de la frontera exacta y el receptor la rechaza.
+En la pasada acelerada continua, una preparación posterior a la primera marcha agotó el plazo a 123,08 s. Quedan abiertas esa continuidad gráfica y la cadencia.
 
 Pasaron las 149 pruebas dirigidas de ciclo de trabajador, Idle, Home y barrido continuo. El build web de producción terminó en 46,56 s e incluyó ambos WASM con las mismas importaciones y exportaciones que la preimagen.
+
+## Parada de Farm23 ya adquirido para la primera tarea
+
+El orden en que Farm23 empieza a caminar antes de la primera tarea producía una diferencia de un ULP en la hora de la pose. En la semilla 712, el límite de Stop24 era `8.049999999999908` y la muestra devolvía `8.049999999999907` al reconstruir el tiempo desde la distancia. La posición y las fases coincidían con el cuerpo nativo. El receptor rechazaba esa fila antes de preparar el dibujo.
+
+La proyección nativa de parada conserva la pose comprobada y la fecha en el límite exacto de autoridad. Se mantiene la igualdad estricta del receptor. Con READY retenido, Farm23 sigue avanzando. La revalidación emite un ticket posterior, congela la muestra de ese instante y permite a Task14 adquirir el mismo cuerpo. El control llega a un único `WaterSatisfied` y se reproduce con `node --test --test-name-pattern="stops acquired Farm23" tests/native-production-lifecycle.test.js`.
+
+NVIDIA Turing adquirió Farm23 al contratar. Retuvo READY de Stop24 desde 0,04 s y presentó la parada en el dibujo 26 a 1,24 s. El cuerpo 1 y su asignación conservaron los valores acreditados de posición y fase. El dibujo 27 presentó Task14 en el mismo cuerpo con destino `plant-3`. El recorrido gráfico usó avance controlado y terminó con un único cargo de contratación y drenaje. [Recibo de NVIDIA](performance/native-savanna-acquired-farm-stop-nvidia-20261126.json).
+
+Pasaron 186 pruebas de ciclo de trabajador, paradas, mutaciones del mundo y rutas de animales. El build de producción terminó en 49,78 s e incluyó ambos WASM con la misma interfaz de importación y exportación.

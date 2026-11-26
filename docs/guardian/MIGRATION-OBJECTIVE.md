@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En Sabana, una primera tarea puede interrumpir Farm23 después de que el trabajador empiece a andar. Stop24 fecha la pose comprobada en la frontera exacta. NVIDIA acreditó la parada y Task14 en el mismo cuerpo. El control CPU completa un solo riego. [Recorrido y recibo](native-cold-worker-admission-20261126.md#parada-de-farm23-ya-adquirido-para-la-primera-tarea).
+
 El turno civil de Sabana ya recorre Idle22, Home18 y Home19 en CPU. NVIDIA acreditó la marcha desde la contratación y el regreso desde el checkpoint de las 250 s, con el mismo cuerpo durante la marcha y su retirada en casa. Una preparación posterior de la corrida acelerada agotó el plazo. [Recorridos y límites](native-cold-worker-admission-20261126.md#marcha-idle-y-regreso-al-final-del-turno-en-sabana).
 
 Sabana ya admite el primer trabajador pagado con `nativeWorkerLifecycle`. NVIDIA presentó Task14 y Action15 sobre el mismo cuerpo, confirmó un único riego y adquirió Idle20. La continuación del turno y la selección desde el menú ordinario siguen abiertas. [Flujo y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).

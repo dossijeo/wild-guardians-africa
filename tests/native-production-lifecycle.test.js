@@ -660,6 +660,75 @@ test('the first paid hire in Savanna completes watering through Task14 and Actio
  }finally{release();await f.close();}
 });
 
+test('a paid Savanna worker stops acquired Farm23 at the exact task boundary',async()=>{
+ const opening=await createSpatialCampaignOpening();
+ const {state,nav}=opening;
+ try{
+  state.tutorial.step='plant';
+  const center=state.structures.find(s=>s.kind==='center');
+  assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
+ }finally{opening.dispose();}
+ let releaseStop;
+ const held=new Promise(resolve=>releaseStop=resolve),receipts=new Map();
+ const f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,
+  onReady:record=>record.kind==='farm-arrival-stop'?held:undefined,
+  onCommit:(record,receipt)=>receipts.set(record,receipt)});
+ try{
+  f.command({kind:'setNavigationView',view:{bounds:[24,-48,144,48],eye:{x:76,z:30},target:{x:75,z:-4}}});
+  f.command({kind:'openInitialHiring'});
+  const hire={kind:'hire',id:'savanna-moving-hire',selection:{youngMale:1}};
+  f.command(hire);
+  const advance=async()=>{
+   const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward:false});
+   for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
+   for(let i=0;i<6;i++)await f.present();
+   assert.deepEqual(f.faults,[]);
+   return JSON.parse(p.snapshot);
+  };
+  const find=kind=>f.records.find(row=>row.kind===kind);
+  for(let i=0;i<30&&!find('farm-arrival-stop')?.packet;i++)await advance();
+  const farm=find('farm-arrival'),stop=find('farm-arrival-stop');
+  assert(farm?.committed&&stop?.packet);
+  assert.equal(farm.resources.bodyId,1);
+  const prepared=stop.resources.worldBoundary,source=stop.resources.nativeStop.sourceRoute,pose=stop.resources.routeEffects.rows.subarray(8);
+  assert.equal(pose[7],prepared.effectiveTime);
+  assert(pose[10]>0);
+  assert.equal(source.assignmentSequence,receipts.get(farm).nativeFarmArrivalBinding.assignmentSequence);
+  const before=(await advance()).workers[0];
+  const later=(await advance()).workers[0];
+  assert.equal(later.nativeRouteAdmission,'native-farm-arrival');
+  assert(later.walkPhase>before.walkPhase);
+  assert.equal(stop.committed,false);
+  releaseStop();
+  for(let i=0;i<12&&!find('task-start')?.committed;i++)await advance();
+  const proof=receipts.get(stop).nativeFarmArrivalStopBinding;
+  const final=proof.projection.routeEffects.rows.slice(8);
+  assert(proof.reference.worldBoundary.ticket>prepared.ticket);
+  assert.equal(final[7],proof.reference.worldBoundary.effectiveTime);
+  assert(final[10]>pose[10]);
+  assert.deepEqual(proof.reference.sourceRoute,source);
+  const task=find('task-start');
+  assert(task?.committed);
+  assert.equal(task.resources.bodyId,1);
+  assert.equal(task.resources.targetId,Number(state.plants[0].id.split('-').at(-1)));
+  const moved=(await advance()).workers[0];
+  assert.equal(moved.nativeRouteAdmission,'native-task');
+  assert(moved.walkPhase>final[10]);
+  const frame=f.host.inspect().nativeRouteFrame;
+  assert(frame?.bindings.some(row=>row.nativeStart?.bodyId===1));
+  assert(f.host.inspect().samples.some(row=>row.nativeWorldBoundary?.ticket===proof.reference.worldBoundary.ticket));
+  const wateringDeadline=receipts.get(task).nativeTaskStartBinding.reference.endTime+25;
+  let watered;
+  do {watered=await advance();} while(watered.plants[0].water[0].status!=='manual'&&watered.elapsed<wateringDeadline);
+  assert.equal(watered.plants[0].water[0].status,'manual',JSON.stringify(f.authority.nativeIntentProductionStatus()));
+  assert.equal(find('task-action')?.resources.request.bodyId,1);
+  const after=f.snapshot();
+  assert.equal(after.events.filter(event=>event.type==='HiringConfirmed').length,1);
+  assert.equal(after.events.filter(event=>event.type==='WaterSatisfied').length,1);
+  assert.deepEqual(f.faults,[]);
+ }finally{releaseStop();await f.close();}
+});
+
 test('the paid Savanna shift preserves the worker through a selected Idle stroll and Home',async()=>{
  const opening=await createSpatialCampaignOpening({seed:714});
  const {state,nav}=opening,chunkKeys=[...opening.loaded.keys()];

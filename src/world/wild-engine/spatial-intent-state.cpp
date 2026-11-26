@@ -1637,6 +1637,9 @@ bool projectWorldRouteStops(const IntentState& s,const std::set<uint64_t>& seeds
     const bool suspend=routeCanSuspend(s,intent);uint32_t next=suspend?route.generation+1:0;if(suspend&&!next)next=1;
     rows.insert(rows.end(),{double(actor),double(intent.assignmentSequence),double(intent.slot),double(route.generation),
       double(route.reservationBody),double(int(suspend?PlanningState::WaitingBlocked:PlanningState::NeedsPlan)),s.effectiveTime,double(next)});
+    // Attest when the body is frozen. Interpolating the route can reconstruct
+    // the same pose with a time that differs from the authority boundary.
+    pose[7]=s.effectiveTime;
     pose[15]=pose[16]=0;rows.insert(rows.end(),pose.begin(),pose.end());
     for(uint64_t id:route.gateReservations){const auto gate=s.gates.find(id);
       if(gate==s.gates.end()||frozen.count(id)||!gateCrossingReleaseStopsOthers(gate->second,route,s.effectiveTime))continue;
