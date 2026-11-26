@@ -513,7 +513,14 @@ static int flightCropOriginClear(double session,double worker,double sequence,do
   if(!h||!h->raidSpawnSequence||h->sequence!=uint64_t(sequence)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
   path={nullptr,h->x,h->z};wr=h->radius;
  }
- return separatedFlightRoutes(path,{nullptr,x,z},radius+std::max(wr,1.1))?1:0;
+ const ReservationPath origin{nullptr,x,z};
+ const double reach=radius+std::max(wr,1.1);
+ if(separatedFlightRoutes(path,origin,reach))return 1;
+ // The Desert animal is held at its birth pose while the worker keeps the
+ // issued route through Stop. Earlier nodes cannot come back into execution.
+ if(biome!=1||!path.route)return 0;
+ double contact;
+ return reservationConflict(path,origin,reach,s.effectiveTime,contact)?0:1;
 }
 
 EMSCRIPTEN_KEEPALIVE int nav_flight_crop_origin_clear(double session,double worker,double sequence,double x,double z,double radius){

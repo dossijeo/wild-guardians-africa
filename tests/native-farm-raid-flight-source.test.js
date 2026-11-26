@@ -156,6 +156,46 @@ test('the northern center corridor waits for the stop-safe Home suffix before ac
   }
 });
 
+for(const {name,eye,origin,clear} of [
+  {name:'uses the clear Farm suffix inside its expanded bounds',eye:{x:-16,z:1.4},origin:{x:-19.01890775019956,z:2.104411808379897},clear:true},
+  {name:'ignores the retired Farm prefix',eye:{x:-16,z:1},origin:{x:-19.057821163879645,z:1.5096368606466077},clear:true},
+  {name:'keeps an overlapping origin outside the qualified cohort',eye:{x:-14,z:0},origin:{x:-17.1,z:0},clear:false},
+])test(`Desert raid birth ${name}`,async()=>{
+  const {state,chunkKeys}=mixedDesertRaid();
+  let stopReady,releaseStop;
+  const retained=new Promise(resolve=>{releaseStop=resolve;});
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    async onReady(record){if(record.kind==='farm-arrival-stop'){stopReady=record;await retained;}}});
+  try{
+    await untilProduction(world,()=>world.records.some(record=>record.kind==='farm-arrival'&&record.committed));
+    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye,target:{x:-10,z:0}}});
+    let next;
+    for(let i=0;i<30&&!next?.raid;i++){next=world.advance(.02);await world.present();}
+    assert(next?.raid);
+    const [animal]=next.raid.animals,[worker]=next.workers;
+    assert.deepEqual(animal.spawn,origin);
+    const gap=Math.hypot(worker.x-animal.x,worker.z-animal.z);
+    assert(clear?gap>animal.radius+1.1:gap<animal.radius+.28);
+    assert.equal(animal.targetId,clear?'structure-2':null);
+    assert.equal(worker.nativeRouteAdmission,'pending-farm-flight-stop');
+    assert(!world.records.some(record=>record.kind==='animal-crop-route'));
+    if(!clear)return;
+    for(let i=0;i<4;i++){
+      next=world.advance(.02);await world.present();
+      assert.deepEqual([next.raid.animals[0].x,next.raid.animals[0].z],[origin.x,origin.z]);
+      assert.equal(next.workers[0].hits,0);
+      assert.equal(next.workers[0].nativeRouteAdmission,'pending-farm-flight-stop');
+      assert(!world.records.some(record=>record.kind==='animal-crop-route'));
+    }
+    assert(stopReady);
+    assert.notDeepEqual([next.workers[0].x,next.workers[0].z],[worker.x,worker.z]);
+    assert.deepEqual(world.faults,[]);
+  }finally{
+    releaseStop();
+    await world.close();
+  }
+});
+
 function gatedDesertRaid(){
   const {state,chunkKeys}=mixedDesertRaid();
   const [worker]=state.workers;

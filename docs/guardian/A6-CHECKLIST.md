@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La admisión del nacimiento de Desierto comprueba el itinerario Farm restante si la caja de su ruta contiene un posible encuentro. Así admite al animal estacionario en el encuadre cercano cuando la ruta real deja más de 2,2 m y sigue rechazando el nacimiento solapado. El contacto durante la marcha todavía requiere su relevo nativo. [Contrastes del nacimiento](native-desert-mixed-flight-center-20261125.md#nacimiento-cerca-de-farm).
+
 En el encuadre norte de Desierto, Home18 sale con el facóquero todavía en su pose de nacimiento. La marcha al centro espera hasta que cualquier parada en el corredor restante del trabajador conserve la separación. NVIDIA confirmó ambas marchas en el mismo envío antes de Home19, cuatro golpes al centro y el regreso a Idle. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#huida-por-el-corredor-norte).
 
 RaidSpawned toma el cuerpo de Repair después de GO15 y cancela la restitución de la muralla. NVIDIA confirmó el READY tardío, el cruce con Home18 y el regreso civil a Idle con la ruina y el saldo intactos. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-con-repair-action15-adquirida).
