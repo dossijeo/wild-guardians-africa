@@ -939,6 +939,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
    assert.equal(nightRig.runningReturns,1);
    await presentRetreatAbsence(receipts.get(acquired.at(-1)).nativeAnimalCropRouteBinding.reference);
    nightRig.close();nightRig=null;checkNightRig=false;
+   return afterRaid;
   };
   await checkShelteredNight('hyena',4,[[560,535],[535,510],[510,485]],1180);
 
@@ -983,6 +984,18 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal((await advance()).ledger.balance.n,delivered.ledger.balance.n);
   assert.equal(deliveries().length,1);
   await checkShelteredNight('buffalo',6,[[485,450],[450,415],[415,380],[380,345]],1799);
+
+  const fourthDawn=await drive(s=>s.day===4,1801,true);
+  assert.deepEqual(fourthDawn.pauses,['hiring']);
+  assert.equal(fourthDawn.workers.length,0);
+  f.command({kind:'hire',id:'savanna-fourth-hire',selection:{youngMale:1}});
+  const {workers:[fourthWorker],ledger:fourthLedger}=f.snapshot();
+  assert.deepEqual(fourthLedger.entries['savanna-fourth-hire'],{n:'-40',d:'1'});
+  assert.deepEqual(fourthLedger.entries[`deliver:${crate.id}`],delivered.ledger.entries[`deliver:${crate.id}`]);
+  const afterLion=await checkShelteredNight('lion',8,[[345,305],[305,265],[265,225],[225,185]],2399);
+  assert.equal(afterLion.workers[0].id,fourthWorker.id);
+  assert.deepEqual(afterLion.ledger,fourthLedger);
+  assert.equal(afterLion.structures[0].status,'intact');
  }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();releaseCarry?.();try{await f.close();}finally{nightRig?.close();}}
 });
 

@@ -788,7 +788,7 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
  return state.biome==='sabana'&&nativeCenterAttackCohort(state)&&state.raid.animals.length===1&&
-   state.raid.animals[0]===animal&&['warthog','hyena','buffalo'].includes(animal?.species);
+   state.raid.animals[0]===animal&&['warthog','hyena','buffalo','lion'].includes(animal?.species);
 }
 export function nativeAnimalCropPublicationMatches(state,{reference,attackId}){
  const animal=state.raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);

@@ -148,7 +148,7 @@ test('the graphical publication after GO must confirm the typed target and attac
   assert.equal(nativeAnimalCropPublicationMatches(state,strike),false);
   animal.attackId = 'attack-8';
   assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
-  for(const species of ['hyena','buffalo']){
+  for(const species of ['hyena','buffalo','lion']){
    animal.species=species;
    assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
    assert.equal(nativeAnimalCropPublicationMatches({...state,workers:[{status:'fleeing'}]},strike),false);
