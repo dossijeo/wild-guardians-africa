@@ -1,0 +1,134 @@
+{
+  "scenario": "The Desert work-side Idle22 READY is held during RaidSpawned, then delivered after cancellation.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "idle": {
+    "body": 1,
+    "actor": 900011,
+    "sourceSequence": 2,
+    "request": 1,
+    "preparedTicket": 1,
+    "wireOrder": [
+      1,
+      2,
+      4,
+      6
+    ],
+    "acquired": false,
+    "stopped": false,
+    "pose": {
+      "x": -14,
+      "z": 6,
+      "yaw": 0.37,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.125,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "spawn": {
+    "event": "event-29208",
+    "elapsed": 10.299999999999994
+  },
+  "home": {
+    "body": 1,
+    "ticket": 3,
+    "assignment": 5,
+    "sourceRequestSequence": 3,
+    "preparedTicket": 2,
+    "drawWorldTicket": 3,
+    "drawSequence": 19,
+    "drawElapsed": 15.899999999999874,
+    "gateIds": [
+      1000000
+    ],
+    "origin": {
+      "x": -14,
+      "z": 6,
+      "yaw": 0.37,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.125,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "animal": {
+    "ticket": 5,
+    "body": 2,
+    "actor": 1000001
+  },
+  "refuge": {
+    "ticket": 7,
+    "retiredSequence": 7,
+    "body": 1
+  },
+  "events": {
+    "centerDebits": [
+      {
+        "at": 44.30000000000115,
+        "hp": 580
+      },
+      {
+        "at": 47.2500000000014,
+        "hp": 560
+      },
+      {
+        "at": 53.300000000001916,
+        "hp": 540
+      },
+      {
+        "at": 58.670000000002375,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 67.24000000000264
+  },
+  "civilian": {
+    "ticket": 25,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 7,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "drawDrained": true,
+    "webGpuMessages": 0
+  },
+  "evidence": {
+    "receiptSha256": "b1c424b73bc46d83e68682f4c5b514676615dbfb4195030a4573714f8ce2dfa1",
+    "traceSha256": "caefc4f7b4eb687e5b923d40f2e2b6ab67926ed37e39bbd710d98493b565040a",
+    "traceBytes": 44048966,
+    "dataLossOccurred": false,
+    "artifacts": {
+      "src/world/wild-engine/spatial-savanna.wasm": "997fce993f142e4b2395685d4809c669ce1a2c01e8ab02f84fa939912139ccbc",
+      "public/wild-engine/spatial-threaded.wasm": "3b2554049b725e583cf5cac66cb51ab29f158aca15a27db77c73674e049cf1dd",
+      "public/wild-engine/spatial-threaded.mjs": "2c38d51183983f3d6fe2f932f491b6d9d85ffa8d4095e30380821cff5323af2a"
+    },
+    "baseline": {
+      "commit": "8111c90f770d77ebd6a0b7bc84e672fe98cda863",
+      "failure": "Native game execution still requires projection for this intention class",
+      "controlSha256": "0c8c8ecca8bd37c221f448bbbad1ba32336e7c029038252c978d4d7fba7f6822",
+      "regressionFailures": 2,
+      "regressionTapSha256": "a773f2a5adf1a1bd5c8587b322010bd754e9cbb77fe3096fcfa84fc7b234bd33"
+    }
+  }
+}

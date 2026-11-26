@@ -221,4 +221,14 @@ En la segunda captura NVIDIA, Idle22 alcanzó su destino a t=12,963 mientras el 
 
 Pasaron 670 pruebas de regresión. Las dos variantes WASM se reconstruyeron y pasaron las cuatro comparaciones de compatibilidad. El módulo pthread arrancó con memoria compartida. La compilación de producción terminó en 54,74 s.
 
-Queda abierto el Idle22 que todavía espera su primera adquisición. En ese control, el productor canceló su READY cuando apareció la incursión en t=10,30, y el avance posterior rechazó la proyección del trabajador. La aceptación de cadencia sigue abierta.
+## RaidSpawned antes del primer GO de Idle22
+
+En la preimagen, el productor cancelaba Idle22 al nacer la incursión y el siguiente avance rechazaba la proyección del trabajador. La autoridad retira ahora la propuesta 22 del mismo dueño y declara Home desde su pose restaurada. Draw exige la secuencia de la solicitud pendiente que acredita WASM. El control que altera esa secuencia rechaza el relevo.
+
+En NVIDIA Turing, `event-29208` llegó a t=10,30 con el ticket 1 de Idle22 retenido. La autoridad canceló ese pedido y el arnés entregó el READY tarde. El cuerpo 1 conservó la posición (−14, 6), la orientación y las fases. Home18 preparó el ticket 2 y el envío 19 confirmó el ticket adquirido 3 y el portón propio. Home19 retiró el cuerpo al llegar al refugio. El centro recibió cuatro golpes de 20 HP y el mismo trabajador regresó a Idle con el cuerpo 3 y el saldo conservado. Draw drenó sin errores. [Recibo físico](performance/native-mixed-raid-pending-idle-20261126.json).
+
+El control determinista retiene también el READY de Home18 durante tres pasos y comprueba que las poses del trabajador y del animal siguen fijas. La evidencia cubre la cohorte de desarrollo de Desierto con un cuerpo de Idle22 ya vinculado. La aceptación de cadencia sigue abierta.
+
+Pasaron 784 pruebas de regresión y cuatro comparaciones de compatibilidad WASM. La variante pthread arrancó con memoria compartida. La compilación de producción terminó en 54,93 s con los mismos binarios WASM de la captura.
+
+Idle20 sigue pendiente en dos controles. El avance posterior a `RaidSpawned` rechaza el cuerpo tanto con el primer READY de Idle20 retenido como con Idle20 adquirido y el primer READY de Idle21 retenido.

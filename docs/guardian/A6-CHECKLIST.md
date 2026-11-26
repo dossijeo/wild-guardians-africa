@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Si `RaidSpawned` llega con el primer READY de Idle22 retenido, Home18 adquiere la pose restaurada del mismo cuerpo. NVIDIA confirmó la cancelación, la entrega tardía, el cruce del portón y el regreso civil. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-antes-del-primer-go-de-idle22).
+
 Un Idle22 que ya camina conserva su corredor al nacer la incursión hasta que adquiere Stop12 o llega a su destino. NVIDIA confirmó ambos relevos a Home18, el cruce del portón y el retorno civil. [Recorridos y recibos](native-desert-mixed-flight-center-20261125.md#raidspawned-durante-idle22-en-marcha).
 
 RaidSpawned conserva el cuerpo de un Idle21 estacionario ya adquirido hasta el GO de Home18. NVIDIA confirmó el READY retenido durante tres pasos, el cruce del portón, cuatro golpes al centro y el regreso civil a Idle. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-con-idle21-estacionario-adquirido).

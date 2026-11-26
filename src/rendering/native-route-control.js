@@ -454,7 +454,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(assigned&&actor?.state===7&&actor.pendingIdleCycleRequest?.idleState.mode==='walk'&&!event.taskId&&!event.targetId&&!stroll)throw Error('Native Idle stroll acquisition omitted its typed source');
     if(assigned&&actor?.pendingIdleStrollRequest&&!event.taskId&&!event.targetId&&!stroll)throw Error('Native restored stroll acquisition omitted its typed source');
     if(idleStrollRequest&&(current||actor.closed||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingIdleStrollRequest||actor.pendingInitialIdleRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.idleCycleSource||actor.strollProof||actor.revoked||actor.initialIdleBodySource||actor.settlementSource||actor.actionProof))throw Error('Native restored stroll request cannot replace an existing owner');
-    if(homeRequest&&actor?.pendingIdleStrollRequest){const q=actor.pendingIdleStrollRequest;if(!['authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','profile'].every(k=>homeRequest[k]===q[k])||homeRequest.requestSequence<=q.requestSequence||homeRequest.requestedAt<q.requestedAt||Object.keys(q.pose).some(k=>homeRequest.pose[k]!==q.pose[k]))throw Error('Native Home differs from its pending restored stroll body');}
+    const pendingStroll=actor?.pendingIdleStrollRequest;
+    if(homeRequest&&pendingStroll&&!nativeHomeRequestContinuesInitialIdle(homeRequest,pendingStroll))
+      throw Error('Native Home differs from its pending restored stroll body');
+    const pendingStrollFlight=homeRequest?.version===2&&pendingStroll&&event.type==='IntentChanged'&&!current&&!handle&&!revoked&&
+      actor.state===6&&actor.latestSequence===pendingStroll.requestSequence&&event.strollFlightSequence===pendingStroll.requestSequence;
+    if(event.strollFlightSequence!==undefined&&!pendingStrollFlight)throw Error('Native Home flight lacks its pending restored stroll source');
     if(current?.issuedStroll&&event.type==='RouteCompleted'&&event.state===7&&!idleCycle)throw Error('Native Idle stroll completion omitted its stationary source');
     if(idleCycle&&(!actor||!cyclePreparationSourceMatches(idleCycle.reference,actor)))throw Error('Native Idle cycle acquisition has no exact admitted body source');
     if(idleCycleNext&&(!actor||actor.state!==7||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,idleCycleNext.sourceCycle)||!stationarySequenceCurrent(actor,21,idleCycleNext.sourceCycle.cycleSequence)))throw Error('Native Idle cycle successor has no current native cycle');
@@ -489,8 +494,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         birth.sourceSequence===strollFlightSource.assignmentSequence&&birth.strollTicket===strollFlightSource.reference.worldBoundary.ticket&&
         birth.workerBody===homeRequest.bodyId;
     });
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
-      throw Error('Native raid flight requires its Farm or acquired Idle source');
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+      throw Error('Native raid flight requires its Farm or Idle source');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingIdleStrollRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');
     if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');

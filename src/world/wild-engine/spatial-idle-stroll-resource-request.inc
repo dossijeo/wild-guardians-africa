@@ -48,18 +48,38 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_declaration_snapshot(double act
  auto& s=state();s.strollRequestResult.fill(0);if(!integer(actor))return 0;const auto found=s.activeIntents.find(uint64_t(actor));
  return found!=s.activeIntents.end()&&nativeIdleStrollRequestCurrent(s,found->second)?snapshotIdleStrollRequest(s,*found->second.strollRequest):0;
 }
-EMSCRIPTEN_KEEPALIVE int nav_intent_restored_idle_stroll_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+static int requestRestoredIdleStrollHome(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;const auto worker=s.workers.find(uint64_t(actor));if(worker==s.workers.end())return -2;
  if(intent.homeRequest){const auto& r=*intent.homeRequest;
   const bool current=r.body?nativeHomeRequestBodyCurrent(s,intent):intent.home&&intent.state==PlanningState::AwaitingResources&&!intent.task&&!intent.target&&!intent.generation&&intent.requiresResources&&!intent.lease&&r.actor==intent.actor&&r.session==s.session&&r.sequence==intent.resourceRequestSequence&&!worker->second.bodyBound&&!worker->second.body&&!worker->second.eligible&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.x==r.x&&worker->second.z==r.z;
-  if(!current||r.strollRequestSourceSequence!=uint64_t(sourceSequence))return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
+  if(!current||r.strollRequestSourceSequence!=uint64_t(sourceSequence)||r.raidSpawnSequence!=raidSpawnSequence)return -2;return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
  }
  if(!nativeIdleStrollRequestCurrent(s,intent)||intent.strollRequest->sequence!=uint64_t(sourceSequence))return -2;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
+ if(raidSpawnSequence){
+  if(!nativeIdleStrollRequestBodyCurrent(s,intent))return -2;
+  if(s.worldMutationPreview||s.proposalOpen)return -4;
+  auto& p=s.barrierProposal;
+  // An unacquired corridor owns only its draft. The body is still at the
+  // declared pose, and a different proposal cannot be cancelled by this raid.
+  if(p.pending){
+   if(p.kind!=22||!p.idleStroll||p.idleStroll->strollRequestSource!=intent.strollRequest||
+      p.idleStroll->body!=intent.strollRequest->body)return -4;
+   clearWorldMutationProposal(p);
+  }
+ }
  auto request=std::make_shared<NativeHomeResourceRequest>();static_cast<NativeWorkerPoseResourceRequest&>(*request)=*intent.strollRequest;request->strollRequestSourceSequence=uint64_t(sourceSequence);request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;request->at=s.effectiveTime;
+ request->raidSpawnSequence=raidSpawnSequence;
  intent.strollRequest.reset();intent.homeRequest=std::move(request);intent.home=true;intent.state=PlanningState::AwaitingResources;intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);worker->second.eligible=false;
  intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restored_idle_stroll_home_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ){
+ return requestRestoredIdleStrollHome(actor,session,sourceSequence,village,homeX,homeZ,0);
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_pending_idle_stroll_flight_request(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,double event){
+ if(!integer(event))return -1;
+ return requestRestoredIdleStrollHome(actor,session,sourceSequence,village,homeX,homeZ,uint64_t(event));
 }
 EMSCRIPTEN_KEEPALIVE int nav_idle_stroll_restore_request_snapshot(double actor){
  auto& s=state();s.strollRequestResult.fill(0);if(!integer(actor))return 0;const auto found=s.activeIntents.find(uint64_t(actor));

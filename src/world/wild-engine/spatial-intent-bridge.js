@@ -638,9 +638,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       const pendingCrop=data[at+1]===6&&data[at+13]===4&&owningState?.raid?.animals.some(animal=>numericId(animal.id)===data[at])?
         readPendingAnimalCrop(false):null;
       const birth=pendingCrop&&raidFlight?.requestSequence===pendingCrop.requestSequence?raidFlight.birth:null;
+      const home=homeRequestReferences.get(data[at]);
+      const strollFlightSequence=home?.version===2&&home.requestSequence===data[at+8]?
+        wasm.nav_home_pending_idle_stroll_flight_source?.(home.actorId,home.requestSequence,home.raidSpawnSequence):0;
       const stopped=issuedShieldCropStop,shieldCropStop=stopped?.actorId===data[at]&&data[at+13]===2&&data[at+1]===0&&
         stopped.worldBoundary.effectiveTime===data[at+9]&&stopped.slot===data[at+11]&&stopped.generation===data[at+12]?stopped:null;
-      return {...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
+      return {...(strollFlightSequence?{strollFlightSequence}:{}),...(shieldCropStop?{nativeShieldCropStop:shieldCropStop,nativeShieldCropPolygon:shieldCropStop.polygonId}:{}),...((pendingCrop?.previousStrike||pendingCrop?.previousShieldCrop||pendingCrop?.purpose==='center'||birth)&&pendingCrop.requestSequence===data[at+8]?
         {pendingAnimalCrop:pendingCrop,...(birth?{raidFlightBirth:birth}:{})}:{}),...(crop?{nativeAnimalCrop:crop}:{}),actorId:data[at],state:data[at+1],taskId:data[at+2]||null,
         targetId:data[at+3]||null,routeHandle:data[at+6]?
           routeHandle(data[at+4],data[at+5],data[at+6]):null,
@@ -2824,11 +2827,16 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(wasm.nav_intent_initial_idle_home_request(r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native initial Idle Home request rejected');
     return nativeHomeRequestReference(r.actorId);
   };
-  const requestNativeRestoredIdleStrollHome=(source,home)=>{
+  const requestNativeRestoredIdleStrollHome=(source,home,raidSpawnSequence=0)=>{
     const declared=source?.kind==='native-idle-stroll-declaration-reference',r=(declared?copyNativeIdleStrollDeclarationReference:copyNativeIdleStrollRequestReference)(source),current=declared?nativeIdleStrollDeclarationReference(r.actorId):nativeIdleStrollRequestReference(r.actorId);
     if(r.authorityEpoch!==epoch()||JSON.stringify(current)!==JSON.stringify(r))throw Error('Native restored stroll Home source is not current');
     if(typeof wasm.nav_intent_restored_idle_stroll_home_request!=='function')throw Error('Rebuild native restored stroll Home');syncBoundaryTime();
-    if(wasm.nav_intent_restored_idle_stroll_home_request(r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z)!==1)throw Error('Native restored stroll Home request rejected');return nativeHomeRequestReference(r.actorId);
+    const args=[r.actorId,r.nativeSession,r.requestSequence,home.villageId,home.x,home.z];
+    const status=raidSpawnSequence?wasm.nav_intent_pending_idle_stroll_flight_request?.(...args,raidSpawnSequence):wasm.nav_intent_restored_idle_stroll_home_request(...args);
+    if(status!==1)throw Error('Native restored stroll Home request rejected');
+    const request=nativeHomeRequestReference(r.actorId);
+    if(!declared&&!nativeHomeRequestContinuesInitialIdle(request,r))throw Error('Native restored stroll Home lost its physical source');
+    return request;
   };
   const requestNativeInitialIdleBodyHome=(source,home)=>{
     const held=copyNativeInitialIdleBodyAttestation(source),r=held.reference;
@@ -4829,6 +4837,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!goal)return false;
     const home={villageId:numericId(village.id),x:goal.x,z:goal.z};
     const request=source.kind==='native-idle-cycle-attestation'?bridge.requestNativeIdleCycleHome(source,home,eventId):
+      source.kind==='native-idle-stroll-request-reference'?bridge.requestNativeRestoredIdleStrollHome(source,home,eventId):
       ['native-idle-stroll-execution','native-idle-stroll-held-execution'].includes(source.kind)?bridge.requestNativeIdleStrollHome(source,home,eventId):
       bridge.requestNativeFarmArrivalHome(source,home,eventId);
     if(!request)return null;
@@ -4847,18 +4856,20 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const pending=bridge.nativeFarmArrivalRequestReference(worker.id);
     const held=bridge.nativeFarmArrivalHeldExecution(worker.id);
     const moving=bridge.nativeFarmArrivalRouteExecution(worker.id);
-    const stroll=state.biome==='desierto'&&!pending&&!held&&!moving?bridge.nativeIdleStrollExecution(worker.id):null;
-    const cycle=!pending&&!held&&!moving&&!stroll?bridge.nativeIdleCycleExecution(worker.id):null;
+    const idleSource=state.biome==='desierto'&&!pending&&!held&&!moving;
+    const pendingStroll=idleSource?bridge.nativeIdleStrollRequestReference(worker.id):null;
+    const stroll=idleSource&&!pendingStroll?bridge.nativeIdleStrollExecution(worker.id):null;
+    const cycle=!pending&&!held&&!moving&&!stroll&&!pendingStroll?bridge.nativeIdleCycleExecution(worker.id):null;
     if(cycle&&cycle.executedThrough!==state.elapsed)return;
     if(stroll&&stroll.executedThrough!==state.elapsed)return;
-    const original=pending??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest??
+    const original=pending??pendingStroll??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest??
       stroll?.binding.reference??(cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
     if(!original||original.centerId!==numericId(worker.centerId)||original.workerProfile!==worker.profile)return;
     const pose=pending?.pose??held?.pose??moving??stroll?.pose??original.pose;
     if(['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==worker[key])||pose.yaw!==worker.heading)return;
     const eventId=numericId(event.id);
-    if(cycle||pending||held||moving?.arrived&&moving.currentSpeed===0){
-      requestRaidRefuge(state,worker,cycle?.binding??pending??held??moving,eventId);return;
+    if(cycle||pending||pendingStroll||held||moving?.arrived&&moving.currentSpeed===0){
+      requestRaidRefuge(state,worker,cycle?.binding??pending??pendingStroll??held??moving,eventId);return;
     }
     const marker=stroll?'pending-idle-flight-stop':'pending-farm-flight-stop',
       sample=stroll?'nativeIdleFlightSample':'nativeFarmFlightSample';

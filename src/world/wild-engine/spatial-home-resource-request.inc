@@ -307,6 +307,10 @@ EMSCRIPTEN_KEEPALIVE int nav_home_flight_from_acquired_idle(double actor,double 
  const auto* request=currentHomeFlightSource(actor,sequence,event);
  return request&&request->idleCycleSourceSequence?1:0;
 }
+EMSCRIPTEN_KEEPALIVE double nav_home_pending_idle_stroll_flight_source(double actor,double sequence,double event){
+ const auto* request=currentHomeFlightSource(actor,sequence,event);
+ return request?double(request->strollRequestSourceSequence):0;
+}
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;
  // Subscriptions may precede physical initialization. Unbound declarations

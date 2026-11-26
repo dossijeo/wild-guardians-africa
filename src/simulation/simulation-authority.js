@@ -176,7 +176,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          source.raidSpawnSequence!==raidSpawnSequence||source.pose.x!==worker.x||source.pose.z!==worker.z)return;
       if((source.pose.x!==source.home.x||source.pose.z!==source.home.z)&&
          session.core.wasm.nav_home_flight_from_completed_farm?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
-         session.core.wasm.nav_home_flight_from_acquired_idle?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1)return;
+         session.core.wasm.nav_home_flight_from_acquired_idle?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
+         !(session.core.wasm.nav_home_pending_idle_stroll_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0))return;
       pose=source.pose;bodyId=source.bodyId;
      }
      const stationary=planner.nativeGateMechanismSegment(gate.id,bodyId,pose,pose);
