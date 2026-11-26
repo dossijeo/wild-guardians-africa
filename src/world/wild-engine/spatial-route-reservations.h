@@ -131,6 +131,10 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     if(found==s.activeIntents.end()||found->second.state!=PlanningState::RouteActive)continue;
     const auto& other=s.routeSlots[found->second.slot];
     if(!other.reserved)continue;
+    const auto& encounter=route.centerEncounter;
+    if(encounter&&encounter->animal==route.actor&&encounter->animalBody==body&&encounter->worker==other.actor&&
+       encounter->workerBody==other.reservationBody&&encounter->homeSlot==found->second.slot&&
+       encounter->homeAssignment==found->second.assignmentSequence&&encounter->homeGeneration==other.generation)continue;
     SpatialBodyView b;
     if(!spatialReadBody(other.reservationBody,b)||!reservationParticipates(physical,b))continue;
     s.reservationPairs++;double at;
@@ -143,6 +147,12 @@ bool reserveRouteClear(IntentState& s,const ActiveIntent& intent,const RouteSlot
     [](uint64_t id,const SpatialBodyView& b,void* context){
       auto& q=*static_cast<Query*>(context);
       if(id==q.body||!reservationParticipates(q.physical,b))return;
+      const auto& encounter=q.route.centerEncounter;
+      if(encounter&&encounter->animal==q.route.actor&&encounter->animalBody==q.body&&encounter->workerBody==id){
+        const auto peer=q.s.reservedBodies.find(id);
+        if(peer!=q.s.reservedBodies.end()&&peer->second==encounter->homeSlot&&
+           q.s.routeSlots[peer->second].generation==encounter->homeGeneration)return;
+      }
       q.s.reservationBodyChecks++;double at;
       if(reservationConflict({&q.route},{nullptr,b.x,b.z},q.route.radius+b.r,q.s.effectiveTime,at))
         reservationWitness(q.s,1,id,0,at);
@@ -222,7 +232,14 @@ void drainStoppedReservations(IntentState& s){
       continue;
     }
     const uint64_t id=*s.stoppedReservationBodies.begin();s.stoppedReservationBodies.erase(id);
-    visitStoppedReservationConflicts(s,id,[](uint64_t){return false;},[&](uint64_t actor,double at){
+
+    visitStoppedReservationConflicts(s,id,[&](uint64_t actor){
+      const auto& impact=s.homeEncounterImpact;
+      if(!impact||!impact->consumed||impact->workerBody!=id||impact->animal!=actor)return false;
+      const auto found=s.activeIntents.find(actor);
+      return found!=s.activeIntents.end()&&found->second.slot==impact->animalSlot&&found->second.generation==impact->animalGeneration&&
+        found->second.assignmentSequence==impact->animalAssignment&&executionBindingCoherent(s,impact->animalBody,impact->animalSlot);
+    },[&](uint64_t actor,double at){
       auto& intent=s.activeIntents.at(actor);const auto& route=s.routeSlots[intent.slot];
       reservationWitness(s,1,id,actor,at,intent.slot,route.generation);
       stopRouteForEvent(s,intent);

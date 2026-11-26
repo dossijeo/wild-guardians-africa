@@ -115,6 +115,199 @@ bool causalClockCohortReady(IntentState& s){
   }
   s.clockProofSequence=s.intentSequence;return true;
 }
+
+static bool homeEncounterImpactSources(const IntentState& s,const HomeEncounterImpact& q){
+ const auto w=s.activeIntents.find(q.worker),a=s.activeIntents.find(q.animal);
+ if(w==s.activeIntents.end()||a==s.activeIntents.end()||!nativeHomeBodyCurrent(s,w->second))return false;
+ const auto& worker=w->second;const auto& animal=a->second;
+ if(worker.slot!=q.workerSlot||worker.generation!=q.workerGeneration||worker.assignmentSequence!=q.workerAssignment||
+    animal.slot!=q.animalSlot||animal.generation!=q.animalGeneration||animal.assignmentSequence!=q.animalAssignment||
+    !animal.animal||animal.retreat||animal.state!=PlanningState::RouteActive||
+    !executionBindingCoherent(s,q.animalBody,q.animalSlot))return false;
+ const auto& home=s.routeSlots[q.workerSlot];const auto& crop=s.routeSlots[q.animalSlot];
+ return home.homeBinding->requestSource&&home.homeBinding->requestSource->raidSpawnSequence==q.spawn&&
+   home.reservationBody==q.workerBody&&home.gateReservations.empty()&&crop.animalRouteBinding&&crop.hasExecution&&
+   !home.executionPose[6]&&!crop.executionPose[6]&&home.executionPose==q.pose;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_home_encounter_impact_prepare(double session,double worker,double animal,double workerAssignment,
+    double animalAssignment,double spawn,double at,double x,double z,double resultX,double resultZ){
+ auto& s=state();
+ if(!integer(worker)||!integer(animal)||worker==animal||!integer(spawn)||!integer(workerAssignment)||!integer(animalAssignment)||
+    s.session!=session||!coordinate(resultX)||!coordinate(resultZ)||!std::isfinite(at)||at<=s.effectiveTime||at-s.effectiveTime>.021)return -1;
+ if(s.homeEncounterImpact||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ if(!s.causalClock||s.clockPaused||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence)return -2;
+ const auto w=s.activeIntents.find(uint64_t(worker)),a=s.activeIntents.find(uint64_t(animal));
+ if(w==s.activeIntents.end()||a==s.activeIntents.end()||w->second.slot>=s.routeSlots.size()||a->second.slot>=s.routeSlots.size())return -2;
+ const auto& wi=w->second;const auto& ai=a->second;
+ const auto& home=s.routeSlots[wi.slot];const auto& crop=s.routeSlots[ai.slot];
+ HomeEncounterImpact proof{wi.actor,ai.actor,home.reservationBody,crop.reservationBody,uint64_t(workerAssignment),uint64_t(animalAssignment),uint64_t(spawn),
+   wi.slot,wi.generation,ai.slot,ai.generation,s.effectiveTime,at,home.executionPose,resultX,resultZ};
+ if(!homeEncounterImpactSources(s,proof)||proof.pose[0]!=x||proof.pose[1]!=z)return -2;
+
+ if((x!=resultX||z!=resultZ)&&spatial_execution_segment_clear(x,z,resultX,resultZ,home.radius)!=1)return -3;
+ proof.priorHome=home.homeBinding->requestSource;
+ s.homeEncounterImpact=proof;return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_home_encounter_impact_consume(double session,double worker,double animal,double spawn,double at,double x,double z,double resultX,double resultZ){
+ auto& s=state();const auto& q=s.homeEncounterImpact;
+ if(!q||q->consumed||session!=double(s.session)||worker!=double(q->worker)||animal!=double(q->animal)||spawn!=double(q->spawn)||
+    s.effectiveTime!=q->at||s.clockThrough!=q->from||at!=q->at||x!=q->pose[0]||z!=q->pose[1]||resultX!=q->resultX||resultZ!=q->resultZ||!homeEncounterImpactSources(s,*q))return -2;
+
+ auto& intent=s.activeIntents.at(q->worker);
+ auto& route=s.routeSlots[intent.slot];
+ if(x!=resultX||z!=resultZ){
+  if(spatial_execution_segment_clear(x,z,resultX,resultZ,route.radius)!=1)return -3;
+  auto posed=q->pose;posed[0]=resultX;posed[1]=resultZ;projectExecutedPose(s,route,posed);
+ }
+ releaseRoute(s,intent);intent.state=PlanningState::NeedsPlan;s.homeEncounterImpact->consumed=true;emitIntentChange(s,intent);
+ s.entityRevision++;return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_home_encounter_impact_current(double worker,double animal,double spawn){
+ const auto& s=state();const auto& q=s.homeEncounterImpact;
+ if(!q||!q->consumed||worker!=double(q->worker)||animal!=double(q->animal)||spawn!=double(q->spawn))return 0;
+ const auto w=s.activeIntents.find(q->worker);SpatialBodyView body;
+ return w!=s.activeIntents.end()&&w->second.state==PlanningState::NeedsPlan&&!w->second.generation&&
+  !s.reservedBodies.count(q->workerBody)&&!s.suspendedBodies.count(q->workerBody)&&
+  spatialReadBody(q->workerBody,body)&&body.kind==0&&body.x==q->resultX&&body.z==q->resultZ?1:-2;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_worker_finish_encounter_recovery(double session,double worker,double animal,double spawn,
+    double at,double fromX,double fromZ,double toX,double toZ,double yaw){
+ auto& s=state();auto& q=s.homeEncounterImpact;
+ if(!q||q->recovered||!q->priorHome||session!=double(s.session)||s.effectiveTime!=at||
+    s.clockThrough>=at||at-s.clockThrough>.021||fromX!=q->resultX||fromZ!=q->resultZ||yaw!=q->pose[4]||
+    !coordinate(toX)||!coordinate(toZ)||nav_home_encounter_impact_current(worker,animal,spawn)!=1)return -2;
+ SpatialBodyView before;
+ if(!spatialReadBody(q->workerBody,before)||
+    ((fromX!=toX||fromZ!=toZ)&&spatial_execution_segment_clear(fromX,fromZ,toX,toZ,before.r)!=1))return -3;
+ const auto& peer=s.activeIntents.find(q->animal);
+ const auto& cut=s.encounterRetreat;SpatialBodyView removed;
+ const bool departed=cut&&cut->departed&&cut->worker==q->worker&&cut->animal==q->animal&&
+    cut->animalBody==q->animalBody&&cut->spawn==q->spawn&&peer==s.activeIntents.end()&&!spatialReadBody(q->animalBody,removed);
+ if(!departed&&(peer==s.activeIntents.end()||peer->second.assignmentSequence!=q->animalAssignment||
+    peer->second.generation!=q->animalGeneration||!executionBindingCoherent(s,q->animalBody,q->animalSlot)))return -2;
+ if(!spatialMoveBodyFromIntent(q->workerBody,toX,toZ))return -2;
+ SpatialBodyView after=before;after.x=toX;after.z=toZ;updateResidencyPinRevision(s,&before,&after);
+ auto& bound=s.workers.at(q->worker);bound.x=toX;bound.z=toZ;
+ q->resultX=toX;q->resultZ=toZ;q->recovered=true;s.entityRevision++;
+ return 1;
+}
+static bool centerEncounterExecuted(const IntentState& s,const CenterEncounterPermit& c,
+    const ActiveIntent& animal,const RouteSlot& route){
+ const auto w=s.activeIntents.find(c.worker);
+ if(animal.actor!=c.animal||route.reservationBody!=c.animalBody||!route.animalRouteBinding||
+    route.animalRouteBinding->source->sequence!=c.request||w==s.activeIntents.end()||
+    w->second.assignmentSequence!=c.homeAssignment||w->second.slot!=c.homeSlot||w->second.generation!=c.homeGeneration||
+    !nativeHomeBodyCurrent(s,w->second))return false;
+ const auto& home=s.routeSlots[c.homeSlot];
+ return home.reservationBody==c.workerBody&&home.homeBinding->requestSource->raidSpawnSequence==c.spawn&&
+   home.homeBinding->centerFlight.animal==route.animalRouteBinding->source;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_active(double actor){
+ const auto& s=state();
+ if(!integer(actor))return 0;
+ const auto found=s.activeIntents.find(uint64_t(actor));
+ if(found==s.activeIntents.end()||found->second.slot>=s.routeSlots.size())return 0;
+ const auto& route=s.routeSlots[found->second.slot];
+ return route.centerEncounter&&route.generation==found->second.generation&&
+   executionBindingCoherent(s,route.reservationBody,found->second.slot)?1:0;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_step(double session,double worker,double animal,double event,double at,double impact){
+ auto& s=state();
+ if(session!=double(s.session)||!integer(worker)||!integer(animal)||!integer(event)||
+    !std::isfinite(at)||at<=s.effectiveTime||at-s.effectiveTime>.021||(impact!=0&&impact!=1))return -1;
+ if(s.centerEncounterStep)return -4;
+ const auto found=s.activeIntents.find(uint64_t(animal));
+ if(found==s.activeIntents.end()||found->second.slot>=s.routeSlots.size())return -2;
+ const auto& route=s.routeSlots[found->second.slot];const auto& context=route.centerEncounter;
+ if(!context||context->worker!=uint64_t(worker)||context->spawn!=uint64_t(event)||
+    s.clockPaused||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
+    !centerEncounterExecuted(s,*context,found->second,route))return -2;
+ const auto& q=s.homeEncounterImpact;
+ if(impact!=double(bool(q&&!q->consumed&&q->worker==context->worker&&q->animal==context->animal&&q->at==at)))return -2;
+ s.centerEncounterStep=CenterEncounterStep{found->second.assignmentSequence,context->workerBody,context->animalBody,
+    s.intentSequence,s.clockSequence,executionWorldStamp(),s.effectiveTime,at,impact==1};return 1;
+}
+
+static bool encounterRetreatCutCurrent(const IntentState& s,const EncounterRetreatCut& c){
+ const auto& impact=s.homeEncounterImpact;
+ const auto animal=s.activeIntents.find(c.animal);
+ if(!impact||!impact->consumed||impact->worker!=c.worker||impact->workerBody!=c.workerBody||
+    impact->animal!=c.animal||impact->animalBody!=c.animalBody||impact->spawn!=c.spawn||impact->animalAssignment!=c.assignment||
+    animal==s.activeIntents.end()||animal->second.state!=PlanningState::RouteActive||animal->second.slot!=c.slot||
+    animal->second.generation!=c.generation||animal->second.assignmentSequence!=c.assignment||animal->second.animalStrike||
+    !executionBindingCoherent(s,c.animalBody,c.slot)||nav_home_encounter_impact_current(double(c.worker),double(c.animal),double(c.spawn))!=1)return false;
+ const auto& route=s.routeSlots[c.slot];
+ return route.centerEncounter&&route.animalRouteBinding&&route.animalRouteBinding->source->attackCenter&&
+    route.hasExecution&&route.executionPose==c.origin&&!c.origin[6]&&c.origin[7]==c.from;
+}
+static int previewEncounterRetreatStep(IntentState& s,const ActiveIntent& intent,EncounterRetreatCut& cut){
+  SpatialBodyView body;
+  if(s.reservedBodies.size()!=1||!spatialReadBody(cut.animalBody,body)||body.kind!=1||body.flags!=1||
+     body.x!=cut.origin[0]||body.z!=cut.origin[1])return -2;
+  cut.profile=intent.profile;
+  const int previous=lazy_selected_context();
+  if(previous!=cut.profile)spatial_select_nav_profile_index(cut.profile);
+  RouteSlot candidate;
+  const int count=spatial_world_route_cached(float(body.x),float(body.z),float(cut.exitX),float(cut.exitZ));
+  int status=count<=0?(count<0?3:0):-3;
+  if(count>0&&count<=4096){
+    const float* points=spatial_world_route_ptr();
+    if(points[count*2-2]==float(cut.exitX)&&points[count*2-1]==float(cut.exitZ)){
+      candidate.points.assign(points,points+size_t(count)*2);
+      status=prepareRouteTiming(candidate,cut.animal,body.x,body.z,cut.from,body.r,1,0,0,false,true);
+    }
+  }
+  if(previous!=cut.profile)spatial_select_nav_profile_index(previous);
+  if(status!=1)return status<0?-3:status;
+  candidate.originYaw=cut.origin[4];candidate.motionOffset[1]=cut.origin[3];
+  candidate.runDistance=candidate.distances.back();candidate.runSpeed=3.8;
+  if(routeTimingRepresentable(candidate)!=1)return -3;
+  s.reservationResult.fill(0);
+  if(!reserveRouteClear(s,intent,candidate,cut.animalBody,body,true))return -3;
+  cut.first=sampleRouteTiming(candidate,cut.at);
+  if(cut.first[6]||cut.first[2]<=0)return -3;
+  const auto cursor=size_t(cut.first[5])*2;
+  cut.remaining.assign(candidate.points.begin()+cursor,candidate.points.end());
+  cut.world=executionWorldStamp();cut.bodies=spatialBodiesMutationRevision();
+  return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_encounter_exhaust_pose(double session,double animal,double hit){
+  const auto& s=state();const auto& cut=s.encounterRetreat;
+  return cut&&session==double(s.session)&&animal==double(cut->animal)&&hit==double(cut->hit)?cut->first.data():nullptr;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_encounter_exhaust_prepare(double session,double worker,double animal,double spawn,
+    double assignment,double at,double x,double z,double yaw,double phase,double exitX,double exitZ){
+ auto& s=state();
+ if(session!=double(s.session)||!integer(worker)||!integer(animal)||!integer(spawn)||!integer(assignment)||
+    !std::isfinite(at)||at<=s.effectiveTime||at-s.effectiveTime>.021||!coordinate(exitX)||!coordinate(exitZ))return -1;
+ if(s.encounterRetreat||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ if(!s.causalClock||s.clockPaused||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence)return -2;
+ const auto& impact=s.homeEncounterImpact;const auto found=s.activeIntents.find(uint64_t(animal));
+ if(!impact||found==s.activeIntents.end()||found->second.slot>=s.routeSlots.size())return -2;
+ const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];
+ EncounterRetreatCut cut{uint64_t(worker),impact->workerBody,uint64_t(animal),route.reservationBody,uint64_t(assignment),uint64_t(spawn),0,0,
+    intent.slot,intent.generation,s.effectiveTime,at,exitX,exitZ,route.executionPose,false};
+ if(!encounterRetreatCutCurrent(s,cut)||cut.origin[0]!=x||cut.origin[1]!=z||cut.origin[4]!=yaw||cut.origin[3]!=phase)return -2;
+ const int step=previewEncounterRetreatStep(s,intent,cut);
+ if(step!=1)return step;
+ s.encounterRetreat=std::move(cut);return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_encounter_exhaust_consume(double session,double worker,double animal,double spawn,
+    double assignment,double at,double hit){
+ auto& s=state();auto& cut=s.encounterRetreat;
+ if(!cut||cut->hit||!integer(hit)||hit<=spawn||session!=double(s.session)||worker!=double(cut->worker)||animal!=double(cut->animal)||
+    spawn!=double(cut->spawn)||assignment!=double(cut->assignment)||at!=cut->at||s.effectiveTime!=cut->at||
+    s.clockThrough!=cut->from||!encounterRetreatCutCurrent(s,*cut))return -2;
+
+ if(cut->world!=executionWorldStamp()||cut->bodies!=spatialBodiesMutationRevision())return -3;
+ SpatialBodyView before;
+ if(!spatialReadBody(cut->animalBody,before)||!spatialMoveBodyFromIntent(cut->animalBody,cut->first[0],cut->first[1]))return -3;
+ SpatialBodyView after=before;after.x=cut->first[0];after.z=cut->first[1];
+ updateResidencyPinRevision(s,&before,&after);s.executionBodyUpdates++;
+ cut->hit=uint64_t(hit);releaseIntent(s,cut->animal,PlanningState::NeedsPlan);s.activeIntents.erase(cut->animal);
+ s.entityRevision++;return 1;
+}
 int advanceRouteExecution(IntentState& s,double at){
   if(!std::isfinite(at)||at<s.effectiveTime)return -1;
   if(!nativeTaskActionsCoherent(s))return -3;
@@ -137,7 +330,28 @@ int advanceRouteExecution(IntentState& s,double at){
     if(!executionBindingCoherent(s,body,slot))return -3;
     const auto& route=s.routeSlots[slot];SpatialBodyView physical;
     if(!spatialReadBody(body,physical))return -3;
+    if(const auto& encounter=route.centerEncounter;encounter){
+      const auto& permit=*encounter;const auto& step=s.centerEncounterStep;
+      const auto& impact=s.homeEncounterImpact;
+      const auto& animal=s.activeIntents.at(route.actor);
+      const bool consumed=impact&&impact->consumed&&impact->workerBody==permit.workerBody&&impact->animalBody==permit.animalBody&&
+        impact->animalAssignment==animal.assignmentSequence&&impact->animalSlot==slot&&impact->animalGeneration==route.generation;
+      if(!consumed&&(!step||step->animalAssignment!=animal.assignmentSequence||step->workerBody!=permit.workerBody||
+         step->animalBody!=permit.animalBody||step->intents!=s.intentSequence||step->clock!=s.clockSequence||
+         step->worldStamp!=executionWorldStamp()||step->from!=s.effectiveTime||step->to!=at||!centerEncounterExecuted(s,permit,animal,route)))return -6;
+    }
     if(route.hasExecution&&route.executionPose[6]==1){moves.push_back({slot,route.executionPose});continue;}
+
+    if(s.homeEncounterImpact&&!s.homeEncounterImpact->consumed&&body==s.homeEncounterImpact->workerBody){
+      const auto& impact=*s.homeEncounterImpact;
+      if(at!=impact.at||s.effectiveTime!=impact.from||!homeEncounterImpactSources(s,impact))return -6;
+      continue;
+    }
+
+    if(const auto& cut=s.encounterRetreat;cut&&!cut->hit&&cut->animalBody==body){
+      if(at!=cut->at||s.effectiveTime!=cut->from||!encounterRetreatCutCurrent(s,*cut))return -6;
+      continue;
+    }
     moves.push_back({slot,sampleRouteTiming(route,at)});
   }
   // All metadata preflight/sampling precedes every physical write. Body moves
@@ -145,7 +359,7 @@ int advanceRouteExecution(IntentState& s,double at){
   std::vector<std::pair<uint64_t,NativeIdleCycleDecision>> idleDecisions;
   for(const auto& [actor,intent]:s.activeIntents)if(nativeIdleCycleCurrent(s,intent)&&!intent.idleCycle->next.status&&nativeIdleCycleFinished(*intent.idleCycle,at))
     idleDecisions.emplace_back(actor,chooseNativeIdleCycleNext(s,*intent.idleCycle));
-  s.effectiveTime=at;s.executionAdvances++;
+  s.centerEncounterStep.reset();s.effectiveTime=at;s.executionAdvances++;
   const uint64_t updates=s.executionBodyUpdates;
   for(const auto& move:moves){
     auto& route=s.routeSlots[move.slot];

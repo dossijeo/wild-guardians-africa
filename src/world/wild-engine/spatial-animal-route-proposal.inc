@@ -237,28 +237,85 @@ static int animalRunDistance(const RouteSlot& route,const NativeAnimalRouteReque
  }
  distance=travelled;return 1;
 }
-static int stageAnimalRoute(double actor,double session,double requestSequence){
- auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
- if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
- const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!animalRouteRequestCurrent(s,found->second))return -2;
- const auto& intent=found->second;const auto q=intent.animalRouteRequest;if(q->sequence!=uint64_t(requestSequence))return -2;
- PendingNativeMotionDraft d;d.animalRouteSource=q;d.body=q->body;d.slot=intent.slot;d.generation=intent.generation;d.route.points=s.routeSlots[intent.slot].points;
+
+static const RouteSlot* centerEncounterHome(const IntentState& s,const ActiveIntent& animal,
+    const NativeAnimalRouteRequest& request,uint64_t worker,uint64_t assignment,uint64_t event){
+ if(spatial_world_biome()!=1||spatial_body_count()!=2||!request.attackCenter||animal.retreat||!worker||
+    worker==animal.actor||!event||!assignment||request.shieldPolygon||!animalRouteRequestCurrent(s,animal))return nullptr;
+ const auto found=s.activeIntents.find(worker);
+ if(found==s.activeIntents.end()||found->second.assignmentSequence!=assignment||!nativeHomeBodyCurrent(s,found->second))return nullptr;
+ const auto& route=s.routeSlots[found->second.slot];const auto& binding=route.homeBinding;
+ if(!binding||!binding->requestSource||binding->requestSource->raidSpawnSequence!=event||
+    binding->centerFlight.animal.get()!=&request||route.reservationBody==request.body||
+    !route.hasExecution||route.executionPose[6]||route.executionPose[7]!=s.effectiveTime||!route.gateReservations.empty())return nullptr;
+ return &route;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_home(double worker,double animal,double assignment,double sequence,double event){
+ auto& s=state();
+ if(!integer(worker)||!integer(animal)||!integer(assignment)||!integer(sequence)||!integer(event))return -1;
+ const auto found=s.activeIntents.find(uint64_t(animal));
+ if(found==s.activeIntents.end()||!found->second.animalRouteRequest||found->second.animalRouteRequest->sequence!=uint64_t(sequence))return -2;
+ return centerEncounterHome(s,found->second,*found->second.animalRouteRequest,uint64_t(worker),uint64_t(assignment),uint64_t(event))?1:0;
+}
+static int prepareAnimalRouteDraft(IntentState& s,const ActiveIntent& intent,
+    const std::shared_ptr<const NativeAnimalRouteRequest>& q,PendingNativeMotionDraft& d,double at){
+ d.animalRouteSource=q;d.body=q->body;d.slot=intent.slot;d.generation=intent.generation;
  const int previous=lazy_selected_context();if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
- int result=prepareRouteTiming(d.route,intent.actor,q->x,q->z,s.effectiveTime,q->radius,1,0,0,false,true);d.topology=lazy_route_revision();
+ int result=prepareRouteTiming(d.route,intent.actor,q->x,q->z,at,q->radius,1,0,0,false,true);d.topology=lazy_route_revision();
  if(previous!=intent.profile)spatial_select_nav_profile_index(previous);recordTimingResult(s,result);if(result!=1)return -7;
  d.route.originYaw=q->heading;d.route.motionOffset[1]=q->phase;
  if(intent.retreat)d.route.runDistance=d.route.distances.empty()?0:d.route.distances.back();
  else{result=animalRunDistance(d.route,*q,d.route.runDistance);if(result!=1)return result;}
  d.route.runSpeed=d.route.runDistance>0?3.8:0;result=routeTimingRepresentable(d.route);if(result!=1){recordTimingResult(s,result);return -7;}
+ return 1;
+}
+static void captureAnimalRouteDraft(PendingNativeMotionDraft& d,uint64_t intents){
+ captureNativeMotionRows(d);const auto& r=d.route;
+ const auto& q=*d.animalRouteSource;
+ const double length=r.distances.empty()?0:r.distances.back();
+ d.header={1,double(r.actor),double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(r.profile),0,r.radius,r.originX,r.originZ,r.startTime,routeTimeAtDistance(r,length),length,r.speed,r.runDistance,r.runSpeed,0,1,double(r.points.size()/2),double(d.rows.size()/16),double(d.slot),double(q.sequence),q.at,double(intents)};
+}
+static int stageAnimalRoute(double actor,double session,double requestSequence,
+    uint64_t encounterWorker=0,uint64_t homeAssignment=0,uint64_t raidEvent=0){
+ auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!animalRouteRequestCurrent(s,found->second))return -2;
+ const auto& intent=found->second;const auto q=intent.animalRouteRequest;if(q->sequence!=uint64_t(requestSequence))return -2;
+ PendingNativeMotionDraft d;d.route.points=s.routeSlots[intent.slot].points;
+ int result=prepareAnimalRouteDraft(s,intent,q,d,s.effectiveTime);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(q->body,body))return -3;
+
+ if(encounterWorker){
+  const auto* home=centerEncounterHome(s,intent,*q,encounterWorker,homeAssignment,raidEvent);
+  if(!home)return -2;
+  if(home->distances.empty()||d.route.distances.empty())return 0;
+  const auto& peer=s.activeIntents.at(encounterWorker);
+  double reachAt=0,collisionAt=0;
+  if(!reservationConflict({home},{&d.route},q->radius+1.1,s.effectiveTime,reachAt)||reachAt<=s.effectiveTime||
+     reachAt>=std::min(routeTimeAtDistance(*home,home->distances.back()),routeTimeAtDistance(d.route,d.route.distances.back())))return 0;
+  const bool collision=reservationConflict({home},{&d.route},q->radius+home->radius,s.effectiveTime,collisionAt);
+  d.route.centerEncounter=CenterEncounterPermit{encounterWorker,home->reservationBody,homeAssignment,
+    intent.actor,q->body,q->sequence,raidEvent,peer.slot,peer.generation,reachAt,collision?std::optional<double>{collisionAt}:std::nullopt};
+ }
  s.reservationChecks++;if(!reserveRouteClear(s,intent,d.route,q->body,body))return 0;
  result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
- auto& p=s.barrierProposal;p.kind=26;captureNativeMotionRows(d);const auto& r=d.route;
- const double length=r.distances.empty()?0:r.distances.back();
- d.header={1,double(r.actor),double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(r.profile),0,r.radius,r.originX,r.originZ,r.startTime,routeTimeAtDistance(r,length),length,r.speed,r.runDistance,r.runSpeed,0,1,double(r.points.size()/2),double(d.rows.size()/16),double(d.slot),double(q->sequence),q->at,double(p.intents)};
+ auto& p=s.barrierProposal;p.kind=26;captureAnimalRouteDraft(d,p.intents);
  p.animalRoute=std::move(d);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_stage(double actor,double session,double sequence){return stageAnimalRoute(actor,session,sequence);}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_stage(double actor,double session,double sequence,double worker,double assignment,double event){
+ if(!integer(worker)||!integer(assignment)||!integer(event))return -1;
+ return stageAnimalRoute(actor,session,sequence,uint64_t(worker),uint64_t(assignment),uint64_t(event));
+}
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_witness(double session,double ticket){
+ auto& s=state();const auto& p=s.barrierProposal;
+ if(!p.pending||p.kind!=26||session!=double(p.session)||ticket!=double(p.ticket)||!p.animalRoute||!p.animalRoute->route.centerEncounter)return 0;
+ const auto& c=*p.animalRoute->route.centerEncounter;
+ s.centerEncounterWitness={double(c.worker),double(c.workerBody),double(c.homeAssignment),double(c.homeSlot),double(c.homeGeneration),
+    double(c.animal),double(c.animalBody),double(c.request),double(c.spawn),p.at,c.reachAt,c.collisionAt.value_or(0),double(p.ticket),double(s.session)};
+ return 1;
+}
+extern "C" EMSCRIPTEN_KEEPALIVE const double* nav_center_encounter_witness_ptr(){return state().centerEncounterWitness.data();}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.animalRoute&&p.kind==26?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),26):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_route_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==26&&p.animalRoute?p.animalRoute->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_rows(double session,double ticket){const int v=nav_animal_route_proposal_snapshot(session,ticket);return v==1?int(state().barrierProposal.animalRoute->rows.size()/16):v;}
@@ -268,7 +325,9 @@ EMSCRIPTEN_KEEPALIVE const float* nav_animal_route_proposal_points_ptr(){const a
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_cancel(double session,double ticket){const auto& p=state().barrierProposal;return p.kind==26&&p.animalRoute?nav_intent_barrier_proposal_cancel(session,ticket):0;}
 EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=26||!p.animalRoute||session!=double(p.session)||ticket!=double(p.ticket))return -1;
- auto old=std::move(*p.animalRoute);clearWorldMutationProposal(p);const int result=stageAnimalRoute(double(old.route.actor),session,double(old.animalRouteSource->sequence));if(result!=1)return result;
+ auto old=std::move(*p.animalRoute);clearWorldMutationProposal(p);const auto& e=old.route.centerEncounter;
+ const int result=stageAnimalRoute(double(old.route.actor),session,double(old.animalRouteSource->sequence),e?e->worker:0,e?e->homeAssignment:0,e?e->spawn:0);
+ if(result!=1)return result;
  auto& next=*p.animalRoute;if(next.animalRouteSource!=old.animalRouteSource){clearWorldMutationProposal(p);return -2;}
  next.previousAnimal=NativeAnimalRouteOrigin{old.header,uint64_t(ticket)};
  next.timeTranslation={2,ticket,double(p.ticket),old.header[10],old.header[11],next.header[10],next.header[11],sameNativeMotionDraft(old,next)?1.:0.,1,sameNativeMotionDraft(old,next,true)?1.:0.,1};return 1;
@@ -279,6 +338,13 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_commit_bound(double session,d
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,26);if(valid!=1)return valid;
  auto& pending=*s.barrierProposal.animalRoute;const auto found=s.activeIntents.find(pending.route.actor);
  if(found==s.activeIntents.end()||found->second.animalRouteRequest!=pending.animalRouteSource||!animalRouteRequestCurrent(s,found->second)){clearWorldMutationProposal(s.barrierProposal);return -2;}
+
+ if(const auto& encounter=pending.route.centerEncounter;encounter){
+  const auto& c=*encounter;
+  if(!centerEncounterHome(s,found->second,*pending.animalRouteSource,c.worker,c.homeAssignment,c.spawn)){
+    clearWorldMutationProposal(s.barrierProposal);return -2;
+  }
+ }
  auto binding=std::make_shared<NativeAnimalRouteBinding>();binding->actual={pending.header,uint64_t(ticket)};binding->source=pending.animalRouteSource;
  if(preparedTicket==ticket)binding->prepared=binding->actual;
  else if(pending.previousAnimal&&preparedTicket==double(pending.previousAnimal->ticket)&&pending.timeTranslation[9]==1)binding->prepared=*pending.previousAnimal;
@@ -481,6 +547,11 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  }else{
   if(!p.animalRoute||p.animalRoute->animalRouteSource!=ai.animalRouteRequest||p.animalRoute->route.actor!=ai.actor||mode!=1)return -2;
   crop.route=&p.animalRoute->route;
+  if(const auto& encounter=crop.route->centerEncounter;encounter){
+   const auto& c=*encounter;
+   return hr&&c.worker==wi.actor&&c.animal==ai.actor&&c.homeAssignment==wi.assignmentSequence&&c.spawn==uint64_t(event)&&
+     centerEncounterHome(s,ai,*ai.animalRouteRequest,c.worker,c.homeAssignment,c.spawn)==hr?1:-2;
+  }
   if(center&&hr){
    if(nav_center_flight_animal_ready(worker,animal,double(ai.animalRouteRequest->sequence),event)!=1)return 0;
    return centerFlightClearAt(*hr,*crop.route,{crop.route->originX,crop.route->originZ},reach,s.effectiveTime)<=s.effectiveTime?1:0;

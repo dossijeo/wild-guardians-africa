@@ -22,6 +22,8 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_game_execution_state(){
  }
  for(const auto& [actor,intent]:s.activeIntents){
   if(intent.state==PlanningState::Cancelled)continue;
+  if(s.homeEncounterImpact&&s.homeEncounterImpact->worker==actor&&
+     nav_home_encounter_impact_current(double(actor),double(s.homeEncounterImpact->animal),double(s.homeEncounterImpact->spawn))==1)continue;
   if(nativeHeldIdleStrollBodyCurrent(s,intent,intent.assignmentSequence,intent.generation)||nativeHeldFarmArrivalBodyCurrent(s,intent))continue;
   if(nativeFarmArrivalBodyCurrent(s,intent))continue;
   if(intent.farmArrivalRequest){if(!nativeFarmArrivalRequestCurrent(s,intent))return -1;continue;}

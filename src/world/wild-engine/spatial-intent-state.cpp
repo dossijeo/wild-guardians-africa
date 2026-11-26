@@ -359,7 +359,21 @@ struct NativeTaskStartBinding {
   NativeTaskStartOrigin prepared,actual;
   uint64_t assignmentSequence=0;
 };
+struct CenterEncounterPermit {
+  uint64_t worker=0,workerBody=0,homeAssignment=0,animal=0,animalBody=0,request=0,spawn=0;
+  uint32_t homeSlot=0,homeGeneration=0;
+  double reachAt=0;
+  std::optional<double> collisionAt;
+};
+struct CenterEncounterStep {
+  uint64_t animalAssignment=0,workerBody=0,animalBody=0;
+  uint64_t intents=0,clock=0;
+  std::array<uint64_t,3> worldStamp{};
+  double from=0,to=0;
+  bool impact=false;
+};
 struct RouteSlot {
+  std::optional<CenterEncounterPermit> centerEncounter;
   std::shared_ptr<const NativeAnimalRouteBinding> animalRouteBinding;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalBinding;
   std::shared_ptr<const NativeIdleStrollBinding> idleStrollBinding;
@@ -516,7 +530,36 @@ struct FinishedAnimalStrike {
   double x,z,radius,phase,yaw,at;
   std::shared_ptr<const NativeAnimalRouteRequest> covered;
 };
+
+// Disposable first-impact experiment. No qualification or generated artefact in the product.
+struct HomeEncounterImpact {
+  uint64_t worker,animal,workerBody,animalBody,workerAssignment,animalAssignment,spawn;
+  uint32_t workerSlot,workerGeneration,animalSlot,animalGeneration;
+  double from,at;
+  std::array<double,18> pose;
+  double resultX,resultZ;
+  bool consumed=false,recovered=false;
+  std::shared_ptr<const NativeHomeResourceRequest> priorHome;
+};
+struct EncounterRetreatCut {
+  uint64_t worker=0,workerBody=0,animal=0,animalBody=0,assignment=0,spawn=0,hit=0,retreatRequest=0;
+  uint32_t slot=0,generation=0;
+  double from=0,at=0,exitX=0,exitZ=0;
+  std::array<double,18> origin{};
+  bool departed=false;
+  std::array<double,18> first{};
+  std::array<uint64_t,3> world{};
+  uint64_t bodies=0;
+  int profile=0;
+  std::vector<float> remaining;
+  std::optional<PendingNativeMotionDraft> graphicalDraft;
+  std::array<double,6> graphicalBoundary{};
+};
 struct IntentState {
+ std::optional<EncounterRetreatCut> encounterRetreat;
+  std::optional<HomeEncounterImpact> homeEncounterImpact;
+  std::optional<CenterEncounterStep> centerEncounterStep;
+  std::array<double,14> centerEncounterWitness{};
   std::unordered_map<uint64_t,Worker> workers;
   std::unordered_map<uint64_t,Target> targets;
   std::unordered_map<uint64_t,Task> tasks;
@@ -1063,7 +1106,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       }
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;route.stoppedTaskForHome=false;
-      route.animalRouteBinding.reset();route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.idleStrollBinding.reset();route.farmArrivalBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
+      route.centerEncounter.reset();route.animalRouteBinding.reset();route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.idleStrollBinding.reset();route.farmArrivalBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
       route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
@@ -1120,6 +1163,7 @@ void releaseIntent(IntentState& s,uint64_t actor,PlanningState next,bool notify=
   if(notify)emitIntentChange(s,intent);
   intent.task=0;intent.target=0;if(notify)s.invalidations++;
 }
+bool executionBindingCoherent(const IntentState&,uint64_t,uint32_t);
 #include "spatial-route-reservations.h"
 bool gateStaticProofCurrent(const IntentState&);
 bool gateRouteBindingsCoherent(const IntentState&,const RouteSlot&,uint32_t);
@@ -3564,6 +3608,32 @@ static void declareNativeRetreat(IntentState& s,ActiveIntent& intent,RouteSlot& 
   intent.state=PlanningState::AwaitingResources;intent.animalRouteRequest=request;
   request->sequence=emitIntentChange(s,intent);
 }
+static uint32_t nextPendingRetreatGeneration(uint32_t generation){
+ return ++generation?generation:1;
+}
+static int installAnimalRetreat(IntentState& s,const std::shared_ptr<NativeAnimalRouteRequest>& request,
+    uint64_t actor,double startX,double startZ,double exitX,double exitZ,std::vector<float> points){
+  uint32_t slot=uint32_t(s.routeSlots.size());
+  for(uint32_t i=0;i<s.routeSlots.size();i++)
+    if(!s.routeSlots[i].active){slot=i;break;}
+  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
+  RouteSlot& route=s.routeSlots[slot];
+  route.points=std::move(points);
+  route.actor=actor;route.originX=startX;route.originZ=startZ;
+  route.active=true;route.generation=nextPendingRetreatGeneration(route.generation);
+  ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
+    slot,route.generation,lazy_route_revision(),true,false};
+  intent.retreat=true;intent.lease=false;
+  intent.profile=lazy_selected_context();
+  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
+  intent.approachX=float(exitX);intent.approachZ=float(exitZ);
+  intent.approachKnown=true;
+  auto& installed=s.activeIntents.insert_or_assign(actor,intent).first->second;
+  if(request)declareNativeRetreat(s,installed,route,request);
+  else emitIntentChange(s,installed);
+  return 1;
+}
+
 static int planAnimalRetreat(const std::shared_ptr<NativeAnimalRouteRequest>& request,double actorId,double startX,double startZ,
                             double exitX,double exitZ){
   if(!integer(actorId)||!coordinate(startX)||!coordinate(startZ)||
@@ -3586,28 +3656,106 @@ static int planAnimalRetreat(const std::shared_ptr<NativeAnimalRouteRequest>& re
     const int result=validateNativeRetreatPath(*request,points,count);
     if(result!=1)return result;
   }
-  uint32_t slot=uint32_t(s.routeSlots.size());
-  for(uint32_t i=0;i<s.routeSlots.size();i++)
-    if(!s.routeSlots[i].active){slot=i;break;}
-  if(slot==s.routeSlots.size())s.routeSlots.emplace_back();
-  RouteSlot& route=s.routeSlots[slot];
-  route.points.assign(points,points+size_t(count)*2);
-  route.actor=actor;route.originX=startX;route.originZ=startZ;
-  route.active=true;route.generation++;
-  if(!route.generation)route.generation=1;
-  ActiveIntent intent{actor,0,0,PlanningState::RouteActive,
-    slot,route.generation,lazy_route_revision(),true,false};
-  intent.retreat=true;intent.lease=false;
-  intent.profile=lazy_selected_context();
-  intent.routeStartX=float(startX);intent.routeStartZ=float(startZ);
-  intent.approachX=float(exitX);intent.approachZ=float(exitZ);
-  intent.approachKnown=true;
-  auto& installed=s.activeIntents.insert_or_assign(actor,intent).first->second;
-  if(request)declareNativeRetreat(s,installed,route,request);
-  else emitIntentChange(s,installed);
-  return 1;
+  return installAnimalRetreat(s,request,actor,startX,startZ,exitX,exitZ,
+    std::vector<float>(points,points+size_t(count)*2));
 }
 
+
+EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_draft(double session,double actor,double spawn,double end){
+ auto& s=state();auto& c=s.encounterRetreat;
+ if(!c||c->hit||session!=double(s.session)||actor!=double(c->animal)||spawn!=double(c->spawn)||end!=c->at||
+    s.effectiveTime!=c->from||s.clockThrough!=c->from||c->bodies!=spatialBodiesMutationRevision()||
+    c->world!=executionWorldStamp()||!encounterRetreatCutCurrent(s,*c))return -2;
+ if(c->graphicalDraft||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ if(s.intentSequence>uint64_t(maxId)-3)return -5;
+ SpatialBodyView body;if(!spatialReadBody(c->animalBody,body))return -2;
+ uint32_t slot=0;
+ while(slot<c->slot&&s.routeSlots[slot].active)slot++;
+ const uint32_t released=s.routeSlots[slot].generation+(slot==c->slot?1u:0u);
+ const uint32_t generation=nextPendingRetreatGeneration(released);
+ auto q=std::make_shared<NativeAnimalRouteRequest>();
+ q->actor=c->animal;q->body=c->animalBody;q->sequence=s.intentSequence+2;q->at=c->at;
+ q->x=c->first[0];q->z=c->first[1];q->phase=c->first[3];q->heading=c->first[4];q->radius=body.r;
+ q->targetX=c->exitX;q->targetZ=c->exitZ;
+ ActiveIntent request{q->actor,0,0,PlanningState::AwaitingResources,slot,generation,lazy_route_revision(),true,false};
+ request.retreat=true;request.profile=c->profile;
+ PendingNativeMotionDraft d;d.route.points=c->remaining;
+ const int motion=prepareAnimalRouteDraft(s,request,q,d,c->from);if(motion!=1)return motion;
+ const int result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
+ auto& p=s.barrierProposal;
+ c->graphicalBoundary={double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),c->at};
+ captureAnimalRouteDraft(d,q->sequence);c->graphicalDraft=std::move(d);
+ clearWorldMutationProposal(p);return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_encounter_retreat_draft_boundary(){
+ const auto& c=state().encounterRetreat;return c&&c->graphicalDraft&&!c->hit?c->graphicalBoundary.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_encounter_retreat_draft_header(){
+ const auto& c=state().encounterRetreat;return c&&c->graphicalDraft&&!c->hit?c->graphicalDraft->header.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_encounter_retreat_draft_rows(){
+ const auto& c=state().encounterRetreat;return c&&c->graphicalDraft&&!c->hit?c->graphicalDraft->rows.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_match_draft(double session,double actual,double prepared,double actor,double hit){
+ auto& s=state();auto& c=s.encounterRetreat;auto& p=s.barrierProposal;
+ if(!c||!c->graphicalDraft||!c->hit||!c->retreatRequest||c->departed||session!=double(s.session)||
+    prepared!=c->graphicalBoundary[1]||actor!=double(c->animal)||hit!=double(c->hit)||p.kind!=26||!p.pending||!p.animalRoute||
+    p.at!=c->at||actual!=double(p.ticket)||actual<=prepared||c->world!=executionWorldStamp()||
+    s.intentSequence!=uint64_t(c->graphicalBoundary[2])+2||s.clockThrough!=c->at||
+    s.clockSequence!=uint64_t(c->graphicalBoundary[4])+1)return -2;
+ auto& next=*p.animalRoute;const auto& old=*c->graphicalDraft;
+ if(!next.animalRouteSource||next.animalRouteSource->sequence!=c->retreatRequest||
+    old.animalRouteSource->sequence!=c->retreatRequest||old.animalRouteSource->x!=next.animalRouteSource->x||
+    old.animalRouteSource->z!=next.animalRouteSource->z||old.animalRouteSource->heading!=next.animalRouteSource->heading||
+    old.animalRouteSource->phase!=next.animalRouteSource->phase||!sameNativeMotionDraft(old,next,true))return 0;
+ // Checking equality grants no graphical authorization and leaves the actual
+ // draft untouched. The later holder must still supply a genuine READY.
+ return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_commit_draft(
+ double session,double actual,double prepared,double actor,double hit){
+ auto& s=state();auto& p=s.barrierProposal;auto& cut=s.encounterRetreat;
+ const int match=nav_encounter_retreat_match_draft(session,actual,prepared,actor,hit);
+ if(match!=1)return match;
+ auto& next=*p.animalRoute;const auto& old=*cut->graphicalDraft;
+ next.previousAnimal=NativeAnimalRouteOrigin{old.header,uint64_t(prepared)};
+ next.timeTranslation={2,prepared,actual,old.header[10],old.header[11],next.header[10],next.header[11],
+   sameNativeMotionDraft(old,next)?1.:0.,1,1,1};
+ const int result=nav_animal_route_proposal_commit_bound(session,actual,double(p.intents),p.at,double(p.clock),prepared);
+ if(result==1)cut->graphicalDraft.reset();
+ return result;
+}
+EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_request(double session,double actor,double hit,double exitX,double exitZ){
+ auto& s=state();auto& cut=s.encounterRetreat;
+ if(session!=double(s.session)||!cut||!cut->hit||cut->departed||cut->retreatRequest||
+    actor!=double(cut->animal)||hit!=double(cut->hit)||exitX!=cut->exitX||exitZ!=cut->exitZ||
+    s.effectiveTime<cut->at||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||
+    nav_home_encounter_impact_current(double(cut->worker),actor,double(cut->spawn))!=1)return -2;
+ SpatialBodyView body;
+ if(!spatialReadBody(cut->animalBody,body)||body.kind!=1||body.flags!=1||body.x!=cut->first[0]||body.z!=cut->first[1]||
+    s.activeIntents.count(cut->animal)||s.suspendedBodies.count(cut->animalBody)||s.reservedBodies.count(cut->animalBody))return -2;
+ const auto request=std::make_shared<NativeAnimalRouteRequest>();
+ request->actor=cut->animal;request->body=cut->animalBody;request->at=s.effectiveTime;
+ request->x=body.x;request->z=body.z;request->heading=cut->first[4];request->phase=cut->first[3];request->radius=body.r;
+ request->targetX=exitX;request->targetZ=exitZ;
+
+ const int previous=lazy_selected_context();
+ if(previous!=cut->profile)spatial_select_nav_profile_index(cut->profile);
+ const int clear=validateNativeRetreatPath(*request,cut->remaining.data(),int(cut->remaining.size()/2));
+ const int result=clear==1?installAnimalRetreat(s,request,cut->animal,body.x,body.z,exitX,exitZ,cut->remaining):clear;
+ if(previous!=cut->profile)spatial_select_nav_profile_index(previous);
+ if(result==1)cut->retreatRequest=request->sequence;
+ return result;
+}
+EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_proposal(double session,double ticket,double actor,double hit){
+ const auto& s=state();const auto& p=s.barrierProposal;const auto& cut=s.encounterRetreat;
+ if(!cut||!cut->retreatRequest||cut->departed||hit!=double(cut->hit)||actor!=double(cut->animal)||
+    !p.pending||p.kind!=26||session!=double(p.session)||ticket!=double(p.ticket)||!p.animalRoute||!p.animalRoute->animalRouteSource)return 0;
+ const auto& q=*p.animalRoute->animalRouteSource;
+ return q.sequence==cut->retreatRequest&&q.actor==cut->animal&&q.body==cut->animalBody&&!q.target&&!q.center&&
+   q.x==cut->first[0]&&q.z==cut->first[1]&&q.heading==cut->first[4]&&q.phase==cut->first[3]&&
+   q.targetX==cut->exitX&&q.targetZ==cut->exitZ?1:0;
+}
 int nav_intent_plan_retreat(double actor,double x,double z,double exitX,double exitZ){
   return planAnimalRetreat(nullptr,actor,x,z,exitX,exitZ);
 }
@@ -3659,6 +3807,9 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_finish_retreat(double actor,double assignmen
   const auto& route=s.routeSlots[intent.slot];const auto& binding=route.animalRouteBinding;
   if(!intent.retreat||!binding||binding->assignmentSequence!=assignment||route.executionPose[6]!=1||
      route.executionPose[0]!=float(binding->source->targetX)||route.executionPose[1]!=float(binding->source->targetZ))return 0;
+
+  if(auto& cut=s.encounterRetreat;cut&&cut->animal==intent.actor&&cut->animalBody==route.reservationBody&&
+     cut->retreatRequest==binding->source->sequence)cut->departed=true;
   releaseIntent(s,intent.actor,PlanningState::Cancelled);s.activeIntents.erase(uint64_t(actor));
   return 1;
 }
