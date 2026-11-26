@@ -7,7 +7,7 @@ import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,co
 import {copyNativeIdleStrollStopReference,sameNativeIdleStrollStopReference,copyNativeIdleStrollStopAttestation} from '../world/native-idle-stroll-stop.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,copyNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,copyNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
-import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
+import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyNativeFarmArrivalRouteReference,sameNativeFarmArrivalRouteReference,copyNativeFarmArrivalRouteAttestation} from '../world/native-farm-arrival-route.js';
 import {copyNativeHomeRouteReference,sameNativeHomeRouteReference,copyNativeHomeRouteAttestation} from '../world/native-home-route.js';
@@ -153,6 +153,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
            (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
+           (recoveryBaseline.refuge&&members.length===0?!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge):draw.refuge!==undefined)||
            !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              return row?.kind===kind&&row.assignmentSequence===proof.assignmentSequence&&

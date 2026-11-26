@@ -741,8 +741,8 @@ for(const order of ['preparer closing first','hold requested first','an ordinary
 });
 
 for(const closeFirst of [true,false])test(`wounded Home19 READY is recovered with ${closeFirst?'preparer retirement':'production hold'} first`,{timeout:35000},async()=>{
- let first,release,draw,rig;
- const ready=new Promise(resolve=>release=resolve),ports=new MessageChannel();
+ let first,release,draw,rig,absentDraw;
+ const ready=new Promise(resolve=>release=resolve),ports=new MessageChannel(),absencePorts=new MessageChannel();
  const world=await setup(true,{captureHistoricalEvents:true,onReady(record){
   if(!first&&record.kind==='home-arrival'&&record.resources.nativeHomeArrival.sourceHome.reference.sourceRequest.recoveryHit){
    first=record;return ready;
@@ -841,7 +841,37 @@ for(const closeFirst of [true,false])test(`wounded Home19 READY is recovered wit
   assert.equal(complete.workers[0].hits,2);
   assert.deepEqual(complete.ledger,snapshot.ledger);
   assert.deepEqual([...world.faults,...draw.errors],[]);
- }finally{release();rig?.close();await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
+  if(!closeFirst){
+   await retry.packet.presented;
+   world.retireResourceEndpoint();
+   const absentHold=await world.authority.quiesceNativeIntentProduction({forLostDraw:true});
+   await draw.host.dispose();
+   assert.equal((await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true,lossHoldId:40})).terminal,true);
+   const absentRoute=await world.authority.terminalWorkerRoute();
+   assert.deepEqual(absentRoute,{version:2,refuge:true,members:[]});
+   absentDraw=await drawFixture({}, {intentControl:{port:absencePorts.port2,session:'production-control',recoveryHold:40}});
+   const {recoveredWorkerRoute:source}=await world.authority.attachHeldWorkerRoute(absencePorts.port1,'production-control',40,absentHold,absentRoute);
+   assert.deepEqual(source.refuge.reference.sourceHome,arrival.sourceHome);
+   assert.equal(source.refuge.reference.worldBoundary.ticket,draw.client.requiredNativeWorldBoundary().ticket);
+   const frame=absentDraw.frame(3,{nativeWorldBoundary:source.worldBoundary,clock:{...world.clock,
+    elapsed:complete.elapsed,safeUntil:complete.elapsed,paused:true,segments:[]}});
+   await flush();await absentDraw.host.idle();
+   await assert.rejects(world.authority.checkHeldDraw(40,absentHold,absentRoute),/Missing submitted/);
+   absentDraw.host.present();await frame;
+   const confirmed=await world.authority.checkHeldDraw(40,absentHold,absentRoute);
+   assert.deepEqual(confirmed.refuge,source.refuge);
+   assert.deepEqual(confirmed.members,[]);
+   assert.deepEqual(absentDraw.host.inspect().nativeRouteFrame.bindings,[]);
+   await world.attachRecoveredResources(absentDraw);
+   assert.equal(world.authority.resumeNativeIntentProduction(absentHold),true);
+   const continued=JSON.parse((await advance(world)).snapshot);
+   assert.equal(continued.elapsed,complete.elapsed+.02);
+   assert.deepEqual(continued.workers,complete.workers);
+   assert.deepEqual(continued.ledger,complete.ledger);
+   assert.deepEqual([...world.faults,...absentDraw.errors],[]);
+  }
+ }finally{release();rig?.close();await world.close();draw?.client.dispose();await draw?.host.dispose();absentDraw?.client.dispose();await absentDraw?.host.dispose();
+  for(const pair of [ports,absencePorts]){pair.port1.close();pair.port2.close();}}
 });
 
 test('the ordinary Desert qualifications still withhold contact corridors without encounter qualification',async()=>{

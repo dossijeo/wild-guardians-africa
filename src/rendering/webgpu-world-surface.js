@@ -741,7 +741,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     });
     const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
     const ruin=source.ruin,encounter=source.encounter;
-    const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter.at;
+    const woundedRefuge=!!source.refuge&&members.length===0;
+    const stationary=encounter?.version===3,at=members[0]?.execution.executedThrough??encounter?.at??state.elapsed;
     const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
     const approach=encounter?.version===2;
     const hitAt=approach||stationary?encounter.impactAt:boundary.effectiveTime;
@@ -768,6 +769,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       if(!arrival)return true;
       const worker=state.workers.find(worker=>worker.id==='worker-'+arrival.actorId);
       return worker?.status==='home'&&!worker.nativeRouteAdmission&&worker.heading===arrival.pose.yaw&&
+        (!woundedRefuge||!state.raid&&worker.incapacitated===true&&worker.hits===2&&workers?.get(worker.id)===null)&&
         worker.villageId==='village-'+destination.villageId&&worker.x===destination.x&&worker.z===destination.z&&
         ['runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===arrival.pose[key]);
     };
@@ -776,7 +778,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||members.some(member=>member.crop))&&
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||woundedRefuge||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&

@@ -99,8 +99,9 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
             const {refuge,ruin,encounter}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
+            if(refuge&&members.length===0&&qualifyRaidEncounter!==true)throw Error('Wounded refuge recovery is unavailable');
             evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(encounter?{encounter}:{})};
-            const at=members[0]?.execution.executedThrough??encounter.at;
+            const at=members[0]?.execution.executedThrough??encounter?.at??cut.effectiveTime;
             if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');
           }

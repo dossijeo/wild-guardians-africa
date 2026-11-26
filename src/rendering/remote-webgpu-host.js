@@ -904,6 +904,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
             elapsed:recovered.at,...(recovered.grouped?{members}:members[0]),
+            ...(recovered.refuge&&members.length===0?{refuge:recovered.refuge}:{}),
             ...(recovered.encounter?{encounter:recovered.encounter}:{})};
           recovered=null;
         }
@@ -2323,6 +2324,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
           const rows=recoveredSubmission?.members??[recoveredSubmission];
           const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&
+            (!recoveredSubmission.refuge||nativeRouteFrame?.clockElapsed===message.effectiveTime&&
+              sameNativeWorldBoundary(nativeRouteFrame.worldBoundary,recoveredSubmission.refuge.reference.worldBoundary)&&
+              !nativeRouteFrame.bindings.some(({nativeHome,nativeRoute})=>
+                (nativeHome?.actorId??nativeRoute?.actorId)===recoveredSubmission.refuge.reference.actorId))&&
             (!recoveredSubmission.encounter||sameRecoveredEncounter(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&
             (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);

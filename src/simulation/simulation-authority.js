@@ -3,6 +3,7 @@ import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
 import {nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
+import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
@@ -1078,6 +1079,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const encounter=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
       planner.nativeStationaryEncounterRecovery();
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
+    if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
+      return {version:2,refuge:true,members:[]};
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
     const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
@@ -1097,6 +1100,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const encounter=planner.nativeStationaryEncounterRecovery();
       return encounter?.workerId===route.workerId&&route.members.length===0&&
         encounter.at===planner.nativeCausalClock()?.committedThrough?{executions:[],encounter}:null;
+    }
+    if(route.refuge&&route.members.length===0){
+      const refuge=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery();
+      return refuge?{executions:[],refuge}:null;
     }
     if(route.refuge||route.ruin||route.encounter){
       const [member]=route.members;
@@ -1259,6 +1266,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
          route.encounter&&!sameRecoveredEncounter(draw.encounter,live.encounter)||
+         route.refuge&&!routes.length&&!sameNativeHomeArrivalAttestation(draw.refuge,live.refuge)||
          !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))
         throw Error('Missing submitted worker route at recovery cut');
       if(route.encounter===true){

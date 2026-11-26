@@ -32,6 +32,9 @@ export function copyNativeHomeArrivalAttestation(value){
  if(value.retiredSequence<=reference.sourceControlSequence||!nativeHomeArrivalSuccessor(preparedReference,reference))throw TypeError('Native Home arrival differs from its prepared source');
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,retiredSequence:value.retiredSequence,reference,preparedReference});
 }
+export const sameNativeHomeArrivalAttestation=(a,b)=>!!a&&!!b&&a.kind===b.kind&&
+ a.version===b.version&&a.projectionVersion===b.projectionVersion&&a.retiredSequence===b.retiredSequence&&
+ sameNativeHomeArrivalReference(a.reference,b.reference)&&sameNativeHomeArrivalReference(a.preparedReference,b.preparedReference);
 export function copyNativeHomeArrivalResources(value){
  if(value?.version!==1||value.kind!==19||value.phase!=='committed'||Object.keys(value).some(k=>!['version','kind','phase','worldBoundary','nativeHomeArrivalBinding'].includes(k)))throw TypeError('Invalid native Home arrival resources');
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),nativeHomeArrivalBinding=copyNativeHomeArrivalAttestation(value.nativeHomeArrivalBinding);
