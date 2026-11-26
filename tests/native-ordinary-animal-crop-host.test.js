@@ -223,6 +223,89 @@ test('a saved crop strike reacquires its original rig and hits once after its re
   assert.deepEqual(restored.faults,[]);
  }finally{try{await restored?.close();rig?.close();}finally{await source.close();}}
 });
+test('terminal Draw loss preserves the existing Strike27 before and after a save reload',async()=>{
+ const {s,manifest,chunkKeys}=fixture();
+ const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest});
+ let loaded;
+ const step=f=>f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+ try{
+  await untilProduction(source,()=>source.records[0]?.committed);
+  const acquired=()=>source.records.find(row=>row.kind==='animal-crop-strike'&&row.committed);
+  for(let i=0;i<380&&!acquired();i++){step(source);await source.present();}
+  assert.ok(acquired());
+  for(let i=0;i<12;i++){step(source);await source.present();}
+  const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const stored=prepareWorkerCheckpoint(checkpoint,{slotId:s.slotId,policy:{nativeAuthority:true},savedAt:1795663080000});
+  assert(stored.saved);
+  const continuousHit=await replaceAndFinish(source,false);
+  loaded=await nativeProductionAuthority(stored.state,{qualifyAnimalCrop:true,
+    ...savedNativeAuthorityOptions(serialize(stored.state)),getTerrainManifest:()=>manifest});
+  await untilProduction(loaded,()=>loaded.records[0]?.committed);
+  for(let i=0;i<6;i++){step(loaded);await loaded.present();}
+  assert.deepEqual(await replaceAndFinish(loaded,true),continuousHit);
+ }finally{await loaded?.close();await source.close();}
+
+ async function replaceAndFinish(f,reloaded){
+  const old=f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeAnimalCrop?.kind===27);
+  const frozen=f.snapshot(),animal=frozen.raid.animals[0];
+  assert(old?.relativeTime>0);
+  f.gpu.device.destroy();f.retireResourceEndpoint();
+  const hold=await f.authority.quiesceNativeIntentProduction();
+  const retired=await f.authority.flushNativeResourcePreparation({allowRetired:true});
+  assert.equal(retired.terminal,true);assert.equal(retired.callbacksSettled,true);
+  const route=await f.authority.terminalWorkerRoute();
+  assert.deepEqual(route,{kind:27,actorId:396});
+  const ports=new MessageChannel();
+  let draw;
+  try{
+   draw=await drawFixture({capabilities:{nativeAnimalCropVersion:1}},
+    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+   const {recoveredWorkerRoute:q}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+   const binding=q.execution.binding,ref=binding.reference,epoch=ref.worldBoundary.effectiveTime,at=q.execution.executedThrough;
+   assert.equal(!!ref.restore,reloaded);assert.equal(ref.routeAssignment===undefined,reloaded);
+   assert.equal(binding.attackId,Number(animal.attackId.slice(7)));
+   assert.equal(ref.bodyId,old.nativeAnimalCrop.bodyId);assert.equal(ref.clip,old.nativeAnimalCrop.clip);
+   assert.equal(ref.endTime-at,q.execution.attackRemaining);assert.equal(q.execution.attackRemaining,animal.attackRemaining);
+   assert.equal(q.resources.presentation,undefined);
+   const forged=structuredClone(q.resources);
+   forged.worldBoundary.ticket++;
+   assert.throws(()=>nativeWorkerRouteRecoveryProfile(27).copyResources(forged),/stationary action/);
+   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,resourceEnd:ref.endTime});
+   const pending=draw.frame(3,{nativeWorldBoundary:ref.worldBoundary,
+     clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
+   await flush();await draw.host.idle();draw.host.present();await pending;
+   const submitted=await f.authority.checkHeldDraw(30,hold,route);
+   const pick=captureNativeRoutePickFrame(draw.host.inspect());
+   assert.equal(submitted.relativeTime,old.relativeTime);
+   assert.equal(pick.getAnimalCropAge(ref),submitted.relativeTime);
+   assert.equal(nativeAnimalStrikeClipAge(ref,submitted.relativeTime),nativeAnimalStrikeClipAge(old.nativeAnimalCrop,old.relativeTime));
+   assert.equal(f.snapshot().rng,frozen.rng);
+   assert(f.authority.resumeNativeIntentProduction(hold));
+   const hit=[];
+   for(let i=0;i<120&&!hit.length;i++){
+    hit.push(...step(f).events.filter(event=>event.type==='AnimalLogicalHit'));await flush();
+   }
+   assert.equal(hit.length,1);assert.equal(hit[0].attackId,animal.attackId);assert.equal(hit[0].targetId,animal.targetId);
+   assert(hit[0].simulationTime>=ref.endTime&&hit[0].simulationTime-ref.endTime<=.05+1e-9);
+   const later=step(f);
+   assert.equal(later.events.filter(event=>event.type==='AnimalLogicalHit').length,0);
+   for(let i=0;i<100&&draw.host.inspect().nativeCausalClock.committedThrough<later.elapsed;i++)
+    await new Promise(resolve=>setImmediate(resolve));
+   assert.equal(draw.host.inspect().nativeCausalClock.committedThrough,later.elapsed);
+   const submittedBefore=draw.gpu.submitted.length;draw.host.present();
+   assert.equal(draw.gpu.submitted.length,submittedBefore);
+   const late=draw.frame(4,{nativeWorldBoundary:ref.worldBoundary,clock:{version:1,epoch:1,
+     elapsed:later.elapsed,safeUntil:later.elapsed,anchorAbsoluteMs:0,paused:true,segments:[]}});
+   await assert.rejects(late,{code:'remote-frame-native-route-obsolete'});
+   assert.equal(draw.gpu.submitted.length,submittedBefore);
+   assert.deepEqual(f.faults,[]);assert.deepEqual(draw.errors,[]);
+   return hit[0];
+  }finally{
+   draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();
+  }
+ }
+});
 test('a saved native Retreat reacquires its remaining corridor and ends the raid once',async()=>{
  const {s,manifest,chunkKeys}=fixture();
  let sourceProof;

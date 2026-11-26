@@ -42,6 +42,25 @@ function copyCropResources(value){
    throw TypeError('Recovered crop program differs from the acquired route');
  return Object.freeze({version:1,kind:26,phase:'committed',worldBoundary,nativeRoute,presentation,nativeAnimalCropRouteBinding:binding});
 }
+function copyStrikeAttestation(value){
+ const binding=copyNativeAnimalCropAttestation(value,27);
+ if(binding.reference.purpose!==undefined||binding.assignmentSequence!==binding.reference.sourceControlSequence+1||
+    !Array.isArray(value.gateIds)||value.gateIds.length)throw TypeError('Invalid recovered crop strike');
+ return Object.freeze({...binding,gateIds:Object.freeze([])});
+}
+function sameStrikeAttestation(a,b){
+ return !!a&&!!b&&a.attackId===b.attackId&&a.assignmentSequence===b.assignmentSequence&&
+   a.gateIds?.length===0&&b.gateIds?.length===0&&sameNativeAnimalCropReference(a.reference,b.reference)&&
+   sameNativeAnimalCropReference(a.preparedReference,b.preparedReference);
+}
+function copyStrikeResources(value){
+ const binding=copyStrikeAttestation(value?.nativeAnimalCropStrikeBinding);
+ const worldBoundary=copyNativeWorldBoundary(value.worldBoundary);
+ if(value.version!==1||value.kind!==27||value.phase!=='committed'||value.nativeRoute!==undefined||
+    value.presentation!==undefined||!sameNativeWorldBoundary(worldBoundary,binding.reference.worldBoundary))
+   throw TypeError('Recovered strike is not the acquired stationary action');
+ return Object.freeze({version:1,kind:27,phase:'committed',worldBoundary,nativeAnimalCropStrikeBinding:binding});
+}
 
 const profiles=new Map([
  [18,Object.freeze({
@@ -73,6 +92,13 @@ const profiles=new Map([
   obsoleteCode:'native-crop-recovery-obsolete',
   copyResources:copyCropResources,copyAttestation:copyCropAttestation,
   sameAttestation:sameCropAttestation,sameReference:sameNativeAnimalCropReference
+ })],
+ [27,Object.freeze({
+  kind:27,executionKind:'native-animal-crop-strike-execution',maxGates:0,
+  bindingField:'nativeAnimalCropStrikeBinding',clockField:'nativeAnimalCrop',
+  obsoleteCode:'native-crop-recovery-obsolete',
+  copyResources:copyStrikeResources,copyAttestation:copyStrikeAttestation,
+  sameAttestation:sameStrikeAttestation,sameReference:sameNativeAnimalCropReference
  })]
 ]);
 

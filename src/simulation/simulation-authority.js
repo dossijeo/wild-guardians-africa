@@ -936,7 +936,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     return Math.abs(opening-pose.opening)<=1e-9;
   }
   function recoveryExecution({kind,actorId}){
-    return kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId):
+    return kind===27?planner.nativeAnimalCropStrikeExecution('animal-'+actorId):
+      kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId):
       kind===18?planner.nativeHomeRouteExecution(actorId):
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
@@ -945,8 +946,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const [animal]=game.raid.animals;
       if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1||
          !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id)))return null;
-      const execution=planner.nativeAnimalCropRouteExecution(animal.id);
-      return execution?{kind:26,actorId:execution.actorId}:null;
+      const kind=animal.status==='attacking'?27:26;
+      const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
+      return execution?{kind,actorId:execution.actorId}:null;
     }
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
@@ -1024,13 +1026,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(!terminal?.terminal||!terminal.callbacksSettled||!current?.closed||!current.drained||pending||cohort.consumers!==1||
          nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
       const profile=nativeWorkerRouteRecoveryProfile(route.kind),execution=recoveryExecution(route);
-      if(!execution||execution.arrived||!recoveryGateCurrent(profile.kind,execution))throw Error('Expected current moving worker route');
+      if(!execution||execution.arrived||!recoveryGateCurrent(profile.kind,execution))throw Error('Expected current native recovery assignment');
       const binding=execution.binding,ref=binding.reference,boundary=ref.worldBoundary;
       const handle=profile.kind===26?planner.nativeAnimalRouteBinding('animal-'+ref.actorId)?.routeHandle:ref.expectedRouteHandle;
       const presentation=handle&&planner.captureNativeRoutePresentation(handle);
       if(presentation?.gates.length&&!recoveryGateCurrent(profile.kind,execution,presentation))throw Error('Recovered gate motor has changed');
       const resources=profile.copyResources({version:1,kind:profile.kind,phase:'committed',worldBoundary:boundary,
-        nativeRoute:presentation?.nativeRoute,[profile.bindingField]:binding,presentation});
+        [profile.bindingField]:binding,...(profile.kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})});
 
       const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,kind:profile.kind,proof:execution.binding});
       const liveExecution=recoveryExecution(route);

@@ -174,18 +174,19 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   };
  }
  async function prepareRecoveredCrop(source,terrain,{signal,isCurrent,getPickAge}){
-  const profile=nativeWorkerRouteRecoveryProfile(26),resources=profile.copyResources(source.resources);
-  const proof=resources.nativeAnimalCropRouteBinding,ref=proof.reference,execution=source.execution;
+  const profile=nativeWorkerRouteRecoveryProfile(source.resources.kind),resources=profile.copyResources(source.resources);
+  const proof=resources[profile.bindingField],ref=proof.reference,execution=source.execution;
   if(execution?.kind!==profile.executionKind||execution.arrived!==false||execution.actorId!==ref.actorId||
      execution.bodyId!==ref.bodyId||!profile.sameAttestation(proof,execution.binding)||
      execution.executedThrough<ref.worldBoundary.effectiveTime||execution.executedThrough>=ref.endTime||
      !isCurrent()||typeof pipelineAdmission?.prepareAndPublish!=='function')throw Error('Invalid recovered crop source');
-  const proposal=copyNativeAnimalCropProposal({...resources.presentation,kind:'native-animal-crop-route-proposal',
-    reference:ref},26);
+  const proposal=copyNativeAnimalCropProposal({...resources.presentation,
+    version:1,kind:ref.kind===26?'native-animal-crop-route-proposal':'native-animal-crop-strike-proposal',
+    reference:ref,worldBoundary:ref.worldBoundary,authorizedAutonomy:false},ref.kind);
   const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:source.terrainManifest});
   let part,adopted=false;
   try{
-   part=await prepareAnimalCrop(proposal,support,{signal,getPickAge,recovery:{execution,isCurrent}});
+   part=await prepareAnimalCrop(proposal,support,{signal,getPickAge,recovery:{execution,isCurrent,attackId:proof.attackId}});
    const {object,options}=part.request;
    await pipelineAdmission.prepareAndPublish(object,options,()=>{
     if(!part.valid())throw Error('Recovered crop rig changed during admission');
@@ -204,9 +205,12 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     entry.entity.targetId===targetId&&(!center||state.structures.some(target=>target.id===targetId&&
       target.kind==='center'&&target.status==='intact'&&target.x===ref.targetX&&target.z===ref.targetZ)))&&
     !entry.entity.magicDown&&!poses.has(id)&&!provisional.byTarget.has(id)&&!historyRun&&
-    (travel?!previous&&(!recovery||recovery.isCurrent()&&state.elapsed===recovery.execution.executedThrough&&
-      nativeAnimalCropPublicationMatches(state.raid,{reference:ref})&&entry.entity.heading===recovery.execution.yaw&&
-      entry.entity.motionPhase===recovery.execution.phase&&['x','z'].every(k=>entry.entity[k]===recovery.execution[k])):
+    (recovery?!previous&&recovery.isCurrent()&&state.elapsed===recovery.execution.executedThrough&&
+      nativeAnimalCropPublicationMatches(state.raid,{reference:ref,attackId:recovery.attackId})&&entry.entity.heading===recovery.execution.yaw&&
+      entry.entity.motionPhase===recovery.execution.phase&&['x','z'].every(k=>entry.entity[k]===recovery.execution[k])&&
+      (travel||entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&
+       entry.entity.attackRemaining===recovery.execution.attackRemaining&&entry.entity.hitApplied===false):
+      travel?!previous:
       ref.restore?!previous&&entry.entity.status==='attacking'&&entry.entity.attackId==='attack-'+ref.restore.attackId&&
       entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&entry.entity.attackRemaining===ref.restore.remaining&&
       entry.entity.hitApplied===false&&entry.entity.x===ref.x&&entry.entity.z===ref.z&&entry.entity.heading===ref.yaw&&entry.entity.motionPhase===ref.phase:
@@ -240,7 +244,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   if(speculative){entry.motionPreparing=null;speculative.controller.abort();}
   try{
    await entry.ready;check();
-   if(travel||ref.restore){
+   if(travel||ref.restore||recovery){
     // Let already-issued admissions publish or retire on this same actor. Its
     // crop request now owns further clip selection through GPU acquisition.
     await Promise.all([entry.runReady,entry.attackReady]);check();

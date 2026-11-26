@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Strike27 recupera el mismo ataque tras perder Draw, tanto iniciado en vivo como después de cargarlo. NVIDIA confirmó la edad del clip en el sustituto, el impacto único en el cultivo, un paquete posterior sin la acción revocada y el drenaje. Es evidencia parcial de E en Sabana con la calificación de desarrollo. [Recuperación y recibos](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-strike27).
+
 Retreat recupera su corredor adquirido tras pérdida terminal de Draw. NVIDIA confirmó la edad exacta del corte en el sustituto, una sola llegada en el subpaso previsto, el dibujo posterior sin el binding retirado y el drenaje. Es evidencia parcial de E en Sabana con la calificación de desarrollo. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-retreat).
 
 AttackCrops recupera una aproximación ya adquirida tras pérdida terminal de Draw. En NVIDIA el sustituto presentó el mismo cuerpo, asignación y fase antes de que la autoridad reanudara, y el recorrido llegó a un golpe único y al drenaje. Es evidencia parcial de E en la cohorte de desarrollo. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-la-aproximación).

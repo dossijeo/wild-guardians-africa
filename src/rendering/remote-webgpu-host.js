@@ -76,6 +76,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     return binding.semantic==='relative'&&binding.nativeGate?.gateId===gateId&&
       binding.epoch===boundary.effectiveTime&&sameNativeWorldBoundary(binding.nativeGate.worldBoundary,boundary);
   }
+  function retainAcquiredCropClock(packet,reference){
+    if(reference.kind!==27&&reference.purpose!=='retreat')return;
+    for(const binding of packet.admittedClockBindings){
+      const registered=clockBindings.get(`${binding.id}:${binding.byteOffset}`);
+      if(registered&&sameNativeAnimalCropReference(registered.nativeAnimalCrop,reference)&&
+         sameNativeAnimalCropReference(binding.nativeAnimalCrop,reference)&&binding.motionRecord?.isCurrent())
+        registered.acquiredCropLease=binding.motionRecord;
+    }
+  }
   let nativeWorldBoundary=null,worldBoundaryRequired=false;
   const frameBoundary=packet=>packet.admittedWorldBoundary??packet.metadata?.nativeWorldBoundary??null;
   const frameWorldCurrent=packet=>!worldBoundaryRequired||sameNativeWorldBoundary(frameBoundary(packet),nativeWorldBoundary);
@@ -872,6 +881,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const gate=recovered.gateId===null?null:nativeRouteFrame.bindings.find(b=>
           recoveryGateMatches(b,recovered.gateId,recovered.ref.worldBoundary)&&b.elapsed===row?.elapsed);
         if(row&&(recovered.gateId===null||gate)){
+          if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,recovered.ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
             assignmentSequence:recovered.assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],
             elapsed:recovered.at,relativeTime:row.relativeTime,
@@ -1207,10 +1217,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(recovered) {
+      const epoch=recovered.ref.worldBoundary.effectiveTime;
+      const resourceEnd=recovered.profile.kind===27?recovered.ref.endTime:nativeClockResourceEnd(epoch,recovered.ref.endTime);
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
          !preparedBindings.some(b=>recoveryBindingMatches(b,recovered.profile,recovered.ref)
-             &&b.epoch===recovered.ref.worldBoundary.effectiveTime&&b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime))||
+             &&b.epoch===epoch&&b.resourceEnd===resourceEnd)||
          recovered.gateId!==null&&!preparedBindings.some(b=>recoveryGateMatches(b,recovered.gateId,recovered.ref.worldBoundary)&&
              b.resourceEnd===nativeClockResourceEnd(b.epoch,recovered.ref.endTime)))
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
@@ -2153,12 +2165,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                   Object.keys(message).some(k=>k!==cropField&&k.startsWith('native')&&Array.isArray(message[k])&&message[k].length))
                  throw Error('Animal crop release differs from its retained frame');
                routeControl.installAnimalCrop(boundary,binding);
-               if(ref.kind===27||ref.purpose==='retreat')for(const b of pending.admittedClockBindings){
-                 const registered=clockBindings.get(`${b.id}:${b.byteOffset}`);
-                 if(registered&&sameNativeAnimalCropReference(registered.nativeAnimalCrop,ref)&&
-                    sameNativeAnimalCropReference(b.nativeAnimalCrop,ref)&&b.motionRecord?.isCurrent())
-                   registered.acquiredCropLease=b.motionRecord;
-               }
+               retainAcquiredCropClock(pending,ref);
                pending.admittedMotionBinding=binding;pending.admittedWorldBoundary=boundary;
              }
              if(hold.preparedFarmArrivalTemplate){

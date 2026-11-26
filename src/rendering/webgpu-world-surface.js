@@ -718,11 +718,11 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
 
   let firstReplacementFrame=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
-    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,crop=profile.kind===26;
+    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,crop=profile.kind===26||profile.kind===27;
     const actorId=(crop?'animal-':'worker-')+source.execution?.actorId,sequence=source.publicationSequence;
     const ref=source.resources[profile.bindingField]?.reference;
     const replayed=preparedNativeWorldBoundary,boundary=ref?.worldBoundary;
-    // A route-only GO can postdate the retained terrain checkpoint without
+    // A motion-only GO can postdate the retained terrain checkpoint without
     // writing a terrain record into the journal. The frozen source, current
     // Draw and terrain support must all attest the route before publishing it.
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||crop&&(!replayed||
@@ -734,8 +734,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!ref||!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||!(crop?roster:workers)||ownerSignal?.aborted||!current())
       throw Error('Route recovery needs its replayed publication and current Draw');
-    const {presentation}=source.resources;
-    const gates=presentation.gates.map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
+    const gates=(source.resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
     const gateOwnersReady=gates.length?settlements?.nativeGatePreparationReadiness({gates}):null;
     if(gates.length&&gateOwnersReady?.()!==true)throw Error('Recovered gate wall is not resident');
     terrainSupport??=createConfirmedTerrainSupport({residency});
