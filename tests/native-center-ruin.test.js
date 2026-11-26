@@ -11,6 +11,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
+import {recoverRetreatAfterRuin} from './helpers/native-center-ruin-recovery.js';
 
 const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/spatial-savanna.wasm', import.meta.url);
 const module = new WebAssembly.Module(readFileSync(binary));
@@ -72,9 +73,12 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
  const options=savanna?savedNativeAuthorityOptions(snapshot):{chunkKeys,navigationView:view,qualifyAnimalCrop:true};
  if(!savanna){initial.structures[0].hp=140;initial.raid.animals[0].hitsRemaining=1;}
  else assert.equal(options.nativeWorkerLifecycle,true);
- let releaseReady;
+ let releaseReady,replacement;
  const readyGate=new Promise(resolve=>{releaseReady=resolve;});
- const fixture=await nativeProductionAuthority(initial,{...options,
+ const manifest={epoch:'savanna-rhino-loss',chunks:options.chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+ })};
+ const fixture=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest,
   onReady:record=>record.kind==='center-ruin'?readyGate:undefined});
  const checkpoint=()=>fixture.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
  const polygonIds=result=>result.nativeAuthorityCheckpoint.spatialState.polygons.map(row=>row.id);
@@ -175,6 +179,8 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
    {...record,nativeCenterRuin:{...record.nativeCenterRuin,polygon:source.polygon+1}},
   ]},source.previous),/differs from its committed boundary/);
   if(savanna){
+   // Destroy the original Draw only after it submitted the kind4 packet.
+   replacement=await recoverRetreatAfterRuin(fixture,retention.commit.nativeCenterRuin,state.elapsed,state);
    const step=()=>fixture.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
    let final=state;
    for(let i=0;i<500&&!final.result;i++){
@@ -195,6 +201,7 @@ for(const savanna of [false,true])test(`center ruin spends its retained ticket i
   }
  }finally{
   releaseReady();
-  await fixture.close();
+  try{await fixture.close();}
+  finally{replacement?.client.dispose();await replacement?.host.dispose();}
  }
 });

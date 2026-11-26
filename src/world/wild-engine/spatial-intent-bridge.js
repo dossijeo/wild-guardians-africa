@@ -1488,7 +1488,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?
         recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId==='plant-'+r.targetId);
-    if(animal?.species!=='warthog'||!expected||animal.magicDown||live?.mode!==2||live.arrived||
+    if((animal?.species!=='warthog'&&!(r.purpose==='retreat'&&nativeShelteredSavannaCenterActor(owningState,animal)))||
+       !expected||animal.magicDown||live?.mode!==2||live.arrived||
        live.executedThrough!==owningState.elapsed||live.executedThrough>=r.endTime||
        live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
        live.x!==animal.x||live.z!==animal.z||live.phase!==animal.motionPhase||live.yaw!==animal.heading||

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El control CPU de pérdida de Draw después del derrumbe conserva el Retreat del rinoceronte, su cuota y el mundo adquirido. La autoridad reanuda tras verificar el primer envío del sustituto. Queda el contraste físico. [Recorrido y límites](native-cold-worker-admission-20261126.md#recuperación-tras-perder-draw-durante-la-retirada-del-rinoceronte).
+
 La quinta noche de Sabana conserva la cuota del rinoceronte al retirar el único centro. NVIDIA presentó Retreat y el derrumbe en la misma frontera kind4, después presentó la ausencia y drenó. Game confirmó la derrota ordinaria. [Recorrido y límites](native-cold-worker-admission-20261126.md#quinta-noche-de-sabana-y-derrota-tras-el-derrumbe).
 
 La revalidación de un corredor de animal en Sabana reutiliza el barrido nativo de admisión sobre su tramo pendiente. El control conserva el vínculo tras un cambio detrás del cuerpo y lo revoca si el nuevo sólido corta el sufijo. [Pruebas y alcance](native-cold-worker-admission-20261126.md#revalidación-de-los-corredores-de-animales-de-sabana).

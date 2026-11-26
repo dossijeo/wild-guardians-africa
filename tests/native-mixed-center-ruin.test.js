@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
+import {recoverRetreatAfterRuin} from './helpers/native-center-ruin-recovery.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {readFileSync} from 'node:fs';
@@ -242,47 +243,6 @@ function assertRetreatRetiresAfterRuin(publication,proof,structures){
   surface.retire(reference);
   assert.equal(surface.wakes(),1);
  }
-}
-
-async function recoverRetreatAfterRuin(world,proof,at){
- world.gpu.device.destroy();world.retireResourceEndpoint();
- const hold=await world.authority.quiesceNativeIntentProduction();
- const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
- assert(retired.terminal&&retired.callbacksSettled);
- const route=await world.authority.terminalWorkerRoute(),ref=proof.prepared.retreat.reference;
- assert.deepEqual(route,{version:2,ruin:true,members:[{kind:26,actorId:ref.actorId}]});
- const [authorityPort,drawPort]=pair();
- const draw=await fixture({capabilities:{nativeAnimalCropVersion:1}},
-  {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
- try{
-  const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
-  assert.deepEqual(q.ruin,proof);
-  assert.deepEqual(q.worldBoundary,proof.acquired);
-  const [{execution,resources}]=q.members;
-  assert.equal(execution.executedThrough,at);
-  assert.deepEqual(execution.binding.reference,ref);
-  assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
-  const evidence={version:2,members:[{kind:26,proof:execution.binding}],ruin:proof};
-  assert.deepEqual(copyNativeRecoveryGroup(evidence,q.worldBoundary).ruin,proof);
-  const foreign=structuredClone(evidence);
-  foreign.ruin.revisions[1]++;
-  assert.throws(()=>copyNativeRecoveryGroup(foreign,q.worldBoundary),/differs from the acquired center ruin/);
-  assert.throws(()=>copyNativeRecoveryGroup(evidence,ref.worldBoundary),/differs from the acquired center ruin/);
-  const epoch=ref.worldBoundary.effectiveTime;
-  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,
-   resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
-  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
-  const submit=draw.frame(0,{nativeWorldBoundary:q.worldBoundary,
-   clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(e=>e);
-  await flush();await draw.host.idle();draw.host.present();
-  const rendered=await submit;
-  assert(!(rendered instanceof Error),rendered.message);
-  const witness=await world.authority.checkHeldDraw(30,hold,route);
-  assert.equal(witness.members[0].relativeTime,floorFloat32(at-epoch));
-  await world.attachRecoveredResources(draw);
-  world.authority.resumeNativeIntentProduction(hold);
-  return draw;
- }catch(error){draw.client.dispose();await draw.host.dispose();throw error;}
 }
 
 for(const scenario of [

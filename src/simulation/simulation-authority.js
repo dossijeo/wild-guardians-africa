@@ -1120,7 +1120,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
     if(game.raid){
       const [animal]=game.raid.animals;
-      if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
+      if(!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
+      if(!qualifyAnimalCrop){
+        if(!nativeWorkerLifecycle||animal.status!=='retreating'||!nativeShelteredSavannaCenterActor(game,animal)||
+           !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id)))return null;
+        const ruined=planner.nativeCenterRuinRetreatRecovery();
+        return ruined?{version:2,ruin:true,members:[{kind:26,actorId:ruined.execution.actorId}]}:null;
+      }
       if(!game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))){
         const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
         if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
