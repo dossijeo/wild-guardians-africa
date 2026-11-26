@@ -1,0 +1,185 @@
+{
+  "baseline": "fea01ad2ef964ff5085141a441b8f01f3b16979a",
+  "scope": "Desierto sin portón, Game y Host de producción con standalone y loader privados, paquetes de prueba y cola GPU determinista.",
+  "privateStandaloneSha256": "77ed51641dd55c168dc2262e581f257f94eba3fb9d764606c7f199e53a2f1bf4",
+  "nativeExhaustion": {
+    "from": 12.599999999999945,
+    "at": 12.619999999999944,
+    "event": "event-29210",
+    "eventType": "WorkerIncapacitated",
+    "priorCollision": {
+      "at": 12.179999999999954,
+      "pushed": 1.7222681130515411
+    },
+    "secondPush": 0,
+    "worker": {
+      "actor": 900011,
+      "body": 1,
+      "fallBeforeStep": 3.101666507720947
+    },
+    "animal": {
+      "actor": 1000000,
+      "body": 2,
+      "pose": [
+        -16.64610998419932,
+        2,
+        1.5707963267948966
+      ],
+      "motionPhase": 1.639999999999965
+    },
+    "retiredRoute": {
+      "assignment": 8,
+      "slot": 1,
+      "generation": 3
+    },
+    "newRequest": 11,
+    "exit": {
+      "x": -21.94043137942494,
+      "z": 2.786100655199152
+    },
+    "wire": {
+      "revocation": 10,
+      "request": 11,
+      "clockBefore": 12.599999999999945,
+      "clockAfter": 12.619999999999944
+    }
+  },
+  "runs": {
+    "exact": {
+      "readyHeldPublications": 0,
+      "readyTicket": 10,
+      "acquiredTicket": 11,
+      "acquiredAt": 12.659999999999943,
+      "corridorEndTime": 14.39050764733543,
+      "firstSubmit": {
+        "at": 12.679999999999943,
+        "age": 0,
+        "ticket": 11
+      },
+      "lastMovingSubmit": {
+        "at": 14.379999999999907,
+        "age": 1.71999990940094,
+        "ticket": 11
+      },
+      "movingSamples": 86,
+      "raidEndedAt": 14.399999999999906,
+      "absenceWorldTicket": 11,
+      "workerAtRaidEnd": {
+        "x": -14.520928903743672,
+        "z": 2.5523155738541687,
+        "fall": 1.3016665077209453,
+        "exit": null,
+        "recovery": null,
+        "status": "incapacitated",
+        "incapacitated": true,
+        "hits": 2
+      },
+      "getUpFinishedAt": 18.91999999999981,
+      "getUpBody": 1,
+      "getUpPose": {
+        "x": -14.791069342739112,
+        "z": 2.2152638339379633,
+        "heading": 0
+      },
+      "exitBlendSeconds": 0.24,
+      "workerIncapacitated": true,
+      "centerHp": 600
+    },
+    "held": {
+      "readyHeldPublications": 6,
+      "readyTicket": 10,
+      "acquiredTicket": 11,
+      "acquiredAt": 12.759999999999941,
+      "corridorEndTime": 14.490507647335427,
+      "firstSubmit": {
+        "at": 12.77999999999994,
+        "age": 0,
+        "ticket": 11
+      },
+      "lastMovingSubmit": {
+        "at": 14.479999999999905,
+        "age": 1.71999990940094,
+        "ticket": 11
+      },
+      "movingSamples": 86,
+      "raidEndedAt": 14.499999999999904,
+      "absenceWorldTicket": 11,
+      "workerAtRaidEnd": {
+        "x": -14.520928903743672,
+        "z": 2.5523155738541687,
+        "fall": 1.2016665077209452,
+        "exit": null,
+        "recovery": null,
+        "status": "incapacitated",
+        "incapacitated": true,
+        "hits": 2
+      },
+      "getUpFinishedAt": 18.91999999999981,
+      "getUpBody": 1,
+      "getUpPose": {
+        "x": -14.791069342739112,
+        "z": 2.2152638339379633,
+        "heading": 0
+      },
+      "exitBlendSeconds": 0.24,
+      "workerIncapacitated": true,
+      "centerHp": 600
+    }
+  },
+  "nativeRejections": {
+    "assignment": -2,
+    "event": -2,
+    "pose": -2,
+    "hit": -2,
+    "exit": -2
+  },
+  "wireRejections": {
+    "wrong-hit": {
+      "diagnostic": "Retreat request lacks its worker encounter exhaustion",
+      "retreatAcquired": false,
+      "elapsed": 12.659999999999943
+    },
+    "other-worker": {
+      "diagnostic": "Worker encounter exhaustion lacks its exact live approach and held worker",
+      "retreatAcquired": false,
+      "elapsed": 12.659999999999943
+    },
+    "omit-hit": {
+      "diagnostic": "Crop successor lacks the completed strike body",
+      "retreatAcquired": false,
+      "elapsed": 12.659999999999943
+    }
+  },
+  "regression": {
+    "passed": 56,
+    "failed": 0,
+    "skipped": 0
+  },
+  "vite": {
+    "success": true,
+    "durationSeconds": 50.94,
+    "runtime": {
+      "src/world/wild-engine/spatial-savanna.wasm": "bc6a78976e9ff3220dfce7b3faa31970016528f053384eeaba41b379486913ec",
+      "public/wild-engine/spatial-threaded.mjs": "8479646f090904f8f4bb137b938335e82d2d279df471667335ccbc07d21bb26d",
+      "public/wild-engine/spatial-threaded.wasm": "78b71a1a1b362ad10496ab4a2e9686418891eaf7274b40d49c4d05a284938a62"
+    }
+  },
+  "pending": [
+    "Mantener el primer paso de Retreat dentro del subpaso del segundo golpe como en Game.",
+    "Integrar el contrato nativo, el paquete de Surface y la presentación de Fall y GetUp.",
+    "Acreditar el sucesor del trabajador, el dibujo físico y la activación ordinaria."
+  ],
+  "localEvidenceSha256": {
+    "install-encounter-retreat.mjs": "3931ab5454ca0008f553e8ee6a8f43fd419ffeed3a071cc0ef4e4d9a7ebf29f8",
+    "encounter-retreat-loader.mjs": "139696adab294f31902e821fbd1729fbf51fe17f534dc2d2b21fb7a87c37c774",
+    "encounter-retreat-native.mjs": "94eb3c6c9c0eb3ca8b74eb871c38e77c43aea61b0c805efff16f9e31ee0c8afd",
+    "verify-encounter-retreat.mjs": "03d70ef85eba59ca7ab4bcf4347efe93a4dfde81a342cd23a77a4f9e48fd5038",
+    "center-encounter-retreat-positive.log": "31eb9df3fa57d924e1b1353a601546115f0e9206a04ab9770e8a9ad70564c7ef",
+    "center-encounter-retreat-held.log": "96deb864d22a156eb09023d49eebd482ce50a6ec3c138c21689d9c99bbba9d77",
+    "center-encounter-retreat-wrong-hit.log": "c35751eb41966fccd11c2043c7f9a115b37b1f4d2e289eb8b6fb640467b9c0e5",
+    "center-encounter-retreat-other-worker.log": "720c1ec9890f66ce281b9d7335f0b66df396ead4be396373d435a5f5c74b8459",
+    "center-encounter-retreat-omit-hit.log": "d2e8b7c7575b665cd4c5c56bd94913491d3fa3743b37cf802e1996b54207b0b1",
+    "center-encounter-retreat-vite.log": "d9e090f033cde9331cc8ff207b2114fbc9c5bb12900fb0bc7438ccea86bbc12f",
+    "center-encounter-retreat-regression.tap": "f1fc4f658f0118222eee9872ab846aa51db4b6517a14150889a95c649685ea01"
+  }
+}

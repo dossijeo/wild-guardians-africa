@@ -390,10 +390,13 @@ export function spawnRaid(s,plan,nav,daytime=false) {
   emit(s,wave?'RaidWaveSpawned':'RaidSpawned',{raidFacts:{id:s.raid.id,day:s.day,daytime,elapsed:s.elapsed,waveIndex:s.raid.waveIndex??0,pressureFacts:s.raid.pressureFacts??null,exposedLiving:exposed.length,exposedWounded:exposed.filter(p=>(p.attackHits??0)>0).length,actors:animals.map(a=>({id:a.id,species:a.species,hitsRemaining:a.hitsRemaining,...(a.damageProfile?{damageProfile:structuredClone(a.damageProfile)}:{}),spawn:{...a.spawn},exit:{...a.exit}}))}});return true;
 }
 function release(s,a,nav) {nav?.intentTaskPlanner?.cancelAttackIntent(a.id);if(a.reservation&&s.raid.reservations[a.reservation]===a.id){delete s.raid.reservations[a.reservation];s.raid.waitRevision=((s.raid.waitRevision??0)+1)>>>0;}a.reservation=null;a.targetId=null;a.path=null;a.approach=null;a.approachShieldId=null;}
-function beginRetreat(s,a,nav,reason){
+function publishRetreat(s,a,reason){
   leaveWait(s.raid,a);a.status='retreating';delete a.retreatRouteUnknown;
   emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,
     hitsRemaining:a.hitsRemaining,reason});
+}
+function beginRetreat(s,a,nav,reason){
+  publishRetreat(s,a,reason);
   const route=nav.intentTaskPlanner?.planRetreatRoute?.(s,a);
   if(route?.status==='found'){
     a.path=route.path;a.destinationId=`exit-${a.id}`;a.pathVersion=nav.version;
@@ -925,8 +928,7 @@ export function updateRaid(s,dt,nav) {
         continue;
       }
       if(result!=='pending')throw Error('Native retreat has no terminal source');
-      leaveWait(s.raid,a);delete a.retreatRouteUnknown;a.status='retreating';
-      emit(s,'AnimalRetreating',{targetId:a.id,species:a.species,hitsRemaining:0,reason:'budget-exhausted'});
+      publishRetreat(s,a,'budget-exhausted');
       continue;
     }
     if(crop?.retreat){
