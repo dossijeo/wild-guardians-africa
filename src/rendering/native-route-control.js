@@ -1049,7 +1049,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     admitHome(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeHomeRouteReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),current=proofLeaseCurrent(reference,actor,'homeProof',nativeHomeRouteAttestationCovers,homeRecordCurrent),pending=()=>(reference.sourceRequest?homeRequestCurrent(reference.sourceRequest,actor):settlementCurrent(reference.sourceSettlement.reference,actor)&&sameSettlementProof(actor.settlementProof,reference.sourceSettlement))&&sameNativeWorldBoundary(boundary,reference.worldBoundary)&&sequence>=reference.sourceControlSequence&&clock.committedThrough>=reference.worldBoundary.effectiveTime;
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native Home is obsolete or lacks direct stationary/assignment proof');error.code='native-home-admission-obsolete';throw error;}
-      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.homeProof.reference.endTime:null;}});
+      const admitted=current()?actor.current:null;
+      counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),
+        isRevoked:()=>!closed&&admitted!==null&&admitted.revokedSequence>admitted.assignmentSequence,
+        get routeRecord(){return current()?actor.current:null;},get executionEpoch(){return current()?actor.current.startTime:null;},get executionEnd(){return current()?actor.homeProof.reference.endTime:null;}});
     },
     installConsequences(boundary,values=[],{bootstrap=false}={}){
       boundary=copyNativeWorldBoundary(boundary);
