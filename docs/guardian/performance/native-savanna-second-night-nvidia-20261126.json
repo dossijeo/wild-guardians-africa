@@ -1,0 +1,169 @@
+{
+  "seed": "714",
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "restored nativeWorkerLifecycle",
+  "clock": "live Hosted",
+  "checkpoint": {
+    "source": "sabana-second-night-probe-save.json",
+    "sha256": "7b5df0398ec50b7409f4f1d98ce489a892c9ae0394c006de67838f7764d3ef95",
+    "elapsed": 953.2499999996617,
+    "nativeVersion": 3,
+    "workerLifecycle": 1,
+    "worker": "worker-11",
+    "status": "home"
+  },
+  "before": {
+    "source": "hyena-adoption-before.json",
+    "sha256": "0d1fb89485bfaecd5a70572bb502b0d94d678e3a651c56c8e157bafeefb7fcad",
+    "error": "Native publication boundary did not arrive",
+    "elapsed": 968.9794285575779,
+    "submittedTicket": 2
+  },
+  "after": {
+    "source": "sabana-second-night-nvidia.json",
+    "sha256": "0f2f4eb69e28ad6ace880a163552cb18212e7ae2fee19a29c9f19b55c9766a49",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 87
+      }
+    },
+    "firstReady": {
+      "ticket": 1,
+      "sourceSequence": 7,
+      "milliseconds": 4916.79999999702
+    },
+    "animal": "animal-15",
+    "born": 953.6367856970744,
+    "frames": [
+      {
+        "kind": 26,
+        "purpose": "center",
+        "ticket": 2,
+        "frame": 32,
+        "elapsed": 956.4794285575892,
+        "effectiveTime": 956.4794285575892,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "ticket": 4,
+        "frame": 185,
+        "elapsed": 982.7194285575654,
+        "effectiveTime": 982.7194285575654,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 26,
+        "purpose": "center",
+        "ticket": 6,
+        "frame": 195,
+        "elapsed": 984.9794285575633,
+        "effectiveTime": 984.9794285575633,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "ticket": 8,
+        "frame": 199,
+        "elapsed": 985.7194285575627,
+        "effectiveTime": 985.7194285575627,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 26,
+        "purpose": "center",
+        "ticket": 10,
+        "frame": 210,
+        "elapsed": 987.8794285575607,
+        "effectiveTime": 987.8794285575607,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "ticket": 12,
+        "frame": 214,
+        "elapsed": 988.8794285575598,
+        "effectiveTime": 988.8794285575598,
+        "age": 0,
+        "bodyId": 1
+      },
+      {
+        "kind": 26,
+        "purpose": "retreat",
+        "ticket": 14,
+        "frame": 224,
+        "elapsed": 990.9994285575578,
+        "effectiveTime": 990.9994285575578,
+        "age": 0,
+        "bodyId": 1
+      }
+    ],
+    "hits": [
+      {
+        "id": "event-37",
+        "elapsed": 984.279428557564,
+        "from": 560,
+        "to": 535,
+        "targetId": "structure-2"
+      },
+      {
+        "id": "event-40",
+        "elapsed": 987.2794285575612,
+        "from": 535,
+        "to": 510,
+        "targetId": "structure-2"
+      },
+      {
+        "id": "event-43",
+        "elapsed": 990.4394285575584,
+        "from": 510,
+        "to": 485,
+        "targetId": "structure-2"
+      }
+    ],
+    "attackIds": [
+      "attack-36",
+      "attack-39",
+      "attack-42"
+    ],
+    "absence": {
+      "kind": "night-animal-absence",
+      "ticket": 14,
+      "frame": 307,
+      "at": 1003.5594285575464
+    },
+    "raidEnded": {
+      "id": "event-46",
+      "type": "RaidEnded",
+      "simulationTime": 1003.5594285575464
+    },
+    "elapsed": 1005.1594285575468,
+    "cropDestroyed": 0,
+    "closingBalance": {
+      "n": "470",
+      "d": "1"
+    },
+    "drained": true,
+    "errors": []
+  },
+  "scope": "Second-night checkpoint, one introductory hyena and one sheltered worker. No continuous menu comparison or frame-rate measurement."
+}

@@ -18,10 +18,11 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
  const session=createSpatialGameSession(module,state,{loaded:()=>chunks,onData:d=>chunks.set(d.cx+','+d.cz,d)});
  const scene=new Scene(),mat=new MeshBasicMaterial(),residency=createWebGpuTerrainResidency({scene,material:mat,waterMaterial:mat}),terrain=createConfirmedTerrainSupport({residency});
  for(const c of manifest.chunks){session.core.addChunk(c.cx,c.cz);session.core.selectChunk(c.cx,c.cz);residency.replace(session.core.chunkPayload(),1,manifest.epoch);}
- const asset=await actorAsset('public'+ANIMAL_ACTIONS.animals.warthog.url),model=asset.scene,original=[];
- model.traverse(n=>{if(n.isSkinnedMesh)original.push([n,n.geometry,n.geometry.attributes.position,n.geometry.attributes.normal]);});
- assert.equal(original.length,4);
  const animal=state.raid.animals[0],savedStatus=animal.status;
+ const asset=await actorAsset('public'+ANIMAL_ACTIONS.animals[animal.species].url),model=asset.scene,original=[];
+ model.traverse(n=>{if(n.isSkinnedMesh)original.push([n,n.geometry,n.geometry.attributes.position,n.geometry.attributes.normal]);});
+ assert(original.length>0);
+ if(animal.species==='warthog')assert.equal(original.length,4);
  const postStrike=contention==='post-strike';let historicalAdmissions=0;
  const historical=contention==='historical'||postStrike||contention==='successor-history'?createConfirmedHistoricalClock({initialElapsed:state.elapsed}):null;
  const holdWalking=contention==='locomotion';
@@ -202,7 +203,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     if(actor.isBakedRunning()){
      assert.equal(s.raid.animals[0].status,'retreating');assert.equal(s.raid.animals[0].hitsRemaining,0);runningReturns++;
     }else assert(actor.isBakedWalking());
-    assert.equal(visible.length,4);
+    assert.equal(visible.length,original.length);
     for(const mesh of visible)assert(preparedReturn.get(mesh)===mesh.material,'first ordinary draw needs the exact prepared return material');
     preparedReturn=null;centerReturns++;
    }if(!s.raid){assert.equal(roster.get(animal.id),null);assert.equal(roster.nativeCropLease(),null);return;}intact();if(lastProof?.reference.kind===27&&s.raid.animals[0]?.hitApplied&&s.raid.animals[0]?.status!=='attacking')assert.equal(roster.nativeCropLease(),null);},

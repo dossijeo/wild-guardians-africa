@@ -51,7 +51,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -284,12 +284,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    }finally{if(nativeBodies!==bodies)bodies.dispose();}
   }
   function prepareShelteredSavannaCenterAttack(event){
-   if(!nativeWorkerLifecycle||!nativeBodies||game.biome!=='sabana'||!nativeCenterAttackCohort(game)||
+   const animal=game.raid?.animals[0],center=game.structures[0];
+   if(!nativeWorkerLifecycle||!nativeBodies||!nativeShelteredSavannaCenterActor(game,animal)||
       restoringPhysics||physicsInitializing||physics?.actorIds.length||
-      game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||game.raid.animals.length!==1||
+      game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||session.core.wasm.spatial_body_count()!==0)return;
-   const [animal]=game.raid.animals,[center]=game.structures;
-   if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering'||!operational(center))return;
+   if(animal.targetId||animal.status!=='entering'||!operational(center))return;
    const selected=targetFor(game,animal,nav);
    if(selected?.target!==center||selected.native||selected.shieldId||!selected.approach.path?.length)return;
    const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});

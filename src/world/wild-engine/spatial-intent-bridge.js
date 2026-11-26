@@ -8,7 +8,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {captureRestoredWallRepairs} from '../restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources,nativeBarrierAdditionSuccessor} from '../native-barrier-addition.js';
@@ -1366,7 +1366,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   };
   const finishedAnimalStrike=(state,animal,retreat)=>{
     if(state!==owningState||!animal?.hitApplied||animal.status!=='walking'||
-       (retreat?animal.hitsRemaining!==0:!(animal.hitsRemaining>0))||animal.species!=='warthog'||state.raid?.animals.length!==1||
+       (retreat?animal.hitsRemaining!==0:!(animal.hitsRemaining>0))||
+       (animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||state.raid?.animals.length!==1||
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
        !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
     const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state);

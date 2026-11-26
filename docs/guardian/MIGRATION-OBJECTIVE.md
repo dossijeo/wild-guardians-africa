@@ -1,6 +1,8 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-En una sesión continua desde el menú, NVIDIA presentó Home19, los dos golpes de la primera incursión y Retreat. El amanecer conservó el perfil civil y, tras un cargo por dos trabajadores, un mismo dibujo presentó Task14 y Farm23 sobre los cuerpos nuevos. El control CPU de la segunda noche rechaza la cohorte de hiena. [Recorrido y límites](native-cold-worker-admission-20261126.md#del-menú-al-segundo-turno-en-una-sola-sesión).
+La segunda noche introductoria admite una hiena que ataca el único centro con el trabajador refugiado. NVIDIA recargó el checkpoint previo, presentó los tres golpes y la retirada sobre el mismo cuerpo y drenó. [Recorrido y límites](native-cold-worker-admission-20261126.md#segunda-noche-con-una-hiena-y-el-trabajador-refugiado).
+
+En una sesión continua desde el menú, NVIDIA presentó Home19, los dos golpes de la primera incursión y Retreat. El amanecer conservó el perfil civil y, tras un cargo por dos trabajadores, un mismo dibujo presentó Task14 y Farm23 sobre los cuerpos nuevos. [Recorrido y límites](native-cold-worker-admission-20261126.md#del-menú-al-segundo-turno-en-una-sola-sesión).
 
 El primer centro liga su huella, su cobro y el dibujo al mismo ticket. NVIDIA verificó la transacción con READY retenido y también la colocación mediante el selector y la herramienta del menú con el perfil nativo seleccionado en el arnés. Sigue pendiente la activación ordinaria. [Control y límites](native-cold-worker-admission-20261126.md#colocación-de-centro-con-una-autoridad-civil-activa).
 

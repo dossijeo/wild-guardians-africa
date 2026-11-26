@@ -786,11 +786,27 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    (state.workers.length>0||state.structures.length===1)&&
    state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
 }
+export function nativeShelteredSavannaCenterActor(state,animal){
+ return state.biome==='sabana'&&nativeCenterAttackCohort(state)&&state.raid.animals.length===1&&
+   state.raid.animals[0]===animal&&(animal?.species==='warthog'||animal?.species==='hyena');
+}
+export function nativeAnimalCropPublicationMatches(state,{reference,attackId}){
+ const animal=state.raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
+ const shelteredPurpose=reference.purpose==='center'||reference.purpose==='retreat';
+ if(!animal||(animal.species!=='warthog'&&(!shelteredPurpose||!nativeShelteredSavannaCenterActor(state,animal))))return false;
+ if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&animal.hitsRemaining===0&&
+  (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
+ const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
+ return animal.targetId===targetId&&(reference.kind===26?['entering','walking'].includes(animal.status):
+  animal.status==='attacking'&&animal.attackId==='attack-'+attackId);
+}
 export function nativeCropRouteSubject(state,animal,flightWorker=null,native=null){
  const raid=state.raid;
  const centerAttack=nativeCenterAttackCohort(state,flightWorker)&&
    (state.biome==='desierto'||animal?.targetId===state.structures[0].id);
- if((state.biome!=='sabana'&&!centerAttack)||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
+ if((state.biome!=='sabana'&&!centerAttack)||
+    (animal?.species!=='warthog'&&!(centerAttack&&nativeShelteredSavannaCenterActor(state,animal)))||
+    raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
     animal.hitsRemaining<=0)return null;
@@ -812,7 +828,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
 }
 export function nativeRetreatSubject(state,animal){
  if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state))||state.raid?.animals.length!==1||
-    state.raid.animals[0]!==animal||animal.species!=='warthog'||animal.status!=='retreating'||
+    state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||animal.status!=='retreating'||
     animal.hitsRemaining!==0||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
     (animal.magicStunUntil??0)>state.elapsed||
     !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;

@@ -1,7 +1,8 @@
 import {nativeHomeWorkerStatus,sameNativeHomeRequestReference} from '../world/native-home-request-reference.js';
 import {centerSource,matchesCenterRuinCommit,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
-import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropPublicationMatches,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
+import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
+import {nativeAnimalCropPublicationMatches} from '../simulation/raids.js';
 import {nativeMotionPresentationMatches} from '../world/native-motion-presentation-match.js';
 import {copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation,nativeBarrierAdditionPresentationMatches} from '../world/native-barrier-addition.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
@@ -706,7 +707,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
        for(const participant of participants)participant.retire?.();releasePublication();
        if(crop){
          onPresentationReady();
-         await waitNativePublication(preparedSequence+1,controller.signal,()=>nativeAnimalCropPublicationMatches(state.raid,binding));
+         await waitNativePublication(preparedSequence+1,controller.signal,()=>nativeAnimalCropPublicationMatches(state,binding));
          if(nativeGateProposal===item)nativeGateProposal=null;
        }
        if(farm){const q=binding.reference.sourceRequest,projected=()=>{

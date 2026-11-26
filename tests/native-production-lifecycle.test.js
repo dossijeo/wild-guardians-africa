@@ -25,6 +25,7 @@ import {cropSpec} from '../src/simulation/rules.js';
 import {centerServicePoint} from '../src/world/centers.js';
 import {newGame,plant} from '../src/simulation/game.js';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
+import {originalRig} from './helpers/native-animal-crop-rig.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate,pump=flush){const end=Date.now()+8000;while(!predicate()){if(Date.now()>end)throw Error('Native production lifecycle fixture timed out');await pump();await flush();}}
@@ -738,7 +739,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const center=state.structures.find(s=>s.kind==='center');
   assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
  }finally{opening.dispose();}
- let releaseFarm,releaseStroll,releaseHome,releaseRaid;
+ let releaseFarm,releaseStroll,releaseHome,releaseRaid,secondNightRig,qualifySecondNight=false;
  const holds=new Map([
   ['farm-arrival',new Promise(resolve=>releaseFarm=resolve)],
   ['idle-stroll',new Promise(resolve=>releaseStroll=resolve)],
@@ -746,8 +747,23 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   ['animal-crop-route',new Promise(resolve=>releaseRaid=resolve)]
  ]);
  const receipts=new Map(),events=[];
+ const manifest={epoch:'savanna-two-nights',chunks:chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+ })};
  const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
-  onReady:record=>holds.get(record.kind),onCommit:(record,receipt)=>receipts.set(record,receipt)});
+  getTerrainManifest:()=>manifest,onReady:record=>holds.get(record.kind),
+  async onPrepare(record){
+   if(!qualifySecondNight||!['animal-crop-route','animal-crop-strike'].includes(record.kind))return;
+   if(!secondNightRig)secondNightRig=await originalRig(f.snapshot(),manifest);
+   secondNightRig.update(f.snapshot());
+   await secondNightRig.prepare(record.resources);
+  },onCommit(record,receipt){
+   receipts.set(record,receipt);
+   if(qualifySecondNight){
+    const binding=receipt.nativeAnimalCropRouteBinding??receipt.nativeAnimalCropStrikeBinding;
+    if(binding)secondNightRig.commit(binding,receipt);
+   }
+  }});
  try{
   f.command({kind:'setNavigationView',view:{bounds:[24,-48,144,48],eye:{x:76,z:30},target:{x:75,z:-4}}});
   f.command({kind:'openInitialHiring'});
@@ -759,10 +775,12 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const advance=async(nightFastForward=false)=>{
    const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward});
    events.push(...p.events);
+   const snapshot=JSON.parse(p.snapshot);
+   secondNightRig?.update(snapshot);
    for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
    for(let i=0;i<6;i++)await f.present();
    assert.deepEqual(f.faults,[]);
-   return JSON.parse(p.snapshot);
+   return snapshot;
   };
   const drive=async(predicate,deadline,fast=false)=>{
    let s;
@@ -895,7 +913,26 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
    assert.equal((await reloaded.runtime.submit(order)).events.filter(event=>event.type==='HiringConfirmed').length,0);
    assert.deepEqual(reloaded.native.faults,[]);
   }finally{await reloaded.close();}
- }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();await f.close();}
+
+  qualifySecondNight=true;
+  const secondNightStart=events.length,secondNightRecords=f.records.length;
+  const secondNightEvents=()=>events.slice(secondNightStart);
+  const afterHyena=await drive(()=>secondNightEvents().some(event=>event.type==='RaidEnded'),1100,true);
+  const hyenaBorn=secondNightEvents().find(event=>event.type==='RaidSpawned');
+  assert.deepEqual(hyenaBorn.raidFacts.actors.map(({species,hitsRemaining})=>[species,hitsRemaining]),[['hyena',3]]);
+  const hyenaActor=Number(hyenaBorn.raidFacts.actors[0].id.slice(7));
+  const acquired=f.records.slice(secondNightRecords).filter(row=>row.committed&&row.kind.startsWith('animal-crop'));
+  assert.deepEqual(acquired.map(row=>row.resources.reference.purpose),['center','center','center','center','center','center','retreat']);
+  assert(acquired.every(row=>row.resources.reference.actorId===hyenaActor&&row.resources.reference.bodyId===4));
+  const hyenaHits=secondNightEvents().filter(event=>event.type==='StructureHit');
+  assert.deepEqual(hyenaHits.map(event=>[event.structureHit.previousHp,event.structureHit.hp]),[[560,535],[535,510],[510,485]]);
+  assert.equal(new Set(secondNightEvents().filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId)).size,3);
+  assert.equal(secondNightEvents().filter(event=>event.type==='CropDestroyed').length,0);
+  assert.equal(afterHyena.raid,null);
+  assert.equal(afterHyena.workers[0].status,'home');
+  assert.equal(secondNightRig.centerReturns,3);
+  assert.equal(secondNightRig.runningReturns,1);
+ }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();try{await f.close();}finally{secondNightRig?.close();}}
 });
 
 for(const [kind,fixtureName,clockField,bindingField,capability] of [

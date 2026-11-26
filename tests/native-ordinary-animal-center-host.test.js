@@ -8,7 +8,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
-import {nativeAnimalCropPublicationMatches} from '../src/world/native-animal-crop-resource.js';
+import {nativeAnimalCropPublicationMatches} from '../src/simulation/raids.js';
 import {originalRig} from './helpers/native-animal-crop-rig.js';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
 import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
@@ -136,17 +136,24 @@ test('a live Desert raid without qualification keeps its ordinary approach', asy
 
 test('the graphical publication after GO must confirm the typed target and attack', () => {
   const animal = {id:'animal-3',species:'warthog',targetId:'plant-2',status:'walking'};
-  const raid = {animals:[animal]};
+  const raid = {animals:[animal],daytime:false,introCropLimit:0};
+  const state={raid,biome:'sabana',structures:[{kind:'center',id:'structure-2'}],workers:[{status:'home'}]};
   const reference = {kind:26,purpose:'center',actorId:3,targetId:2};
-  assert.equal(nativeAnimalCropPublicationMatches(raid,{reference}),false);
+  assert.equal(nativeAnimalCropPublicationMatches(state,{reference}),false);
   animal.targetId = 'structure-2';
-  assert.equal(nativeAnimalCropPublicationMatches(raid,{reference}),true);
+  assert.equal(nativeAnimalCropPublicationMatches(state,{reference}),true);
   const strike = {reference:{...reference,kind:27},attackId:8};
   animal.status = 'attacking';
   animal.attackId = 'attack-5';
-  assert.equal(nativeAnimalCropPublicationMatches(raid,strike),false);
+  assert.equal(nativeAnimalCropPublicationMatches(state,strike),false);
   animal.attackId = 'attack-8';
-  assert.equal(nativeAnimalCropPublicationMatches(raid,strike),true);
+  assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
+  animal.species='hyena';
+  assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
+  assert.equal(nativeAnimalCropPublicationMatches({...state,workers:[{status:'fleeing'}]},strike),false);
+  assert.equal(nativeAnimalCropPublicationMatches({...state,raid:{...raid,daytime:true}},strike),false);
+  animal.targetId='plant-2';
+  assert.equal(nativeAnimalCropPublicationMatches(state,{...strike,reference:{...strike.reference,purpose:undefined}}),false);
 });
 
 for(const kind of [26,27])test('terminal Draw loss preserves the acquired center resource '+kind,async()=>{

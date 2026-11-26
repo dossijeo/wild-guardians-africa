@@ -107,13 +107,3 @@ export function animalCropMatchesRequest(r,q){
  return !!q&&r.purpose===q.purpose&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&
    sameRestoredAnimalStrike(r.restore,q.restore)&&requestFields.every(key=>r[key]===q[key]);
 }
-
-export function nativeAnimalCropPublicationMatches(raid,{reference,attackId}){
- const animal=raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
- if(animal?.species!=='warthog')return false;
- if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&animal.hitsRemaining===0&&
-  (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
- const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
- return animal.targetId===targetId&&(reference.kind===26?['entering','walking'].includes(animal.status):
-  animal.status==='attacking'&&animal.attackId==='attack-'+attackId);
-}
