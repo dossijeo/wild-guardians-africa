@@ -67,9 +67,10 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorkerLifecycle=false,qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
+  if(typeof nativeWorkerLifecycle!=='boolean')throw TypeError('Invalid native worker lifecycle option');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
  const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});const savedEncounter=game.workerNativeAuthorityCheckpoint?.encounter;delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
@@ -83,7 +84,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
   const nativeGateOwners=game.structures.filter(s=>s.gate&&s.status!=='ruined');
-  const nativeRosterSupported=nativeRestoration&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  // Arm the direct clock before attaching Draw. The paid hire adds the first
+  // request to that same control stream when the roster is still empty.
+  const emptyNativeRoster=nativeWorkerLifecycle&&game.biome==='desierto'&&!restoringPhysics&&game.workers.length===0;
+  const nativeRosterSupported=(nativeRestoration||emptyNativeRoster)&&!game.raid&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+ if(nativeWorkerLifecycle&&!nativeRosterSupported)throw Error('Native worker lifecycle cannot bootstrap this roster');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
   const acceptChunk=raw=>{const data=withMud(raw);loaded.set(`${data.cx},${data.cz}`,data);terrainGeneration++;onTerrainChunk?.(data,game.elapsed);};
@@ -146,7 +151,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
    }
-   if(planner.commitNativeCausalClock().status!=='committed')throw Error('Native restored body clock unavailable');
+   if(planner.commitNativeCausalClock({paused:emptyNativeRoster&&(!!game.pauses.length||!!game.result)}).status!=='committed')throw Error('Native worker bootstrap clock unavailable');
    installNativeProduction();
   }
   function installNativeProduction(){

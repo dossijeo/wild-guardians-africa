@@ -19,9 +19,10 @@ import {deserializeConfirmedState} from '../src/simulation/confirmed-live-state.
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
 import {nativeProductionAuthority} from './helpers/native-production-authority.js';
-import {createPlant} from '../src/simulation/crops.js';
+import {createPlant,waterPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
 import {centerServicePoint} from '../src/world/centers.js';
+import {newGame} from '../src/simulation/game.js';
 
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function until(predicate,pump=flush){const end=Date.now()+8000;while(!predicate()){if(Date.now()>end)throw Error('Native production lifecycle fixture timed out');await pump();await flush();}}
@@ -86,7 +87,10 @@ function adapter(harness){
 async function sourceFixture(options={}){
  const {state=nativeIdleStrollGameSave().state,...nativeOptions}=options,snapshot=serialize(state);let onSourceError=()=>{},created=0;
  const native=await nativeProductionAuthority(state,{...nativeOptions,attach:false,transportSession:'s',onNativeIntentControlError:error=>onSourceError(error)}),wasm=readFileSync('src/world/wild-engine/spatial-savanna.wasm'),originalFetch=globalThis.fetch;
- const source={self:{},messages:[],fetch:async url=>url==='native-lifecycle-wasm'?{ok:true,arrayBuffer:async()=>wasm.buffer.slice(wasm.byteOffset,wasm.byteOffset+wasm.byteLength)}:originalFetch(url),createAuthority(...args){created++;onSourceError=args[3].onNativeIntentControlError;return native.authority;}},sourceWorker=adapter(source);
+ const source={self:{},messages:[],fetch:async url=>url==='native-lifecycle-wasm'?{ok:true,arrayBuffer:async()=>wasm.buffer.slice(wasm.byteOffset,wasm.byteOffset+wasm.byteLength)}:originalFetch(url),createAuthority(...args){
+  assert.equal(args[3].nativeWorkerLifecycle,nativeOptions.nativeWorkerLifecycle===true);
+  created++;onSourceError=args[3].onNativeIntentControlError;return native.authority;
+ }},sourceWorker=adapter(source);
  await loadWorker('source',source);return {native,source,sourceWorker,snapshot,created:()=>created,async close(){sourceWorker.terminate();await flush();await native.close();}};
 }
 async function fullFixture(options={}){
@@ -96,7 +100,7 @@ async function fullFixture(options={}){
  const close=async()=>{runtime?.dispose();await flush();await flush();await base.close();};
  try{
   await loadWorker('host',host);
-  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:()=>receiver},session:'s',clientOptions:{snapshot,nativeAuthorityCheckpoints:options.nativeAuthorityCheckpoints===true,nativeBootstrap:options.nativeBootstrap??null,chunkKeys:options.chunkKeys??Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`)},runtimeOptions:{startupSuspended:true},workerFactory:()=>hostWorker});
+  runtime=createWorkerHostedRuntime({world:{createConfirmedReceiver:()=>receiver},session:'s',clientOptions:{snapshot,nativeWorkerLifecycle:options.nativeWorkerLifecycle===true,nativeAuthorityCheckpoints:options.nativeAuthorityCheckpoints===true,nativeBootstrap:options.nativeBootstrap??null,chunkKeys:options.chunkKeys??Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`)},runtimeOptions:{startupSuspended:true},workerFactory:()=>hostWorker});
   await runtime.start();return {runtime,native,source,host,sourceWorker,hostWorker,state,created:base.created,close};
  }catch(error){await close();throw error;}
 }
@@ -547,6 +551,58 @@ function movingFarmForRecovery(){
   return state;
  }finally{origin.close();}
 }
+
+for(const initialTask of [false,true])test(`the first paid hire uses the cold native worker clock for ${initialTask?'the initial task':'Farm23'}`,async()=>{
+ const scene=movingFarmForRecovery();
+ const state=newGame({biome:scene.biome,culture:scene.culture,seed:scene.seed});
+ state.structures=scene.structures;state.villages=scene.villages;
+ state.tutorial.step='done';state.nextId=90000;
+ const center=state.structures.find(s=>s.kind==='center');
+ state.plants=[createPlant('plant-80000','mijo',center.x+4,center.z,center.id)];
+ if(!initialTask)assert.equal(waterPlant(state.plants[0]),true);
+ let release;
+ const ready=new Promise(resolve=>release=resolve);
+ const f=await fullFixture({state,nativeWorkerLifecycle:true,onReady:record=>record.kind==='farm-arrival'?ready:undefined});
+ try{
+  assert.equal(f.sourceWorker.sent[0].data.nativeWorkerLifecycle,true);
+  await f.runtime.attachNativeIntentControl(f.native.controlPort);
+  await f.runtime.attachNativeResourcePreparation(f.native.resourcePort);
+  assert.equal(f.native.host.inspect().nativeCausalClock.committedThrough,0);
+  assert.equal(f.state.workers.length,0);
+  assert.equal(f.native.records.length,0);
+  await f.runtime.submit({kind:'openInitialHiring'});
+  const command={kind:'hire',id:'first-native-paid-hire',selection:{youngMale:1}};
+  await f.runtime.submit(command);
+  await until(()=>f.native.records.some(row=>row.kind==='farm-arrival'&&row.packet),()=>f.native.present());
+  const pending=f.native.records.find(row=>row.kind==='farm-arrival'),worker=f.state.workers[0];
+  assert.equal(worker.nativeRouteAdmission,'pending-farm-arrival-resources');
+  assert.equal(worker.path,null);
+  assert.equal(pending.resources.bodyId,1);
+  assert.equal(pending.committed,false);
+  assert.equal(pending.resources.sourceRequest.actorId,Number(worker.id.split('-').at(-1)));
+  assert.equal(f.state.events.filter(event=>event.type==='HiringConfirmed').length,1);
+  assert(Object.hasOwn(f.state.ledger.entries,command.id));
+  const origin=[worker.x,worker.z],at=f.state.elapsed;
+  let now=performance.now();f.host.now=()=>now;
+  await f.runtime.activateClock();now+=150;
+  await until(()=>f.state.elapsed>at&&(!initialTask||f.state.workers[0].nativeRouteAdmission==='pending-resources'),()=>f.native.present());
+  assert.equal(f.state.workers[0].nativeRouteAdmission,initialTask?'pending-resources':'pending-farm-arrival-resources');
+  assert.deepEqual([f.state.workers[0].x,f.state.workers[0].z],origin);
+  release();
+  await until(()=>f.native.records.some(row=>row.kind===(initialTask?'task-start':'farm-arrival')&&row.committed),()=>f.native.present());
+  await f.runtime.submit({kind:'snapshot'});
+  now+=250;
+  await until(()=>Math.hypot(f.state.workers[0].x-origin[0],f.state.workers[0].z-origin[1])>.1,()=>f.native.present());
+  assert.equal(f.state.workers[0].nativeRouteAdmission,initialTask?'native-task':'native-farm-arrival');
+  const clockField=initialTask?'nativeStart':'nativeFarmArrival';
+  assert.equal(f.native.host.inspect().nativeRouteFrame.bindings.find(row=>row[clockField])[clockField].bodyId,1);
+  if(initialTask){assert.equal(pending.aborted,true);assert.equal(pending.committed,false);}
+  await f.runtime.submit(command);
+  assert.equal(f.state.workers.length,1);
+  assert.equal(f.state.events.filter(event=>event.type==='HiringConfirmed').length,1);
+  assert.deepEqual(f.native.faults,[]);
+ }finally{release();await f.close();}
+});
 
 for(const [kind,fixtureName,clockField,bindingField,capability] of [
  [22,'Idle22','nativeStroll','nativeIdleStrollBinding','nativeIdleStrollVersion'],

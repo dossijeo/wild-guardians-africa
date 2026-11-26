@@ -1,0 +1,303 @@
+{
+  "version": 1,
+  "scope": "Desierto con centro y cultivo colocados, sin trabajador inicial. Hosted, Worker de autoridad, Preparer y Draw en NVIDIA Turing.",
+  "cases": [
+    {
+      "kind": "farm",
+      "raw": {
+        "file": "E:/wild-guardians-qa/cold-native-worker-20261126/nvidia-farm.json",
+        "sha256": "884324700de4a5ada66db07a1938d88019393bc00df899d258d03e3febbcbc4f"
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 98.29999999701977
+        }
+      },
+      "initialClock": {
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+        "nativeSession": 1,
+        "clockSequence": 1,
+        "intentSequence": 0,
+        "committedThrough": 0,
+        "rate": 1,
+        "paused": false,
+        "reanchor": true,
+        "anchorLogicalTime": 0,
+        "anchorAbsoluteMs": 1795712205121.3
+      },
+      "beforeReady": {
+        "held": {
+          "kind": "farm-ready-held",
+          "id": 1,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 0
+          }
+        },
+        "declared": {
+          "id": "worker-90001",
+          "status": "arriving",
+          "admission": "pending-farm-arrival-resources",
+          "x": -14,
+          "z": 11.8
+        },
+        "duringHold": {
+          "id": "worker-90001",
+          "status": "arriving",
+          "admission": "pending-farm-arrival-resources",
+          "x": -14,
+          "z": 11.8
+        },
+        "cancelled": false
+      },
+      "acquisition": {
+        "bodyId": 1,
+        "actorId": 90001,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+          "nativeSession": 1,
+          "ticket": 2,
+          "effectiveTime": 0.19999999999999998
+        },
+        "assignmentSequence": 3
+      },
+      "final": {
+        "worker": {
+          "id": "worker-90001",
+          "status": "arriving",
+          "admission": "native-farm-arrival",
+          "x": -14,
+          "z": 11.281600000000001
+        },
+        "drawSequence": 20,
+        "clockElapsed": 0.6800000000000003,
+        "clockBinding": {
+          "nativeFarmArrival": {
+            "kind": "native-farm-arrival-route-reference",
+            "version": 1,
+            "actorId": 90001,
+            "bodyId": 1,
+            "sourceRequest": {
+              "kind": "native-farm-arrival-request-reference",
+              "version": 1,
+              "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+              "nativeSession": 1,
+              "actorId": 90001,
+              "bodyId": 1,
+              "bodyFlags": 1,
+              "requestSequence": 2,
+              "requestedAt": 0,
+              "centerId": 2,
+              "profile": 1,
+              "workerProfile": "youngMale",
+              "pose": {
+                "x": -14,
+                "z": 11.8,
+                "yaw": 0,
+                "radius": 0.28,
+                "runPhase": 0,
+                "walkPhase": 0,
+                "carryPhase": 0,
+                "runRemaining": 105.80409353316266
+              },
+              "goal": {
+                "x": -14,
+                "z": 3.2,
+                "centerX": -18.954998779296876,
+                "centerZ": 3.2,
+                "arrivalRadius": 2
+              }
+            },
+            "destination": {
+              "x": -14,
+              "z": 5.199999809265137
+            },
+            "motionFlags": 0,
+            "distance": 6.600000190734864,
+            "expectedRouteHandle": {
+              "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 2
+            },
+            "sourceControlSequence": 2,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "7bcfc7cd-be71-44d4-bbdf-95b371e6fa23/1",
+              "nativeSession": 1,
+              "ticket": 1,
+              "effectiveTime": 0
+            },
+            "endTime": 6.111111287717466
+          },
+          "relativeTime": 0.47999998927116394,
+          "semantic": "relative",
+          "epoch": 0,
+          "executionEpoch": 0.19999999999999998,
+          "elapsed": 0.47999998927116394
+        },
+        "elapsed": 0.6800000000000003,
+        "hire": {
+          "id": "event-1",
+          "type": "HiringConfirmed",
+          "count": 1,
+          "cost": 40,
+          "simulationTime": 0
+        },
+        "drawDrained": true
+      },
+      "errors": []
+    },
+    {
+      "kind": "task",
+      "raw": {
+        "file": "E:/wild-guardians-qa/cold-native-worker-20261126/nvidia-task.json",
+        "sha256": "1e9f58828d89db566d0b90c2a10f195e62f94ef153acf6def91df4a36ff1b809"
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 87.59999999403954
+        }
+      },
+      "initialClock": {
+        "protocolVersion": 2,
+        "clockVersion": 1,
+        "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+        "nativeSession": 1,
+        "clockSequence": 1,
+        "intentSequence": 0,
+        "committedThrough": 0,
+        "rate": 1,
+        "paused": false,
+        "reanchor": true,
+        "anchorLogicalTime": 0,
+        "anchorAbsoluteMs": 1795712227597.2998
+      },
+      "beforeReady": {
+        "held": {
+          "kind": "farm-ready-held",
+          "id": 1,
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+            "nativeSession": 1,
+            "ticket": 1,
+            "effectiveTime": 0
+          }
+        },
+        "declared": {
+          "id": "worker-90001",
+          "status": "arriving",
+          "admission": "pending-farm-arrival-resources",
+          "x": -14,
+          "z": 11.8
+        },
+        "duringHold": {
+          "id": "worker-90001",
+          "status": "waiting-task",
+          "admission": "pending-resources",
+          "x": -14,
+          "z": 11.8
+        },
+        "cancelled": true
+      },
+      "acquisition": {
+        "bodyId": 1,
+        "actorId": 90001,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+          "nativeSession": 1,
+          "ticket": 3,
+          "effectiveTime": 0.19999999999999998
+        },
+        "assignmentSequence": 4
+      },
+      "final": {
+        "worker": {
+          "id": "worker-90001",
+          "status": "walking",
+          "admission": "native-task",
+          "x": -14,
+          "z": 11.2384
+        },
+        "drawSequence": 20,
+        "clockElapsed": 0.7200000000000003,
+        "clockBinding": {
+          "nativeStart": {
+            "kind": "native-task-start-reference",
+            "version": 1,
+            "actorId": 90001,
+            "bodyId": 1,
+            "taskId": 90002,
+            "targetId": 80000,
+            "requestSequence": 3,
+            "requestedAt": 0.02,
+            "sourceControlSequence": 3,
+            "endTime": 7.52882122158905,
+            "sourceRequestHandle": {
+              "kind": "native-task-route-request-handle",
+              "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 1
+            },
+            "expectedRouteHandle": {
+              "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+              "session": 1,
+              "slot": 0,
+              "generation": 3
+            },
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "a4c0128b-3155-4513-92e8-e54286b6faaf/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 0.04
+            }
+          },
+          "semantic": "relative",
+          "epoch": 0.04,
+          "executionEpoch": 0.19999999999999998,
+          "elapsed": 0.5599999809265137
+        },
+        "elapsed": 0.7200000000000003,
+        "hire": {
+          "id": "event-2",
+          "type": "HiringConfirmed",
+          "count": 1,
+          "cost": 40,
+          "simulationTime": 0
+        },
+        "drawDrained": true
+      },
+      "errors": []
+    }
+  ]
+}
