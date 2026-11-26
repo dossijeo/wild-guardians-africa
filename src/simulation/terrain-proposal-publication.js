@@ -3,10 +3,17 @@ import {copyNativeWorldStopEffects} from '../world/native-suspended-body-referen
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyTerrainResourcePayload,sameTerrainResourcePayload} from '../world/terrain-resource-payload.js';
 import {estimateRetainedBytes} from './retained-size.js';
+import {copyNativeCenterPlacement,sameNativeCenterPlacement} from '../world/native-center-placement.js';
 
-function resourcePayloads(resources,boundary,proposal){
+function centerPlacement(resources,proposal){
+ if(resources?.nativeCenterPlacement===undefined)return null;
+ if(resources.kind!==3||proposal&&resources.retainsNativeAssignments!==true)throw Error('Invalid native center terrain proposal');
+ return copyNativeCenterPlacement(resources.nativeCenterPlacement,{committed:!proposal});
+}
+
+function resourcePayloads(resources,boundary,proposal,center){
  const stop=isTerrainStopKind(resources?.kind);
- if(resources?.version!==1||proposal&&resources.phase!=='proposal'||!Number.isSafeInteger(resources.kind)||resources.kind<6||resources.kind>12&&!stop||(stop||resources.kind===7)&&resources.chunks?.length>0||resources.kind!==7&&resources.removed?.length>0||resources.nativeSession!==boundary.nativeSession||resources.ticket!==boundary.ticket||resources.effectiveTime!==boundary.effectiveTime||!Array.isArray(resources.chunks)||!Array.isArray(resources.removed))throw Error('Native terrain proposal resource identity mismatch');
+ if(resources?.version!==1||proposal&&resources.phase!=='proposal'||!Number.isSafeInteger(resources.kind)||resources.kind<6&&!center||resources.kind>12&&!stop||(stop||resources.kind===7)&&resources.chunks?.length>0||resources.kind!==7&&resources.removed?.length>0||resources.nativeSession!==boundary.nativeSession||resources.ticket!==boundary.ticket||resources.effectiveTime!==boundary.effectiveTime||!Array.isArray(resources.chunks)||!Array.isArray(resources.removed))throw Error('Native terrain proposal resource identity mismatch');
  const keys=new Set(),payloads=[...resources.chunks,...resources.removed.map(({cx,cz})=>({authority:'spatial-wasm',cx,cz,removed:true}))].map(value=>copyTerrainResourcePayload(value,boundary.effectiveTime));
  for(const p of payloads){const key=`${p.cx},${p.cz}`;if(keys.has(key))throw Error('Duplicate native terrain proposal chunk');keys.add(key);}return payloads;
 }
@@ -28,27 +35,31 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   if(!boundary||typeof epoch!=='string'||!epoch||!Number.isSafeInteger(sequence)||closed||slot||!available()||!base.idle||base.sequence<0||sequence!==base.sequence+1||signal!==undefined&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw Error('Native terrain proposal publication unavailable');
   if(signal?.aborted)throw new DOMException('Native terrain proposal cancelled','AbortError');
   if(resources?.retainsNativeAssignments!==undefined&&typeof resources.retainsNativeAssignments!=='boolean')throw TypeError('Invalid native assignment retention proof');
+  const center=centerPlacement(resources,true);
   const stopProtocol=terrainStopProposalProtocol(resources),stopTemplate=stopProtocol?stopProtocol.codec.copyProposal(resources).nativeStop:null;
   if(stopTemplate&&!sameNativeWorldBoundary(stopTemplate.worldBoundary,boundary))throw Error('Native terrain stop template boundary mismatch');
-  const stopEffects=copyNativeWorldStopEffects(resources,boundary),stopBytes=terrainStopReservation(stopTemplate,stopEffects).bytes,payloads=resourcePayloads(resources,boundary,true),messages=payloads.map(payload=>({payload,sequence,epoch,revision:base.revision(payload.cx,payload.cz)+1})),bytes=payloads.reduce((sum,p)=>sum+estimateRetainedBytes(p),stopBytes),capacity=limits();
+  const stopEffects=copyNativeWorldStopEffects(resources,boundary),stopBytes=terrainStopReservation(stopTemplate,stopEffects).bytes,payloads=resourcePayloads(resources,boundary,true,center),messages=payloads.map(payload=>({payload,sequence,epoch,revision:base.revision(payload.cx,payload.cz)+1})),bytes=payloads.reduce((sum,p)=>sum+estimateRetainedBytes(p),stopBytes+(center?estimateRetainedBytes(center):0)),capacity=limits();
+  if(center&&(stopTemplate||stopEffects?.routeEffects.rows.length||stopEffects?.gateEffects.rows.length))throw Error('Native center cannot carry stopped routes');
   if(isTerrainStopKind(resources.kind)&&(!stopEffects?.routeEffects.rows.length||resources.retainsNativeAssignments!==false))throw Error('Native route stop lacks body-only effects');
   // Keep room for comparing the actual publication with the owned preview.
   capacity.bytes=Math.floor(capacity.bytes/2);capacity.count=Math.floor(capacity.count/2);
   if(!Number.isSafeInteger(bytes)||bytes+256*(messages.length+1)>capacity.bytes||messages.length+1>capacity.count)throw Error('Native terrain proposal exceeds capacity');
-  const item={id:++serial,boundary,baseSequence:base.sequence,sequence,messages,phase:'preparing',signal,kind:resources.kind,stopTemplate,stopProtocol};slot=item;
+  const item={id:++serial,boundary,baseSequence:base.sequence,sequence,messages,phase:'preparing',signal,kind:resources.kind,stopTemplate,stopProtocol,center};slot=item;
   const ready=new Promise((resolve,reject)=>{item.resolve=resolve;item.reject=reject;});
   item.onAbort=()=>abort(item,new DOMException('Native terrain proposal cancelled','AbortError'));signal?.addEventListener('abort',item.onAbort,{once:true});
   item.timer=setTimeout(()=>abort(item,Error('Native terrain proposal preparation timed out')),timeoutMs);
-  try{port.postMessage({kind:'terrainProposal',session,epoch,id:item.id,sequence,baseSequence:base.sequence,worldBoundary:boundary,retainsNativeAssignments:resources.retainsNativeAssignments===true,...(stopEffects?{stopEffects}:{}),...(stopTemplate?{[stopProtocol.wireTemplateField]:stopTemplate}:{}),messages,bytes});}catch(error){abort(item,error);}
+  try{port.postMessage({kind:'terrainProposal',session,epoch,id:item.id,sequence,baseSequence:base.sequence,worldBoundary:boundary,retainsNativeAssignments:resources.retainsNativeAssignments===true,...(stopEffects?{stopEffects}:{}),...(stopTemplate?{[stopProtocol.wireTemplateField]:stopTemplate}:{}),...(center?{nativeCenterPlacement:center}:{}),messages,bytes});}catch(error){abort(item,error);}
   await ready;
   return {...(item.stopTemplate?{[item.stopProtocol.preparedTemplateField]:item.stopTemplate}:{}),...(item.preparedWorldBoundary?{preparedWorldBoundary:item.preparedWorldBoundary}:{}),valid:()=>valid(item),commit(value={}){
    const {worldBoundary,resources:committed}=value,finalStop=item.stopProtocol?value[item.stopProtocol.bindingField]:null;
    if(hasOtherTerrainStopField(value,'bindingField',item.stopProtocol))throw Error('Native terrain stop commit has another family');
    if(item.stopTemplate&&!finalStop)throw Error('Native terrain proposal commit differs from preparation: missing final stop');
    const binding=item.stopTemplate?item.stopProtocol.codec.copyAttestation(finalStop):null,actual=copyNativeWorldBoundary(worldBoundary),current=snapshot();
+   const finalCenter=centerPlacement(committed,false);
+   if((center||finalCenter)&&!sameNativeCenterPlacement(center,finalCenter))throw Error('Native center commit differs from preparation');
    if(binding&&(!binding.projection||!item.stopProtocol.codec.sameReference(binding.preparedReference,item.stopTemplate)||!sameNativeWorldBoundary(binding.reference.worldBoundary,actual)))throw Error('Native terrain stop differs from its retained template');
-   if(slot!==item||item.phase!=='ready'||closed||item.signal?.aborted||current.sequence!==item.baseSequence||(!binding&&!sameNativeWorldBoundary(actual,item.boundary))||committed?.kind!==item.kind||!item.messages.every(m=>current.revision(m.payload.cx,m.payload.cz)+1===m.revision)||!samePayloads(payloads,resourcePayloads(committed,actual,false))||!samePayloads(payloads,staged()))throw Error('Native terrain proposal commit differs from preparation');
-   send('terrainProposalCommit',item,binding?{committedWorldBoundary:actual,[item.stopProtocol.bindingField]:binding}:{});clearTimeout(item.timer);item.timer=null;item.phase='armed';item.signal?.removeEventListener('abort',item.onAbort);return true;
+   if(slot!==item||item.phase!=='ready'||closed||item.signal?.aborted||current.sequence!==item.baseSequence||(!binding&&!sameNativeWorldBoundary(actual,item.boundary))||committed?.kind!==item.kind||!item.messages.every(m=>current.revision(m.payload.cx,m.payload.cz)+1===m.revision)||!samePayloads(payloads,resourcePayloads(committed,actual,false,finalCenter))||!samePayloads(payloads,staged()))throw Error('Native terrain proposal commit differs from preparation');
+   send('terrainProposalCommit',item,{...(binding?{committedWorldBoundary:actual,[item.stopProtocol.bindingField]:binding}:{}),...(finalCenter?{nativeCenterPlacement:finalCenter}:{})});clearTimeout(item.timer);item.timer=null;item.phase='armed';item.signal?.removeEventListener('abort',item.onAbort);return true;
   },abort(){return item.phase==='armed'?false:abort(item);}};
  }
  function accept(data){
@@ -59,6 +70,7 @@ export function createTerrainProposalPublication({port,session,epoch,snapshot,st
   if(item.phase!=='preparing'||data.sequence!==item.sequence||!sameNativeWorldBoundary(copyNativeWorldBoundary(data.worldBoundary),item.boundary))throw Error('Native terrain proposal response mismatch');
   if(data.kind==='terrainProposalRejected'){abort(item,Error(data.message||'Native terrain proposal preparation rejected'));return true;}
   const prepared=copyNativeWorldBoundary(data.preparedWorldBoundary??null);if(prepared&&!sameNativeWorldBoundary(prepared,item.boundary)){abort(item,Error('Native terrain prepared commands identity mismatch'));return true;}if(hasOtherTerrainStopField(data,'preparedTemplateField',item.stopProtocol)||item.stopTemplate&&(!prepared||!item.stopProtocol.codec.sameReference(data[item.stopProtocol.preparedTemplateField],item.stopTemplate))){abort(item,Error('Native terrain retained stop template mismatch'));return true;}item.preparedWorldBoundary=prepared;
+  if(item.center&&!prepared){abort(item,Error('Native center lacks its prepared world boundary'));return true;}
   item.phase='ready';item.resolve();item.resolve=item.reject=null;return true;
  }
  return {prepare,accept,onStage(payload){if(slot&&(slot.phase==='preparing'||!slot.messages.some(m=>sameTerrainResourcePayload(m.payload,payload))))abort(slot,Error('Native terrain proposal invalidated by staged resources'));},beforePublication(sequence){if(!slot)return;if(slot.phase!=='armed'){abort(slot);return;}if(sequence!==slot.sequence||!samePayloads(slot.messages.map(m=>m.payload),staged()))throw Error('Native terrain proposal publication differs from preparation');slot=null;},cancel(){if(slot)abort(slot);},dispose(){closed=true;if(slot)abort(slot);},status(){return slot?{phase:slot.phase,sequence:slot.sequence,worldBoundary:slot.boundary}:null;}};

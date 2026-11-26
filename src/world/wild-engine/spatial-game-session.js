@@ -219,6 +219,11 @@ export function createSpatialGameSession(module,state,streamOptions){
       streamOptions.onData(data);
     }});
   let publishedNativeResources=null;
+  function prepareNativeCenterPlacementAdoption(entity,placement){
+    const center=centers.preparePlacementAdoption(entity,state,placement.polygonId);
+    const suppress=props.prepareSuppressionAdoption(placement.suppressed);
+    return ()=>{center();suppress(state.suppressed);};
+  }
   function publishNativeWorldResources(boundary){
     const resources=core.captureNativeWorldResources(boundary);
     if(publishedNativeResources?.nativeSession===resources.nativeSession&&resources.ticket<=publishedNativeResources.ticket)
@@ -520,7 +525,7 @@ export function createSpatialGameSession(module,state,streamOptions){
     key=>chunkRevisions.get(key)??0,retainedProps);
   return {get core(){return core;},field,stream,horizonSource,topologySource,routeStamp,publishNativeWorldResources,
     captureWallOwners:walls.captureOwners,wallBarrierIds:walls.barrierIds,routeUnaffectedByWalls,suppressed:props.suppressed,syncState,prepareNativeWallAdditionAdoption:walls.prepareNativeAdditionAdoption,prepareNativeWallRemovalAdoption:walls.prepareNativeRemovalAdoption,
-    centerPolygonId:centers.polygonId,prepareNativeCenterRuinAdoption:centers.prepareRuinAdoption,captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
+    centerPolygonId:centers.polygonId,prepareNativeCenterRuinAdoption:centers.prepareRuinAdoption,prepareNativeCenterPlacementAdoption,captureShieldOwners:shields.captureOwners,shieldPolygonId:shields.polygonId,prepareNativeShieldAdditionAdoption:shields.prepareNativeAdditionAdoption,prepareNativeShieldRemovalAdoption:shields.prepareNativeRemovalAdoption,
     routeActor,routeActorNative,routeActorNativeBatch,actorConnectivity,actorSectorRevision,actorRegions,actorEnclosure,actorRegionsBatch,actorCanStand,actorStepClear,
     actorStepClearExceptWalls,
     queryPropsAt,withWallPreview,withWallStatePreview,gateOverlayClear,

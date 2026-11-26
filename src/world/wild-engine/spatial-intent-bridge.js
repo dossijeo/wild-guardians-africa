@@ -2,6 +2,7 @@ import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/e
 import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
+import {copyNativeCenterPlacement} from '../native-center-placement.js';
 import {centerFootprint} from '../centers.js';
 import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,sameRestoredAnimalStrike} from '../native-animal-crop-resource.js';
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
@@ -2147,16 +2148,24 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const split=value=>[Number(BigInt(value)&0xffffffffn)|0,Math.floor(value/4294967296)];
     return [...split(h.session),...split(actorId),h.slot|0,h.generation|0,...split(assignmentSequence)];
   };
-  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null,shield=null}={})=>{
+  const mutateNativeWorldAfterGpuQuiescence=({getPublication,mutation,prepareResources=null,signal=null,shield=null,center=null}={})=>{
     if(prepareResources!==null&&typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Invalid native resource preparation');
     if(prepareResources&&wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resources');
     if(wasm.spatial_world_proposal_version?.()!==1)throw Error('Rebuild native world proposal service');
     if(wasm.spatial_world_resource_version?.()!==1)throw Error('Rebuild native world resource projection');
     const m=mutation;if(!m||typeof m!=='object'||Array.isArray(m))throw TypeError('Expected a native world mutation');
     let kind,mode=0,floats=[],integers=[];
+    const placement=center===null?null:copyNativeCenterPlacement(center.source);
     const pass=value=>Number.isInteger(value)&&value>=0&&value<=3,
       id=value=>Number.isInteger(value)&&value>0&&value<=2147483647;
-    if(m.type==='barriers'){
+    if(m.type==='placeCenter'){
+      if(!placement||shield||typeof prepareResources!=='function'||typeof center.validate!=='function'||
+         typeof center.project!=='function'||typeof center.atCommitBoundary!=='function')throw TypeError('Invalid prepared center owner');
+      kind=3;
+      floats=centerFootprint(placement.entity,owningState).footprint.flatMap(p=>[p.x,p.z]);
+      integers=[numericId(placement.entity.id),...placement.suppressed.flatMap(key=>key.split(':').slice(1).map(Number))];
+    }else if(placement)throw TypeError('Prepared center requires its own mutation');
+    else if(m.type==='barriers'){
       const remove=m.removeIds??[],add=m.additions??[];
       if(!Array.isArray(remove)||!Array.isArray(add)||remove.length>1024||add.length>1024||!remove.length&&!add.length||
          remove.some(v=>!id(v))||new Set(remove).size!==remove.length||add.some(v=>!v||![v.x,v.z,v.halfX,v.halfZ,v.yaw??0].every(Number.isFinite)||
@@ -2211,6 +2220,19 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }else throw TypeError('Unsupported native world mutation');
     let protocol=null,pendingShield=null,cropStop=null,cropExpiry=null;
     const supersededStrike=shield?.expiredRequest?.previousStrike;
+    if(placement){
+      protocol={preparedFrameRequired:true,atCommitBoundary:center.atCommitBoundary,
+       capture:worldBoundary=>{
+        const resources=session.core.captureNativeWorldProposalResources(worldBoundary);
+        if(resources.workCenter!==integers[0]||!resources.retainsNativeAssignments||resources.kind!==3||resources.removed.length)
+          throw Error('Native center proposal lost its physical owner');
+        return {...resources,worldBoundary,nativeCenterPlacement:placement};
+       },
+       ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
+       snapshot:(...boundary)=>wasm.spatial_world_proposal_resource_snapshot(...boundary),
+       release:(...boundary)=>wasm.spatial_world_proposal_resource_release(...boundary),
+       cancel:(...boundary)=>wasm.nav_intent_barrier_proposal_cancel(...boundary)};
+    }
     if(shield!==null){
       if(!nativeShieldWorldKind(kind)||typeof prepareResources!=='function'||typeof shield.validate!=='function'||
          typeof shield.project!=='function'||typeof shield.atCommitBoundary!=='function')throw TypeError('Invalid prepared shield owner');
@@ -2247,7 +2269,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     }
     // Only serialization into the authority-owned temporary input buffers.
     return commitNativeWorldProposal(getPublication,()=>{
-      if(shield&&shield.validate()!==true)return -2;
+      if(shield&&shield.validate()!==true||placement&&center.validate()!==true)return -2;
       const fp=wasm.spatial_world_proposal_float_ptr(floats.length);if(floats.length&&!fp)throw Error('Native proposal allocation failed');
       if(floats.length)new Float32Array(wasm.memory.buffer,fp,floats.length).set(floats);
       const ip=wasm.spatial_world_proposal_int_ptr(integers.length);if(integers.length&&!ip)throw Error('Native proposal allocation failed');
@@ -2263,7 +2285,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       }
       return (prepareResources?wasm.spatial_world_proposal_stage_resources:wasm.spatial_world_proposal_stage)(kind,mode,floats.length,integers.length);
     },(markCommitted,...boundary)=>{
-      if(shield&&shield.validate()!==true)return {status:-2};
+      if(shield&&shield.validate()!==true||placement&&center.validate()!==true)return {status:-2};
       const status=wasm.spatial_world_proposal_commit(...boundary);if(status!==1)return {status};
       // Once native state changed, every failure must still retire the old GPU
       // packet. Never report/release as an aborted physical mutation.
@@ -2272,6 +2294,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const ids=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_result_ptr(),count));markCommitted({ids});
       if(kind===6||kind===7||kind===11)session.core.adoptNativeResidencyCommit(kind,ids);
       const worldBoundary=nativeWorldBoundary();
+      let nativeCenterPlacement=null;
+      if(placement){
+        if(ids.length!==1)throw Error('Native center committed another polygon set');
+        nativeCenterPlacement=copyNativeCenterPlacement({...placement,polygonId:ids[0]},{committed:true});
+        if(center.project(nativeCenterPlacement)!==true)throw Error('Native center projection was not synchronous and successful');
+      }
       let nativeShield=null;
       if(pendingShield){
         if(ids.length!==1||kind===4&&ids[0]!==pendingShield.polygonId)throw Error('Native shield committed another polygon');
@@ -2319,7 +2347,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
           replanNativeShieldCrop(cropStop?'animal-'+cropStop.actorId:shield.expiredRequest.actorId,shield.nav);
       }
       const published=session.publishNativeWorldResources(committedWorldBoundary);
-      const resources=nativeShield?{...published,phase:'committed',worldBoundary,nativeShield}:published;
+      const resources=nativeShield?{...published,phase:'committed',worldBoundary,nativeShield}:
+        nativeCenterPlacement?{...published,phase:'committed',worldBoundary,nativeCenterPlacement}:published;
       if(resources.kind!==kind)throw Error('Native world resource family mismatch');
       if(onNativeWorldResources)onNativeWorldResources({...resources,worldBoundary});
       return {status:1,value:{ids,resources:cropStop?{...resources,nativeShieldCropStop:cropStop}:

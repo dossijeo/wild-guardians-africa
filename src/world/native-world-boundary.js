@@ -1,6 +1,7 @@
 import {copyNativeBarrierAdditionAttestation} from './native-barrier-addition.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind} from './native-shield-world.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
+import {copyNativeCenterPlacement,sameNativeCenterPlacement} from './native-center-placement.js';
 
 // Identity of a committed native proposal, not a clock permit or a description
 // of geometry. Preparation must apply the corresponding world before using it.
@@ -26,14 +27,17 @@ function readNativeWorldResources(publication,previous){
  }
  if(!Array.isArray(records)||!records.length||records.length>32768||!Number.isSafeInteger(publication.sequence)||publication.sequence<0||
     !Number.isFinite(publication.elapsed)||publication.elapsed<0||publication.unchanged===true)throw TypeError('Invalid native world resource publication');
- const expected=new Map();let boundary=before,total=0;
+ const expected=new Map();let boundary=before,total=0,center=null;
  for(const record of records){
   if(!record||record.version!==1||Object.keys(record).some(key=>!['version','worldBoundary','kind','chunks','removed'].includes(key)&&
      !(record.kind===2&&key==='nativeBarrierAdditionBinding')&&!(nativeShieldWorldKind(record.kind)&&key==='nativeShield')&&
-     !(record.kind===4&&key==='nativeCenterRuin'))||
+     !(record.kind===4&&key==='nativeCenterRuin')&&!(record.kind===3&&key==='nativeCenterPlacement'))||
      !Array.isArray(record.chunks)||!Array.isArray(record.removed))throw TypeError('Invalid native world resource record');
   if(![2,3,4,6,7,8,9,10,11,12,24,25].includes(record.kind))throw Error('Native graphical resource family is not implemented');
-  if(record.kind===4&&record.nativeCenterRuin!==undefined){
+  if(record.kind===3&&record.nativeCenterPlacement!==undefined){
+   if(center||record.nativeShield!==undefined||record.removed.length)throw Error('Native center publication has another world owner');
+   center=copyNativeCenterPlacement(record.nativeCenterPlacement,{committed:true});
+  }else if(record.kind===4&&record.nativeCenterRuin!==undefined){
    const proof=record.nativeCenterRuin,source=centerSource(proof?.prepared);
    if(record.nativeShield!==undefined||record.chunks.length||record.removed.length||!verifiesCenter(source,record.worldBoundary,proof))
      throw Error('Native center ruin publication differs from its committed boundary');
@@ -55,7 +59,7 @@ function readNativeWorldResources(publication,previous){
   }
   boundary=next;
  }
- return {boundary,expected};
+ return {boundary,expected,center};
 }
 // Source history may copy a descriptor without claiming a consumer applied it.
 // Drawing still requires reconcileNativeWorldResources and real scene admission.
@@ -63,11 +67,15 @@ export function copyPublishedNativeWorldBoundary(publication,previous=null){retu
 // Correlate physical publications with this consumer's applied graphical
 // batch. This grants no time and does not prepare other presentation owners.
 export function reconcileNativeWorldResources({publication,admitted,previous=null}={}){
- const {boundary,expected}=readNativeWorldResources(publication,previous);
+ const {boundary,expected,center}=readNativeWorldResources(publication,previous);
  if(expected===null){if(boundary&&admitted?.changes?.length)throw Error('Terrain changed without a native world resource boundary');return boundary;}
  if(!admitted||admitted.version!==1||admitted.sequence!==publication.sequence||typeof admitted.epoch!=='string'||!admitted.epoch||
     admitted.canonicalPropsUnmasked!==true||!Array.isArray(admitted.changes)||admitted.changes.length!==expected.size||
     (!expected.size?admitted.empty!==true:admitted.empty!==undefined))throw Error('Native resources lack their applied graphical batch');
+ if(center||admitted.nativeCenterPlacement!==undefined){
+  const actual=copyNativeCenterPlacement(admitted.nativeCenterPlacement,{committed:true});
+  if(!sameNativeCenterPlacement(center,actual)||actual.polygonId!==center.polygonId||!sameNativeWorldBoundary(admitted.nativeWorldBoundary,boundary))throw Error('Native center differs from its applied graphical batch');
+ }
  const seen=new Set();
  for(const item of admitted.changes){
   const key=`${item?.cx},${item?.cz}`,target=expected.get(key);

@@ -1,0 +1,223 @@
+{
+  "record": {
+    "ok": true,
+    "elapsed": 0.25,
+    "center": {
+      "id": "structure-2",
+      "created": 3,
+      "kind": "center",
+      "material": "zarzas",
+      "gate": false,
+      "x": 83,
+      "z": 0,
+      "yaw": 0,
+      "culture": "mapungubwe",
+      "maxHp": 600,
+      "hp": 600,
+      "status": "intact",
+      "villageId": "village-1",
+      "cost": 800,
+      "collapseRemaining": 0
+    },
+    "balance": 1500,
+    "final": 700,
+    "ready": {
+      "kind": "ready",
+      "session": "center-fifo-2f558ee2-a981-4e62-a4b0-f66cdb3b5e41",
+      "epoch": "e4edc682-9b27-4353-a3a8-9850d37d993e",
+      "id": 1,
+      "sequence": 10,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 0.25
+      },
+      "preparedWorldBoundary": {
+        "version": 1,
+        "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 0.25
+      }
+    },
+    "go": {
+      "kind": "commit",
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+        "nativeSession": 1,
+        "ticket": 1,
+        "effectiveTime": 0.25
+      },
+      "center": {
+        "version": 1,
+        "commandId": "physical-native-work-center",
+        "entity": {
+          "id": "structure-2",
+          "kind": "center",
+          "status": "intact",
+          "culture": "mapungubwe",
+          "villageId": "village-1",
+          "x": 83,
+          "z": 0,
+          "yaw": 0,
+          "hp": 600,
+          "maxHp": 600
+        },
+        "suppressed": [],
+        "polygonId": 9
+      }
+    },
+    "drawn": {
+      "draw": {
+        "sequence": 34,
+        "clockElapsed": 0.25,
+        "presentationElapsed": 0.25,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 0.25
+        },
+        "bindings": []
+      },
+      "adapter": {
+        "vendor": "nvidia",
+        "architecture": "turing",
+        "device": "",
+        "description": "",
+        "imageCopyPreparation": {
+          "version": 1,
+          "formats": [
+            "rgba8unorm",
+            "rgba8unorm-srgb"
+          ],
+          "completed": true,
+          "milliseconds": 113.29999999701977
+        }
+      },
+      "settlements": {
+        "closed": false,
+        "villages": 1,
+        "units": 10,
+        "centers": 1,
+        "walls": 0,
+        "damagedCenters": 0,
+        "selectableReady": true,
+        "provisional": 0,
+        "previewHistorySaturated": false,
+        "destruction": [],
+        "banks": 2,
+        "failure": null,
+        "textureFailure": null,
+        "villagePreviews": 1,
+        "villageTextured": 1,
+        "centerPreviews": 1,
+        "centerTextured": 0,
+        "wallPreviews": 0,
+        "wallTextured": 0
+      }
+    },
+    "events": [
+      {
+        "id": "event-4",
+        "type": "PlacementCommitted",
+        "commandId": "physical-native-work-center",
+        "kind": "center",
+        "targetId": "structure-2",
+        "presentation": {
+          "x": 83,
+          "z": 0
+        },
+        "simulationTime": 0.25
+      }
+    ],
+    "wire": [
+      {
+        "kind": "request",
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 0.25
+        },
+        "center": {
+          "version": 1,
+          "commandId": "physical-native-work-center",
+          "entity": {
+            "id": "structure-2",
+            "kind": "center",
+            "status": "intact",
+            "culture": "mapungubwe",
+            "villageId": "village-1",
+            "x": 83,
+            "z": 0,
+            "yaw": 0,
+            "hp": 600,
+            "maxHp": 600
+          },
+          "suppressed": []
+        },
+        "chunks": []
+      },
+      {
+        "kind": "ready",
+        "session": "center-fifo-2f558ee2-a981-4e62-a4b0-f66cdb3b5e41",
+        "epoch": "e4edc682-9b27-4353-a3a8-9850d37d993e",
+        "id": 1,
+        "sequence": 10,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 0.25
+        },
+        "preparedWorldBoundary": {
+          "version": 1,
+          "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 0.25
+        }
+      },
+      {
+        "kind": "commit",
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "07f8b083-7ed7-4f2f-86ce-fa3c799dc8dc/1",
+          "nativeSession": 1,
+          "ticket": 1,
+          "effectiveTime": 0.25
+        },
+        "center": {
+          "version": 1,
+          "commandId": "physical-native-work-center",
+          "entity": {
+            "id": "structure-2",
+            "kind": "center",
+            "status": "intact",
+            "culture": "mapungubwe",
+            "villageId": "village-1",
+            "x": 83,
+            "z": 0,
+            "yaw": 0,
+            "hp": 600,
+            "maxHp": 600
+          },
+          "suppressed": [],
+          "polygonId": 9
+        }
+      },
+      {
+        "kind": "drained"
+      }
+    ],
+    "errors": []
+  },
+  "errors": []
+}

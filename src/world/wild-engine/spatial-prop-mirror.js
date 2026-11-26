@@ -1,3 +1,5 @@
+import {captureSpatialRemovedProps} from './spatial-state.js';
+
 const SPATIAL_ID=/^spatial:([0-5]):(-?\d+):(-?\d+)$/;
 
 // New spatial-world saves use the C++ prop identity. Legacy JS generator IDs
@@ -37,5 +39,16 @@ export function createSpatialPropMirror(core,initialIds=[]){
     if(added.length)revision++;
     return {count:suppressed.size,added};
   }
-  return {sync,suppressed,revision:()=>revision};
+  function prepareSuppressionAdoption(ids){
+    const added=parse(ids),native=new Set(captureSpatialRemovedProps(core.wasm).map(({group,gx,gz})=>`spatial:${group}:${gx}:${gz}`));
+    if(native.size!==suppressed.size+added.length||[...suppressed].some(id=>!native.has(id))||
+       added.some(({id})=>suppressed.has(id)||!native.has(id)))throw Error('Placed center changed its native prop suppressions');
+    const before=revision;
+    return next=>{
+      if(revision!==before||added.some(({id})=>!next.includes(id)))throw Error('Placed center suppression adoption changed');
+      for(const {id} of added)suppressed.add(id);
+      if(added.length)revision++;
+    };
+  }
+  return {sync,suppressed,prepareSuppressionAdoption,revision:()=>revision};
 }

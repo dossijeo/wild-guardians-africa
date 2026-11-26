@@ -42,6 +42,7 @@ import {createSpatialNavigationMovement,SpatialChunkUnavailable} from '../world/
 import {createEventDrivenTaskPlanner} from '../world/wild-engine/spatial-intent-bridge.js';
 import {captureRaidWaitBindings,restoreRaidWaitBindings} from './raid-wait-handoff.js';
 import {raidEntryChunks,raidResidentDemand} from '../world/raid-entry-residency.js';
+import {copyNativeCenterPlacement} from '../world/native-center-placement.js';
 import {workerChunkDemand} from '../world/worker-chunk-residency.js';
 import {plantTouchTarget} from './plant-touch-target.js';
 import {syncTutorialActionPause} from '../tutorial/action-pause.js';
@@ -67,9 +68,10 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
-export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorkerLifecycle=false,qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null}={}){
+export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorkerLifecycle=false,qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,nativeBootstrap=null,raidWaitBindings=null,navigationView=null,compactViewAcks=false,compactPausedAcks=false,compactPhysicsPoses=false,checkpointRaidWaitsOnly=false,compactPresentationPaths=false,prepareTransportSnapshots=false,observeWorldMotion=false,captureHistoricalEvents=false,captureHyenaDiagnostics=true,presentationWorkerHeadingSeed=null,restoringPhysics=false,mudPresentation=false,onTerrainChunk=null,onNativeIntentControlError=null,getTerrainManifest=null,prepareNativeTerrainResources=null}={}){
   if(onNativeIntentControlError!==null&&typeof onNativeIntentControlError!=='function')throw TypeError('Invalid native intent control error handler');
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
+  if(prepareNativeTerrainResources!==null&&typeof prepareNativeTerrainResources!=='function')throw TypeError('Invalid native terrain preparation');
   if(typeof nativeWorkerLifecycle!=='boolean')throw TypeError('Invalid native worker lifecycle option');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
@@ -118,11 +120,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   },onNativeWorldResources:resources=>{
     // Empty receipts for occupancy, shield polygons and worker stops retain
     // the terrain meshes and vegetation.
-    const preservesTerrain=([2,12,24,25].includes(resources.kind)||!!resources.nativeShield||!!resources.nativeCenterRuin)&&resources.removed.length===0;
+    const preservesTerrain=([2,12,24,25].includes(resources.kind)||!!resources.nativeShield||!!resources.nativeCenterRuin||!!resources.nativeCenterPlacement)&&resources.removed.length===0;
     if(!preservesTerrain&&!resources.chunks.length)terrainGeneration++;
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
-      ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{})});
+      ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{}),
+      ...(resources.nativeCenterPlacement?{nativeCenterPlacement:resources.nativeCenterPlacement}:{})});
   }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3});
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
@@ -699,18 +702,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     return new Promise((ready,reject)=>{
       let commitReady;
       owner.commitReady=new Promise(resolve=>{commitReady=resolve;});
-      const retain=async(handle,signal)=>{
-        try{
-          // Keep READY resources retained until the existing authority FIFO
-          // admits this command and the consumer reaches its mutation boundary.
-          await new Promise((resolve,cancel)=>{
+      const waitForFifo=signal=>new Promise((resolve,cancel)=>{
             const cleanup=()=>{signal.removeEventListener('abort',abort);owner.enterCommit=null;};
             const abort=()=>{cleanup();cancel(new DOMException(`${label} cancelled`,'AbortError'));};
             owner.enterCommit=()=>{cleanup();resolve();};
             signal.addEventListener('abort',abort,{once:true});
             if(signal.aborted){abort();return;}
             owner.ready=true;ready({version:1});
-          });
+      });
+      const retain=async(handle,signal)=>{
+        try{
+          // Keep READY resources retained until the existing authority FIFO
+          // admits this command and the consumer reaches its mutation boundary.
+          await waitForFifo(signal);
           return handle;
         }catch(error){handle.abort();throw error;}
       };
@@ -719,14 +723,43 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         owner.consume=()=>{if(!owner.consume)throw Error(`${label} already consumed`);owner.consume=null;owner.consumed=true;try{return consume();}finally{resolve();}};
         owner.commitBoundarySettled=true;commitReady();
       });
-      owner.completion=operation({retain,atCommitBoundary});
+      owner.completion=operation({retain,atCommitBoundary,waitForFifo});
       owner.completion.then(result=>{
         if(result.status==='committed-control-failed'){nativeStructureFailure=Error(`${label} ${result.status}: ${result.error}`);onNativeIntentControlError?.(nativeStructureFailure);}
         if(!owner.ready)reject(Error(`${label} preparation ${result.status}`+(result.error?`: ${result.error}`:'')));
-        else if(!owner.consume&&!owner.consumed)owner.rejection=`${rejection}: ${result.status}`;
+        else if(!owner.consume&&!owner.consumed)owner.rejection??=`${rejection}: ${result.status}`;
         owner.commitBoundarySettled=true;commitReady();
       },error=>{reject(error);owner.failure=error;commitReady();});
     });
+  }
+
+  function prepareNativeCenterCommand(owner){
+    if(!prepareNativeTerrainResources){owner.rejection='La colocación del centro necesita sus recursos de terreno';owner.ready=true;return {version:1};}
+    return prepareNativeCommandCommit(owner,async({waitForFifo,atCommitBoundary})=>{
+      try{await waitForFifo(owner.controller.signal);}
+      catch(error){if(error?.name==='AbortError'&&owner.controller.signal.aborted)return {status:'cancelled'};throw error;}
+      if(!nativeCommandOwnerCurrent(owner))return {status:'stale'};
+      const {plan,rejection,missingNativeChunks}=quoteStructureCommand(owner.command,[]);
+      if(plan?.kind!=='center'||rejection||missingNativeChunks){owner.rejection=rejection;return {status:'stale'};}
+      planner.flushTaskEvents();planner.flushNativeIntentControl();
+      const at=game.elapsed,sourceSequence=sequence,entity=plan.entity;
+      const suppressed=[...new Set(plan.suppression)].filter(id=>!session.suppressed.has(id));
+      const source=copyNativeCenterPlacement({version:1,commandId:owner.command.id,entity,suppressed});
+      const valid=()=>nativeCommandOwnerCurrent(owner)&&game.elapsed===at&&sequence===sourceSequence&&
+        entity.id===`structure-${game.nextId}`&&entity.created===game.sequence;
+      return planner.mutateNativeWorldAfterGpuQuiescence({mutation:{type:'placeCenter'},getPublication:()=>nativeIntentControl,
+        signal:owner.controller.signal,prepareResources:prepareNativeTerrainResources,center:{source,validate:valid,atCommitBoundary,
+        project:proof=>{
+          const adopt=session.prepareNativeCenterPlacementAdoption(entity,proof),sync=nav.setState;
+          let adopted=false;
+          nav.setState=next=>{
+            if(next!==game||adopted)throw Error('Native center Game projection changed owner');
+            adopt();adopted=true;return sync(next);
+          };
+          try{return commitStructurePlacement(game,owner.command.id,plan,nav)===true&&adopted;}
+          finally{nav.setState=sync;}
+        }}});
+    },{label:'Native center',rejection:'La colocación del centro cambió durante su preparación'});
   }
 
   function prepareNativeBarrierCommit(owner){
@@ -996,6 +1029,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       // Dispatch is held; authority commands and native execution keep running.
       owner.receipt=await nativeProduction?.quiesce()??null;
       if(closed||nativeStructurePreparation!==owner)throw Error('Native structure preparation retired');
+      if(nativeBodies&&captured.kind==='placeStructure'&&(captured.structure?.kind??'center')==='center')return prepareNativeCenterCommand(owner);
       const quoted=quoteStructureCommand(captured,[]),{plan,missingNativeChunks}=quoted;
       if(missingNativeChunks)throw Error('Native structure requires prepared regions: '+missingNativeChunks.map(p=>`${p.cx},${p.cz}`).join(';'));
       const nativeQuote=nativeBodies?nativeStructureQuote(quoted):null;

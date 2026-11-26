@@ -33,6 +33,7 @@ import {sameNativeGatePresentations} from '../world/native-gate-presentation.js'
 import {installRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {assertNativeTerrainPresentationSupport} from './native-terrain-presentation-support.js';
 import {copyNativeWorldBoundary,reconcileNativeWorldResources,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {copyNativeCenterPlacement,sameNativeCenterPlacement} from '../world/native-center-placement.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,sameNativeShieldWorld,copyNativeShieldCropStop,sameNativeShieldCropStop,copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {prepareNativeWorldFrameBoundary} from './webgpu-native-world-admission.js';
@@ -206,6 +207,9 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const stopProtocol=terrainStopWireProtocol(options,'Native stopped Surface mixes source families');
    const stopTemplate=stopProtocol?stopProtocol.codec.copyReference(options[stopProtocol.wireTemplateField]):null;
    const barrierTemplate=options.nativeBarrierAdditionTemplate?copyNativeBarrierAdditionReference(options.nativeBarrierAdditionTemplate):null;
+   const center=options.nativeCenterPlacement?copyNativeCenterPlacement(options.nativeCenterPlacement):null;
+   if(center&&(!remoteGpu||!retainsNativeAssignments||stopTemplate||barrierTemplate||nativeShieldProposal||nativeCenterRuin||
+       stopEffects?.routeEffects.rows.length||stopEffects?.gateEffects.rows.length))throw Error('Native center requires its retained terrain batch');
    if(barrierTemplate&&(stopTemplate||messages.length||!retainsNativeAssignments||!sameNativeWorldBoundary(barrierTemplate.worldBoundary,proposedWorldBoundary)))throw Error('Native solid additions require their geometry-only proposal');
    if(nativeShieldProposal&&(barrierTemplate||stopTemplate||messages.length||!retainsNativeAssignments&&!nativeShieldProposal.nativeShieldCropStop))throw Error('Native shield requires its retained geometry-only proposal');
    if(nativeCenterRuin&&(nativeShieldProposal||barrierTemplate||stopTemplate||messages.length||!retainsNativeAssignments||
@@ -214,12 +218,23 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(stopEffects?.gateEffects.rows.length&&!stopEffects?.routeEffects.rows.length)throw Error('Native stop requires a coordinated terrain/body/motor batch');
    const routesRetainable=()=>{const status=workers?.status();return !status?.nativePreparing&&(!status?.native||retainsNativeAssignments||!!stopEffects?.routeEffects.rows.length);};
    if(remoteGpu&&(nativeGateProposal&&nativeGateProposal!==proposalOwner||nativeRoutePreparations||!routesRetainable()))throw Error('Native terrain commands require projected route assignments before recording moving actors');
-   const routeRevision=nativeRouteResourceRevision,suppressed=[...(state.suppressed??[])],unchanged=()=>!closed&&!proposalSignal.aborted&&nativeRouteResourceRevision===routeRevision&&(!remoteGpu||routesRetainable())&&JSON.stringify(state.suppressed??[])===JSON.stringify(suppressed);
-   let stoppedParts=[],shieldCropPart=null;let raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),prepareDependents:(view,options)=>prepareNativeTerrainDependents(view,{...options,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}}),...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
-   if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate||nativeShieldProposal||nativeCenterRuin)){
+   const routeRevision=nativeRouteResourceRevision,suppressed=[...(state.suppressed??[])],suppressionBefore=JSON.stringify(suppressed),
+     suppressionAfter=center?JSON.stringify([...new Set([...suppressed,...center.suppressed])].sort()):null;
+   const finalSuppression=()=>JSON.stringify([...new Set(state.suppressed??[])].sort())===suppressionAfter;
+   const unchanged=({applying=false}={})=>!closed&&!proposalSignal.aborted&&nativeRouteResourceRevision===routeRevision&&(!remoteGpu||routesRetainable())&&
+     (applying&&center?finalSuppression():JSON.stringify(state.suppressed??[])===suppressionBefore);
+   let stoppedParts=[],shieldCropPart=null,centerPart=null;
+   const dependents=async(view,{signal})=>{
+    const parts=await prepareNativeTerrainDependents(view,{signal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
+    if(!center)return parts;
+    try{centerPart=await settlements.prepareNativeCenterPlacement(center,view,{signal});parts.push(centerPart);return parts;}
+    catch(error){for(const part of parts.reverse())part.cancel();throw error;}
+   };
+   let raw=messages.length?await prepareWebGpuTemporalTerrain(messages,{signal:proposalSignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,suppressed,mudPreparer,...(remoteGpu?{validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),prepareDependents:dependents,...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}):null;
+   if(!messages.length&&(stopEffects?.routeEffects.rows.length||barrierTemplate||nativeShieldProposal||nativeCenterRuin||center)){
     const view={get:(cx,cz)=>(residency.getVisible??residency.get).call(residency,cx,cz),changedKeys:new Set()};
     const parts=nativeCenterRuin?[settlements.prepareCenterRuin(nativeCenterRuin,{signal:proposalSignal})]:options.shieldGeometry?[options.shieldGeometry.part]:nativeShieldProposal?[await agricultureVfx.prepareNativeShield(nativeShieldProposal.nativeShield.spell,{camera,signal:proposalSignal,removing:nativeShieldProposal.kind===4})]:
-     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
+     barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await dependents(view,{signal:proposalSignal});
     stoppedParts=parts;try{
      const cropExpiry=nativeShieldProposal?.nativeShieldCropExpiry;
      const shieldStop=nativeShieldProposal?.nativeShieldCropStop??(cropExpiry?.completionSequence===undefined?null:cropExpiry);
@@ -252,7 +267,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      // A pending solid addition describes the retained graph at the proposal
      // time. Surface may already display a later Game publication. Draw still
      // takes execution time from the independently acquired native clock.
-     const coverage=barrierTemplate||nativeShieldProposal?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
+     const coverage=barrierTemplate||nativeShieldProposal||center?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
      const metadata=remoteFrameMetadata(boundary,coverage);
      if(nativeShieldProposal?.nativeShieldCropStop)metadata.preparedShieldCropStop=nativeShieldProposal.nativeShieldCropStop;
      if(nativeShieldProposal?.nativeShieldCropExpiry)metadata.preparedShieldCropExpiry=nativeShieldProposal.nativeShieldCropExpiry;
@@ -265,7 +280,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     }catch(error){remoteGpu.cancelFrame();throw error;}
    }}catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
    return {get presented(){return preparedFrame?.presented;},canonicalPropsUnmasked:raw?.canonicalPropsUnmasked??true,...(stopTemplate?{[stopProtocol.preparedTemplateField]:stopTemplate}:{}),...(preparedFrame?{preparedWorldBoundary:preparedFrame.preparedWorldBoundary}:{}),valid:()=>active&&unchanged()&&(!raw||raw.valid()===true)&&(!preparedFrame||preparedFrame.valid()),
-    commit(data={}){const {worldBoundary=proposedWorldBoundary}=data;if(!active||!unchanged()){raw?.abort();preparedFrame?.abort();active=false;unblock();throw Error('Native terrain proposal suppression became stale');}active=false;
+    commit(data={}){const {worldBoundary=proposedWorldBoundary}=data;if(!active||!unchanged({applying:true})){raw?.abort();preparedFrame?.abort();active=false;unblock();throw Error('Native terrain proposal suppression became stale');}active=false;
+     if(center)try{
+      const final=copyNativeCenterPlacement(data.nativeCenterPlacement,{committed:true});
+      if(!sameNativeCenterPlacement(center,final)||!sameNativeWorldBoundary(proposedWorldBoundary,worldBoundary))throw Error('Native center lost its final boundary');
+      centerPart.acceptCenterPlacement(final);
+     }catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
      try{if(hasOtherTerrainStopField(data,'bindingField',stopProtocol))throw Error('Native stopped Surface mixes final source families');const proof=nativeCenterRuin?data.nativeCenterRuin:barrierTemplate?copyNativeBarrierAdditionAttestation(data.nativeBarrierAdditionBinding):stopTemplate?stopProtocol.codec.copyAttestation(data[stopProtocol.bindingField]):null;if(barrierTemplate&&!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native solid additions lost their final boundary');if(stopTemplate&&proof){if(!proof.projection||!stopProtocol.codec.sameReference(proof.preparedReference,stopTemplate)||!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native stopped Surface lost its final source');for(const part of stoppedParts)part.acceptNativeStopBinding?.(proof);}if(barrierTemplate)for(const part of stoppedParts)part.acceptNativeBarrierBinding?.(proof);if(nativeCenterRuin){if(!verifiesCenter(nativeCenterRuin,worldBoundary,proof))throw Error('Native center ruin lost its final boundary');stoppedParts[0].acceptCenterRuin(worldBoundary,proof);}if(shieldCropPart)shieldCropPart.accept(data.resources.nativeShieldCropStop??data.resources.nativeShieldCropExpiry);const result=raw?.commit()??true;if(result!==true)throw Error('Native prepared terrain batch not retained');if(preparedFrame){if(!preparedFrame.commit(worldBoundary,proof))throw Error('Native prepared terrain commands not retained');void preparedFrame.presented.then(unblock,error=>{unblock();if(!closed&&!proposalOwner)onError(error);});}else unblock();return true;}catch(error){preparedFrame?.abort();unblock();throw error;}},
     abort(){if(!active)return false;active=false;preparedFrame?.abort();unblock();return raw?.abort()??true;},identityFor:payload=>raw?.identityFor?.(payload)??null};
   }
@@ -304,7 +324,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    if(!temporal||recoveringPublication)return;
    const admitted=terrain.admittedBoundary(message.sequence),next=reconcileNativeWorldResources({publication:message,admitted,previous:preparedNativeWorldBoundary});
    if(!sameNativeWorldBoundary(next,preparedNativeWorldBoundary)){
-    const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind));
+    const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind)&&record.nativeCenterPlacement===undefined);
     if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
     const ruin=nativeGateProposal?.acquiredWorld?.centerRuin;
     retainedCenterRuin=direct&&ruin?{worldBoundary:next,retreat:ruin.retreat}:null;
