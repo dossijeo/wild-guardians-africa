@@ -19,8 +19,8 @@ export function prepareWorkerCheckpoint(result,{slotId,policy,savedAt}){
   if(worker?.nativeRouteAdmission!=='native-home')throw Error('Saved encounter Home has no acquired source');
   delete worker.nativeRouteAdmission;
   validateSnapshot(state);
-  nativeEncounterCheckpointActors(state,checkpoint.encounter);
  }
+ if(checkpoint?.encounter)nativeEncounterCheckpointActors(state,checkpoint.encounter);
  if(physical){if(state.pauses.includes('campaign-cinematic'))return {saved:false,reason:'physics-active',sequence:result.sequence};state.workerPhysicsCheckpoint=physical;}
  else if(!confirmedStateSaveAvailable(state))throw Error('Worker checkpoint is not restorable');
  validateRaidWaitBindings(state,result.raidWaitBindings);

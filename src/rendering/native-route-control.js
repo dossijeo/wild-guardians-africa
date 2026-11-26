@@ -114,10 +114,15 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const q=copyPendingAnimalCrop(pendingAnimalCrop);
     // This first ordinary raid owns the only moving body. A mixed cohort must
     // establish its own causal transition before it can use the same profile.
-    if(actors.size||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence||q.restore?.requestedAt>initialTime)
+    if(actors.size||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence||
+       q.restore?.requestedAt>initialTime||q.restoredWorkerImpact?.at>initialTime)
       throw Error('Crop request conflicts with its native cohort or baseline');
     const actor=actorContext(q.actorId);actor.state=6;actor.latestSequence=q.requestSequence;
     actor.targetId=q.targetId;actor.cropRequest=q;
+    if(q.restoredWorkerImpact){
+      const worker=actorContext(q.restoredWorkerImpact.actorId);
+      worker.state=0;worker.restoredWorkerImpact=q.restoredWorkerImpact;
+    }
   }
 
   let sequence=initialSequence,effectiveTime=initialTime??-Infinity,closed=false,clock=null;
@@ -274,14 +279,27 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const r=proof.reference,actor=actors.get(r.actorId),previous=actor?.revoked,cut=previous?.nativeEncounterExhaustion;
     return !!cut&&previous.revokedSequence===source.intent+1&&previous.safeUntil===source.at&&
       cut.hit===hit&&cut.spawn===source.spawn&&cut.worker===source.worker&&cut.workerBody===source.workerBody&&
-      cut.workerAssignment===source.workerAssignment&&cut.animalBody===r.bodyId&&cut.assignment===source.approach.assignmentSequence&&
+      cut.workerAssignment===source.workerAssignment&&cut.restoredHit===source.restoredHit&&
+      cut.animalBody===r.bodyId&&cut.assignment===source.approach.assignmentSequence&&
       sameNativeAnimalCropReference(previous.cropBinding?.reference,source.approach.reference)&&
       actor.encounterRetreatRequest===actor.cropRequest&&animalCropMatchesRequest(r,actor.cropRequest)&&
       ['x','z','yaw','phase'].every(key=>cut.first[key]===r[key])&&sequence===source.intent+3&&
       clock?.intentSequence===sequence&&clock.clockSequence===source.initialClock+2&&clock.committedThrough===source.at;
   }
+  function encounterWorkerCurrent(source,animal,from){
+    const peer=actors.get(source?.worker);
+    if(!source||peer?.state!==0||peer.closed||peer.current)return false;
+    const impact=animal?.cropRequest?.restoredWorkerImpact;
+    if(impact)return peer.restoredWorkerImpact===impact&&source.restoredHit===impact.hit&&
+      source.workerAssignment===undefined&&source.worker===impact.actorId&&source.workerBody===impact.bodyId&&
+      source.spawn===impact.spawn&&impact.at<=from;
+    const birth=animal?.raidFlightBirth,home=peer.revoked,access=home?.sourceHomeRequest;
+    return source.restoredHit===undefined&&source.worker===birth?.workerActor&&source.workerBody===birth.workerBody&&
+      source.spawn===birth.raidSpawnSequence&&home?.revokedState===0&&home.assignmentSequence===source.workerAssignment&&
+      home.safeUntil<from&&access?.bodyId===source.workerBody&&access.raidSpawnSequence===source.spawn;
+  }
   function heldEncounterCropDraft(input,r,actor){
-    const draft=input,approach=actor?.current?.cropBinding,peer=actors.get(draft?.worker),home=peer?.revoked,access=home?.sourceHomeRequest;
+    const draft=input,approach=actor?.current?.cropBinding;
     if(!draft||draft.version!==1||!r||r.kind!==26||r.purpose!=='retreat'||!approach||approach.reference.purpose!=='center'||
        !sameNativeAnimalCropReference(r,draft.reference)||
        !sameNativeAnimalCropReference(approach.reference,draft.approach?.reference)||
@@ -291,10 +309,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
        draft.intent!==sequence||r.requestSequence!==sequence+2||r.sourceControlSequence!==sequence+2||
        draft.initialClock!==clock?.clockSequence||r.worldBoundary.effectiveTime!==clock?.committedThrough||
        !(draft.at>r.worldBoundary.effectiveTime&&draft.at-r.worldBoundary.effectiveTime<=.020000001&&draft.at<approach.reference.endTime)||
-       draft.worker!==actor.raidFlightBirth?.workerActor||draft.workerBody!==actor.raidFlightBirth.workerBody||
-       draft.spawn!==actor.raidFlightBirth.raidSpawnSequence||peer?.state!==0||peer.current||home?.revokedState!==0||
-       home.assignmentSequence!==draft.workerAssignment||home.safeUntil>=r.worldBoundary.effectiveTime||
-       access?.bodyId!==draft.workerBody||access?.raidSpawnSequence!==draft.spawn)return false;
+       !encounterWorkerCurrent(draft,actor,r.worldBoundary.effectiveTime))return false;
     return true;
   }
   function admitAnimalCrop(input,{preparingWorldBoundary=null,encounterRetreatDraft=null}={}){
@@ -387,16 +402,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
 
     const exhaustion=event.nativeEncounterExhaustion;
     if(exhaustion!==undefined){
-      const owner=actors.get(event.actorId),birth=owner?.raidFlightBirth,peer=actors.get(exhaustion?.worker),home=peer?.revoked;
-      const route=current?.cropBinding?.reference,access=home?.sourceHomeRequest;
+      const owner=actors.get(event.actorId),route=current?.cropBinding?.reference;
       if(!exhaustion||exhaustion.version!==1||event.type!=='RouteInvalidated'||event.state!==0||handle||assigned||!revoked||
          event.actorId!==exhaustion.animal||event.targetId!==route?.targetId||event.taskId||route?.kind!==26||route.purpose!=='center'||
          !sameHandle(revoked,exhaustion.handle)||exhaustion.assignment!==current.assignmentSequence||exhaustion.animalBody!==route.bodyId||
-         birth?.workerActor!==exhaustion.worker||birth.workerBody!==exhaustion.workerBody||birth.raidSpawnSequence!==exhaustion.spawn||
-         peer?.state!==0||peer.current||!home||home.revokedState!==0||home.assignmentSequence!==exhaustion.workerAssignment||
-         access?.bodyId!==exhaustion.workerBody||access.raidSpawnSequence!==exhaustion.spawn||
-         home.safeUntil>=exhaustion.from||exhaustion.at!==event.effectiveTime||exhaustion.from!==clock?.committedThrough||
-         !(exhaustion.from<exhaustion.at)||exhaustion.at-exhaustion.from>.021||!id(exhaustion.hit)||exhaustion.hit<=exhaustion.spawn||
+         !encounterWorkerCurrent(exhaustion,owner,exhaustion.from)||
+         exhaustion.at!==event.effectiveTime||exhaustion.from!==clock?.committedThrough||
+         !(exhaustion.from<exhaustion.at)||exhaustion.at-exhaustion.from>.021||!id(exhaustion.hit)||exhaustion.hit<=(exhaustion.restoredHit??exhaustion.spawn)||
          ![exhaustion.x,exhaustion.z,exhaustion.yaw,exhaustion.phase,exhaustion.exit?.x,exhaustion.exit?.z].every(Number.isFinite)||
          !exhaustion.first||!['x','z','yaw','phase','distance'].every(key=>Number.isFinite(exhaustion.first[key]))||
          exhaustion.first.distance<=0||Math.abs(exhaustion.first.distance-(exhaustion.at-exhaustion.from)*3.8)>1e-10||
@@ -406,6 +418,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         throw Error('Worker encounter exhaustion lacks its exact live approach and held worker');
     }
     const successor=event.pendingAnimalCrop==null?null:copyPendingAnimalCrop(event.pendingAnimalCrop);
+    if(successor?.restoredWorkerImpact)throw Error('Restored worker impact requires a fresh baseline');
     let continuedEncounter=false;
     const birth=event.raidFlightBirth;
     const centerBirth=successor?.purpose==='center'&&!event.pendingAnimalCrop.previousStrike;

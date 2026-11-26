@@ -222,7 +222,10 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_restore_encounter_worker(double session,
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_finish_restored_encounter_worker(double session,double actor,double hit,
     double at,double fromX,double fromZ,double toX,double toZ,double yaw){
  auto& s=state();auto& source=s.restoredEncounterWorker;
- if(!source||source->recovered||session!=double(s.session)||s.effectiveTime!=at||
+ const auto& cut=s.encounterRetreat;
+ if(!source||source->recovered||source->approach&&(!cut||!cut->hit||!cut->departed||
+    cut->worker!=source->actor||cut->workerBody!=source->body||cut->spawn!=source->spawn)||
+    session!=double(s.session)||s.effectiveTime!=at||
     s.clockThrough>=at||at-s.clockThrough>.021||fromX!=source->x||fromZ!=source->z||yaw!=source->yaw||
     !coordinate(toX)||!coordinate(toZ)||nav_restored_encounter_worker_current(actor,hit)!=1)return -2;
  SpatialBodyView before;
@@ -271,17 +274,31 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_center_encounter_step(double session,dou
     s.intentSequence,s.clockSequence,executionWorldStamp(),s.effectiveTime,at,impact==1};return 1;
 }
 
-static bool encounterRetreatCutCurrent(const IntentState& s,const EncounterRetreatCut& c){
+static bool restoredEncounterApproachCurrent(const IntentState& s,const NativeAnimalRouteRequest& request){
+ const auto& source=s.restoredEncounterWorker;
+ return source&&source->approach.get()==&request&&source->spawn&&
+    nav_restored_encounter_worker_current(double(source->actor),double(source->hit))==1;
+}
+static bool encounterRetreatWorkerCurrent(const IntentState& s,const EncounterRetreatCut& c){
  const auto& impact=s.homeEncounterImpact;
+ if(impact&&impact->consumed&&impact->worker==c.worker&&impact->workerBody==c.workerBody&&
+    impact->animal==c.animal&&impact->animalBody==c.animalBody&&impact->spawn==c.spawn&&
+    impact->animalAssignment==c.assignment)
+   return nav_home_encounter_impact_current(double(c.worker),double(c.animal),double(c.spawn))==1;
+ const auto& source=s.restoredEncounterWorker;
+ return source&&source->approach&&source->actor==c.worker&&source->body==c.workerBody&&source->spawn==c.spawn&&
+    source->approach->actor==c.animal&&source->approach->body==c.animalBody&&
+    restoredEncounterApproachCurrent(s,*source->approach);
+}
+static bool encounterRetreatCutCurrent(const IntentState& s,const EncounterRetreatCut& c){
  const auto animal=s.activeIntents.find(c.animal);
- if(!impact||!impact->consumed||impact->worker!=c.worker||impact->workerBody!=c.workerBody||
-    impact->animal!=c.animal||impact->animalBody!=c.animalBody||impact->spawn!=c.spawn||impact->animalAssignment!=c.assignment||
-    animal==s.activeIntents.end()||animal->second.state!=PlanningState::RouteActive||animal->second.slot!=c.slot||
-    animal->second.generation!=c.generation||animal->second.assignmentSequence!=c.assignment||animal->second.animalStrike||
-    !executionBindingCoherent(s,c.animalBody,c.slot)||nav_home_encounter_impact_current(double(c.worker),double(c.animal),double(c.spawn))!=1)return false;
- const auto& route=s.routeSlots[c.slot];
- return route.centerEncounter&&route.animalRouteBinding&&route.animalRouteBinding->source->attackCenter&&
-    route.hasExecution&&route.executionPose==c.origin&&!c.origin[6]&&c.origin[7]==c.from;
+ if(!encounterRetreatWorkerCurrent(s,c)||animal==s.activeIntents.end()||animal->second.state!=PlanningState::RouteActive||
+    animal->second.slot!=c.slot||animal->second.generation!=c.generation||animal->second.assignmentSequence!=c.assignment||
+    animal->second.animalStrike||!executionBindingCoherent(s,c.animalBody,c.slot))return false;
+ const auto& route=s.routeSlots[c.slot];const auto& binding=route.animalRouteBinding;
+ if(!binding||!binding->source->attackCenter||!route.hasExecution||
+    route.executionPose!=c.origin||c.origin[6]||c.origin[7]!=c.from)return false;
+ return route.centerEncounter||restoredEncounterApproachCurrent(s,*binding->source);
 }
 static int previewEncounterRetreatStep(IntentState& s,const ActiveIntent& intent,EncounterRetreatCut& cut){
   SpatialBodyView body;
@@ -325,10 +342,12 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_encounter_exhaust_prepare(double session
     !std::isfinite(at)||at<=s.effectiveTime||at-s.effectiveTime>.021||!coordinate(exitX)||!coordinate(exitZ))return -1;
  if(s.encounterRetreat||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!s.causalClock||s.clockPaused||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence)return -2;
- const auto& impact=s.homeEncounterImpact;const auto found=s.activeIntents.find(uint64_t(animal));
- if(!impact||found==s.activeIntents.end()||found->second.slot>=s.routeSlots.size())return -2;
+ const auto& impact=s.homeEncounterImpact;const auto& source=s.restoredEncounterWorker;
+ const uint64_t workerBody=impact?impact->workerBody:source&&source->approach?source->body:0;
+ const auto found=s.activeIntents.find(uint64_t(animal));
+ if(!workerBody||found==s.activeIntents.end()||found->second.slot>=s.routeSlots.size())return -2;
  const auto& intent=found->second;const auto& route=s.routeSlots[intent.slot];
- EncounterRetreatCut cut{uint64_t(worker),impact->workerBody,uint64_t(animal),route.reservationBody,uint64_t(assignment),uint64_t(spawn),0,0,
+ EncounterRetreatCut cut{uint64_t(worker),workerBody,uint64_t(animal),route.reservationBody,uint64_t(assignment),uint64_t(spawn),0,0,
     intent.slot,intent.generation,s.effectiveTime,at,exitX,exitZ,route.executionPose,false};
  if(!encounterRetreatCutCurrent(s,cut)||cut.origin[0]!=x||cut.origin[1]!=z||cut.origin[4]!=yaw||cut.origin[3]!=phase)return -2;
  const int step=previewEncounterRetreatStep(s,intent,cut);
@@ -338,7 +357,9 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_encounter_exhaust_prepare(double session
 extern "C" EMSCRIPTEN_KEEPALIVE int nav_encounter_exhaust_consume(double session,double worker,double animal,double spawn,
     double assignment,double at,double hit){
  auto& s=state();auto& cut=s.encounterRetreat;
- if(!cut||cut->hit||!integer(hit)||hit<=spawn||session!=double(s.session)||worker!=double(cut->worker)||animal!=double(cut->animal)||
+ const auto& restored=s.restoredEncounterWorker;
+ if(!cut||cut->hit||!integer(hit)||hit<=spawn||restored&&restored->approach&&hit<=double(restored->hit)||
+    session!=double(s.session)||worker!=double(cut->worker)||animal!=double(cut->animal)||
     spawn!=double(cut->spawn)||assignment!=double(cut->assignment)||at!=cut->at||s.effectiveTime!=cut->at||
     s.clockThrough!=cut->from||!encounterRetreatCutCurrent(s,*cut))return -2;
 

@@ -112,7 +112,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     pendingNativeWorldResources.push({version:1,worldBoundary:resources.worldBoundary,kind:resources.kind,
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
       ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{})});
-  }});planner.resetFromState(game);
+  }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3});
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
@@ -239,8 +239,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     planner.restoreEncounterWorker(game,marker,body);
     if(animal){
      const animalBody=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
-     if(!planner.requestRestoredAnimalRetreat(game,animal,animalBody,marker))
-       throw Error('Native encounter checkpoint could not rebuild the retreat');
+     const accepted=marker.version===3?planner.restoreEncounterApproach(game,animal,animalBody):
+       planner.requestRestoredAnimalRetreat(game,animal,animalBody,marker);
+     if(!accepted)throw Error('Native encounter checkpoint could not rebuild the animal route');
     }
     nativeBodies=bodies;
     if(planner.commitNativeCausalClock({paused:game.pauses.length>0}).status!=='committed')
@@ -1094,7 +1095,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     return pair&&route.members.length===2&&pair.every((row,i)=>
       row.actorId===route.members[i].actorId&&route.members[i].kind===(i===0?18:26))?{executions:pair}:null;
   }
-  return {
+  const authority={
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
 
     async terminalWorkerRoute(){
@@ -1299,6 +1300,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
     if(savedEncounter&&!nativeBodies&&command.kind==='advance')
       throw Error('Saved encounter requires native control before advancing');
+    if(command.kind==='advance'&&!game.pauses.length&&planner.encounterApproachPending())
+      return nativeProduction.wake().then(()=>{
+        if(closed||planner.encounterApproachPending())
+          throw Error('Saved encounter requires an acquired approach before advancing');
+        return authority.execute(command);
+      });
     if(nativeStructurePreparation?.commandSequence!==undefined){
       if(command.sequence!==nativeStructurePreparation.commandSequence||nativeStructurePreparation.identity!==structureIdentity(command))throw Error('Native structure FIFO head is occupied');
       if(!nativeStructurePreparation.commitBoundarySettled)throw Error('Native structure command boundary is not ready');
@@ -1572,5 +1579,6 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
     dispose(){if(closed)return;closed=true;encounterDraftAdvance?.waitingForLossClaim?.(Error('Simulation authority closed'));shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
+  return authority;
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}
 }

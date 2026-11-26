@@ -65,9 +65,13 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_encounter_home_request(double session,double
     yaw,run,walk,carry,budget,true};
   return declareEncounterHome(s,source,uint64_t(village),homeX,homeZ,live->priorHome->profile,.24);
  }
- if(cold&&cold->recovered&&nav_restored_encounter_worker_current(actor,hit)==1&&
-          yaw==cold->yaw&&run==cold->runPhase&&walk==cold->walkPhase&&carry==cold->carryPhase&&budget==cold->runRemaining)
-  return declareEncounterHome(s,*cold,uint64_t(village),homeX,homeZ,lazy_selected_context(),.24);
+ if(cold&&cold->recovered&&nav_restored_encounter_worker_current(actor,double(cold->hit))==1&&
+    yaw==cold->yaw&&run==cold->runPhase&&walk==cold->walkPhase&&carry==cold->carryPhase&&budget==cold->runRemaining){
+  if(cold->approach?(!cut||!cut->departed||!cut->hit||hit!=double(cut->hit)||
+    cut->worker!=cold->actor||cut->workerBody!=cold->body||cut->spawn!=cold->spawn):hit!=double(cold->hit))return -2;
+  RestoredEncounterWorker source=*cold;source.hit=uint64_t(hit);
+  return declareEncounterHome(s,source,uint64_t(village),homeX,homeZ,lazy_selected_context(),.24);
+ }
  return -2;
 }
 EMSCRIPTEN_KEEPALIVE int nav_intent_restore_encounter_home(double session,double actor,double hit,double village,

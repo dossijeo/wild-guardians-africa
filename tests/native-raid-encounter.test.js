@@ -184,7 +184,7 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   const worker=snapshot.workers[0],first=snapshot.events.find(event=>event.type==='WorkerHit');
   assert.equal(first.nativeHomeImpact.home.reference.bodyId,1);
   assert.equal(worker.hits,1);
-  const checkpoint=await world.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const checkpoint=await world.command({kind:'snapshot'});
   assert.equal(checkpoint.saveAvailable,false);
   assert.equal(checkpoint.nativeAuthorityCheckpoint,undefined);
   const receive=world.resourcePort.onmessage;
@@ -237,6 +237,83 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   assert.deepEqual([...world.errors,...world.faults],[]);
   await finishWoundedHome(world,snapshot);
  }finally{await world.close();}
+});
+
+test('a checkpoint between impacts acquires the saved approach and consumes one second hit',async()=>{
+ const source=await setup(true);
+ let loaded,releaseReady;
+ try{
+  let before=source.snapshot();
+  while(!before.events.some(event=>event.type==='WorkerHit')){
+   assert(before.elapsed<12.60);
+   before=JSON.parse((await advance(source)).snapshot);
+   await source.present();
+  }
+  const result=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(result.saveAvailable,true);
+  const {state}=prepareWorkerCheckpoint(result,{slotId:before.slotId,policy:{nativeAuthority:true},savedAt:1});
+  const {approachPath,...marker}=state.workerNativeAuthorityCheckpoint.encounter;
+  assert.deepEqual(marker,{version:3,workerId:900011,animalId:1000000,hit:29209,spawn:29208});
+  assert.equal(approachPath.length,3);
+  assert.deepEqual(state.raid.animals[0].path,before.raid.animals[0].path,
+   'The checkpoint corridor must not change the live presentation path');
+  assert.deepEqual(approachPath,before.raid.animals[0].path.slice(-3));
+  const bad=structuredClone(state);
+  bad.events.find(event=>event.id==='event-29209').nativeHomeImpact.x+=.01;
+  assert.throws(()=>savedNativeAuthorityOptions(JSON.stringify(bad)),/first impact/);
+  bad.events=structuredClone(state.events);
+  bad.workerNativeAuthorityCheckpoint.encounter.approachPath.at(-1).x+=1;
+  assert.throws(()=>savedNativeAuthorityOptions(JSON.stringify(bad)),/first impact/);
+  const options=savedNativeAuthorityOptions(JSON.stringify(state));
+  const ready=new Promise(resolve=>{releaseReady=resolve;});
+  loaded=await nativeProductionAuthority(state,{...options,attach:false,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+   qualifyRaidEncounter:true,onReady(record){if(record.resources.reference?.purpose==='center')return ready;}});
+  await loaded.attach();
+  const approach=await until(()=>loaded.records.find(record=>record.kind==='animal-crop-route'));
+  assert.equal(approach.resources.reference.phase,before.raid.animals[0].motionPhase);
+  assert.equal(approach.resources.reference.x,before.raid.animals[0].x);
+  assert.equal(approach.resources.worldBoundary.effectiveTime,before.elapsed);
+  assert.notEqual(approach.resources.worldBoundary.authorityEpoch,
+   source.records.find(record=>record.kind==='animal-crop-route').resources.worldBoundary.authorityEpoch);
+  const frozen=loaded.snapshot();
+  assert.deepEqual(frozen.workers[0],before.workers[0]);
+  let settled=false;
+  const queued=advance(loaded);
+  queued.then(()=>{settled=true;},()=>{settled=true;});
+  await loaded.present();
+  assert.equal(settled,false);
+  assert.equal(approach.committed,false);
+  releaseReady();
+  await untilProduction(loaded,()=>approach.committed);
+  await loaded.present();
+  assert.equal(loaded.host.inspect().nativeRouteFrame?.bindings.find(row=>row.nativeAnimalCrop?.purpose==='center')?.relativeTime,0);
+  assert.equal((await queued).elapsed,before.elapsed+.02);
+  const original=await reachSecondHit(source);
+  let restored=await reachSecondHit(loaded);
+  assert.equal(restored.elapsed,original.elapsed);
+  assert.equal(restored.rng,original.rng);
+  assert.deepEqual(restored.workers,original.workers);
+  for(const field of ['x','z','heading','motionPhase','hitsRemaining','targetId','reservation'])
+   assert.equal(restored.raid.animals[0][field],original.raid.animals[0][field],field);
+  const at=restored.elapsed+.02,advancing=advance(loaded,2);
+  await until(()=>loaded.host.inspect().nativeCausalClock.committedThrough===at&&loaded.host.inspect().pendingSequence!==null);
+  await loaded.present();
+  const resultAfter=await advancing;
+  assert.equal(resultAfter.stepsExecuted,2);
+  assert.equal(resultAfter.events.filter(event=>event.type==='WorkerIncapacitated').length,1);
+  assert.equal(resultAfter.events.filter(event=>event.type==='AnimalRetreating').length,1);
+  restored=JSON.parse(resultAfter.snapshot);
+  assert.equal(restored.events.filter(event=>event.type==='WorkerHit').length,1);
+  assert.equal(loaded.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.encounter.version,1);
+  while(!restored.workers[0].recoveryExitRemaining){
+   assert(restored.elapsed<19);
+   restored=JSON.parse((await advance(loaded)).snapshot);
+   await loaded.present();
+   if(!restored.raid)await presentDepartedEncounter(loaded,restored);
+  }
+  assert.equal(restored.structures[0].hp,600);
+  await finishWoundedHome(loaded,restored);
+ }finally{releaseReady?.();await loaded?.close();await source.close();}
 });
 
 test('a checkpoint during wounded Home resumes the remaining route and exit phase',async()=>{

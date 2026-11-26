@@ -280,7 +280,9 @@ static int stageAnimalRoute(double actor,double session,double requestSequence,
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(requestSequence))return -1;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end()||!animalRouteRequestCurrent(s,found->second))return -2;
- const auto& intent=found->second;const auto q=intent.animalRouteRequest;if(q->sequence!=uint64_t(requestSequence))return -2;
+ const auto& intent=found->second;const auto q=intent.animalRouteRequest;
+ if(q->sequence!=uint64_t(requestSequence)||s.restoredEncounterWorker&&
+    s.restoredEncounterWorker->approach==q&&!restoredEncounterApproachCurrent(s,*q))return -2;
  PendingNativeMotionDraft d;d.route.points=s.routeSlots[intent.slot].points;
  int result=prepareAnimalRouteDraft(s,intent,q,d,s.effectiveTime);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(q->body,body))return -3;
@@ -337,7 +339,11 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_proposal_commit_bound(double session,d
  auto& s=state();if(!integer(preparedTicket)||!s.barrierProposal.animalRoute)return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,26);if(valid!=1)return valid;
  auto& pending=*s.barrierProposal.animalRoute;const auto found=s.activeIntents.find(pending.route.actor);
- if(found==s.activeIntents.end()||found->second.animalRouteRequest!=pending.animalRouteSource||!animalRouteRequestCurrent(s,found->second)){clearWorldMutationProposal(s.barrierProposal);return -2;}
+ if(found==s.activeIntents.end()||found->second.animalRouteRequest!=pending.animalRouteSource||
+    !animalRouteRequestCurrent(s,found->second)||s.restoredEncounterWorker&&
+    s.restoredEncounterWorker->approach==pending.animalRouteSource&&!restoredEncounterApproachCurrent(s,*pending.animalRouteSource)){
+   clearWorldMutationProposal(s.barrierProposal);return -2;
+ }
 
  if(const auto& encounter=pending.route.centerEncounter;encounter){
   const auto& c=*encounter;

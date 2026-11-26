@@ -568,6 +568,8 @@ struct RestoredEncounterWorker {
  double x,z,yaw;
  double runPhase,walkPhase,carryPhase,runRemaining;
  bool recovered=false;
+ uint64_t spawn=0;
+ std::shared_ptr<const NativeAnimalRouteRequest> approach;
 };
 struct IntentState {
  std::optional<EncounterRetreatCut> encounterRetreat;
@@ -3745,7 +3747,7 @@ EMSCRIPTEN_KEEPALIVE int nav_encounter_retreat_request(double session,double act
  if(session!=double(s.session)||!cut||!cut->hit||cut->departed||cut->retreatRequest||
     actor!=double(cut->animal)||hit!=double(cut->hit)||exitX!=cut->exitX||exitZ!=cut->exitZ||
     s.effectiveTime<cut->at||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||
-    nav_home_encounter_impact_current(double(cut->worker),actor,double(cut->spawn))!=1)return -2;
+    !encounterRetreatWorkerCurrent(s,*cut))return -2;
  SpatialBodyView body;
  if(!spatialReadBody(cut->animalBody,body)||body.kind!=1||body.flags!=1||body.x!=cut->first[0]||body.z!=cut->first[1]||
     s.activeIntents.count(cut->animal)||s.suspendedBodies.count(cut->animalBody)||s.reservedBodies.count(cut->animalBody))return -2;
@@ -3997,6 +3999,30 @@ static int requestAttackCenterRoute(double actor,double target,const SpatialBody
     s.activeIntents.erase(uint64_t(actor));
   }
   return request;
+}
+// Cold admission of the approach retained by a confirmed first worker hit.
+EMSCRIPTEN_KEEPALIVE int nav_restore_encounter_approach(double session,double worker,double hit,double spawn,
+    double actor,double targetId,double bodyId,int count,double approachX,double approachZ,
+    double entering,double yaw,double phase){
+  auto& s=state();auto& source=s.restoredEncounterWorker;
+  if(session!=double(s.session)||!integer(spawn)||!integer(actor)||!integer(targetId)||!integer(bodyId)||
+     count<1||count>4096||!coordinate(approachX)||!coordinate(approachZ)||
+     (entering!=0&&entering!=1)||!std::isfinite(yaw)||!std::isfinite(phase)||phase<0)return -1;
+  if(s.causalClock||s.executionEnabled||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||
+     !s.activeIntents.empty()||s.finishedAnimalStrike||s.encounterRetreat||!s.gates.empty()||
+     spatial_body_count()!=2||spatial_execution_profile_kind()!=1)return -4;
+  const auto target=s.targets.find(uint64_t(targetId));SpatialBodyView origin;
+  if(!source||source->recovered||source->approach||hit!=spawn+1||actor==worker||bodyId==double(source->body)||
+     nav_restored_encounter_worker_current(worker,hit)!=1||target==s.targets.end()||
+     !intactAttackCenter(target->second)||!spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
+     s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
+     s.attackRouteInput[size_t(count)*2-2]!=float(approachX))return -2;
+  const int status=requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,entering,yaw,phase);
+  if(status==1){
+    source->spawn=uint64_t(spawn);
+    source->approach=s.activeIntents.at(uint64_t(actor)).animalRouteRequest;
+  }
+  return status;
 }
 // A live birth publishes the initial resource request without an executable route.
 EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_birth(double session,double actor,double targetId,double bodyId,

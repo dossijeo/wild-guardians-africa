@@ -110,6 +110,29 @@ test('a live center birth requires a fresh actor in the same empty causal cohort
   assert.equal(empty.status().active,0);
   assert.throws(()=>empty.accept({...birth,sequence:2,pendingAnimalCrop:{...request,requestSequence:2}}),/empty causal cohort/);
 });
+test('the first-impact checkpoint creates a stationary worker owner only at a fresh baseline',()=>{
+ const impact={version:1,actorId:9,bodyId:1,spawn:31,hit:32,at:9.5};
+ const request={version:1,purpose:'center',actorId:7,bodyId:2,targetId:4,centerId:4,
+  centerX:60,centerZ:0,targetX:60,targetZ:0,x:110,z:10,radius:1.1,yaw:0,phase:3,
+  authorityEpoch:'authority-a',nativeSession:1,requestSequence:1,restoredWorkerImpact:impact};
+ const baseline={authorityEpoch:'authority-a',initialTime:10,initialSequence:1};
+ for(const alteration of [{actorId:7},{bodyId:2},{hit:31},{at:11}]){
+  assert.throws(()=>createNativeRouteControl({...baseline,pendingAnimalCrop:{...request,
+   restoredWorkerImpact:{...impact,...alteration}}}),/restored worker impact|cohort or baseline/);
+ }
+ const control=createNativeRouteControl({...baseline,pendingAnimalCrop:request});
+ control.acceptClock(clock());
+ const worldBoundary={version:1,authorityEpoch:'authority-a',nativeSession:1,ticket:1,effectiveTime:10};
+ const reference={...request,kind:26,worldBoundary,sourceControlSequence:1,slot:0,generation:2,endTime:12};
+ const permit=control.admitAnimalCrop(reference,{preparingWorldBoundary:worldBoundary});
+ assert.equal(permit.isPrepared(),true);
+ assert.equal(permit.isCurrent(),false);
+ assert.throws(()=>control.admit(descriptor(1,9)),/unauthorized/);
+ const live=createNativeRouteControl({authorityEpoch:'authority-a',initialTime:10});
+ live.acceptClock(clock(1,10,{intentSequence:0}));
+ assert.throws(()=>live.accept({...assigned(),type:'IntentChanged',state:6,targetId:4,routeHandle:null,
+  pendingAnimalCrop:request}),/requires a fresh baseline/);
+});
 test('causal control bounds time independently of prepared clocks and accepts pause/rate at non-rewinding native boundaries',()=>{
  const c=createNativeRouteControl({authorityEpoch:'authority-a'});c.accept(assigned());c.acceptClock(clock());
  assert.equal(evaluateRemoteClock(c.clockLease(0),9000),10);

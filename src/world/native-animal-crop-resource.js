@@ -94,8 +94,14 @@ export function copyPendingAnimalCrop(value){
    throw TypeError('Invalid resting crop request');
  const restore=value.restore===undefined?null:copyRestoredStrike(value.restore);
  if(restore&&value.purpose!==undefined)throw TypeError('Only a crop strike can be restored');
+ const impact=value.restoredWorkerImpact;
+ if(impact!==undefined&&(!impact||Object.keys(impact).length!==6||impact.version!==1||value.purpose!=='center'||
+    ![impact.actorId,impact.bodyId,impact.spawn,impact.hit].every(id)||impact.hit!==impact.spawn+1||
+    impact.actorId===value.actorId||impact.bodyId===value.bodyId||!Number.isFinite(impact.at)||impact.at<0))
+   throw TypeError('Invalid restored worker impact source');
  return Object.freeze({version:1,authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,
-   ...(value.purpose?{purpose:value.purpose}:{}),...(restore?{restore}:{}),...Object.fromEntries(requestFields.map(key=>[key,value[key]]))});
+   ...(value.purpose?{purpose:value.purpose}:{}),...(restore?{restore}:{}),
+   ...(impact?{restoredWorkerImpact:Object.freeze({...impact})}:{}),...Object.fromEntries(requestFields.map(key=>[key,value[key]]))});
 }
 export function animalCropMatchesRequest(r,q){
  return !!q&&r.purpose===q.purpose&&r.worldBoundary.authorityEpoch===q.authorityEpoch&&r.worldBoundary.nativeSession===q.nativeSession&&
