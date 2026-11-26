@@ -1,0 +1,206 @@
+{
+  "baseline": "f604a783c63eb8eefef9c9f7e6f8787b918c127c",
+  "comparison": {
+    "profiles": [
+      "youngMale",
+      "olderMale",
+      "olderFemale",
+      "youngFemale"
+    ],
+    "scenarios": 1024,
+    "steps": 61440
+  },
+  "impactTests": {
+    "file": ".cache/flee-mixed/getup-impact.tap",
+    "sha256": "e7e61a391855cb599ed2f600ccb10951d8f29476f3eb1730417a471aabc4d346",
+    "tests": 64,
+    "pass": 64,
+    "fail": 0,
+    "skipped": 0
+  },
+  "baselineTests": {
+    "file": ".cache/flee-mixed/getup-preimage.tap",
+    "sha256": "58bec54a2b69d274547c2e5ef562e93c81b2562e50047dc0ddceb08f1f4983e6",
+    "tests": 7,
+    "pass": 0,
+    "fail": 1,
+    "skipped": 6
+  },
+  "nativeTests": {
+    "file": ".cache/flee-mixed/getup-native-regression.tap",
+    "sha256": "7c87a7e4c34f3e55d3840f5593438167a7538b8fc19534f53638a363005f777e",
+    "tests": 89,
+    "pass": 89,
+    "fail": 0,
+    "skipped": 0
+  },
+  "build": {
+    "duration": "1m 2s",
+    "testedArtifactSha256": {
+      "standalone": "bc6a78976e9ff3220dfce7b3faa31970016528f053384eeaba41b379486913ec",
+      "pthread": "78b71a1a1b362ad10496ab4a2e9686418891eaf7274b40d49c4d05a284938a62",
+      "loader": "8479646f090904f8f4bb137b938335e82d2d279df471667335ccbc07d21bb26d"
+    }
+  },
+  "scope": "Game and private WASM, real Host with deterministic submission double, no physical GPU and no new canonical WASM",
+  "frontal": {
+    "impact": {
+      "at": 11.819999999999961,
+      "previousClock": 11.799999999999962,
+      "held": [
+        -16,
+        0.8059572875253171
+      ],
+      "result": [
+        -16,
+        0.8059572875253171
+      ],
+      "body": 1,
+      "actor": 900011,
+      "budget": 3,
+      "rng": 149829618
+    },
+    "firstRecovery": {
+      "elapsed": 15.359999999999886,
+      "x": -16,
+      "z": 0.8059572875253171,
+      "fall": 0,
+      "recovery": {
+        "elapsed": 0.01833349227905561,
+        "duration": 3.1999999999999997,
+        "heading": 0,
+        "dx": -0.2701404389954405,
+        "dz": -0.3370517399162054,
+        "fraction": 1
+      },
+      "exit": null,
+      "admission": null,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "commit": {
+      "at": 18.559999999999818,
+      "previousClock": 18.539999999999818,
+      "from": [
+        -16,
+        0.8059572875253171
+      ],
+      "dest": {
+        "x": -16.27014043899544,
+        "z": 0.46890554760911174,
+        "heading": 0
+      },
+      "body": 1,
+      "foreign": {
+        "actor": -2,
+        "clock": -2
+      },
+      "phase": {
+        "elapsed": 3.1999999999999997,
+        "duration": 3.1999999999999997,
+        "heading": 0,
+        "dx": -0.2701404389954405,
+        "dz": -0.3370517399162054,
+        "fraction": 1
+      }
+    },
+    "published": {
+      "elapsed": 18.559999999999818,
+      "x": -16.27014043899544,
+      "z": 0.46890554760911174,
+      "fall": 0,
+      "recovery": null,
+      "exit": 0.24,
+      "admission": null,
+      "rng": 149829618,
+      "hits": 1,
+      "budget": 3
+    },
+    "advanceSteps": 337
+  },
+  "home": {
+    "request": {
+      "kind": "native-home-request-reference",
+      "version": 2,
+      "raidSpawnSequence": 29208,
+      "nativeSession": 1,
+      "actorId": 900011,
+      "bodyId": 1,
+      "bodyFlags": 1,
+      "requestSequence": 10,
+      "requestedAt": 18.559999999999818,
+      "profile": 1,
+      "home": {
+        "villageId": 1,
+        "x": -5.800000000000001,
+        "z": 0.2
+      },
+      "pose": {
+        "x": -16.27014043899544,
+        "z": 0.46890554760911174,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 24.14999999999998,
+        "walkPhase": 8.414999999999973,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "foreign": {
+      "village": -2,
+      "time": -2
+    },
+    "exit": 0.24,
+    "rejectedBy": "Native raid flight requires its Farm, Idle or Task source",
+    "newGo": false
+  },
+  "collision": {
+    "inputRng": 3,
+    "held": {
+      "elapsed": 12.599999999999945,
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "fall": 3.101666507720947,
+      "recovery": null,
+      "exit": null,
+      "admission": null,
+      "rng": 1909268553,
+      "hits": 1,
+      "budget": 1
+    },
+    "at": 12.619999999999944,
+    "workerStatus": "incapacitated",
+    "animalBudget": 0,
+    "nativeMode": 2,
+    "nativeExecutedThrough": 12.619999999999944,
+    "events": [
+      {
+        "id": "event-29209",
+        "type": "WorkerHit",
+        "simulationTime": 12.179999999999954,
+        "collision": true,
+        "pushed": 1.7222681130515411
+      },
+      {
+        "id": "event-29210",
+        "type": "WorkerIncapacitated",
+        "simulationTime": 12.619999999999944,
+        "collision": false,
+        "pushed": 0
+      }
+    ],
+    "rejectedBy": "Native crop action lost the current game source"
+  },
+  "localInputsAndEvidence": {
+    ".cache/flee-mixed/compare-getup.mjs": "04ba7689c44e5ac1603ba5895208577456531e21b5b4f0ce3973cb7a926fe804",
+    ".cache/flee-mixed/prepare-encounter-phase.mjs": "7702ec3c750e7c06c0a0f1d84bf30577346e65f3e6cf2ec3de9a2f08cf5e8395",
+    ".cache/flee-mixed/encounter-phase-loader.mjs": "fff7e34a99643fd8566493d9f1503952eee6610df36ed021053bc3fe7823b219",
+    ".cache/flee-mixed/encounter-desert-native.mjs": "b6713580f085c70be008d8c6aefacc9e812eb4b9d3771cf49a1d8685c9e55033",
+    ".cache/flee-mixed/encounter-getup-build/standalone/spatial-savanna.wasm": "2988b650b155bab51af51574c2d51f46422c23bd5983abff2de2b12eab322238",
+    ".cache/flee-mixed/encounter-getup-home-build/standalone/spatial-savanna.wasm": "8f7610ed55f478438834be1a2b3021b865ab94b5f1926b0241bda7a70f7758fc",
+    ".cache/flee-mixed/encounter-getup-frontal.log": "9d864725b455eff1504acd23b40f053edacb31bbed468e5c5350bf48db8ec605",
+    ".cache/flee-mixed/encounter-getup-home-r2.log": "2686d59b382bab9efe92f8cfdc47167a0597beb00c76c06715a3e426d95c874d",
+    ".cache/flee-mixed/encounter-getup-collision-events.log": "b80f100a8dcd94bf64c99d8e8a9d0d8fbf8cde190abe108183135bf352468473"
+  }
+}

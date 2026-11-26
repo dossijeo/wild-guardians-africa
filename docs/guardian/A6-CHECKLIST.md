@@ -2,6 +2,8 @@
 
 Game prepara la consecuencia del encuentro antes de aplicar el RNG, el golpe y el empuje. El contraste CPU conserva el estado completo en 2.048 casos y deja intacto el encuentro cuyo barrido falla. El relevo de Home18 a caída avanzó en un prototipo nativo privado para el golpe frontal y la colisión. La admisión gráfica y la recuperación siguen pendientes. [Contraste de encuentros](native-desert-mixed-flight-center-20261125.md#consecuencia-y-frontera-del-encuentro).
 
+Fall y GetUp conservan su fase si la consulta de terreno falla. En el ensayo CPU privado, el golpe frontal completa GetUp y conserva el cuerpo hasta la pose final con 0,24 s de mezcla de salida. El sucesor Home, los contactos adicionales durante Fall y el dibujo físico siguen abiertos. [Corte de GetUp](native-desert-mixed-flight-center-20261125.md#pose-final-de-getup).
+
 La admisión del nacimiento de Desierto comprueba el itinerario Farm restante si la caja de su ruta contiene un posible encuentro. Así admite al animal estacionario en el encuadre cercano cuando la ruta real deja más de 2,2 m y sigue rechazando el nacimiento solapado. El contacto durante la marcha todavía requiere su relevo nativo. [Contrastes del nacimiento](native-desert-mixed-flight-center-20261125.md#nacimiento-cerca-de-farm).
 
 En el encuadre norte de Desierto, Home18 sale con el facóquero todavía en su pose de nacimiento. La marcha al centro espera hasta que cualquier parada en el corredor restante del trabajador conserve la separación. NVIDIA confirmó ambas marchas en el mismo envío antes de Home19, cuatro golpes al centro y el regreso a Idle. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#huida-por-el-corredor-norte).

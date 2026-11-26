@@ -17,6 +17,22 @@ test('saved recovery resumes deterministically with heading and remaining time',
  assert.ok(Math.abs(a.x-10-WORKER_RECOVERY.youngMale.finalOffset[2])<1e-10);
 });
 
+test('a terrain exception can be retried at the same Fall and GetUp phases',()=>{
+ const interrupted=worker(),continuous=worker(),failure=Error('Terrain chunk unavailable');
+ const interruptedTerrain={walkable:()=>true,workerMotionClear:()=>{throw failure;}};
+ for(const dt of [1.25,.5,4]){
+  const before=structuredClone(interrupted),recovery=interrupted.recovery;
+  assert.throws(()=>advanceWorkerRecovery(interrupted,dt,interruptedTerrain),error=>error===failure);
+  assert.deepEqual(interrupted,before);
+  assert.equal(interrupted.recovery,recovery);
+  assert.equal(advanceWorkerRecovery(interrupted,dt,nav),true);
+  assert.equal(advanceWorkerRecovery(continuous,dt,nav),true);
+  assert.deepEqual(interrupted,continuous);
+ }
+ assert.equal(interrupted.recovery,undefined);
+ assert.equal(interrupted.recoveryExitRemaining,.24);
+});
+
 test('recovery exit blends without delaying navigation and survives save',()=>{
  const w=worker();advanceWorkerRecovery(w,5,nav);
  assert.equal(w.recoveryExitRemaining,.24);
