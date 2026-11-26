@@ -94,7 +94,11 @@ export function createNativeResourcePreparationReceiver({prepare,isRunning,canFl
        !sameNativeAnimalCropReference(binding.preparedReference,item.resources.reference)||
        !Number.isSafeInteger(sequence)||sequence<1||!item.handle.presented?.then)
       throw Error('Encounter commit lacks the retained consumer packet');
-    if(item.handle.commit(data.commit)!==true)throw Error('Encounter resource commit failed');
+    if(item.handle.commit(data.commit)!==true){
+      abortHandle(item);
+      if(!closed&&isRunning())postMessage({kind:'nativeGateResourcesError',id:data.id,message:'Encounter graphics retired before commit'});
+      return true;
+    }
     let cancel;
     const cancelled=new Promise(resolve=>{cancel=()=>resolve(null);});
     submission={id:item.id,cancel};inflight++;onCommit();

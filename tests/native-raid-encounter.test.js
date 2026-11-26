@@ -18,6 +18,14 @@ async function setup(qualifyRaidEncounter){
 async function advance(world,count=1){
  return await world.command({kind:'advance',steps:count,seconds:.02,nightFastForward:false});
 }
+async function reachSecondHit(world){
+ let snapshot=world.snapshot();
+ while(snapshot.elapsed<12.60-1e-9){
+  snapshot=JSON.parse((await advance(world)).snapshot);
+  await world.present();
+ }
+ return snapshot;
+}
 async function until(read){
  for(let i=0;i<1000;i++){
   const value=read();
@@ -30,11 +38,7 @@ async function until(read){
 test('the qualified Desert encounter waits for its submitted Retreat before the next substep',async()=>{
  const world=await setup(true);
  try{
-  let snapshot=world.snapshot();
-  while(snapshot.elapsed<12.60-1e-9){
-   snapshot=JSON.parse((await advance(world)).snapshot);
-   await world.present();
-  }
+  let snapshot=await reachSecondHit(world);
   const worker=snapshot.workers[0],first=snapshot.events.find(event=>event.type==='WorkerHit');
   assert.equal(first.nativeHomeImpact.home.reference.bodyId,1);
   assert.equal(worker.hits,1);
@@ -53,6 +57,16 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   await until(()=>settled||world.host.inspect().nativeCausalClock.committedThrough===at&&world.host.inspect().pendingSequence!==null);
   assert.equal(settled,false);
   assert.equal(held,undefined);
+  const lastDraw=world.host.inspect().nativeRouteFrame?.sequence;
+  world.host.setVisibility(true);
+  await world.present();
+  const hidden=world.host.inspect();
+  assert.equal(hidden.presentationOpportunities.at(-1).outcome,'hidden');
+  assert.equal(hidden.nativeRouteFrame?.sequence,lastDraw);
+  assert.equal(hidden.nativeCausalClock.committedThrough,at);
+  assert.equal(held,undefined);
+  assert.equal(settled,false);
+  world.host.setVisibility(false);
   await world.present();
   await until(()=>held||settled);
   assert.equal(settled,false);
@@ -78,6 +92,40 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   assert.equal(snapshot.raid,null);
   assert.equal(snapshot.structures[0].hp,600);
   assert.deepEqual([...world.errors,...world.faults],[]);
+ }finally{await world.close();}
+});
+
+for(const order of ['commit in transit','commit accepted'])test(`retiring Draw before the Retreat submit leaves the next substep unexecuted with ${order}`,async()=>{
+ const world=await setup(true);
+ try{
+  const snapshot=await reachSecondHit(world);
+  const at=snapshot.elapsed+.02;
+  const receive=world.resourcePort.onmessage;
+  const post=world.resourcePort.postMessage.bind(world.resourcePort);
+  let heldCommit;
+  if(order==='commit in transit')world.resourcePort.postMessage=(message,...args)=>{
+   if(message.kind==='commitEncounterRetreatResources'){heldCommit=message;return;}
+   post(message,...args);
+  };
+  const submissions=[];
+  world.resourcePort.onmessage=event=>{
+   if(event.data.result?.assignment)submissions.push(event.data.result);
+   receive(event);
+  };
+  const advancing=advance(world,2);
+  advancing.catch(()=>{});
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===at&&world.host.inspect().pendingSequence!==null&&
+   (order==='commit in transit'?heldCommit:world.records.some(record=>record.resources.reference?.purpose==='retreat'&&record.committed)));
+  const pending=world.host.inspect().pendingSequence;
+  assert.notEqual(world.host.inspect().nativeRouteFrame?.sequence,pending);
+  world.client.dispose();
+  await world.host.dispose();
+  if(heldCommit)post(heldCommit);
+  const reason=order==='commit in transit'?/graphics retired before commit/i:/disposed/i;
+  await assert.rejects(advancing,reason);
+  assert.deepEqual(submissions,[]);
+  assert.notEqual(world.host.inspect().nativeRouteFrame?.sequence,pending);
+  assert.throws(()=>world.command({kind:'snapshot'}),reason);
  }finally{await world.close();}
 });
 
