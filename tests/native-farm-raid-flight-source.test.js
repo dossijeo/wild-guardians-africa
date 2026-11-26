@@ -390,16 +390,18 @@ function restoredGatedDesertInitialIdle(){
   return {...fixture,state:deserialize(serialize(state))};
 }
 
-for(const mode of ['stopped','arrived','foreign Task','foreign raid'])test('RaidSpawned transfers the acquired Task14 body: '+mode,async()=>{
+for(const mode of ['stopped','arrived','pending Action15','foreign Task','foreign raid'])test('RaidSpawned transfers the acquired Task14 body: '+mode,async()=>{
   const {state,chunkKeys,start,gate,gateId}=restoredGatedDesertInitialIdle();
   const wall={...gate,id:`structure-${state.nextId++}`,gate:false,x:-11,z:1,hp:0,status:'ruined'};
   state.structures.push(wall);
-  state.dayPlan.at=state.time+1.35;
+  const pendingAction=mode==='pending Action15',raidDelay=pendingAction?4.5:1.35;
+  state.dayPlan.at=state.time+raidDelay;
+  const spawnAt=state.elapsed+raidDelay;
   const worker=state.workers[0],events=[],acquisitions=[];
   let ready,readySignal,releaseReady,birth,homeRequest;
   const held=new Promise(resolve=>{releaseReady=resolve;});
   const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
-    async onReady(record,{signal}){if(record.kind==='task-route-stop'&&!ready){ready=record;readySignal=signal;await held;}},
+    async onReady(record,{signal}){if(record.kind===(pendingAction?'task-action':'task-route-stop')&&!ready){ready=record;readySignal=signal;await held;}},
     onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
   const post=world.controlPort.postMessage;
   world.controlPort.postMessage=change=>{
@@ -431,7 +433,19 @@ for(const mode of ['stopped','arrived','foreign Task','foreign raid'])test('Raid
     assert(route);
     assert.equal(current.workers[0].nativeRouteAdmission,'native-task');
     assert.equal(current.workers[0].taskId,`task-${route.reference.taskId}`);
-    while(current.elapsed<11.2999)current=await step();
+    while(current.elapsed<spawnAt-.050001)current=await step();
+    if(pendingAction){
+      await untilProduction(world,()=>!!ready);
+      assert.equal(readySignal.aborted,false);
+      assert.equal(current.raid,null);
+      const action=nativeResourceAdmissionProfile('task-action').reference(ready.resources);
+      assert.equal(action.request.bodyId,route.reference.bodyId);
+      assert.equal(action.request.nativeRoute.assignmentSequence,route.assignmentSequence);
+      assert.deepEqual(action.request.nativeRoute.routeHandle,route.reference.expectedRouteHandle);
+      assert.equal(action.request.actionKind,'repair');
+      assert.equal(action.request.taskId,route.reference.taskId);
+      assert(action.startTime>=route.reference.endTime);
+    }
     current=await step(2);
     const spawn=events.find(e=>e.type==='RaidSpawned');
     assert(spawn&&current.elapsed>spawn.simulationTime);
@@ -451,13 +465,13 @@ for(const mode of ['stopped','arrived','foreign Task','foreign raid'])test('Raid
     assert.equal(before.bodyId,route.reference.bodyId);
     assert.equal(before.nativeRoute.assignmentSequence,route.assignmentSequence);
     assert.equal(confirmedStateSaveAvailable(current),false);
-    const limit=mode==='arrived'?route.reference.endTime:current.elapsed+.145;
+    const limit=pendingAction?current.elapsed:mode==='arrived'?route.reference.endTime:current.elapsed+.145;
     while(current.elapsed<limit){
       current=await step();
       assert.deepEqual([current.raid.animals[0].x,current.raid.animals[0].z],[born.x,born.z]);
       assert(!acquisitions.some(row=>row.kind==='animal-crop-route'));
     }
-    if(mode==='arrived')await untilProduction(world,()=>readySignal.aborted);
+    if(mode==='arrived'||pendingAction)await untilProduction(world,()=>readySignal.aborted);
     else assert.equal(readySignal.aborted,false);
     assert.equal(ready.committed,false);
     releaseReady();
@@ -476,7 +490,14 @@ for(const mode of ['stopped','arrived','foreign Task','foreign raid'])test('Raid
       const row=stop.projection.routeEffects.rows.slice(8);
       assert.deepEqual(['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'].map(key=>homeRequest.pose[key]),
         [0,1,4,9,10,11,14].map(index=>row[index]));
-    }else assert(homeRequest.requestedAt>=route.reference.endTime);
+    }else{
+      assert(homeRequest.requestedAt>=route.reference.endTime);
+      if(pendingAction){
+        for(const key of ['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'])
+          assert.equal(homeRequest.pose[key],before.pose[key==='yaw'?'heading':key]);
+        assert(!acquisitions.some(row=>row.kind==='task-action'));
+      }
+    }
     const home=acquisitions.find(row=>row.kind==='home-route')?.data.nativeHomeRouteBinding;
     const refuge=acquisitions.find(row=>row.kind==='home-arrival')?.data.nativeHomeArrivalBinding;
     assert.deepEqual(home.reference.sourceRequest,homeRequest);

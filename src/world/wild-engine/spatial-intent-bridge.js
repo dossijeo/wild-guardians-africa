@@ -1958,6 +1958,20 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     try{const proposal=captureNativeTaskActionProposal(ticket);if(!proposal)throw Error('Native task action proposal expired during capture');return outcome('proposed',{proposal});}catch(error){wasm.nav_task_action_proposal_cancel(t[0],t[1]);throw error;}
   };
   const cancelNativeTaskActionProposal=ticket=>ticket?.kind==='native-task-action-proposal-ticket'&&ticket.authorityEpoch===epoch()&&wasm.nav_task_action_proposal_cancel(ticket.session,ticket.ticket)===1;
+  const cancelNativeTaskActionForRaidFlight=task=>{
+    if(wasm.nav_intent_barrier_proposal_ticket()!==1)return true;
+    const [session,ticket,,,,kind]=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);
+    if(kind!==15)return true;
+    const request=nativeTaskActionRequest(task.nativeRoute.actorId),ptr=wasm.nav_task_action_proposal_header_ptr();
+    if(!request?.nativeRoute||request.taskId!==task.taskId||request.targetId!==task.targetId||
+       request.bodyId!==task.bodyId||request.nativeRoute.assignmentSequence!==task.nativeRoute.assignmentSequence||!ptr)return false;
+    // The preparation can be older than this tick. Read its identity without
+    // asking for a current world snapshot, which would clear a stale proposal.
+    const header=Array.from(new Float64Array(wasm.memory.buffer,ptr,24));
+    if(header[6]===0)return false;
+    const proposal=taskActionProposalFromHeader(header,session,ticket);
+    return sameNativeTaskActionRequest(proposal.request,request)&&cancelNativeTaskActionProposal(proposal.ticket);
+  };
   const revalidateNativeTaskActionProposal=ticket=>{
     const outcome=(status,extra={})=>({status,authorizedAutonomy:false,authorizedConsequences:false,...extra});
     if(ticket?.kind!=='native-task-action-proposal-ticket'||ticket.authorityEpoch!==epoch()||wasm.nav_intent_barrier_proposal_ticket()!==1)return outcome('stale');
@@ -3703,7 +3717,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     findPlantingSite,releasePlantingSite,
     prepareNativeCenterRuin,takeRefugeReturn,intentChanges,routePoints,replanNativeShieldCrop,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestRestoredAnimalStrike,requestNativeProtectedSuccessor,requestNativeCenterSuccessor,declareRaidFlightPair,nativeRaidFlightMember,requestNativeRetreat,requestRestoredAnimalRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalCropRouteExecution,nativeRaidFlightRecoveryExecutions,nativeRefugeCropRecovery,nativeCenterRuinRetreatRecovery,nativeAnimalCropStrikeExecution,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
-    startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,
+    startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,cancelNativeTaskActionForRaidFlight,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
     nativeWorkerHomeInactive,startNativeHomeArrivalAfterGpuQuiescence,prepareNativeHomeArrivalProposal,captureNativeHomeArrivalProposal,revalidateNativeHomeArrivalProposal,cancelNativeHomeArrivalProposal,
     nativeIdleStrollDeclarationReference,requestNativeRestoredIdleStrollHome,nativeIdleStrollRequestReference,nativeIdleStrollSourceRequestReference,nativeIdleStrollRequestReferences,
@@ -4884,6 +4898,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       if(!released||!binding||task.executedThrough!==state.elapsed||task.bodyId!==binding.reference.bodyId||
          task.nativeRoute.assignmentSequence!==binding.assignmentSequence||
          ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>task[key]!==worker[key])||task.yaw!==worker.heading)return;
+      // The raid declares its animal in this event. Release the exact
+      // unacquired action before that declaration needs the same native slot.
+      if(task.arrived&&!bridge.cancelNativeTaskActionForRaidFlight(task))return;
       const marker='pending-task-flight-stop';
       raidFlightStop={raid,worker,eventId:numericId(event.id),spawnTime:event.simulationTime,binding,marker,sample:'nativeTaskFlightSample',
         task:{id:released.entity.id,targetId:released.entity.targetId,deltas:[]}};

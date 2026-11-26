@@ -263,4 +263,16 @@ En el primer intento de Idle21, el arnés seguía reteniendo READY14 cuando venc
 
 Pasaron 136 pruebas de regresión. Los cinco controles nuevos reproducen el rechazo de Home en la preimagen. El build WebGPU de producción terminó en 52,87 s y sus tres artefactos nativos coinciden con los de las capturas.
 
-El siguiente control mantiene retenido el READY de Action15 después de que Task14 llegue al objetivo. En ese orden, `RaidSpawned` a t=14,50 libera Repair, el facóquero queda sin objetivo y el avance posterior rechaza la cohorte. La acción pendiente se cancela sin adquirir. El relevo desde ese READY queda abierto.
+## RaidSpawned antes del GO de Action15
+
+En la preimagen, Task14 llegaba a la muralla y `RaidSpawned` liberaba Repair mientras se retenía el READY de Action15. El slot de esa propuesta seguía ocupado al declarar el facóquero. El animal quedaba sin objetivo y el avance rechazaba la cohorte. La autoridad coteja ahora la propuesta con la solicitud de acción del mismo cuerpo, tarea, objetivo, asignación y generación del corredor. Usa la cancelación de Action15 antes de que la declaración del animal necesite el slot. El corredor terminado sigue siendo el origen de Home18. El control impide adquirir la acción cancelada o aplicar Repair y atraviesa el nacimiento dentro de un avance de dos subpasos.
+
+OpenRA distingue la cancelación de una actividad en cola de la de una actividad en curso. En este relevo, la autoridad puede descartar la preparación pendiente directamente. La actividad que ya poseía el cuerpo sigue acreditando la pose. [OpenRA `Activity.Cancel`](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Game/Activities/Activity.cs).
+
+En NVIDIA Turing, Task14 adquirió el ticket 5 y llegó a t=14,126. El arnés retuvo el READY15 del ticket 6 desde t=14,15. `event-29210` lo canceló a t=14,50 y el arnés lo entregó después. Home18 adquirió el ticket 8 desde la pose terminal (−12,470, 1), con el mismo cuerpo 1. El envío 47 acreditó Home18 y el portón 1000000. Home19 retiró el cuerpo 1 en el refugio. Hubo cuatro golpes de 20 HP al centro. El mismo trabajador volvió a Idle con el cuerpo 3, su saldo intacto y la muralla todavía en ruinas. Draw drenó sin errores. [Recibo físico](performance/native-mixed-raid-pending-action15-20261126.json).
+
+El primer intento físico avanzó el reloj antes de GO14. Su llegada quedó a t=16,176, después del nacimiento programado, y el arnés se detuvo antes de READY15. La captura válida esperó GO14 antes de avanzar al destino. La calificación cubre la cohorte de desarrollo de Desierto con un trabajador, un facóquero y un portón. La cadencia sigue abierta.
+
+Pasaron 123 pruebas de regresión. El control nuevo confirma el mismo rechazo de la cohorte en la preimagen. El build WebGPU de producción terminó en 55,81 s y sus tres artefactos nativos coinciden con los de la captura.
+
+El control siguiente mantiene el READY de restitución de la muralla después de GO15. Con el trabajador todavía en acción a t=14,80, RaidSpawned libera la tarea y la restitución queda cancelada. El avance posterior rechaza la cohorte. El relevo desde la acción adquirida queda abierto.
