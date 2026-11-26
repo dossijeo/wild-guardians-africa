@@ -1,6 +1,6 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
-El guardado tomado al nacer la incursión en Sabana conserva el corredor pendiente de su primer GO. WASM standalone y pthread recargan esa pose, preparan un ticket nuevo y aplican un solo impacto en el control de CPU. [Evidencia y alcance](native-cold-worker-admission-20261126.md#guardado-entre-raidspawned-y-el-primer-go).
+NVIDIA recargó el guardado tomado al nacer la incursión en Sabana. El primer dibujo conservó la pose con edad cero; procedieron un solo impacto, Retreat en el mismo cuerpo, la derrota y el drenaje. Standalone y pthread verificaron también el corredor y el READY retenido en CPU. [Evidencia y alcance](native-cold-worker-admission-20261126.md#guardado-entre-raidspawned-y-el-primer-go).
 
 La última campaña continua superó el fallo de Recovery del primer turno y llegó a la tercera noche. Surface rechazó la muestra inicial de una publicación de movimiento mientras esperaba el primer Strike27 del búfalo. El contraste CPU desde el checkpoint previo completó la incursión y no reprodujo la discrepancia. [Recibo y límite](native-cold-worker-admission-20261126.md#publicaciones-durante-la-aproximación-del-búfalo).
 

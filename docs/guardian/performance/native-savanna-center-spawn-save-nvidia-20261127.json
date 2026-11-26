@@ -1,0 +1,41 @@
+{
+  "scenario": "Recarga del guardado público de Sabana 714 en RaidSpawned, con el primer corredor aún pendiente",
+  "sourceRevision": "d6a08514901c7fa377f46d5e8e9f31246c1f1668",
+  "adapter": {"vendor": "nvidia", "architecture": "turing"},
+  "artifacts": {
+    "savanna-center-spawn-pending-checkpoint.json": "58c85fa90d54d4313ca6d1c040145c012a91451e0e77c6a66f58b10aef188ac5",
+    "savanna-center-spawn-pending-nvidia.json": "d38d76b105cae7971499c6ad7696035e30e58ccb70d7f322b55e53f247bd2a3a",
+    "savanna-center-spawn-pending-nvidia.trace.json.gz": "2831345d33820b32615e5a8e42cf5d1e5a9d7e897443dbb8732539d921f12a9c"
+  },
+  "save": {"actor": "animal-23", "elapsed": 2744.2500000000596, "corridorPoints": 46, "quota": 5, "balance": 671},
+  "firstDraw": {
+    "kind": 26,
+    "time": 2744.2500000000596,
+    "frame": 46,
+    "preparedTicket": 1,
+    "acquiredTicket": 2,
+    "relativeAge": 0,
+    "adoptedSequence": 4,
+    "bodyId": 1,
+    "x": 76.10436663318671,
+    "z": 33.54846552834845,
+    "yaw": 0,
+    "phase": 0
+  },
+  "hit": {"id": "event-103", "attackId": "attack-101", "elapsed": 2770.200000000154, "centerHp": 125},
+  "retreat": {"ticket": 6, "bodyId": 1},
+  "ruin": {"ticket": 7, "polygon": 9, "elapsed": 2773.4000000001656},
+  "terminal": {
+    "events": [
+      {"type": "RaidEnded", "id": "event-107", "elapsed": 2783.5000000002024},
+      {"type": "GameOver", "id": "event-109", "elapsed": 2783.5000000002024}
+    ],
+    "frame": 413,
+    "elapsed": 2783.5000000002024,
+    "bindings": 0,
+    "balance": 671,
+    "drained": true,
+    "errors": 0,
+    "traceDataLoss": false
+  }
+}
