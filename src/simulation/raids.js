@@ -788,13 +788,28 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
  return state.biome==='sabana'&&nativeCenterAttackCohort(state)&&state.raid.animals.length===1&&
-   state.raid.animals[0]===animal&&['warthog','hyena','buffalo','lion'].includes(animal?.species);
+   state.raid.animals[0]===animal&&['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
+}
+export function nativeRetreatBudgetAllowed(state,animal){
+ if(animal.hitsRemaining===0)return true;
+ if(!nativeShelteredSavannaCenterActor(state,animal)||!animal.hitApplied||!animal.attackId||
+    animal.targetId||animal.reservation||animal.hitsRemaining<=0)return false;
+ const center=state.structures[0],retreating=animal.status==='retreating';
+ if(!retreating&&(animal.status!=='walking'||center.status!=='collapsing'||activeCrops(state.plants).length))return false;
+ const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+   event.targetId===center.id&&event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
+ if(!hit||!state.events.some(event=>event.type==='StructureHit'&&event.simulationTime===hit.simulationTime&&
+   event.animalId===animal.id&&event.targetId===center.id&&event.structureHit?.kind==='center'&&
+   event.structureHit.previousHp>collapseThreshold(center)&&event.structureHit.hp<=collapseThreshold(center)))return false;
+ // Once the raid has decided to leave, later crop or center changes cannot give it a new target.
+ return !retreating||state.events.some(event=>event.type==='AnimalRetreating'&&event.targetId===animal.id&&
+   event.reason==='no-reachable-unleased-target'&&event.hitsRemaining===animal.hitsRemaining&&event.simulationTime>=hit.simulationTime);
 }
 export function nativeAnimalCropPublicationMatches(state,{reference,attackId}){
  const animal=state.raid?.animals.find(candidate=>candidate.id==='animal-'+reference.actorId);
  const shelteredPurpose=reference.purpose==='center'||reference.purpose==='retreat';
  if(!animal||(animal.species!=='warthog'&&(!shelteredPurpose||!nativeShelteredSavannaCenterActor(state,animal))))return false;
- if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&animal.hitsRemaining===0&&
+ if(reference.purpose==='retreat')return animal.status==='retreating'&&!animal.targetId&&nativeRetreatBudgetAllowed(state,animal)&&
   (animal.exit??animal.spawn)?.x===reference.targetX&&(animal.exit??animal.spawn)?.z===reference.targetZ;
  const targetId=(reference.purpose==='center'?'structure-':'plant-')+reference.targetId;
  return animal.targetId===targetId&&(reference.kind===26?['entering','walking'].includes(animal.status):
@@ -829,7 +844,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
 export function nativeRetreatSubject(state,animal){
  if(!animal||(state.biome!=='sabana'&&!nativeCenterAttackCohort(state))||state.raid?.animals.length!==1||
     state.raid.animals[0]!==animal||(animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||animal.status!=='retreating'||
-    animal.hitsRemaining!==0||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
+    !nativeRetreatBudgetAllowed(state,animal)||!animal.hitApplied||animal.targetId||animal.reservation||animal.magicDown||
     (animal.magicStunUntil??0)>state.elapsed||
     !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
  const exit=animal.exit??animal.spawn;
@@ -845,7 +860,7 @@ function nativeRetreatOwnersMatch(state,animal,native,planner){
 export function nativeCropCohortCurrent(state,planner){
  const animal=state.raid?.animals[0],native=animal&&planner?.nativeAnimalCropState?.(animal.id);
  const subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal),native);
- if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(animal.hitsRemaining===0?
+ if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(nativeRetreatBudgetAllowed(state,animal)?
     planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
 
  if(!native&&planner?.encounterRetreatOwner?.(state,animal,null))return true;
@@ -945,7 +960,7 @@ export function updateRaid(s,dt,nav) {
       if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor))throw Error('Native center strike lost its next stationary source');
       continue;
     }
-    if(!crop&&a.hitsRemaining===0&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){
+    if(!crop&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){
       const exit=a.exit??a.spawn,prior=a.retreatRouteUnknown;
       const sectors=nav.spatialSectorRevision?.(a.radius,false)??0;
       if(prior&&prior.sectors===sectors&&prior.topology===nav.version&&prior.exitX===exit?.x&&prior.exitZ===exit?.z)continue;
@@ -956,7 +971,8 @@ export function updateRaid(s,dt,nav) {
         continue;
       }
       if(result!=='pending')throw Error('Native retreat has no terminal source');
-      publishRetreat(s,a,'budget-exhausted');
+      if(a.hitsRemaining>0)emit(s,'AnimalTargetUnavailable',{targetId:a.id,species:a.species,hitsRemaining:a.hitsRemaining});
+      publishRetreat(s,a,a.hitsRemaining>0?'no-reachable-unleased-target':'budget-exhausted');
       continue;
     }
 

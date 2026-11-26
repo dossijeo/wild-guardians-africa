@@ -1,0 +1,146 @@
+{
+  "seed": "714",
+  "biome": "sabana",
+  "culture": "mapungubwe",
+  "profile": "restored nativeWorkerLifecycle",
+  "clock": "live Hosted",
+  "checkpoint": {
+    "fixture": "tests/fixtures/sabana714-d5-before-rhino.json.gz",
+    "sha256": "8b3c1c395b678d040045c7520773439c357c66ec5614b47ce960f8b8fd5f4e97",
+    "elapsed": 2743.750000000058,
+    "worker": "worker-22",
+    "balance": {
+      "n": "671",
+      "d": "1"
+    },
+    "centerHp": 185
+  },
+  "capture": {
+    "name": "sabana-fifth-night-nvidia.json",
+    "sha256": "157467a9c4316cb7c5d8361ee67e979f3e91a6ba97e6b27467a0f055ab9aee50",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 85.29999999701977
+      }
+    },
+    "elapsed": 2787.5192141497237,
+    "errors": []
+  },
+  "approach": {
+    "boundary": {
+      "version": 1,
+      "authorityEpoch": "8ca306f3-1103-401c-9636-76e11240e274/1",
+      "nativeSession": 1,
+      "ticket": 1,
+      "effectiveTime": 2744.179214149763
+    },
+    "holdMs": 321.20000000298023,
+    "actor": "animal-23",
+    "born": 2744.1615176871896,
+    "pose": {
+      "x": 76.10436663318671,
+      "z": 33.54846552834845,
+      "hitsRemaining": 5
+    }
+  },
+  "frames": [
+    {
+      "kind": 26,
+      "purpose": "center",
+      "ticket": 2,
+      "frame": 32,
+      "elapsed": 2746.9592141497606,
+      "age": 0,
+      "bodyId": 1
+    },
+    {
+      "kind": 27,
+      "purpose": "center",
+      "ticket": 4,
+      "frame": 169,
+      "elapsed": 2772.3992141497374,
+      "age": 0,
+      "bodyId": 1
+    },
+    {
+      "kind": 26,
+      "purpose": "retreat",
+      "ticket": 6,
+      "frame": 177,
+      "elapsed": 2774.959214149735,
+      "age": 0,
+      "bodyId": 1
+    }
+  ],
+  "hit": {
+    "id": "event-102",
+    "attackId": "attack-101",
+    "elapsed": 2773.959214149736,
+    "from": 185,
+    "to": 125
+  },
+  "retreat": {
+    "id": "event-105",
+    "type": "AnimalRetreating",
+    "targetId": "animal-23",
+    "species": "rhino",
+    "hitsRemaining": 4,
+    "reason": "no-reachable-unleased-target",
+    "simulationTime": 2773.979214149736
+  },
+  "ruin": {
+    "center": "structure-2",
+    "polygon": 9,
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "8ca306f3-1103-401c-9636-76e11240e274/1",
+      "nativeSession": 1,
+      "ticket": 7,
+      "effectiveTime": 2777.139214149733
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "8ca306f3-1103-401c-9636-76e11240e274/1",
+      "nativeSession": 1,
+      "ticket": 7,
+      "effectiveTime": 2777.159214149733
+    },
+    "holdMs": 322,
+    "sequence": 198,
+    "elapsed": 2777.159214149733,
+    "retreatAge": 2.1999998092651367,
+    "bodyId": 1
+  },
+  "absence": {
+    "kind": "night-animal-absence",
+    "ticket": 7,
+    "frame": 261,
+    "at": 2787.5192141497237
+  },
+  "raidEnded": {
+    "id": "event-107",
+    "type": "RaidEnded",
+    "simulationTime": 2787.5192141497237
+  },
+  "gameOver": {
+    "id": "event-109",
+    "type": "GameOver",
+    "simulationTime": 2787.5192141497237
+  },
+  "drained": true,
+  "finalBalance": {
+    "n": "671",
+    "d": "1"
+  },
+  "scope": "The explicit civil lifecycle on a fifth-night checkpoint through a real Draw submit for the center ruin, Retreat and absence. No continuous menu run, replacement Draw recovery or frame-rate measurement."
+}

@@ -1414,7 +1414,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      if(qualifyShieldExpiry&&nativeBodies&&
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
        options.expireShield=expireNativeShield;
-     if(qualifyAnimalCrop&&nativeBodies)options.prepareCenterRuin=prepareCenterRuin;
+     if(nativeBodies&&(qualifyAnimalCrop||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
+       options.prepareCenterRuin=prepareCenterRuin;
      if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;
      const completeStep=i=>{
        peerCapture?.checkpoint();worldCapture?.checkpoint();if(trackMicroIncome)trackIncome(game,[]);

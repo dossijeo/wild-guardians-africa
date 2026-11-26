@@ -8,7 +8,7 @@ import {copyNativeAnimalCropAttestation,copyNativeAnimalCropProposal,sameNativeA
 import {nativeMotionPresentationMatches} from '../native-motion-presentation-match.js';
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
-import {canAttackCrop,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
+import {canAttackCrop,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
 import {captureRestoredWallRepairs} from '../restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources,nativeBarrierAdditionSuccessor} from '../native-barrier-addition.js';
@@ -1366,7 +1366,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   };
   const finishedAnimalStrike=(state,animal,retreat)=>{
     if(state!==owningState||!animal?.hitApplied||animal.status!=='walking'||
-       (retreat?animal.hitsRemaining!==0:!(animal.hitsRemaining>0))||
+       (retreat?!nativeRetreatBudgetAllowed(state,animal):!(animal.hitsRemaining>0))||
        (animal.species!=='warthog'&&!nativeShelteredSavannaCenterActor(state,animal))||state.raid?.animals.length!==1||
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
        !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
@@ -1421,7 +1421,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   };
   const requestNativeRetreat=(state,animal)=>{
     const finished=nativeFinishedAnimalRetreat(state,animal),exit=animal.exit??animal.spawn;
-    if(!finished||animal.hitsRemaining!==0||!Number.isFinite(exit?.x)||!Number.isFinite(exit?.z))return 'unsupported';
+    if(!finished||!Number.isFinite(exit?.x)||!Number.isFinite(exit?.z))return 'unsupported';
     session.actorSectorRevision({worker:false,species:animal.species});
     const result=wasm.nav_animal_plan_finished_retreat(numericId(animal.id),finished.attackId,exit.x,exit.z);
     if(result===0||result===3)return result===3?'unknown':'blocked';

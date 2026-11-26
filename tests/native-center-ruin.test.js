@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import test from 'node:test';
+import {gunzipSync} from 'node:zlib';
 import {deserialize, serialize} from '../src/persistence/snapshots.js';
 import {tick} from '../src/simulation/game.js';
+import {createPlant} from '../src/simulation/crops.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
@@ -62,19 +66,21 @@ function savedAttack() {
 
 import {copyPublishedNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 
-test('center ruin spends its retained ticket inside the ordinary Retreat substep', {timeout:90000}, async()=>{
- const initial=deserialize(savedAttack());
- initial.structures[0].hp=140;
- initial.raid.animals[0].hitsRemaining=1;
+for(const savanna of [false,true])test(`center ruin spends its retained ticket inside the ordinary ${savanna?'Savanna':'Desert'} Retreat substep`, {timeout:90000}, async()=>{
+ const snapshot=savanna?gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString():savedAttack();
+ const initial=deserialize(snapshot);
+ const options=savanna?savedNativeAuthorityOptions(snapshot):{chunkKeys,navigationView:view,qualifyAnimalCrop:true};
+ if(!savanna){initial.structures[0].hp=140;initial.raid.animals[0].hitsRemaining=1;}
+ else assert.equal(options.nativeWorkerLifecycle,true);
  let releaseReady;
  const readyGate=new Promise(resolve=>{releaseReady=resolve;});
- const fixture=await nativeProductionAuthority(initial,{chunkKeys,qualifyAnimalCrop:true,
+ const fixture=await nativeProductionAuthority(initial,{...options,
   onReady:record=>record.kind==='center-ruin'?readyGate:undefined});
  const checkpoint=()=>fixture.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
  const polygonIds=result=>result.nativeAuthorityCheckpoint.spatialState.polygons.map(row=>row.id);
  try{
-  fixture.command({kind:'setNavigationView',view});
-  await untilProduction(fixture,()=>fixture.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
+  fixture.command({kind:'setNavigationView',view:options.navigationView});
+  if(!savanna)await untilProduction(fixture,()=>fixture.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
   const intact=checkpoint();
   let previous=JSON.parse(intact.snapshot),result,steps;
   const events=[];
@@ -136,11 +142,57 @@ test('center ruin spends its retained ticket inside the ordinary Retreat substep
   const ruins=events.filter(row=>row.type==='StructureRuined');
   assert.deepEqual(ruins.map(row=>[row.targetId,row.simulationTime]),[[source.center,source.end]]);
   assert.equal(events.filter(row=>row.type==='AnimalLogicalHit').length,1);
+  if(savanna){
+   const [animal]=state.raid.animals;
+   const ref=source.retreat.reference,matching={reference:ref};
+   const departure=events.find(event=>event.type==='AnimalRetreating');
+   const centerHit=events.find(event=>event.type==='StructureHit');
+   assert.deepEqual([animal.species,animal.hitsRemaining],['rhino',4]);
+   assert.deepEqual([centerHit.structureHit.previousHp,centerHit.structureHit.hp],[185,125]);
+   assert.deepEqual([departure.reason,departure.hitsRemaining],['no-reachable-unleased-target',4]);
+   assert.equal(events.filter(event=>event.type==='AnimalTargetUnavailable').length,1);
+   const programs=fixture.records.filter(row=>row.resources.reference).map(row=>row.resources.reference);
+   assert.deepEqual(programs.map(row=>[row.kind,row.purpose]),[[26,'center'],[27,'center'],[26,'retreat']]);
+   assert(programs.every(row=>row.bodyId===ref.bodyId&&row.actorId===ref.actorId));
+   assert.deepEqual(state.ledger,initial.ledger);
+   assert(nativeAnimalCropPublicationMatches(state,matching));
+   const unrelated=structuredClone(state);unrelated.raid.animals[0].attackId='attack-1';
+   assert(!nativeAnimalCropPublicationMatches(unrelated,matching));
+   const withoutDeparture={...state,events:state.events.filter(event=>event.type!=='AnimalRetreating')};
+   assert(!nativeAnimalCropPublicationMatches(withoutDeparture,matching));
+   const selecting=structuredClone(state),candidate=selecting.raid.animals[0];
+   candidate.status='walking';selecting.structures[0].status='collapsing';
+   assert(nativeRetreatBudgetAllowed(selecting,candidate));
+   const target=createPlant('plant-1000000','platano',86,-3,source.center);
+   selecting.plants.push(target);
+   assert(!nativeRetreatBudgetAllowed(selecting,candidate));
+   candidate.status='retreating';
+   assert(nativeAnimalCropPublicationMatches(selecting,matching));
+  }
   assert.deepEqual(copyPublishedNativeWorldBoundary(result,source.previous),acquired);
   const [record]=result.nativeWorldResources;
   assert.throws(()=>copyPublishedNativeWorldBoundary({...result,nativeWorldResources:[
    {...record,nativeCenterRuin:{...record.nativeCenterRuin,polygon:source.polygon+1}},
   ]},source.previous),/differs from its committed boundary/);
+  if(savanna){
+   const step=()=>fixture.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+   let final=state;
+   for(let i=0;i<500&&!final.result;i++){
+    const next=await step();events.push(...next.events);final=JSON.parse(next.snapshot);
+    await fixture.present();
+   }
+   assert.equal(final.raid,null);
+   assert.equal(final.result,'defeat');
+   assert.deepEqual(final.ledger,initial.ledger);
+   const ended=events.filter(event=>event.type==='RaidEnded');
+   assert.equal(ended.length,1);
+   const gameOver=events.filter(event=>event.type==='GameOver');
+   assert.deepEqual(gameOver.map(event=>event.simulationTime),[ended[0].simulationTime]);
+   const stopped=await step();
+   assert.equal(stopped.elapsed,final.elapsed);
+   assert.deepEqual(stopped.events,[]);
+   assert.deepEqual(fixture.faults,[]);
+  }
  }finally{
   releaseReady();
   await fixture.close();

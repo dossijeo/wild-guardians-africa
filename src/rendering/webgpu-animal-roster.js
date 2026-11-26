@@ -4,7 +4,7 @@ import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
-import {nativeAnimalCropPublicationMatches,nativeShelteredSavannaCenterActor,raidStrikeClips} from '../simulation/raids.js';
+import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed,nativeShelteredSavannaCenterActor,raidStrikeClips} from '../simulation/raids.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
 import {nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
@@ -215,7 +215,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   const source=()=>entry?.entity?.id===id&&(entry.entity.species==='warthog'||
     ((center||ref.purpose==='retreat'&&!encounterRetreat)&&nativeShelteredSavannaCenterActor(state,entry.entity)))&&
     (encounterRetreat?isEncounterRetreat():ref.purpose==='retreat'?
-    entry.entity.status==='retreating'&&entry.entity.hitsRemaining===0&&!entry.entity.targetId&&
+    entry.entity.status==='retreating'&&nativeRetreatBudgetAllowed(state,entry.entity)&&!entry.entity.targetId&&
     (entry.entity.exit??entry.entity.spawn)?.x===ref.targetX&&(entry.entity.exit??entry.entity.spawn)?.z===ref.targetZ:
     entry.entity.targetId===targetId&&(!center||state.structures.some(target=>target.id===targetId&&
       target.kind==='center'&&target.status==='intact'&&target.x===ref.targetX&&target.z===ref.targetZ)))&&
