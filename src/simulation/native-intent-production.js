@@ -23,7 +23,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     const waitingForHome=flight?.nativeRouteAdmission==='pending-farm-flight-stop'||
       r?.purpose==='center'&&flight?.nativeRouteAdmission==='pending-raid-flight-resources';
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
-    if(r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
+    if(r?.mode===5||r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
    }
   }
   const workers=state.workers,start=onlyActor===null?(workers.findIndex(w=>w.id===last?.actorId)+1)%Math.max(1,workers.length):0;

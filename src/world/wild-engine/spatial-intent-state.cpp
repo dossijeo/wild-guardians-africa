@@ -276,11 +276,19 @@ struct NativeAnimalRouteRequest {
 };
 struct NativeAnimalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeAnimalRouteBinding {NativeAnimalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;std::shared_ptr<const NativeAnimalRouteRequest> source;};
+struct RestoredAnimalStrike {
+ std::shared_ptr<const NativeAnimalRouteRequest> source;
+ uint64_t attackId=0;
+ int clip=0;
+ double duration=0,remaining=0;
+};
 struct NativeAnimalStrike {
  std::shared_ptr<const NativeAnimalRouteBinding> route;
+ std::shared_ptr<const RestoredAnimalStrike> restored;
  std::array<double,19> header{};
  std::optional<std::array<double,19>> prepared;
  uint64_t attackId=0;
+ const auto& source()const{return restored?restored->source:route->source;}
 };
 struct StoppedShieldCrop {
   SpatialShieldCropStop stop;int polygon;
@@ -312,6 +320,7 @@ struct ActiveIntent {
   double timingRadius=0;
   int motionFlags=0;double runBudget=0;
   std::shared_ptr<NativeAnimalRouteRequest> animalRouteRequest;
+  std::shared_ptr<const RestoredAnimalStrike> restoredAnimalStrike;
   std::shared_ptr<const NativeAnimalStrike> animalStrike;
   std::optional<StoppedShieldCrop> stoppedShieldCrop;
   std::optional<TaskActionResourceRequest> actionRequest;
@@ -631,7 +640,7 @@ struct IntentState {
   // Only the completed native attack attests this stationary body's handoff.
   // Keep the small terminal receipt after revoking the old route and bindings.
   std::optional<FinishedAnimalStrike> finishedAnimalStrike;
-  std::array<double,24> animalCropState{};
+  std::array<double,29> animalCropState{};
   std::array<double,12> stoppedShieldCropResult{};
   std::optional<StoppedShieldCrop> pendingShieldCropStop;
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
@@ -1018,7 +1027,7 @@ uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
 }
 void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
-  intent.animalStrike.reset();intent.animalRouteRequest.reset();intent.stoppedShieldCrop.reset();
+  intent.animalStrike.reset();intent.restoredAnimalStrike.reset();intent.animalRouteRequest.reset();intent.stoppedShieldCrop.reset();
   intent.pendingTaskCancellation.reset();
   intent.actionRequest.reset();
   intent.restoredActionSource.reset();
@@ -3120,6 +3129,7 @@ int nav_animal_crop_state(double actor);
 #include "spatial-home-route-proposal.inc"
 #include "spatial-farm-arrival-route-proposal.inc"
 #include "spatial-home-arrival-proposal.inc"
+static bool restoredAnimalStrikeCurrent(const IntentState&,const ActiveIntent&,bool);
 #include "spatial-animal-route-proposal.inc"
 #include "spatial-animal-strike-proposal.inc"
 EMSCRIPTEN_KEEPALIVE double nav_intent_execution_advances(){return double(state().executionAdvances);}
@@ -4494,10 +4504,10 @@ int nav_intent_attack_finished(double actorId){
   if(found->second.animalStrike){
     const auto& strike=*found->second.animalStrike;
     const auto& h=strike.header;
-    const auto& source=*strike.route->source;
+    const auto& source=*strike.source();
     if(s.effectiveTime<h[16]||nav_animal_strike_snapshot(actorId)!=1)return -1;
     s.finishedAnimalStrike=FinishedAnimalStrike{s.session,actor,source.body,source.target,source.center,
-      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime,source.shieldPolygon?strike.route->source:nullptr};
+      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime,source.shieldPolygon?strike.source():nullptr};
   }
   const int tactical=found->second.tacticalPending?1:0;
 #ifdef WILD_DECLARATIVE_ATTACK

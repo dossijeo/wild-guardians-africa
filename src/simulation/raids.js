@@ -829,6 +829,14 @@ function nativeCropOwnersMatch({target,center,purpose},animal,native){
    center.x===native.centerX&&center.z===native.centerZ&&animal.radius===native.radius;
 }
 export const raidStrikeClips=Object.freeze(['Right_Hand_Sword_Slash','Charged_Upward_Slash','Weapon_Combo','Weapon_Combo_2']);
+export function savedRaidStrike(animal){
+ const match=/^attack-([1-9]\d*)$/.exec(animal.attackId??''),attackId=match?Number(match[1]):0;
+ const clip=raidStrikeClips.indexOf(animal.animation),duration=animal.attackDuration,remaining=animal.attackRemaining;
+ if(animal.status!=='attacking'||animal.hitApplied!==false||!Number.isSafeInteger(attackId)||attackId<=0||
+    clip<0||duration!==ANIMAL_ACTIONS.animals[animal.species]?.clips[animal.animation]?.duration||
+    !Number.isFinite(remaining)||!(remaining>0&&remaining<=duration))return null;
+ return {attackId,clip,duration,remaining};
+}
 function raidStrikeClip(roll){return roll<.45?0:roll<.75?1:roll<.9?2:3;}
 
 // Resource selection can read the persisted RNG, but only acquisition consumes
@@ -936,6 +944,13 @@ export function updateRaid(s,dt,nav) {
         if(a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
           throw Error('Shield crop moved while stopped');
         nav.intentTaskPlanner.replanNativeShieldCrop(a.id,nav);
+        continue;
+      }
+      if(crop.mode===5){
+        const saved=savedRaidStrike(a),restore=crop.restore;
+        if(!saved||!Object.keys(saved).every(key=>saved[key]===restore[key])||
+           a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
+          throw Error('Pending restored strike lost its saved action');
         continue;
       }
       if(crop.mode!==3){

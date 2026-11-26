@@ -317,6 +317,15 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
  auto& s=state();if(!integer(actor))return 0;
  const auto it=s.activeIntents.find(uint64_t(actor));if(it==s.activeIntents.end())return 0;
  const auto& intent=it->second;
+ if(const auto& restored=intent.restoredAnimalStrike){
+  const auto& q=*restored->source;
+  const int mode=intent.animalStrike?3:5;
+  if(!restoredAnimalStrikeCurrent(s,intent,mode==3))return -1;
+  s.animalCropState={1,double(mode),actor,double(q.body),double(q.target),double(q.center),q.centerX,q.centerZ,
+   q.radius,q.x,q.z,q.heading,q.phase,double(mode==3),0,0,s.effectiveTime,q.targetX,q.targetZ,double(q.sequence),
+   0,0,0,0,double(restored->attackId),double(restored->clip),restored->duration,restored->remaining,q.at};
+  return mode;
+ }
  if(intent.stoppedShieldCrop&&intent.state==PlanningState::NeedsPlan){
   const auto& h=*intent.stoppedShieldCrop;const auto& p=h.stop;const auto& q=*h.routeSource;
   if(!stoppedShieldCropCurrent(s,intent,h))return -1;

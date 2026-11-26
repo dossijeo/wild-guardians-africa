@@ -192,7 +192,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    const bodies=createSpatialDynamicBodies(session.core.wasm);
    try{
     const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
-    if(!planner.requestNativeAnimalCropRoute(game,animal,body)){bodies.dispose();return;}
+    const requested=animal.status==='attacking'?planner.requestRestoredAnimalStrike(game,animal,body):
+      planner.requestNativeAnimalCropRoute(game,animal,body);
+    if(!requested){bodies.dispose();return;}
     nativeBodies=bodies;
     if(planner.commitNativeCausalClock({paused:game.pauses.length>0}).status!=='committed')throw Error('Native crop request lacks its causal clock');
     installNativeProduction();

@@ -11,6 +11,7 @@ import {gunzipSync} from 'node:zlib';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {copyNativeAnimalCropAttestation,nativeAnimalStrikeClipAge} from '../src/world/native-animal-crop-resource.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 function fixture(){
 const s=deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d1-native-active-raid.json.gz')).toString());
@@ -71,6 +72,67 @@ for(const legacy of [false,true])test(`an AttackCrops checkpoint resumes after a
   assert.equal(strike.resources.reference.targetId,route.reference.targetId);
   assert.equal(restored.snapshot().plants.find(plant=>plant.id===before.targetId).alive,false);
  }finally{await restored?.close();await source.close();}
+});
+test('a saved crop strike reacquires its original rig and hits once after its remaining time',async()=>{
+ const {s,manifest,chunkKeys}=fixture(),source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys});
+ let restored,rig,releaseReady,proof;
+ const step=f=>f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+ try{
+  await untilProduction(source,()=>source.records[0]?.committed);
+  for(let i=0;i<380&&!source.records.some(r=>r.kind==='animal-crop-strike'&&r.committed);i++){
+   step(source);await source.present();
+  }
+  const originalStrike=source.records.find(r=>r.kind==='animal-crop-strike'&&r.committed);
+  assert.ok(originalStrike);
+  for(let i=0;i<12;i++){step(source);await source.present();}
+  const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const stored=prepareWorkerCheckpoint(checkpoint,{slotId:s.slotId,policy:{nativeAuthority:true},savedAt:1795663080000});
+  const animal=stored.state.raid.animals[0],{attackId,attackRemaining,attackDuration}=animal;
+  assert.ok(attackRemaining>0&&attackRemaining<attackDuration);
+  const options=savedNativeAuthorityOptions(serialize(stored.state));
+  rig=await originalRig(structuredClone(stored.state),manifest,{contention:'post-strike'});
+  restored=await nativeProductionAuthority(stored.state,{qualifyAnimalCrop:true,nativeBootstrap:options.nativeBootstrap,chunkKeys:options.chunkKeys,
+   getTerrainManifest:()=>manifest,onPrepare:record=>record.kind==='animal-crop-strike'?rig.prepare(record.resources):undefined,
+   onReady:record=>record.kind==='animal-crop-strike'?new Promise(resolve=>{releaseReady=resolve;}):undefined,
+   onCommit:(record,data)=>{if(record.kind==='animal-crop-strike'){proof=data.nativeAnimalCropStrikeBinding;rig.commit(proof,data);}}});
+  await untilProduction(restored,()=>releaseReady);
+  const prepared=restored.records[0].resources.reference;
+  assert.equal(prepared.kind,27);
+  assert.equal(prepared.restore.attackId,Number(attackId.slice(7)));
+  assert.equal(prepared.restore.remaining,attackRemaining);
+  assert.equal(prepared.routeTicket,undefined);
+  assert.notEqual(prepared.worldBoundary.authorityEpoch,originalStrike.resources.worldBoundary.authorityEpoch);
+  let held=JSON.parse(step(restored).snapshot);
+  assert.ok(held.elapsed>checkpoint.elapsed);
+  assert.deepEqual(held.raid.animals[0],animal);
+  assert.equal(held.rng,stored.state.rng);
+  assert.equal(held.sequence,stored.state.sequence);
+  assert.ok(!restored.records[0].committed);
+  releaseReady();await untilProduction(restored,()=>proof);
+  assert.equal(proof.reference.endTime,held.elapsed+attackRemaining);
+  assert.throws(()=>copyNativeAnimalCropAttestation({...proof,attackId:proof.attackId+1},27));
+  assert.throws(()=>copyNativeAnimalCropAttestation({...proof,reference:{...proof.reference,routeTicket:1}},27));
+  await untilProduction(restored,()=>restored.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===proof.reference.worldBoundary.ticket);
+  const first=captureNativeRoutePickFrame(restored.host.inspect()).getAnimalCropAge(proof.preparedReference);
+  assert.equal(first,0);
+  assert.equal(nativeAnimalStrikeClipAge(prepared,first),Math.fround(attackDuration-attackRemaining));
+  rig.presented(first);
+  const hit=[];
+  for(let i=0;i<120&&!hit.length;i++){
+   const result=step(restored);hit.push(...result.events.filter(e=>e.type==='AnimalLogicalHit'));
+   held=JSON.parse(result.snapshot);rig.update(structuredClone(held));await restored.present();
+  }
+  assert.equal(hit.length,1);
+  assert.equal(hit[0].attackId,attackId);
+  assert.equal(hit[0].targetId,animal.targetId);
+  assert.equal(held.raid.animals[0].hitsRemaining,animal.hitsRemaining-1);
+  assert.equal(held.plants.find(p=>p.id===animal.targetId).alive,false);
+  assert.equal(rig.nativeCropLease(),null);
+  step(restored);
+  await untilProduction(restored,()=>restored.records.some(r=>r.kind==='animal-crop-route'&&r.committed));
+  assert.equal(restored.records[1].resources.reference.bodyId,prepared.bodyId);
+  assert.deepEqual(restored.faults,[]);
+ }finally{try{await restored?.close();rig?.close();}finally{await source.close();}}
 });
 test('prepared warthog retains its original rig across the issued crop route and strike',async()=>{
 const {s,manifest,chunkKeys}=fixture();

@@ -5,7 +5,7 @@ import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {createNativeStationaryGpuTransform} from './native-stationary-gpu-transform.js';
 import {raidStrikeClips} from '../simulation/raids.js';
-import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor} from '../world/native-animal-crop-resource.js';
+import {copyNativeAnimalCropReference,copyNativeAnimalCropProposal,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference,nativeAnimalCropSuccessor,nativeAnimalStrikeClipAge} from '../world/native-animal-crop-resource.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor,releaseRosterMotion} from './webgpu-roster-admission.js';
 import {bindWebGpuActorMotion} from './webgpu-actor-motion-binding.js';
@@ -182,7 +182,10 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
     entry.entity.targetId===targetId&&(!center||state.structures.some(target=>target.id===targetId&&
       target.kind==='center'&&target.status==='intact'&&target.x===ref.targetX&&target.z===ref.targetZ)))&&
     !entry.entity.magicDown&&!poses.has(id)&&!provisional.byTarget.has(id)&&!historyRun&&
-    (travel?!previous:previous?.proof?.assignmentSequence===ref.routeAssignment&&previous.proof.reference.worldBoundary.ticket===ref.routeTicket&&
+    (travel?!previous:ref.restore?!previous&&entry.entity.status==='attacking'&&entry.entity.attackId==='attack-'+ref.restore.attackId&&
+      entry.entity.animation===names[0]&&entry.entity.attackDuration===ref.duration&&entry.entity.attackRemaining===ref.restore.remaining&&
+      entry.entity.hitApplied===false&&entry.entity.x===ref.x&&entry.entity.z===ref.z&&entry.entity.heading===ref.yaw&&entry.entity.motionPhase===ref.phase:
+      previous?.proof?.assignmentSequence===ref.routeAssignment&&previous.proof.reference.worldBoundary.ticket===ref.routeTicket&&
       previous.proof.reference.bodyId===ref.bodyId&&previous.proof.reference.purpose===ref.purpose);
   if(!source()||entry.cropPending||!support?.valid()||signal?.aborted||!pipelineAdmission||!bakedWalkBank||!bakedRunBank||!travel&&!bakedAttackBank)
     throw Error('Animal crop source or original clip bank unavailable');
@@ -212,7 +215,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   if(speculative){entry.motionPreparing=null;speculative.controller.abort();}
   try{
    await entry.ready;check();
-   if(travel){
+   if(travel||ref.restore){
     // Let already-issued admissions publish or retire on this same actor. Its
     // crop request now owns further clip selection through GPU acquisition.
     await Promise.all([entry.runReady,entry.attackReady]);check();
@@ -233,9 +236,10 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
    }else{
     if(clips[0]?.meta.clip!==names[0]||Math.fround(clips[0].meta.duration)!==Math.fround(ref.duration))throw Error('Animal strike changed its original clip');
     const transform=createNativeStationaryGpuTransform({origin:ref,height:support.point.height,heading:ref.yaw,anchorPosition:anchor,anchorYaw:yaw,heightOffset:0,label:'crop strike'});
-    const node=markRemoteAnimalCropNode(uniform(0),ref).clamp(0,ref.duration);
+    const clock=markRemoteAnimalCropNode(uniform(0),ref);
+    const node=(ref.restore?clock.add(nativeAnimalStrikeClipAge(ref,0)):clock).clamp(0,ref.duration);
     motion={...transform,actorId:id,status:()=>({installed:{start:transform.bindingAnchor}})};
-    phaseSource={clipNames:names,clipNode:int(0),resolve:()=>node,sampleClip:()=>names[0],sampleForClip:()=>Math.min(ref.duration,age())};
+    phaseSource={clipNames:names,clipNode:int(0),resolve:()=>node,sampleClip:()=>names[0],sampleForClip:()=>nativeAnimalStrikeClipAge(ref,age())};
    }
    variant=actor.prepareNativeMotionVariant(phaseSource,{clipBakes:clips,clip:'Walking'});
    const meshes=variant.materialAlternatives.map(v=>v.mesh),options={motion,getPickTime:sampleAt,meshes,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources};

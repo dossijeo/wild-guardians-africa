@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La recarga de un golpe AttackCrops en Sabana readmite el ticket 27 con el mismo ataque, clip y edad. NVIDIA confirmó el golpe único, el dibujo posterior sin la acción y el drenaje. Es evidencia parcial de E para un ataque contra cultivo en la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-pleno-golpe).
+
 La recarga de AttackCrops durante la marcha conserva el tramo pendiente de WASM. NVIDIA confirmó READY retenido, primer dibujo a edad cero y avance hacia el cultivo. La prueba de autoridad y Host confirma también un golpe al mismo cultivo. Esta parte de E queda acreditada para un facóquero en Sabana con la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-plena-aproximación).
 
 El golpe y la caducidad de Escudo ya comparten el subpaso de Game en Sabana con pose terminal preparada y validada en NVIDIA. El anterior binding queda revocado y el primer dibujo del reemplazo acredita el mismo corte de autoridad. Avance parcial de f-R4. [Control y recibo](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
