@@ -758,9 +758,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       homes=nativeHomeRouteBindings();
     if(recoveredWorkerRoute?.version===2){
       const {members,refuge:arrival,ruin}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
-      const single=ruin?nativeCenterRuinRetreatRecovery():arrival?nativeRefugeCropRecovery():null;
+      const single=ruin?nativeCenterRuinRetreatRecovery():arrival?nativeRefugeCropRecovery(members[0].kind):null;
       const executions=ruin||arrival?single&&[single.execution]:nativeRaidFlightRecoveryExecutions();
-      if(count!==members.length||strolls.length||farmCount||homes.length!==members.length-1||!executions||
+      const rows=members[0].kind===27?0:members.length;
+      if(count!==rows||strolls.length||farmCount||homes.length!==members.length-1||!executions||
          arrival&&JSON.stringify(arrival)!==JSON.stringify(single.refuge)||
          ruin&&JSON.stringify(ruin)!==JSON.stringify(single.ruin)||
          members.some(({kind,proof},i)=>!nativeWorkerRouteRecoveryProfile(kind).sameAttestation(executions[i].binding,proof)))
@@ -787,7 +788,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       throw Error('Commit the native causal clock before attaching a new draw consumer');
     const pendingTaskRequests=nativeTaskRequestReferences(),pendingActionRequests=nativeTaskActionRestoreReferences(),pendingHomeRequests=nativeHomeRequestReferences(),pendingInitialIdleRequests=nativeInitialIdleRequestReferences(),pendingIdleStrollRequests=nativeIdleStrollRequestReferences(),pendingFarmArrivalRequests=nativeFarmArrivalRequestReferences(),nativeIdleCycles=nativeIdleCycleBindings(),cycleActors=new Set(nativeIdleCycles.map(value=>value.reference.actorId)),pendingIdleCycleRequests=nativeIdleCycles.map(value=>nativeIdleCycleNextRequest(value.reference.actorId)).filter(Boolean),nativeInitialIdleBodies=nativeInitialIdleBodyBindings().filter(value=>!cycleActors.has(value.reference.actorId)),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean),nativeActions=nativeTaskActionBindings(),nativeHomes=recoveredWorkerRoute?.kind===18||recoveredWorkerRoute?.version===2?[]:homes,nativeSettlements=nativeTaskSettlementBindings(),nativeConsequences=Array.from({length:count},(_,i)=>nativeTaskConsequenceBinding(data[i*6])).filter(Boolean);
     const recoveryKind=recoveredWorkerRoute?.kind;
-    const recoveredAnimal=recoveredWorkerRoute?.version===2?recoveredWorkerRoute.members.find(member=>member.kind===26).proof.reference.actorId:
+    const recoveredAnimal=recoveredWorkerRoute?.version===2?recoveredWorkerRoute.members.find(member=>member.kind===26||member.kind===27).proof.reference.actorId:
       recoveryKind===26||recoveryKind===27?recoveredWorkerRoute.proof.reference.actorId:null;
     const pendingAnimalCrop=readPendingAnimalCrop(true,recoveredAnimal);
     return {...(recoveredWorkerRoute?{recoveredWorkerRoute}:{}),...(pendingAnimalCrop?{pendingAnimalCrop}:{}),type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(restoredWallRepairs.length?{restoredWallRepairs}:{}),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
@@ -1027,22 +1028,26 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
        sameNativeWorldBoundary(cut,homeWorld)===sameNativeWorldBoundary(cut,cropWorld))return null;
     return [home,crop];
   }
-  function nativeRefugeCropRecovery(){
+  function nativeRefugeCropRecovery(kind){
     const game=owningState,saved=refuge,raid=game?.raid;
     if(!qualifyFarmFlee||!saved||!raid?.daytime||raid!==saved.raid||raid.animals.length!==1||
        game.workers.length!==1||game.workers[0]!==saved.worker)return null;
     const {worker,issued}=saved,r=issued.reference,cut=nativeWorldBoundary();
     const home=nativeHomeRouteSource(r.sourceHome.reference).home;
-    if(!sameNativeWorldBoundary(cut,r.worldBoundary)||!nativeWorkerHomeInactive(r.actorId)||
+    const strike=kind===27;
+    if(!(strike?nativeRecoveryCovers(cut,r.worldBoundary):sameNativeWorldBoundary(cut,r.worldBoundary))||!nativeWorkerHomeInactive(r.actorId)||
        worker.x!==home.x||worker.z!==home.z||worker.heading!==r.pose.yaw||
        ['runPhase','walkPhase','carryPhase','runRemaining'].some(key=>worker[key]!==r.pose[key])||
        wasm.spatial_body_has_blockers(r.bodyId,0)!==-1)return null;
     const actual=new Float64Array(wasm.memory.buffer,wasm.nav_home_arrival_result_ptr(),52);
-    if(actual[0]!==1||actual[1]!==issued.retiredSequence||actual[3]!==cut.ticket||
-       actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==cut.effectiveTime)return null;
-    const execution=nativeAnimalCropRouteExecution(raid.animals[0].id,{sharedCut:true}),source=execution?.binding.reference;
-    if(!source||source.purpose==='retreat'||source.worldBoundary.ticket>=cut.ticket||
-       execution.binding.assignmentSequence>=issued.retiredSequence)return null;
+    if(actual[0]!==1||actual[1]!==issued.retiredSequence||actual[3]!==r.worldBoundary.ticket||
+       actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==r.worldBoundary.effectiveTime)return null;
+    const actorId=raid.animals[0].id;
+    const execution=strike?nativeAnimalCropStrikeExecution(actorId):nativeAnimalCropRouteExecution(actorId,{sharedCut:true});
+    const source=execution?.binding.reference;
+    if(!source||source.purpose==='retreat')return null;
+    if(strike?(cut.ticket<=r.worldBoundary.ticket||source.restore||execution.binding.assignmentSequence<=issued.retiredSequence):
+       (source.worldBoundary.ticket>=cut.ticket||execution.binding.assignmentSequence>=issued.retiredSequence))return null;
     return {execution,refuge:issued};
   }
   function nativeCenterRuinRetreatRecovery(){

@@ -160,3 +160,15 @@ El control anterior reproducía la pérdida con el mundo en el ticket 28 y Retre
 En NVIDIA Turing, el polígono 9 se retiró a t=63,12 con el ticket mundial 28. El paquete del Draw original aún referenciaba la plantilla 26 con el reloj anclado a la adquisición 27 a t=60,50. El primer envío del sustituto dibujó a t=63,45 con el ticket 27, cuerpo 2, asignación 25 y edad local 2,949999809 s. El dibujo 52 confirmó la ausencia del corredor al acabar la incursión a t=68,34. El centro quedó en 0 HP, el trabajador siguió en el refugio, se conservó el saldo y el Draw nuevo drenó sin errores. Una comprobación del arnés detuvo la primera pasada al comparar dos recibos con campos distintos. La segunda verificó los campos de identidad compartidos y completó el recorrido. [Recibo físico](performance/native-ruin-retreat-draw-loss-20261126.json).
 
 Pasaron 415 pruebas dirigidas y la compilación web de producción terminó en 46,65 s. La calificación usa la cohorte de desarrollo de Desierto con un trabajador y un facóquero. E sigue abierto para otras cohortes y C4 mantiene su criterio de cadencia.
+
+## Pérdida de Draw durante Strike27 después de Home19
+
+En el control anterior, el sustituto retomaba el golpe y los débitos de HP. Al acabar la incursión, el control de Draw rechazaba el Farm23 civil porque había perdido el recibo de Home19. El reemplazo transporta ahora el golpe activo y la retirada anterior del trabajador. La autoridad comprueba en WASM la secuencia de retirada, su ticket, su instante y el cuerpo retirado. La adquisición del golpe acredita la frontera mundial más reciente. El primer dibujo conserva al trabajador ausente y confirma el reloj del golpe en el tiempo congelado. Solo entonces el nuevo Draw instala el recibo que consumirá la petición civil.
+
+La prueba con WASM y cola determinista comprueba el orden entre Home19 y Strike27, rechaza acreditar el golpe con el ticket de Home19 y exige un envío válido antes de aceptar el relevo. Tras reanudar, el golpe original emite un único impacto y el sustituto acepta la petición de Farm23 para un cuerpo nuevo del mismo trabajador con la secuencia original de Home19.
+
+En NVIDIA Turing, Home19 retiró el cuerpo 1 con el ticket 11 y la secuencia 9. El primer dibujo del sustituto presentó `attack-29209` con el cuerpo 2, ticket 13 y edad local 0,399999976 s a t=45,00. El ataque descontó 20 HP una sola vez. El centro terminó intacto con 520 HP. Tras RaidEnded, Farm23 consumió la secuencia 9 y adquirió el cuerpo 3 para el mismo trabajador. Llegó a Idle con el saldo conservado y el dispositivo drenó sin errores. [Recibo físico](performance/native-mixed-center-strike-home19-loss-20261126.json).
+
+Pasaron 416 pruebas dirigidas y la compilación web de producción terminó en 46,40 s. La prueba física de Strike27 usa el perfil de desarrollo y aporta evidencia parcial de E.
+
+Un control posterior con WASM y cola determinista reprodujo el rechazo civil al perder Draw durante Retreat con el centro intacto. A t=48,30, el sustituto recibe el corredor con el ticket 27 y el regreso posterior requiere la retirada del ticket 11. Ese relevo sigue pendiente.

@@ -136,14 +136,17 @@ export function copyNativeRecoveryGroup(value,world){
  }
  if(value.refuge!==undefined){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge),{reference:home}=refuge;
-   if(value.members.length!==1||value.members[0]?.kind!==26)throw Error('Refuge recovery requires the surviving crop route');
-   const crop=copyCropAttestation(value.members[0].proof),ref=crop.reference;
-   if(!sameNativeWorldBoundary(world,home.worldBoundary)||!nativeRecoveryCovers(world,ref.worldBoundary)||
-      sameNativeWorldBoundary(world,ref.worldBoundary)||!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||
-      ref.purpose==='retreat'||ref.actorId===home.actorId||ref.bodyId===home.bodyId||
-      crop.assignmentSequence>=refuge.retiredSequence)
+   const member=value.members[0],kind=member?.kind;
+   if(value.members.length!==1||(kind!==26&&kind!==27))throw Error('Refuge recovery requires the surviving animal');
+   const proof=nativeWorkerRouteRecoveryProfile(kind).copyAttestation(member.proof),ref=proof.reference;
+   const current=kind===26?sameNativeWorldBoundary(world,home.worldBoundary)&&nativeRecoveryCovers(world,ref.worldBoundary)&&
+     !sameNativeWorldBoundary(world,ref.worldBoundary)&&proof.assignmentSequence<refuge.retiredSequence:
+     sameNativeWorldBoundary(world,ref.worldBoundary)&&nativeRecoveryCovers(world,home.worldBoundary)&&
+     world.ticket>home.worldBoundary.ticket&&!ref.restore&&proof.assignmentSequence>refuge.retiredSequence;
+   if(!current||!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||
+      ref.purpose==='retreat'||ref.actorId===home.actorId||ref.bodyId===home.bodyId)
      throw Error('Crop recovery differs from the acquired refuge cut');
-   return {members:[{kind:26,proof:crop}],refuge};
+   return {members:[{kind,proof}],refuge};
  }
  if(value.members.length!==2||value.members[0]?.kind!==18||value.members[1]?.kind!==26)
    throw Error('Invalid mixed recovery membership');

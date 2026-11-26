@@ -905,7 +905,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     installRecoveredRefuge(value,boundary){
       const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference;
       if(closed||!clock||retiredRefuge||!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
-         !sameNativeWorldBoundary(r.worldBoundary,boundary)||boundary.authorityEpoch!==authorityEpoch||
+         !nativeRecoveryCovers(boundary,r.worldBoundary)||boundary.authorityEpoch!==authorityEpoch||
          boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime>clock.committedThrough||
          proof.retiredSequence>clock.intentSequence||actors.has(r.actorId)||active.has(r.actorId))
         throw Error('Recovered Home absence conflicts with the fresh control baseline');

@@ -950,12 +950,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         return pair?{version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))}:null;
       }
       const kind=animal.status==='attacking'?27:26;
+      const sheltered=qualifyFarmFlee&&planner.nativeRefugeCropRecovery(kind);
+      if(sheltered)return {version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]};
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
       if(execution)return {kind,actorId:execution.actorId};
       const ruined=kind===26&&planner.nativeCenterRuinRetreatRecovery();
-      if(ruined)return {version:2,ruin:true,members:[{kind,actorId:ruined.execution.actorId}]};
-      const sheltered=kind===26&&qualifyFarmFlee&&planner.nativeRefugeCropRecovery();
-      return sheltered?{version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]}:null;
+      return ruined?{version:2,ruin:true,members:[{kind,actorId:ruined.execution.actorId}]}:null;
     }
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
@@ -972,8 +972,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       return execution?{executions:[execution]}:null;
     }
     if(route.refuge||route.ruin){
-      const source=route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(),[member]=route.members;
-      if(!source||route.members.length!==1||member.kind!==26||member.actorId!==source.execution.actorId)return null;
+      const [member]=route.members;
+      if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
+      const source=route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
+      if(!source||member.actorId!==source.execution.actorId)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }

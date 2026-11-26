@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Strike27 recupera el golpe adquirido y la retirada de Home19 tras la pérdida de Draw en la incursión mixta. NVIDIA confirmó un único impacto del ataque recuperado y el regreso civil del mismo trabajador a Idle con un cuerpo nuevo. Es evidencia parcial de E para la cohorte de desarrollo de Desierto. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-strike27-después-de-home19).
+
 Retreat recupera su adquisición tras la pérdida de Draw con el centro ya arruinado. NVIDIA confirmó la edad congelada con el cuerpo y el ticket originales del corredor, el ticket mundial de la ruina y el dibujo de ausencia tras RaidEnded. Es evidencia parcial de E para la cohorte de desarrollo de Desierto. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-tras-la-ruina-durante-retreat).
 
 La incursión mixta de Desierto se recupera tras una pérdida de Draw con Home18 vigente y otra después de Home19. NVIDIA confirmó los tres relojes del primer relevo, los cuatro golpes al centro y el regreso civil del trabajador a Idle. Es evidencia parcial de E con el portón asentado y la cohorte de desarrollo. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-la-huida-y-tras-home19).

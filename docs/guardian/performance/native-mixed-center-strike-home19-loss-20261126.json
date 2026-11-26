@@ -1,0 +1,123 @@
+{
+  "scenario": "Terminal Draw loss during the first acquired Strike27 after Home19 in the gated Desert raid.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "refuge": {
+    "ticket": 11,
+    "sequence": 9,
+    "actor": 900011,
+    "retiredBody": 1,
+    "elapsed": 20.949999999999942
+  },
+  "source": {
+    "hold": 6,
+    "checkpoint": 651,
+    "publication": 703,
+    "resumedPublication": 703,
+    "kind": 27,
+    "attack": "attack-29209",
+    "assignment": 10,
+    "actor": 1000001,
+    "body": 2,
+    "at": 45.00000000000121,
+    "pose": [
+      -18.67253303527832,
+      -0.43426570296287537,
+      -0.07756698100668953
+    ],
+    "phase": 22.34519651059942,
+    "remaining": 1.141666705161299
+  },
+  "draws": {
+    "lastObservedOriginal": {
+      "sequence": 296,
+      "elapsed": 44.70000000000118,
+      "worldTicket": 13,
+      "strikeTicket": 12,
+      "executionEpoch": 44.600000000001174,
+      "age": 0.09999999403953552
+    },
+    "firstReplacement": {
+      "sequence": 1,
+      "elapsed": 45.00000000000121,
+      "worldTicket": 13,
+      "strikeTicket": 13,
+      "executionEpoch": 44.600000000001174,
+      "age": 0.3999999761581421
+    },
+    "afterCivilReturn": {
+      "sequence": 264,
+      "elapsed": 81.85000000000181,
+      "worldTicket": 31,
+      "strikeTicket": null,
+      "executionEpoch": null,
+      "age": null
+    }
+  },
+  "events": {
+    "recoveredImpactAt": 46.150000000001306,
+    "impactCount": 1,
+    "centerDebits": [
+      {
+        "at": 46.150000000001306,
+        "hp": 580
+      },
+      {
+        "at": 50.30000000000166,
+        "hp": 560
+      },
+      {
+        "at": 56.350000000002176,
+        "hp": 540
+      },
+      {
+        "at": 61.52000000000262,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 70.24000000000247
+  },
+  "civil": {
+    "ticket": 29,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 9,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "centerStatus": "intact",
+    "centerHp": 520,
+    "replacementDrained": true,
+    "webGpuMessages": 0,
+    "deviceLossCallbacks": 1,
+    "uncaughtDeviceLossPageErrors": 0
+  },
+  "evidence": {
+    "receiptSha256": "16a0153509ca465a10315acfbfd8d644b5132263f2bf9c327584b095d9a4e2ad",
+    "traceSha256": "1b35ed3a99190b0cfb1297b913fe65e4052fa6cd05714f3b5978455576dece38",
+    "traceBytes": 60834263,
+    "dataLossOccurred": false,
+    "baseline": {
+      "commit": "bd7dfa45c6a7663d6695feb6586b1ce1fa32dff7",
+      "failure": "Civil Farm request lacks its acquired Home absence",
+      "controlSha256": "a982d5df713877b23030f5856b533ea3e13862e0f4439a30f3439e0a5d4562a8"
+    }
+  }
+}
