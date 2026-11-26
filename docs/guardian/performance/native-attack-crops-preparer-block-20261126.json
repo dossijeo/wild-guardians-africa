@@ -1,0 +1,52 @@
+{
+  "baseline": "529459bc48b0d4fe6bfcc7c2d21bb0dccfef1e94",
+  "scope": "DEV, one native AttackCrops route during a synchronous Preparer block, no topology change",
+  "fixture": "tests/fixtures/sabana712-d1-native-active-raid.json.gz",
+  "stallFixture": "tests/browser/fixtures/webgpu-preparation-stall-worker.js",
+  "physical": {
+    "browser": "Edge 158.0.4370.33",
+    "adapter": {"vendor": "nvidia", "architecture": "turing"},
+    "actor": "animal-396",
+    "target": "plant-373",
+    "acquiredBody": 1,
+    "acquisitions": 1,
+    "sequenceReplayed": 34,
+    "ticketReplayed": 2,
+    "synchronousBlockMs": 2500.10009765625,
+    "sampledSpanMs": 2333.300048828125,
+    "drawsInSampledSpan": 71,
+    "replaysInSampledSpan": 71,
+    "firstRelativeAge": 0.09999999403953552,
+    "lastRelativeAge": 2.3999998569488525,
+    "runToWalkAge": 1.4565299212779905,
+    "maxDrawIntervalMs": 33.5,
+    "drained": true,
+    "receiptSha256": "b1a659e2fbb3870625efb75c5425aef50eca655bca578d9e2bfd4a9f0fe86980",
+    "trace": {
+      "sha256": "602ab70c57c6fbad32c1ee65805f348078021312ffbe29a61ca003d5ae47b3b3",
+      "bytes": 17529488,
+      "dataLossOccurred": false
+    }
+  },
+  "authority": {
+    "start": 375.0000000000071,
+    "end": 377.50000000000483,
+    "planningCalls": 0,
+    "routeValidations": 0,
+    "validatedSegments": 0,
+    "explicitRouteSamples": 1,
+    "logicalSteps": 150,
+    "nativePoseEvaluations": 150,
+    "bodyUpdates": 150
+  },
+  "cpuAttribution": {
+    "explicitRouteSamples": 1,
+    "caller": "readIssuedAnimalCrop, through readIntentChanges and reconcileWorkerRoutes",
+    "sampledTime": 391.3467996957248,
+    "sampleRole": "issued route endpoint"
+  },
+  "harness": {
+    "browserAssertionsPassed": true,
+    "postCaptureSummaryError": "The console summary used first.draw.sequence instead of first.sequence after the receipt and trace had been written."
+  }
+}

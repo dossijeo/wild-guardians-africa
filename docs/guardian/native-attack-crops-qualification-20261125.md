@@ -142,6 +142,12 @@ El guardado a t=402 escribe el tramo pendiente en `path`, desde la pose ejecutad
 
 En NVIDIA Turing el arnés retuvo READY durante 300 ms. El primer envío del ticket 2 fue la secuencia 42, con edad cero y la pose guardada. La llegada siguió prevista para t=409,5247353. El diario registró una desaparición y un `RaidEnded` a t=409,54, el mismo subpaso que la partida continua. El paquete 117 apareció sin el binding de Retreat y Draw confirmó el drenaje. La preparación en frío duró 3,82 s hasta READY. La validación física cubre el perfil de desarrollo en Sabana con civiles en casa. [Recibo y binarios](performance/native-attack-crops-retreat-reload-20261126.json).
 
+## Marcha durante el bloqueo del Preparer
+
+Con el ticket 26 ya adquirido, el arnés de NVIDIA bloqueó el hilo del Preparer durante 2.500,10 ms con el bucle síncrono de la prueba existente. En los 2.333,30 ms medidos dentro del bloqueo, Draw volvió a someter 71 veces el mismo paquete 34. La edad realmente escrita en su binding pasó de 0,10 a 2,40 s. El programa cruzó la transición de 3,8 a 1,5 m/s a los 1,45653 s. La autoridad siguió avanzando por su canal causal y el consumidor confirmó el drenaje. [Recibo de bloqueo](performance/native-attack-crops-preparer-block-20261126.json).
+
+En ese corte, la autoridad registró 150 pasos, 150 evaluaciones de pose y 150 actualizaciones de cuerpo. Hubo cero llamadas al planificador y cero validaciones de ruta o segmento. La única consulta explícita de un punto de la ruta fue al extremo cuando Game leyó la asignación, como confirmó la traza de llamadas del control CPU. Este ensayo acredita continuidad de marcha sin paquetes gráficos nuevos en una cohorte de desarrollo. El máximo entre dibujos fue 33,50 ms. Quedan el veto de revocación durante el bloqueo, el tráfico, Recovery y la cadencia a 60 Hz.
+
 ## Regresión
 
 En las pruebas de incursión que guardan partida, el arnés registra el plan nocturno que usa para lanzar el grupo y lo marca resuelto al aparecer. El doble de WASM del portón aplica el ancho de 15 campos y las versiones del servicio real. La selección amplia queda en 36 aprobadas y 19 omitidas por configuración. Con WASM canónico seleccionado, cinco controles de recarga y proyección adicionales pasan. La prueba del golpe completa los campos recientes de presentación usando la hora y la pose del impacto registradas en la partida de referencia.

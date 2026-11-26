@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+AttackCrops cruzó la transición de carrera a marcha en NVIDIA durante un bloqueo síncrono del Preparer de 2,5 s. Draw reutilizó el paquete adquirido en 71 envíos. La autoridad registró cero planificaciones y validaciones de ruta en ese corte. Es evidencia parcial de A, D y F en la cohorte de desarrollo. La revocación durante el bloqueo sigue abierta. [Medición y límites](native-attack-crops-qualification-20261125.md#marcha-durante-el-bloqueo-del-preparer).
+
 La recarga de Retreat en Sabana readmite el tramo pendiente con el ticket 26 de la nueva sesión. NVIDIA confirmó la misma frontera de salida, una desaparición, un cierre de incursión y el drenaje. Es evidencia parcial de E con la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-plena-retirada).
 
 La recarga de un golpe AttackCrops en Sabana readmite el ticket 27 con el mismo ataque, clip y edad. NVIDIA confirmó el golpe único, el dibujo posterior sin la acción y el drenaje. Es evidencia parcial de E para un ataque contra cultivo en la calificación de desarrollo. [Recorrido y límites](native-attack-crops-qualification-20261125.md#recarga-en-pleno-golpe).
