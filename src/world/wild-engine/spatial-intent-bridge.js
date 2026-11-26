@@ -925,7 +925,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       if(wasm.nav_animal_strike_snapshot(actor)!==1)throw Error('Native crop action lost its strike');
       const a=new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),24);
       if(a[1]!==actor||a[2]!==h[3]||a[3]!==h[4]||a[21]!==h[16])throw Error('Native strike changed its physical source');
-      strike={ticket:a[17],attackId:a[19],endTime:a[16],duration:a[8],at:a[15],clip:a[7]};
+      strike={ticket:a[17],attackId:a[19],endTime:a[16],duration:a[8],at:a[15],clip:a[7],yaw:a[14]};
     }
     const retreat=h[4]===0&&h[5]===0;
     const purpose=retreat?'retreat':h[22]===1?'center':undefined;
@@ -1498,6 +1498,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
        get preparedShieldCropExpiry(){return cropExpiry;},
        capture:worldBoundary=>{
         const captured={...session.core.captureNativeWorldProposalResources(worldBoundary,shield.crop),worldBoundary,nativeShield:pendingShield};
+         if(shield.terminalStrike){
+           cropExpiry=copyNativeShieldCropExpiry({version:1,worldBoundary,polygonId:pendingShield.polygonId,...shield.terminalStrike});
+           return {...captured,nativeShieldCropExpiry:cropExpiry};
+         }
          if(supersededStrike){
            const q=nativeAnimalCropState(shield.expiredRequest.actorId);
            if(kind!==4||q?.mode!==1||q.shieldPolygon!==pendingShield.polygonId||q.requestSequence!==shield.expiredRequest.requestSequence||

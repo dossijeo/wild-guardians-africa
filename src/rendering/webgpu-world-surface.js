@@ -201,6 +201,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   }
   async function prepareNativeTerrainProposal(messages,options){
    const {signal:proposalSignal,proposedWorldBoundary,retainsNativeAssignments=false,stopEffects=null,proposalOwner=null,nativeShieldProposal=null,nativeCenterRuin=null}=options;
+   const terminalCrop=nativeShieldProposal?.nativeShieldCropExpiry?.completionSequence!==undefined;
    const stopProtocol=terrainStopWireProtocol(options,'Native stopped Surface mixes source families');
    const stopTemplate=stopProtocol?stopProtocol.codec.copyReference(options[stopProtocol.wireTemplateField]):null;
    const barrierTemplate=options.nativeBarrierAdditionTemplate?copyNativeBarrierAdditionReference(options.nativeBarrierAdditionTemplate):null;
@@ -219,7 +220,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const parts=nativeCenterRuin?[settlements.prepareCenterRuin(nativeCenterRuin,{signal:proposalSignal})]:options.shieldGeometry?[options.shieldGeometry.part]:nativeShieldProposal?[await agricultureVfx.prepareNativeShield(nativeShieldProposal.nativeShield.spell,{camera,signal:proposalSignal,removing:nativeShieldProposal.kind===4})]:
      barrierTemplate?(barrierTemplate.removal?settlements.prepareNativeWallRemoval(options.nativeBarrierWallEntities,{signal:proposalSignal,template:barrierTemplate}):await settlements.prepareNativeWallAdditions(options.nativeBarrierWallEntities,{signal:proposalSignal,gate:barrierTemplate.gate,template:barrierTemplate})):await prepareNativeTerrainDependents(view,{signal:proposalSignal,nativeStop:{stopEffects,boundary:proposedWorldBoundary,template:stopTemplate,protocol:stopProtocol}});
     stoppedParts=parts;try{
-     const shieldStop=nativeShieldProposal?.nativeShieldCropStop;
+     const cropExpiry=nativeShieldProposal?.nativeShieldCropExpiry;
+     const shieldStop=nativeShieldProposal?.nativeShieldCropStop??(cropExpiry?.completionSequence===undefined?null:cropExpiry);
      if(shieldStop){
       terrainSupport??=createConfirmedTerrainSupport({residency});
       const support=terrainSupport.prepareShieldCropStop(shieldStop);
@@ -229,7 +231,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      assertNativeTerrainPresentationSupport({state,residency,view,participants:parts});raw=options.shieldGeometry?.batch??await chunkCoordinator.prepareBatch([],{signal:proposalSignal,scene,dependents:parts});}
     catch(error){for(const part of parts.reverse())try{part.cancel();}catch{}throw error;}
    }
-   try{await pipelineAdmission.completePreparation({signal:proposalSignal});if(!unchanged())throw new DOMException('Native terrain proposal cancelled','AbortError');}catch(error){raw?.abort();throw error;}
+   try{
+    // A revoked strike can leave uploads that only a replacement packet can
+    // own. The remote prepared packet completes its own uploads and first use.
+    if(!remoteGpu||!terminalCrop)await pipelineAdmission.completePreparation({signal:proposalSignal});
+    if(!unchanged())throw new DOMException('Native terrain proposal cancelled','AbortError');
+   }catch(error){raw?.abort();throw error;}
    let active=true,preparedFrame=null,blocked=false;
    const unblock=()=>{if(!blocked)return;blocked=false;nativeRoutePreparations--;onPresentationReady();};
    try{if(remoteGpu){
@@ -246,7 +253,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
      // takes execution time from the independently acquired native clock.
      const coverage=barrierTemplate||nativeShieldProposal?{start:boundary.effectiveTime,end:remoteClockLease()?.safeUntil??boundary.effectiveTime}:stopEffects?.routeEffects.rows.length?{start:boundary.effectiveTime,end:Number.MAX_SAFE_INTEGER}:null;
      const metadata=remoteFrameMetadata(boundary,coverage);
-     if(shieldCropPart)metadata.preparedShieldCropStop=nativeShieldProposal.nativeShieldCropStop;
+     if(nativeShieldProposal?.nativeShieldCropStop)metadata.preparedShieldCropStop=nativeShieldProposal.nativeShieldCropStop;
      if(nativeShieldProposal?.nativeShieldCropExpiry)metadata.preparedShieldCropExpiry=nativeShieldProposal.nativeShieldCropExpiry;
      if(nativeCenterRuin){
       const start=boundary.effectiveTime,end=nativeCenterRuin.end;
@@ -258,7 +265,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    }}catch(error){raw?.abort();preparedFrame?.abort();unblock();throw error;}
    return {get presented(){return preparedFrame?.presented;},canonicalPropsUnmasked:raw?.canonicalPropsUnmasked??true,...(stopTemplate?{[stopProtocol.preparedTemplateField]:stopTemplate}:{}),...(preparedFrame?{preparedWorldBoundary:preparedFrame.preparedWorldBoundary}:{}),valid:()=>active&&unchanged()&&(!raw||raw.valid()===true)&&(!preparedFrame||preparedFrame.valid()),
     commit(data={}){const {worldBoundary=proposedWorldBoundary}=data;if(!active||!unchanged()){raw?.abort();preparedFrame?.abort();active=false;unblock();throw Error('Native terrain proposal suppression became stale');}active=false;
-     try{if(hasOtherTerrainStopField(data,'bindingField',stopProtocol))throw Error('Native stopped Surface mixes final source families');const proof=nativeCenterRuin?data.nativeCenterRuin:barrierTemplate?copyNativeBarrierAdditionAttestation(data.nativeBarrierAdditionBinding):stopTemplate?stopProtocol.codec.copyAttestation(data[stopProtocol.bindingField]):null;if(barrierTemplate&&!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native solid additions lost their final boundary');if(stopTemplate&&proof){if(!proof.projection||!stopProtocol.codec.sameReference(proof.preparedReference,stopTemplate)||!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native stopped Surface lost its final source');for(const part of stoppedParts)part.acceptNativeStopBinding?.(proof);}if(barrierTemplate)for(const part of stoppedParts)part.acceptNativeBarrierBinding?.(proof);if(nativeCenterRuin){if(!verifiesCenter(nativeCenterRuin,worldBoundary,proof))throw Error('Native center ruin lost its final boundary');stoppedParts[0].acceptCenterRuin(worldBoundary,proof);}if(shieldCropPart)shieldCropPart.accept(data.resources.nativeShieldCropStop);const result=raw?.commit()??true;if(result!==true)throw Error('Native prepared terrain batch not retained');if(preparedFrame){if(!preparedFrame.commit(worldBoundary,proof))throw Error('Native prepared terrain commands not retained');void preparedFrame.presented.then(unblock,error=>{unblock();if(!closed&&!proposalOwner)onError(error);});}else unblock();return true;}catch(error){preparedFrame?.abort();unblock();throw error;}},
+     try{if(hasOtherTerrainStopField(data,'bindingField',stopProtocol))throw Error('Native stopped Surface mixes final source families');const proof=nativeCenterRuin?data.nativeCenterRuin:barrierTemplate?copyNativeBarrierAdditionAttestation(data.nativeBarrierAdditionBinding):stopTemplate?stopProtocol.codec.copyAttestation(data[stopProtocol.bindingField]):null;if(barrierTemplate&&!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native solid additions lost their final boundary');if(stopTemplate&&proof){if(!proof.projection||!stopProtocol.codec.sameReference(proof.preparedReference,stopTemplate)||!sameNativeWorldBoundary(proof.reference.worldBoundary,worldBoundary))throw Error('Native stopped Surface lost its final source');for(const part of stoppedParts)part.acceptNativeStopBinding?.(proof);}if(barrierTemplate)for(const part of stoppedParts)part.acceptNativeBarrierBinding?.(proof);if(nativeCenterRuin){if(!verifiesCenter(nativeCenterRuin,worldBoundary,proof))throw Error('Native center ruin lost its final boundary');stoppedParts[0].acceptCenterRuin(worldBoundary,proof);}if(shieldCropPart)shieldCropPart.accept(data.resources.nativeShieldCropStop??data.resources.nativeShieldCropExpiry);const result=raw?.commit()??true;if(result!==true)throw Error('Native prepared terrain batch not retained');if(preparedFrame){if(!preparedFrame.commit(worldBoundary,proof))throw Error('Native prepared terrain commands not retained');void preparedFrame.presented.then(unblock,error=>{unblock();if(!closed&&!proposalOwner)onError(error);});}else unblock();return true;}catch(error){preparedFrame?.abort();unblock();throw error;}},
     abort(){if(!active)return false;active=false;preparedFrame?.abort();unblock();return raw?.abort()??true;},identityFor:payload=>raw?.identityFor?.(payload)??null};
   }
   const nativePublicationWaiters=new Set();

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El golpe y la caducidad de Escudo ya comparten el subpaso de Game en Sabana con pose terminal preparada y validada en NVIDIA. El anterior binding queda revocado y el primer dibujo del reemplazo acredita el mismo corte de autoridad. Avance parcial de f-R4. [Control y recibo](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
+
 La calificación AttackCrops de Sabana conserva un golpe ya consumado cuando caduca Escudo y cancela su marcha sucesora pendiente. NVIDIA confirmó el primer dibujo sin el permiso anterior, la marcha al mismo cultivo, el único daño posterior y el drenaje. Es evidencia parcial de aplicación gráfica en f-R4. [Recorrido y límites](webgpu-shield.md#caducidad-entre-dos-golpes).
 
 El recorrido de ruina del centro también conserva al trabajador refugiado por Home19 y el portón abierto que usó al volver. NVIDIA confirmó cuatro golpes, retirada del polígono, dibujo con Retreat vigente, derrota por pérdida del último centro y drenaje. [Caso mixto con portón](native-desert-mixed-flight-center-20261125.md#ruina-con-el-trabajador-refugiado-y-el-portón-abierto).

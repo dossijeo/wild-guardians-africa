@@ -63,7 +63,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    }
 
  async function prepareStop(resources){
-    const stop=resources.nativeShieldCropStop;
+    const stop=resources.nativeShieldCropStop??resources.nativeShieldCropExpiry;
     const support=terrain.prepareShieldCropStop(stop),root=roster.get(animal.id).root;
     const signal=new AbortController().signal;
     await assert.rejects(roster.prepareShieldCropStop({...stop,bodyId:stop.bodyId+1},support,{signal}));
@@ -86,7 +86,7 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     const commit=data=>{
      assert.equal(data.worldBoundary.ticket,stop.worldBoundary.ticket);
      assert.throws(()=>part.accept({...stop,phase:stop.phase+.001}));
-     part.accept(data.resources.nativeShieldCropStop);assert(batch.commit());batcher.dispose();
+     part.accept(data.resources.nativeShieldCropStop??data.resources.nativeShieldCropExpiry);assert(batch.commit());batcher.dispose();
      assert.deepEqual(visible(),selected);assert.equal(roster.nativeCropLease(),null);
      const restore=roster.get(animal.id).preparePick();restore();intact();
     };

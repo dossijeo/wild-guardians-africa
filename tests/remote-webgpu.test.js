@@ -1995,6 +1995,38 @@ test('a retained published vertex buffer remains protected from admission fence 
  }finally{f.close();}
 });
 
+test('a remote prepared replacement can own retained vertex uploads that the global fence rejects',async()=>{
+ const f=await nativePreparationFixture();let prepared;
+ try{
+  const device=f.client.device,vertex=device.createBuffer({size:16,usage:44});
+  device.queue.writeBuffer(vertex,0,new Uint32Array([3]));
+  const first=unpublishedFenceVertexDraw(f,vertex,{clock:f.clock});await flush();await f.host.idle();f.host.present();await first;
+  const displayed=f.gpu.buffers[1],previous=await f.commit();
+  assert.equal(previous.status,'committed');
+  await assert.rejects(unpublishedFenceVertexDraw(f,vertex,{clock:f.clock},99),error=>error.resourcePreparationsRetained===true);
+  await assert.rejects(device.queue.onSubmittedWorkDone(),/uncommitted changes/);
+  const result=await f.native.bridge.mutateNativeWorldAfterGpuQuiescence({getPublication:()=>f.source,
+   mutation:{type:'addChunk',cx:5,cz:4},async prepareResources({proposedWorldBoundary,signal}){
+    const metadata={clock:f.clock,nativeWorldBoundary:proposedWorldBoundary};
+    f.client.beginFrame(metadata);
+    const encoder=device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
+     {view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+    pass.setPipeline(f.pipeline);pass.setBindGroup(0,f.group);pass.setVertexBuffer(0,vertex);pass.draw(3);pass.end();
+    device.queue.submit([encoder.finish()]);
+    prepared=await f.client.prepareNativeWorldFrame(metadata,{signal});
+    assert.equal(new Uint32Array(displayed.data.buffer)[0],3);
+    const fork=f.gpu.buffers.find(buffer=>new Uint32Array(buffer.data.buffer)[0]===99);
+    assert(fork&&fork!==displayed);
+    assert.equal(f.host.inspect().activeSequence,1);
+    return {preparedWorldBoundary:prepared.preparedWorldBoundary,valid:prepared.valid,abort:prepared.abort,
+     commit:data=>prepared.commit(data.worldBoundary)};
+   }});
+  assert.equal(result.status,'committed',result.error);await flush();f.host.present();await prepared.presented;
+  assert.equal(new Uint32Array(displayed.data.buffer)[0],3);
+  assert.equal(f.host.inspect().stagedOperations,0);assert.deepEqual(f.errors,[]);
+ }finally{f.close();}
+});
+
 for(const closeWithoutFrame of [false,true])test('retirement fences preserve the retained vertex generation through '+(closeWithoutFrame?'consumer shutdown':'replacement'),async()=>{
  const f=await nativePreparationFixture(),queue=f.client.device.queue;
  const completions=[],errors=[];

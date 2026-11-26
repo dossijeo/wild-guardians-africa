@@ -302,7 +302,8 @@ export function createNativeIntentControlPublication({port,session,observe,
     if(preparedShieldCropExpiry){
       preparedShieldCropExpiry=copyNativeShieldCropExpiry(preparedShieldCropExpiry);
       if(!sameNativeWorldBoundary(preparedShieldCropExpiry.worldBoundary,preparedWorldBoundary)||
-         preparedShieldCropExpiry.requestSequence!==sentSequence)throw Error('Shield expiry differs from the pending crop successor');
+         (preparedShieldCropExpiry.requestSequence??preparedShieldCropExpiry.completionSequence)!==sentSequence)
+        throw Error('Shield expiry differs from the issued crop boundary');
     }
     const holdId=++nextMutationFence,sequence=sentSequence,effectiveTime=sentTime,clockSequence=clock.clockSequence;
     return new Promise((resolve,reject)=>{

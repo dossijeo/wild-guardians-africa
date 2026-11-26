@@ -1,5 +1,5 @@
 import {int,uniform} from 'three/tsl';
-import {copyNativeShieldCropStop,sameNativeShieldCropStop} from '../world/native-shield-world.js';
+import {copyNativeShieldCropStop,sameNativeShieldCropStop,copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {createAnimalCropGpuMotion} from './native-gpu-motion.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
@@ -99,26 +99,30 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   return parts;
  }
  async function prepareShieldCropStop(input,support,{signal}){
-  const stop=copyNativeShieldCropStop(input);
+  const completed=input.completionSequence!==undefined;
+  const copy=completed?copyNativeShieldCropExpiry:copyNativeShieldCropStop,same=completed?sameNativeShieldCropExpiry:sameNativeShieldCropStop;
+  const stop=copy(input);
   const id='animal-'+stop.actorId,entry=entries.get(id),previous=entry?.cropOwner;
   const ref=previous?.proof.reference;
-  if(!ref||ref.kind!==26||ref.purpose||ref.bodyId!==stop.bodyId||ref.targetId!==stop.targetId||
-     ref.slot!==stop.slot||ref.generation!==stop.generation||previous.proof.assignmentSequence!==stop.assignmentSequence||
-     ref.worldBoundary.ticket!==stop.routeTicket||!support?.valid()||signal.aborted)
+  const at=stop.worldBoundary.effectiveTime;
+  if(!ref||ref.kind!==(completed?27:26)||ref.purpose||ref.bodyId!==stop.bodyId||ref.targetId!==stop.targetId||
+     ref.worldBoundary.ticket!==(completed?stop.strikeTicket:stop.routeTicket)||!support?.valid()||signal.aborted||
+     (completed?previous.proof.attackId!==stop.attackId||ref.endTime>at||!['x','z','yaw','phase'].every(k=>ref[k]===stop[k]):
+       ref.slot!==stop.slot||ref.generation!==stop.generation||previous.proof.assignmentSequence!==stop.assignmentSequence))
     throw Error('Shield stop lacks its admitted animal crop');
   const actor=previous.actor,entity=entry.entity;
-  const at=stop.worldBoundary.effectiveTime;
   const stoppedPose=()=>state.elapsed===at&&entity.x===stop.x&&entity.z===stop.z&&
     entity.heading===stop.yaw&&entity.motionPhase===stop.phase;
   // Expiry is inside an advance. Its prepared frame owns the cut pose while
   // the last visible publication still owns the earlier pose of this route.
-  const retainedPose=()=>stop.removal&&state.elapsed>=ref.worldBoundary.effectiveTime&&state.elapsed<at&&entity.motionPhase<=stop.phase;
+  const retainedPose=()=>state.elapsed>=ref.worldBoundary.effectiveTime&&state.elapsed<at&&
+    (completed?entity.status==='attacking'&&entity.attackId==='attack-'+stop.attackId:stop.removal&&entity.motionPhase<=stop.phase);
   const current=()=>!closed&&!signal.aborted&&entries.get(id)===entry&&entry.entity===entity&&
    entry.cropOwner===previous&&!entry.cropPending&&(stoppedPose()||retainedPose())&&
    entity.targetId==='plant-'+stop.targetId&&!historyRun&&!poses.has(id)&&support.valid();
   const check=()=>{if(!current())throw Error('Shield crop pose changed before capture');};
   check();
-  const clip=(stop.removal?stop.running:entity.status==='entering')?'Running':'Walking';
+  const clip=!completed&&(stop.removal?stop.running:entity.status==='entering')?'Running':'Walking';
   const bank=clip==='Running'?bakedRunBank:bakedWalkBank;
   const bake=await bank.get(entry.species);check();
   const anchor=actor.root.getWorldPosition(new Vector3()),q=actor.root.getWorldQuaternion(new Quaternion());
@@ -149,7 +153,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   return {object:actor.root,signal,include:alternatives.map(item=>item.mesh),materialAlternatives:alternatives,
    eventRoots:()=>[actor.root],presentation:()=>({show:[],hide:[]}),valid,
    capturePresentation(record){capturing=true;try{return binding.capturePresentation(record);}finally{capturing=false;}},
-   accept(proof){check();if(!sameNativeShieldCropStop(copyNativeShieldCropStop(proof),stop))throw Error('Shield crop stop proof changed');approved=true;},
+   accept(proof){check();if(!same(copy(proof),stop))throw Error('Shield crop stop proof changed');approved=true;},
    activate(){return approved&&valid();},
    attach(){
     if(!approved||!valid())throw Error('Shield crop stop became stale');

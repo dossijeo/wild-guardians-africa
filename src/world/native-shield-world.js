@@ -20,16 +20,23 @@ export function sameNativeShieldCropStop(a,b){
  return !!a&&!!b&&a.slot===b.slot&&a.removal===b.removal&&a.running===b.running&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&
   [...cropStopIds,...cropStopPose].every(k=>a[k]===b[k]);
 }
-const cropExpiryFields=['actorId','bodyId','targetId','attackId','strikeTicket','requestSequence','polygonId'];
+const cropExpiryFields=['actorId','bodyId','targetId','attackId','strikeTicket','polygonId'];
 export function copyNativeShieldCropExpiry(value){
  const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ const completed=value?.completionSequence!==undefined;
+ const sequence=completed?value.completionSequence:value?.requestSequence;
  if(!worldBoundary||value.version!==1||!cropExpiryFields.every(k=>Number.isSafeInteger(value[k])&&value[k]>0)||
-    value.strikeTicket>=worldBoundary.ticket||value.polygonId>0x7fffffff)
+    value.strikeTicket>=worldBoundary.ticket||value.polygonId>0x7fffffff||!Number.isSafeInteger(sequence)||sequence<1||
+    (completed?value.requestSequence!==undefined||!cropStopPose.every(k=>Number.isFinite(value[k]))||value.phase<0:
+      cropStopPose.some(k=>value[k]!==undefined)))
    throw Error('Invalid native Shield expiry after a crop strike');
- return Object.freeze({version:1,worldBoundary,...Object.fromEntries(cropExpiryFields.map(k=>[k,value[k]]))});
+ return Object.freeze({version:1,worldBoundary,...Object.fromEntries(cropExpiryFields.map(k=>[k,value[k]])),
+  ...(completed?{completionSequence:sequence,...Object.fromEntries(cropStopPose.map(k=>[k,value[k]]))}:{requestSequence:sequence})});
 }
 export function sameNativeShieldCropExpiry(a,b){
- return a?.version===1&&b?.version===1&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&cropExpiryFields.every(k=>a[k]===b[k]);
+ return a?.version===1&&b?.version===1&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&
+  a.requestSequence===b.requestSequence&&a.completionSequence===b.completionSequence&&
+  [...cropExpiryFields,...cropStopPose].every(k=>a[k]===b[k]);
 }
 export function shieldCropStopFromProposal(resources,source,running){
  const row=resources.routeEffects.rows;

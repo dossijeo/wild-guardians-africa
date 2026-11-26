@@ -460,8 +460,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          !nativeCropCohortCurrent(game,planner))return null;
       const q=planner.nativeAnimalCropState(stopped.id);
       return q?.mode===3&&q.body===nativeBodies.id(stopped.id)&&q.shieldContact?.id===spell.id&&
-        q.shieldPolygon===session.shieldPolygonId(spell.id)&&stopped.attackId==='attack-'+q.strike.attackId&&
-        q.strike.endTime>game.elapsed+spell.remaining?q:null;
+        q.shieldPolygon===session.shieldPolygonId(spell.id)&&stopped.attackId==='attack-'+q.strike.attackId?q:null;
     };
     const held=readStrike();
     const polygonId=session.shieldPolygonId(spell.id);
@@ -493,7 +492,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         q.strike.ticket===held.strike.ticket&&q.strike.at===held.strike.at&&q.strike.endTime===held.strike.endTime;
     };
     const subject=game.raid?(approach?approachCurrent:captureShieldExpiryCropRoute()??(held?strikeCurrent:stoppedCurrent)):civil;
-    const cohortCurrent=()=>civilShieldPhysicsAvailable()&&subject?.()===true;
+    const expiredImpact=()=>held&&stopped.status==='walking'&&stopped.hitApplied&&stopped.attackId==='attack-'+held.strike.attackId&&
+      held.strike.endTime<=game.elapsed&&stopped.hitsRemaining===remainingHits-1&&
+      ['x','z'].every(k=>stopped[k]===held[k])&&stopped.heading===held.strike.yaw&&stopped.motionPhase===held.phase&&
+      game.events.some(e=>e.type==='AnimalLogicalMiss'&&e.reason==='shield-expired'&&e.targetId==='plant-'+held.target&&
+        e.attackId===stopped.attackId&&e.simulationTime===game.elapsed)&&
+      (stopped.hitsRemaining?planner.nativeFinishedAnimalCrop(game,stopped):planner.nativeFinishedAnimalRetreat(game,stopped))?.body===held.body;
+    const remainingHits=stopped?.hitsRemaining;
+    let terminalStrike=null;
+    const cohortCurrent=()=>civilShieldPhysicsAvailable()&&(terminalStrike?expiredImpact():subject?.()===true);
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!cohortCurrent()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
@@ -514,6 +521,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     // before preparing removal. The enclosing advance owns publication.
     advanceToExpiry();
     const at=game.elapsed;
+    if(expiredImpact())terminalStrike={actorId:held.actor,bodyId:held.body,targetId:held.target,attackId:held.strike.attackId,
+      strikeTicket:held.strike.ticket,completionSequence:planner.nativeCausalClock().intentSequence,
+      x:held.x,z:held.z,yaw:held.strike.yaw,phase:held.phase};
     const validate=()=>current()&&spell.remaining<=1e-9&&game.elapsed===at&&
       cohortCurrent()&&
       planner.nativeCausalClock()?.committedThrough===at;
@@ -521,7 +531,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const result=await planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'removePolygon',id:polygonId},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
       prepareResources:({resources,signal})=>owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence}),
-      shield:{source:{spell,polygonId},crop:approach?.binding,expiredRequest,nav,validate,atCommitBoundary:consume=>consume(),project:proof=>{
+      shield:{source:{spell,polygonId},crop:approach?.binding,expiredRequest,terminalStrike,nav,validate,atCommitBoundary:consume=>consume(),project:proof=>{
         if(!current()||game.elapsed!==at)throw Error('Native shield expiry source changed before adoption');
         session.prepareNativeShieldRemovalAdoption(spell,proof)();
         game.spells=game.spells.filter(item=>item!==spell);

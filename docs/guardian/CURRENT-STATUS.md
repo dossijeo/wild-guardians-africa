@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+NVIDIA confirmó también el caso en que el golpe termina dentro del mismo subpaso que vence Escudo. Game registra un único fallo, Draw conserva la pose sin el reloj del golpe y el nuevo corredor llega al mismo cultivo. [Recorrido y recibo](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
+
 NVIDIA confirmó la caducidad de Escudo entre dos golpes. El primer impacto protegido permanece registrado una sola vez, se descarta el READY de la siguiente marcha al borde y el nuevo corredor conserva cuerpo y pose. Solo el golpe posterior daña el cultivo. Retreat y drenaje verificados. [Recorrido y recibo](webgpu-shield.md#caducidad-entre-dos-golpes).
 
 Escudo ya puede caducar antes de adquirir el primer golpe de un facóquero contra un cultivo protegido. NVIDIA confirmó el relevo en marcha y al llegar al borde con el golpe aún pendiente. La nueva ruta conserva cuerpo, reserva, pose y fase, y la cola drena. El caso con la primera ruta pendiente se verificó en CPU. [Recorridos y recibos](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe).

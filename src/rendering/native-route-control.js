@@ -225,15 +225,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   function shieldCropExpirySource(proof){
     const actor=actors.get(proof.actorId),last=finishedCrop,ref=last?.reference,request=actor?.cropRequest;
-    if(closed||!clock||active.size||actors.size!==1||!actor||actor.closed||actor.state!==6||
-       !ref||ref.kind!==27||ref.purpose||actor.cropPredecessor!==ref||
-       !request||actor.latestSequence!==proof.requestSequence||request.requestSequence!==proof.requestSequence||
-       !['actorId','bodyId','targetId'].every(k=>request[k]===proof[k]&&ref[k]===proof[k])||
+    const preparedSequence=proof.requestSequence??proof.completionSequence;
+    if(closed||!clock||active.size||!ref||ref.kind!==27||ref.purpose||
+       !['actorId','bodyId','targetId'].every(k=>ref[k]===proof[k])||
        last.attackId!==proof.attackId||ref.worldBoundary.ticket!==proof.strikeTicket||
-       clock.intentSequence!==proof.requestSequence||proof.worldBoundary.authorityEpoch!==authorityEpoch||
+       clock.intentSequence!==preparedSequence||proof.worldBoundary.authorityEpoch!==authorityEpoch||
        clock.nativeSession!==proof.worldBoundary.nativeSession||proof.worldBoundary.effectiveTime!==clock.committedThrough||
        ref.endTime>clock.committedThrough)return null;
-    return Object.freeze({matches:previous=>sameNativeAnimalCropReference(previous,last.preparedReference),
+    const matches=previous=>sameNativeAnimalCropReference(previous,last.preparedReference);
+    if(proof.completionSequence!==undefined){
+      if(actors.size||last.retiredSequence!==proof.completionSequence||last.retiredAt!==proof.worldBoundary.effectiveTime||
+         !['x','z','yaw','phase'].every(k=>ref[k]===proof[k]))return null;
+      return Object.freeze({matches,retired:()=>!closed&&finishedCrop===last&&!active.has(proof.actorId)});
+    }
+    if(actors.size!==1||!actor||actor.closed||actor.state!==6||actor.cropPredecessor!==ref||!request||
+       actor.latestSequence!==proof.requestSequence||request.requestSequence!==proof.requestSequence||
+       !['actorId','bodyId','targetId'].every(k=>request[k]===proof[k]))return null;
+    return Object.freeze({matches,
       retired:()=>!closed&&finishedCrop===last&&actor.closed&&actor.state===5&&
         actor.latestSequence===proof.requestSequence+1&&!active.has(proof.actorId)});
   }
@@ -488,7 +496,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(successor){actor.cropRequest=successor;actor.cropPredecessor=birth||centerBirth||event.pendingAnimalCrop.previousShieldCrop?null:finishedCrop.reference;if(birth)actor.raidFlightBirth=Object.freeze({...birth});}
     if(current?.cropBinding?.reference.kind===27&&revoked&&event.type==='RouteInvalidated'&&
         event.effectiveTime>=current.cropBinding.reference.endTime){
-      finishedCrop=current.cropBinding;
+      finishedCrop={...current.cropBinding,retiredSequence:event.sequence,retiredAt:event.effectiveTime};
     }else if(!successor&&!(event.type==='IntentChanged'&&actor?.cropRequest&&event.state===5)){
       finishedCrop=null;
     }
