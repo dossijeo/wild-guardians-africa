@@ -1,0 +1,128 @@
+{
+  "baseline": "d394f8807a3e0a2b647a9b379fe3dcd0c2dbbe6b",
+  "scope": "Game, WASM privado y Host de producción con paquetes de prueba y cola GPU determinista, Desierto sin portón.",
+  "baselineDistanceFromOrdinaryAtCutMetres": 0.07600000000000051,
+  "positionDeltaAtCutMetres": 3.552713678800501e-15,
+  "runs": {
+    "positive": {
+      "cut": 12.619999999999944,
+      "pose": [
+        -16.722109984199317,
+        2,
+        -1.5707963267948966,
+        1.6599999999999646
+      ],
+      "poseAtImpact": [
+        -16.64610998419932,
+        2,
+        1.5707963267948966,
+        1.639999999999965
+      ],
+      "poseAtRetreat": [
+        -16.64610998419932,
+        2,
+        1.5707963267948966,
+        1.639999999999965
+      ],
+      "distanceMetres": 0.07599999999999837,
+      "oldDrawClock": 12.599999999999945,
+      "priorAssignment": 8,
+      "workerBody": 1,
+      "animalBody": 2,
+      "newRequest": 11,
+      "nativeControlSequence": [
+        10,
+        11
+      ],
+      "retainedPublications": 0,
+      "acquiredAt": 12.659999999999943,
+      "acquiredTicket": 11,
+      "firstSubmit": {
+        "at": 12.679999999999943,
+        "age": 0,
+        "ticket": 11
+      },
+      "raidEndedAt": 14.379999999999907,
+      "absenceWorldTicket": 11,
+      "getUpAt": 18.91999999999981,
+      "exitBlendSeconds": 0.24
+    },
+    "held": {
+      "cut": 12.619999999999944,
+      "pose": [
+        -16.722109984199317,
+        2,
+        -1.5707963267948966,
+        1.6599999999999646
+      ],
+      "poseAtImpact": [
+        -16.64610998419932,
+        2,
+        1.5707963267948966,
+        1.639999999999965
+      ],
+      "poseAtRetreat": [
+        -16.64610998419932,
+        2,
+        1.5707963267948966,
+        1.639999999999965
+      ],
+      "distanceMetres": 0.07599999999999837,
+      "oldDrawClock": 12.599999999999945,
+      "priorAssignment": 8,
+      "workerBody": 1,
+      "animalBody": 2,
+      "newRequest": 11,
+      "nativeControlSequence": [
+        10,
+        11
+      ],
+      "retainedPublications": 6,
+      "acquiredAt": 12.759999999999941,
+      "acquiredTicket": 11,
+      "firstSubmit": {
+        "at": 12.77999999999994,
+        "age": 0,
+        "ticket": 11
+      },
+      "raidEndedAt": 14.479999999999905,
+      "absenceWorldTicket": 11,
+      "getUpAt": 18.91999999999981,
+      "exitBlendSeconds": 0.24
+    }
+  },
+  "wireRejections": {
+    "wrong-first-phase": "Worker encounter exhaustion lacks its exact live approach and held worker",
+    "wrong-first-pose": "Retreat request lacks its worker encounter exhaustion",
+    "wrong-hit": "Retreat request lacks its worker encounter exhaustion",
+    "other-worker": "Worker encounter exhaustion lacks its exact live approach and held worker",
+    "omit-hit": "Crop successor lacks the completed strike body"
+  },
+  "pending": [
+    "La publicación de Game ya contiene la pose correcta, pero el dibujo sigue en el paquete anterior hasta que se adquiere Retreat.",
+    "Acreditar el paquete del mismo subpaso con Surface y la preparación retenida, completar Fall y GetUp en GPU física y habilitar el perfil ordinario."
+  ],
+  "privateSourceSha256": {
+    "source/src/world/wild-engine/spatial-intent-state.cpp": "80a86a2545c1c38f24568513c2f0140d727b5fe4d6f1e1fbc452869e2d3d0b1d",
+    "source/src/world/wild-engine/spatial-route-execution.h": "61e40087924dc90eae4869ee8cca5c78d3285620a0902f3a02decc22a5a5ce3a",
+    "source/tools/build-spatial-savanna-wasm.sh": "5f19e94ebbad523e348d431bd24fe47d86f41a16bf1f8168f49620034ee1b968",
+    "build/standalone/spatial-savanna.wasm": "7a61dc1b2b484ccb13d93d7c418bb8e3cced12124d2f4546c05c87326cf168fd"
+  },
+  "localEvidenceSha256": {
+    "install-encounter-retreat-first-step.mjs": "487bd51370b1e21991ad53399c084dfc3d0a9e4a50d2933e144aa827a2b0855a",
+    "encounter-retreat-first-step-loader.mjs": "a8503229639b1222d091e953f27785c8eb995d0f0ca0bf69ba96c9c23664c656",
+    "encounter-retreat-native.mjs": "94eb3c6c9c0eb3ca8b74eb871c38e77c43aea61b0c805efff16f9e31ee0c8afd",
+    "verify-encounter-retreat-first-step.mjs": "4581107c7e6e84ccd5074299f7a33c6cdb9134f32a05d6d57850174ad917dc0f",
+    "center-encounter-retreat-oracle.json": "c2806747b214c5d06722e407ff03f9e3f6cd01530e24984f2ad510dc3beba1ae",
+    "center-encounter-retreat-verified.json": "3591f6321c5714c0f6ffa1af2bf4d2b4db2c15b8a2d36bd1128276fefc4682b4",
+    "center-encounter-retreat-first-step-positive.log": "56f3bb169b548aa8eea98561bb75a6e3c27f1ccedf0cf590d891133fdcfbdb1d",
+    "center-encounter-retreat-first-step-held.log": "a1f43252169d8ef3dc98061888f12cf811efcbf0736bb004f3d493bd0015616f",
+    "center-encounter-retreat-first-step-wrong-first-phase.log": "abd966f2441d734bb7fb36e77863ea3ca07dcef8f29435ba637b3d4014f88d74",
+    "center-encounter-retreat-first-step-wrong-first-pose.log": "76780fc05de5b509fbf0899f2750be2ee0f58ee61ca7c6eeed49fdbb409e6aaa",
+    "center-encounter-retreat-first-step-wrong-hit.log": "712b7efae8ad40aa87296b0dc8edf756efdb9152cf983bf17054bda70964f376",
+    "center-encounter-retreat-first-step-other-worker.log": "3df3c01e38d0b8f6773d9bf757518767f6b028d8b9734138ebfd1f6eb8771977",
+    "center-encounter-retreat-first-step-omit-hit.log": "43f7f8b7e2df92c6c997262a20b233e250f8484d936010361502b51258d42fb2",
+    "center-encounter-retreat-first-step-build.log": "d0e23f9b894ed83878928650820882b15c415d636b0962c38b3d5d3901f3ce33"
+  },
+  "previousReceiptSha256": "233cf09b87cb3d8cd62966a6ed815b57f3dbff901072b72fb6e54f82bcd26131"
+}
