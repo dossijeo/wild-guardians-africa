@@ -379,8 +379,28 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
    const motion=planner.nativeAnimalCropState(animal.id);
+   const centerApproach=motion?.purpose==='center'&&nativeWorkerLifecycle&&shelteredCenterApproach(game);
+   if(centerApproach&&motion.mode===1){
+    const wasm=session.core.wasm,source=[motion.actor,wasm.nav_intent_session(),motion.requestSequence];
+    const count=wasm.nav_animal_pending_center_approach_points?.(...source);
+    if(count===undefined)return game;
+    if(count<0||count>4096||motion.executedThrough!==game.elapsed||motion.x!==animal.x||motion.z!==animal.z||
+       motion.yaw!==(animal.heading??0)||motion.phase!==(animal.motionPhase??0))
+     throw Error('Native center approach checkpoint lost its pending route');
+    const path=[];
+    if(count){
+     const ptr=wasm.nav_animal_pending_center_approach_points_ptr(...source);
+     if(!ptr)throw Error('Native center approach checkpoint lost its points');
+     const points=new Float32Array(wasm.memory.buffer,ptr,count*2);
+     for(let i=0;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
+    }else path.push({x:motion.x,z:motion.z});
+    const endpoint=path.at(-1);
+    if(endpoint.x!==Math.fround(animal.approach.x)||endpoint.z!==Math.fround(animal.approach.z))
+     throw Error('Native center approach checkpoint lost its reserved site');
+    return {...game,raid:{...game.raid,animals:[{...animal,heading:motion.yaw,motionPhase:motion.phase,path}]}};
+   }
    if(motion?.mode!==2)return game;
-   if(motion.purpose==='center'?(!nativeWorkerLifecycle||!shelteredCenterApproach(game)):motion.arrived)return game;
+   if(motion.purpose==='center'?!centerApproach:motion.arrived)return game;
    const route=planner.nativeAnimalRouteBinding(animal.id);
    const sample=route&&planner.sampleNativeRoute(route.routeHandle,game.elapsed);
    if(route?.bodyId!==motion.body||route?.targetId!==motion.target||motion.executedThrough!==game.elapsed||

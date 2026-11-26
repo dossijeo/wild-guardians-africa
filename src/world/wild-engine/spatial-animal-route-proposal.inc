@@ -51,6 +51,28 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
  intent.animalRouteRequest=request;intent.requiresResources=true;intent.state=PlanningState::AwaitingResources;route.pendingResources=true;intent.resourceRequestedAt=s.effectiveTime;
  request->sequence=emitIntentChange(s,intent);intent.resourceRequestSequence=request->sequence;s.entityRevision++;return 1;
 }
+// A save can read the current pending center corridor without staging a
+// second proposal or touching the committed route registry.
+static const RouteSlot* pendingCenterApproach(double actor,double session,double requestSequence){
+ const auto& s=state();
+ if(!integer(actor)||!integer(session)||!integer(requestSequence)||session!=double(s.session))return nullptr;
+ const auto found=s.activeIntents.find(uint64_t(actor));
+ if(found==s.activeIntents.end())return nullptr;
+ const auto& intent=found->second;
+ const auto& q=intent.animalRouteRequest;
+ if(!q||!q->attackCenter||q->sequence!=requestSequence||!animalRouteRequestCurrent(s,intent))return nullptr;
+ const auto& route=s.routeSlots[intent.slot];
+ if(route.points.empty()&&(q->x!=intent.approachX||q->z!=intent.approachZ))return nullptr;
+ return &route;
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_pending_center_approach_points(double actor,double session,double requestSequence){
+ const auto* route=pendingCenterApproach(actor,session,requestSequence);
+ return route?int(route->points.size()/2):-1;
+}
+EMSCRIPTEN_KEEPALIVE const float* nav_animal_pending_center_approach_points_ptr(double actor,double session,double requestSequence){
+ const auto* route=pendingCenterApproach(actor,session,requestSequence);
+ return route?route->points.data():nullptr;
+}
 // The last acquired source is captured only by a scoped Shield commit.
 // No route is assigned while its replacement is being planned or prepared.
 extern "C++" bool spatialIntentCaptureShieldCropStop(const SpatialShieldCropStop& stop){
