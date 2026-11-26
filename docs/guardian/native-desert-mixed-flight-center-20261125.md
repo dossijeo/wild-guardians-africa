@@ -363,4 +363,12 @@ El ensayo privado prepara en WASM los nueve nudos del corredor restante desde la
 
 Al confirmar `event-29210` a 12,62 s, la propuesta real usa el ticket 11. WASM y JavaScript comprueban la misma proyección Float32 del corredor, incluidos los tiempos relativos, la pose, el cuerpo y la generación. El Host de la preimagen rechaza la preparación si la aproximación aún está activa. Los controles del prototipo también rechazan otro cuerpo, otro reloj, una retención que difiere del paquete y un intento de GO antes del golpe. [Recibo de READY y cancelación](performance/native-raid-encounter-retreat-ready-20261126.json).
 
-En este ensayo el paquete anticipado se cancela y la retirada adquiere después por la vía existente. Quedan pendientes vincular ese mismo paquete al GO de 12,62 s, construirlo desde Surface con los rigs de ambos actores y verificar la transición en GPU física. El perfil ordinario continúa cerrado.
+En este ensayo el paquete anticipado se cancela y la retirada adquiere después por la vía existente.
+
+### GO del paquete retenido en el subpaso del golpe
+
+El control posterior conserva el paquete 6 desde READY a 12,60 s. A 12,62 s el golpe `event-29210` revoca la aproximación, publica la solicitud de retirada y adquiere la asignación 12 sobre el mismo cuerpo 2. La autoridad completa los dos cambios de reloj del subpaso y libera la retención. El Host somete el paquete 6 con el ticket adquirido 11 y conserva el ticket preparado 10 como origen del recurso. El reloj visible de Retreat empieza con edad cero y picking lee el mismo valor.
+
+En el avance de dos subpasos, se retiene el primer RAF tras GO. El reloj causal ya está en 12,62 s y el último dibujo sigue siendo el paquete 5. Tras el acuse del paquete 6 se ejecuta el segundo subpaso. La respuesta completa cuenta dos pasos y alcanza 12,64 s con otros 0,076 m de desplazamiento y un solo `AnimalRetreating`. Ambos recorridos completan la retirada y GetUp. La cancelación sigue funcionando y cinco controles rechazan el GO prematuro o adulterado y la retención de otra fuente. [Recibo del GO](performance/native-raid-encounter-retreat-go-20261126.json).
+
+El paquete del ensayo usa el Host real y una cola GPU determinista. Quedan pendientes el paquete de Surface con los rigs de ambos actores, la integración de este contrato en producto, la validación en GPU física y la activación ordinaria.

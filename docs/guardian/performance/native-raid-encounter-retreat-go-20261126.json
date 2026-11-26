@@ -1,0 +1,130 @@
+{
+  "baseline": "5b5ba3f6fa75f722af895a775cc5ce7e891576c5",
+  "scope": "Game, autoridad y Host real con WASM privado, paquete gráfico mínimo y cola GPU determinista.",
+  "runs": {
+    "qualified": {
+      "held": {
+        "cutoff": 12.599999999999945,
+        "at": 12.619999999999944,
+        "ticket": 10,
+        "hold": 6,
+        "packet": 6,
+        "old": 5
+      },
+      "firstSubmit": {
+        "sequence": 6,
+        "clock": 12.619999999999944,
+        "ticket": 11,
+        "preparedTicket": 10,
+        "age": 0,
+        "owner": 1000000
+      },
+      "assignmentSequence": 12,
+      "clockSequence": 138,
+      "revocation": 10,
+      "request": 11,
+      "hit": 29210,
+      "body": 2,
+      "knots": 9,
+      "tail": null,
+      "raidEndedAt": 14.339999999999907,
+      "getUpAt": 18.91999999999981,
+      "absenceWorldTicket": 11
+    },
+    "two-step": {
+      "held": {
+        "cutoff": 12.599999999999945,
+        "at": 12.619999999999944,
+        "ticket": 10,
+        "hold": 6,
+        "packet": 6,
+        "old": 5
+      },
+      "firstSubmit": {
+        "sequence": 6,
+        "clock": 12.619999999999944,
+        "ticket": 11,
+        "preparedTicket": 10,
+        "age": 0,
+        "owner": 1000000
+      },
+      "assignmentSequence": 12,
+      "clockSequence": 138,
+      "revocation": 10,
+      "request": 11,
+      "hit": 29210,
+      "body": 2,
+      "knots": 9,
+      "tail": {
+        "stepsExecuted": 2,
+        "at": 12.639999999999944,
+        "pose": [
+          -16.798109984199314,
+          2,
+          -1.5707963267948966,
+          1.6799999999999642
+        ],
+        "worker": {
+          "x": -14.520928903743672,
+          "z": 2.5523155738541687,
+          "fall": 3.061666507720947,
+          "exit": null,
+          "recovery": null,
+          "status": "incapacitated",
+          "incapacitated": true,
+          "hits": 2
+        },
+        "events": [
+          "event-29211"
+        ]
+      },
+      "raidEndedAt": 14.339999999999907,
+      "getUpAt": 18.91999999999981,
+      "absenceWorldTicket": 11
+    }
+  },
+  "cancelled": {
+    "clock": 12.599999999999945,
+    "at": 12.619999999999944,
+    "packet": 6,
+    "ticket": 10,
+    "hold": 6,
+    "oldSequence": 5,
+    "oldClock": 12.599999999999945,
+    "cancelled": true
+  },
+  "rejected": {
+    "wrong-go-hit": "Encounter GO lacks the issued revocation and request",
+    "wrong-go-boundary": "Encounter GO differs from the held substep",
+    "missing-go-hit": "Encounter GO differs from the held substep",
+    "early-go": "Encounter GO differs from the held substep",
+    "wrong-hold": "Invalid native mutation fence acknowledgement"
+  },
+  "pending": [
+    "Preparar los rigs de Surface mientras la aproximación sigue adquirida y presentar su primer paquete tras GO.",
+    "Integrar el contrato en la ruta de producto, probar el encuentro con GPU física y validar la activación ordinaria."
+  ],
+  "privateSourceSha256": {
+    "source/src/world/wild-engine/spatial-intent-state.cpp": "5923aaf310d24a3e7af402b20d3e8a3bf309264cffada19d28cb95fd1928f85b",
+    "source/src/world/wild-engine/spatial-route-execution.h": "61e40087924dc90eae4869ee8cca5c78d3285620a0902f3a02decc22a5a5ce3a",
+    "source/src/world/wild-engine/spatial-animal-route-proposal.inc": "abbc1973a2f74507fd76e8a00a2d35d06f64aa31a5f48883e1b0b9b7e836494e",
+    "build/standalone/spatial-savanna.wasm": "6cd961fa4530e0228b68ac478a6c60ddfc5673db324ada1f3a0c63fee8b802c8"
+  },
+  "localEvidenceSha256": {
+    "install-encounter-retreat-go.mjs": "5a75840270530caeb1e58be853149e9f216c66fd171e99788b576d859bd129cd",
+    "encounter-retreat-go-loader.mjs": "5407783c36d9c8e5009a23a431f10dc5cfcb67d1c301678266122f090090aaf5",
+    "encounter-retreat-ready-loader.mjs": "2b5c8db941ac143fabe3beff2a77bb6e0af643c656bc01a74b3d287960f5e35b",
+    "encounter-retreat-draft-loader.mjs": "e81bca2958eeb01d241c7e747b6c939c2bb6d48bd6bb67796abf39dcdd66d843",
+    "encounter-retreat-native.mjs": "94eb3c6c9c0eb3ca8b74eb871c38e77c43aea61b0c805efff16f9e31ee0c8afd",
+    "verify-encounter-retreat-go.mjs": "914770ad365153688579eb9e4d406d6e6b7a138daf13880478dccdd85e4757b8",
+    "center-encounter-retreat-go-build.log": "a7a7e1eb96b61eeac8b916dd0f9c996159f8c519f46ca8133f9fe0268a1121af",
+    "center-encounter-retreat-go-qualified.log": "f1c38848dbad6d9566bff4f44c8a755f69d135d8d2dca71e8f52a0833a2c560c",
+    "center-encounter-retreat-go-two-step.log": "df6a2f0d6a988ac1131adfb7ccce7e6670d0603e5c5c78f7a3d1f4d4ee62e1d6",
+    "center-encounter-retreat-go-cancel.log": "644ad634920737e7f6f36f6987e165ce7ed560bebf764bb3ee536fe650569bc1",
+    "center-encounter-retreat-go-wrong-go-hit.log": "7baf74f410b491737413e45edd682472b1028bd734e208e3ed84ef299ac93bfc",
+    "center-encounter-retreat-go-wrong-go-boundary.log": "54a53b41049fa9bf34819509ea56e09230479273fe6a7bbe69c1d5abfea7f4c3",
+    "center-encounter-retreat-go-missing-go-hit.log": "912d1c7d5cf1242d07a3c89c1f18cdb1e1cfb40b8c83c22f22b3c01e60186814",
+    "center-encounter-retreat-go-early-go.log": "09355f2f178e3020626ffe64dac8de638bc1617b8197ae5781a9d5559d57d2cb",
+    "center-encounter-retreat-go-wrong-hold.log": "e1e05d9075e8641679ea29a2c1e0eebd093835034336b9f2baa46e2b50e16ea3"
+  }
+}
