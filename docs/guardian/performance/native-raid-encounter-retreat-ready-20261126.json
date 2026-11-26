@@ -1,0 +1,91 @@
+{
+  "baseline": "09d21b5eb57280a6db867c89b82964ba97e0135c",
+  "scope": "Game, autoridad y Host con standalone privado, paquete mínimo y cola GPU determinista.",
+  "draft": {
+    "clock": 12.599999999999945,
+    "at": 12.619999999999944,
+    "packet": 6,
+    "ticket": 10,
+    "hold": 6,
+    "oldSequence": 5,
+    "oldClock": 12.599999999999945,
+    "cancelled": true,
+    "control": {
+      "intent": 9,
+      "clockSequence": 136
+    },
+    "oldAssignment": 8,
+    "worker": 900011,
+    "workerBody": 1,
+    "animalBody": 2,
+    "expectedRequest": 11,
+    "slot": 0,
+    "generation": 7,
+    "knots": 9
+  },
+  "actualAtSubstep": {
+    "nativeSession": 1,
+    "ticket": 11,
+    "elapsed": 12.619999999999944,
+    "position": [
+      -16.722109984199317,
+      2,
+      -1.5707963267948966,
+      1.6599999999999646
+    ],
+    "hit": "event-29210",
+    "projectionMatches": true
+  },
+  "rejectedNativeDraft": {
+    "actor": -2,
+    "event": -2,
+    "time": -2
+  },
+  "rejectedNativeMatch": {
+    "ticket": -2,
+    "hit": -2,
+    "actor": -2
+  },
+  "rejectedGraphicPaths": {
+    "baseline": "Animal crop preparation lacks its current native source",
+    "wrong-worker": "Animal crop preparation lacks its current native source",
+    "wrong-clock": "Animal crop preparation lacks its current native source",
+    "wrong-hold": "Invalid native mutation fence acknowledgement",
+    "early-go": "Provisional encounter hold cannot acquire a drawing"
+  },
+  "afterCancellation": {
+    "ordinaryPreparedTicket": 11,
+    "ordinaryAcquiredAt": 12.659999999999943,
+    "firstSubmit": {
+      "at": 12.679999999999943,
+      "age": 0,
+      "ticket": 12
+    },
+    "raidEndedAt": 14.379999999999907
+  },
+  "pending": [
+    "Vincular el paquete retenido al GO real de 12,62 s antes de publicar el resultado del avance.",
+    "Construir el paquete de Surface con los rigs definitivos y acreditar el recorrido en GPU física."
+  ],
+  "privateSourceSha256": {
+    "source/src/world/wild-engine/spatial-animal-route-proposal.inc": "abbc1973a2f74507fd76e8a00a2d35d06f64aa31a5f48883e1b0b9b7e836494e",
+    "source/src/world/wild-engine/spatial-intent-state.cpp": "301ef554768b93942ebec5d985c7df5ea1da36e3dd92b94b24a66c3a7bd74715",
+    "source/src/world/wild-engine/spatial-route-execution.h": "61e40087924dc90eae4869ee8cca5c78d3285620a0902f3a02decc22a5a5ce3a",
+    "build/standalone/spatial-savanna.wasm": "74ffe0b1948817c63b4387e0631caae01fb549a02d1b8663db48ca7e955b1559"
+  },
+  "localEvidenceSha256": {
+    "install-encounter-retreat-draft.mjs": "4498b12af41d14896f0af4c7f1524156c5c0d6cd3bd3467e3669fe94fb3ee47a",
+    "encounter-retreat-draft-loader.mjs": "e81bca2958eeb01d241c7e747b6c939c2bb6d48bd6bb67796abf39dcdd66d843",
+    "encounter-retreat-ready-loader.mjs": "2b5c8db941ac143fabe3beff2a77bb6e0af643c656bc01a74b3d287960f5e35b",
+    "encounter-retreat-first-step-loader.mjs": "a8503229639b1222d091e953f27785c8eb995d0f0ca0bf69ba96c9c23664c656",
+    "encounter-retreat-native.mjs": "94eb3c6c9c0eb3ca8b74eb871c38e77c43aea61b0c805efff16f9e31ee0c8afd",
+    "verify-encounter-retreat-ready.mjs": "6c6002c63cbcba8579befe17cf23c91692c6625aacb0aa87363c389420c12b57",
+    "center-encounter-retreat-draft-build.log": "c69778477f839a6736d17d965b41c3bf491b31138131a4481847d8f84326b9c3",
+    "center-encounter-retreat-ready-qualified.log": "bb6a9c6db1f20f944d21ad9a023c24c442a82c64dd93e63c141df6f92ecb47eb",
+    "center-encounter-retreat-ready-baseline.log": "7799190e05acf7dce038464343a47a6a308f653018b0dc2152a3dd9c84ad2e34",
+    "center-encounter-retreat-ready-wrong-worker.log": "e2e76bea3ac7f7b0de5aaaa5f0fcc30c1e799e55f6781b00e22f3516137671b2",
+    "center-encounter-retreat-ready-wrong-clock.log": "8251e0e752f9c2fbbbe15fca77e5458c1c8580b0e459cb4097d1acd4fd6204b7",
+    "center-encounter-retreat-ready-wrong-hold.log": "bfa408114f09b9528e6d772c73024722262c0126d9f3b1fa66106a553d657ec6",
+    "center-encounter-retreat-ready-early-go.log": "9f72538b350f184aa041d0fbb7b4177994d80a1f441d2c9495a318e03c065f56"
+  }
+}
