@@ -394,7 +394,7 @@ struct RouteSlot {
   std::vector<double> distances;
   std::vector<RouteHold> holds;
   double originX=0,originZ=0,originYaw=0,startTime=0,speed=0,radius=0;
-  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false,workerDrySweep=false;
+  double departureTime=0;uint64_t waitGate=0;bool gateCandidate=false,workerDrySweep=false,animalAttackSweep=false;
   bool gateAdmitted=false;
   bool resumable=false,suspended=false;
   double suspendedAt=0;
@@ -1124,7 +1124,7 @@ void releaseRoute(IntentState& s,ActiveIntent& intent){
       if(route.suspended)s.suspendedBodies.erase(route.reservationBody);
       route.suspended=route.resumable=false;route.motionOffset.fill(0);route.suspendedAt=0;route.stoppedTaskForHome=false;
       route.centerEncounter.reset();route.animalRouteBinding.reset();route.startBinding.reset();route.consequenceBinding.reset();route.homeBinding.reset();route.idleStrollBinding.reset();route.farmArrivalBinding.reset();route.active=route.pendingResources=false;route.points.clear();route.distances.clear();route.timingMode=0;
-      route.holds.clear();route.waitGate=0;route.gateCandidate=false;route.departureTime=0;
+      route.holds.clear();route.waitGate=0;route.gateCandidate=route.workerDrySweep=route.animalAttackSweep=false;route.departureTime=0;
       route.gateReservations.clear();route.gateAdmitted=false;
       route.generation++;
     }
@@ -3250,23 +3250,24 @@ bool activeRouteClear(IntentState& s,const ActiveIntent& intent){
   if(intent.slot>=s.routeSlots.size())return false;
   const RouteSlot& route=s.routeSlots[intent.slot];
   if(!route.active||route.generation!=intent.generation||
-     route.points.size()<2||route.points.size()%2)return false;
+     route.points.size()%2||(!route.animalAttackSweep&&route.points.empty()))return false;
   const auto worker=s.workers.find(intent.actor);
   if(!intent.animal&&worker==s.workers.end())return false;
   double x=intent.animal?intent.routeStartX:worker->second.x;
   double z=intent.animal?intent.routeStartZ:worker->second.z;
   if(route.reserved&&route.hasExecution){x=route.executionPose[0];z=route.executionPose[1];}
-  if(intent.routeCursor>route.points.size()/2||
-     !spatial_local_clear(x,z,x,z))return false;
-  for(size_t i=size_t(intent.routeCursor)*2;i<route.points.size();i+=2){
+  const size_t cursor=intent.routeCursor;
+  if(cursor>route.points.size()/2)return false;
+  if(route.animalAttackSweep){
+    if(timedRouteSegmentClear(route,x,z,x,z,false)!=1)return false;
+  }else if(!spatial_local_clear(x,z,x,z))return false;
+  for(size_t i=cursor*2;i<route.points.size();i+=2){
     s.routeValidationSegments++;
     const float nextX=route.points[i],nextZ=route.points[i+1];
     // The local predicate accepts only short connector segments. World routes
     // may contain validated shortcuts spanning several cells.
     if(route.timingMode){
-      const int clear=route.workerDrySweep?spatialWorkerFlightSegmentClear(x,z,nextX,nextZ,route.radius):route.gateAdmitted?spatialGateCandidateSegmentClear(x,z,nextX,nextZ,route.radius):
-        spatial_execution_segment_clear(x,z,nextX,nextZ,route.radius);
-      if(clear!=1)return false;
+      if(timedRouteSegmentClear(route,x,z,nextX,nextZ,route.gateAdmitted)!=1)return false;
     }else if(!spatial_world_segment_clear(x,z,nextX,nextZ))return false;
     x=nextX;z=nextZ;
   }

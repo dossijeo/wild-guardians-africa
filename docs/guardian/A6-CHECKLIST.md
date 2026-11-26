@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La revalidación de un corredor de animal en Sabana reutiliza el barrido nativo de admisión sobre su tramo pendiente. El control conserva el vínculo tras un cambio detrás del cuerpo y lo revoca si el nuevo sólido corta el sufijo. [Pruebas y alcance](native-cold-worker-admission-20261126.md#revalidación-de-los-corredores-de-animales-de-sabana).
+
 La cuarta noche de Sabana admite al león con el trabajador refugiado. NVIDIA confirmó el origen con READY retenido, los cuatro golpes y la ausencia posterior a Retreat. [Recorrido y límites](native-cold-worker-admission-20261126.md#cuarta-noche-con-un-león-y-el-trabajador-refugiado).
 
 La tercera noche introductoria de Sabana admite un búfalo con el trabajador refugiado. NVIDIA confirmó las nueve adquisiciones sobre un solo cuerpo, los cuatro golpes al centro, la ausencia tras Retreat y el drenaje. [Recorrido y límites](native-cold-worker-admission-20261126.md#tercera-noche-con-un-búfalo-y-el-trabajador-refugiado).

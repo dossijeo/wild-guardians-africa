@@ -1,0 +1,100 @@
+{
+  "scope": "Native route revalidation and a private fifth-night authority prototype using the deterministic Draw Host. No hardware or product qualification.",
+  "checkpoint": {
+    "name": "sabana-second-night-fifth-night-cut-save.json",
+    "sha256": "8b3c1c395b678d040045c7520773439c357c66ec5614b47ce960f8b8fd5f4e97",
+    "seed": "714",
+    "elapsed": 2743.750000000058,
+    "centerHp": 185,
+    "shelteredWorker": "worker-22"
+  },
+  "wasm": {
+    "src/world/wild-engine/spatial-savanna.wasm": "5b7601a568a7708289ae55d1d047da4222a91fc631a2717d0efd8dc4287e90fb",
+    "public/wild-engine/spatial-threaded.wasm": "db47ef5080f96359064198c4fe7e3b0bc306fabe73dfc88bb39b6dff91dd0ce8"
+  },
+  "before": {
+    "name": "sabana-second-night-fifth-night-rhino-retreat-topology.json",
+    "sha256": "bd0ef123a2d4730f424098556c0257a4ce9493f38ff10ccbbfd8a3e499cc0dd6",
+    "failure": "Error: Center ruin did not finish at its native boundary {\"proof\":true,\"status\":\"ruined\",\"hp\":0,\"route\":false,\"clock\":{\"protocolVersion\":2,\"clockVersion\":1,\"authorityEpoch\":\"40688c05-6bca-4569-96b8-03476a1515fa/1\",\"nativeSession\":1,\"clockSequence\":1725,\"intentSequence\":8,\"committedThrough\":2772.7292141498674,\"rate\":1,\"paused\":false,\"reanchor\":false},\"end\":2772.7292141498674,\"native\":null,\"world\":{\"version\":1,\"authorityEpoch\":\"40688c05-6bca-4569-96b8-03476a1515fa/1\",\"nativeSession\":1,\"ticket\":7,\"effectiveTime\":2772.7292141498674}}"
+  },
+  "after": {
+    "name": "sabana-second-night-fifth-night-canonical-native-sweep.json",
+    "sha256": "e61608c5e909b7aedbc8b64f44bc83c61ac9009c544f347290a4513964b1af59",
+    "motions": [
+      {
+        "kind": 26,
+        "purpose": "center",
+        "bodyId": 1,
+        "actorId": 23
+      },
+      {
+        "kind": 27,
+        "purpose": "center",
+        "bodyId": 1,
+        "actorId": 23
+      },
+      {
+        "kind": 26,
+        "purpose": "retreat",
+        "bodyId": 1,
+        "actorId": 23
+      }
+    ],
+    "retreat": {
+      "ticket": 6,
+      "assignmentSequence": 7,
+      "bodyId": 1,
+      "actorId": 23
+    },
+    "ruin": {
+      "center": "structure-2",
+      "polygon": 9,
+      "ticket": 7,
+      "elapsed": 2772.7292141498674
+    },
+    "events": [
+      {
+        "type": "RaidSpawned",
+        "id": "event-100",
+        "simulationTime": 2744.16151768719
+      },
+      {
+        "type": "StructureHit",
+        "id": "event-102",
+        "simulationTime": 2769.5292141498558
+      },
+      {
+        "type": "AnimalLogicalHit",
+        "id": "event-103",
+        "simulationTime": 2769.5292141498558
+      },
+      {
+        "type": "AnimalTargetUnavailable",
+        "id": "event-104",
+        "simulationTime": 2769.5492141498557,
+        "hitsRemaining": 4
+      },
+      {
+        "type": "AnimalRetreating",
+        "id": "event-105",
+        "simulationTime": 2769.5492141498557,
+        "hitsRemaining": 4
+      },
+      {
+        "type": "StructureRuined",
+        "id": "event-106",
+        "simulationTime": 2772.7292141498674
+      },
+      {
+        "type": "RaidEnded",
+        "id": "event-107",
+        "simulationTime": 2782.179214149902
+      }
+    ],
+    "finalElapsed": 2782.179214149902
+  },
+  "verification": {
+    "standalone": "39 passed",
+    "pthread": "same suffix control passed via the actual shared-memory runtime"
+  }
+}

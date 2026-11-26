@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Los corredores de animales de Sabana conservan su prueba de barrido al revalidar topología. El prototipo del rinoceronte alcanza `RaidEnded` en CPU tras retirar el centro. La integración de esa salida y su dibujo físico siguen pendientes. [Control y alcance](native-cold-worker-admission-20261126.md#revalidación-de-los-corredores-de-animales-de-sabana).
+
 NVIDIA completó la cuarta noche de Sabana desde el guardado previo al león. Los nueve dibujos iniciales corresponden al mismo cuerpo, el centro terminó en 185 HP y la cola drenó tras la retirada. [Recorrido y límites](native-cold-worker-admission-20261126.md#cuarta-noche-con-un-león-y-el-trabajador-refugiado).
 
 NVIDIA completó la tercera noche de Sabana desde el guardado posterior a la venta de la cosecha. El búfalo conservó cuerpo y cuota con READY retenido, golpeó cuatro veces el centro y se retiró con el saldo de 751 intacto. [Recorrido y límites](native-cold-worker-admission-20261126.md#tercera-noche-con-un-búfalo-y-el-trabajador-refugiado).

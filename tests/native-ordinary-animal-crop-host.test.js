@@ -684,7 +684,7 @@ import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-se
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 
-test('completed crop honors quota and shields and rejects cancelled or unrelated successor readiness',()=>{
+test('completed crop honors quota and shields, rejects stale readiness and preserves the Retreat suffix',()=>{
  const module=new WebAssembly.Module(readFileSync(process.env.QA_BARRIER_WASM??new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
  const {s,chunkKeys}=fixture();
 const chunks=new Map(),session=createSpatialGameSession(module,s,{loaded:()=>chunks,onData:d=>chunks.set(d.cx+','+d.cz,d)});
@@ -791,6 +791,21 @@ try{
  assert.equal(w.nav_animal_finish_retreat(actor,binding.assignmentSequence),0);
  assert.equal(w.nav_intent_attack_cancel(actor),0);
  assert(s.raid);assert.equal(animal.status,'retreating');
+ // Revalidation uses the admitted Savanna sweep and the executed suffix.
+ const {routeHandle}=binding;
+ for(let i=0;i<24;i++)step();
+ const beforeTopology=pose(),beforeReconcile=w.nav_intent_route_validation_count();
+ assert(Math.hypot(animal.x-atExitHold[0],animal.z-atExitHold[1])>2*animal.radius);
+ assert(session.core.addWall(atExitHold[0],atExitHold[1],.2,.2)>0);
+ session.actorSectorRevision({worker:false,species:animal.species});
+ assert.equal(w.nav_intent_reconcile_topology(),0,'a wall on the traversed prefix must not revoke Retreat');
+ assert(w.nav_intent_route_validation_count()>beforeReconcile,'the changed sector must exercise revalidation');
+ assert.deepEqual(planner.nativeAnimalRouteBinding(routeHandle),binding);
+ assert.deepEqual(pose(),beforeTopology);
+ step();assert(animal.motionPhase>beforeTopology[2]);
+ const {x,z}=animal.exit;
+ assert(session.core.addWall(x,z,.2,.2)>0);
+ assert.equal(planner.nativeAnimalRouteBinding(routeHandle),null,'a new solid on the live suffix must revoke the old handle');
  }finally{session.dispose();}
 });
 

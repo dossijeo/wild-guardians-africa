@@ -36,6 +36,12 @@ int appendRouteGateHold(RouteSlot& route,uint64_t gate,double distance,double un
   if(route.holds.front().distance==0){route.departureTime=route.holds.front().until;route.waitGate=route.holds.front().gate;}
   return 1;
 }
+int timedRouteSegmentClear(const RouteSlot& route,double x,double z,double nx,double nz,bool gateCandidate){
+  if(route.workerDrySweep)return spatialWorkerFlightSegmentClear(x,z,nx,nz,route.radius);
+  if(route.animalAttackSweep)return spatial_animal_attack_segment_clear(x,z,nx,nz,route.radius);
+  return gateCandidate?spatialGateCandidateSegmentClear(x,z,nx,nz,route.radius):
+    spatial_execution_segment_clear(x,z,nx,nz,route.radius);
+}
 int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
     double time,double radius,int mode,int motionFlags=0,double runBudget=0,
     bool gateCandidate=false,bool animalAttack=false,bool workerDrySweep=false){
@@ -45,24 +51,19 @@ int prepareRouteTiming(RouteSlot& route,uint64_t actor,double x,double z,
      mode==1&&(motionFlags||runBudget))return -3;
   if(spatial_execution_profile_kind()!=(mode==2?0:1))return -2;
   route.originX=x;route.originZ=z;route.originYaw=0;route.startTime=time;
-  route.workerDrySweep=workerDrySweep;
+  route.workerDrySweep=workerDrySweep;route.animalAttackSweep=animalAttack;
   route.departureTime=time;route.gateCandidate=gateCandidate;route.waitGate=0;route.holds.clear();
   route.speed=mode==2?workerWalkSpeed*workerTravelMultiplier:1.5;
   route.radius=radius;route.actor=actor;route.profile=lazy_selected_context();
   route.motionFlags=motionFlags;route.runBudget=runBudget;route.runDistance=0;route.runSpeed=0;
   route.distances.clear();route.distances.reserve(route.points.size()/2);
   double travelled=0;
-  const auto clearSegment=[&](double ax,double az,double bx,double bz){
-    if(workerDrySweep)return spatialWorkerFlightSegmentClear(ax,az,bx,bz,radius);
-    if(animalAttack)return spatial_animal_attack_segment_clear(ax,az,bx,bz,radius);
-    return gateCandidate?spatialGateCandidateSegmentClear(ax,az,bx,bz,radius):
-      spatial_execution_segment_clear(ax,az,bx,bz,radius);};
   if(route.points.empty()){
-    const int clear=clearSegment(x,z,x,z);if(clear!=1)return clear;
+    const int clear=timedRouteSegmentClear(route,x,z,x,z,gateCandidate);if(clear!=1)return clear;
   }
   for(size_t i=0;i<route.points.size();i+=2){
     const double nx=route.points[i],nz=route.points[i+1];
-    const int clear=clearSegment(x,z,nx,nz);if(clear!=1)return clear;
+    const int clear=timedRouteSegmentClear(route,x,z,nx,nz,gateCandidate);if(clear!=1)return clear;
     travelled+=std::hypot(nx-x,nz-z);route.distances.push_back(travelled);x=nx;z=nz;
   }
   if(mode==2){
