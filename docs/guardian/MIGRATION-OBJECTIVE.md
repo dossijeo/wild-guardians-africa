@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+NVIDIA verificó la primera noche de Sabana tras Home19. Un facóquero golpeó dos veces el centro y se retiró. El amanecer permitió una sola contratación pagada. Farm23 y Task14 del día 2 se presentaron en el mismo cuerpo nuevo. El recorrido usa el perfil explícito y una incursión introductoria con los civiles refugiados. [Pruebas y recibo](native-cold-worker-admission-20261126.md#primera-noche-y-segunda-contratación-en-sabana).
+
 En Sabana, una primera tarea puede interrumpir Farm23 después de que el trabajador empiece a andar. Stop24 fecha la pose comprobada en la frontera exacta. NVIDIA acreditó la parada y Task14 en el mismo cuerpo. El control CPU completa un solo riego. [Recorrido y recibo](native-cold-worker-admission-20261126.md#parada-de-farm23-ya-adquirido-para-la-primera-tarea).
 
 NVIDIA completó el turno civil continuo de Sabana desde la primera contratación hasta la retirada Home19 y el drenaje. El preparador descartó el intervalo histórico vencido y Draw presentó un reemplazo en el mismo mundo. La prueba usa el perfil explícito con un solo trabajador y el reloj normal de Hosted. [Recorrido y límites](native-cold-worker-admission-20261126.md#continuación-después-de-home19).

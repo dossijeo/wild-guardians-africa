@@ -274,6 +274,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     installNativeProduction();
    }finally{if(nativeBodies!==bodies)bodies.dispose();}
   }
+  function prepareShelteredSavannaCenterAttack(event){
+   if(!nativeWorkerLifecycle||!nativeBodies||game.biome!=='sabana'||!nativeCenterAttackCohort(game)||
+      restoringPhysics||physicsInitializing||physics?.actorIds.length||
+      game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||game.raid.animals.length!==1||
+      !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||session.core.wasm.spatial_body_count()!==0)return;
+   const [animal]=game.raid.animals,[center]=game.structures;
+   if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering'||!operational(center))return;
+   const selected=targetFor(game,animal,nav);
+   if(selected?.target!==center||selected.native||selected.shieldId||!selected.approach.path?.length)return;
+   const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
+   let declared=false;
+   try{
+    declared=planner.requestNativeCenterBirth(game,animal,selected,body);
+    if(declared)assignRaidTarget(game,animal,{...selected,approach:{point:selected.approach.point,path:null}},nav);
+   }finally{if(!declared)nativeBodies.remove(animal.id);}
+  }
   function armLiveCenterClock(){
    const plan=game.dayPlan;
    if(liveCenterClockArmed||nativeBodies||game.raid||game.result||restoringPhysics||physicsInitializing||physics?.actorIds.length||
@@ -329,7 +345,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    return {...game,raid:{...game.raid,animals:[{...animal,path}]}};
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
-  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
+  stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredSavannaCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
   const presentationJournal=createPresentationLifecycleJournal(game,observeGameEvents);
   function spellRejection(command,kind){
    if(game.commandIds.includes(command.id)||Object.hasOwn(game.ledger.entries,command.id))return null;

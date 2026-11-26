@@ -1368,11 +1368,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        (retreat?animal.hitsRemaining!==0:!(animal.hitsRemaining>0))||animal.species!=='warthog'||state.raid?.animals.length!==1||
        state.raid.animals[0]!==animal||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
        !state.workers.every(w=>w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission))return null;
-    const center=animalRouteV2&&nativeCenterAttackCohort(state);
-    if(state.biome!=='sabana'&&!center||
+    const centerCohort=animalRouteV2&&nativeCenterAttackCohort(state);
+    if(state.biome!=='sabana'&&!centerCohort||
        wasm.nav_animal_finished_strike_snapshot?.(numericId(animal.id))!==1)return null;
     const [version,nativeSession,actor,body,attackId,x,z,radius,phase,yaw,at,polygon,target]=
       new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),wasm.nav_animal_repeat_protected_strike?13:11);
+    const center=centerCohort&&(state.biome==='desierto'||target===numericId(state.structures[0].id));
     const stop=issuedShieldCropStop;
     const border=!retreat&&!center&&polygon>0&&stop?.actorId===actor&&stop.polygonId===polygon&&
       animal.approachShieldId===stop.spell?.id&&numericId(animal.targetId)===target&&

@@ -737,13 +737,14 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const center=state.structures.find(s=>s.kind==='center');
   assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
  }finally{opening.dispose();}
- let releaseFarm,releaseStroll,releaseHome;
+ let releaseFarm,releaseStroll,releaseHome,releaseRaid;
  const holds=new Map([
   ['farm-arrival',new Promise(resolve=>releaseFarm=resolve)],
   ['idle-stroll',new Promise(resolve=>releaseStroll=resolve)],
-  ['home-route',new Promise(resolve=>releaseHome=resolve)]
+  ['home-route',new Promise(resolve=>releaseHome=resolve)],
+  ['animal-crop-route',new Promise(resolve=>releaseRaid=resolve)]
  ]);
- const receipts=new Map();
+ const receipts=new Map(),events=[];
  const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
   onReady:record=>holds.get(record.kind),onCommit:(record,receipt)=>receipts.set(record,receipt)});
  try{
@@ -754,16 +755,17 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const find=kind=>f.records.find(row=>row.kind===kind&&row.committed);
   const ready=kind=>f.records.find(row=>row.kind===kind&&row.packet);
   const pose=({x,z,heading,walkPhase,runPhase,runRemaining})=>[x,z,heading,walkPhase,runPhase,runRemaining];
-  const advance=async()=>{
-   const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward:false});
+  const advance=async(nightFastForward=false)=>{
+   const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward});
+   events.push(...p.events);
    for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
    for(let i=0;i<6;i++)await f.present();
    assert.deepEqual(f.faults,[]);
    return JSON.parse(p.snapshot);
   };
-  const drive=async(predicate,deadline)=>{
+  const drive=async(predicate,deadline,fast=false)=>{
    let s;
-   do {s=await advance();} while(!predicate(s)&&s.elapsed<deadline);
+   do {s=await advance(fast);} while(!predicate(s)&&s.elapsed<deadline);
    assert(predicate(s),JSON.stringify(f.authority.nativeIntentProductionStatus()));
    return s;
   };
@@ -797,7 +799,54 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(after.workers[0].nativeRouteAdmission,undefined);
   assert.equal(f.records.filter(row=>row.kind==='home-arrival'&&row.committed).length,1);
   assert.deepEqual(after.ledger,ledger);
- }finally{releaseFarm();releaseStroll();releaseHome();await f.close();}
+
+  const night=await drive(()=>ready('animal-crop-route'),400,true),attack=ready('animal-crop-route');
+  const born=events.find(event=>event.type==='RaidSpawned').raidFacts.actors[0];
+  const pending=night.raid.animals[0],targetId=night.structures.find(structure=>structure.kind==='center').id;
+  assert.equal(pending.id,born.id);assert.equal(pending.targetId,targetId);
+  assert.deepEqual([pending.x,pending.z],[born.spawn.x,born.spawn.z]);
+  assert.equal(night.workers[0].status,'home');
+  const held=(await advance(true)).raid.animals[0];
+  assert.deepEqual([held.x,held.z,held.hitsRemaining],[pending.x,pending.z,pending.hitsRemaining]);
+  assert.equal(attack.committed,false);
+  releaseRaid();
+  await drive(()=>events.some(event=>event.type==='RaidEnded'),520,true);
+  const routes=f.records.filter(row=>row.kind==='animal-crop-route'&&row.committed).map(row=>receipts.get(row).nativeAnimalCropRouteBinding.reference);
+  assert.deepEqual(routes.map(route=>route.purpose),['center','center','retreat']);
+  assert(routes.every(route=>route.actorId===Number(born.id.slice(7))&&route.bodyId===2));
+  const strikes=f.records.filter(row=>row.kind==='animal-crop-strike'&&row.committed).map(row=>receipts.get(row).nativeAnimalCropStrikeBinding);
+  const target=Number(targetId.split('-').at(-1));
+  assert.deepEqual(strikes.map(strike=>[strike.reference.bodyId,strike.reference.targetId]),[[2,target],[2,target]]);
+  const hits=events.filter(event=>event.type==='StructureHit');
+  assert.deepEqual(hits.map(event=>[event.structureHit.previousHp,event.structureHit.hp]),[[600,580],[580,560]]);
+  assert.equal(new Set(events.filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId)).size,2);
+  assert.equal(events.filter(event=>event.type==='CropDestroyed').length,0);
+
+  // Submit the ordinary absence when Game removes the animal from the roster.
+  const retreat=routes.at(-1),at=f.snapshot().elapsed;
+  f.client.beginFrame({nativeWorldBoundary:retreat.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}});
+  const encoder=f.client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{view:f.client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+  pass.end();f.client.device.queue.submit([encoder.finish()]);const absent=f.client.endFrame();await f.present();await absent;
+  assert.equal(f.host.inspect().nativeRouteFrame.bindings.length,0);
+  const dawn=await drive(s=>s.day===2,601,true);
+  assert.equal(dawn.result,null);assert.deepEqual(dawn.pauses,['hiring']);assert.equal(dawn.workers.length,0);
+  assert.equal(events.filter(event=>event.type==='Dawn').length,1);
+  assert.deepEqual(dawn.ledger.balance,{n:'510',d:'1'});
+  const order={kind:'hire',id:'savanna-next-hire',selection:{youngMale:1}};
+  const hire=f.command(order);events.push(...hire.events);
+  const next=JSON.parse(hire.snapshot).workers[0];
+  assert.notEqual(next.id,workerId);assert.equal(next.contractDay,2);assert.equal(next.personId,hired.workers[0].personId);
+  assert.equal(next.nativeRouteAdmission,'pending-farm-arrival-resources');
+  const second=await drive(()=>f.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeFarmArrival?.actorId===Number(next.id.slice(7))&&row.relativeTime>0),612);
+  assert.equal(second.workers[0].nativeRouteAdmission,'native-farm-arrival');
+  assert.equal(f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeFarmArrival).nativeFarmArrival.bodyId,3);
+  await drive(()=>f.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeStart?.actorId===Number(next.id.slice(7))),650);
+  const secondTask=f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeStart).nativeStart;
+  assert.equal(secondTask.bodyId,3);
+  assert.equal(f.records.filter(row=>row.kind==='task-start'&&row.committed&&receipts.get(row).nativeTaskStartBinding.reference.actorId===secondTask.actorId).length,1);
+  assert.equal(f.command(order).events.filter(event=>event.type==='HiringConfirmed').length,0);
+  assert.deepEqual(f.snapshot().ledger.entries[order.id],{n:'-40',d:'1'});
+ }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();await f.close();}
 });
 
 for(const [kind,fixtureName,clockField,bindingField,capability] of [

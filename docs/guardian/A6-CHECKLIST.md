@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Tras Home19, el perfil explícito de Sabana admite el ataque introductorio al centro con los civiles refugiados. NVIDIA confirmó la retirada del animal, el amanecer y el mismo cuerpo nuevo en Farm23 y Task14 del segundo turno. [Recorrido y límites](native-cold-worker-admission-20261126.md#primera-noche-y-segunda-contratación-en-sabana).
+
 La frontera de autoridad fecha la pose congelada de Stop24 tras comprobar el cuerpo. NVIDIA confirmó Farm23 adquirido, READY retenido, parada y Task14 con el mismo cuerpo en Sabana. [Pruebas y recibo](native-cold-worker-admission-20261126.md#parada-de-farm23-ya-adquirido-para-la-primera-tarea).
 
 Idle22 y Home18 usan en Sabana la prueba continua de terreno seco. NVIDIA acreditó el turno continuo desde la contratación, con retirada Home19, recaptura tras un intervalo histórico vencido y drenaje. [Pruebas y recibos](native-cold-worker-admission-20261126.md#continuación-después-de-home19).
