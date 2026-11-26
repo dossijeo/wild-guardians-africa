@@ -129,6 +129,42 @@ for(const order of ['commit in transit','commit accepted'])test(`retiring Draw b
  }finally{await world.close();}
 });
 
+for(const first of ['resources','draw'])test(`encounter recovery waits for both retirements with ${first} first`,async()=>{
+ const world=await setup(true);
+ try{
+  const snapshot=await reachSecondHit(world);
+  const at=snapshot.elapsed+.02;
+  const advancing=advance(world,2);
+  advancing.catch(()=>{});
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===at&&world.host.inspect().pendingSequence!==null&&
+   world.records.some(record=>record.resources.reference?.purpose==='retreat'&&record.committed));
+  const submitted=world.host.inspect().nativeRouteFrame?.sequence;
+  const hold=await world.authority.quiesceNativeIntentProduction();
+  await assert.rejects(world.authority.flushNativeResourcePreparation({allowRetired:true}),/already pending/);
+  let settled=false;
+  const retired=world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true});
+  retired.then(()=>{settled=true;},()=>{settled=true;});
+  if(first==='resources'){
+   world.retireResourceEndpoint();
+   await until(()=>world.authority.nativeResourcePreparationStatus().phase==='failed');
+  }else{
+   await world.host.dispose();
+   await until(()=>world.authority.nativeIntentControlStatus().current?.drained);
+  }
+  await eventLoop();
+  assert.equal(settled,false);
+  assert.equal(world.host.inspect().nativeRouteFrame?.sequence,submitted);
+  assert.throws(()=>world.authority.resumeNativeIntentProduction(hold),/still owns/);
+  if(first==='resources')await world.host.dispose();
+  else world.retireResourceEndpoint();
+  assert.deepEqual(await retired,{version:1,session:'production-resources',terminal:true,callbacksSettled:true});
+  await assert.rejects(advancing,first==='resources'?
+   {name:'AbortError',message:'Native gate preparation cancelled'}:/WebGPU device lost/);
+  assert.equal(world.host.inspect().nativeRouteFrame?.sequence,submitted);
+  assert.equal(world.authority.nativeIntentProductionStatus().phase,'suspended');
+ }finally{await world.close();}
+});
+
 test('the ordinary Desert qualifications still withhold contact corridors without encounter qualification',async()=>{
  const world=await setup(false);
  try{

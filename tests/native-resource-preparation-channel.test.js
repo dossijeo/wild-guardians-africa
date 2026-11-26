@@ -62,6 +62,19 @@ test('closing a Shield capture discards a late packet and waits for the actual p
  }finally{finish.resolve();f.close();}
 });
 
+test('a terminal-only observation cannot use a live flush and its deadline leaves the live port open',async()=>{
+ const f=setup({timeoutMs:100});
+ try{
+  await f.connection.ready;
+  await assert.rejects(f.connection.settleForRecovery({waitForRetirement:true}),/retirement timed out/);
+  assert.equal(f.connection.status().phase,'running');
+  assert.deepEqual(await f.connection.flush(),{version:1});
+  const retired=f.connection.settleForRecovery({waitForRetirement:true});
+  f.endpoint.dispose();
+  assert.deepEqual(await retired,{version:1,session:'game',terminal:true,callbacksSettled:true});
+ }finally{f.close();}
+});
+
 test('a genuine first-task declaration crosses the retained endpoint while independent native execution advances',async()=>{
  const native=nativeTaskRequestFixture({bindBodies:true}),started=deferred(),finish=deferred();native.claim();
  const request=native.planner.pendingTaskRoute(native.state.tasks[0].workerId),proposal=native.planner.prepareNativeTaskStartProposal(request,{bodyId:1,radius:.28,runPhase:4,walkPhase:7}).proposal,reference=nativeTaskStartReferenceFromProposal(proposal);

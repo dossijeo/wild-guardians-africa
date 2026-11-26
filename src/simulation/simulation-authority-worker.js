@@ -72,7 +72,7 @@ self.onmessage=async ({data})=>{
       createdHold.receipt=receipt;
       // The checkpoint recovery path may consume a terminal callback receipt;
       // native consumer retirement still requires its independent GPU proof.
-      const settled=await source.flushNativeResourcePreparation({allowRetired:data.withPublicationFloor===true});
+      const settled=await source.flushNativeResourcePreparation({allowRetired:data.withPublicationFloor===true,forLostDraw:data.forLostDraw===true});
       if(authority!==source||nativeProductionHold!==createdHold)return;
       const publicationFloor=data.withPublicationFloor===true&&receipt!==null?source.nativeIntentProductionStatus().publicationSequence:null;
       if(data.withPublicationFloor===true&&publicationFloor!==null&&(!Number.isSafeInteger(publicationFloor)||publicationFloor<0))throw Error('Native publication floor unavailable');

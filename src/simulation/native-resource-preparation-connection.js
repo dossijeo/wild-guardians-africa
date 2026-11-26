@@ -13,11 +13,14 @@ export function createNativeResourcePreparationConnection({port,session,timeoutM
  function closePort(){port.onmessage=port.onmessageerror=null;port.close?.();}
  function finishRetirement(error=null){
   const item=retirement;if(!item)return;retirement=null;clearTimeout(item.timer);
-  if(error)item.reject(error);else{retired=Object.freeze({version:1,session,terminal:true,callbacksSettled:true});item.resolve(retired);}closePort();
+  if(error)item.reject(error);else{retired=Object.freeze({version:1,session,terminal:true,callbacksSettled:true});item.resolve(retired);}
+  if(item.announced)closePort();
  }
  function beginRetirement(){
+  if(retirement)return retirement;
   let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});promise.catch(()=>{});
-  retirement={promise,resolve,reject,timer:setTimeout(()=>finishRetirement(Error('Native resource retirement timed out')),timeoutMs)};retirement.timer.unref?.();
+  retirement={promise,resolve,reject,announced:false,timer:setTimeout(()=>finishRetirement(Error('Native resource retirement timed out')),timeoutMs)};retirement.timer.unref?.();
+  return retirement;
  }
  function close(error,{awaitRetirement=false}={}){
   if(!awaitRetirement){finishRetirement(error??Error('Native resource connection disposed'));retired=null;}
@@ -28,7 +31,7 @@ export function createNativeResourcePreparationConnection({port,session,timeoutM
  function fail(error){if(phase==='closed'||phase==='failed'){finishRetirement(error);return;}close(error);onError(error);}
  port.onmessage=({data})=>{try{
   if(data?.session!==session)throw Error('Native resource session mismatch');
-  if(retirement){
+  if(retirement?.announced){
    if(data.kind!=='nativeResourcesRetired'||data.retirementVersion!==2||data.callbacksSettled!==true)throw Error('Invalid native resource retirement receipt');
    finishRetirement();return;
   }
@@ -36,7 +39,7 @@ export function createNativeResourcePreparationConnection({port,session,timeoutM
    const error=Error(data.message||'Native resource preparer closed');
    if(data.retirementVersion!==undefined){
     if(phase!=='running'||retirementVersion!==2||data.retirementVersion!==2||data.callbacksSettled!==undefined)throw Error('Invalid native resource close receipt');
-    beginRetirement();close(error,{awaitRetirement:true});onError(error);return;
+    beginRetirement().announced=true;close(error,{awaitRetirement:true});onError(error);return;
    }
    throw error;
   }
@@ -59,9 +62,13 @@ export function createNativeResourcePreparationConnection({port,session,timeoutM
  }
  // A terminal callback receipt is NOT a live flush or a GPU drain. Only the
  // recovery caller, after suspending native production, may consume this fact.
- async function settleForRecovery(){
-  await ready;if(retired)return retired;if(retirement)return retirement.promise;
-  try{return await flush();}catch(error){if(retired)return retired;if(retirement)return retirement.promise;throw error;}
+ async function settleForRecovery({waitForRetirement=false}={}){
+  await ready;if(retired)return retired;if(retirement?.announced)return retirement.promise;
+  if(waitForRetirement){
+   if(phase!=='running'||retirementVersion!==2)throw Error('Native resource retirement unavailable');
+   return beginRetirement().promise;
+  }
+  try{return await flush();}catch(error){if(retired)return retired;if(retirement?.announced)return retirement.promise;throw error;}
  }
  async function prepare(method,resources,options={}){
   options={...options};

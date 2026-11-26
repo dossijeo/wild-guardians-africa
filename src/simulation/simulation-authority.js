@@ -437,6 +437,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         consumer.releaseGpuAfterMutation(hold,{committed:true,worldBoundary:result.worldBoundary,
           nativeAnimalCropRoutes:[result.binding],acquiredEncounterRetreatHit:result.hit});
         released=true;
+        owner.acquired={consumer,resources,boundary:result.worldBoundary};
         await submitted;
       }};
     }).catch(error=>{abort();throw error;});
@@ -1077,10 +1078,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       try{const ready=await connection.ready;nativeProduction?.wake();return ready;}catch(error){if(nativeResourcePreparation===connection)nativeResourcePreparation=null;connection.dispose();throw error;}
     },
     nativeResourcePreparationStatus:()=>nativeResourcePreparation?.status()??null,
-    flushNativeResourcePreparation({allowRetired=false}={}){
+    async flushNativeResourcePreparation({allowRetired=false,forLostDraw=false}={}){
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      if(typeof allowRetired!=='boolean')return Promise.reject(TypeError('Invalid native resource recovery mode'));
+      if(typeof allowRetired!=='boolean'||typeof forLostDraw!=='boolean'||forLostDraw&&!allowRetired)
+        throw TypeError('Invalid native resource recovery mode');
       if(allowRetired&&nativeProduction&&nativeProduction.status().phase!=='suspended')return Promise.reject(Error('Native resource retirement requires suspended production'));
+      const encounter=forLostDraw&&encounterDraftAdvance?.acquired;
+      if(encounter){
+        const {consumer,resources,boundary}=encounter;
+        const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),consumer.waitForTerminalDraw()]);
+        if(closed||encounterDraftAdvance?.acquired!==encounter||consumer!==nativeIntentControl||
+           resources!==nativeResourcePreparation||nativeProduction.status().phase!=='suspended'||
+           !sameNativeWorldBoundary(boundary,consumer.connections().current?.worldBoundary)||
+           !sameNativeWorldBoundary(boundary,planner.nativeWorldResourceBoundary()))
+          throw Error('Encounter retirement changed its native cut');
+        return retired;
+      }
       return (allowRetired?nativeResourcePreparation?.settleForRecovery():nativeResourcePreparation?.flush())??Promise.resolve(null);
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
@@ -1091,6 +1104,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
+      if(encounterDraftAdvance)throw Error('Encounter advance still owns native production');
       if(nativeProduction)return nativeProduction.resume(receipt);
       if(receipt!==null)throw TypeError('Invalid native production quiescence receipt');
       return true;
