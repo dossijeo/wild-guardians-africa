@@ -9,8 +9,32 @@ import {WebGPURenderer,NodeMaterial} from 'three/webgpu';
 import Renderer from '../node_modules/three/src/renderers/common/Renderer.js';
 import {vec4} from 'three/tsl';
 import {createWebGpuPicker} from '../src/rendering/webgpu-picker.js';
+import {emit} from '../src/simulation/game.js';
+import {cropBecameInactive} from '../src/simulation/active-crops.js';
 
 function meshes(root){const out=[];root.traverse(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)out.push({mesh,geometry:mesh.geometry,index:mesh.geometry.index,material:mesh.material,visible:mesh.visible});});return out;}
+test('reanchoring an arrived stroll preserves the original worker rig and holds it until adoption',async()=>{
+ const f=await nativeIdleStrollGraphicsFixture();let stroll,idle;try{
+  const actor=f.roster.get(f.actor),root=actor.root;
+  stroll=await f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime});
+  stroll.activate();const data=f.commitStroll();stroll.finalize(data);
+  f.planner.projectNativeIdleStroll(f.nativeState,f.worker);f.sync();f.flush();
+  const reference=data.nativeIdleStrollBinding.reference;
+  f.advance(reference.endTime-f.nativeState.elapsed+.1);f.planner.projectNativeIdleStroll(f.nativeState,f.worker);f.sync();
+  const plant=f.nativeState.plants.find(row=>row.id===`plant-${reference.anchor.id}`);
+  plant.alive=false;cropBecameInactive(f.nativeState.plants);emit(f.nativeState,'CropDestroyed',{targetId:plant.id});f.planner.flushWorldEvents();
+  const stopped=f.body(1),parts=meshes(root),{proposal,support}=f.prepare();
+  assert.equal(proposal.nativeIdleCycle.sourceBody.kind,'native-idle-stroll-reanchor-source');
+  idle=await f.roster.prepareNativeIdleCycleProposal(support,{getPickAge:()=>0});assert(idle.valid());
+  idle.activate();idle.rollback();assert(idle.valid());
+  assert.deepEqual(meshes(root),parts);
+  idle.activate();const acquired=f.commit(proposal);idle.finalize(acquired);
+  f.planner.projectNativeIdleCycle(f.nativeState,f.worker);f.sync();f.flush();
+  assert.equal(f.roster.get(f.actor),actor);assert.equal(actor.root,root);
+  for(const part of parts){assert.equal(part.mesh.geometry,part.geometry);assert.equal(part.mesh.geometry.index,part.index);}
+  assert.deepEqual(f.body(1),stopped);assert.deepEqual(f.errors,[]);
+ }finally{idle?.cancel();stroll?.cancel();f.close();}
+});
 for(const profile of PROFILES)test(`${profile.id} stroll reversibly replaces its genuine finite Idle on the same authored actor`,async()=>{
  const f=await nativeIdleStrollGraphicsFixture({profile:profile.id});let part;try{
   const actor=f.roster.get(f.actor),before=meshes(actor.root),position=actor.root.position.clone(),body=f.body(1),worker=structuredClone(f.worker);part=await f.roster.prepareNativeIdleStrollProposal(f.support,{getPickTime:f.getPickTime});assert(part.valid());part.activate();part.rollback();assert(part.valid());for(const item of before){assert.equal(item.mesh.material,item.material);assert.equal(item.mesh.visible,item.visible);}assert.deepEqual(f.body(1),body);assert.deepEqual(f.worker,worker);

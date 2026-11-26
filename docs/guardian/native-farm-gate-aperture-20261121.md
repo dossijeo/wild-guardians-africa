@@ -122,6 +122,30 @@ se necesita tanto una selección nativa del destino lateral como el cambio
 de ancla tras recoger el cultivo. El destino fijo se usó solo en el
 prototipo.
 
+### Relevo tras retirar el cultivo
+
+Al llegar un Walk22 que perdió su cultivo, Game elige el nuevo ancla con la
+misma regla de Idle. WASM comprueba la retirada del cultivo anterior y el
+final exacto del recorrido adquirido antes de preparar el relevo. El
+trabajador conserva cuerpo, pose y fases mientras espera READY. Dentro del
+nuevo radio inicia Rest21. Fuera reutiliza el programa de reintento para
+adquirir otro Walk22 sobre el mismo cuerpo. Un cultivo anterior todavía
+activo, una asignación ajena o coordenadas distintas de las del nuevo
+cultivo rechazan la operación. Cancelar conserva el Walk22 adquirido.
+
+Los controles standalone y pthread cubren ambos radios. Los puertos de
+producción y el Host determinista verificaron la sustitución del reloj
+presentado. El roster verificó las mismas geometrías e índices y su
+restauración al cancelar la activación del paquete. Pasaron 247 pruebas
+dirigidas y el build de producción.
+
+Al combinar este relevo con el destino lateral fijo del prototipo, el
+cuerpo 2 adquirió la marcha inicial, el relevo y un nuevo acercamiento al
+centro. El cuerpo 1 entregó una sola caja en el punto original. Ambos
+llegaron a Idle en el mismo turno a los 67 s. La selección lateral
+ordinaria y la captura en hardware siguen pendientes.
+[Recibo y límites](performance/native-idle-stroll-reanchor-20261126.json).
+
 OpenRA pospone la búsqueda de otro camino si el bloqueador ya está
 saliendo. En Wild Guardians, el mismo punto de
 entrega sigue ocupado hasta que la reserva de Home permite acreditar el

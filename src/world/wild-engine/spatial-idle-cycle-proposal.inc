@@ -38,14 +38,16 @@ static bool idleCycleDraftCurrent(const IntentState& s,const PendingBarrierPropo
   return source&&intent.settlementBinding==d.settlementSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
  }
  if(d.strollSource){
-  const auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(d.header[3]));
+  auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(d.header[3]));
+  if(source&&d.source.kind==idleStrollReanchorSourceKind&&
+     !reanchorArrivedIdleStroll(s,*source,int(d.header[9]),uint64_t(d.header[10]),uint32_t(d.source.initial[3]),d.header[14]))return false;
   return source&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].idleStrollBinding==d.strollSource&&idleCycleBodySourceData(*source)==idleCycleBodySourceData(d.source);
  }
  return intent.state==PlanningState::StationaryActive&&!intent.task&&!intent.target&&!intent.home&&
   intent.initialIdleBodyBinding==d.body&&intent.idleCycle==d.previousCycle&&
   (d.previousCycle?nativeIdleCycleCurrent(s,intent)&&d.previousCycle->next.status==1&&d.previousCycle->next.state[0]!=3:nativeInitialIdleBodyCurrent(s,intent));
 }
-static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,std::optional<uint32_t> farmRng=std::nullopt,bool failedRest=false,bool initialRetry=false,int settlementProfile=-1){
+static int stageIdleCycle(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,std::optional<uint32_t> farmRng=std::nullopt,bool failedRest=false,bool initialRetry=false,int settlementProfile=-1,std::optional<uint32_t> reanchorRng=std::nullopt){
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||!integer(anchorKind)||anchorKind>2||!integer(anchorId))return -1;
  for(double v:{x,z,radius,idleSeconds,alertSeconds})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
@@ -66,18 +68,21 @@ static int stageIdleCycle(double actor,double session,double sourceSequence,doub
   draft.body=intent.initialIdleBodyBinding;const auto& q=*draft.body->source;if(double(draft.body->bodySequence)!=sourceSequence)return -2;
   auto& v=draft.source;static_cast<NativeWorkerPoseResourceRequest&>(v)=q;v.kind=20;v.sequence=draft.body->bodySequence;v.center=q.center;v.workerProfile=q.workerProfile;v.anchorKind=q.anchorKind;v.anchor=q.anchor;v.initial={double(q.mode),q.elapsed,q.remaining,double(q.rng),q.approachRetry,0};
  }else{
-  const auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(sourceSequence));if(!source)return -2;
+  auto source=arrivedIdleStrollCycleSource(s,intent,uint64_t(sourceSequence));if(!source)return -2;
+  if(reanchorRng&&!reanchorArrivedIdleStroll(s,*source,int(anchorKind),uint64_t(anchorId),*reanchorRng,idleSeconds))return -2;
   draft.source=*source;draft.strollSource=s.routeSlots[intent.slot].idleStrollBinding;
   const auto& m=draft.strollSource->semantic;
-  if(x!=m[12]||z!=m[13]||radius!=m[14]||idleSeconds!=m[17]||!idleStrollCycleReleaseClear(s,source->body))return -2;
+  if((!reanchorRng&&(x!=m[12]||z!=m[13]||radius!=m[14]))||idleSeconds!=m[17]||!idleStrollCycleReleaseClear(s,source->body))return -2;
  }
  const auto& q=draft.source;
+ const bool reanchored=q.kind==idleStrollReanchorSourceKind;
+ if(reanchorRng&&(!reanchored||!draft.strollSource))return -2;
  const bool outside=std::hypot(q.x-x,q.z-z)>radius;
  // Preserve the actual20 origin. Its explicit retry opt-in shares the existing
  // finite horizon/decision kernel, never a fictitious failed WALK request.
  if(initialRetry&&(q.kind!=20||!outside))return -2;
- if(q.anchorKind!=int(anchorKind)||q.anchor!=uint64_t(anchorId)||outside&&q.kind!=1&&!initialRetry)return -2;
- const bool retryPolicy=q.kind==1||initialRetry;
+ if(q.anchorKind!=int(anchorKind)||q.anchor!=uint64_t(anchorId)||outside&&q.kind!=1&&!initialRetry&&!reanchored)return -2;
+ const bool retryPolicy=q.kind==1||initialRetry||(reanchored&&outside);
  const auto initial=draft.previousCycle?draft.previousCycle->next.state:q.initial;
  uint32_t rng=uint32_t(initial[3]);const double watchStart=initial[0]==1?initial[2]:0,watchRng=initial[0]==1?(idleCycleRandom(rng),double(rng)):initial[3],watchDuration=initial[0]==1?alertSeconds*(1+std::floor(watchRng/4294967296.*2)):initial[2],fullDuration=watchStart+watchDuration;
  const double duration=retryPolicy&&outside?std::min(fullDuration,initial[4]):fullDuration;
@@ -105,13 +110,18 @@ EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_settlement_proposal_stage(double actor,d
  if(!integer(rng)||rng>4294967295.||!integer(workerProfile,true)||workerProfile>3)return -1;
  return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds,uint32_t(rng),false,false,int(workerProfile));
 }
+EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_stroll_reanchor_proposal_stage(double actor,double session,double sourceSequence,double anchorKind,double anchorId,double x,double z,double radius,double idleSeconds,double alertSeconds,double rng){
+ if(!integer(rng)||rng>4294967295.)return -1;
+ return stageIdleCycle(actor,session,sourceSequence,anchorKind,anchorId,x,z,radius,idleSeconds,alertSeconds,std::nullopt,false,false,-1,uint32_t(rng));
+}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),21):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_idle_cycle_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==21&&p.idleCycle?p.idleCycle->header.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=21||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_idle_cycle_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=21||!p.idleCycle||session!=double(p.session)||ticket!=double(p.ticket))return -1;
  auto old=std::move(*p.idleCycle);clearWorldMutationProposal(p);const auto& h=old.header;
- const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15],old.farmSource||old.settlementSource?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt,bool(old.failedRequest),old.source.kind==20&&h[0]==2,old.settlementSource?old.source.workerProfile:-1);if(result!=1)return result;
+ const auto reanchorRng=old.strollSource&&old.source.kind==idleStrollReanchorSourceKind?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt;
+ const int result=stageIdleCycle(h[1],session,old.previousCycle?double(old.previousCycle->next.sequence):h[3],h[9],h[10],h[11],h[12],h[13],h[14],h[15],old.farmSource||old.settlementSource?std::optional<uint32_t>(uint32_t(old.source.initial[3])):std::nullopt,bool(old.failedRequest),old.source.kind==20&&h[0]==2,old.settlementSource?old.source.workerProfile:-1,reanchorRng);if(result!=1)return result;
  auto& next=*p.idleCycle;bool same=old.body==next.body&&old.previousCycle==next.previousCycle&&old.strollSource==next.strollSource&&old.farmSource==next.farmSource&&old.settlementSource==next.settlementSource&&old.failedRequest==next.failedRequest&&idleCycleBodySourceData(old.source)==idleCycleBodySourceData(next.source);
  for(size_t i=0;i<h.size();i++)if(i!=5&&i!=6&&h[i]!=next.header[i])same=false;
  next.previous=NativeIdleCycleOrigin{h,uint64_t(ticket)};next.timeTranslation={1,ticket,double(p.ticket),h[5],h[5]+h[23],next.header[5],next.header[5]+next.header[23],same?1.:0.};return 1;

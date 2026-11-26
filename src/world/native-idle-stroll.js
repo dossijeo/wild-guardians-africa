@@ -3,7 +3,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-bo
 import {copyNativeRouteReference} from './native-route-reference.js';
 import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeIdleCycleNextRequest} from './native-idle-cycle.js';
-import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
+import {copyNativeIdleCycleBodySource,isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
 import {copyNativePresentationSamples} from './native-presentation-samples.js';
 import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
@@ -55,7 +55,10 @@ export function nativeIdleStrollContinuesRestoredRequest(reference,value){try{co
 export function nativeIdleStrollArrivalSourceMatches(value,proof){
  try{const q=copyNativeIdleCycleBodySource(value),b=copyNativeIdleStrollAttestation(proof),r=b.reference,p=q.pose,s=q.idleState;
   let rng=r.walkRng;rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;rng>>>=0;
-  return q.kind==='native-idle-stroll-arrival-source'&&q.sourceSequence===b.assignmentSequence&&q.sourceAt===r.endTime&&q.authorityEpoch===r.worldBoundary.authorityEpoch&&q.nativeSession===r.worldBoundary.nativeSession&&q.actorId===r.actorId&&q.bodyId===r.bodyId&&q.bodyFlags===r.bodyFlags&&q.centerId===r.centerId&&q.profile===r.profile&&q.workerProfile===r.workerProfile&&p.x===Math.fround(r.destination.x)&&p.z===Math.fround(r.destination.z)&&['radius','runPhase','carryPhase','runRemaining'].every(k=>p[k]===r.pose[k])&&p.walkPhase>=r.pose.walkPhase&&s.anchorId===anchorId(r.anchor)&&s.rng===rng&&s.approachRetry===Math.max(0,r.approachRetry-(r.endTime-r.worldBoundary.effectiveTime));
+  const anchorMatches=q.kind==='native-idle-stroll-reanchor-source'?
+    r.anchor.kind===1&&s.anchorId!==anchorId(r.anchor)&&(s.anchorId.startsWith('farm-plant-')||s.anchorId===`farm-structure-${r.centerId}`):
+    s.anchorId===anchorId(r.anchor)&&s.rng===rng&&s.approachRetry===Math.max(0,r.approachRetry-(r.endTime-r.worldBoundary.effectiveTime));
+  return isNativeIdleStrollArrivalSource(q)&&anchorMatches&&q.sourceSequence===b.assignmentSequence&&q.sourceAt===r.endTime&&q.authorityEpoch===r.worldBoundary.authorityEpoch&&q.nativeSession===r.worldBoundary.nativeSession&&q.actorId===r.actorId&&q.bodyId===r.bodyId&&q.bodyFlags===r.bodyFlags&&q.centerId===r.centerId&&q.profile===r.profile&&q.workerProfile===r.workerProfile&&p.x===Math.fround(r.destination.x)&&p.z===Math.fround(r.destination.z)&&['radius','runPhase','carryPhase','runRemaining'].every(k=>p[k]===r.pose[k])&&p.walkPhase>=r.pose.walkPhase;
  }catch{return false;}
 }
 const proposalFields=['kind','version','ticket','worldBoundary','nativeIdleStroll','actorId','bodyId','expectedRouteHandle','sourceControlSequence','profile','motionFlags','radius','origin','startTime','endTime','distance','speed','runDistance','runSpeed','runBudget','motionMode','rowWidth','rows','points','gates','authorizedAutonomy','authorizedPassage'];

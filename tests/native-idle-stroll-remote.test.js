@@ -5,6 +5,8 @@ import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-fr
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeIdleStrollFixture} from './helpers/native-idle-stroll.js';
 import {fixture as gpuFixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {emit} from '../src/simulation/game.js';
+import {cropBecameInactive} from '../src/simulation/active-crops.js';
 
 test('prepared stroll uses its own installed program and submitted clock while retaining static resources',async()=>{
  let ready;const f=await nativeIdleStrollRemoteFixture({onPrepare(f){f.advance(.2);},onDrain(f){f.advance(.1);},onReady(f,{gpu,host,client}){ready={buffers:gpu.buffers.slice(),host:host.inspect(),created:client.inspect().resourcesCreated};}});try{
@@ -32,4 +34,28 @@ test('retirement retains the actual retimed origin and clamps its last submitted
 
 test('a consumer without advertised stroll support rejects its clock before sending an unscoped binding',async()=>{
  const f=nativeIdleStrollFixture();let gpu;try{const p=f.prepare().proposal;gpu=await gpuFixture();assert.throws(()=>gpu.client.registerClockBinding(gpu.buffer,{byteOffset:0,semantic:'relative',epoch:p.startTime,resourceEnd:p.endTime,nativeStroll:p.nativeIdleStroll}),/support native Idle stroll/);await flush();await gpu.host.idle();assert.equal(gpu.host.inspect().failed,false);assert.equal(f.planner.nativeIdleStrollBinding(f.actor),null);assert(f.planner.cancelNativeIdleStrollProposal(p.ticket));}finally{gpu?.client.dispose();await gpu?.host.dispose();f.close();}
+});
+
+test('a retired stroll anchor uses the next prepared cycle and replaces its submitted clock',async()=>{
+ const f=await nativeIdleStrollRemoteFixture();try{
+  const result=await f.run();assert.equal(result.status,'committed',JSON.stringify(result));await f.v.present();
+  const old=result.nativeIdleStrollBinding;
+  const plant=f.state.plants.find(row=>row.id===`plant-${old.reference.anchor.id}`);
+  plant.alive=false;cropBecameInactive(f.state.plants);emit(f.state,'CropDestroyed',{targetId:plant.id});f.planner.flushWorldEvents();
+  assert.equal(f.planner.prepareNativeIdleCycleProposal(f.actor).status,'unsupported','the old Walk still owns motion');
+  f.advance(old.reference.endTime-f.state.elapsed+.1);f.planner.projectNativeIdleStroll(f.state,f.worker);
+  const before=await f.draw(),pose=f.body(1);
+  assert(before.nativeRouteFrame.bindings.some(row=>row.nativeStroll));
+  const acquired=await f.v.run(o=>f.planner.startNativeIdleCycleAfterGpuQuiescence({actorId:f.actor,...o}),{kind:'idle-cycle'});
+  assert.equal(acquired.status,'committed',JSON.stringify(acquired));await f.v.present();
+  const binding=acquired.nativeIdleCycleBinding,reference=binding.reference;
+  assert.equal(reference.sourceBody.kind,'native-idle-stroll-reanchor-source');
+  assert.equal(reference.sourceBody.sourceSequence,old.assignmentSequence);
+  assert.equal(reference.bodyId,old.reference.bodyId);
+  const submitted=await f.draw(),pick=captureNativeRoutePickFrame(submitted);
+  assert.equal(pick.getIdleCycleElapsed(binding.preparedReference),0);
+  assert(submitted.nativeRouteFrame.bindings.every(row=>!row.nativeStroll));
+  assert.equal(f.worker.idleState.anchorId,reference.anchor.id);
+  assert.deepEqual(f.body(1),pose);assert.deepEqual(f.v.errors,[]);
+ }finally{await f.close();}
 });

@@ -25,6 +25,14 @@ static std::optional<NativeIdleCycleBodySource> arrivedIdleStrollCycleSource(con
  NativeIdleCycleBodySource v;v.kind=22;v.actor=intent.actor;v.body=route.reservationBody;v.session=s.session;v.sequence=sequence;v.at=h[11];v.profile=intent.profile;v.workerProfile=int(m[2]);v.center=uint64_t(m[3]);v.bodyFlags=int(m[4]);
  v.x=pose[0];v.z=pose[1];v.yaw=pose[4];v.radius=route.radius;v.runPhase=pose[9];v.walkPhase=pose[10];v.carryPhase=pose[11];v.runRemaining=pose[14];v.anchorKind=int(m[10]);v.anchor=uint64_t(m[11]);v.initial=idleStrollRestState(*b,s.effectiveTime);return v;
 }
+static bool reanchorArrivedIdleStroll(const IntentState& s,NativeIdleCycleBodySource& source,int kind,uint64_t anchor,uint32_t rng,double idleSeconds){
+ if(source.anchorKind!=1||source.anchor==anchor||(kind==2&&anchor!=source.center)||!rng)return false;
+ const auto old=s.targets.find(source.anchor);
+ if(old!=s.targets.end()&&(old->second.active||(old->second.kind!=1&&old->second.kind!=2)))return false;
+ source.kind=idleStrollReanchorSourceKind;source.anchorKind=kind;source.anchor=anchor;
+ source.initial={1,0,idleSeconds*2,double(rng),0,0};
+ return true;
+}
 static bool idleStrollCycleReleaseClear(IntentState& s,uint64_t body){
  // Same prepared-stop condition as Carry settlement: releasing this endpoint
  // must not incidentally revoke a peer whose stop has not been prepared.

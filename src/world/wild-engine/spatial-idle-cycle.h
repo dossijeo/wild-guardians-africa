@@ -1,5 +1,6 @@
 // Original private xorshift32 stream. Like idle.js, return the NEW state;
 // Unity.Mathematics uses the same shifts but a different output convention.
+constexpr int idleStrollReanchorSourceKind=122;
 static double idleCycleRandom(uint32_t& rng){rng^=rng<<13;rng^=rng>>17;rng^=rng<<5;return double(rng)/4294967296.;}
 static std::array<double,26> idleCycleBodySourceData(const NativeIdleCycleBodySource& q){
  return {1,double(q.kind),double(q.actor),double(q.body),double(q.session),double(q.sequence),q.at,double(q.profile),double(q.workerProfile),double(q.center),double(q.bodyFlags),q.x,q.z,q.yaw,q.radius,q.runPhase,q.walkPhase,q.carryPhase,q.runRemaining,double(q.anchorKind),double(q.anchor),q.initial[0],q.initial[1],q.initial[2],q.initial[3],q.initial[4]};
@@ -11,7 +12,7 @@ static bool nativeIdleCycleBodyCurrent(const IntentState& s,const ActiveIntent& 
  const bool pendingHome=intent.home&&intent.homeRequest&&!intent.task&&!intent.target&&!intent.generation&&intent.state==PlanningState::AwaitingResources&&intent.homeRequest->idleCycleSourceSequence==b.cycleSequence;
  const bool pendingTask=intent.task&&intent.target&&!intent.home&&!intent.homeRequest&&intent.generation&&intent.state==PlanningState::AwaitingResources&&intent.resourceRequestSequence>b.cycleSequence&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].active&&s.routeSlots[intent.slot].pendingResources&&!s.routeSlots[intent.slot].suspended&&s.routeSlots[intent.slot].actor==intent.actor&&s.routeSlots[intent.slot].generation==intent.generation&&s.routeSlots[intent.slot].originX==q.x&&s.routeSlots[intent.slot].originZ==q.z;
  const bool idle=!intent.home&&!intent.homeRequest&&!intent.task&&!intent.target&&!intent.generation&&intent.state==PlanningState::StationaryActive;
- if((q.kind!=1&&q.kind!=17&&q.kind!=22&&q.kind!=23)||intent.initialIdleBodyBinding||intent.initialIdleRequest||intent.settlementBinding||intent.actionBinding||intent.restoredActionSource||intent.animal||intent.retreat||intent.delivery||(intent.lease&&!pendingTask)||!intent.requiresResources||(!idle&&!pendingHome&&!pendingTask))return false;
+ if((q.kind!=1&&q.kind!=17&&q.kind!=22&&q.kind!=23&&q.kind!=idleStrollReanchorSourceKind)||intent.initialIdleBodyBinding||intent.initialIdleRequest||intent.settlementBinding||intent.actionBinding||intent.restoredActionSource||intent.animal||intent.retreat||intent.delivery||(intent.lease&&!pendingTask)||!intent.requiresResources||(!idle&&!pendingHome&&!pendingTask))return false;
  const auto worker=s.workers.find(intent.actor);const auto center=s.targets.find(q.center);SpatialBodyView body;
  return q.actor==intent.actor&&q.session==s.session&&q.sequence&&q.body&&intent.profile==q.profile&&worker!=s.workers.end()&&worker->second.center==q.center&&worker->second.eligible==idle&&!worker->second.actionActive&&!worker->second.inactiveSequence&&worker->second.bodyBound&&worker->second.body==q.body&&worker->second.x==q.x&&worker->second.z==q.z&&
   spatialReadBody(q.body,body)&&body.kind==0&&body.flags==q.bodyFlags&&body.x==q.x&&body.z==q.z&&body.r==q.radius&&!s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body)&&center!=s.targets.end()&&center->second.active&&center->second.kind==4&&center->second.status==0;
@@ -21,6 +22,7 @@ static bool nativeIdleCycleCurrent(const IntentState& s,const ActiveIntent& inte
 }
 static const NativeIdleStrollBinding* currentIdleStroll(double actor);
 static std::optional<NativeIdleCycleBodySource> arrivedIdleStrollCycleSource(const IntentState&,const ActiveIntent&,uint64_t);
+static bool reanchorArrivedIdleStroll(const IntentState&,NativeIdleCycleBodySource&,int,uint64_t,uint32_t,double);
 static bool idleStrollCycleReleaseClear(IntentState&,uint64_t);
 static std::optional<NativeIdleCycleBodySource> failedIdleStrollCycleSource(const IntentState&,const ActiveIntent&,uint64_t);
 static int idleStrollPathOutcome(int,float,float,float,float);

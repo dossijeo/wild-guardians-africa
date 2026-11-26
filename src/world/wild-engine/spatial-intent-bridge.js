@@ -19,7 +19,7 @@ import {LOCOMOTION} from '../../simulation/locomotion-calibration.js';
 import {copyNativeRouteReference} from '../native-route-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec} from '../native-worker-route-stop-codec.js';
 import {copyNativeIdleStrollStopReference,copyNativeIdleStrollStopProposal,copyNativeIdleStrollStopTicket,nativeIdleStrollStopTicketFromProposal,copyNativeIdleStrollStopAttestation,copyNativeIdleStrollStopProjection} from '../native-idle-stroll-stop.js';
-import {copyNativeIdleCycleBodySource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
+import {copyNativeIdleCycleBodySource,isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState} from '../native-idle-cycle-body-source.js';
 import {copyNativeIdleStrollReference,copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollHeldExecution,sameNativeIdleStrollAttestation,nativeIdleStrollContinuesNext,nativeIdleStrollContinuesRestoredRequest,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../native-idle-stroll.js';
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../native-home-arrival.js';
 import {createNativeResourceAdmission} from '../native-resource-admission.js';
@@ -122,6 +122,14 @@ function inactiveHomeEntry(state,worker,legacyCropHome=false){
   return entry&&Number.isFinite(entry.x)&&Number.isFinite(entry.z)&&worker.x===entry.x&&worker.z===entry.z?entry:null;
 }
 
+function idleReanchorAfterCrop(state,worker,anchorId){
+  const old=/^farm-(plant-[1-9]\d*)$/.exec(anchorId)?.[1];
+  if(!old)return null;
+  const crops=activeCrops(state.plants);
+  if(crops.some(crop=>crop.id===old))return null;
+  const center=state.structures.find(c=>c.id===worker.centerId);
+  return idleFarmAnchor(state,worker,center,crops);
+}
 function restoredStrollGameState(state,worker){
   const semantic=nativeIdleStrollSavedState(state,worker),idle=semantic.idleState,approach=idle.destination.id===idle.anchorId,center=state.structures.find(c=>c.id===worker.centerId),match=/^farm-(plant|structure)-(\d+)$/.exec(idle.anchorId);
   const plant=match?.[1]==='plant'?state.plants.find(p=>p.id===`plant-${match[2]}`&&p.centerId===worker.centerId&&p.alive):null;
@@ -2368,7 +2376,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     return Object.freeze({kind:'native-idle-stroll-execution',version:1,actorId:a[1],bodyId:a[2],binding,executedThrough:a[7],arrived:a[18]===1,distance:a[14],sampledThrough:a[19],pose:Object.freeze({x:a[12],z:a[13],yaw:a[16],radius:r.pose.radius,runPhase:a[21],walkPhase:a[22],carryPhase:a[23],runRemaining:a[26]}),walkState:Object.freeze({mode:'walk',rng:a[33],approachRetry:a[34],age:a[35],...(nativeIdleStrollApproachesAnchor(r)?{remaining:a[32]}:{})}),desiredRest:a[36]===1?Object.freeze({mode:'rest',elapsed:a[37],remaining:a[38],rng:a[39],approachRetry:a[40]}):null});
   };
   const decodeIdleCycleBodySource=(actor,a,ticket=0)=>{
-    if(a[0]!==1||![1,17,20,22,23].includes(a[1])||!a.every(Number.isFinite)||a[2]!==actor||a[4]!==wasm.nav_intent_session()||![1,2].includes(a[19])||![1,2].includes(a[21]))throw Error('Invalid native Idle current-body source');
+    if(a[0]!==1||![1,17,20,22,23,122].includes(a[1])||!a.every(Number.isFinite)||a[2]!==actor||a[4]!==wasm.nav_intent_session()||![1,2].includes(a[19])||![1,2].includes(a[21]))throw Error('Invalid native Idle current-body source');
     const pose={x:a[11],z:a[12],yaw:a[13],radius:a[14],runPhase:a[15],walkPhase:a[16],carryPhase:a[17],runRemaining:a[18]},idleState={anchorId:`${a[19]===1?'farm-plant':'farm-structure'}-${a[20]}`,mode:a[21]===1?'rest':'watch',elapsed:a[22],remaining:a[23],rng:a[24],approachRetry:a[25]};
     if(a[1]===20){const body=nativeInitialIdleBodyBinding(actor),q=body?.reference.sourceRequest;
       if(!q||body.bodySequence!==a[5]||q.requestedAt!==a[6]||q.bodyId!==a[3]||q.profile!==a[7]||q.workerProfile!==PROFILES[a[8]]?.id||q.centerId!==a[9]||q.bodyFlags!==a[10]||JSON.stringify(q.pose)!==JSON.stringify(pose)||JSON.stringify(q.idleState)!==JSON.stringify(idleState))throw Error('Native Idle initial-body source mismatch');return body;
@@ -2379,7 +2387,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       if(wasm.nav_idle_cycle_failed_request_snapshot(actor,ticket)!==1)throw Error('Native failed Idle source lost its original WALK request');
       sourceRequest=idleStrollRequestFromRow(idleStrollRequestRow());
     }
-    return copyNativeIdleCycleBodySource({kind:a[1]===1?'native-idle-stroll-failed-source':a[1]===17?'native-settled-worker-idle-source':a[1]===23?'native-farm-arrival-idle-source':'native-idle-stroll-arrival-source',...(sourceRequest?{sourceRequest}:{}),version:1,authorityEpoch:epoch(),nativeSession:a[4],actorId:a[2],bodyId:a[3],bodyFlags:a[10],sourceSequence:a[5],sourceAt:a[6],centerId:a[9],profile:a[7],workerProfile:PROFILES[a[8]]?.id,pose,idleState});
+    const kind=a[1]===1?'native-idle-stroll-failed-source':a[1]===17?'native-settled-worker-idle-source':a[1]===23?'native-farm-arrival-idle-source':a[1]===122?'native-idle-stroll-reanchor-source':'native-idle-stroll-arrival-source';
+    return copyNativeIdleCycleBodySource({kind,...(sourceRequest?{sourceRequest}:{}),version:1,authorityEpoch:epoch(),nativeSession:a[4],actorId:a[2],bodyId:a[3],bodyFlags:a[10],sourceSequence:a[5],sourceAt:a[6],centerId:a[9],profile:a[7],workerProfile:PROFILES[a[8]]?.id,pose,idleState});
   };
   const idleCycleBodySource=(actor,ticket=0)=>{
     if(wasm.nav_idle_cycle_source_snapshot===undefined)return nativeInitialIdleBodyBinding(actor);
@@ -2433,7 +2442,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     const state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor);
     if(!worker||contractExpired(worker,state)||state.time>=PROFILES.find(p=>p.id===worker.profile)?.end)return null;
     try{
-      let body,semantic,initial,next=null,sourceStroll=null,sourceFarm=null,sourceFailed=null,sourceSettlement=null,sequence;const stroll=nativeIdleStrollExecution(actor),farm=nativeFarmArrivalRouteExecution(actor),settled=nativeSettledWorkerExecution(actor);
+      let body,semantic,initial,next=null,sourceStroll=null,sourceFarm=null,sourceFailed=null,sourceSettlement=null,reanchor=null,sequence;const stroll=nativeIdleStrollExecution(actor),farm=nativeFarmArrivalRouteExecution(actor),settled=nativeSettledWorkerExecution(actor);
       if(settled){
         const r=settled.binding.reference,p=r.pose,crate=state.crates.find(c=>c.id===`crate-${r.crateId}`),center=state.structures.find(c=>c.id===worker.centerId);
         if(r.home||settled.executedThrough!==state.elapsed||worker.status!=='idle'||worker.nativeRouteAdmission||worker.taskId||worker.crateId||worker.path!==null||worker.idleState!==null||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||worker.heading!==p.yaw||!crate?.delivered||crate.carrierId||!center||numericId(center.id)!==r.centerId||['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==p[k]))return null;
@@ -2453,7 +2462,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         if(allowStroll||!stroll.arrived||!stroll.desiredRest||stroll.executedThrough!==state.elapsed)return null;
         semantic=nativeIdleStrollLiveState(state,worker);const r=stroll.binding.reference,idle=semantic.idleState,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`;
         if(idle.remaining!==nativeIdleStrollWalkRemaining(r)||idle.anchorId!==anchorId||idle.rng!==stroll.walkState.rng||idle.approachRetry!==stroll.walkState.approachRetry||idle.destination.x!==r.destination.x||idle.destination.z!==r.destination.z)return null;
-        body=copyNativeIdleCycleBodySource({kind:'native-idle-stroll-arrival-source',version:1,authorityEpoch:epoch(),nativeSession:r.worldBoundary.nativeSession,actorId:actor,bodyId:r.bodyId,bodyFlags:r.bodyFlags,sourceSequence:stroll.binding.assignmentSequence,sourceAt:r.endTime,centerId:r.centerId,profile:r.profile,workerProfile:r.workerProfile,pose:stroll.pose,idleState:{anchorId,...stroll.desiredRest}});
+        reanchor=idleReanchorAfterCrop(state,worker,anchorId);
+        const kind=reanchor?'native-idle-stroll-reanchor-source':'native-idle-stroll-arrival-source';
+        const idleState=reanchor?{...createIdleState(worker,reanchor,state.seed),approachRetry:0}:{anchorId,...stroll.desiredRest};
+        body=copyNativeIdleCycleBodySource({kind,version:1,authorityEpoch:epoch(),nativeSession:r.worldBoundary.nativeSession,actorId:actor,bodyId:r.bodyId,bodyFlags:r.bodyFlags,sourceSequence:stroll.binding.assignmentSequence,sourceAt:r.endTime,centerId:r.centerId,profile:r.profile,workerProfile:r.workerProfile,pose:stroll.pose,idleState});
         sourceStroll=stroll.binding;initial=body.idleState;sequence=body.sourceSequence;
       }else{
         const request=nativeIdleStrollRequestReference(actor);
@@ -2477,9 +2489,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       // Complete the acquired WALK against its own anchor. A newly nearer crop
       // is a future policy choice, not a change to the source of REST21.
       const retainedAnchor=sourceFailed?.anchor??sourceStroll?.reference.anchor;
-      const center=state.structures.find(c=>c.id===worker.centerId),anchor=retainedAnchor?{id:initial.anchorId,x:retainedAnchor.x,z:retainedAnchor.z,idleRadius:retainedAnchor.radius}:idleFarmAnchor(state,worker,center),match=/^(farm-plant|farm-structure|village)-(\d+)$/.exec(anchor.id),calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
+      const center=state.structures.find(c=>c.id===worker.centerId),anchor=reanchor??(retainedAnchor?{id:initial.anchorId,x:retainedAnchor.x,z:retainedAnchor.z,idleRadius:retainedAnchor.radius}:idleFarmAnchor(state,worker,center)),match=/^(farm-plant|farm-structure|village)-(\d+)$/.exec(anchor.id),calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
       if(!match||anchor.id!==initial.anchorId||!calibration||![anchor.x,anchor.z,anchor.idleRadius].every(Number.isFinite)||allowStroll&&(sourceFarm||sourceSettlement)&&Math.hypot(q.pose.x-anchor.x,q.pose.z-anchor.z)<=anchor.idleRadius)return null;
-      return {state,worker,body,next,sourceStroll,sourceFarm,sourceFailed,sourceSettlement,anchor:{kind:['','farm-plant','farm-structure','village'].indexOf(match[1]),id:Number(match[2]),x:anchor.x,z:anchor.z,radius:anchor.idleRadius},sequence,calibration};
+      return {state,worker,body,next,sourceStroll,sourceFarm,sourceFailed,sourceSettlement,reanchor:!!reanchor,anchor:{kind:['','farm-plant','farm-structure','village'].indexOf(match[1]),id:Number(match[2]),x:anchor.x,z:anchor.z,radius:anchor.idleRadius},sequence,calibration};
     }catch{return null;}
   };
   const sameIdleCycleSource=(a,b)=>!!a&&!!b&&a.state===b.state&&a.worker===b.worker&&JSON.stringify(a.body)===JSON.stringify(b.body)&&JSON.stringify(a.sourceStroll)===JSON.stringify(b.sourceStroll)&&JSON.stringify(a.sourceFarm)===JSON.stringify(b.sourceFarm)&&JSON.stringify(a.sourceSettlement)===JSON.stringify(b.sourceSettlement)&&JSON.stringify(a.sourceFailed)===JSON.stringify(b.sourceFailed)&&(!a.next&&!b.next||sameNativeIdleCycleNextRequest(a.next,b.next))&&JSON.stringify(a.anchor)===JSON.stringify(b.anchor);
@@ -2501,7 +2513,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(source.sourceSettlement&&typeof wasm.nav_idle_cycle_settlement_proposal_stage!=='function')throw Error('Rebuild native settled Idle cycle admission');
     const a=source.anchor,c=source.calibration,q=nativeIdleCycleBodyState(source.body),initialRetry=source.body.kind==='native-initial-idle-body-attestation'&&Math.hypot(q.pose.x-a.x,q.pose.z-a.z)>a.radius;
     if(initialRetry&&(wasm.nav_idle_cycle_initial_retry_version?.()!==1||typeof wasm.nav_idle_cycle_initial_retry_proposal_stage!=='function'))throw Error('Rebuild native initial Idle retry admission');
-    const args=[actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,c.idleSeconds,c.alertSeconds],status=source.sourceFailed?wasm.nav_idle_cycle_failed_rest_proposal_stage(...args):source.sourceSettlement?wasm.nav_idle_cycle_settlement_proposal_stage(...args,source.body.idleState.rng,PROFILES.findIndex(p=>p.id===source.body.workerProfile)):source.sourceFarm?wasm.nav_idle_cycle_farm_proposal_stage(...args,source.body.idleState.rng):initialRetry?wasm.nav_idle_cycle_initial_retry_proposal_stage(...args):wasm.nav_idle_cycle_proposal_stage(...args);
+    if(source.reanchor&&typeof wasm.nav_idle_cycle_stroll_reanchor_proposal_stage!=='function')throw Error('Rebuild native Idle reanchor admission');
+    const args=[actor,wasm.nav_intent_session(),source.sequence,a.kind,a.id,a.x,a.z,a.radius,c.idleSeconds,c.alertSeconds],status=source.reanchor?wasm.nav_idle_cycle_stroll_reanchor_proposal_stage(...args,q.idleState.rng):source.sourceFailed?wasm.nav_idle_cycle_failed_rest_proposal_stage(...args):source.sourceSettlement?wasm.nav_idle_cycle_settlement_proposal_stage(...args,source.body.idleState.rng,PROFILES.findIndex(p=>p.id===source.body.workerProfile)):source.sourceFarm?wasm.nav_idle_cycle_farm_proposal_stage(...args,source.body.idleState.rng):initialRetry?wasm.nav_idle_cycle_initial_retry_proposal_stage(...args):wasm.nav_idle_cycle_proposal_stage(...args);
     if(status!==1)return outcome(status===-4?'busy':status===-2?'unsupported':'stale');
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Native Idle cycle lost its proposal ticket');const t=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6)),ticket={kind:'native-idle-cycle-proposal-ticket',authorityEpoch:epoch(),session:t[0],ticket:t[1]};
     try{return outcome('proposed',{proposal:captureNativeIdleCycleProposal(ticket)});}catch(error){wasm.nav_idle_cycle_proposal_cancel(t[0],t[1]);throw error;}
@@ -4158,7 +4171,10 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
         worker.nativeRouteAdmission='native-idle';worker.destinationId=null;
       }else if(worker.nativeRouteAdmission==='native-idle-stroll'){
         const {idleState:idle}=nativeIdleStrollLiveState(state,worker);let rng=idle.rng;rng^=rng<<13;rng^=rng>>>17;rng^=rng<<5;rng>>>=0;
-        if(q.kind!=='native-idle-stroll-arrival-source'||view.binding.reference.sourceCycleSequence!==0||idle.anchorId!==q.idleState.anchorId||q.idleState.rng!==rng||q.idleState.approachRetry!==idle.approachRetry||worker.x!==Math.fround(idle.destination.x)||worker.z!==Math.fround(idle.destination.z))throw Error('Native Idle cycle has no matching executed stroll source');
+        const reanchor=q.kind==='native-idle-stroll-reanchor-source'&&idleReanchorAfterCrop(state,worker,idle.anchorId);
+        const phaseMatches=reanchor?JSON.stringify(q.idleState)===JSON.stringify(copyNativeInitialIdleState({...createIdleState(worker,reanchor,state.seed),approachRetry:0})):
+          q.kind==='native-idle-stroll-arrival-source'&&idle.anchorId===q.idleState.anchorId&&q.idleState.rng===rng&&q.idleState.approachRetry===idle.approachRetry;
+        if(!phaseMatches||view.binding.reference.sourceCycleSequence!==0||worker.x!==Math.fround(idle.destination.x)||worker.z!==Math.fround(idle.destination.z))throw Error('Native Idle cycle has no matching executed stroll source');
         worker.nativeRouteAdmission='native-idle';worker.destinationId=null;
       }else if(worker.nativeRouteAdmission==='native-farm-arrival'){
         nativeFarmArrivalTerminalState(state,worker);
@@ -4175,7 +4191,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       }
       if(JSON.stringify(worker.idleState)!==JSON.stringify(view.idleState))worker.idleState={...view.idleState};
     }
-    if(q.kind==='native-idle-stroll-arrival-source')wakeDeferredIdleTask(numericId(worker.id));
+    if(isNativeIdleStrollArrivalSource(q))wakeDeferredIdleTask(numericId(worker.id));
     projectedPositions.set(numericId(worker.id),[worker.x,worker.z]);return view;
   };
   const projectNativeIdleStroll=(state,worker)=>{
