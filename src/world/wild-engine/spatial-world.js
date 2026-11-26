@@ -233,20 +233,21 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const h=Array.from(new Float64Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_header_ptr(),9)),count=h[5];
     const stop=h[4]===12||h[4]===24||h[4]===25;
     const overlay=h[4]===2||h[4]===3||h[4]===4;
+    const workCenter=h[4]===3?wasm.spatial_world_proposal_center_owner?.(nativeSession,ticket)??0:0;
     if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||(h[4]<6&&!overlay)||(h[4]>12&&!stop)||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
     const cropStop=(h[4]===3||h[4]===4)&&shieldCrop&&retention===0&&routeEffects.rows.length===26&&
     [shieldCrop.actorId,shieldCrop.assignmentSequence,shieldCrop.routeHandle.slot,shieldCrop.routeHandle.generation,shieldCrop.bodyId,0,effectiveTime,0]
       .every((value,index)=>value===routeEffects.rows[index]);
-    if(overlay&&(count!==0||!cropStop&&(retention!==1||routeEffects.rows.length)||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');
+    if(overlay&&(!workCenter&&count!==0||!cropStop&&(retention!==1||routeEffects.rows.length)||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');
     if(stop&&(count!==0||retention!==0||!routeEffects.rows.length))throw Error('Native route stop lacks its body-only effects');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
     for(let index=0;index<count;index++){
       const [operation,cx,cz]=rows.slice(index*3,index*3+3),key=cx+','+cz;
       if(seen.has(key)||![1,2].includes(operation))throw Error('Invalid native proposal resource journal');seen.add(key);
-      if(operation===2){removed.push(Object.freeze({cx,cz}));continue;}
+      if(operation===2){if(workCenter)throw Error('Native center removed a resident chunk');removed.push(Object.freeze({cx,cz}));continue;}
       chunks.push(copiedNativeResourcePayload(index,cx,cz,wasm.spatial_world_proposal_resource_buffer_ptr,wasm.spatial_world_proposal_resource_buffer_bytes));
     }
-    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],retainsNativeAssignments:retention===1,routeEffects,gateEffects,chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
+    return Object.freeze({version:1,phase:'proposal',nativeSession,ticket,effectiveTime,kind:h[4],...(workCenter?{workCenter}:{}),retainsNativeAssignments:retention===1,routeEffects,gateEffects,chunks:Object.freeze(chunks),removed:Object.freeze(removed)});
   }
   function props(){
     return spatialProps(wasm);

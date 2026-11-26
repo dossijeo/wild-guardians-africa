@@ -6,7 +6,7 @@ import {createNativeRouteExecutionFixture} from './helpers/native-route-executio
 import {WORKER_SPATIAL_PROFILE,ANIMAL_SPATIAL_PROFILES} from '../src/world/wild-engine/spatial-movement-profiles.js';
 import {createThreadedSpatialWorld} from '../src/world/wild-engine/spatial-thread-runtime.js';
 
-const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
+const module=new WebAssembly.Module(readFileSync(process.env.QA_BARRIER_WASM??'src/world/wild-engine/spatial-savanna.wasm'));
 const id=p=>({group:p.group,gx:p.gx,gz:p.gz});
 const key=p=>`${p.group}:${p.gx}:${p.gz}`;
 const boundary=t=>({nativeSession:t[0],ticket:t[1],effectiveTime:t[3]});
@@ -29,6 +29,75 @@ function graph(f,prop){const out=[],x0=Math.floor(prop.x),z0=Math.floor(prop.z);
   }
  }assert(actualRoutes>0,'requires actual passable routes');return out;
 }
+function stageCenter(f,points,integers,mode=0){
+ const floats=points.flatMap(({x,z})=>[x,z]);
+ new Float32Array(f.w.memory.buffer,f.w.spatial_world_proposal_float_ptr(floats.length),floats.length).set(floats);
+ new Int32Array(f.w.memory.buffer,f.w.spatial_world_proposal_int_ptr(integers.length),integers.length).set(integers);
+ const status=f.w.spatial_world_proposal_stage_resources(3,mode,floats.length,integers.length);
+ if(status===1)assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);
+ const ticket=status===1?Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6)):null;
+ return {status,ticket};
+}
+function centerFixture(count=2){
+ const f=fixture('sabana'),candidates=props(f.core).filter(p=>Math.hypot(p.x,p.z)>10&&Math.hypot(p.x,p.z)<42);
+ const prop=candidates[0],near=candidates.find(p=>p!==prop&&Math.hypot(p.x-prop.x,p.z-prop.z)<8);
+ const chosen=count===2?[prop,near]:count?[prop]:[];assert(chosen.every(Boolean));
+ const x=prop.x,z=prop.z,points=[{x:x-9,z:z-9},{x:x+9,z:z-9},{x:x+9,z:z+9},{x:x-9,z:z+9}];
+ return {...f,chosen,points,integers:[43,...chosen.flatMap(p=>[p.group,p.gx,p.gz])]};
+}
+function centerOwner(wasm,id){
+ const count=wasm.spatial_polygon_state_count(),ptr=wasm.spatial_polygon_state_ptr(),records=new DataView(wasm.memory.buffer,ptr,count*528);
+ for(let at=0;at<records.byteLength;at+=528)if(records.getInt32(at,true)===id)return records.getInt32(at+12,true);
+}
+for(const count of [0,1,2])test('prepared center installs one owned polygon and '+count+' canonical prop suppressions',()=>{
+ const f=centerFixture(count),reference=fixture('sabana'),before=f.core.snapshot(),resident=f.core.captureResidentChunks();
+ const start={x:f.points[0].x+9,z:f.points[0].z+9};
+ const {status,ticket}=stageCenter(f,f.points,f.integers);assert.equal(status,1);
+ assert.deepEqual(f.core.snapshot(),before);assert.deepEqual(f.core.captureResidentChunks(),resident);
+ assert(f.chosen.every(prop=>props(f.core).some(p=>key(p)===key(prop))));
+ const prepared=f.core.captureNativeWorldProposalResources(boundary(ticket));
+ assert.equal(prepared.kind,3);assert.equal(prepared.workCenter,43);assert.equal(prepared.retainsNativeAssignments,true);
+ assert.equal(prepared.chunks.length>0,count>0);assert.deepEqual(prepared.removed,[]);
+ assert.equal(f.w.spatial_world_proposal_commit(...ticket.slice(0,5)),1);
+ assert.equal(f.w.spatial_world_proposal_result_count(),1);
+ const polygon=new Int32Array(f.w.memory.buffer,f.w.spatial_world_proposal_result_ptr(),1)[0];
+ assert.equal(polygon,before.nextPolygonId);assert.equal(centerOwner(f.w,polygon),43);
+ for(const prop of f.chosen)assert.equal(reference.core.removeProp(id(prop)),1);
+ assert.equal(reference.core.addPolygon(f.points,0,43),polygon);
+ assert.deepEqual(f.core.snapshot(),reference.core.snapshot());
+ const committed=f.core.captureNativeWorldResources(boundary(ticket));
+ assert.deepEqual(committed.chunks,prepared.chunks);
+ assert.equal(f.w.spatial_world_resource_prepared_snapshot(ticket[0],ticket[1]),1);
+ assert(f.chosen.every(prop=>!props(f.core).some(p=>key(p)===key(prop))));
+ assert.deepEqual(graph(f,start),graph(reference,start));
+ assert(f.w.spatial_world_proposal_commit(...ticket.slice(0,5))<0);
+ assert.equal(stageCenter(f,f.points,[43]).status,-1);
+});
+
+test('prepared center rejects missing ownership, duplicate and missing props, and a body in the footprint',()=>{
+ const f=centerFixture(),before=f.core.snapshot(),first=f.integers.slice(1,4);
+ assert.equal(stageCenter(f,f.points,[]).status,-2);
+ assert.equal(stageCenter(f,f.points,[43,5,2147483647,0]).status,-1);
+ assert.equal(stageCenter(f,f.points,[43,...first,...first]).status,-1);
+ assert.equal(stageCenter(f,f.points,[43],1).status,-1);
+ assert.equal(f.w.spatial_body_upsert(99,f.points[0].x+9,f.points[0].z+9,.28,0,1),1);
+ assert.equal(stageCenter(f,f.points,f.integers).status,0);
+ assert.deepEqual(f.core.snapshot(),before);
+});
+
+test('retiring or invalidating prepared center resources cannot install either effect',()=>{
+ for(const interrupt of [
+  (f,t)=>assert.equal(f.w.spatial_world_proposal_resource_release(t[0],t[1]),1),
+  f=>assert.equal(f.w.spatial_body_upsert(99,f.points[0].x+9,f.points[0].z+9,.28,0,1),1)
+ ]){
+  const f=centerFixture(),before=f.core.snapshot(),{status,ticket}=stageCenter(f,f.points,f.integers);assert.equal(status,1);
+  interrupt(f,ticket);
+  assert.equal(f.w.spatial_world_proposal_commit(...ticket.slice(0,5)),-2);
+  assert.deepEqual(f.core.snapshot(),before);
+  assert(f.chosen.every(prop=>props(f.core).some(p=>key(p)===key(prop))));
+ }
+});
+
 for(const biome of ['sabana','desierto','gran-rio','volcanes','manglares','gran-canon'])test(`prepared prop suppression preserves canonical resources and six-profile graph in ${biome}`,()=>{
  const a=fixture(biome),b=fixture(biome),prop=props(a.core).find(p=>Math.hypot(p.x,p.z)>25);assert(prop);const integers=[prop.group,prop.gx,prop.gz],before=profiles(a),resident=a.core.captureResidentChunks(),selected=a.core.currentChunk(),ta=stage(a,8,integers),tb=stage(b,8,integers,false);
  assert.deepEqual(profiles(a),before);assert.deepEqual(a.core.captureResidentChunks(),resident);assert.deepEqual(a.core.currentChunk(),selected);assert(props(a.core).some(p=>key(p)===key(prop)));
@@ -93,6 +162,16 @@ test('the real pthread runtime installs prepared props and rejects its earlier b
    if(kind===8){assert.equal(f.core.preparation.publish(job,4,4),-2);assert.equal(f.core.preparation.release(),1);assert(!f.core.hasResidentChunk(4,4));}
    f.bridge.commitNativeCausalClock();
   }
+  const around=({x,z},r)=>[{x:x-r,z:z-r},{x:x+r,z:z-r},{x:x+r,z:z+r},{x:x-r,z:z+r}];
+  const before=f.core.snapshot(),body=f.body(1);
+  assert.equal(stageCenter(f,around(f.point(0,0),.5),[43]).status,0,'center must retain the acquired future corridor');
+  assert.deepEqual(f.core.snapshot(),before);assert.deepEqual(f.body(1),body);
+  const {status,ticket}=stageCenter(f,around(p,2),[43,p.group,p.gx,p.gz]);assert.equal(status,1);
+  const prepared=f.core.captureNativeWorldProposalResources(boundary(ticket));
+  assert.equal(prepared.workCenter,43);assert(prepared.chunks.length>0);
+  assert.equal(f.w.spatial_world_proposal_commit(...ticket.slice(0,5)),1);
+  assert.deepEqual(f.core.captureNativeWorldResources(boundary(ticket)).chunks,prepared.chunks);
+  assert.equal(centerOwner(f.w,before.nextPolygonId),43);assert.deepEqual(f.body(1),body);
   assert.equal(f.advance(11).status,'advanced');
  }finally{f.session.dispose();await runtime.dispose();}
 });

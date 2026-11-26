@@ -16,9 +16,9 @@ bool mutationBodiesClear(const SpatialStaticMutation* shapes,int count,double pa
   }
   return true;
 }
-bool staticMutationPreflight(IntentState& s,const SpatialStaticMutation* shapes,int count){
+bool staticMutationPreflight(IntentState& s,const SpatialStaticMutation* shapes,int count,bool checkBodies=false){
   return gateStaticOverlayPreflight(s,shapes,count)&&
-    (!s.bodyDomainActive||mutationBodiesClear(shapes,count,0,s.staticMutationBodyChecks,s.staticMutationRejected));
+    (!(checkBodies||s.bodyDomainActive)||mutationBodiesClear(shapes,count,0,s.staticMutationBodyChecks,s.staticMutationRejected));
 }
 bool mutationAffectedRoutes(IntentState& s,const SpatialStaticMutation* shapes,int count,double padding,
     uint64_t& candidateCount,uint64_t& segmentCount,std::set<uint64_t>& affected,bool allowPrepared=false){

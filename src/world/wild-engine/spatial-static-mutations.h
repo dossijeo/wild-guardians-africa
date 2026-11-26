@@ -38,7 +38,7 @@ struct SpatialWorldProposalInput {
   int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;
   std::optional<SpatialShieldCropStop> shieldCrop;
 };
-int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count,bool requireRetained=false);
+int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count,bool requireRetained=false,bool checkBodies=false);
 void spatialIntentCompleteShieldCropStop(const SpatialShieldCropStop&,int polygon);
 bool spatialShieldFootprintMatches(const float* xy,int count,double x,double z,double radius);
 bool spatialShieldFootprintCurrent(int polygon,double x,double z,double radius);

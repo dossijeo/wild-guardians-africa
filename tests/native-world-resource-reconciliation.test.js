@@ -48,9 +48,18 @@ test('ACK-like, old, incomplete or masked resource proofs cannot grant a native 
 });
 
 test('unsupported native visuals and conflicting or future metadata are explicit failures',()=>{
- for(const kind of [3,4,5,...Array.from({length:11},(_,i)=>13+i)]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
+ for(const kind of [5,...Array.from({length:11},(_,i)=>13+i)]){const f=fixture();f.publication.nativeWorldResources[0].kind=kind;assert.throws(()=>reconcileNativeWorldResources(f),/family/);}
  for(const change of [{version:2},{future:true},{chunks:null},{removed:[{cx:0,cz:0}]}]){const f=fixture();Object.assign(f.publication.nativeWorldResources[0],change);assert.throws(()=>reconcileNativeWorldResources(f));}
  const f=fixture();f.publication.nativeWorldResources[0].chunks.push({cx:0,cz:0});assert.throws(()=>reconcileNativeWorldResources(f),/Conflicting/);
+});
+
+test('shield kinds reject terrain writes and require their own declaration',()=>{
+ for(const kind of [3,4]){
+  const f=fixture(),record=f.publication.nativeWorldResources[0];record.kind=kind;
+  assert.throws(()=>reconcileNativeWorldResources(f),/Native shield preview changed terrain geometry/);
+  record.chunks=[];
+  assert.throws(()=>reconcileNativeWorldResources(f),/Invalid native shield world declaration/);
+ }
 });
 
 test('solid addition history requires the exact committed attestation and an empty terrain batch',()=>{

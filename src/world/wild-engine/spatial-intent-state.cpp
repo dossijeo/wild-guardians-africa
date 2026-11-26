@@ -1652,14 +1652,14 @@ bool projectWorldRouteStops(const IntentState& s,const std::set<uint64_t>& seeds
   }
   return true;
 }
-int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count,uint64_t semanticStop=0){
+int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count,uint64_t semanticStop=0,bool checkBodies=false){
   auto& s=state();if(s.barrierProposal.pending)return -4;
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
      !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
   if(s.nextBarrierProposal>=uint64_t(maxId)||spatialBodiesMutationRevision()==std::numeric_limits<uint64_t>::max())return -5;
   // This is read-only preflight. No route, slot, world index, ID, or clock is
   // released or published while the graphics receipt is outstanding.
-  if(count>=0&&!staticMutationPreflight(s,shapes,count))return 0;
+  if(count>=0&&!staticMutationPreflight(s,shapes,count,checkBodies))return 0;
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
   if(count>=0&&s.executionEnabled&&!mutationAffectedRoutes(s,shapes,count,0,candidates,segments,affected))return -2;
   if(semanticStop)affected.insert(semanticStop);
@@ -1675,9 +1675,9 @@ int spatialIntentStageBarrier(const SpatialBarrierProposalInput& input,const Spa
   auto& p=state().barrierProposal;p.kind=1;p.input=input;return 1;
 }
 void clearWorldMutationProposal(PendingBarrierProposal&);
-int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shapes,int count,bool requireRetained){
+int spatialIntentStageWorld(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shapes,int count,bool requireRetained,bool checkBodies){
   if(input.kind<2)return -1;
-  const int result=stageWorldMutationBoundary(shapes,count);if(result!=1)return result;
+  const int result=stageWorldMutationBoundary(shapes,count,0,checkBodies);if(result!=1)return result;
   auto& p=state().barrierProposal;
   if(requireRetained&&(!p.retainsRoutes||!p.routeEffects.empty()||!p.gateEffects.empty())){clearWorldMutationProposal(p);return 0;}
   p.kind=input.kind;p.worldInput=input;

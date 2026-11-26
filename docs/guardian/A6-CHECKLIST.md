@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La propuesta de construcción kind 3 conserva el dueño de la huella del centro y los props del mismo ticket. WASM acredita la colocación y rechaza un corredor afectado. La unión con Game y Draw sigue pendiente. [Control y límites](native-cold-worker-admission-20261126.md#propuesta-nativa-de-colocación-de-centro).
+
 El checkpoint civil mantiene el perfil nativo cuando ya se retiró el último cuerpo. La recarga de amanecer en NVIDIA conserva el reloj pausado y presenta Farm23 y Task14 tras una contratación pagada. [Recorrido y límites](native-cold-worker-admission-20261126.md#recarga-después-de-home19-y-al-amanecer).
 
 Tras Home19, el perfil explícito de Sabana admite el ataque introductorio al centro con los civiles refugiados. NVIDIA confirmó la retirada del animal, el amanecer y el mismo cuerpo nuevo en Farm23 y Task14 del segundo turno. [Recorrido y límites](native-cold-worker-admission-20261126.md#primera-noche-y-segunda-contratación-en-sabana).

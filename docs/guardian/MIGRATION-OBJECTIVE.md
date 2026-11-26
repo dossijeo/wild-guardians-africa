@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+WASM ya prepara la huella del primer centro y los props que despeja bajo un solo ticket. El polígono resultante coincide con el que instala Game en el inicio de Sabana 714. Quedan el cobro y el dibujo en la misma transacción, y la entrada desde el menú. [Control y límites](native-cold-worker-admission-20261126.md#propuesta-nativa-de-colocación-de-centro).
+
 El guardado civil conserva la selección del perfil nativo tras Home19 y al amanecer. NVIDIA recargó desde el roster vacío con el reloj pausado y presentó Farm23 y Task14 tras un solo cobro. [Pruebas y alcance](native-cold-worker-admission-20261126.md#recarga-después-de-home19-y-al-amanecer).
 
 NVIDIA verificó la primera noche de Sabana tras Home19. Un facóquero golpeó dos veces el centro y se retiró. El amanecer permitió una sola contratación pagada. Farm23 y Task14 del día 2 se presentaron en el mismo cuerpo nuevo. El recorrido usa el perfil explícito y una incursión introductoria con los civiles refugiados. [Pruebas y recibo](native-cold-worker-admission-20261126.md#primera-noche-y-segunda-contratación-en-sabana).
