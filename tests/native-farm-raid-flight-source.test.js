@@ -98,31 +98,60 @@ test('a southern Desert center approach and refuge acquire on their original bod
   }
 });
 
-test('the northern center corridor cannot acquire either motion across a possible worker encounter', async () => {
+test('the northern center corridor waits for the stop-safe Home suffix before acquiring the animal route', async () => {
   const {state,chunkKeys} = mixedDesertRaid();
-  const world = await nativeProductionAuthority(state, {chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
+  const acquired=[];
+  let homeReady,releaseHome;
+  const retained=new Promise(resolve=>{releaseHome=resolve;});
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    async onReady(record){if(record.kind==='home-route'&&!homeReady){homeReady=record;await retained;}},
+    onCommit(record,data){acquired.push({kind:record.kind,data});}});
   try {
     await untilProduction(world,()=>world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
     world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:24},target:{x:-10,z:0}}});
+    async function step(){const next=world.advance();await world.present();return next;}
     let next;
-    for (let i=0;i<20&&!next?.raid;i++) {
-      next=world.advance();
-      await world.present();
-    }
+    for(let i=0;i<30&&!homeReady;i++)next=await step();
+    assert(homeReady,'Home18 should be admissible with the animal stationary');
     assert.equal(next.raid.animals[0].targetId,'structure-2');
-    for (let i=0;i<10;i++) {
-      next=world.advance();
-      await world.present();
-    }
-    assert(world.records.every(row=>row.kind==='farm-arrival'||row.kind==='farm-arrival-stop'));
-    assert.deepEqual(world.records.filter(row=>row.committed).map(row=>row.kind),['farm-arrival','farm-arrival-stop']);
     const [animal]=next.raid.animals;
-    assert.deepEqual([animal.x,animal.z],[animal.spawn.x,animal.spawn.z]);
     assert.equal(next.workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
-    assert.equal(world.authority.nativeIntentProductionStatus().last?.status,'blocked');
-    assert.equal(next.structures[0].hp,600);
+    for(let i=0;i<3;i++){
+      next=await step();
+      assert.deepEqual([next.raid.animals[0].x,next.raid.animals[0].z],[animal.spawn.x,animal.spawn.z]);
+      assert(!world.records.some(record=>record.kind==='animal-crop-route'));
+    }
+    releaseHome();
+    await untilProduction(world,()=>acquired.some(row=>row.kind==='home-route'));
+    const home=acquired.find(row=>row.kind==='home-route').data.nativeHomeRouteBinding;
+    for(let i=0;i<16;i++)next=await step();
+    assert.equal(next.workers[0].nativeRouteAdmission,'native-home');
+    assert(!world.records.some(record=>record.kind==='animal-crop-route'));
+    const heldAt=next.elapsed,heldWorker=next.workers[0];
+    world.command({kind:'pause',reason:'center-flight-suffix'});
+    next=await step();
+    assert.equal(next.elapsed,heldAt);
+    assert.deepEqual([next.workers[0].x,next.workers[0].z],[heldWorker.x,heldWorker.z]);
+    assert(!world.records.some(record=>record.kind==='animal-crop-route'));
+    world.command({kind:'resume',reason:'center-flight-suffix'});
+    for(let i=0;i<100&&!acquired.some(row=>row.kind==='animal-crop-route');i++){
+      next=await step();
+      if(!acquired.some(row=>row.kind==='animal-crop-route'))assert.deepEqual([next.raid.animals[0].x,next.raid.animals[0].z],[animal.spawn.x,animal.spawn.z]);
+    }
+    const animalRoute=acquired.find(row=>row.kind==='animal-crop-route')?.data.nativeAnimalCropRouteBinding;
+    assert(animalRoute);
+    assert(animalRoute.reference.worldBoundary.effectiveTime>home.reference.worldBoundary.effectiveTime+1.6);
+    assert(animalRoute.reference.worldBoundary.effectiveTime<home.reference.endTime);
+    assert(!acquired.some(row=>row.kind==='home-arrival'));
+    for(let i=0;i<1500&&(next.raid||next.workers[0].nativeRouteAdmission!=='native-idle');i++)next=await step();
+    assert.equal(next.raid,null);
+    assert.equal(next.workers[0].id,state.workers[0].id);
+    assert.equal(next.workers[0].nativeRouteAdmission,'native-idle');
+    assert.equal(next.workers[0].hits,0);
+    assert.deepEqual(next.events.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),[580,560,540,520]);
     assert.deepEqual(world.faults,[]);
   } finally {
+    releaseHome();
     await world.close();
   }
 });

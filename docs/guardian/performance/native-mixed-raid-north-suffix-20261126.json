@@ -1,0 +1,150 @@
+{
+  "scenario": "Northern Desert Home18 keeps the animal at spawn until the remaining Home path is safe against independent stop and timing.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1,
+    "stepBatch": 2,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja",
+    "gates": 0
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33"
+  },
+  "baseline": {
+    "commit": "f55737e0486dbd870122060ba39cef146b785acc",
+    "failure": "Home18 should be admissible with the animal stationary",
+    "tapSha256": "0497048bd1101b4aadc7348e7a4b51ec80bb88135d51a556cfd76f2041f3d3ca"
+  },
+  "geometry": {
+    "originalCorridorsMinimum": 0.838446855545044,
+    "workerRouteToStationaryAnimal": 24.100000381469727,
+    "encounterRadius": 2.2,
+    "physicalThreshold": 1.3800000000000001,
+    "kind": "geometric distance over both paths before admission, with independent times"
+  },
+  "nativeControls": {
+    "early": {
+      "staged": 1,
+      "blocked": 0,
+      "at": 11.599999999999966
+    },
+    "ready": {
+      "verified": 1,
+      "foreign": {
+        "request": -1,
+        "event": -1,
+        "actor": -1
+      },
+      "at": 16.59999999999988,
+      "worker": [
+        -7.854842712474852,
+        3
+      ],
+      "requestSequence": 4,
+      "event": 29208
+    },
+    "tapSha256": "316eee712636e1837478f157f31d4769fac6dbb92679149d55009ac034db237c"
+  },
+  "spawn": {
+    "id": "event-29208",
+    "at": 10.799999999999983,
+    "origin": {
+      "x": -10,
+      "z": 27.1
+    }
+  },
+  "home": {
+    "actor": 900011,
+    "body": 1,
+    "assignment": 7,
+    "prepared": 10.849999999999982,
+    "preparedTicket": 5,
+    "acquired": 10.999999999999979,
+    "ticket": 6,
+    "end": 18.375702205077776,
+    "beforePause": {
+      "at": 12.199999999999953,
+      "x": -16,
+      "z": 1.4611572875253036
+    }
+  },
+  "animal": {
+    "actor": 1000000,
+    "body": 2,
+    "assignment": 8,
+    "acquired": 16.199999999999875,
+    "ticket": 8,
+    "preparedTicket": 7,
+    "targetId": 2
+  },
+  "combinedDraw": {
+    "sequence": 68,
+    "world": {
+      "version": 1,
+      "authorityEpoch": "fe9f836f-5789-458c-a03f-ae5fe23beefe/1",
+      "nativeSession": 1,
+      "ticket": 8,
+      "effectiveTime": 16.199999999999875
+    },
+    "homeAge": 5.249999523162842,
+    "animalAge": 0.04999999701976776
+  },
+  "refuge": {
+    "body": 1,
+    "ticket": 10,
+    "retiredSequence": 9
+  },
+  "centerDamage": [
+    {
+      "at": 36.20000000000046,
+      "hp": 580
+    },
+    {
+      "at": 39.20000000000071,
+      "hp": 560
+    },
+    {
+      "at": 45.10000000000122,
+      "hp": 540
+    },
+    {
+      "at": 50.62000000000169,
+      "hp": 520
+    }
+  ],
+  "raidEndedAt": 58.9700000000024,
+  "civil": {
+    "worker": "worker-900011",
+    "body": 3,
+    "ticket": 28,
+    "admission": "native-idle"
+  },
+  "outcome": {
+    "workerHits": 0,
+    "workerIncapacitations": 0,
+    "ledgerPreserved": true,
+    "drawDrained": true,
+    "webGpuMessages": 0
+  },
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "dd084c36cebc88df02ff012e3ae382566480acea05c20134dfff35f18f97d488",
+    "public/wild-engine/spatial-threaded.wasm": "c05cffea411097e86b684765218e78c9d736ff131f24a584255c9d0ce87a24f5",
+    "public/wild-engine/spatial-threaded.mjs": "8479646f090904f8f4bb137b938335e82d2d279df471667335ccbc07d21bb26d"
+  },
+  "evidence": {
+    "receiptSha256": "e239c11051b53b132578536d6a93c1f9221b2766d62b1625c174b2cfefd36b11",
+    "traceSha256": "796950acc3f5b67f256f15311df37c398f80b07ec8302e1c29339e750677ea3c",
+    "traceBytes": 39453951,
+    "collectionComplete": true,
+    "dataLossOccurred": false
+  }
+}

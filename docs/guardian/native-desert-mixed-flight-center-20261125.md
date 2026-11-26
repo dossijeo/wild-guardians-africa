@@ -2,9 +2,9 @@
 
 La calificación de desarrollo de Desierto 983 conserva el trabajador de Farm y el facóquero de RaidSpawned. El encuadre sur permite que Game elija el centro y que el dueño nativo pruebe la separación antes de solicitar los recursos gráficos de ambas marchas. Los muros de la partida permanecen activos. La selección ordinaria encuentra el acceso a `structure-2`.
 
-Home18 se prepara primero. Verifica el corredor de refugio contra el corredor completo del animal, todavía pendiente. Al adquirir la marcha 26, el Host exige el mismo recibo del trabajador en Home18 o la ausencia exacta de Home19. La primera acción contra el centro espera esa ausencia. Se conservan las distancias de encuentro de Game y el barrido de terreno de cada ruta. Pausa o entrega tardía de READY no pueden convertir trayectorias geométricamente separadas en un encuentro.
+Home18 se prepara primero. Verifica el corredor hasta el refugio frente a la pose de nacimiento del animal, que permanece estacionario hasta GO26. Para adquirir 26 se verifica la separación del tramo todavía vigente de Home18 o la ausencia exacta de Home19. La primera acción contra el centro espera esa ausencia. Se conservan las distancias de encuentro de Game y el barrido de terreno de cada ruta.
 
-Box2D une las envolventes del principio y del final antes de consultar posibles contactos. La prueba local usa las envolventes ya existentes de ambos corredores completos. Una separación superior al alcance acredita también los extremos retenidos. El caso que se solapa requiere el dueño de encuentros del plan. [Box2D 3.1, búsqueda continua](https://github.com/erincatto/box2d/blob/v3.1.0/src/solver.c#L427-L446).
+Box2D une las envolventes del principio y del final antes de consultar posibles contactos. Una separación superior al alcance acredita también los extremos retenidos. Para el encuadre norte la comprobación nativa alcanza cada segmento restante y el refugio. Los recorridos que de verdad producen un encuentro requieren el dueño de encuentros del plan. [Box2D 3.1, búsqueda continua](https://github.com/erincatto/box2d/blob/v3.1.0/src/solver.c#L427-L446).
 
 ## Huida por un portón
 
@@ -80,7 +80,7 @@ En dos pasadas emparejadas a 4K/60 Hz, NVIDIA presentó el primer daño del mism
 
 ## Controles
 
-Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. El mismo escenario nativo bloquea Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.
+Desde la pose que acreditó Stop24, el encuadre norte dio una distancia mínima de 15,856 m en 143 pasos de Game hasta el refugio. En ese contraste se retiró solo el marcador de admisión para reproducir el movimiento previo. Cerca del centro, los dos recorridos pasan a unos 0,838 m en momentos diferentes. La preimagen bloqueaba Home18 y la marcha del animal antes de preparar sus recursos. El encuadre sur conserva al menos 3 m entre las envolventes y supera el radio de encuentro de 2,2 m.
 
 En el control positivo, retener READY de Home conserva ambos orígenes. Se confirma Home19 sin daño, cuatro golpes que llevan el centro de 600 a 520 HP y un Retreat con el mismo cuerpo del facóquero. Tras RaidEnded, la ausencia Home19 acredita desde el mismo refugio un cuerpo nuevo para el trabajador original. Farm23 conserva la vuelta sin urgencia y llega a Idle. La selección integrada pasa 57 pruebas e incluye AttackCrops, el ataque aislado y las rutas previas de Farm y Flee.
 
@@ -284,3 +284,15 @@ En NVIDIA Turing, Action15 adquirió el ticket 7 a t=14,15. La restitución qued
 La calificación cubre un trabajador, un facóquero y un portón en el perfil de desarrollo de Desierto. Los encuentros entre ambos corredores y la cadencia siguen abiertos.
 
 Pasaron 117 pruebas de regresión y las dos pruebas nuevas reprodujeron el fallo en la preimagen. Standalone y pthread conservan sus importaciones y exponen las dos funciones de relevo. Pthread arrancó con memoria compartida. El build WebGPU de producción terminó en 51,35 s. Sus tres artefactos nativos coinciden con los usados en la captura.
+
+## Huida por el corredor norte
+
+Los recorridos completos pasan a 0,838 m entre sí con tiempos independientes. El recorrido inicial del trabajador deja al menos 24,10 m hasta la pose de nacimiento del facóquero. Home18 acredita ese caso estacionario y el dueño nativo conserva el nudo posterior al último tramo que puede acercarse a 2,2 m de la ruta del animal. Desde ese nudo, una parada en cualquier punto restante, incluido el refugio, conserva la separación. Si el propio refugio queda dentro del alcance, 26 espera la retirada de Home19. WASM coteja la solicitud y el evento de nacimiento, y vuelve a comprobar los segmentos del programa 26 al prepararlo y adquirirlo. La distancia punto-segmento acota la proyección a los extremos. La petición queda bajo su dueño mientras espera. [Jolt 5.3.0, punto más próximo](https://github.com/jrouwe/JoltPhysics/blob/v5.3.0/Jolt/Geometry/ClosestPoint.h) · [DetourCrowd 1.6.0, solicitudes de marcha](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp).
+
+El control de WASM preparó un 26 de prueba a 11,60 s y rechazó su admisión mixta. Cuando la comprobación pasó, una solicitud, un evento o un actor ajeno siguieron rechazándose. La prueba de producción retuvo READY de Home18, mantuvo inmóvil al animal y comprobó la pausa durante Home18. La preimagen se detuvo antes del primer READY de refugio con ese mismo control.
+
+En NVIDIA Turing, `event-29208` nació a 10,80 s. Home18 adquirió el ticket 6 a 11,00 s y conservó el cuerpo 1 durante la pausa a 12,20 s. La marcha 26 adquirió el ticket 8 a 16,20 s, antes del final de Home18 a 18,376 s. El envío 68 presentó ambas marchas con edades de 5,25 y 0,05 s. Home19 retiró el cuerpo 1 en el refugio. El centro recibió sus cuatro golpes de 20 HP y el mismo trabajador volvió a Idle con el cuerpo 3, sin daño y con el saldo intacto. Draw drenó sin errores y la traza terminó sin pérdidas. El primer intento del arnés siguió avanzando mientras Stop24 esperaba su admisión. El recorrido acreditado esperó su GO antes de continuar. [Recibo físico y control nativo](performance/native-mixed-raid-north-suffix-20261126.json).
+
+La calificación cubre un trabajador y un facóquero en el encuadre norte sin portón. El encuentro efectivo, la recuperación del dispositivo en esta variante, la activación ordinaria y C4 siguen abiertos.
+
+Pasaron 115 pruebas de regresión y el build WebGPU de producción terminó en 59,10 s. Los tres artefactos nativos del build coinciden con los de la captura. Standalone y pthread conservan sus importaciones y añaden `nav_center_flight_animal_ready`. Pthread arrancó con memoria compartida.

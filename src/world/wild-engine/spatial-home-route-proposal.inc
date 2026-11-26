@@ -71,6 +71,7 @@ EMSCRIPTEN_KEEPALIVE int nav_home_route_proposal_commit_bound(double session,dou
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,18);if(valid!=1)return valid;
  const auto& d=*p.home;if(!homeRouteSourceCurrent(s,d)||d.slot>s.routeSlots.size()||d.slot<s.routeSlots.size()&&(s.routeSlots[d.slot].active||s.routeSlots[d.slot].generation!=d.generation)){clearWorldMutationProposal(s.barrierProposal);return -2;}
  auto binding=std::make_shared<NativeHomeRouteBinding>();binding->actual={d.header,uint64_t(ticket)};binding->source=d.stationarySource;binding->requestSource=d.homeRequestSource;
+ binding->centerFlight=d.centerFlight;
  if(preparedTicket==ticket)binding->prepared=binding->actual;
  else if(d.previousHome&&preparedTicket==double(d.previousHome->ticket)&&d.timeTranslation[9]==1&&d.timeTranslation[10]==1)binding->prepared=*d.previousHome;
  else return -9;

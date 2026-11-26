@@ -381,8 +381,70 @@ static bool separatedFlightRoutes(const ReservationPath& home,const ReservationP
                               std::abs(a[0]),std::abs(a[1]),std::abs(a[2]),std::abs(a[3])});
  return std::hypot(x,z)>reach+1e-7+64*std::numeric_limits<double>::epsilon()*scale;
 }
+using FlightPoint=std::pair<double,double>;
+static FlightPoint flightVertex(const RouteSlot& route,size_t i){
+ return {route.points[i*2],route.points[i*2+1]};
+}
+static double pointFlightSegmentDistance(FlightPoint p,FlightPoint a,FlightPoint b){
+ const double x=b.first-a.first,z=b.second-a.second,length=std::hypot(x,z);
+ if(length==0)return std::hypot(p.first-a.first,p.second-a.second);
+ const double ux=x/length,uz=z/length;
+ const double t=std::clamp((p.first-a.first)*ux+(p.second-a.second)*uz,0.0,length);
+ return std::hypot(p.first-a.first-t*ux,p.second-a.second-t*uz);
+}
+static int flightOrientation(FlightPoint a,FlightPoint b,FlightPoint c){
+ const double x=(b.first-a.first)*(c.second-a.second),z=(b.second-a.second)*(c.first-a.first);
+ const double error=8*std::numeric_limits<double>::epsilon()*(std::abs(x)+std::abs(z)+1);
+ return x-z>error?1:z-x>error?-1:0;
+}
+static bool flightSegmentsMeet(FlightPoint a,FlightPoint b,FlightPoint c,FlightPoint d,double reach){
+ const double x=std::max({0.,std::min(c.first,d.first)-std::max(a.first,b.first),std::min(a.first,b.first)-std::max(c.first,d.first)}),
+   z=std::max({0.,std::min(c.second,d.second)-std::max(a.second,b.second),std::min(a.second,b.second)-std::max(c.second,d.second)});
+ if(std::hypot(x,z)>reach)return false;
+ if(x==0&&z==0&&flightOrientation(a,b,c)*flightOrientation(a,b,d)<=0&&flightOrientation(c,d,a)*flightOrientation(c,d,b)<=0)return true;
+ return pointFlightSegmentDistance(a,c,d)<=reach||pointFlightSegmentDistance(b,c,d)<=reach||
+   pointFlightSegmentDistance(c,a,b)<=reach||pointFlightSegmentDistance(d,a,b)<=reach;
+}
+static bool homeSegmentMeetsAnimal(FlightPoint a,FlightPoint b,FlightPoint origin,const RouteSlot& animal,double reach){
+ if(animal.points.empty())return flightSegmentsMeet(a,b,origin,origin,reach);
+ for(size_t i=0;i<animal.points.size()/2;i++){
+  const auto next=flightVertex(animal,i);
+  if(flightSegmentsMeet(a,b,origin,next,reach))return true;
+  origin=next;
+ }
+ return false;
+}
+// Walk the Home suffix backwards to its last unsafe edge. Every possible
+// stop after the next knot is separated from the animal's entire trajectory.
+// The knot comes from the admitted Home timetable, including gate holds.
+static double centerFlightClearAt(const RouteSlot& home,const RouteSlot& animal,FlightPoint animalOrigin,double reach,double now){
+ const auto hb=encounterBounds({&home}),ab=encounterBounds({&animal});
+ const double scale=std::max({1.,std::abs(animalOrigin.first),std::abs(animalOrigin.second),
+   std::abs(hb[0]),std::abs(hb[1]),std::abs(hb[2]),std::abs(hb[3]),std::abs(ab[0]),std::abs(ab[1]),std::abs(ab[2]),std::abs(ab[3])});
+ const double required=reach+1e-7+64*std::numeric_limits<double>::epsilon()*scale;
+ const FlightPoint end=home.points.empty()?FlightPoint{home.originX,home.originZ}:flightVertex(home,home.points.size()/2-1);
+ if(homeSegmentMeetsAnimal(end,end,animalOrigin,animal,required))return std::numeric_limits<double>::infinity();
+ const auto sample=reservationPosition({&home},now);
+ for(size_t i=home.distances.size();i-->0;){
+  const double endAt=routeTimeAtDistance(home,home.distances[i]);if(endAt<=now)break;
+  const double startAt=i?routeTimeAtDistance(home,home.distances[i-1]):home.startTime;
+  const auto start=startAt<=now?sample:i?flightVertex(home,i-1):FlightPoint{home.originX,home.originZ};
+  if(homeSegmentMeetsAnimal(start,flightVertex(home,i),animalOrigin,animal,required))return endAt;
+ }
+ return now;
+}
+EMSCRIPTEN_KEEPALIVE int nav_center_flight_animal_ready(double worker,double animal,double request,double event){
+ const auto& s=state();
+ if(!integer(worker)||!integer(animal)||!integer(request)||!integer(event))return -1;
+ const auto w=s.activeIntents.find(uint64_t(worker)),a=s.activeIntents.find(uint64_t(animal));
+ if(w==s.activeIntents.end()||a==s.activeIntents.end()||!nativeHomeBodyCurrent(s,w->second)||!animalRouteRequestCurrent(s,a->second))return -1;
+ const auto& home=*s.routeSlots[w->second.slot].homeBinding;const auto& clearance=home.centerFlight;
+ if(!home.requestSource||home.requestSource->raidSpawnSequence!=uint64_t(event)||!clearance.animal||
+    clearance.animal!=a->second.animalRouteRequest||clearance.animal->sequence!=uint64_t(request))return -1;
+ return s.effectiveTime>=clearance.readyAt?1:0;
+}
 EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ticket,double worker,double animal,double event){
- auto& s=state();const auto& p=s.barrierProposal;
+ auto& s=state();auto& p=s.barrierProposal;
  const int biome=spatial_world_biome();
  if(!integer(worker)||!integer(animal)||worker==animal||!integer(event)||event<=0||(biome!=0&&biome!=1)||
     !p.pending||session!=double(s.session)||session!=double(p.session)||ticket!=double(p.ticket)||
@@ -394,8 +456,6 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  if(mode<1||mode>3||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
  const bool center=s.animalCropState[22]==1;
  if(center!=(biome==1))return -2;
- // Home prepares first in the center cohort. Its proof includes the entire
- // declared center corridor even before the animal's own timetable exists.
  const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1&&!center?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
  const RouteSlot* hr=nullptr;auto source=std::shared_ptr<const NativeHomeResourceRequest>(wi.homeRequest);
  if(source){if(!nativeHomeRequestBodyCurrent(s,wi))return -2;}
@@ -405,16 +465,28 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  }
  if(!source||source->actor!=uint64_t(worker)||source->raidSpawnSequence!=uint64_t(event)||double(source->body)==s.animalCropState[3])return -2;
  ReservationPath home{hr,source->x,source->z};
+ // Game.updateWorkerEncounters includes the frontal-attack radius as well as collision.
+ const double reach=s.animalCropState[8]+std::max(1.1,source->radius);
  if(p.kind==18){
   if(!p.home||p.home->homeRequestSource!=source||p.home->route.actor!=wi.actor||p.home->body!=source->body)return -2;
   home.route=&p.home->route;
+  if(center&&mode==1){
+   if(!ai.animalRouteRequest||!animalRouteRequestCurrent(s,ai))return -2;
+   // Only Home can acquire now. The animal is stationary until its own GO.
+   double contact;
+   if(reservationConflict(home,{nullptr,crop.x,crop.z},reach,s.effectiveTime,contact))return 0;
+   p.home->centerFlight={ai.animalRouteRequest,centerFlightClearAt(*home.route,ar,{crop.x,crop.z},reach,s.effectiveTime)};
+   return 1;
+  }
  }else{
   if(!p.animalRoute||p.animalRoute->animalRouteSource!=ai.animalRouteRequest||p.animalRoute->route.actor!=ai.actor||mode!=1)return -2;
   crop.route=&p.animalRoute->route;
+  if(center&&hr){
+   if(nav_center_flight_animal_ready(worker,animal,double(ai.animalRouteRequest->sequence),event)!=1)return 0;
+   return centerFlightClearAt(*hr,*crop.route,{crop.route->originX,crop.route->originZ},reach,s.effectiveTime)<=s.effectiveTime?1:0;
+  }
  }
- // Game.updateWorkerEncounters uses the animal radius plus 1.1 metres
- // for a frontal encounter and the worker radius for actual collision.
- return separatedFlightRoutes(home,crop,s.animalCropState[8]+std::max(1.1,source->radius))?1:0;
+ return separatedFlightRoutes(home,crop,reach)?1:0;
 }
 
 // The spawn must be clear even if the acquired worker finishes its entire

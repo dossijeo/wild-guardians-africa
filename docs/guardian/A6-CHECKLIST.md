@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En el encuadre norte de Desierto, Home18 sale con el facóquero todavía en su pose de nacimiento. La marcha al centro espera hasta que cualquier parada en el corredor restante del trabajador conserve la separación. NVIDIA confirmó ambas marchas en el mismo envío antes de Home19, cuatro golpes al centro y el regreso a Idle. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#huida-por-el-corredor-norte).
+
 RaidSpawned toma el cuerpo de Repair después de GO15 y cancela la restitución de la muralla. NVIDIA confirmó el READY tardío, el cruce con Home18 y el regreso civil a Idle con la ruina y el saldo intactos. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-con-repair-action15-adquirida).
 
 Tras la llegada de Task14, RaidSpawned cancela el READY de Action15 y conserva la pose terminal del mismo cuerpo para Home18. NVIDIA confirmó el cruce, Home19 y el regreso civil sin aplicar Repair. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-antes-del-go-de-action15).

@@ -242,10 +242,16 @@ NativeHomeRouteSourceView homeRouteSourceView(const NativeTaskSettlementBinding*
  }return v;
 }
 struct NativeHomeRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
+struct NativeAnimalRouteRequest;
+struct CenterFlightClearance {
+  std::shared_ptr<const NativeAnimalRouteRequest> animal;
+  double readyAt=0;
+};
 struct NativeHomeRouteBinding {
   NativeHomeRouteOrigin prepared,actual;uint64_t assignmentSequence=0;
   std::shared_ptr<const NativeTaskSettlementBinding> source;
   std::shared_ptr<const NativeHomeResourceRequest> requestSource;
+  CenterFlightClearance centerFlight;
 };
 // Bounded causal source: the preceding cycle/decision are named by sequence,
 // not retained as an ever-growing chain of movement/Idle histories.
@@ -419,6 +425,7 @@ struct PendingNativeMotionDraft {
   std::optional<FarmHarvestYield> farmHarvestYield;
   std::shared_ptr<const NativeTaskSettlementBinding> strollSettlementSource;
   std::shared_ptr<const NativeHomeResourceRequest> homeRequestSource;
+  CenterFlightClearance centerFlight;
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalHeldBinding;
   std::optional<NativeFarmArrivalHeldSource> farmArrivalHeldSource;

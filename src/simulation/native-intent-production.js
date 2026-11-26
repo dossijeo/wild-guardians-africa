@@ -22,7 +22,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     const r=planner.nativeAnimalCropState?.(actorId);
     const flight=planner.nativeRaidFlightMember?.(state,animal);
     const waitingForHome=flightStopMarkers.has(flight?.nativeRouteAdmission)||
-      r?.purpose==='center'&&flight?.nativeRouteAdmission==='pending-raid-flight-resources';
+      r?.purpose==='center'&&(flight?.nativeRouteAdmission==='pending-raid-flight-resources'||
+        r.mode===1&&planner.nativeCenterFlightAnimalReady?.(state,animal,r.requestSequence)===false);
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
     if(r?.mode===5||r?.mode===2&&!r.retreat&&r.arrived&&!(r.purpose==='center'&&flight))return {actorId,kind:'animal-crop-strike',operation:'startNativeAnimalCropStrikeAfterGpuQuiescence',prepare:'prepareNativeAnimalCropStrikeResources',requestSequence:r.requestSequence};
    }
