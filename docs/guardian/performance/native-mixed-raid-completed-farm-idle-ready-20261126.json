@@ -1,0 +1,141 @@
+{
+  "scenario": "A daytime Desert raid takes the completed Farm23 endpoint while the first Idle21 READY is held.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "setup": {
+    "workerInitialPosition": [
+      -14,
+      4.5
+    ],
+    "refuge": [
+      -14,
+      11.8
+    ],
+    "raidSpawnOffset": 0.1,
+    "hostClock": "Two controlled elapsed steps before the cut, then the normal scheduler."
+  },
+  "farm": {
+    "ticket": 2,
+    "body": 1,
+    "assignment": 3,
+    "endTime": 10,
+    "observedAt": 10.049999999999999,
+    "pose": [
+      -14,
+      4.5,
+      0.37
+    ],
+    "gateIds": []
+  },
+  "spawn": {
+    "event": "event-29208",
+    "elapsed": 10.099999999999998
+  },
+  "idle": {
+    "request": 2,
+    "preparedTicket": 3,
+    "cancelled": true,
+    "lateReadyForwarded": true,
+    "committed": false,
+    "wireOrder": [
+      4,
+      5,
+      7,
+      9
+    ]
+  },
+  "home": {
+    "ticket": 5,
+    "assignment": 6,
+    "body": 1,
+    "actor": 900011,
+    "sourceRequest": 4,
+    "requestedAt": 10.099999999999998,
+    "gateIds": [
+      1000000
+    ],
+    "origin": [
+      -14,
+      4.5,
+      0.37
+    ]
+  },
+  "animal": {
+    "ticket": 7,
+    "body": 2,
+    "actor": 1000001,
+    "assignment": 7
+  },
+  "refuge": {
+    "ticket": 9,
+    "retiredSequence": 8,
+    "body": 1
+  },
+  "events": {
+    "centerDebits": [
+      {
+        "at": 41.800000000000935,
+        "hp": 580
+      },
+      {
+        "at": 44.850000000001195,
+        "hp": 560
+      },
+      {
+        "at": 50.90000000000171,
+        "hp": 540
+      },
+      {
+        "at": 56.27000000000217,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 64.69000000000278
+  },
+  "civilian": {
+    "ticket": 27,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 8,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "drawDrained": true,
+    "webGpuMessages": 0,
+    "authoritativeFarmStopped": false
+  },
+  "evidence": {
+    "receiptSha256": "4f5d442f06f77e6caf296d477aeeba759721668147cd0dd790c67ee42f121967",
+    "traceSha256": "ec86b0488aa61505d3605e179ec8ace59104d33a51333ed685f8b4f735fc0b10",
+    "traceBytes": 43325656,
+    "dataLossOccurred": false,
+    "artifacts": {
+      "src/world/wild-engine/spatial-savanna.wasm": "0f5f57260277a206219697f0ab856734ae8966b3c8de6631f3bea292e3585f9d",
+      "public/wild-engine/spatial-threaded.wasm": "5069108b5b76c2ff27a102717ba4d9f6b57dcc270a7d2474e7742c9dd165b881",
+      "public/wild-engine/spatial-threaded.mjs": "f27330da01763fb022be23dead12128666032819ca8d04773e334c6f45c79498",
+      "public/wild-engine/spatial-threaded.worker.mjs": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+    },
+    "baseline": {
+      "commit": "dd3e09a8ce09823e37499be82099a8dcc617e168",
+      "failure": "Native Farm Home request rejected",
+      "controlSha256": "6bf3e792f3d83bec0325fc44f4f6cbf97779aa3b3744a36be13af1316875edbf"
+    }
+  }
+}

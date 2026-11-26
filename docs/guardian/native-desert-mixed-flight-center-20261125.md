@@ -192,3 +192,13 @@ En NVIDIA Turing, el primer dibujo del sustituto se envió a t=10,80. Home18 y l
 El arnés controló el reloj del planificador para alcanzar la apertura parcial y retomó el ritmo normal después del relevo. Las primeras pasadas terminaron antes de perder Draw, durante la preparación del corte. La calificación aporta evidencia de E para esta cohorte de desarrollo y deja abierta la aceptación de cadencia.
 
 Pasaron 426 pruebas dirigidas y la compilación de producción terminó en 44,52 s. Dos controles posteriores delimitan el siguiente relevo de huida. Si la incursión nace con Farm23 completado e Idle todavía en preparación, se rechaza la petición de Home. Si Idle ya se adquirió, el avance exige una proyección nativa de esa intención.
+
+## RaidSpawned entre Farm23 completado y el primer Idle
+
+La preimagen abortaba al pedir Home mientras el primer Idle21 del Farm completado todavía ocupaba la propuesta nativa. La transición cancela únicamente el borrador 21 que pertenece al mismo recibo de Farm, actor, cuerpo y asignación. Home conserva la pose terminal ya ejecutada. La prueba nativa del origen vincula la solicitud nueva con el `RaidSpawned` exacto. El portón verifica la pose antes de que Home18 prepare su cruce. El Farm que todavía carece de una adquisición sigue sin admitir la pareja fuera del refugio.
+
+En NVIDIA Turing, Farm23 terminó en el punto inicial del lado de trabajo con el cuerpo 1. El arnés retuvo el READY del ticket 3, observó la cancelación del pedido 2 a partir de `RaidSpawned` en t=10,10 y entregó tarde ese mismo READY. Home18 adquirió el ticket 5 con el cuerpo 1, la pose terminal y el portón original. Home19 retiró ese cuerpo y autorizó el regreso con la secuencia 8. Después de los cuatro golpes, el mismo trabajador volvió con el cuerpo 3, llegó a Idle y el dispositivo drenó. [Recibo físico](performance/native-mixed-raid-completed-farm-idle-ready-20261126.json).
+
+El arnés controló los dos primeros pasos y dejó correr el planificador normal tras liberar el READY antiguo. El control determinista también repite el relevo con un Farm que camina antes de llegar. Las dos variantes WASM se reconstruyeron con la nueva consulta de procedencia. Las cuatro comparaciones de ABI, terreno, ruta, incursión y guardado pasaron frente al binario anterior. El módulo pthread arrancó con memoria compartida y expuso la consulta. Queda abierto el nacimiento de la incursión cuando Idle21 ya se adquirió.
+
+Pasaron 469 pruebas de regresión, los dos controles focales de llegada estacionaria y llegada tras caminar, y la compilación de producción en 45,15 s. La captura aporta evidencia funcional para la cohorte de desarrollo de Desierto.

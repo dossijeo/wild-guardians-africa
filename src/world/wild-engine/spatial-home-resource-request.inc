@@ -65,7 +65,8 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  auto& s=state();if(!integer(actor)||session!=double(s.session)||!integer(assignmentSequence)||!integer(generation)||generation>double(UINT32_MAX)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  const auto& pending=s.barrierProposal;
  const bool farmContinuation=farm&&pending.pending&&pending.kind==23&&pending.farmArrivalRoute&&pending.farmArrivalRoute->header[1]==actor&&pending.farmArrivalRoute->farmArrivalHeldBinding;
- if(pending.pending&&!farmContinuation||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto* farmIdle=raidSpawnSequence&&farm&&pending.pending&&pending.kind==21&&pending.idleCycle&&pending.idleCycle->farmSource?&*pending.idleCycle:nullptr;
+ if(pending.pending&&!farmContinuation&&!farmIdle||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;auto& intent=found->second;
  if(intent.homeRequest&&intent.homeRequest->raidSpawnSequence!=raidSpawnSequence)return -2;
  if(raidSpawnSequence&&intent.homeRequest&&(intent.homeRequest->farmArrivalSourceSequence!=uint64_t(assignmentSequence)||intent.homeRequest->farmArrivalSourceGeneration!=uint32_t(generation)))return -2;
@@ -82,6 +83,14 @@ static int requestHeldWorkerHome(double actor,double session,double assignmentSe
  // Keep every other proposal and all source/body checks unchanged.
  if(farmContinuation){if(pending.farmArrivalRoute->farmArrivalHeldBinding!=route.farmArrivalBinding)return -4;clearWorldMutationProposal(s.barrierProposal);}
  const auto& pose=route.executionPose;SpatialBodyView body;if(!spatialReadBody(route.reservationBody,body))return -2;
+ // A raid may take the completed Farm pose while its first Idle is pending.
+ // Only the draft owned by this exact Farm binding can lose its ticket.
+ if(farmIdle){
+  const auto& source=farmIdle->source;
+  if(!completed||farmIdle->farmSource!=route.farmArrivalBinding||source.kind!=23||source.actor!=intent.actor||
+     source.session!=s.session||source.sequence!=intent.assignmentSequence||source.body!=route.reservationBody)return -4;
+  clearWorldMutationProposal(s.barrierProposal);
+ }
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=intent.actor;request->session=s.session;request->body=route.reservationBody;request->profile=intent.profile;request->bodyFlags=body.flags;request->radius=route.radius;request->at=s.effectiveTime;
  request->x=pose[0];request->z=pose[1];request->yaw=pose[4];request->runPhase=pose[9];request->walkPhase=pose[10];request->carryPhase=pose[11];request->runRemaining=pose[14];request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
  if(farm){request->farmArrivalSourceSequence=uint64_t(assignmentSequence);request->farmArrivalSourceGeneration=uint32_t(generation);}else{request->idleStrollSourceSequence=uint64_t(assignmentSequence);request->idleStrollSourceGeneration=uint32_t(generation);}
@@ -265,6 +274,14 @@ EMSCRIPTEN_KEEPALIVE double nav_home_flight_event(double actor,double ticket){
  const auto& intent=s.activeIntents.at(uint64_t(actor));
  const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
  return request?double(request->raidSpawnSequence):0;
+}
+EMSCRIPTEN_KEEPALIVE int nav_home_flight_from_completed_farm(double actor,double sequence,double event){
+ const auto& s=state();
+ if(!integer(actor)||!integer(sequence)||!integer(event))return 0;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;
+ const auto& request=found->second.homeRequest;
+ return request&&request->completedFarmArrival&&double(request->sequence)==sequence&&
+   double(request->raidSpawnSequence)==event&&nativeHomeRequestBodyCurrent(s,found->second)?1:0;
 }
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;

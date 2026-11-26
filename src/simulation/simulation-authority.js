@@ -147,6 +147,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       game.workers.length!==1||game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==1)return;
    const [animal]=game.raid.animals,[worker]=game.workers;
+   const raidSpawnSequence=Number(event.id.split('-').at(-1));
    if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering'||nativeBodies.id(animal.id)!==undefined)return;
    const centerAttack=nativeCenterAttackCohort(game,worker);
    if(game.biome!=='sabana'&&!centerAttack)return;
@@ -169,10 +170,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          execution.executedThrough!==game.elapsed||execution.x!==worker.x||execution.z!==worker.z)return;
       pose=execution;bodyId=execution.bodyId;
      }else{
-      // A Farm cancelled at the refuge keeps the same certified pose.
+      // Home can begin at the refuge or the exact endpoint of a completed Farm.
       if(source.kind!=='native-home-request-reference'||source.version!==2||source.requestedAt!==game.elapsed||
-         source.raidSpawnSequence!==Number(event.id.split('-').at(-1))||
-         source.pose.x!==source.home.x||source.pose.z!==source.home.z)return;
+         source.raidSpawnSequence!==raidSpawnSequence||source.pose.x!==worker.x||source.pose.z!==worker.z)return;
+      if((source.pose.x!==source.home.x||source.pose.z!==source.home.z)&&
+         session.core.wasm.nav_home_flight_from_completed_farm?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1)return;
       pose=source.pose;bodyId=source.bodyId;
      }
      const stationary=planner.nativeGateMechanismSegment(gate.id,bodyId,pose,pose);
@@ -187,7 +189,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
    const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
    let selected;
    try{
-    selected=planner.declareRaidFlightPair(game,animal,worker,Number(event.id.split('-').at(-1)),body,center,()=>targetFor(game,animal,nav,!centerAttack));
+    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,center,()=>targetFor(game,animal,nav,!centerAttack));
     if(selected)assignRaidTarget(game,animal,selected,nav);
    }finally{if(!selected)nativeBodies.remove(animal.id);}
   }
