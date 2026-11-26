@@ -25,7 +25,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyRecoveredEncounterFall,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -289,6 +289,11 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function encounterWorkerCurrent(source,animal,from){
     const peer=actors.get(source?.worker);
     if(!source||peer?.state!==0||peer.closed||peer.current)return false;
+    const recovered=animal?.recoveredWorkerImpact;
+    if(recovered)return peer.recoveredWorkerImpact===recovered&&source.worker===recovered.workerId&&
+      source.workerBody===recovered.workerBody&&source.spawn===recovered.spawn&&recovered.impactAt<=from&&
+      source.workerAssignment===recovered.workerAssignment&&
+      source.restoredHit===(recovered.workerAssignment===undefined?recovered.hit:undefined);
     const impact=animal?.cropRequest?.restoredWorkerImpact;
     if(impact)return peer.restoredWorkerImpact===impact&&source.restoredHit===impact.hit&&
       source.workerAssignment===undefined&&source.worker===impact.actorId&&source.workerBody===impact.bodyId&&
@@ -408,7 +413,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
          !sameHandle(revoked,exhaustion.handle)||exhaustion.assignment!==current.assignmentSequence||exhaustion.animalBody!==route.bodyId||
          !encounterWorkerCurrent(exhaustion,owner,exhaustion.from)||
          exhaustion.at!==event.effectiveTime||exhaustion.from!==clock?.committedThrough||
-         !(exhaustion.from<exhaustion.at)||exhaustion.at-exhaustion.from>.021||!id(exhaustion.hit)||exhaustion.hit<=(exhaustion.restoredHit??exhaustion.spawn)||
+         !(exhaustion.from<exhaustion.at)||exhaustion.at-exhaustion.from>.021||!id(exhaustion.hit)||
+         exhaustion.hit<=(owner?.recoveredWorkerImpact?.hit??exhaustion.restoredHit??exhaustion.spawn)||
          ![exhaustion.x,exhaustion.z,exhaustion.yaw,exhaustion.phase,exhaustion.exit?.x,exhaustion.exit?.z].every(Number.isFinite)||
          !exhaustion.first||!['x','z','yaw','phase','distance'].every(key=>Number.isFinite(exhaustion.first[key]))||
          exhaustion.first.distance<=0||Math.abs(exhaustion.first.distance-(exhaustion.at-exhaustion.from)*3.8)>1e-10||
@@ -1043,6 +1049,18 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       // Its body stays retired. The receipt is consumed by the same civil
       // Farm request as it would have been on the original Draw.
       retiredRefuge=proof;
+    },
+    installRecoveredEncounterFall(value,ref){
+      const fall=copyRecoveredEncounterFall(value),actor=actors.get(ref.actorId),record=actor?.current;
+      const approach=fall.version===2,at=approach?fall.impactAt:ref.worldBoundary.effectiveTime;
+      if(closed||!clock||clock.committedThrough<at||!record?.recoveredCrop||
+         active.get(ref.actorId)!==record||!sameNativeAnimalCropReference(record.cropBinding.reference,ref)||
+         approach!==(ref.purpose==='center')||actors.has(fall.workerId)||active.has(fall.workerId))
+        throw Error('Recovered Fall conflicts with the held animal route');
+      const worker=actorContext(fall.workerId);
+      worker.state=0;
+      if(approach)worker.recoveredWorkerImpact=actor.recoveredWorkerImpact=fall;
+      else worker.encounterRecovery={hit:fall.hit,body:fall.workerBody,at};
     },
     prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;

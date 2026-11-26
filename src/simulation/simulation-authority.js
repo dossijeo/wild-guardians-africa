@@ -1048,13 +1048,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   }
   function recoveryRoute(){
     if(encounterDraftAdvance?.published){
-      const source=planner.nativeEncounterRetreatRecovery();
+      const source=planner.nativeEncounterFallRecovery('retreat');
       return source?{version:2,encounter:true,members:[{kind:26,actorId:source.execution.actorId}]}:null;
     }
     if(game.raid){
       const [animal]=game.raid.animals;
       if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
       if(!game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))){
+        const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
+        if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
         const pair=qualifyFarmFlee&&planner.nativeRaidFlightRecoveryExecutions();
         return pair?{version:2,members:pair.map(({actorId},i)=>({kind:i===0?18:26,actorId}))}:null;
       }
@@ -1086,7 +1088,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(route.refuge||route.ruin||route.encounter){
       const [member]=route.members;
       if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
-      const source=route.encounter?planner.nativeEncounterRetreatRecovery():route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
+      const source=route.encounter?planner.nativeEncounterFallRecovery(route.encounter==='approach'?'center':'retreat'):
+        route.ruin?planner.nativeCenterRuinRetreatRecovery():planner.nativeRefugeCropRecovery(member.kind);
       if(!source||member.actorId!==source.execution.actorId)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
@@ -1193,7 +1196,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     async attachHeldWorkerRoute(port,transportSession,holdId,receipt,route){
       if(!Number.isSafeInteger(holdId)||holdId<1||closed||nativeProduction?.status().phase!=='suspended'||
-         route.encounter&&encounterDraftAdvance?.published?.holdId!==holdId||
+         route.encounter===true&&encounterDraftAdvance?.published?.holdId!==holdId||
          await nativeProduction.quiesce()!==receipt)throw Error('Exact active native hold required');
       const terminal=await nativeResourcePreparation.settleForRecovery();
       const {current,pending,cohort}=nativeIntentControl.connections();
@@ -1234,7 +1237,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
-      if(route.encounter&&encounterDraftAdvance)encounterDraftAdvance.replacementProved=false;
+      if(route.encounter===true&&encounterDraftAdvance)encounterDraftAdvance.replacementProved=false;
       const routes=route.members??[route],previous=recoveryGroup(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
@@ -1245,7 +1248,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          route.encounter&&!sameRecoveredEncounterFall(draw.encounter,live.encounter)||
          !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))
         throw Error('Missing submitted worker route at recovery cut');
-      if(route.encounter){
+      if(route.encounter===true){
         if(encounterDraftAdvance?.published?.holdId!==holdId||encounterDraftAdvance.receipt!==receipt)
           throw Error('Invalid encounter replacement proof');
         encounterDraftAdvance.replacementProved=true;

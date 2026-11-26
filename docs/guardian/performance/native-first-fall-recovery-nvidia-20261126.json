@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 79.10000000149012
+    }
+  },
+  "scope": "Desierto sin portón en calificación DEV. Device loss tras el primer golpe con la misma autoridad viva y el corredor al centro adquirido.",
+  "loss": {
+    "elapsed": 12.179999999999954,
+    "oldDraw": 67,
+    "pendingSteps": 0,
+    "errors": [
+      "Error: Error: WebGPU device lost: Device was destroyed.\n    at http://127.0.0.1:5289/src/rendering/webgpu-world-surface.js:177:833\n    at worker.onmessage (http://127.0.0.1:5289/src/rendering/webgpu-world-client.js:31:760)"
+    ],
+    "browserErrors": [
+      "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+    ]
+  },
+  "replay": {
+    "base": 66,
+    "publication": 117
+  },
+  "acquired": {
+    "ticket": 9,
+    "assignmentSequence": 8,
+    "bodyId": 2,
+    "slot": 1,
+    "generation": 3
+  },
+  "replacement": {
+    "frame": 1,
+    "clockElapsed": 12.179999999999954,
+    "worldBoundary": {
+      "version": 1,
+      "authorityEpoch": "006bd2d5-1ffe-4fbd-8dd9-8ca28d514631/1",
+      "nativeSession": 1,
+      "ticket": 9,
+      "effectiveTime": 10.95999999999998
+    },
+    "phaseOffset": 0.020000000000000018,
+    "clockWeight": 0,
+    "animalAge": 1.21999990940094,
+    "animalPose": {
+      "x": -17.27610998419931,
+      "z": 2,
+      "phase": 1.219999999999974
+    },
+    "worker": {
+      "version": 2,
+      "workerId": 900011,
+      "workerBody": 1,
+      "hit": 29209,
+      "x": -14.520928903743672,
+      "z": 2.5523155738541687,
+      "heading": 0,
+      "remaining": 3.5216665077209472,
+      "spawn": 29208,
+      "impactAt": 12.179999999999954,
+      "workerAssignment": 7
+    },
+    "firstAdvance": 12.199999999999953
+  },
+  "retreat": {
+    "submit": {
+      "version": 1,
+      "sequence": 10,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "006bd2d5-1ffe-4fbd-8dd9-8ca28d514631/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 12
+    },
+    "ack": {
+      "version": 1,
+      "sequence": 10,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "006bd2d5-1ffe-4fbd-8dd9-8ca28d514631/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 12.619999999999944
+      },
+      "elapsed": 12.619999999999944,
+      "assignment": 12
+    }
+  },
+  "events": [
+    {
+      "id": "event-29209",
+      "type": "WorkerHit",
+      "simulationTime": 12.179999999999954
+    },
+    {
+      "id": "event-29210",
+      "type": "WorkerIncapacitated",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29211",
+      "type": "AnimalRetreating",
+      "simulationTime": 12.619999999999944
+    },
+    {
+      "id": "event-29212",
+      "type": "RaidEnded",
+      "simulationTime": 14.339999999999907
+    }
+  ],
+  "home": {
+    "bodyId": 1,
+    "firstSequence": 222,
+    "firstAge": 0,
+    "movedAge": 0.019999999552965164,
+    "retiredSequence": 16,
+    "absent": {
+      "sequence": 357,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "006bd2d5-1ffe-4fbd-8dd9-8ca28d514631/1",
+        "nativeSession": 1,
+        "ticket": 15,
+        "effectiveTime": 34.81999999999997
+      }
+    },
+    "hits": 2,
+    "runRemaining": 40,
+    "lastElapsed": 34.899999999999984,
+    "drawDrained": true
+  },
+  "earlierFailure": {
+    "file": "nvidia-3.json",
+    "error": "Error: Error: Native publication boundary did not arrive\n    at http://127.0.0.1:5289/src/rendering/webgpu-world-surface.js:274:429\n    at worker.onmessage (http://127.0.0.1:5289/src/rendering/webgpu-world-client.js:31:760)",
+    "blocked": {
+      "kind": "fall-request",
+      "history": false,
+      "motion": true,
+      "entry": {
+        "fallPending": false,
+        "fallAttempted": false,
+        "fallInstalled": false,
+        "fallDeferred": false,
+        "bakePending": false,
+        "bakeLoading": false,
+        "bakeResource": false,
+        "runPending": false,
+        "getUpPending": false
+      },
+      "elapsed": 12.179999999999954
+    },
+    "inputSha256": "a4de9d49cce241965b6decf7e74d423e8caa40c747eeabc493e70a57874ed072"
+  },
+  "input": {
+    "file": "nvidia-5.json",
+    "sha256": "c825b37f87aeca10d86fa0d11ddff1045ac743dc8d868b831fcf016691f8a7b6"
+  }
+}

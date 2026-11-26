@@ -191,7 +191,14 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   let motion=null,binding=null,adopted=false;
   try{actor.root.updateWorldMatrix(true,true);const point=actor.root.getWorldPosition(new Vector3());motion=createConfirmedGpuMotion({actorId:id,clock:experimentalHistoricalMotion.clock,resourceRegistry});motion.bootstrap({at:experimentalHistoricalMotion.clock.elapsed,x:point.x,y:point.y,z:point.z});binding=bindWebGpuActorMotion({root:actor.root,renderer,motion,actorId:id,getPickTime:()=>experimentalHistoricalMotion.clock.elapsed,staged:true,resourceRegistry});motion.reset();}
   catch(error){binding?.dispose();motion?.dispose();entry.motionPreparing=null;onBakedWalkError(entry.profile,error);return;}
-  pending.ready=Promise.resolve().then(()=>pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:actor.admissionObjects?.()??[],materialAlternatives:binding.materialAlternatives()},()=>{if(!current())return;binding.activate();entry.motion=motion;entry.motionBinding=binding;entry.motionPreparing=null;adopted=true;})).then(()=>{if(adopted)onSelectableChange();}).catch(error=>{if(current())onBakedWalkError(entry.profile,error);}).finally(()=>{if(entry.motionPreparing===pending)entry.motionPreparing=null;if(entry.bakeResource&&!closed&&entries.get(id)===entry)resumeBakedWalk(id,entry);if(!adopted){const release=()=>{binding.dispose();motion.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}});
+  pending.ready=Promise.resolve().then(()=>pipelineAdmission.prepareAndPublish(actor.root,{signal:controller.signal,include:actor.admissionObjects?.()??[],materialAlternatives:binding.materialAlternatives()},()=>{if(!current())return;binding.activate();entry.motion=motion;entry.motionBinding=binding;entry.motionPreparing=null;adopted=true;})).then(()=>{if(adopted)onSelectableChange();}).catch(error=>{if(current())onBakedWalkError(entry.profile,error);}).finally(()=>{
+   if(entry.motionPreparing===pending)entry.motionPreparing=null;
+   if(!closed&&entries.get(id)===entry){
+    requestBakedFall(id,entry);
+    if(entry.bakeResource)resumeBakedWalk(id,entry);
+   }
+   if(!adopted){const release=()=>{binding.dispose();motion.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}
+  });
  }
  function retireNative(value,cancelledCarry=null){
   for(const participant of value.gateParticipants??[])participant.cancel();

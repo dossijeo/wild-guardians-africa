@@ -525,6 +525,81 @@ for(const delayed of [false,true])test(`terminal encounter resumes through a new
  }
 });
 
+for(const phase of ['approach','retreat'])test(`terminal Draw loss preserves the acquired ${phase} during Fall`, {timeout:30000}, async()=>{
+ const world=await setup(true,{captureHistoricalEvents:true}),ports=new MessageChannel();
+ let draw;
+ try{
+  let snapshot=world.snapshot();
+  if(phase==='retreat'){
+   snapshot=await reachSecondHit(world);
+   const hitAt=snapshot.elapsed+.02,advancing=advance(world,2);
+   await until(()=>world.host.inspect().nativeCausalClock.committedThrough===hitAt&&world.host.inspect().pendingSequence!==null);
+   await world.present();
+   snapshot=JSON.parse((await advancing).snapshot);
+  }else{
+   while(!snapshot.events.some(event=>event.type==='WorkerHit')){
+    assert(snapshot.elapsed<12.60);
+    snapshot=JSON.parse((await advance(world)).snapshot);
+    await world.present();
+   }
+  }
+  const at=snapshot.elapsed,worker=snapshot.workers[0],animal=snapshot.raid.animals[0];
+  const hold=await world.authority.quiesceNativeIntentProduction();
+  world.retireResourceEndpoint();
+  await world.host.dispose();
+  const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true,lossHoldId:30});
+  assert.equal(retired.terminal,true);
+  const route=await world.authority.terminalWorkerRoute();
+  assert.equal(route?.encounter,phase);
+  draw=await drawFixture({capabilities:{nativeAnimalCropVersion:1}},
+   {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:replacement}=await world.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const {execution,resources}=replacement.members[0],ref=resources.nativeAnimalCropRouteBinding.reference;
+  assert.equal(ref.purpose,phase==='approach'?'center':'retreat');
+  assert.ok(ref.worldBoundary.effectiveTime<at);
+  assert.equal(execution.x,animal.x);
+  assert.equal(execution.phase,animal.motionPhase);
+  assert.equal(replacement.encounter.hit,phase==='approach'?29209:29210);
+  assert.equal(replacement.encounter.workerBody,1);
+  assert.equal(replacement.encounter.remaining,worker.fallRemaining);
+  assert.deepEqual(world.snapshot().workers[0],worker);
+  const epoch=ref.worldBoundary.effectiveTime;
+  draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',
+   nativeAnimalCrop:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+  const frame={nativeWorldBoundary:replacement.worldBoundary,
+   clock:{...world.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}};
+  const valid=draw.frame(3,{...frame,recoveredEncounterFall:replacement.encounter});
+  valid.catch(()=>{});
+  await flush();await draw.host.idle();
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  draw.host.present();await valid;
+  const proof=await world.authority.checkHeldDraw(30,hold,route);
+  assert.equal(proof.members[0].relativeTime,floorFloat32(at-epoch));
+  assert.deepEqual(proof.encounter,replacement.encounter);
+  await world.attachRecoveredResources(draw);
+  assert.equal(world.authority.resumeNativeIntentProduction(hold),true);
+  if(phase==='retreat'){
+   const next=await advance(world);
+   assert.equal(next.stepsExecuted,1);
+   assert.equal(JSON.parse(next.snapshot).workers[0].hits,2);
+   assert.equal(next.events.some(event=>['WorkerIncapacitated','AnimalRetreating'].includes(event.type)),false);
+   return;
+  }
+  snapshot=await reachSecondHit(world);
+  const secondAt=snapshot.elapsed+.02,advancing=advance(world,2);
+  await until(()=>draw.host.inspect().nativeCausalClock.committedThrough===secondAt&&draw.host.inspect().pendingSequence!==null);
+  await world.present();
+  await until(()=>draw.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeAnimalCrop?.purpose==='retreat'));
+  const after=await advancing;
+  assert.equal(after.stepsExecuted,2);
+  assert.deepEqual(after.events.map(event=>event.type),['WorkerIncapacitated','AnimalRetreating']);
+  snapshot=JSON.parse(after.snapshot);
+  assert.equal(snapshot.events.filter(event=>event.type==='WorkerHit').length,1);
+  assert.equal(snapshot.workers[0].hits,2);
+  assert.deepEqual([...draw.errors,...world.faults],[]);
+ }finally{await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
+});
+
 test('the ordinary Desert qualifications still withhold contact corridors without encounter qualification',async()=>{
  const world=await setup(false);
  try{

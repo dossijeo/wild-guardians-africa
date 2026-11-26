@@ -887,6 +887,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         });
         if(members.every(Boolean)){
           if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active));
+          if(recovered.encounter)routeControl.installRecoveredEncounterFall(recovered.encounter,recovered.members[0].ref);
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
@@ -2375,6 +2376,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                 !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered worker route attachment');
              const grouped=q.version===2,source=copyNativeRecoveryGroup(q,nativeWorldBoundary);
              if(source.refuge&&source.refuge.retiredSequence>message.sequence)throw Error('Refuge retirement is newer than the control baseline');
+             if(source.encounter?.version===2&&source.encounter.impactAt>message.clock.committedThrough)
+               throw Error('Encounter impact is newer than the control baseline');
              const members=source.members.map(({kind,proof})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
                ref:proof.reference,gateId:proof.gateIds[0]??null,

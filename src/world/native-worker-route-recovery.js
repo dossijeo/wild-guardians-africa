@@ -128,14 +128,19 @@ export function matchesNativeRefugeRecovery(world,{reference:home,retiredSequenc
 }
 
 export function copyRecoveredEncounterFall(value){
- const {version,workerId,workerBody,hit,x,z,heading,remaining}=value??{};
- if(version!==1||![workerId,workerBody,hit].every(id=>Number.isSafeInteger(id)&&id>0)||
+ const {version,workerId,workerBody,hit,x,z,heading,remaining,spawn,impactAt,workerAssignment}=value??{};
+ const positiveId=id=>Number.isSafeInteger(id)&&id>0;
+ if(![1,2].includes(version)||![workerId,workerBody,hit].every(positiveId)||
     ![x,z,heading,remaining].every(Number.isFinite)||remaining<=0)throw Error('Invalid recovered encounter Fall');
- return Object.freeze({version,workerId,workerBody,hit,x,z,heading,remaining});
+ if(version===2&&(!positiveId(spawn)||hit<=spawn||!Number.isFinite(impactAt)||impactAt<0||
+    workerAssignment!==undefined&&!positiveId(workerAssignment)))throw Error('Invalid first-impact recovery source');
+ const source=version===2?{spawn,impactAt,...(workerAssignment===undefined?{}:{workerAssignment})}:{};
+ return Object.freeze({version,workerId,workerBody,hit,x,z,heading,remaining,...source});
 }
 
 export function sameRecoveredEncounterFall(a,b){
- return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining'].every(key=>a[key]===b[key]);
+ return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining','spawn','impactAt','workerAssignment']
+  .every(key=>a[key]===b[key]);
 }
 
 // The current world can include an exact later mutation that retained the
@@ -146,9 +151,11 @@ export function copyNativeRecoveryGroup(value,world){
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
  if(value.encounter!==undefined){
    if(value.refuge!==undefined||value.ruin!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
-     throw Error('Encounter recovery requires its Retreat and Fall');
+     throw Error('Encounter recovery requires its route and Fall');
    const proof=copyCropAttestation(value.members[0].proof),encounter=copyRecoveredEncounterFall(value.encounter),ref=proof.reference;
-   if(ref.purpose!=='retreat'||ref.actorId===encounter.workerId||ref.bodyId===encounter.workerBody||
+   if(ref.purpose!==(encounter.version===2?'center':'retreat')||ref.actorId===encounter.workerId||ref.bodyId===encounter.workerBody||
+      encounter.version===2&&encounter.workerAssignment!==undefined&&
+        (encounter.impactAt<ref.worldBoundary.effectiveTime||encounter.workerAssignment>=proof.assignmentSequence)||
       !sameNativeWorldBoundary(ref.worldBoundary,world))
      throw Error('Encounter Fall belongs to another acquisition');
    return {members:[{kind:26,proof}],encounter};

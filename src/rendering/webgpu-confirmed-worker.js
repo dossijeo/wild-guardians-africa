@@ -86,9 +86,10 @@ export async function createWebGpuConfirmedWorker({scene,residency,state,actorId
 
  let capturingFall=false;
  function recoveredFallCurrent(sample){
-  const entity=getEntity(),bake=bakedFall?.status();
+  const entity=getEntity(),bake=bakedFall?.status(),incapacitated=sample.version===1;
   if(closed||!root.visible||nativePickVariant?.current()||!bake?.enabled||bake.clockWeight!==0||
-     actorId!=='worker-'+sample.workerId||!entity?.incapacitated||entity.hits!==2||entity.recovery||
+     actorId!=='worker-'+sample.workerId||!entity||!!entity.incapacitated!==incapacitated||
+     entity.status!==(incapacitated?'incapacitated':'fleeing')||entity.hits!==(incapacitated?2:1)||entity.recovery||
      entity.fallRemaining!==sample.remaining||entity.x!==sample.x||entity.z!==sample.z||
      entity.downHeading!==sample.heading||root.position.x!==sample.x||root.position.z!==sample.z||
      root.rotation.y!==sample.heading)return false;

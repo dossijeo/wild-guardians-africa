@@ -741,9 +741,18 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const at=members[0].execution.executedThrough;
     const ruin=source.ruin,encounter=source.encounter;
     const fallCurrent=()=>workers?.get('worker-'+encounter.workerId)?.recoveredFallCurrent(encounter)===true;
-    const encounterCurrent=()=>!encounter||state.events.some(fact=>fact.id==='event-'+encounter.hit&&
-      fact.type==='WorkerIncapacitated'&&fact.targetId==='worker-'+encounter.workerId&&
-      fact.animalId===members[0].actorId&&fact.simulationTime===at);
+    const approach=encounter?.version===2;
+    const encounterCurrent=()=>!encounter||state.events.some(fact=>{
+      if(fact.id!=='event-'+encounter.hit||fact.type!==(approach?'WorkerHit':'WorkerIncapacitated')||
+         fact.targetId!=='worker-'+encounter.workerId||fact.animalId!==members[0].actorId||
+         fact.simulationTime!==(approach?encounter.impactAt:boundary.effectiveTime)||fact.simulationTime>at)return false;
+      if(!approach)return true;
+      const impact=fact.nativeHomeImpact,home=impact?.home;
+      return impact?.at===encounter.impactAt&&impact.event===encounter.hit&&
+        home?.reference?.sourceRequest?.raidSpawnSequence===encounter.spawn&&
+        (encounter.workerAssignment===undefined||home.assignmentSequence===encounter.workerAssignment&&
+          home.reference.bodyId===encounter.workerBody);
+    });
     const ruinCurrent=()=>{
       if(!ruin)return true;
       const center=state.structures.find(row=>row.id===ruin.center);
