@@ -40,6 +40,10 @@ La pasada acelerada continua agotó el plazo a 123,08 s. La segunda preparación
 
 El arnés adelantaba el tiempo de Hosted con pulsos de hasta 0,50 s y dejaba el reloj directo de Draw a velocidad normal. En 12 de 13 paquetes ordinarios observados, Draw rechazó 21 oportunidades porque la hora del paquete aún era futura para su reloj causal. El paquete 269 requería 105,48 s. En su primera oportunidad, el reloj permitía 104,7889 s y WASM ya había ejecutado hasta 116,58 s. La mediana entre admisión y primer dibujo fue 717,9 ms, con espera de recursos cero. Se conservaron la guarda causal y el plazo de preparación. [Corte de publicaciones y dibujo en NVIDIA](performance/native-savanna-continuous-publication-nvidia-20261126.json).
 
+Una pasada de la misma semilla con el reloj normal de Hosted superó ese corte y adquirió seis marchas Idle22. El recibo conserva cuatro dibujos de marchas posteriores a 100 s. Home18 adquirió el ticket 55 a 250,48 s y su dibujo se verificó a 250,84 s. Home19 adquirió el ticket 57 a 291,12 s y Game dejó a `worker-6` en (60, 0). A 291,24 s el preparador informó `Prepared clock coverage precedes the presented frame`. La pasada termina ahí, con el dibujo de retirada y el drenaje aún sin acreditar en el turno continuo. El diagnóstico de este segundo corte sigue separado del plazo de Idle22.
+
+La recarga corta desde 250 s con el mismo reloj normal presentó la ausencia en el paquete 446. Con el mismo mundo, Draw rechazó el paquete siguiente 447. La cobertura del intervalo histórico 1924 terminaba a 290,70 s y Draw ya había presentado 290,74 s. En esa recarga el arnés observó el dibujo de ausencia y cerró antes de que se registrase el rechazo en Surface. El control de CPU existente conserva el rechazo de intervalos preparados en la vía de recaptura ordinaria. Queda por comprobar la continuidad del preparador y el primer dibujo posterior a ese rechazo.
+
 Pasaron las 149 pruebas dirigidas de ciclo de trabajador, Idle, Home y barrido continuo. El build web de producción terminó en 46,56 s e incluyó ambos WASM con las mismas importaciones y exportaciones que la preimagen.
 
 ## Parada de Farm23 ya adquirido para la primera tarea
