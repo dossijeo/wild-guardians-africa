@@ -1,4 +1,4 @@
-import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
 import {createMainSnapshotDecoder} from './main-thread-snapshot-transport.js';
@@ -79,10 +79,10 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           if(![1,2].includes(q?.version)||item.recoveryHold===undefined||q.holdId!==item.recoveryHold||
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
-          const mixed=q.version===2,cut=mixed?copyNativeWorldBoundary(q.worldBoundary):null;
-          if(mixed&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||q.members.length!==2))
+          const grouped=q.version===2,cut=grouped?copyNativeWorldBoundary(q.worldBoundary):null;
+          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||q.members.length!==(q.refuge===undefined?2:1)))
             throw Error('Invalid replacement world cut');
-          const members=(mixed?q.members:[q]).map(({execution,resources:input})=>{
+          const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
             const binding=resources[profile.bindingField],ref=binding.reference;
             if(execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
@@ -93,13 +93,15 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
               throw Error('Invalid replacement committed assignment');
             return {execution,resources};
           });
-          if(mixed){
+          let refuge;
+          if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            copyNativeRecoveryMembers({version:2,members:proofs},cut);
+            ({refuge}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge},cut));
             const at=members[0].execution.executedThrough;
-            if(at<cut.effectiveTime||members[1].execution.executedThrough!==at)throw Error('Replacement samples span different times');
+            if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
+              throw Error('Replacement samples span different times');
           }
-          recoveredWorkerRoute=mixed?{...q,worldBoundary:cut,members}:{...q,...members[0]};
+          recoveredWorkerRoute=grouped?{...q,worldBoundary:cut,members,...(refuge?{refuge}:{})}:{...q,...members[0]};
         }
         item.resolve({authorityEpoch:data.authorityEpoch,sequence:data.sequence,...(recoveredWorkerRoute?{recoveredWorkerRoute}:{})});
       }catch(error){item.reject(error);fail(error);return true;}

@@ -718,21 +718,30 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
 
   let firstReplacementFrame=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
-    const mixed=source?.version===2,inputs=mixed?source.members:[source],sequence=source?.publicationSequence;
+    const grouped=source?.version===2,inputs=grouped?source.members:[source],sequence=source?.publicationSequence;
     const members=inputs.map(({resources,execution})=>{
       const profile=nativeWorkerRouteRecoveryProfile(resources?.kind),crop=profile.kind===26||profile.kind===27;
       const ref=resources[profile.bindingField].reference;
       return {resources,execution,profile,crop,ref,actorId:(crop?'animal-':'worker-')+execution.actorId};
     });
-    const replayed=preparedNativeWorldBoundary,boundary=mixed?source.worldBoundary:members[0].ref.worldBoundary;
+    const replayed=preparedNativeWorldBoundary,boundary=grouped?source.worldBoundary:members[0].ref.worldBoundary;
     const at=members[0].execution.executedThrough;
+    const arrival=source.refuge?.reference;
+    const destination=arrival&&nativeHomeRouteSource(arrival.sourceHome.reference).home;
+    const refugeCurrent=()=>{
+      if(!arrival)return true;
+      const worker=state.workers.find(worker=>worker.id==='worker-'+arrival.actorId);
+      return worker?.status==='home'&&!worker.nativeRouteAdmission&&worker.heading===arrival.pose.yaw&&
+        worker.villageId==='village-'+destination.villageId&&worker.x===destination.x&&worker.z===destination.z&&
+        ['runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===arrival.pose[key]);
+    };
     // A motion-only GO can postdate the retained terrain checkpoint without
     // writing a terrain record into the journal. The frozen source, current
     // Draw and terrain support must all attest the route before publishing it.
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||members.some(member=>member.crop)&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
-      stream.status().sequence===sequence&&state.elapsed===at&&
+      stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&
       replayMatches&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
@@ -742,7 +751,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     nativeRoutePreparations++;
     try{
       for(const {resources,execution,profile,crop,ref} of members){
-        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:mixed?boundary:null};
+        const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null};
         if(crop){
           await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});

@@ -1,5 +1,5 @@
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
@@ -889,7 +889,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
-            elapsed:recovered.at,...(recovered.mixed?{members}:members[0])};
+            elapsed:recovered.at,...(recovered.grouped?{members}:members[0])};
           recovered=null;
         }
       }
@@ -1230,6 +1230,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       });
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
+         recovered.retiredActor!==null&&preparedBindings.some(({nativeHome,nativeRoute})=>
+           (nativeHome?.actorId??nativeRoute?.actorId)===recovered.retiredActor)||
          missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
           {code:(missing??recovered.members[0]).profile.obsoleteCode});
@@ -2339,13 +2341,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(!Number.isSafeInteger(intentControl.recoveryHold)||intentControl.recoveryHold<1||
                 q.holdId!==intentControl.recoveryHold||!nativeConsumerToken||q.consumerToken!==nativeConsumerToken||
                 !worldBoundaryRequired||!message.clock)throw Error('Invalid recovered worker route attachment');
-             const mixed=q.version===2;
-             const members=copyNativeRecoveryMembers(q,nativeWorldBoundary).map(({kind,proof})=>({
+             const grouped=q.version===2,source=copyNativeRecoveryGroup(q,nativeWorldBoundary);
+             if(source.refuge&&source.refuge.retiredSequence>message.sequence)throw Error('Refuge retirement is newer than the control baseline');
+             const members=source.members.map(({kind,proof})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
                ref:proof.reference,gateId:proof.gateIds[0]??null,
-               install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,{mixed})
+               install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
+                 {cohortSize:source.members.length,sharedCut:grouped})
              }));
-             recovered={holdId:q.holdId,consumerToken:q.consumerToken,mixed,members,at:message.clock.committedThrough};
+             recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
+               retiredActor:source.refuge?.reference.actorId??null};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

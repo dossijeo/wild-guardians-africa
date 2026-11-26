@@ -902,7 +902,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },
 
-    prepareRecoveredWorkerRoute(kind,input,boundary,{mixed=false}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===27){
         const current=()=>!closed&&!!clock&&actors.size===0&&active.size===0&&
@@ -928,12 +928,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const actor=actors.get(ref.actorId),record=actor?.current;
       const handle=kind===26?{authorityEpoch:ref.worldBoundary.authorityEpoch,session:ref.worldBoundary.nativeSession,
         slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
-      const count=mixed?2:1,source=ref.worldBoundary;
-      if(closed||!clock||actors.size!==count||active.size!==count||proof.gateIds.length>profile.maxGates||
+      const source=ref.worldBoundary;
+      if(closed||!clock||actors.size!==cohortSize||active.size!==cohortSize||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
-         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==mixed||
+         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
-         !(mixed?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||
+         !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||
          clock.committedThrough<record.startTime||clock.committedThrough>ref.endTime)
         throw Error('Recovered worker route conflicts with the fresh control baseline');

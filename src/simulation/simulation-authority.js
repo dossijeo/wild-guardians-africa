@@ -951,7 +951,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       }
       const kind=animal.status==='attacking'?27:26;
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
-      return execution?{kind,actorId:execution.actorId}:null;
+      if(execution)return {kind,actorId:execution.actorId};
+      const sheltered=kind===26&&qualifyFarmFlee&&planner.nativeRefugeCropRecovery();
+      return sheltered?{version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]}:null;
     }
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
@@ -962,14 +964,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
        kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
     return {kind,actorId:bindings[0].reference.actorId};
   }
-  function recoveryExecutions(route){
+  function recoveryGroup(route){
     if(route.version!==2){
       const execution=recoveryExecution(route);
-      return execution?[execution]:null;
+      return execution?{executions:[execution]}:null;
+    }
+    if(route.refuge){
+      const sheltered=planner.nativeRefugeCropRecovery(),[member]=route.members;
+      return sheltered&&route.members.length===1&&member.kind===26&&member.actorId===sheltered.execution.actorId?
+        {executions:[sheltered.execution],refuge:sheltered.refuge}:null;
     }
     const pair=planner.nativeRaidFlightRecoveryExecutions();
     return pair&&route.members.length===2&&pair.every((row,i)=>
-      row.actorId===route.members[i].actorId&&route.members[i].kind===(i===0?18:26))?pair:null;
+      row.actorId===route.members[i].actorId&&route.members[i].kind===(i===0?18:26))?{executions:pair}:null;
   }
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
@@ -980,15 +987,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(!current||pending||cohort.consumers!==1)return null;
       const route=recoveryRoute();
       if(!route)return null;
-      const cut=planner.nativeWorldResourceBoundary(),routes=route.members??[route],executions=recoveryExecutions(route);
+      const cut=planner.nativeWorldResourceBoundary(),routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions;
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))return null;
       await nativeIntentControl.waitForTerminalDraw();
-      const live=recoveryExecutions(route);
+      const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||!sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
-         !live||JSON.stringify(live)!==JSON.stringify(executions)||
-         live.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
+         !live||JSON.stringify(live)!==JSON.stringify(group)||
+         live.executions.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
         throw Error('Native assignments changed while waiting for terminal draw');
       return route;
     },
@@ -1040,7 +1047,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!terminal?.terminal||!terminal.callbacksSettled||!current?.closed||!current.drained||pending||cohort.consumers!==1||
          nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
-      const routes=route.members??[route],executions=recoveryExecutions(route),cut=planner.nativeWorldResourceBoundary();
+      const routes=route.members??[route],group=recoveryGroup(route),executions=group?.executions,cut=planner.nativeWorldResourceBoundary();
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>execution.arrived||!recoveryGateCurrent(routes[i].kind,execution)))
@@ -1057,30 +1064,31 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       });
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
+      const refuge=group.refuge?{refuge:group.refuge}:{};
       const attachment=await nativeIntentControl.attach(port,transportSession,
-        route.members?{version:2,holdId,members:proofs}:{holdId,...proofs[0]});
-      const live=recoveryExecutions(route);
+        route.members?{version:2,holdId,members:proofs,...refuge}:{holdId,...proofs[0]});
+      const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
          !sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
-         !live||JSON.stringify(live)!==JSON.stringify(executions)||
-         live.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
+         !live||JSON.stringify(live)!==JSON.stringify(group)||
+         live.executions.some((execution,i)=>!recoveryGateCurrent(routes[i].kind,execution)))
         throw Error('Held sources changed while installing replacement');
       const manifest=getTerrainManifest?.();
       if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
       const common={holdId,publicationSequence:sequence,terrainManifest:manifest};
       return {...attachment,recoveredWorkerRoute:route.members?
-        {version:2,...common,worldBoundary:cut,members}:{version:1,...common,...members[0]}};
+        {version:2,...common,worldBoundary:cut,members,...refuge}:{version:1,...common,...members[0]}};
     },
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
-      const routes=route.members??[route],previous=recoveryExecutions(route);
+      const routes=route.members??[route],previous=recoveryGroup(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
-      const live=recoveryExecutions(route),rows=route.members?draw?.members:draw?[draw]:null;
+      const live=recoveryGroup(route),rows=route.members?draw?.members:draw?[draw]:null;
       if(!draw||draw.holdId!==holdId||nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
          draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
-         !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live[i],row,draw.elapsed)))
+         !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))
         throw Error('Missing submitted worker route at recovery cut');
       return draw;
       function sameHeld(profile,after,row,elapsed){

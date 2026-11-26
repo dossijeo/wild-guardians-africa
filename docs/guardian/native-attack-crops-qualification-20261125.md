@@ -184,7 +184,15 @@ En el día 2 de Sabana, el mismo relevo terminal reconstruye juntos Home18 y Att
 
 En NVIDIA Turing, la pérdida ocurrió mientras avanzaban el trabajador 21, con cuerpo 1 y ticket 9, y el facóquero 22, con cuerpo 2 y ticket 7. El sustituto reconstruyó el diario desde la publicación 196 hasta la 232. El primer envío a t=611,45 usó edades de 0,449999988 s y 2,649999857 s. Tras activar se observaron ambas edades avanzando. Home19 acreditó la llegada al refugio (60, 0) y el primer dibujo sin el binding del trabajador conservó el corredor original del facóquero. Se confirmó una adquisición de cada marcha, el saldo intacto y el drenaje del sustituto.
 
-La prueba usa el perfil de desarrollo de un trabajador en huida y un facóquero en aproximación a un cultivo, con ambos corredores residentes. La sesión se detuvo después de Home19 y antes del golpe al cultivo. Un control posterior con WASM y Host determinista reprodujo otra pérdida a t=606,35. El reemplazo rechaza el corredor del facóquero, que sigue con el ticket 7 tras la retirada del trabajador en el ticket 11. Siguen abiertos ese relevo, el ataque a centros en una cohorte mixta y la cadencia a 60 Hz. [Recibo físico](performance/native-flight-crop-draw-loss-20261126.json).
+La prueba usa el perfil de desarrollo de un trabajador en huida y un facóquero en aproximación a un cultivo, con ambos corredores residentes. La sesión se detuvo después de Home19 y antes del golpe al cultivo. El caso de pérdida tras el refugio tiene su propia validación. Siguen abiertos el ataque a centros en una cohorte mixta y la cadencia a 60 Hz. [Recibo físico](performance/native-flight-crop-draw-loss-20261126.json).
+
+## Pérdida de Draw después de Home19
+
+El control anterior fallaba porque Home19 había adquirido el ticket mundial 11 y el facóquero conservaba su corredor del ticket 7. El relevo comprueba el recibo de llegada exacto de WASM, la pose en el refugio y la ausencia del cuerpo del trabajador. La superficie nueva prepara el corredor superviviente con su propia época y el fence exige un envío real en la frontera de Home19. Los controles de CPU rechazan el recibo con otro ticket y un fotograma que vuelva a incluir el reloj del trabajador retirado. El caso con refugio en z=0,2 conserva esa coordenada de Game y comprueba por separado el valor Float32 de la pose nativa.
+
+En NVIDIA Turing, Home19 dejó al trabajador 21 en (60, 0) a t=614,10. Tras perder el dispositivo anterior, el sustituto reprodujo las publicaciones 261 a 289 y sometió el primer dibujo a t=614,30. Escribió una edad de 5,649999619 s para el cuerpo 2, asignación 7, con el trabajador ausente. La edad avanzó al reanudar y el mismo cuerpo pasó a Strike27. El ataque `attack-48` golpeó una sola vez a `plant-5` a t=657,80. El fotograma 307 ya omitía los bindings de Home y Strike27. El ledger quedó intacto y el sustituto drenó. El cierre del primer Draw produjo dos notificaciones iguales de la destrucción esperada y el reemplazo terminó sin errores.
+
+La validación usa la cohorte de desarrollo de Sabana con los corredores residentes y la frontera de Home19 vigente en el corte. Quedan por validar la recuperación tras otras mutaciones y la cadencia a 60 Hz. [Recibo físico](performance/native-refuge-crop-draw-loss-20261126.json).
 
 ## Regresión
 

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Después de Home19, AttackCrops26 recupera su asignación original aunque el ticket mundial ya sea el del refugio. NVIDIA confirmó el primer dibujo con el trabajador ausente, el golpe único del facóquero y el drenaje. Es evidencia parcial de E en el perfil de desarrollo de Sabana. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-después-de-home19).
+
 Flee Home18 y AttackCrops26 recuperan juntos sus dos asignaciones tras la pérdida terminal de Draw. NVIDIA confirmó ambas edades en el primer envío del sustituto y Home19 retiró al trabajador mientras el facóquero seguía con su ticket inicial. Es evidencia parcial de E para la cohorte de desarrollo de Sabana. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-flee-y-attackcrops).
 
 Strike27 recupera el mismo ataque tras perder Draw, tanto iniciado en vivo como después de cargarlo. NVIDIA confirmó la edad del clip en el sustituto, el impacto único en el cultivo, un paquete posterior sin la acción revocada y el drenaje. Es evidencia parcial de E en Sabana con la calificación de desarrollo. [Recuperación y recibos](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-strike27).

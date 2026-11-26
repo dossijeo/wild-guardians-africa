@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryMembers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -201,7 +201,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         if(worldBoundary&&(!initial||worldBoundary.nativeSession!==initial.nativeSession||worldBoundary.effectiveTime>initial.committedThrough))
           throw Error('Native world resources precede their causal baseline');
         baselineClockSequence=initial?.clockSequence??null;recoveryBaseline=baseline.recoveredWorkerRoute??null;
-        recoveryMembers=recoveryBaseline&&copyNativeRecoveryMembers(recoveryBaseline,worldBoundary);
+        recoveryMembers=recoveryBaseline&&copyNativeRecoveryGroup(recoveryBaseline,worldBoundary).members;
         port.postMessage({...baseline,...(baseline.recoveredWorkerRoute?{recoveredWorkerRoute:{...baseline.recoveredWorkerRoute,consumerToken}}:{}),...(initial?{clock:initial}:{}),worldBoundary,worldBoundaryVersion:1,mutationOpportunityVersion:1,session,consumerToken});
       },
       onClock(record){

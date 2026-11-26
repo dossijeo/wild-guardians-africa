@@ -1,6 +1,7 @@
 import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
+import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
 import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
@@ -113,12 +114,25 @@ export function nativeRecoveryCovers(world,source){
    (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
 }
 
-// A pair is one recovery transaction with two independently acquired clocks.
-export function copyNativeRecoveryMembers(value,world){
- if(value.version===undefined&&value.members===undefined)
-   return [{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}];
- if(value.version!==2||!Array.isArray(value.members)||value.members.length!==2||
-    value.members[0]?.kind!==18||value.members[1]?.kind!==26)throw Error('Invalid mixed recovery membership');
+// The current world is owned by one of the moving actors or by the exact
+// Home19 that retired the other actor. Each surviving clock keeps its origin.
+export function copyNativeRecoveryGroup(value,world){
+ if(value.version===undefined&&value.members===undefined&&value.refuge===undefined)
+   return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
+ if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
+ if(value.refuge!==undefined){
+   const refuge=copyNativeHomeArrivalAttestation(value.refuge),{reference:home}=refuge;
+   if(value.members.length!==1||value.members[0]?.kind!==26)throw Error('Refuge recovery requires the surviving crop route');
+   const crop=copyCropAttestation(value.members[0].proof),ref=crop.reference;
+   if(!sameNativeWorldBoundary(world,home.worldBoundary)||!nativeRecoveryCovers(world,ref.worldBoundary)||
+      sameNativeWorldBoundary(world,ref.worldBoundary)||!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||
+      ref.purpose!==undefined||ref.actorId===home.actorId||ref.bodyId===home.bodyId||
+      crop.assignmentSequence>=refuge.retiredSequence)
+     throw Error('Crop recovery differs from the acquired refuge cut');
+   return {members:[{kind:26,proof:crop}],refuge};
+ }
+ if(value.members.length!==2||value.members[0]?.kind!==18||value.members[1]?.kind!==26)
+   throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
  const [home,crop]=members.map(member=>member.proof.reference);
  if(!home.sourceRequest?.raidSpawnSequence||crop.purpose!==undefined||
@@ -127,5 +141,5 @@ export function copyNativeRecoveryMembers(value,world){
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
     members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
    throw Error('Mixed recovery requires two current assignments at one world cut');
- return members;
+ return {members};
 }

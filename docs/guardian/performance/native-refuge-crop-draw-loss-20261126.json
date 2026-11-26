@@ -1,0 +1,140 @@
+{
+  "scenario": "Terminal Draw loss after Home19 with the original AttackCrops26 still active in paid Sabana day two.",
+  "profile": {
+    "qualifyFarmFlee": true,
+    "qualifyAnimalCrop": true,
+    "ordinary": false
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "recovery": {
+    "hold": 6,
+    "basePublication": 261,
+    "frozenPublication": 289,
+    "activatedPublication": 290,
+    "elapsed": 614.299999999977
+  },
+  "homeArrival": {
+    "actor": 21,
+    "body": 1,
+    "ticket": 11,
+    "effectiveTime": 614.0999999999772,
+    "retiredSequence": 9,
+    "position": [
+      60,
+      0
+    ]
+  },
+  "cropSource": {
+    "actor": 22,
+    "body": 2,
+    "ticket": 7,
+    "origin": 608.6499999999821,
+    "assignment": 7,
+    "target": "plant-5",
+    "pose": {
+      "x": 72,
+      "z": 20.15259787829202,
+      "yaw": 3.141592653589793,
+      "phase": 5.649999999994862
+    }
+  },
+  "originalFrame": {
+    "sequence": 112,
+    "elapsed": 614.0999999999772,
+    "worldTicket": 11,
+    "containsHome": false,
+    "crop": {
+      "kind": 26,
+      "body": 2,
+      "ticket": 6,
+      "age": 5.449999809265137
+    }
+  },
+  "firstReplacementFrame": {
+    "sequence": 1,
+    "elapsed": 614.299999999977,
+    "worldTicket": 11,
+    "containsHome": false,
+    "crop": {
+      "kind": 26,
+      "body": 2,
+      "ticket": 7,
+      "age": 5.649999618530273
+    }
+  },
+  "continuedFrame": {
+    "sequence": 2,
+    "elapsed": 614.3999999999769,
+    "worldTicket": 11,
+    "containsHome": false,
+    "crop": {
+      "kind": 26,
+      "body": 2,
+      "ticket": 7,
+      "age": 5.749999523162842
+    }
+  },
+  "strike": {
+    "kind": 27,
+    "ticket": 13,
+    "id": "event-51",
+    "type": "AnimalLogicalHit",
+    "attackId": "attack-48",
+    "targetId": "plant-5",
+    "species": "warthog",
+    "presentation": {
+      "version": 1,
+      "elapsed": 657.7999999999374,
+      "animal": {
+        "x": 88.70540618896484,
+        "z": -5.325719833374023,
+        "heading": 2.9674229229780287
+      },
+      "target": {
+        "x": 89,
+        "z": -7
+      },
+      "shield": null
+    },
+    "simulationTime": 657.7999999999374,
+    "occurrences": 1
+  },
+  "postHitFrame": {
+    "sequence": 307,
+    "elapsed": 657.8499999999374,
+    "worldTicket": 13,
+    "containsHome": false,
+    "crop": null
+  },
+  "checks": {
+    "ledgerUnchanged": true,
+    "sourceRouteAcquiredOnce": true,
+    "homeRetiredOnce": true,
+    "replacementDrained": true,
+    "originalDeviceLoss": 1,
+    "expectedDestroyedDevicePageErrors": 2,
+    "unexpectedErrors": []
+  },
+  "evidence": {
+    "trace": {
+      "bytes": 67593007,
+      "sha256": "db2f2092726aedd80fc0a6136b8707f26eadcbb0bac7e9196f61d123709a7217",
+      "dataLoss": false
+    },
+    "fullReceiptSha256": "51436dd3d616146d6581472d9979bd4ac7da893f65768444c5230d5f5202d078"
+  },
+  "limits": [
+    "The active world cut must still belong to the matching Home19.",
+    "The validation covers the development profile with one native worker and one native warthog.",
+    "C4 and 60 Hz cadence remain open."
+  ]
+}

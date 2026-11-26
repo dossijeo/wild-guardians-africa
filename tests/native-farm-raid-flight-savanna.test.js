@@ -100,6 +100,112 @@ for(const complete of [false,true])test('terminal Draw loss requires both Flight
     await f.close();
   }
 });
+
+for(const mode of ['exact','fractional refuge','foreign refuge','retired clock'])test('terminal Draw loss after Home19: '+mode,async()=>{
+  const receipts=new Map();
+  const initial=source();
+  if(mode==='fractional refuge')initial.villages.find(v=>v.id==='village-1').entry.z=.2;
+  const f=await nativeProductionAuthority(initial,{qualifyFarmFlee:true,qualifyAnimalCrop:true,chunkKeys,
+    onCommit(record,receipt){receipts.set(record.kind,receipt);}});
+  const ports=new MessageChannel();
+  let replacement;
+  try{
+    await untilProduction(f,()=>f.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+    f.command({kind:'setNavigationView',view:{bounds:[24,-72,168,72],eye:{x:83,z:24},target:{x:83,z:0}}});
+    let refuge,original;
+    for(let i=0;i<186;i++){
+      const step=f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+      for(const key of step.residency?.missing??[]){
+        const [cx,cz]=key.split(',').map(Number);
+        f.command({kind:'addChunk',cx,cz});
+      }
+      await f.present();
+      refuge=receipts.get('home-arrival')?.nativeHomeArrivalBinding;
+      original=f.host.inspect().nativeRouteFrame;
+      if(refuge&&original?.worldBoundary.ticket===refuge.reference.worldBoundary.ticket&&
+         !original.bindings.some(b=>b.nativeHome)&&original.bindings.some(b=>b.nativeAnimalCrop?.actorId===22))break;
+    }
+    const proof=receipts.get('animal-crop-route')?.nativeAnimalCropRouteBinding;
+    assert(proof&&refuge);
+    assert.deepEqual(original.worldBoundary,refuge.reference.worldBoundary);
+    assert.notEqual(proof.reference.worldBoundary.ticket,original.worldBoundary.ticket);
+    const before=f.snapshot(),at=before.elapsed;
+    assert.equal(before.workers[0].status,'home');
+    if(mode==='fractional refuge'){
+      assert.equal(before.workers[0].z,.2);
+      assert.equal(refuge.reference.pose.z,Math.fround(.2));
+    }
+    f.gpu.device.destroy();
+    f.retireResourceEndpoint();
+    const hold=await f.authority.quiesceNativeIntentProduction();
+    const retired=await f.authority.flushNativeResourcePreparation({allowRetired:true});
+    assert(retired.terminal&&retired.callbacksSettled);
+    const route=await f.authority.terminalWorkerRoute();
+    assert.deepEqual(route,{version:2,refuge:true,members:[{kind:26,actorId:22}]});
+    replacement=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1}},
+      {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+    if(mode==='foreign refuge'){
+      const accept=ports.port2.onmessage;
+      ports.port2.onmessage=event=>{
+        if(event.data.type!=='IntentBaseline')return accept(event);
+        const data=structuredClone(event.data);
+        data.recoveredWorkerRoute.refuge.reference.worldBoundary.ticket++;
+        accept({data});
+      };
+      await assert.rejects(f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route),
+        /Native intent control closed: consumer-retired/);
+      await flush();
+      assert(replacement.errors.some(error=>/Crop recovery differs from the acquired refuge cut/.test(error.message)));
+      assert.equal(replacement.host.inspect().nativeRouteFrame,null);
+      assert.equal(f.snapshot().elapsed,at);
+      return;
+    }
+    const {recoveredWorkerRoute:q}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+    assert.deepEqual(q.refuge,refuge);
+    assert.deepEqual(q.worldBoundary,refuge.reference.worldBoundary);
+    const [{execution,resources}]=q.members,ref=resources.nativeAnimalCropRouteBinding.reference;
+    assert.equal(execution.executedThrough,at);
+    assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
+    assert.deepEqual(ref,proof.reference);
+    const epoch=ref.worldBoundary.effectiveTime,age=floorFloat32(at-epoch);
+    replacement.client.registerClockBinding(replacement.buffer,{byteOffset:0,epoch,semantic:'relative',
+      nativeAnimalCrop:ref,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+    if(mode==='retired clock'){
+      const home=refuge.reference.sourceHome.reference,epoch=home.worldBoundary.effectiveTime;
+      replacement.client.registerClockBinding(replacement.buffer,{byteOffset:4,epoch,semantic:'relative',
+        nativeHome:home,resourceEnd:nativeClockResourceEnd(epoch,home.endTime)});
+    }
+    await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+    const submit=replacement.frame(0,{nativeWorldBoundary:q.worldBoundary,
+      clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(error=>error);
+    await flush();await replacement.host.idle();replacement.host.present();
+    const rendered=await submit;
+    if(mode==='retired clock'){
+      assert.match(rendered.message,/Replacement requires its bound worker clock/);
+      assert.equal(replacement.host.inspect().nativeRouteFrame,null);
+      assert.equal(f.snapshot().elapsed,at);
+      return;
+    }
+    assert(!(rendered instanceof Error),rendered.message);
+    const {members}=await f.authority.checkHeldDraw(30,hold,route);
+    assert.deepEqual(members,[{kind:26,assignmentSequence:proof.assignmentSequence,nativeAnimalCrop:ref,relativeTime:age}]);
+    assert.equal(new Float32Array(replacement.gpu.buffers[0].data.buffer)[0],age);
+    f.authority.resumeNativeIntentProduction(hold);
+    f.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+    const after=f.snapshot();
+    assert.equal(after.elapsed,at+.05);
+    assert.equal(after.workers[0].status,'home');
+    assert.deepEqual(after.workers.map(({x,z})=>[x,z]),before.workers.map(({x,z})=>[x,z]));
+    assert.notDeepEqual(after.raid.animals.map(({x,z})=>[x,z]),before.raid.animals.map(({x,z})=>[x,z]));
+    assert.deepEqual(after.raid.reservations,before.raid.reservations);
+    assert.deepEqual(f.faults,[]);
+  }finally{
+    replacement?.client.dispose();
+    await replacement?.host.dispose();
+    ports.port1.close();ports.port2.close();
+    await f.close();
+  }
+});
 for (const enabled of [false, true]) {
   test('Savanna Farm admission ' + (enabled ? 'retains the original body through the daytime Stop' : 'stays gated in the ordinary profile'), async () => {
     const initial = source();
