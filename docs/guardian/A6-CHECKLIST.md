@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Idle22 y Home18 usan en Sabana la prueba continua de terreno seco. El turno completo pasa en CPU. NVIDIA acredita por separado el dibujo de la primera marcha y Home19 tras recargar el fin del turno. [Pruebas y recibos](native-cold-worker-admission-20261126.md#marcha-idle-y-regreso-al-final-del-turno-en-sabana).
+
 El arranque explícito de Sabana conserva el primer cuerpo pagado desde Task14 hasta Action15 e Idle20. NVIDIA verificó los dibujos de marcha y riego, el único efecto sobre el cultivo y el drenaje. [Pruebas y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).
 
 Si la marcha norte pasa por el refugio, Home19 obtiene turno para retirar al trabajador. NVIDIA presentó la ausencia antes del GO de 26 y confirmó hasta Idle. El refugio original conserva su tramo seguro con ambas marchas en CPU. [Pruebas y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).

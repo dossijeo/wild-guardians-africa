@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+El turno civil de Sabana ya recorre Idle22, Home18 y Home19 en CPU. NVIDIA acreditó la marcha desde la contratación y el regreso desde el checkpoint de las 250 s, con el mismo cuerpo durante la marcha y su retirada en casa. Una preparación posterior de la corrida acelerada agotó el plazo. [Recorridos y límites](native-cold-worker-admission-20261126.md#marcha-idle-y-regreso-al-final-del-turno-en-sabana).
+
 Sabana ya admite el primer trabajador pagado con `nativeWorkerLifecycle`. NVIDIA presentó Task14 y Action15 sobre el mismo cuerpo, confirmó un único riego y adquirió Idle20. La continuación del turno y la selección desde el menú ordinario siguen abiertas. [Flujo y recibo](native-cold-worker-admission-20261126.md#primera-tarea-en-sabana).
 
 La cohorte norte de Desierto ya completa Home19 cuando el refugio intersecta la ruta del animal. NVIDIA confirmó el dibujo de la ausencia antes de adquirir 26, los cuatro golpes al centro y la vuelta civil a Idle. El control original del tramo seguro conserva la marcha simultánea. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).

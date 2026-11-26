@@ -1,0 +1,266 @@
+{
+  "version": 1,
+  "scope": {
+    "biome": "sabana",
+    "seed": 714,
+    "worker": "worker-6",
+    "body": 1,
+    "gate": false,
+    "manualClock": true
+  },
+  "assets": [
+    {
+      "file": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "6186d80167410cea7e8033e81eda76def1e469acb9b330e0a1fa5f16561c2739"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "a4f93b91d03719df514fbe2b039d4b078c3f95b23f45a704de81ef3d1e4b9df2"
+    },
+    {
+      "file": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "7ff2cb7b9b24fe3ddc31ab60e522394d385ff48efe572431dc2721df8e77480f"
+    }
+  ],
+  "controls": [
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/selected-714-base.log",
+      "sha256": "5661929f3f21a724eb8edfd7b8da594d861c80c06a2f76f6f642ab8d7f8043d1"
+    },
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/selected-base.log",
+      "sha256": "c636af7d1d74ec60a021d4921fd1c5f1c4d26f68fb6e30cf2385af6839012e38"
+    },
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/shift-candidate.log",
+      "sha256": "3fa6b9df3e82644c40792a9e57727b6e4dc007a781ff5b7b9b743775c5c0efbb"
+    },
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/impact.tap",
+      "sha256": "999f00d25971f01d0b840bb4f7bf478741e6d0d7b3a12caff353365836dd1c8b"
+    },
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/build.log",
+      "sha256": "c88e1ac816b6b212af2bbde2834dd73ade18a61a37cccee5bff8f37937005933"
+    },
+    {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/abi.log",
+      "sha256": "a2130dff4a865fa25e11cf0d9ff9e89567c8396d32bf944d9610596daaf74174"
+    }
+  ],
+  "stroll": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 98.29999999701977
+      }
+    },
+    "raw": {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/nvidia-stroll.json",
+      "sha256": "95198afb79155d5e7f7a80aafa7b8314cc98214192d200218c31e2176c1465c6"
+    },
+    "assignment": 9,
+    "reference": {
+      "kind": "native-idle-stroll-reference",
+      "version": 1,
+      "actorId": 6,
+      "bodyId": 1,
+      "centerId": 2,
+      "profile": 1,
+      "workerProfile": "youngMale",
+      "bodyFlags": 1,
+      "pose": {
+        "x": 86.1122055053711,
+        "z": -7.522230625152588,
+        "yaw": 1.039073456627862,
+        "radius": 0.28,
+        "runPhase": 0,
+        "walkPhase": 59.01495615149437,
+        "carryPhase": 0,
+        "runRemaining": 105.80409353316266
+      },
+      "anchor": {
+        "kind": 1,
+        "id": 3,
+        "x": 87,
+        "z": -7,
+        "radius": 3
+      },
+      "sourceCycleSequence": 7,
+      "sourceDecisionSequence": 8,
+      "requestedAt": 73.78000000000246,
+      "walkRng": 2740067004,
+      "approachRetry": 0,
+      "idleSeconds": 3.799999952316284,
+      "destination": {
+        "x": 84.7285845040267,
+        "z": -5.658521107821933
+      },
+      "expectedRouteHandle": {
+        "authorityEpoch": "d8db70f9-61f1-4916-a0f9-defdd0a1d19c/1",
+        "session": 1,
+        "slot": 0,
+        "generation": 6
+      },
+      "sourceControlSequence": 8,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "d8db70f9-61f1-4916-a0f9-defdd0a1d19c/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 84.08000000000041
+      },
+      "endTime": 87.71608594962208
+    },
+    "display": {
+      "sequence": 253,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "d8db70f9-61f1-4916-a0f9-defdd0a1d19c/1",
+        "nativeSession": 1,
+        "ticket": 11,
+        "effectiveTime": 84.08000000000041
+      },
+      "age": 0.003999999724328518,
+      "clock": 84.084
+    },
+    "endElapsed": 84.48000000000033,
+    "drained": true
+  },
+  "home": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 106.69999998807907
+      }
+    },
+    "source": {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/home-source.json",
+      "sha256": "1a229de81022e201cf02fe92c40cc458d56b2e3d221122f2e93f6198ccfc246e"
+    },
+    "raw": {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/nvidia-home.json",
+      "sha256": "0cd60dc21efefcbb72736403ad59e4b071c98c094631dfe228ef1c6a1b83133e"
+    },
+    "initial": {
+      "id": "worker-6",
+      "personId": "person-5",
+      "profile": "youngMale",
+      "contractDay": 1,
+      "centerId": "structure-2",
+      "villageId": "village-1",
+      "x": 86.2056884765625,
+      "z": -6.34428071975708,
+      "heading": 2.26090512580896,
+      "runPhase": 0,
+      "walkPhase": 102.32616552026813,
+      "carryPhase": 0,
+      "status": "returning",
+      "taskId": null,
+      "crateId": null,
+      "path": null,
+      "hits": 0,
+      "incapacitated": false,
+      "recovering": false,
+      "runRemaining": 105.80409353316266,
+      "actionRemaining": 0,
+      "idleState": null,
+      "running": false,
+      "taskApproach": null,
+      "nativeRouteAdmission": "pending-home-resources",
+      "gateWaiting": false,
+      "destinationId": null,
+      "pathVersion": 2
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "37637a03-da38-49aa-941d-ea5753bf5b10/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 250
+    },
+    "assignment": 3,
+    "end": 290.45113245600874,
+    "display": {
+      "sequence": 42,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "37637a03-da38-49aa-941d-ea5753bf5b10/1",
+        "nativeSession": 1,
+        "ticket": 2,
+        "effectiveTime": 250
+      },
+      "age": 0.09999999403953552,
+      "clock": 250.10000000000005
+    },
+    "retired": {
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "37637a03-da38-49aa-941d-ea5753bf5b10/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 290.4799999999717
+      },
+      "pose": {
+        "x": 60,
+        "z": 0,
+        "yaw": 0,
+        "radius": 0.28,
+        "runPhase": 0,
+        "walkPhase": 163.00286420428122,
+        "carryPhase": 0,
+        "runRemaining": 105.80409353316266
+      },
+      "sequence": 4,
+      "frame": {
+        "sequence": 101,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "37637a03-da38-49aa-941d-ea5753bf5b10/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 290.4799999999717
+        },
+        "clock": 290.4799999999717,
+        "homeBindingAbsent": true
+      }
+    },
+    "endElapsed": 290.4799999999717,
+    "finalWorker": "worker-6",
+    "finalStatus": "home",
+    "drained": true
+  },
+  "failedContinuousPass": {
+    "raw": {
+      "file": "E:/wild-guardians-qa/savanna-idle-and-home-20261126/nvidia-accelerated-timeout.json",
+      "sha256": "f28081c88a5e261ffcd6e7d48ba0977ea8bda77bdbf087f609f97a9b7ec229e4"
+    },
+    "elapsed": 123.07999999999265,
+    "phase": "civil Home",
+    "error": {
+      "kind": "authority-client-first-error",
+      "message": "Native resource preparation timed out",
+      "stack": "Error: Native resource preparation timed out\n    at receiveNativeIntentControl (http://127.0.0.1:5294/src/simulation/simulation-authority-client.js:69:54)\n    at worker.onmessage (http://127.0.0.1:5294/src/simulation/simulation-authority-client.js:125:227)",
+      "state": "ready"
+    },
+    "lastRequestAbort": 8
+  }
+}

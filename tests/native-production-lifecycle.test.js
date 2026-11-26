@@ -660,6 +660,77 @@ test('the first paid hire in Savanna completes watering through Task14 and Actio
  }finally{release();await f.close();}
 });
 
+test('the paid Savanna shift preserves the worker through a selected Idle stroll and Home',async()=>{
+ const opening=await createSpatialCampaignOpening({seed:714});
+ const {state,nav}=opening,chunkKeys=[...opening.loaded.keys()];
+ try{
+  state.tutorial.step='plant';
+  const center=state.structures.find(s=>s.kind==='center');
+  assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
+ }finally{opening.dispose();}
+ let releaseFarm,releaseStroll,releaseHome;
+ const holds=new Map([
+  ['farm-arrival',new Promise(resolve=>releaseFarm=resolve)],
+  ['idle-stroll',new Promise(resolve=>releaseStroll=resolve)],
+  ['home-route',new Promise(resolve=>releaseHome=resolve)]
+ ]);
+ const receipts=new Map();
+ const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
+  onReady:record=>holds.get(record.kind),onCommit:(record,receipt)=>receipts.set(record,receipt)});
+ try{
+  f.command({kind:'setNavigationView',view:{bounds:[24,-48,144,48],eye:{x:76,z:30},target:{x:75,z:-4}}});
+  f.command({kind:'openInitialHiring'});
+  f.command({kind:'hire',id:'savanna-shift-hire',selection:{youngMale:1}});
+  const hired=f.snapshot(),workerId=hired.workers[0].id,ledger=hired.ledger;
+  const find=kind=>f.records.find(row=>row.kind===kind&&row.committed);
+  const ready=kind=>f.records.find(row=>row.kind===kind&&row.packet);
+  const pose=({x,z,heading,walkPhase,runPhase,runRemaining})=>[x,z,heading,walkPhase,runPhase,runRemaining];
+  const advance=async()=>{
+   const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward:false});
+   for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
+   for(let i=0;i<6;i++)await f.present();
+   assert.deepEqual(f.faults,[]);
+   return JSON.parse(p.snapshot);
+  };
+  const drive=async(predicate,deadline)=>{
+   let s;
+   do {s=await advance();} while(!predicate(s)&&s.elapsed<deadline);
+   assert(predicate(s),JSON.stringify(f.authority.nativeIntentProductionStatus()));
+   return s;
+  };
+  await drive(s=>s.workers[0].nativeRouteAdmission==='pending-resources',12);
+  releaseFarm();
+  const beforeStroll=await drive(()=>ready('idle-stroll'),90),stroll=ready('idle-stroll');
+  const selection=stroll.resources.nativeIdleStroll;
+  assert.equal(stroll.resources.bodyId,1);
+  assert.equal(selection.walkRng,2740067004);
+  assert.deepEqual(selection.destination,{x:84.7285845040267,z:-5.658521107821933});
+  assert.deepEqual(pose((await advance()).workers[0]),pose(beforeStroll.workers[0]));
+  assert.equal(stroll.committed,false);
+  releaseStroll();
+  await drive(()=>find('idle-stroll')&&f.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeStroll?.bodyId===1&&row.relativeTime>0),95);
+  const returned=await drive(()=>ready('home-route'),255),home=ready('home-route');
+  assert.equal(returned.workers[0].nativeRouteAdmission,'pending-home-resources');
+  assert.equal(home.resources.bodyId,1);
+  assert.equal(home.resources.motionFlags,0);
+  assert.deepEqual(pose((await advance()).workers[0]),pose(returned.workers[0]));
+  assert.equal(home.committed,false);
+  releaseHome();
+  await drive(()=>find('home-route')&&f.host.inspect().nativeRouteFrame?.bindings.some(row=>row.nativeHome?.bodyId===1&&row.relativeTime>0),260);
+  const homeAcquisition=receipts.get(home).nativeHomeRouteBinding.reference;
+  await drive(()=>find('home-arrival'),homeAcquisition.endTime+2);
+  const receipt=receipts.get(find('home-arrival')).nativeHomeArrivalBinding;
+  assert.equal(receipt.reference.bodyId,1);
+  assert.equal(receipt.reference.sourceHome.reference.worldBoundary.ticket,homeAcquisition.worldBoundary.ticket);
+  await drive(s=>s.workers[0].status==='home'&&f.host.inspect().nativeRouteFrame?.worldBoundary?.ticket===receipt.reference.worldBoundary.ticket,homeAcquisition.endTime+3);
+  const after=f.snapshot();
+  assert.equal(after.workers[0].id,workerId);
+  assert.equal(after.workers[0].nativeRouteAdmission,undefined);
+  assert.equal(f.records.filter(row=>row.kind==='home-arrival'&&row.committed).length,1);
+  assert.deepEqual(after.ledger,ledger);
+ }finally{releaseFarm();releaseStroll();releaseHome();await f.close();}
+});
+
 for(const [kind,fixtureName,clockField,bindingField,capability] of [
  [22,'Idle22','nativeStroll','nativeIdleStrollBinding','nativeIdleStrollVersion'],
  [23,'Farm23','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion']

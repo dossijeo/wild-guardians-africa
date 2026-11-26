@@ -25,3 +25,17 @@ La preimagen rechaza el arranque de Sabana. Al aplicar solo el cambio de arranqu
 NVIDIA Turing presentó Task14 en el dibujo 28, con el ticket 3 y el cuerpo 1. El dibujo 204 presentó Action15 en su frontera adquirida de 43,84 s, con el ticket 5 y el mismo cuerpo. Idle20 adquirió el ticket 7 a 51,64 s. El cultivo `plant-3` registró un `WaterSatisfied` del trabajador `worker-6`. El recorrido usó avance controlado. Los dos ensayos iniciales localizaron un campo erróneo de la sonda y un límite de observación que terminaba antes del GO de Idle20. La pasada final registró los dos dibujos y drenó sin errores. La continuación de Idle en Sabana, el turno completo y la cadencia siguen pendientes. [Recibo de NVIDIA](performance/native-savanna-first-task-nvidia-20261126.json).
 
 Pasaron 97 pruebas de arranque, Farm, Task14, portones y barrido continuo. El build web de producción terminó en 49,42 s e incluyó los binarios comprobados. Standalone y pthread conservan las mismas importaciones y exportaciones que la preimagen. El módulo JavaScript de pthread coincide byte a byte.
+
+## Marcha Idle y regreso al final del turno en Sabana
+
+Con la semilla 714, la primera decisión de marcha de Idle usa la secuencia 8 y el RNG privado 2740067004. La preimagen rechaza ese corredor con `−2` y deja al trabajador en la pose anterior. La semilla 712 llega al final del turno a 250 s y deja al trabajador en `pending-home-resources`, con Home18 rechazado antes de preparar sus recursos. Ambos casos usan el centro y las operaciones de compra y contratación de Game.
+
+Idle22 y Home18 aplican ahora el barrido continuo de trabajador de Sabana, que exige terreno residente y seco y respeta los sólidos. La ruta conserva el tipo de prueba para revalidar al cambiar la topología. El corredor de Home sin huida sigue usando marcha sin urgencia. Home19 retira el mismo cuerpo al alcanzar la entrada de la aldea.
+
+El control de CPU conserva la decisión, el destino y la pose durante READY de Idle. Comprueba también el reloj del dibujo, mantiene la pose durante READY de Home y exige una sola retirada con la misma asignación. Se reproduce con `node --test --test-name-pattern="the paid Savanna shift" tests/native-production-lifecycle.test.js`.
+
+En NVIDIA Turing, después de la primera contratación y el riego, el ticket 11 adquirió Idle22 a 84,08 s. El dibujo 253 presentó el cuerpo 1 con edad de 0,004 s y el destino de la decisión original. El recorrido corto drenó. Otra pasada cargó el checkpoint del final de ese mismo turno a 250 s. El dibujo 42 presentó Home18 con el cuerpo 1 y el dibujo 101 confirmó su ausencia al adquirir Home19 a 290,48 s. El mismo trabajador quedó en casa en (60, 0) y Draw drenó. Durante esta prueba se detuvo el avance del reloj al alcanzar la entrada para observar el GO de Home19. [Recibos de NVIDIA](performance/native-savanna-idle-home-nvidia-20261126.json).
+
+En la pasada acelerada continua, una preparación posterior a la primera marcha agotó el plazo a 123,08 s. Quedan abiertas esa continuidad gráfica y la cadencia. También queda pendiente el orden en que Farm23 adquiere el cuerpo antes de la primera tarea. En ese orden, la fila de Stop24 reconstruye el tiempo de la pose con un ULP de diferencia respecto de la frontera exacta y el receptor la rechaza.
+
+Pasaron las 149 pruebas dirigidas de ciclo de trabajador, Idle, Home y barrido continuo. El build web de producción terminó en 46,56 s e incluyó ambos WASM con las mismas importaciones y exportaciones que la preimagen.

@@ -100,7 +100,11 @@ static int stageIdleStroll(double actor,double session,double sourceSequence,con
   if(d.route.points.empty()||d.route.points[d.route.points.size()-2]!=float(next.x)||d.route.points.back()!=float(next.z))result=-7;
   for(size_t i=0;!selectedApproach&&!d.strollFarmSource&&!d.strollSettlementSource&&!(d.strollRequestSource&&d.strollRequestSource->approach)&&result==1&&i<d.route.points.size();i+=2)if(std::hypot(double(d.route.points[i])-h[11],double(d.route.points[i+1])-h[12])>h[13])result=-7;
  }
- if(result==1){result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true);if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}}
+ if(result==1){
+  const bool savannaWorker=spatial_world_biome()==0;
+  result=prepareRouteTiming(d.route,uint64_t(actor),q.x,q.z,s.effectiveTime,q.radius,2,0,q.runRemaining,true,false,savannaWorker);
+  if(result==1){d.route.motionOffset[2]=q.runPhase;d.route.motionOffset[3]=q.walkPhase;d.route.motionOffset[4]=q.carryPhase;}
+ }
  d.topology=lazy_route_revision();if(previous!=q.profile)spatial_select_nav_profile_index(previous);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;d.gates=s.gates;s.reservationResult.fill(0);
  result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,d.strollSettlementSource.get(),nullptr,d.idleCycleSource?d.idleCycleSource->binding->body.get():nullptr,d.idleCycleSource?d.idleCycleSource->binding.get():nullptr,d.strollRequestSource.get());if(result!=1)return result;
