@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Si la marcha norte pasa por el refugio, Home19 obtiene turno para retirar al trabajador. NVIDIA presentó la ausencia antes del GO de 26 y confirmó hasta Idle. El refugio original conserva su tramo seguro con ambas marchas en CPU. [Pruebas y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).
+
 La primera contratación pagada puede declarar Farm23 con el roster vacío y el reloj nativo ya conectado. NVIDIA confirmó Farm23 y la prioridad ordinaria de la primera tarea, que cancela su READY y adquiere Task14 con el mismo cuerpo. La prueba cubre un arranque explícito de Desierto. [Flujo y recibo](native-cold-worker-admission-20261126.md).
 
 Después de RaidEnded, el sustituto acredita el cuerpo inmóvil y el uniforme de Fall o GetUp consumido por un pase real antes de reanudar. NVIDIA confirmó ambas fases y Home19 en el encuentro DEV de Desierto sin portón. [Recorrido y recibos](native-desert-mixed-flight-center-20261125.md#sustitución-de-draw-durante-fall-y-getup-después-de-raidended).

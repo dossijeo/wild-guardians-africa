@@ -98,8 +98,9 @@ test('a southern Desert center approach and refuge acquire on their original bod
   }
 });
 
-test('the northern center corridor waits for the stop-safe Home suffix before acquiring the animal route', async () => {
+for(const blockedRefuge of [false,true])test(`the northern center corridor waits for ${blockedRefuge?'Home19 at the intersecting refuge':'the stop-safe Home suffix'} before acquiring the animal route`, async () => {
   const {state,chunkKeys} = mixedDesertRaid();
+  if(blockedRefuge)state.villages.find(village=>village.id===state.workers[0].villageId).entry={x:-12,z:14};
   const acquired=[];
   let homeReady,releaseHome;
   const retained=new Promise(resolve=>{releaseHome=resolve;});
@@ -109,15 +110,19 @@ test('the northern center corridor waits for the stop-safe Home suffix before ac
   try {
     await untilProduction(world,()=>world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
     world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:24},target:{x:-10,z:0}}});
-    async function step(){const next=world.advance();await world.present();return next;}
+    async function step(seconds=.05){const next=world.advance(seconds);await world.present();return next;}
     let next;
-    for(let i=0;i<30&&!homeReady;i++)next=await step();
+    for(let i=0;i<30&&!next?.raid;i++)next=await step(.025);
+    assert(next?.raid);
+    await untilProduction(world,()=>acquired.some(row=>row.kind==='farm-arrival-stop'));
+    await untilProduction(world,()=>homeReady);
+    next=world.snapshot();
     assert(homeReady,'Home18 should be admissible with the animal stationary');
     assert.equal(next.raid.animals[0].targetId,'structure-2');
     const [animal]=next.raid.animals;
     assert.equal(next.workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
     for(let i=0;i<3;i++){
-      next=await step();
+      next=await step(.025);
       assert.deepEqual([next.raid.animals[0].x,next.raid.animals[0].z],[animal.spawn.x,animal.spawn.z]);
       assert(!world.records.some(record=>record.kind==='animal-crop-route'));
     }
@@ -141,8 +146,20 @@ test('the northern center corridor waits for the stop-safe Home suffix before ac
     const animalRoute=acquired.find(row=>row.kind==='animal-crop-route')?.data.nativeAnimalCropRouteBinding;
     assert(animalRoute);
     assert(animalRoute.reference.worldBoundary.effectiveTime>home.reference.worldBoundary.effectiveTime+1.6);
-    assert(animalRoute.reference.worldBoundary.effectiveTime<home.reference.endTime);
-    assert(!acquired.some(row=>row.kind==='home-arrival'));
+    const absence=acquired.find(row=>row.kind==='home-arrival')?.data.nativeHomeArrivalBinding;
+    if(blockedRefuge){
+      assert(absence,'The intersecting refuge must retire its worker first');
+      assert.equal(absence.reference.bodyId,home.reference.bodyId);
+      assert.equal(absence.reference.sourceHome.assignmentSequence,home.assignmentSequence);
+      const rows=world.records.find(row=>row.kind==='animal-crop-route').resources.rows;
+      const {x,z,radius}=absence.reference.pose;
+      assert(rows.some((value,i)=>i%16===1&&Math.hypot(value-x,rows[i+1]-z)<radius+animalRoute.reference.radius));
+      assert(animalRoute.reference.worldBoundary.effectiveTime>=absence.reference.worldBoundary.effectiveTime);
+      assert(animalRoute.reference.worldBoundary.ticket>absence.reference.worldBoundary.ticket);
+    }else{
+      assert(animalRoute.reference.worldBoundary.effectiveTime<home.reference.endTime);
+      assert.equal(absence,undefined);
+    }
     for(let i=0;i<1500&&(next.raid||next.workers[0].nativeRouteAdmission!=='native-idle');i++)next=await step();
     assert.equal(next.raid,null);
     assert.equal(next.workers[0].id,state.workers[0].id);

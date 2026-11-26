@@ -297,6 +297,16 @@ La calificación cubre un trabajador y un facóquero en el encuadre norte sin po
 
 Pasaron 115 pruebas de regresión y el build WebGPU de producción terminó en 59,10 s. Los tres artefactos nativos del build coinciden con los de la captura. Standalone y pthread conservan sus importaciones y añaden `nav_center_flight_animal_ready`. Pthread arrancó con memoria compartida.
 
+### Retirada del trabajador cuando la ruta norte corta el refugio
+
+Cuando el refugio queda dentro del recorrido del animal, el comprobador nativo conserva la espera de 26. La preimagen devolvía un valor nulo cuando tampoco había un permiso de encuentro. El productor esperaba un booleano, volvía a preparar 26 y dejaba sin turno a Home19. La preparación de 26 terminaba bloqueada por el cuerpo en el refugio. La comprobación devuelve ahora un booleano y el productor da turno a la retirada del Home18 que ya llegó. La baja sigue requiriendo su propia preparación y adquisición.
+
+Los controles CPU fijan el inicio del relevo en Stop24. El refugio original conserva la adquisición concurrente de 26 antes de terminar Home18. En el segundo control, el refugio en (-12, 14) cae dentro de la cobertura barrida de la ruta real. Home19 retira el cuerpo 1 a 19,15 s antes del GO de 26 a 19,45 s. Ambos recorridos conservan los cuatro golpes al centro y el retorno civil hasta Idle. Los módulos de la preimagen `47f10d9ef` reproducen el bloqueo con el refugio intersectado. [Controles del corredor](../../tests/native-farm-raid-flight-source.test.js).
+
+En NVIDIA Turing, el dibujo 88 presentó Home19 a 19,40 s en el ticket 8. El facóquero conservó su pose de nacimiento hasta retirar el cuerpo 1. El dibujo 89 presentó 26 con el ticket 10 adquirido a 19,55 s. Tras cuatro golpes de 20 HP, el mismo trabajador volvió a Idle en el cuerpo 3, con cero golpes recibidos y el saldo intacto. Draw drenó y la captura terminó sin pérdidas de traza. La cadencia integrada sigue pendiente. [Recibo físico](performance/native-north-refuge-retirement-nvidia-20261126.json).
+
+Pasaron 77 pruebas de incursión, Home, vuelo y retorno civil. El build web de producción terminó en 51,44 s. La calificación física cubre el perfil DEV de Desierto con un trabajador y un facóquero sin portón.
+
 ## Nacimiento cerca de Farm
 
 En el encuadre de Desierto `(-16, 1,4)`, el mismo `event-29208` coloca al facóquero a 2,644 m del trabajador. La preimagen rechazaba la propuesta por la caja del corredor Farm. Sus 18 nudos dejan 2,261 m como mínimo en el itinerario completo y 2,644 m en el tramo todavía ejecutable al nacer el animal. El dueño de reservas conserva la prueba rápida de la caja y, si esta es insuficiente, comprueba el itinerario restante contra la posición estacionaria de nacimiento. La comprobación se repite al declarar el objetivo del animal. En el control con separación inicial de 0,319 m la admisión sigue cerrada.

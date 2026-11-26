@@ -1344,7 +1344,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
     const check=wasm.nav_center_flight_animal_ready;
 
     const verdict=check?.(numericId(worker.id),numericId(animal.id),requestSequence,raidFlight.event);
-    return !check||verdict===1||verdict===0&&raidFlight.centerAttack&&centerPermitSource(state,animal,requestSequence);
+    return !check||verdict===1||verdict===0&&raidFlight.centerAttack&&!!centerPermitSource(state,animal,requestSequence);
   }
   const requestNativeAnimalCropRoute=(state,animal,bodyId)=>{
     if(state!==owningState||!Number.isSafeInteger(bodyId)||bodyId<1||!wasm.nav_animal_route_request)return false;

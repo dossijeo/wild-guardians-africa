@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La cohorte norte de Desierto ya completa Home19 cuando el refugio intersecta la ruta del animal. NVIDIA confirmó el dibujo de la ausencia antes de adquirir 26, los cuatro golpes al centro y la vuelta civil a Idle. El control original del tramo seguro conserva la marcha simultánea. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#retirada-del-trabajador-cuando-la-ruta-norte-corta-el-refugio).
+
 El arranque explícito del trabajador nativo admite una primera contratación desde Desierto con un centro y el roster vacío. El reloj ya existe al conectar Draw. NVIDIA verificó el pago, Farm23 con READY retenido y la alternativa ordinaria en la que la primera tarea adquiere Task14 sobre ese mismo cuerpo. La selección del perfil desde la partida ordinaria sigue abierta. [Arranque y recibo](native-cold-worker-admission-20261126.md).
 
 NVIDIA confirmó la sustitución de Draw después de RaidEnded durante Fall y GetUp. El primer dibujo del sustituto acreditó la fase exacta del trabajador inmóvil. También verificó la sustitución con READY de Home18 retenido, el reintento de la misma solicitud con un ticket nuevo y un único GO. Los tres recorridos completaron Home19 y drenaron. [Fall y GetUp](native-desert-mixed-flight-center-20261125.md#sustitución-de-draw-durante-fall-y-getup-después-de-raidended) · [Home18 pendiente](native-desert-mixed-flight-center-20261125.md#sustitución-de-draw-con-home18-pendiente).

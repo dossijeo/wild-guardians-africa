@@ -22,7 +22,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    if(onlyActor===null||onlyActor===actorId){
     const r=planner.nativeAnimalCropState?.(actorId);
     const flight=planner.nativeRaidFlightMember?.(state,animal);
-    const waitingForHome=flightStopMarkers.has(flight?.nativeRouteAdmission)||
+    // An arrived worker still owns its endpoint until Home19 retires it.
+    // The waiting animal must leave that preparation its turn.
+    const arrivedHome=r?.mode===1&&flight?.nativeRouteAdmission==='native-home'&&planner.nativeHomeRouteExecution(flight.id)?.arrived;
+    const waitingForHome=arrivedHome||flightStopMarkers.has(flight?.nativeRouteAdmission)||
       r?.purpose==='center'&&(flight?.nativeRouteAdmission==='pending-raid-flight-resources'||
         r.mode===1&&planner.nativeCenterFlightAnimalReady?.(state,animal,r.requestSequence)===false);
     if(r?.mode===1&&!waitingForHome)return {actorId,kind:'animal-crop-route',operation:'startNativeAnimalCropRouteAfterGpuQuiescence',prepare:'prepareNativeAnimalCropRouteResources',requestSequence:r.requestSequence};
