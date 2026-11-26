@@ -203,7 +203,7 @@ seguían en su pose de origen. Al liberarlo, los dos órdenes cruzaron el
 portón abierto y llegaron a Idle con los centros y los cuerpos originales.
 También se comprobó una contratación pagada después de que el primer
 cuerpo ya hubiera llegado y quedado en Idle. Ese cuerpo permanece en el
-corredor y el nuevo Farm sigue esperando. Ese relevo queda pendiente.
+corredor y el nuevo Farm sigue esperando en el binario inicial.
 
 En NVIDIA, con los dos centros alineados del caso bloqueado, el primer
 Farm aparcó en x=-13,29627, z=5,06142. Draw presentó ambos cruces con
@@ -212,3 +212,30 @@ Idle a los 25,70 s con sus raíces y geometrías originales. El consumidor
 drenó sin errores. El recorrido acredita el cruce, la llegada y el relevo
 a Idle. En la ventana de 240 oportunidades a 30 Hz, el mayor intervalo
 registrado fue de 35,70 ms. C4 sigue abierto. [Recibo y controles](performance/native-opposed-farm-egress-20261126.json).
+
+### Contratación con un trabajador estacionado
+
+Si una reserva de Farm identifica un cuerpo estacionario en el primer
+tramo, WASM prueba un desvío local con el planificador de cuerpos
+existente. El desvío vuelve al corredor original por delante del
+bloqueador y antes del portón. Cada alternativa pasa de nuevo la prueba
+continua de terreno, hoja, cuerpos y reservas. La petición conserva el
+mismo centro, extremo y portón. Una reserva en movimiento mantiene la
+espera previa.
+
+El control contrata a la segunda persona con el primer cuerpo ya en
+Idle. Retiene READY, conserva ambas poses, comprueba la separación en
+cada segmento del corredor y luego adquiere la ruta hasta Idle. El
+trabajador estacionado conserva su posición, orientación y fases. La
+contratación registra un solo débito.
+
+NVIDIA confirmó el segundo Farm con el ticket 6 sobre el cuerpo 2. El
+trabajador recién contratado cruzó con la hoja abierta y llegó a Idle
+en su centro. El cuerpo estacionado conservó su pose y sus fases.
+Ambos conservaron sus raíces y geometrías originales y solo se cargaron
+26 monedas. El consumidor drenó sin errores. [Recibo y controles](performance/native-late-farm-detour-20261126.json).
+
+OpenRA espera si el bloqueador ya está saliendo y vuelve a consultar la
+ruta para los demás casos. Detour reincorpora el prefijo local cuando
+comparte un punto del corredor vigente. En Wild Guardians la admisión de
+la ruta completa sigue a cargo del dueño que emite el GO. [OpenRA Move](https://github.com/OpenRA/OpenRA/blob/release-20250330/OpenRA.Mods.Common/Activities/Move/Move.cs#L260-L295) · [Detour v1.6.0](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourPathCorridor.cpp#L103-L148).

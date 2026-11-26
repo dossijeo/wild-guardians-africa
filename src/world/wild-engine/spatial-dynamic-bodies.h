@@ -11,6 +11,8 @@ uint64_t spatialBodiesMutationRevision();
 // after the whole cohort transaction has passed its metadata preflight.
 bool spatialMoveBodyFromIntent(uint64_t id,double x,double z);
 bool spatialBodiesParticipate(const SpatialBodyView& actor,const SpatialBodyView& other);
+extern "C" int spatial_body_detour(double id,double goalX,double goalZ,int mask);
+extern "C" const double* spatial_bodies_result_ptr();
 using SpatialBodyVisitor=void (*)(uint64_t,const SpatialBodyView&,void*);
 void spatialVisitBodiesBox(double minX,double minZ,double maxX,double maxZ,
   SpatialBodyVisitor visitor,void* context);

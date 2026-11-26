@@ -61,6 +61,52 @@ static int planFarmArrival(RouteSlot& route,const NativeFarmArrivalResourceReque
 static double farmGateSide(const NativeGate& gate,double x,double z){
  return (x-gate.x)*std::sin(gate.yaw)+(z-gate.z)*std::cos(gate.yaw);
 }
+static bool proveFarmArrivalAlternative(IntentState& s,const ActiveIntent& intent,PendingNativeMotionDraft& draft,const SpatialBodyView& body,std::vector<float> points){
+ const auto& r=*draft.farmArrivalRequestSource;
+ RouteSlot next;next.points=std::move(points);
+ if(timeFarmArrival(next,r,s.effectiveTime,draft.route.motionFlags,draft.route.workerDrySweep)!=1)return false;
+ auto gates=s.gates;std::vector<GateCrossingBoundary> boundaries;s.reservationResult.fill(0);
+ if(proveGateRouteAdmission(s,intent,next,r.body,body,gates,boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,&r)!=1||
+    next.gateReservations!=draft.route.gateReservations)return false;
+ draft.route=std::move(next);draft.gates=std::move(gates);draft.boundaries=std::move(boundaries);return true;
+}
+static bool detourFarmGateApproach(IntentState& s,const ActiveIntent& intent,PendingNativeMotionDraft& draft,const SpatialBodyView& body){
+ const auto witness=s.reservationResult;
+ const auto& route=draft.route;
+ if(witness[0]!=1||route.gateReservations.empty()||route.points.size()<2)return false;
+ const auto blockerId=uint64_t(witness[1]);SpatialBodyView blocker;
+ if(s.reservedBodies.count(blockerId)||s.suspendedBodies.count(blockerId)||!spatialReadBody(blockerId,blocker)||blocker.kind!=0||!reservationParticipates(body,blocker))return false;
+ const auto& r=*draft.farmArrivalRequestSource;const auto& gate=s.gates.at(route.gateReservations.front());
+ const double length=route.distances.front(),side=farmGateSide(gate,r.x,r.z);
+ if(length<=0||side*farmGateSide(gate,blocker.x,blocker.z)<=0||side*farmGateSide(gate,route.points[route.points.size()-2],route.points.back())>=0||
+    sampleRouteTiming(route,witness[3])[2]>=length)return false;
+ const double ux=(route.points[0]-r.x)/length,uz=(route.points[1]-r.z)/length,
+   along=(blocker.x-r.x)*ux+(blocker.z-r.z)*uz;
+ if(along<=0||along>=length)return false;
+
+ // Rejoin the original first edge beyond the stationary disc, before the
+ // gate. The local body detour is only a candidate for full route admission.
+ const int rejection=s.timingRejection,previous=lazy_selected_context();
+ if(previous!=r.profile)spatial_select_nav_profile_index(r.profile);
+ bool admitted=false;
+ for(double clearance:{.08,.20,.32,.44}){
+  const double join=std::min(length,along+r.radius+blocker.r+clearance);
+  const float x=join==length?route.points[0]:float(r.x+join*ux),z=join==length?route.points[1]:float(r.z+join*uz);
+  if(side*farmGateSide(gate,x,z)<=0)break;
+  const int count=spatial_body_detour(double(r.body),x,z,-1);
+  if(count>0&&route.points.size()+2*size_t(count)<=8192){
+   const auto points=spatial_bodies_result_ptr();
+   std::vector<float> path(points,points+2*count);
+   const bool first=path[path.size()-2]==route.points[0]&&path.back()==route.points[1];
+   path.insert(path.end(),route.points.begin()+(first?2:0),route.points.end());
+   if(proveFarmArrivalAlternative(s,intent,draft,body,std::move(path))){admitted=true;break;}
+  }
+  if(join==length)break;
+ }
+ if(previous!=r.profile)spatial_select_nav_profile_index(previous);
+ if(!admitted){s.reservationResult=witness;s.timingRejection=rejection;}
+ return admitted;
+}
 static void clearOpposedFarmEgress(IntentState& s,const ActiveIntent& intent,PendingNativeMotionDraft& draft,const SpatialBodyView& body){
  const auto& r=*draft.farmArrivalRequestSource;
  const auto& route=draft.route;
@@ -99,11 +145,8 @@ static void clearOpposedFarmEgress(IntentState& s,const ActiveIntent& intent,Pen
     return side*farmGateSide(gate,r.x,r.z)<0&&side*farmGateSide(gate,x,z)<=0;
   }))continue;
   if(!farmArrivalApproachClear(r,x,z,route.workerDrySweep)||std::any_of(opposed.begin(),opposed.end(),[&](const auto& reverse){return blocks(reverse,x,z);}))continue;
-  RouteSlot next;next.points=route.points;next.points.insert(next.points.end(),{x,z});
-  if(timeFarmArrival(next,r,s.effectiveTime,route.motionFlags,route.workerDrySweep)!=1)continue;
-  auto gates=s.gates;std::vector<GateCrossingBoundary> boundaries;
-  if(proveGateRouteAdmission(s,intent,next,r.body,body,gates,boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,&r)!=1||next.gateReservations!=route.gateReservations)continue;
-  draft.route=std::move(next);draft.gates=std::move(gates);draft.boundaries=std::move(boundaries);break;
+  auto path=route.points;path.insert(path.end(),{x,z});
+  if(proveFarmArrivalAlternative(s,intent,draft,body,std::move(path)))break;
  }
  if(previous!=r.profile)spatial_select_nav_profile_index(previous);
  s.reservationResult=reservation;s.timingRejection=rejection;
@@ -129,8 +172,9 @@ static int stageFarmArrivalRoute(double actor,double session,double sourceSequen
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  int result=planFarmArrival(d.route,r,s.effectiveTime,int(urgent),savannaWorker,d.topology);if(result!=1)return result;
  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;s.reservationResult.fill(0);d.gates=s.gates;
- result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,held?nullptr:d.farmArrivalRequestSource.get(),d.farmArrivalHeldBinding.get());if(result!=1)return result;
- if(!held)clearOpposedFarmEgress(s,found->second,d,body);
+ result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,held?nullptr:d.farmArrivalRequestSource.get(),d.farmArrivalHeldBinding.get());
+ if(result==1){if(!held)clearOpposedFarmEgress(s,found->second,d,body);}
+ else if(result!=0||held||!detourFarmGateApproach(s,found->second,d,body))return result;
  result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
  auto& p=s.barrierProposal;p.kind=23;captureNativeMotionRows(d);const auto& route=d.route;const double length=route.distances.empty()?0:route.distances.back();
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,

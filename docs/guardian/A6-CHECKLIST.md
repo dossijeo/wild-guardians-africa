@@ -626,6 +626,11 @@ Dentro de A6-04, a–d están marcados implementados/validados en el dominio nat
 actual; e/f están parciales. Los IDs siguientes solo desglosan el alcance que ya
 estaba dentro de e/f; no son funcionalidades adicionales ni renumeran A6-01–11.
 
+Los recorridos de Farm con Draw remoto ya cubren dos solicitudes opuestas y
+una contratación después de estacionar el primer cuerpo. Los controles retienen
+READY y NVIDIA confirma ambos cuerpos, el portón y el drenaje. e-R3, e-R4 y
+f-R4 conservan sus criterios de integración. [Recorrido y controles](native-farm-gate-aperture-20261121.md#contratacion-con-un-trabajador-estacionado).
+
 ### Componentes ya implementados, con sus límites
 
 | Componente | Hecho | Límite de lo entregado |
