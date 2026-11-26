@@ -195,6 +195,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    if(entry.motionPreparing===pending)entry.motionPreparing=null;
    if(!closed&&entries.get(id)===entry){
     requestBakedFall(id,entry);
+    requestBakedGetUp(id,entry);
     if(entry.bakeResource)resumeBakedWalk(id,entry);
    }
    if(!adopted){const release=()=>{binding.dispose();motion.dispose();};if(typeof pipelineAdmission.deferRelease==='function')pipelineAdmission.deferRelease(actor.root,release);else release();}

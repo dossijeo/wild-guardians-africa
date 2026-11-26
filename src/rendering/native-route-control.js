@@ -25,7 +25,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {copyRecoveredEncounterFall,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
+import {copyRecoveredEncounterFall,copyRecoveredEncounterPose,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -1061,6 +1061,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       if(approach)worker.recoveredWorkerImpact=actor.recoveredWorkerImpact=fall;
       else worker.encounterRecovery={hit:fall.hit,body:fall.workerBody,at};
+    },
+    installRecoveredEncounterPose(value){
+      const pose=copyRecoveredEncounterPose(value);
+      if(closed||clock?.committedThrough!==pose.at||actors.size||active.size)
+        throw Error('Recovered encounter pose conflicts with the fresh baseline');
+      const worker=actorContext(pose.workerId);
+      worker.state=0;
+      worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
     prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;

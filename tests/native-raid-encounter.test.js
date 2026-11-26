@@ -600,6 +600,78 @@ for(const phase of ['approach','retreat'])test(`terminal Draw loss preserves the
  }finally{await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
 });
 
+for(const phase of ['Fall','GetUp'])test(`terminal Draw verifies stationary ${phase} after RaidEnded`, {timeout:30000}, async()=>{
+ const world=await setup(true,{captureHistoricalEvents:true}),ports=new MessageChannel();
+ let draw;
+ try{
+  const before=await reachSecondHit(world),impact=before.elapsed+.02,advancing=advance(world,2);
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===impact&&world.host.inspect().pendingSequence!==null);
+  await world.present();
+  let snapshot=JSON.parse((await advancing).snapshot);
+  while(snapshot.raid||phase==='GetUp'&&!snapshot.workers[0].recovery){
+   assert(snapshot.elapsed<17);
+   snapshot=JSON.parse((await advance(world)).snapshot);
+   await world.present();
+   if(!snapshot.raid)await presentDepartedEncounter(world,snapshot);
+  }
+  await presentDepartedEncounter(world,snapshot);
+  const {elapsed:at,workers:[worker]}=snapshot;
+  assert.equal(worker.hits,2);
+  assert.equal(!!worker.recovery,phase==='GetUp');
+  assert.equal(worker.nativeRouteAdmission,undefined);
+  const hold=await world.authority.quiesceNativeIntentProduction();
+  world.retireResourceEndpoint();
+  await world.host.dispose();
+  assert.equal((await world.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true,lossHoldId:30})).terminal,true);
+  const route=await world.authority.terminalWorkerRoute();
+  assert.deepEqual(route,{version:2,encounter:'stationary',workerId:900011,members:[]});
+  draw=await drawFixture({}, {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:replacement}=await world.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const {encounter,worldBoundary}=replacement;
+  assert.equal(encounter.at,at);
+  assert.equal(encounter.workerBody,1);
+  assert.equal(encounter.hit,29210);
+  assert.equal(encounter.remaining,worker.fallRemaining??0);
+  assert.deepEqual(encounter.getUp,worker.recovery??null);
+  const frame={nativeWorldBoundary:worldBoundary,recoveredEncounterFall:encounter,
+   clock:{...world.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}};
+  const recoveryPoseWitness={id:draw.buffer.__remoteGpuId,phaseOffset:0,weightOffset:4};
+  const stage=async(value,witness,count=3)=>{
+   const {client}=draw;
+   client.beginFrame({...frame,...(witness?{recoveryPoseWitness}:{})});
+   client.device.queue.writeBuffer(draw.buffer,0,new Float32Array([value]));
+   const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[
+    {view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+   pass.setPipeline(draw.pipeline);pass.setBindGroup(0,draw.group);pass.draw(count);pass.end();
+   client.device.queue.submit([encoder.finish()]);
+   const pending=client.endFrame();
+   pending.catch(()=>{});await flush();await draw.host.idle();return {pending};
+  };
+  const present=async(...args)=>{const {pending}=await stage(...args);draw.host.present();await pending;};
+  await present(encounter.phase,null);
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  await present(encounter.phase+1,recoveryPoseWitness);
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  await present(encounter.phase,recoveryPoseWitness,0);
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  const {pending}=await stage(encounter.phase,recoveryPoseWitness);
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  draw.host.present();await pending;
+  assert.equal(draw.host.inspect().nativeRouteFrame.recoveredEncounterPose.phase,encounter.phase);
+  assert.deepEqual((await world.authority.checkHeldDraw(30,hold,route)).encounter,encounter);
+  await present(encounter.phase,null);
+  await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  await present(encounter.phase,recoveryPoseWitness);
+  await world.attachRecoveredResources(draw);
+  assert.equal(world.authority.resumeNativeIntentProduction(hold),true);
+  const next=await advance(world);
+  assert.equal(next.stepsExecuted,1);
+  assert.equal(next.elapsed,at+.02);
+  assert.equal(next.events.some(event=>['WorkerIncapacitated','AnimalRetreating','RaidEnded'].includes(event.type)),false);
+  assert.deepEqual([...draw.errors,...world.faults],[]);
+ }finally{await world.close();draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();}
+});
+
 test('the ordinary Desert qualifications still withhold contact corridors without encounter qualification',async()=>{
  const world=await setup(false);
  try{

@@ -19,7 +19,7 @@ test('fall waits for earlier admission and never publishes after recovery',async
  const entity={id:'w',profile:'youngMale',status:'fleeing',fallRemaining:2},state={workers:[entity],tasks:[]},root=new Group(),scene=new Group();scene.add(root);let walkDone,fallDone,requested=0,installed=0;const roster=createWebGpuWorkerRoster({scene,residency:{},state,renderer:{backend:{isWebGPUBackend:true}},assetBank:{dispose(){}},pipelineAdmission:{prepare:async()=>{}},bakedWalkBank:{get:()=>new Promise(resolve=>walkDone=resolve)},bakedFallBank:{get(){requested++;return new Promise(resolve=>fallDone=resolve);}},createWorker:async()=>({root,update(){},async installBakedWalk(){return true;},async installBakedFall(_b,{isCurrent}){if(isCurrent())installed++;return isCurrent();},dispose(){root.removeFromParent();}})});
  try{roster.sync();await flush();await flush();assert.equal(requested,1);walkDone({});await flush();await flush();assert.equal(requested,1);entity.fallRemaining=0;entity.status='walking';roster.sync();fallDone({});await flush();await flush();assert.equal(installed,0);}finally{roster.dispose();}
 });
-test('pending historical admission hands off to a confirmed Fall while publication is stopped',async()=>{
+for(const kind of ['Fall','GetUp'])test(`pending historical admission hands off to a confirmed ${kind} while publication is stopped`,async()=>{
  const worker={id:'w',profile:'unsupported',status:'fleeing',x:0,z:0},state={elapsed:5,workers:[worker],tasks:[]};
  const scene=new Group(),root=new Group(),geometry=new BoxGeometry(),material=new MeshBasicNodeMaterial();
  const clock=createConfirmedHistoricalClock({initialElapsed:5});
@@ -27,18 +27,20 @@ test('pending historical admission hands off to a confirmed Fall while publicati
  let release,admissions=0,installs=0;
  const roster=createWebGpuWorkerRoster({scene,state,residency:{},assetBank:{dispose(){}},
   renderer:{backend:{isWebGPUBackend:true},library:{fromMaterial:source=>source.clone()}},
-  experimentalHistoricalMotion:{actorIds:[],clock},bakedWalkBank:{get:async()=>({})},bakedFallBank:{get:async()=>({})},
+  experimentalHistoricalMotion:{actorIds:[],clock},bakedWalkBank:{get:async()=>({})},
+  [kind==='Fall'?'bakedFallBank':'bakedGetUpBank']:{get:async()=>({})},
   pipelineAdmission:{prepare:async()=>{},prepareAndPublish:(_root,_options,publish)=>{
    if(++admissions===1){publish();return Promise.resolve();}
    return new Promise(resolve=>{release=()=>{publish();resolve();};});
   }},
-  createWorker:async()=>({root,update(){root.visible=true;},async installBakedFall(_bake,{isCurrent}){
+  createWorker:async()=>({root,update(){root.visible=true;},async ['installBaked'+kind](_bake,{isCurrent}){
    assert.equal(isCurrent(),true);installs++;return true;
   },dispose(){root.removeFromParent();}})});
  try{
   roster.sync();await flush();assert.ok(roster.get('w'));
   roster.setHistoricalActors(['w']);await flush();assert.equal(typeof release,'function');
-  state.workers[0]={...worker,fallRemaining:2};roster.sync();await flush();assert.equal(installs,0);
+  state.workers[0]={...worker,...(kind==='Fall'?{fallRemaining:2}:{recovery:{fraction:.4,duration:2,heading:0,elapsed:.5}})};
+  roster.sync();await flush();assert.equal(installs,0);
   release();await flush();assert.equal(installs,1);
  }finally{roster.dispose();clock.dispose();geometry.dispose();material.dispose();}
 });

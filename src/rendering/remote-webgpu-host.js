@@ -1,5 +1,6 @@
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounterFall} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {submittedRecoveryPose} from './remote-recovery-pose.js';
 import {copyNativeAnimalCropReference,copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from '../world/native-animal-crop-resource.js';
 import {copyAnimalCropClock} from './remote-clock-bindings.js';
 import {copyRestoredWallRepairClock} from '../world/restored-wall-repair-reference.js';
@@ -862,10 +863,18 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (!next||active.initializedPreparation) for (const baseline of active.baselineWrites) device.queue.writeBuffer(resolve({ [REF]: baseline.id }), 0, baseline.bytes);
       // Preserve the original queue order (a buffer can change between passes).
       // Only the generation boundary is atomic, never reorder WebGPU operations.
-      const nativeTimes=new Map();let submitted=false,cropDraws=null;
+      const nativeTimes=new Map();let submitted=false,cropDraws=null,recoveredPose=null;
+      const encounter=recovered?.encounter??recoveredSubmission?.encounter;
+      const pose=encounter?.version===3&&clockElapsed===encounter.at&&
+        sameRecoveredEncounter(active.metadata.recoveredEncounterFall,encounter)?encounter:null;
       for (const op of active.operations) {
-        if (op.method === 'submit') cropDraws=patchPresentation(clockElapsed,camera,nativeTimes,cropDraws);
-        if(applyQueue(op, !next,active.initializedPreparation)===true)submitted=true;
+        let witness=null;
+        if(op.method==='submit'){
+          cropDraws=patchPresentation(clockElapsed,camera,nativeTimes,cropDraws);
+          if(pose&&!active.gpuWrittenBuffers.has(active.metadata.recoveryPoseWitness?.id))
+            witness=submittedRecoveryPose(op,active.resourceSnapshot,active.metadata.recoveryPoseWitness,pose.phase);
+        }
+        if(applyQueue(op, !next,active.initializedPreparation)===true){submitted=true;if(witness)recoveredPose=witness;}
       }
       // Publish input witnesses only after the actual command submissions have
       // succeeded. A preparation, rejected frame or failed submit is no image.
@@ -874,7 +883,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         record.lastDrawTime=Math.max(record.lastDrawTime??-Infinity,at);
       }
       if(submitted&&!active.firstUseTracked){for(const pipeline of active.drawnPipelines)pipeline.firstUseSubmitted=true;active.firstUseTracked=true;}
-      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
+      if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(recoveredPose?{recoveredEncounterPose:{...pose,...recoveredPose}}:{}),...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at){
         const members=recovered.members.map(({profile,ref,assignmentSequence,gateId})=>{
@@ -885,9 +894,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
             ...(gate?{nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}:{})};
         });
-        if(members.every(Boolean)){
+        if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
           if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active));
-          if(recovered.encounter)routeControl.installRecoveredEncounterFall(recovered.encounter,recovered.members[0].ref);
+          if(encounter?.version===3)routeControl.installRecoveredEncounterPose(encounter);
+          else if(recovered.encounter)routeControl.installRecoveredEncounterFall(recovered.encounter,recovered.members[0].ref);
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
@@ -1244,12 +1254,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
          recovered.refuge&&preparedBindings.some(({nativeHome,nativeRoute})=>
            (nativeHome?.actorId??nativeRoute?.actorId)===recovered.refuge.reference.actorId)||
-         recovered.encounter&&(!sameRecoveredEncounterFall(packet.metadata.recoveredEncounterFall,recovered.encounter)||
+         recovered.encounter&&(!sameRecoveredEncounter(packet.metadata.recoveredEncounterFall,recovered.encounter)||
            preparedBindings.some(({nativeHome,nativeRoute})=>
              (nativeHome?.actorId??nativeRoute?.actorId)===recovered.encounter.workerId))||
          missing)
         throw Object.assign(Error('Replacement requires its bound worker clock at the loss cut'),
-          {code:(missing??recovered.members[0]).profile.obsoleteCode});
+          {code:(missing??recovered.members[0])?.profile.obsoleteCode});
       for(const member of recovered.members)if(member.install){member.install();member.install=null;}
     }
     assertTerminalGateClocks(packet.metadata.nativeHomeArrivalTemplate??packet.metadata.nativeTaskSettlementTemplate,preparedBindings);
@@ -2311,7 +2321,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           lastNativeGpuFence=message.fenceId;nativeGpuFences.add(message.fenceId);
           const rows=recoveredSubmission?.members??[recoveredSubmission];
           const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&
-            (!recoveredSubmission.encounter||sameRecoveredEncounterFall(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&rows.every(row=>{
+            (!recoveredSubmission.encounter||sameRecoveredEncounter(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&
+            (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
             return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime)&&
               (!row.nativeGate||nativeRouteFrame.bindings.some(b=>
@@ -2378,6 +2389,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(source.refuge&&source.refuge.retiredSequence>message.sequence)throw Error('Refuge retirement is newer than the control baseline');
              if(source.encounter?.version===2&&source.encounter.impactAt>message.clock.committedThrough)
                throw Error('Encounter impact is newer than the control baseline');
+             if(source.encounter?.version===3&&source.encounter.at!==message.clock.committedThrough)
+               throw Error('Recovered pose differs from the held control clock');
              const members=source.members.map(({kind,proof})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
                ref:proof.reference,gateId:proof.gateIds[0]??null,

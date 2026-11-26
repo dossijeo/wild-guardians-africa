@@ -80,7 +80,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
              !Number.isSafeInteger(q.publicationSequence)||q.publicationSequence<1||q.publicationSequence!==next-queue.length-1||
              !Array.isArray(q.terrainManifest?.chunks))throw Error('Invalid replacement publication');
           const grouped=q.version===2,cut=grouped?copyNativeWorldBoundary(q.worldBoundary):null;
-          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![1,2].includes(q.members.length)))
+          if(grouped&&(cut?.authorityEpoch!==data.authorityEpoch||!Array.isArray(q.members)||![0,1,2].includes(q.members.length)))
             throw Error('Invalid replacement world cut');
           const members=(grouped?q.members:[q]).map(({execution,resources:input})=>{
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
@@ -98,7 +98,7 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
             const {refuge,ruin,encounter}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
             evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(encounter?{encounter}:{})};
-            const at=members[0].execution.executedThrough;
+            const at=members[0]?.execution.executedThrough??encounter.at;
             if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');
           }

@@ -6,6 +6,8 @@ import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './n
 import {copyNativeRoutePresentation} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
+import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
+import {WORKER_RECOVERY} from '../simulation/worker-recovery.js';
 
 // Recovery carries the acquired program independently of the original Draw.
 // The terminal sample is also needed for the next strike's source validation.
@@ -138,9 +140,34 @@ export function copyRecoveredEncounterFall(value){
  return Object.freeze({version,workerId,workerBody,hit,x,z,heading,remaining,...source});
 }
 
-export function sameRecoveredEncounterFall(a,b){
+export function sameRecoveredEncounter(a,b){
+ if(a?.version===3||b?.version===3)return a?.version===3&&b?.version===3&&
+  ['workerId','workerBody','animalId','profile','hit','impactAt','raidEnded','endedAt','at','x','z','heading','remaining','phase']
+   .every(key=>a[key]===b[key])&&(a.getUp===null?b.getUp===null:!!a.getUp&&!!b.getUp&&
+    ['duration','elapsed','heading','dx','dz','fraction','travelLimit'].every(key=>a.getUp[key]===b.getUp[key]));
  return !!a&&!!b&&['version','workerId','workerBody','hit','x','z','heading','remaining','spawn','impactAt','workerAssignment']
   .every(key=>a[key]===b[key]);
+}
+
+export function copyRecoveredEncounterPose(value){
+ const {version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp}=value??{};
+ const duration=LOCOMOTION.sources.find(source=>source.profile===profile)?.fallSeconds;
+ if(version!==3||![workerId,workerBody,animalId,hit,raidEnded].every(id=>Number.isSafeInteger(id)&&id>0)||
+    animalId===workerId||raidEnded<=hit+1||![impactAt,endedAt,at,x,z,heading,remaining,duration].every(Number.isFinite)||
+    impactAt<0||endedAt<impactAt||at<endedAt||remaining<0||remaining>duration)
+  throw Error('Invalid stationary encounter source');
+ let recovery=null;
+ if(remaining===0){
+  const {duration,elapsed,heading:yaw,dx,dz,fraction,travelLimit}=getUp??{};
+  if(duration!==WORKER_RECOVERY[profile]?.duration||![duration,elapsed,yaw,dx,dz,fraction].every(Number.isFinite)||
+     elapsed<0||elapsed>=duration||yaw!==heading||fraction<0||fraction>1||
+     travelLimit!==undefined&&(!Number.isFinite(travelLimit)||travelLimit<0||travelLimit>1))
+   throw Error('Invalid stationary GetUp source');
+  recovery=Object.freeze({duration,elapsed,heading:yaw,dx,dz,fraction,...(travelLimit===undefined?{}:{travelLimit})});
+ }else if(getUp!==null)throw Error('Recovered Fall overlaps GetUp');
+ const phase=Math.fround(recovery?.elapsed??duration-remaining);
+ if(value.phase!==undefined&&value.phase!==phase)throw Error('Invalid stationary encounter phase');
+ return Object.freeze({version,workerId,workerBody,animalId,profile,hit,impactAt,raidEnded,endedAt,at,x,z,heading,remaining,getUp:recovery,phase});
 }
 
 // The current world can include an exact later mutation that retained the
@@ -150,6 +177,12 @@ export function copyNativeRecoveryGroup(value,world){
    return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
  if(value.encounter!==undefined){
+   if(value.encounter?.version===3){
+     const encounter=copyRecoveredEncounterPose(value.encounter);
+     if(value.refuge!==undefined||value.ruin!==undefined||value.members.length||
+        !world||world.effectiveTime>encounter.at)throw Error('Stationary encounter recovery cannot supply a moving route');
+     return {members:[],encounter};
+   }
    if(value.refuge!==undefined||value.ruin!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
      throw Error('Encounter recovery requires its route and Fall');
    const proof=copyCropAttestation(value.members[0].proof),encounter=copyRecoveredEncounterFall(value.encounter),ref=proof.reference;

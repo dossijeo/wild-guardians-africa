@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounterFall} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -152,7 +152,7 @@ export function createNativeIntentControlPublication({port,session,observe,
         const rows=recoveryBaseline?.version===2?draw.members:[draw];
         if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
-           (recoveryBaseline.encounter?!sameRecoveredEncounterFall(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
+           (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
            !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              return row?.kind===kind&&row.assignmentSequence===proof.assignmentSequence&&
