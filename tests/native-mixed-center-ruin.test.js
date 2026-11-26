@@ -39,19 +39,21 @@ function mixedState(gated){
  }finally{fixture.close();}
 }
 
-for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
+for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
  const initial=mixedState(true),receipts=new Map(),[authorityPort,drawPort]=pair();
  initial.structures[0].hp=initial.structures[0].maxHp;
  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
   onCommit(record,receipt){receipts.set(record.kind,receipt);}});
- const strike=mode==='strike after Home19',late=mode==='refuge'||strike,kind=strike?27:26;
+ const strike=mode==='strike after Home19',retreat=mode==='retreat after Home19';
+ const laterAnimalCut=strike||retreat,late=mode==='refuge'||laterAnimalCut,kind=strike?27:26;
+ const purpose=retreat?'retreat':'center';
  const step=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:1});
  let draw;
  try{
   world.command({kind:'setNavigationView',view});
   await untilProduction(world,()=>receipts.has('farm-arrival'));
   let state,frame,absence;
-  for(let i=0;i<(strike?1000:300);i++){
+  for(let i=0;i<(laterAnimalCut?1100:300);i++){
    const next=step();state=JSON.parse(next.snapshot);
    for(const key of next.residency?.missing??[]){
     const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});
@@ -59,22 +61,22 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
    await world.present();
    frame=world.host.inspect().nativeRouteFrame;
    absence=receipts.get('home-arrival')?.nativeHomeArrivalBinding;
-   if(frame?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&row.nativeAnimalCrop.purpose==='center'&&row.relativeTime>0)&&
-      (late?absence&&(strike||frame.worldBoundary.ticket===absence.reference.worldBoundary.ticket):
+   if(frame?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>0)&&
+      (late?absence&&(laterAnimalCut||frame.worldBoundary.ticket===absence.reference.worldBoundary.ticket):
         receipts.has('home-route')&&state.workers[0].nativeRouteAdmission==='native-home'))break;
   }
-  const center=strike?receipts.get('animal-crop-strike').nativeAnimalCropStrikeBinding:
+  const animalBinding=strike?receipts.get('animal-crop-strike').nativeAnimalCropStrikeBinding:
    receipts.get('animal-crop-route').nativeAnimalCropRouteBinding;
   const home=receipts.get('home-route').nativeHomeRouteBinding;
-  assert.equal(center.reference.purpose,'center');
+  assert.equal(animalBinding.reference.purpose,purpose);
   assert.deepEqual(home.gateIds,[1000000]);
-  assert.notEqual(home.reference.worldBoundary.ticket,center.reference.worldBoundary.ticket);
+  assert.notEqual(home.reference.worldBoundary.ticket,animalBinding.reference.worldBoundary.ticket);
   assert.equal(state.workers[0].status,late?'home':'fleeing');
-  if(strike){
-   assert.equal(frame.worldBoundary.ticket,center.reference.worldBoundary.ticket);
+  if(laterAnimalCut){
+   assert.equal(frame.worldBoundary.ticket,animalBinding.reference.worldBoundary.ticket);
    assert(absence.reference.worldBoundary.ticket<frame.worldBoundary.ticket);
-   assert.equal(state.raid.animals[0].status,'attacking');
-   assert.equal(state.structures[0].hp,600);
+   assert.equal(state.raid.animals[0].status,retreat?'retreating':'attacking');
+   assert.equal(state.structures[0].hp,retreat?520:600);
   }
   const before=world.snapshot(),at=before.elapsed;
   assert.equal(before.structures.find(s=>s.id===gateId).gateOpen,1);
@@ -83,16 +85,17 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
   const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
   assert(retired.terminal&&retired.callbacksSettled);
   const route=await world.authority.terminalWorkerRoute();
-  const worker={kind:18,actorId:home.reference.actorId},animal={kind,actorId:center.reference.actorId};
+  const worker={kind:18,actorId:home.reference.actorId},animal={kind,actorId:animalBinding.reference.actorId};
   assert.deepEqual(route,late?{version:2,refuge:true,members:[animal]}:{version:2,members:[worker,animal]});
   draw=await fixture({capabilities:{nativeHomeRouteVersion:1,nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1}},
     {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
   const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(authorityPort,'production-control',30,hold,route);
   assert.deepEqual(q.worldBoundary,frame.worldBoundary);
   assert.deepEqual(q.refuge,late?absence:undefined);
-  if(strike){
-   const evidence={version:2,members:[{kind:27,proof:q.members[0].execution.binding}],refuge:q.refuge};
+  if(laterAnimalCut){
+   const evidence={version:2,members:[{kind,proof:q.members[0].execution.binding}],refuge:q.refuge};
    assert.throws(()=>copyNativeRecoveryGroup(evidence,absence.reference.worldBoundary),/differs from the acquired refuge cut/);
+   assert.throws(()=>copyNativeRecoveryGroup(evidence,{...q.worldBoundary,ticket:q.worldBoundary.ticket+1}),/differs from the acquired refuge cut/);
   }
   let byteOffset=0;
   const register=(binding,ref)=>{
@@ -104,16 +107,16 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
   const ages=q.members.map(({resources,execution})=>{
    const ref=execution.binding.reference,isHome=resources.kind===18;
    assert.equal(execution.executedThrough,at);
-   assert.deepEqual(ref,isHome?home.reference:center.reference);
+   assert.deepEqual(ref,isHome?home.reference:animalBinding.reference);
    if(resources.kind===27){
-    assert.equal(execution.binding.attackId,center.attackId);
+    assert.equal(execution.binding.attackId,animalBinding.attackId);
     assert.deepEqual(resources.worldBoundary,q.worldBoundary);
    }else assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
    register(isHome?{nativeHome:ref}:{nativeAnimalCrop:ref},ref);
    if(isHome){
     const [gate]=resources.presentation.gates;
     assert.equal(gate.gateId,1000000);
-    register({nativeGate:{gateId:gate.gateId,worldBoundary:mode==='foreign motor ticket'?center.reference.worldBoundary:ref.worldBoundary}},ref);
+    register({nativeGate:{gateId:gate.gateId,worldBoundary:mode==='foreign motor ticket'?animalBinding.reference.worldBoundary:ref.worldBoundary}},ref);
    }
    return floorFloat32(at-ref.worldBoundary.effectiveTime);
   });
@@ -150,7 +153,8 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
   const after=JSON.parse(step().snapshot);
   assert(Math.abs(after.elapsed-at-.05)<1e-12);
   assert.equal(after.workers[0].status,before.workers[0].status);
-  assert.equal(after.raid.animals[0].targetId,'structure-2');
+  if(retreat)assert.equal(after.raid.animals[0].status,'retreating');
+  else assert.equal(after.raid.animals[0].targetId,'structure-2');
   const poses=next=>next.raid.animals.map(a=>[a.x,a.z]);
   if(strike)assert.deepEqual(poses(after),poses(before));
   else assert.notDeepEqual(poses(after),poses(before));
@@ -173,7 +177,11 @@ for(const mode of ['crossing','foreign motor ticket','refuge','strike after Home
    assert(control.nativeCausalClock.intentSequence>=civilRequest.requestSequence);
    assert.equal(state.raid,null);
    assert.deepEqual(state.events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[580,560,540,520]);
-   if(strike)assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId==='attack-'+center.attackId).length,1);
+   if(strike)assert.equal(state.events.filter(e=>e.type==='AnimalLogicalHit'&&e.attackId==='attack-'+animalBinding.attackId).length,1);
+   if(retreat){
+    const ends=state.events.filter(e=>e.type==='RaidEnded'&&e.simulationTime>=at);
+    assert.equal(ends.length,1,JSON.stringify(ends));
+   }
   }
   assert.deepEqual(world.faults,[]);
  }finally{

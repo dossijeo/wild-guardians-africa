@@ -1,4 +1,4 @@
-import {copyNativeRecoveryGroup,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,matchesNativeRefugeRecovery,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {centerFootprint} from '../centers.js';
@@ -1034,8 +1034,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
        game.workers.length!==1||game.workers[0]!==saved.worker)return null;
     const {worker,issued}=saved,r=issued.reference,cut=nativeWorldBoundary();
     const home=nativeHomeRouteSource(r.sourceHome.reference).home;
-    const strike=kind===27;
-    if(!(strike?nativeRecoveryCovers(cut,r.worldBoundary):sameNativeWorldBoundary(cut,r.worldBoundary))||!nativeWorkerHomeInactive(r.actorId)||
+    if(!nativeRecoveryCovers(cut,r.worldBoundary)||!nativeWorkerHomeInactive(r.actorId)||
        worker.x!==home.x||worker.z!==home.z||worker.heading!==r.pose.yaw||
        ['runPhase','walkPhase','carryPhase','runRemaining'].some(key=>worker[key]!==r.pose[key])||
        wasm.spatial_body_has_blockers(r.bodyId,0)!==-1)return null;
@@ -1043,12 +1042,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
     if(actual[0]!==1||actual[1]!==issued.retiredSequence||actual[3]!==r.worldBoundary.ticket||
        actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==r.worldBoundary.effectiveTime)return null;
     const actorId=raid.animals[0].id;
-    const execution=strike?nativeAnimalCropStrikeExecution(actorId):nativeAnimalCropRouteExecution(actorId,{sharedCut:true});
-    const source=execution?.binding.reference;
-    if(!source||source.purpose==='retreat')return null;
-    if(strike?(cut.ticket<=r.worldBoundary.ticket||source.restore||execution.binding.assignmentSequence<=issued.retiredSequence):
-       (source.worldBoundary.ticket>=cut.ticket||execution.binding.assignmentSequence>=issued.retiredSequence))return null;
-    return {execution,refuge:issued};
+    const execution=kind===27?nativeAnimalCropStrikeExecution(actorId):nativeAnimalCropRouteExecution(actorId,{sharedCut:true});
+    return execution&&matchesNativeRefugeRecovery(cut,issued,execution.binding)?{execution,refuge:issued}:null;
   }
   function nativeCenterRuinRetreatRecovery(){
     const game=owningState,ruin=committedCenterRuin,cut=nativeWorldBoundary();

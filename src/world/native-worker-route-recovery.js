@@ -115,6 +115,18 @@ export function nativeRecoveryCovers(world,source){
    (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
 }
 
+export function matchesNativeRefugeRecovery(world,{reference:home,retiredSequence},{reference:animal,assignmentSequence}){
+ if(!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||animal.actorId===home.actorId||animal.bodyId===home.bodyId)return false;
+ if(sameNativeWorldBoundary(world,animal.worldBoundary)){
+   return nativeRecoveryCovers(world,home.worldBoundary)&&world.ticket>home.worldBoundary.ticket&&
+     !animal.restore&&assignmentSequence>retiredSequence;
+ }
+ // Home19 may itself be the last world operation, retaining the approach
+ // that was acquired before the worker reached the refuge.
+ return animal.kind===26&&animal.purpose!=='retreat'&&sameNativeWorldBoundary(world,home.worldBoundary)&&
+   nativeRecoveryCovers(world,animal.worldBoundary)&&assignmentSequence<retiredSequence;
+}
+
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world){
@@ -135,16 +147,11 @@ export function copyNativeRecoveryGroup(value,world){
    return {members:[{kind:26,proof}],ruin};
  }
  if(value.refuge!==undefined){
-   const refuge=copyNativeHomeArrivalAttestation(value.refuge),{reference:home}=refuge;
+   const refuge=copyNativeHomeArrivalAttestation(value.refuge);
    const member=value.members[0],kind=member?.kind;
    if(value.members.length!==1||(kind!==26&&kind!==27))throw Error('Refuge recovery requires the surviving animal');
-   const proof=nativeWorkerRouteRecoveryProfile(kind).copyAttestation(member.proof),ref=proof.reference;
-   const current=kind===26?sameNativeWorldBoundary(world,home.worldBoundary)&&nativeRecoveryCovers(world,ref.worldBoundary)&&
-     !sameNativeWorldBoundary(world,ref.worldBoundary)&&proof.assignmentSequence<refuge.retiredSequence:
-     sameNativeWorldBoundary(world,ref.worldBoundary)&&nativeRecoveryCovers(world,home.worldBoundary)&&
-     world.ticket>home.worldBoundary.ticket&&!ref.restore&&proof.assignmentSequence>refuge.retiredSequence;
-   if(!current||!home.sourceHome.reference.sourceRequest?.raidSpawnSequence||
-      ref.purpose==='retreat'||ref.actorId===home.actorId||ref.bodyId===home.bodyId)
+   const proof=nativeWorkerRouteRecoveryProfile(kind).copyAttestation(member.proof);
+   if(!matchesNativeRefugeRecovery(world,refuge,proof))
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind,proof}],refuge};
  }

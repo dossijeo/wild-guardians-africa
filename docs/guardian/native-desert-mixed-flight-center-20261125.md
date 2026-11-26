@@ -171,4 +171,12 @@ En NVIDIA Turing, Home19 retiró el cuerpo 1 con el ticket 11 y la secuencia 9. 
 
 Pasaron 416 pruebas dirigidas y la compilación web de producción terminó en 46,40 s. La prueba física de Strike27 usa el perfil de desarrollo y aporta evidencia parcial de E.
 
-Un control posterior con WASM y cola determinista reprodujo el rechazo civil al perder Draw durante Retreat con el centro intacto. A t=48,30, el sustituto recibe el corredor con el ticket 27 y el regreso posterior requiere la retirada del ticket 11. Ese relevo sigue pendiente.
+## Pérdida de Draw durante Retreat con el centro intacto
+
+El control anterior recuperaba el corredor de Retreat con el ticket 27 a t=48,30. Al terminar la incursión, el regreso civil se rechazaba porque requería la retirada del ticket 11. La autoridad y Draw comparten ahora la regla de orden de los recibos. Si Home19 es la frontera vigente, conserva la aproximación anterior. Si el animal adquirió después otro movimiento, ese ticket debe ser la frontera vigente y coincidir con el recibo del animal. La ruina conserva su propia prueba de retirada del polígono.
+
+Los controles con WASM y cola determinista ejercitan ambos Retreat. Con el centro intacto, el primer envío del sustituto acredita el corredor y conserva la retirada del trabajador. La misma secuencia de Home19 autoriza Farm23 tras un único `RaidEnded` de la incursión en curso. El descriptor rechaza la frontera anterior de Home19 y un ticket mundial posterior al corredor. El control de ruina sigue exigiendo el recibo de colapso y termina con el trabajador en el refugio.
+
+En NVIDIA Turing, el primer envío del sustituto presentó el cuerpo 2, la asignación 25 y el ticket 27 a t=61,75 con edad local de 0,25 s. La incursión terminó a t=69,34. El centro conservó 520 HP y los cuatro débitos previos. Farm23 consumió la secuencia 9 de Home19, adquirió el cuerpo 3 para el mismo trabajador y llegó a Idle con el saldo conservado. El último dibujo carecía del reloj de Retreat y el sustituto drenó sin errores. [Recibo físico](performance/native-mixed-center-retreat-civil-loss-20261126.json).
+
+Pasaron 417 pruebas dirigidas y la compilación de producción terminó en 47,44 s. En este recorrido el portón ya estaba abierto desde Farm23. La pérdida durante el movimiento de la hoja en la cohorte mixta sigue pendiente.
