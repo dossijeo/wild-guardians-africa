@@ -69,6 +69,82 @@ function savedAttack() {
 
 import {copyPublishedNativeWorldBoundary} from '../src/world/native-world-boundary.js';
 
+for(const arrived of [false,true])test(`the sheltered Savanna center approach reacquires its ${arrived?'terminal pose':'saved corridor'}`, {timeout:30000}, async()=>{
+ const snapshot=gunzipSync(readFileSync(new URL('./fixtures/sabana714-d5-before-rhino.json.gz',import.meta.url))).toString();
+ const initial=deserialize(snapshot),options=savedNativeAuthorityOptions(snapshot);
+ const manifest={epoch:'sheltered-center-approach',chunks:options.chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+ })};
+ let releaseOriginalStrike;
+ const source=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest,
+  onReady:record=>arrived&&record.kind==='animal-crop-strike'?new Promise(resolve=>{releaseOriginalStrike=resolve;}):undefined});
+ let restored,releaseReady;
+ const step=authority=>authority.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+ try{
+  source.command({kind:'setNavigationView',view:options.navigationView});
+  let original;
+  for(let i=0;i<800&&!original;i++){
+   await step(source);await source.present();
+   original=source.records.find(row=>row.kind==='animal-crop-route'&&row.committed);
+  }
+  assert.ok(original);
+  for(let i=0;i<12;i++){await step(source);await source.present();}
+  if(arrived){
+   for(let i=0;i<600&&!releaseOriginalStrike;i++){await step(source);await source.present();}
+   assert.ok(releaseOriginalStrike,'expected an acquired approach awaiting its first Strike27');
+  }
+  const checkpoint=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const stored=prepareWorkerCheckpoint(checkpoint,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert.equal(stored.saved,true);
+  const [animal]=stored.state.raid.animals,saved=savedNativeAuthorityOptions(serialize(stored.state));
+  assert.equal(saved.nativeWorkerLifecycle,true);
+  assert.ok(animal.path?.length);
+  assert.equal(animal.targetId,'structure-2');
+  assert(animal.motionPhase>original.resources.reference.phase);
+  if(arrived)assert.deepEqual(animal.path,[{x:animal.x,z:animal.z}]);
+  else assert(animal.path[0].x!==animal.x||animal.path[0].z!==animal.z);
+  const missing=structuredClone(stored.state);missing.raid.animals[0].path=null;
+  assert.throws(()=>createSimulationAuthority(module,serialize(missing),saved.chunkKeys,saved),/no restorable corridor/);
+  const invalid=structuredClone(stored.state);invalid.raid.animals[0].path[0].x+=1000;
+  assert.throws(()=>createSimulationAuthority(module,serialize(invalid),saved.chunkKeys,saved),/corridor ends at another site|lost its corridor|Native attack intention rejected/);
+
+  restored=await nativeProductionAuthority(stored.state,{...saved,getTerrainManifest:()=>manifest,
+   onReady:record=>record.kind==='animal-crop-route'&&!releaseReady?new Promise(resolve=>{releaseReady=resolve;}):undefined});
+  restored.command({kind:'setNavigationView',view:saved.navigationView});
+  await untilProduction(restored,()=>releaseReady);
+  const [route]=restored.records,{reference,rows}=route.resources;
+  assert.equal(reference.purpose,'center');
+  assert.notEqual(reference.worldBoundary.authorityEpoch,original.resources.worldBoundary.authorityEpoch);
+  assert.equal(reference.targetId,original.resources.reference.targetId);
+  assert.deepEqual(Array.from(rows.slice(1,5)),[animal.x,animal.z,0,animal.motionPhase]);
+  if(arrived)assert.equal(rows.length,16);
+  else assert.deepEqual(Array.from(rows.slice(17,19)),[animal.path[0].x,animal.path[0].z]);
+  const held=await step(restored),heldState=JSON.parse(held.snapshot);
+  assert.ok(held.elapsed>checkpoint.elapsed);
+  assert.deepEqual(heldState.raid.animals[0],animal);
+  assert.deepEqual(heldState.raid.reservations,stored.state.raid.reservations);
+  assert.equal(route.committed,false);
+  const heldCheckpoint=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(heldCheckpoint.nativeAuthorityCheckpoint.workerLifecycle,1);
+  assert.deepEqual(JSON.parse(heldCheckpoint.snapshot).raid.animals[0].path,animal.path);
+  releaseReady();
+  await untilProduction(restored,()=>route.committed);
+  await restored.present();
+  await route.packet.presented;
+  assert(restored.host.inspect().nativeRouteFrame.bindings.some(row=>row.nativeAnimalCrop?.purpose==='center'&&row.relativeTime===0));
+
+  const events=[];
+  let final=heldState;
+  for(let i=0;i<500&&!events.some(event=>event.type==='StructureHit');i++){
+   const next=await step(restored);events.push(...next.events);final=JSON.parse(next.snapshot);await restored.present();
+  }
+  assert.deepEqual(events.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),[125]);
+  assert.equal(events.filter(event=>event.type==='AnimalLogicalHit').length,1);
+  assert.deepEqual(final.ledger,stored.state.ledger);
+  assert.deepEqual(restored.faults,[]);
+ }finally{releaseReady?.();releaseOriginalStrike?.();try{await restored?.close();}finally{await source.close();}}
+});
+
 async function restoreShelteredRetreat(checkpoint,manifest,source){
  const state=JSON.parse(checkpoint.snapshot);
  assert.equal(checkpoint.saveAvailable,true);

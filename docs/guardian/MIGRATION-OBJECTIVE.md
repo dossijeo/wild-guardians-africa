@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En Sabana, el guardado conserva la aproximación nativa al centro, incluida la pose de llegada mientras espera Strike27. Dos controles WASM recargan, readmiten el corredor o la pose y aplican un solo golpe. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-durante-la-aproximación-al-centro).
+
 La partida continua de Sabana desde el menú superó tres noches y una entrega de cosecha. El cuarto turno llegó al león refugiando al civil, pero la primera ruta del animal agotó su plazo de preparación después de recibir su publicación. [Recibo del límite](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
 
 NVIDIA recargó Retreat antes del derrumbe, presentó la retirada del polígono y sustituyó Draw tras destruir el dispositivo. El primer dibujo del sustituto conservó el cuerpo y su edad antes de reanudar. La retirada terminó en una sola derrota y drenó. El control CPU cubre también la recarga posterior al derrumbe. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-durante-la-retirada-posterior-al-derrumbe).

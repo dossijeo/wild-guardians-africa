@@ -68,6 +68,12 @@ export function parseSimulationChunkKey(key){
 // Owns the game state and a native world inside the simulation worker. Chunk
 // residency is explicit: callers must provide the confirmed simulation demand.
 export const authoritySnapshotFields=Symbol('authoritySnapshotFields');
+function shelteredCenterApproach(state){
+ const animal=state.raid?.animals[0];
+ if(!nativeShelteredSavannaCenterActor(state,animal)||!['entering','walking'].includes(animal.status)||
+    nativeCropRouteSubject(state,animal)?.purpose!=='center')return null;
+ return animal;
+}
 function shelteredCenterRetreat(state){
  const [animal]=state.raid?.animals??[],center=state.structures[0];
  const collapse=center?.status==='collapsing'&&center.hp>0&&center.collapseRemaining>0;
@@ -99,11 +105,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    throw Error('Invalid native worker lifecycle restoration');
   const savedRetreat=savedWorkerLifecycle===1?shelteredCenterRetreat(game):null;
   if(savedRetreat&&(!savedRetreat.path?.length||savedEncounter))throw Error('Saved native Retreat has no restorable corridor');
+  const savedApproach=savedWorkerLifecycle===1?shelteredCenterApproach(game):null,savedApproachPath=savedApproach?.path;
+  if(savedApproach&&(!savedApproachPath?.length||savedEncounter))throw Error('Saved native center approach has no restorable corridor');
+  if(savedApproach){
+   const endpoint=savedApproachPath.at(-1);
+   if(endpoint.x!==Math.fround(savedApproach.approach.x)||endpoint.z!==Math.fround(savedApproach.approach.z))
+    throw Error('Saved native center approach corridor ends at another site');
+  }
+  const savedRaidRoute=savedRetreat??savedApproach;
   // Home19 and Dawn can both leave the authority without a live body. Restore
   // its clock and registry before the next raid or hiring request is emitted.
   const inactiveNativeRoster=nativeWorkerLifecycle&&(game.biome==='desierto'||game.biome==='sabana')&&!restoringPhysics&&
     (game.workers.length===0||savedWorkerLifecycle===1&&game.workers.every(worker=>worker.status==='home'));
-  const nativeRosterSupported=(nativeRestoration||inactiveNativeRoster)&&(!game.raid||savedRetreat)&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
+  const nativeRosterSupported=(nativeRestoration||inactiveNativeRoster)&&(!game.raid||savedRaidRoute)&&nativeGateOwners.every(s=>s.kind==='wall'&&s.status==='intact'&&Number.isFinite(s.maxHp)&&s.hp>0&&s.hp<=s.maxHp&&nativeGateModelId(s.material))&&game.workers.every(worker=>nativeMarkers.has(worker.nativeRouteAdmission)||worker.status==='home');
  if(nativeWorkerLifecycle&&!nativeRosterSupported)throw Error('Native worker lifecycle cannot bootstrap this roster');
  try{
   const withMud=data=>mudPresentation&&session.field.c.biome==='mangrove'?{...data,mudInputs:captureMudInputs(session.field,data.cx,data.cz,data.terrain.positions)}:data;
@@ -170,9 +184,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
    }
-   if(savedRetreat){
-    const body=nativeBodies.publish(savedRetreat.id,{x:savedRetreat.x,z:savedRetreat.z,radius:savedRetreat.radius,kind:1,flags:1});
-    if(!planner.requestRestoredAnimalRetreat(game,savedRetreat,body))throw Error('Saved native Retreat request rejected');
+   if(savedRaidRoute){
+    if(savedApproach&&savedApproach.path!==savedApproachPath)throw Error('Saved native center approach lost its corridor');
+    const {id,x,z,radius}=savedRaidRoute;
+    const body=nativeBodies.publish(id,{x,z,radius,kind:1,flags:1});
+    const requested=savedRetreat?planner.requestRestoredAnimalRetreat(game,savedRetreat,body):planner.requestNativeAnimalCropRoute(game,savedApproach,body);
+    if(!requested)throw Error('Saved native raid route request rejected');
    }
    if(planner.commitNativeCausalClock({paused:inactiveNativeRoster&&(!!game.pauses.length||!!game.result)}).status!=='committed')throw Error('Native worker bootstrap clock unavailable');
    installNativeProduction();
@@ -352,19 +369,23 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
    const motion=planner.nativeAnimalCropState(animal.id);
-   if(motion?.mode!==2||motion.purpose==='center'||motion.arrived)return game;
+   if(motion?.mode!==2)return game;
+   if(motion.purpose==='center'?(!nativeWorkerLifecycle||!shelteredCenterApproach(game)):motion.arrived)return game;
    const route=planner.nativeAnimalRouteBinding(animal.id);
    const sample=route&&planner.sampleNativeRoute(route.routeHandle,game.elapsed);
-   const points=route&&planner.routePoints(route.routeHandle);
-   const first=sample?.firstRemainingPoint;
    if(route?.bodyId!==motion.body||route?.targetId!==motion.target||motion.executedThrough!==game.elapsed||
-      !sample||sample.x!==animal.x||sample.z!==animal.z||sample.phase!==(animal.motionPhase??0)||
-      !points||!Number.isSafeInteger(first)||first<0||first*2>=points.length)
+      !sample||sample.x!==animal.x||sample.z!==animal.z||sample.phase!==(animal.motionPhase??0))
     throw Error('Native attack checkpoint lost its executed corridor');
    // Keep the save's ordinary path format. Cold restore validates these
    // points against its own world and acquires a new graphical ticket.
    const path=[];
-   for(let i=first*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
+   if(motion.arrived)path.push({x:sample.x,z:sample.z});
+   else{
+    const points=planner.routePoints(route.routeHandle),first=sample.firstRemainingPoint;
+    if(!points||!Number.isSafeInteger(first)||first<0||first*2>=points.length)
+     throw Error('Native attack checkpoint lost its remaining corridor');
+    for(let i=first*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
+   }
    return {...game,raid:{...game.raid,animals:[{...animal,path}]}};
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
@@ -1684,10 +1705,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const encounter=command.kind==='snapshot'?planner.encounterCheckpoint(command.nativeAuthorityCheckpoint===true):null;
     const captureNativeCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked();
     const snapshotState=captureNativeCheckpoint?nativeAnimalCheckpointState():game;
-    const retreat=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?shelteredCenterRetreat(snapshotState):null;
-    const restorableRetreat=retreat&&(snapshotState!==game||retreat===savedRetreat&&retreat.path?.length&&
-      planner.nativeAnimalCropState(retreat.id)?.mode===1);
-    const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRetreat)&&game.workers.every(worker=>
+    const raidAnimal=captureNativeCheckpoint&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()?
+      shelteredCenterRetreat(snapshotState)??shelteredCenterApproach(snapshotState):null;
+    const restorableRaidRoute=raidAnimal&&(snapshotState!==game||raidAnimal===savedRaidRoute&&
+      raidAnimal.path?.length&&planner.nativeAnimalCropState(raidAnimal.id)?.mode===1);
+    const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute)&&game.workers.every(worker=>
       nativeMarkers.has(worker.nativeRouteAdmission)||planner.nativeWorkerHomeInactive(worker.id));
     const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
