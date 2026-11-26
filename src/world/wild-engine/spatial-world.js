@@ -222,7 +222,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
   }
   // Owned copies of the native proposal's canonical scratch outputs. Reading
   // these buffers never selects/publishes a live chunk or advances any clock.
-  function captureNativeWorldProposalResources({nativeSession,ticket,effectiveTime}={}){
+  function captureNativeWorldProposalResources({nativeSession,ticket,effectiveTime}={},shieldCrop=null){
     if(!generated||wasm.spatial_world_proposal_resource_version?.()!==1)throw Error('Rebuild native proposal resource projection');
     if(wasm.spatial_world_proposal_resource_snapshot(nativeSession,ticket)!==1)throw Error('Native proposal resources are unavailable or stale');
     const retention=wasm.nav_intent_world_proposal_retains_routes?.(nativeSession,ticket);if(retention!==0&&retention!==1)throw Error('Native proposal route retention proof unavailable');
@@ -234,7 +234,10 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const stop=h[4]===12||h[4]===24||h[4]===25;
     const overlay=h[4]===2||h[4]===3||h[4]===4;
     if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||(h[4]<6&&!overlay)||(h[4]>12&&!stop)||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
-    if(overlay&&(count!==0||retention!==1||routeEffects.rows.length||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');
+    const cropStop=h[4]===3&&shieldCrop&&retention===0&&routeEffects.rows.length===26&&
+    [shieldCrop.actorId,shieldCrop.assignmentSequence,shieldCrop.routeHandle.slot,shieldCrop.routeHandle.generation,shieldCrop.bodyId,0,effectiveTime,0]
+      .every((value,index)=>value===routeEffects.rows[index]);
+    if(overlay&&(count!==0||!cropStop&&(retention!==1||routeEffects.rows.length)||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');
     if(stop&&(count!==0||retention!==0||!routeEffects.rows.length))throw Error('Native route stop lacks its body-only effects');
     const rows=Array.from(new Int32Array(wasm.memory.buffer,wasm.spatial_world_proposal_resource_changes_ptr(),count*3)),chunks=[],removed=[],seen=new Set();
     for(let index=0;index<count;index++){

@@ -50,6 +50,101 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
  intent.animalRouteRequest=request;intent.requiresResources=true;intent.state=PlanningState::AwaitingResources;route.pendingResources=true;intent.resourceRequestedAt=s.effectiveTime;
  request->sequence=emitIntentChange(s,intent);intent.resourceRequestSequence=request->sequence;s.entityRevision++;return 1;
 }
+// The last acquired source is captured only by the scoped kind3 commit.
+// No route is assigned while its replacement is being planned or prepared.
+extern "C++" bool spatialIntentCaptureShieldCropStop(const SpatialShieldCropStop& stop){
+ auto& s=state();const auto& c=stop.source;
+ if(c.slot>=s.routeSlots.size()||s.effectiveTime!=stop.time)return false;
+ const auto i=s.activeIntents.find(uint64_t(c.actor));
+ if(i==s.activeIntents.end())return false;
+ auto& intent=i->second;const auto& route=s.routeSlots[size_t(c.slot)];
+ const auto& b=route.animalRouteBinding;
+ if(s.pendingShieldCropStop||intent.stoppedShieldCrop||intent.slot!=c.slot||intent.generation!=c.generation||
+    !b||b->actual.ticket!=c.ticket||b->assignmentSequence!=c.assignment||
+    !executionBindingCoherent(s,uint64_t(c.body),intent.slot)||!route.hasExecution||
+    route.executionPose[0]!=stop.x||route.executionPose[1]!=stop.z||
+    route.executionPose[4]!=stop.yaw||route.executionPose[3]!=stop.phase||
+    (route.executionPose[15]==1)!=stop.running)return false;
+
+ s.pendingShieldCropStop=StoppedShieldCrop{stop,0,b->source};return true;
+}
+static bool stoppedShieldCropCurrent(const IntentState& s,const ActiveIntent& intent,const StoppedShieldCrop& hold){
+ const auto& p=hold.stop;const auto& q=*hold.routeSource;SpatialBodyView b;
+ return hold.polygon>0&&intent.animal&&intent.lease&&!intent.retreat&&!intent.animalStrike&&
+   intent.actor==q.actor&&intent.target==q.target&&intent.assignmentSequence==p.source.assignment&&
+   intent.approachKnown&&intent.state==PlanningState::NeedsPlan&&!intent.animalRouteRequest&&
+   s.effectiveTime>=p.time&&animalRouteDestinationCurrent(s,intent,q)&&
+   !s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body)&&spatialReadBody(q.body,b)&&
+   b.kind==1&&b.flags==1&&b.r==q.radius&&b.x==p.x&&b.z==p.z;
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_replan_shield_crop(double actor,double session,double polygon){
+ auto& s=state();if(!integer(actor)||session!=s.session||!integer(polygon))return -1;
+ if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto i=s.activeIntents.find(uint64_t(actor));if(i==s.activeIntents.end())return -2;
+ auto& intent=i->second;auto& hold=intent.stoppedShieldCrop;
+ if(!hold||hold->polygon!=polygon||!stoppedShieldCropCurrent(s,intent,*hold))return -2;
+ const auto& p=hold->stop;
+ const int previous=lazy_selected_context();
+ if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
+ const auto w=executionWorldStamp();
+ const std::array<uint64_t,4> revision{w[0],w[1],w[2],lazy_route_revision()};
+ if(hold->lastAttempt&&*hold->lastAttempt==revision){
+  if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
+  return hold->lastResult;
+ }
+ hold->lastAttempt=revision;
+ const int count=spatial_world_route_cached(float(p.x),float(p.z),intent.approachX,intent.approachZ);
+ s.planningCallsByActor[intent.actor]++;
+ std::vector<float> points;int clear=0;
+ if(count>0){
+  const auto* xy=spatial_world_route_ptr();
+  points.assign(xy,xy+count*2);
+  if(xy[count*2-2]==intent.approachX&&xy[count*2-1]==intent.approachZ){
+   double x=p.x,z=p.z;clear=1;
+   for(int k=0;k<count&&clear==1;k++){
+    const double nx=xy[k*2],nz=xy[k*2+1];
+    clear=spatial_animal_attack_segment_clear(x,z,nx,nz,hold->routeSource->radius);
+    x=nx;z=nz;
+   }
+  }
+ }
+ if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
+ if(count<0||clear==-1)return hold->lastResult=3;
+ if(clear!=1)return hold->lastResult=0;
+ const auto slot=uint32_t(p.source.slot);
+ if(slot>=s.routeSlots.size()||s.routeSlots[slot].active)return -2;
+ auto request=std::make_shared<NativeAnimalRouteRequest>(*hold->routeSource);
+ request->at=s.effectiveTime;request->x=p.x;request->z=p.z;request->heading=p.yaw;request->phase=p.phase;
+ request->entering=p.running;
+ auto& route=s.routeSlots[slot];
+ route.points=std::move(points);route.actor=intent.actor;route.originX=p.x;route.originZ=p.z;
+ route.active=true;route.pendingResources=true;route.generation=nextGateRouteGeneration(route.generation);
+ intent.slot=slot;intent.generation=route.generation;intent.topology=lazy_route_revision();
+ intent.routeStartX=float(p.x);intent.routeStartZ=float(p.z);intent.routeCursor=0;
+ intent.state=PlanningState::AwaitingResources;intent.animalRouteRequest=request;
+ request->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+extern "C++" void spatialIntentCompleteShieldCropStop(const SpatialShieldCropStop& stop,int polygon){
+ auto& s=state();auto captured=std::exchange(s.pendingShieldCropStop,std::nullopt);
+ if(!captured||polygon<=0)return;
+ const auto i=s.activeIntents.find(uint64_t(stop.source.actor));
+ if(i==s.activeIntents.end())return;
+ captured->polygon=polygon;
+ if(stoppedShieldCropCurrent(s,i->second,*captured))i->second.stoppedShieldCrop=std::move(captured);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_stopped_shield_crop(double actor){
+ auto& s=state();if(!integer(actor))return 0;const auto i=s.activeIntents.find(uint64_t(actor));
+ if(i==s.activeIntents.end()||!i->second.stoppedShieldCrop)return 0;
+ const auto& stopped=*i->second.stoppedShieldCrop;const auto& p=stopped.stop;
+ const auto& intent=i->second;const auto& q=intent.animalRouteRequest;
+ const bool request=q&&animalRouteRequestCurrent(s,intent)&&q->body==p.source.body&&q->target==stopped.routeSource->target&&
+   q->x==p.x&&q->z==p.z&&q->heading==p.yaw&&q->phase==p.phase;
+ if(!request&&!stoppedShieldCropCurrent(s,intent,stopped))return -2;
+ s.stoppedShieldCropResult={actor,double(stopped.routeSource->body),double(stopped.routeSource->target),
+   double(stopped.polygon),p.time,p.x,p.z,p.yaw,p.phase,p.source.generation,p.source.assignment,p.source.ticket};
+ return 1;
+}
+EMSCRIPTEN_KEEPALIVE const double* nav_animal_stopped_shield_crop_ptr(){return state().stoppedShieldCropResult.data();}
 // The strict 25m rule belongs to the animal's semantic declaration. Gate
 // activation is closed and conservative, so use its finite range only after
 // proving a non-tangent open intersection. No per-frame geometry queries.
@@ -148,7 +243,15 @@ EMSCRIPTEN_KEEPALIVE const double* nav_animal_route_binding_ptr(){return state()
 EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
  auto& s=state();if(!integer(actor))return 0;
  const auto it=s.activeIntents.find(uint64_t(actor));if(it==s.activeIntents.end())return 0;
- const auto& intent=it->second;if(!intent.animal||intent.slot>=s.routeSlots.size())return 0;
+ const auto& intent=it->second;
+ if(intent.stoppedShieldCrop&&intent.state==PlanningState::NeedsPlan){
+  const auto& h=*intent.stoppedShieldCrop;const auto& p=h.stop;const auto& q=*h.routeSource;
+  if(!stoppedShieldCropCurrent(s,intent,h))return -1;
+  s.animalCropState={1,4,actor,double(q.body),double(q.target),double(q.center),q.centerX,q.centerZ,
+   q.radius,p.x,p.z,p.yaw,p.phase,0,0,0,s.effectiveTime,q.targetX,q.targetZ,0};
+  return 4;
+ }
+ if(!intent.animal||intent.slot>=s.routeSlots.size())return 0;
  const auto& route=s.routeSlots[intent.slot];
  const auto binding=route.animalRouteBinding;
  const auto source=intent.animalRouteRequest?intent.animalRouteRequest:binding?binding->source:nullptr;

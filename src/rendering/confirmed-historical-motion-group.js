@@ -9,7 +9,7 @@ export function createConfirmedHistoricalMotionGroup({animals,workers=null,effec
  const prepared=new WeakMap();let lastRejection=null,remoteActive=null;const reject=(reason,actorId=null,preparationPending=false)=>{if(diagnostics||preparationPending)lastRejection={reason:typeof reason==='string'?reason.slice(0,100):'unknown',actorId:typeof actorId==='string'?actorId.slice(0,100):null,...(preparationPending?{preparationPending:true}:{})};return null;};
  function completeRoster(preview){if(typeof animals.historicalActorIds!=='function'||workers&&typeof workers.historicalActorIds!=='function'||!Array.isArray(preview?.trace?.actors))return false;const ids=[...animals.historicalActorIds(),...(workers?workers.historicalActorIds():[])],trace=preview.trace.actors.map(actor=>actor?.actorId);if(ids.some(id=>typeof id!=='string'||!id)||trace.some(id=>typeof id!=='string'||!id)||new Set(ids).size!==ids.length||new Set(trace).size!==trace.length||ids.length!==trace.length)return false;const selected=new Set(ids);return trace.every(id=>selected.has(id));}
  const isCurrent=preview=>completeRoster(preview)&&animals.historicalMotionCurrent(preview)===true&&(!workers||workers.historicalMotionCurrent(preview)===true)&&(!effects||effects.historicalMotionCurrent(preview)===true)&&(!(preview.certificates?.workSynchronized||preview.certificates?.combatSynchronized||preview.certificates?.footstepsSynchronized)||otherEffectsQuiet?.(preview)===true);
- const hasNativeCropOwner=()=>Boolean(animals.nativeCropLease?.());
+ const hasNativeCropOwner=()=>Boolean(animals.hasNativeCropOwner?.()??animals.nativeCropLease?.());
  return {
   hasNativeCropOwner,
   // The stream has validated the authority evidence and exact state endpoints.

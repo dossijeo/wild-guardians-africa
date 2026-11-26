@@ -276,6 +276,12 @@ struct NativeAnimalStrike {
  std::optional<std::array<double,19>> prepared;
  uint64_t attackId=0;
 };
+struct StoppedShieldCrop {
+  SpatialShieldCropStop stop;int polygon;
+  std::shared_ptr<const NativeAnimalRouteRequest> routeSource;
+  std::optional<std::array<uint64_t,4>> lastAttempt;
+  int lastResult=0;
+};
 struct ActiveIntent {
   uint64_t actor=0,task=0,target=0;
   PlanningState state=PlanningState::NeedsPlan;
@@ -301,6 +307,7 @@ struct ActiveIntent {
   int motionFlags=0;double runBudget=0;
   std::shared_ptr<NativeAnimalRouteRequest> animalRouteRequest;
   std::shared_ptr<const NativeAnimalStrike> animalStrike;
+  std::optional<StoppedShieldCrop> stoppedShieldCrop;
   std::optional<TaskActionResourceRequest> actionRequest;
   std::optional<RestoredTaskActionSource> restoredActionSource;
   std::shared_ptr<NativeHomeResourceRequest> homeRequest;
@@ -617,6 +624,8 @@ struct IntentState {
   // Keep the small terminal receipt after revoking the old route and bindings.
   std::optional<FinishedAnimalStrike> finishedAnimalStrike;
   std::array<double,23> animalCropState{};
+  std::array<double,12> stoppedShieldCropResult{};
+  std::optional<StoppedShieldCrop> pendingShieldCropStop;
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
   std::set<uint64_t> worldPreviewStoppedRoutes;
   std::array<double,6> barrierProposalResult{};
@@ -1001,7 +1010,7 @@ uint64_t emitIntentChange(IntentState& s,ActiveIntent& intent){
 }
 void releaseGateCrossings(IntentState&,const RouteSlot&);
 void releaseRoute(IntentState& s,ActiveIntent& intent){
-  intent.animalStrike.reset();intent.animalRouteRequest.reset();
+  intent.animalStrike.reset();intent.animalRouteRequest.reset();intent.stoppedShieldCrop.reset();
   intent.pendingTaskCancellation.reset();
   intent.actionRequest.reset();
   intent.restoredActionSource.reset();
@@ -1875,6 +1884,35 @@ int takeCenterRuin(double session,double ticket,double end,SpatialWorldProposalI
   if(route.executionPose!=expected||s.entityRevision!=p.entities+moved||spatialBodiesMutationRevision()!=p.bodies+moved)return -2;
   out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
+int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,
+    const SpatialShieldCropRoute& crop){
+  auto& s=state();
+  if(input.kind!=3||input.mode!=1||spatial_world_biome()!=0||!s.executionEnabled||!integer(crop.actor)||
+     !integer(crop.body)||!integer(crop.slot,true)||crop.slot>=s.routeSlots.size()||!integer(crop.generation)||
+     !integer(crop.assignment)||!integer(crop.ticket)||s.reservedBodies.size()!=1||spatial_body_count()!=1)return -2;
+  const auto it=s.activeIntents.find(uint64_t(crop.actor));
+  if(it==s.activeIntents.end())return -2;
+  const auto& intent=it->second;
+  const auto& slot=s.routeSlots[size_t(crop.slot)];
+  const auto& binding=slot.animalRouteBinding;
+  if(!intent.animal||intent.retreat||intent.animalStrike||!intent.approachKnown||!intent.lease||
+     intent.state!=PlanningState::RouteActive||intent.slot!=crop.slot||intent.generation!=crop.generation||
+     !binding||binding->source->attackCenter||binding->actual.ticket!=crop.ticket||
+     binding->assignmentSequence!=crop.assignment||slot.reservationBody!=crop.body||
+     slot.executionPose[6]||!slot.hasExecution||!executionBindingCoherent(s,uint64_t(crop.body),intent.slot))return -2;
+  const int result=spatialIntentStageWorld(input,&shape,1);
+  if(result!=1)return result;
+  auto& p=s.barrierProposal;
+  const auto& rows=p.routeEffects;
+  if(!p.gateEffects.empty()||(!p.retainsRoutes&&(rows.size()!=26||rows[0]!=crop.actor||
+      rows[1]!=crop.assignment||rows[2]!=crop.slot||rows[3]!=crop.generation||rows[4]!=crop.body||
+      rows[5]!=double(int(PlanningState::NeedsPlan))||rows[6]!=p.at||rows[7]!=0))){
+    clearWorldMutationProposal(p);return -2;
+  }
+  if(!p.retainsRoutes)p.worldInput.shieldCrop=SpatialShieldCropStop{
+    crop,p.at,rows[8],rows[9],rows[12],rows[11],slot.executionPose[15]==1};
+  return 1;
+}
 int spatialIntentWorldProposalSnapshot(std::array<double,6>& out){
   auto& p=state().barrierProposal;if(!p.pending||p.kind<2)return 0;
   const int valid=takeWorldMutationBoundary(double(p.session),double(p.ticket),double(p.intents),p.at,double(p.clock),2);
@@ -2031,7 +2069,7 @@ void nav_intent_reset(){
   if(!s.gates.empty())spatialGateSupportChanged();
   s.gates.clear();s.gateBodyActors.clear();s.gateInput.clear();s.gateResult.clear();
   cancelGateMotionProposal(s);s.gateMotionResult.fill(0);
-  s.barrierProposal=PendingBarrierProposal{};s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
+  s.barrierProposal=PendingBarrierProposal{};s.pendingShieldCropStop.reset();s.barrierProposalResult.fill(0);s.homeArrivalResult.fill(0);s.gateRevision=0;s.worldMutationPreview=false;s.worldPreviewRetainsRoutes=true;s.worldPreviewStoppedRoutes.clear();
   s.farmArrivalRequestResult.fill(0);s.farmArrivalRequestsResult.clear();s.farmArrivalRouteBindingResult.clear();s.farmArrivalExecutionResult.fill(0);
   s.homeRequestResult.fill(0);s.homeRequestsResult.clear();s.strollRequestResult.fill(0);s.strollRequestsResult.clear();s.strollFailedRestResult.fill(0);s.initialIdleRequestResult.fill(0);s.initialIdleRequestsResult.clear();s.initialIdleBodyBindingResult.clear();
   s.routeHoldResult.clear();s.routeKnotResult.clear();s.gateWaitSegments=0;

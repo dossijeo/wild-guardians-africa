@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {createChunkPublicationCoordinator} from '../../src/rendering/webgpu-chunk-publication.js';
 import {actorTickState} from '../../src/simulation/worker-actor-tick-states.js';
 import {readFileSync} from 'node:fs';
 import {Scene,MeshBasicMaterial} from 'three';
@@ -61,7 +62,37 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
     return {preview,support};
    }
 
- return {nativeCropLease:roster.nativeCropLease,async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
+ async function prepareStop(resources){
+    const stop=resources.nativeShieldCropStop;
+    const support=terrain.prepareShieldCropStop(stop),root=roster.get(animal.id).root;
+    const signal=new AbortController().signal;
+    await assert.rejects(roster.prepareShieldCropStop({...stop,bodyId:stop.bodyId+1},support,{signal}));
+    const batcher=createChunkPublicationCoordinator({admission:{...pipelineAdmission,prepareManyAndPublish:async()=>{}}});
+    const prepare=async()=>{const part=await roster.prepareShieldCropStop(stop,support,{signal});return {
+     part,batch:await batcher.prepareBatch([],{scene,signal,dependents:[part]})};};
+    const visible=()=>{const meshes=[];root.traverseVisible(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)meshes.push(mesh);});
+     return meshes.map(mesh=>[mesh,mesh.material,mesh.geometry]);};
+    const original=visible();assert.equal(original.length,4);
+    const first=await prepare();
+    assert.throws(()=>first.batch.capturePresentation(()=>{throw Error('cancelled recording');}),/cancelled recording/);
+    assert.deepEqual(visible(),original);
+    const {part,batch}=await prepare();let selected;
+    batch.capturePresentation(()=>{selected=visible();
+     assert.equal(selected.length,4);for(let i=0;i<selected.length;i++){
+      assert.equal(selected[i][0],original[i][0]);assert.equal(selected[i][2],original[i][2]);assert.notEqual(selected[i][1],original[i][1]);
+     }
+    });
+    assert.deepEqual(visible(),original);intact();
+    const commit=data=>{
+     assert.equal(data.worldBoundary.ticket,stop.worldBoundary.ticket);
+     assert.throws(()=>part.accept({...stop,phase:stop.phase+.001}));
+     part.accept(data.resources.nativeShieldCropStop);assert(batch.commit());batcher.dispose();
+     assert.deepEqual(visible(),selected);assert.equal(roster.nativeCropLease(),null);
+     const restore=roster.get(animal.id).preparePick();restore();intact();
+    };
+    return {commit,abort:()=>batcher.dispose()};
+   }
+   return {prepareStop,nativeCropLease:roster.nativeCropLease,async prepare(proposal){if(proposal.reference.kind===26)assert.equal(roster.nativeCropLease(),null);const support=terrain.prepareAnimalCrop(proposal,{terrainManifest:manifest});assert(support.valid());
    await assert.rejects(roster.prepareAnimalCrop(proposal,support,{signal:AbortSignal.abort(),getPickAge:()=>0}));
    if(contention==='successor-history'&&proposal.reference.kind===26&&lastProof?.reference.kind===27){
     // Same owner and target as the next admission, but the stationary

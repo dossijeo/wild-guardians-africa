@@ -1,7 +1,33 @@
 import {BALANCE} from '../simulation/balance.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 
 const duration=BALANCE.spells.find(spell=>spell.id==='shield').duration_seconds;
 
+
+const cropStopIds=['actorId','assignmentSequence','generation','bodyId','targetId','routeTicket'];
+const cropStopPose=['x','z','phase','yaw'];
+export function copyNativeShieldCropStop(value){
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ if(!worldBoundary||value.version!==1||!cropStopIds.every(k=>Number.isSafeInteger(value[k])&&value[k]>0)||
+    value.routeTicket>=worldBoundary.ticket||!Number.isSafeInteger(value.slot)||value.slot<0||
+    !cropStopPose.every(k=>Number.isFinite(value[k]))||value.phase<0)
+   throw Error('Invalid native Shield crop stop');
+ return Object.freeze({version:1,worldBoundary,slot:value.slot,...Object.fromEntries([...cropStopIds,...cropStopPose].map(k=>[k,value[k]]))});
+}
+export function sameNativeShieldCropStop(a,b){
+ return !!a&&!!b&&a.slot===b.slot&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary)&&
+  [...cropStopIds,...cropStopPose].every(k=>a[k]===b[k]);
+}
+export function shieldCropStopFromProposal(resources,source){
+ const row=resources.routeEffects.rows;
+ if(!row.length)return null;
+ if(resources.kind!==3||resources.retainsNativeAssignments||resources.gateEffects.rows.length||row.length!==26||
+    ![source.actorId,source.assignmentSequence,source.routeHandle.slot,source.routeHandle.generation,source.bodyId,0,
+     resources.worldBoundary.effectiveTime,0].every((value,i)=>value===row[i]))
+   throw Error('Shield route stop differs from its acquired crop');
+ return copyNativeShieldCropStop({version:1,worldBoundary:resources.worldBoundary,actorId:row[0],assignmentSequence:row[1],
+  slot:row[2],generation:row[3],bodyId:row[4],x:row[8],z:row[9],phase:row[11],yaw:row[12],targetId:source.targetId,routeTicket:source.worldBoundary.ticket});
+}
 export function nativeShieldWorldKind(kind){return kind===3||kind===4;}
 
 export function copyNativeShieldWorld(value,kind,{proposal=false}={}){

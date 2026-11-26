@@ -447,7 +447,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const workers=game.workers.slice(),motion=workers.map(captureShieldExpiryWorker);
     const civil=()=>!game.raid&&workers.length>0&&game.workers.length===workers.length&&
       workers.every((worker,index)=>game.workers[index]===worker&&motion[index]?.());
-    const subject=game.raid?captureShieldExpiryCropRoute():civil;
+    const stopped=game.raid&&qualifyAnimalCrop?game.raid.animals[0]:null;
+    const stoppedCurrent=()=>{
+      if(!stopped||game.raid?.animals.length!==1||game.raid.animals[0]!==stopped||
+         !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||!nativeCropCohortCurrent(game,planner))return false;
+      const q=planner.nativeAnimalCropState(stopped.id);
+      return q?.mode===4&&q.body===nativeBodies.id(stopped.id);
+    };
+    const subject=game.raid?captureShieldExpiryCropRoute()??stoppedCurrent:civil;
     const cohortCurrent=()=>civilShieldPhysicsAvailable()&&subject?.()===true;
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!cohortCurrent()||
@@ -734,10 +741,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       !game.spells.some(item=>item.id===spell.id)&&!spellRejection(command,'shield');
     const civil=()=>civilShieldPhysicsAvailable()&&game.workers.length===1&&!game.raid&&['native-farm-arrival','native-idle'].includes(game.workers[0].nativeRouteAdmission);
     const running=qualifyRunningShield&&civil();
+    const cropCurrent=civilShieldPhysicsAvailable()?captureShieldExpiryCropRoute():null;
+    const animal=game.raid?.animals[0],target=animal?game.plants.find(item=>item.id===animal.targetId):null;
+    const crop=cropCurrent?.()&&target&&Math.hypot(x-target.x,z-target.z)>spell.radius?
+      planner.nativeAnimalRouteBinding(animal.id):null;
     const stage=(atCommitBoundary,prepareResources)=>planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'addPolygon',points:spatialShieldFootprint(spell),passMask:1},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
       prepareResources,
-      shield:{source:{spell,polygonId:null},validate:()=>validate()&&(!running||civil()),atCommitBoundary,project:proof=>{
+      shield:{source:{spell,polygonId:null},crop,validate:()=>validate()&&(!running||civil())&&(!crop||cropCurrent()),atCommitBoundary,project:proof=>{
         const adopt=session.prepareNativeShieldAdditionAdoption(spell,proof),sync=nav.setState;let adopted=false;
         nav.setState=next=>{
           const actual=next.spells.at(-1);
@@ -1098,6 +1109,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       if(owner.identity!==structureIdentity(command)||!owner.ready||!nativeCommandOwnerCurrent(owner)){value=false;rejection='El Escudo tiene otra preparación pendiente';}
       else if(owner.consume){const result=owner.consume();value=result.status==='committed';if(!value)rejection='El Escudo cambió durante su preparación: '+result.status;}
       else{value=false;rejection=owner.rejection??null;}
+     }else if(nativeBodies&&qualifyAnimalCrop&&game.raid?.animals.some(animal=>planner.nativeAnimalCropState(animal.id))){
+      value=false;rejection='El Escudo necesita preparar la presentación de la incursión';
      }else{rejection=spellRejection(command,'shield');value=rejection?false:cast(game,command.id,'shield',command.x,command.z,nav,command.selection??null);}
     }else if(command.kind==='castAgricultural'){
      if(typeof command.id!=='string'||!command.id||!['growth','multiply'].includes(command.spell)||!Number.isFinite(command.x)||!Number.isFinite(command.z))throw TypeError('Invalid agricultural spell command');

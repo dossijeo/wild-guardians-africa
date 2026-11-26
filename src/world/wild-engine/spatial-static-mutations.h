@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 // Temporary views of proposed native geometry, never another obstacle store.
@@ -28,8 +29,16 @@ struct SpatialBarrierProposalInput {float x,z,halfX,halfZ,yaw;int passMask;};
 int spatialIntentStageBarrier(const SpatialBarrierProposalInput&,const SpatialStaticMutation&);
 int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput&);
 // Bounded, immutable transaction input; transient proposal, not a second world.
-struct SpatialWorldProposalInput {int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;};
+struct SpatialShieldCropRoute {double actor,body,slot,generation,assignment,ticket;};
+struct SpatialShieldCropStop {SpatialShieldCropRoute source;double time,x,z,yaw,phase;bool running;};
+struct SpatialWorldProposalInput {
+  int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;
+  std::optional<SpatialShieldCropStop> shieldCrop;
+};
 int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count,bool requireRetained=false);
+void spatialIntentCompleteShieldCropStop(const SpatialShieldCropStop&,int polygon);
+bool spatialIntentCaptureShieldCropStop(const SpatialShieldCropStop&);
+int spatialIntentStageShieldCrop(const SpatialWorldProposalInput&,const SpatialStaticMutation&,const SpatialShieldCropRoute&);
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&,bool allowGate=false);
 int spatialIntentRevalidateBarrierAddition(double,double,const SpatialStaticMutation*,int,std::array<double,8>&);
 int spatialIntentTakeBarrierAddition(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&,bool allowGate=false);

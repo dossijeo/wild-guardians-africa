@@ -2999,7 +2999,7 @@ EMSCRIPTEN_KEEPALIVE const double* spatial_world_resource_header_ptr(){return wo
 EMSCRIPTEN_KEEPALIVE const int32_t* spatial_world_resource_changes_ptr(){return worldResourcePublication?worldResourcePublication->changes.data():nullptr;}
 // 2â€“5 overlays; 6/7 residency; 8/9 props; 10 terrain; 11 pthread publication;
 // 12/24/25 explicitly stop a native Idle stroll/Farm arrival/Task route without changing world geometry.
-int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources){
+int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captureResources,const SpatialShieldCropRoute* crop=nullptr){
   if(captureResources&&kind<6&&kind!=2&&kind!=3&&kind!=4)return -2;
   // Prepared overlay edits retain every route and gate owner. The polygon
   // path is restricted to the worker-passable shape used by Shield.
@@ -3077,7 +3077,8 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     const int result=applyWorldProposalInput(input);worldProposalResult.clear();
     if(result!=1)return 0;
   }
-  const int staged=spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind>=2&&kind<=4);
+  const int staged=crop?spatialIntentStageShieldCrop(input,shapes.front(),*crop):
+    spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind>=2&&kind<=4);
   if(staged==1&&captureResources){
     std::array<double,6> identity{};
     if(spatialIntentWorldProposalSnapshot(identity)!=1)return -2;
@@ -3105,6 +3106,10 @@ EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage(int center,int polygon,double
   worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
+EMSCRIPTEN_KEEPALIVE int spatial_shield_crop_stage_resources(int count,double actor,double body,double slot,double generation,double assignment,double routeTicket){
+  const SpatialShieldCropRoute crop{actor,body,slot,generation,assignment,routeTicket};
+  return stageWorldProposal(3,1,count,0,true,&crop);
+}
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
 // The original world preview for kinds12/24/25 owns no terrain buffers. Refresh its
 // receipt only after native recomputation; other families keep exact snapshots.
@@ -3217,7 +3222,10 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   const bool installingPrepared=hasPrepared&&(worldResourcePreview->header[4]==6||worldResourcePreview->header[4]==8||worldResourcePreview->header[4]==9&&spatialIntentPropsProtected()||worldResourcePreview->header[4]==10&&spatialIntentTerrainProtected());
   worldResourcePreviewApplying=installingPrepared?worldResourcePreview.get():nullptr;
   std::array<double,5> stopBinding{},barrierBinding{};SpatialWorldProposalInput input;const int valid=collapse?takeCenterRuin(session,ticket,time,input):(gateBound||removalBound)?1:barrierBound?spatialIntentTakeBarrierAddition(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding):stopBound?spatialIntentTakeWorkerRouteStop(session,ticket,sequence,time,clockSequence,preparedTicket,input,stopBinding):spatialIntentTakeWorld(session,ticket,sequence,time,clockSequence,input);
-  if(valid!=1)return valid;worldProposalResult.clear();
+
+  if(valid!=1)return valid;
+  if(input.shieldCrop&&!spatialIntentCaptureShieldCropStop(*input.shieldCrop))return -2;
+  worldProposalResult.clear();
   if(!stopBound&&(input.kind==12||input.kind==24||input.kind==25))stopBinding={1,ticket,time,ticket,time};
   std::map<std::pair<int,int>,int> resources;
   struct ResourceGuard {
@@ -3226,6 +3234,9 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
     ~ResourceGuard(){worldResourceCapture=previous;}
   } recording(resources);
   const int result=removalBound?spatialIntentCommitGateRemoval(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding,applyWorldProposalInput):gateBound?spatialIntentCommitGateAddition(session,ticket,sequence,time,clockSequence,preparedTicket,nextBarrierId,input,barrierBinding,applyWorldProposalInput):applyWorldProposalInput(input);
+
+  if(input.shieldCrop)spatialIntentCompleteShieldCropStop(*input.shieldCrop,
+    result==1&&worldProposalResult.size()==1?worldProposalResult.front():0);
   if((gateBound||removalBound)&&result!=1)return result;
   if(removalBound&&result==1)worldProposalResult.assign(input.integers.begin(),input.integers.end());
   if(result==1){

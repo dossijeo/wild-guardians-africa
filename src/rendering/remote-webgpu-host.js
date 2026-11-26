@@ -35,6 +35,7 @@ import { remoteCameraWithinEnvelope } from './remote-camera-envelope.js';
 import { createRemoteFrameTimeGuard } from './remote-frame-time-guard.js';
 import { scheduleRemoteFrame } from './remote-frame-scheduler.js';
 import { evaluateRemoteClock } from './remote-presentation-clock.js';
+import {copyNativeShieldCropStop} from '../world/native-shield-world.js';
 import { createNativeRouteControl } from './native-route-control.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 
@@ -1154,6 +1155,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       boundary.nativeSession!==status.clock.nativeSession||boundary.effectiveTime>status.clock.committedThrough||
       nativeWorldBoundary&&boundary.ticket<=nativeWorldBoundary.ticket||clock.safeUntil<boundary.effectiveTime||clock.elapsed>boundary.effectiveTime)
       throw Error('Prepared frame requires a new native world proposal boundary and covering resources');
+    if(packet.metadata.preparedShieldCropStop){
+      const stop=copyNativeShieldCropStop(packet.metadata.preparedShieldCropStop);
+      if(packet.metadata.preparedCenterRuin||Object.keys(packet.metadata).some(key=>key.endsWith('Template'))||
+         !sameNativeWorldBoundary(stop.worldBoundary,boundary)||!routeControl.shieldCropStopCurrent(stop))
+        throw Error('Invalid retained Shield crop stop');
+      packet.metadata.preparedShieldCropStop=stop;
+    }
     if(packet.metadata.preparedCenterRuin){
       const ruin=centerSource(packet.metadata.preparedCenterRuin);
       if(Object.keys(packet.metadata).some(key=>key.endsWith('Template'))||
@@ -2187,6 +2195,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                  if(!binding.gateIds.includes(clock.nativeGate.gateId))throw Error('Native resume did not attest its prepared gate');clockBindings.set(key,{...clock,executionEpoch:binding.reference.worldBoundary.effectiveTime});
                }
              }else if(message.nativeResumedRoutes?.some(value=>value.preparedReference))throw Error('Deferred attestation without a retained template');
+             const shieldStop=pending?.metadata?.preparedShieldCropStop;
+             if(!!shieldStop!==!!routeControl.shieldCropStopAtBoundary(boundary)||shieldStop&&(
+                !sameNativeWorldBoundary(boundary,shieldStop.worldBoundary)||pending.sequence!==hold.preparedFrameSequence||
+                !routeControl.shieldCropStopCurrent(shieldStop,{revoked:true})||
+                pending.admittedClockBindings.some(binding=>!!binding.nativeAnimalCrop)))
+               throw Error('Native Shield GO lacks its prescribed stationary packet');
              routeControl.installSuspendedBodies(boundary,message.nativeSuspendedBodies??[]);
              routeControl.installResumedRoutes(boundary,message.nativeResumedRoutes??[]);
              routeControl.installStartedRoutes(boundary,message.nativeStartedRoutes??[]);

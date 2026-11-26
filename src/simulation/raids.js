@@ -917,6 +917,12 @@ export function updateRaid(s,dt,nav) {
       const source=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a));
       if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
         throw Error('Native crop action lost the current game source');
+      if(crop.mode===4){
+        if(a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
+          throw Error('Shield crop moved while stopped');
+        nav.intentTaskPlanner.replanNativeShieldCrop(a.id);
+        continue;
+      }
       if(crop.mode!==3){
         if(!['entering','walking'].includes(a.status))throw Error('Native crop route has another semantic action');
         if(crop.mode===1){
