@@ -4,6 +4,7 @@ import {validateSpatialState} from '../world/wild-engine/spatial-state.js';
 import {validateRaidWaitBindings} from './raid-wait-handoff.js';
 import {deserialize} from '../persistence/snapshots.js';
 import {deserializeConfirmedState} from './confirmed-live-state.js';
+import {copyNativeEncounterCheckpoint,nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
 
 // The Worker reconstructs authorized Game topology before restoring saved proxy
 // identities. Its final verification still requires every native field and ID.
@@ -13,6 +14,10 @@ export function validateNativeAuthorityCheckpoint(checkpoint){
  validateSpatialState(checkpoint.spatialState);
  if(checkpoint.version>=2)validateSpatialWallOwners(checkpoint.wallOwners,checkpoint.spatialState);
  if(checkpoint.version===3)validateSpatialShieldOwners(checkpoint.shieldOwners,checkpoint.spatialState);
+ if(checkpoint.encounter!==undefined){
+  if(checkpoint.version!==3)throw Error('Native encounter requires checkpoint version 3');
+  copyNativeEncounterCheckpoint(checkpoint.encounter);
+ }
  const v=checkpoint.navigationView;
  if(v!==null&&(!v||!Array.isArray(v.bounds)||v.bounds.length!==4||!v.bounds.every(Number.isFinite)||![v.eye?.x,v.eye?.z,v.target?.x,v.target?.z].every(Number.isFinite)))throw TypeError('Invalid native navigation view');
  return checkpoint;
@@ -23,5 +28,6 @@ export function validateNativeAuthorityCheckpoint(checkpoint){
 export function savedNativeAuthorityOptions(snapshot){
  const raw=JSON.parse(snapshot),state=raw.workerPhysicsCheckpoint?deserializeConfirmedState(snapshot):deserialize(snapshot),checkpoint=validateNativeAuthorityCheckpoint(state.workerNativeAuthorityCheckpoint);
  validateRaidWaitBindings(state,state.workerRaidWaitBindings);
+ if(checkpoint.encounter!==undefined)nativeEncounterCheckpointActors(state,checkpoint.encounter);
  return {snapshot,chunkKeys:[...checkpoint.chunkKeys],raidWaitBindings:structuredClone(state.workerRaidWaitBindings),navigationView:structuredClone(checkpoint.navigationView),nativeBootstrap:{version:checkpoint.version,chunkKeys:[...checkpoint.chunkKeys],spatialState:structuredClone(checkpoint.spatialState),...(checkpoint.version>=2?{wallOwners:structuredClone(checkpoint.wallOwners)}:{}),...(checkpoint.version===3?{shieldOwners:structuredClone(checkpoint.shieldOwners)}:{})}};
 }

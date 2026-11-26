@@ -4,6 +4,8 @@ import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 
 const chunkKeys=Array.from({length:25},(_,i)=>[i%5-2,Math.floor(i/5)-2].join(','));
 const eventLoop=()=>new Promise(resolve=>setImmediate(resolve));
@@ -251,4 +253,74 @@ test('the ordinary Desert qualifications still withhold contact corridors withou
   assert.equal((await world.command({kind:'snapshot',nativeAuthorityCheckpoint:true})).nativeAuthorityCheckpoint.version,3);
   assert.deepEqual([...world.errors,...world.faults],[]);
  }finally{await world.close();}
+});
+
+for(const getUp of [false,true])test(`a disk checkpoint restores the qualified encounter during ${getUp?'GetUp after Retreat':'Fall and Retreat'}`,async()=>{
+ const source=await setup(true);
+ let loaded;
+ try{
+  const before=await reachSecondHit(source);
+  const go=before.elapsed+.02;
+  const advancing=advance(source);
+  advancing.catch(()=>{});
+  await until(()=>source.host.inspect().nativeCausalClock.committedThrough===go&&source.host.inspect().pendingSequence!==null);
+  await source.present();await advancing;
+  if(getUp){
+   let current=source.snapshot();
+   while(current.elapsed<19&&!current.workers[0].recovery){
+    current=JSON.parse((await advance(source)).snapshot);
+    await source.present();
+   }
+   assert(current.workers[0].recovery);
+   assert.equal(current.raid,null);
+  }
+  const command={kind:'snapshot',nativeAuthorityCheckpoint:true};
+  assert.equal(source.command({kind:'snapshot'}).saveAvailable,false);
+  const snapshot=source.command(command),state=JSON.parse(snapshot.snapshot);
+  const at=state.elapsed;
+  assert.equal(snapshot.saveAvailable,true);
+  const saved=prepareWorkerCheckpoint(snapshot,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:1});
+  assert.equal(saved.saved,true);
+  const encoded=JSON.stringify(saved.state);
+  const marker=saved.state.workerNativeAuthorityCheckpoint.encounter;
+  const hit=state.events.find(event=>event.type==='WorkerIncapacitated');
+  assert.deepEqual(marker,{version:1,workerId:900011,animalId:Number(hit.animalId.split('-').at(-1)),hit:29210});
+  const forged=structuredClone(saved.state);forged.workerNativeAuthorityCheckpoint.encounter.hit++;
+  assert.throws(()=>savedNativeAuthorityOptions(JSON.stringify(forged)),/differs from the completed hit/);
+  const options=savedNativeAuthorityOptions(encoded);
+  loaded=await nativeProductionAuthority(saved.state,{...options,attach:false,
+   qualifyRaidEncounter:true,qualifyAnimalCrop:true,qualifyFarmFlee:true});
+  assert.throws(()=>loaded.authority.execute({kind:'advance',sequence:1,seconds:.02,nightFastForward:false}),
+   /requires native control/);
+  await loaded.attach();
+  if(!getUp)await untilProduction(loaded,()=>loaded.records.some(record=>record.kind==='animal-crop-route'&&record.committed));
+  const restored=loaded.snapshot();
+  if(getUp){
+   assert.equal(restored.raid,null);
+   assert.equal(loaded.records.length,0);
+  }else{
+   const proof=loaded.records.find(record=>record.kind==='animal-crop-route').resources.reference;
+   const original=source.records.find(record=>record.kind==='animal-crop-route'&&record.resources.reference.purpose==='retreat').resources.reference;
+   assert.notEqual(proof.worldBoundary.authorityEpoch,original.worldBoundary.authorityEpoch);
+   assert.equal(proof.worldBoundary.effectiveTime,at);
+   assert.deepEqual([restored.raid.animals[0].x,restored.raid.animals[0].z,restored.raid.animals[0].motionPhase],
+    [state.raid.animals[0].x,state.raid.animals[0].z,state.raid.animals[0].motionPhase]);
+  }
+  assert.deepEqual(restored.workers[0],state.workers[0]);
+  const facts=[];
+  let current=restored;
+  while(current.elapsed<19&&!current.workers[0].recoveryExitRemaining){
+   const publication=await advance(loaded);
+   facts.push(...publication.events);
+   current=JSON.parse(publication.snapshot);
+   await loaded.present();
+  }
+  assert.equal(current.workers[0].recoveryExitRemaining,.24);
+  assert.equal(current.raid,null);
+  assert.equal(facts.filter(event=>event.type==='RaidEnded').length,getUp?0:1);
+  assert.equal(facts.some(event=>['WorkerIncapacitated','AnimalRetreating'].includes(event.type)),false);
+  assert.equal(current.structures[0].hp,600);
+  assert.deepEqual(current.ledger,state.ledger);
+  assert.deepEqual([...loaded.errors,...loaded.faults],[]);
+ }finally{await loaded?.close();await source.close();}
 });

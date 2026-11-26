@@ -2,6 +2,7 @@ import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
 import {nativeWorkerRouteRecoveryProfile,sameRecoveredEncounterFall} from '../world/native-worker-route-recovery.js';
+import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {spatialStructureBarriers} from '../world/wild-engine/spatial-wall-bridge.js';
 import {spatialShieldFootprint} from '../world/wild-engine/spatial-shield-mirror.js';
@@ -68,7 +69,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   if(getTerrainManifest!==null&&typeof getTerrainManifest!=='function')throw TypeError('Invalid native terrain manifest provider');
  if(!(module instanceof WebAssembly.Module)||typeof snapshot!=='string'||!Array.isArray(chunkKeys)||new Set(chunkKeys).size!==chunkKeys.length||typeof checkpointRaidWaitsOnly!=='boolean'||typeof compactPresentationPaths!=='boolean'||typeof prepareTransportSnapshots!=='boolean'||typeof observeWorldMotion!=='boolean'||typeof captureHistoricalEvents!=='boolean'||typeof captureHyenaDiagnostics!=='boolean'||typeof mudPresentation!=='boolean'||onTerrainChunk!==null&&typeof onTerrainChunk!=='function')throw TypeError('Invalid simulation authority initialization');
  for(const key of chunkKeys)parseSimulationChunkKey(key);
- const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
+ const tutorialGuideTracker=createTutorialGuideRevision(),game=(restoringPhysics?deserializeConfirmedState:deserialize)(snapshot),loaded=new Map(),savedWaitBindings=game.workerRaidWaitBindings??null,presentationHeadings=presentationWorkerHeadingSeed===null?null:createPresentationWorkerHeadings(presentationWorkerHeadingSeed,{initialWorkerIds:game.workers.map(worker=>worker.id)});const savedEncounter=game.workerNativeAuthorityCheckpoint?.encounter;delete game.workerRaidWaitBindings;delete game.workerPhysicsCheckpoint;delete game.workerNativeAuthorityCheckpoint;let session,stopTasks,stopWorld,stopEvents,stopSettlements,physics=null,physicsInitializing=false,tutorial=null,closed=false,sequence=0,events=[],settlements=[],trackMicroIncome=false,trackedActor=null,trackMotionPeers=false,trackWorldMotion=observeWorldMotion,stopMotion=null,motionSegments=null,terrainGeneration=0,reportedTerrainGeneration=0;
   let guardianMetadata=null,guardianMetadataFailure=null,guardianTerrainEpoch=null,guardianTerrainManifest=null,activeHistoricalCapture=null;
   let nativeIntentControl=null;
   let nativeResourcePreparation=null;
@@ -225,6 +226,27 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     installNativeProduction();
    }catch(error){if(nativeBodies!==bodies)bodies.dispose();throw error;}
   }
+  function prepareColdNativeEncounter(){
+   if(!savedEncounter||nativeBodies)return;
+   if(!nativeBootstrap||!qualifyFarmFlee||!qualifyAnimalCrop||!qualifyRaidEncounter||restoringPhysics||physicsInitializing||
+      physics?.actorIds.length||nativeGateOwners.length||session.core.wasm.spatial_body_count()!==0)
+     throw Error('Native encounter checkpoint requires a fresh compatible authority');
+   const {marker,worker,animal}=nativeEncounterCheckpointActors(game,savedEncounter);
+   const bodies=createSpatialDynamicBodies(session.core.wasm);
+   try{
+    const body=bodies.publish(worker.id,{x:worker.x,z:worker.z,radius:WORKER_SPATIAL_PROFILE.radius,kind:0,flags:1});
+    planner.restoreEncounterWorker(game,marker,body);
+    if(animal){
+     const animalBody=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
+     if(!planner.requestRestoredAnimalRetreat(game,animal,animalBody,marker))
+       throw Error('Native encounter checkpoint could not rebuild the retreat');
+    }
+    nativeBodies=bodies;
+    if(planner.commitNativeCausalClock({paused:game.pauses.length>0}).status!=='committed')
+      throw Error('Native encounter checkpoint lacks its fresh clock');
+    installNativeProduction();
+   }catch(error){if(nativeBodies!==bodies)bodies.dispose();throw error;}
+  }
   function prepareLiveCenterAttack(event){
    if(!liveCenterClockArmed||nativeBodies||physicsInitializing||physics?.actorIds.length||!nativeCenterAttackCohort(game)||
       !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
@@ -276,7 +298,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   if(navigationView!==null)setNavigationView(navigationView);
   function residency(){const required=[...new Set([...raidResidentDemand(game,nav),...workerChunkDemand(game)])].sort();return {required,missing:required.filter(key=>!loaded.has(key))};}
   // Cinematic presentation is not restorable; do not persist its transient pause.
-  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&!planner.encounterCheckpointBlocked()&&confirmedStateSaveAvailable(game);}
+  function saveAvailable(){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
+    !planner.encounterCheckpointBlocked()&&confirmedStateSaveAvailable(game);}
   function nativeAnimalCheckpointState(){
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
@@ -1234,7 +1257,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     },
     attachNativeIntentControl(port,transportSession){
       if(closed)return Promise.reject(Error('Native intent control attachment unavailable'));
-      if(qualifyAnimalCrop===true){prepareColdNativeCrop();armLiveCenterClock();}
+      if(savedEncounter)prepareColdNativeEncounter();
+      else if(qualifyAnimalCrop===true){prepareColdNativeCrop();armLiveCenterClock();}
       return nativeIntentControl.attach(port,transportSession).then(ready=>{nativeProduction?.wake();return ready;});
     },
     nativeIntentControlStatus:()=>nativeIntentControl.connections(),
@@ -1269,6 +1293,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     if(centerRuinAdvance)throw centerRuinAdvance.failure??Error('Native center ruin owns this advance');
     if(closed)throw Error('Simulation authority is closed');if(nativeProduction?.status().fault)throw Error('Native intent production failed: '+nativeProduction.status().fault);if(physicsInitializing)throw Error('Worker physics is initializing');
     if(!command||command.sequence!==sequence+1)throw Error('Simulation command out of order');
+    if(savedEncounter&&!nativeBodies&&command.kind==='advance')
+      throw Error('Saved encounter requires native control before advancing');
     if(nativeStructurePreparation?.commandSequence!==undefined){
       if(command.sequence!==nativeStructurePreparation.commandSequence||nativeStructurePreparation.identity!==structureIdentity(command))throw Error('Native structure FIFO head is occupied');
       if(!nativeStructurePreparation.commitBoundarySettled)throw Error('Native structure command boundary is not ready');
@@ -1532,10 +1558,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
     const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked()?{version:3,wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
+    const encounter=command.kind==='snapshot'?planner.encounterCheckpoint():null;
+    const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked()?{version:3,...(encounter?{encounter}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
     const snapshotState=nativeAuthorityCheckpoint?nativeAnimalCheckpointState():game;
-    const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(snapshotState,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable(),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(snapshotState):serializeConfirmedState(snapshotState)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;nativeProduction?.wake();return result;
+    const preparedState=prepareTransportSnapshots?prepareConfirmedStateTransport(snapshotState,{projectPaths:projectedPaths}):null;const result={sequence,value,...(pausedQuiescent?{pausedQuiescent:true}:{}),...(tutorialGuideRevision===null?{}:{tutorialGuideRevision}),...(projectedPaths?{presentationPaths:'head-v1'}:{}),...(nativeAuthorityCheckpoint?{nativeAuthorityCheckpoint}:{}),...(presentationWorkerHeadings?.length?{presentationWorkerHeadings}:{}),...(terrainCheckpoint?{terrainCheckpoint}:{}),...(command.steps!==undefined?{stepsExecuted}:{}),...(clockCapture?{clockSegments:clockCapture}:{}),...(eventBoundaries&&emitted.length?{historicalEventBoundaries:eventBoundaries.finish(emitted)}:{}),...(motionTrace?{motionTrace}:{}),...(worldMotionTrace?{worldMotionTrace}:{}),...(motionInvalidation?{motionInvalidation}:{}),...(rejection?{rejection}:{}),...(commandLoadedChunks.length?{commandLoadedChunks}:{}),...(physical===undefined?{}:{physicsCheckpoint:physical&&command.physicsCheckpoint==='encoded'?encodePhysicsCheckpoint(physical):physical}),residency:resident,physicsPose:physicsPoses?.[0]??null,...(physicsPoses?.length>1?{physicsPoses}:{}),elapsed:game.elapsed,pauses:[...game.pauses],events:emitted,...(emittedSettlements.length?{settlements:emittedSettlements}:{}),...(emitted.length?{presentationJournalVersion:2}:{}),presentationJournal:lifecycle,...(!checkpointRaidWaitsOnly||command.kind==='snapshot'?{raidWaitBindings:captureRaidWaitBindings(game,nav)}:{}),saveAvailable:saveAvailable()&&(!encounter||!!nativeAuthorityCheckpoint),snapshot:preparedState?null:(projectedPaths?serializeConfirmedPresentationState(snapshotState):serializeConfirmedState(snapshotState)),terrainChanged:takeTerrainChanged()};if(preparedState){Object.defineProperty(result,'snapshot',{enumerable:true,configurable:true,get:()=>preparedState.snapshot});Object.defineProperty(result,authoritySnapshotFields,{value:preparedState.fields});}if(tutorial)result.tutorialUpdate=tutorial.updateStatus(projectedPaths?JSON.stringify(game):result.snapshot);if(pendingNativeWorldResources.length){result.nativeWorldResources=pendingNativeWorldResources;pendingNativeWorldResources=[];}hasPublishedSnapshot=true;nativeProduction?.wake();return result;
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},

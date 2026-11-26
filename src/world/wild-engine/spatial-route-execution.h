@@ -192,6 +192,47 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_worker_finish_encounter_recovery(double 
  q->resultX=toX;q->resultZ=toZ;q->recovered=true;s.entityRevision++;
  return 1;
 }
+
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_restored_encounter_worker_current(double actor,double hit){
+ const auto& s=state();const auto& source=s.restoredEncounterWorker;
+ if(!source||actor!=double(source->actor)||hit!=double(source->hit))return 0;
+ const auto worker=s.workers.find(source->actor);SpatialBodyView body;
+ return worker!=s.workers.end()&&!s.activeIntents.count(source->actor)&&
+   !s.reservedBodies.count(source->body)&&!s.suspendedBodies.count(source->body)&&
+   spatialReadBody(source->body,body)&&body.flags==1&&body.kind==0&&
+   body.x==source->x&&body.z==source->z?1:-2;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_restore_encounter_worker(double session,double actor,double bodyId,double hit,
+    double x,double z,double yaw){
+ auto& s=state();SpatialBodyView body;
+ if(session!=double(s.session)||!integer(actor)||!integer(bodyId)||!integer(hit)||
+    !coordinate(x)||!coordinate(z)||!std::isfinite(yaw))return -1;
+ const uint64_t worker=uint64_t(actor),id=uint64_t(bodyId);
+ if(s.restoredEncounterWorker||s.homeEncounterImpact||s.encounterRetreat||s.executionEnabled||s.causalClock||
+    s.barrierProposal.pending||s.proposalOpen||s.worldMutationPreview||s.workers.size()!=1||
+    !s.workers.count(worker)||s.activeIntents.count(worker)||s.reservedBodies.count(id)||s.suspendedBodies.count(id)||
+    !spatialReadBody(id,body)||body.flags!=1||body.kind!=0||body.x!=x||body.z!=z||
+    spatial_execution_segment_clear(x,z,x,z,body.r)!=1)return -2;
+ s.restoredEncounterWorker=RestoredEncounterWorker{worker,id,uint64_t(hit),x,z,yaw};
+ return 1;
+}
+
+extern "C" EMSCRIPTEN_KEEPALIVE int nav_finish_restored_encounter_worker(double session,double actor,double hit,
+    double at,double fromX,double fromZ,double toX,double toZ,double yaw){
+ auto& s=state();auto& source=s.restoredEncounterWorker;
+ if(!source||source->recovered||session!=double(s.session)||s.effectiveTime!=at||
+    s.clockThrough>=at||at-s.clockThrough>.021||fromX!=source->x||fromZ!=source->z||yaw!=source->yaw||
+    !coordinate(toX)||!coordinate(toZ)||nav_restored_encounter_worker_current(actor,hit)!=1)return -2;
+ SpatialBodyView before;
+ if(!spatialReadBody(source->body,before)||
+    ((fromX!=toX||fromZ!=toZ)&&spatial_execution_segment_clear(fromX,fromZ,toX,toZ,before.r)!=1))return -3;
+ if(!spatialMoveBodyFromIntent(source->body,toX,toZ))return -2;
+ SpatialBodyView after=before;after.x=toX;after.z=toZ;updateResidencyPinRevision(s,&before,&after);
+ auto& worker=s.workers.at(source->actor);worker.x=toX;worker.z=toZ;
+ source->x=toX;source->z=toZ;source->recovered=true;s.entityRevision++;
+ return 1;
+}
 static bool centerEncounterExecuted(const IntentState& s,const CenterEncounterPermit& c,
     const ActiveIntent& animal,const RouteSlot& route){
  const auto w=s.activeIntents.find(c.worker);

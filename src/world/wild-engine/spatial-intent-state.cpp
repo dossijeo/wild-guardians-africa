@@ -555,9 +555,15 @@ struct EncounterRetreatCut {
   std::optional<PendingNativeMotionDraft> graphicalDraft;
   std::array<double,6> graphicalBoundary{};
 };
+struct RestoredEncounterWorker {
+ uint64_t actor,body,hit;
+ double x,z,yaw;
+ bool recovered=false;
+};
 struct IntentState {
  std::optional<EncounterRetreatCut> encounterRetreat;
   std::optional<HomeEncounterImpact> homeEncounterImpact;
+  std::optional<RestoredEncounterWorker> restoredEncounterWorker;
   std::optional<CenterEncounterStep> centerEncounterStep;
   std::array<double,14> centerEncounterWitness{};
   std::unordered_map<uint64_t,Worker> workers;
@@ -3776,9 +3782,12 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_restore_retreat_request(double actor,double 
   auto& s=state();SpatialBodyView body;
   if(!integer(actor)||session!=double(s.session)||!integer(bodyId)||!coordinate(exitX)||!coordinate(exitZ)||
      !std::isfinite(phase)||phase<0||!std::isfinite(yaw))return -1;
+  const auto& encounter=s.restoredEncounterWorker;
+  const bool encounterWorker=encounter&&
+     nav_restored_encounter_worker_current(double(encounter->actor),double(encounter->hit))==1;
   if(s.proposalOpen||s.barrierProposal.pending||s.worldMutationPreview||s.executionEnabled||
      s.finishedAnimalStrike||!s.reservedBodies.empty()||!s.suspendedBodies.empty()||
-     spatial_body_count()!=1||!spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||
+     spatial_body_count()!=(encounterWorker?2:1)||!spatialReadBody(uint64_t(bodyId),body)||body.kind!=1||body.flags!=1||
      !(body.r>0&&body.r<=2))return -2;
   const auto request=std::make_shared<NativeAnimalRouteRequest>();
   request->actor=uint64_t(actor);request->body=uint64_t(bodyId);request->at=s.effectiveTime;
