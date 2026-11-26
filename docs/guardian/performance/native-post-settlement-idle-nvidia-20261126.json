@@ -1,0 +1,251 @@
+{
+  "base": "12fb701379afd3072432b034b37e6c7917366e35",
+  "fixture": "Paid hire through ordinary Harvest15 and Carry16 with the existing newborn Farm cancelled by Task14",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 114.05499999970198
+    }
+  },
+  "viewport": {
+    "width": 640,
+    "height": 360
+  },
+  "desktopRefreshHz": 30,
+  "profile": "youngFemale",
+  "actor": "worker-1000001",
+  "bodyId": 2,
+  "settlement": {
+    "ticket": 15,
+    "sequence": 13,
+    "draws": 63,
+    "income": {
+      "entryId": "deliver:crate-1000003",
+      "expectedIncome": "11",
+      "entry": {
+        "n": "11",
+        "d": "1"
+      },
+      "expectedBalance": "99992"
+    }
+  },
+  "idle": {
+    "ticket": 19,
+    "fromTime": 55.98000000000328,
+    "toTime": 56.26000000000332,
+    "actualAt": 56.30000000000333,
+    "bindingTime": 0.35999998450279236,
+    "anchor": {
+      "id": "farm-structure-900097",
+      "x": -5.7999999999999945,
+      "z": 16.2,
+      "radius": 2
+    },
+    "pose": {
+      "x": -6.008856296539307,
+      "z": 16.17082405090332,
+      "yaw": -0.051798177382495085,
+      "radius": 0.28,
+      "runPhase": 0,
+      "walkPhase": 27.39330478359077,
+      "carryPhase": 7.574856549633837,
+      "runRemaining": 105.80409353316266
+    },
+    "drawCount": 11,
+    "draws": [
+      {
+        "sequence": 301,
+        "replay": false,
+        "at": 1795659339565.63,
+        "ticket": 19
+      },
+      {
+        "sequence": 302,
+        "replay": false,
+        "at": 1795659339598.9648,
+        "ticket": 19
+      },
+      {
+        "sequence": 302,
+        "replay": true,
+        "at": 1795659339632.1948,
+        "ticket": 19
+      },
+      {
+        "sequence": 303,
+        "replay": false,
+        "at": 1795659339665.615,
+        "ticket": 19
+      },
+      {
+        "sequence": 303,
+        "replay": true,
+        "at": 1795659339698.97,
+        "ticket": 19
+      },
+      {
+        "sequence": 304,
+        "replay": false,
+        "at": 1795659339732.275,
+        "ticket": 19
+      },
+      {
+        "sequence": 304,
+        "replay": true,
+        "at": 1795659339765.65,
+        "ticket": 19
+      },
+      {
+        "sequence": 305,
+        "replay": false,
+        "at": 1795659339798.9048,
+        "ticket": 19
+      },
+      {
+        "sequence": 305,
+        "replay": true,
+        "at": 1795659339832.26,
+        "ticket": 19
+      },
+      {
+        "sequence": 306,
+        "replay": false,
+        "at": 1795659339865.585,
+        "ticket": 19
+      },
+      {
+        "sequence": 306,
+        "replay": true,
+        "at": 1795659339898.9,
+        "ticket": 19
+      }
+    ],
+    "selected": {
+      "entityId": "worker-1000001",
+      "hitPoint": {
+        "x": -6.054531275205246,
+        "y": 17.188815465112853,
+        "z": 16.344569029965882
+      },
+      "point": {
+        "x": -5.82095843505449,
+        "z": 15.456071445363321
+      },
+      "sequence": 2337
+    },
+    "meshCounts": [
+      32,
+      45
+    ]
+  },
+  "final": {
+    "drained": true,
+    "gpu": {
+      "disposed": true
+    },
+    "gpuErrors": 0,
+    "maxObservedIntervalMs": 36.175048828125,
+    "trace": null,
+    "sourceAliveUntilGraphicalClose": true
+  },
+  "rawEvidence": {
+    "path": ".cache/harvest-farm-yield/settlement-idle-nvidia-v6.json",
+    "sha256": "645a2a0736eb2b9ba5b87f7702c29bb6fe15457467032e5b2467d771b74ead7d",
+    "checkpoint": {
+      "sha256": "5d433e92925ab6a244b024a6741c97259fa43ace57cfc52cb34c983ca783239a",
+      "path": ".cache/harvest-farm-yield/settlement-idle-nvidia-v6.checkpoint.json"
+    },
+    "capture": {
+      "mode": "visual",
+      "clock": "browser-performance-epoch-ms",
+      "visualEvidence": true,
+      "checkpoints": [
+        {
+          "label": "settled-idle-rest",
+          "mode": "visual",
+          "startedAt": 1795659340064.66,
+          "image": ".cache/harvest-farm-yield/settlement-idle-nvidia-v6-settled-idle-rest.png",
+          "finishedAt": 1795659340260.905
+        }
+      ]
+    },
+    "resourceOriginOverrides": [
+      {
+        "file": "native-farm-birth-task-scenario.js",
+        "originalSha256": "94775da15a3c505a3c0ed1011958f575b3b1f30d8ce8a64105dd71a41eed7865",
+        "annotatedSha256": "99e20b567aa90f602f7fc34cdb137ad8593b88053fd3410ac30641a705a0c2d1",
+        "scope": "hold and inspect actual Idle after settlement"
+      },
+      {
+        "file": "native-farm-birth-audit-worker.js",
+        "originalSha256": "add3a363234249b12fe140075af2264b491e832c949a26915f87361e6aad6cfe",
+        "annotatedSha256": "704a35b2cac9bee151229a6c25676fbf80374d38f43bfbc8930bbbd30a26d255",
+        "scope": "hold and inspect actual Idle after settlement"
+      },
+      {
+        "file": "baked-worker-walk-catalog.js",
+        "url": "http://127.0.0.1:5218/src/rendering/baked-worker-walk-catalog.js",
+        "originalSha256": "cd2d9275c36ce938a8ce7ff1675d208b90b305fc6edb340ade38d447f5d2b1a6",
+        "annotatedSha256": "20b810b50302ab6ed2f67533ad3029950f3b668b42c76c45a9e9d80649d49689",
+        "scope": "QA object name/origin only"
+      },
+      {
+        "file": "native-gpu-motion.js",
+        "url": "http://127.0.0.1:5218/src/rendering/native-gpu-motion.js?t=1795656810125",
+        "originalSha256": "39780723ce8630a9f8bb2a5f65e9c7751a07c4753e9f358267381786b557a3d6",
+        "annotatedSha256": "08b35cfaddbfa31bee61038aed3d6785fe0181aeeb67cadaa3a28be8b31f25a2",
+        "scope": "QA object name/origin only"
+      },
+      {
+        "file": "webgpu-footstep-playback.js",
+        "url": "http://127.0.0.1:5218/src/rendering/webgpu-footstep-playback.js",
+        "originalSha256": "d2d1d8a542c424bf16d8f22eb1f6e827cb78457f770710fa9b9ff303a825d167",
+        "annotatedSha256": "0602929661c0d79659f656890969115cecc098bc8f0b17cf5f7b2f4deabcff81",
+        "scope": "QA object name/origin only"
+      }
+    ]
+  },
+  "limits": "Rest21 physical. Walk22 verified separately with a deterministic GPU queue. Display mode and viewport do not certify 60 FPS.",
+  "runtimeInputs": {
+    "src/simulation/native-intent-production.js": "b67ea93ce988cc6abcb5fb6e10157a1e59ba311dedae11827fe0f183cec28b8d",
+    "src/world/wild-engine/spatial-intent-bridge.js": "34b91b917123c091a6d70c7c4a62ed4c96309e7a375d097b75ad7c1f4467aeb7",
+    "src/world/wild-engine/spatial-savanna.wasm": "914884594bb004f2bb28a5d380e36f1b4bdcdda18473c7529c972f2c7889b9a7",
+    "public/wild-engine/spatial-threaded.wasm": "c4e5c3ada79ef9f2db2763f8a3e76bee322f8aae8a02d3d92d5eeb249acf9797"
+  },
+  "physicalDisplay": {
+    "width": 3840,
+    "height": 2160,
+    "refreshHz": 30,
+    "adapter": "NVIDIA GeForce GTX 1660"
+  },
+  "validation": {
+    "passed": 230,
+    "failed": 0,
+    "skipped": 0,
+    "buildSeconds": 52.66,
+    "baselineCasesRejected": 2,
+    "logs": {
+      "tests": {
+        "path": ".cache/harvest-farm-yield/settlement-idle-final.tap",
+        "sha256": "75aa2c44d944d8b7e510a70ea3e0ced5a9de705cd3113c1ec7c0738645ec65ea"
+      },
+      "build": {
+        "path": ".cache/harvest-farm-yield/settlement-idle-build.log",
+        "sha256": "4a678fa645a8f6a4fc362ccef5601cb53992951cfcb433a0c956280831ab736d"
+      },
+      "baseline": {
+        "path": ".cache/harvest-farm-yield/settlement-idle-baseline.tap",
+        "sha256": "027f6bbbc2e4c51c108fcb960e19178a84326491af3a12797ee926aab8313792"
+      }
+    }
+  }
+}

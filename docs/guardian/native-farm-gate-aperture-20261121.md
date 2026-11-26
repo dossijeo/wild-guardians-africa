@@ -106,6 +106,22 @@ debe mantener la comprobación de ambos cuerpos y probar la entrega una
 sola vez mientras los dos trabajadores siguen de turno.
 [Mediciones y testigos WASM](performance/native-same-shift-delivery-block-20261126.json).
 
+En un prototipo privado sobre ese mismo guardado, el barrido WASM permitió
+un destino lateral dentro del radio del mismo cultivo. En
+`(-13,509801, 5,987866)` quedó a 1,060 m del corredor completo de Carry,
+frente a los 0,56 m requeridos. Con ese destino fijo de diagnóstico,
+Idle22 adquirió el cuerpo 2, Carry16 adquirió el cuerpo 1 hasta el destino
+de entrega original y Settlement17 entregó una sola caja a los 29,50 s.
+La prueba usó los dos puertos de producción con Host determinista.
+
+El contraste encontró la siguiente frontera. El cultivo fue recogido a los
+26,00 s. A los 26,50 s el cuerpo 2 ya había llegado al punto lateral y su
+Rest21 pasó a `unsupported` porque el ancla de Walk22 había dejado de estar
+activa. A los 67 s seguía en el extremo de Walk22. Para habilitar el relevo
+se necesita tanto una selección nativa del destino lateral como el cambio
+de ancla tras recoger el cultivo. El destino fijo se usó solo en el
+prototipo.
+
 OpenRA pospone la búsqueda de otro camino si el bloqueador ya está
 saliendo. En Wild Guardians, el mismo punto de
 entrega sigue ocupado hasta que la reserva de Home permite acreditar el

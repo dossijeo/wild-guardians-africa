@@ -28,3 +28,38 @@ Se incorporan por separado los commits externos78aacb134/e7fb1d5fd (recuperació
 La auditoría distingue el bloqueo local prepare-world-frame (28,515ms;28,114CPU;gap60,990ms) de los picos periódicos. El recorrido con marcas posterior falla al consultar Idle; sus marcas previas sirven para diagnóstico, no para aceptar la vertical. Se prioriza limitar el trabajo dentro del paquete con pins/cancelación/fronteras seguras. La asociación de66gaps/59 en fase inicial del minuto tampoco demuestra causalidad del escritorio. No hay nueva GPU ni aceptación de cadencia en este incremento.
 
 [Recibo, mapas, fuentes y logs](performance/native-post-settlement-idle-consumer-20261120-validation.json).
+
+## Productor ordinario tras entregar
+
+El productor de intenciones consulta el cuerpo ya liquidado y el ancla
+ordinaria de Game. Si el trabajador sigue de turno, solicita Rest21 dentro
+del radio y Walk22 fuera. Durante la preparación se conserva Settlement17.
+Al recibir READY se vuelven a comprobar cuerpo, secuencia de liquidación,
+pose, ancla y ausencia de una tarea que haya tomado el trabajador. Una pausa
+cancela el intento pendiente y la reanudación puede preparar otro sobre el
+mismo cuerpo. El relevo utiliza los dos puertos y las guardas de admisión
+existentes.
+
+El control de autoridad recorre Harvest restaurado, Carry16 y Settlement17
+para los dos destinos. Comprueba que el estado y el saldo ya liquidados se
+conservan durante READY, la llegada del recibo antiguo tras cancelar Rest21
+y la adquisición de Walk22 tras avanzar durante la preparación. El mismo
+control aplicado a `12fb70137` se detiene tras Settlement17 en ambos casos.
+La selección final pasó 230 pruebas en 14 archivos, sin omisiones. El build
+de producción terminó en 52,66 s. Se usaron los binarios WASM existentes.
+[Pruebas del productor](../../tests/native-intent-production-authority.test.js).
+
+En NVIDIA Turing, una contratación pagada de perfil `youngFemale` llegó a
+Settlement17 con el cuerpo 2 y un abono único de 11. Con READY de Rest21
+retenido, Game avanzó 280 ms y conservó la pose liquidada. El ticket 19
+se presentó 11 veces sobre el mismo cuerpo y las mismas mallas. Picking
+devolvió `worker-1000001` y la cola drenó con cero errores WebGPU. El mayor
+intervalo conservado en esa inspección fue 36,18 ms a 30 Hz. Walk22 se
+comprobó con Host determinista. [Recibo físico](performance/native-post-settlement-idle-nvidia-20261126.json).
+
+La captura final comprobó los recibos de Carry16, Settlement17 y Rest21,
+las mallas residentes, el mismo saldo y el drenaje. La comprobación de
+bancos del arnés de contratación exigía cero preparaciones mientras el
+recibo nuevo seguía retenido. En esa pasada, la referencia del banco seguía
+en dos, con un participante en preparación. La captura final acotó ese
+arnés a la liquidación y su sucesor.

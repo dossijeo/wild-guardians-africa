@@ -107,16 +107,52 @@ test('authority automatically acquires fresh Home and its prepared absence at th
  }finally{await f.close();}
 });
 
-test('restored harvest action produces Carry and genuine settlement through ordinary authority boundaries',async()=>{
+for(const stroll of [false,true])test(`restored harvest produces Carry, settlement and prepared ${stroll?'Walk22':'Rest21'} on the same body`,async()=>{
  const saved=nativeActionSave().saved,worker=saved.workers[0];saved.workers=[worker];saved.tasks=saved.tasks.filter(t=>t.workerId===worker.id);saved.plants=saved.plants.filter(p=>p.id===saved.tasks[0].targetId);
  // Same authored clear-corridor checkpoint as nativeTaskConsequenceFixture;
  // configure before constructing the fresh authority, never mutate live goals.
  const center=saved.structures.find(s=>s.id===worker.centerId);center.x=worker.x-6;center.z=worker.z+6;
- const f=await nativeProductionAuthority(saved);try{
+ const delivery=centerDeliveryPoint(center,saved.plants[0],saved);
+ const anchor=createPlant(`plant-${saved.nextId++}`,'mijo',delivery.x+(stroll?5:1.5),delivery.z+.5,center.id);
+ for(const water of anchor.water)water.status='manual';
+ saved.plants.push(anchor);
+ const kind=stroll?'idle-stroll':'idle-cycle',commits=[];
+ let first,release;const held=new Promise(resolve=>{release=resolve;});
+ const f=await nativeProductionAuthority(saved,{
+  onReady(record){if(record.kind===kind&&!first){first=record;return held;}},
+  onCommit(record,data){commits.push({kind:record.kind,data});}
+ });try{
   await untilProduction(f,()=>f.records.some(r=>r.kind==='task-action'&&r.committed));
-  for(let i=0;i<400&&!f.records.some(r=>r.kind==='task-settlement');i++){f.advance();await f.present();}
-  await untilProduction(f,()=>f.records.some(r=>r.kind==='task-settlement'&&r.committed));const state=f.snapshot();assert.deepEqual(f.records.filter(r=>r.committed).map(r=>r.kind),['task-action','task-consequence','task-settlement']);assert.equal(state.crates.length,1);assert.equal(state.crates[0].delivered,true);assert.equal(state.workers[0].crateId,null);assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
- }finally{await f.close();}
+  for(let i=0;i<400&&!first;i++){f.advance();await f.present();}
+  await untilProduction(f,()=>!!first);
+  const before=f.snapshot(),settlement=commits.find(r=>r.kind==='task-settlement').data.nativeTaskSettlementBinding;
+  assert.deepEqual(commits.map(r=>r.kind),['task-action','task-consequence','task-settlement']);
+  const source=stroll?first.resources.nativeIdleStroll.sourceSettlement:first.resources.nativeIdleCycle.sourceBody;
+  assert.equal(source.bodyId,settlement.reference.bodyId);
+  assert.equal(source.sourceSequence,settlement.settlementSequence);
+  assert.deepEqual(source.pose,settlement.reference.pose);
+  assert.equal(source.idleState.anchorId,`farm-${anchor.id}`);
+  assert.equal(before.workers[0].nativeRouteAdmission,undefined);
+  assert.equal(before.workers[0].idleState,null);
+  assert.equal(before.crates[0].delivered,true);
+
+  if(!stroll){
+   f.command({kind:'pause',reason:'menu'});release();
+   await untilProduction(f,()=>first.aborted);
+   assert.equal(first.committed,false);
+   assert.equal(f.snapshot().workers[0].idleState,null);
+   f.command({kind:'resume',reason:'menu'});
+  }else{f.advance();await f.present();release();}
+  await untilProduction(f,()=>commits.some(r=>r.kind===kind));
+  const state=f.snapshot(),bound=commits.find(r=>r.kind===kind).data[stroll?'nativeIdleStrollBinding':'nativeIdleCycleBinding'];
+  assert.deepEqual(stroll?bound.reference.sourceSettlement:bound.reference.sourceBody,source);
+  assert.equal(state.workers[0].nativeRouteAdmission,stroll?'native-idle-stroll':'native-idle');
+  assert.equal(state.workers[0].idleState.mode,stroll?'walk':'rest');
+  assert.equal(state.workers[0].crateId,null);
+  assert.deepEqual(state.ledger,before.ledger);
+  assert.equal(state.events.filter(e=>e.type==='CrateDelivered').length,1);
+  assert.deepEqual(f.faults,[]);assert.deepEqual(f.errors,[]);
+ }finally{release();await f.close();}
 });
 
 test('ordinary Multiply follows the same crop through native Harvest, Carry and one settlement',async()=>{

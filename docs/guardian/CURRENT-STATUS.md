@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Cuando el portador sigue de turno, Settlement17 ya puede pasar a Rest21 o Walk22 sobre el mismo cuerpo. NVIDIA confirmó Rest21 con picking, un solo abono y drenaje. El Host determinista confirmó también Walk22. El bloqueo de dos trabajadores sigue abierto en el cambio de ancla del que cede el paso. [Relevo y validación](native-post-settlement-idle-consumer-20261120.md#productor-ordinario-tras-entregar) · [Prototipo de tráfico](native-farm-gate-aperture-20261121.md#dos-trabajadores-hacia-el-mismo-centro).
+
 NVIDIA confirmó también el caso en que el golpe termina dentro del mismo subpaso que vence Escudo. Game registra un único fallo, Draw conserva la pose sin el reloj del golpe y el nuevo corredor llega al mismo cultivo. [Recorrido y recibo](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
 
 NVIDIA confirmó la caducidad de Escudo entre dos golpes. El primer impacto protegido permanece registrado una sola vez, se descarta el READY de la siguiente marcha al borde y el nuevo corredor conserva cuerpo y pose. Solo el golpe posterior daña el cultivo. Retreat y drenaje verificados. [Recorrido y recibo](webgpu-shield.md#caducidad-entre-dos-golpes).
