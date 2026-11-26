@@ -1888,6 +1888,26 @@ double spatialNativePolygonDistance(const double* xy,int count,double x,double z
   return best;
 }
 void spatialGateSupportChanged(){++overlayRevision;}
+
+bool spatialShieldFootprintMatches(const float* xy,int count,double x,double z,double radius){
+  const int sides=64;
+  if(!xy||count!=sides||!std::isfinite(x)||!std::isfinite(z)||!std::isfinite(radius)||radius<=0)return false;
+  const double halfSector=std::acos(-1.)/sides;
+  const double outer=radius/std::cos(halfSector);
+  for(int i=0;i<sides;i++){
+    const double angle=i*2*halfSector;
+    if(xy[i*2]!=float(x+std::cos(angle)*outer)||
+       xy[i*2+1]!=float(z+std::sin(angle)*outer))return false;
+  }
+  return true;
+}
+bool spatialShieldFootprintCurrent(int id,double x,double z,double radius){
+  const auto& polygons=polygonIndex().byId;
+  const auto at=polygons.find(id);
+  return at!=polygons.end()&&at->second.passMask==1&&
+    spatialShieldFootprintMatches(at->second.xy.data(),int(at->second.xy.size()/2),x,z,radius);
+}
+bool spatialShieldPolygonAbsent(int id){return id>0&&!polygonIndex().byId.count(id);}
 bool spatialGatePlanningClear(double x,double z,double nx,double nz){
  return !workerNow||spatialIntentGatePlanningClear(x,z,nx,nz,radiusNow);
 }
@@ -3109,6 +3129,11 @@ EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floa
 EMSCRIPTEN_KEEPALIVE int spatial_shield_crop_stage_resources(int count,double actor,double body,double slot,double generation,double assignment,double routeTicket){
   const SpatialShieldCropRoute crop{actor,body,slot,generation,assignment,routeTicket};
   return stageWorldProposal(3,1,count,0,true,&crop);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_shield_protected_crop_stage_resources(int floatCount,double actor,double body,
+    double slot,double generation,double assignment,double routeTicket,double x,double z,double radius){
+  const SpatialShieldCropRoute crop{actor,body,slot,generation,assignment,routeTicket,std::array<double,3>{x,z,radius}};
+  return stageWorldProposal(3,1,floatCount,0,true,&crop);
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
 // The original world preview for kinds12/24/25 owns no terrain buffers. Refresh its

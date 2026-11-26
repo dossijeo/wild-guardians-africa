@@ -1,5 +1,7 @@
 # Current delivery status (2026-10-29)
 
+Escudo ya conserva un golpe adquirido al caducar sobre un cultivo protegido. NVIDIA confirmó el fallo del primer golpe, el nuevo acercamiento con el mismo cuerpo, el único impacto posterior, Retreat y el drenaje. Un hueco de 666,80 ms al cambiar de golpe a marcha sigue abierto en C4. [Recorrido, controles y recibo](webgpu-shield.md#golpes-al-borde-y-caducidad-del-escudo).
+
 El alta de Escudo puede interrumpir una aproximación AttackCrops en Sabana. NVIDIA confirmó un primer dibujo con el facóquero detenido y un corredor nuevo con el mismo cuerpo y objetivo. La calificación opera con reloj suspendido. [Recorrido y recibo](webgpu-shield.md#alta-de-escudo-sobre-un-corredor-attackcrops).
 
 Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).

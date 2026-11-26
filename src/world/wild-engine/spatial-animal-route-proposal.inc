@@ -19,6 +19,7 @@ static bool animalRouteRequestCurrent(const IntentState& s,const ActiveIntent& i
  return route.active&&route.pendingResources&&!route.reserved&&!route.suspended&&route.actor==intent.actor&&route.generation==intent.generation&&
   q->actor==intent.actor&&q->target==intent.target&&q->sequence==intent.resourceRequestSequence&&q->at==intent.resourceRequestedAt&&
   animalRouteDestinationCurrent(s,intent,*q)&&
+  (!q->shieldPolygon||spatialShieldFootprintCurrent(q->shieldPolygon,q->shieldX,q->shieldZ,q->shieldRadius))&&
   spatialReadBody(q->body,body)&&body.kind==1&&body.flags==1&&body.x==q->x&&body.z==q->z&&body.r==q->radius&&
   !s.reservedBodies.count(q->body)&&!s.suspendedBodies.count(q->body);
 }
@@ -77,29 +78,40 @@ static bool stoppedShieldCropCurrent(const IntentState& s,const ActiveIntent& in
    !s.reservedBodies.count(q.body)&&!s.suspendedBodies.count(q.body)&&spatialReadBody(q.body,b)&&
    b.kind==1&&b.flags==1&&b.r==q.radius&&b.x==p.x&&b.z==p.z;
 }
-EMSCRIPTEN_KEEPALIVE int nav_animal_replan_shield_crop(double actor,double session,double polygon){
+static int replanStoppedShieldCrop(double actor,double session,double polygon,const std::array<double,5>* contact){
+ // The JS owner selects the ordinary Game service point. This owner verifies
+ // the exact installed footprint, radial reach, and swept path of this body.
  auto& s=state();if(!integer(actor)||session!=s.session||!integer(polygon))return -1;
  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto i=s.activeIntents.find(uint64_t(actor));if(i==s.activeIntents.end())return -2;
  auto& intent=i->second;auto& hold=intent.stoppedShieldCrop;
  if(!hold||hold->polygon!=polygon||!stoppedShieldCropCurrent(s,intent,*hold))return -2;
  const auto& p=hold->stop;
+ float goalX=intent.approachX,goalZ=intent.approachZ;
+ if(contact){
+  const auto [x,z,r,px,pz]=*contact;
+  const auto& source=*hold->routeSource;
+  if(!std::isfinite(px)||!std::isfinite(pz)||!spatialShieldFootprintCurrent(hold->polygon,x,z,r)||
+     std::hypot(source.targetX-x,source.targetZ-z)>r||
+     std::abs(std::hypot(px-x,pz-z)-(r+source.radius+.1))>1e-8)return -2;
+  goalX=float(px);goalZ=float(pz);
+ }
  const int previous=lazy_selected_context();
  if(previous!=intent.profile)spatial_select_nav_profile_index(intent.profile);
  const auto w=executionWorldStamp();
  const std::array<uint64_t,4> revision{w[0],w[1],w[2],lazy_route_revision()};
- if(hold->lastAttempt&&*hold->lastAttempt==revision){
+ if(!contact&&hold->lastAttempt&&*hold->lastAttempt==revision){
   if(previous!=intent.profile)spatial_select_nav_profile_index(previous);
   return hold->lastResult;
  }
- hold->lastAttempt=revision;
- const int count=spatial_world_route_cached(float(p.x),float(p.z),intent.approachX,intent.approachZ);
+ if(!contact)hold->lastAttempt=revision;
+ const int count=spatial_world_route_cached(float(p.x),float(p.z),goalX,goalZ);
  s.planningCallsByActor[intent.actor]++;
  std::vector<float> points;int clear=0;
  if(count>0){
   const auto* xy=spatial_world_route_ptr();
   points.assign(xy,xy+count*2);
-  if(xy[count*2-2]==intent.approachX&&xy[count*2-1]==intent.approachZ){
+  if(xy[count*2-2]==goalX&&xy[count*2-1]==goalZ){
    double x=p.x,z=p.z;clear=1;
    for(int k=0;k<count&&clear==1;k++){
     const double nx=xy[k*2],nz=xy[k*2+1];
@@ -116,6 +128,11 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_replan_shield_crop(double actor,double sessi
  auto request=std::make_shared<NativeAnimalRouteRequest>(*hold->routeSource);
  request->at=s.effectiveTime;request->x=p.x;request->z=p.z;request->heading=p.yaw;request->phase=p.phase;
  request->entering=p.running;
+ if(contact){
+  request->shieldPolygon=hold->polygon;
+  request->shieldX=(*contact)[0];request->shieldZ=(*contact)[1];request->shieldRadius=(*contact)[2];
+  intent.approachX=goalX;intent.approachZ=goalZ;
+ }
  auto& route=s.routeSlots[slot];
  route.points=std::move(points);route.actor=intent.actor;route.originX=p.x;route.originZ=p.z;
  route.active=true;route.pendingResources=true;route.generation=nextGateRouteGeneration(route.generation);
@@ -123,6 +140,14 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_replan_shield_crop(double actor,double sessi
  intent.routeStartX=float(p.x);intent.routeStartZ=float(p.z);intent.routeCursor=0;
  intent.state=PlanningState::AwaitingResources;intent.animalRouteRequest=request;
  request->sequence=emitIntentChange(s,intent);s.entityRevision++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_replan_shield_crop(double actor,double session,double polygon){
+ return replanStoppedShieldCrop(actor,session,polygon,nullptr);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_replan_protected_crop(double actor,double session,double polygon,
+ double shieldX,double shieldZ,double radius,double approachX,double approachZ){
+ const std::array<double,5> contact{shieldX,shieldZ,radius,approachX,approachZ};
+ return replanStoppedShieldCrop(actor,session,polygon,&contact);
 }
 extern "C++" void spatialIntentCompleteShieldCropStop(const SpatialShieldCropStop& stop,int polygon){
  auto& s=state();auto captured=std::exchange(s.pendingShieldCropStop,std::nullopt);
@@ -273,6 +298,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_crop_state(double actor){
    s.animalCropState[21]=double(s.finishedAnimalStrike->ticket);
  }
  s.animalCropState[22]=source->attackCenter?1.:0.;
+ s.animalCropState[23]=double(source->shieldPolygon);
  return mode;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_crop_state_ptr(){return state().animalCropState.data();}

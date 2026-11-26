@@ -29,7 +29,10 @@ struct SpatialBarrierProposalInput {float x,z,halfX,halfZ,yaw;int passMask;};
 int spatialIntentStageBarrier(const SpatialBarrierProposalInput&,const SpatialStaticMutation&);
 int spatialIntentTakeBarrier(double session,double ticket,double sequence,double time,double clockSequence,SpatialBarrierProposalInput&);
 // Bounded, immutable transaction input; transient proposal, not a second world.
-struct SpatialShieldCropRoute {double actor,body,slot,generation,assignment,ticket;};
+struct SpatialShieldCropRoute {
+  double actor,body,slot,generation,assignment,ticket;
+  std::optional<std::array<double,3>> protection;
+};
 struct SpatialShieldCropStop {SpatialShieldCropRoute source;double time,x,z,yaw,phase;bool running;};
 struct SpatialWorldProposalInput {
   int kind=0,mode=0;std::vector<float> floats;std::vector<int32_t> integers;
@@ -37,6 +40,9 @@ struct SpatialWorldProposalInput {
 };
 int spatialIntentStageWorld(const SpatialWorldProposalInput&,const SpatialStaticMutation*,int count,bool requireRetained=false);
 void spatialIntentCompleteShieldCropStop(const SpatialShieldCropStop&,int polygon);
+bool spatialShieldFootprintMatches(const float* xy,int count,double x,double z,double radius);
+bool spatialShieldFootprintCurrent(int polygon,double x,double z,double radius);
+bool spatialShieldPolygonAbsent(int polygon);
 bool spatialIntentCaptureShieldCropStop(const SpatialShieldCropStop&);
 int spatialIntentStageShieldCrop(const SpatialWorldProposalInput&,const SpatialStaticMutation&,const SpatialShieldCropRoute&);
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&,bool allowGate=false);

@@ -454,7 +454,23 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
       const q=planner.nativeAnimalCropState(stopped.id);
       return q?.mode===4&&q.body===nativeBodies.id(stopped.id);
     };
-    const subject=game.raid?captureShieldExpiryCropRoute()??stoppedCurrent:civil;
+    const readStrike=()=>{
+      if(!stopped||stopped.status!=='attacking'||game.biome!=='sabana'||game.raid?.animals.length!==1||
+         stopped.approachShieldId!==spell.id||!game.workers.every(w=>planner.nativeWorkerHomeInactive(w.id))||
+         !nativeCropCohortCurrent(game,planner))return null;
+      const q=planner.nativeAnimalCropState(stopped.id);
+      return q?.mode===3&&q.body===nativeBodies.id(stopped.id)&&q.shieldContact?.id===spell.id&&
+        q.shieldPolygon===session.shieldPolygonId(spell.id)&&stopped.attackId==='attack-'+q.strike.attackId&&
+        q.strike.endTime>game.elapsed+spell.remaining?q:null;
+    };
+    const held=readStrike();
+    const strikeCurrent=()=>{
+      const q=readStrike();
+      return !!q&&q.body===held.body&&q.requestSequence===held.requestSequence&&q.target===held.target&&
+        q.x===held.x&&q.z===held.z&&q.phase===held.phase&&q.yaw===held.yaw&&
+        q.strike.ticket===held.strike.ticket&&q.strike.at===held.strike.at&&q.strike.endTime===held.strike.endTime;
+    };
+    const subject=game.raid?captureShieldExpiryCropRoute()??(held?strikeCurrent:stoppedCurrent):civil;
     const cohortCurrent=()=>civilShieldPhysicsAvailable()&&subject?.()===true;
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!cohortCurrent()||
@@ -743,12 +759,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const running=qualifyRunningShield&&civil();
     const cropCurrent=civilShieldPhysicsAvailable()?captureShieldExpiryCropRoute():null;
     const animal=game.raid?.animals[0],target=animal?game.plants.find(item=>item.id===animal.targetId):null;
-    const crop=cropCurrent?.()&&target&&Math.hypot(x-target.x,z-target.z)>spell.radius?
+    const covered=target&&Math.hypot(x-target.x,z-target.z)<=spell.radius;
+    const protectedApproach=covered&&session.core.wasm.spatial_shield_protected_crop_stage_resources&&
+      !game.spells.some(item=>item.kind==='shield')&&!animal.approachShieldId;
+    const crop=cropCurrent?.()&&target&&(!covered||protectedApproach)&&!animal.approachShieldId?
       planner.nativeAnimalRouteBinding(animal.id):null;
     const stage=(atCommitBoundary,prepareResources)=>planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'addPolygon',points:spatialShieldFootprint(spell),passMask:1},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
       prepareResources,
-      shield:{source:{spell,polygonId:null},crop,validate:()=>validate()&&(!running||civil())&&(!crop||cropCurrent()),atCommitBoundary,project:proof=>{
+      shield:{source:{spell,polygonId:null},crop,protectedApproach,nav,validate:()=>validate()&&(!running||civil())&&(!crop||cropCurrent()),atCommitBoundary,project:proof=>{
         const adopt=session.prepareNativeShieldAdditionAdoption(spell,proof),sync=nav.setState;let adopted=false;
         nav.setState=next=>{
           const actual=next.spells.at(-1);

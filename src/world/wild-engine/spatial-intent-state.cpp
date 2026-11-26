@@ -267,6 +267,8 @@ struct NativeAnimalRouteRequest {
  uint64_t actor=0,target=0,body=0,center=0,sequence=0;
  double at=0,x=0,z=0,heading=0,radius=0,phase=0,centerX=0,centerZ=0;bool entering=false;double targetX=0,targetZ=0;
  bool attackCenter=false;
+ int shieldPolygon=0;
+ double shieldX=0,shieldZ=0,shieldRadius=0;
 };
 struct NativeAnimalRouteOrigin {std::array<double,24> header{};uint64_t ticket=0;};
 struct NativeAnimalRouteBinding {NativeAnimalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;std::shared_ptr<const NativeAnimalRouteRequest> source;};
@@ -490,6 +492,7 @@ struct PendingBarrierProposal {
 struct FinishedAnimalStrike {
   uint64_t session,actor,body,target,center,attack,ticket;
   double x,z,radius,phase,yaw,at;
+  std::shared_ptr<const NativeAnimalRouteRequest> covered;
 };
 struct IntentState {
   std::unordered_map<uint64_t,Worker> workers;
@@ -623,7 +626,7 @@ struct IntentState {
   // Only the completed native attack attests this stationary body's handoff.
   // Keep the small terminal receipt after revoking the old route and bindings.
   std::optional<FinishedAnimalStrike> finishedAnimalStrike;
-  std::array<double,23> animalCropState{};
+  std::array<double,24> animalCropState{};
   std::array<double,12> stoppedShieldCropResult{};
   std::optional<StoppedShieldCrop> pendingShieldCropStop;
   bool worldMutationPreview=false,worldPreviewRetainsRoutes=true;
@@ -1560,7 +1563,7 @@ bool projectWorldRouteStops(const IntentState& s,const std::set<uint64_t>& seeds
   }
   return true;
 }
-int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
+int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count,uint64_t semanticStop=0){
   auto& s=state();if(s.barrierProposal.pending)return -4;
   if(!s.session||!s.causalClock||s.clockThrough!=s.effectiveTime||s.clockIntentSequence!=s.intentSequence||
      !gateStaticProofCurrent(s)||s.executionEnabled&&s.executionWorldStamp!=executionWorldStamp())return -2;
@@ -1570,6 +1573,7 @@ int stageWorldMutationBoundary(const SpatialStaticMutation* shapes,int count){
   if(count>=0&&!staticMutationPreflight(s,shapes,count))return 0;
   std::set<uint64_t> affected;uint64_t candidates=0,segments=0;
   if(count>=0&&s.executionEnabled&&!mutationAffectedRoutes(s,shapes,count,0,candidates,segments,affected))return -2;
+  if(semanticStop)affected.insert(semanticStop);
   std::vector<double> routes,gates;if(!projectWorldRouteStops(s,count<0?s.worldPreviewStoppedRoutes:affected,routes,gates))return -2;
   auto& p=s.barrierProposal;p.routeEffects=std::move(routes);p.gateEffects=std::move(gates);p.pending=true;p.session=s.session;p.ticket=++s.nextBarrierProposal;p.at=s.effectiveTime;
   p.bodies=spatialBodiesMutationRevision();p.entities=s.entityRevision;p.facts=s.sequence;p.intents=s.intentSequence;
@@ -1900,9 +1904,18 @@ int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const Sp
      !binding||binding->source->attackCenter||binding->actual.ticket!=crop.ticket||
      binding->assignmentSequence!=crop.assignment||slot.reservationBody!=crop.body||
      slot.executionPose[6]||!slot.hasExecution||!executionBindingCoherent(s,uint64_t(crop.body),intent.slot))return -2;
-  const int result=spatialIntentStageWorld(input,&shape,1);
+  if(crop.protection){
+    const auto [x,z,radius]=*crop.protection;
+    const auto& source=*binding->source;
+    if(!spatialShieldFootprintMatches(shape.xy,shape.count,x,z,radius)||
+       std::hypot(source.targetX-x,source.targetZ-z)>radius)return -2;
+  }
+  // A covered crop changes interaction point even when the swept route has
+  // enough geometric clearance. Use its exact assignment in the same stop.
+  const int result=stageWorldMutationBoundary(&shape,1,crop.protection?it->first:0);
   if(result!=1)return result;
   auto& p=s.barrierProposal;
+  p.kind=input.kind;p.worldInput=input;
   const auto& rows=p.routeEffects;
   if(!p.gateEffects.empty()||(!p.retainsRoutes&&(rows.size()!=26||rows[0]!=crop.actor||
       rows[1]!=crop.assignment||rows[2]!=crop.slot||rows[3]!=crop.generation||rows[4]!=crop.body||
@@ -3799,6 +3812,57 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double a
   return requestAttackCenterRoute(actorId,targetId,origin,double(finished.body),0,
     approachX,approachZ,0,finished.yaw,finished.phase);
 }
+// Both continuations start from the finished strike's exact body and lease.
+// Only an installed matching Shield permits another strike at the old site.
+static int continueProtectedCrop(double actor,double attack,double target,double polygon,
+                                bool expired,double approachX,double approachZ){
+  auto& s=state();
+  if(!integer(actor)||!integer(attack)||!integer(target)||!integer(polygon))return -1;
+  if(s.proposalOpen||s.barrierProposal.pending||s.worldMutationPreview)return -4;
+  if(nav_animal_finished_strike_snapshot(actor)!=1)return 0;
+  const auto& h=*s.finishedAnimalStrike;
+  const auto& q=h.covered;
+  const auto t=s.targets.find(h.target),c=s.targets.find(h.center);
+  if(!q||h.attack!=attack||h.target!=target||q->shieldPolygon!=polygon||
+     t==s.targets.end()||!t->second.active||t->second.kind>=3||t->second.x!=q->targetX||t->second.z!=q->targetZ||
+     c==s.targets.end()||!c->second.active||c->second.x!=q->centerX||c->second.z!=q->centerZ)return -2;
+  int count=0;
+  if(expired){
+    if(!spatialShieldPolygonAbsent(q->shieldPolygon)||!coordinate(approachX)||!coordinate(approachZ)||
+       std::abs(std::hypot(approachX-q->targetX,approachZ-q->targetZ)-(h.radius+.6))>1e-8)return -2;
+    count=spatial_world_route_cached(float(h.x),float(h.z),float(approachX),float(approachZ));
+    if(count<=0||count>4096)return count<0?3:0;
+    const auto* route=spatial_world_route_ptr();
+    if(route[count*2-2]!=float(approachX)||route[count*2-1]!=float(approachZ))return 0;
+    double x=h.x,z=h.z;
+    for(int k=0;k<count;k++){
+      const double nx=route[k*2],nz=route[k*2+1];
+      const int clear=spatial_animal_attack_segment_clear(x,z,nx,nz,h.radius);
+      if(clear!=1)return clear==-1?3:0;
+      x=nx;z=nz;
+    }
+    s.attackRouteInput.assign(route,route+count*2);
+  }else{
+    if(!spatialShieldFootprintCurrent(q->shieldPolygon,q->shieldX,q->shieldZ,q->shieldRadius))return -2;
+    approachX=h.x;approachZ=h.z;
+  }
+  const int site=registerAttackSite(actor,target,h.x,h.z,count,approachX,approachZ,h.radius,0,false);
+  if(site!=1)return site;
+  const int requested=nav_animal_route_request(actor,h.body,h.center,0,h.yaw,h.phase);
+  if(requested!=1){releaseIntent(s,h.actor,PlanningState::Cancelled,false);s.activeIntents.erase(h.actor);return requested;}
+  if(!expired){
+    auto& next=*s.activeIntents.at(h.actor).animalRouteRequest;
+    next.shieldPolygon=q->shieldPolygon;next.shieldX=q->shieldX;next.shieldZ=q->shieldZ;next.shieldRadius=q->shieldRadius;
+  }
+  return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_repeat_protected_strike(double actor,double attack,double target,double polygon){
+  return continueProtectedCrop(actor,attack,target,polygon,false,0,0);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_reapproach_expired_crop(double actor,double attack,double target,double polygon,
+                                                          double approachX,double approachZ){
+  return continueProtectedCrop(actor,attack,target,polygon,true,approachX,approachZ);
+}
 // Capture only crop groups whose interaction regions were proven unreachable
 // when this wall intention began. A later topology event can then ask whether
 // the animal gained a new agricultural opportunity without probing crops on
@@ -4423,7 +4487,7 @@ int nav_intent_attack_finished(double actorId){
     const auto& source=*strike.route->source;
     if(s.effectiveTime<h[16]||nav_animal_strike_snapshot(actorId)!=1)return -1;
     s.finishedAnimalStrike=FinishedAnimalStrike{s.session,actor,source.body,source.target,source.center,
-      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime};
+      strike.attackId,uint64_t(h[17]),h[11],h[12],source.radius,h[13],h[14],s.effectiveTime,source.shieldPolygon?strike.route->source:nullptr};
   }
   const int tactical=found->second.tacticalPending?1:0;
 #ifdef WILD_DECLARATIVE_ATTACK

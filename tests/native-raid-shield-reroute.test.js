@@ -23,7 +23,7 @@ function checkpoint(f){
  return f.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
 }
 
-for(const variant of ['clear','intersecting','blocked','expired READY'])test('acquired crop and '+variant+' Shield',async()=>{
+for(const variant of ['clear','intersecting','blocked','expired READY','covered','covered-offset'])test('acquired crop and '+variant+' Shield',async()=>{
  const intersects=variant!=='clear',blocked=variant==='blocked',stale=variant==='expired READY';
  let allowShield,allowDetour;
  const holdShield=new Promise(resolve=>allowShield=resolve),holdDetour=new Promise(resolve=>allowDetour=resolve);
@@ -51,7 +51,7 @@ for(const variant of ['clear','intersecting','blocked','expired READY'])test('ac
   const old=qualifiedDraw(f).nativeAnimalCrop;
   const a=checkpoint(f),before=JSON.parse(a.snapshot),animal=before.raid.animals[0];
   rig.update(structuredClone(before));
-  const [x,z]=blocked?[91.25,10.55]:intersects?[84,21]:[62,0];
+  const [x,z]=variant==='covered-offset'?[90,5.6]:variant==='covered'?[90,7.5]:blocked?[91.25,10.55]:intersects?[84,21]:[62,0];
   const command={kind:'castShield',id:'shield-crop-host',x,z};
   let prepareError;
   const prepare=f.authority.prepareNativeStructureCommand(command);prepare.catch(error=>prepareError=error);
@@ -129,6 +129,17 @@ for(const variant of ['clear','intersecting','blocked','expired READY'])test('ac
    await untilProduction(f,()=>detour.committed);
    await settle(f,detour.packet.presented);
    const next=qualifiedDraw(f).nativeAnimalCrop;
+   if(variant.startsWith('covered')){
+    assert.equal(detour.resources.reference.phase,stopped.motionPhase);
+    const rows=detour.resources.rows,last=rows.length-16;
+    const end={x:rows[last+1],z:rows[last+2]};
+    assert(Math.abs(Math.hypot(end.x-x,end.z-z)-3.15)<2e-6,JSON.stringify(end));
+    const successor=f.snapshot().raid.animals[0];
+    assert.equal(successor.approachShieldId,owner.spellId);
+    assert.equal(Math.fround(successor.approach.x),end.x);
+    assert.equal(Math.fround(successor.approach.z),end.z);
+    assert(!f.snapshot().events.some(e=>e.type==='AnimalLogicalHit'));
+   }
    assert.equal(next.bodyId,old.bodyId);
    assert.equal(next.targetId,old.targetId);
    assert.equal(next.phase,old.phase);

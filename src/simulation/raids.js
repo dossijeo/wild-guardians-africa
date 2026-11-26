@@ -780,16 +780,25 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    (state.workers.length>0||state.structures.length===1)&&
    state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
 }
-export function nativeCropRouteSubject(state,animal,flightWorker=null){
+export function nativeCropRouteSubject(state,animal,flightWorker=null,native=null){
  const raid=state.raid;
  const centerAttack=nativeCenterAttackCohort(state,flightWorker);
  if((state.biome!=='sabana'&&!centerAttack)||animal?.species!=='warthog'||raid?.animals.length!==1||raid.animals[0]!==animal||
     !state.workers.every(w=>w===flightWorker||w.status==='home'&&!w.raidReturn&&!w.nativeRouteAdmission)||
-    !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||animal.approachShieldId||
+    !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
     animal.hitsRemaining<=0)return null;
  const target=raidTarget(state,animal.targetId);
  if((centerAttack?target!==state.structures[0]:!target?.alive)||animal.reservation!==targetReservationKey(target,animal)||
-    raid.reservations[animal.reservation]!==animal.id||spellAt(state,'shield',target))return null;
+    raid.reservations[animal.reservation]!==animal.id)return null;
+ const shield=spellAt(state,'shield',target),contact=native?.shieldContact;
+ const pendingRemoval=!shield&&contact&&state.spells.some(spell=>spell.kind==='shield'&&spell.id===contact.id&&spell.remaining<=1e-9&&
+   spell.x===contact.x&&spell.z===contact.z&&spell.radius===contact.radius&&Math.hypot(spell.x-target.x,spell.z-target.z)<=spell.radius);
+ const expiredStrike=!shield&&!centerAttack&&!flightWorker&&native?.mode===3&&native.shieldPolygon>0&&contact&&animal.approachShieldId===contact.id&&
+   animal.status==='attacking'&&animal.attackId==='attack-'+native.strike.attackId&&(pendingRemoval||native.shieldExpired&&!state.spells.some(s=>s.id===contact.id));
+ if((shield||animal.approachShieldId)&&!expiredStrike){
+   if(centerAttack||flightWorker||!contact||shield?.id!==contact.id||shield.x!==contact.x||shield.z!==contact.z||
+      shield.radius!==contact.radius||native.mode!==4&&(!native.shieldPolygon||animal.approachShieldId!==shield.id))return null;
+ }
  return centerAttack?{target,center:target,purpose:'center'}:{target,center:state.structures.find(operational)??target};
 }
 function nativeRetreatOwnersMatch(state,animal,native){
@@ -802,11 +811,11 @@ function nativeRetreatOwnersMatch(state,animal,native){
    animal.radius===native.radius&&exit?.x===native.targetX&&exit?.z===native.targetZ;
 }
 export function nativeCropCohortCurrent(state,planner){
- const animal=state.raid?.animals[0],subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal));
+ const animal=state.raid?.animals[0],native=animal&&planner?.nativeAnimalCropState?.(animal.id);
+ const subject=animal&&nativeCropRouteSubject(state,animal,planner?.nativeRaidFlightMember?.(state,animal),native);
  if((!subject||subject.purpose==='center')&&animal?.hitApplied&&(animal.hitsRemaining===0?
     planner?.nativeFinishedAnimalRetreat?.(state,animal):planner?.nativeFinishedAnimalCrop?.(state,animal)))return true;
  if(!subject&&animal?.status!=='retreating')return false;
- const native=planner?.nativeAnimalCropState?.(animal.id);
  if(native?.retreat)return native.executedThrough===state.elapsed&&nativeRetreatOwnersMatch(state,animal,native)&&
    animal.x===native.x&&animal.z===native.z&&animal.motionPhase===native.phase;
  return !!subject&&!!native&&native.executedThrough===state.elapsed&&nativeCropOwnersMatch(subject,animal,native)&&
@@ -881,6 +890,10 @@ export function updateRaid(s,dt,nav) {
     if((a.magicStunUntil??0)>s.elapsed)continue;
     const crop=nav.intentTaskPlanner?.nativeAnimalCropState?.(a.id);
     const successor=!crop&&a.hitApplied&&a.hitsRemaining>0?nav.intentTaskPlanner?.nativeFinishedAnimalCrop?.(s,a):null;
+    if(successor?.shieldPolygon){
+      if(!nav.intentTaskPlanner.requestNativeProtectedSuccessor(s,a,successor,nav))throw Error('Native protected strike lost its finished source');
+      continue;
+    }
     if(successor?.purpose==='center'){
       if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor))throw Error('Native center strike lost its next stationary source');
       continue;
@@ -914,13 +927,13 @@ export function updateRaid(s,dt,nav) {
       continue;
     }
     if(crop){
-      const source=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a));
+      const source=nativeCropRouteSubject(s,a,nav.intentTaskPlanner?.nativeRaidFlightMember?.(s,a),crop);
       if(!source||!nativeCropOwnersMatch(source,a,crop)||crop.executedThrough!==s.elapsed)
         throw Error('Native crop action lost the current game source');
       if(crop.mode===4){
         if(a.x!==crop.x||a.z!==crop.z||a.heading!==crop.yaw||a.motionPhase!==crop.phase)
           throw Error('Shield crop moved while stopped');
-        nav.intentTaskPlanner.replanNativeShieldCrop(a.id);
+        nav.intentTaskPlanner.replanNativeShieldCrop(a.id,nav);
         continue;
       }
       if(crop.mode!==3){
@@ -979,7 +992,7 @@ export function updateRaid(s,dt,nav) {
       }
       const reconsider=nav.intentTaskPlanner?.finishAttackIntent(a.id);
       a.status='walking';a.path=null;
-      if(reconsider>0||!target||target.alive===false||crop?.purpose==='center'&&a.hitsRemaining===0||
+      if(reconsider>0||!target||target.alive===false||(crop?.purpose==='center'||crop?.shieldPolygon>0)&&a.hitsRemaining===0||
         target.status&&target.status!=='intact')release(s,a,nav);
       else if(nav.intentTaskPlanner&&a.approach){
         if(dist(a,a.approach)>.1)release(s,a,nav);

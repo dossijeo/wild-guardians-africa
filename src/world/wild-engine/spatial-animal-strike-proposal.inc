@@ -77,7 +77,7 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_finished_strike_snapshot(double actor){
     !spatialReadBody(h.body,body)||body.kind!=1||body.flags!=1||
     body.x!=h.x||body.z!=h.z||body.r!=h.radius)return 0;
  s.animalStrikeResult={1.,double(h.session),actor,double(h.body),double(h.attack),
-   h.x,h.z,h.radius,h.phase,h.yaw,h.at};
+   h.x,h.z,h.radius,h.phase,h.yaw,h.at,double(h.covered?h.covered->shieldPolygon:0),double(h.target)};
  return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_animal_strike_snapshot_ptr(){return state().animalStrikeResult.data();}

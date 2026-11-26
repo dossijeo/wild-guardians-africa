@@ -76,6 +76,9 @@ SpatialStaticTicket staticMutationBefore(IntentState& s,const SpatialStaticMutat
   }
   // No geometry/ID/revision has changed yet. Stop events and their held-disc
   // conflict closure precede the actual world mutation.
+  // Only the validated kind3 consume can supply a semantic crop stop.
+  if(s.pendingShieldCropStop&&s.pendingShieldCropStop->stop.source.protection)
+    affected.insert(uint64_t(s.pendingShieldCropStop->stop.source.actor));
   retireMutationRoutes(s,affected,s.staticMutationRevocations);
   return ticket;
 }
