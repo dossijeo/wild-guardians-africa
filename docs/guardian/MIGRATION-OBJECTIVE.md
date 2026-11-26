@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La partida continua de Sabana desde el menú superó tres noches y una entrega de cosecha. El cuarto turno llegó al león refugiando al civil, pero la primera ruta del animal agotó su plazo de preparación después de recibir su publicación. [Recibo del límite](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
+
 El guardado durante Retreat en Sabana conserva la autoridad nativa a ambos lados del derrumbe. En CPU, al cargar antes de la ruina el avance espera el nuevo corredor y luego conserva el mismo subpaso de mutación. Al cargar después de la ruina llega a una sola derrota. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-durante-la-retirada-posterior-al-derrumbe).
 
 Tras el derrumbe de Sabana, el control CPU reemplaza Draw con el Retreat del rinoceronte, verifica el primer envío del sustituto y reanuda hasta la derrota ordinaria. Queda el contraste físico de la pérdida. [Pruebas y alcance](native-cold-worker-admission-20261126.md#recuperación-tras-perder-draw-durante-la-retirada-del-rinoceronte).
