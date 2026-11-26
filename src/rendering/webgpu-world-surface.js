@@ -428,7 +428,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const shieldStop=shield&&proposal.nativeShieldCropStop?copyNativeShieldCropStop(proposal.nativeShieldCropStop):null;
    if(shieldStop){
     const row=proposal.routeEffects?.rows;
-    if(shieldGeometry||proposal.kind!==3||!sameNativeWorldBoundary(boundary,shieldStop.worldBoundary)||
+    if(shieldGeometry||!!shieldStop.removal!==(proposal.kind===4)||!sameNativeWorldBoundary(boundary,shieldStop.worldBoundary)||
        proposal.retainsNativeAssignments!==false||!(row instanceof Float64Array)||row.length!==26||
        ![shieldStop.actorId,shieldStop.assignmentSequence,shieldStop.slot,shieldStop.generation,shieldStop.bodyId,0,boundary.effectiveTime,0]
          .every((value,i)=>value===row[i])||!['x','z','phase','yaw'].every((key,i)=>shieldStop[key]===row[[8,9,11,12][i]]))

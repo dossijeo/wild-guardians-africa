@@ -684,7 +684,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       item.x===stop.spell.x&&item.z===stop.spell.z&&item.radius===stop.spell.radius);
     const covered=target&&spell&&Math.hypot(spell.x-target.x,spell.z-target.z)<=spell.radius;
     let approach=null,out;
-    if(covered){
+    if(stop.removed){
+      if(!nav||!target||spell)return false;
+      approach=reachableApproach(animal,target,nav)?.point;
+      if(!approach)return false;
+      out=wasm.nav_animal_replan_expired_shield_crop(actor,stop.worldBoundary.nativeSession,stop.polygonId,approach.x,approach.z);
+    }else if(covered){
       if(!nav||session.shieldPolygonId(spell.id)!==stop.polygonId)return false;
       approach=reachableApproach(animal,target,nav,spell)?.point;
       if(!approach)return false;
@@ -692,12 +697,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
         spell.x,spell.z,spell.radius,approach.x,approach.z);
     }else out=wasm.nav_animal_replan_shield_crop(actor,stop.worldBoundary.nativeSession,stop.polygonId);
     if(out===0||out===3||out===-4)return false;
-    if(out===1&&approach){animal.approach=approach;animal.approachShieldId=spell.id;animal.path=null;}
+    if(out===1&&approach){animal.approach=approach;animal.approachShieldId=spell?.id??null;animal.path=null;}
     if(out!==1)throw Error('Native Shield crop replan rejected: '+out);
     const q=nativeAnimalCropState(actorId);
     if(q.mode!==1||!['x','z','yaw','phase'].every(key=>q[key]===stop[key]))
       throw Error('Shield crop replan lost the stopped pose');
     shieldCropRequest={requestSequence:q.requestSequence,source:{worldBoundary:stop.worldBoundary,polygonId:stop.polygonId,
+      ...(stop.replacesRequestSequence?{replacesRequestSequence:stop.replacesRequestSequence}:{}),
       assignmentSequence:stop.assignmentSequence,routeHandle:{authorityEpoch:epoch(),session:stop.worldBoundary.nativeSession,
         slot:stop.slot,generation:stop.generation},routeTicket:stop.routeTicket}};
     return true;
@@ -1488,7 +1494,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       protocol={preparedFrameRequired:true,atCommitBoundary:shield.atCommitBoundary,
        capture:worldBoundary=>{
         const captured={...session.core.captureNativeWorldProposalResources(worldBoundary,shield.crop),worldBoundary,nativeShield:pendingShield};
-        cropStop=shield.crop?shieldCropStopFromProposal(captured,shield.crop):null;
+        const running=kind===4&&shield.crop?nativeAnimalCropState('animal-'+shield.crop.actorId)?.running:undefined;
+        cropStop=shield.crop?shieldCropStopFromProposal(captured,shield.crop,running):null;
         return cropStop?{...captured,nativeShieldCropStop:cropStop}:captured;
        },
        ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
@@ -1505,11 +1512,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       if(integers.length)new Int32Array(wasm.memory.buffer,ip,integers.length).set(integers);
       if(shield?.crop){
         const crop=shield.crop,h=crop.routeHandle;
+        const {x,z,radius}=pendingShield.spell;
+        if(kind===4)return wasm.spatial_shield_crop_expiry_stage(crop.actorId,crop.bodyId,h.slot,h.generation,
+          crop.assignmentSequence,crop.worldBoundary.ticket,x,z,radius);
         const owner=[floats.length,crop.actorId,crop.bodyId,h.slot,h.generation,crop.assignmentSequence,crop.worldBoundary.ticket];
-        if(shield.protectedApproach){
-          const {x,z,radius}=pendingShield.spell;
-          return wasm.spatial_shield_protected_crop_stage_resources(...owner,x,z,radius);
-        }
+        if(shield.protectedApproach)return wasm.spatial_shield_protected_crop_stage_resources(...owner,x,z,radius);
         return wasm.spatial_shield_crop_stage_resources(...owner);
       }
       return (prepareResources?wasm.spatial_world_proposal_stage_resources:wasm.spatial_world_proposal_stage)(kind,mode,floats.length,integers.length);
@@ -1540,11 +1547,24 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
             spell:wasm.nav_animal_replan_protected_crop?nativeShield.spell:null};
         }
         if(shield.project({ids,worldBoundary,nativeShield})!==true)throw Error('Native shield Game projection was not synchronous and successful');
+        if(kind===4&&(cropStop||shield.expiredRequest)){
+          const stop=issuedShieldCropStop,actorId=cropStop?'animal-'+cropStop.actorId:shield.expiredRequest.actorId;
+          const animal=owningState.raid?.animals.find(item=>item.id===actorId);
+          if(!stop||!animal||stop.actorId!==numericId(actorId)||stop.polygonId!==ids[0]||animal.approachShieldId!==nativeShield.spell.id)
+            throw Error('Native Shield expiry lost the protected approach source');
+          if(shield.expiredRequest){
+            const sequence=shield.expiredRequest.requestSequence;
+            if(wasm.nav_animal_retire_expired_shield_request(stop.actorId,worldBoundary.nativeSession,ids[0],sequence)!==1)
+              throw Error('Native Shield expiry could not retire the pending route');
+            stop.replacesRequestSequence=sequence;
+          }
+          stop.removed=true;animal.approachShieldId=null;animal.path=null;
+        }
         if(kind===4&&issuedShieldCropStop?.polygonId===ids[0]&&issuedShieldCropStop.spell?.id===nativeShield.spell.id){
           const q=nativeAnimalCropState('animal-'+issuedShieldCropStop.actorId);
           if(q?.mode===3&&q.shieldPolygon===ids[0])issuedShieldCropStop.expiredStrike=q.strike;
         }
-        if(cropStop)replanNativeShieldCrop('animal-'+cropStop.actorId,shield.nav);
+        if(cropStop||shield.expiredRequest)replanNativeShieldCrop(cropStop?'animal-'+cropStop.actorId:shield.expiredRequest.actorId,shield.nav);
       }
       const published=session.publishNativeWorldResources(committedWorldBoundary);
       const resources=nativeShield?{...published,phase:'committed',worldBoundary,nativeShield}:published;

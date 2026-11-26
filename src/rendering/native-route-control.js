@@ -201,11 +201,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   }
   function shieldCropStopMatches(record,stop){
     const ref=record?.cropBinding?.reference;
+    const terminal=record?.issuedCrop?.terminal;
+    const terminalCut=stop.removal&&!stop.running&&terminal&&['x','z','phase'].every(key=>terminal[key]===stop[key]);
     return !!ref&&ref.kind===26&&!ref.purpose&&ref.bodyId===stop.bodyId&&ref.targetId===stop.targetId&&
       ref.slot===stop.slot&&ref.generation===stop.generation&&record.assignmentSequence===stop.assignmentSequence&&
       ref.worldBoundary.ticket===stop.routeTicket&&ref.worldBoundary.nativeSession===stop.worldBoundary.nativeSession&&
       ref.worldBoundary.authorityEpoch===stop.worldBoundary.authorityEpoch&&
-      ref.worldBoundary.effectiveTime<=stop.worldBoundary.effectiveTime&&stop.worldBoundary.effectiveTime<ref.endTime&&stop.phase>=ref.phase;
+      ref.worldBoundary.effectiveTime<=stop.worldBoundary.effectiveTime&&
+      (stop.worldBoundary.effectiveTime<ref.endTime||terminalCut)&&stop.phase>=ref.phase;
   }
   function shieldCropStopCurrent(stop,{revoked=false}={}){
     const owner=actors.get(stop.actorId),record=revoked?owner?.revoked:active.get(stop.actorId);
@@ -329,13 +332,17 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     }else if(event.pendingAnimalCrop?.previousShieldCrop){
       const previous=event.pendingAnimalCrop.previousShieldCrop,owner=actors.get(event.actorId),cut=owner?.revoked;
       const issued=cut?.issuedCrop,old=cut?.cropBinding?.reference,w=copyNativeWorldBoundary(previous.worldBoundary);
+      const replaces=previous.replacesRequestSequence;
+      const latest=replaces===undefined?cut?.revokedSequence:id(replaces)&&owner?.state===6&&
+        owner.cropRequest?.requestSequence===replaces&&['actorId','bodyId','targetId','centerId','radius','x','z','yaw','phase']
+          .every(k=>owner.cropRequest[k]===successor?.[k])?replaces:null;
       if(!successor||!old||!issued||!w||!sameNativeWorldBoundary(cut.nativeShieldCropStop?.worldBoundary,w)||
          !['x','z','yaw','phase'].every(key=>cut.nativeShieldCropStop[key]===successor[key])||
          w.authorityEpoch!==authorityEpoch||w.nativeSession!==clock?.nativeSession||
          w.ticket<=old.worldBoundary.ticket||w.effectiveTime!==cut.safeUntil||w.effectiveTime>event.effectiveTime||
          cut.nativeShieldCropPolygon!==previous.polygonId||cut.assignmentSequence!==previous.assignmentSequence||
          previous.routeTicket!==old.worldBoundary.ticket||!sameHandle(cut.handle,previous.routeHandle)||
-         actors.size!==1||active.size||current||revoked||handle||cut.revokedState!==0||owner.latestSequence!==cut.revokedSequence||
+         actors.size!==1||active.size||current||revoked||handle||cut.revokedState!==0||owner.latestSequence!==latest||
          event.type!=='IntentChanged'||event.state!==6||event.taskId||event.targetId!==old.targetId||
          successor.requestSequence!==event.sequence||successor.authorityEpoch!==authorityEpoch||successor.nativeSession!==w.nativeSession||
          ['actorId','bodyId','targetId','centerId','targetX','targetZ','centerX','centerZ','radius','purpose'].some(key=>old[key]!==successor[key])||

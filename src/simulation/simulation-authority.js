@@ -464,25 +464,45 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
         q.strike.endTime>game.elapsed+spell.remaining?q:null;
     };
     const held=readStrike();
+    const polygonId=session.shieldPolygonId(spell.id);
+    const readProtectedApproach=()=>{
+      if(!stopped||game.biome!=='sabana'||game.raid?.animals.length!==1||stopped.approachShieldId!==spell.id||
+         !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||!nativeCropCohortCurrent(game,planner))return null;
+      const q=planner.nativeAnimalCropState(stopped.id);
+      if(!q||q.shieldContact?.id!==spell.id||q.shieldPolygon!==polygonId||q.body!==nativeBodies.id(stopped.id))return null;
+      if(q.mode===1)return q.previousStrike?null:{requestSequence:q.requestSequence,binding:null};
+      if(q.mode!==2)return null;
+      const binding=planner.nativeAnimalRouteBinding(stopped.id);
+      return binding?{requestSequence:q.requestSequence,binding}:null;
+    };
+    const approach=readProtectedApproach();
+    const approachCurrent=()=>{
+      const now=readProtectedApproach();
+      return !!now&&now.requestSequence===approach.requestSequence&&
+        (approach.binding?now.binding?.assignmentSequence===approach.binding.assignmentSequence&&
+          sameNativeWorldBoundary(now.binding.worldBoundary,approach.binding.worldBoundary):now.binding===null);
+    };
     const strikeCurrent=()=>{
       const q=readStrike();
       return !!q&&q.body===held.body&&q.requestSequence===held.requestSequence&&q.target===held.target&&
         q.x===held.x&&q.z===held.z&&q.phase===held.phase&&q.yaw===held.yaw&&
         q.strike.ticket===held.strike.ticket&&q.strike.at===held.strike.at&&q.strike.endTime===held.strike.endTime;
     };
-    const subject=game.raid?captureShieldExpiryCropRoute()??(held?strikeCurrent:stoppedCurrent):civil;
+    const subject=game.raid?(approach?approachCurrent:captureShieldExpiryCropRoute()??(held?strikeCurrent:stoppedCurrent)):civil;
     const cohortCurrent=()=>civilShieldPhysicsAvailable()&&subject?.()===true;
     if(closed||nativeStructurePreparation||!nativeProduction||!nativeResourcePreparation||
        !nativeIntentControl||!cohortCurrent()||
        game.spells.filter(item=>item.kind==='shield').length!==1||
        ['suspended','quiescing'].includes(nativeProduction.status().phase))
       throw Error('Native shield expiry requires acquired civil workers or an acquired crop approach and their resource owner');
-    const polygonId=session.shieldPolygonId(spell.id);
     if(!polygonId)throw Error('Native shield expiry lacks its polygon');
     const current=()=>!closed&&!owner.controller.signal.aborted&&shieldAdvance===owner&&
       owner.resources===nativeResourcePreparation&&owner.control===nativeIntentControl&&
       game.spells.includes(spell)&&session.shieldPolygonId(spell.id)===polygonId;
-    owner.receipt=await nativeProduction.quiesce();
+    const expiredRequest=approach&&!approach.binding?{actorId:stopped.id,requestSequence:approach.requestSequence}:null;
+    const cancelCrop=approach?{actorId:stopped.id,requestSequence:approach.requestSequence,
+      kind:approach.binding?'animal-crop-strike':'animal-crop-route'}:null;
+    owner.receipt=await nativeProduction.quiesce({cancelCrop});
     if(!current()||!cohortCurrent())throw Error('Native shield expiry source changed');
     // The current program either passes workers through the shield or was
     // admitted around its boundary. Finish its normal substep and watermark
@@ -496,8 +516,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     const result=await planner.mutateNativeWorldAfterGpuQuiescence({
       mutation:{type:'removePolygon',id:polygonId},getPublication:()=>nativeIntentControl,signal:owner.controller.signal,
       prepareResources:({resources,signal})=>owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence}),
-      shield:{source:{spell,polygonId},validate,atCommitBoundary:consume=>consume(),project:proof=>{
-        if(!validate())throw Error('Native shield expiry source changed before adoption');
+      shield:{source:{spell,polygonId},crop:approach?.binding,expiredRequest,nav,validate,atCommitBoundary:consume=>consume(),project:proof=>{
+        if(!current()||game.elapsed!==at)throw Error('Native shield expiry source changed before adoption');
         session.prepareNativeShieldRemovalAdoption(spell,proof)();
         game.spells=game.spells.filter(item=>item!==spell);
         nav.setState(game);

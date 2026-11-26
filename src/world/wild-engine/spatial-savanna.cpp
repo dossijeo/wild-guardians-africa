@@ -2730,6 +2730,7 @@ int spatial_remove_polygon(int id){
   if(it==index.byId.end())return 0;
   const PolygonObstacle polygon=it->second;
   const auto ticket=spatialIntentStaticBefore(nullptr,0);
+  if(!ticket.allowed)return 0;
   indexPolygon(polygon,false);index.byId.erase(it);refreshPolygon(polygon);
   spatialIntentStaticCommitted(ticket);
   return 1;
@@ -3097,7 +3098,7 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
     const int result=applyWorldProposalInput(input);worldProposalResult.clear();
     if(result!=1)return 0;
   }
-  const int staged=crop?spatialIntentStageShieldCrop(input,shapes.front(),*crop):
+  const int staged=crop?spatialIntentStageShieldCrop(input,shapes.empty()?nullptr:&shapes.front(),*crop):
     spatialIntentStageWorld(input,kind<=5?shapes.data():nullptr,kind<=5?int(shapes.size()):-1,captureResources&&kind>=2&&kind<=4);
   if(staged==1&&captureResources){
     std::array<double,6> identity{};
@@ -3134,6 +3135,11 @@ EMSCRIPTEN_KEEPALIVE int spatial_shield_protected_crop_stage_resources(int float
     double slot,double generation,double assignment,double routeTicket,double x,double z,double radius){
   const SpatialShieldCropRoute crop{actor,body,slot,generation,assignment,routeTicket,std::array<double,3>{x,z,radius}};
   return stageWorldProposal(3,1,floatCount,0,true,&crop);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_shield_crop_expiry_stage(double actor,double body,double slot,double generation,
+    double assignment,double routeTicket,double x,double z,double radius){
+  const SpatialShieldCropRoute crop{actor,body,slot,generation,assignment,routeTicket,std::array<double,3>{x,z,radius}};
+  return stageWorldProposal(4,0,0,1,true,&crop);
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage_resources(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,true);}
 // The original world preview for kinds12/24/25 owns no terrain buffers. Refresh its
@@ -3261,7 +3267,7 @@ int commitWorldProposal(double session,double ticket,double sequence,double time
   const int result=removalBound?spatialIntentCommitGateRemoval(session,ticket,sequence,time,clockSequence,preparedTicket,input,barrierBinding,applyWorldProposalInput):gateBound?spatialIntentCommitGateAddition(session,ticket,sequence,time,clockSequence,preparedTicket,nextBarrierId,input,barrierBinding,applyWorldProposalInput):applyWorldProposalInput(input);
 
   if(input.shieldCrop)spatialIntentCompleteShieldCropStop(*input.shieldCrop,
-    result==1&&worldProposalResult.size()==1?worldProposalResult.front():0);
+    result!=1?0:input.kind==4?input.integers[0]:worldProposalResult.size()==1?worldProposalResult.front():0);
   if((gateBound||removalBound)&&result!=1)return result;
   if(removalBound&&result==1)worldProposalResult.assign(input.integers.begin(),input.integers.end());
   if(result==1){

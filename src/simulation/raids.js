@@ -795,7 +795,9 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
    spell.x===contact.x&&spell.z===contact.z&&spell.radius===contact.radius&&Math.hypot(spell.x-target.x,spell.z-target.z)<=spell.radius);
  const expiredStrike=!shield&&!centerAttack&&!flightWorker&&native?.mode===3&&native.shieldPolygon>0&&contact&&animal.approachShieldId===contact.id&&
    animal.status==='attacking'&&animal.attackId==='attack-'+native.strike.attackId&&(pendingRemoval||native.shieldExpired&&!state.spells.some(s=>s.id===contact.id));
- if((shield||animal.approachShieldId)&&!expiredStrike){
+ const expiringApproach=pendingRemoval&&!centerAttack&&!flightWorker&&[1,2].includes(native?.mode)&&
+   native.shieldPolygon>0&&animal.approachShieldId===contact.id;
+ if((shield||animal.approachShieldId)&&!expiredStrike&&!expiringApproach){
    if(centerAttack||flightWorker||!contact||shield?.id!==contact.id||shield.x!==contact.x||shield.z!==contact.z||
       shield.radius!==contact.radius||native.mode!==4&&(!native.shieldPolygon||animal.approachShieldId!==shield.id))return null;
  }

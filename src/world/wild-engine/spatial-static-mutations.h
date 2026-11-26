@@ -44,7 +44,7 @@ bool spatialShieldFootprintMatches(const float* xy,int count,double x,double z,d
 bool spatialShieldFootprintCurrent(int polygon,double x,double z,double radius);
 bool spatialShieldPolygonAbsent(int polygon);
 bool spatialIntentCaptureShieldCropStop(const SpatialShieldCropStop&);
-int spatialIntentStageShieldCrop(const SpatialWorldProposalInput&,const SpatialStaticMutation&,const SpatialShieldCropRoute&);
+int spatialIntentStageShieldCrop(const SpatialWorldProposalInput&,const SpatialStaticMutation*,const SpatialShieldCropRoute&);
 int spatialIntentTakeWorld(double,double,double,double,double,SpatialWorldProposalInput&,bool allowGate=false);
 int spatialIntentRevalidateBarrierAddition(double,double,const SpatialStaticMutation*,int,std::array<double,8>&);
 int spatialIntentTakeBarrierAddition(double,double,double,double,double,double,SpatialWorldProposalInput&,std::array<double,5>&,bool allowGate=false);

@@ -234,7 +234,7 @@ export function createSpatialWorld(module,{exports:runtimeExports}={}){
     const stop=h[4]===12||h[4]===24||h[4]===25;
     const overlay=h[4]===2||h[4]===3||h[4]===4;
     if(h[0]!==1||h[1]!==nativeSession||h[2]!==ticket||h[3]!==effectiveTime||!Number.isSafeInteger(h[4])||(h[4]<6&&!overlay)||(h[4]>12&&!stop)||!Number.isSafeInteger(count)||count<0||count>32768)throw Error('Native proposal resource identity mismatch');
-    const cropStop=h[4]===3&&shieldCrop&&retention===0&&routeEffects.rows.length===26&&
+    const cropStop=(h[4]===3||h[4]===4)&&shieldCrop&&retention===0&&routeEffects.rows.length===26&&
     [shieldCrop.actorId,shieldCrop.assignmentSequence,shieldCrop.routeHandle.slot,shieldCrop.routeHandle.generation,shieldCrop.bodyId,0,effectiveTime,0]
       .every((value,index)=>value===routeEffects.rows[index]);
     if(overlay&&(count!==0||!cropStop&&(retention!==1||routeEffects.rows.length)||gateEffects.rows.length))throw Error('Native overlay preview cannot change terrain or route owners');

@@ -1888,10 +1888,12 @@ int takeCenterRuin(double session,double ticket,double end,SpatialWorldProposalI
   if(route.executionPose!=expected||s.entityRevision!=p.entities+moved||spatialBodiesMutationRevision()!=p.bodies+moved)return -2;
   out=std::move(p.worldInput);clearWorldMutationProposal(p);return 1;
 }
-int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,
+int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const SpatialStaticMutation* shape,
     const SpatialShieldCropRoute& crop){
   auto& s=state();
-  if(input.kind!=3||input.mode!=1||spatial_world_biome()!=0||!s.executionEnabled||!integer(crop.actor)||
+  const bool expiry=input.kind==4;
+  if((expiry?input.mode||!crop.protection||input.integers.size()!=1:input.kind!=3||input.mode!=1||!shape)||
+     spatial_world_biome()!=0||!s.executionEnabled||!integer(crop.actor)||
      !integer(crop.body)||!integer(crop.slot,true)||crop.slot>=s.routeSlots.size()||!integer(crop.generation)||
      !integer(crop.assignment)||!integer(crop.ticket)||s.reservedBodies.size()!=1||spatial_body_count()!=1)return -2;
   const auto it=s.activeIntents.find(uint64_t(crop.actor));
@@ -1903,16 +1905,19 @@ int spatialIntentStageShieldCrop(const SpatialWorldProposalInput& input,const Sp
      intent.state!=PlanningState::RouteActive||intent.slot!=crop.slot||intent.generation!=crop.generation||
      !binding||binding->source->attackCenter||binding->actual.ticket!=crop.ticket||
      binding->assignmentSequence!=crop.assignment||slot.reservationBody!=crop.body||
-     slot.executionPose[6]||!slot.hasExecution||!executionBindingCoherent(s,uint64_t(crop.body),intent.slot))return -2;
+     (!expiry&&slot.executionPose[6])||!slot.hasExecution||!executionBindingCoherent(s,uint64_t(crop.body),intent.slot))return -2;
   if(crop.protection){
     const auto [x,z,radius]=*crop.protection;
     const auto& source=*binding->source;
-    if(!spatialShieldFootprintMatches(shape.xy,shape.count,x,z,radius)||
+    const bool footprint=expiry?source.shieldPolygon==input.integers[0]&&
+      spatialShieldFootprintCurrent(source.shieldPolygon,x,z,radius):
+      spatialShieldFootprintMatches(shape->xy,shape->count,x,z,radius);
+    if(!footprint||
        std::hypot(source.targetX-x,source.targetZ-z)>radius)return -2;
   }
   // A covered crop changes interaction point even when the swept route has
   // enough geometric clearance. Use its exact assignment in the same stop.
-  const int result=stageWorldMutationBoundary(&shape,1,crop.protection?it->first:0);
+  const int result=stageWorldMutationBoundary(shape,expiry?0:1,crop.protection?it->first:0);
   if(result!=1)return result;
   auto& p=s.barrierProposal;
   p.kind=input.kind;p.worldInput=input;

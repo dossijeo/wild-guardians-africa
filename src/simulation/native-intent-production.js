@@ -126,7 +126,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const manifest=terrainManifest();if(!manifest)return Promise.resolve(null);
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
-  const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
+  const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
   if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
   transaction.promise=(async()=>{
    try{
@@ -149,14 +149,15 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   transaction.promise.then(()=>{if(!closed&&transaction.obsolete)wake();});
   return transaction.promise;
  }
- function quiesce({cancelTask=null}={}){
+ function quiesce({cancelTask=null,cancelCrop=null}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
   // Holding dispatch is not completion. Only the existing operation's actual
   // settlement can certify a stable source; its errors remain terminal.
   const hold={receipt:Object.freeze({}),settled:false,promise:null};quiescence=hold;
-  if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId){
+  if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
+     cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence){
    active.obsolete=true;active.controller.abort();
   }
   hold.promise=Promise.resolve(active?.promise).then(()=>{

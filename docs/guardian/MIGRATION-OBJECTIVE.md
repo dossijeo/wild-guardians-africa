@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+La caducidad antes del primer golpe protegido conserva cuerpo y reserva en la calificación AttackCrops de Sabana. CPU cubre el primer corredor pendiente. NVIDIA confirma el cambio durante la marcha y con el golpe aún pendiente en el borde. Quedan el sucesor pendiente tras un golpe protegido, el menú ordinario y C4. [Evidencia](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe).
+
 Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).
 
 Home18 también se recupera con un portón de zarzas en apertura. El reemplazo acredita ambos relojes antes de reanudar. NVIDIA confirmó el picking, Home19 y el drenaje. [Recorrido y recibo](native-terminal-resource-recovery-20261120.md#reemplazo-de-home18-mientras-abre-un-portón).

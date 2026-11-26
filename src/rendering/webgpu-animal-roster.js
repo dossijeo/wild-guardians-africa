@@ -107,13 +107,18 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
      ref.worldBoundary.ticket!==stop.routeTicket||!support?.valid()||signal.aborted)
     throw Error('Shield stop lacks its admitted animal crop');
   const actor=previous.actor,entity=entry.entity;
+  const at=stop.worldBoundary.effectiveTime;
+  const stoppedPose=()=>state.elapsed===at&&entity.x===stop.x&&entity.z===stop.z&&
+    entity.heading===stop.yaw&&entity.motionPhase===stop.phase;
+  // Expiry is inside an advance. Its prepared frame owns the cut pose while
+  // the last visible publication still owns the earlier pose of this route.
+  const retainedPose=()=>stop.removal&&state.elapsed>=ref.worldBoundary.effectiveTime&&state.elapsed<at&&entity.motionPhase<=stop.phase;
   const current=()=>!closed&&!signal.aborted&&entries.get(id)===entry&&entry.entity===entity&&
-   state.elapsed===stop.worldBoundary.effectiveTime&&entry.cropOwner===previous&&!entry.cropPending&&
-   entity.x===stop.x&&entity.z===stop.z&&entity.heading===stop.yaw&&entity.motionPhase===stop.phase&&
+   entry.cropOwner===previous&&!entry.cropPending&&(stoppedPose()||retainedPose())&&
    entity.targetId==='plant-'+stop.targetId&&!historyRun&&!poses.has(id)&&support.valid();
   const check=()=>{if(!current())throw Error('Shield crop pose changed before capture');};
   check();
-  const clip=entity.status==='entering'?'Running':'Walking';
+  const clip=(stop.removal?stop.running:entity.status==='entering')?'Running':'Walking';
   const bank=clip==='Running'?bakedRunBank:bakedWalkBank;
   const bake=await bank.get(entry.species);check();
   const anchor=actor.root.getWorldPosition(new Vector3()),q=actor.root.getWorldQuaternion(new Quaternion());
