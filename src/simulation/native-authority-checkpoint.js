@@ -14,6 +14,8 @@ export function validateNativeAuthorityCheckpoint(checkpoint){
  validateSpatialState(checkpoint.spatialState);
  if(checkpoint.version>=2)validateSpatialWallOwners(checkpoint.wallOwners,checkpoint.spatialState);
  if(checkpoint.version===3)validateSpatialShieldOwners(checkpoint.shieldOwners,checkpoint.spatialState);
+ if(checkpoint.workerLifecycle!==undefined&&(checkpoint.version!==3||checkpoint.workerLifecycle!==1))
+  throw TypeError('Invalid native worker lifecycle checkpoint');
  if(checkpoint.encounter!==undefined){
   if(checkpoint.version!==3)throw Error('Native encounter requires checkpoint version 3');
   copyNativeEncounterCheckpoint(checkpoint.encounter);
@@ -29,5 +31,5 @@ export function savedNativeAuthorityOptions(snapshot){
  const raw=JSON.parse(snapshot),state=raw.workerPhysicsCheckpoint?deserializeConfirmedState(snapshot):deserialize(snapshot),checkpoint=validateNativeAuthorityCheckpoint(state.workerNativeAuthorityCheckpoint);
  validateRaidWaitBindings(state,state.workerRaidWaitBindings);
  if(checkpoint.encounter!==undefined)nativeEncounterCheckpointActors(state,checkpoint.encounter);
- return {snapshot,chunkKeys:[...checkpoint.chunkKeys],raidWaitBindings:structuredClone(state.workerRaidWaitBindings),navigationView:structuredClone(checkpoint.navigationView),nativeBootstrap:{version:checkpoint.version,chunkKeys:[...checkpoint.chunkKeys],spatialState:structuredClone(checkpoint.spatialState),...(checkpoint.version>=2?{wallOwners:structuredClone(checkpoint.wallOwners)}:{}),...(checkpoint.version===3?{shieldOwners:structuredClone(checkpoint.shieldOwners)}:{})}};
+ return {snapshot,chunkKeys:[...checkpoint.chunkKeys],raidWaitBindings:structuredClone(state.workerRaidWaitBindings),navigationView:structuredClone(checkpoint.navigationView),...(checkpoint.workerLifecycle===1?{nativeWorkerLifecycle:true}:{}),nativeBootstrap:{version:checkpoint.version,chunkKeys:[...checkpoint.chunkKeys],spatialState:structuredClone(checkpoint.spatialState),...(checkpoint.version>=2?{wallOwners:structuredClone(checkpoint.wallOwners)}:{}),...(checkpoint.version===3?{shieldOwners:structuredClone(checkpoint.shieldOwners)}:{})}};
 }

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+El checkpoint civil mantiene el perfil nativo cuando ya se retiró el último cuerpo. La recarga de amanecer en NVIDIA conserva el reloj pausado y presenta Farm23 y Task14 tras una contratación pagada. [Recorrido y límites](native-cold-worker-admission-20261126.md#recarga-después-de-home19-y-al-amanecer).
+
 Tras Home19, el perfil explícito de Sabana admite el ataque introductorio al centro con los civiles refugiados. NVIDIA confirmó la retirada del animal, el amanecer y el mismo cuerpo nuevo en Farm23 y Task14 del segundo turno. [Recorrido y límites](native-cold-worker-admission-20261126.md#primera-noche-y-segunda-contratación-en-sabana).
 
 La frontera de autoridad fecha la pose congelada de Stop24 tras comprobar el cuerpo. NVIDIA confirmó Farm23 adquirido, READY retenido, parada y Task14 con el mismo cuerpo en Sabana. [Pruebas y recibo](native-cold-worker-admission-20261126.md#parada-de-farm23-ya-adquirido-para-la-primera-tarea).

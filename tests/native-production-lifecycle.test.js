@@ -15,6 +15,7 @@ import {attachNativeResourcePreparationEndpoint} from '../src/rendering/native-r
 import {createSimulationAuthorityClient} from '../src/simulation/simulation-authority-client.js';
 import {createWorkerHostedRuntime} from '../src/simulation/worker-hosted-runtime.js';
 import {serialize} from '../src/persistence/snapshots.js';
+import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
 import {deserializeConfirmedState} from '../src/simulation/confirmed-live-state.js';
 import {createConfirmedStateReceiver} from '../src/simulation/confirmed-state-receiver.js';
 import {nativeIdleStrollGameSave} from './helpers/native-idle-stroll-restoration-game.js';
@@ -799,6 +800,27 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(after.workers[0].nativeRouteAdmission,undefined);
   assert.equal(f.records.filter(row=>row.kind==='home-arrival'&&row.committed).length,1);
   assert.deepEqual(after.ledger,ledger);
+  const saveAtRest=()=>prepareWorkerCheckpoint(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}),
+    {slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+  const sheltered=saveAtRest();assert.equal(sheltered.saved,true);
+  const shelteredOptions=savedNativeAuthorityOptions(serialize(sheltered.state));
+  assert.equal(shelteredOptions.nativeWorkerLifecycle,true);
+  const module=new WebAssembly.Module(readFileSync('src/world/wild-engine/spatial-savanna.wasm'));
+  const restore=options=>createSimulationAuthority(module,options.snapshot,options.chunkKeys,options);
+  const homeRestore=restore(shelteredOptions);
+  try{
+   assert(homeRestore.verifyNativeBootstrap(shelteredOptions.nativeBootstrap));
+   const next=await homeRestore.execute({kind:'advance',sequence:1,seconds:.05,nightFastForward:true});
+   const [stationary]=JSON.parse(next.snapshot).workers;
+   assert.equal(stationary.id,workerId);assert.equal(stationary.status,'home');
+   assert.deepEqual(pose(stationary),pose(after.workers[0]));
+   assert.equal(homeRestore.nativeIntentProductionStatus().phase,'idle');
+  }finally{homeRestore.dispose();}
+  const invalidVersion=structuredClone(sheltered.state);invalidVersion.workerNativeAuthorityCheckpoint.workerLifecycle=2;
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(invalidVersion)),/Invalid native worker lifecycle checkpoint/);
+  const displaced=structuredClone(sheltered.state);displaced.workers[0].x+=.05;
+  assert.throws(()=>restore(savedNativeAuthorityOptions(serialize(displaced))),/not inactive at home/);
+  assert.throws(()=>restore({...shelteredOptions,nativeWorkerLifecycle:false}),/Invalid native worker lifecycle restoration/);
 
   const night=await drive(()=>ready('animal-crop-route'),400,true),attack=ready('animal-crop-route');
   const born=events.find(event=>event.type==='RaidSpawned').raidFacts.actors[0];
@@ -832,6 +854,14 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(dawn.result,null);assert.deepEqual(dawn.pauses,['hiring']);assert.equal(dawn.workers.length,0);
   assert.equal(events.filter(event=>event.type==='Dawn').length,1);
   assert.deepEqual(dawn.ledger.balance,{n:'510',d:'1'});
+  const savedDawn=saveAtRest();assert.equal(savedDawn.saved,true);
+  const dawnOptions=savedNativeAuthorityOptions(serialize(savedDawn.state));
+  assert.equal(dawnOptions.nativeWorkerLifecycle,true);
+  const oldCheckpoint=structuredClone(savedDawn.state);delete oldCheckpoint.workerNativeAuthorityCheckpoint.workerLifecycle;
+  const legacyDawn=savedNativeAuthorityOptions(serialize(oldCheckpoint));
+  assert.equal(Object.hasOwn(legacyDawn,'nativeWorkerLifecycle'),false);
+  const priorOwner=restore(legacyDawn);
+  try{assert.equal(priorOwner.nativeIntentProductionStatus().phase,'inactive');}finally{priorOwner.dispose();}
   const order={kind:'hire',id:'savanna-next-hire',selection:{youngMale:1}};
   const hire=f.command(order);events.push(...hire.events);
   const next=JSON.parse(hire.snapshot).workers[0];
@@ -846,6 +876,25 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(f.records.filter(row=>row.kind==='task-start'&&row.committed&&receipts.get(row).nativeTaskStartBinding.reference.actorId===secondTask.actorId).length,1);
   assert.equal(f.command(order).events.filter(event=>event.type==='HiringConfirmed').length,0);
   assert.deepEqual(f.snapshot().ledger.entries[order.id],{n:'-40',d:'1'});
+
+  const reloaded=await fullFixture({...dawnOptions,state:savedDawn.state});
+  try{
+   await reloaded.runtime.attachNativeIntentControl(reloaded.native.controlPort);
+   await reloaded.runtime.attachNativeResourcePreparation(reloaded.native.resourcePort);
+   assert.equal(reloaded.state.elapsed,dawn.elapsed);
+   assert.deepEqual(reloaded.state.pauses,['hiring']);
+   assert.deepEqual(reloaded.state.workers,[]);
+   const hiring=await reloaded.runtime.submit(order);
+   assert.equal(hiring.events.filter(event=>event.type==='HiringConfirmed').length,1);
+   assert.equal(reloaded.state.workers[0].id,next.id);
+   assert.equal(reloaded.state.workers[0].personId,next.personId);
+   assert.deepEqual(reloaded.state.ledger.entries[order.id],{n:'-40',d:'1'});
+   const farmFrame=()=>reloaded.native.host.inspect().nativeRouteFrame?.bindings.find(row=>row.nativeFarmArrival?.actorId===Number(next.id.slice(7)));
+   await until(()=>!!farmFrame(),()=>reloaded.native.present());
+   assert.equal(farmFrame().nativeFarmArrival.bodyId,1);
+   assert.equal((await reloaded.runtime.submit(order)).events.filter(event=>event.type==='HiringConfirmed').length,0);
+   assert.deepEqual(reloaded.native.faults,[]);
+  }finally{await reloaded.close();}
  }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();await f.close();}
 });
 

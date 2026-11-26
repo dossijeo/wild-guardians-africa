@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "scope": "Recarga al amanecer de Sabana, semilla 714. Preparación pública de checkpoint y Workers de producción en un arnés de navegador.",
+  "preimage": "076e6e04d1a675a342a7fdc0521fbe80a8c9e21b",
+  "input": {
+    "file": "E:/wild-guardians-qa/savanna-lifecycle-checkpoint-20261126/dawn.json",
+    "sha256": "b93e30b4cd7ab31b979bae1350206d4c17442ed1c6e52ef4f7d4a1a48a967f14",
+    "day": 2,
+    "elapsed": 599.9999999999613,
+    "workerLifecycle": 1,
+    "workers": 0,
+    "pauses": [
+      "hiring"
+    ]
+  },
+  "raw": {
+    "file": "E:/wild-guardians-qa/savanna-lifecycle-checkpoint-20261126/nvidia-dawn-continue.json",
+    "sha256": "20a45811458ad71d643d37cf1a3b4c3a64d08a502cfeacdd81ed5c51adc7bf85"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 90.6000000089407
+    }
+  },
+  "initialClock": {
+    "paused": true,
+    "committedThrough": 599.9999999999613,
+    "intentSequence": 0
+  },
+  "heldFarm": {
+    "ticket": 1,
+    "at": 599.9999999999613,
+    "x": 60,
+    "z": 0
+  },
+  "worker": {
+    "id": "worker-11",
+    "personId": "person-5",
+    "contractDay": 2
+  },
+  "farm": {
+    "ticket": 2,
+    "bodyId": 1,
+    "at": 600.1799999999612,
+    "frame": 31,
+    "drawnAt": 600.2599999999611,
+    "relativeTime": 0.07999999821186066
+  },
+  "task": {
+    "ticket": 6,
+    "bodyId": 1,
+    "at": 631.4799999999327,
+    "frame": 290,
+    "drawnAt": 631.5399999999327
+  },
+  "hireCount": 1,
+  "balanceBefore": {
+    "n": "510",
+    "d": "1"
+  },
+  "balanceAfter": {
+    "n": "470",
+    "d": "1"
+  },
+  "hireDebit": {
+    "n": "-40",
+    "d": "1"
+  },
+  "elapsed": 631.7799999999324,
+  "drained": true,
+  "errors": []
+}
