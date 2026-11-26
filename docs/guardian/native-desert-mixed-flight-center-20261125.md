@@ -395,4 +395,12 @@ En el control privado, la preparación cruza un MessagePort y devuelve la secuen
 
 El primer dibujo deja a la autoridad en 12,62 s mientras el acuse permanece retenido. Cuando llega, la misma orden completa los dos subpasos a 12,64 s y conserva un único `AnimalRetreating`. Seis controles impiden el segundo subpaso si se altera la secuencia, el ticket, la hora o la asignación, si se omite el testigo de GPU o si falla el envío. En el último caso el dibujo 5 sigue siendo el último sometido. Pasaron 67 pruebas dirigidas de los canales existentes. [Recibo del puerto de recursos](performance/native-raid-encounter-resource-ack-20261126.json).
 
-Quedan pendientes el participante de Surface, el comportamiento con Draw oculto o perdido durante la espera, la integración en producto y la validación en GPU física.
+### Captura de Surface en NVIDIA
+
+El primer golpe retira Home18 en el prototipo. El roster verifica que el hecho confirmado corresponde a la asignación 7 y al mismo cuerpo, vuelve a la presentación del trabajador en la pose del empuje y prepara Fall. La primera pasada que adoptó ese hecho completó Retreat y GetUp en NVIDIA Turing. Una repetición quedó esperando la publicación de origen para Retreat antes de READY.
+
+El control CPU reproduce un orden suficiente para atascar ese relevo. Draw admite el paquete ordinario 6 con Home18 aún vigente. El golpe real revoca la asignación antes del primer RAF del paquete. El Host vetaba el dibujo y dejaba el paquete en espera, con el preparador bloqueado en su acuse. Ahora el Host reconoce la revocación del registro que admitió, rechaza el paquete obsoleto y permite el siguiente dibujo sin ese binding. La traza física con timeout carece del estado de ese paquete en Draw.
+
+En la siguiente pasada física, Three visitó cuatro mallas baked de Fall a fase 0,46 s y cuatro del facóquero durante la captura de Surface. El paquete 87 adquirió ticket 11 y asignación 12 a 12,62 s con edad cero para Retreat. Retener el acuse 120 ms dejó la proyección principal en 12,60 s. Al entregar el acuse llegó a 12,64 s. La incursión terminó a 14,34 s, GetUp a 18,92 s y Draw drenó sin errores. El control físico positivo no registró un rechazo de Home pendiente. [Recibo de Surface en NVIDIA](performance/native-raid-encounter-surface-nvidia-20261126.json).
+
+El encuentro y su WASM siguen en el prototipo. Quedan la integración en producto y el comportamiento con Draw oculto o perdido durante la espera.
