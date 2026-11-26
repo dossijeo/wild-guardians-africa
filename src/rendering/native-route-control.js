@@ -469,8 +469,6 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(actor?.idleCycleSource&&event.type==='IntentChanged'&&event.state===7&&!idleCycle&&!idleCycleNext&&pendingTaskCancellation?.owner.kind!==21)throw Error('Native Idle cycle event omitted its typed source');
     const stoppedRouteSourceRequired=!!actor?.stoppedProjection||!current&&actor?.revoked?.revokedState===4&&!!(actor.revoked.issuedStroll||actor.revoked.issuedFarmArrival||actor.revoked.taskStopBodyId);
     const heldHomeSource=homeRequest&&actor?.stoppedProjection?stoppedHomeSource(actor):null;
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
-      throw Error('Native raid flight requires the original Farm source');
     const heldTaskHome=homeRequest&&stoppedTaskHomeMatches(actor,homeRequest);
     if(homeRequest&&stoppedRouteSourceRequired&&!heldTaskHome&&(!heldHomeSource||!nativeHomeRequestContinuesHeldWorker(homeRequest,heldHomeSource)))throw Error('Native Home differs from its actual stopped worker body');
     const heldTaskSource=taskRequest?stoppedHomeSource(actor):null;
@@ -479,6 +477,10 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const keepIdleCycle=!!actor?.idleCycleSource&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===21||!!idleCycleNext||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     const phaseDelay=idleCycle?inheritedIdleCyclePhaseDelay(idleCycle,actor):0;
     if(keepIdleCycle&&homeRequest&&!cycleHomeMatches(homeRequest,actor.idleCycleSource.binding))throw Error('Native Home differs from its held Idle cycle body');
+    const idleFlight=keepIdleCycle&&actor.state===7&&event.state===6&&!assigned&&!handle&&!revoked&&
+      !actor.pendingHomeRequest&&cycleState(actor,actor.idleCycleSource.binding);
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+      throw Error('Native raid flight requires its Farm or acquired Idle source');
     if(actor?.idleCycleRecord?.lastDrawTime!=null&&event.effectiveTime<actor.idleCycleRecord.lastDrawTime){const error=Error('Native Idle cycle revocation arrived after its presented time');error.code='native-idle-cycle-revocation-late';throw error;}
     if(initialIdleRequest&&(current||actor.taskId||actor.targetId||actor.state!==null&&actor.state!==6||actor.pendingInitialIdleRequest||actor.pendingIdleStrollRequest||actor.pendingFarmArrivalRequest||actor.pendingTaskRequest||actor.pendingActionRequest||actor.pendingHomeRequest||actor.proof||actor.startProof||actor.actionProof||actor.consequenceProof||actor.settlementProof||actor.settlementSource||actor.homeProof||actor.initialIdleBodyProof||actor.initialIdleBodySource))throw Error('Native initial Idle request cannot replace an existing owner');
     if(homeRequest&&actor?.pendingInitialIdleRequest&&!nativeHomeRequestContinuesInitialIdle(homeRequest,actor.pendingInitialIdleRequest))throw Error('Native Home request differs from its pending initial Idle body');

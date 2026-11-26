@@ -212,6 +212,79 @@ for(const {workerZ,spawnDelay,approachSteps,label} of [
   }finally{releaseIdle();await world.close();}
 });
 
+test('RaidSpawned takes the acquired stationary Idle body across the gate', async () => {
+  const {state,chunkKeys,start,center,gateId}=gatedDesertRaid();
+  state.workers[0].z=5;
+  state.dayPlan.at=state.time+.2;
+  let stagedHome,releaseHome;
+  const held=new Promise(resolve=>{releaseHome=resolve;});
+  const acquisitions=[];
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    async onReady(record){if(record.kind==='home-route'&&!stagedHome){stagedHome=record;await held;}},
+    onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
+  const events=[];
+  const pose=worker=>[worker.x,worker.z,worker.heading,worker.runPhase,worker.walkPhase,worker.carryPhase,worker.runRemaining];
+  async function step(){
+    const next=world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:1});
+    for(const key of next.residency.missing){const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});}
+    events.push(...next.events);
+    await world.present();
+    assert.deepEqual(world.faults,[]);
+    return JSON.parse(next.snapshot);
+  }
+  try{
+    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
+    await untilProduction(world,()=>acquisitions.some(r=>r.kind==='farm-arrival'));
+    const farm=acquisitions[0].data.nativeFarmArrivalBinding;
+    const endpoint=await step();
+    await untilProduction(world,()=>acquisitions.some(r=>r.kind==='idle-cycle'));
+    const idle=acquisitions.find(r=>r.kind==='idle-cycle').data.nativeIdleCycleBinding;
+    const resting=world.snapshot().workers[0];
+    assert.equal(resting.nativeRouteAdmission,'native-idle');
+    assert.equal(idle.reference.bodyId,farm.reference.bodyId);
+    assert.deepEqual(pose(resting),pose(endpoint.workers[0]));
+    let current;
+    for(let i=0;i<4&&!current?.raid;i++)current=await step();
+    const spawn=events.find(e=>e.type==='RaidSpawned');
+    assert(spawn);
+    assert.equal(current.workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
+    assert.equal(current.raid.animals[0].targetId,center.id);
+    const waitingAnimal={x:current.raid.animals[0].x,z:current.raid.animals[0].z};
+    await untilProduction(world,()=>!!stagedHome);
+    for(let i=0;i<3;i++){
+      current=await step();
+      const worker=current.workers[0],animal=current.raid.animals[0];
+      assert.equal(worker.nativeRouteAdmission,'pending-raid-flight-resources');
+      assert.equal(worker.idleState,null);
+      assert.deepEqual(pose(worker),pose(resting));
+      assert.deepEqual({x:animal.x,z:animal.z},waitingAnimal);
+    }
+    assert.equal(stagedHome.committed,false);
+    assert(!acquisitions.some(r=>r.kind==='animal-crop-route'));
+    releaseHome();
+    for(let i=0;i<200&&current.workers[0].status!=='home';i++)current=await step();
+    const home=acquisitions.find(r=>r.kind==='home-route')?.data.nativeHomeRouteBinding;
+    const absence=acquisitions.find(r=>r.kind==='home-arrival')?.data.nativeHomeArrivalBinding;
+    assert.equal(home?.reference.bodyId,idle.reference.bodyId);
+    assert.equal(home.reference.sourceRequest.raidSpawnSequence,Number(spawn.id.split('-').at(-1)));
+    const source=home.reference.sourceRequest.pose;
+    assert.deepEqual([source.x,source.z,source.yaw,source.runPhase,source.walkPhase,source.carryPhase,source.runRemaining],pose(resting));
+    assert.deepEqual(home.gateIds,[gateId]);
+    assert(!world.records.some(r=>r.kind==='farm-arrival-stop'));
+    assert.equal(absence?.reference.bodyId,idle.reference.bodyId);
+    assert.deepEqual([current.workers[0].x,current.workers[0].z],[start.x,start.z]);
+    for(let i=0;i<1250&&(current.raid||current.workers[0].nativeRouteAdmission!=='native-idle');i++)current=await step();
+    assert.equal(current.raid,null);
+    assert.equal(current.workers[0].nativeRouteAdmission,'native-idle');
+    const resumed=acquisitions.findLast(r=>r.kind==='farm-arrival').data.nativeFarmArrivalBinding;
+    assert.equal(resumed.reference.actorId,idle.reference.actorId);
+    assert.notEqual(resumed.reference.bodyId,idle.reference.bodyId);
+    assert.equal(resumed.reference.sourceRequest.refugeSequence,absence.retiredSequence);
+    assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[580,560,540,520]);
+    assert.deepEqual(current.ledger,state.ledger);
+  }finally{releaseHome();await world.close();}
+});
+
 test('the Desert Farm gate remains with Home while the animal takes a different corridor', async () => {
   const {state,chunkKeys,start,center,gate,gateId}=gatedDesertRaid();
   const acquisitions=[];

@@ -1,0 +1,157 @@
+{
+  "scenario": "A daytime Desert raid acquires Home from the stationary Idle21 body on the far side of its gate.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "setup": {
+    "workerInitialPosition": [
+      -14,
+      5
+    ],
+    "refuge": [
+      -14,
+      11.8
+    ],
+    "raidSpawnOffset": 0.2,
+    "hostClock": "Controlled elapsed steps through retained Home READY, followed by the normal scheduler."
+  },
+  "farm": {
+    "ticket": 2,
+    "body": 1,
+    "assignment": 3,
+    "endTime": 10,
+    "gateIds": []
+  },
+  "idle": {
+    "ticket": 4,
+    "cycleSequence": 4,
+    "at": 10.049999999999999,
+    "observedAt": 10.099999999999998,
+    "pose": [
+      -14,
+      5,
+      0.37,
+      23.25,
+      7.125,
+      9.5,
+      40
+    ]
+  },
+  "spawn": {
+    "event": "event-29208",
+    "elapsed": 10.199999999999996
+  },
+  "home": {
+    "readyRequest": 3,
+    "preparedTicket": 5,
+    "heldUntil": 10.349999999999993,
+    "wireOrder": [
+      5,
+      7,
+      8,
+      9
+    ],
+    "ticket": 6,
+    "assignment": 7,
+    "body": 1,
+    "actor": 900011,
+    "sourceRequest": 5,
+    "requestedAt": 10.199999999999996,
+    "gateIds": [
+      1000000
+    ],
+    "origin": {
+      "x": -14,
+      "z": 5,
+      "yaw": 0.37,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 7.125,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    }
+  },
+  "animal": {
+    "ticket": 8,
+    "body": 2,
+    "actor": 1000001,
+    "assignment": 8
+  },
+  "refuge": {
+    "ticket": 10,
+    "retiredSequence": 9,
+    "body": 1
+  },
+  "events": {
+    "centerDebits": [
+      {
+        "at": 38.95000000000069,
+        "hp": 580
+      },
+      {
+        "at": 42.20000000000097,
+        "hp": 560
+      },
+      {
+        "at": 48.30000000000149,
+        "hp": 540
+      },
+      {
+        "at": 53.77000000000196,
+        "hp": 520
+      }
+    ],
+    "raidEndedAt": 62.14000000000267
+  },
+  "civilian": {
+    "ticket": 28,
+    "actor": 900011,
+    "body": 3,
+    "refugeSequence": 9,
+    "worker": "worker-900011",
+    "admission": "native-idle",
+    "ledgerPreserved": true
+  },
+  "outcome": {
+    "drawDrained": true,
+    "webGpuMessages": 0,
+    "authoritativeFarmStopped": false
+  },
+  "evidence": {
+    "receiptSha256": "70bbd8884a040eefc4bc84365cf191c83da2d8d1cfedb531ee1c873026befb7c",
+    "traceSha256": "508ac3e38a52842c265af64e6f153750934503e19ea32f4faf08d1819e6e1fce",
+    "traceBytes": 42852877,
+    "dataLossOccurred": false,
+    "firstBrowserAttempt": {
+      "failure": "Native publication boundary did not arrive after Idle21 GO while the controlled clock waited for its projection",
+      "receiptSha256": "9606b265df18c504b1894df741b454620907de5cd91d221b672af3d88a9323c8"
+    },
+    "artifacts": {
+      "src/world/wild-engine/spatial-savanna.wasm": "4e16fc869303b66dc93612b867132126213cc3016e39ad4c469fb6dc15b23e7e",
+      "public/wild-engine/spatial-threaded.wasm": "22ab3b727528366d450b8f61fe41859583cdc57903c0cafd728c96e098dd4751",
+      "public/wild-engine/spatial-threaded.mjs": "571a0befced24f3407b96a0d8c87f4ec240a2a92d201011e5f698847c3778450",
+      "public/wild-engine/spatial-threaded.worker.mjs": "7e6dad4bca61807357acfcb3789c781deaca3e20214ccd76dd82ddcb0be0a153"
+    },
+    "baseline": {
+      "commit": "d4b14f346f90c632eea3f48766fc7cf214cdf5a4",
+      "failure": "Native game execution still requires projection for this intention class",
+      "controlSha256": "9c3803ac4b4ba7e16c3a28db13dbae04b61936722ce3aea531f281aa998ba959",
+      "regressionFailure": "RaidSpawned did not publish pending-raid-flight-resources",
+      "regressionTapSha256": "cc6c643ac98f2b00af3b64b103e57b25fb40888a79b2ecbb8182cdd670507d36"
+    }
+  }
+}

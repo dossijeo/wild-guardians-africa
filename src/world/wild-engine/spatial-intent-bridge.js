@@ -2798,12 +2798,14 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,authori
       throw Error('Native Task stop Home lost its actual pose');
     return request;
   };
-  const requestNativeIdleCycleHome=(source,home)=>{
+  const requestNativeIdleCycleHome=(source,home,raidSpawnSequence=0)=>{
     const held=copyNativeIdleCycleAttestation(source),r=held.reference;
     if(r.worldBoundary.authorityEpoch!==epoch()||JSON.stringify(nativeIdleCycleBinding(r.actorId))!==JSON.stringify(held))throw Error('Native Idle cycle Home source is not current');
     if(typeof wasm.nav_intent_idle_cycle_home_request!=='function')throw Error('Rebuild native current-cycle Home request');
     syncBoundaryTime();
-    if(wasm.nav_intent_idle_cycle_home_request(r.actorId,r.worldBoundary.nativeSession,held.cycleSequence,home.villageId,home.x,home.z)!==1)throw Error('Native Idle cycle Home request rejected');
+    const args=[r.actorId,r.worldBoundary.nativeSession,held.cycleSequence,home.villageId,home.x,home.z];
+    const status=raidSpawnSequence?wasm.nav_intent_idle_cycle_flight_request?.(...args,raidSpawnSequence):wasm.nav_intent_idle_cycle_home_request(...args);
+    if(status!==1)throw Error('Native Idle cycle Home request rejected');
     const request=nativeHomeRequestReference(r.actorId);if(!nativeHomeRequestContinuesIdleCycle(request,held))throw Error('Native Idle cycle Home lost its current body');return request;
   };
   const requestNativeInitialIdleHome=(source,home)=>{
@@ -4361,7 +4363,9 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     if(!state.workers.includes(worker)||view.executedThrough!==state.elapsed||view.actorId!==numericId(worker.id)||worker.profile!==q.workerProfile||numericId(worker.centerId)!==q.centerId||worker.crateId||worker.incapacitated||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining||worker.raidReturn||worker.running!==false||worker.gateWaiting!==false||
       ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(k=>worker[k]!==q.pose[k])||worker.heading!==q.pose.yaw)throw Error('Native Idle cycle is not the executed game boundary');
     const pending=worker.status==='waiting-task'&&worker.nativeRouteAdmission==='pending-resources'&&worker.path===null&&!!worker.taskId&&bridge.pendingTaskRoute(worker.id)?.taskId===numericId(worker.taskId);
-    const home=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'&&nativeHomeRequestContinuesIdleCycle(bridge.nativeHomeRequestReference(worker.id),view.binding)&&!!projectNativeHomeExecution(state,worker);
+    const pendingHome=worker.status==='returning'&&worker.nativeRouteAdmission==='pending-home-resources'||
+      worker.status==='fleeing'&&worker.nativeRouteAdmission==='pending-raid-flight-resources'&&bridge.nativeRaidFlightMember(state,state.raid?.animals[0])===worker;
+    const home=pendingHome&&nativeHomeRequestContinuesIdleCycle(bridge.nativeHomeRequestReference(worker.id),view.binding)&&!!projectNativeHomeExecution(state,worker);
     if(!pending&&!home){
       if(worker.nativeRouteAdmission==='pending-stroll-resources'){
         if(q.kind!=='native-idle-stroll-failed-source'||view.binding.reference.sourceCycleSequence!==0||!restoredStrollMatchesWorker(state,worker,q.sourceRequest))throw Error('Native failed Idle cycle has no matching pending WALK source');
@@ -4805,21 +4809,22 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       if(!stopWorldObserver)observedTaskState=null;
     };
   };
-  // Only a RaidSpawned delivered by this observed Game can transfer a Farm
+  // Only a RaidSpawned delivered by this observed Game can transfer a worker
   // source. A restored status string or a similar event in another Game cannot.
   let farmFlightStop=null;
   function requestRaidRefuge(state,worker,source,eventId){
     const village=state.villages.find(v=>v.id===worker.villageId),goal=village?.entry??village;
     if(!goal)return false;
     const home={villageId:numericId(village.id),x:goal.x,z:goal.z};
-    const request=bridge.requestNativeFarmArrivalHome(source,home,eventId);
-    if(request.raidSpawnSequence!==eventId)throw Error('Farm flight lost its raid source');
+    const request=source.kind==='native-idle-cycle-attestation'?bridge.requestNativeIdleCycleHome(source,home,eventId):
+      bridge.requestNativeFarmArrivalHome(source,home,eventId);
+    if(request.raidSpawnSequence!==eventId)throw Error('Home flight lost its raid source');
     // This is a stationary request. Continuous mixed traffic owns any later GO.
     worker.nativeRouteAdmission='pending-raid-flight-resources';
     pendingNativeChanges=true;
     return request;
   }
-  function observeFarmEvacuation(state,event){
+  function observeRaidEvacuation(state,event){
     const raid=state.raid,animal=raid?.animals[0];
     if(!raid?.daytime||raid.id!==event.raidFacts?.id||event.simulationTime!==state.elapsed||
        raid.animals.length!==1||animal.species!=='warthog'||state.workers.length!==1)return;
@@ -4828,13 +4833,16 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
     const pending=bridge.nativeFarmArrivalRequestReference(worker.id);
     const held=bridge.nativeFarmArrivalHeldExecution(worker.id);
     const moving=bridge.nativeFarmArrivalRouteExecution(worker.id);
-    const original=pending??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest;
+    const cycle=!pending&&!held&&!moving?bridge.nativeIdleCycleExecution(worker.id):null;
+    if(cycle&&cycle.executedThrough!==state.elapsed)return;
+    const original=pending??held?.sourceReference?.sourceRequest??moving?.binding.reference.sourceRequest??
+      (cycle&&nativeIdleCycleBodyState(cycle.binding.reference.sourceBody));
     if(!original||original.centerId!==numericId(worker.centerId)||original.workerProfile!==worker.profile)return;
-    const pose=pending?.pose??held?.pose??moving;
+    const pose=pending?.pose??held?.pose??moving??original.pose;
     if(['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>pose[key]!==worker[key])||pose.yaw!==worker.heading)return;
     const eventId=numericId(event.id);
-    if(pending||held||moving.arrived&&moving.currentSpeed===0){
-      requestRaidRefuge(state,worker,pending??held??moving,eventId);return;
+    if(cycle||pending||held||moving.arrived&&moving.currentSpeed===0){
+      requestRaidRefuge(state,worker,cycle?.binding??pending??held??moving,eventId);return;
     }
     farmFlightStop={raid,worker,eventId,spawnTime:event.simulationTime,binding:moving.binding};
     worker.nativeRouteAdmission='pending-farm-flight-stop';
@@ -4906,7 +4914,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,retr
       'PlacementCommitted','WallChainBuilt','WallRemoved','StructureHit',
       'StructureRuined','RepairApplied']);
     const stop=observeGameEvents(state,event=>{
-      if(qualifyFarmFlee&&event.type==='RaidSpawned')observeFarmEvacuation(state,event);
+      if(qualifyFarmFlee&&event.type==='RaidSpawned')observeRaidEvacuation(state,event);
       if(farmFlightStop&&farmFlightStop.raid!==state.raid){
         delete farmFlightStop.worker.nativeFarmFlightSample;
         if(farmFlightStop.worker.nativeRouteAdmission==='pending-farm-flight-stop')delete farmFlightStop.worker.nativeRouteAdmission;
