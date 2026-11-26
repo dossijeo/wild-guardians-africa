@@ -275,4 +275,12 @@ El primer intento físico avanzó el reloj antes de GO14. Su llegada quedó a t=
 
 Pasaron 123 pruebas de regresión. El control nuevo confirma el mismo rechazo de la cohorte en la preimagen. El build WebGPU de producción terminó en 55,81 s y sus tres artefactos nativos coinciden con los de la captura.
 
-El control siguiente mantiene el READY de restitución de la muralla después de GO15. Con el trabajador todavía en acción a t=14,80, RaidSpawned libera la tarea y la restitución queda cancelada. El avance posterior rechaza la cohorte. El relevo desde la acción adquirida queda abierto.
+## RaidSpawned con Repair Action15 adquirida
+
+En la preimagen, el trabajador conservaba la acción adquirida cuando Game liberaba Repair durante `RaidSpawned`. El siguiente subpaso rechazaba la cohorte. La autoridad liga la propuesta de restitución al actor, la acción y el objetivo que la solicitaron. WASM coteja el ticket de esa propuesta y conserva la pose de Action15 al declarar la petición de Home18. Draw exige la secuencia exacta de la acción y el estado del cuerpo que ya tenía. Home18 adquiere el corredor y su propio cruce del portón. El control de WASM rechaza por separado una secuencia de acción y un ticket de restitución ajenos antes de aceptar los originales. El control de Draw rechaza la secuencia de origen adulterada.
+
+En NVIDIA Turing, Action15 adquirió el ticket 7 a t=14,15. La restitución quedó preparada con el ticket 10 a t=14,20. `event-29210` a t=14,80 transfirió el cuerpo 1 desde (−12,470, 1). El arnés entregó el READY de restitución después de su cancelación. Home18 adquirió el ticket 12 y el envío 53 confirmó su cruce del portón 1000000. Home19 retiró el cuerpo 1 en el refugio. El centro conservó sus cuatro débitos de 20 HP y el mismo trabajador volvió a Idle con el cuerpo 3. La muralla siguió en ruinas, el saldo quedó intacto y Draw drenó sin errores. [Recibo físico](performance/native-mixed-raid-acquired-repair15-20261126.json).
+
+La calificación cubre un trabajador, un facóquero y un portón en el perfil de desarrollo de Desierto. Los encuentros entre ambos corredores y la cadencia siguen abiertos.
+
+Pasaron 117 pruebas de regresión y las dos pruebas nuevas reprodujeron el fallo en la preimagen. Standalone y pthread conservan sus importaciones y exponen las dos funciones de relevo. Pthread arrancó con memoria compartida. El build WebGPU de producción terminó en 51,35 s. Sus tres artefactos nativos coinciden con los usados en la captura.

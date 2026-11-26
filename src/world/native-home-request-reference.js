@@ -1,4 +1,5 @@
 import {nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
+import {nativeTaskActionActor} from './native-task-action-presentation.js';
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const fields=['kind','version','authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','requestSequence','requestedAt','profile','home','pose'];
 const poseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
@@ -25,6 +26,14 @@ export function nativeHomeRequestContinuesIdle(request,settlement){
  const r=settlement?.reference,w=r?.worldBoundary;
  return !!request&&!!r&&!r.home&&request.actorId===r.actorId&&request.bodyId===r.bodyId&&request.profile===r.profile&&
   request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>settlement.settlementSequence&&request.requestedAt>=w.effectiveTime&&poseFields.every(k=>request.pose[k]===r.pose[k]);
+}
+export function nativeHomeRequestContinuesRepairAction(request,action){
+ const r=action?.reference,q=r?.request,w=r?.worldBoundary;
+ if(request?.version!==2||q?.actionKind!=='repair')return false;
+ const pose={x:r.origin.x,z:r.origin.z,yaw:q.heading,radius:r.radius,runPhase:r.runPhase,walkPhase:r.walkPhase,carryPhase:r.carryPhase,runRemaining:r.runRemaining};
+ return request.actorId===nativeTaskActionActor(q)&&request.bodyId===q.bodyId&&request.profile===r.profile&&
+  request.authorityEpoch===w.authorityEpoch&&request.nativeSession===w.nativeSession&&request.requestSequence>action.actionSequence&&
+  request.requestedAt>=r.endTime&&poseFields.every(key=>request.pose[key]===pose[key]);
 }
 // Pending initial Idle has no settlement history. Both inputs have already
 // crossed their typed boundaries; this checks their immutable held body once.

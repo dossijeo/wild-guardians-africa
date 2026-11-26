@@ -229,6 +229,43 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_task_flight_request(double actor,double sess
   const auto request=stopped?requestStoppedTaskHome:requestCompletedTaskHome;
   return request(actor,session,assignment,generation,village,homeX,homeZ,uint64_t(event));
 }
+// A committed Repair action owns a stationary body, independently of the
+// proposed wall restoration. A pending kind2 may be retired only by its owner.
+EMSCRIPTEN_KEEPALIVE int nav_intent_repair_flight_request(double actor,double session,double actionSequence,
+    double village,double homeX,double homeZ,double event,double repairTicket){
+ auto& s=state();
+ if(spatial_world_biome()!=1||!integer(actor)||session!=double(s.session)||!integer(actionSequence)||
+    !integer(village)||!coordinate(homeX)||!coordinate(homeZ)||!integer(event)||!integer(repairTicket,true))return -1;
+ const auto found=s.activeIntents.find(uint64_t(actor));if(found==s.activeIntents.end())return 0;
+ auto& intent=found->second;
+ if(intent.homeRequest){const auto& r=*intent.homeRequest;
+  if(r.actionSourceSequence!=uint64_t(actionSequence)||r.raidSpawnSequence!=uint64_t(event)||!nativeHomeRequestBodyCurrent(s,intent))return -2;
+  return r.village==uint64_t(village)&&r.homeX==homeX&&r.homeZ==homeZ?1:-3;
+ }
+ NativeTaskCancellationSource source;
+ if(!captureTaskCancellationSource(s,intent,source)||source.values[1]!=15||source.values[6]!=actionSequence||
+    intent.actionBinding->actual[9]!=4||s.effectiveTime<intent.actionBinding->actual[16])return -2;
+ const auto& row=source.values;const uint64_t body=uint64_t(row[9]);
+ if(s.reservedBodies.count(body)||s.suspendedBodies.count(body)||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto& p=s.barrierProposal;
+ if(p.pending&&(p.kind!=2||double(p.session)!=session||double(p.ticket)!=repairTicket))return -4;
+
+ auto request=std::make_shared<NativeHomeResourceRequest>();
+ request->actor=uint64_t(actor);request->session=s.session;request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
+ request->at=s.effectiveTime;request->body=body;request->profile=int(intent.actionBinding->actual[22]);request->bodyFlags=int(row[19]);
+ request->x=row[11];request->z=row[12];request->yaw=row[13];request->radius=row[14];
+ request->runPhase=row[15];request->walkPhase=row[16];request->carryPhase=row[17];request->runRemaining=row[18];
+ request->raidSpawnSequence=uint64_t(event);request->actionSourceSequence=uint64_t(actionSequence);
+
+ if(p.pending)clearWorldMutationProposal(s.barrierProposal);
+ s.tasks.at(intent.task).assigned=0;
+ releaseIntent(s,intent.actor,PlanningState::Cancelled,false);
+ auto& worker=s.workers.at(intent.actor);worker.eligible=worker.actionActive=false;
+ intent.lease=false;intent.home=true;intent.state=PlanningState::AwaitingResources;
+ intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
+ intent.homeRequest=std::move(request);intent.homeRequest->sequence=emitIntentChange(s,intent);s.entityRevision++;
+ return 1;
+}
 // A pending13 owns an intent and possibly its first body, not a Farm corridor.
 // Retarget that exact source as for a restored WALK, without inventing Idle.
 static int requestPendingFarmHome(double actor,double session,double sourceSequence,double village,double homeX,double homeZ,uint64_t raidSpawnSequence){
@@ -351,6 +388,10 @@ EMSCRIPTEN_KEEPALIVE double nav_home_pending_idle_stroll_flight_source(double ac
 EMSCRIPTEN_KEEPALIVE double nav_home_initial_idle_flight_source(double actor,double sequence,double event){
  const auto* request=currentHomeFlightSource(actor,sequence,event);
  return request&&!request->idleCycleSourceSequence?double(request->initialIdleSourceSequence):0;
+}
+EMSCRIPTEN_KEEPALIVE double nav_home_repair_flight_source(double actor,double sequence,double event){
+ const auto* request=currentHomeFlightSource(actor,sequence,event);
+ return request?double(request->actionSourceSequence):0;
 }
 EMSCRIPTEN_KEEPALIVE int nav_home_requests_snapshot(){
  auto& s=state();auto& out=s.homeRequestsResult;out.clear();std::vector<uint64_t> actors;

@@ -74,6 +74,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
   let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
+  let repairFlightProposal=null;
   let liveCenterClockArmed=false;
   const nativeMarkers=new Set(['native-idle','pending-idle-resources','native-idle-stroll','pending-stroll-resources','native-home','pending-home-resources','native-task','pending-resources','native-action','pending-action-resources','pending-farm-arrival-resources','native-farm-arrival','native-farm-arrival-held']);
   const nativeRestoration=game.workers.some(worker=>nativeMarkers.has(worker.nativeRouteAdmission));
@@ -91,7 +92,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,onNativeRefugeReturn:(actor,body)=>{
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee,repairFlightTicket:source=>{
+    const repair=repairFlightProposal;
+    return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
+      repair.boundary?.nativeSession===source.nativeSession?repair.boundary.ticket:0;
+  },onNativeRefugeReturn:(actor,body)=>{
     if(nativeBodies?.id(actor)!==body||session.core.wasm.spatial_body_has_blockers(body,0)!==-1)throw Error('Civil return lost its retired Home body');
     return ()=>{if(!nativeBodies.forgetRetired(actor,body))throw Error('Civil return body identity changed');nativeBirthsPending=true;};
   },onNativeAnimalDeparted:(actor,body)=>{
@@ -178,6 +183,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          session.core.wasm.nav_home_flight_from_completed_farm?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
          session.core.wasm.nav_home_flight_from_acquired_idle?.(source.actorId,source.requestSequence,raidSpawnSequence)!==1&&
          !(session.core.wasm.nav_home_initial_idle_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0)&&
+         !(session.core.wasm.nav_home_repair_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0)&&
          !(session.core.wasm.nav_home_pending_idle_stroll_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0))return;
       pose=source.pose;bodyId=source.bodyId;
      }
@@ -755,14 +761,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     // The ordinary producer owns its fresh Farm continuation after settlement.
     planner.flushTaskEvents();planner.flushNativeIntentControl();
     const remaining=impact();if(remaining.status!=='ready'||remaining.actors.length)return {status:'blocked'};
-    return planner.addNativeBarriersAfterGpuQuiescence({additions,getPublication,signal,validate,
+    const repair={actorId:Number(actorId.split('-').at(-1)),actionSequence:source.binding.actionSequence,targetId:source.binding.reference.request.targetId,boundary:null};
+    repairFlightProposal=repair;
+    try{return await planner.addNativeBarriersAfterGpuQuiescence({additions,getPublication,signal,validate,
+      onProposal:boundary=>{repair.boundary=boundary;},
       prepareResources:({resources,signal})=>prepareResources({resources,signal,nativeBarrierWallEntities:[repaired]}),
       project:proof=>{
         const adopt=session.prepareNativeWallAdditionAdoption([repaired],proof),original=nav.setState;let adopted=false;
         nav.setState=next=>{if(next!==game||adopted)throw Error('Native Repair adoption owner changed');adopt();adopted=true;return original(next);};
         try{return projectNativeRuinedWallRepair(game,worker,current,nav)&&adopted;}finally{nav.setState=original;}
       }
-    });
+    });}finally{if(repairFlightProposal===repair)repairFlightProposal=null;}
   }
 
   async function stopNativeStructureActors(owner,impact){

@@ -12,7 +12,7 @@ import {isNativeIdleStrollArrivalSource,nativeIdleCycleBodyState,nativeSettledId
 import {copyNativeHomeArrivalReference,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
 import {copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteAttestationCovers,sameNativeHomeRouteReference} from '../world/native-home-route.js';
 import {sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
-import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker} from '../world/native-home-request-reference.js';
+import {copyNativeHomeRequestReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldWorker,nativeHomeRequestContinuesRepairAction} from '../world/native-home-request-reference.js';
 import {copyNativeInitialIdleRequestReference,sameNativeInitialIdleRequestReference} from '../world/native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesPendingAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
 import {copyNativeIdleCycleReference,copyNativeIdleCycleAttestation,copyNativeIdleCycleNextRequest,sameNativeIdleCycleAttestation,nativeIdleCycleAttestationCovers,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
@@ -512,7 +512,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       (pendingInitialIdle&&actor.state===6&&actor.latestSequence===pendingInitialIdle.requestSequence&&event.initialIdleFlightSequence===pendingInitialIdle.requestSequence||
        initialBody&&actor.state===7&&stationarySequenceCurrent(actor,20,initialBody.bodySequence)&&event.initialIdleFlightSequence===initialBody.bodySequence);
     if(event.initialIdleFlightSequence!==undefined&&!initialIdleFlight)throw Error('Native Home flight lacks its initial Idle source');
-    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&!initialIdleFlight&&!taskFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
+    const repair=actor?.actionProof;
+    const repairFlight=event.repairFlightSequence!==undefined&&!!repair&&event.repairFlightSequence===repair.actionSequence&&
+      event.type==='IntentChanged'&&event.state===6&&!handle&&!revoked&&!assigned&&!event.taskId&&!event.targetId&&
+      !event.initialIdleFlightSequence&&!event.strollFlightSequence&&actionCurrent(repair.reference,actor)&&nativeHomeRequestContinuesRepairAction(homeRequest,repair);
+    if(event.repairFlightSequence!==undefined&&!repairFlight)throw Error('Native Home flight lacks its acquired Repair action');
+    if(homeRequest?.version===2&&!pendingFarmHome&&!completedFarmHome&&!idleFlight&&!strollFlight&&!pendingStrollFlight&&!initialIdleFlight&&!taskFlight&&!repairFlight&&heldHomeSource?.kind!=='native-farm-arrival-held-execution')
       throw Error('Native raid flight requires its Farm, Idle or Task source');
     const keepInitialBody=!!initialBodyRequest&&!current&&event.type==='IntentChanged'&&(pendingTaskCancellation?.owner.kind===20||event.state===6&&!!(taskRequest||homeRequest)&&[6,7].includes(actor.state));
     if(actor?.pendingInitialIdleRequest&&event.state===7&&(event.type!=='IntentChanged'||current||handle||revoked||event.taskId||event.targetId||event.taskRequest||event.actionRequest||event.homeRequest||event.initialIdleRequest))throw Error('Native initial Idle body acquisition conflicts with its pending source');

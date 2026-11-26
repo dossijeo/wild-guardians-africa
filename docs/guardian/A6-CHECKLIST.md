@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+RaidSpawned toma el cuerpo de Repair después de GO15 y cancela la restitución de la muralla. NVIDIA confirmó el READY tardío, el cruce con Home18 y el regreso civil a Idle con la ruina y el saldo intactos. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-con-repair-action15-adquirida).
+
 Tras la llegada de Task14, RaidSpawned cancela el READY de Action15 y conserva la pose terminal del mismo cuerpo para Home18. NVIDIA confirmó el cruce, Home19 y el regreso civil sin aplicar Repair. [Recorrido y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-antes-del-go-de-action15).
 
 RaidSpawned cancela el READY de Repair antes de GO14 y conserva el cuerpo estacionario de Idle20 o de Idle21 terminal. NVIDIA confirmó en ambos casos la entrega tardía, el cruce del portón, Home19 y el regreso civil a Idle. [Recorridos y recibo](native-desert-mixed-flight-center-20261125.md#raidspawned-antes-del-go-de-task14).

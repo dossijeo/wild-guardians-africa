@@ -519,6 +519,100 @@ for(const mode of ['stopped','arrived','pending Action15','foreign Task','foreig
   }finally{releaseReady();await world.close();}
 });
 
+for(const foreign of [false,true])test('RaidSpawned transfers acquired Repair Action15'+(foreign?' only with its exact source':' while the wall restoration READY is retained'),async()=>{
+  const {state,chunkKeys,start,gate,gateId}=restoredGatedDesertInitialIdle();
+  const wall={...gate,id:`structure-${state.nextId++}`,gate:false,x:-11,z:1,hp:0,status:'ruined'};
+  state.structures.push(wall);
+  state.dayPlan.at=state.time+4.8;
+  const worker=state.workers[0],spawnAt=state.elapsed+4.8,events=[],acquisitions=[];
+  let restoration,restorationSignal,homeReady,releaseRestoration,releaseHome;
+  let handoff,birth;
+  const held=new Promise(resolve=>{releaseRestoration=resolve;}),heldHome=new Promise(resolve=>{releaseHome=resolve;});
+  const world=await nativeProductionAuthority(state,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+    async onReady(record,{signal}){
+      if(record.kind==='barrier-addition'&&!restoration){restoration=record;restorationSignal=signal;await held;}
+      if(record.kind==='home-route'&&!homeReady){homeReady=record;await heldHome;}
+    },onCommit(record,data){acquisitions.push({kind:record.kind,data});}});
+  const post=world.controlPort.postMessage;
+  world.controlPort.postMessage=change=>{
+    if(change.repairFlightSequence!==undefined){
+      handoff=change;
+      if(foreign)change={...change,repairFlightSequence:change.repairFlightSequence+1};
+    }
+    if(change.raidFlightBirth)birth=change.raidFlightBirth;
+    post(change);
+  };
+  async function step(steps=1){
+    const result=world.command({kind:'advance',seconds:.05,steps,nightFastForward:false});
+    for(const key of result.residency.missing){const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});}
+    events.push(...result.events);
+    await world.present();
+    if(!foreign)assert.deepEqual(world.faults,[]);
+    return JSON.parse(result.snapshot);
+  }
+  try{
+    world.command({kind:'setNavigationView',view:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}}});
+    await untilProduction(world,()=>acquisitions.some(row=>row.kind==='initial-idle-body'));
+    assert.equal(world.command({kind:'requestRepair',id:'interrupt-acquired-repair',targetId:wall.id}).value,true);
+    let current=await step();
+    while(current.elapsed<spawnAt-.050001)current=await step();
+    await untilProduction(world,()=>!!restoration);
+    const action=acquisitions.find(row=>row.kind==='task-action')?.data.nativeTaskActionBinding;
+    const before=current.workers[0];
+    assert.equal(before.nativeRouteAdmission,'native-action');
+    assert.equal(before.taskId,`task-${action.reference.request.taskId}`);
+    assert.equal(restoration.nativeBarrierWallEntities[0].id,wall.id);
+    assert.equal(restorationSignal.aborted,false);
+    assert.equal(restoration.committed,false);
+    current=await step(2);
+    const spawn=events.find(event=>event.type==='RaidSpawned');
+    assert(spawn&&spawn.simulationTime<current.elapsed);
+    assert.equal(handoff.repairFlightSequence,action.actionSequence);
+    assert.equal(handoff.homeRequest.raidSpawnSequence,Number(spawn.id.split('-').at(-1)));
+    assert.equal(handoff.homeRequest.bodyId,action.reference.request.bodyId);
+    const keys=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
+    assert.deepEqual(keys.map(key=>handoff.homeRequest.pose[key]),keys.map(key=>before[key==='yaw'?'heading':key]));
+    if(foreign){
+      await assert.rejects(untilProduction(world,()=>false),/Native Home flight lacks its acquired Repair action/);
+      assert(!acquisitions.some(row=>row.kind==='home-route'||row.kind==='barrier-addition'));
+      return;
+    }
+    assert.equal(current.raid.animals[0].targetId,'structure-2');
+    assert.equal(current.workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
+    assert.equal(birth.sourceSequence,handoff.homeRequest.requestSequence);
+    assert.equal(birth.workerBody,handoff.homeRequest.bodyId);
+    await untilProduction(world,()=>restorationSignal.aborted);
+    releaseRestoration();
+    await untilProduction(world,()=>restoration.aborted&&!!homeReady);
+    const animal=current.raid.animals[0];
+    for(let i=0;i<3;i++){
+      current=await step();
+      assert.deepEqual(keys.map(key=>current.workers[0][key==='yaw'?'heading':key]),keys.map(key=>before[key==='yaw'?'heading':key]));
+      assert.deepEqual([current.raid.animals[0].x,current.raid.animals[0].z],[animal.x,animal.z]);
+    }
+    releaseHome();
+    for(let i=0;i<230&&current.workers[0].status!=='home';i++)current=await step();
+    const home=acquisitions.find(row=>row.kind==='home-route')?.data.nativeHomeRouteBinding;
+    const refuge=acquisitions.find(row=>row.kind==='home-arrival')?.data.nativeHomeArrivalBinding;
+    assert.deepEqual(home.reference.sourceRequest,handoff.homeRequest);
+    assert.equal(refuge.reference.bodyId,handoff.homeRequest.bodyId);
+    assert.deepEqual(home.gateIds,[gateId]);
+    assert.deepEqual([current.workers[0].x,current.workers[0].z],[start.x,start.z]);
+    for(let i=0;i<1450&&(current.raid||current.workers[0].nativeRouteAdmission!=='native-idle');i++)current=await step();
+    assert.equal(current.raid,null);
+    assert.equal(current.workers[0].id,worker.id);
+    assert.equal(current.workers[0].nativeRouteAdmission,'native-idle');
+    const civil=acquisitions.findLast(row=>row.kind==='farm-arrival').data.nativeFarmArrivalBinding.reference;
+    assert.notEqual(civil.bodyId,refuge.reference.bodyId);
+    assert.equal(civil.sourceRequest.refugeSequence,refuge.retiredSequence);
+    assert(!acquisitions.some(row=>row.kind==='barrier-addition'||row.kind==='task-route-stop'));
+    assert.equal(current.structures.find(s=>s.id===wall.id).hp,0);
+    assert(!events.some(e=>e.type==='RepairApplied'||e.type==='WorkerHit'));
+    assert.deepEqual(events.filter(e=>e.type==='StructureHit').map(e=>e.structureHit.hp),[580,560,540,520]);
+    assert.deepEqual(current.ledger,state.ledger);
+  }finally{releaseRestoration();releaseHome();await world.close();}
+});
+
 for(const {label,holdKind,flightField,restore,negative,taskOwner,terminal} of [
   {label:'replaces pending Idle22',holdKind:'idle-stroll',flightField:'strollFlightSequence',restore:restoredGatedDesertStroll,negative:/Native Home flight lacks its pending restored stroll source/},
   {label:'replaces pending Idle20',holdKind:'initial-idle-body',flightField:'initialIdleFlightSequence',restore:restoredGatedDesertInitialIdle,negative:/Native Home flight lacks its initial Idle source/},

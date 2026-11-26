@@ -1,0 +1,130 @@
+{
+  "scenario": "RaidSpawned transfers the acquired Repair Action15 body to Home18 while the wall restoration READY is retained.",
+  "qualification": {
+    "qualifyAnimalCrop": true,
+    "qualifyFarmFlee": true,
+    "ordinary": false,
+    "workers": 1,
+    "animals": 1,
+    "stepBatch": 2,
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "edge": "158.0.4370.33"
+  },
+  "baseline": {
+    "commit": "4ece84f94a206276dea3f35a848aca674bbea5b3",
+    "failure": "Native task game cohort contains an unsupported mover",
+    "tapSha256": "dd09223c1c5eb71a380d01cf3f887b83a96530b3a334340b6ca44a3be312c762"
+  },
+  "task": {
+    "actor": 900011,
+    "body": 1,
+    "taskId": 1000002,
+    "targetId": 1000001,
+    "assignment": 5,
+    "routeHandle": {
+      "authorityEpoch": "2548c458-52f5-4e79-bc0a-7f35996c85d2/1",
+      "session": 1,
+      "slot": 0,
+      "generation": 3
+    },
+    "acquired": 10.149999999999997,
+    "end": 14.125968576566118,
+    "ticket": 5
+  },
+  "action": {
+    "ticket": 7,
+    "sequence": 6,
+    "effectiveTime": 14.149999999999912
+  },
+  "restoration": {
+    "ticket": 10,
+    "preparedAt": 14.19999999999991,
+    "wireOrder": {
+      "held": 12,
+      "aborted": 14,
+      "sent": 16,
+      "home": 18
+    }
+  },
+  "spawn": {
+    "id": "event-29210",
+    "at": 14.799999999999898
+  },
+  "home": {
+    "at": 17.399999999999892,
+    "draw": 53,
+    "ticket": 12,
+    "preparedTicket": 11,
+    "origin": {
+      "x": -12.470000267028809,
+      "z": 1,
+      "yaw": 2.6542342825543024,
+      "radius": 0.28,
+      "runPhase": 23.25,
+      "walkPhase": 13.088952864849183,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "gateIds": [
+      1000000
+    ]
+  },
+  "refuge": {
+    "body": 1,
+    "ticket": 16,
+    "retiredSequence": 11
+  },
+  "centerDamage": [
+    {
+      "at": 46.600000000001344,
+      "hp": 580
+    },
+    {
+      "at": 49.75000000000161,
+      "hp": 560
+    },
+    {
+      "at": 55.750000000002125,
+      "hp": 540
+    },
+    {
+      "at": 61.120000000002584,
+      "hp": 520
+    }
+  ],
+  "raidEndedAt": 69.54000000000251,
+  "civil": {
+    "worker": "worker-900011",
+    "ticket": 34,
+    "body": 3,
+    "admission": "native-idle"
+  },
+  "outcome": {
+    "restorationGo": false,
+    "stopGo": false,
+    "repairApplied": false,
+    "ledgerPreserved": true,
+    "drawDrained": true,
+    "webGpuMessages": 0
+  },
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "473accba67fc28f4224a0e6efc102a3e834a92e4048179a5cd197077adccba02",
+    "public/wild-engine/spatial-threaded.wasm": "a08eb3a1bd8d89d3d5805c3bd0d2d0107aac93fe36d8ca479f4075c7cb36853f",
+    "public/wild-engine/spatial-threaded.mjs": "b8569f4efdc9cbaa29898dcc00e1b143cffe15b53c6d7df7395b3bb29bd81c51"
+  },
+  "evidence": {
+    "receiptSha256": "bfcba0d44f654fdaf75335519b4e169fd8bcb40289f4259eb7ded09f5d78dbbc",
+    "traceSha256": "7652cb8a84bbc08e5aab8b4c63cf9d4de963858ec7ff3a3fceda43dafe5c6ef8",
+    "traceBytes": 44935002,
+    "collectionComplete": true,
+    "dataLossOccurred": false
+  }
+}

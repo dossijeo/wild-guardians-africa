@@ -172,6 +172,7 @@ struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint32_t completedTaskSourceGeneration=0;
  uint64_t stoppedTaskSourceSequence=0;
  uint32_t stoppedTaskSourceGeneration=0;
+ uint64_t actionSourceSequence=0;
  bool completedFarmArrival=false,completedIdleStroll=false;
 };
 // Semantic arrival goal on the existing owner; no route or Idle history.
@@ -804,6 +805,9 @@ bool nativeHomeRequestBodyCurrent(const IntentState& s,const ActiveIntent& inten
     r.completedTaskSourceSequence!=intent.assignmentSequence||r.completedTaskSourceSequence>=r.sequence||
     r.initialIdleSourceSequence||r.idleCycleSourceSequence||r.idleStrollSourceSequence||r.farmArrivalSourceSequence||
     r.strollRequestSourceSequence||r.farmRequestSourceSequence||r.stoppedTaskSourceSequence||r.completedFarmArrival||r.completedIdleStroll))return false;
+ if(r.actionSourceSequence&&(!r.raidSpawnSequence||r.actionSourceSequence>=r.sequence||intent.actionBinding||
+    r.completedTaskSourceSequence||r.stoppedTaskSourceSequence||r.initialIdleSourceSequence||r.idleCycleSourceSequence||
+    r.idleStrollSourceSequence||r.farmArrivalSourceSequence||r.strollRequestSourceSequence||r.farmRequestSourceSequence))return false;
  const bool taskStop=r.stoppedTaskSourceSequence&&stoppedTaskHomeRequestCurrent(s,intent,r);
  if((r.stoppedTaskSourceSequence&&!taskStop)||(r.idleStrollSourceSequence&&r.farmArrivalSourceSequence)||
     (r.idleStrollSourceSequence?!stroll:r.farmArrivalSourceSequence?!farm:!taskStop&&intent.generation!=0))return false;
