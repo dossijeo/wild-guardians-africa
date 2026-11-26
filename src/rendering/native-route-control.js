@@ -260,11 +260,16 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       retired:()=>!closed&&finishedCrop===last&&actor.closed&&actor.state===5&&
         actor.latestSequence===proof.requestSequence+1&&!active.has(proof.actorId)});
   }
+  function cropClockMatches(record,reference){
+    const proof=record.cropBinding;
+    return sameNativeAnimalCropReference(proof?.preparedReference,reference)||
+      record.recoveredCrop===true&&sameNativeAnimalCropReference(proof?.reference,reference);
+  }
   function admitAnimalCrop(input,{preparingWorldBoundary=null}={}){
     const r=copyNativeAnimalCropReference(input,input?.kind),actor=actors.get(r.actorId);
     const live=()=>!closed&&!!clock&&actor&&!actor.closed&&actors.get(r.actorId)===actor&&clock.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch;
     const current=()=>!!(live()&&actor.current&&active.get(r.actorId)===actor.current&&actor.state===(r.kind===26?1:2)&&
-      sameNativeAnimalCropReference(actor.current.cropBinding?.preparedReference,r));
+      cropClockMatches(actor.current,r));
     const pending=()=>!!(live()&&sequence>=r.sourceControlSequence&&clock.committedThrough>=r.worldBoundary.effectiveTime&&
       sameNativeWorldBoundary(preparingWorldBoundary,r.worldBoundary)&&actor.state===(r.kind===26||r.restore?6:1)&&sameCropSource(r,actor));
     if(!current()&&!pending())throw Error('Animal crop preparation lacks its current native source');
@@ -273,7 +278,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         const record=actor?.revoked,proof=record?.cropBinding;
         return !closed&&clock?.nativeSession===r.worldBoundary.nativeSession&&r.worldBoundary.authorityEpoch===authorityEpoch&&
           (proof?.reference.kind===27||proof?.reference.purpose==='retreat'&&record.safeUntil>=proof.reference.endTime||!!record?.nativeShieldCropStop)&&record.revokedSequence>proof.assignmentSequence&&
-          sameNativeAnimalCropReference(proof.preparedReference,r);
+          cropClockMatches(record,r);
       },
       canQuiesceForRefugeReturn(next){
         const request=next?.sourceRequest,peer=request&&actors.get(request.actorId),retired=actor?.revoked;
@@ -900,10 +905,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     prepareRecoveredWorkerRoute(kind,input,boundary) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       const actor=actors.get(ref.actorId),record=actor?.current;
+      const handle=kind===26?{authorityEpoch:ref.worldBoundary.authorityEpoch,session:ref.worldBoundary.nativeSession,
+        slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
       if(closed||!clock||actors.size!==1||active.size!==1||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===18&&ref.sourceRequest?.raidSpawnSequence||
-         actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:ref.expectedRouteHandle})||
+         actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !sameNativeWorldBoundary(boundary,ref.worldBoundary)||record.startTime!==boundary.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||
          clock.committedThrough<record.startTime||clock.committedThrough>ref.endTime)
@@ -913,6 +920,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       return ()=>{if(closed||actors.get(ref.actorId)!==actor||active.get(ref.actorId)!==record||
         actor.current!==record||actor.latestSequence!==proof.assignmentSequence||record.lastDrawTime!==null)
         throw Error('Recovered worker route was revoked before materialization');
+        if(kind===26){
+          actor.cropRequest=copyPendingAnimalCrop({...ref,authorityEpoch,nativeSession:boundary.nativeSession});
+          actor.targetId=ref.targetId;
+          record.issuedCrop=Object.freeze({kind:26,terminal:proof.terminal});
+          record.cropBinding=proof;
+          record.recoveredCrop=true;
+          return;
+        }
         actor[profile.proofField]=proof;
         if(profile.issuedField)record[profile.issuedField]=proof;
         if(profile.admittedField)record[profile.admittedField]=true;};

@@ -718,15 +718,22 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
 
   let firstReplacementFrame=null;
   async function prepareRecoveredWorkerRoute(source,ownerSignal){
-    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18;
-    const actorId='worker-'+source.execution?.actorId,sequence=source.publicationSequence;
+    const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,crop=profile.kind===26;
+    const actorId=(crop?'animal-':'worker-')+source.execution?.actorId,sequence=source.publicationSequence;
     const ref=source.resources[profile.bindingField]?.reference;
+    const replayed=preparedNativeWorldBoundary,boundary=ref?.worldBoundary;
+    // A route-only GO can postdate the retained terrain checkpoint without
+    // writing a terrain record into the journal. The frozen source, current
+    // Draw and terrain support must all attest the route before publishing it.
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||crop&&(!replayed||
+      replayed.authorityEpoch===boundary?.authorityEpoch&&replayed.nativeSession===boundary.nativeSession&&
+      replayed.ticket<boundary.ticket&&replayed.effectiveTime<=boundary.effectiveTime);
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===source.execution.executedThrough&&
-      sameNativeWorldBoundary(preparedNativeWorldBoundary,ref.worldBoundary)&&
-      sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),ref.worldBoundary);
-    if(!ref||!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||!workers||ownerSignal?.aborted||!current())
-      throw Error('Worker route recovery needs its replayed publication and current Draw');
+      replayMatches&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
+      sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
+    if(!ref||!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||!(crop?roster:workers)||ownerSignal?.aborted||!current())
+      throw Error('Route recovery needs its replayed publication and current Draw');
     const {presentation}=source.resources;
     const gates=presentation.gates.map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
     const gateOwnersReady=gates.length?settlements?.nativeGatePreparationReadiness({gates}):null;
@@ -734,17 +741,21 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     terrainSupport??=createConfirmedTerrainSupport({residency});
     nativeRoutePreparations++;
     try{
-      await workers.prepareRecoveredWorkerRoute({...source,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+      if(crop)await roster.prepareRecoveredCrop(source,terrainSupport,{signal:ownerSignal,isCurrent:current,
+        getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
+      else await workers.prepareRecoveredWorkerRoute({...source,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
         getPickTime:()=>nativePickFrame[home?'getHomeTime':farm?'getFarmArrivalTime':'getStrollTime'](ref),
         ...(home?{}:{getPickIdleOffset:duration=>nativePickFrame[farm?'getFarmArrivalIdleOffset':'getStrollIdleOffset'](ref,ref.worldBoundary.effectiveTime,duration)}),
         prepareGateParticipants:({signal})=>settlements.prepareNativeGateMotors({gates},{signal,
           getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
-      if(!current()||!workers.nativeRouteCurrent(actorId,source.resources.nativeRoute))throw Error('Replayed worker rig is no longer current');
+      if(!current()||!(crop?roster.hasNativeCropOwner():workers.nativeRouteCurrent(actorId,source.resources.nativeRoute)))
+        throw Error('Replayed rig is no longer current');
       // The static replay may already have admitted the scene without the typed rig.
       // Re-establish the full-scene proof against the newly installed materials.
       nativeWorldFrameAdmission=null;
-      await admitRecoveredNativeWorld(preparedNativeWorldBoundary,sequence,ownerSignal,state);
-      if(!current())throw Error('Recovered worker route changed during frame admission');
+      const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state);
+      if(!current())throw Error('Recovered route changed during frame admission');
+      preparedNativeWorldBoundary=admitted;
       nativeRouteResourceRevision++;nativeRouteRejected=false;
       firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};
     }finally{nativeRoutePreparations--;onPresentationReady();}

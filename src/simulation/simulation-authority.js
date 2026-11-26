@@ -936,24 +936,39 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     return Math.abs(opening-pose.opening)<=1e-9;
   }
   function recoveryExecution({kind,actorId}){
-    return kind===18?planner.nativeHomeRouteExecution(actorId):
+    return kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId):
+      kind===18?planner.nativeHomeRouteExecution(actorId):
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
+  }
+  function recoveryRoute(){
+    if(game.raid){
+      const [animal]=game.raid.animals;
+      if(!qualifyAnimalCrop||!civilShieldPhysicsAvailable()||game.raid.animals.length!==1||
+         !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id)))return null;
+      const execution=planner.nativeAnimalCropRouteExecution(animal.id);
+      return execution?{kind:26,actorId:execution.actorId}:null;
+    }
+    if(game.workers.length!==1)return null;
+    const worker=game.workers[0],admission=worker.nativeRouteAdmission;
+    if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
+    const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
+    const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
+    if(bindings.length!==1||worker.id!=='worker-'+bindings[0].reference.actorId||
+       kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
+    return {kind,actorId:bindings[0].reference.actorId};
   }
   return {
     prepareNativeStructureCommand,beginNativeStructureCommand,finishNativeStructureCommand,
 
     async terminalWorkerRoute(){
-      if(nativeProduction?.status().phase!=='suspended'||game.raid||game.workers.length!==1)return null;
+      if(nativeProduction?.status().phase!=='suspended')return null;
       const {current,pending,cohort}=nativeIntentControl.connections();
       if(!current||pending||cohort.consumers!==1)return null;
-      const worker=game.workers[0],admission=worker.nativeRouteAdmission;
-      if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
-      const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23,profile=nativeWorkerRouteRecoveryProfile(kind);
-      const bindings=kind===18?planner.nativeHomeRouteBindings():kind===22?planner.nativeIdleStrollBindings():planner.nativeFarmArrivalRouteBindings();
-      if(bindings.length!==1||!sameNativeWorldBoundary(current.worldBoundary,bindings[0].reference.worldBoundary))return null;
-      if(kind===18&&bindings[0].reference.sourceRequest?.raidSpawnSequence)return null;
-      const route={kind,actorId:bindings[0].reference.actorId},execution=recoveryExecution(route);
-      if(worker.id!=='worker-'+route.actorId||!execution||execution.arrived||!recoveryGateCurrent(kind,execution))return null;
+      const route=recoveryRoute();
+      if(!route)return null;
+      const {kind}=route,profile=nativeWorkerRouteRecoveryProfile(kind),execution=recoveryExecution(route);
+      if(!execution||execution.arrived||!sameNativeWorldBoundary(current.worldBoundary,execution.binding.reference.worldBoundary)||
+         !recoveryGateCurrent(kind,execution))return null;
       await nativeIntentControl.waitForTerminalDraw();
       const live=recoveryExecution(route);
       if(nativeProduction.status().phase!=='suspended'||!live||live.arrived||!profile.sameAttestation(live.binding,execution.binding)||!recoveryGateCurrent(kind,live))
@@ -1010,17 +1025,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
          nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Previous draw not terminal');
       const profile=nativeWorkerRouteRecoveryProfile(route.kind),execution=recoveryExecution(route);
       if(!execution||execution.arrived||!recoveryGateCurrent(profile.kind,execution))throw Error('Expected current moving worker route');
+      const binding=execution.binding,ref=binding.reference,boundary=ref.worldBoundary;
+      const handle=profile.kind===26?planner.nativeAnimalRouteBinding('animal-'+ref.actorId)?.routeHandle:ref.expectedRouteHandle;
+      const presentation=handle&&planner.captureNativeRoutePresentation(handle);
+      if(presentation?.gates.length&&!recoveryGateCurrent(profile.kind,execution,presentation))throw Error('Recovered gate motor has changed');
+      const resources=profile.copyResources({version:1,kind:profile.kind,phase:'committed',worldBoundary:boundary,
+        nativeRoute:presentation?.nativeRoute,[profile.bindingField]:binding,presentation});
 
       const attachment=await nativeIntentControl.attach(port,transportSession,{holdId,kind:profile.kind,proof:execution.binding});
       const liveExecution=recoveryExecution(route);
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt||
         !liveExecution||liveExecution.arrived||JSON.stringify(liveExecution)!==JSON.stringify(execution)||!recoveryGateCurrent(profile.kind,liveExecution))
         throw Error('Held source changed while installing replacement');
-      const binding=liveExecution.binding,boundary=binding.reference.worldBoundary;
-      const presentation=planner.captureNativeRoutePresentation(binding.reference.expectedRouteHandle);
-      if(presentation?.gates.length&&!recoveryGateCurrent(profile.kind,liveExecution,presentation))throw Error('Recovered gate motor has changed');
-      const resources=profile.copyResources({version:1,kind:profile.kind,phase:'committed',worldBoundary:boundary,
-        nativeRoute:presentation.nativeRoute,[profile.bindingField]:binding,presentation});
       const manifest=getTerrainManifest?.();
       if(!manifest||!Array.isArray(manifest.chunks))throw Error('Replacement terrain manifest unavailable');
       return {...attachment,recoveredWorkerRoute:{version:1,holdId,publicationSequence:sequence,execution:liveExecution,resources,terrainManifest:manifest}};

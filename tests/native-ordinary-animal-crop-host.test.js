@@ -13,12 +13,74 @@ import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpo
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {copyNativeAnimalCropAttestation,nativeAnimalStrikeClipAge} from '../src/world/native-animal-crop-resource.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
+import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
 function fixture(){
 const s=deserialize(gunzipSync(readFileSync('tests/fixtures/sabana712-d1-native-active-raid.json.gz')).toString());
 const {chunkKeys}=JSON.parse(readFileSync('docs/guardian/performance/native-ordinary-attack-crops-20261121.json'));
 const manifest={epoch:'crop',chunks:chunkKeys.map(k=>{const [cx,cz]=k.split(',').map(Number);return {cx,cz,revision:1};})};
 return {s,manifest,chunkKeys};
 }
+test('an acquired crop route needs a new sealed Draw at the loss cut',async()=>{
+ const {s,manifest,chunkKeys}=fixture();
+ const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys,getTerrainManifest:()=>manifest});
+ const ports=new MessageChannel();
+ let draw;
+ try{
+  await untilProduction(source,()=>source.records[0]?.committed);
+  for(let i=0;i<7;i++){source.advance();await source.present();}
+  const old=source.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeAnimalCrop?.kind===26);
+  assert(old?.relativeTime>0);
+  const frozen=source.snapshot(),animal=frozen.raid.animals[0];
+  source.gpu.device.destroy();source.retireResourceEndpoint();
+  const hold=await source.authority.quiesceNativeIntentProduction();
+  const retired=await source.authority.flushNativeResourcePreparation({allowRetired:true});
+  assert.equal(retired.terminal,true);
+  assert.equal(retired.callbacksSettled,true);
+  const route=await source.authority.terminalWorkerRoute();
+  assert.deepEqual(route,{kind:26,actorId:396});
+  draw=await drawFixture({capabilities:{nativeAnimalCropVersion:1}},
+    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+  const {recoveredWorkerRoute:q}=await source.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const {execution,resources}=q,binding=resources.nativeAnimalCropRouteBinding,ref=binding.reference;
+  const at=execution.executedThrough,epoch=ref.worldBoundary.effectiveTime;
+  assert.equal(at,frozen.elapsed);
+  assert.equal(execution.x,animal.x);assert.equal(execution.z,animal.z);
+  assert.equal(execution.phase,animal.motionPhase);assert.equal(execution.yaw,animal.heading);
+  assert.equal(ref.bodyId,old.nativeAnimalCrop.bodyId);
+  assert.equal(ref.generation,old.nativeAnimalCrop.generation);
+  assert.equal(ref.targetId,old.nativeAnimalCrop.targetId);
+  assert.notEqual(ref.worldBoundary.ticket,binding.preparedReference.worldBoundary.ticket);
+  const forged=structuredClone(resources);
+  forged.presentation.rows[forged.presentation.rows.length-12]+=.5;
+  assert.throws(()=>nativeWorkerRouteRecoveryProfile(26).copyResources(forged),/differs from the acquired route/);
+  const metadata={nativeWorldBoundary:ref.worldBoundary,
+    clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}};
+  async function submit(){
+   const pending=draw.frame(3,metadata).catch(error=>error);
+   await flush();await draw.host.idle();draw.host.present();
+   return pending;
+  }
+  const mark=reference=>draw.client.registerClockBinding(draw.buffer,
+    {byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:reference,resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+  await assert.rejects(source.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+  mark(ref);
+  assert(!(await submit() instanceof Error));
+  const submitted=await source.authority.checkHeldDraw(30,hold,route);
+  assert.equal(submitted.relativeTime,old.relativeTime);
+  assert.equal(submitted.elapsed,at);
+  assert.equal(submitted.assignmentSequence,binding.assignmentSequence);
+  assert.equal(new Float32Array(draw.gpu.buffers[0].data.buffer)[0],old.relativeTime);
+  const pick=captureNativeRoutePickFrame({nativeRouteFrame:draw.host.inspect().nativeRouteFrame});
+  assert.equal(pick.getAnimalCropAge(ref),old.relativeTime);
+  assert.equal(source.authority.resumeNativeIntentProduction(hold),true);
+  assert(source.advance().elapsed>at);
+  assert.equal(source.records.filter(row=>row.committed).length,1);
+ }finally{
+  draw?.client.dispose();await draw?.host.dispose();ports.port1.close();ports.port2.close();
+  await source.close();
+ }
+});
 for(const legacy of [false,true])test(`an AttackCrops checkpoint resumes after a fresh READY (${legacy?'legacy path':'native suffix'})`,async()=>{
  const {s,chunkKeys}=fixture();
  const source=await nativeProductionAuthority(s,{qualifyAnimalCrop:true,chunkKeys});

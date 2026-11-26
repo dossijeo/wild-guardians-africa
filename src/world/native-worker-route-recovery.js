@@ -1,6 +1,44 @@
 import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
+import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
+import {copyNativeRoutePresentation} from './native-route-presentation.js';
+import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
+
+// Recovery carries the acquired program independently of the original Draw.
+// The terminal sample is also needed for the next strike's source validation.
+function copyCropAttestation(value){
+ const binding=copyNativeAnimalCropAttestation(value,26);
+ if(binding.reference.purpose!==undefined||value?.gateIds?.length!==0||!Array.isArray(value.gateIds)||
+    !['x','z','phase'].every(key=>Number.isFinite(value.terminal?.[key]))||
+    value.terminal.phase<binding.reference.phase)throw TypeError('Invalid recovered crop source');
+ const {x,z,phase}=value.terminal;
+ return Object.freeze({...binding,gateIds:Object.freeze([]),terminal:Object.freeze({x,z,phase})});
+}
+function sameCropAttestation(a,b){
+ return !!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&a.gateIds?.length===0&&b.gateIds?.length===0&&
+   !!a.terminal&&!!b.terminal&&['x','z','phase'].every(key=>a.terminal[key]===b.terminal[key])&&
+   sameNativeAnimalCropReference(a.reference,b.reference)&&sameNativeAnimalCropReference(a.preparedReference,b.preparedReference);
+}
+function copyCropResources(value){
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ const binding=copyCropAttestation(value?.nativeAnimalCropRouteBinding),r=binding.reference;
+ const presentation=copyNativeRoutePresentation(value.presentation),nativeRoute=presentation.nativeRoute;
+ const h=nativeRoute.routeHandle,p=value.nativeRoute,k=p?.routeHandle;
+ if(value.version!==1||value.kind!==26||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
+    !sameNativeWorldBoundary(presentation.worldBoundary,worldBoundary)||
+    nativeRoute.assignmentSequence!==binding.assignmentSequence||nativeRoute.actorId!==r.actorId||
+    h.session!==worldBoundary.nativeSession||h.authorityEpoch!==worldBoundary.authorityEpoch||h.slot!==r.slot||h.generation!==r.generation||
+    p?.actorId!==nativeRoute.actorId||p.assignmentSequence!==nativeRoute.assignmentSequence||
+    !['session','authorityEpoch','slot','generation'].every(name=>k?.[name]===h[name])||
+    presentation.motionMode!=='animal'||presentation.gates.length||presentation.radius!==r.radius||
+    presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==r.endTime||
+    presentation.rows[1]!==r.x||presentation.rows[2]!==r.z||presentation.rows[4]!==r.phase||
+    presentation.rows.at(-15)!==binding.terminal.x||presentation.rows.at(-14)!==binding.terminal.z||
+    presentation.rows.at(-12)!==binding.terminal.phase||presentation.rows.at(-9)!==1)
+   throw TypeError('Recovered crop program differs from the acquired route');
+ return Object.freeze({version:1,kind:26,phase:'committed',worldBoundary,nativeRoute,presentation,nativeAnimalCropRouteBinding:binding});
+}
 
 const profiles=new Map([
  [18,Object.freeze({
@@ -25,6 +63,13 @@ const profiles=new Map([
   obsoleteCode:'native-farm-arrival-admission-obsolete',
   copyResources:copyNativeFarmArrivalRouteResources,copyAttestation:copyNativeFarmArrivalRouteAttestation,
   sameAttestation:sameNativeFarmArrivalRouteAttestation,sameReference:sameNativeFarmArrivalRouteReference
+ })],
+ [26,Object.freeze({
+  kind:26,executionKind:'native-animal-crop-route-execution',maxGates:0,
+  bindingField:'nativeAnimalCropRouteBinding',clockField:'nativeAnimalCrop',
+  obsoleteCode:'native-crop-recovery-obsolete',
+  copyResources:copyCropResources,copyAttestation:copyCropAttestation,
+  sameAttestation:sameCropAttestation,sameReference:sameNativeAnimalCropReference
  })]
 ]);
 

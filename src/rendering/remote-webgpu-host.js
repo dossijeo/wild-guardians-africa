@@ -699,7 +699,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         // Prepared and ordinary aliases resolve to the same acquired route (or strike).
         // Hold its local origin until a frame actually submits it.
         const cropRecord=binding.nativeAnimalCrop?binding.motionRecord.routeRecord:null;
-        const cropCeiling=cropRecord&&(cropRecord.lastDrawTime===null||cropRecord.originDrawClock===elapsed)?executionEpoch:Infinity;
+        const cropCeiling=cropRecord&&!cropRecord.recoveredCrop&&(cropRecord.lastDrawTime===null||cropRecord.originDrawClock===elapsed)?executionEpoch:Infinity;
         const routeTime=terminalIdle?Math.min(bindingTime,executionEpoch+(nativeClockResourceEnd(binding.epoch,terminalRoute.endTime)-binding.epoch)):Math.min(bindingTime,binding.routeRecord?.safeUntil??binding.actionRecord?.safeUntil??binding.settlementRecord?.safeUntil??binding.initialIdleBodyRecord?.safeUntil??binding.idleCycleRecord?.safeUntil??Infinity,resumeCeiling,cropCeiling);
         const resourceCeiling=binding.resourceEnd??binding.nativeResume?.endTime??binding.nativeStart?.endTime??binding.nativeConsequence?.endTime??binding.nativeFarmArrival?.endTime??binding.nativeHome?.endTime??binding.nativeStroll?.endTime??(active.admittedMotionBinding?active.metadata.clock.safeUntil:Infinity);
         const resourceTime=Math.min(resourceCeiling,(binding.nativeResume||binding.nativeStart||binding.nativeConsequence||binding.nativeAnimalCrop||binding.nativeFarmArrival||binding.nativeHome||binding.nativeStroll||binding.executionEpoch!==undefined)?binding.epoch+Math.max(0,routeTime-executionEpoch):routeTime);
