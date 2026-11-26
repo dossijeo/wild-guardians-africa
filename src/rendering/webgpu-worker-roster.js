@@ -16,7 +16,7 @@ import {copyNativeHomeRouteProposal,copyNativeHomeRouteAttestation,sameNativeHom
 import {createNativeHomeRouteGpuMotion} from './native-gpu-motion.js';
 import {nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesRepairAction} from '../world/native-home-request-reference.js';
 import {nativeHomeWorkerStatus} from '../world/native-home-request-reference.js';
-import {woundedHomeSourceCurrent,workerRecoveryExitRemaining} from '../simulation/worker-recovery.js';
+import {RECOVERY_EXIT_SECONDS,woundedHomeSourceCurrent,workerRecoveryExitRemaining} from '../simulation/worker-recovery.js';
 import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,nativeTaskSettlementAttestationCovers,sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {createNativeTaskSettlementGpuMotion} from './native-task-settlement-gpu-motion.js';
@@ -222,10 +222,10 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    if(signal.aborted)throw new DOMException('Idle graph reuse cancelled','AbortError');if(entry.retainedNativeMaterials?.idle!==slot||!slot.idleCycle)return null;if(!value.motion.canReuseNativeIdleCycle(support)||!value.variant.canReuse()||value.clipBakes.length!==clipBakes.length||value.clipBakes.some((bake,i)=>bake!==clipBakes[i])){slot();return null;}entry.retainedNativeMaterials.idle=null;return slot.take();
   }
  function nativeLocomotionEntity(entry,carrying,allowGateWait=false){const entity=entry.entity;return entity&&!entity.recovery&&!entity.recoveryExitRemaining&&!entity.fallRemaining&&!entity.incapacitated&&(!entity.gateWaiting||allowGateWait)&&(carrying?carryingConfirmed(entity):!entity.crateId&&['walking','arriving','returning'].includes(entity.status));}
- function homeExitPhases(motion,getPickTime){
+ function homeExitPhases(motion,getPickTime,{recoveryExit=RECOVERY_EXIT_SECONDS}){
   return {
-   resolveExit:(_fallback,seconds)=>motion.timeNode.div(seconds).oneMinus().clamp(0,1),
-   sampleExit:()=>workerRecoveryExitRemaining(motion.sample(getPickTime()).relativeTime),
+   resolveExit:(_fallback,seconds)=>motion.timeNode.negate().add(recoveryExit).div(seconds).clamp(0,1),
+   sampleExit:()=>workerRecoveryExitRemaining(motion.sample(getPickTime()).relativeTime,recoveryExit),
    status:()=>({exit:true})
   };
  }
@@ -312,7 +312,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    let variant,binding;
    try{
     const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};
-    if(woundedHome)Object.assign(phases,homeExitPhases(motion,getPickTime));
+    if(woundedHome)Object.assign(phases,homeExitPhases(motion,getPickTime,recovery.binding.nativeHome.sourceRequest));
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':actor.isBakedIdle?.()?'Idle':!(actor.isBakedWalking?.()||actor.isBakedRunning?.())?'Walk_Skip':null});
     const options={motion,getPickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};
     binding=entry.motionBinding?entry.motionBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId,resourceRegistry,staged:true,...options});
@@ -571,7 +571,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const anchor=actor.root.getWorldPosition(new Vector3()),yaw=new Quaternion();actor.root.getWorldQuaternion(yaw);const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motion=(farm?createNativeFarmArrivalGpuMotion:stroll?createNativeIdleStrollGpuMotion:home?createNativeHomeRouteGpuMotion:consequence?createNativeTaskConsequenceGpuMotion:starting?createNativeTaskStartGpuMotion:createNativeResumeGpuMotion)({actorId:id,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry});let variant,binding;
    const pickTime=()=>getPickTime(ref,packet.startTime);
    try{const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(pickTime());return carrying?'Carry_Crate':needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(pickTime(),clip,duration,(farm||stroll)&&clip==='Idle'&&getPickIdleOffset?getPickIdleOffset(ref,packet.startTime,duration):undefined)};
-    if(home&&ref.sourceRequest?.recoveryHit)Object.assign(phases,homeExitPhases(motion,pickTime));
+    if(home&&ref.sourceRequest?.recoveryHit)Object.assign(phases,homeExitPhases(motion,pickTime,ref.sourceRequest));
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':actor.isBakedIdle?.()?'Idle':farm||starting||home||stroll?'Walk_Skip':null});const options={motion,getPickTime:pickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};binding=oldBinding?oldBinding.prepareReplacement(options):bindWebGpuActorMotion({root:actor.root,renderer,actorId:id,resourceRegistry,staged:true,...options});
     candidate={actor,motion,variant,binding,packet,support,crateId,...(starting?{taskHomePolicy:farmTaskPolicy(entity)}:farm?{farmTaskPolicy:completedFarmPolicy(entity,ref.sourceRequest)}:stroll?{strollHomePolicy:farmTaskPolicy(entity)}:{}),preparedRun:needsRun,preparedIdle:needsIdle,[key]:ref,nativeRoute:null,start:packet.startTime,end:packet.endTime,gateParticipants:[]};pending.candidate=candidate;
    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}

@@ -1,12 +1,12 @@
 import bank from '../../content/manifests/worker-recovery.json' with {type:'json'};
 export const WORKER_RECOVERY=bank.profiles;
 export const RECOVERY_EXIT_SECONDS=.24;
-export const workerRecoveryExitRemaining=age=>Math.max(0,RECOVERY_EXIT_SECONDS-age);
+export const workerRecoveryExitRemaining=(age,initial=RECOVERY_EXIT_SECONDS)=>Math.max(0,initial-age);
 
-export function woundedHomeSourceCurrent(state,worker,{recoveryHit,requestedAt},age){
+export function woundedHomeSourceCurrent(state,worker,{recoveryHit,requestedAt,recoveryExit},age){
  return !!recoveryHit&&age>=0&&!state.raid&&worker?.status==='incapacitated'&&
   worker.incapacitated===true&&worker.hits===2&&!worker.recovery&&!worker.fallRemaining&&
-  worker.recoveryExitRemaining===workerRecoveryExitRemaining(age)&&
+  worker.recoveryExitRemaining===workerRecoveryExitRemaining(age,recoveryExit)&&
   state.events?.some(event=>event.type==='WorkerIncapacitated'&&event.targetId===worker.id&&
     event.id==='event-'+recoveryHit&&event.simulationTime<=requestedAt)===true;
 }

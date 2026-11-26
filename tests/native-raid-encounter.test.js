@@ -57,7 +57,7 @@ async function presentDepartedEncounter(world,snapshot){
  await frame;
 }
 async function finishWoundedHome(world,snapshot,afterFirstStep){
- const worker=snapshot.workers[0],elapsed=snapshot.elapsed;
+ const worker=snapshot.workers[0];
  assert.equal(worker.status,'incapacitated');
  assert.equal(worker.nativeRouteAdmission,'pending-home-resources');
  const route=await until(()=>world.records.find(record=>record.kind==='home-route'&&record.resources.sourceRequest.recoveryHit));
@@ -80,6 +80,9 @@ async function finishWoundedHome(world,snapshot,afterFirstStep){
  assert.ok(Math.abs(next.runPhase-start.runPhase-.007)<1e-12);
  assert.ok(Math.abs(Math.hypot(next.x-start.x,next.z-start.z)-.0168)<1e-8);
  await afterFirstStep?.(route);
+ await finishWoundedHomeArrival(world,route,worker,snapshot);
+}
+async function finishWoundedHomeArrival(world,route,worker,snapshot){
  for(let i=0;i<100;i++){
   const step=await world.command({kind:'advance',seconds:.25,nightFastForward:false});
   await world.present();
@@ -93,7 +96,7 @@ async function finishWoundedHome(world,snapshot,afterFirstStep){
  assert.equal(complete.workers[0].nativeRouteAdmission,undefined);
  assert.equal(complete.workers[0].runRemaining,worker.runRemaining);
  assert.equal(complete.raid,null);
- assert.ok(complete.elapsed>elapsed);
+ assert.ok(complete.elapsed>snapshot.elapsed);
  assert.deepEqual(complete.ledger,snapshot.ledger);
  assert.equal(world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,true);
  assert.equal((await advance(world,2)).stepsExecuted,2);
@@ -234,6 +237,75 @@ test('the qualified Desert encounter waits for its submitted Retreat before the 
   assert.deepEqual([...world.errors,...world.faults],[]);
   await finishWoundedHome(world,snapshot);
  }finally{await world.close();}
+});
+
+test('a checkpoint during wounded Home resumes the remaining route and exit phase',async()=>{
+ const world=await setup(true);
+ let restored,blocked;
+ try{
+  let snapshot=await reachSecondHit(world);
+  const at=snapshot.elapsed+.02,advancing=advance(world,2);
+  await until(()=>world.host.inspect().nativeCausalClock.committedThrough===at&&world.host.inspect().pendingSequence!==null);
+  await world.present();
+  snapshot=JSON.parse((await advancing).snapshot);
+  while(!snapshot.workers[0].recoveryExitRemaining){
+   snapshot=JSON.parse((await advance(world)).snapshot);
+   await world.present();
+   if(!snapshot.raid)await presentDepartedEncounter(world,snapshot);
+  }
+  await finishWoundedHome(world,snapshot,async route=>{
+   const actual=world.snapshot().workers[0];
+   const result=world.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+   assert.equal(result.saveAvailable,true);
+   const checkpoint=prepareWorkerCheckpoint(result,{slotId:snapshot.slotId,policy:{nativeAuthority:true},savedAt:1});
+   const stored=checkpoint.state.workerNativeAuthorityCheckpoint.encounter;
+   assert.equal(stored.version,2);
+   assert.equal(stored.hit,29210);
+   assert.equal(stored.home.exitRemaining,actual.recoveryExitRemaining);
+   const forged=structuredClone(checkpoint.state);
+   forged.workerNativeAuthorityCheckpoint.encounter.home.path.at(-1).z+=1;
+   assert.throws(()=>savedNativeAuthorityOptions(JSON.stringify(forged)),/saved encounter Home/);
+   forged.workerNativeAuthorityCheckpoint.encounter.home.path=structuredClone(stored.home.path);
+   forged.workerNativeAuthorityCheckpoint.encounter.home.path.unshift({x:512,z:512});
+   const forgedOptions=savedNativeAuthorityOptions(JSON.stringify(forged));
+   blocked=await nativeProductionAuthority(forged,{...forgedOptions,attach:false,
+    qualifyFarmFlee:true,qualifyAnimalCrop:true,qualifyRaidEncounter:true});
+   await assert.rejects(blocked.attach(),/native corridor proof/);
+   const options=savedNativeAuthorityOptions(JSON.stringify(checkpoint.state));
+   restored=await nativeProductionAuthority(checkpoint.state,{...options,
+    attach:false,qualifyFarmFlee:true,qualifyAnimalCrop:true,qualifyRaidEncounter:true});
+   assert.equal(restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,false);
+   await restored.attach();
+   await untilProduction(restored,()=>restored.records.some(row=>row.kind==='home-route'&&row.committed));
+   const rebuilt=restored.records.find(row=>row.kind==='home-route');
+   assert.notEqual(rebuilt.resources.worldBoundary.authorityEpoch,route.resources.worldBoundary.authorityEpoch);
+   assert.deepEqual(Array.from(rebuilt.resources.points),stored.home.path.flatMap(({x,z})=>[x,z]));
+   assert.equal(rebuilt.resources.sourceRequest.recoveryExit,actual.recoveryExitRemaining);
+   const start=restored.snapshot().workers[0];
+   for(const key of ['x','z','runPhase','walkPhase','carryPhase','runRemaining','recoveryExitRemaining'])assert.equal(start[key],actual[key]);
+   await restored.present();
+   const drawn=restored.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeHome?.sourceRequest?.recoveryHit===stored.hit);
+   assert.equal(drawn.relativeTime,0);
+   assert.equal(drawn.nativeHome.sourceRequest.recoveryExit,actual.recoveryExitRemaining);
+   const nextOriginal=JSON.parse((await advance(world)).snapshot).workers[0];
+   const nextRestored=JSON.parse((await advance(restored)).snapshot).workers[0];
+   for(const key of ['x','z','heading','runPhase','recoveryExitRemaining'])assert.ok(Math.abs(nextOriginal[key]-nextRestored[key])<1e-10,key);
+   assert.equal(nextRestored.runRemaining,40);
+   await finishWoundedHomeArrival(restored,rebuilt,actual,snapshot);
+   await restored.close();
+   for(let i=0;i<13;i++)await advance(world);
+   const finishedExit=world.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+   assert.equal(finishedExit.saveAvailable,true);
+   assert.equal(finishedExit.nativeAuthorityCheckpoint.encounter.home.exitRemaining,0);
+   const later=prepareWorkerCheckpoint(finishedExit,{slotId:snapshot.slotId,policy:{nativeAuthority:true},savedAt:2});
+   const laterOptions=savedNativeAuthorityOptions(JSON.stringify(later.state));
+   restored=await nativeProductionAuthority(later.state,{...laterOptions,
+    qualifyFarmFlee:true,qualifyAnimalCrop:true,qualifyRaidEncounter:true});
+   await untilProduction(restored,()=>restored.records.some(row=>row.kind==='home-route'&&row.committed));
+   assert.equal(restored.records.find(row=>row.kind==='home-route').resources.sourceRequest.recoveryExit,0);
+   assert.equal(restored.snapshot().workers[0].recoveryExitRemaining,0);
+  });
+ }finally{await blocked?.close();await restored?.close();await world.close();}
 });
 
 for(const order of ['commit in transit','commit accepted'])test(`retiring Draw before the Retreat submit leaves the next substep unexecuted with ${order}`,async()=>{

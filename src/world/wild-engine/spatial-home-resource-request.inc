@@ -20,6 +20,32 @@ static bool snapshotHomeRequest(IntentState& s,const NativeHomeResourceRequest* 
  s.homeRequestResult.fill(0);if(!r||!r->body||r->session!=s.session)return false;
  s.homeRequestResult={r->recoveryHit?3.:r->raidSpawnSequence?2.:1.,double(r->actor),double(r->session),double(r->sequence),r->at,double(r->village),r->homeX,r->homeZ,r->x,r->z,r->yaw,r->runPhase,r->walkPhase,r->carryPhase,r->runRemaining,double(r->profile),double(r->body),r->radius,double(r->bodyFlags)};return true;
 }
+static int declareEncounterHome(IntentState& s,const RestoredEncounterWorker& source,
+    uint64_t village,double homeX,double homeZ,int profile,double exitRemaining,std::vector<float> path={}){
+ const auto w=s.workers.find(source.actor);
+ if(w==s.workers.end()||w->second.actionActive||w->second.inactiveSequence)return -2;
+ for(const auto& [id,task]:s.tasks)if(task.assigned==source.actor)return -2;
+ SpatialBodyView pose;
+ if(!spatialReadBody(source.body,pose)||pose.kind!=0||pose.flags!=1||
+    pose.x!=source.x||pose.z!=source.z||pose.x!=w->second.x||pose.z!=w->second.z)return -2;
+ if(nav_gate_bind_worker(double(source.actor),double(source.body))!=1)return -2;
+ auto request=std::make_shared<NativeHomeResourceRequest>();
+ request->actor=source.actor;request->session=s.session;request->village=village;
+ request->homeX=homeX;request->homeZ=homeZ;request->recoveryHit=source.hit;
+ request->recoveryExit=exitRemaining;request->restoredHomePath=std::move(path);
+ request->at=s.effectiveTime;request->x=pose.x;request->z=pose.z;request->yaw=source.yaw;
+ request->runPhase=source.runPhase;request->walkPhase=source.walkPhase;
+ request->carryPhase=source.carryPhase;request->runRemaining=source.runRemaining;
+ request->profile=profile;request->radius=pose.r;request->body=source.body;request->bodyFlags=pose.flags;
+ ActiveIntent intent;intent.actor=source.actor;intent.home=true;intent.requiresResources=true;intent.lease=false;
+ intent.state=PlanningState::AwaitingResources;intent.profile=profile;
+ intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
+ intent.homeRequest=request;
+ w->second.eligible=false;
+ auto& stored=s.activeIntents.insert_or_assign(source.actor,std::move(intent)).first->second;
+ request->sequence=emitIntentChange(s,stored);s.entityRevision++;
+ return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_intent_encounter_home_request(double session,double actor,double hit,double village,
     double homeX,double homeZ,double yaw,double run,double walk,double carry,double budget){
  auto& s=state();
@@ -28,42 +54,42 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_encounter_home_request(double session,double
  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||!s.causalClock||
     !(s.clockThrough<s.effectiveTime)||s.effectiveTime-s.clockThrough>.021||
     s.workers.size()!=1||spatial_body_count()!=1||!s.gates.empty())return -4;
- const auto workerId=uint64_t(actor);
- const auto w=s.workers.find(workerId);
- if(w==s.workers.end()||w->second.actionActive||w->second.inactiveSequence)return -2;
- for(const auto& [id,task]:s.tasks)if(task.assigned==workerId)return -2;
  const auto& live=s.homeEncounterImpact;
  const auto& cut=s.encounterRetreat;
  const auto& cold=s.restoredEncounterWorker;
- uint64_t body=0;
- int profile=lazy_selected_context();
  if(live&&cut&&live->recovered&&cut->departed&&actor==double(live->worker)&&hit==double(cut->hit)&&
     cut->worker==live->worker&&cut->workerBody==live->workerBody&&cut->spawn==live->spawn&&
     nav_home_encounter_impact_current(actor,double(live->animal),double(live->spawn))==1&&
     yaw==live->pose[4]&&run==live->pose[9]&&walk==live->pose[10]&&carry==live->pose[11]&&budget==live->pose[14]){
-  body=live->workerBody;
-  profile=live->priorHome->profile;
- }else if(cold&&cold->recovered&&nav_restored_encounter_worker_current(actor,hit)==1&&
+  const RestoredEncounterWorker source{live->worker,live->workerBody,cut->hit,live->resultX,live->resultZ,
+    yaw,run,walk,carry,budget,true};
+  return declareEncounterHome(s,source,uint64_t(village),homeX,homeZ,live->priorHome->profile,.24);
+ }
+ if(cold&&cold->recovered&&nav_restored_encounter_worker_current(actor,hit)==1&&
           yaw==cold->yaw&&run==cold->runPhase&&walk==cold->walkPhase&&carry==cold->carryPhase&&budget==cold->runRemaining)
-  body=cold->body;
- SpatialBodyView pose;
- if(!body||!spatialReadBody(body,pose)||pose.kind!=0||pose.flags!=1||
-    pose.x!=w->second.x||pose.z!=w->second.z)return -2;
- if(nav_gate_bind_worker(actor,double(body))!=1)return -2;
- auto request=std::make_shared<NativeHomeResourceRequest>();
- request->actor=workerId;request->session=s.session;request->village=uint64_t(village);
- request->homeX=homeX;request->homeZ=homeZ;request->recoveryHit=uint64_t(hit);
- request->at=s.effectiveTime;request->x=pose.x;request->z=pose.z;request->yaw=yaw;
- request->runPhase=run;request->walkPhase=walk;request->carryPhase=carry;request->runRemaining=budget;
- request->profile=profile;request->radius=pose.r;request->body=body;request->bodyFlags=pose.flags;
- ActiveIntent intent;intent.actor=workerId;intent.home=true;intent.requiresResources=true;intent.lease=false;
- intent.state=PlanningState::AwaitingResources;intent.profile=profile;
- intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);
- intent.homeRequest=request;
- w->second.eligible=false;
- auto& stored=s.activeIntents.insert_or_assign(workerId,std::move(intent)).first->second;
- request->sequence=emitIntentChange(s,stored);s.entityRevision++;
- return 1;
+  return declareEncounterHome(s,*cold,uint64_t(village),homeX,homeZ,lazy_selected_context(),.24);
+ return -2;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restore_encounter_home(double session,double actor,double hit,double village,
+    double homeX,double homeZ,double exitRemaining,int count){
+ auto& s=state();
+ if(session!=double(s.session)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ)||
+    !std::isfinite(exitRemaining)||exitRemaining<0||exitRemaining>.24||count<1||count>4096||
+    s.attackRouteInput.size()!=size_t(count)*2)return -1;
+ if(s.causalClock||s.executionEnabled||s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen||
+    s.workers.size()!=1||spatial_body_count()!=1||!s.gates.empty()||spatial_execution_profile_kind()!=0)return -4;
+ const auto& source=s.restoredEncounterWorker;
+ if(!source||source->recovered||nav_restored_encounter_worker_current(actor,hit)!=1||
+    s.attackRouteInput[s.attackRouteInput.size()-2]!=float(homeX)||s.attackRouteInput.back()!=float(homeZ))return -2;
+ SpatialBodyView body;
+ if(!spatialReadBody(source->body,body))return -2;
+ double x=source->x,z=source->z;
+ for(size_t i=0;i<s.attackRouteInput.size();i+=2){
+  const float nx=s.attackRouteInput[i],nz=s.attackRouteInput[i+1];
+  if(!coordinate(nx)||!coordinate(nz)||spatialWorkerFlightSegmentClear(x,z,nx,nz,body.r)!=1)return -3;
+  x=nx;z=nz;
+ }
+ return declareEncounterHome(s,*source,uint64_t(village),homeX,homeZ,lazy_selected_context(),exitRemaining,s.attackRouteInput);
 }
 // Retarget a genuine live Idle. The immutable preceding settlement keeps its
 // body association while the new semantic request awaits prepared resources.
@@ -417,6 +443,14 @@ EMSCRIPTEN_KEEPALIVE double nav_home_recovery_event(double actor,double ticket){
  const auto& intent=s.activeIntents.at(uint64_t(actor));
  const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
  return request?double(request->recoveryHit):0;
+}
+EMSCRIPTEN_KEEPALIVE double nav_home_recovery_exit(double actor,double ticket){
+ if(nav_home_request_snapshot(actor,ticket)!=1)return -1;
+ const auto& s=state();
+ if(ticket)return s.barrierProposal.home->homeRequestSource->recoveryExit;
+ const auto& intent=s.activeIntents.at(uint64_t(actor));
+ const auto& request=intent.homeRequest?intent.homeRequest:s.routeSlots[intent.slot].homeBinding->requestSource;
+ return request&&request->recoveryHit?request->recoveryExit:-1;
 }
 static const NativeHomeResourceRequest* currentHomeFlightSource(double actor,double sequence,double event){
  const auto& s=state();

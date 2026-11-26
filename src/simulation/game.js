@@ -1333,7 +1333,7 @@ export function projectNativeHomeRouteExecution(s,w,native){
     const request=native?.nativeHomeRequestReference?.(w.id)??native?.nativeHomeDeclarationReference?.(w.id),home=request?.home,village=home&&s.villages.find(v=>nativeEntityNumericId(v.id)===home.villageId),entry=village?.entry??village,p=request?.pose;
     if(!request||!s.workers.includes(w)||w.nativeRouteAdmission!==(request.raidSpawnSequence?'pending-raid-flight-resources':'pending-home-resources')||
       w.status!==nativeHomeWorkerStatus(request)||w.taskId||w.crateId||w.path!==null||
-      (request.recoveryHit?!w.incapacitated||w.hits!==2||w.recoveryExitRemaining!==RECOVERY_EXIT_SECONDS:w.incapacitated||w.recoveryExitRemaining)||
+      (request.recoveryHit?!w.incapacitated||w.hits!==2||w.recoveryExitRemaining!==(request.recoveryExit??RECOVERY_EXIT_SECONDS):w.incapacitated||w.recoveryExitRemaining)||
       w.recovery||w.fallRemaining||w.raidReturn||w.running!==false||w.gateWaiting!==false||w.heading!==p.yaw||request.requestedAt>s.elapsed||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||!['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>w[k]===p[k]))throw Error('Pending Home has no current native semantic body');
     return Object.freeze({kind:'native-home-awaiting-resources',version:1,sourceRequest:request,authorizedAutonomy:false});
   }
@@ -1342,7 +1342,7 @@ export function projectNativeHomeRouteExecution(s,w,native){
     (source.recoveryHit?!w.incapacitated||w.hits!==2:w.incapacitated||w.recoveryExitRemaining)||
     w.recovery||w.fallRemaining||w.raidReturn||w.taskId||w.crateId||w.nativeRouteAdmission!==undefined&&!['native-home',source.raidSpawnSequence?'pending-raid-flight-resources':'pending-home-resources'].includes(w.nativeRouteAdmission)||execution.actorId!==nativeEntityNumericId(w.id)||execution.bodyId!==r.bodyId||execution.executedThrough!==s.elapsed||execution.villageId!==home.villageId||nativeEntityNumericId(w.villageId)!==home.villageId||entry?.x!==home.x||entry?.z!==home.z||r.sourceSettlement&&(!crate?.delivered||crate.carrierId))throw Error('Native Home projection is not the executed game boundary');
   const changed=w.nativeRouteAdmission!=='native-home';Object.assign(w,{x:execution.x,z:execution.z,heading:execution.yaw,runPhase:execution.runPhase,walkPhase:execution.walkPhase,carryPhase:execution.carryPhase,runRemaining:execution.runRemaining,running:execution.running,gateWaiting:!execution.arrived&&execution.currentSpeed===0,path:null,nativeRouteAdmission:'native-home'});
-  if(source.recoveryHit)w.recoveryExitRemaining=workerRecoveryExitRemaining(s.elapsed-r.worldBoundary.effectiveTime);
+  if(source.recoveryHit)w.recoveryExitRemaining=workerRecoveryExitRemaining(s.elapsed-r.worldBoundary.effectiveTime,source.recoveryExit);
   if(changed)notifyWorkerPlanningChange(s,w);return execution;
 }
 // Semantic mirror of the current native cache. It does not execute a route,

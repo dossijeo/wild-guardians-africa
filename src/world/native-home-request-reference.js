@@ -1,5 +1,6 @@
 import {nativeIdleCycleBodyState} from './native-idle-cycle-body-source.js';
 import {nativeTaskActionActor} from './native-task-action-presentation.js';
+import {RECOVERY_EXIT_SECONDS} from '../simulation/worker-recovery.js';
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const fields=['kind','version','authorityEpoch','nativeSession','actorId','bodyId','bodyFlags','requestSequence','requestedAt','profile','home','pose'];
 const poseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','runRemaining'];
@@ -7,15 +8,16 @@ const poseFields=['x','z','yaw','radius','runPhase','walkPhase','carryPhase','ru
 // route, old settlement receipt, graphical permission or saved authority token.
 function copyReference(value,bound){
  const flight=value?.version===2,recovery=bound&&value?.version===3;
- const permitted=flight?[...fields,'raidSpawnSequence']:recovery?[...fields,'recoveryHit']:fields;
+ const permitted=flight?[...fields,'raidSpawnSequence']:recovery?[...fields,'recoveryHit','recoveryExit']:fields;
  const home=value?.home,pose=value?.pose,allowed=bound?permitted:permitted.filter(k=>!['bodyId','bodyFlags'].includes(k)),poseKeys=bound?poseFields:poseFields.filter(k=>k!=='radius');
  if(value?.kind!==(bound?'native-home-request-reference':'native-home-declaration-reference')||!(value.version===1||flight&&id(value.raidSpawnSequence)||recovery&&id(value.recoveryHit))||Object.keys(value).some(k=>!allowed.includes(k))||
   typeof value.authorityEpoch!=='string'||!value.authorityEpoch||value.authorityEpoch.length>256||!['nativeSession','actorId','requestSequence'].every(k=>id(value[k]))||
+  recovery&&value.recoveryExit!==undefined&&(!Number.isFinite(value.recoveryExit)||value.recoveryExit<0||value.recoveryExit>RECOVERY_EXIT_SECONDS)||
   !Number.isFinite(value.requestedAt)||value.requestedAt<0||!Number.isInteger(value.profile)||value.profile<0||value.profile>31||bound&&(!id(value.bodyId)||!Number.isSafeInteger(value.bodyFlags)||value.bodyFlags<0||value.bodyFlags>0x7fffffff||!(value.bodyFlags&1)||(value.bodyFlags&2))||
   !home||Object.keys(home).some(k=>!['villageId','x','z'].includes(k))||!id(home.villageId)||!['x','z'].every(k=>Number.isFinite(home[k])&&Math.abs(home[k])<2147483000)||
   !pose||Object.keys(pose).some(k=>!poseKeys.includes(k))||!poseKeys.every(k=>Number.isFinite(pose[k])&&Number.isFinite(Math.fround(pose[k])))||
   bound&&(pose.radius<=0||pose.radius>2)||!bound&&['x','z'].some(k=>Math.abs(pose[k])>=2147483000)||['runPhase','walkPhase','carryPhase','runRemaining'].some(k=>pose[k]<0))throw TypeError('Invalid fresh native Home request');
- return Object.freeze({kind:value.kind,version:value.version,...(flight?{raidSpawnSequence:value.raidSpawnSequence}:recovery?{recoveryHit:value.recoveryHit}:{}),authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,actorId:value.actorId,...(bound?{bodyId:value.bodyId,bodyFlags:value.bodyFlags}:{}),requestSequence:value.requestSequence,requestedAt:value.requestedAt,profile:value.profile,
+ return Object.freeze({kind:value.kind,version:value.version,...(flight?{raidSpawnSequence:value.raidSpawnSequence}:recovery?{recoveryHit:value.recoveryHit,...(value.recoveryExit===undefined?{}:{recoveryExit:value.recoveryExit})}:{}),authorityEpoch:value.authorityEpoch,nativeSession:value.nativeSession,actorId:value.actorId,...(bound?{bodyId:value.bodyId,bodyFlags:value.bodyFlags}:{}),requestSequence:value.requestSequence,requestedAt:value.requestedAt,profile:value.profile,
   home:Object.freeze({villageId:home.villageId,x:home.x,z:home.z}),pose:Object.freeze(Object.fromEntries(poseKeys.map(k=>[k,pose[k]])))});
 }
 export const copyNativeHomeRequestReference=value=>copyReference(value,true);

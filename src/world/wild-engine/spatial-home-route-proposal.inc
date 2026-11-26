@@ -19,11 +19,15 @@ static int stageHomeRoute(double actor,double session,double sourceSequence){
  for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  const int previous=lazy_selected_context();if(previous!=h.profile)spatial_select_nav_profile_index(h.profile);
- const int count=spatial_world_route_cached(float(h.x),float(h.z),float(h.homeX),float(h.homeZ));
- int result=count<0?-6:count==0?0:1;
- if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);
-  if(d.route.points[size_t(count)*2-2]!=float(h.homeX)||d.route.points.back()!=float(h.homeZ))result=0;
+ int result=1;
+ if(d.homeRequestSource&&!d.homeRequestSource->restoredHomePath.empty())
+  d.route.points=d.homeRequestSource->restoredHomePath;
+ else{
+  const int count=spatial_world_route_cached(float(h.x),float(h.z),float(h.homeX),float(h.homeZ));
+  result=count<0?-6:count==0?0:1;
+  if(result==1){const float* points=spatial_world_route_ptr();d.route.points.assign(points,points+size_t(count)*2);}
  }
+ if(result==1&&(d.route.points[d.route.points.size()-2]!=float(h.homeX)||d.route.points.back()!=float(h.homeZ)))result=0;
  if(result==1){
   const int motionFlags=homeMotionFlags(d.homeRequestSource.get());
   result=prepareRouteTiming(d.route,uint64_t(actor),h.x,h.z,s.effectiveTime,h.radius,2,

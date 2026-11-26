@@ -1562,7 +1562,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{qualifyFarm
     }
     const physicsPoses=pausedPoses===undefined?(physics?.poses({activeOnly:command.visualTerrain===true?false:compactPhysicsPoses})??null):pausedPoses;
     const physical=command.kind==='snapshot'&&(command.physicsCheckpoint===true||command.physicsCheckpoint==='encoded')?physics?.checkpointFall()??null:undefined;
-    const encounter=command.kind==='snapshot'?planner.encounterCheckpoint():null;
+    const encounter=command.kind==='snapshot'?planner.encounterCheckpoint(command.nativeAuthorityCheckpoint===true):null;
     const nativeAuthorityCheckpoint=command.kind==='snapshot'&&command.nativeAuthorityCheckpoint===true&&!planner.encounterCheckpointBlocked()?{version:3,...(encounter?{encounter}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;
     const projectedPaths=compactPresentationPaths&&!captureHistoricalEvents&&command.kind==='advance'&&!terrainCheckpoint&&!motionTrace&&!motionInvalidation&&(game.workers.some(actor=>Array.isArray(actor.path)&&actor.path.length>1)||(game.raid?.animals??[]).some(actor=>Array.isArray(actor.path)&&actor.path.length>1));
     const snapshotState=nativeAuthorityCheckpoint?nativeAnimalCheckpointState():game;

@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "scope": "Desierto sin portón, cohorte de calificación DEV. Guardado real de Home18 durante la mezcla de salida de GetUp y recarga en una autoridad nueva.",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 108.20000000298023
+    }
+  },
+  "sourceReceiptSha256": "109c30745029c727e6cdf8f9eba5816e48fb45e2fea19a5996f08b6b4dbd0ab5",
+  "artifacts": {
+    "src/world/wild-engine/spatial-savanna.wasm": "d4b7d751f40e8c356ab57e1aea01b3d025080f09a1456a347956793cd5f97795",
+    "public/wild-engine/spatial-threaded.wasm": "1b6692657f2e48195fa46ebe7d8b7670d4bfe455b3adc57cbe186dc1872a41de",
+    "public/wild-engine/spatial-threaded.mjs": "09256599c470ea827846d0cf34fabf5bb0e391a517999580601ec1a8431db41a"
+  },
+  "save": {
+    "storage": "IndexedDB",
+    "workerPersistence": true,
+    "sequence": 319,
+    "bytes": 280955,
+    "elapsed": 18.93999999999981,
+    "encounter": {
+      "version": 2,
+      "workerId": 900011,
+      "animalId": 1000000,
+      "hit": 29210,
+      "home": {
+        "villageId": 1,
+        "x": -5.800000000000001,
+        "z": 0.2,
+        "exitRemaining": 0.22000000000000042,
+        "path": [
+          {
+            "x": -15,
+            "z": 3
+          },
+          {
+            "x": -14,
+            "z": 3
+          },
+          {
+            "x": -13,
+            "z": 3
+          },
+          {
+            "x": -12,
+            "z": 3
+          },
+          {
+            "x": -11,
+            "z": 3
+          },
+          {
+            "x": -10,
+            "z": 3
+          },
+          {
+            "x": -9,
+            "z": 3
+          },
+          {
+            "x": -8,
+            "z": 3
+          },
+          {
+            "x": -7,
+            "z": 3
+          },
+          {
+            "x": -6,
+            "z": 3
+          },
+          {
+            "x": -6,
+            "z": 2
+          },
+          {
+            "x": -6,
+            "z": 1
+          },
+          {
+            "x": -6,
+            "z": 0
+          },
+          {
+            "x": -5.800000190734863,
+            "z": 0.20000000298023224
+          }
+        ]
+      }
+    }
+  },
+  "previousHome": {
+    "version": 1,
+    "authorityEpoch": "f5e246dc-13ab-4828-8eb2-36581ae1e6d1/1",
+    "nativeSession": 1,
+    "ticket": 4,
+    "effectiveTime": 18.91999999999981
+  },
+  "restoredHome": {
+    "prepared": {
+      "version": 1,
+      "authorityEpoch": "f9091377-20e8-4992-83f9-6ec5a02d0c3b/1",
+      "nativeSession": 1,
+      "ticket": 1,
+      "effectiveTime": 18.93999999999981
+    },
+    "acquired": {
+      "version": 1,
+      "authorityEpoch": "f9091377-20e8-4992-83f9-6ec5a02d0c3b/1",
+      "nativeSession": 1,
+      "ticket": 2,
+      "effectiveTime": 18.93999999999981
+    },
+    "actorId": 900011,
+    "bodyId": 1,
+    "firstSubmit": {
+      "sequence": 19,
+      "clockElapsed": 18.93999999999981,
+      "relativeTime": 0
+    }
+  },
+  "origin": {
+    "x": -14.795391656386068,
+    "z": 2.2314982912660457,
+    "runPhase": 24.516999999999975,
+    "walkPhase": 8.414999999999973,
+    "carryPhase": 9.5,
+    "runRemaining": 40,
+    "recoveryExitRemaining": 0.22000000000000042
+  },
+  "nextStep": {
+    "x": -14.799713970033023,
+    "z": 2.247732748594128,
+    "runPhase": 24.523999999999976,
+    "walkPhase": 8.414999999999973,
+    "carryPhase": 9.5,
+    "runRemaining": 40,
+    "recoveryExitRemaining": 0.20000000000000084
+  },
+  "home19": {
+    "retiredSequence": 3,
+    "pose": {
+      "x": -5.800000190734863,
+      "z": 0.20000000298023224,
+      "yaw": 0.7853976791094822,
+      "radius": 0.28,
+      "runPhase": 29.966214905060653,
+      "walkPhase": 8.414999999999973,
+      "carryPhase": 9.5,
+      "runRemaining": 40
+    },
+    "firstAbsentSubmit": {
+      "sequence": 130,
+      "boundary": {
+        "version": 1,
+        "authorityEpoch": "f9091377-20e8-4992-83f9-6ec5a02d0c3b/1",
+        "nativeSession": 1,
+        "ticket": 4,
+        "effectiveTime": 34.79999999999997
+      }
+    }
+  },
+  "elapsedAfterDrain": 34.87999999999998,
+  "drainedConsumers": 3,
+  "errors": []
+}

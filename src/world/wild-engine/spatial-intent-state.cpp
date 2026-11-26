@@ -167,6 +167,8 @@ struct NativeWorkerPoseResourceRequest {
 struct NativeHomeResourceRequest:NativeWorkerPoseResourceRequest {
  uint64_t raidSpawnSequence=0;
  uint64_t recoveryHit=0;
+ double recoveryExit=.24;
+ std::vector<float> restoredHomePath;
  uint64_t village=0,initialIdleSourceSequence=0,idleCycleSourceSequence=0,idleStrollSourceSequence=0;
  uint64_t strollRequestSourceSequence=0,farmRequestSourceSequence=0,farmArrivalSourceSequence=0;uint32_t idleStrollSourceGeneration=0,farmArrivalSourceGeneration=0;double homeX=0,homeZ=0;
  uint64_t completedTaskSourceSequence=0;

@@ -35,7 +35,7 @@ import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,c
 import {copyNativeHomeRouteProposal,copyNativeHomeRouteReference,copyNativeHomeRouteAttestation,nativeHomeRouteSource,nativeHomeRouteSourceSequence} from '../native-home-route.js';
 import {copyNativeHomeRequestReference,copyNativeHomeDeclarationReference,sameNativeHomeRequestReference,nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesInitialIdle,nativeHomeRequestContinuesFarmRequest,nativeHomeRequestContinuesIdleCycle,nativeHomeRequestContinuesHeldIdleStroll,nativeHomeRequestContinuesHeldFarmArrival,nativeHomeRequestContinuesCompletedFarmArrival,nativeHomeRequestContinuesCompletedIdleStroll} from '../native-home-request-reference.js';
 import {nativeHomeWorkerStatus} from '../native-home-request-reference.js';
-import {RECOVERY_EXIT_SECONDS} from '../../simulation/worker-recovery.js';
+import {RECOVERY_EXIT_SECONDS,woundedHomeSourceCurrent} from '../../simulation/worker-recovery.js';
 import {copyNativeInitialIdleRequestReference,copyNativeInitialIdleDeclarationReference,copyNativeInitialIdleState} from '../native-initial-idle-request-reference.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyProposal,copyNativeInitialIdleBodyAttestation,copyNativeTaskCancellationSource,sameNativeTaskCancellationSource} from '../native-initial-idle-body.js';
 import {readNativePendingTaskCancellation} from '../native-pending-task-cancellation.js';
@@ -947,11 +947,28 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
       throw Error('Encounter step proof was rejected');
   }
   let restoredEncounter=null;
-  function encounterCheckpoint(){
+  function encounterCheckpoint(captureHome=false){
     const state=owningState,worker=restoredEncounter?.worker??raidFlight?.worker;
     const marker=restoredEncounter?.marker??(encounterExhaustion?.confirmed?{version:1,
       workerId:encounterExhaustion.worker,animalId:encounterExhaustion.animal,hit:encounterExhaustion.hit}:null);
-    if(!marker||!encounterRecoveryCurrent(state,worker)||state.structures.some(s=>s.gate&&s.status!=='ruined'))return null;
+    if(!marker||state.structures.some(s=>s.gate&&s.status!=='ruined'))return null;
+    if(worker?.nativeRouteAdmission==='native-home'&&worker.incapacitated&&!state.raid){
+      const execution=nativeHomeRouteExecution(worker.id),reference=execution?.binding.reference,request=reference?.sourceRequest;
+      if(!request||request.recoveryHit!==marker.hit||execution.arrived||execution.executedThrough!==state.elapsed||
+         execution.binding.gateIds.length||execution.yaw!==worker.heading||worker.path!==null||worker.gateWaiting!==false||
+         worker.taskId||worker.crateId||worker.raidReturn||
+         !['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>execution[key]===worker[key])||
+         !woundedHomeSourceCurrent(state,worker,request,state.elapsed-reference.worldBoundary.effectiveTime))return null;
+      if(!captureHome)return marker;
+      const points=routePoints(reference.expectedRouteHandle),first=execution.firstRemainingPoint;
+      if(!points||!Number.isSafeInteger(first)||first<0||first*2>=points.length)
+        throw Error('Native encounter Home checkpoint lost its executed corridor');
+      const path=[];
+      for(let i=first*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
+      return {version:2,workerId:marker.workerId,animalId:marker.animalId,hit:marker.hit,
+        home:{...request.home,exitRemaining:worker.recoveryExitRemaining,path}};
+    }
+    if(!encounterRecoveryCurrent(state,worker))return null;
     if(state.raid){
       const animal=state.raid.animals[0],route=nativeAnimalCropState(animal.id);
       if(route?.mode!==2||route.arrived||!encounterRetreatOwner(state,animal,route)||route.executedThrough!==state.elapsed)return null;
@@ -965,12 +982,22 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
   }
   function restoreEncounterWorker(state,marker,body){
     if(!qualifyRaidEncounter||state!==owningState||restoredEncounter)throw Error('Native encounter restoration unavailable');
-    const source=nativeEncounterCheckpointActors(state,marker),{worker}=source;
+    const source=nativeEncounterCheckpointActors(state,marker),{worker,home}=source;
     syncBoundaryTime();
     session.actorSectorRevision({worker:true});
     if(wasm.nav_restore_encounter_worker?.(wasm.nav_intent_session(),marker.workerId,body,marker.hit,
-       worker.x,worker.z,worker.downHeading,worker.runPhase,worker.walkPhase,worker.carryPhase,
+       worker.x,worker.z,home?worker.heading:worker.downHeading,worker.runPhase,worker.walkPhase,worker.carryPhase,
        worker.runRemaining)!==1)throw Error('Native encounter worker restoration rejected');
+    if(home){
+      const pointer=wasm.nav_intent_attack_route_input_ptr(home.path.length);
+      if(!pointer)throw Error('Saved encounter Home path input unavailable');
+      const points=new Float32Array(wasm.memory.buffer,pointer,home.path.length*2);
+      home.path.forEach(({x,z},i)=>{points[i*2]=x;points[i*2+1]=z;});
+      const status=wasm.nav_intent_restore_encounter_home?.(wasm.nav_intent_session(),marker.workerId,marker.hit,
+        home.villageId,home.x,home.z,home.exitRemaining,home.path.length);
+      if(status!==1)throw Error('Saved encounter Home failed its native corridor proof: '+status);
+      Object.assign(worker,{nativeRouteAdmission:'pending-home-resources',running:false});
+    }
     restoredEncounter=source;
     return true;
   }
@@ -2631,6 +2658,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
     const a=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_home_request_ptr(),19));if(![1,2,3].includes(a[0])||a[1]!==actor||!a.every(Number.isFinite))throw Error('Invalid native Home request snapshot');
     const origin=a[0]===2?{raidSpawnSequence:wasm.nav_home_flight_event(actor,ticket)}:
       a[0]===3?{recoveryHit:wasm.nav_home_recovery_event(actor,ticket)}:{};
+    if(a[0]===3){
+      const exit=wasm.nav_home_recovery_exit?.(actor,ticket)??RECOVERY_EXIT_SECONDS;
+      if(exit!==RECOVERY_EXIT_SECONDS)origin.recoveryExit=exit;
+    }
     return copyNativeHomeRequestReference({kind:'native-home-request-reference',version:a[0],...origin,authorityEpoch:epoch(),actorId:a[1],nativeSession:a[2],requestSequence:a[3],requestedAt:a[4],home:{villageId:a[5],x:a[6],z:a[7]},pose:{x:a[8],z:a[9],yaw:a[10],runPhase:a[11],walkPhase:a[12],carryPhase:a[13],runRemaining:a[14],radius:a[17]},profile:a[15],bodyId:a[16],bodyFlags:a[18]});
   };
   const nativeHomeDeclarationReference=actorId=>{
@@ -3454,7 +3485,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,qualify
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('Native Home requires retained resource preparation');
     const actor=typeof actorId==='number'?actorId:numericId(actorId),state=owningState,worker=state?.workers.find(w=>numericId(w.id)===actor),flight=worker?.nativeRouteAdmission==='pending-raid-flight-resources',fresh=flight||worker?.nativeRouteAdmission==='pending-home-resources',source=fresh?nativeHomeRequestReference(actor):nativeTaskSettlementBinding(actor),r=fresh?source:source?.reference,home=r?.home,village=home&&state?.villages.find(v=>numericId(v.id)===home.villageId);
     if(!source||!home||!worker||!village)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
-    const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(flight?nativeRaidFlightMember(state,state.raid?.animals[0])===worker&&r.raidSpawnSequence===raidFlight?.event:worker.status===nativeHomeWorkerStatus(r))&&(r.recoveryHit?worker.incapacitated&&worker.hits===2&&worker.recoveryExitRemaining===RECOVERY_EXIT_SECONDS:!worker.incapacitated&&!worker.recoveryExitRemaining)&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission===(flight?'pending-raid-flight-resources':'pending-home-resources')&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
+    const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(flight?nativeRaidFlightMember(state,state.raid?.animals[0])===worker&&r.raidSpawnSequence===raidFlight?.event:worker.status===nativeHomeWorkerStatus(r))&&(r.recoveryHit?worker.incapacitated&&worker.hits===2&&worker.recoveryExitRemaining===(r.recoveryExit??RECOVERY_EXIT_SECONDS):!worker.incapacitated&&!worker.recoveryExitRemaining)&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission===(flight?'pending-raid-flight-resources':'pending-home-resources')&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});let candidate=null,translation=null,preparedTicket=null;
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-route',
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===18;},
