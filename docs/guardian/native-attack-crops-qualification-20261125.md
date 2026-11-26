@@ -132,6 +132,10 @@ En NVIDIA Turing, el Worker recargó el archivo público. La pose, el objetivo y
 
 ## Regresión
 
+En las pruebas de incursión que guardan partida, el arnés registra el plan nocturno que usa para lanzar el grupo y lo marca resuelto al aparecer. El doble de WASM del portón aplica el ancho de 15 campos y las versiones del servicio real. La selección amplia queda en 36 aprobadas y 19 omitidas por configuración. Con WASM canónico seleccionado, cinco controles de recarga y proyección adicionales pasan. La prueba del golpe completa los campos recientes de presentación usando la hora y la pose del impacto registradas en la partida de referencia.
+
+El control de un guardado durante `attack-661`, con 0,65 s consumidos, restituyó el golpe lógico al mismo cultivo y en el mismo subpaso que la partida continua. La autoridad quedó sin productor nativo activo y no solicitó otro ticket 27 al recargar. Esa recarga acredita la consecuencia de Game. La preparación gráfica a la edad guardada y la continuación nativa de ese golpe siguen abiertas.
+
 Se recuperaron las tres comprobaciones de la selección anterior. La prueba de preview envía su publicación sin segmentos antes de que el stream la prepare. Los dos arneses de recuperación incluyen la proyección de supresiones exigida por el canal y comprueban que la autoridad reciba la pausa antes de perder terreno. Las 484 pruebas de la selección ampliada pasaron. [Recibo de regresión](performance/native-attack-crops-qualification-20261125.json).
 
 Pasaron 512 de 522 pruebas seleccionadas. Cinco quedaron omitidas y cinco casos QA-100 de último golpe a trabajador reprodujeron los mismos fallos de la línea base. El build de producto con WebGPU Worker y Draw remoto pasó en 1 min 5 s. Standalone y pthread conservaron las firmas existentes y añadieron 25 funciones de los contratos de ruta, golpe y estado del animal.
