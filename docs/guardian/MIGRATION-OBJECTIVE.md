@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+NVIDIA completó la tercera noche de Sabana desde el guardado posterior a la venta de la cosecha. El búfalo conservó cuerpo y cuota con READY retenido, golpeó cuatro veces el centro y se retiró con el saldo de 751 intacto. [Recorrido y límites](native-cold-worker-admission-20261126.md#tercera-noche-con-un-búfalo-y-el-trabajador-refugiado).
+
 La primera cosecha de Sabana llega de Harvest15 a Carry16 y liquidación17 con el mismo cuerpo. NVIDIA retuvo READY, presentó el relevo, confirmó un único ingreso y drenó tras Idle. [Recorrido y límites](native-cold-worker-admission-20261126.md#primera-cosecha-y-entrega-del-tercer-turno).
 
 La segunda noche introductoria admite una hiena que ataca el único centro con el trabajador refugiado. NVIDIA recargó el checkpoint previo, presentó los tres golpes y la retirada sobre el mismo cuerpo y drenó. [Recorrido y límites](native-cold-worker-admission-20261126.md#segunda-noche-con-una-hiena-y-el-trabajador-refugiado).

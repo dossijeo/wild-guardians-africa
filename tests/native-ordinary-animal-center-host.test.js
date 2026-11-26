@@ -148,12 +148,15 @@ test('the graphical publication after GO must confirm the typed target and attac
   assert.equal(nativeAnimalCropPublicationMatches(state,strike),false);
   animal.attackId = 'attack-8';
   assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
-  animal.species='hyena';
-  assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
-  assert.equal(nativeAnimalCropPublicationMatches({...state,workers:[{status:'fleeing'}]},strike),false);
-  assert.equal(nativeAnimalCropPublicationMatches({...state,raid:{...raid,daytime:true}},strike),false);
-  animal.targetId='plant-2';
-  assert.equal(nativeAnimalCropPublicationMatches(state,{...strike,reference:{...strike.reference,purpose:undefined}}),false);
+  for(const species of ['hyena','buffalo']){
+   animal.species=species;
+   assert.equal(nativeAnimalCropPublicationMatches(state,strike),true);
+   assert.equal(nativeAnimalCropPublicationMatches({...state,workers:[{status:'fleeing'}]},strike),false);
+   assert.equal(nativeAnimalCropPublicationMatches({...state,raid:{...raid,daytime:true}},strike),false);
+   animal.targetId='plant-2';
+   assert.equal(nativeAnimalCropPublicationMatches(state,{...strike,reference:{...strike.reference,purpose:undefined}}),false);
+   animal.targetId='structure-2';
+  }
 });
 
 for(const kind of [26,27])test('terminal Draw loss preserves the acquired center resource '+kind,async()=>{

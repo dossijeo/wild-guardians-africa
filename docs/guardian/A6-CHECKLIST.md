@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La tercera noche introductoria de Sabana admite un búfalo con el trabajador refugiado. NVIDIA confirmó las nueve adquisiciones sobre un solo cuerpo, los cuatro golpes al centro, la ausencia tras Retreat y el drenaje. [Recorrido y límites](native-cold-worker-admission-20261126.md#tercera-noche-con-un-búfalo-y-el-trabajador-refugiado).
+
 Carry16 de Sabana conserva el cuerpo y la pose de Harvest15 durante READY. NVIDIA presentó la caja sobre ese cuerpo, la liquidación17 y el único abono del tercer turno. El control del rig verifica además la retirada diferida de los materiales del dueño histórico. [Recorrido y límites](native-cold-worker-admission-20261126.md#primera-cosecha-y-entrega-del-tercer-turno).
 
 La hiena introductoria de la segunda noche usa el corredor al centro, los tres golpes y Retreat sobre un solo cuerpo. NVIDIA certificó sus siete adquisiciones, la ausencia final y el drenaje desde un checkpoint con el civil refugiado. [Recorrido y límites](native-cold-worker-admission-20261126.md#segunda-noche-con-una-hiena-y-el-trabajador-refugiado).

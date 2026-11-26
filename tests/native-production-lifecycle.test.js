@@ -739,7 +739,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   const center=state.structures.find(s=>s.kind==='center');
   assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
  }finally{opening.dispose();}
- let releaseFarm,releaseStroll,releaseHome,releaseRaid,releaseCarry,secondNightRig,qualifySecondNight=false;
+ let releaseFarm,releaseStroll,releaseHome,releaseRaid,releaseCarry,nightRig,checkNightRig=false;
  const holds=new Map([
   ['farm-arrival',new Promise(resolve=>releaseFarm=resolve)],
   ['idle-stroll',new Promise(resolve=>releaseStroll=resolve)],
@@ -753,15 +753,15 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
  const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
   getTerrainManifest:()=>manifest,onReady:record=>holds.get(record.kind),
   async onPrepare(record){
-   if(!qualifySecondNight||!['animal-crop-route','animal-crop-strike'].includes(record.kind))return;
-   if(!secondNightRig)secondNightRig=await originalRig(f.snapshot(),manifest);
-   secondNightRig.update(f.snapshot());
-   await secondNightRig.prepare(record.resources);
+   if(!checkNightRig||!['animal-crop-route','animal-crop-strike'].includes(record.kind))return;
+   if(!nightRig)nightRig=await originalRig(f.snapshot(),manifest);
+   nightRig.update(f.snapshot());
+   await nightRig.prepare(record.resources);
   },onCommit(record,receipt){
    receipts.set(record,receipt);
-   if(qualifySecondNight){
+   if(checkNightRig){
     const binding=receipt.nativeAnimalCropRouteBinding??receipt.nativeAnimalCropStrikeBinding;
-    if(binding)secondNightRig.commit(binding,receipt);
+    if(binding)nightRig.commit(binding,receipt);
    }
   }});
  try{
@@ -776,7 +776,7 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
    const p=await f.command({kind:'advance',seconds:.05,steps:10,nightFastForward});
    events.push(...p.events);
    const snapshot=JSON.parse(p.snapshot);
-   secondNightRig?.update(snapshot);
+   nightRig?.update(snapshot);
    for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
    for(let i=0;i<6;i++)await f.present();
    assert.deepEqual(f.faults,[]);
@@ -918,25 +918,29 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
    assert.deepEqual(reloaded.native.faults,[]);
   }finally{await reloaded.close();}
 
-  qualifySecondNight=true;
-  const secondNightStart=events.length,secondNightRecords=f.records.length;
-  const secondNightEvents=()=>events.slice(secondNightStart);
-  const afterHyena=await drive(()=>secondNightEvents().some(event=>event.type==='RaidEnded'),1100,true);
-  const hyenaBorn=secondNightEvents().find(event=>event.type==='RaidSpawned');
-  assert.deepEqual(hyenaBorn.raidFacts.actors.map(({species,hitsRemaining})=>[species,hitsRemaining]),[['hyena',3]]);
-  const hyenaActor=Number(hyenaBorn.raidFacts.actors[0].id.slice(7));
-  const acquired=f.records.slice(secondNightRecords).filter(row=>row.committed&&row.kind.startsWith('animal-crop'));
-  assert.deepEqual(acquired.map(row=>row.resources.reference.purpose),['center','center','center','center','center','center','retreat']);
-  assert(acquired.every(row=>row.resources.reference.actorId===hyenaActor&&row.resources.reference.bodyId===4));
-  const hyenaHits=secondNightEvents().filter(event=>event.type==='StructureHit');
-  assert.deepEqual(hyenaHits.map(event=>[event.structureHit.previousHp,event.structureHit.hp]),[[560,535],[535,510],[510,485]]);
-  assert.equal(new Set(secondNightEvents().filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId)).size,3);
-  assert.equal(secondNightEvents().filter(event=>event.type==='CropDestroyed').length,0);
-  assert.equal(afterHyena.raid,null);
-  assert.equal(afterHyena.workers[0].status,'home');
-  assert.equal(secondNightRig.centerReturns,3);
-  assert.equal(secondNightRig.runningReturns,1);
-  await presentRetreatAbsence(receipts.get(acquired.at(-1)).nativeAnimalCropRouteBinding.reference);
+  const checkShelteredNight=async(species,bodyId,hitPoints,deadline)=>{
+   checkNightRig=true;
+   const eventStart=events.length,recordStart=f.records.length;
+   const nightEvents=()=>events.slice(eventStart);
+   const afterRaid=await drive(()=>nightEvents().some(event=>event.type==='RaidEnded'),deadline,true);
+   const born=nightEvents().find(event=>event.type==='RaidSpawned');
+   assert.deepEqual(born.raidFacts.actors.map(animal=>[animal.species,animal.hitsRemaining]),[[species,hitPoints.length]]);
+   const actor=Number(born.raidFacts.actors[0].id.slice(7));
+   const acquired=f.records.slice(recordStart).filter(row=>row.committed&&row.kind.startsWith('animal-crop'));
+   assert.deepEqual(acquired.map(row=>[row.kind,row.resources.reference.purpose]),[
+    ...hitPoints.flatMap(()=>[['animal-crop-route','center'],['animal-crop-strike','center']]),['animal-crop-route','retreat']]);
+   assert(acquired.every(row=>row.resources.reference.actorId===actor&&row.resources.reference.bodyId===bodyId));
+   assert.deepEqual(nightEvents().filter(event=>event.type==='StructureHit').map(event=>[event.structureHit.previousHp,event.structureHit.hp]),hitPoints);
+   assert.equal(new Set(nightEvents().filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId)).size,hitPoints.length);
+   assert.equal(nightEvents().filter(event=>event.type==='CropDestroyed').length,0);
+   assert.equal(afterRaid.raid,null);
+   assert.equal(afterRaid.workers[0].status,'home');
+   assert.equal(nightRig.centerReturns,hitPoints.length);
+   assert.equal(nightRig.runningReturns,1);
+   await presentRetreatAbsence(receipts.get(acquired.at(-1)).nativeAnimalCropRouteBinding.reference);
+   nightRig.close();nightRig=null;checkNightRig=false;
+  };
+  await checkShelteredNight('hyena',4,[[560,535],[535,510],[510,485]],1180);
 
   const thirdDawn=await drive(s=>s.day===3,1201,true);
   assert.deepEqual(thirdDawn.pauses,['hiring']);
@@ -978,7 +982,8 @@ test('the paid Savanna shift preserves the worker through a selected Idle stroll
   assert.equal(f.records.slice(harvestStart).filter(row=>row.kind==='task-settlement'&&row.committed).length,1);
   assert.equal((await advance()).ledger.balance.n,delivered.ledger.balance.n);
   assert.equal(deliveries().length,1);
- }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();releaseCarry?.();try{await f.close();}finally{secondNightRig?.close();}}
+  await checkShelteredNight('buffalo',6,[[485,450],[450,415],[415,380],[380,345]],1799);
+ }finally{releaseFarm();releaseStroll();releaseHome();releaseRaid();releaseCarry?.();try{await f.close();}finally{nightRig?.close();}}
 });
 
 for(const [kind,fixtureName,clockField,bindingField,capability] of [
