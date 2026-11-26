@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La aproximación a un centro y su Strike27 recuperan sus adquisiciones tras dos pérdidas de Draw en la misma incursión. NVIDIA confirmó las edades en ambos sustitutos, un solo débito de 20 HP y el drenaje. Es evidencia parcial de E para un facóquero sin civiles en Desierto. [Recuperación y recibo](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-el-ataque-aislado).
+
 Después de Home19, AttackCrops26 recupera su asignación original aunque el ticket mundial ya sea el del refugio. NVIDIA confirmó el primer dibujo con el trabajador ausente, el golpe único del facóquero y el drenaje. Es evidencia parcial de E en el perfil de desarrollo de Sabana. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-después-de-home19).
 
 Flee Home18 y AttackCrops26 recuperan juntos sus dos asignaciones tras la pérdida terminal de Draw. NVIDIA confirmó ambas edades en el primer envío del sustituto y Home19 retiró al trabajador mientras el facóquero seguía con su ticket inicial. Es evidencia parcial de E para la cohorte de desarrollo de Sabana. [Recuperación y recibo](native-attack-crops-qualification-20261125.md#pérdida-de-draw-durante-flee-y-attackcrops).

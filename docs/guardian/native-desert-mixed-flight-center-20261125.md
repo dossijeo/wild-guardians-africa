@@ -132,3 +132,11 @@ La primera presentación de ruina registró 40,500 ms. El máximo de 1998 muestr
 Pasaron 35 de 35 pruebas dirigidas. El control anterior al cambio reproduce el bloqueo cuando el trabajador ya está en el refugio. El control negativo conserva el rechazo cuando comienza a 0,25 m del refugio. La compilación web terminó en 45,91 s.
 
 SHA-256 del recibo gzip `29cf8766fb98710f447b0eec74853d88a8783f54a893eab3f17a94cba8e86fd8`. SHA-256 del snapshot de entrada `9eea11bd2ffa33e9c442019f66a884098008e7a450cd734c503554d5bc75792f`.
+
+## Pérdida de Draw durante el ataque aislado
+
+El relevo conserva la aproximación 26 y el golpe 27 cuando su reserva identifica al centro todavía intacto en WASM y Game. La superficie prepara la geometría de daño del centro y admite el material del golpe junto con los materiales a los que volverá el rig. Los controles dirigidos usan el glTF original, comparan el reloj escrito con el de picking y rechazan `plant-2` cuando el permiso identifica a `structure-2`.
+
+NVIDIA Turing ejecutó dos pérdidas en la misma partida sin civiles. El primer sustituto retomó el cuerpo 1, la asignación 2 y el ticket 2 con edad 0,299999982 s en t=3,35. La aproximación continuó hasta el Strike27 que adquirió el mismo cuerpo. El segundo sustituto retomó la asignación 3 y el ticket 4 con edad 0,399999976 s en t=45,55. Cada recuperación confirmó su primer envío antes de reanudar. `attack-5` redujo una sola vez `structure-2` de 600 a 580 HP en t=46,70. El dibujo 14 posterior omitió el golpe retirado, el saldo permaneció intacto y el sustituto final drenó.
+
+La prueba física carga un estado de Desierto anterior a RaidSpawned, con un facóquero previsto, un centro y el terreno residente. Los dos controles de recuperación también se pueden ejecutar con `node --test tests/native-ordinary-animal-center-host.test.js`. Siguen abiertas la recuperación de la cohorte mixta con un portón en movimiento y la cadencia integrada a 60 Hz. [Estado de partida](../qa/raid-spawn-navigation/prepared-complete-browser-desert.json) · [Recibo físico](performance/native-center-draw-loss-20261126.json).

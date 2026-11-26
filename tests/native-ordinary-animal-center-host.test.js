@@ -11,6 +11,9 @@ import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-fr
 import {nativeAnimalCropPublicationMatches} from '../src/world/native-animal-crop-resource.js';
 import {originalRig} from './helpers/native-animal-crop-rig.js';
 import {nativeProductionAuthority, untilProduction} from './helpers/native-production-authority.js';
+import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
+import {floorFloat32} from '../src/rendering/float32-time.js';
+import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 
 const binary = process.env.QA_BARRIER_WASM ?? new URL('../src/world/wild-engine/spatial-savanna.wasm', import.meta.url);
 const module = new WebAssembly.Module(readFileSync(binary));
@@ -144,6 +147,88 @@ test('the graphical publication after GO must confirm the typed target and attac
   assert.equal(nativeAnimalCropPublicationMatches(raid,strike),false);
   animal.attackId = 'attack-8';
   assert.equal(nativeAnimalCropPublicationMatches(raid,strike),true);
+});
+
+for(const kind of [26,27])test('terminal Draw loss preserves the acquired center resource '+kind,async()=>{
+  const initial=beforeRaid(),receipts=new Map(),manifest={epoch:'center-replacement',chunks:chunkKeys.map(key=>{
+    const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+  })};
+  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyAnimalCrop:true,getTerrainManifest:()=>manifest,
+    onCommit(record,receipt){receipts.set(record.kind,receipt);}});
+  const ports=new MessageChannel();
+  let replacement,rig;
+  const step=()=>world.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+  try{
+    world.command({kind:'setNavigationView',view});
+    step();
+    await untilProduction(world,()=>receipts.has('animal-crop-route'));
+    let row;
+    for(let i=0;i<1000;i++){
+      const result=step();
+      for(const key of result.residency?.missing??[]){
+        const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});
+      }
+      await world.present();
+      row=world.host.inspect().nativeRouteFrame?.bindings.find(b=>b.nativeAnimalCrop?.kind===kind&&b.nativeAnimalCrop?.purpose==='center');
+      if(row?.relativeTime>.15)break;
+    }
+    assert(row?.relativeTime>.15);
+    const frozen=world.snapshot(),animal=frozen.raid.animals[0],field=kind===26?'nativeAnimalCropRouteBinding':'nativeAnimalCropStrikeBinding';
+    const proof=receipts.get(kind===26?'animal-crop-route':'animal-crop-strike')[field];
+    assert.equal(animal.targetId,'structure-2');
+    assert.equal(frozen.structures[0].hp,600);
+    world.gpu.device.destroy();world.retireResourceEndpoint();
+    const hold=await world.authority.quiesceNativeIntentProduction();
+    const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
+    const route=await world.authority.terminalWorkerRoute();
+    assert(retired.terminal&&retired.callbacksSettled);
+    assert.deepEqual(route,{kind,actorId:proof.reference.actorId});
+    replacement=await fixture({capabilities:{nativeAnimalCropVersion:1}},
+      {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
+    const {recoveredWorkerRoute:q}=await world.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+    const ref=q.resources[field].reference,origin=ref.worldBoundary.effectiveTime,at=frozen.elapsed,age=floorFloat32(at-origin);
+    assert.deepEqual(ref,proof.reference);
+    assert.equal(q.execution.executedThrough,at);
+    if(kind===27)assert.equal(q.execution.binding.attackId,proof.attackId);
+
+    const wrongTarget=structuredClone(frozen);
+    wrongTarget.raid.animals[0].targetId='plant-2';
+    rig=await originalRig(wrongTarget,manifest);
+    await assert.rejects(rig.recover(q),/Animal crop source or original clip bank unavailable/);
+    rig.update(structuredClone(frozen));
+    assert.deepEqual(await rig.recover(q),kind===26?[4]:[4,4]);
+    replacement.client.registerClockBinding(replacement.buffer,{byteOffset:0,epoch:origin,semantic:'relative',
+      nativeAnimalCrop:ref,resourceEnd:kind===26?nativeClockResourceEnd(origin,ref.endTime):ref.endTime});
+    await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
+    const submit=replacement.frame(0,{nativeWorldBoundary:ref.worldBoundary,
+      clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
+    submit.catch(()=>{});
+    await flush();await replacement.host.idle();replacement.host.present();await submit;
+    const draw=await world.authority.checkHeldDraw(30,hold,route);
+    assert.equal(draw.relativeTime,age);
+    assert.deepEqual(draw.nativeAnimalCrop,ref);
+    assert.equal(new Float32Array(replacement.gpu.buffers[0].data.buffer)[0],age);
+    const pickAge=captureNativeRoutePickFrame(replacement.host.inspect()).getAnimalCropAge(ref);
+    assert.equal(pickAge,age);rig.presented(pickAge);
+    world.authority.resumeNativeIntentProduction(hold);
+    let state=JSON.parse(step().snapshot);
+    if(kind===26){
+      const next=state.raid.animals[0];
+      assert.notDeepEqual([next.x,next.z],[animal.x,animal.z]);
+      assert.equal(state.structures[0].hp,600);
+    }else{
+      while(state.elapsed<ref.endTime)state=JSON.parse(step().snapshot);
+      rig.update(structuredClone(state));
+      const impacts=state.events.filter(e=>e.type==='AnimalLogicalHit');
+      assert.deepEqual(impacts.map(e=>[e.attackId,e.targetId]),[['attack-'+proof.attackId,'structure-2']]);
+      assert.equal(state.structures[0].hp,580);
+      assert.equal(rig.centerReturns,1);
+    }
+    assert.deepEqual(world.faults,[]);
+  }finally{
+    rig?.close();replacement?.client.dispose();await replacement?.host.dispose();
+    ports.port1.close();ports.port2.close();await world.close();
+  }
 });
 
 test('the Desert center route, both strikes and retreat keep one acquired animal body', async () => {

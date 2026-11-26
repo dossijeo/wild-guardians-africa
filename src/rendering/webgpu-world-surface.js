@@ -753,6 +753,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       for(const {resources,execution,profile,crop,ref} of members){
         const input={resources,execution,terrainManifest:source.terrainManifest,recoveryCut:grouped?boundary:null};
         if(crop){
+          if(profile.kind===27&&ref.purpose==='center')await settlements.prepareCenterStrike(ref.targetId,ownerSignal);
           await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
         }else{

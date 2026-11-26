@@ -10,7 +10,7 @@ import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-bo
 // The terminal sample is also needed for the next strike's source validation.
 function copyCropAttestation(value){
  const binding=copyNativeAnimalCropAttestation(value,26);
- if(binding.reference.purpose==='center'||value?.gateIds?.length!==0||!Array.isArray(value.gateIds)||
+ if(value?.gateIds?.length!==0||!Array.isArray(value.gateIds)||
     !['x','z','phase'].every(key=>Number.isFinite(value.terminal?.[key]))||
     value.terminal.phase<binding.reference.phase)throw TypeError('Invalid recovered crop source');
  const {x,z,phase}=value.terminal;
@@ -45,7 +45,7 @@ function copyCropResources(value,cut=null){
 }
 function copyStrikeAttestation(value){
  const binding=copyNativeAnimalCropAttestation(value,27);
- if(binding.reference.purpose!==undefined||binding.assignmentSequence!==binding.reference.sourceControlSequence+1||
+ if(binding.assignmentSequence!==binding.reference.sourceControlSequence+1||
     !Array.isArray(value.gateIds)||value.gateIds.length)throw TypeError('Invalid recovered crop strike');
  return Object.freeze({...binding,gateIds:Object.freeze([])});
 }

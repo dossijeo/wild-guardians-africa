@@ -188,10 +188,12 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
   try{
    part=await prepareAnimalCrop(proposal,support,{signal,getPickAge,recovery:{execution,isCurrent,attackId:proof.attackId}});
    const {object,options}=part.request;
-   await pipelineAdmission.prepareAndPublish(object,options,()=>{
+   const publish=()=>{
     if(!part.valid())throw Error('Recovered crop rig changed during admission');
     part.activate();part.finalize(resources);adopted=true;
-   });
+   };
+   if(part.requests)await pipelineAdmission.prepareManyAndPublish(part.requests,publish);
+   else await pipelineAdmission.prepareAndPublish(object,options,publish);
    if(!adopted)throw Error('Recovered crop rig was not admitted');
   }finally{if(!adopted)part?.cancel();}
  }
@@ -287,7 +289,7 @@ export function createWebGpuAnimalRoster({scene,residency,state,renderer,assetBa
    if(center&&!travel){
     // Detaching the strike reinstalls the route binding's original materials.
     // Admit that exact return on the live meshes before the strike can start.
-    const materialAlternatives=meshes.map(mesh=>({mesh,material:oldBinding.originalMaterial(mesh)}));
+    const materialAlternatives=meshes.map(mesh=>({mesh,material:oldBinding?oldBinding.originalMaterial(mesh):mesh.material}));
     // A final hit may publish Retreat in the same boundary. The confirmed
     // actor then selects its existing Running presentation before the route GO.
     const include=entry.entity.hitsRemaining===1?[...meshes,...actor.bakedRunningMeshes()]:meshes;

@@ -35,12 +35,19 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
   const p='public/content/'+prefix+'/'+species+'/'+(attack?name+'/':'')+'walking';if(!owned.has(p)){
    const bytes=readFileSync(p+'.bin');owned.set(p,createBakedWalkTexture(JSON.parse(readFileSync(p+'.json')),bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength)));
   }return owned.get(p);}};}
+ let recoveryRequests=null;
  const pipelineAdmission={prepare:async()=>{},async prepareTicket(){
    if(holdWalking&&rootAdmitted&&!holdingWalk){holdingWalk=true;walkStarted();await walkGate;}
    rootAdmitted=true;return {valid:()=>true};
-  },async prepareAndPublish(_root,{signal},publish){
+  },async prepareAndPublish(object,options,publish){
+   if(recoveryRequests){if(options.materialAlternatives)recoveryRequests.push({object,options});publish();return;}
+   const {signal}=options;
    assert(historical);if(postStrike){historicalAdmissions++;publish();return;}assert(!lateHistory||lateHistory.signal.aborted);
    await new Promise(resolve=>{lateHistory={signal,publish,resolve};});
+   publish();
+  },async prepareManyAndPublish(requests,publish){
+   assert(recoveryRequests);
+   recoveryRequests.push(...requests);
    publish();
   },deferRelease(_root,op){op();}},
   renderer={backend:{isWebGPUBackend:true},library:{fromMaterial:()=>new MeshStandardNodeMaterial()}};
@@ -167,6 +174,24 @@ export async function originalRig(state,manifest,{contention=null,onNativeCropSt
    assert(!observe(.05).ok);assert(!observe(.05).ok);
    await new Promise(resolve=>setImmediate(resolve));assert.equal(historicalAdmissions,1);
    assert(observe(.05).ok);assert.equal(historicalAdmissions,1);intact();
+  },
+  async recover(source){
+   recoveryRequests=[];
+   try{
+    await roster.prepareRecoveredCrop(source,terrain,{signal:new AbortController().signal,isCurrent:()=>true,getPickAge:()=>age});
+    const root=roster.get(animal.id).root;
+    for(const {object,options} of recoveryRequests){
+     assert.equal(object,root);
+     for(const {mesh} of options.materialAlternatives)assert(options.include.includes(mesh));
+    }
+    const retired=source.execution.binding.reference.kind===27&&source.execution.binding.reference.purpose==='center';
+    if(retired){
+     const [{options}]=recoveryRequests;
+     preparedReturn=new Map(options.include.map(mesh=>[mesh,options.materialAlternatives.find(item=>item.mesh===mesh)?.material??mesh.material]));
+    }
+    intact();
+    return recoveryRequests.map(({options})=>options.materialAlternatives.length);
+   }finally{recoveryRequests=null;}
   },
   presented(value){age=value;const restore=roster.get(animal.id).preparePick();assert.equal(typeof restore,'function');restore();intact();},
   get centerReturns(){return centerReturns;},get runningReturns(){return runningReturns;},
