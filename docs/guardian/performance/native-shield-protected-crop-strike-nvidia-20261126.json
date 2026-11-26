@@ -700,5 +700,33 @@
     "traceSha256": "6a0fe68e826ef20797ddd69bab2d53e35f35c813caafc16963c9632c986b1ade",
     "traceBytes": 35962734,
     "traceLoss": false
+  },
+  "longestIntervalTrace": {
+    "previousSequence": 239,
+    "replacementSequence": 241,
+    "fence": {
+      "request": "request:6662",
+      "caller": "pipeline admission retirement flushUploads",
+      "retainedWrites": 61,
+      "requestedMs": 92.2,
+      "receivedMs": 392,
+      "finishedMs": 393.4
+    },
+    "preparer": {
+      "microtasksStartMs": 100.215,
+      "microtasksWallMs": 280.717,
+      "pipelinePumpStartMs": 146.369,
+      "pipelinePumpWallMs": 234.558,
+      "pipelinePumpCpuMs": 235.592
+    },
+    "unverified": [
+      "time of fence postMessage after transport credit",
+      "pipeline request and shader owner",
+      "contribution to replacement frame delay"
+    ],
+    "nextObservation": [
+      "mark the fence send after transport credit",
+      "correlate pipeline request, object, pass and compileAsync start and return"
+    ]
   }
 }
