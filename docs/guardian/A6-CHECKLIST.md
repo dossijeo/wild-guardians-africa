@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Desierto 983 recarga dos centros y dos portones asentados durante la huida y tras Home19, durante aproximación, golpe y Retreat. NVIDIA confirmó las cuatro épocas, ambas hojas y la vuelta al centro civil. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros-y-dos-portones).
+
 NVIDIA presentó la ruina de Desierto 983 con la aproximación del facóquero activa tras Home19, en recorridos con uno y dos portones. WASM conserva las hojas asentadas y la asignación del animal. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#derrumbe-tras-cruzar-portones).
 
 En Desierto 983 con dos centros alternativos, la admisión conserva la elección ordinaria del tercero mientras se retira la huella del centro derrumbado. NVIDIA confirmó que el centro civil conserva 600 HP y que el trabajador completa el mismo turno. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#elección-entre-dos-centros-alternativos).

@@ -15,15 +15,24 @@ const input=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/desierto983-g
 const gateId='structure-'+input.expectedGate;
 const gate=state=>state.structures.find(structure=>structure.gate);
 
-for(const phases of [['flight'],['approach','strike','retreat']])test(`a second Desert center keeps its identity across ${phases.join(', ')} disk cuts`,async()=>{
- const source=nativeFarmArrivalRouteFixture({peer:false});
- const initial=structuredClone(source.state);
- source.close();
+for(const twoGates of [false,true])for(const phases of [['flight'],['approach','strike','retreat']])test(
+ `a second Desert center keeps its identity across ${phases.join(', ')} disk cuts${twoGates?' with two gates':''}`,async()=>{
+ let initial,gateIds=[];
+ if(twoGates){
+  initial=deserialize(input.snapshot);
+  const extraGate=initial.nextId++;
+  initial.structures.push({...gate(initial),id:'structure-'+extraGate,created:gate(initial).created+1,z:5.3});
+  gateIds=[input.expectedGate,extraGate];
+ }else{
+  const source=nativeFarmArrivalRouteFixture({peer:false});
+  initial=structuredClone(source.state);
+  source.close();
+ }
  const civilCenter=initial.workers[0].centerId,targetId=`structure-${initial.nextId++}`;
  initial.structures.push({...initial.structures[0],id:targetId,x:-18,z:-12});
- initial.dayPlan={done:false,at:initial.time+.8,group:['warthog']};
- const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
- const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
+ initial.dayPlan={done:false,at:initial.time+(twoGates?10:.8),group:['warthog']};
+ const view=twoGates?input.navigationView:{bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
+ const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,drawFarmGate:twoGates});
  const cuts=new Map();
  let originalEpoch;
  try{
@@ -43,7 +52,13 @@ for(const phases of [['flight'],['approach','strike','retreat']])test(`a second 
    const disk=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
    assert(disk.saved,`missing ${phase} checkpoint`);
    const checkpoint=disk.state.workerNativeAuthorityCheckpoint;
-   assert.equal((checkpoint.raidFlight??checkpoint.refugeReturn)?.centerId,civilCenter);
+   const marker=checkpoint.raidFlight??checkpoint.refugeReturn;
+   assert.equal(marker?.centerId,civilCenter);
+   if(twoGates){
+    assert.equal(marker.version,2);
+    assert.deepEqual(marker.gates,gateIds.map(id=>({id:'structure-'+id,opening:1,...(phase==='flight'?{reservedByHome:true}:{})})));
+    if(phase==='flight')assert.deepEqual(new Set(draw.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId)),new Set(gateIds));
+   }
    if(phase!=='retreat')assert.equal(disk.state.raid.animals[0].targetId,targetId);
    cuts.set(phase,{disk:disk.state,kind,purpose});
    originalEpoch=binding.nativeAnimalCrop.worldBoundary.authorityEpoch;
@@ -56,7 +71,13 @@ for(const phases of [['flight'],['approach','strike','retreat']])test(`a second 
   if(phase==='flight')checkpoint.raidFlight.animalPose.targetId=civilCenter;
   else checkpoint.refugeReturn.centerId=targetId;
   assert.throws(()=>savedNativeAuthorityOptions(serialize(altered)),/differs from/);
+  if(twoGates){
+   const changed=structuredClone(disk);
+   changed.structures.find(row=>row.id==='structure-'+gateIds[1]).gateOpen=.5;
+   assert.throws(()=>savedNativeAuthorityOptions(serialize(changed)),/differs from/);
+  }
   const options=savedNativeAuthorityOptions(serialize(disk));
+  const restoredFlightActor=disk.workerNativeAuthorityCheckpoint.raidFlight?.actorId;
   let release,held,returned,restoredDraw;
   const ready=new Promise(resolve=>{release=resolve;});
   const cold=await nativeProductionAuthority(disk,{...options,async onReady(record){
@@ -64,16 +85,24 @@ for(const phases of [['flight'],['approach','strike','retreat']])test(`a second 
    if(record.kind===expected&&!held){held=record;await ready;}
   },onCommit(record,data){if(record.kind==='farm-arrival')returned=data.nativeFarmArrivalBinding;}});
   try{
+   assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
    await untilProduction(cold,()=>held?.packet);
    const waiting=await tick(cold),animal=waiting.raid.animals[0],saved=disk.raid.animals[0];
    for(const key of ['x','z','heading','motionPhase','targetId','attackId','attackRemaining','hitsRemaining'])
     assert.equal(animal[key],saved[key],`${phase}: ${key} changed before READY`);
    assert.equal(waiting.workers[0].centerId,civilCenter);
+   if(twoGates){
+    assert.deepEqual(waiting.structures.filter(row=>row.gate).map(row=>row.gateOpen),[1,1]);
+    if(phase==='flight')assert.deepEqual(new Set(held.resources.gates.map(row=>row.gateId)),new Set(gateIds));
+   }
    release();
    let current;
    for(let i=0;i<1850;i++){
     current=await tick(cold);
-    restoredDraw??=cold.host.inspect().nativeRouteFrame?.bindings.find(row=>{
+    const frame=cold.host.inspect().nativeRouteFrame;
+    const mixedGateDraw=!twoGates||phase!=='flight'||frame?.bindings.some(row=>row.nativeHome?.actorId===restoredFlightActor)&&
+      gateIds.every(id=>frame.bindings.some(row=>row.nativeGate?.gateId===id));
+    if(mixedGateDraw)restoredDraw??=frame?.bindings.find(row=>{
      const ref=row.nativeAnimalCrop;
      return ref?.kind===kind&&ref.purpose===purpose&&ref.worldBoundary.authorityEpoch!==originalEpoch&&
       (purpose==='retreat'||'structure-'+ref.targetId===targetId)&&row.relativeTime>=0;
@@ -88,6 +117,7 @@ for(const phases of [['flight'],['approach','strike','retreat']])test(`a second 
    assert.equal(current.workers[0].hits,0);
    assert.deepEqual(current.ledger,disk.ledger);
    assert.equal('structure-'+returned.reference.sourceRequest.centerId,civilCenter);
+   if(twoGates)assert.deepEqual(returned.gateIds,gateIds);
    assert.equal(current.structures.find(row=>row.id===civilCenter).hp,600);
    assert.deepEqual(current.events.filter(row=>row.type==='StructureHit').map(row=>[row.targetId,row.structureHit.hp]),
     [580,560,540,520].map(hp=>[targetId,hp]));
