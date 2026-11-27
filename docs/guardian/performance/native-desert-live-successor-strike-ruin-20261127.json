@@ -1,0 +1,93 @@
+{
+  "scenario": "Desierto desde RaidSpawned con Strike27 del centro sucesor activo al derrumbarse el primero",
+  "base": "bec91d7c03fc79c688075064e7cae9fe490df653",
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "artifacts": {
+    "live-birth-successor-strike-ruin-nvidia-20261127.json": "094f9f7f4d2f257bb47ab80ee672d55aa3264f1f7d7243ed11034b743374421f"
+  },
+  "snapshotSHA256": "3b4a7c2c55bb589116ad70044be17ede9ec8f7b06949f021464366105a5cbfb7",
+  "weak": {
+    "x": 108,
+    "z": 20
+  },
+  "successor": {
+    "x": 111.5,
+    "z": 30
+  },
+  "birth": {
+    "time": 0.1,
+    "actor": "animal-4"
+  },
+  "strike": {
+    "target": "structure-2",
+    "attackId": 14,
+    "body": 1,
+    "acquiredAt": 16.13999999999974,
+    "nativeEnd": 20.681666824370364,
+    "draw": {
+      "sequence": 113,
+      "ticket": 16,
+      "executionEpoch": 16.13999999999974,
+      "relativeTime": 0
+    }
+  },
+  "ruin": {
+    "target": "structure-3",
+    "polygon": 10,
+    "preparedAt": 16.13999999999974,
+    "acquiredAt": 16.149999999999743,
+    "draw": {
+      "sequence": 115,
+      "ticket": 17,
+      "executionEpoch": 16.13999999999974,
+      "relativeTime": 0.009999999776482582
+    },
+    "attackId": 14
+  },
+  "hits": [
+    {
+      "id": "attack-5",
+      "center": "structure-3",
+      "time": 7.599999999999918,
+      "hp": 160
+    },
+    {
+      "id": "attack-8",
+      "center": "structure-3",
+      "time": 10.249999999999861,
+      "hp": 140
+    },
+    {
+      "id": "attack-11",
+      "center": "structure-3",
+      "time": 12.949999999999804,
+      "hp": 120
+    },
+    {
+      "id": "attack-14",
+      "center": "structure-2",
+      "time": 20.689999999999806,
+      "hp": 580
+    }
+  ],
+  "reuse": {
+    "root": 482,
+    "geometries": [
+      302,
+      303,
+      304,
+      305
+    ],
+    "attributes": 26
+  },
+  "retreat": {
+    "absenceFrame": 169,
+    "clockElapsed": 22.649999999999835
+  },
+  "drained": true,
+  "errors": [],
+  "scope": "Reloj ordinario de Hosted, una incursión aislada con calificación explícita. No mide cadencia."
+}

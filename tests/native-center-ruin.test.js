@@ -260,7 +260,7 @@ async function restoreShelteredRetreatBeforeRuin(checkpoint,manifest,source){
    else if(row.kind==='center-ruin')releaseRuin=resolve;
    else resolve();
   })});
- let settled=false,failure;
+ let prefix,failure;
  const wait=async condition=>{
   for(let i=0;i<1000;i++){
    if(failure)throw failure;
@@ -280,22 +280,36 @@ async function restoreShelteredRetreatBeforeRuin(checkpoint,manifest,source){
   assert.deepEqual(Array.from(rows.slice(1,5)),[animal.x,animal.z,0,animal.motionPhase]);
   const before=restored.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
   assert.deepEqual(before.nativeAuthorityCheckpoint.spatialState,checkpoint.nativeAuthorityCheckpoint.spatialState);
-  const advancing=restored.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+  const command={kind:'advance',seconds:.05,steps:2,nightFastForward:false};
+  const advancing=restored.command(command);
   assert(advancing instanceof Promise);
-  advancing.then(()=>{settled=true;},error=>{failure=error;});
+  advancing.then(value=>{prefix=value;},error=>{failure=error;});
   await restored.present();
-  assert.equal(settled,false);
+  assert.equal(prefix,undefined);
   assert.equal(restored.records.length,1);
   assert.equal(restored.host.inspect().nativeCausalClock.committedThrough,saved.elapsed);
 
   releaseRoute();
+  await wait(()=>prefix&&route.committed);
+  const motion=prefix.centerMotionPublication;
+  assert.equal(motion?.kind,26);
+  assert.deepEqual(prefix.events,[]);
+  assert.equal(releaseRuin,undefined);
+
+  const sameStep=motion.remainingSeconds===command.seconds;
+  const partial=restored.command({...command,seconds:motion.remainingSeconds,
+   steps:sameStep?command.steps-prefix.stepsExecuted:1});
+  let continued=false;
+  assert(partial instanceof Promise);
+  partial.then(()=>{continued=true;},error=>{failure=error;});
   await wait(()=>releaseRuin);
   const [,ruin]=restored.records;
   const proof=ruin.resources.nativeCenterRuin;
+  assert.deepEqual(motion.worldBoundary,proof.retreat.reference.worldBoundary);
   assert.equal(route.committed,true);
   await route.packet.presented;
   assert.equal(ruin.committed,false);
-  assert.equal(settled,false);
+  assert.equal(continued,false);
   assert.equal(proof.polygon,source.polygon);
   assert.equal(proof.end,source.end);
   assert.notEqual(proof.boundary.authorityEpoch,source.boundary.authorityEpoch);
@@ -303,9 +317,13 @@ async function restoreShelteredRetreatBeforeRuin(checkpoint,manifest,source){
   await wait(()=>ruin.committed);
   await restored.present();
   await ruin.packet.presented;
-  const result=await advancing,state=JSON.parse(result.snapshot);
-  assert.equal(result.stepsExecuted,2);
-  assert.deepEqual(result.events.map(event=>[event.type,event.simulationTime]),[['StructureRuined',source.end]]);
+  const result=await partial,full=command.steps-prefix.stepsExecuted-result.stepsExecuted;
+  const last=full?await restored.command({...command,steps:full}):result;
+  const state=JSON.parse(last.snapshot);
+  assert.equal(prefix.stepsExecuted+result.stepsExecuted+(full?last.stepsExecuted:0),2);
+  assert(Math.abs(state.elapsed-saved.elapsed-.1)<1e-9);
+  const events=[...result.events,...(full?last.events:[])];
+  assert.deepEqual(events.map(event=>[event.type,event.simulationTime]),[['StructureRuined',source.end]]);
   assert.equal(state.structures[0].status,'ruined');
   assert.equal(state.raid.animals[0].hitsRemaining,animal.hitsRemaining);
   assert.deepEqual(state.ledger,saved.ledger);

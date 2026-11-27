@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import {deserialize, serialize} from '../src/persistence/snapshots.js';
 import {tick} from '../src/simulation/game.js';
-import {previewRaidStrike} from '../src/simulation/raids.js';
+import {nativeLiveCenterRaidCanArm,previewRaidStrike} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
 import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
@@ -181,24 +181,38 @@ test('a second center that can collapse within the raid keeps its ordinary defen
   }
 });
 
-test('a live Desert raid admits a collapsing first center and the separated successor', {timeout:90000}, async () => {
+for(const near of [false,true])test('a live Desert raid admits a collapsing first center '+(near?'during the successor strike':'and the separated successor'), {timeout:90000}, async () => {
   const initial=beforeTwoCenterRaid();
   initial.structures[1].hp=180;
   initial.dayPlan.actors=[{hits:4}];
+  const navigationView=near?{...view,eye:{x:107.7,z:22.3},target:{x:95,z:0}}:view;
+  if(near){
+    Object.assign(initial.structures[0],{x:111.5,z:30});
+    initial.dayPlan.at=initial.time+.10;
+    const tooClose=structuredClone(initial);
+    tooClose.structures[0].z=28.9;
+    assert.equal(nativeLiveCenterRaidCanArm(tooClose,tooClose.dayPlan),false);
+  }
   let release;
   const ready=new Promise(resolve=>{release=resolve;});
-  const acquired=[];
-  const world=await nativeProductionAuthority(initial,{chunkKeys,navigationView:view,qualifyAnimalCrop:true,
+  const acquired=[],remaining=[];
+  const world=await nativeProductionAuthority(initial,{chunkKeys,navigationView,qualifyAnimalCrop:true,
     onReady(record){if(record.kind==='animal-crop-route'&&!acquired.length)return ready;},
     onCommit(record,data){if(record.kind!=='center-ruin')acquired.push(data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding);},
   });
   async function advance(){
-    let result=world.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+    const command=remaining.shift()??{kind:'advance',seconds:.05,steps:2,nightFastForward:false};
+    let result=world.command(command);
     if(result instanceof Promise){
       let settled=false;
       void result.then(()=>{settled=true;},()=>{settled=true;});
       await untilProduction(world,()=>settled);
       result=await result;
+    }
+    if(result.centerMotionPublication){
+      remaining.push({...command,steps:1,seconds:result.centerMotionPublication.remainingSeconds});
+      const full=command.steps-result.stepsExecuted-1;
+      if(full)remaining.push({...command,steps:full});
     }
     for(const key of result.residency.missing){
       const [cx,cz]=key.split(',').map(Number);
@@ -231,12 +245,18 @@ test('a live Desert raid admits a collapsing first center and the separated succ
     assert(ruin?.committed);
     const proof=ruin.commit.nativeCenterRuin;
     await ruin.packet.presented;
-    assert.equal(proof.prepared.approach.reference.targetId,2);
-    assert.equal(proof.prepared.approach.reference.bodyId,acquired[0].reference.bodyId);
+    const source=near?proof.prepared.strike:proof.prepared.approach;
+    assert.equal(source?.reference.targetId,2);
+    assert.equal(source.reference.bodyId,acquired[0].reference.bodyId);
     assert.equal(new Set(acquired.map(({reference})=>reference.bodyId)).size,1);
     const hits=state.events.filter(event=>event.type==='StructureHit');
     assert.deepEqual(hits.map(({targetId,structureHit})=>[targetId,structureHit.hp]),
       [['structure-3',160],['structure-3',140],['structure-3',120],['structure-2',580]]);
+    if(near){
+      assert(source.reference.worldBoundary.effectiveTime<proof.acquired.effectiveTime);
+      assert(proof.acquired.effectiveTime<hits[3].simulationTime);
+      assert.equal('attack-'+source.attackId,state.events.filter(event=>event.type==='AnimalLogicalHit').at(-1).attackId);
+    }
     const ruins=state.events.filter(event=>event.type==='StructureRuined');
     assert.deepEqual(ruins.map(event=>[event.targetId,event.simulationTime]),[['structure-3',proof.acquired.effectiveTime]]);
     assert(before.some(polygon=>polygon.id===proof.prepared.polygon));
