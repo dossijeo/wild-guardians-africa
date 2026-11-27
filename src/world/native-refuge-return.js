@@ -23,29 +23,50 @@ export function nativeDesertRefugeLayout(state){
   if(state.biome!=='desierto'||state.structures[0]?.kind!=='center'||state.spells.length||
      state.structures.slice(1).some(structure=>structure.kind!=='wall'))return null;
   const gates=state.structures.filter(structure=>structure.gate&&structure.status!=='ruined');
-  const [gate]=gates;
-  if(gates.length>1||gate&&(gate.status!=='intact'||gate.hp!==gate.maxHp||
+  if(gates.length>1024||gates.some(gate=>gate.status!=='intact'||gate.hp!==gate.maxHp||
      !nativeGateModelId(gate.material)||!validGateOpening(gate.gateOpen)))return null;
-  return {gate};
+  return {gates};
+}
+
+export function checkpointGateOpenings(value){
+  return value?.gates??(value?.gate?[value.gate]:[]);
+}
+
+export function validCheckpointGateOpening(gate){
+  return !!gate&&typeof gate.id==='string'&&/^structure-[1-9]\d*$/.test(gate.id)&&
+    id(actorNumber(gate.id))&&validGateOpening(gate.opening);
+}
+
+export function sameCheckpointGateOpenings(gates,checkpoint){
+  const saved=checkpointGateOpenings(checkpoint);
+  return gates.length===saved.length&&gates.every((gate,i)=>gate.id===saved[i].id&&gate.gateOpen===saved[i].opening);
+}
+
+export function refugeGateFields(gates){
+  const rows=gates.map(gate=>({id:gate.id,opening:gate.gateOpen}));
+  return rows.length>1?{version:2,gates:rows}:{version:1,...(rows.length?{gate:rows[0]}:{})};
 }
 
 export function copyRefugeReturnCheckpoint(value){
-  const {version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose,gate}=value??{};
-  if(version!==1||![actorId,animalId,spawnSequence].every(id)||actorId===animalId||
+  const {version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose,gate,gates}=value??{};
+  if(![1,2].includes(version)||![actorId,animalId,spawnSequence].every(id)||actorId===animalId||
      !Number.isSafeInteger(contractDay)||contractDay<0||
      ![personId,centerId,villageId].every(key=>typeof key==='string'&&key.length>0)||
-     gate!==undefined&&(!gate||typeof gate.id!=='string'||!/^structure-[1-9]\d*$/.test(gate.id)||!validGateOpening(gate.opening)))
+     (version===1?gates!==undefined||gate!==undefined&&!validCheckpointGateOpening(gate):
+       gate!==undefined||!Array.isArray(gates)||gates.length<2||gates.length>1024||
+       !gates.every(validCheckpointGateOpening)||new Set(gates.map(row=>row.id)).size!==gates.length))
     throw TypeError('Invalid native refuge return checkpoint');
+  const copyGate=({id,opening})=>Object.freeze({id,opening});
   return Object.freeze({version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose:copyPose(pose),
-    ...(gate?{gate:Object.freeze({id:gate.id,opening:gate.opening})}:{})});
+    ...(gates?{gates:Object.freeze(gates.map(copyGate))}:gate?{gate:copyGate(gate)}:{})});
 }
 
 export function validateRefugeReturnState(state,value){
   const saved=copyRefugeReturnCheckpoint(value),[worker]=state.workers,[animal]=state.raid?.animals??[];
   const spawn=state.events.findLast(event=>event.type==='RaidSpawned');
   const village=state.villages.find(item=>item.id===saved.villageId),home=village?.entry??village;
-  const layout=state.biome==='sabana'?{}:nativeDesertRefugeLayout(state);
-  if(!layout||layout.gate?.id!==saved.gate?.id||layout.gate?.gateOpen!==saved.gate?.opening||
+  const layout=state.biome==='sabana'?{gates:[]}:nativeDesertRefugeLayout(state);
+  if(!layout||!sameCheckpointGateOpenings(layout.gates,saved)||
      state.raid?.daytime!==true||state.raid.animals.length!==1||state.workers.length!==1||
      animal?.id!=='animal-'+saved.animalId||animal.species!=='warthog'||worker?.id!=='worker-'+saved.actorId||
      worker.status!=='home'||worker.running!==false||worker.gateWaiting!==false||worker.nativeRouteAdmission||
@@ -60,11 +81,10 @@ export function validateRefugeReturnState(state,value){
   return saved;
 }
 
-export function captureRefugeReturnCheckpoint(state,worker,spawnSequence,gate=null){
-  return validateRefugeReturnState(state,{version:1,actorId:actorNumber(worker.id),
+export function captureRefugeReturnCheckpoint(state,worker,spawnSequence,gates=[]){
+  return validateRefugeReturnState(state,{...refugeGateFields(gates),actorId:actorNumber(worker.id),
     animalId:actorNumber(state.raid.animals[0].id),spawnSequence,personId:worker.personId,contractDay:worker.contractDay,
-    centerId:worker.centerId,villageId:worker.villageId,pose:refugeWorkerPose(worker),
-    ...(gate?{gate:{id:gate.id,opening:gate.gateOpen}}:{})});
+    centerId:worker.centerId,villageId:worker.villageId,pose:refugeWorkerPose(worker)});
 }
 
 export function copyRestoredRefugeReturn(value){

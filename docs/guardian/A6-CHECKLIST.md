@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Desierto 983 vuelve a admitir Home18 y el ataque al centro desde un checkpoint con dos hojas abiertas. NVIDIA presentó ambos cuerpos y los dos motores antes del regreso civil. También se comprobó en CPU la recarga entre ambos cruces y después de Home19. El guardado de Farm23 antes de Stop24 mantiene pendiente el caso con dos motores. [Recorrido y límites](desert-frozen-gate-checkpoint-20261127.md#huida-y-refugio-con-dos-portones).
+
 La recarga civil de Farm23 y Home18 conserva la pose y las aperturas de dos portones mientras espera READY. La sesión nueva vuelve a adquirir ambos motores y continúa hasta Idle o Home19. Los cuatro cortes de apertura parcial pasan con WASM y Host determinista. El checkpoint multirreserva de cohortes mixtas sigue pendiente. [Control y alcance](native-terminal-resource-recovery-20261120.md#recarga-de-disco-civil-con-dos-portones).
 
 El control CPU de pérdida de Draw después del derrumbe conserva el Retreat del rinoceronte, su cuota y el mundo adquirido. La autoridad reanuda tras verificar el primer envío del sustituto. Queda el contraste físico. [Recorrido y límites](native-cold-worker-admission-20261126.md#recuperación-tras-perder-draw-durante-la-retirada-del-rinoceronte).

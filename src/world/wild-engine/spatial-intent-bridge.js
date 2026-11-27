@@ -9,9 +9,9 @@ import {nativeMotionPresentationMatches} from '../native-motion-presentation-mat
 import {copyNativeShieldWorld,nativeShieldWorldKind,shieldCropStopFromProposal,copyNativeShieldCropExpiry} from '../native-shield-world.js';
 import {spatialShieldFootprint} from './spatial-shield-mirror.js';
 import {canAttackCrop,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropRouteSubject,nativeCropCohortCurrent,nativeRetreatBudgetAllowed,nativeRetreatSubject,reachableApproach,raidTarget,previewRaidStrike,projectAcquiredRaidStrike,savedRaidStrike} from '../../simulation/raids.js';
-import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
+import {captureRefugeReturnCheckpoint,copyRestoredRefugeReturn,refugeGateFields,refugeWorkerPose,sameRefugePose,validateRefugeReturnState} from '../native-refuge-return.js';
 import {nativeEncounterCheckpointActors} from '../../simulation/native-encounter-checkpoint.js';
-import {farmStopCutFromNative} from '../../simulation/native-raid-flight-checkpoint.js';
+import {farmStopCutFromNative,savedRaidFlightHomeGateIds} from '../../simulation/native-raid-flight-checkpoint.js';
 import {captureRestoredWallRepairs} from '../restored-wall-repair-reference.js';
 import {copyNativeBarrierAdditions,copyNativeBarrierAdditionProposal,copyNativeBarrierAdditionAttestation,copyNativeBarrierAdditionResources,nativeBarrierAdditionSuccessor} from '../native-barrier-addition.js';
 import {copyNativeIdleStrollFailedRestReference} from '../native-idle-stroll-failed-rest-reference.js';
@@ -913,7 +913,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       farmTicket:farm?.reference.worldBoundary.ticket??null,raidSpawnSequence:marker.spawnSequence};
     const pair={raid:state.raid,animal,worker,event:marker.spawnSequence,animalBody:body,workerBody,
       birth,center:numericId(subject.center.id),centerAttack:subject.purpose==='center',cold:true,farmSequence:farm?.assignmentSequence,
-      ...(marker.gate&&!marker.homePending&&!marker.farmStop?{gateIds:marker.gate.reservedByHome===false?[]:[numericId(marker.gate.id)]}:{})};
+      ...(marker.homePath?{gateIds:savedRaidFlightHomeGateIds(marker)}:{})};
     raidFlight=pair;
     const requested=marker.farmStop?subject.purpose==='center'&&requestNativeCenterBirth(state,animal,{
       target:subject.target,approach:{point:animal.approach,path:animal.path}},body,pair):
@@ -1662,13 +1662,15 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==r.worldBoundary.effectiveTime)return null;
     return issued;
   }
-  function nativeRefugeReturnCheckpoint(gate=null){
-    if(restoredRefuge&&restoredRefuge.raid===owningState?.raid&&nativeWorkerHomeInactive(restoredRefuge.saved.actorId))
-      return validateRefugeReturnState(owningState,{...restoredRefuge.saved,gate:gate?{id:gate.id,opening:gate.gateOpen}:undefined});
+  function nativeRefugeReturnCheckpoint(gates=[]){
+    if(restoredRefuge&&restoredRefuge.raid===owningState?.raid&&nativeWorkerHomeInactive(restoredRefuge.saved.actorId)){
+      const {gate,gates:oldGates,...saved}=restoredRefuge.saved;
+      return validateRefugeReturnState(owningState,{...saved,...refugeGateFields(gates)});
+    }
     const issued=currentRefuge();
     if(!issued||refuge.worker.hits!==0)return null;
     const spawn=issued.reference.sourceHome.reference.sourceRequest?.raidSpawnSequence;
-    return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn,gate):null;
+    return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn,gates):null;
   }
   function nativeOrdinaryRefugeRecovery(){
     const game=owningState,worker=ordinaryRefuge?.worker;
@@ -3804,7 +3806,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});let candidate=null,translation=null,preparedTicket=null;
     const flightRouteClear=proposal=>{
       const ids=raidFlight?.gateIds;
-      return (!ids||proposal.gates.length===ids.length&&proposal.gates.every((gate,i)=>gate.gateId===ids[i]))&&
+      return (!ids||proposal.gates.length===ids.length&&proposal.gates.every(gate=>ids.includes(gate.gateId)))&&
         flightCandidateClear(proposal.ticket.session,proposal.ticket.ticket);
     };
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-route',

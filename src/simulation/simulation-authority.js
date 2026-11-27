@@ -59,7 +59,7 @@ import {createPresentationWorkerHeadings} from './presentation-worker-headings.j
 import {captureWorldMotion} from './worker-world-motion.js';
 import {workerPhysicsActivity} from './worker-physics-activity.js';
 import {queryGuardianOrigin,queryGuardianTutorialOrigin} from './guardian-origin-query.js';
-import {nativeDesertRefugeLayout,validateRefugeReturnState} from '../world/native-refuge-return.js';
+import {nativeDesertRefugeLayout,sameCheckpointGateOpenings,validateRefugeReturnState} from '../world/native-refuge-return.js';
 import {captureNativeRaidFlightCheckpoint,nativeRaidFlightCheckpointActors,nativeRaidFlightCheckpointLayout} from './native-raid-flight-checkpoint.js';
 
 export function parseSimulationChunkKey(key){
@@ -244,9 +244,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
-    const savedGate=savedFlight?.marker.gate??savedRefuge?.gate;
-    if(savedGate&&nativeGateOwners[0].gateOpen!==savedGate.opening)
-     throw Error('Saved raid lost its gate opening during bootstrap');
+    const savedRaid=savedFlight?.marker??savedRefuge;
+    if(savedRaid&&!sameCheckpointGateOpenings(nativeGateOwners,savedRaid))
+     throw Error('Saved raid lost its gate openings during bootstrap');
    }
    if(savedRaidAnimal){
     if(savedApproach&&savedApproach.path!==savedApproachPath)throw Error('Saved native center approach lost its corridor');
@@ -277,14 +277,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const stopRequest=planner.nativeRaidFlightStopRequest(worker.id);
    const source=stopRequest?.binding??(worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null);
    if(nativeGateOwners.length){
-    const [gate]=nativeGateOwners;
-    if(!desertCenter||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||!source)return;
-    const mechanism=planner.nativeGateMechanismPose(gate.id),boundary=source.reference?.worldBoundary??source;
-    if(!mechanism||mechanism.authorityEpoch!==boundary.authorityEpoch||
-       mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
-    if(source.gateIds?.length!==1||mechanism.gateId!==source.gateIds[0]){
+    if(!desertCenter||!source)return;
+    const boundary=source.reference?.worldBoundary??source;
+    const reservations=new Set(source.gateIds??[]),stationaryGates=[];
+    for(const gate of nativeGateOwners){
+     const mechanism=planner.nativeGateMechanismPose(gate.id);
+     if(gate.status!=='intact'||gate.hp!==gate.maxHp||!mechanism||mechanism.authorityEpoch!==boundary.authorityEpoch||
+        mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
+     if(!reservations.delete(mechanism.gateId))stationaryGates.push({gate,mechanism});
+    }
+    if(reservations.size)return;
+    if(stationaryGates.length){
      let pose,bodyId;
-     if(stopRequest&&(stopRequest.stroll||source.gateIds?.length===0)){
+     if(stopRequest){
       // An acquired worker can stop on the work side without owning the gate.
       // Home must establish its own crossing and motor timing.
       const execution=stopRequest.task?planner.nativeTaskExecution(worker.id):stopRequest.stroll?planner.nativeIdleStrollExecution(worker.id):planner.nativeFarmArrivalRouteExecution(worker.id);
@@ -304,8 +309,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !(session.core.wasm.nav_home_pending_idle_stroll_flight_source?.(source.actorId,source.requestSequence,raidSpawnSequence)>0))return;
       pose=source.pose;bodyId=source.bodyId;
      }
-     const stationary=planner.nativeGateMechanismSegment(gate.id,bodyId,pose,pose);
-     if(stationary.status!=='clear'||stationary.mechanism!==mechanism.mechanism||stationary.sampledAt!==game.elapsed)return;
+     for(const {gate,mechanism} of stationaryGates){
+      const stationary=planner.nativeGateMechanismSegment(gate.id,bodyId,pose,pose);
+      if(stationary.status!=='clear'||stationary.mechanism!==mechanism.mechanism||stationary.sampledAt!==game.elapsed)return;
+     }
     }
    }
    const seq=source?.assignmentSequence??source?.requestSequence;
@@ -439,8 +446,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(!(ordinarySavannaFlight||savedFlight||savedRefuge||mixedFlight&&game.biome==='desierto')||
       game.raid?.daytime!==true||game.workers.length!==1||
       game.workers[0].status!=='home'||!civilShieldPhysicsAvailable())return null;
-   const gate=nativeDesertRefugeLayout(game)?.gate;
-   if(gate&&!settledGateCheckpointPose(gate))return null;
+   const gates=nativeDesertRefugeLayout(game)?.gates??[];
+   if(!gates.every(settledGateCheckpointPose))return null;
    const centerRoute=shelteredCenterRetreat(game)??shelteredCenterApproach(game),crop=shelteredCropCheckpointAnimal(game);
    const route=centerRoute??(crop?.status!=='attacking'?crop:null);
    const strike=route?null:shelteredCenterStrike(game)??crop;
@@ -453,7 +460,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const strikeReady=strike&&(motion.purpose==='center'||crop===strike&&!motion.purpose)&&
      (motion.mode===3&&strike.attackId==='attack-'+motion.strike.attackId||
       strike===savedStrike&&motion.mode===5&&strike.attackId==='attack-'+motion.restore.attackId);
-   return routeReady||strikeReady?planner.nativeRefugeReturnCheckpoint(gate):null;
+   return routeReady||strikeReady?planner.nativeRefugeReturnCheckpoint(gates):null;
   }
   function liveRaidFlightCheckpointOwners(){
    const admission=game.workers[0]?.nativeRouteAdmission;
@@ -462,24 +469,33 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       !civilShieldPhysicsAvailable())return null;
    const layout=nativeRaidFlightCheckpointLayout(game);
    if(!layout)return null;
-   const {gate}=layout;
+   const {gates}=layout;
    if(admission==='pending-farm-flight-stop'){
-    if(!gate||game.biome!=='desierto')return null;
+    const [gate]=gates;
+    if(gates.length!==1||game.biome!=='desierto')return null;
     const source=planner.nativeRaidFlightFarmCheckpoint(),motor=gateBindings?.read(gate.id);
     if(!source||gate.id!=='structure-'+source.gateId||motor?.sampledAt!==game.elapsed||motor.opening!==gate.gateOpen||
        Object.keys(source.cut.motor).some(key=>source.cut.motor[key]!==motor[key]))return null;
-    return {farmStop:source.cut,gate,pending:{raidSpawnSequence:source.spawnSequence}};
+    return {farmStop:source.cut,gates,pending:{raidSpawnSequence:source.spawnSequence}};
    }
-   if(gate&&!settledGateCheckpointPose(gate))return null;
+   if(!gates.every(settledGateCheckpointPose))return null;
    if(admission==='pending-raid-flight-resources'){
     const pending=planner.nativeRaidFlightPendingCheckpoint();
-    return pending?{pending,gate}:null;
+    return pending?{pending,gates}:null;
    }
    const owners=planner.nativeRaidFlightRecoveryExecutions();
    if(!owners||owners[1].binding.gateIds.length)return null;
-   const [home]=owners,ids=home.binding.gateIds;
-   if(ids.length&&(!gate||ids.length!==1||ids[0]!==Number(gate.id.split('-').at(-1))||gate.gateOpen!==1))return null;
-   return {home,gate};
+   const [home]=owners,handle=home.nativeRoute.routeHandle,gateIds=[];
+   for(const id of home.binding.gateIds){
+    const entity='structure-'+id,gate=gates.find(row=>row.id===entity);
+    if(gate?.gateOpen!==1)return null;
+    const crossing=planner.nativeGateCrossings(entity)?.find(row=>row.actorId===home.nativeRoute.actorId&&
+      row.bodyId===home.binding.reference.bodyId&&row.routeHandle.session===handle.session&&
+      row.routeHandle.slot===handle.slot&&row.routeHandle.generation===handle.generation);
+    if(!crossing)return null;
+    if(crossing.until>=game.elapsed)gateIds.push(id);
+   }
+   return {home,gates,gateIds};
   }
   function saveAvailable(refugeReturn=refugeReturnCheckpoint(),flight=null){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
     !planner.encounterCheckpointBlocked(!!refugeReturn,!!flight)&&confirmedStateSaveAvailable(game,{allowNativeRaidFlight:!!flight,allowNativeFarmStop:!!flight?.farmStop});}
@@ -537,16 +553,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    }
    return {...game,raid:{...game.raid,animals:[{...animal,path}]}};
   }
-  function captureRaidFlightCheckpoint(state,{pending,home,gate,farmStop}){
+  function captureRaidFlightCheckpoint(state,{pending,home,gates,gateIds,farmStop}){
    const [worker]=state.workers,[animal]=state.raid.animals;
-   if(pending)return captureNativeRaidFlightCheckpoint(state,worker,animal,pending.raidSpawnSequence,null,gate,true,farmStop);
+   if(pending)return captureNativeRaidFlightCheckpoint(state,worker,animal,pending.raidSpawnSequence,null,gates,[],farmStop);
    const handle=home.nativeRoute.routeHandle,points=planner.routePoints(handle),sample=planner.sampleNativeRoute(handle,state.elapsed);
    if(!points||!sample||sample.x!==worker.x||sample.z!==worker.z||sample.firstRemainingPoint<0||
       sample.firstRemainingPoint*2>=points.length)throw Error('Native raid flight checkpoint lost its Home corridor');
    const path=[];
    for(let i=sample.firstRemainingPoint*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
-   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,gate,
-     home.binding.gateIds.length!==0);
+   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,gates,gateIds);
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
   stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredSavannaCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});

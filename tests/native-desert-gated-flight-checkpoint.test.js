@@ -14,6 +14,129 @@ const input=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/desierto983-g
 const gateId='structure-'+input.expectedGate;
 const gate=state=>state.structures.find(structure=>structure.gate);
 
+test('a Desert flight checkpoint restores both retained Home gate reservations and the sheltered successor',async()=>{
+ const original=deserialize(input.snapshot),extraGate=original.nextId++;
+ original.structures.push({...gate(original),id:'structure-'+extraGate,created:gate(original).created+1,z:5.3});
+ original.dayPlan.at=original.time+10;
+ const gateIds=[input.expectedGate,extraGate],openings=state=>state.structures.filter(row=>row.gate).map(row=>row.gateOpen);
+ const live=await nativeProductionAuthority(original,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,drawFarmGate:true});
+ const evidence=runtime=>{
+  const frame=runtime.host.inspect().nativeRouteFrame;
+  const home=frame?.bindings.find(row=>row.nativeHome),animal=frame?.bindings.find(row=>row.nativeAnimalCrop?.purpose==='center');
+  return home&&animal?{frame,home,animal,motors:frame.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId)}:null;
+ };
+ const saved=[];
+ const persist=snapshot=>{
+  const disk=prepareWorkerCheckpoint(snapshot,{slotId:original.slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert(disk.saved);
+  return serialize(disk.state);
+ };
+ try{
+  live.command({kind:'setNavigationView',view:input.navigationView});
+  await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  assert.deepEqual(live.records[0].resources.gates.map(row=>row.gateId),gateIds);
+  for(let i=0;i<340&&saved.length<2;i++){
+   await tick(live,.025);
+   const current=evidence(live);
+   if(!(current?.home.relativeTime>0)||!(current.animal.relativeTime>0))continue;
+   assert.deepEqual(new Set(current.motors),new Set(gateIds));
+   const snapshot=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+   const marker=snapshot.nativeAuthorityCheckpoint?.raidFlight;
+   if(!marker)continue;
+   const reservations=marker.gates.filter(row=>row.reservedByHome).map(row=>row.id);
+   if(reservations.length===2-saved.length)saved.push({text:persist(snapshot),epoch:current.frame.worldBoundary.authorityEpoch});
+  }
+  assert.equal(saved.length,2,'expected a disk cut with both motors and then a cut past one crossing');
+ }finally{await live.close();}
+
+ let shelteredText;
+ for(let index=0;index<saved.length;index++){
+  const {text,epoch}=saved[index],state=deserialize(text),marker=state.workerNativeAuthorityCheckpoint.raidFlight;
+  assert.equal(marker.version,2);
+  assert.deepEqual(marker.gates.map(row=>row.id),gateIds.map(id=>'structure-'+id));
+  assert.deepEqual(marker.gates.map(row=>row.opening),[1,1]);
+  const required=index===0?gateIds:[gateIds[0]];
+  assert.deepEqual(marker.gates.filter(row=>row.reservedByHome).map(row=>Number(row.id.split('-').at(-1))),required);
+  if(index===0){
+   const altered=structuredClone(state);
+   altered.workerNativeAuthorityCheckpoint.raidFlight.gates[1].id=marker.gates[0].id;
+   assert.throws(()=>savedNativeAuthorityOptions(serialize(altered)),/Invalid native raid flight checkpoint/);
+   altered.workerNativeAuthorityCheckpoint.raidFlight.gates[1].id=marker.gates[1].id;
+   const second=altered.structures.find(row=>row.id===marker.gates[1].id);
+   second.gateOpen=.75;
+   assert.throws(()=>savedNativeAuthorityOptions(serialize(altered)),/differs from the saved cohort/);
+   second.gateOpen=1;
+   altered.workerNativeAuthorityCheckpoint.raidFlight.gates[1].reservedByHome=false;
+   const wrong=await nativeProductionAuthority(altered,savedNativeAuthorityOptions(serialize(altered)));
+   try{
+    await untilProduction(wrong,()=>wrong.authority.nativeIntentProductionStatus().last?.status==='blocked');
+    assert.equal(wrong.records.some(row=>row.kind==='home-route'),false);
+    assert.equal(wrong.snapshot().workers[0].nativeRouteAdmission,'pending-raid-flight-resources');
+   }finally{await wrong.close();}
+  }
+  let held,release;
+  const ready=new Promise(resolve=>{release=resolve;});
+  const options=savedNativeAuthorityOptions(text);
+  const cold=await nativeProductionAuthority(state,{...options,onReady(record){
+   if(record.kind==='home-route'&&!held){held=record;return ready;}
+  }});
+  try{
+   assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
+   await untilProduction(cold,()=>held?.packet);
+   assert.deepEqual(new Set(held.resources.gates.map(row=>row.gateId)),new Set(required));
+   for(let i=0;i<2;i++){
+    const waiting=await tick(cold,.025);
+    const worker=waiting.workers[0],animal=waiting.raid.animals[0];
+    assert(!held.committed);
+    assert.deepEqual(openings(waiting),[1,1]);
+    for(const [key,value] of Object.entries(marker.workerPose))assert.equal(worker[key==='yaw'?'heading':key],value);
+    assert.deepEqual([animal.x,animal.z,animal.heading,animal.motionPhase],
+      [marker.animalPose.x,marker.animalPose.z,marker.animalPose.yaw,marker.animalPose.phase]);
+   }
+   release();
+   await untilProduction(cold,()=>held.committed);
+   await held.packet.presented;
+   for(let i=0;i<50&&!evidence(cold);i++)await tick(cold,.025);
+   const first=evidence(cold);
+   assert(first);
+   assert.notEqual(first.frame.worldBoundary.authorityEpoch,epoch);
+   assert.deepEqual(new Set(first.motors),new Set(required));
+   assert.equal(first.home.nativeHome.actorId,marker.actorId);
+   assert.equal(first.animal.nativeAnimalCrop.actorId,marker.animalId);
+   if(index===0){
+    for(let i=0;i<260;i++){
+     const current=await tick(cold,.025);
+     if(current.workers[0].status!=='home')continue;
+     const snapshot=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+     if(!snapshot.nativeAuthorityCheckpoint?.refugeReturn)continue;
+     assert.equal(cold.records.filter(row=>row.kind==='home-arrival'&&row.committed).length,1);
+     shelteredText=persist(snapshot);break;
+    }
+   }
+  }finally{release();await cold.close();}
+ }
+ assert(shelteredText,'expected a public checkpoint after Home19');
+ const state=deserialize(shelteredText),refuge=state.workerNativeAuthorityCheckpoint.refugeReturn;
+ assert.deepEqual(refuge.gates,gateIds.map(id=>({id:'structure-'+id,opening:1})));
+ assert.equal(refuge.version,2);
+ const cold=await nativeProductionAuthority(state,savedNativeAuthorityOptions(shelteredText));
+ try{
+  let end;
+  for(let i=0;i<800;i++){
+   end=await tick(cold,.04);
+   if(!end.raid&&end.workers[0].nativeRouteAdmission==='native-idle')break;
+  }
+  assert.equal(end.raid,null);
+  assert.equal(end.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(end.workers[0].personId,refuge.personId);
+  assert.equal(end.workers[0].hits,0);
+  assert.deepEqual(end.ledger,state.ledger);
+  const raidEvents=end.events.filter(event=>event.simulationTime>=state.elapsed);
+  assert.deepEqual(raidEvents.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),input.expectedCenterHits);
+  assert.equal(raidEvents.filter(event=>event.type==='RaidEnded').length,1);
+ }finally{await cold.close();}
+});
+
 async function tick(f,seconds=.02){
  const step=await f.command({kind:'advance',seconds,steps:2,nightFastForward:false});
  for(const key of step.residency.missing){
