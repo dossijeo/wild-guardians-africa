@@ -778,17 +778,21 @@ export function retreatAnimal(s,a,reason='magic',nav={}) {
 // The first native crop cohort has one mobile body and only inactive workers.
 // A different encounter, protection or reservation requires a new admission.
 export function nativeCenterAttackCohort(state,flightWorker=null){
- if(state.biome==='sabana')return !flightWorker&&state.raid?.daytime===false&&
-   Number.isSafeInteger(state.raid.introCropLimit)&&state.structures.length===1&&state.structures[0].kind==='center'&&
-   state.workers.every(worker=>worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
+ if(state.biome==='sabana')return state.structures.length===1&&state.structures[0].kind==='center'&&
+   (state.raid?.daytime===true?state.workers.length===1:
+     !flightWorker&&state.raid?.daytime===false&&Number.isSafeInteger(state.raid.introCropLimit))&&
+   state.workers.every(worker=>worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
  return state.biome==='desierto'&&state.workers.length<=1&&state.workers.every(worker=>
    worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)&&
    (state.workers.length>0||state.structures.length===1)&&
    state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
- return state.biome==='sabana'&&nativeCenterAttackCohort(state)&&state.raid.animals.length===1&&
-   state.raid.animals[0]===animal&&['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
+ if(state.biome!=='sabana'||!nativeCenterAttackCohort(state)||state.raid.animals.length!==1||state.raid.animals[0]!==animal)return false;
+ if(!state.raid.daytime)return ['warthog','hyena','buffalo','lion','rhino'].includes(animal?.species);
+ const center=state.structures[0].id;
+ return animal?.species==='warthog'&&(animal.targetId===center||state.events?.some(event=>
+   event.type==='StructureHit'&&event.animalId===animal.id&&event.targetId===center));
 }
 export function nativeRetreatBudgetAllowed(state,animal){
  if(animal.hitsRemaining===0)return true;

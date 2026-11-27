@@ -4052,10 +4052,11 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_flight_center(double session,double act
   if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
   const auto target=s.targets.find(uint64_t(targetId));
   SpatialBodyView origin;
-  if(s.activeIntents.size()!=1||s.finishedAnimalStrike||
+  const int biome=spatial_world_biome();
+  if((biome!=0&&biome!=1)||s.activeIntents.size()!=1||s.finishedAnimalStrike||
      target==s.targets.end()||!intactAttackCenter(target->second)||
      !spatialReadBody(uint64_t(bodyId),origin)||origin.kind!=1||origin.flags!=1||
-     flightCropOriginClear(session,worker,sourceSequence,origin.x,origin.z,origin.r,2,1)!=1)return -2;
+     flightCropOriginClear(session,worker,sourceSequence,origin.x,origin.z,origin.r,2,biome)!=1)return -2;
   return requestAttackCenterRoute(actor,targetId,origin,bodyId,count,approachX,approachZ,1,yaw,phase);
 }
 // A center can survive a strike. Its next action starts at the same validated

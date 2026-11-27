@@ -19,6 +19,105 @@ function source() {
 }
 const chunkKeys = Array.from({length: 25}, (_, i) => [i % 5, Math.floor(i / 5) - 2].join(','));
 
+for(const collapses of [false,true])test(`a daytime Savanna center target keeps its native body through ${collapses?'the ruin':'the worker evacuation and return'}`, async () => {
+  const state=source();
+  state.plants=[];
+  if(collapses)state.structures[0].hp=146;
+  const acquired=[];
+  let retainedHome,releaseHome;
+  const hold=new Promise(resolve=>{releaseHome=resolve;});
+  const f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,chunkKeys,
+    onCommit(record,data){acquired.push({kind:record.kind,data});},
+    async onReady(record){if(record.kind==='home-route'&&!retainedHome){retainedHome=record;await hold;}},
+  });
+  const worker=state.workers[0],center=state.structures[0];
+  const step=async()=>{
+    let result=f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
+    if(result instanceof Promise){
+      let settled,error;
+      result.then(value=>{settled=value;},reason=>{error=reason;});
+      for(let i=0;i<1000&&!settled&&!error;i++)await f.present();
+      if(error)throw error;
+      assert(settled,'expected the center ruin to finish its reserved substep');
+      result=settled;
+    }
+    for(const key of result.residency.missing){const [cx,cz]=key.split(',').map(Number);f.command({kind:'addChunk',cx,cz});}
+    await f.present();
+    assert.deepEqual(f.faults,[]);
+    return JSON.parse(result.snapshot);
+  };
+  try{
+    await untilProduction(f,()=>acquired.some(row=>row.kind==='farm-arrival'));
+    f.command({kind:'setNavigationView',view:{bounds:[24,-72,168,72],eye:{x:83,z:24},target:{x:83,z:0}}});
+    let current;
+    for(let i=0;i<70&&!current?.raid;i++)current=await step();
+    const [animal]=current.raid.animals;
+    const spawn=current.events.findLast(e=>e.type==='RaidSpawned');
+    assert.equal(animal.targetId,center.id);
+    await untilProduction(f,()=>{f.snapshot();return retainedHome;});
+    for(let i=0;i<3;i++){
+      const waiting=await step();
+      assert.deepEqual([waiting.raid.animals[0].x,waiting.raid.animals[0].z],[animal.x,animal.z]);
+      assert.equal(waiting.structures[0].hp,center.hp);
+      assert.ok(!acquired.some(row=>row.kind==='home-route'||row.kind.startsWith('animal-crop-')));
+    }
+    releaseHome();
+    let seenPair=false,checkedRefuge=false;
+    for(let i=0;i<1600;i++){
+      current=await step();
+      const bindings=f.host.inspect().nativeRouteFrame?.bindings??[];
+      if(bindings.some(b=>b.nativeHome)&&bindings.some(b=>b.nativeAnimalCrop?.purpose==='center'))seenPair=true;
+      if(!checkedRefuge&&current.raid&&acquired.some(row=>row.kind==='home-arrival')){
+        const saving=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+        assert.equal(saving.saveAvailable,false);
+        assert.equal(saving.nativeAuthorityCheckpoint,undefined);
+        checkedRefuge=true;
+      }
+      if(!current.raid&&(collapses||current.workers[0].nativeRouteAdmission==='native-idle'))break;
+    }
+    assert(seenPair,'expected the center and refuge clocks in the same submitted packet');
+    assert(checkedRefuge,'expected an unsaved live raid after Home19');
+    const hits=current.events.filter(e=>e.type==='AnimalLogicalHit'&&e.simulationTime>=spawn.simulationTime);
+    const strikes=acquired.filter(row=>row.kind==='animal-crop-strike').map(({data})=>data.nativeAnimalCropStrikeBinding);
+    assert.equal(hits.length,collapses?1:animal.hitsRemaining);
+    assert.equal(new Set(hits.map(e=>e.attackId)).size,hits.length);
+    assert(hits.every(e=>e.targetId===center.id));
+    assert.deepEqual(hits.map(e=>e.attackId),strikes.map(strike=>'attack-'+strike.attackId));
+    assert.deepEqual(current.events.filter(e=>e.type==='StructureHit'&&e.animalId===animal.id).map(e=>e.structureHit.hp),collapses?[126]:[560,540]);
+    assert.equal(current.events.filter(e=>e.type==='RaidEnded'&&e.simulationTime>=spawn.simulationTime).length,1);
+    assert.deepEqual(current.ledger,state.ledger);
+    const [returned]=current.workers;
+    assert.equal(returned.id,worker.id);
+    assert.equal(returned.personId,worker.personId);
+    assert.equal(returned.hits,0);
+    const programs=acquired.filter(row=>row.kind.startsWith('animal-crop-')).map(({data})=>
+      data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding);
+    assert.equal(new Set(programs.map(({reference})=>reference.bodyId)).size,1);
+    assert.equal(programs[0].reference.purpose,'center');
+    assert.equal(programs.at(-1).reference.purpose,'retreat');
+    const farm=acquired.filter(row=>row.kind==='farm-arrival');
+    if(collapses){
+      const ruin=acquired.find(row=>row.kind==='center-ruin')?.data.nativeCenterRuin;
+      assert(ruin,'expected a retained native ruin');
+      assert.equal(ruin.prepared.retreat.reference.bodyId,programs[0].reference.bodyId);
+      assert.deepEqual(current.events.filter(e=>e.type==='StructureRuined').map(e=>[e.targetId,e.simulationTime]),[[center.id,ruin.acquired.effectiveTime]]);
+      assert.equal(current.structures[0].status,'ruined');
+      assert.equal(current.result,'defeat');
+      assert.equal(returned.status,'home');
+      assert.equal(farm.length,1);
+      return;
+    }
+    assert.equal(returned.nativeRouteAdmission,'native-idle');
+    assert.equal(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,true);
+    assert.equal(farm.length,2);
+    const home=acquired.find(row=>row.kind==='home-arrival').data.nativeHomeArrivalBinding;
+    assert.equal(farm[0].data.nativeFarmArrivalBinding.reference.bodyId,home.reference.bodyId);
+    const returnedFarm=farm[1].data.nativeFarmArrivalBinding.reference;
+    assert.equal(returnedFarm.sourceRequest.refugeSequence,home.retiredSequence);
+    assert.notEqual(returnedFarm.bodyId,home.reference.bodyId);
+  }finally{releaseHome();await f.close();}
+});
+
 for(const [profile,complete] of [['qualification',false],['qualification',true],['lifecycle',true]])test(`terminal Draw loss requires both Flight Home and crop clocks (${profile}): ${complete}`, async () => {
   const receipts=new Map();
   const nativeWorkerLifecycle=profile==='lifecycle';

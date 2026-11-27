@@ -217,14 +217,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const [animal]=game.raid.animals,[worker]=game.workers;
    const raidSpawnSequence=Number(event.id.split('-').at(-1));
    if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering'||nativeBodies.id(animal.id)!==undefined)return;
-   const centerAttack=nativeCenterAttackCohort(game,worker);
-   if(game.biome!=='sabana'&&!centerAttack)return;
-   if(centerAttack&&game.structures.slice(1).some(structure=>structure.kind!=='wall'))return;
+   const centerCohort=nativeCenterAttackCohort(game,worker);
+   const desertCenter=game.biome==='desierto'&&centerCohort;
+   if(game.biome!=='sabana'&&!desertCenter)return;
+   if(desertCenter&&game.structures.slice(1).some(structure=>structure.kind!=='wall'))return;
    const stopRequest=planner.nativeRaidFlightStopRequest(worker.id);
    const source=stopRequest?.binding??(worker.nativeRouteAdmission==='pending-raid-flight-resources'?planner.nativeHomeRequestReference(worker.id):null);
    if(nativeGateOwners.length){
     const [gate]=nativeGateOwners;
-    if(!centerAttack||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||!source)return;
+    if(!desertCenter||nativeGateOwners.length!==1||gate.status!=='intact'||gate.hp!==gate.maxHp||!source)return;
     const mechanism=planner.nativeGateMechanismPose(gate.id),boundary=source.reference?.worldBoundary??source;
     if(!mechanism||mechanism.authorityEpoch!==boundary.authorityEpoch||
        mechanism.nativeSession!==boundary.nativeSession||mechanism.sampledAt!==game.elapsed||mechanism.opening!==gate.gateOpen)return;
@@ -255,14 +256,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
    }
    const seq=source?.assignmentSequence??source?.requestSequence;
-   const originClear=centerAttack?session.core.wasm.nav_flight_center_origin_clear:session.core.wasm.nav_flight_crop_origin_clear;
+   const originClear=desertCenter?session.core.wasm.nav_flight_center_origin_clear:session.core.wasm.nav_flight_crop_origin_clear;
    if(!seq||originClear?.(session.core.wasm.nav_intent_session(),Number(worker.id.split('-').at(-1)),seq,animal.x,animal.z,animal.radius)!==1)return;
    const center=game.structures.find(operational);
    if(!center)return;
    const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
    let selected;
    try{
-    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,center,()=>targetFor(game,animal,nav,!centerAttack));
+    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,center,()=>targetFor(game,animal,nav,!centerCohort));
     if(selected)assignRaidTarget(game,animal,selected,nav);
    }finally{if(!selected)nativeBodies.remove(animal.id);}
   }
@@ -329,7 +330,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
   function prepareShelteredSavannaCenterAttack(event){
    const animal=game.raid?.animals[0],center=game.structures[0];
-   if(!nativeWorkerLifecycle||!nativeBodies||!nativeShelteredSavannaCenterActor(game,animal)||
+   if(!nativeWorkerLifecycle||!nativeBodies||game.raid?.daytime!==false||!nativeShelteredSavannaCenterActor(game,animal)||
       restoringPhysics||physicsInitializing||physics?.actorIds.length||
       game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       !game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))||session.core.wasm.spatial_body_count()!==0)return;

@@ -558,7 +558,7 @@ EMSCRIPTEN_KEEPALIVE int nav_flight_crop_proposal_clear(double session,double ti
  const int mode=nav_animal_crop_state(animal);
  if(mode<1||mode>3||s.animalCropState[4]<=0||s.animalCropState[8]!=1.1)return -2;
  const bool center=s.animalCropState[22]==1;
- if(center!=(biome==1))return -2;
+ if(biome==1&&!center)return -2;
  const auto& ar=s.routeSlots[ai.slot];ReservationPath crop{mode==1&&!center?nullptr:&ar,s.animalCropState[9],s.animalCropState[10]};
  const RouteSlot* hr=nullptr;auto source=std::shared_ptr<const NativeHomeResourceRequest>(wi.homeRequest);
  if(source){if(!nativeHomeRequestBodyCurrent(s,wi))return -2;}

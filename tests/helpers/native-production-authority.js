@@ -111,6 +111,8 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   });
   const activeHome=records.findLast(r=>r.committed&&(r.kind==='home-route'||r.kind==='home-arrival'));
   const gateGroups=record.gateGroups??(activeHome?.kind==='home-route'?activeHome.gateGroups:null);
+  const cropWithHome=kind==='animal-crop-route'&&reference.purpose==='center'&&activeHome?.kind==='home-route'&&
+   activeHome.resources.sourceRequest?.raidSpawnSequence;
   let packet;
   if(farmGroup){
    const groups=new Map(farmGroups);groups.set(reference.actorId,farmGroup);
@@ -121,7 +123,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    packet=await prepareExistingGroup(graphics,groups,
     {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal);
   }else packet=peer?await prepareExistingGroup(graphics,arrival?peer.cropGroup:[peer.cropGroup,graphics.group],
-    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
+    {clock,nativeWorldBoundary:resources.worldBoundary,[arrival?'nativeHomeArrivalTemplate':'nativeHomeRouteTemplate']:reference},options.signal):crop?await prepareExistingGroup(graphics,cropWithHome?[cropGroup,graphics.group,...(gateGroups??[])]:cropGroup,{nativeAnimalCropTemplate:reference,nativeWorldBoundary:resources.worldBoundary,
    ...(options.encounterRetreat?{encounterRetreatDraft:options.encounterRetreat.source}:{}),
    clock:{...clock,safeUntil:resources.worldBoundary.effectiveTime,elapsed:resources.worldBoundary.effectiveTime,segments:[],paused:true}},options.signal):stopped?await prepareWorkerStoppedDraw(graphics,reference,records,record,options.signal):arrival?await prepareHomeAbsenceDraw({...graphics,clock},resources):previousStop?await prepareExistingGroup(graphics,previousStop.stoppedGroup,{clock,nativeWorldBoundary:resources.worldBoundary,...metadata},options.signal):await preparedWorldDraw({...graphics,clock,[template]:reference},resources.worldBoundary,0,options.signal,metadata);packet.presented.catch(()=>{});record.packet=packet;
   try{await onReady(record,options);}catch(error){packet.abort();throw error;}

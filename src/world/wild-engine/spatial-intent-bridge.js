@@ -881,20 +881,22 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const birth={workerActor:numericId(worker.id),workerBody,sourceSequence:motion?.assignmentSequence??home?.requestSequence,
       farmTicket:farm?.reference.worldBoundary.ticket??null,...(stroll?{strollTicket:stroll.reference.worldBoundary.ticket}:{}),
       ...(task?{taskTicket:task.reference.worldBoundary.ticket}:{}),raidSpawnSequence:event};
-    const centerAttack=nativeCenterAttackCohort(state,worker);
+    const centerCohort=nativeCenterAttackCohort(state,worker);
     const pair={raid:state.raid,animal,worker,event,animalBody:body,workerBody,farmSequence:farm?.assignmentSequence,
-      strollSequence:stroll?.assignmentSequence,taskSequence:task?.assignmentSequence,birth,center:numericId(center.id),centerAttack};
+      strollSequence:stroll?.assignmentSequence,taskSequence:task?.assignmentSequence,birth,center:numericId(center.id),
+      centerAttack:state.biome==='desierto'&&centerCohort};
     raidFlight=pair;
     let selected;
     try{
       const result=nativeRaidFlightMember(state,animal)&&select();
-      if(centerAttack){
+      if(centerCohort&&!pair.requestSequence&&result?.target===center)pair.centerAttack=true;
+      if(pair.centerAttack){
         if(result?.target!==center||result.native||result.shieldId||!requestNativeCenterBirth(state,animal,result,body,pair))return null;
         pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
       }else if(!result?.native||result.shieldId||!result.target?.alive)return null;
       const q=nativeAnimalCropState(animal.id);
       if(q?.mode!==1||q.body!==body||q.target!==numericId(result.target.id)||pair.requestSequence!==q.requestSequence)throw Error('Raid spawn lost its pending crop body');
-      selected=centerAttack?{...result,approach:{point:result.approach.point,path:null}}:result;
+      selected=pair.centerAttack?{...result,approach:{point:result.approach.point,path:null}}:result;
       return selected;
     }finally{if(!selected)raidFlight=null;}
   }
@@ -1012,6 +1014,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return path;
   }
   function encounterCheckpointBlocked(){
+    // The paid return still owns the live Home19 retirement record after refuge.
+    const raid=owningState?.raid;
+    if(nativeWorkerLifecycle&&owningState?.biome==='sabana'&&raid&&(raidFlight?.raid===raid||refuge?.raid===raid))return true;
     const worker=restoredEncounter?.worker??raidFlight?.worker;
     return !!(encounterImpact?.consumed||restoredEncounter)&&!encounterCheckpoint()&&!(worker&&nativeWorkerHomeInactive(worker.id));
   }
