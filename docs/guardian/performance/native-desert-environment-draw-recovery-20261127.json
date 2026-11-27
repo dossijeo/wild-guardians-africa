@@ -1,0 +1,508 @@
+{
+  "base": "ba446b6a33bd37d97e9f657e7d7e4859de5c968a",
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "method": "Chromium compositor screenshots of the visible canvas on the same camera and held simulation clock. Environment values were sampled at acknowledged WebGPU submissions.",
+  "before": {
+    "source": {
+      "path": "D:/wild-guardians-qa/recovery-environment-before-nvidia-20261127.json",
+      "sha256": "f45367397ebb386f70cb709468688f1cc38453648f666fb508fcfc5e09402a14"
+    },
+    "saveSha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "checkpoint": {
+      "sequence": 35,
+      "elapsed": 48.60000000000207,
+      "replayedSequence": 45,
+      "environment": null
+    },
+    "original": {
+      "sequence": 32,
+      "elapsed": 48.60000000000207,
+      "environment": {
+        "closed": false,
+        "installed": true,
+        "pending": 0,
+        "ready": 1,
+        "readyAt": 47.79999923706055,
+        "at": 48.599998474121094,
+        "amount": 1,
+        "night": 0,
+        "sizes": [
+          [
+            256,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ]
+      },
+      "ground": {
+        "night": 0,
+        "seed": [
+          0.611129030585289,
+          0.38632504106499255
+        ],
+        "sun": [
+          -0.804501724269551,
+          0.5101718251465446,
+          0.30414089576044007
+        ],
+        "detail": 0.6
+      },
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "elapsed": 48.60000000000207,
+      "environment": {
+        "closed": false,
+        "installed": true,
+        "pending": 0,
+        "ready": 1,
+        "readyAt": 48.599998474121094,
+        "at": 48.599998474121094,
+        "amount": 0,
+        "night": 0,
+        "sizes": [
+          [
+            256,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ]
+      },
+      "ground": {
+        "night": 0,
+        "seed": [
+          0.611129030585289,
+          0.38632504106499255
+        ],
+        "sun": [
+          -0.804501724269551,
+          0.5101718251465446,
+          0.30414089576044007
+        ],
+        "detail": 0.6
+      },
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "pixels": {
+      "images": [
+        {
+          "path": "D:/wild-guardians-qa/recovery-environment-before-nvidia-20261127.original.png",
+          "sha256": "1f1da3711b17a3808f3219513b6bf64d3ecbfd865584784f32e98cec8df3139e"
+        },
+        {
+          "path": "D:/wild-guardians-qa/recovery-environment-before-nvidia-20261127.replacement.png",
+          "sha256": "32237bbf5c768e327db4cb07e4be50e16021c2c02dd58fa546ea48a038bd2893"
+        }
+      ],
+      "equalPixels": 39630,
+      "differentPixels": 267570,
+      "pixelsWithAnyChannelDriftAbove1": 254464,
+      "meanAbsoluteErrorRgb": [
+        0.24119791666666668,
+        1.9576041666666666,
+        10.448860677083333
+      ],
+      "maxChannelDrift": 19,
+      "differenceBounds": [
+        0,
+        0,
+        640,
+        480
+      ],
+      "terrainSamples": [
+        {
+          "xy": [
+            500,
+            440
+          ],
+          "original": [
+            220,
+            167,
+            59
+          ],
+          "replacement": [
+            220,
+            164,
+            45
+          ]
+        },
+        {
+          "xy": [
+            30,
+            450
+          ],
+          "original": [
+            219,
+            166,
+            59
+          ],
+          "replacement": [
+            219,
+            163,
+            44
+          ]
+        },
+        {
+          "xy": [
+            172,
+            375
+          ],
+          "original": [
+            219,
+            166,
+            59
+          ],
+          "replacement": [
+            219,
+            163,
+            44
+          ]
+        },
+        {
+          "xy": [
+            517,
+            133
+          ],
+          "original": [
+            229,
+            183,
+            71
+          ],
+          "replacement": [
+            228,
+            181,
+            57
+          ]
+        },
+        {
+          "xy": [
+            598,
+            60
+          ],
+          "original": [
+            203,
+            159,
+            59
+          ],
+          "replacement": [
+            203,
+            157,
+            48
+          ]
+        }
+      ]
+    },
+    "continuation": {
+      "picking": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -23.141347846713074,
+          "y": 18.453831118467026,
+          "z": -16.357343313557386
+        },
+        "point": {
+          "x": -23.141347846713078,
+          "z": -15.32527122381052
+        },
+        "sequence": 45
+      },
+      "idle": 91.55000000000182,
+      "drained": true,
+      "expectedDeviceLossPageNotices": 1
+    }
+  },
+  "after": {
+    "source": {
+      "path": "D:/wild-guardians-qa/recovery-environment-after-nvidia-20261127.json",
+      "sha256": "1591643063817d36abdb943c7cc9eaa742927b8a438275c6f57b47c5678fdae5"
+    },
+    "saveSha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "checkpoint": {
+      "sequence": 35,
+      "elapsed": 48.60000000000207,
+      "replayedSequence": 44,
+      "environment": {
+        "version": 1,
+        "readyAt": 47.79999923706055
+      }
+    },
+    "original": {
+      "sequence": 29,
+      "elapsed": 48.60000000000207,
+      "environment": {
+        "closed": false,
+        "installed": true,
+        "pending": 0,
+        "ready": 1,
+        "readyAt": 47.79999923706055,
+        "at": 48.599998474121094,
+        "amount": 1,
+        "night": 0,
+        "sizes": [
+          [
+            256,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ]
+      },
+      "ground": {
+        "night": 0,
+        "seed": [
+          0.611129030585289,
+          0.38632504106499255
+        ],
+        "sun": [
+          -0.804501724269551,
+          0.5101718251465446,
+          0.30414089576044007
+        ],
+        "detail": 0.6
+      },
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "elapsed": 48.60000000000207,
+      "environment": {
+        "closed": false,
+        "installed": true,
+        "pending": 0,
+        "ready": 1,
+        "readyAt": 47.79999923706055,
+        "at": 48.599998474121094,
+        "amount": 1,
+        "night": 0,
+        "sizes": [
+          [
+            256,
+            128
+          ],
+          [
+            256,
+            128
+          ]
+        ]
+      },
+      "ground": {
+        "night": 0,
+        "seed": [
+          0.611129030585289,
+          0.38632504106499255
+        ],
+        "sun": [
+          -0.804501724269551,
+          0.5101718251465446,
+          0.30414089576044007
+        ],
+        "detail": 0.6
+      },
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "pixels": {
+      "images": [
+        {
+          "path": "D:/wild-guardians-qa/recovery-environment-after-nvidia-20261127.original.png",
+          "sha256": "1f1da3711b17a3808f3219513b6bf64d3ecbfd865584784f32e98cec8df3139e"
+        },
+        {
+          "path": "D:/wild-guardians-qa/recovery-environment-after-nvidia-20261127.replacement.png",
+          "sha256": "2cd661cdea92577b074fba593ab882aa4ba7457bc6e61791369e9817be030ced"
+        }
+      ],
+      "equalPixels": 307187,
+      "differentPixels": 13,
+      "pixelsWithAnyChannelDriftAbove1": 1,
+      "meanAbsoluteErrorRgb": [
+        0.00002604166666666667,
+        0.000016276041666666666,
+        0.000006510416666666667
+      ],
+      "maxChannelDrift": 2,
+      "differenceBounds": [
+        302,
+        155,
+        359,
+        253
+      ],
+      "terrainSamples": [
+        {
+          "xy": [
+            500,
+            440
+          ],
+          "original": [
+            220,
+            167,
+            59
+          ],
+          "replacement": [
+            220,
+            167,
+            59
+          ]
+        },
+        {
+          "xy": [
+            30,
+            450
+          ],
+          "original": [
+            219,
+            166,
+            59
+          ],
+          "replacement": [
+            219,
+            166,
+            59
+          ]
+        },
+        {
+          "xy": [
+            172,
+            375
+          ],
+          "original": [
+            219,
+            166,
+            59
+          ],
+          "replacement": [
+            219,
+            166,
+            59
+          ]
+        },
+        {
+          "xy": [
+            517,
+            133
+          ],
+          "original": [
+            229,
+            183,
+            71
+          ],
+          "replacement": [
+            229,
+            183,
+            71
+          ]
+        },
+        {
+          "xy": [
+            598,
+            60
+          ],
+          "original": [
+            203,
+            159,
+            59
+          ],
+          "replacement": [
+            203,
+            159,
+            59
+          ]
+        }
+      ]
+    },
+    "continuation": {
+      "picking": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -23.141347846713074,
+          "y": 18.453831118467026,
+          "z": -16.357343313557386
+        },
+        "point": {
+          "x": -23.141347846713078,
+          "z": -15.32527122381052
+        },
+        "sequence": 44
+      },
+      "idle": 91.9500000000018,
+      "drained": true,
+      "expectedDeviceLossPageNotices": 1
+    }
+  },
+  "tests": [
+    {
+      "path": ".cache/recovery-environment-regression.tap",
+      "sha256": "addb5cd4d5560a7df98c124e56c3b875f8f04b67caf2980c14146632616434c1",
+      "passed": 77
+    },
+    {
+      "path": ".cache/recovery-environment-cold-ruin.tap",
+      "sha256": "853870e249ec33397254e826cfabc7177776f2e99b00710880676b60e51745bb",
+      "passed": 1
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';
+import {uniform} from 'three/tsl';
 import {createWebGpuWaterEnvironment} from '../src/rendering/webgpu-water-environment.js';
 const pixels=n=>({width:1,height:1,pixels:new Uint8Array([n,n,n,255])});
 test('environment bindings change together only after both GPU uploads finish',async()=>{
@@ -21,4 +22,41 @@ import {createWebGpuResourceRegistry} from '../src/rendering/webgpu-resource-reg
 test('water placeholders and pending uploads retain generation leases until both fences complete',async()=>{
  const registry=createWebGpuResourceRegistry(),waits=[],renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:()=>new Promise(resolve=>waits.push(resolve))},lost:new Promise(()=>{})}},initTexture(){}},environment=createWebGpuWaterEnvironment({renderer,resourceRegistry:registry}),pending=environment.install([pixels(5),pixels(6)]);
  assert.equal(registry.status().owned.length,4);registry.dispose();environment.dispose();await assert.rejects(pending,/cancelled|closed/i);assert.equal(registry.status().owned.length,4);for(const resolve of waits)resolve();await new Promise(resolve=>setImmediate(resolve));assert.equal(registry.status().owned.length,0);
+});
+
+test('a replacement waits for its uploaded environment and restores the original fade origin',async()=>{
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:async()=>{}},lost:new Promise(()=>{})}},initTexture(){}};
+ const oldClock=uniform(Math.fround(47.8)),original=createWebGpuWaterEnvironment({renderer,clockNode:oldClock});
+ const elapsed=48.05,recoveredClock=uniform(Math.fround(elapsed)),replacement=createWebGpuWaterEnvironment({renderer,clockNode:recoveredClock});
+ try{
+  assert.equal(original.exportRecoveryCheckpoint(),null);
+  await original.install([pixels(5),pixels(6)]);oldClock.value=recoveredClock.value;
+  const checkpoint=original.exportRecoveryCheckpoint();
+  assert.deepEqual(checkpoint,{version:1,readyAt:Math.fround(47.8)});
+  let ready,restored=false;
+  const readyPromise=new Promise(resolve=>{ready=resolve;});
+  const recovery=replacement.restoreRecoveryCheckpoint(checkpoint,{elapsed,ready:readyPromise}).then(()=>{restored=true;});
+  await Promise.resolve();assert(!restored);assert.equal(replacement.day.value.image.data[0],64);
+  await replacement.install([pixels(5),pixels(6)]);
+  assert.equal(replacement.day.value.image.data[0],5);
+  assert.equal(replacement.exportRecoveryCheckpoint().readyAt,Math.fround(elapsed));
+  ready(true);await recovery;
+  assert.deepEqual(replacement.exportRecoveryCheckpoint(),checkpoint);
+  await assert.rejects(replacement.restoreRecoveryCheckpoint({...checkpoint,readyAt:elapsed+1},{elapsed}),/Invalid water environment checkpoint/);
+  assert.deepEqual(replacement.exportRecoveryCheckpoint(),checkpoint);
+ }finally{replacement.dispose();original.dispose();}
+});
+
+test('environment recovery rejects missing uploads and leaves cancelled fades unclaimed',async()=>{
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:async()=>{}},lost:new Promise(()=>{})}},initTexture(){}};
+ const environment=createWebGpuWaterEnvironment({renderer,clockNode:uniform(9)}),checkpoint={version:1,readyAt:8};
+ try{
+  await assert.rejects(environment.restoreRecoveryCheckpoint(checkpoint,{elapsed:9,ready:Promise.resolve(true)}),/no uploaded textures/);
+  await assert.rejects(environment.restoreRecoveryCheckpoint(checkpoint,{elapsed:9,ready:Promise.resolve(false)}),/no uploaded textures/);
+  let ready;const pending=new Promise(resolve=>{ready=resolve;});
+  const abort=new AbortController(),recovery=environment.restoreRecoveryCheckpoint(checkpoint,{elapsed:9,ready:pending,signal:abort.signal});
+  abort.abort();await assert.rejects(recovery,{name:'AbortError'});
+  await environment.install([pixels(5),pixels(6)]);ready(true);
+  assert.deepEqual(environment.exportRecoveryCheckpoint(),{version:1,readyAt:9});
+ }finally{environment.dispose();}
 });

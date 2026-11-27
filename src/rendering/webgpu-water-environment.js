@@ -22,5 +22,26 @@ export function createWebGpuWaterEnvironment({renderer,clockNode=uniform(0),admi
    for(const tex of staged)leases.get(tex)?.commit();for(const tex of staged)owned.add(tex);day.value=staged[0];dark.value=staged[1];if(staged[2])slope.value=staged[2];readyTime.value=clockNode.value;ready.value=1;installed=true;
   }catch(error){for(const tex of staged)releaseTexture(tex);throw error;}finally{installing=false;}
  }
- return {day,dark,slope,night,light,blend,install,setAdmission(value){if(closed||currentAdmission||typeof value?.deferCompilations!=='function')throw Error('Invalid water admission');currentAdmission=value;},update(state,sun){if(closed)return;if(!state||!sun?.isDirectionalLight)throw TypeError('Invalid water lighting');night.value=skyNight(state);light.value.copy(sun.position).sub(sun.target.position).normalize();},status(){return {closed,installed,pending};},dispose(){if(closed)return;closed=true;abort.abort();const items=[...owned];owned.clear();releaseAfterWebGpuWork({renderer,admission:currentAdmission,uploadsPending:true,release:()=>items.forEach(releaseTexture),onError});}};
+ function exportRecoveryCheckpoint(){
+  if(closed)throw Error('Water environment disposed');
+  return installed?{version:1,readyAt:readyTime.value}:null;
+ }
+ async function restoreRecoveryCheckpoint(checkpoint,{elapsed,ready:uploadReady,signal}={}){
+  if(closed||checkpoint?.version!==1||!Number.isFinite(elapsed)||elapsed<0||
+     !Number.isFinite(checkpoint.readyAt)||checkpoint.readyAt<0||checkpoint.readyAt>Math.fround(elapsed))
+   throw TypeError('Invalid water environment checkpoint');
+  signal?.throwIfAborted();
+  if(!installed){
+   let onAbort;
+   try{
+    const cancelled=signal?new Promise((_,reject)=>{
+     onAbort=()=>reject(signal.reason);signal.addEventListener('abort',onAbort,{once:true});
+    }):null;
+    const result=cancelled?await Promise.race([uploadReady,cancelled]):await uploadReady;
+    if(result!==true||!installed||closed)throw Error('Recovered water environment has no uploaded textures');
+   }finally{if(onAbort)signal.removeEventListener('abort',onAbort);}
+  }
+  signal?.throwIfAborted();readyTime.value=checkpoint.readyAt;
+ }
+ return {day,dark,slope,night,light,blend,install,exportRecoveryCheckpoint,restoreRecoveryCheckpoint,setAdmission(value){if(closed||currentAdmission||typeof value?.deferCompilations!=='function')throw Error('Invalid water admission');currentAdmission=value;},update(state,sun){if(closed)return;if(!state||!sun?.isDirectionalLight)throw TypeError('Invalid water lighting');night.value=skyNight(state);light.value.copy(sun.position).sub(sun.target.position).normalize();},status(){return {closed,installed,pending};},dispose(){if(closed)return;closed=true;abort.abort();const items=[...owned];owned.clear();releaseAfterWebGpuWork({renderer,admission:currentAdmission,uploadsPending:true,release:()=>items.forEach(releaseTexture),onError});}};
 }

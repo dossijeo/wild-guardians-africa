@@ -387,7 +387,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const canonical=value=>Array.isArray(value)?value.map(canonical):value&&typeof value==='object'?Object.fromEntries(Object.keys(value).sort().map(key=>[key,canonical(value[key])])):value;
    if(JSON.stringify(canonical(JSON.parse(message.snapshot)))!==JSON.stringify(canonical(JSON.parse(serializeConfirmedState(state)))))throw Error('Temporal checkpoint snapshot mismatch');
    if(message.terrainCheckpoint?.workerHeadings!==undefined)assertPresentationWorkerHeadingCheckpoint(presentationWorkerHeadings,message.terrainCheckpoint.workerHeadings);roster?.validatePoses(confirmedAnimalPoses(message,state));
-   if(retainCurrent){const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(message.sequence,{allowHidden:true}):null;assertRetainedTemporalPresentation(message,{work,presentation:captureTemporalPresentationCheckpoint(message.sequence)});}
+   if(retainCurrent){const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(message.sequence,{allowHidden:true}):null;assertRetainedTemporalPresentation(message,{work,presentation:captureTemporalPresentationCheckpoint(message.sequence,{retainCurrent:true})});}
   }
   const temporalRecoverySurface=experimentalTimelineRecovery||retainedTimelineRecovery?createTemporalSurfaceRecovery({stream,terrain,onError,validateCheckpoint:validateTemporalCheckpoint,
    prepareCheckpoint:(message,{signal:recoverySignal,retainCurrent=false})=>prepareWebGpuTemporalCheckpoint(message,{session,signal:recoverySignal,scene,residency,biome:biomeProps,coordinator:chunkCoordinator,publicationEpoch:livePublicationEpoch,publicationOrder:()=>publicationEpochs.order(),validateInstances:assertCoordinatedChunkInstances,mudPreparer,...(retainCurrent?{retainCurrent:true,assertCurrent:()=>validateTemporalCheckpoint(message,{retainCurrent:true}),prepareDependents:prepareNativeTerrainDependents,validatePresentationSupport:(view,participants)=>assertNativeTerrainPresentationSupport({state,residency,view,participants})}:{}),...(grassTimeline?{onPreparedIdentity:grassTimeline.prepared,onDiscardIdentity:grassTimeline.discarded}:{})}),onCheckpoint:async(message,prepared,{signal:recoverySignal,retainCurrent=false})=>{
@@ -401,6 +401,10 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    }
    roster?.setPoses(confirmedAnimalPoses(message,state));roster?.sync();workers?.sync();crates?.sync();settlements?.terrainChanged();crops?.terrainChanged();agricultureVfx?.terrainChanged();blessingVfx?.terrainChanged();
    const presentation=message.presentationCheckpoint??message.workCheckpoint?.presentation;if(!presentation||presentation.version!==1||presentation.sequence!==message.sequence||presentation.elapsed!==state.elapsed)throw Error('Temporal presentation checkpoint unavailable');agricultureVfx.restorePresentationCheckpoint(presentation.agriculture,message.sequence);blessingVfx.restoreRecoveryCheckpoint(presentation.blessing,message.sequence);if(presentation.centerDamage!==undefined)await settlements.restoreCenterDamageCheckpoint(presentation.centerDamage,recoverySignal);settlements?.sync();crops?.sync();guardianAttack.restoreRecoveryCheckpoint(presentation.guardian,message.sequence);
+   if(presentation.waterEnvironment!==undefined){
+    if(!waterEnvironment||!sky)throw Error('Recovery water environment unavailable');
+    await waterEnvironment.restoreRecoveryCheckpoint(presentation.waterEnvironment,{elapsed:state.elapsed,ready:sky.environmentReady,signal:recoverySignal});
+   }
    if(presentation.guardian.active)await guardianAttack.prepare({awakening:presentation.guardian.active.kind==='awakening'});
    if(presentationWorkRecovery||experimentalWorkRecovery){if(!message.workCheckpoint)throw Error('Temporal work checkpoint unavailable');await agricultureVfx.restoreWorkCheckpoint(message.workCheckpoint,message.sequence);await agricultureVfx.ensureRecoveryWorkReady({signal:recoverySignal??null});}else if(message.workCheckpoint.effects?.length)throw Error('Temporal work recovery disabled');if(recoverySignal?.aborted)throw new DOMException('Temporal recovery cancelled','AbortError');
    preparedNativeWorldBoundary=await admitRecoveredNativeWorld(copyNativeWorldBoundary(prepared.nativeWorldBoundary),message.sequence,recoverySignal,state);
@@ -413,12 +417,19 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    const recovery=temporalRecoverySurface?.status(),sequence=stream?.status().sequence,elapsed=state?.elapsed,pump=timelinePump?.status();
    if(closed||!retainedTimelineRecovery||timelineRecovering||recovery?.busy||!['checkpoint','live'].includes(recovery?.phase)||nativeGateProposal||nativeRoutePreparations||pump?.closed||pump?.historicalPending!==null&&pump?.historicalPending!==undefined||historicalClock?.status().active||nextTerrainPort===nextPresentationPort)throw Error('Retained Surface transport unavailable');
    const boundary={sequence,elapsed};stream.assertRecoveryTransport({port:nextPresentationPort,...boundary});terrain.assertRecoveryTransport({port:nextTerrainPort,...boundary});
-   const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(sequence,{allowHidden:true}):null,presentation=captureTemporalPresentationCheckpoint(sequence);
+   const work=presentationWorkRecovery||experimentalWorkRecovery?agricultureVfx.exportWorkCheckpoint(sequence,{allowHidden:true}):null,presentation=captureTemporalPresentationCheckpoint(sequence,{retainCurrent:true});
    timelineRecovering=true;recoveryTransportPending=true;grassTimeline?.beginRecovery();
    try{terrain.rebindForRecovery({port:nextTerrainPort,...boundary});stream.rebindForRecovery({port:nextPresentationPort,...boundary});}catch(error){try{onError(error);}catch{}throw error;}
    return {sequence,presentationCheckpoint:presentation,...(work===null?{}:{workCheckpoint:work})};
   }
-  function captureTemporalPresentationCheckpoint(sequence){if(!temporal||!stream||sequence!==stream.status().sequence||visualClock.elapsed!==state.elapsed)throw Error('Temporal presentation checkpoint boundary unavailable');const centerDamage=settlements?.exportCenterDamageCheckpoint();return {version:1,sequence,elapsed:state.elapsed,...(centerDamage?{centerDamage}:{}),guardian:guardianAttack.exportRecoveryCheckpoint(sequence),agriculture:agricultureVfx.exportPresentationCheckpoint(sequence),blessing:blessingVfx.exportRecoveryCheckpoint(sequence)};}
+  function captureTemporalPresentationCheckpoint(sequence,{retainCurrent=false}={}){
+   if(!temporal||!stream||sequence!==stream.status().sequence||visualClock.elapsed!==state.elapsed)throw Error('Temporal presentation checkpoint boundary unavailable');
+   const centerDamage=settlements?.exportCenterDamageCheckpoint();
+   // The retained Surface keeps its existing environment owner.
+   const environment=retainCurrent?null:waterEnvironment?.exportRecoveryCheckpoint();
+   return {version:1,sequence,elapsed:state.elapsed,...(centerDamage?{centerDamage}:{}),...(environment?{waterEnvironment:environment}:{}),
+    guardian:guardianAttack.exportRecoveryCheckpoint(sequence),agriculture:agricultureVfx.exportPresentationCheckpoint(sequence),blessing:blessingVfx.exportRecoveryCheckpoint(sequence)};
+  }
   const terrainReady=()=>{const status=terrain.status();return nativeDrawReadiness()==='ready'&&!status.closed&&!status.pending&&!status.presentationPending;};
   const terrainStatusForRay=(ray,limit)=>{const status=terrain.status();return {...status,presentationPending:status.presentationPending&&!residency.visualRayReady(ray,limit)};};
   const terrainRayReady=(ray,limit)=>{const status=terrainStatusForRay(ray,limit);return !status.closed&&!status.pending&&!status.presentationPending;};
