@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En Desierto 983, el segundo centro puede derrumbarse durante Retreat tras el último golpe. NVIDIA presentó la ruina con el mismo cuerpo del facóquero y el trabajador recuperó su turno en el primer centro. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#derrumbe-del-segundo-centro-en-el-último-golpe).
+
 En Desierto 983 con dos centros, NVIDIA confirmó la recarga durante la huida y tras Home19, con readmisión en una época nueva y vuelta a Idle. CPU también cubre los cortes con un golpe o Retreat en curso. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros).
 
 La huida de un trabajador de Desierto 983 comparte dibujo con el facóquero que marcha al segundo centro. NVIDIA confirmó cuatro golpes al centro elegido y la readmisión civil en el primero después de Home19 y Retreat. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#huida-con-dos-centros).

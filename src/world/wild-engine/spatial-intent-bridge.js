@@ -941,7 +941,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     try{
       const result=nativeRaidFlightMember(state,animal)&&select();
       if(!result||result.shieldId)return null;
-      const centerSelected=centerCohort&&nativeLiveCenterAttackSite(state,animal,result.target);
+      const centerSelected=centerCohort&&nativeLiveCenterAttackSite(state,animal,result.target,result.approach?.point);
       if(centerSelected&&!pair.requestSequence)pair.centerAttack=true;
       if(pair.centerAttack){
         if(!centerSelected||result.native||!requestNativeCenterBirth(state,animal,result,body,pair))return null;

@@ -51,7 +51,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -736,7 +736,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   }
   async function prepareCenterRuin(center,span,advanceSubstep){
     const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
-      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&game.structures[0]===center&&
+      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseSite(game,game.raid?.animals[0])===center&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&
       game.raid.animals[0].status==='retreating'&&nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
@@ -1637,7 +1637,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           throw Error('Saved encounter requires an acquired approach before advancing');
         return authority.execute(command);
       });
-    if(command.kind==='advance'&&!game.pauses.length&&savedRetreat&&game.structures[0].status==='collapsing'&&
+    if(command.kind==='advance'&&!game.pauses.length&&savedRetreat&&nativeCenterCollapseSite(game,savedRetreat)?.status==='collapsing'&&
        planner.nativeAnimalCropState(savedRetreat.id)?.mode===1)
       return nativeProduction.wake().then(result=>{
         if(closed||result?.status!=='committed')throw Error('Saved collapse requires an acquired Retreat before advancing');

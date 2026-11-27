@@ -12,7 +12,7 @@ import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
 import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
-import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold} from './rules.js';
+import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold,CENTER_COLLAPSE_SECONDS} from './rules.js';
 import {createRaidCompositionIndex} from './raid-composition-index.js';
 import {preparePressureNight,nextPressureWave} from './raid-pressure-plan.js';
 import {eligiblePendingRaidWavePlan} from '../world/raid-entry-data.js';
@@ -31,6 +31,7 @@ import {wallCollisionFrame} from '../world/wall-collision-frame.js';
 import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTargetReservations} from './raid-target-reservations.js';
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
+const RETREAT_SPEED=3.8;
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
 const reservationReconciliation=new WeakMap();
@@ -794,8 +795,8 @@ export function nativeCenterAttackSite(state,target){
 function animalStructureDamage(animal){
  return validDamageProfile(animal.damageProfile)?animal.damageProfile.structureDamage:animalSpec(animal.species).structure_hit_damage;
 }
-function centerSurvivesRaid(target,animal){
- return target.hp-animalStructureDamage(animal)*animal.hitsRemaining>collapseThreshold(target)+1e-9;
+function centerSurvivesStrikes(target,animal,hits){
+ return target.hp-animalStructureDamage(animal)*hits>collapseThreshold(target)+1e-9;
 }
 export function nativeLiveCenterRaidCanArm(state,plan){
  if(!state.structures.some(operational))return false;
@@ -804,13 +805,29 @@ export function nativeLiveCenterRaidCanArm(state,plan){
  // Cover every possible target until the ordinary selector chooses one.
  const species=plan.group[0],actor=plan.actors?.[0];
  const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??animalSpec(species).hit_budget_max};
- return state.structures.every(center=>center.status==='ruined'||operational(center)&&centerSurvivesRaid(center,animal));
+ return state.structures.every(center=>center.status==='ruined'||operational(center)&&centerSurvivesStrikes(center,animal,animal.hitsRemaining));
 }
-export function nativeLiveCenterAttackSite(state,animal,target){
+export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=null){
  if(!nativeCenterAttackSite(state,target))return false;
- if(!state.structures.some(center=>center!==target&&center.kind==='center'))return true;
- // The ruin transaction still belongs to the one-center cohort.
- return centerSurvivesRaid(target,animal);
+ if(!state.structures.some(center=>center!==target&&center.kind==='center')||
+    centerSurvivesStrikes(target,animal,animal.hitsRemaining))return true;
+ // Before its final blow the animal may need to select another target. The
+ // collapse transaction also needs a retreat that lasts through the substep.
+ const exit=animal.exit??animal.spawn;
+ return !!mixedApproach&&!!exit&&centerSurvivesStrikes(target,animal,animal.hitsRemaining-1)&&
+   Math.hypot(Math.fround(mixedApproach.x)-Math.fround(exit.x),Math.fround(mixedApproach.z)-Math.fround(exit.z))>
+   (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
+}
+export function nativeCenterCollapseSite(state,animal){
+ if(!animal?.hitApplied||!animal.attackId)return null;
+ const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
+   event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
+ const center=hit&&state.structures.find(item=>item.id===hit.targetId&&item.kind==='center');
+ if(!center)return null;
+ const threshold=collapseThreshold(center)+1e-9;
+ return state.events.some(event=>event.type==='StructureHit'&&event.simulationTime===hit.simulationTime&&
+   event.animalId===animal.id&&event.targetId===center.id&&event.structureHit?.kind==='center'&&
+   event.structureHit.previousHp>threshold&&event.structureHit.hp<=threshold)?center:null;
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
  if(state.biome!=='sabana'||!nativeCenterAttackCohort(state)||state.raid.animals.length!==1||state.raid.animals[0]!==animal)return false;
@@ -1145,7 +1162,7 @@ export function updateRaid(s,dt,nav) {
       }
       try{
         if(walkTo(s,a,exit,dt,nav,
-          {speed:3.8,worker:false,expandRoute:true,routeVia:a.spawn,
+          {speed:RETREAT_SPEED,worker:false,expandRoute:true,routeVia:a.spawn,
             externallyPlanned:native})){
           a.status='gone';publishAnimalGone(s,a.id);nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);
         }else if(native&&!a.path)nav.intentTaskPlanner?.finishRetreatIntent?.(a.id);

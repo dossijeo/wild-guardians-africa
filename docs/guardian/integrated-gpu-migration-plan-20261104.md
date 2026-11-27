@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-Desierto 983 admite el segundo centro elegido por Game mientras el trabajador todavía huye. NVIDIA confirmó los dos relojes en un mismo envío, cuatro golpes, Retreat y la recuperación del turno civil en el primer centro. Con dos centros y sin portones, el guardado desde esas dos rutas y desde el refugio también se recargó en NVIDIA. Quedan el derrumbe y las combinaciones de guardado con portones y varios centros. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros).
+Desierto 983 admite el segundo centro elegido por Game mientras el trabajador todavía huye. NVIDIA confirmó la recarga desde ambas rutas y desde el refugio, y presentó el derrumbe del segundo centro durante Retreat cuando colapsa tras el último golpe. Quedan la selección de otro objetivo con golpes disponibles y las combinaciones de guardado con portones y varios centros. [Recarga](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros) · [Derrumbe](native-desert-mixed-flight-center-20261125.md#derrumbe-del-segundo-centro-en-el-último-golpe).
 
 Desierto 712 admite el segundo centro elegido por el selector ordinario dentro de la calificación de un facóquero aislado. NVIDIA verificó cinco adquisiciones, dos golpes al centro elegido y la retirada. [Recorrido y evidencia](native-desert-attack-center-20261125.md#selección-entre-dos-centros-en-desierto).
 

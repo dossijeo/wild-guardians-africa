@@ -51,12 +51,13 @@ export function dawnMinimum(state) {
 }
 export function structureHealth(kind,material,gate=false) { return kind==='center'?600:gate?wallSpec(material).gate_hp:wallSpec(material).hp; }
 export function collapseThreshold(s) { return s.kind==='center'?s.maxHp*.21:s.maxHp*.2; }
+export const CENTER_COLLAPSE_SECONDS=3.2;
 export function hitStructure(s,damage,elapsed,state=null) {
   if(s.status!=='intact')return false;
   const visual=s.kind==='wall'&&Number.isFinite(elapsed)?wallVisualAt(s,elapsed):null;
   s.hp=Math.max(0,s.hp-damage*(1-wallDamageReduction(s,state)));
   if(s.hp<=collapseThreshold(s)+1e-9) {
-    s.status='collapsing'; s.collapseRemaining=s.kind==='center'?3.2:1.4;
+    s.status='collapsing'; s.collapseRemaining=s.kind==='center'?CENTER_COLLAPSE_SECONDS:1.4;
   }
   if(visual!==null)recordWallPresentation(s,visual,elapsed);
   return true;
