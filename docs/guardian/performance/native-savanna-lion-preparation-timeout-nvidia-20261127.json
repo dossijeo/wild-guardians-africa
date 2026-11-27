@@ -1,0 +1,275 @@
+{
+  "revision": "89139a21e8bb61f5dcd174714dc0b5c72c26ff18",
+  "receipt": {
+    "name": "native-menu-campaign-714-released-floor-terminal-wait-extended.json",
+    "sha256": "c644d9bbdea25261d8e45b204b53e3d1d511c8e82555f375cf663c93be5eac21"
+  },
+  "scenario": {
+    "seed": 714,
+    "biome": "sabana",
+    "culture": "mapungubwe",
+    "day": 4,
+    "profile": "explicit nativeWorkerLifecycle",
+    "clock": "ordinary Hosted"
+  },
+  "lastConfirmed": {
+    "elapsed": 2145.448709451792,
+    "sequence": 33018
+  },
+  "lastExaminedDraw": {
+    "sequence": 5333,
+    "elapsed": 2138.3487094517664,
+    "ticket": 195
+  },
+  "lion": {
+    "id": 100,
+    "ticket": 196,
+    "sequence": 32942,
+    "requestTime": 2137.8487094517645,
+    "surface": [
+      {
+        "kind": "surface-wait",
+        "ms": 229.03,
+        "sequence": 32942,
+        "applied": 32836,
+        "received": 32860
+      },
+      {
+        "kind": "surface-wait-settled",
+        "ms": 6154.15,
+        "sequence": 32942,
+        "applied": 32942,
+        "received": 32971
+      },
+      {
+        "kind": "surface-wait",
+        "ms": 6276.505,
+        "sequence": 32942,
+        "applied": 32947,
+        "received": 32971
+      },
+      {
+        "kind": "surface-wait",
+        "ms": 6278.47,
+        "sequence": 32942,
+        "applied": 32947,
+        "received": 32971,
+        "phase": "preparing",
+        "ticket": 196
+      }
+    ],
+    "preparation": [
+      {
+        "kind": "receive",
+        "ms": 0.285
+      },
+      {
+        "kind": "error",
+        "ms": 10015.81,
+        "message": "Pipeline admission cancelled"
+      }
+    ],
+    "phases": [
+      {
+        "stage": "roster-start",
+        "ms": 6280.085,
+        "sequence": 32947,
+        "time": 2137.8487094517645
+      },
+      {
+        "stage": "roster-end",
+        "ms": 9426.12,
+        "sequence": 32947,
+        "time": 2137.8487094517645
+      },
+      {
+        "stage": "pipeline-start",
+        "ms": 9426.915,
+        "sequence": 32947,
+        "time": 2137.8487094517645
+      }
+    ],
+    "lastPhase": "pipeline-start",
+    "failureMs": 10013.07,
+    "commitMs": null
+  },
+  "firstProbeWait": {
+    "kind": "surface-wait",
+    "ms": 1.31982421875,
+    "sequence": 32829,
+    "confirmed": 32828,
+    "received": 32860,
+    "clock": {
+      "sequence": 32828,
+      "version": 1,
+      "start": 2096.19999999886,
+      "end": 2096.2999999988606,
+      "startPauses": [],
+      "endPauses": [],
+      "complete": true,
+      "segments": [
+        {
+          "start": 2096.19999999886,
+          "end": 2096.2999999988606,
+          "realDuration": 0.1000000000003638,
+          "rate": 1
+        }
+      ]
+    },
+    "preparedWaiting": {
+      "token": 802,
+      "sequence": 32829,
+      "start": 2096.2999999988606,
+      "end": 2096.399999998861,
+      "sealed": false,
+      "held": false
+    }
+  },
+  "requiredPublication": [
+    {
+      "kind": "surface-wait",
+      "ms": 229.02978515625,
+      "sequence": 32942,
+      "confirmed": 32836,
+      "received": 32860,
+      "clock": {
+        "sequence": 32836,
+        "version": 1,
+        "start": 2096.999999998863,
+        "end": 2097.0999999988635,
+        "startPauses": [],
+        "endPauses": [],
+        "complete": true,
+        "segments": [
+          {
+            "start": 2096.999999998863,
+            "end": 2097.0999999988635,
+            "realDuration": 0.1000000000003638,
+            "rate": 1
+          }
+        ]
+      },
+      "preparedWaiting": null
+    },
+    {
+      "kind": "surface-wait-settled",
+      "ms": 6154.14990234375,
+      "sequence": 32942,
+      "confirmed": 32942,
+      "received": 32971,
+      "clock": {
+        "sequence": 32941,
+        "version": 1,
+        "start": 2136.999999998874,
+        "end": 2137.499999998874,
+        "startPauses": [],
+        "endPauses": [],
+        "complete": true,
+        "segments": [
+          {
+            "start": 2136.999999998874,
+            "end": 2137.499999998874,
+            "realDuration": 0.1,
+            "rate": 5
+          }
+        ]
+      },
+      "preparedWaiting": null
+    },
+    {
+      "kind": "surface-wait",
+      "ms": 6276.5048828125,
+      "sequence": 32942,
+      "confirmed": 32947,
+      "received": 32971,
+      "clock": {
+        "sequence": 32947,
+        "version": 1,
+        "start": 2138.248709451766,
+        "end": 2138.3487094517664,
+        "startPauses": [],
+        "endPauses": [],
+        "complete": true,
+        "segments": [
+          {
+            "start": 2138.248709451766,
+            "end": 2138.3487094517664,
+            "realDuration": 0.1000000000003638,
+            "rate": 1
+          }
+        ]
+      },
+      "preparedWaiting": null
+    },
+    {
+      "kind": "surface-wait",
+      "ms": 6278.469970703125,
+      "sequence": 32942,
+      "confirmed": 32947,
+      "received": 32971,
+      "clock": {
+        "sequence": 32947,
+        "version": 1,
+        "start": 2138.248709451766,
+        "end": 2138.3487094517664,
+        "startPauses": [],
+        "endPauses": [],
+        "complete": true,
+        "segments": [
+          {
+            "start": 2138.248709451766,
+            "end": 2138.3487094517664,
+            "realDuration": 0.1000000000003638,
+            "rate": 1
+          }
+        ]
+      },
+      "preparedWaiting": null
+    }
+  ],
+  "queueAtFailure": {
+    "steps": 274,
+    "pendingCommands": 52,
+    "recovery": {
+      "base": 32891,
+      "candidate": 32956,
+      "through": 33018,
+      "entries": 127,
+      "bytes": 10561866,
+      "entryBytes": 6221382,
+      "overheadBytes": 4340484,
+      "capacity": 256,
+      "highWatermark": 128,
+      "maxBytes": 268435456,
+      "highWatermarkBytes": 201326592,
+      "pendingTerrain": false,
+      "saturated": false,
+      "encoderFault": false,
+      "checkpointDeferred": false,
+      "checkpointRetry": false,
+      "closed": false
+    }
+  },
+  "cancellation": {
+    "message": "Pipeline admission cancelled",
+    "ms": 10015.809814453125
+  },
+  "confirmedDawns": [
+    {
+      "type": "RaidEnded",
+      "id": "event-33",
+      "elapsed": 432.42814648068384
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-62",
+      "elapsed": 1028.3494285575239
+    },
+    {
+      "type": "RaidEnded",
+      "id": "event-95",
+      "elapsed": 1718.121211758026
+    }
+  ],
+  "scope": "The required publication resolved before roster preparation. Pipeline admission had started when the end-to-end preparation timer elapsed. This receipt does not attribute the time inside the preceding publication drain."
+}
