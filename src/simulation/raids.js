@@ -821,17 +821,17 @@ export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=nul
  if(!nav||state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
    structure.kind==='center'&&structure.status==='collapsing'||structure.gate&&structure.status!=='ruined'))return false;
  const centers=state.structures.filter(center=>center!==target&&operational(center));
- if(centers.length!==1)return false;
- const [next]=centers,damage=animalStructureDamage(animal);
+ const damage=animalStructureDamage(animal);
  const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));
- if(!centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))return false;
- // Every approach lies within the footprint radius plus its interaction gap.
- // The existing moving-route receipt must remain live through the collapse.
- const hull=centerFootprint(next,state).footprint;
- const clearance=Math.max(...hull.map(point=>dist(point,next)))+animal.radius+.5;
  const from={...animal,x:Math.fround(mixedApproach.x),z:Math.fround(mixedApproach.z)};
- return dist(from,next)-clearance>(CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED&&
-   !!reachableApproach(from,next,nav)?.path?.length;
+ return centers.every(next=>{
+  if(!centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))return false;
+  // Every approach lies within the footprint radius plus its interaction gap.
+  // Game may choose any of these centers when the strike finishes.
+  const hull=centerFootprint(next,state).footprint;
+  const clearance=Math.max(...hull.map(point=>dist(point,next)))+animal.radius+.5;
+  return dist(from,next)-clearance>(CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED;
+ })&&centers.some(next=>!!reachableApproach(from,next,nav)?.path?.length);
 }
 export function nativeCenterCollapseSite(state,animal){
  if(!animal?.hitApplied||!animal.attackId)return null;

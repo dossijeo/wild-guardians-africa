@@ -252,14 +252,17 @@ for(const scenario of [
  {gated:true,recover:true,name:'through terminal Draw loss during Retreat'},
  {gated:false,secondCenter:true,name:'when the second center collapses on the final hit'},
  {gated:false,secondCenter:true,early:true,name:'during the approach to the successor center'},
+ {gated:false,secondCenter:true,early:true,thirdCenter:true,name:'when Game picks a third center before the ruin'},
 ])test('center ruin preserves the certified refuge '+scenario.name,{timeout:90000},async()=>{
- const {gated,pendingFarm,secondCenter,early}=scenario;
+ const {gated,pendingFarm,secondCenter,early,thirdCenter}=scenario;
  const initial=mixedState(gated),workerId=initial.workers[0].id,civilCenter=initial.workers[0].centerId;
  if(secondCenter){
   initial.structures.push({...initial.structures[0],id:`structure-${initial.nextId++}`,x:-18,z:-12,hp:early?180:200});
   initial.structures[0].hp=600;
  }
  const destroyedId=(secondCenter?initial.structures.at(-1):initial.structures[0]).id;
+ const successorId=thirdCenter?`structure-${initial.nextId++}`:civilCenter;
+ if(thirdCenter)initial.structures.push({...initial.structures[0],id:successorId,x:-5,z:-16});
  let releaseFarm,releaseRoute,farmReady=null,routeReady=null;
  const farmGate=new Promise(resolve=>{releaseFarm=resolve;});
  const routeGate=new Promise(resolve=>{releaseRoute=resolve;});
@@ -268,7 +271,7 @@ for(const scenario of [
    if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}
    if(secondCenter&&!routeReady&&record.kind==='animal-crop-route'){
     const ref=record.resources.reference;
-    if(early?'structure-'+ref.targetId===civilCenter:ref.purpose==='retreat'){routeReady=record;return routeGate;}
+    if(early?'structure-'+ref.targetId===successorId:ref.purpose==='retreat'){routeReady=record;return routeGate;}
    }
   }});
  const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
@@ -343,7 +346,7 @@ for(const scenario of [
   assert.equal(route.reference.bodyId,2);
   assert.equal(snap.sequence,ruin.packet.sequence);
   assert.deepEqual(events.filter(row=>row.type==='StructureHit').map(row=>[row.targetId,row.structureHit.hp]),
-   early?[[destroyedId,160],[destroyedId,140],[destroyedId,120],[civilCenter,580]]:[180,160,140,120].map(hp=>[destroyedId,hp]));
+   early?[[destroyedId,160],[destroyedId,140],[destroyedId,120],[successorId,580]]:[180,160,140,120].map(hp=>[destroyedId,hp]));
   assert.equal(events.filter(row=>row.type==='WorkerHit').length,0);
   assert.deepEqual(events.filter(row=>row.type==='StructureRuined').map(row=>[row.targetId,row.simulationTime]),
    [[destroyedId,source.end]]);
@@ -355,8 +358,8 @@ for(const scenario of [
    assert.deepEqual(polygons(),beforePolygons.filter(row=>row.id!==source.polygon));
    assert.equal(confirmed.result,null);
    if(early){
-    assert.equal('structure-'+source.approach.reference.targetId,civilCenter);
-    assert.throws(()=>centerSource({...source,center:civilCenter}),/Invalid center removal source/);
+    assert.equal('structure-'+source.approach.reference.targetId,successorId);
+    assert.throws(()=>centerSource({...source,center:successorId}),/Invalid center removal source/);
     const hits=events.filter(row=>row.type==='AnimalLogicalHit');
     assert.equal(new Set(hits.map(row=>row.attackId)).size,4);
     assert(hits[2].simulationTime<route.reference.worldBoundary.effectiveTime&&
@@ -370,7 +373,8 @@ for(const scenario of [
    assert.equal(confirmed.workers[0].nativeRouteAdmission,'native-idle');
    assert.equal(confirmed.workers[0].centerId,civilCenter);
    assert.equal(confirmed.workers[0].personId,initial.workers[0].personId);
-   assert.equal(confirmed.structures.find(row=>row.id===civilCenter).hp,early?580:600);
+   assert.equal(confirmed.structures.find(row=>row.id===civilCenter).hp,early&&!thirdCenter?580:600);
+   if(thirdCenter)assert.equal(confirmed.structures.find(row=>row.id===successorId).hp,580);
    assert.deepEqual(confirmed.ledger,initial.ledger);
    assert.deepEqual(world.faults,[]);
   }

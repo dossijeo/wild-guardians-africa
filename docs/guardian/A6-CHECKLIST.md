@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En Desierto 983 con dos centros alternativos, la admisión conserva la elección ordinaria del tercero mientras se retira la huella del centro derrumbado. NVIDIA confirmó que el centro civil conserva 600 HP y que el trabajador completa el mismo turno. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#elección-entre-dos-centros-alternativos).
+
 En Desierto 983 sin portones, NVIDIA presentó el derrumbe del centro anterior con la aproximación al siguiente centro todavía adquirida. El mismo facóquero aplicó el cuarto golpe y el trabajador volvió a Idle tras la incursión. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#derrumbe-con-un-golpe-disponible).
 
 En Desierto 983, el segundo centro puede derrumbarse durante Retreat tras el último golpe. NVIDIA presentó la ruina con el mismo cuerpo del facóquero y el trabajador recuperó su turno en el primer centro. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#derrumbe-del-segundo-centro-en-el-último-golpe).
@@ -789,9 +791,10 @@ dependencias con A6-01/02/06/07/08/09; no se cuentan otra vez como trabajo nuevo
 
 Avance de f-R4: [identidad de recursos ligada al commit nativo](f-r4-resource-boundary-20261113.md).
 Los paquetes que llegan tarde, los command buffers antiguos y los envíos directos
-no pueden adoptar la época nueva por su momento de recepción. El reemplazo GPU
-se comprueba con preparación bloqueada; payload visible y personajes reales
-siguen pendientes. No cambia la cuenta fija de entregables.
+no pueden adoptar la época nueva por su momento de recepción. En Desierto 983 se
+comprobaron la espera con READY retenido en CPU y el dibujo real de la ruina con
+la ruta adquirida del facóquero en NVIDIA. Quedan las variantes de ruta y mutación
+fuera de esa calificación. [Recorrido](native-desert-mixed-flight-center-20261125.md#elección-entre-dos-centros-alternativos).
 
 **Alcance del cierre de e-R1:** mecanismo cinemático de unión ocupada, materiales
 zarzas/empalizada/reforzado intactos y apoyo plano validado por el terreno nativo.
