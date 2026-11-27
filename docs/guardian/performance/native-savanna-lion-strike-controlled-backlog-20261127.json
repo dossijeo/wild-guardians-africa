@@ -1,0 +1,101 @@
+{
+  "revision": "cc92e9c08a8ccac9477b161f50b1be6438c96d28",
+  "artifact": "native-savanna-lion-first-strike-backlog-cut.json",
+  "sha256": "31271da5b7a331289fa07d490890745515a004c6b08ce9b231afc155bfdd2f89",
+  "scenario": {
+    "biome": "sabana",
+    "profile": "nativeWorkerLifecycle",
+    "seed": 714,
+    "initialSave": "sabana-second-night-fourth-cut-diagnosis-save.json",
+    "injection": "hold Preparer draw before timeline pump until first ordinary Strike27 request"
+  },
+  "hold": {
+    "appliedAtHold": 536,
+    "receivedAtHold": 539,
+    "elapsed": 2161.698709451811,
+    "holdBeforeRequestMs": 2628.135009765625,
+    "releaseAfterRequestMs": 2.619873046875,
+    "wokeOnRequest": true
+  },
+  "request": {
+    "id": 3,
+    "ticket": 4,
+    "effectiveTime": 2164.548709451821,
+    "minSequence": 603
+  },
+  "initialApplied": 536,
+  "initialReceived": 568,
+  "sourceAppliedMs": 1775.764892578125,
+  "untilRoster": {
+    "wallMs": 1859.89990234375,
+    "publications": 74,
+    "timeline": {
+      "count": 10,
+      "sumMs": 275.6200000047684,
+      "maxMs": 35.95499999821186
+    },
+    "previewIncludedInTimeline": {
+      "count": 74,
+      "sumMs": 17.87499989569187,
+      "maxMs": 0.625
+    },
+    "render": {
+      "count": 10,
+      "sumMs": 522.3250000029802,
+      "maxMs": 55.03499999642372
+    },
+    "frameEndAwait": {
+      "count": 9,
+      "sumMs": 807.0149999856949,
+      "maxMs": 94.95000000298023
+    },
+    "endFrameReturnToSend": {
+      "count": 9,
+      "sumMs": 19.72998046875,
+      "maxMs": 10.539794921875
+    },
+    "receiptThroughAdmission": {
+      "count": 9,
+      "sumMs": 460.485107421875,
+      "maxMs": 57.28515625
+    },
+    "admissionStartThroughResourceCheck": {
+      "count": 9,
+      "sumMs": 245.6806640625,
+      "maxMs": 31.065185546875
+    },
+    "resourceWait": {
+      "count": 9,
+      "sumMs": 0.04931640625,
+      "maxMs": 0.010009765625
+    },
+    "batchCounters": {
+      "count": 655,
+      "operations": 2175,
+      "precedingFrame": 123,
+      "lastFrame": 132
+    }
+  },
+  "draw": {
+    "receivedMs": 4023.530029296875,
+    "resourcesWaitMs": 0.364990234375,
+    "readyMs": 4117.16015625
+  },
+  "acquired": {
+    "elapsedMs": 4159.44482421875,
+    "ticket": 5
+  },
+  "firstDraw": {
+    "sequence": 134,
+    "clockElapsed": 2168.6987094518363,
+    "relativeTime": 0
+  },
+  "hit": {
+    "attackId": "attack-86",
+    "targetId": "structure-2",
+    "time": 2170.248709451842
+  },
+  "drained": true,
+  "pageErrors": [],
+  "unattributedConsole404s": 2
+}
