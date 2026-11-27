@@ -16,6 +16,9 @@ import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.j
 import {createNativeGateGpuBinding} from '../src/rendering/native-gate-gpu-binding.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {cropSpec} from '../src/simulation/rules.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {serialize} from '../src/persistence/snapshots.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 
 async function gateRouteAuthority(home,{configure=()=>{},...options}={}){
   const origin=nativeFarmArrivalRouteFixture({peer:false}),state=structuredClone(origin.state);origin.close();
@@ -82,6 +85,81 @@ test('Stop24 draws its acquired motor even when the next Task has already reques
   assert.equal(motor?.opening,Math.fround(actual[2]));
   assert.deepEqual(f.faults,[]);
  }finally{release();await f.close();}
+});
+
+test('the ordinary Home18 checkpoint reacquires the same gate opening and reproduces the crossing',async()=>{
+ const source=await gateRouteAuthority(true,{nativeWorkerLifecycle:true});
+ const gateId='structure-1000000';
+ const leaf=state=>state.structures.find(s=>s.id===gateId);
+ const pose=({x,z,heading,runPhase,walkPhase,carryPhase,runRemaining})=>[x,z,heading,runPhase,walkPhase,carryPhase,runRemaining];
+ let saved,firstEpoch;
+ try{
+  await untilProduction(source,()=>source.records.some(row=>row.kind==='home-route'&&row.committed));
+  const home=source.records.find(row=>row.kind==='home-route'&&row.committed);
+  firstEpoch=home.resources.worldBoundary.authorityEpoch;
+  assert.equal(home.resources.gates[0].gateId,1000000);
+  for(let i=0;i<100;i++){
+   const active=source.advance(.025);
+   await source.present();
+   if(leaf(active).gateOpen>.2&&leaf(active).gateOpen<.65)break;
+  }
+  const active=source.snapshot();
+  assert(leaf(active).gateOpen>.2&&leaf(active).gateOpen<.65);
+  assert.equal(active.workers[0].nativeRouteAdmission,'native-home');
+  assert.equal(active.workers[0].gateWaiting,true);
+  assert(active.workers[0].z<leaf(active).z);
+  const result=source.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+  const stored=prepareWorkerCheckpoint(await result,{slotId:active.slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert(stored.saved);
+  assert.equal(stored.state.workerNativeAuthorityCheckpoint.workerLifecycle,1);
+  assert.deepEqual(pose(stored.state.workers[0]),pose(active.workers[0]));
+  assert.equal(leaf(stored.state).gateOpen,leaf(active).gateOpen);
+  saved=stored.state;
+ }finally{await source.close();}
+ const forged=structuredClone(saved);
+ forged.workers[0].nativeRouteAdmission='pending-home-resources';
+ await assert.rejects(nativeProductionAuthority(forged,savedNativeAuthorityOptions(serialize(forged))),/Invalid native Home restoration state/);
+ async function replay(){
+  let release;
+  const held=new Promise(resolve=>{release=resolve;});
+  const restored=await nativeProductionAuthority(saved,{...savedNativeAuthorityOptions(serialize(saved)),onReady:row=>row.kind==='home-route'?held:undefined});
+  try{
+   await untilProduction(restored,()=>restored.records.some(row=>row.kind==='home-route'&&row.packet));
+   const home=restored.records.find(row=>row.kind==='home-route');
+   assert.notEqual(home.resources.worldBoundary.authorityEpoch,firstEpoch);
+   assert.equal(home.committed,false);
+   const cold=restored.snapshot(),from=saved.workers[0];
+   assert.deepEqual(pose(cold.workers[0]),pose(from));
+   assert.equal(cold.workers[0].nativeRouteAdmission,'pending-home-resources');
+   assert.equal(cold.workers[0].gateWaiting,false);
+   assert.equal(leaf(cold).gateOpen,leaf(saved).gateOpen);
+   assert.equal(home.resources.gates[0].gateId,1000000);
+   release();
+   await untilProduction(restored,()=>home.committed);
+   await restored.present();
+   await home.packet.presented;
+   const first=restored.host.inspect().nativeRouteFrame;
+   assert(first.bindings.some(b=>b.nativeHome?.actorId===900011));
+   assert(first.bindings.some(b=>b.nativeGate?.gateId===1000000));
+   const samples=[];
+   for(let i=0;i<380;i++){
+    const state=restored.advance(.05);
+    await restored.present();
+    const worker=state.workers[0];
+    samples.push([state.elapsed,leaf(state).gateOpen,...pose(worker)]);
+    if(worker.status==='home'&&restored.records.some(row=>row.kind==='home-arrival'&&row.committed))break;
+   }
+   const final=restored.snapshot();
+   assert.equal(final.workers[0].status,'home');
+   assert.equal(final.workers[0].id,from.id);
+   assert.deepEqual([final.workers[0].x,final.workers[0].z],[-14,11.8]);
+   assert.deepEqual(final.ledger,saved.ledger);
+   assert.equal(restored.records.filter(row=>row.kind==='home-arrival'&&row.committed).length,1);
+   assert.deepEqual(restored.faults,[]);
+   return samples;
+  }finally{release();await restored.close();}
+ }
+ assert.deepEqual(await replay(),await replay());
 });
 
 for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
