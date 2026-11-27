@@ -731,6 +731,8 @@ una contratación después de estacionar el primer cuerpo. Los controles retiene
 READY y NVIDIA confirma ambos cuerpos, el portón y el drenaje. e-R3, e-R4 y
 f-R4 conservan sus criterios de integración. [Recorrido y controles](native-farm-gate-aperture-20261121.md#contratacion-con-un-trabajador-estacionado).
 
+El ensayo del 27 de noviembre dibujó Stop24 con el cuerpo y el motor todavía en apertura tras retener READY. También recargó Home18 con el portón a medio abrir y presentó la retirada de Home19. Idle22 se guardó y volvió a dibujar en una segunda época sin perder la pose, la fase ni el destino. Los tres recibos incluyen drenaje de Draw. Queda la aceptación de la partida ordinaria de los criterios e-R3, e-R4 y f-R4. [Stop24](performance/native-stop24-moving-gate-20261127.json) · [Home18](performance/native-home18-moving-gate-save-20261127.json) · [Idle22](performance/native-idle22-public-save-20261127.json).
+
 ### Componentes ya implementados, con sus límites
 
 | Componente | Hecho | Límite de lo entregado |

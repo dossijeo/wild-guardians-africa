@@ -49,7 +49,7 @@ import {copyNativeGatePresentation} from '../native-gate-presentation.js';
 import {centerGeometry,centerServicePoint,centerDeliveryPoint} from '../centers.js';
 import {contractExpired,PROFILES} from '../../simulation/workforce.js';
 import {observeGameEvents,idleFarmAnchor,repairCost,prepareHarvestConsequence,harvestConsequenceCurrent,projectNativeHarvestConsequence,prepareNativeStationaryTaskConsequence,projectNativeStationaryTaskConsequence,prepareCrateDeliveryConsequence,crateDeliveryConsequenceCurrent,projectNativeCrateDeliveryConsequence,projectNativeHomeRouteExecution,projectNativeFarmArrivalRouteExecution} from '../../simulation/game.js';
-import {nativeIdleStrollLiveState,nativeIdleStrollSavedState} from '../native-idle-stroll-state.js';
+import {nativeIdleStrollLiveState,nativeIdleStrollSavedState,nativeIdleStrollShiftEnded,nativeIdleStrollRestoreState as restoredStrollGameState} from '../native-idle-stroll-state.js';
 import {BALANCE} from '../../simulation/balance.js';
 import {activeCrops} from '../../simulation/active-crops.js';
 import {workerEntityLookup} from '../../simulation/worker-entity-lookup.js';
@@ -135,16 +135,6 @@ function idleReanchorAfterCrop(state,worker,anchorId){
   const center=state.structures.find(c=>c.id===worker.centerId);
   return idleFarmAnchor(state,worker,center,crops);
 }
-function restoredStrollGameState(state,worker){
-  const semantic=nativeIdleStrollSavedState(state,worker),idle=semantic.idleState,approach=idle.destination.id===idle.anchorId,center=state.structures.find(c=>c.id===worker.centerId),match=/^farm-(plant|structure)-(\d+)$/.exec(idle.anchorId);
-  const plant=match?.[1]==='plant'?state.plants.find(p=>p.id===`plant-${match[2]}`&&p.centerId===worker.centerId&&p.alive):null;
-  if(!match||match[1]==='plant'&&!plant||match[1]==='structure'&&center.id!==`structure-${match[2]}`)throw Error('Invalid saved native stroll anchor');
-  // Reuse the original policy with the SAVED anchor ID. Re-evaluating the
-  // nearest crop here would change the selected WALK target after loading.
-  const a=idleFarmAnchor(state,worker,center,plant?[plant]:[]),anchor={kind:plant?1:2,id:Number(match[2]),x:a.x,z:a.z,radius:a.idleRadius},calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
-  if(a.id!==idle.anchorId||!calibration||!['x','z','radius'].every(k=>Number.isFinite(anchor[k]))||anchor.radius<=0||anchor.radius>8||!approach&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.radius||(approach?idle.destination.x!==anchor.x||idle.destination.z!==anchor.z:Math.hypot(idle.destination.x-anchor.x,idle.destination.z-anchor.z)>anchor.radius+1e-9))throw Error('Invalid saved native stroll geometry');
-  return {...semantic,anchor,calibration,approach};
-}
 function restoredStrollMatchesWorker(state,worker,request){
   if(!worker||request.actorId!==numericId(worker.id)||request.requestedAt>state.elapsed||worker.profile!==request.workerProfile||numericId(worker.centerId)!==request.centerId)return false;
   try{const {pose,idleState:i,anchor:a,approach}=restoredStrollGameState(state,worker);return (request.approach===true)===approach&&Object.keys(pose).every(k=>pose[k]===request.pose[k])&&['kind','id','x','z','radius'].every(k=>a[k]===request.anchor[k])&&i.remaining===(request.version===2?request.walkRemaining:request.approach?request.idleSeconds*2:0)&&i.rng===request.walkRng&&i.approachRetry===request.approachRetry&&i.destination.x===request.destination.x&&i.destination.z===request.destination.z;}catch{return false;}
@@ -166,8 +156,7 @@ function normalizeNativeIntentRestoration(state,wasm){
   if(strollers.some(w=>w.idleState?.destination?.id===w.idleState?.anchorId&&w.idleState.remaining!==LOCOMOTION.sources.find(c=>c.profile===w.profile)?.idleSeconds*2)&&(wasm.nav_idle_stroll_restore_state_version?.()!==1||typeof wasm.nav_intent_restore_idle_approach_state!=='function'||typeof wasm.nav_idle_stroll_restore_state_requests_snapshot!=='function'))throw Error('Rebuild native stroll remaining restoration');
   if(strollers.length&&wasm.spatial_body_count()!==0)throw Error('Native stroll restoration requires a fresh physical world');
   const strolls=strollers.map(worker=>{
-    nativeIdleStrollSavedState(state,worker);
-    if(contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile)){const home={...worker};cancelIdle(home);Object.assign(home,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});return {worker,home};}
+    if(nativeIdleStrollShiftEnded(state,worker)){nativeIdleStrollSavedState(state,worker);const home={...worker};cancelIdle(home);Object.assign(home,{status:'returning',path:null,nativeRouteAdmission:'pending-home-resources',running:false,gateWaiting:false});return {worker,home};}
     restoredStrollGameState(state,worker);return {worker};
   });
   const homeWorkers=[...state.workers.filter(w=>['native-home','pending-home-resources'].includes(w.nativeRouteAdmission)),...strolls.filter(p=>p.home).map(p=>p.home),...farmHomes.map(p=>p.home)];

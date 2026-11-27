@@ -60,7 +60,7 @@ import {workerSlopeRecoveryPath} from '../world/worker-slope-recovery.js';
 import {animalWallOverlapRecovery,workerWallOverlapRecoveryPath} from '../world/worker-wall-overlap-recovery.js';
 import {createUrgencyPass} from './work-urgency.js';
 import {repairRoute,wateringRoute,canWaterFrom} from '../world/work-points.js';
-import {updateIdle,cancelIdle,createIdleState} from './idle.js';
+import {updateIdle,cancelIdle,createIdleState,farmIdleAnchor} from './idle.js';
 import {copyNativeInitialIdleState} from '../world/native-initial-idle-request-reference.js';
 import {nativeInitialIdleActionSource} from '../world/native-initial-idle-body.js';
 import {advanceGateLeaves,waitForGate} from './gates.js';
@@ -1527,8 +1527,7 @@ export function idleFarmAnchor(s,worker,center,livingCandidates=null){
     const distance=dist(plant,worker);
     if(distance<liveDistance||distance===liveDistance&&plant.id.localeCompare(live.id)<0){live=plant;liveDistance=distance;}
   }
-  if(live)return {...live,id:'farm-'+live.id,idleRadius:3};
-  return {...center,...centerServicePoint(center,s,.8),id:'farm-'+center.id,idleRadius:2};
+  return farmIdleAnchor(s,center,live);
 }
 function taskRouteWhenKnown(compute){
   try{return compute();}

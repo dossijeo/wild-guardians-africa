@@ -1,4 +1,9 @@
-import {PROFILES} from '../simulation/workforce.js';
+import {PROFILES,contractExpired} from '../simulation/workforce.js';
+import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
+import {activeCrops} from '../simulation/active-crops.js';
+import {farmIdleAnchor} from '../simulation/idle.js';
+
+const profileEnd=new Map(PROFILES.map(({id,end})=>[id,end]));
 
 // Semantic live writeback, without native handles or an execution permission.
 // Restoring a moving Idle still requires a fresh native source declaration.
@@ -14,3 +19,28 @@ export function nativeIdleStrollLiveState(state,worker){return strollState(state
 // This validates semantic values only. Accepting a saved/pending marker here
 // does not make a snapshot loadable or grant a native/graphical permission.
 export function nativeIdleStrollSavedState(state,worker){return strollState(state,worker,true);}
+
+export function nativeIdleStrollShiftEnded(state,worker){
+ return contractExpired(worker,state)||state.time>=profileEnd.get(worker.profile);
+}
+
+export function nativeIdleStrollRestoreState(state,worker){
+ const semantic=nativeIdleStrollSavedState(state,worker),idle=semantic.idleState,approach=idle.destination.id===idle.anchorId;
+ const center=state.structures.find(c=>c.id===worker.centerId);
+ const match=/^farm-(plant|structure)-(\d+)$/.exec(idle.anchorId);
+ const plant=match?.[1]==='plant'?activeCrops(state.plants).find(p=>p.id===`plant-${match[2]}`&&p.centerId===worker.centerId&&p.alive):null;
+ if(!match||match[1]==='plant'&&!plant||match[1]==='structure'&&center.id!==`structure-${match[2]}`)throw Error('Invalid saved native stroll anchor');
+ // Loading keeps the saved anchor even when a different crop is nearer now.
+ const a=farmIdleAnchor(state,center,plant),anchor={kind:plant?1:2,id:Number(match[2]),x:a.x,z:a.z,radius:a.idleRadius};
+ const calibration=LOCOMOTION.sources.find(c=>c.profile===worker.profile);
+ if(a.id!==idle.anchorId||!calibration||!['x','z','radius'].every(k=>Number.isFinite(anchor[k]))||anchor.radius<=0||anchor.radius>8||!approach&&Math.hypot(worker.x-anchor.x,worker.z-anchor.z)>anchor.radius||(approach?idle.destination.x!==anchor.x||idle.destination.z!==anchor.z:Math.hypot(idle.destination.x-anchor.x,idle.destination.z-anchor.z)>anchor.radius+1e-9))throw Error('Invalid saved native stroll geometry');
+ return {...semantic,anchor,calibration,approach};
+}
+
+export function nativeIdleStrollSaveAvailable(state,worker){
+ try{
+  if(nativeIdleStrollShiftEnded(state,worker))nativeIdleStrollSavedState(state,worker);
+  else nativeIdleStrollRestoreState(state,worker);
+  return true;
+ }catch{return false;}
+}

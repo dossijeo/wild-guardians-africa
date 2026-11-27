@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Stop24 presentó en NVIDIA el portón mientras abría y el cuerpo detenido en el mismo paquete. Home18 recargó el vano parcialmente abierto y continuó hasta Home19. Idle22 guardó el movimiento desde el navegador y otra sesión recuperó el destino y la fase. Los casos se validaron con el perfil nativo de calificación y mantienen pendientes e-R3, e-R4 y f-R4. [Control de portón](native-farm-gate-aperture-20261121.md) · [Guardado Idle22](native-cold-worker-admission-20261126.md#guardado-de-idle22-en-movimiento).
+
 Draw descarta los paquetes que quedan por debajo del piso de un hold cancelado. En NVIDIA, el reintento de Task14 y Action15 completó un solo riego y drenó. La prueba fuerza la cancelación y la campaña continua sigue pendiente de aceptación. [Recibo y alcance](native-cold-worker-admission-20261126.md#reintento-de-task14-tras-cancelar-un-hold).
 
 El guardado de la aproximación al centro conserva el corredor de disco sin incorporarlo a la publicación en vivo. Un control NVIDIA guardó durante READY26 y completó el golpe, la retirada y el drenaje. Se conserva el recibo de la campaña que falló en la publicación 7332. [Pruebas y alcance](native-cold-worker-admission-20261126.md#publicación-en-vivo-al-guardar-una-aproximación).

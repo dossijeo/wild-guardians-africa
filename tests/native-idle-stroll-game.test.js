@@ -32,10 +32,10 @@ test('stroll writeback rejects another Game, watermark, source pose and substitu
  }finally{f.close();}
 });
 
-test('live transport and semantic save accept actual stroll values while ordinary UI saving remains closed',()=>{
+test('live transport and ordinary saving accept the semantic stroll without native handles',()=>{
  const f=nativeIdleStrollGameFixture();try{
-  assert(confirmedStateSaveAvailable(f.state));f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.1);f.planner.projectNativeIdleStroll(f.state,f.worker);const encoded=serializeConfirmedState(f.state),restored=deserializeConfirmedState(encoded);assert.deepEqual(restored.workers[0],f.worker);assert.equal(prepareConfirmedStateTransport(f.state).snapshot,encoded);assert(!encoded.includes('native-idle-stroll-attestation'));assert(!encoded.includes('expectedRouteHandle'));assert.equal(confirmedStateSaveAvailable(f.state),false);assert.deepEqual(JSON.parse(serialize(f.state)).workers[0],f.worker);
-  for(const mutate of [w=>{w.path=[];},w=>{w.idleState.mode='rest';},w=>{w.idleState.rng=-1;},w=>{w.idleState.binding={};},w=>{w.destinationId=null;}]){const bad=structuredClone(f.state);mutate(bad.workers[0]);assert.throws(()=>serializeConfirmedState(bad),/stroll/);}
+  assert(confirmedStateSaveAvailable(f.state));f.commitStroll();f.planner.projectNativeIdleStroll(f.state,f.worker);f.advance(.1);f.planner.projectNativeIdleStroll(f.state,f.worker);const encoded=serializeConfirmedState(f.state),restored=deserializeConfirmedState(encoded);assert.deepEqual(restored.workers[0],f.worker);assert.equal(prepareConfirmedStateTransport(f.state).snapshot,encoded);assert(!encoded.includes('native-idle-stroll-attestation'));assert(!encoded.includes('expectedRouteHandle'));assert.equal(confirmedStateSaveAvailable(f.state),true);assert.deepEqual(JSON.parse(serialize(f.state)).workers[0],f.worker);
+  for(const mutate of [w=>{w.path=[];},w=>{w.idleState.mode='rest';},w=>{w.idleState.rng=-1;},w=>{w.idleState.binding={};},w=>{w.destinationId=null;}]){const bad=structuredClone(f.state);mutate(bad.workers[0]);assert.equal(confirmedStateSaveAvailable(bad),false);assert.throws(()=>serializeConfirmedState(bad),/stroll/);}
  }finally{f.close();}
 });
 

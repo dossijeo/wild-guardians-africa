@@ -1,6 +1,12 @@
 import {LOCOMOTION as L} from './locomotion-calibration.js';
 import {moveWorker,pathMotionClock,WORKER_SPEED_MULTIPLIER} from './locomotion.js';
 import {prepareActorMotion} from './actor-motion.js';
+import {centerServicePoint} from '../world/centers.js';
+
+export function farmIdleAnchor(state,center,plant){
+  if(plant)return {...plant,id:'farm-'+plant.id,idleRadius:3};
+  return {...center,...centerServicePoint(center,state,.8),id:'farm-'+center.id,idleRadius:2};
+}
 
 // Cosmetic choices have their own persisted stream: waiting never consumes a raid/event roll.
 function seedFor(worker,seed){

@@ -274,6 +274,12 @@ El control de CPU retiene READY26, guarda y ejecuta el siguiente paso. La preima
 
 La comprobación en NVIDIA Turing cargó el comienzo de la quinta noche y retuvo la respuesta READY26 durante 1,8 s de pared. A 2745,28 s, el guardado 62 contenía 46 puntos y el rinoceronte visible seguía sin camino. El dibujo 36 presentó la marcha adquirida con el ticket 3 a 2747,48 s. El golpe `attack-103` coincidió con el ID del recibo de Strike27. La incursión acabó y hubo una sola derrota a 2788,78 s, con saldo 671, sin el rechazo del validador y con drenaje. Se corrigió el arnés para ignorar eventos de las noches anteriores y tomar el ID del golpe del ticket de esta pasada. Quedan por repetir la campaña continua y el corte del búfalo. [Cortes y recibo NVIDIA](performance/native-savanna-autosave-publication-nvidia-20261127.json).
 
+## Guardado de Idle22 en movimiento
+
+El guardado público acepta al civil en Idle22 adquirido y en espera de recursos si la pose, la fase y el destino pasan la misma comprobación semántica que la recarga. La nueva sesión conserva el ancla guardada, vuelve a declarar el corredor desde esos datos y obtiene su propio READY y GO. Los controles rechazan un destino fuera de su radio o una planta ajena y conservan el retorno a casa cuando ya terminó el contrato.
+
+La prueba de Sabana 714 cargó en el juego un guardado de la jornada pagada. El primer Draw de Idle22 presentó al trabajador 6 a t=64,35 y la fase de marcha partió de 59,239956. El navegador guardó de nuevo a t=64,60 con fase 59,614956. Otra sesión presentó esa pose de origen a t=64,85, progresó con el mismo destino y guardó a t=65,10. Se verificaron la época nueva, el saldo y los drenajes NVIDIA. El control en CPU retiene READY y guarda también la solicitud pendiente. [Recibo de ambas recargas](performance/native-idle22-public-save-20261127.json).
+
 ## Reintento de Task14 tras cancelar un hold
 
 En la primera repetición de la campaña con el guardado separado, Task14 llegó a READY con el ticket 3. Su sucesor, ticket 5, esperaba la publicación 454. Al vencer su plazo, Surface seguía en 391, había recibido hasta 423 y el último dibujo acreditado conservaba 16,10 s. La partida llegó a 25,10 s con el trabajador esperando su primera tarea. Ese recibo carece del piso causal en Draw. Una pasada corta con instrumentación sí llegó a Task14, Action15 y el primer riego y drenó, adquiriendo Task14 en el primer intento.
