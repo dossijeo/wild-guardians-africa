@@ -842,7 +842,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const workerTask=members.length===1&&[14,15,16,17,24].includes(members[0].profile.kind);
+    const workerTask=members.length===1&&[14,15,16,17,24,25].includes(members[0].profile.kind);
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||workerTask||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
@@ -873,8 +873,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           if(!support?.valid())throw Error('Recovered delivery settlement terrain is unavailable');
           await workers.prepareRecoveredTaskSettlement(input,support,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getSettlementElapsed(reference)});
-        }else if(profile.kind===24){
-          await workers.prepareRecoveredFarmStop({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+        }else if(profile.stopProjectionMatches){
+          await workers.prepareRecoveredStoppedWorker({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
             getProjection:(selector,epoch)=>nativePickFrame.getStoppedBody(selector,epoch)});
         }else if(profile.kind===21){
           const support=terrainSupport.prepareNativeIdleCycle(ref);
@@ -895,7 +895,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       }
       if(!current()||!members.every(({crop,actorId,resources,profile,ref})=>
         crop?roster.hasNativeCropOwner():profile.kind===15?workers.recoveredTaskActionCurrent(actorId,ref):
-          profile.kind===17?workers.recoveredTaskSettlementCurrent(actorId,ref):profile.kind===24?workers.recoveredFarmStopCurrent(actorId,ref):profile.kind===21?workers.recoveredIdleCycleCurrent(actorId,ref):
+          profile.kind===17?workers.recoveredTaskSettlementCurrent(actorId,ref):profile.stopProjectionMatches?workers.recoveredStoppedWorkerCurrent(actorId,ref,profile):profile.kind===21?workers.recoveredIdleCycleCurrent(actorId,ref):
           workers.nativeRouteCurrent(actorId,resources.nativeRoute)))
         throw Error('Replayed rig is no longer current');
       // The static replay may already have admitted the scene without the typed rig.

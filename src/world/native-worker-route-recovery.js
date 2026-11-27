@@ -1,4 +1,5 @@
-import {copyStop24Source,copyStop24Resources,sameStop24Source,sameStop24Clock} from "./native-stop24-task-recovery.js";
+import {copyStop24Source,copyStop24Resources,sameStop24Source,sameStop24Clock,stop24ProjectionMatches} from "./native-stop24-task-recovery.js";
+import {copyTask25HomeSource,copyTask25HomeResources,sameTask25HomeSource,sameTask25HomeClock,task25ProjectionMatches} from './native-task25-home-recovery.js';
 import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
 import {copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,sameNativeIdleCycleAttestation,sameNativeIdleCycleReference} from './native-idle-cycle.js';
@@ -200,7 +201,14 @@ const profiles=new Map([
  [24,Object.freeze({
   kind:24,admission:'pending-resources',executionKind:'native-stopped-task-execution',maxGates:0,
   bindingField:'stoppedTaskBinding',clockField:'nativeStopped',obsoleteCode:'native-farm-arrival-stop-admission-obsolete',
+  stopProjectionMatches:stop24ProjectionMatches,
   copyResources:copyStop24Resources,copyAttestation:copyStop24Source,sameAttestation:sameStop24Source,sameReference:sameStop24Clock
+ })],
+ [25,Object.freeze({
+  kind:25,admission:'pending-home-resources',executionKind:'native-stopped-home-execution',maxGates:0,
+  bindingField:'stoppedHomeBinding',clockField:'nativeStopped',obsoleteCode:'native-route-admission-obsolete',
+  stopProjectionMatches:task25ProjectionMatches,
+  copyResources:copyTask25HomeResources,copyAttestation:copyTask25HomeSource,sameAttestation:sameTask25HomeSource,sameReference:sameTask25HomeClock
  })],
  [26,Object.freeze({
   kind:26,executionKind:'native-animal-crop-route-execution',maxGates:0,

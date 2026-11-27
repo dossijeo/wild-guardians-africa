@@ -1,4 +1,5 @@
-import {copyStop24Source,stop24ProjectionMatches} from "../world/native-stop24-task-recovery.js";
+import {copyStop24Source} from "../world/native-stop24-task-recovery.js";
+import {copyTask25HomeSource} from '../world/native-task25-home-recovery.js';
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
@@ -272,7 +273,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    installNativeProduction();
   }
   function installNativeProduction(){
-   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,recoverableIdleCycleSource:recoverableOrdinaryIdleSource,recoverableStoppedTaskSource:exactStoppedTaskRecovery,onError:error=>onNativeIntentControlError?.(error)});
+   nativeProduction=createNativeIntentProduction({state:game,planner,bodyId:id=>nativeBodies.id(id),getPublication:()=>nativeIntentControl,getResources:()=>nativeResourcePreparation,publicationSequence:()=>sequence,terrainManifest:()=>getTerrainManifest?.()??null,stationaryTaskNavigation:nav,restoreRuinedWall:restoreNativeRuinedWall,ruinedWallWakeKey:nativeRuinedWallWakeKey,recoverableIdleCycleSource:recoverableOrdinaryIdleSource,recoverableStoppedTaskSource:exactStoppedTaskRecovery,recoverableStoppedHomeSource:exactStoppedHomeRecovery,onError:error=>onNativeIntentControlError?.(error)});
   }
   function prepareRaidFlightAnimal(event){
    if(!mixedFlight||!nativeBodies||
@@ -1344,6 +1345,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     });
   }
   function recoveryExecution({kind,actorId}){
+    if(kind===25){
+      const source=exactStoppedHomeRecovery(typeof actorId==='number'?'worker-'+actorId:actorId);
+      if(!source)return null;
+      const binding=copyTask25HomeSource(source);
+      return {kind:'native-stopped-home-execution',version:1,binding,actorId:binding.reference.actorId,
+        bodyId:binding.reference.bodyId,executedThrough:game.elapsed,taskTemplate:source.taskTemplate};
+    }
     if(kind===24){
       const found=exactStoppedTaskRecovery(typeof actorId==='number'?'worker-'+actorId:actorId);
       if(!found)return null;
@@ -1436,6 +1444,20 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const phases=cycles.map(cycle=>retirement.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,cycle)));
     return phases.every(Boolean)?phases:null;
   }
+  function exactStoppedHomeRecovery(actorId){
+    if(!nativeWorkerLifecycle||game.raid||game.workers.length!==1||!civilShieldPhysicsAvailable()||
+       session.core.wasm.spatial_body_count()!==1)return null;
+    const [worker]=game.workers;
+    if(worker.id!==actorId||worker.status!=='returning'||worker.nativeRouteAdmission!=='pending-home-resources'||
+       worker.taskId||worker.crateId||worker.path!==null||worker.running!==false||worker.gateWaiting!==false||
+       worker.incapacitated||worker.raidReturn||worker.recovery||worker.recoveryExitRemaining||worker.fallRemaining)return null;
+    const source=planner.stoppedTaskHomeRecovery(actorId),village=game.villages.find(v=>v.id===worker.villageId),goal=village?.entry??village;
+    if(!source||!goal||village.id!=='village-'+source.request.home.villageId||
+       source.request.home.x!==goal.x||source.request.home.z!==goal.z||worker.heading!==source.request.pose.yaw||
+       !['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===source.request.pose[k]))return null;
+    return source;
+  }
+
   function exactStoppedTaskRecovery(actorId){
     if(!nativeWorkerLifecycle||game.raid||game.workers.length!==1||!civilShieldPhysicsAvailable()||
        session.core.wasm.spatial_body_count()!==1)return null;
@@ -1504,6 +1526,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const kindOfTask=admission==='native-task'?14:admission==='native-action'?15:admission==='native-delivery'?16:null;
     const stoppedTask=recoveryExecution({kind:24,actorId:worker.id});
     if(stoppedTask)return {kind:24,actorId:stoppedTask.actorId};
+    const stoppedHome=recoveryExecution({kind:25,actorId:worker.id});
+    if(stoppedHome)return {kind:25,actorId:stoppedHome.actorId};
     if(kindOfTask&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&session.core.wasm.spatial_body_count()===1){
       const kind=kindOfTask;
       const execution=recoveryExecution({kind,actorId:worker.id});
@@ -1622,7 +1646,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     quiesceNativeIntentProduction({forLostDraw=false}={}){
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelRuinStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw})??Promise.resolve(null);
+      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelRuinStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
@@ -1677,7 +1701,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         const presentation=handle&&planner.captureNativeRoutePresentation(handle);
         if(presentation?.gates.length&&!recoveryGateCurrent(kind,execution,presentation))throw Error('Recovered gate motor has changed');
         const resources=profile.copyResources({version:1,kind,phase:'committed',worldBoundary:boundary,
-          [profile.bindingField]:binding,...(kind===24?{farmTemplate:execution.farmTemplate}:kind===15||kind===17||kind===21||kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
+          [profile.bindingField]:binding,...(kind===24?{farmTemplate:execution.farmTemplate}:kind===25?{taskTemplate:execution.taskTemplate}:
+            kind===15||kind===17||kind===21||kind===27?{}:{nativeRoute:presentation?.nativeRoute,presentation})},route.members?cut:null);
         return {execution,resources};
       });
 
@@ -1725,8 +1750,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
            row.assignmentSequence!==nativeRecoverySequence(after.binding)||
            row.phaseDelay!==phase?.phaseDelay||
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
-        if(profile.kind===24)return row.relativeTime===recoveryFloorFloat32(elapsed-after.binding.reference.epoch)&&
-          stop24ProjectionMatches(row,after.binding)&&after.executedThrough===elapsed;
+        if(profile.stopProjectionMatches)return row.relativeTime===recoveryFloorFloat32(elapsed-after.binding.reference.epoch)&&
+          profile.stopProjectionMatches(row,after.binding)&&after.executedThrough===elapsed;
         const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
         const terminal=after.arrived&&(profile.kind===18||profile.kind===26&&live.ruin);
         const age=profile.kind===21&&after.finished?reference.duration:

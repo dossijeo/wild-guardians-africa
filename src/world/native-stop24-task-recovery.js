@@ -39,8 +39,11 @@ export function copyStop24Resources(value){
 }
 export const sameStop24Clock=(selector,ref)=>codec.sameStoppedBody(selector?.selector??selector,ref?.selector??ref);
 export function stop24ProjectionMatches(row,proof){
+ return stoppedRecoveryProjectionMatches(row,proof,proof.farm.reference.worldBoundary.effectiveTime);
+}
+export function stoppedRecoveryProjectionMatches(row,proof,startedAt){
  const p=proof.proof.projection.routeEffects.rows.slice(8,26),value=row?.projection;
  if(!value||!sameNativeSuspendedBodyReference(row.bodyReference,proof.bodyReference)||
-    value.age!==floorFloat32(proof.reference.worldBoundary.effectiveTime-proof.farm.reference.worldBoundary.effectiveTime))return false;
+    value.age!==floorFloat32(proof.reference.worldBoundary.effectiveTime-startedAt))return false;
  return Object.entries(NATIVE_STOP_POSE_FIELDS).every(([field,index])=>value[field]===Math.fround(p[index]));
 }

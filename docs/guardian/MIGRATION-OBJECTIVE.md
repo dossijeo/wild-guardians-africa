@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Task25 conserva el cuerpo detenido al perder Draw mientras espera Home18. NVIDIA confirmó el picking del sustituto, el regreso por el mismo cuerpo y su retirada en Home19 al final del turno. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-task25-adquirido-y-home18-pendiente).
+
 Stop24 conserva el cuerpo detenido al perder Draw mientras espera Task14. NVIDIA confirmó el picking del sustituto, la adquisición posterior de Task14 en el mismo cuerpo y un solo abono de la cosecha. A6-07 sigue abierto. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-stop24-adquirido-y-task14-pendiente).
 
 Delivery17 conserva el cuerpo y el ingreso ya abonado al perder Draw. NVIDIA confirmó la cancelación del Idle22 pendiente, el picking del sustituto con el reloj retenido y la adquisición de un nuevo Idle22 en el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-después-de-delivery17).

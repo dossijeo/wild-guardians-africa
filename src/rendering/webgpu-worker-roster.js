@@ -1,4 +1,3 @@
-import {copyStop24Resources,sameStop24Clock} from "../world/native-stop24-task-recovery.js";
 import {attachNativeSourcePresentation} from './native-source-presentation.js';
 import {terrainStopWireProtocol} from '../simulation/terrain-stop-reservation.js';
 import {copyNativeFarmArrivalHeldExecution,nativeFarmArrivalContinuesHeld,nativeFarmArrivalSourcePose} from '../world/native-farm-arrival-route.js';
@@ -39,7 +38,7 @@ import {copyNativeGatePresentation} from '../world/native-gate-presentation.js';
 import {copyNativeResumeProposal} from '../world/native-resume-presentation.js';
 import {copyNativeRoutePresentation} from '../world/native-route-presentation.js';
 import {sameNativeGatePresentations} from '../world/native-gate-presentation.js';
-import {createRecoveredFarmStopGpuMotion,createRecoveredWorkerRouteGpuMotion,createNativeGpuMotion,createNativeResumeGpuMotion,createNativeTaskStartGpuMotion} from './native-gpu-motion.js';
+import {createRecoveredStoppedWorkerGpuMotion,createRecoveredWorkerRouteGpuMotion,createNativeGpuMotion,createNativeResumeGpuMotion,createNativeTaskStartGpuMotion} from './native-gpu-motion.js';
 import {isWorkerIncapacitatedPresentation,isWorkerWaitingWoundedHome} from './worker-incapacitated-presentation.js';
 import {createBakedWalkRetry} from './baked-walk-retry.js';
 import {admitRosterActor,disposePendingRosterActor,releaseRosterActor,releaseRosterMotion} from './webgpu-roster-admission.js';
@@ -321,33 +320,36 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
           {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:task?
           {taskHomePolicy:farmTaskPolicy(entry.entity)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
     }
-    function prepareRecoveredFarmStop({resources,execution,terrain,terrainManifest},options){
-      const validated=copyStop24Resources(resources),proof=validated.stoppedTaskBinding,ref=proof.reference,q=proof.farm.reference.sourceRequest;
-      const actorId='worker-'+ref.actorId,entry=entries.get(actorId),pose=execution.pose;
+    function prepareRecoveredStoppedWorker({resources,execution,terrain,terrainManifest},options){
+      const profile=nativeWorkerRouteRecoveryProfile(resources.kind),validated=profile.copyResources(resources),
+        proof=validated[profile.bindingField],ref=proof.reference,farm=resources.kind===24,q=proof.farm?.reference.sourceRequest;
+      const actorId='worker-'+ref.actorId,entry=entries.get(actorId),pose=farm?execution.pose:proof.held.pose;
       const current=()=>{
         const worker=entry?.entity,task=tasks.get(worker?.taskId);
-        return !!worker&&options.isCurrent()&&execution.executedThrough===state.elapsed&&worker.status==='waiting-task'&&
-          worker.nativeRouteAdmission==='pending-resources'&&worker.profile===q.workerProfile&&worker.centerId==='structure-'+q.centerId&&
+        return !!worker&&options.isCurrent()&&execution.executedThrough===state.elapsed&&worker.nativeRouteAdmission===profile.admission&&
           !worker.crateId&&!worker.recovery&&!worker.incapacitated&&!worker.raidReturn&&worker.path===null&&worker.running===false&&worker.gateWaiting===false&&
-          task?.workerId===actorId&&task.id==='task-'+proof.request.taskId&&nativeEntityNumericId(task.targetId)===proof.request.targetId&&
-          worker.heading===pose.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===pose[key]);
+          worker.heading===pose.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===pose[key])&&
+          (farm?worker.status==='waiting-task'&&worker.profile===q.workerProfile&&worker.centerId==='structure-'+q.centerId&&
+            task?.workerId===actorId&&task.id==='task-'+proof.request.taskId&&nativeEntityNumericId(task.targetId)===proof.request.targetId:
+            worker.status==='returning'&&!worker.taskId&&worker.villageId==='village-'+proof.request.home.villageId);
       };
-      if(!current()||entry.nativePending||entry.nativeState)throw Error('Recovered Stop24 differs from the confirmed worker');
-      const support=terrain.prepareNativeFarmArrivalProposal(validated.farmTemplate,{terrainManifest});
+      if(!current()||entry.nativePending||entry.nativeState)throw Error('Recovered stop differs from the confirmed worker');
+      const support=farm?terrain.prepareNativeFarmArrivalProposal(validated.farmTemplate,{terrainManifest}):
+        terrain.prepareNativeTaskStartProposal(validated.taskTemplate,{terrainManifest});
       const foot=terrain.prepareNativeBody(proof.bodyReference,Float64Array.from(proof.proof.projection.routeEffects.rows.slice(8,26)));
-      if(!support?.valid()||!foot?.valid())throw Error('Recovered Stop24 source terrain is unavailable');
-      const held=copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:ref.actorId,bodyId:ref.bodyId,
+      if(!support?.valid()||!foot?.valid())throw Error('Recovered stop source terrain is unavailable');
+      const held=farm?copyNativeFarmArrivalHeldExecution({kind:'native-farm-arrival-held-execution',version:1,actorId:ref.actorId,bodyId:ref.bodyId,
         sourceReference:proof.farm.reference,assignmentSequence:proof.farm.assignmentSequence,resumeHandle:{...proof.bodyReference.nativeRoute.routeHandle,
-          generation:proof.bodyReference.resumeGeneration},suspendedAt:proof.bodyReference.suspendedAt,executedThrough:execution.executedThrough,pose});
+          generation:proof.bodyReference.resumeGeneration},suspendedAt:proof.bodyReference.suspendedAt,executedThrough:execution.executedThrough,pose}):proof.held;
       const routeSupport={...support,valid:()=>support.valid()&&foot.valid(),presentation:{...support.presentation,kind:'native-route-presentation',
         version:1,nativeRoute:proof.bodyReference.nativeRoute,executionScope:'canonical-native',nativeCrossingAdmitted:false}};
       return prepareWorkerRoute(actorId,routeSupport,{...options,getPickTime:()=>options.getProjection(ref.selector,ref.epoch).at},
         {resources:validated,current,stopped:{support,foot,getProjection:()=>options.getProjection(ref.selector,ref.epoch)},
-        binding:{nativeHeldFarmArrival:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
+        binding:{[farm?'nativeHeldFarmArrival':'nativeHeldTaskRoute']:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
     }
-    function recoveredFarmStopCurrent(actorId,ref){
+    function recoveredStoppedWorkerCurrent(actorId,ref,profile){
       const value=entries.get(actorId)?.nativeState;
-      return !!value?.nativeStopped&&sameStop24Clock(value.nativeStopped,ref)&&
+      return !!value?.nativeStopped&&profile.sameReference(value.nativeStopped,ref)&&
         value.suspended?.bodyId===ref.bodyId&&value.motion.valid()&&value.variant.current();
     }
     async function prepareWorkerRoute(actorId,support,{getPickTime,getPickIdleOffset,signal,isCurrent=()=>true,prepareGateParticipants=null}={},recovery){
@@ -378,7 +380,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const actor=entry.actor,anchor=actor.root.getWorldPosition(new Vector3()),yaw=new Quaternion();actor.root.getWorldQuaternion(yaw);
    // The root remains where its original rig was admitted, also on a suffix
    // replacement. C++'s next route origin is a separate world-space position.
-   const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?.stopped?createRecoveredFarmStopGpuMotion({...motionOptions,support:recovery.stopped.support,height:recovery.stopped.foot.point.height,resources:recovery.resources,getProjection:recovery.stopped.getProjection}):recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources,recoveryCut:recovery.recoveryCut}):createNativeGpuMotion(motionOptions);
+   const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?.stopped?createRecoveredStoppedWorkerGpuMotion({...motionOptions,support:recovery.stopped.support,height:recovery.stopped.foot.point.height,resources:recovery.resources,getProjection:recovery.stopped.getProjection}):recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources,recoveryCut:recovery.recoveryCut}):createNativeGpuMotion(motionOptions);
    let variant,binding;
    try{
     const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){if(carrying)return 'Carry_Crate';const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};
@@ -1030,5 +1032,5 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  function abortHistoricalMotion(){if(!historyRun)return;if(!experimentalHistoricalMotion.clock.status().active){cancelHistoricalMotion();return;}const run=historyRun;run.invalid=true;for(const value of run.installed)if(value.phaseSamples)try{value.entry.phase.hold();}catch{}for(const {entry} of run.moving)try{entry.motion.hold(experimentalHistoricalMotion.clock.elapsed);}catch{}}
  function cancelHistoricalMotion(){if(!historyRun)return;for(const value of historyRun.installed){if(value.kind==='moving')value.entry.motion.cancelAtStart();if(value.phaseSamples)value.entry.phase.reset();}const completed=historyRun;historyRun=null;for(const [id,entry] of completed.entries)if(entry.bakeResource)resumeBakedWalk(id,entry);}
  function setHistoricalActors(next){if(closed||historyRun)throw Error('Historical selection is busy');if(!Array.isArray(next)||next.some(id=>typeof id!=='string'||!id)||new Set(next).size!==next.length)throw TypeError('Invalid historical worker selection');ids.splice(0,ids.length,...next);selected.clear();for(const id of next)selected.add(id);for(const [id,entry] of entries){if(!selected.has(id))entry.motionPreparing?.controller.abort();else prepareLateHistoricalMotion(id,entry);}}
- return {sync,prepareRecoveredFarmStop,recoveredFarmStopCurrent,prepareRecoveredWorkerRoute,prepareRecoveredTaskAction,recoveredTaskActionCurrent,prepareRecoveredTaskSettlement,recoveredTaskSettlementCurrent,prepareRecoveredIdleCycle,recoveredIdleCycleCurrent,prepareNativeIdleStrollProposal,prepareNativeHomeArrivalProposal,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeFarmArrivalProposal,prepareNativeHomeRouteProposal,prepareNativeTaskStartProposal,prepareNativeTaskConsequenceProposal,prepareNativeTaskActionProposal,prepareNativeTaskSettlementProposal,prepareNativeInitialIdleBodyProposal,prepareNativeIdleCycleProposal,releaseNativeIdleCycle,releaseNativeInitialIdleBody,releaseNativeTaskAction,releaseNativeTaskSettlement,releaseNativeRoute,prepareNativeTerrainRetention,prepareNativeTerrainStops,nativeRouteLease,nativeRouteCurrent,...(experimentalHistoricalMotion?{setHistoricalActors,historicalActorIds:()=>[...ids],prepareHistoricalMotion,startHistoricalMotion,historicalMotionCurrent,canFinishHistoricalMotion,finishHistoricalMotion,abortHistoricalMotion,cancelHistoricalMotion}:{}),...(import.meta.env?.DEV?{bindMotion(actorId,motion,renderer,getPickTime){const entry=entries.get(actorId);if(closed||!entry?.actor||entry.motionBinding)throw Error('Actor motion binding unavailable');const binding=bindWebGpuActorMotion({root:entry.actor.root,renderer,motion,actorId,getPickTime});entry.motionBinding=binding;return {dispose(){if(entry.motionBinding===binding)entry.motionBinding=null;binding.dispose();}};}}:{}),tick(now){assetBank.tick?.(now);},get(id){return entries.get(id)?.actor??null;},status(){let ready=0;for(const entry of entries.values())if(entry.actor)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready,native: [...entries.values()].filter(entry=>entry.nativeState).length,nativePreparing:[...entries.values()].filter(entry=>entry.nativePending).length,assets:assetBank.status?.()??null};},dispose(){if(closed)return;closed=true;walkRetries.dispose();actionRetries.dispose();for(const [id,entry] of entries)remove(id,entry);if(ownsAssetBank)assetBank.dispose();}};
+ return {sync,prepareRecoveredStoppedWorker,recoveredStoppedWorkerCurrent,prepareRecoveredWorkerRoute,prepareRecoveredTaskAction,recoveredTaskActionCurrent,prepareRecoveredTaskSettlement,recoveredTaskSettlementCurrent,prepareRecoveredIdleCycle,recoveredIdleCycleCurrent,prepareNativeIdleStrollProposal,prepareNativeHomeArrivalProposal,prepareNativeRoute,prepareNativeResumeProposal,prepareNativeFarmArrivalProposal,prepareNativeHomeRouteProposal,prepareNativeTaskStartProposal,prepareNativeTaskConsequenceProposal,prepareNativeTaskActionProposal,prepareNativeTaskSettlementProposal,prepareNativeInitialIdleBodyProposal,prepareNativeIdleCycleProposal,releaseNativeIdleCycle,releaseNativeInitialIdleBody,releaseNativeTaskAction,releaseNativeTaskSettlement,releaseNativeRoute,prepareNativeTerrainRetention,prepareNativeTerrainStops,nativeRouteLease,nativeRouteCurrent,...(experimentalHistoricalMotion?{setHistoricalActors,historicalActorIds:()=>[...ids],prepareHistoricalMotion,startHistoricalMotion,historicalMotionCurrent,canFinishHistoricalMotion,finishHistoricalMotion,abortHistoricalMotion,cancelHistoricalMotion}:{}),...(import.meta.env?.DEV?{bindMotion(actorId,motion,renderer,getPickTime){const entry=entries.get(actorId);if(closed||!entry?.actor||entry.motionBinding)throw Error('Actor motion binding unavailable');const binding=bindWebGpuActorMotion({root:entry.actor.root,renderer,motion,actorId,getPickTime});entry.motionBinding=binding;return {dispose(){if(entry.motionBinding===binding)entry.motionBinding=null;binding.dispose();}};}}:{}),tick(now){assetBank.tick?.(now);},get(id){return entries.get(id)?.actor??null;},status(){let ready=0;for(const entry of entries.values())if(entry.actor)ready++;return {closed,count:entries.size,ready,pending:entries.size-ready,native: [...entries.values()].filter(entry=>entry.nativeState).length,nativePreparing:[...entries.values()].filter(entry=>entry.nativePending).length,assets:assetBank.status?.()??null};},dispose(){if(closed)return;closed=true;walkRetries.dispose();actionRetries.dispose();for(const [id,entry] of entries)remove(id,entry);if(ownsAssetBank)assetBank.dispose();}};
 }

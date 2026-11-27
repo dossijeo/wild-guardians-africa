@@ -1150,22 +1150,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           installIdleCycleRecord(actor,source);
         };
       }
-      if(kind===24){
-        const actor=actors.get(ref.actorId),request=actor?.pendingTaskRequest,at=clock?.committedThrough;
+      if(kind===24||kind===25){
+        const home=kind===25,field=home?'pendingHomeRequest':'pendingTaskRequest',requestField=home?'stoppedHomeRequest':'stoppedTaskRequest';
+        const actor=actors.get(ref.actorId),request=actor?.[field],at=clock?.committedThrough;
         const current=()=>!closed&&!!clock&&clock.committedThrough===at&&clock.intentSequence===sequence&&
-          actors.size===1&&active.size===0&&actor?.state===6&&actor.pendingTaskRequest===request&&!actor.current&&!actor.revoked&&
+          actors.size===1&&active.size===0&&actor?.state===6&&actor[field]===request&&!actor.current&&!actor.revoked&&
           !actor.proof&&!actor.stoppedProjection&&actor.latestSequence===request?.requestSequence;
         if(sharedCut||cohortSize!==1||!sameNativeWorldBoundary(boundary,ref.worldBoundary)||boundary.authorityEpoch!==authorityEpoch||
            clock?.nativeSession!==boundary.nativeSession||at<proof.request.requestedAt||
            !request||JSON.stringify(request)!==JSON.stringify(proof.request)||!current())
-          throw Error('Recovered Stop24 differs from the pending Task source');
+          throw Error('Recovered stopped worker differs from its pending request');
         return ()=>{
-          if(!current())throw Error('Recovered Stop24 was revoked before materialization');
-          const {projection,...stop}=proof.proof,p=stop.reference.sourceRoute,farm=proof.farm;
+          if(!current())throw Error('Recovered stopped worker was revoked before materialization');
+          const {projection,...stop}=proof.proof,p=stop.reference.sourceRoute,predecessor=home?proof.task:proof.farm;
           actor.revoked={actorId:ref.actorId,handle:p.routeHandle,assignmentSequence:p.assignmentSequence,
-            startTime:farm.reference.worldBoundary.effectiveTime,safeUntil:ref.worldBoundary.effectiveTime,lastDrawTime:null,actor,
-            revokedState:4,revokedSequence:proof.revokedSequence,stopProof:stop,stoppedTaskRequest:request,
-            issuedFarmArrival:farm,farmArrivalAdmitted:true};
+            startTime:predecessor.reference.worldBoundary.effectiveTime,safeUntil:ref.worldBoundary.effectiveTime,lastDrawTime:null,actor,
+            revokedState:4,revokedSequence:proof.revokedSequence,stopProof:stop,[requestField]:request,
+            ...(home?{taskStopBodyId:ref.bodyId}:{issuedFarmArrival:predecessor,farmArrivalAdmitted:true})};
           actor.proof=proof.bodyReference;
           actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),null);
         };

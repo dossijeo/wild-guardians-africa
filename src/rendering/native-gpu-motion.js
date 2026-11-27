@@ -1,4 +1,4 @@
-import {copyStop24Resources,sameStop24Clock} from "../world/native-stop24-task-recovery.js";
+import {sameNativeTaskStartReference,nativeTaskStartSuccessor} from '../world/native-task-start-reference.js';
 import {markRemoteAnimalCropNode} from './remote-clock-bindings.js';
 import {prepareAnimalCropGpuTable} from './native-route-gpu-table.js';
 import {nativeFarmIdlePhaseOffset} from './native-farm-idle-phase.js';
@@ -10,7 +10,6 @@ import {nativeFarmArrivalRouteSuccessor,sameNativeFarmArrivalRouteReference} fro
 import {nativeHomeRouteSuccessor} from '../world/native-home-route.js';
 import {nativeTaskConsequenceSuccessor} from '../world/native-task-consequence.js';
 import {nativeClockResourceEnd} from './native-clock-resource-end.js';
-import {nativeTaskStartSuccessor} from '../world/native-task-start-reference.js';
 import {nativeResumeSuccessor} from '../world/native-resume-reference.js';
 import {DataTexture,FloatType,NearestFilter,RGBAFormat,Vector3,Vector4} from 'three';
 import {Fn,If,Loop,clamp,float,int,ivec2,mix,struct,textureLoad,uniform,vec3,vec4} from 'three/tsl';
@@ -43,13 +42,15 @@ export function createNativeResumeGpuMotion(options={}){
 export function createNativeTaskStartGpuMotion(options={}){if(options.support?.kind!=='native-task-start-terrain-support')throw TypeError('Native first task requires proposal terrain support');return createMotion(options);}
 export function createNativeTaskConsequenceGpuMotion(options={}){if(options.support?.kind!=='native-task-consequence-terrain-support')throw TypeError('Native consequence requires proposal terrain support');return createMotion(options);}
 export function createNativeFarmArrivalGpuMotion(options={}){if(options.support?.kind!=='native-farm-arrival-terrain-support')throw TypeError('Native farm arrival requires proposal terrain support');return createMotion(options);}
-export function createRecoveredFarmStopGpuMotion({resources,getProjection,...options}){
-  const {stoppedTaskBinding:proof,farmTemplate}=copyStop24Resources(resources);
-  if(!sameNativeFarmArrivalRouteReference(farmTemplate.nativeFarmArrival,options.support?.presentation?.nativeFarmArrival))
-    throw Error('Recovered Stop24 has a different Farm table');
-  const original=createNativeFarmArrivalGpuMotion(options);
+export function createRecoveredStoppedWorkerGpuMotion({resources,getProjection,...options}){
+  const profile=nativeWorkerRouteRecoveryProfile(resources.kind),source=profile.copyResources(resources),
+    proof=source[profile.bindingField],presentation=options.support?.presentation,farm=profile.kind===24;
+  if(!(farm?sameNativeFarmArrivalRouteReference(source.farmTemplate.nativeFarmArrival,presentation?.nativeFarmArrival):
+    sameNativeTaskStartReference(source.taskTemplate.nativeStart,presentation?.nativeStart)))
+    throw Error('Recovered stopped body has a different source table');
+  const original=(farm?createNativeFarmArrivalGpuMotion:createNativeTaskStartGpuMotion)(options);
   try{
-    original.setExecutionEpoch(proof.farm.reference.worldBoundary.effectiveTime);
+    original.setExecutionEpoch((proof.farm??proof.task).reference.worldBoundary.effectiveTime);
     const nativePose=Float64Array.from(proof.proof.projection.routeEffects.rows.slice(8,26));
     return original.prepareStopped({reference:proof.reference.selector,nativePose,height:options.height,
       isCurrent:options.support.valid,getProjection});

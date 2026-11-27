@@ -1,4 +1,6 @@
 import {sameStop24Source} from "../native-stop24-task-recovery.js";
+import {copyTask25HomeSource,sameTask25HomeSource} from '../native-task25-home-recovery.js';
+import {copyNativeTaskStartProposal} from '../native-task-start-presentation.js';
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
 import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
@@ -813,6 +815,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const source=stoppedFarmTaskRecovery(recoveredWorkerRoute.proof.reference.actorId);
       if(count||strolls.length||homes.length||farmCount||!sameStop24Source(source,recoveredWorkerRoute.proof))
         throw Error('Held Stop24 task changed before bootstrap');
+    }else if(recoveredWorkerRoute?.kind===25){
+      const source=stoppedTaskHomeRecovery(recoveredWorkerRoute.proof.reference.actorId);
+      if(count||strolls.length||homes.length||farmCount||!sameTask25HomeSource(source,recoveredWorkerRoute.proof))
+        throw Error('Held Task25 Home changed before bootstrap');
     }else if(recoveredWorkerRoute!==null){
       const profile=nativeWorkerRouteRecoveryProfile(recoveredWorkerRoute.kind);
       const crop=profile.kind===26,strike=profile.kind===27,task=profile.kind===14,action=profile.kind===15,carry=profile.kind===16;
@@ -2520,7 +2526,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         cropExpiry?{...resources,nativeShieldCropExpiry:cropExpiry}:resources}};
     },prepareResources,signal,protocol);
   };
-  let committedWorkerFarmStop=null,preparedFarmForStop=null;
+  let committedWorkerFarmStop=null,preparedFarmForStop=null,preparedTaskForStop=null,committedTaskStop=null;
 
   const stopNativeWorkerRouteAfterGpuQuiescence=(kind,{actorId,getPublication,prepareResources,signal=null,sourceStillCurrent=null}={})=>{
     const {motionKind,source,matches}=workerRouteStops[kind];
@@ -2532,12 +2538,18 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeWorkerRouteStopProposal(kind,sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
       binding(reference,preparedReference){
         const proof=nativeWorkerRouteStopBinding(kind,reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});
-        if(proof&&kind===24&&proof.reference.routes.length===1&&!proof.reference.gates.length){
+        if(proof&&(kind===24||kind===25)&&proof.reference.routes.length===1&&!proof.reference.gates.length){
           const revoked=readIntentChanges(stopControlFloor).find(change=>change.type==='RouteInvalidated'&&change.actorId===actor&&
             change.state===4&&change.effectiveTime===proof.reference.worldBoundary.effectiveTime&&
             JSON.stringify(change.revokedRouteHandle)===JSON.stringify(proof.reference.sourceRoute.routeHandle));
-          committedWorkerFarmStop=revoked&&preparedFarmForStop?.assignmentSequence===binding.assignmentSequence?
+          if(kind===24)committedWorkerFarmStop=revoked&&preparedFarmForStop?.assignmentSequence===binding.assignmentSequence?
             {proof,revokedSequence:revoked.sequence,farm:binding,farmTemplate:preparedFarmForStop.template}:null;
+          else{
+            const previous=preparedTaskForStop,task=previous?.binding;
+            committedTaskStop=revoked&&task&&task.reference.bodyId===proof.reference.routes[0].bodyId&&
+              sameNativeRouteReference(proof.reference.sourceRoute,stopSourceRoute(task))?
+              {proof,revokedSequence:revoked.sequence,task,taskTemplate:previous.template}:null;
+          }
         }
         return proof;
       },
@@ -2563,6 +2575,23 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(wasm.nav_intent_pending_task_body_matches(...args)!==1)return null;
     return {proof:value.proof,farm:value.farm,revokedSequence:value.revokedSequence,request,farmTemplate:value.farmTemplate,
       pose:{x:p[0],z:p[1],yaw:p[4],radius:q.pose.radius,runPhase:p[9],walkPhase:p[10],carryPhase:p[11],runRemaining:p[14]}};
+  };
+  const stoppedTaskHomeRecovery=actorId=>{
+    const source=committedTaskStop,clock=nativeCausalClock(),world=nativeWorldBoundary();
+    if(!source||!clock||!sameNativeWorldBoundary(world,source.proof.reference.worldBoundary))return null;
+    // The Home snapshot checks the request's old stopped assignment and the
+    // actual body in WASM. The row is still readable after Home takes ownership,
+    // when the generic query for resumable route points intentionally fails.
+    const request=nativeHomeRequestReference(actorId),r=source.proof.reference,[owner]=r.routes;
+    const {actorId:actor,routeHandle:old}=r.sourceRoute;
+    if(!request||request.version!==1||request.actorId!==actor||request.requestSequence!==clock.intentSequence||
+       request.requestedAt!==world.effectiveTime||wasm.nav_gate_suspended_route(actor)!==1)return null;
+    const held=new Float64Array(wasm.memory.buffer,wasm.nav_gate_suspended_route_ptr(),27),
+      expected=source.proof.projection.routeEffects.rows.slice(8,26);
+    if(held[0]!==actor||held[1]!==old.session||held[2]!==old.slot||held[3]!==owner.resumeGeneration||
+       held[4]!==world.effectiveTime||held[6]!==owner.bodyId||held[8]!==request.pose.radius||
+       expected.some((number,i)=>held[i+9]!==number))return null;
+    return {...copyTask25HomeSource({...source,request}),taskTemplate:source.taskTemplate};
   };
   const stopNativeIdleStrollAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(12,options);
   const stopNativeFarmArrivalAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(24,options);
@@ -4085,18 +4114,22 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   // and the source-owned bound origin; no fabricated suspension or sequence.
   const startNativeTaskRouteAfterGpuQuiescence=({getPublication,request,policy,prepareResources,signal=null}={})=>{
     if(typeof prepareResources!=='function'||signal!==null&&(typeof signal?.addEventListener!=='function'||typeof signal?.removeEventListener!=='function'))throw TypeError('First task requires retained resource preparation');
-    let candidate=null,translation=null,preparedTicket=null;
+    let candidate=null,translation=null,preparedTicket=null,prepared=null;
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'task-start',
       retained(session,ticket){if(wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const t=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return t[0]===session&&t[1]===ticket&&t[5]===14;},
       revalidate(session,ticket){const result=revalidateNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;translation=result.timeTranslation;}return result;},
       timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(gate=>gate.gateId),
       ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),
       snapshot:(session,ticket)=>wasm.nav_task_start_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_task_start_proposal_cancel(session,ticket),release(){},
-      capture(boundary){candidate=captureNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native first-task resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
+      capture(boundary){candidate=captureNativeTaskStartProposal({kind:'native-task-start-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native first-task resources unavailable');prepared=candidate;preparedTicket=candidate.ticket.ticket;return candidate;}};
     return commitNativeWorldProposal(getPublication,()=>{const result=prepareNativeTaskStartProposal(request,policy);return result.status==='proposed'?1:result.status==='busy'?-4:0;},
       (mark,...boundary)=>{const status=wasm.nav_task_start_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
         const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('First native assignment unavailable');
         if(beginNativeRouteExecution().status!=='started')throw Error('First native assignment could not establish its causal boundary');
+        if(nativeWorkerLifecycle&&owningState?.workers.length===1&&!owningState.raid&&!prepared.gates.length){
+          const binding=nativeTaskStartBinding(candidate.actorId);
+          preparedTaskForStop=binding?{binding,template:copyNativeTaskStartProposal(prepared)}:null;
+        }else preparedTaskForStop=null;
         const nativeRoute=Object.freeze({actorId:plan.actorId,routeHandle:candidate.expectedRouteHandle,assignmentSequence:plan.assignmentSequence}),resources=Object.freeze({version:1,kind:14,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,presentation:captureNativeRoutePresentation(candidate.expectedRouteHandle)});mark({resources,nativeRoute});return {status:1,value:{resources,nativeRoute}};
       },prepareResources,signal,protocol);
   };
@@ -4568,7 +4601,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     getUnprotectedCropGroups,
     findPlantingSite,releasePlantingSite,
     nativeRaidFlightPendingCheckpoint,nativeRaidFlightFarmCheckpoint,declareRestoredRaidFlightFarm,
-    stoppedFarmTaskRecovery,prepareNativeCenterRuin,takeRefugeReturn,nativeRefugeReturnCheckpoint,intentChanges,routePoints,replanNativeShieldCrop,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestRestoredAnimalStrike,requestNativeProtectedSuccessor,requestNativeCenterSuccessor,acquireEncounterRetreat,prepareEncounterRetreat,observeRetreatEncounter,hasRetreatEncounter,applyRetreatEncounter,prepareEncounterExhaustion,consumeEncounterExhaustion,confirmEncounterExhaustion,encounterRetreatOwner,requestEncounterRetreat,encounterCheckpoint,restoreEncounterWorker,restoreEncounterApproach,encounterApproachPending,encounterCheckpointBlocked,encounterRecoveryCurrent,finishEncounterRecovery,requestEncounterHome,prepareHomeEncounterImpact,prepareCenterEncounterStep,consumeHomeEncounterImpact,verifyEncounterBoundary,declareRaidFlightPair,declareRestoredRaidFlightHome,restoreRaidFlightPair,nativeRaidFlightMember,nativeCenterFlightAnimalReady,requestNativeRetreat,requestRestoredAnimalRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalCropRouteExecution,nativeEncounterFallRecovery,nativeStationaryEncounterRecovery,nativeRaidFlightRecoveryExecutions,nativeRefugeCropRecovery,nativeCenterRuinRouteRecovery,nativeAnimalCropStrikeExecution,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
+    stoppedTaskHomeRecovery,stoppedFarmTaskRecovery,prepareNativeCenterRuin,takeRefugeReturn,nativeRefugeReturnCheckpoint,intentChanges,routePoints,replanNativeShieldCrop,startNativeAnimalCropRouteAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,26),startNativeAnimalCropStrikeAfterGpuQuiescence:options=>acquireNativeAnimalCrop(options,27),requestNativeAnimalCropRoute,requestRestoredAnimalStrike,requestNativeProtectedSuccessor,requestNativeCenterSuccessor,acquireEncounterRetreat,prepareEncounterRetreat,observeRetreatEncounter,hasRetreatEncounter,applyRetreatEncounter,prepareEncounterExhaustion,consumeEncounterExhaustion,confirmEncounterExhaustion,encounterRetreatOwner,requestEncounterRetreat,encounterCheckpoint,restoreEncounterWorker,restoreEncounterApproach,encounterApproachPending,encounterCheckpointBlocked,encounterRecoveryCurrent,finishEncounterRecovery,requestEncounterHome,prepareHomeEncounterImpact,prepareCenterEncounterStep,consumeHomeEncounterImpact,verifyEncounterBoundary,declareRaidFlightPair,declareRestoredRaidFlightHome,restoreRaidFlightPair,nativeRaidFlightMember,nativeCenterFlightAnimalReady,requestNativeRetreat,requestRestoredAnimalRetreat,finishNativeRetreat,nativeFinishedAnimalRetreat,nativeFinishedAnimalCrop,nativeAnimalCropState,nativeAnimalCropRouteExecution,nativeEncounterFallRecovery,nativeStationaryEncounterRecovery,nativeRaidFlightRecoveryExecutions,nativeRefugeCropRecovery,nativeCenterRuinRouteRecovery,nativeAnimalCropStrikeExecution,nativeAnimalRouteBinding,nativeRouteTiming,nativeRouteTimeKnots,sampleNativeRoute,captureNativeRoutePresentation,nativeGateRouteSweep,nativeGateMechanism,nativeGateMechanismPose,nativeGateMechanismSegment,nativeGateMechanismWorldVertices,prepareNativeGateMotionAfterGpuFence,inspectNativeStructureStops,inspectNativeGateAdditionStops,inspectNativeGateRemovalStops,addNativeBarriersAfterGpuQuiescence,addNativeBarrierAfterGpuQuiescence,mutateNativeOverlayAfterGpuQuiescence,mutateNativeWorldAfterGpuQuiescence,stopNativeIdleStrollAfterGpuQuiescence,stopNativeFarmArrivalAfterGpuQuiescence,prepareNativeRouteMotion,reserveNativeRoute,admitNativeGateRoute,nativeGateCrossings,nativeSuspendedGateRoute,suspendNativeGateRoute,resumeNativeGateRoute,resumeNativeGateRouteAfterGpuQuiescence,prepareNativeGateResumeProposal,captureNativeGateResumeProposal,cancelNativeGateResumeProposal,revalidateNativeGateResumeProposal,prepareNativeTaskStartProposal,captureNativeTaskStartProposal,revalidateNativeTaskStartProposal,cancelNativeTaskStartProposal,
     beginNativeRouteExecution,advanceNativeRouteExecution,stopNativeRouteExecution,nativeRouteExecution,nativeGameExecutionState,advanceNativeGameExecution,nativeTaskExecution,nativeTaskCancellationSource,nativeTaskCancellationSupported,cancelNativePendingTask,requestNativeTaskActionResources,nativeTaskActionRequest,
     startNativeTaskActionAfterGpuQuiescence,prepareNativeTaskActionProposal,captureNativeTaskActionProposal,revalidateNativeTaskActionProposal,cancelNativeTaskActionProposal,cancelNativeTaskActionForRaidFlight,
     nativeTaskActionBinding,nativeTaskActionBindings,nativeTaskActionExecution,nativeTaskActionRestoreReferences,
@@ -6143,7 +6176,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
     nativeCausalClock:bridge.nativeCausalClock,commitNativeCausalClock:bridge.commitNativeCausalClock,
     observeNativeIntentControl:bridge.observeNativeIntentControl,
     flushNativeIntentControl:bridge.flushNativeIntentControl,
-    stoppedFarmTaskRecovery:bridge.stoppedFarmTaskRecovery,intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,nativeTaskStartBinding:bridge.nativeTaskStartBinding,
+    stoppedTaskHomeRecovery:bridge.stoppedTaskHomeRecovery,stoppedFarmTaskRecovery:bridge.stoppedFarmTaskRecovery,intentChanges:bridge.intentChanges,pendingTaskRoute:bridge.pendingTaskRoute,nativeTaskStartBinding:bridge.nativeTaskStartBinding,
     async startNativeTaskRouteAfterGpuQuiescence(options){
       const owner=bridge.authorityEpoch,result=await bridge.startNativeTaskRouteAfterGpuQuiescence(options);
       // The asynchronous commit emits a real native assignment without a task
