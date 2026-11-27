@@ -280,6 +280,8 @@ El guardado público acepta al civil en Idle22 adquirido y en espera de recursos
 
 La prueba de Sabana 714 cargó en el juego un guardado de la jornada pagada. El primer Draw de Idle22 presentó al trabajador 6 a t=64,35 y la fase de marcha partió de 59,239956. El navegador guardó de nuevo a t=64,60 con fase 59,614956. Otra sesión presentó esa pose de origen a t=64,85, progresó con el mismo destino y guardó a t=65,10. Se verificaron la época nueva, el saldo y los drenajes NVIDIA. El control en CPU retiene READY y guarda también la solicitud pendiente. [Recibo de ambas recargas](performance/native-idle22-public-save-20261127.json).
 
+La regresión serial de Idle, Home, Stop y el ciclo de producción completó 451 de 452 casos, incluida la jornada pagada de Sabana. El único fallo fue una aserción que aún esperaba que Idle22 cerrara el guardado público. El archivo corregido pasó sus 15 pruebas, incluidos los rechazos de pose semántica inválida. El build de WebGPU Worker con Draw remoto terminó en 53,03 s.
+
 ## Reintento de Task14 tras cancelar un hold
 
 En la primera repetición de la campaña con el guardado separado, Task14 llegó a READY con el ticket 3. Su sucesor, ticket 5, esperaba la publicación 454. Al vencer su plazo, Surface seguía en 391, había recibido hasta 423 y el último dibujo acreditado conservaba 16,10 s. La partida llegó a 25,10 s con el trabajador esperando su primera tarea. Ese recibo carece del piso causal en Draw. Una pasada corta con instrumentación sí llegó a Task14, Action15 y el primer riego y drenó, adquiriendo Task14 en el primer intento.

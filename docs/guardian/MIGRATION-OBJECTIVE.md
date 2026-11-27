@@ -900,7 +900,9 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 ## Próximo bloqueo
 
-La [caducidad civil de Escudo](webgpu-shield.md#caducidad-civil-preparada) adquiere la retirada y consume una vez la fracción pendiente del avance. El siguiente límite es revalidar el alta desde el menú cuando Game avanza mientras espera READY. Para C4 queda la investigación del coste común del primer impacto al centro con y sin portón. La evidencia y el alcance de Flee y Recovery figuran en el [estado por vertical](MIGRATION-VERTICALS.md).
+En la campaña continua de Sabana, el primer corredor del león puede agotar el plazo mientras prepara sus pipelines. La última repetición empleó 6,154 s en alcanzar la publicación requerida y 3,146 s más en preparar el rig. El siguiente contraste reproduce el cuarto turno desde su guardado público y mide por separado el avance de Surface, la espera de Draw y la admisión gráfica. La campaña completa debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Corte del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
+
+El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias
 de gameplay, sin conservar un ejecutor JS paralelo para las clases migradas.
