@@ -1488,7 +1488,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?
         recoveredCenterCurrent(r,animal,live,flightWorker):animal.targetId==='plant-'+r.targetId);
-    if((animal?.species!=='warthog'&&!(r.purpose==='retreat'&&nativeShelteredSavannaCenterActor(owningState,animal)))||
+    if((animal?.species!=='warthog'&&!((r.purpose==='center'||r.purpose==='retreat')&&nativeShelteredSavannaCenterActor(owningState,animal)))||
        !expected||animal.magicDown||live?.mode!==2||live.arrived||
        live.executedThrough!==owningState.elapsed||live.executedThrough>=r.endTime||
        live.purpose!==r.purpose||live.body!==r.bodyId||live.target!==r.targetId||live.requestSequence!==r.requestSequence||
@@ -1622,7 +1622,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!r||actorId!=='animal-'+r.actorId||
        !sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary()))return null;
     const animal=owningState?.raid?.animals.find(value=>value.id===actorId);
-    if(animal?.species!=='warthog'||animal.magicDown||
+    if(!animal||animal.magicDown||
+       animal.species!=='warthog'&&!(r.purpose==='center'&&nativeShelteredSavannaCenterActor(owningState,animal))||
        animal.hitsRemaining<=0||owningState.raid.reservations[animal.reservation]!==actorId)return null;
     const live=nativeAnimalCropState(actorId),strike=live?.strike,saved=savedRaidStrike(animal);
     if(r.purpose==='center'?!recoveredCenterCurrent(r,animal,live):animal.targetId!=='plant-'+r.targetId)return null;

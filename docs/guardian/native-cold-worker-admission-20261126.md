@@ -238,6 +238,8 @@ Pasaron 27 pruebas en la selección integrada. El control dirigido también pas�
 
 NVIDIA Turing recargó la aproximación en marcha y presentó su pose guardada a 2745,75 s en el dibujo 44. Otra pasada recargó `attack-101` y lo presentó en el dibujo 61 con 0,70 s de clip transcurridos y 0,842 s restantes. Cada pasada aplicó un solo golpe al centro, conservó el cuerpo 1 para Retreat, retiró el polígono 9 y presentó la ausencia antes de drenar. `RaidEnded` y `GameOver` ocurrieron una vez en cada pasada y el saldo siguió en 671. La recarga en la pose terminal aún tiene evidencia de CPU. El picking físico y la paridad de píxeles quedan pendientes. [Recibos de aproximación y golpe](performance/native-savanna-center-save-nvidia-20261126.json).
 
+La pérdida terminal del dispositivo durante la aproximación, el ataque adquirido y la retirada con el centro todavía en pie tiene tres recorridos físicos propios. También se conserva el corredor al guardar durante el READY de la retirada. [Recuperación de incursión en Sabana](native-savanna-raid-terminal-recovery-20261127.md).
+
 ## Campaña continua hasta el nacimiento del león
 
 La pasada del 27 de noviembre con `978df1aa8` llegó desde el menú hasta la derrota del día 5 en una sola sesión NVIDIA Turing. Usó Sabana 714, Mapungubwe, el perfil nativo explícito y el reloj ordinario de Hosted. Confirmó el único abono de 321 por la entrega, las cinco incursiones en orden y 14 golpes al centro. Los guardados públicos del cuarto y quinto amanecer conservaron el perfil nativo y el recuento de noches. [Recibo de la campaña hasta el último dibujo](performance/native-savanna-campaign-outcome-nvidia-20261127.json).
