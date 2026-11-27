@@ -26,13 +26,17 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_raid_flight_home(double actor,double
     double yaw,double run,double walk,double carry,double budget,int count){
  auto& s=state();
  if(!integer(actor)||!integer(event)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ)||
-    count<1||count>4096||s.attackRouteInput.size()!=size_t(count)*2)return -1;
+    count<0||count>4096||(count&&s.attackRouteInput.size()!=size_t(count)*2))return -1;
  const int biome=spatial_world_biome();
  if((biome!=0&&biome!=1)||spatial_execution_profile_kind()!=0||s.workers.size()!=1||!s.gates.empty()||
     s.causalClock||s.executionEnabled||s.bodyDomainActive||spatial_body_count()!=0||
     s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto worker=s.workers.find(uint64_t(actor));
- if(worker==s.workers.end()||s.attackRouteInput[s.attackRouteInput.size()-2]!=float(homeX)||
+ if(worker==s.workers.end())return -2;
+ // A stopped worker restored before Home acquisition requests an ordinary
+ // new route. The earlier world's prepared route is not part of the save.
+ if(!count)return restoreNativeHomeRequest(actor,village,homeX,homeZ,yaw,run,walk,carry,budget,uint64_t(event));
+ if(s.attackRouteInput[s.attackRouteInput.size()-2]!=float(homeX)||
     s.attackRouteInput.back()!=float(homeZ))return -2;
  double x=worker->second.x,z=worker->second.z;
  for(size_t i=0;i<s.attackRouteInput.size();i+=2){

@@ -27,7 +27,8 @@ export function prepareWorkerCheckpoint(result,{slotId,policy,savedAt}){
  if(checkpoint?.refugeReturn)validateRefugeReturnState(state,checkpoint.refugeReturn);
  if(flight){
   const {worker}=nativeRaidFlightCheckpointActors(state,flight);
-  if(worker.nativeRouteAdmission!=='native-home')throw Error('Saved raid flight has no acquired Home');
+  if(worker.nativeRouteAdmission!==(flight.homePending?'pending-raid-flight-resources':'native-home'))
+   throw Error('Saved raid flight differs from its declared Home stage');
   delete worker.nativeRouteAdmission;
   validateSnapshot(state);
  }

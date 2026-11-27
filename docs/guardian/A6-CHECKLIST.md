@@ -737,6 +737,8 @@ El guardado de Desierto 983 incluye ahora Home18 y la aproximación al centro co
 
 Después de Home19, Desierto 983 se guardó desde aproximación, golpe y Retreat. Las tres recargas en NVIDIA conservaron la ausencia del trabajador y el portón abierto. El regreso consumió la retirada de la época nueva. [Guardado del refugio de Desierto](desert-sheltered-raid-checkpoint-20261127.md).
 
+Desierto 983 también se guardó después de Stop24 con Home18 pendiente. La recarga en NVIDIA preparó Home y la aproximación antes de reanudar, y volvió al mismo centro por el portón original. [Guardado antes de Home18](raid-flight-pending-home-checkpoint-20261127.md).
+
 ### Componentes ya implementados, con sus límites
 
 | Componente | Hecho | Límite de lo entregado |

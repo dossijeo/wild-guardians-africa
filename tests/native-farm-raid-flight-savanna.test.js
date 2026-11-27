@@ -65,7 +65,13 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
     const spawn=current.events.findLast(e=>e.type==='RaidSpawned');
     assert.equal(animal.targetId,crop?'plant-5':center.id);
     await untilProduction(f,()=>{f.snapshot();return retainedHome;});
-    assert.equal(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,false);
+    const pendingHome=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+    // Crop may acquire first. This cut is before its first Game projection.
+    if(crop)assert.equal(pendingHome.saveAvailable,false);
+    else{
+      assert.equal(pendingHome.saveAvailable,true);
+      assert.equal(pendingHome.nativeAuthorityCheckpoint.raidFlight.homePending,true);
+    }
     for(let i=0;i<3;i++){
       const waiting=await step();
       assert.equal(waiting.structures[0].hp,center.hp);
@@ -188,10 +194,16 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
   }finally{releaseHome();releaseCrop();await f.close();}
 });
 
-for(const [target,paused] of [['center',false],['crops',false],['crops',true]])test(`a public Savanna ${target} save rebuilds both moving flight corridors${paused?' while paused':''}`,async()=>{
+for(const [target,paused,pending] of [['center',false],['crops',false],['crops',true],['crops',false,true]])
+test(pending?'a public Savanna crop save restores flight while Home is pending':
+  `a public Savanna ${target} save rebuilds both moving flight corridors${paused?' while paused':''}`,async()=>{
   const initial=source();
   if(target==='center')initial.plants=[];
-  const live=await nativeProductionAuthority(initial,{nativeWorkerLifecycle:true,chunkKeys});
+  let sourceHome,releaseSource;
+  const sourceReady=new Promise(resolve=>{releaseSource=resolve;});
+  const live=await nativeProductionAuthority(initial,{nativeWorkerLifecycle:true,chunkKeys,async onReady(record){
+    if(pending&&record.kind==='home-route'&&!sourceHome){sourceHome=record;await sourceReady;}
+  }});
   let cold,foreign,release,held;
   const commits=new Map();
   const wait=new Promise(resolve=>{release=resolve;});
@@ -218,9 +230,13 @@ for(const [target,paused] of [['center',false],['crops',false],['crops',true]])t
     for(let i=0;i<145&&!cut;i++){
       current=await advance(live);
       const clocks=paired(live);
-      if(clocks?.home.relativeTime>0&&clocks.crop.relativeTime>0&&current.workers[0].status==='fleeing')cut=clocks;
+      if(pending){
+        const frame=live.host.inspect().nativeRouteFrame;
+        const crop=frame?.bindings.find(row=>row.nativeAnimalCrop?.actorId===22&&row.relativeTime>0);
+        if(sourceHome?.packet&&crop&&current.workers[0].nativeRouteAdmission==='pending-raid-flight-resources')cut={frame,crop};
+      }else if(clocks?.home.relativeTime>0&&clocks.crop.relativeTime>0&&current.workers[0].status==='fleeing')cut=clocks;
     }
-    assert(cut,'expected a presented cut with both actors advancing');
+    assert(cut,'expected the flight cut in Draw');
     if(paused)live.command({kind:'pause',reason:'qa-flight-save'});
     const saving=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
     assert(saving.saveAvailable);
@@ -229,14 +245,19 @@ for(const [target,paused] of [['center',false],['crops',false],['crops',true]])t
     const marker=disk.state.workerNativeAuthorityCheckpoint.raidFlight;
     const raw=serialize(disk.state),options=savedNativeAuthorityOptions(raw),savedPose=poses(disk.state);
     assert.deepEqual(savedPose,poses(current));
-    assert.equal(marker.spawnSequence,cut.home.nativeHome.sourceRequest.raidSpawnSequence);
+    assert.equal(marker.spawnSequence,(pending?sourceHome.resources:cut.home.nativeHome).sourceRequest.raidSpawnSequence);
     assert(!disk.state.workers[0].nativeRouteAdmission);
     assert.equal(disk.state.raid.animals[0].targetId,target==='center'?'structure-2':'plant-5');
-    assert.deepEqual(marker.homePath.at(-1),{x:60,z:0});
+    if(pending){
+      assert.equal(marker.homePending,true);
+      assert.equal(marker.homePath,undefined);
+      assert(marker.animalPose.phase>0);
+      releaseSource();
+    }else assert.deepEqual(marker.homePath.at(-1),{x:60,z:0});
     const invalid=structuredClone(disk.state);
     invalid.workers[0].runPhase+=.1;
     assert.throws(()=>savedNativeAuthorityOptions(serialize(invalid)),/checkpoint differs from the saved cohort/);
-    if(target==='crops'&&!paused){
+    if(target==='crops'&&!paused&&!pending){
       foreign=await nativeProductionAuthority(disk.state,{...options,attach:false});
       const post=foreign.controlPort.postMessage;
       foreign.controlPort.postMessage=message=>post(message.restoredFlight?
@@ -284,7 +305,7 @@ for(const [target,paused] of [['center',false],['crops',false],['crops',true]])t
     assert.equal(current.workers[0].personId,marker.personId);
     assert.equal(current.workers[0].hits,0);
     assert.deepEqual(current.ledger,initial.ledger);
-  }finally{release();await foreign?.close();await cold?.close();await live.close();}
+  }finally{release();releaseSource();await foreign?.close();await cold?.close();await live.close();}
 });
 
 for(const [profile,complete] of [['qualification',false],['qualification',true],['lifecycle',true]])test(`terminal Draw loss requires both Flight Home and crop clocks (${profile}): ${complete}`, async () => {

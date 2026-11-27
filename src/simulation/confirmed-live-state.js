@@ -31,8 +31,9 @@ export function deserializeConfirmedState(source){const state=JSON.parse(source)
 export function confirmedStateSaveAvailable(state,{allowNativeRaidFlight=false}={}){
  const workerBlocked=(state.workers??[]).some(w=>{
   const admission=w.nativeRouteAdmission;
-  return w.nativeRefugeSequence!==undefined||!allowNativeRaidFlight&&w.status==='fleeing'&&admission==='native-home'||
-   ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources'].includes(admission)||
+  return w.nativeRefugeSequence!==undefined||!allowNativeRaidFlight&&
+   (w.status==='fleeing'&&admission==='native-home'||admission==='pending-raid-flight-resources')||
+   ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop'].includes(admission)||
    farmSaveBlocked(state,w)||(admission==='native-idle-stroll'||admission==='pending-stroll-resources')&&!nativeIdleStrollSaveAvailable(state,w);
  });
  return !workerBlocked&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);

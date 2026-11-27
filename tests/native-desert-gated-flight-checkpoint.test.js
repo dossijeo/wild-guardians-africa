@@ -235,3 +235,96 @@ test('a sheltered Desert worker returns through the saved gate after a cold cent
   }finally{release();await cold.close();}
  }
 });
+
+test('a confirmed Stop24 reloads while Home READY is still outstanding',async()=>{
+ const initial=deserialize(input.snapshot);
+ let stop,preparingHome,oldHome,releaseStop,releasePreparation,releaseHome;
+ const stopReady=new Promise(resolve=>{releaseStop=resolve;});
+ const homePreparation=new Promise(resolve=>{releasePreparation=resolve;});
+ const homeReady=new Promise(resolve=>{releaseHome=resolve;});
+ const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  async onPrepare(record){if(record.kind==='home-route'&&!preparingHome){preparingHome=record;await homePreparation;}},
+  async onReady(record){
+   if(record.kind==='farm-arrival-stop'&&!stop){stop=record;await stopReady;}
+   if(record.kind==='home-route'&&!oldHome){oldHome=record;await homeReady;}
+  }});
+ let disk,oldEpoch;
+ try{
+  live.command({kind:'setNavigationView',view:input.navigationView});
+  await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  for(let i=0;i<430&&!stop?.packet;i++)await tick(live);
+  assert(stop?.packet&&!stop.committed);
+  const preparingStop=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(preparingStop.saveAvailable,false);
+  releaseStop();
+  for(let i=0;i<40&&!preparingHome;i++)await tick(live);
+  assert(preparingHome&&!preparingHome.packet);
+  const beforeReady=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(beforeReady.nativeAuthorityCheckpoint.raidFlight.homePending,true);
+  assert.equal(beforeReady.saveAvailable,true);
+  releasePreparation();
+  for(let i=0;i<40&&!oldHome?.packet;i++)await tick(live);
+  assert(live.records.some(record=>record.kind==='farm-arrival-stop'&&record.committed));
+  assert(oldHome?.packet&&!oldHome.committed);
+  oldEpoch=oldHome.resources.worldBoundary.authorityEpoch;
+  disk=prepareWorkerCheckpoint(live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true}),
+   {slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+  assert(disk.saved);
+  const marker=disk.state.workerNativeAuthorityCheckpoint.raidFlight;
+  assert.equal(marker.homePending,true);
+  assert.equal(marker.homePath,undefined);
+  assert.equal(marker.workerPose.runPhase,oldHome.resources.sourceRequest.pose.runPhase);
+  assert.deepEqual(marker.gate,{id:gateId,opening:1});
+  const incompatible=structuredClone(disk.state);
+  incompatible.workerNativeAuthorityCheckpoint.raidFlight.homePath=[oldHome.resources.sourceRequest.home];
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(incompatible)),/Invalid native raid flight checkpoint/i);
+ }finally{
+  releaseStop();releasePreparation();
+  try{await live.close();}finally{releaseHome();}
+ }
+ const options=savedNativeAuthorityOptions(serialize(disk.state)),marker=disk.state.workerNativeAuthorityCheckpoint.raidFlight;
+ let held,release;
+ const ready=new Promise(resolve=>{release=resolve;});
+ const commits=new Map();
+ const cold=await nativeProductionAuthority(disk.state,{...options,onCommit:(record,data)=>commits.set(record.kind,data),
+  async onReady(record){if(record.kind==='home-route'&&!held){held=record;await ready;}}});
+ try{
+  assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
+  await untilProduction(cold,()=>held?.packet);
+  assert.notEqual(held.resources.worldBoundary.authorityEpoch,oldEpoch);
+  assert.deepEqual(held.resources.gates.map(gate=>gate.gateId),[input.expectedGate]);
+  for(let i=0;i<3;i++){
+   const waiting=await tick(cold),worker=waiting.workers[0],animal=waiting.raid.animals[0];
+   assert.equal(worker.nativeRouteAdmission,'pending-raid-flight-resources');
+   for(const key of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])
+    assert.equal(worker[key],marker.workerPose[key]);
+   assert.equal(worker.heading,marker.workerPose.yaw);
+   assert.equal(animal.x,marker.animalPose.x);
+   assert.equal(animal.z,marker.animalPose.z);
+   assert.equal(gate(waiting).gateOpen,1);
+  }
+  const again=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  assert.equal(again.saveAvailable,true);
+  assert.equal(again.nativeAuthorityCheckpoint.raidFlight.homePending,true);
+  release();
+  let current,firstPair;
+  for(let i=0;i<1850;i++){
+   current=await tick(cold);
+   const draw=cold.host.inspect().nativeRouteFrame;
+   if(draw?.bindings.some(item=>item.nativeHome)&&draw.bindings.some(item=>item.nativeAnimalCrop)&&
+      draw.bindings.some(item=>item.nativeGate?.gateId===input.expectedGate))firstPair??=draw;
+   if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
+  }
+  assert(firstPair);
+  assert(!cold.records.some(record=>record.kind==='farm-arrival-stop'));
+  assert.deepEqual([...commits.keys()].slice(0,2),['home-route','animal-crop-route']);
+  const arrival=commits.get('home-arrival').nativeHomeArrivalBinding;
+  const paidReturn=commits.get('farm-arrival').nativeFarmArrivalBinding;
+  assert.equal(paidReturn.reference.sourceRequest.refugeSequence,arrival.retiredSequence);
+  assert.deepEqual(paidReturn.gateIds,[input.expectedGate]);
+  assert.equal(current.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(current.workers[0].personId,marker.personId);
+  assert.deepEqual(current.ledger,disk.state.ledger);
+  assert.deepEqual(current.events.filter(event=>event.type==='StructureHit').map(event=>event.structureHit.hp),input.expectedCenterHits);
+ }finally{release();await cold.close();}
+});

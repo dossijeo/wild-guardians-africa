@@ -26,4 +26,4 @@ La selección de vuelo, restauración de Home, portones, checkpoints y roster pa
 
 Se compararon imports y exports de ambos WASM con `046498edf`. Los SHA-256 del standalone y pthread son `f97c238492afa9f87216d5a62bce1a98c266d7394f33942e04c1a309372567fd` y `6b859dbd62dee4f04adb07e568eccbfdf92e0b2482e87b2924b43a503f865b40`.
 
-El alcance es un centro en pie, un trabajador, un facóquero, una ruta de Home sin contacto y un portón intacto totalmente abierto. Quedan por calificar el guardado con el motor en tránsito, durante Stop24 y la sustitución de Draw durante la recarga fría.
+El alcance es un centro en pie, un trabajador, un facóquero, una ruta de Home sin contacto y un portón intacto totalmente abierto. El [guardado después de Stop24 y antes de Home18](raid-flight-pending-home-checkpoint-20261127.md) usa un corte diferente. Quedan por calificar el guardado con el motor en tránsito, antes de confirmar Stop24 y la sustitución de Draw durante la recarga fría.
