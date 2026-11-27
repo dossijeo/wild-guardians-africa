@@ -75,6 +75,44 @@ function beforeTwoCenterRaid() {
   return state;
 }
 
+test('the ordinary Desert raid spends its remaining hit at the next center during a collapse', async () => {
+  const initial=beforeTwoCenterRaid();
+  initial.structures[1].hp=180;
+  initial.dayPlan.actors=[{hits:4}];
+  const world=await nativeProductionAuthority(initial,{chunkKeys});
+  try{
+    world.command({kind:'setNavigationView',view});
+    let state=initial, firstRetarget, atRuin;
+    for(let i=0;i<2000;i++){
+      const step=world.command({kind:'advance',seconds:.05,steps:1,nightFastForward:false});
+      for(const key of step.residency.missing){
+        const [cx,cz]=key.split(',').map(Number);
+        world.command({kind:'addChunk',cx,cz});
+      }
+      state=JSON.parse(step.snapshot);
+      const animal=state.raid?.animals[0];
+      if(animal?.targetId==='structure-2')firstRetarget??={at:state.elapsed,animal};
+      if(step.events.some(event=>event.type==='StructureRuined'))atRuin=animal;
+      if(!state.raid&&state.events.some(event=>event.type==='RaidEnded'))break;
+    }
+    const hits=state.events.filter(event=>event.type==='StructureHit');
+    const ruins=state.events.filter(event=>event.type==='StructureRuined');
+    assert.equal(state.raid,null);
+    assert.deepEqual(hits.map(({targetId,structureHit})=>[targetId,structureHit.hp]),
+      [['structure-3',160],['structure-3',140],['structure-3',120],['structure-2',580]]);
+    assert.equal(ruins.length,1);
+    assert.equal(ruins[0].targetId,'structure-3');
+    assert(hits[2].simulationTime<firstRetarget.at&&firstRetarget.at<ruins[0].simulationTime);
+    assert(ruins[0].simulationTime<hits[3].simulationTime);
+    assert.deepEqual([atRuin.targetId,atRuin.status,atRuin.hitsRemaining],['structure-2','walking',1]);
+    assert.equal(atRuin.id,firstRetarget.animal.id);
+    const attackIds=state.events.filter(event=>event.type==='AnimalLogicalHit').map(event=>event.attackId);
+    assert.equal(attackIds.length,4);
+    assert.equal(new Set(attackIds).size,4);
+    assert.deepEqual(world.faults,[]);
+  }finally{await world.close();}
+});
+
 test('the native Desert raid keeps the center selected by Game among two intact centers', async () => {
   const ordinary = await nativeProductionAuthority(beforeTwoCenterRaid(), {chunkKeys});
   let targetId;
