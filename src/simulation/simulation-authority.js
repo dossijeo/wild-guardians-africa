@@ -8,7 +8,7 @@ import {nativeTaskActionProjectionMatches} from '../world/native-task-action-att
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
 import {nativeTaskSettlementProjectionMatches} from '../world/native-task-settlement.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
@@ -1398,7 +1398,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       return {...execution,actorId:ref.actorId,binding};
     }
     return kind===27?planner.nativeAnimalCropStrikeExecution('animal-'+actorId):
-      kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId):
+      kind===26?planner.nativeAnimalCropRouteExecution('animal-'+actorId,{allowArrivedCenter:true}):
       kind===18?planner.nativeHomeRouteExecution(actorId):kind===21?planner.nativeIdleCycleExecution(actorId):
       kind===22?planner.nativeIdleStrollExecution(actorId):planner.nativeFarmArrivalRouteExecution(actorId);
   }
@@ -1410,9 +1410,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       return execution.nextStatus===1&&execution.endTime<=game.elapsed&&next?.requestSequence===execution.nextSequence&&
         nativeWorkerRouteRecoveryProfile(21).sameAttestation(next?.sourceCycle,execution.binding);
     }
+    const world=planner.nativeWorldResourceBoundary();
     return (!execution.arrived||kind===18&&qualifyRaidEncounter&&game.workers.length===1&&
       woundedHomeExecutionAtEndpoint(game,game.workers[0],execution)||kind===26&&
-      centerRuinApproachEndpoint(ruin,planner.nativeWorldResourceBoundary(),execution.binding,game.elapsed))&&recoveryGateCurrent(kind,execution);
+      (centerRuinApproachEndpoint(ruin,world,execution.binding,game.elapsed)||nativeCenterApproachEndpoint(world,execution.binding,game.elapsed)))&&
+      recoveryGateCurrent(kind,execution);
   }
   function ordinaryWorkerRecovery(){
     const count=game.workers.length;
@@ -1514,10 +1516,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           const retreat=planner.nativeAnimalCropRouteExecution(animal.id);
           return retreat?.binding.reference.purpose==='retreat'?{kind:26,actorId:retreat.actorId}:null;
         }
-        const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
+        const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id,{allowArrivedCenter:true});
         return execution?.binding.reference.purpose==='center'?{kind,actorId:execution.actorId}:null;
       }
-      const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
+      const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id,{allowArrivedCenter:true});
       return execution?{kind,actorId:execution.actorId}:null;
     }
     if(nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&planner.nativeOrdinaryRefugeRecovery())
@@ -1654,7 +1656,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     quiesceNativeIntentProduction({forLostDraw=false}={}){
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
-      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelRuinStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
+      return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelCenterStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
@@ -1762,7 +1764,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           profile.stopProjectionMatches(row,after.binding)&&after.executedThrough===elapsed&&
           recoveredStoppedGateSamplesMatch(row.stoppedGates??[],after.binding);
         const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
-        const terminal=after.arrived&&(profile.kind===18||profile.kind===26&&live.ruin);
+        const terminal=after.arrived&&(profile.kind===18||profile.kind===26);
         const age=profile.kind===21&&after.finished?reference.duration:
           (terminal?nativeClockResourceEnd(start,reference.endTime):elapsed)-start;
         return row.relativeTime===recoveryFloorFloat32(age)&&recoverableExecution(profile.kind,after,live.ruin);

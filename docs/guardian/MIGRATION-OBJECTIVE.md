@@ -932,6 +932,8 @@ En Desierto 983, NVIDIA confirmó la marcha simultánea del trabajador hacia su 
 
 Si el corredor sucesor termina antes del derrumbe, la autoridad cancela el READY pendiente de Strike27 y conserva la pose final. En NVIDIA, el sustituto presentó el mismo cuerpo, su edad terminal y el picking después de perder el dispositivo anterior. El golpe adquirió el ticket 19, dejó el centro sucesor en 580 HP una sola vez y el Draw drenó. Queda probar la pérdida del dispositivo antes de adquirir la retirada. [Controles y recorrido](native-desert-mixed-flight-center-20261125.md#aproximación-terminada-antes-del-subpaso-de-ruina).
 
+En el control de CPU anterior a preparar kind4, el sustituto recuperó el extremo de Route26 con el polígono todavía presente. Tras acreditar el envío, preparó kind4 en el consumidor nuevo y el centro sucesor recibió un solo golpe. Queda devolver al FIFO la parte pendiente del avance cuando Draw cae con kind4 ya preparado, y acreditar ese relevo en NVIDIA. [Controles de recuperación](native-desert-mixed-flight-center-20261125.md#aproximación-terminada-antes-del-subpaso-de-ruina).
+
 En Desierto 983, el sustituto de Draw reprodujo la ruina y la aproximación adquirida tras perder el dispositivo original. Conservó la frontera, la pose ejecutada del facóquero y el golpe restante. NVIDIA confirmó el primer envío, el regreso a Idle y el drenaje. [Prueba del relevo](performance/native-desert-cold-approach-draw-loss-20261127.json).
 
 El contraste en el mismo instante confirmó las huellas de ambos buffers transitorios y el picking del facóquero con el reloj del sustituto. El replay arrancó desde una publicación anterior a la ruina. [Contraste de efectos y picking](performance/native-desert-cold-ruin-draw-fidelity-20261127.json).

@@ -228,7 +228,12 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
  }
 });
 
-for(const alreadyArrived of [false,true])for(const retireFirst of [true,false])test('center ruin recovers the successor approach '+(alreadyArrived?'after its earlier arrival':'when it reaches its endpoint in the ruin substep')+' (retire first: '+retireFirst+')',{timeout:90000},async()=>{
+for(const {alreadyArrived,retireFirst,lossBeforeRuin=false} of [
+ {alreadyArrived:false,retireFirst:true},{alreadyArrived:false,retireFirst:false},
+ {alreadyArrived:true,retireFirst:true},{alreadyArrived:true,retireFirst:false},
+ {alreadyArrived:true,retireFirst:true,lossBeforeRuin:true},
+])test('center ruin recovers the successor approach '+(lossBeforeRuin?'before preparing the ruin':alreadyArrived?
+ 'after its earlier arrival':'when it reaches its endpoint in the ruin substep')+' (retire first: '+retireFirst+')',{timeout:90000},async()=>{
  const before=mixedState(false);
  before.workers=[];
  before.structures=before.structures.filter(center=>center.kind==='center');
@@ -318,10 +323,19 @@ for(const alreadyArrived of [false,true])for(const retireFirst of [true,false])t
   }else assert(state.elapsed<endTime&&endTime<=state.elapsed+.020);
   const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
   const intact=polygons();
+  if(lossBeforeRuin){
+   const previous=strikeBeforeRuin;
+   strikeBeforeRuin=null;
+   replacement=await recoverRouteAfterRuin(world,route,state.elapsed,state,{endpoint:true,retireFirst,beforeRuin:true});
+   assert(previous.aborted&&!previous.committed);
+   assert.deepEqual(polygons(),intact);
+   await untilProduction(world,()=>!!strikeBeforeRuin);
+   assert.equal(strikeBeforeRuin.resources.reference.requestSequence,previous.resources.reference.requestSequence);
+  }
   state=await advance(.020);
   assert(ruin?.committed);
   await ruin.packet.presented;
-  const proof=ruin.commit.nativeCenterRuin,frame=world.host.inspect().nativeRouteFrame;
+  const proof=ruin.commit.nativeCenterRuin,frame=(replacement??world).host.inspect().nativeRouteFrame;
   assert.equal(frame.worldBoundary.ticket,proof.acquired.ticket);
   assert.equal(proof.prepared.approach.reference.bodyId,bodyId);
   assert.equal(proof.prepared.approach.reference.endTime,endTime);
@@ -331,10 +345,11 @@ for(const alreadyArrived of [false,true])for(const retireFirst of [true,false])t
    assert(strikeBeforeRuin.aborted&&!strikeBeforeRuin.committed);
    await assert.rejects(strikeBeforeRuin.packet.presented);
   }else if(!retireFirst)assert.equal(proof.acquired.effectiveTime,endTime);
-  const row=frame.bindings.find(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,route.preparedReference));
-  const epoch=prepared.worldBoundary.effectiveTime;
+  const drawnReference=lossBeforeRuin?route.reference:route.preparedReference;
+  const row=frame.bindings.find(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,drawnReference));
+  const epoch=drawnReference.worldBoundary.effectiveTime;
   const sampledAge=Math.min(frame.clockElapsed-route.reference.worldBoundary.effectiveTime,
-   nativeClockResourceEnd(epoch,prepared.endTime)-epoch);
+   nativeClockResourceEnd(epoch,drawnReference.endTime)-epoch);
   assert.equal(row?.relativeTime,floorFloat32(sampledAge));
   assert.deepEqual(polygons(),intact.filter(polygon=>polygon.id!==proof.polygon));
   assert.deepEqual(state.events.filter(event=>event.type==='StructureRuined').map(event=>[event.targetId,event.simulationTime]),
@@ -348,17 +363,22 @@ for(const alreadyArrived of [false,true])for(const retireFirst of [true,false])t
    assert.equal(strike.resources.reference.requestSequence,strikeBeforeRuin.resources.reference.requestSequence);
    assert(strike.resources.worldBoundary.ticket>proof.acquired.ticket);
   }
-  replacement=await recoverRouteAfterRuin(world,proof,state.elapsed,state,{endpoint:true,retireFirst});
-  await untilProduction(world,()=>retriedStrike?.committed);
-  assert(strike.aborted&&!strike.committed);
-  assert(retriedStrike.resources.worldBoundary.ticket>strike.resources.worldBoundary.ticket);
-  assert.equal(retriedStrike.resources.reference.requestSequence,strike.resources.reference.requestSequence);
+  if(lossBeforeRuin){
+   releaseStrike();
+   await untilProduction(world,()=>strike.committed);
+  }else{
+   replacement=await recoverRouteAfterRuin(world,proof,state.elapsed,state,{endpoint:true,retireFirst});
+   await untilProduction(world,()=>retriedStrike?.committed);
+   assert(strike.aborted&&!strike.committed);
+   assert(retriedStrike.resources.worldBoundary.ticket>strike.resources.worldBoundary.ticket);
+   assert.equal(retriedStrike.resources.reference.requestSequence,strike.resources.reference.requestSequence);
+  }
   for(let i=0;i<600&&state.raid;i++)state=await advance(.05,2);
   assert.equal(state.raid,null);
   const hits=state.events.filter(event=>event.type==='StructureHit');
   assert.deepEqual(hits.map(hit=>[hit.targetId,hit.structureHit.hp]),
    [[doomed.id,160],[doomed.id,140],[doomed.id,120],[successor.id,580]]);
-  assert.equal(retriedStrike.resources.reference.bodyId,bodyId);
+  assert.equal((retriedStrike??strike).resources.reference.bodyId,bodyId);
  }finally{releaseApproach();releaseStrike();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
 });
 

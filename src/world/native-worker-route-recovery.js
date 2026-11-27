@@ -7,7 +7,7 @@ import {copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,sameNativeId
 import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
 import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
-import {copyNativeRoutePresentation} from './native-route-presentation.js';
+import {copyNativeRoutePresentation,NATIVE_ROUTE_PRESENTATION_FIELDS,NATIVE_ROUTE_PRESENTATION_WIDTH} from './native-route-presentation.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
 import {centerSource,verifiesCenter} from './native-center-ruin-source.js';
 import {LOCOMOTION} from '../simulation/locomotion-calibration.js';
@@ -33,6 +33,17 @@ export function centerRuinApproachEndpoint(ruin,world,binding,at){
    approach.assignmentSequence===binding.assignmentSequence&&
    sameNativeAnimalCropReference(approach.reference,ref)&&
    sameNativeAnimalCropReference(approach.preparedReference,binding.preparedReference);
+}
+
+export function nativeCenterApproachEndpoint(world,binding,at){
+ const ref=binding?.reference;
+ return ref?.kind===26&&ref.purpose==='center'&&Number.isFinite(at)&&at>=ref.endTime&&
+   sameNativeWorldBoundary(world,ref.worldBoundary);
+}
+
+const centerEndpointPose=['x','z','phase','yaw'].map(field=>[field,NATIVE_ROUTE_PRESENTATION_FIELDS.indexOf(field)-NATIVE_ROUTE_PRESENTATION_WIDTH]);
+export function matchesNativeCenterEndpointPose(execution,presentation){
+ return centerEndpointPose.every(([field,offset])=>execution[field]===presentation.rows.at(offset));
 }
 
 export function matchesNativeWoundedRefuge(world,refuge){

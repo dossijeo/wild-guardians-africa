@@ -1,4 +1,4 @@
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesNativeOrdinaryRefuge,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,matchesNativeCenterEndpointPose,matchesNativeOrdinaryRefuge,nativeCenterApproachEndpoint,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {createFarVisualReplicaClient} from './far-visual-replica-client.js';
@@ -88,9 +88,10 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
             const profile=nativeWorkerRouteRecoveryProfile(input?.kind),resources=profile.copyResources(input,cut);
             const binding=resources[profile.bindingField],ref=binding.reference;
             const endpoint=execution?.arrived===true&&(!grouped&&qualifyRaidEncounter&&profile.kind===18&&
-              woundedHomeEndpoint(binding,execution.executedThrough)||grouped&&profile.kind===26&&
-              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough)&&
-              ['x','z','phase'].every(key=>execution[key]===binding.terminal[key]));
+              woundedHomeEndpoint(binding,execution.executedThrough)||profile.kind===26&&(grouped?
+              centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough):
+              nativeCenterApproachEndpoint(resources.worldBoundary,binding,execution.executedThrough))&&
+              matchesNativeCenterEndpointPose(execution,resources.presentation));
             const cycle=profile.kind===21,action=profile.kind===15,settlement=profile.kind===17,stopped=!!profile.stopProjectionMatches;
             const end=cycle?ref.worldBoundary.effectiveTime+ref.duration:settlement||stopped?Infinity:ref.endTime;
             const cycleEnd=cycle&&execution?.finished===true&&execution.nextStatus===1&&

@@ -2,7 +2,7 @@ import {stoppedGatePlateau,sameStop12Source,sameStop24Source} from "../native-st
 import {copyTask25HomeSource,sameTask25HomeSource} from '../native-task25-home-recovery.js';
 import {copyNativeTaskStartProposal} from '../native-task-start-presentation.js';
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeCenterApproachEndpoint,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {copyNativeCenterPlacement} from '../native-center-placement.js';
@@ -833,11 +833,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       const execution=action?nativeTaskActionExecution(nativeTaskActionActor(recoveredWorkerRoute.proof.reference.request)):
         settlement?nativeSettledWorkerExecution(recoveredWorkerRoute.proof.reference.actorId):
         strike?nativeAnimalCropStrikeExecution('animal-'+recoveredWorkerRoute.proof?.reference?.actorId):
-        crop?nativeAnimalCropRouteExecution('animal-'+data[0]):profile.kind===18?nativeHomeRouteExecution(data[0]):
+        crop?nativeAnimalCropRouteExecution('animal-'+data[0],{allowArrivedCenter:true}):profile.kind===18?nativeHomeRouteExecution(data[0]):
         profile.kind===22?nativeIdleStrollExecution(data[0]):task?nativeTaskExecution(data[0]):
         carry?nativeDeliveryExecution(data[0]):nativeFarmArrivalRouteExecution(data[0]);
       const binding=task?nativeTaskStartBinding(data[0]):execution?.binding;
-      const endpoint=profile.kind===18&&qualifyRaidEncounter&&owningState?.workers.length===1&&
+      const endpoint=crop&&execution?.arrived===true||profile.kind===18&&qualifyRaidEncounter&&owningState?.workers.length===1&&
         woundedHomeExecutionAtEndpoint(owningState,owningState.workers[0],execution);
       if(!execution||!binding||action&&execution.completed!==false||execution.arrived&&!endpoint||(binding.gateIds?.length??0)>profile.maxGates||
          profile.kind===18&&execution.binding.reference.sourceRequest?.raidSpawnSequence||
@@ -1573,13 +1573,14 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       live?.center===reference.centerId&&live.centerX===target.x&&live.centerZ===target.z&&
       live.targetX===target.x&&live.targetZ===target.z;
   }
-  function nativeAnimalCropRouteExecution(actorId,{sharedCut=false,flightWorker=null,ruin=null}={}){
+  function nativeAnimalCropRouteExecution(actorId,{sharedCut=false,flightWorker=null,ruin=null,allowArrivedCenter=false}={}){
     const proof=activeAnimalRoute,r=proof?.reference;
     if(!r||actorId!=='animal-'+r.actorId||
        !(sharedCut?nativeRecoveryCovers(nativeWorldBoundary(),r.worldBoundary):sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary())))return null;
     const animal=owningState?.raid?.animals.find(row=>row.id===actorId);
     const live=animal&&nativeAnimalCropState(actorId),binding=live&&nativeAnimalRouteBinding(actorId);
-    const endpoint=live?.arrived&&centerRuinApproachEndpoint(ruin,nativeWorldBoundary(),proof,live.executedThrough);
+    const endpoint=live?.arrived&&(centerRuinApproachEndpoint(ruin,nativeWorldBoundary(),proof,live.executedThrough)||
+      allowArrivedCenter&&nativeCenterApproachEndpoint(nativeWorldBoundary(),proof,live.executedThrough));
     const exit=r.purpose==='retreat'?(nativeRetreatSubject(owningState,animal)??encounterRetreatOwner(owningState,animal,live)?.exit):null;
     const expected=r.purpose==='retreat'?exit?.x===r.targetX&&exit.z===r.targetZ:
       ['entering','walking'].includes(animal?.status)&&(r.purpose==='center'?

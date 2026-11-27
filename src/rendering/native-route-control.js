@@ -26,7 +26,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeOrdinaryRefugeContinuation,matchesNativeStationaryRefuge,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeOrdinaryRefugeContinuation,matchesNativeStationaryRefuge,nativeCenterApproachEndpoint,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers,sameNativeTaskActionAttestation as sameActionProof} from '../world/native-task-action-attestation.js';
@@ -341,9 +341,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     const draft=()=>!!(live()&&encounterRetreatDraft&&sameNativeWorldBoundary(preparingWorldBoundary,r.worldBoundary)&&heldEncounterCropDraft(encounterRetreatDraft,r,actor));
     if(!current()&&!pending()&&!draft())throw Error('Animal crop preparation lacks its current native source');
     return Object.freeze({reference:r,isCurrent:current,isPrepared:()=>current()||pending()||draft(),
-      matchesCenterRuinStrike(proof){
-        const own=actor?.current?.cropBinding;
-        return r.kind===27&&current()&&own.attackId===proof.attackId&&own.assignmentSequence===proof.assignmentSequence&&
+      matchesCenterRuinOwner(proof){
+        if(!current())return false;
+        const record=actor.current,own=record.cropBinding;
+        return own.attackId===proof.attackId&&own.assignmentSequence===proof.assignmentSequence&&
+          (sameNativeAnimalCropReference(r,proof.preparedReference)||
+            record.recoveredCrop&&sameNativeAnimalCropReference(r,proof.reference))&&
           sameNativeAnimalCropReference(own.reference,proof.reference)&&sameNativeAnimalCropReference(own.preparedReference,proof.preparedReference);
       },
       isRevoked(){
@@ -1200,7 +1203,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         slot:ref.slot,generation:ref.generation}:ref.expectedRouteHandle;
       const source=ref.worldBoundary;
       const endpoint=kind===18&&cohortSize===1&&woundedHomeEndpoint(proof,clock?.committedThrough);
-      const approachEndpoint=kind===26&&cohortSize===1&&sharedCut&&centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough);
+      const approachEndpoint=kind===26&&cohortSize===1&&(sharedCut?
+        centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough):nativeCenterApproachEndpoint(boundary,proof,clock?.committedThrough));
       if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||
