@@ -228,7 +228,7 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
  }
 });
 
-for(const retireFirst of [true,false])test('center ruin recovers the successor approach when it reaches its endpoint in the ruin substep (retire first: '+retireFirst+')',{timeout:90000},async()=>{
+for(const alreadyArrived of [false,true])for(const retireFirst of [true,false])test('center ruin recovers the successor approach '+(alreadyArrived?'after its earlier arrival':'when it reaches its endpoint in the ruin substep')+' (retire first: '+retireFirst+')',{timeout:90000},async()=>{
  const before=mixedState(false);
  before.workers=[];
  before.structures=before.structures.filter(center=>center.kind==='center');
@@ -252,7 +252,7 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
   assert(selected,'Game did not select the first center');
  }finally{await ordinary.close();}
  const target=Number(successor.id.split('-')[1]);
- let releaseApproach,releaseStrike,approach,strike,retriedStrike,ruin,route,replacement;
+ let releaseApproach,releaseStrike,approach,strikeBeforeRuin,strike,retriedStrike,ruin,route,replacement;
  const approachReady=new Promise(resolve=>{releaseApproach=resolve;});
  const strikeReady=new Promise(resolve=>{releaseStrike=resolve;});
  const manifest={epoch:'center-ruin-arrived-approach',chunks:chunkKeys.map(key=>{
@@ -264,6 +264,10 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
    if(record.resources.reference?.targetId!==target)return;
    if(record.kind==='animal-crop-route'){approach=record;return approachReady;}
    if(record.kind==='animal-crop-strike'){
+    if(alreadyArrived&&!strikeBeforeRuin){
+     strikeBeforeRuin=record;
+     return Promise.race([strikeReady,new Promise(resolve=>signal.addEventListener('abort',resolve,{once:true}))]);
+    }
     if(strike){retriedStrike=record;return;}
     strike=record;
     return Promise.race([strikeReady,new Promise(resolve=>signal.addEventListener('abort',resolve,{once:true}))]);
@@ -299,14 +303,19 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
   const deadline=state.elapsed+collapse.collapseRemaining,prepared=approach.resources.reference;
   assert.equal(collapse.status,'collapsing');
   const cut=deadline-.012,stepEnd=cut+.020;
-  const departure=stepEnd-(prepared.endTime-prepared.worldBoundary.effectiveTime)-(retireFirst?.012:0);
+  const arrival=alreadyArrived?cut-.035:stepEnd-(retireFirst?.012:0);
+  const departure=arrival-(prepared.endTime-prepared.worldBoundary.effectiveTime);
   assert(departure>state.elapsed);
   state=await reach(state,departure);
   releaseApproach();
   await untilProduction(world,()=>!!route);
   state=await reach(state,cut);
   const {endTime,bodyId}=route.reference;
-  assert(state.elapsed<endTime&&endTime<=state.elapsed+.020);
+  if(alreadyArrived){
+   assert(state.elapsed-endTime>.03);
+   await untilProduction(world,()=>!!strikeBeforeRuin);
+   assert(!strikeBeforeRuin.aborted&&!strikeBeforeRuin.committed);
+  }else assert(state.elapsed<endTime&&endTime<=state.elapsed+.020);
   const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
   const intact=polygons();
   state=await advance(.020);
@@ -317,7 +326,11 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
   assert.equal(proof.prepared.approach.reference.bodyId,bodyId);
   assert.equal(proof.prepared.approach.reference.endTime,endTime);
   assert(proof.acquired.effectiveTime>=endTime);
-  if(!retireFirst)assert.equal(proof.acquired.effectiveTime,endTime);
+  if(alreadyArrived){
+   assert(proof.acquired.effectiveTime-endTime>.05);
+   assert(strikeBeforeRuin.aborted&&!strikeBeforeRuin.committed);
+   await assert.rejects(strikeBeforeRuin.packet.presented);
+  }else if(!retireFirst)assert.equal(proof.acquired.effectiveTime,endTime);
   const row=frame.bindings.find(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,route.preparedReference));
   const epoch=prepared.worldBoundary.effectiveTime;
   const sampledAge=Math.min(frame.clockElapsed-route.reference.worldBoundary.effectiveTime,
@@ -331,6 +344,10 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
   assert.equal(state.structures.find(center=>center.id===successor.id).hp,600);
   await untilProduction(world,()=>!!strike);
   assert.equal(strike.committed,false);
+  if(alreadyArrived){
+   assert.equal(strike.resources.reference.requestSequence,strikeBeforeRuin.resources.reference.requestSequence);
+   assert(strike.resources.worldBoundary.ticket>proof.acquired.ticket);
+  }
   replacement=await recoverRouteAfterRuin(world,proof,state.elapsed,state,{endpoint:true,retireFirst});
   await untilProduction(world,()=>retriedStrike?.committed);
   assert(strike.aborted&&!strike.committed);

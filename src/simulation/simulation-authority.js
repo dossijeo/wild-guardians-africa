@@ -756,7 +756,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const current=()=>eligible()&&centerRuinAdvance===owner&&game.elapsed===at&&!signal.aborted&&owner.resources===nativeResourcePreparation;
     let draft=null,prepared=null,hold=null,entered=false;
     try{
-      owner.receipt=await nativeProduction.quiesce();
+      // An already arrived approach can retain its exact endpoint through
+      // the ruin. Its pending strike must prepare again against the new world.
+      const approach=planner.nativeAnimalCropState(animal.id);
+      const cancelCrop=approach?.purpose==='center'&&approach.mode===2&&approach.arrived&&
+       animal.status==='walking'&&animal.targetId==='structure-'+approach.target?
+        {actorId:animal.id,kind:'animal-crop-strike',requestSequence:approach.requestSequence}:null;
+      owner.receipt=await nativeProduction.quiesce({cancelCrop});
       if(!current())throw Error('Native center ruin source changed');
       // Quiescing can finish pending motion. Its acquired program must be
       // published before Surface can adopt it and prepare the next world.
