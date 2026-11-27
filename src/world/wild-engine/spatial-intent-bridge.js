@@ -1662,9 +1662,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const crop=nativeAnimalCropRouteExecution(animal.id,{sharedCut:true,flightWorker:worker});
     return crop&&!crop.binding.gateIds.length?home:null;
   }
-  function currentRefuge(saved=refuge){
+  function currentRefuge(saved=refuge,{wholeRoster=false}={}){
     const game=owningState;
-    if(!saved||!game||game.raid!==saved.raid||game.workers.length!==1||game.workers[0]!==saved.worker)return null;
+    if(!saved||!game||game.raid!==saved.raid||!game.workers.includes(saved.worker)||
+       !wholeRoster&&game.workers.length!==1)return null;
     const {worker,issued}=saved,r=issued.reference,cut=nativeWorldBoundary();
     const home=nativeHomeRouteSource(r.sourceHome.reference).home;
     if(!nativeRecoveryCovers(cut,r.worldBoundary)||!nativeWorkerHomeInactive(r.actorId)||
@@ -1687,9 +1688,11 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn,gates):null;
   }
   function nativeOrdinaryRefugeRecovery(){
-    const game=owningState,worker=ordinaryRefuge?.worker;
-    if(!game||game.raid||worker?.incapacitated||game.structures.some(s=>s.gate&&s.status!=='ruined'))return null;
-    const issued=currentRefuge(ordinaryRefuge);
+    const game=owningState;
+    if(!game||game.raid||!ordinaryRefuge||wasm.spatial_body_count()!==0||
+       game.structures.some(s=>s.gate&&s.status!=='ruined')||
+       game.workers.some(worker=>worker.incapacitated||!nativeWorkerHomeInactive(worker.id)))return null;
+    const issued=currentRefuge(ordinaryRefuge,{wholeRoster:true});
     return matchesNativeOrdinaryRefuge(nativeWorldBoundary(),issued)?issued:null;
   }
   function nativeWoundedRefugeRecovery(){

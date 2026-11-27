@@ -829,7 +829,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       if(!arrival)return true;
       const worker=state.workers.find(worker=>worker.id==='worker-'+arrival.actorId);
       return worker?.status==='home'&&!worker.nativeRouteAdmission&&worker.heading===arrival.pose.yaw&&
-        (!stationaryRefuge||!state.raid&&workers?.get(worker.id)===null&&
+        (!stationaryRefuge||!state.raid&&state.workers.every(peer=>
+         peer.status==='home'&&!peer.nativeRouteAdmission&&workers?.get(peer.id)===null)&&
          (homeSource.recoveryHit?worker.incapacitated===true&&worker.hits===2:!worker.incapacitated))&&
         worker.villageId==='village-'+destination.villageId&&worker.x===destination.x&&worker.z===destination.z&&
         ['runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===arrival.pose[key]);

@@ -1,0 +1,166 @@
+{
+  "scenario": "Sabana 714, recarga de dos trabajadores pagados y reemplazo de Draw al quedar ambos refugiados",
+  "baseRevision": "a088350e9f7d3fd86f35371c99e32a813718e81c",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 76.24500000476837
+    }
+  },
+  "artifacts": {
+    "native-savanna-two-workers-before-home-20261127.json": "dd6006d1012e91791bec19ecfd7c386d0aa384d84e24c05d57969bef7352f757",
+    "native-savanna-two-home-idle-operands-20261127-extended.json": "f20ba2e68f01152d8574babc087d180823db196ae60d8780cec10c17d5e89f81",
+    "native-savanna-two-home-terminal-fixed-20261127-extended.json": "f5c82f3caa193273d6c0fbe7f8a5d66a22ee890d1056496d9284875ac79923c4",
+    "native-savanna-two-home-terminal-final-20261127-extended.json": "bde3a0ee162252997701ec73239ada0dfef327b6b43f54475f17edcf6e81c529"
+  },
+  "fixture": {
+    "elapsed": 248.00000000002635,
+    "workers": [
+      {
+        "actorId": 6,
+        "bodyId": 1
+      },
+      {
+        "actorId": 8,
+        "bodyId": 2
+      }
+    ],
+    "addedWorldVersionAtLoad": true
+  },
+  "priorFailure": {
+    "actor": "worker-6",
+    "elapsed": 248.00000000002635,
+    "minimumPublication": 1,
+    "entityMatches": true,
+    "sourceMatches": true,
+    "terrainCurrent": true,
+    "rigVisible": true,
+    "historicalBindingPending": true
+  },
+  "initialIdle20": [
+    {
+      "actorId": 6,
+      "bodyId": 1,
+      "ticket": 2,
+      "frame": 78,
+      "boundary": 248.2500000000264,
+      "clock": 248.2500000000264,
+      "bindings": 1
+    },
+    {
+      "actorId": 8,
+      "bodyId": 2,
+      "ticket": 4,
+      "frame": 79,
+      "boundary": 248.2500000000264,
+      "clock": 248.2500000000264,
+      "bindings": 2
+    }
+  ],
+  "home19": [
+    {
+      "actorId": 8,
+      "bodyId": 2,
+      "ticket": 22,
+      "frame": 311,
+      "boundary": 294.39999999996644,
+      "clock": 294.39999999996644,
+      "bindings": 3
+    },
+    {
+      "actorId": 6,
+      "bodyId": 1,
+      "ticket": 26,
+      "frame": 377,
+      "boundary": 344.2499999999714,
+      "clock": 344.2499999999714,
+      "bindings": 0
+    }
+  ],
+  "retired": {
+    "lossRequestedAt": 344.7499999999715,
+    "observedPublication": 1670,
+    "cutClock": 345.24999999997164,
+    "publicationFloor": 1673,
+    "journalBase": 1626,
+    "callbacksSettled": true,
+    "drawClosed": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "ticket": 26,
+    "frame": 1,
+    "boundary": 344.2499999999714,
+    "clock": 345.24999999997164,
+    "bindings": 0,
+    "submittedBeforeActivation": true,
+    "activation": [
+      {
+        "stage": "request",
+        "sequence": 1673
+      },
+      {
+        "stage": "fifo-barrier",
+        "sequence": 1673
+      },
+      {
+        "stage": "candidate-drain",
+        "sequence": 1673
+      }
+    ],
+    "nextAnimal": {
+      "actorId": 12,
+      "bodyId": 3,
+      "relativeAge": 0,
+      "ticket": 28,
+      "frame": 61,
+      "boundary": 379.67814648073187,
+      "clock": 379.67814648073187,
+      "bindings": 1
+    }
+  },
+  "continuation": {
+    "raidSpawn": {
+      "id": "event-18",
+      "at": 377.5351831009225,
+      "actors": [
+        {
+          "id": "animal-12",
+          "species": "warthog"
+        }
+      ]
+    },
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "home",
+        "x": 60,
+        "z": 0
+      },
+      {
+        "id": "worker-8",
+        "status": "home",
+        "x": 60,
+        "z": 0
+      }
+    ],
+    "balance": "480",
+    "drawDrained": true,
+    "pageErrors": 0
+  },
+  "scope": {
+    "deviceLoss": "explicit",
+    "fixtureBiome": "sabana",
+    "activeGates": 0,
+    "automaticProfileSelection": false
+  }
+}

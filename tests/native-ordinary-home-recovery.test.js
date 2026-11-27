@@ -9,14 +9,20 @@ import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 
-test('terminal Draw recovers ordinary Home19 before the first Savanna raid',{timeout:30000},async()=>{
- const save=gunzipSync(readFileSync(new URL('./fixtures/sabana714-d1-native-pending-home.json.gz',import.meta.url))).toString();
+for(const {name,file,count,partial} of [
+ {name:'recovers ordinary Home19 before the first Savanna raid',file:'sabana714-d1-native-pending-home.json.gz',count:1},
+ {name:'recovers both sheltered workers at the last ordinary Home19',file:'sabana714-d1-two-paid-workers-before-home.json.gz',count:2},
+ {name:'rejects an ordinary Home19 recovery while the second worker is still outside',file:'sabana714-d1-two-paid-workers-before-home.json.gz',count:2,partial:true},
+])test('terminal Draw '+name,{timeout:45000},async()=>{
+ const save=gunzipSync(readFileSync(new URL('./fixtures/'+file,import.meta.url))).toString();
  const initial=JSON.parse(save),options=savedNativeAuthorityOptions(save);
  assert.equal(options.nativeWorkerLifecycle,true);
+ assert.equal(initial.workers.length,count);
  const manifest={epoch:'ordinary-home-terminal',chunks:options.chunkKeys.map(key=>{
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
  })};
- const f=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest});
+ const departures=new Map(),f=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest,
+  onCommit(record,receipt){if(record.kind==='home-arrival')departures.set(record,receipt.nativeHomeArrivalBinding);}});
  const channel=new MessageChannel();
  let replacement,attached=false,arrival,state;
  try{
@@ -25,15 +31,21 @@ test('terminal Draw recovers ordinary Home19 before the first Savanna raid',{tim
    const p=await f.command({kind:'advance',seconds:.05,steps:8,nightFastForward:true});
    for(const key of p.residency?.missing??[])f.command({kind:'addChunk',key});
    await f.present();
-   arrival=f.records.find(row=>row.kind==='home-arrival'&&row.committed);
-   if(arrival&&p.elapsed>=314.75){state=JSON.parse(p.snapshot);break;}
+   arrival=f.records.findLast(row=>row.kind==='home-arrival'&&row.committed);
+   const current=JSON.parse(p.snapshot),atHome=current.workers.filter(worker=>worker.status==='home').length;
+   if(arrival&&(partial?atHome===1:atHome===count&&(count===2||p.elapsed>=314.75))){state=current;break;}
   }
   assert(state&&arrival);
   await arrival.packet.presented;
-  const worker=state.workers[0],at=state.elapsed;
+  const lastRetirement=departures.get(arrival).reference;
+  const worker=state.workers.find(worker=>worker.id==='worker-'+lastRetirement.actorId),at=state.elapsed;
   assert.equal(worker.status,'home');
   assert.equal(state.raid,null);
-  assert.deepEqual(f.host.inspect().nativeRouteFrame.bindings,[]);
+  assert.equal(departures.size,partial?1:count);
+  if(!partial){
+   assert.equal(new Set([...departures.values()].map(row=>row.reference.bodyId)).size,count);
+   assert.deepEqual(f.host.inspect().nativeRouteFrame.bindings,[]);
+  }
   const hold=await f.authority.quiesceNativeIntentProduction({forLostDraw:true});
   f.retireResourceEndpoint();
   f.gpu.device.destroy();
@@ -42,6 +54,7 @@ test('terminal Draw recovers ordinary Home19 before the first Savanna raid',{tim
   assert.equal(resources.callbacksSettled,true);
   assert.equal(resources.terminal,true);
   const route=await f.authority.terminalWorkerRoute();
+  if(partial){assert.equal(route,null);return;}
   assert.deepEqual(route,{version:2,refuge:true,members:[]});
 
   replacement=await drawFixture({capabilities:{nativeHomeArrivalVersion:1}},
@@ -50,7 +63,7 @@ test('terminal Draw recovers ordinary Home19 before the first Savanna raid',{tim
   const {refuge,worldBoundary}=descriptor,ref=refuge.reference;
   assert.deepEqual(descriptor.members,[]);
   assert.equal(ref.actorId,Number(worker.id.split('-').at(-1)));
-  assert.equal(ref.bodyId,1);
+  assert.equal(ref.bodyId,lastRetirement.bodyId);
   assert.deepEqual(descriptor.terrainManifest,manifest);
   assert.deepEqual(copyNativeRecoveryGroup(descriptor,worldBoundary),{members:[],refuge});
   assert.throws(()=>copyNativeRecoveryGroup(descriptor,{...worldBoundary,ticket:worldBoundary.ticket+1}),/requires the surviving animal/);
@@ -89,7 +102,7 @@ test('terminal Draw recovers ordinary Home19 before the first Savanna raid',{tim
   const result=await f.command({kind:'advance',seconds:.05,steps:2,nightFastForward:false});
   const next=JSON.parse(result.snapshot);
   assert(result.elapsed>at);
-  assert.deepEqual(next.workers,[worker]);
+  assert.deepEqual(next.workers,state.workers);
   assert.deepEqual(next.ledger,state.ledger);
   assert.deepEqual(f.faults,[]);
  }finally{

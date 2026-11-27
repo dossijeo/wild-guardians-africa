@@ -1389,13 +1389,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const execution=kind===27?planner.nativeAnimalCropStrikeExecution(animal.id):planner.nativeAnimalCropRouteExecution(animal.id);
       return execution?{kind,actorId:execution.actorId}:null;
     }
+    if(nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&planner.nativeOrdinaryRefugeRecovery())
+      return {version:2,refuge:true,members:[]};
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
     const encounter=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
       planner.nativeStationaryEncounterRecovery();
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
-    if(civilShieldPhysicsAvailable()&&(qualifyRaidEncounter&&planner.nativeWoundedRefugeRecovery()||
-       nativeWorkerLifecycle&&planner.nativeOrdinaryRefugeRecovery()))
+    if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
       return {version:2,refuge:true,members:[]};
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
