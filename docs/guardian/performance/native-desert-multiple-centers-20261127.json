@@ -1,0 +1,418 @@
+{
+  "base": "3887557b501f299a3f970a972d3ff06f2523da73",
+  "input": {
+    "source": "docs/qa/raid-spawn-navigation/prepared-complete-browser-desert.json",
+    "path": ".cache/flee-return/attack-center-multiple.json",
+    "sha256": "ea483bc21b1cd9356be1374331556e17f4fa503982ddb6a497a0b0006e8d70f3",
+    "snapshotSHA256": "27e9ef443991279294d585ca2c0a36d20c6de2a9f41383fd474ae5dc42d85526",
+    "targetId": "structure-3",
+    "otherCenterId": "structure-2"
+  },
+  "validation": {
+    "before": {
+      "path": ".cache/multicenter-desert-before.tap",
+      "sha256": "5f048ecad522e1264b6fae368efdf2fec2b267fb3198a45126c583860e8c9100",
+      "pass": 0,
+      "fail": 1,
+      "skipped": 7
+    },
+    "regressionBeforeClockFix": {
+      "path": ".cache/multicenter-regression.tap",
+      "sha256": "40cbf39b808c6ebd09a5eb80c4f3e0a1d088b950eeabe667a309410c60700693",
+      "pass": 63,
+      "fail": 21,
+      "skipped": 0
+    },
+    "focused": {
+      "path": ".cache/multicenter-final.tap",
+      "sha256": "4b5e192b2e74493f0b034d6b125a13b8ba86e30ba17875fab6fea396a608c56e",
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0
+    },
+    "encounterBaseline": {
+      "path": ".cache/multicenter-encounter-baseline.tap",
+      "sha256": "d2d0e5a54c9767f3d53e216471097b39ad954fa10d21cc5330d61c2898f09559",
+      "pass": 2,
+      "fail": 20,
+      "skipped": 0
+    },
+    "encounterFailures": [
+      "terminal Draw recovery retains wounded Home and its GetUp exit age",
+      "the qualified Desert encounter waits for its submitted Retreat before the next substep",
+      "a checkpoint during wounded Home resumes the remaining route and exit phase",
+      "retiring Draw before the Retreat submit leaves the next substep unexecuted with commit in transit",
+      "retiring Draw before the Retreat submit leaves the next substep unexecuted with commit accepted",
+      "encounter recovery waits for both retirements with resources first",
+      "encounter recovery waits for both retirements with draw first",
+      "terminal encounter resumes through a new Draw with early loss claim",
+      "terminal encounter resumes through a new Draw with late loss claim",
+      "terminal Draw loss preserves the acquired approach during Fall",
+      "terminal Draw loss preserves the acquired retreat during Fall",
+      "terminal Draw verifies stationary Fall after RaidEnded",
+      "terminal Draw verifies stationary GetUp after RaidEnded",
+      "wounded Home READY handles preparer closing first",
+      "wounded Home READY handles hold requested first",
+      "wounded Home READY handles an ordinary preparation error",
+      "wounded Home19 READY is recovered with preparer retirement first",
+      "wounded Home19 READY is recovered with production hold first",
+      "a disk checkpoint restores the qualified encounter during Fall and Retreat",
+      "a disk checkpoint restores the qualified encounter during GetUp after Retreat"
+    ]
+  },
+  "hardware": {
+    "receipt": {
+      "path": "D:/wild-guardians-qa/multicenter-desert-nvidia-20261127.json",
+      "sha256": "fdc08b94aaec9b17843232a30b253d545e1b7cc48b81e9ca5e0de8b2eef8c53f"
+    },
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 112.40000000596046
+      }
+    },
+    "birth": {
+      "id": "event-4",
+      "type": "RaidSpawned",
+      "raidFacts": {
+        "id": "raid-1-day",
+        "day": 1,
+        "daytime": true,
+        "elapsed": 0.05,
+        "waveIndex": 0,
+        "pressureFacts": null,
+        "exposedLiving": 0,
+        "exposedWounded": 0,
+        "actors": [
+          {
+            "id": "animal-4",
+            "species": "warthog",
+            "hitsRemaining": 2,
+            "spawn": {
+              "x": 113.18869448991569,
+              "z": 33.294181937769594
+            },
+            "exit": {
+              "x": 114.6269711057283,
+              "z": 35.926929623440714
+            }
+          }
+        ]
+      },
+      "simulationTime": 0.05
+    },
+    "birthPose": [
+      113.18869448991569,
+      33.294181937769594,
+      null,
+      600,
+      2
+    ],
+    "strikePose": [
+      109.3775863647461,
+      23.529573440551758,
+      9.301810810318814,
+      600,
+      2
+    ],
+    "heldReady": [
+      {
+        "requestId": 1,
+        "kind": 26,
+        "ticket": 1,
+        "targetId": 3,
+        "centerId": 3
+      },
+      {
+        "requestId": 2,
+        "kind": 27,
+        "ticket": 3,
+        "targetId": 3,
+        "centerId": 3
+      }
+    ],
+    "firstDraws": [
+      {
+        "ticket": 2,
+        "sequence": 12,
+        "kind": 26,
+        "purpose": "center",
+        "targetId": 3,
+        "centerId": 3,
+        "bodyId": 1,
+        "age": 0
+      },
+      {
+        "ticket": 4,
+        "sequence": 113,
+        "kind": 27,
+        "purpose": "center",
+        "targetId": 3,
+        "centerId": 3,
+        "bodyId": 1,
+        "age": 0
+      },
+      {
+        "ticket": 6,
+        "sequence": 131,
+        "kind": 26,
+        "purpose": "center",
+        "targetId": 3,
+        "centerId": 3,
+        "bodyId": 1,
+        "age": 0
+      },
+      {
+        "ticket": 8,
+        "sequence": 133,
+        "kind": 27,
+        "purpose": "center",
+        "targetId": 3,
+        "centerId": 3,
+        "bodyId": 1,
+        "age": 0
+      },
+      {
+        "ticket": 10,
+        "sequence": 152,
+        "kind": 26,
+        "purpose": "retreat",
+        "targetId": null,
+        "centerId": null,
+        "bodyId": 1,
+        "age": 0
+      }
+    ],
+    "reused": {
+      "root": 483,
+      "geometries": [
+        304,
+        305,
+        306,
+        307
+      ],
+      "attributes": 26
+    },
+    "hits": [
+      {
+        "id": "event-6",
+        "type": "StructureHit",
+        "animalId": "animal-4",
+        "targetId": "structure-3",
+        "presentation": {
+          "elapsed": 17.24999999999976,
+          "x": 109.3775863647461,
+          "z": 23.529573440551758
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": 108,
+          "z": 20,
+          "previousHp": 600,
+          "hp": 580,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": true
+        },
+        "simulationTime": 17.24999999999976
+      },
+      {
+        "id": "event-9",
+        "type": "StructureHit",
+        "animalId": "animal-4",
+        "targetId": "structure-3",
+        "presentation": {
+          "elapsed": 20.0999999999998,
+          "x": 109.3775863647461,
+          "z": 23.529573440551758
+        },
+        "structureHit": {
+          "kind": "center",
+          "x": 108,
+          "z": 20,
+          "previousHp": 580,
+          "hp": 560,
+          "maxHp": 600,
+          "criticalThreshold": 252,
+          "firstHitThisRaid": false
+        },
+        "simulationTime": 20.0999999999998
+      }
+    ],
+    "logicalHits": [
+      {
+        "id": "event-7",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-5",
+        "targetId": "structure-3",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 17.24999999999976,
+          "animal": {
+            "x": 109.3775863647461,
+            "z": 23.529573440551758,
+            "heading": -2.7694777239842967
+          },
+          "target": {
+            "x": 108,
+            "z": 20,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 17.24999999999976
+      },
+      {
+        "id": "event-10",
+        "type": "AnimalLogicalHit",
+        "attackId": "attack-8",
+        "targetId": "structure-3",
+        "species": "warthog",
+        "presentation": {
+          "version": 1,
+          "elapsed": 20.0999999999998,
+          "animal": {
+            "x": 109.3775863647461,
+            "z": 23.529573440551758,
+            "heading": -2.7694777239842967
+          },
+          "target": {
+            "x": 108,
+            "z": 20,
+            "kind": "center",
+            "culture": "mapungubwe",
+            "yaw": 0
+          },
+          "shield": null
+        },
+        "simulationTime": 20.0999999999998
+      }
+    ],
+    "centers": [
+      {
+        "id": "structure-2",
+        "hp": 600
+      },
+      {
+        "id": "structure-3",
+        "hp": 560
+      }
+    ],
+    "absence": {
+      "sequence": 190,
+      "at": 1795777108608.1,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "979a5b31-ce0f-48bd-8c79-0476595172e8/1",
+        "nativeSession": 1,
+        "ticket": 10,
+        "effectiveTime": 21.349999999999817
+      },
+      "clockElapsed": 25.04999999999987,
+      "previous": {
+        "actorId": 4,
+        "bodyId": 1,
+        "executionEpoch": 21.349999999999817,
+        "sequence": 188,
+        "at": 1795777108474.7
+      }
+    },
+    "drain": {
+      "disposed": true
+    }
+  },
+  "cadence": {
+    "accepted": false,
+    "targetFrameMs": 16.666666666666668,
+    "declaredSamples": null,
+    "recordedSamples": 792,
+    "recordedIntervals": 791,
+    "completeHistory": true,
+    "missingPredecessors": 0,
+    "recordedOpportunities": 868,
+    "intervalsAboveTarget": 791,
+    "maxRecordedIntervalMs": 133.400146484375,
+    "topIntervals": [
+      {
+        "at": 1795777108608.1,
+        "intervalMs": 133.400146484375,
+        "drawMs": 5.199951171875,
+        "sequence": 190,
+        "trigger": "raf",
+        "from": 1795777108474.7,
+        "excessOverTargetMs": 116.73347981770833,
+        "previousDrawMs": 2.7001953125,
+        "afterPreviousDrawUntilCurrentStartMs": 130.699951171875
+      },
+      {
+        "at": 1795777100841.4001,
+        "intervalMs": 133.300048828125,
+        "drawMs": 3.599853515625,
+        "sequence": 130,
+        "trigger": "raf",
+        "from": 1795777100708.1,
+        "excessOverTargetMs": 116.63338216145833,
+        "previousDrawMs": 2.699951171875,
+        "afterPreviousDrawUntilCurrentStartMs": 130.60009765625
+      },
+      {
+        "at": 1795777103674.8,
+        "intervalMs": 100,
+        "drawMs": 2.60009765625,
+        "sequence": 150,
+        "trigger": "raf",
+        "from": 1795777103574.8,
+        "excessOverTargetMs": 83.33333333333333,
+        "previousDrawMs": 3.39990234375,
+        "afterPreviousDrawUntilCurrentStartMs": 96.60009765625
+      },
+      {
+        "at": 1795777095913.1,
+        "intervalMs": 38.300048828125,
+        "drawMs": 3.800048828125,
+        "sequence": 99,
+        "trigger": "raf",
+        "from": 1795777095874.8,
+        "excessOverTargetMs": 21.633382161458332,
+        "previousDrawMs": 2.89990234375,
+        "afterPreviousDrawUntilCurrentStartMs": 35.400146484375
+      },
+      {
+        "at": 1795777093779.5,
+        "intervalMs": 38,
+        "drawMs": 2.900146484375,
+        "sequence": 78,
+        "trigger": "raf",
+        "from": 1795777093741.5,
+        "excessOverTargetMs": 21.333333333333332,
+        "previousDrawMs": 3.60009765625,
+        "afterPreviousDrawUntilCurrentStartMs": 34.39990234375
+      },
+      {
+        "at": 1795777095612.6,
+        "intervalMs": 37.800048828125,
+        "drawMs": 2.300048828125,
+        "sequence": 96,
+        "trigger": "raf",
+        "from": 1795777095574.8,
+        "excessOverTargetMs": 21.133382161458332,
+        "previousDrawMs": 4,
+        "afterPreviousDrawUntilCurrentStartMs": 33.800048828125
+      }
+    ],
+    "attribution": "Unattributed: intervals are Host draw-start spacing, drawMs is instrumented host wall time; neither is GPU execution or scanout.",
+    "coverage": "Contiguous recorded history only; this does not establish full-session or physical-presentation coverage."
+  }
+}

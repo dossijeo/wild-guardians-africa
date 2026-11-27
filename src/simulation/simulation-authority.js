@@ -51,7 +51,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -374,10 +374,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(!liveCenterClockArmed||nativeBodies||physicsInitializing||physics?.actorIds.length||!nativeCenterAttackCohort(game)||
       !game.raid?.daytime||game.raid.id!==event.raidFacts?.id||event.simulationTime!==game.elapsed||
       game.raid.animals.length!==1||session.core.wasm.spatial_body_count()!==0)return;
-   const [animal]=game.raid.animals,[center]=game.structures;
+   const [animal]=game.raid.animals;
    if(animal.species!=='warthog'||animal.targetId||animal.status!=='entering')return;
    const selected=targetFor(game,animal,nav);
-   if(selected?.target!==center||selected.shieldId||selected.native||!selected.approach.path?.length)return;
+   if(!selected||selected.shieldId||selected.native||!selected.approach.path?.length||
+      !nativeLiveCenterAttackSite(game,animal,selected.target))return;
    const bodies=createSpatialDynamicBodies(session.core.wasm);
    try{
     const body=bodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
@@ -408,8 +409,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const plan=game.dayPlan;
    if(liveCenterClockArmed||nativeBodies||game.raid||game.result||restoringPhysics||physicsInitializing||physics?.actorIds.length||
       !session.core.wasm.nav_animal_plan_center_birth||game.workers.length||!nativeCenterAttackCohort(game)||
-      !operational(game.structures[0])||
-      !plan||plan.done||plan.group?.length!==1||plan.group[0]!=='warthog')return;
+      !plan||plan.done||plan.group?.length!==1||plan.group[0]!=='warthog'||!nativeLiveCenterRaidCanArm(game,plan))return;
    // The Draw consumer needs the causal clock in its first baseline, while
    // the cohort is still empty. RaidSpawned will add the first route request.
    if(!['committed','unchanged'].includes(planner.commitNativeCausalClock({paused:!!game.pauses.length||!!game.result}).status))

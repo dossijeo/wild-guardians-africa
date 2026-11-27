@@ -69,6 +69,80 @@ function savedAttack() {
 
 const snapshot = savedAttack();
 
+function beforeTwoCenterRaid() {
+  const state = beforeRaid();
+  state.structures.push({...state.structures[0], id:`structure-${state.nextId++}`, x:108, z:20});
+  return state;
+}
+
+test('the native Desert raid keeps the center selected by Game among two intact centers', async () => {
+  const ordinary = await nativeProductionAuthority(beforeTwoCenterRaid(), {chunkKeys});
+  let targetId;
+  try {
+    ordinary.command({kind:'setNavigationView', view});
+    targetId = ordinary.advance().raid.animals[0].targetId;
+    assert.equal(targetId, 'structure-3');
+  } finally {
+    await ordinary.close();
+  }
+
+  let release;
+  const held = new Promise(resolve => { release = resolve; });
+  const acquired = [];
+  const world = await nativeProductionAuthority(beforeTwoCenterRaid(), {chunkKeys, qualifyAnimalCrop:true,
+    onReady(record) { if (record.kind === 'animal-crop-route' && !acquired.length) return held; },
+    onCommit(_record,data) { acquired.push(data.nativeAnimalCropRouteBinding ?? data.nativeAnimalCropStrikeBinding); },
+  });
+  try {
+    world.command({kind:'setNavigationView', view});
+    const born = world.advance().raid.animals[0];
+    assert.equal(born.targetId,targetId);
+    assert.deepEqual([born.x,born.z],[born.spawn.x,born.spawn.z]);
+    await untilProduction(world, () => world.records.some(record => record.kind==='animal-crop-route'));
+    const waiting = world.advance().raid.animals[0];
+    assert.deepEqual([waiting.x,waiting.z,waiting.motionPhase],[born.x,born.z,born.motionPhase]);
+    assert.deepEqual(acquired,[]);
+    release();
+    await untilProduction(world, () => !!acquired[0]);
+    let state = world.snapshot();
+    for (let i=0; i<1000 && state.raid; i++) {
+      state = world.advance();
+      await world.present();
+      assert.deepEqual(world.faults,[]);
+    }
+    assert.equal(state.raid,null);
+    assert.deepEqual(acquired.map(({reference:r}) => [r.kind,r.purpose,r.targetId,r.centerId]),
+      [[26,'center',3,3],[27,'center',3,3],[26,'center',3,3],[27,'center',3,3],[26,'retreat',null,null]]);
+    assert.equal(new Set(acquired.map(({reference}) => reference.bodyId)).size,1);
+    assert.deepEqual(state.structures.map(({id,hp}) => [id,hp]), [['structure-2',600],[targetId,560]]);
+    const hits=state.events.filter(event=>event.type==='AnimalLogicalHit');
+    assert.deepEqual(hits.map(({targetId,attackId})=>[targetId,attackId]),
+      [acquired[1],acquired[3]].map(row=>[targetId,'attack-'+row.attackId]));
+    assert.equal(state.events.filter(event=>event.type==='RaidEnded').length,1);
+  } finally {
+    release();
+    await world.close();
+  }
+});
+
+test('a second center that can collapse within the raid keeps its ordinary defense', async () => {
+  const initial = beforeTwoCenterRaid();
+  initial.structures[1].hp = 160;
+  const world = await nativeProductionAuthority(initial,{chunkKeys,qualifyAnimalCrop:true});
+  try {
+    world.command({kind:'setNavigationView',view});
+    assert.equal(world.host.inspect().nativeCausalClock,null);
+    const born=world.advance().raid.animals[0];
+    assert.equal(born.targetId,'structure-3');
+    assert.notDeepEqual([born.x,born.z],[born.spawn.x,born.spawn.z]);
+    await world.present();
+    assert.deepEqual(world.records,[]);
+    assert.deepEqual(world.faults,[]);
+  } finally {
+    await world.close();
+  }
+});
+
 test('the live Desert raid publishes a pending center approach and keeps the newborn still until GO', async () => {
   const initial = beforeRaid();
   let route, binding, release;

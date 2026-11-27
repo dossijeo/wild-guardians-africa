@@ -784,8 +784,33 @@ export function nativeCenterAttackCohort(state,flightWorker=null){
    state.workers.every(worker=>worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission);
  return state.biome==='desierto'&&state.workers.length<=1&&state.workers.every(worker=>
    worker===flightWorker||worker.status==='home'&&!worker.raidReturn&&!worker.nativeRouteAdmission)&&
-   (state.workers.length>0||state.structures.length===1)&&
-   state.structures[0].kind==='center'&&activeCrops(state.plants).length===0;
+   state.structures[0]?.kind==='center'&&activeCrops(state.plants).length===0&&
+   (state.workers.length>0||state.structures.every(structure=>structure.kind==='center'));
+}
+export function nativeCenterAttackSite(state,target){
+ return !!target&&operational(target)&&(target===state.structures[0]||
+   state.biome==='desierto'&&!state.workers.length&&state.structures.includes(target));
+}
+function animalStructureDamage(animal){
+ return validDamageProfile(animal.damageProfile)?animal.damageProfile.structureDamage:animalSpec(animal.species).structure_hit_damage;
+}
+function centerSurvivesRaid(target,animal){
+ return target.hp-animalStructureDamage(animal)*animal.hitsRemaining>collapseThreshold(target)+1e-9;
+}
+export function nativeLiveCenterRaidCanArm(state,plan){
+ if(!state.structures.some(operational))return false;
+ if(state.structures.length===1)return true;
+ // Arming the empty clock commits Game to native execution at birth.
+ // Cover every possible target until the ordinary selector chooses one.
+ const species=plan.group[0],actor=plan.actors?.[0];
+ const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??animalSpec(species).hit_budget_max};
+ return state.structures.every(center=>center.status==='ruined'||operational(center)&&centerSurvivesRaid(center,animal));
+}
+export function nativeLiveCenterAttackSite(state,animal,target){
+ if(!nativeCenterAttackSite(state,target))return false;
+ if(state.structures.length===1)return true;
+ // The ruin transaction still belongs to the one-center cohort.
+ return centerSurvivesRaid(target,animal);
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
  if(state.biome!=='sabana'||!nativeCenterAttackCohort(state)||state.raid.animals.length!==1||state.raid.animals[0]!==animal)return false;
@@ -830,7 +855,7 @@ export function nativeCropRouteSubject(state,animal,flightWorker=null,native=nul
     !animal.approach||animal.magicDown||(animal.magicStunUntil??0)>state.elapsed||
     animal.hitsRemaining<=0)return null;
  const target=raidTarget(state,animal.targetId);
- if((centerAttack?target!==state.structures[0]:!target?.alive)||animal.reservation!==targetReservationKey(target,animal)||
+ if((centerAttack?!nativeCenterAttackSite(state,target):!target?.alive)||animal.reservation!==targetReservationKey(target,animal)||
     raid.reservations[animal.reservation]!==animal.id)return null;
  const shield=spellAt(state,'shield',target),contact=native?.shieldContact;
  const pendingRemoval=!shield&&contact&&state.spells.some(spell=>spell.kind==='shield'&&spell.id===contact.id&&spell.remaining<=1e-9&&
@@ -1063,7 +1088,7 @@ export function updateRaid(s,dt,nav) {
               }
             }
             else {
-              const previousHp=target.hp;hitStructure(target,validDamageProfile(a.damageProfile)?a.damageProfile.structureDamage:animalSpec(a.species).structure_hit_damage,s.elapsed,s);
+              const previousHp=target.hp;hitStructure(target,animalStructureDamage(a),s.elapsed,s);
               const hitIds=s.raid.attackedStructureIds??=[],firstHitThisRaid=target.hp<previousHp&&!hitIds.includes(target.id);
               if(firstHitThisRaid){hitIds.push(target.id);s.raid.attackedStructureIds=hitIds;}
               emit(s,'StructureHit',{animalId:a.id,targetId:target.id,presentation:{elapsed:s.elapsed,x:a.x,z:a.z},structureHit:{kind:target.kind,...(target.kind==='wall'?{material:target.material}:{}),x:target.x,z:target.z,previousHp,hp:target.hp,maxHp:target.maxHp,
