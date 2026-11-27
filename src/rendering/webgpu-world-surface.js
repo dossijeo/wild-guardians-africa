@@ -845,9 +845,10 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const workerTask=members.length===1&&([14,15,16,17].includes(members[0].profile.kind)||members[0].profile.stopProjectionMatches);
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||workerTask||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
+    let recoveredFarmGatesCurrent=()=>true;
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&
-      replayMatches&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
+      replayMatches&&recoveredFarmGatesCurrent()&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
        !members.every(member=>member.execution.executedThrough===at&&(member.crop?roster:workers))||ownerSignal?.aborted||!current())
@@ -874,7 +875,16 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           await workers.prepareRecoveredTaskSettlement(input,support,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getSettlementElapsed(reference)});
         }else if(profile.stopProjectionMatches){
+          const gates=profile.kind===24&&resources.farmTemplate.gates.length?
+            settlements.recoveredFarmGateOwners(resources,{
+              getStoppedProjection:(selector,epoch)=>nativePickFrame.getStoppedGate(selector,epoch)
+            }):null;
+          if(gates){
+            await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gates.current);
+            recoveredFarmGatesCurrent=gates.current;
+          }
           await workers.prepareRecoveredStoppedWorker({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
+            ...(gates?{prepareGateParticipants:gates.prepare}:{}),
             getProjection:(selector,epoch)=>nativePickFrame.getStoppedBody(selector,epoch)});
         }else if(profile.kind===21){
           const support=terrainSupport.prepareNativeIdleCycle(ref);

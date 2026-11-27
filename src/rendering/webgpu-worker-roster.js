@@ -353,9 +353,10 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         }
       }
       const routeSupport={...support,valid:()=>support.valid()&&foot.valid(),presentation:{...support.presentation,kind:'native-route-presentation',
-        version:1,nativeRoute:proof.bodyReference.nativeRoute,executionScope:'canonical-native',nativeCrossingAdmitted:false}};
+        version:1,nativeRoute:proof.bodyReference.nativeRoute,executionScope:'canonical-native',nativeCrossingAdmitted:false,gates:[]}};
       return prepareWorkerRoute(actorId,routeSupport,{...options,getPickTime:()=>options.getProjection(ref.selector,ref.epoch).at},
-        {resources:validated,current,stopped:{support,foot,getProjection:()=>options.getProjection(ref.selector,ref.epoch)},
+        {resources:validated,current,stopped:{support,foot,gateCount:farm?proof.proof.reference.gates.length:0,
+          getProjection:()=>options.getProjection(ref.selector,ref.epoch)},
         binding:{[farm?'nativeHeldFarmArrival':stroll?'nativeHeldIdleStroll':'nativeHeldTaskRoute']:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
     }
     function recoveredStoppedWorkerCurrent(actorId,ref,profile){
@@ -402,7 +403,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
     candidate={actor,motion,variant,binding,packet,support,crateId,...recovery?.binding,preparedRun:needsRunning,preparedIdle:needsIdle,nativeRoute:packet.nativeRoute,start:recovery?.stopped?recovery.binding.suspended.suspendedAt:packet.startTime,end:recovery?.stopped?Number.MAX_SAFE_INTEGER:packet.endTime};
    }catch(error){binding?.dispose();variant?.dispose();motion.dispose();throw error;}
    candidate.gateParticipants=[];
-   if(packet.gates.length){if(typeof prepareGateParticipants!=='function'||typeof pipelineAdmission.prepareManyAndPublish!=='function')throw Error('Native gate resource admission unavailable');candidate.gateParticipants=prepareGateParticipants({packet,motion,getPickTime,signal:controller.signal});check();if(!Array.isArray(candidate.gateParticipants)||candidate.gateParticipants.length!==packet.gates.length)throw Error('Incomplete native gate resource preparation');}
+   const gateCount=recovery?.stopped?.gateCount??packet.gates.length;
+   if(gateCount){if(typeof prepareGateParticipants!=='function'||typeof pipelineAdmission.prepareManyAndPublish!=='function')throw Error('Native gate resource admission unavailable');candidate.gateParticipants=prepareGateParticipants({packet,motion,getPickTime,signal:controller.signal});check();if(!Array.isArray(candidate.gateParticipants)||candidate.gateParticipants.length!==gateCount)throw Error('Incomplete native gate resource preparation');}
    const options={signal:controller.signal,include:variant.materialAlternatives.map(item=>item.mesh),materialAlternatives:binding.materialAlternatives()};
    const publish=()=>{
     check();if(!variant.valid()||!binding.canActivate())throw new DOMException('Native worker materials changed','AbortError');

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import {MessageChannel} from 'node:worker_threads';
 import {Group,Matrix4,DoubleSide,PerspectiveCamera} from 'three';
 import {createWebGpuPipelineAdmission} from '../src/rendering/webgpu-pipeline-admission.js';
 import {MeshStandardNodeMaterial} from 'three/webgpu';
@@ -19,6 +20,9 @@ import {cropSpec} from '../src/simulation/rules.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {copyStop24Resources,stop24GateSamplesMatch,stop24ProjectionMatches,stopFields} from '../src/world/native-stop24-task-recovery.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
+import {createWebGpuAdmittedWall} from '../src/rendering/webgpu-wall-admission.js';
 
 async function gateRouteAuthority(home,{configure=()=>{},...options}={}){
   const origin=nativeFarmArrivalRouteFixture({peer:false}),state=structuredClone(origin.state);origin.close();
@@ -117,8 +121,144 @@ for(const [scenario,{gateCount,maturity,taskReady,stoppedGateIds}] of Object.ent
    assert.equal(after.workers[0][field],cut.workers[0][field],field);
   }
   assert.deepEqual(f.faults,[]);
+  await replaceStoppedFarm(f,task,releaseTask,frame);
  }finally{releaseStop();releaseTask();await f.close();}
 });
+
+async function replaceStoppedFarm(f,task,releaseTask,oldFrame){
+ const holding=f.authority.quiesceNativeIntentProduction({forLostDraw:true});
+ f.gpu.device.destroy();f.retireResourceEndpoint();releaseTask();
+ const hold=await holding;
+ if(task)assert(task.aborted&&!task.committed);
+ await untilProduction(f,()=>f.authority.nativeIntentControlStatus().current?.drained);
+ const terminal=await f.authority.flushNativeResourcePreparation({allowRetired:true,forLostDraw:true});
+ assert(terminal.terminal&&terminal.callbacksSettled);
+ const route=await f.authority.terminalWorkerRoute();
+ assert.deepEqual(route,{kind:24,actorId:900011});
+ const ports=new MessageChannel();
+ const replacement=await fixture({capabilities:{nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,
+   nativeTaskStartVersion:1,nativeTaskActionVersion:1,nativeTaskActionClockVersion:1,nativeInitialIdleBodyVersion:1,
+   nativeIdleCycleVersion:1,nativeIdleStrollVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
+   {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+ let attached=false,rig,admission;
+ const walls=[];
+ try{
+  const {recoveredWorkerRoute:{resources,execution}}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
+  const {client,host,pipeline}=replacement,{binding:proof,executedThrough:at}=execution,ref=proof.reference;
+  const previousBody=oldFrame.bindings.find(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-body');
+  const previousMotors=oldFrame.bindings.filter(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-gate');
+  assert.deepEqual(proof.reference.worldBoundary,oldFrame.worldBoundary);
+  if(proof.settledGates?.length){
+   const [gate]=proof.settledGates;
+   assert.throws(()=>copyStop24Resources({...resources,stoppedTaskBinding:{...proof,settledGates:[]}}),/lost a gate owner/);
+   assert.throws(()=>copyStop24Resources({...resources,stoppedTaskBinding:{...proof,
+     settledGates:[{...gate,opening:gate.opening===1?0:1}]}}),/lost its admitted Farm table/);
+  }
+
+  const view=f.snapshot(),payloads=new Map();
+  f.authority.publishResidentTerrainForQa(chunk=>payloads.set(chunk.cx+','+chunk.cz,chunk));
+  let currentChunk;
+  const session={core:{selectChunk(x,z){currentChunk=payloads.get(x+','+z);assert(currentChunk);},chunkPayload:()=>currentChunk}};
+  const [worker]=view.workers;
+  rig=await nativeWorkerGraphicsFixture({state:view,worker,actor:worker.id,session,close(){}},
+    {clips:['Walk_Skip','Idle'],idle:true});
+  admission=createWebGpuPipelineAdmission({renderer:{...rig.renderer,compileAsync:async()=>{}},
+    scene:rig.scene,camera:new PerspectiveCamera()});
+  rig.admission.prepareManyAndPublish=admission.prepareManyAndPublish.bind(admission);
+  for(const motor of resources.farmTemplate.gates){
+   const entity=view.structures.find(row=>row.id===motor.entityId),prototype=gateMeshPrototype(entity.material);
+   prototype.material.dispose();prototype.material=new MeshStandardNodeMaterial({side:DoubleSide});
+   const wall=createWebGpuAdmittedWall({entity,elapsed:at,prototypes:{[entity.material+'_puerta']:prototype},pipelineAdmission:rig.admission});
+   walls.push({wall,prototype,motor,entity});
+   const scale={adobe:1.4,piedra:1.4,reforzado:1.6}[entity.material]??1;
+   new Matrix4().fromArray(motor.rootMatrix).decompose(wall.group.position,wall.group.quaternion,wall.group.scale);
+   wall.group.scale.divideScalar(scale);wall.group.scale.x/=entity.baseScaleX??1;
+   rig.scene.add(wall.group);
+  }
+  await new Promise(resolve=>setImmediate(resolve));
+  for(const {wall,motor,entity} of walls){
+   assert(wall.recoveredFarmGateCurrent(motor,entity.gateOpen));
+   assert(!wall.recoveredFarmGateCurrent(motor,entity.gateOpen===1?0:1));
+  }
+  const pickFrame=()=>captureNativeRoutePickFrame(host.inspect()),prepared=proof.proof.preparedReference;
+  await rig.roster.prepareRecoveredStoppedWorker({resources,execution,terrain:rig.terrain,terrainManifest:rig.manifest},{
+   isCurrent:()=>true,getProjection:(selector,epoch)=>pickFrame().getStoppedBody(selector,epoch),
+   prepareGateParticipants:({signal})=>previousMotors.map(gate=>{
+    const {wall,motor,entity}=walls.find(({motor})=>motor.gateId===gate.nativeStopped.gateId);
+    const epoch=prepared.worldBoundary.effectiveTime;
+    const presentation={...motor,worldBoundary:prepared.worldBoundary,startTime:epoch,endTime:epoch,
+      rows:Float64Array.of(epoch,entity.gateOpen)};
+    const motion=createNativeGateGpuClock(presentation,{stopTemplate:prepared,recoveredStop:proof.proof,
+      getStoppedProjection:(selector,at)=>pickFrame().getStoppedGate(selector,at)});
+    return wall.prepareNativeGate({presentation,motion,getPickTime:()=>epoch,signal,recoveredStop:true});
+   }),
+  });
+  assert.equal(walls.filter(({wall})=>wall.nativeGateLease).length,previousMotors.length);
+  assert.deepEqual(rig.errors,[]);
+
+  const body=client.device.createBuffer({size:40,usage:72});
+  client.device.queue.writeBuffer(body,0,new Float32Array(10));
+  const clock={nativeStopped:ref.selector,epoch:ref.epoch,resourceEnd:Number.MAX_SAFE_INTEGER};
+  client.registerClockBinding(body,{...clock,byteOffset:0,semantic:'relative'});
+  for(const [i,stopField] of stopFields.entries())
+   client.registerClockBinding(body,{...clock,byteOffset:(i+1)*4,semantic:'stop-value',stopField});
+  const motors=previousMotors.map(({nativeStopped,epoch,semantic,stopField})=>{
+   const buffer=client.device.createBuffer({size:4,usage:72});
+   client.device.queue.writeBuffer(buffer,0,new Float32Array([0]));
+   client.registerClockBinding(buffer,{nativeStopped,epoch,semantic,stopField,byteOffset:0,resourceEnd:Number.MAX_SAFE_INTEGER});
+   return buffer;
+  });
+  function draw(gates){
+   const group=client.device.createBindGroup({entries:[body,...gates].map((buffer,binding)=>({binding,resource:{buffer}}))});
+   client.beginFrame({nativeWorldBoundary:ref.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}});
+   const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{
+    view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
+   pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
+   return client.endFrame();
+  }
+  async function present(gates){
+   const frame=draw(gates);frame.catch(()=>{});await flush();await host.idle();host.present();await frame;
+  }
+  if(motors.length)await assert.rejects(draw(motors.slice(1)),/Replacement requires its bound worker clock/);
+  await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
+  await present(motors);
+  const witness=await f.authority.checkHeldDraw(30,hold,route);
+  assert(stop24ProjectionMatches(witness,proof));
+  assert.deepEqual(witness.projection,previousBody.projection);
+  assert(stop24GateSamplesMatch(witness.stoppedGates??[],proof));
+  const picker=captureNativeRoutePickFrame(host.inspect());
+  for(const gate of previousMotors){
+   const picked=picker.getStoppedGate(gate.nativeStopped,gate.epoch);
+   assert.equal(picked.opening,gate.opening);
+   const {wall}=walls.find(({motor})=>motor.gateId===gate.nativeStopped.gateId);
+   assert.equal(wall.parts[0].mesh.parent.nativeGpuGate.sampleOpening(gate.epoch),gate.opening);
+  }
+  if(motors.length){
+   await present(motors.slice(1));
+   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
+   await present(motors);
+   assert(stop24GateSamplesMatch((await f.authority.checkHeldDraw(30,hold,route)).stoppedGates,proof));
+  }
+  await f.attachRecoveredResources(replacement);attached=true;
+  assert(f.authority.resumeNativeIntentProduction(hold));
+  if(task){
+   const successor=()=>f.records.find(record=>record.kind==='task-start'&&record.committed);
+   await untilProduction(f,successor);
+   assert.equal(successor().resources.bodyId,1);
+   assert(successor().resources.worldBoundary.ticket>task.resources.worldBoundary.ticket);
+  }
+  const resumed=f.advance(.025);
+  assert(resumed.elapsed>at);
+  assert.equal(resumed.workers[0].id,worker.id);
+  assert.deepEqual(f.faults,[]);
+ }finally{
+  admission?.dispose();
+  for(const {wall,prototype} of walls){wall.dispose();prototype.material.dispose();prototype.geometry.dispose();}
+  rig?.close();
+  if(!attached){replacement.client.dispose();await replacement.host.dispose();}
+  if(!attached){ports.port1.close();ports.port2.close();}
+ }
+}
 
 test('the ordinary Home18 checkpoint reacquires the same gate opening and reproduces the crossing',async()=>{
  const source=await gateRouteAuthority(true,{nativeWorkerLifecycle:true});

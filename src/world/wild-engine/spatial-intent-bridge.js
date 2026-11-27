@@ -1,4 +1,4 @@
-import {sameStop12Source,sameStop24Source} from "../native-stop24-task-recovery.js";
+import {farmStopGatePlateau,sameStop12Source,sameStop24Source} from "../native-stop24-task-recovery.js";
 import {copyTask25HomeSource,sameTask25HomeSource} from '../native-task25-home-recovery.js';
 import {copyNativeTaskStartProposal} from '../native-task-start-presentation.js';
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
@@ -2543,7 +2543,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeWorkerRouteStopProposal(kind,sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
       binding(reference,preparedReference){
         const proof=nativeWorkerRouteStopBinding(kind,reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});
-        if(proof&&proof.reference.routes.length===1&&!proof.reference.gates.length){
+        if(proof&&proof.reference.routes.length===1&&(kind===24||!proof.reference.gates.length)){
           const revoked=readIntentChanges(stopControlFloor).find(change=>change.type==='RouteInvalidated'&&change.actorId===actor&&
             change.state===4&&change.effectiveTime===proof.reference.worldBoundary.effectiveTime&&
             JSON.stringify(change.revokedRouteHandle)===JSON.stringify(proof.reference.sourceRoute.routeHandle));
@@ -2583,7 +2583,28 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return {...value,request,
       pose:{x:p[0],z:p[1],yaw:p[4],radius:q.pose.radius,runPhase:p[9],walkPhase:p[10],carryPhase:p[11],runRemaining:p[14]}};
   };
-  const stoppedFarmTaskRecovery=actor=>stoppedTaskRecovery(committedWorkerFarmStop,actor);
+  const stoppedFarmTaskRecovery=actor=>{
+    const source=stoppedTaskRecovery(committedWorkerFarmStop,actor);
+    if(!source||!source.farm.gateIds.length)return source;
+    const {proof,farm,farmTemplate}=source,{worldBoundary,gates}=proof.reference;
+    const at=nativeCausalClock().committedThrough,settledGates=[];
+    if(farmTemplate.gates.length!==farm.gateIds.length||gates.some(gate=>!farm.gateIds.includes(gate.gateId)))return null;
+    for(const motor of farmTemplate.gates){
+      const pose=nativeGateMechanismPose(motor.entityId),wall=owningState.structures.find(s=>s.id===motor.entityId);
+      if(!farm.gateIds.includes(motor.gateId)||!wall?.gate||wall.status!=='intact'||wall.hp!==wall.maxHp||wall.wallPresentation||
+         !pose||pose.nativeSession!==worldBoundary.nativeSession||pose.authorityEpoch!==worldBoundary.authorityEpoch||
+         pose.sampledAt!==at||pose.opening!==wall.gateOpen||pose.mechanism!==motor.mechanism||pose.modelId!==motor.modelId||
+         !motor.rootMatrix.every((value,i)=>value===pose.rootMatrix[i]))return null;
+      const index=gates.findIndex(gate=>gate.gateId===motor.gateId);
+      if(index>=0){
+        if(gates[index].mechanism!==pose.mechanism||proof.projection.gateEffects.rows[index*3+2]!==pose.opening)return null;
+      }else{
+        if(!farmStopGatePlateau(motor,farm,worldBoundary.effectiveTime,pose.opening))return null;
+        settledGates.push({gateId:pose.gateId,mechanism:pose.mechanism,opening:pose.opening});
+      }
+    }
+    return {...source,settledGates};
+  };
   const stoppedStrollTaskRecovery=actor=>stoppedTaskRecovery(committedStrollStop,actor);
   const stoppedTaskHomeRecovery=actorId=>{
     const source=committedTaskStop,clock=nativeCausalClock(),world=nativeWorldBoundary();
@@ -3921,7 +3942,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         Object.assign(worker,{nativeRouteAdmission:'pending-farm-flight-stop',running:execution.running,gateWaiting:execution.currentSpeed===0});
         restoredFarmFlight=null;
       }else projectNativeFarmArrivalRouteExecution(state,worker,{nativeFarmArrivalRouteExecution});
-      const binding=nativeFarmArrivalRouteBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=copyNativeFarmArrivalRouteResources({version:1,kind:23,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeFarmArrivalBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});preparedFarmForStop=state.workers.length===1&&!state.raid&&!binding.gateIds.length?{assignmentSequence:binding.assignmentSequence,template:preparedFarmTemplate}:null;
+      const binding=nativeFarmArrivalRouteBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=copyNativeFarmArrivalRouteResources({version:1,kind:23,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeFarmArrivalBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});preparedFarmForStop=state.workers.length===1&&!state.raid?{assignmentSequence:binding.assignmentSequence,template:preparedFarmTemplate}:null;
       mark({resources,nativeRoute,nativeFarmArrivalBinding:binding});return {status:1,value:{resources,nativeRoute,nativeFarmArrivalBinding:binding}};
     },prepareResources,signal,protocol);
   };

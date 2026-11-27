@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+En Stop24, el sustituto vuelve a presentar el mismo trabajador y los motores detenidos de hasta dos portones. NVIDIA confirmó el picking y la reanudación bajo el mismo corte antes de drenar. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-del-draw-con-los-motores-detenidos).
+
 Stop12 conserva el cuerpo detenido de Idle22 cuando se pierde Draw con Task14 pendiente. NVIDIA confirmó el picking del sustituto y la readmisión de Task14 en el mismo cuerpo con un solo riego. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-stop12-adquirido-y-task14-pendiente).
 
 Task25 conserva el cuerpo detenido al perder Draw mientras espera Home18. NVIDIA confirmó el picking del sustituto, el regreso por el mismo cuerpo y su retirada en Home19 al final del turno. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-task25-adquirido-y-home18-pendiente).

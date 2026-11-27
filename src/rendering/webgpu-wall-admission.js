@@ -139,9 +139,28 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   const current=binding?.captureRemoval(reference)??(()=>wall.nativeGpuGate==null);
   return ()=>!closed&&!gatePreparation&&slot.upToDate&&slot.active===wall&&(wall.nativeGpuGate??null)===binding&&current();
  }
- function prepareNativeGate({presentation,motion,getPickTime,signal}){
+ function recoveredFarmGateCurrent(presentation,opening){
+  const wall=slot.active,part=wall?.parts[0],mesh=part?.mesh;
+  if(closed||!slot.upToDate||!wall?.gate||wall.entityId!==presentation.entityId||
+     wall.lastStatus!=='intact'||wall.visual!==1||wall.gateOpen!==opening||
+     wall.parts.length!==1||!mesh?.visible||!wall.visible||
+     presentation.modelId!==({zarzas:1,empalizada:2,reforzado:3}[wall.nativeGateMaterial])||
+     presentation.positions.length!==part.bridge.pos.length||presentation.leafFlags.length!==part.bridge.leafFlags?.length||
+     presentation.positions.some((value,i)=>Math.abs(value-part.bridge.pos[i])>1e-6)||
+     presentation.leafFlags.some((value,i)=>value!==part.bridge.leafFlags[i]))return false;
+  mesh.updateWorldMatrix(true,false);
+  return mesh.matrixWorld.elements.every((value,i)=>Math.abs(value-presentation.rootMatrix[i])<=1e-5);
+ }
+ function prepareNativeGate({presentation,motion,getPickTime,signal,recoveredStop=false}){
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
-  const resident=slot.active?.nativeGpuGate;if(motion.stoppedSelector){if(!resident)throw Error('Native stopped gate has no resident source');resident.captureRetention(presentation,presentation.worldBoundary);}
+  const resident=slot.active?.nativeGpuGate;
+  if(recoveredStop){
+   if(resident||!motion.stoppedSelector||!motion.readyToCommit()||!recoveredFarmGateCurrent(presentation,presentation.rows[1]))
+     throw Error('Recovered stopped gate has no exact replayed wall');
+  }else if(motion.stoppedSelector){
+   if(!resident)throw Error('Native stopped gate has no resident source');
+   resident.captureRetention(presentation,presentation.worldBoundary);
+  }
   const wall=slot.active,binding=createNativeGateGpuBinding({wall,presentation,motion,getPickTime,presentationClock,getPresentationTime});let previous=wall.nativeGpuGate??wall.nativeGpuRepair??null;
   let finished=false,activated=false;
   const current=()=>!closed&&!finished&&!signal?.aborted&&gatePreparation===participant&&slot.upToDate&&slot.active===wall&&(activated?binding.current():binding.canActivate());
@@ -162,5 +181,5 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');if(motion.stoppedSelector&&!motion.readyToCommit())throw Error('Native stopped gate lacks its final receipt');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
- return {group:slot.group,initialParticipant,update,prepareNativeRepair,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
+ return {group:slot.group,initialParticipant,update,prepareNativeRepair,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,recoveredFarmGateCurrent,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
 }

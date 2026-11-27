@@ -1,4 +1,4 @@
-import {stopFields} from "../world/native-stop24-task-recovery.js";
+import {stop24GateClockMatches,stop24GateSamplesMatch,stopFields} from "../world/native-stop24-task-recovery.js";
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {submittedRecoveryPose} from './remote-recovery-pose.js';
@@ -934,9 +934,13 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             recoveryGateMatches(b,id,ref.worldBoundary)&&b.elapsed===row.elapsed));
           if(!gates.every(Boolean))return null;
           const samples=gates.map(gate=>({nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}));
+          const stoppedGates=profile.kind===24?proof.proof.reference.gates.map(gate=>
+            nativeRouteFrame.bindings.find(binding=>stop24GateClockMatches(binding,gate,proof))):[];
+          if(stoppedGates.length&&!stop24GateSamplesMatch(stoppedGates,proof))return null;
           return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
             ...(inherited?{phaseDelay}:{}),
             ...(profile.stopProjectionMatches?{projection:row.projection,bodyReference:row.bodyReference}:{}),
+            ...(stoppedGates.length?{stoppedGates}:{}),
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
         if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
@@ -1292,11 +1296,16 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function admitClockBindings(packet,preparing=false){
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(recovered) {
-      const missing=recovered.members.find(({profile,ref,gateIds})=>{
+      const missing=recovered.members.find(({profile,ref,gateIds,proof})=>{
         const stopped=!!profile.stopProjectionMatches,epoch=stopped?ref.epoch:ref.worldBoundary.effectiveTime;
         if(stopped&&(!preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch)||
            stopFields.some(field=>!preparedBindings.some(b=>b.semantic==='stop-value'&&b.stopField===field&&b.epoch===epoch&&
              profile.sameReference(b.nativeStopped,ref)))))return true;
+        if(profile.kind===24){
+          const stoppedGates=proof.proof.reference.gates;
+          if(stoppedGates.some(gate=>!preparedBindings.some(binding=>stop24GateClockMatches(binding,gate,proof)))||
+             preparedBindings.some(binding=>proof.farm.gateIds.includes(binding.nativeGate?.gateId)))return true;
+        }
         const end=stopped?Number.MAX_SAFE_INTEGER:[15,17,21].includes(profile.kind)?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
           profile.kind===21&&ref.sourceCycleSequence!==0&&!preparedBindings.some(b=>recoveredIdleOffsetMatches(b,ref)&&b.epoch===epoch)||
@@ -2400,6 +2409,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime&&(row.kind!==24||JSON.stringify(b.projection)===JSON.stringify(row.projection)))&&
               (row.phaseDelay===undefined||nativeRouteFrame.bindings.some(b=>recoveredIdleOffsetMatches(b,row[profile.clockField])&&
                 b.phaseDelay===row.phaseDelay))&&
+              (row.stoppedGates??[]).every(gate=>nativeRouteFrame.bindings.some(b=>
+                b.opening===gate.opening&&sameNativeWorldBoundary(b.worldBoundary,gate.worldBoundary)&&
+                b.nativeStopped&&nativeStoppedClockKey(b)===nativeStoppedClockKey(gate)))&&
               recoveredNativeGateSamples(row).every(gate=>nativeRouteFrame.bindings.some(b=>
                 recoveryGateMatches(b,gate.nativeGate.gateId,gate.nativeGate.worldBoundary)&&b.elapsed===gate.gateElapsed));
           })

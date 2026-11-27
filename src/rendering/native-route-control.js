@@ -1169,7 +1169,8 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
             ...(home?{taskStopBodyId:ref.bodyId}:kind===12?{issuedStroll:predecessor,strollAdmitted:true}:
               {issuedFarmArrival:predecessor,farmArrivalAdmitted:true})};
           actor.proof=proof.bodyReference;
-          actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),null);
+          actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),
+            kind===24?projection.gateEffects.rows:null);
         };
       }
       if(kind===27){

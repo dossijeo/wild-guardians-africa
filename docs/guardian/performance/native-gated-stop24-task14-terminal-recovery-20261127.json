@@ -1,0 +1,225 @@
+{
+  "base": "7b874fc8a8b702fbc93f6e0024daf52119100513",
+  "regressions": {
+    "passed": 74,
+    "failed": 0,
+    "skipped": 0,
+    "sha256": "8373a4017a00c845e19dcd42982579b0497742cae8b30ce7c98f1ecc9db10954"
+  },
+  "captures": [
+    {
+      "gateCount": 1,
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "publicSave": {
+        "sha256": "d4b89637f26440a6733fb6b9dee3102f7609fcfcf48ed6dafe82542c8360397c",
+        "biome": "desierto",
+        "elapsed": 10,
+        "workerLifecycle": 1
+      },
+      "raw": {
+        "filename": "nvidia-one-native-profile.json",
+        "sha256": "b931a3f40d58f1392e80057a282cb718b91fff66f87ce2ccccab57965ec134cb"
+      },
+      "loss": {
+        "priorFrame": 52,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "5dbdf111-a4ed-48b8-8e79-05c6a5b9c8e2/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 12.549999999999946
+        },
+        "body": 1,
+        "task": {
+          "stage": "Task14 held",
+          "id": 3,
+          "ticket": 5
+        },
+        "aborted": {
+          "stage": "Task14 cancelled",
+          "id": 3
+        }
+      },
+      "replacement": {
+        "holdId": 36,
+        "at": 13.149999999999933,
+        "frame": 1,
+        "ordinaryFrameBetweenFences": 4,
+        "publication": 201,
+        "fences": [
+          {
+            "id": 1,
+            "frame": 1,
+            "body": 1
+          },
+          {
+            "id": 2,
+            "frame": 1,
+            "body": 1
+          }
+        ],
+        "motors": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 1
+          }
+        ],
+        "picking": {
+          "stage": "replacement held pick",
+          "actorId": "worker-900011",
+          "pose": {
+            "x": -13.949600219726562,
+            "z": 9.694641344984092,
+            "yaw": 3.141592653589793,
+            "radius": 0.28,
+            "runPhase": 23.25,
+            "walkPhase": 10.049999999999919,
+            "carryPhase": 9.5,
+            "runRemaining": 40
+          },
+          "ground": 17.507015228271484,
+          "publication": 201,
+          "frameSequence": 4,
+          "attempts": [
+            {
+              "height": 1,
+              "coordinate": {
+                "x": 0,
+                "y": -3.0251356919237974e-16
+              },
+              "entityId": "worker-900011",
+              "hitPoint": {
+                "x": -13.875991965417116,
+                "y": 18.591138947482396,
+                "z": 9.810311458899063
+              }
+            }
+          ]
+        }
+      },
+      "resumed": {
+        "at": 13.399999999999928,
+        "ticket": 7,
+        "taskBody": 1,
+        "idleAt": 36.050000000000445,
+        "exitDrained": true,
+        "unexpectedErrors": []
+      }
+    },
+    {
+      "gateCount": 2,
+      "device": {
+        "vendor": "nvidia",
+        "architecture": "turing"
+      },
+      "publicSave": {
+        "sha256": "3ff7fac09f4ad38eec39a3e6ce4eeb8e7005bb27ce33a89f235005b392989c25",
+        "biome": "desierto",
+        "elapsed": 10,
+        "workerLifecycle": 1
+      },
+      "raw": {
+        "filename": "nvidia-two-blocked.json",
+        "sha256": "a3c19da7b87e2973aa94aba88efbb9543f5d56ea03b449a61af8d951f4dd2249"
+      },
+      "loss": {
+        "priorFrame": 54,
+        "boundary": {
+          "version": 1,
+          "authorityEpoch": "948a181b-148b-4830-aca1-14d21e486ff4/1",
+          "nativeSession": 1,
+          "ticket": 4,
+          "effectiveTime": 12.599999999999945
+        },
+        "body": 1,
+        "task": {
+          "stage": "Task14 blocked before READY",
+          "elapsed": 12.699999999999942,
+          "source": "[{\"kind\":\"native-task-route-request-handle\",\"authorityEpoch\":\"948a181b-148b-4830-aca1-14d21e486ff4/1\",\"session\":1,\"slot\":0,\"generation\":5},5,{\"bodyId\":1,\"radius\":0.28,\"urgent\":false,\"runRemaining\":40,\"runPhase\":23.25,\"walkPhase\":10.124999999999918,\"carryPhase\":9.5}]"
+        }
+      },
+      "replacement": {
+        "holdId": 36,
+        "at": 13.049999999999935,
+        "frame": 1,
+        "ordinaryFrameBetweenFences": 6,
+        "publication": 203,
+        "fences": [
+          {
+            "id": 1,
+            "frame": 1,
+            "body": 1
+          },
+          {
+            "id": 2,
+            "frame": 1,
+            "body": 1
+          }
+        ],
+        "motors": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 1
+          },
+          {
+            "gateId": 1000001,
+            "mechanism": 2,
+            "opening": 0
+          }
+        ],
+        "picking": {
+          "stage": "replacement held pick",
+          "actorId": "worker-900011",
+          "pose": {
+            "x": -13.949600219726562,
+            "z": 9.640641344984093,
+            "yaw": 3.141592653589793,
+            "radius": 0.28,
+            "runPhase": 23.25,
+            "walkPhase": 10.124999999999918,
+            "carryPhase": 9.5,
+            "runRemaining": 40
+          },
+          "ground": 17.507015228271484,
+          "publication": 203,
+          "frameSequence": 6,
+          "attempts": [
+            {
+              "height": 1,
+              "coordinate": {
+                "x": 0,
+                "y": 0
+              },
+              "entityId": "worker-900011",
+              "hitPoint": {
+                "x": -13.875854535560476,
+                "y": 18.5912960101757,
+                "z": 9.756527420102357
+              }
+            }
+          ]
+        }
+      },
+      "resumed": {
+        "at": 13.24999999999993,
+        "ticket": 4,
+        "taskBody": null,
+        "idleAt": null,
+        "exitDrained": true,
+        "unexpectedErrors": []
+      }
+    }
+  ],
+  "initialProfileContrast": {
+    "raw": "nvidia-one-diagnostic.json",
+    "sha256": "2dc396ff399fa313d46c49fb37592cb67c520e447d20d9e68afa2a0f069a33c7",
+    "lastStage": "Native resource preparer closed",
+    "configuration": "ordinary-start seed without saved native worker lifecycle flag"
+  },
+  "limits": "With one gate, hardware held the Task14 request before READY and then reacquired Task14. With two, the fixture was already blocked before READY and resumed with the same stopped actor. Deterministic Host tests cover held READY with two gates, missing motor on the final fence, and partial-opening and settled gates."
+}
