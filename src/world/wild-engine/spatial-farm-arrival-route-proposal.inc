@@ -75,7 +75,7 @@ static int proveColdFarmGateCut(IntentState& s,const ActiveIntent& intent,
     start<0||start>=s.effectiveTime||!coordinate(data[1])||!coordinate(data[2])||
     data[4]<0||data[5]<0||data[6]<0||data[7]<0||!(data[8]==0||data[8]==1)||
     !integer(gateId)||gateFrom<0||gateFrom>=1||gateTarget!=1||
-    gateAt<start||gateAt>s.effectiveTime||gateEnd<=s.effectiveTime||routeEnd<gateEnd||
+    gateAt<start||gateEnd<=gateAt||routeEnd<gateEnd||s.effectiveTime>=routeEnd||
     !(data[15]==0||data[15]==1))return -2;
  const auto found=s.gates.find(uint64_t(gateId));
  if(found==s.gates.end()||!found->second.mesh||!found->second.defined||found->second.status!=0||
@@ -99,6 +99,7 @@ static int proveColdFarmGateCut(IntentState& s,const ActiveIntent& intent,
  if(proof!=1)return proof;
  const auto& route=draft.route;
  if(route.gateReservations.size()!=1||route.gateReservations.front()!=uint64_t(gateId)||
+    route.holds.size()!=1||route.holds.front().from!=gateAt||route.holds.front().until!=gateEnd||
     route.distances.empty()||routeTimeAtDistance(route,route.distances.back())!=routeEnd)return -2;
  const auto sample=sampleRouteTiming(route,s.effectiveTime);
  if(sample[0]!=request.x||sample[1]!=request.z||sample[4]!=request.yaw||sample[9]!=request.runPhase||
@@ -299,17 +300,42 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_capture_gate_cut(double actor){
  const uint64_t id=route.gateReservations.front();
  const auto found=s.gates.find(id);if(found==s.gates.end())return 0;
  const auto& gate=found->second;const auto lease=gate.crossings.find(intent.actor);
+ const double motorEnd=gateMotionEnd(gate),routeEnd=routeTimeAtDistance(route,route.distances.back());
  if(lease==gate.crossings.end()||lease->second.body!=route.reservationBody||lease->second.slot!=intent.slot||
-    lease->second.generation!=route.generation||gate.precedingMotor||gate.at>s.effectiveTime||
-    gate.target!=1||gate.from>=gate.target||!gateMotionPending(gate,s.effectiveTime))return 0;
+    lease->second.generation!=route.generation||gate.precedingMotor||gate.at<route.startTime||
+    gate.target!=1||gate.from>=gate.target||s.effectiveTime>=routeEnd||route.holds.size()!=1)return 0;
+ const auto& hold=route.holds.front();
+ if(hold.gate!=id||hold.from!=gate.at||hold.until!=motorEnd)return 0;
  const auto pose=sampleRouteTiming(route,s.effectiveTime);
  if(pose!=route.executionPose)return 0;
  s.gateResult={route.startTime,route.originX,route.originZ,route.originYaw,route.motionOffset[2],route.motionOffset[3],
   route.motionOffset[4],route.runBudget,double(route.motionFlags),double(id),gate.from,gate.target,gate.at,
-  gateMotionEnd(gate),routeTimeAtDistance(route,route.distances.back()),pose[16]==0?1.:0.};
+  motorEnd,routeEnd,pose[16]==0?1.:0.};
  return int(s.gateResult.size());
 }
 static const NativeFarmArrivalRouteBinding* currentHeldFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeHeldFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
+// The clipped table uses the absolute program's arithmetic for its phases.
+// Publish the same basis at READY, at GO and while Stop24 holds that source.
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_program(double actor,double ticket){
+ auto& s=state();s.gateResult.clear();
+ const RouteSlot* route=nullptr;double at=0;
+ if(ticket){
+  const auto& p=s.barrierProposal;
+  if(!p.pending||p.kind!=23||ticket!=double(p.ticket)||!p.farmArrivalRoute||
+     actor!=p.farmArrivalRoute->header[1]||p.farmArrivalRoute->farmArrivalColdGateCut.empty())return 0;
+  route=&p.farmArrivalRoute->route;at=p.farmArrivalRoute->header[10];
+ }else{
+  const auto* binding=currentFarmArrivalRoute(actor);
+  if(!binding)binding=currentHeldFarmArrivalRoute(actor);
+  if(!binding||!binding->coldGateCut)return 0;
+  route=&s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];at=binding->actual.header[10];
+ }
+ if(route->distances.empty()||at<=route->startTime)return -1;
+ const auto cut=sampleRouteTiming(*route,at);
+ s.gateResult={route->startTime,route->distances.back(),route->runDistance,cut[2],cut[12],
+  route->motionOffset[2],route->motionOffset[3],route->runBudget};
+ return 1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_snapshot(double actor){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();const auto b=currentFarmArrivalRoute(actor);if(!b)return 0;out={1,double(b->assignmentSequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());return 1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_binding_ptr(){return state().farmArrivalRouteBindingResult.data();}
 // Bounded metadata from the same route owner. Reuse execution scratch so typed

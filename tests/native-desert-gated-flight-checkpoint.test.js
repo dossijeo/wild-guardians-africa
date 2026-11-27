@@ -5,6 +5,7 @@ import test from 'node:test';
 import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {copyNativeFarmArrivalRouteProposal} from '../src/world/native-farm-arrival-route.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {nativeWorkerGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
@@ -280,7 +281,8 @@ for(const frozenGate of [false,true])test(`a confirmed Stop24 reloads with a ${f
   for(let i=0;i<430&&!stop?.packet;i++)await tick(live);
   assert(stop?.packet&&!stop.committed);
   const preparingStop=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
-  assert.equal(preparingStop.saveAvailable,frozenGate);
+  assert.equal(preparingStop.saveAvailable,true);
+  assert(preparingStop.nativeAuthorityCheckpoint.raidFlight.farmStop);
   releaseStop();
   for(let i=0;i<40&&!preparingHome;i++)await tick(live);
   assert(preparingHome&&!preparingHome.packet);
@@ -359,20 +361,22 @@ for(const frozenGate of [false,true])test(`a confirmed Stop24 reloads with a ${f
  }finally{release();await cold.close();}
 });
 
-test('a public raid checkpoint reacquires the moving Farm gate before resuming Stop24',async()=>{
+for(const phase of ['scheduled','opening','open'])test(`a public raid checkpoint reacquires the ${phase} Farm gate before resuming Stop24`,async()=>{
  const initial=deserialize(input.snapshot);
- initial.dayPlan.at=initial.time+.5;
+ initial.dayPlan.at=initial.time+(phase==='scheduled' ? .2 : .5);
  let held,release;
  const ready=new Promise(resolve=>{release=resolve;});
  const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
   async onReady(record){if(record.kind==='farm-arrival-stop'&&!held){held=record;await ready;}}});
  let text,oldEpoch;
+ const liveSuffix=[];
  try{
   live.command({kind:'setNavigationView',view:input.navigationView});
   await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
   for(let i=0;i<430&&!held?.packet;i++)await tick(live);
   assert(held?.packet&&!held.committed);
   oldEpoch=held.resources.worldBoundary.authorityEpoch;
+  if(phase==='open')for(let i=0;i<14;i++)await tick(live);
   const result=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
   assert(result.saveAvailable);
   const disk=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
@@ -380,18 +384,32 @@ test('a public raid checkpoint reacquires the moving Farm gate before resuming S
   assert.equal(disk.state.workers[0].nativeFarmFlightSample,undefined);
   assert.equal(disk.state.workers[0].nativeRouteAdmission,undefined);
   text=serialize(disk.state);
+  const steps=phase==='scheduled'?6:2;
+  for(let i=0;i<steps;i++){
+   const liveState=await tick(live);
+   liveSuffix.push({elapsed:liveState.elapsed,gate:gate(liveState).gateOpen,worker:liveState.workers[0].nativeFarmFlightSample.pose});
+  }
  }finally{try{await live.close();}finally{release();}}
  const state=deserialize(text),options=savedNativeAuthorityOptions(text),cut=state.workerNativeAuthorityCheckpoint.raidFlight;
  assert(cut.farmStop);
  assert.equal(cut.homePending,undefined);
  assert.equal(cut.homePath,undefined);
- assert(cut.farmStop.startTime<cut.farmStop.motor.at&&cut.farmStop.motor.at<cut.at&&cut.at<cut.farmStop.motor.endsAt);
- assert(cut.gate.opening>0&&cut.gate.opening<1);
+ const {motor}=cut.farmStop;
+ assert(cut.farmStop.startTime<motor.at&&motor.at<motor.endsAt);
+ if(phase==='scheduled')assert(cut.at<motor.at&&cut.gate.opening===0);
+ else if(phase==='opening')assert(motor.at<cut.at&&cut.at<motor.endsAt&&cut.gate.opening>0&&cut.gate.opening<1);
+ else assert(motor.endsAt<cut.at&&cut.gate.opening===1);
+ assert.equal(cut.farmStop.waiting,phase==='opening');
  const incompatible=structuredClone(state);
- incompatible.workerNativeAuthorityCheckpoint.raidFlight.farmStop.motor.endsAt=cut.at;
+ incompatible.workerNativeAuthorityCheckpoint.raidFlight.farmStop.motor.endsAt=motor.at;
  assert.throws(()=>savedNativeAuthorityOptions(serialize(incompatible)),/Invalid saved Farm stop program/);
  const altered=structuredClone(state);
- altered.workerNativeAuthorityCheckpoint.raidFlight.farmStop.motor.at+=.001;
+ const alternateProgram=altered.workerNativeAuthorityCheckpoint.raidFlight.farmStop;
+ alternateProgram.motor.at+=.001;
+ if(phase==='scheduled'){
+  alternateProgram.motor.endsAt=alternateProgram.motor.at+(1-alternateProgram.motor.from)*.6;
+  alternateProgram.endTime+=alternateProgram.motor.endsAt-motor.endsAt;
+ }
  const bad=await nativeProductionAuthority(altered,{...savedNativeAuthorityOptions(serialize(altered)),drawFarmGate:true});
  try{
   for(let i=0;i<12&&!bad.faults.length;i++)await bad.present();
@@ -407,6 +425,11 @@ test('a public raid checkpoint reacquires the moving Farm gate before resuming S
  }});
  try{
   await untilProduction(cold,()=>!!farm?.packet);
+  const {sourceProgram}=farm.resources.nativeFarmArrival;
+  assert(sourceProgram.startTime<cut.at&&sourceProgram.passedDistance>0);
+  const rounded=structuredClone(farm.resources);
+  rounded.rows[rounded.rows.length-7]=cut.workerPose.walkPhase+rounded.distance/.72;
+  if(phase==='open')assert.throws(()=>copyNativeFarmArrivalRouteProposal(rounded),/changed its held phases or endpoint/);
   const heldAdvance=await cold.command({kind:'advance',seconds:.02,steps:2,nightFastForward:false});
   assert.equal(heldAdvance.stepsExecuted,0);
   const heldState=JSON.parse(heldAdvance.snapshot),[worker]=heldState.workers;
@@ -425,14 +448,16 @@ test('a public raid checkpoint reacquires the moving Farm gate before resuming S
   assert.equal(draw.bindings.find(row=>row.nativeGate?.gateId===input.expectedGate)?.elapsed,cut.at);
   assert.equal(cold.snapshot().workers[0].nativeRouteAdmission,'pending-farm-flight-stop');
   await untilProduction(cold,()=>!!stop?.packet);
-  await tick(cold);
-  const retimed=await tick(cold);
-  assert.equal(retimed.workers[0].x,cut.workerPose.x);
-  assert.equal(retimed.workers[0].walkPhase,cut.workerPose.walkPhase);
-  assert.equal(retimed.raid.animals[0].x,cut.animalPose.x);
-  assert.equal(retimed.raid.animals[0].z,cut.animalPose.z);
+  let retimed;
+  for(const expected of liveSuffix){
+   retimed=await tick(cold);
+   assert.deepEqual({elapsed:retimed.elapsed,gate:gate(retimed).gateOpen,worker:retimed.workers[0].nativeFarmFlightSample.pose},expected);
+   assert.equal(retimed.raid.animals[0].x,cut.animalPose.x);
+   assert.equal(retimed.raid.animals[0].z,cut.animalPose.z);
+  }
   const opening=gate(retimed).gateOpen;
-  assert(opening>cut.gate.opening&&opening<1);
+  if(phase==='open')assert.equal(opening,1);
+  else assert(opening>cut.gate.opening&&opening<1);
   allowStop();
   await untilProduction(cold,()=>stop.committed);
   await cold.present();await stop.packet.presented;

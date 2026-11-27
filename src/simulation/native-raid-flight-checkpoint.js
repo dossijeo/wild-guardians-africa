@@ -12,8 +12,9 @@ function copyFarmStopCut(value,at,gate){
  if(!gate||gate.reservedByHome!==undefined||!Number.isFinite(startTime)||startTime<0||startTime>=at||
     !pose||!poseFields.every(key=>pointValue(pose[key]))||poseFields.slice(3).some(key=>pose[key]<0)||
     ![0,1].includes(motionFlags)||typeof waiting!=='boolean'||!motor||!validGateOpening(motor.from)||motor.from>=1||
-    motor.target!==1||!Number.isFinite(motor.at)||motor.at<startTime||motor.at>at||
-    !Number.isFinite(motor.endsAt)||motor.endsAt<=at||!Number.isFinite(endTime)||endTime<motor.endsAt)
+    motor.target!==1||!Number.isFinite(motor.at)||motor.at<startTime||
+    !Number.isFinite(motor.endsAt)||motor.endsAt<=motor.at||!Number.isFinite(endTime)||endTime<motor.endsAt||endTime<=at||
+    (at<=motor.at?gate.opening!==motor.from:at>=motor.endsAt?gate.opening!==motor.target:false))
   throw Error('Invalid saved Farm stop program');
  return {startTime,pose:Object.fromEntries(poseFields.map(key=>[key,pose[key]])),motionFlags,
   motor:{from:motor.from,target:motor.target,at:motor.at,endsAt:motor.endsAt},endTime,waiting};
