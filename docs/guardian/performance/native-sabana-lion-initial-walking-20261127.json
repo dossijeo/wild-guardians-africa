@@ -1,0 +1,109 @@
+{
+  "baseRevision": "d94cbabb6f1d6b59f5176c7dfeb0ec957beb66ef",
+  "affected": "Sheltered single-animal nocturnal arrivals in Sabana",
+  "snapshot": {
+    "file": "sabana-second-night-fourth-night-cut-save.json",
+    "sha256": "4a64bb230a2ddc6a3a187207247cf8f18b44b7a00ea17d76ddd44a6b18f8aa66",
+    "elapsed": 2137.4999999988336
+  },
+  "checks": {
+    "tests": 182,
+    "pass": 182,
+    "fail": 0,
+    "skipped": 0,
+    "negativeFailures": 2,
+    "bakePendingUsesTheExistingLateAdmission": true
+  },
+  "browser": {
+    "scope": "Two observed Edge runs from the same fourth-night save. Timings are individual observations.",
+    "cases": [
+      {
+        "case": "prior",
+        "adapter": null,
+        "file": "sol-lion-cold-entry-base-20261127.json",
+        "sha256": "df19fbbd6e183f523b7c73d031145d8b5ea202efc58ca14a11ecc29889fb0174",
+        "bodyId": 1,
+        "route": {
+          "ticket": 3,
+          "firstFrame": 36,
+          "firstAge": 0,
+          "requestToReadyMs": 7882.155029296875
+        },
+        "strike": {
+          "ticket": 5,
+          "firstFrame": 136,
+          "firstAge": 0,
+          "requestToReadyMs": 2620.76513671875
+        },
+        "coldRig": {
+          "initialAdmissionMs": 2535.7450000047684,
+          "walkingWaitMs": 4042.969999998808,
+          "runningWaitMs": 419.10499998927116
+        },
+        "hit": {
+          "id": "attack-86",
+          "target": "structure-2",
+          "hp": 305
+        },
+        "drained": true,
+        "diagnostics": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ]
+      },
+      {
+        "case": "joint-admission",
+        "adapter": {
+          "vendor": "nvidia",
+          "architecture": "turing",
+          "device": "",
+          "description": "",
+          "imageCopyPreparation": {
+            "version": 1,
+            "formats": [
+              "rgba8unorm",
+              "rgba8unorm-srgb"
+            ],
+            "completed": true,
+            "milliseconds": 73.80500000715256
+          }
+        },
+        "file": "sol-lion-initial-walk-ticket-final-20261127.json",
+        "sha256": "4e8c5579690b4cf36b64874a38e7aab21ff13edad1213d6ca39d519dc01ec6f5",
+        "bodyId": 1,
+        "route": {
+          "ticket": 3,
+          "firstFrame": 41,
+          "firstAge": 0,
+          "requestToReadyMs": 6010.0751953125
+        },
+        "strike": {
+          "ticket": 5,
+          "firstFrame": 146,
+          "firstAge": 0,
+          "requestToReadyMs": 2516.699951171875
+        },
+        "coldRig": {
+          "initialAdmissionMs": 2937.609999984503,
+          "walkingWaitMs": 0.07500001788139343,
+          "runningWaitMs": 1215.655000001192
+        },
+        "hit": {
+          "id": "attack-86",
+          "target": "structure-2",
+          "hp": 305
+        },
+        "drained": true,
+        "diagnostics": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ]
+      }
+    ]
+  },
+  "evidence": {
+    "lion-initial-walk-ticket-final-impact-20261127.tap": "906fb328df81e7ba41d65d15f35d4e6163587d900440eb086799f82c1bec65d6",
+    "lion-initial-walk-ticket-final-negative-20261127.tap": "68f18d153f30d778490249f4eba38cff6d5252c8b08dbcb2a0c6ec9b32549e2d",
+    "sol-lion-cold-entry.mjs": "43b26e2a02da997964a5d72a74cd7de6e0aeb2ab84929a76047fd19aed8dfcba"
+  }
+}

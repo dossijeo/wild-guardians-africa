@@ -11,6 +11,42 @@ import {actorTickState} from '../src/simulation/worker-actor-tick-states.js';
 import {confirmedAnimalRunningSamples} from '../src/rendering/confirmed-animation-samples.js';
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 
+for(const readyWithRig of [true,false])test(`sheltered nocturnal Walking uses ${readyWithRig?'the first hidden root ticket':'the ordinary late ticket'}`,async()=>{
+ const animal={id:'animal-21',species:'lion',status:'entering'},state={biome:'sabana',structures:[{kind:'center'}],workers:[],
+  raid:{daytime:false,introCropLimit:4,animals:[animal]}};
+ const root=new Group(),source=new Mesh(new BoxGeometry(),new MeshBasicMaterial()),walking=new Mesh(source.geometry,source.material);
+ root.add(source,walking);
+ const baked={meta:{species:'lion'}},admissions=[],errors=[];
+ let finishBake,finishRig,finishAdmission,loads=0,lateInstalls=0;
+ const bakeReady=new Promise(resolve=>{finishBake=resolve;});
+ const rigReady=new Promise(resolve=>{finishRig=resolve;});
+ const roster=createWebGpuAnimalRoster({scene:new Scene(),state,residency:{},assetBank:{tick(){},dispose(){}},
+  bakedWalkBank:{get(species){assert.equal(species,'lion');loads++;return bakeReady;}},
+  pipelineAdmission:{prepare(){throw Error('Expected the initial pipeline ticket');},prepareTicket(object,{include}){
+   assert.equal(object,root);assert.equal(root.visible,false);admissions.push(include);
+   return new Promise(resolve=>{finishAdmission=()=>resolve({valid:()=>true});});
+  }},onError:error=>errors.push(error),async createAnimal({readInitialBakedWalk}){
+   assert.equal(typeof readInitialBakedWalk,'function');
+   await rigReady;
+   const selected=readInitialBakedWalk();
+   assert.equal(selected,readyWithRig?baked:null);
+   return {root,update(){root.visible=true;},hasBakedWalking:()=>!!selected,admissionObjects:()=>selected?[source,walking]:[source],
+    installBakedWalk(value){assert.equal(value,baked);lateInstalls++;return true;},dispose(){}};
+  }});
+ try{
+  roster.sync();await flush();
+  assert.equal(loads,1);assert.equal(roster.get(animal.id),null);assert.deepEqual(admissions,[]);
+  if(readyWithRig){finishBake(baked);await flush();}
+  finishRig();await flush();
+  assert.deepEqual(admissions,[readyWithRig?[source,walking]:[source]]);assert.equal(roster.get(animal.id),null);
+  finishAdmission();await flush();
+  assert.equal(roster.get(animal.id).root,root);assert(root.visible);
+  assert.equal(lateInstalls,0);
+  if(!readyWithRig){finishBake(baked);await flush();}
+  assert.equal(loads,readyWithRig?1:2);assert.equal(lateInstalls,readyWithRig?0:1);assert.deepEqual(errors,[]);
+ }finally{roster.dispose();source.geometry.dispose();source.material.dispose();}
+});
+
 test('a demanded attack clip survives strike rollover and stays reusable after the actor stops attacking',async()=>{
  for(const nextStatus of ['attacking','walking']){
   const animal={id:'a',species:'hyena',status:'attacking',animation:'Weapon_Combo',attackId:'first'},state={raid:{animals:[animal]}},installed=new Set(),root=new Group();let finish,attempts=0,loads=0;

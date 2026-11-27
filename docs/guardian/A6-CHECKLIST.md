@@ -2,6 +2,8 @@
 
 El recorrido en Edge desde el cuarto amanecer de Sabana 714 llegó al primer golpe del león y drenó. Durante la preparación de Strike27, Surface retomó la aplicación después del checkpoint 7216 y alcanzó la publicación 7228 antes del siguiente ACK de dibujo. El contraste aislado en NVIDIA conservó el token de picking y pasó de cinco esperas de dibujo a cuatro. Route26 llegó a READY en 9,43 s durante el recorrido de Edge. [Comparación y alcance](performance/native-sabana-source-checkpoint-20261127.json).
 
+El rig de la llegada nocturna en Sabana admite Walking en su primer ticket si la variante ya está lista. En la recarga de la cuarta noche, NVIDIA confirmó Route26, Strike27, el primer golpe y el drenaje. Route26 llegó a READY en 6,01 s en esa pasada. El control tarda en entregar Walking y comprueba que el rig puede publicarse primero. [Recibo de admisión inicial](performance/native-sabana-lion-initial-walking-20261127.json).
+
 NVIDIA confirmó la recuperación de Home18 e Idle21 con dos portones. El primer envío conservó ambos cuerpos y ambos motores. Los dos trabajadores fueron seleccionables con la autoridad suspendida. Tras reanudar, el mismo cuerpo cruzó ambos portones y se retiró una sola vez en Home19. El segundo siguió con Idle21 y permaneció seleccionable hasta el drenaje. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
 
 El guardado público de la misma pareja conservó las poses, las fases y la primera hoja al 25 %. La recarga en NVIDIA adquirió los dos civiles y ambos motores, permitió seleccionar a los dos trabajadores y presentó Home19 con Idle21 todavía activo. [Recibo de guardado y recarga](performance/native-civil-gated-pair-recovery-20261127.json).
