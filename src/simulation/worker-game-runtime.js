@@ -1,3 +1,4 @@
+import {copyPublication} from './confirmed-snapshot-handoff.js';
 import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 // Coordinates one authoritative Worker with a presentation-only WorldScene.
@@ -44,10 +45,16 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
    }else if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length)){
     throw Error('Invalid worker batch result');
    }
-   const quiet=result.pausedQuiescent===true;if(result.pausedQuiescent!==undefined&&(result.pausedQuiescent!==true||!Array.isArray(result.pauses)||!result.pauses.length))throw TypeError('Invalid paused quiescence certificate');delete result.pausedQuiescent;if(result.unchanged===true&&command.kind!=='setNavigationView'&&!(command.kind==='advance'&&result.pausedAdvance===true))throw Error('Unexpected unchanged publication');const meta={kind:command.kind,backgroundView:item.backgroundView===true,...(item.presentationInput===undefined?{}:{presentationInput:item.presentationInput})};const accepted=result.unchanged===true?receiver.acceptUnchanged(result,meta):receiver.accept(result,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
+   const quiet=result.pausedQuiescent===true;if(result.pausedQuiescent!==undefined&&(result.pausedQuiescent!==true||!Array.isArray(result.pauses)||!result.pauses.length))throw TypeError('Invalid paused quiescence certificate');delete result.pausedQuiescent;if(result.unchanged===true&&command.kind!=='setNavigationView'&&!(command.kind==='advance'&&result.pausedAdvance===true))throw Error('Unexpected unchanged publication');const meta={kind:command.kind,backgroundView:item.backgroundView===true,...(item.presentationInput===undefined?{}:{presentationInput:item.presentationInput})};let publication=result;
+   if(result.liveSnapshot!==undefined){
+    if(command.kind!=='snapshot'||command.nativeAuthorityCheckpoint!==true||typeof result.liveSnapshot!=='string'||result.unchanged===true)
+     throw Error('Unexpected live snapshot for native checkpoint');
+    publication=copyPublication(result,{omit:['snapshot','liveSnapshot'],add:{snapshot:result.liveSnapshot}});
+   }
+   const accepted=publication.unchanged===true?receiver.acceptUnchanged(publication,meta):receiver.accept(publication,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
    if(cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
    if(diagnostics){const label=command.kind==='tutorialCommand'?`${command.kind}:${command.action}`:command.kind;completedKinds[label]=(completedKinds[label]??0)+1;if(result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;}
-   confirmed=result;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
+   confirmed=publication;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
   }).catch(error=>{busy=false;if(item.kind==='command')item.reject(error);activeItem=null;fail(error);});
  }
  function wake(){timer=null;if(!running||closed||fault)return;try{if(!clockCaptureSuspended&&!pausedQuiescent)enqueueElapsed(now());pump();if(running&&!closed&&!fault)timer=schedule(wake,stepSeconds*batchWindowSteps*1000);}catch(error){fail(error);}}

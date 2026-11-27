@@ -223,7 +223,11 @@ self.onmessage=async({data})=>{
      }
      if(recoveryFault||recoveryFrozen&&structurePrepared)throw Error(recoveryFault||'Native structure preparation interrupted by recovery');
      result=await runtime.submit(data.command);
-    const receipt=foldedViews.get(result.sequence);if(receipt)foldedViews.delete(result.sequence);if(outbox)outbox.message({kind:'commandResult',id:data.id,sequence:result.sequence,...(receipt?{receipt}:{})});else postMessage({kind:'commandResult',session,id:data.id,sequence:result.sequence});receiptSent=true;
+    const receipt=foldedViews.get(result.sequence);if(receipt)foldedViews.delete(result.sequence);
+     const reply={kind:'commandResult',id:data.id,sequence:result.sequence,
+      ...(receipt?{receipt}:{}),...(result.liveSnapshot===undefined?{}:{checkpointSnapshot:result.snapshot})};
+     if(outbox)outbox.message(reply);else postMessage({...reply,session});
+     receiptSent=true;
     }finally{if(structurePrepared){const releasing=authorityClient.finishNativeStructureCommand(data.command);nativeStructureRelease=releasing;try{await releasing;}finally{if(nativeStructureRelease===releasing)nativeStructureRelease=null;}}}
    }
    catch(error){if(receiptSent)throw error;const message={kind:'commandFailure',id:data.id,message:String(error?.message??error)};if(outbox)outbox.message(message);else postMessage({...message,session});}return;

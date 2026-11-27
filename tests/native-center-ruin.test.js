@@ -8,6 +8,8 @@ import {tick} from '../src/simulation/game.js';
 import {createPlant} from '../src/simulation/crops.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {createSimulationAuthority} from '../src/simulation/simulation-authority.js';
+import {createWorkerGameRuntime} from '../src/simulation/worker-game-runtime.js';
+import {validateConfirmedMotion} from '../src/rendering/confirmed-motion-validation.js';
 import {nativeAnimalStrikeClipAge} from '../src/world/native-animal-crop-resource.js';
 import {nativeAnimalCropPublicationMatches,nativeRetreatBudgetAllowed} from '../src/simulation/raids.js';
 import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
@@ -78,7 +80,7 @@ for(const scenario of ['saved corridor','terminal pose','pending source'])test(`
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
  })};
  let releaseOriginalStrike,releaseOriginalRoute;
- const source=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest,
+ const source=await nativeProductionAuthority(initial,{...options,getTerrainManifest:()=>manifest,observeWorldMotion:pending,
   onReady:record=>{
    if(pending&&record.kind==='animal-crop-route')return new Promise(resolve=>{releaseOriginalRoute=resolve;});
    if(arrived&&record.kind==='animal-crop-strike')return new Promise(resolve=>{releaseOriginalStrike=resolve;});
@@ -119,6 +121,33 @@ for(const scenario of ['saved corridor','terminal pose','pending source'])test(`
    assert.equal(original.committed,false);
    assert(original.packet.valid());
    assert.equal(animal.motionPhase,original.resources.reference.phase);
+   let now=0,wake,live=null,sequence=0,observedAdvance=false;
+   const receiver={accept(publication){
+    const next=JSON.parse(publication.snapshot);
+    if(publication.worldMotionTrace){
+     assert.equal(publication.worldMotionTrace.actorTickStates.complete,true);
+     validateConfirmedMotion(publication,next,live.elapsed,live);
+     observedAdvance=true;
+    }
+    live=next;sequence=publication.sequence;
+    return {accepted:true};
+   },status:()=>({sequence,lastElapsed:live?.elapsed??0})};
+   const runtime=createWorkerGameRuntime({session:'checkpoint-publication',startupSuspended:true,nightFastForward:false,
+    client:{ready:Promise.resolve(),submit:command=>({accepted:true,result:Promise.resolve(source.command(command))}),dispose(){}},
+    world:{createConfirmedReceiver:()=>receiver},now:()=>now,schedule:fn=>{wake=fn;return 1;},cancel(){}});
+   try{
+    await runtime.start();
+    const liveAnimal=live.raid.animals[0];
+    assert.equal(liveAnimal.path,null);
+    const autosave=await runtime.submit({kind:'snapshot',nativeAuthorityCheckpoint:true});
+    assert.deepEqual(JSON.parse(autosave.snapshot).raid.animals[0].path,animal.path);
+    runtime.activateClock();
+    now=50;wake();
+    await runtime.queueBarrier();
+    assert(observedAdvance);
+    assert.deepEqual(live.raid.animals[0],liveAnimal);
+    assert.equal(original.committed,false);
+   }finally{runtime.dispose();}
   }else assert(animal.motionPhase>original.resources.reference.phase);
   if(arrived)assert.deepEqual(animal.path,[{x:animal.x,z:animal.z}]);
   else assert(animal.path[0].x!==animal.x||animal.path[0].z!==animal.z);

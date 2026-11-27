@@ -7,6 +7,29 @@ import {resolvePresentationRecoveryOptions} from '../src/simulation/presentation
 import {openVisualStream} from '../src/simulation/visual-publication-stream.js';
 import {createPresentationRecoveryJournal} from '../src/simulation/presentation-recovery-journal.js';
 
+test('hosted native checkpoint replies keep the restore snapshot out of the confirmed receiver',async()=>{
+ const messages=[],received=[],worker={postMessage:message=>messages.push(message),terminate(){}};
+ let sequence=0;
+ const receiver={accept(publication){received.push(publication);sequence=publication.sequence;return {accepted:true};},
+  acceptUnchanged(){throw Error('Unexpected unchanged publication');},status:()=>({sequence,lastElapsed:0})};
+ const runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},workerFactory:()=>worker});
+ const send=data=>worker.onmessage({data:{session:'s',...data}});
+ try{
+  const start=runtime.start();
+  send({kind:'publication',publication:{sequence:1,elapsed:0,events:[]}});
+  send({kind:'started',sequence:1,status:{}});await start;
+  const save=runtime.submit({kind:'snapshot',nativeAuthorityCheckpoint:true});
+  const live=JSON.stringify({raid:{animals:[{path:null}]}});
+  const disk=JSON.stringify({raid:{animals:[{path:[{x:1,z:2}]}]}});
+  const publication={sequence:2,elapsed:0,events:[],snapshot:live,nativeAuthorityCheckpoint:{version:3}};
+  send({kind:'publication',publication});
+  send({kind:'commandResult',id:messages.findLast(message=>message.kind==='command').id,sequence:2,checkpointSnapshot:disk});
+  assert.equal((await save).snapshot,disk);
+  assert.equal(received.at(-1).snapshot,live);
+  assert.equal(publication.snapshot,live);
+ }finally{runtime.dispose();}
+});
+
 test('the host forwards the independent resource attachment without publishing state',async()=>{
  const messages=[],worker={postMessage:(message,transfer)=>messages.push({message,transfer}),terminate(){}},receiver={accept:()=>({accepted:true}),acceptUnchanged:()=>({accepted:true}),status:()=>({sequence:1,lastElapsed:0})},runtime=createWorkerHostedRuntime({confirmedReceiver:receiver,session:'s',clientOptions:{},workerFactory:()=>worker});
  const start=runtime.start();worker.onmessage({data:{kind:'publication',session:'s',publication:{sequence:1,elapsed:0,events:[]}}});worker.onmessage({data:{kind:'started',session:'s',sequence:1,status:{}}});await start;

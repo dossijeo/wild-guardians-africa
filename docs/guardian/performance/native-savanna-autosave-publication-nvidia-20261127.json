@@ -1,0 +1,188 @@
+{
+  "baseline": {
+    "rawSha256": "3f0b9a0c8c203a2b86c97425d3ac067b239ee86a299ae6f11b32bfcae04f98d7",
+    "revision": "d42bf67ebbed9dbd8165a8e8483bea4892cadae2",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 85.75999999046326
+      }
+    },
+    "home": {
+      "ticket": 46,
+      "sequence": 1109,
+      "elapsed": 295.24999999996567
+    },
+    "mismatch": {
+      "publication": 7332,
+      "elapsed": 377.78814648073353,
+      "previousElapsed": 377.7381464807336,
+      "actorId": "animal-10",
+      "fields": [
+        {
+          "key": "pathActive",
+          "expected": true,
+          "observed": false
+        },
+        {
+          "key": "pathPresent",
+          "expected": true,
+          "observed": false
+        },
+        {
+          "key": "yaw",
+          "expected": 2.91983689447493,
+          "observed": 0
+        },
+        {
+          "key": "heading",
+          "expected": 0,
+          "observed": null
+        },
+        {
+          "key": "motionPhase",
+          "expected": 0,
+          "observed": null
+        }
+      ],
+      "previousActor": {
+        "id": "animal-10",
+        "status": "entering",
+        "head": {
+          "x": 95,
+          "z": 42
+        }
+      }
+    },
+    "stopped": {
+      "elapsed": 379.73814648073176,
+      "sequence": 7408
+    },
+    "activationSeen": false
+  },
+  "candidate": {
+    "rawSha256": "893797a57fa91766fb202be9560fd04af35dc11f6c811e860f455cc53a970f72",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 99.94000001251698
+      }
+    },
+    "retainedReadyMs": 1800,
+    "save": {
+      "sequence": 62,
+      "elapsed": 2745.2792141497675,
+      "actorId": "animal-23",
+      "livePath": null,
+      "storedPathPoints": 46
+    },
+    "firstNativeDraw": {
+      "sequence": 36,
+      "clockElapsed": 2747.4792141497755,
+      "worldBoundary": {
+        "version": 1,
+        "authorityEpoch": "01595667-fc4c-438f-a3a0-57ec0fca3fa4/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 2747.4792141497755
+      },
+      "bindings": [
+        {
+          "nativeAnimalCrop": {
+            "version": 1,
+            "kind": 26,
+            "worldBoundary": {
+              "version": 1,
+              "authorityEpoch": "01595667-fc4c-438f-a3a0-57ec0fca3fa4/1",
+              "nativeSession": 1,
+              "ticket": 2,
+              "effectiveTime": 2744.329214149764
+            },
+            "sourceControlSequence": 2,
+            "endTime": 2767.626336770024,
+            "purpose": "center",
+            "actorId": 23,
+            "bodyId": 1,
+            "targetId": 2,
+            "centerId": 2,
+            "requestSequence": 2,
+            "slot": 0,
+            "generation": 3,
+            "radius": 1.55,
+            "x": 76.10436663318671,
+            "z": 33.54846552834845,
+            "phase": 0,
+            "yaw": 0,
+            "targetX": 83,
+            "targetZ": 0,
+            "centerX": 83,
+            "centerZ": 0
+          },
+          "relativeTime": 0,
+          "executionEpoch": 2747.4792141497755
+        }
+      ]
+    },
+    "end": {
+      "elapsed": 2788.779214149926,
+      "events": [
+        {
+          "id": "event-105",
+          "type": "AnimalLogicalHit",
+          "attackId": "attack-103",
+          "targetId": "structure-2",
+          "species": "rhino",
+          "presentation": {
+            "version": 1,
+            "elapsed": 2774.879214149875,
+            "animal": {
+              "x": 82.16815185546875,
+              "z": 4.047098159790039,
+              "heading": 2.9388740909628397
+            },
+            "target": {
+              "x": 83,
+              "z": 0,
+              "kind": "center",
+              "culture": "mapungubwe",
+              "yaw": 0
+            },
+            "shield": null
+          },
+          "simulationTime": 2774.879214149875
+        },
+        {
+          "id": "event-110",
+          "type": "RaidEnded",
+          "simulationTime": 2788.779214149926
+        },
+        {
+          "id": "event-112",
+          "type": "GameOver",
+          "simulationTime": 2788.779214149926
+        }
+      ]
+    },
+    "drain": true,
+    "actorStartFailure": false
+  },
+  "scope": "Functional Chromium WebGPU on NVIDIA. The save test loads day 5, explicitly requests a save while READY is pending, and leaves the clock running. It does not complete a continuous campaign or measure frame pacing."
+}
