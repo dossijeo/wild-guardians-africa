@@ -819,7 +819,7 @@ export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=nul
   return Math.hypot(Math.fround(mixedApproach.x)-Math.fround(exit.x),Math.fround(mixedApproach.z)-Math.fround(exit.z))>
     (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
  if(!nav||state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
-   structure.kind==='center'&&structure.status==='collapsing'||structure.gate&&structure.status!=='ruined'))return false;
+   structure.kind==='center'&&structure.status==='collapsing'))return false;
  const centers=state.structures.filter(center=>center!==target&&operational(center));
  const damage=animalStructureDamage(animal);
  const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));

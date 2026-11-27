@@ -253,9 +253,17 @@ for(const scenario of [
  {gated:false,secondCenter:true,name:'when the second center collapses on the final hit'},
  {gated:false,secondCenter:true,early:true,name:'during the approach to the successor center'},
  {gated:false,secondCenter:true,early:true,thirdCenter:true,name:'when Game picks a third center before the ruin'},
+ {gated:true,secondCenter:true,early:true,name:'when the worker crosses the gate before the successor approach'},
+ {gated:true,secondCenter:true,early:true,twoGates:true,name:'when the worker crosses both gates before the successor approach'},
 ])test('center ruin preserves the certified refuge '+scenario.name,{timeout:90000},async()=>{
- const {gated,pendingFarm,secondCenter,early,thirdCenter}=scenario;
+ const {gated,pendingFarm,secondCenter,early,thirdCenter,twoGates}=scenario;
  const initial=mixedState(gated),workerId=initial.workers[0].id,civilCenter=initial.workers[0].centerId;
+ if(twoGates){
+  const original=initial.structures.find(row=>row.id===gateId);
+  initial.structures.push({...original,id:`structure-${initial.nextId++}`,created:original.created+1,z:5.3});
+  initial.dayPlan.at=initial.time+10;
+ }
+ const gates=state=>state.structures.filter(row=>row.gate);
  if(secondCenter){
   initial.structures.push({...initial.structures[0],id:`structure-${initial.nextId++}`,x:-18,z:-12,hp:early?180:200});
   initial.structures[0].hp=600;
@@ -263,10 +271,11 @@ for(const scenario of [
  const destroyedId=(secondCenter?initial.structures.at(-1):initial.structures[0]).id;
  const successorId=thirdCenter?`structure-${initial.nextId++}`:civilCenter;
  if(thirdCenter)initial.structures.push({...initial.structures[0],id:successorId,x:-5,z:-16});
- let releaseFarm,releaseRoute,farmReady=null,routeReady=null;
+ let releaseFarm,releaseRoute,farmReady=null,routeReady=null,flight=null;
  const farmGate=new Promise(resolve=>{releaseFarm=resolve;});
  const routeGate=new Promise(resolve=>{releaseRoute=resolve;});
  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  onCommit(record,receipt){if(record.kind==='home-route')flight=receipt.nativeHomeRouteBinding;},
   onReady(record){
    if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}
    if(secondCenter&&!routeReady&&record.kind==='animal-crop-route'){
@@ -276,7 +285,7 @@ for(const scenario of [
   }});
  const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
  const events=[];
- let confirmed=initial,ruin,workerAtCut,gateAtCut,snap,ruinPublication,replacement;
+ let confirmed=initial,ruin,workerAtCut,gatesAtCut,snap,ruinPublication,replacement;
  try{
   world.command({kind:'setNavigationView',view});
   await untilProduction(world,()=>pendingFarm?farmReady!==null:world.records.some(row=>row.kind==='farm-arrival'&&row.committed));
@@ -287,7 +296,7 @@ for(const scenario of [
    let next=advance();
    if(next instanceof Promise){
     workerAtCut=confirmed.workers[0];
-    gateAtCut=confirmed.structures.find(row=>row.id===gateId);
+    gatesAtCut=gates(confirmed);
     let pending=null,error=null;
     void next.then(value=>{pending=value;},reason=>{error=reason;});
     if(secondCenter){
@@ -379,7 +388,7 @@ for(const scenario of [
    assert.deepEqual(world.faults,[]);
   }
   if(gated){
-   assert.equal(gateAtCut.gateOpen,pendingFarm?0:1);
+   assert.deepEqual(gatesAtCut.map(gate=>gate.gateOpen),twoGates?[1,1]:[pendingFarm?0:1]);
    if(pendingFarm){
     assert(spawn&&farmReady.aborted&&!farmReady.committed);
     assert(!world.records.some(row=>row.kind==='farm-arrival-stop'));
@@ -391,10 +400,22 @@ for(const scenario of [
     assert(home.resources.distance<=Math.hypot(rounded[0]-spawn.x,rounded[1]-spawn.z)+1e-9);
     assert.deepEqual(home.resources.gates,[]);
    }
-   assert.equal(gateAtCut.hp,60);
-   assert.deepEqual(confirmed.structures.find(row=>row.id===gateId),gateAtCut);
-   assert.equal(confirmed.result,'defeat');
-   assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
+   assert(gatesAtCut.every(gate=>gate.hp===60));
+   const atRuin=JSON.parse(ruinPublication.snapshot);
+   assert.deepEqual(gates(atRuin),gatesAtCut);
+   if(secondCenter){
+    assert.deepEqual(flight?.gateIds,twoGates?[1000001,1000000]:[1000000]);
+    assert(flight.reference.worldBoundary.effectiveTime<source.end);
+    if(twoGates){
+     const idle=world.records.find(row=>row.kind==='idle-cycle'&&row.committed);
+     assert(idle&&idle.resources.worldBoundary.effectiveTime<flight.reference.worldBoundary.effectiveTime);
+     assert(!world.records.some(row=>row.kind==='farm-arrival-stop'));
+    }else assert(world.records.some(row=>row.kind==='farm-arrival-stop'&&row.committed));
+   }else{
+    assert.deepEqual(gates(confirmed),gatesAtCut);
+    assert.equal(confirmed.result,'defeat');
+    assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
+   }
   }
  }finally{releaseFarm();releaseRoute();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
 });
