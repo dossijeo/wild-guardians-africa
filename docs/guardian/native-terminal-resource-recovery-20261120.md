@@ -200,6 +200,16 @@ Pasaron 145 pruebas dirigidas de recuperación, fases, transporte y admisión. E
 
 En NVIDIA Turing, Sabana 714 se cargó desde un guardado público con Idle22 en marcha. Tras llegar a Idle21 se destruyó el dispositivo. El primer envío del sustituto presentó el ticket 4 a 69,55 s con `worker-6`, cuerpo 1 y edad 0,199999988 s. Antes de la activación, el picker seleccionó ese trabajador con el mismo ticket y reloj retenido. La partida avanzó a 69,75 s y drenó con saldo 510. El ensayo de hardware cubre el primer ciclo. [Recibo de NVIDIA y huellas de los artefactos](performance/native-savanna-single-idle21-recovery-20261127.json).
 
+## Reemplazo con dos trabajadores en Idle21
+
+En la preimagen, el guardado de Sabana 714 confirma dos Idle21 a 249 s y drena Draw. La autoridad devuelve un descriptor vacío. El mismo contrato de recuperación exige ahora los dos cuerpos y sus adquisiciones distintas. La frontera común cubre ambos orígenes, y cada desfase heredado se coteja con su actor, cuerpo y ciclo en el recibo de la conexión retirada. Se conserva la regla de continuidad de fase ya usada al reemplazar el consumidor de un sucesor.
+
+`node --test tests/native-terminal-civil-cohort.test.js` comprueba con Game, WASM y ambos puertos que el Host rechaza la duplicación de una asignación y los paquetes que omiten uno de los dos relojes. Un paquete válido que aún espera RAF tampoco permite reanudar. En un único envío, el sustituto acredita dos edades distintas desde sus adquisiciones, y picking consulta ambas. Game avanza después con las posiciones y el saldo anteriores.
+
+Pasaron 149 pruebas dirigidas de recuperación, transporte, fases y admisión, incluidos la aproximación y el golpe al centro de Sabana. El build WebGPU en memoria terminó en 49,40 s con los binarios WASM existentes.
+
+En NVIDIA Turing, el primer envío del sustituto presentó a `worker-6` y `worker-8` en los cuerpos 1 y 2, con las adquisiciones 6 y 8 a la hora retenida de 249,50 s. Los dos ciclos se adquirieron a 248,25 s y presentaron una edad de 1,25 s. El picker seleccionó a ambos actores antes de activar. La partida siguió hasta 249,70 s y drenó con saldo 480. El hardware cubre dos primeros ciclos. La sonda de las dos primeras pasadas exigía edades distintas y confundía una referencia preparada con el commit. El recibo final comprueba cada referencia contra su adquisición y conserva ambos intentos anteriores. [Recibo de NVIDIA](performance/native-savanna-two-idle21-recovery-20261127.json).
+
 `node --test tests/native-ordinary-worker-recovery-pair.test.js` cubre la pérdida tanto durante el ciclo como durante la preparación del sucesor. En esta última verifica el cierre del preparador antes y después del hold, que la preparación retirada no adquiere la orden, y que el sucesor se admite en el sustituto. La regresión conserva el rechazo si falta cualquiera de los dos relojes. Pasaron 139 pruebas dirigidas de Idle, admisión y Recovery. Quedan abiertos el picking físico del sustituto, la combinación con portones y el reemplazo cuando el ciclo adquirido ya hereda una fase de otro ciclo.
 
 ### Vencimiento tras publicar una subfrontera histórica

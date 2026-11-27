@@ -55,22 +55,23 @@ for(const loss of ['stroll','cycle','preparer first','hold first','acquired succ
   assert(retired.terminal&&retired.callbacksSettled);
   const route=await f.authority.terminalWorkerRoute();
   assert(route);
-  const {idleCyclePhase,...membership}=route;
+  const {idleCyclePhases,...membership}=route;
+  const idleCyclePhase=idleCyclePhases?.[0];
   assert.deepEqual(membership,{version:2,members:[{kind:18,actorId:8},{kind:stationary?21:22,actorId:6}]});
   if(acquiredSuccessor){
    assert.equal(idleCyclePhase.cycleSequence,acquiredCycle.cycleSequence);
    assert.deepEqual(idleCyclePhase.worldBoundary,acquiredCycle.reference.worldBoundary);
    await assert.rejects(f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,
-    {...route,idleCyclePhase:{...idleCyclePhase,phaseDelay:idleCyclePhase.phaseDelay+0.01}}),/exact Idle cycle phase/);
+    {...route,idleCyclePhases:[{...idleCyclePhase,phaseDelay:idleCyclePhase.phaseDelay+0.01}]}),/exact Idle cycle phase/);
   }else assert.equal(idleCyclePhase,undefined);
   replacement=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
   assert.deepEqual(source.terrainManifest,manifest);
-  const proofs={version:2,members:source.members.map(({resources,execution})=>({kind:resources.kind,proof:execution.binding})),idleCyclePhase:source.idleCyclePhase};
+  const proofs={version:2,members:source.members.map(({resources,execution})=>({kind:resources.kind,proof:execution.binding})),idleCyclePhases:source.idleCyclePhases};
   if(acquiredSuccessor){
-   assert.deepEqual(source.idleCyclePhase,idleCyclePhase);
-   assert.throws(()=>copyNativeRecoveryGroup({...proofs,idleCyclePhase:undefined},source.worldBoundary),/requires its retired phase/);
+   assert.deepEqual(source.idleCyclePhases,[idleCyclePhase]);
+   assert.throws(()=>copyNativeRecoveryGroup({...proofs,idleCyclePhases:undefined},source.worldBoundary),/requires its retired phase/);
   }
   assert.equal(copyNativeRecoveryGroup(proofs,source.worldBoundary).ordinaryWorkers,true);
   assert.throws(()=>copyNativeRecoveryGroup(proofs,{...source.worldBoundary,ticket:source.worldBoundary.ticket+1}),/one world cut/);

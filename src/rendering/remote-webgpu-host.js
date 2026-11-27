@@ -2422,10 +2422,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         let accepted;
         if(message?.type==='IntentBaseline'){
           const recoveryMembers=message.recoveredWorkerRoute?.members;
-          const recoveringCycle=Array.isArray(recoveryMembers)&&recoveryMembers.some(member=>member?.kind===21);
+          const cycleCount=Array.isArray(recoveryMembers)?recoveryMembers.filter(member=>member?.kind===21).length:0;
           if(message.nativeIdleCycles!==undefined&&(!Array.isArray(message.nativeIdleCycles)||message.nativeIdleCycles.length)||
              message.pendingIdleCycleRequests!==undefined&&(!Array.isArray(message.pendingIdleCycleRequests)||
-               message.pendingIdleCycleRequests.length>(recoveringCycle?1:0)))throw Error('Native Idle cycles require prepared graphical admission');
+               message.pendingIdleCycleRequests.length>cycleCount))throw Error('Native Idle cycles require prepared graphical admission');
           if(message.nativeInitialIdleBodies!==undefined&&(!Array.isArray(message.nativeInitialIdleBodies)||message.nativeInitialIdleBodies.length))throw Error('Native initial Idle bodies require prepared graphical admission');
           if(message.nativeHomeArrivals!==undefined&&(!Array.isArray(message.nativeHomeArrivals)||message.nativeHomeArrivals.length))throw Error('Native Home arrival requires prepared graphical admission');
           if(message.nativeStrolls!==undefined&&(!Array.isArray(message.nativeStrolls)||message.nativeStrolls.length))throw Error('Native Idle stroll routes require prepared graphical admission');
@@ -2435,7 +2435,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(routeControl||message.protocolVersion!==2||!Array.isArray(message.routes)||
              !Number.isFinite(message.effectiveTime))throw Error('Invalid or repeated native intent baseline');
            const recovery=message.recoveredWorkerRoute;
-           const recoverySource=recoveringCycle?copyNativeRecoveryGroup(recovery,copyNativeWorldBoundary(message.worldBoundary??null)):null;
+           const recoverySource=cycleCount?copyNativeRecoveryGroup(recovery,copyNativeWorldBoundary(message.worldBoundary??null)):null;
            const recoveryCycles=recoverySource?.members.filter(member=>member.kind===21).map(member=>member.proof)??[];
            const recoveredAnimalId=recovery?.version===2?recovery.members?.find(member=>member.kind===26||member.kind===27)?.proof?.reference?.actorId:
              [26,27].includes(recovery?.kind)?recovery.proof?.reference?.actorId:null;
@@ -2467,12 +2467,12 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                throw Error('Encounter impact is newer than the control baseline');
              if(source.encounter?.version===3&&source.encounter.at!==message.clock.committedThrough)
                throw Error('Recovered pose differs from the held control clock');
-             const members=source.members.map(({kind,proof})=>({
+             const members=source.members.map(({kind,proof,idleCyclePhase})=>({
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
                  {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,
-                   ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase:source.idleCyclePhase})
+                   ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,encounter:source.encounter};

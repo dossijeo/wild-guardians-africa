@@ -1,7 +1,7 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
@@ -1359,13 +1359,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const count=game.workers.length;
     if(!nativeWorkerLifecycle||game.raid||![1,2].includes(count)||!civilShieldPhysicsAvailable()||
        session.core.wasm.spatial_body_count()!==count||game.workers.some(worker=>worker.incapacitated))return null;
-    const home=game.workers.find(worker=>worker.nativeRouteAdmission==='native-home');
-    const idle=game.workers.find(worker=>['native-idle','native-idle-stroll'].includes(worker.nativeRouteAdmission));
-    if(!idle||(count===1?idle.nativeRouteAdmission!=='native-idle':!home))return null;
-    const kind=idle.nativeRouteAdmission==='native-idle'?21:22;
-    const cycle=kind===21?planner.nativeIdleCycleExecution(idle.id):planner.nativeIdleStrollExecution(idle.id);
-    const kinds=home?[18,kind]:[kind],executions=home?[planner.nativeHomeRouteExecution(home.id),cycle]:[cycle];
-    if(executions.some(row=>!row||row.arrived||row.executedThrough!==game.elapsed)||!recoverableExecution(kind,cycle))return null;
+    const workers=[...game.workers].sort((a,b)=>Number(b.nativeRouteAdmission==='native-home')-Number(a.nativeRouteAdmission==='native-home'));
+    const kinds=workers.map(({nativeRouteAdmission})=>nativeRouteAdmission==='native-home'?18:
+      nativeRouteAdmission==='native-idle'?21:nativeRouteAdmission==='native-idle-stroll'?22:null);
+    if(!nativeOrdinaryRecoveryKinds(kinds))return null;
+    const executions=workers.map(({id},i)=>kinds[i]===18?planner.nativeHomeRouteExecution(id):
+      kinds[i]===21?planner.nativeIdleCycleExecution(id):planner.nativeIdleStrollExecution(id));
+    if(executions.some((row,i)=>!row||row.arrived||row.executedThrough!==game.elapsed||!recoverableExecution(kinds[i],row)))return null;
     const members=executions.map(({actorId},i)=>({kind:kinds[i],actorId}));
     const proofs=members.map(({kind},i)=>({kind,proof:executions[i].binding}));
     try{copyNativeRecoveryGroup({version:2,members:proofs},planner.nativeWorldResourceBoundary(),{awaitingIdleCyclePhase:true});}
@@ -1373,14 +1373,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     return {members,executions};
   }
   function recoverableOrdinaryIdleSource(actorId){
-    const group=ordinaryWorkerRecovery(),cycle=group?.executions[group.members.findIndex(({kind})=>kind===21)];
-    return cycle?.finished&&'worker-'+cycle.actorId===actorId?JSON.stringify(cycle.binding):null;
+    const group=ordinaryWorkerRecovery();
+    const cycle=group?.executions[group.members.findIndex(member=>member.kind===21&&'worker-'+member.actorId===actorId)];
+    return cycle?.finished?JSON.stringify(cycle.binding):null;
   }
-  function recoveryCycleProof(group,route){
-    return group.executions[route.members?.findIndex(({kind})=>kind===21)]?.binding??null;
+  function inheritedRecoveryCycles(group,route){
+    return group.executions.flatMap(({binding},i)=>route.members?.[i].kind===21&&binding.reference.sourceCycleSequence?[binding]:[]);
   }
-  function retiredCyclePhase(cycle,retirement){
-    return retirement.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,cycle))??null;
+  function retiredCyclePhases(cycles,retirement){
+    const phases=cycles.map(cycle=>retirement.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,cycle)));
+    return phases.every(Boolean)?phases:null;
   }
   function recoveryRoute(){
     if(encounterDraftAdvance?.published){
@@ -1469,7 +1471,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }
-    if(route.members[0]?.kind===21||[21,22].includes(route.members[1]?.kind)){
+    if(nativeOrdinaryRecoveryKinds(route.members.map(({kind})=>kind))){
       const ordinary=ordinaryWorkerRecovery();
       return ordinary&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
         kind===route.members[i].kind&&actorId===route.members[i].actorId)?{executions:ordinary.executions}:null;
@@ -1497,10 +1499,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !live||JSON.stringify(live)!==JSON.stringify(group)||
          live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,live.ruin)))
         throw Error('Native assignments changed while waiting for terminal draw');
-      const cycle=recoveryCycleProof(live,route);
-      const idleCyclePhase=cycle?.reference.sourceCycleSequence?retiredCyclePhase(cycle,retirement):null;
-      if(cycle?.reference.sourceCycleSequence&&!idleCyclePhase)return null;
-      return idleCyclePhase?{...route,idleCyclePhase}:route;
+      const idleCyclePhases=retiredCyclePhases(inheritedRecoveryCycles(live,route),retirement);
+      if(!idleCyclePhases)return null;
+      return idleCyclePhases.length?{...route,idleCyclePhases}:route;
     },
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
@@ -1590,11 +1591,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))
         throw Error('Expected current native recovery assignments');
-      const cycle=recoveryCycleProof(group,route);
-      const idleCyclePhase=cycle?.reference.sourceCycleSequence?
-        retiredCyclePhase(cycle,await nativeIntentControl.waitForTerminalDraw()):null;
-      if(JSON.stringify(idleCyclePhase)!==JSON.stringify(route.idleCyclePhase??null)||
-         cycle?.reference.sourceCycleSequence&&!idleCyclePhase)
+      const cycles=inheritedRecoveryCycles(group,route);
+      const idleCyclePhases=cycles.length?retiredCyclePhases(cycles,await nativeIntentControl.waitForTerminalDraw()):[];
+      if(!idleCyclePhases||JSON.stringify(idleCyclePhases)!==JSON.stringify(route.idleCyclePhases??[]))
         throw Error('Expected the prior consumer’s exact Idle cycle phase');
       const members=executions.map((execution,i)=>{
         const {kind}=routes[i],profile=nativeWorkerRouteRecoveryProfile(kind);
@@ -1609,7 +1608,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
       const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
-        ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhase?{idleCyclePhase}:{})};
+        ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhases.length?{idleCyclePhases}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
         route.members?{version:2,holdId,members:proofs,...evidence}:{holdId,...proofs[0]});
       const live=recoveryGroup(route);
@@ -1645,9 +1644,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       return draw;
       function sameHeld(profile,after,row,elapsed){
+        const phase=profile.kind===21?route.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,after.binding)):null;
         if(row.kind!==profile.kind||
            row.assignmentSequence!==nativeRecoverySequence(after.binding)||
-           row.phaseDelay!==(profile.kind===21?route.idleCyclePhase?.phaseDelay:undefined)||
+           row.phaseDelay!==phase?.phaseDelay||
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
         const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
         const terminal=after.arrived&&(profile.kind===18||profile.kind===26&&live.ruin);

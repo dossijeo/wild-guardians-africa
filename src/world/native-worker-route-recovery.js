@@ -170,6 +170,11 @@ export function recoveredNativeGateSamples(row){
 
 export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.assignmentSequence;
 export const nativeRecoveryGates=proof=>proof.gateIds??[];
+export function nativeOrdinaryRecoveryKinds(kinds){
+ const [first,second]=kinds;
+ return kinds.length===1&&first===21||kinds.length===2&&
+   (first===21&&second===21||first===18&&[21,22].includes(second));
+}
 
 export function copyNativeIdleCycleRecoveryPhase(value){
  const {version,actorId,bodyId,cycleSequence,phaseDelay}=value??{};
@@ -253,9 +258,9 @@ export function copyRecoveredEncounterPose(value){
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
 export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=false}={}){
- const idleCycle=value.version===2&&Array.isArray(value.members)&&value.refuge===undefined&&value.ruin===undefined&&value.encounter===undefined?
-   value.members.find(member=>member?.kind===21):null;
- if(value.idleCyclePhase!==undefined&&!idleCycle)throw Error('Idle cycle phase requires its recovered cycle');
+ const ordinaryWorkers=value.version===2&&Array.isArray(value.members)&&value.refuge===undefined&&value.ruin===undefined&&
+   value.encounter===undefined&&nativeOrdinaryRecoveryKinds(value.members.map(member=>member?.kind));
+ if(value.idleCyclePhases!==undefined&&!ordinaryWorkers)throw Error('Idle cycle phases require their recovered cycles');
  if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined&&value.encounter===undefined)
    return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
@@ -301,27 +306,33 @@ export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=fals
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind,proof}],refuge};
  }
- const singleIdle=value.members.length===1&&idleCycle===value.members[0];
- const ordinaryWorkers=singleIdle||[21,22].includes(value.members[1]?.kind);
- if(!singleIdle&&(value.members.length!==2||value.members[0]?.kind!==18||!ordinaryWorkers&&value.members[1]?.kind!==26))
+ if(!ordinaryWorkers&&(value.members.length!==2||value.members[0]?.kind!==18||value.members[1]?.kind!==26))
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
- const cycleProof=members.find(({kind})=>kind===21)?.proof;
- const inheritedCycle=cycleProof&&cycleProof.reference.sourceCycleSequence!==0;
- const idleCyclePhase=value.idleCyclePhase===undefined?null:copyNativeIdleCycleRecoveryPhase(value.idleCyclePhase);
- if(idleCyclePhase?(!inheritedCycle||!nativeIdleCycleRecoveryPhaseMatches(idleCyclePhase,cycleProof)):
-    inheritedCycle&&!awaitingIdleCyclePhase)throw Error('Recovered Idle cycle requires its retired phase');
- if(singleIdle){
-   if(!sameNativeWorldBoundary(world,cycleProof.reference.worldBoundary))throw Error('Single Idle recovery needs its acquired world cut');
-   return {members,ordinaryWorkers:true,...(idleCyclePhase?{idleCyclePhase}:{})};
+ let idleCyclePhases=[];
+ if(ordinaryWorkers){
+   const inherited=members.filter(({kind,proof})=>kind===21&&proof.reference.sourceCycleSequence!==0);
+   if(value.idleCyclePhases!==undefined){
+     if(!Array.isArray(value.idleCyclePhases)||value.idleCyclePhases.length!==inherited.length)
+       throw Error('Each inherited Idle cycle requires its retired phase');
+     idleCyclePhases=Object.freeze(value.idleCyclePhases.map(copyNativeIdleCycleRecoveryPhase));
+     for(const [i,member] of inherited.entries()){
+       const phase=idleCyclePhases[i];
+       if(!nativeIdleCycleRecoveryPhaseMatches(phase,member.proof))throw Error('Retired phase differs from its recovered Idle cycle');
+       member.idleCyclePhase=phase;
+     }
+   }else if(inherited.length&&!awaitingIdleCyclePhase)throw Error('Each inherited Idle cycle requires its retired phase');
+   if(members.length===1&&!sameNativeWorldBoundary(world,members[0].proof.reference.worldBoundary))
+     throw Error('Single Idle recovery needs its acquired world cut');
  }
- const [home,peer]=members.map(member=>member.proof.reference);
- if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>nativeRecoveryGates(proof).length):
-    !home.sourceRequest?.raidSpawnSequence||peer.purpose==='retreat')||
-    home.actorId===peer.actorId||home.bodyId===peer.bodyId||
-    nativeRecoverySequence(members[0].proof)===nativeRecoverySequence(members[1].proof)||
+ const refs=members.map(member=>member.proof.reference);
+ if((ordinaryWorkers?members.some(({kind,proof})=>nativeRecoveryGates(proof).length||kind===18&&
+    (proof.reference.sourceRequest?.raidSpawnSequence||proof.reference.sourceRequest?.recoveryHit)):
+    !refs[0].sourceRequest?.raidSpawnSequence||refs[1].purpose==='retreat')||
+    new Set(refs.map(ref=>ref.actorId)).size!==members.length||new Set(refs.map(ref=>ref.bodyId)).size!==members.length||
+    new Set(members.map(({proof})=>nativeRecoverySequence(proof))).size!==members.length||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
     members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
    throw Error('Mixed recovery requires two current assignments at one world cut');
- return ordinaryWorkers?{members,ordinaryWorkers:true,...(idleCyclePhase?{idleCyclePhase}:{})}:{members};
+ return ordinaryWorkers?{members,ordinaryWorkers:true,...(idleCyclePhases.length?{idleCyclePhases}:{})}:{members};
 }

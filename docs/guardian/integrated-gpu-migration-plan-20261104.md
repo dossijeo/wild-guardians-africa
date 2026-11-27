@@ -8,6 +8,8 @@ Recovery en Sabana conserva Home18 e Idle21 con el sucesor aún pendiente y tamb
 
 Con un solo trabajador en Idle21, NVIDIA confirmó el primer envío del sustituto y seleccionó el mismo actor antes de reanudar el reloj. [Control y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).
 
+Con dos Idle21 adquiridos, NVIDIA confirmó ambos relojes en el primer envío y ambos picks con Hosted aún retenido. [Control y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
+
 Si READY de la marcha sucesora llega en el corte de derrumbe, Hosted publica el GO antes de que Surface prepare kind4. NVIDIA confirmó ambos dibujos en orden desde `RaidSpawned`, el cuarto golpe en el mismo cuerpo y el drenaje. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
 
 En Desierto se reprodujo el vencimiento del derrumbe durante el cuarto ataque al centro sucesor, partiendo de una aproximación ya seleccionada. WASM conserva el Strike27 al adquirir kind4 y el reemplazo de Draw vuelve a presentar ese ataque con su edad confirmada. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).

@@ -167,12 +167,12 @@ export function createNativeIntentControlPublication({port,session,observe,
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
            (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
            (recoveryBaseline.refuge&&members.length===0?!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge):draw.refuge!==undefined)||
-           !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof},i)=>{
+           !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof,idleCyclePhase},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              if(row?.kind!==kind)return false;
              const gates=recoveredNativeGateSamples(row),gateIds=nativeRecoveryGates(proof),boundary=proof.reference.worldBoundary;
              return row.assignmentSequence===nativeRecoverySequence(proof)&&
-               row.phaseDelay===(kind===21?recoveryBaseline.idleCyclePhase?.phaseDelay:undefined)&&
+               row.phaseDelay===idleCyclePhase?.phaseDelay&&
                profile.sameReference(row[profile.clockField],proof.reference)&&Number.isFinite(row.relativeTime)&&row.relativeTime>=0&&
                (gateIds.length===1?row.nativeGates===undefined&&row.nativeGate!==undefined:
                  row.nativeGate===undefined&&row.gateElapsed===undefined&&

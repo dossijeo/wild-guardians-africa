@@ -938,6 +938,8 @@ El mismo guardado acreditó Home18 e Idle21 en NVIDIA con el sucesor pendiente y
 
 En un guardado con un solo trabajador, NVIDIA también acreditó el primer envío de Idle21 y su picking con el reloj retenido. La cobertura del sucesor pendiente y adquirido de ese trabajador está comprobada en CPU. [Prueba del trabajador único](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).
 
+Con los dos trabajadores todavía en Idle21, NVIDIA acreditó las dos adquisiciones en el primer envío del sustituto y seleccionó los dos actores con el reloj retenido. El control CPU exige ambos relojes en el mismo envío. [Prueba de los dos ciclos adquiridos](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
+
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias

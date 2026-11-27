@@ -41,7 +41,7 @@ for(const loss of ['first cycle','pending successor','acquired successor'])test(
   const route=await f.authority.terminalWorkerRoute();
   assert(route,'One acquired Idle21 is missing from terminal recovery');
   assert.deepEqual(route.members,[{kind:21,actorId:cycle.reference.actorId}]);
-  assert.equal(Boolean(route.idleCyclePhase),inherited);
+  assert.equal(Boolean(route.idleCyclePhases),inherited);
   replacement=await drawFixture({capabilities:{nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
@@ -51,7 +51,7 @@ for(const loss of ['first cycle','pending successor','acquired successor'])test(
   assert.deepEqual(resources.nativeIdleCycleBinding,cycle);
   assert.equal(execution.finished,waiting);
   assert.equal(at,atLoss.elapsed);
-  const proof={version:2,members:[{kind:21,proof:execution.binding}],idleCyclePhase:source.idleCyclePhase};
+  const proof={version:2,members:[{kind:21,proof:execution.binding}],idleCyclePhases:source.idleCyclePhases};
   assert.equal(copyNativeRecoveryGroup(proof,source.worldBoundary).ordinaryWorkers,true);
   assert.throws(()=>copyNativeRecoveryGroup(proof,{...source.worldBoundary,ticket:source.worldBoundary.ticket+1}),/acquired world cut/);
 
@@ -77,7 +77,7 @@ for(const loss of ['first cycle','pending successor','acquired successor'])test(
   const first=await f.authority.checkHeldDraw(30,hold,route),age=floorFloat32(waiting?ref.duration:at-epoch);
   assert.equal(first.elapsed,at);
   assert.equal(first.members[0].relativeTime,age);
-  const pick=captureNativeRoutePickFrame(host.inspect()),phaseDelay=source.idleCyclePhase?.phaseDelay??0;
+  const pick=captureNativeRoutePickFrame(host.inspect()),phaseDelay=source.idleCyclePhases?.[0].phaseDelay??0;
   assert.equal(pick.getIdleCycleElapsed(ref),age);
   assert.equal(pick.getIdleCyclePhaseOffset(ref,period),nativeIdleCyclePhaseOffset({elapsed:at,executionEpoch:epoch,relativeTime:age,duration:ref.duration,period,phaseDelay}));
   await f.attachRecoveredResources(replacement);attached=true;

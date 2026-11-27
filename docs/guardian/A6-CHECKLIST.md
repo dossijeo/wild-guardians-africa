@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Sabana 714 recuperó dos trabajadores con Idle21 adquirido en el mismo corte. NVIDIA confirmó ambos cuerpos y ambos picks antes de reanudar. El control CPU rechaza un primer envío parcial. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
+
 Sabana 714 recuperó al único trabajador desde el primer Idle21 en NVIDIA. El sustituto presentó el mismo cuerpo y el picking lo seleccionó al reloj retenido antes de reanudar. Los casos con sucesor pendiente o adquirido pasan en CPU. [Recibo y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).
 
 Sabana 714 recuperó Home18 e Idle21 tanto con el sucesor pendiente como después de adquirirlo. NVIDIA confirmó el relevo posterior en el primer caso y la continuidad de los dos relojes en el segundo. El desfase acumulado positivo se comprobó en CPU. Quedan el picking físico y una pérdida con ese desfase positivo. [Sucesor pendiente](native-terminal-resource-recovery-20261120.md#reemplazo-con-home18-y-el-primer-ciclo-idle21) · [Sucesor adquirido](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-sucesor-idle21-adquirido).
