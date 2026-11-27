@@ -355,7 +355,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       const routeSupport={...support,valid:()=>support.valid()&&foot.valid(),presentation:{...support.presentation,kind:'native-route-presentation',
         version:1,nativeRoute:proof.bodyReference.nativeRoute,executionScope:'canonical-native',nativeCrossingAdmitted:false,gates:[]}};
       return prepareWorkerRoute(actorId,routeSupport,{...options,getPickTime:()=>options.getProjection(ref.selector,ref.epoch).at},
-        {resources:validated,current,stopped:{support,foot,gateCount:farm?proof.proof.reference.gates.length:0,
+        {resources:validated,current,stopped:{support,foot,gateCount:proof.proof.reference.gates.length,
           getProjection:()=>options.getProjection(ref.selector,ref.epoch)},
         binding:{[farm?'nativeHeldFarmArrival':stroll?'nativeHeldIdleStroll':'nativeHeldTaskRoute']:held,nativeStopped:ref.selector,suspended:proof.bodyReference}});
     }
@@ -812,7 +812,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const templates={nativeIdleStrollStopTemplate:nativeIdleStrollStopTemplate??undefined,nativeFarmArrivalStopTemplate:nativeFarmArrivalStopTemplate??undefined,nativeTaskRouteStopTemplate:nativeTaskRouteStopTemplate??undefined};
   const stop=terrainStopWireProtocol(templates,'Native stop mixes source families'),codec=stop?.codec;
   const template=codec?codec.copyReference(templates[stop.wireTemplateField]):null,farm=codec?.kind===24,task=codec?.kind===25;
-  if(template?.gates.length&&(!farm||typeof prepareStoppedGate!=='function'))throw Error('Native moving stop gate projection requires its prepared motor uniforms');
+  if(template?.gates.length&&(!codec.stoppedGateKind||typeof prepareStoppedGate!=='function'))throw Error('Native moving stop gate projection requires its prepared motor uniforms');
   if(template&&typeof getStoppedProjection!=='function')throw Error('Native moving stop requires its submitted projection reader');
   const effects=copyNativeWorldStopEffects(stopEffects,boundary),references=effects?nativeSuspendedBodiesFromProposal(effects,boundary):[],parts=[],gates=new Map(),retainedGates=new Set(),exclude=new Set();
   if(!effects||effects.routeEffects.rows.length!==references.length*26||typeof prepareBodySupport!=='function'||typeof getPickTime!=='function')throw Error('Native stopped terrain requires pinned projected workers');
@@ -975,7 +975,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
      return true;
     };
     parts.push(part);
-    for(const original of previous.packet.gates){let at=-1;for(let j=0;j<effects.gateEffects.rows.length;j+=3)if(effects.gateEffects.rows[j]===original.gateId){at=j;break;}if(at<0&&farm&&typeof retainNativeGate==='function'){
+    for(const original of previous.packet.gates){let at=-1;for(let j=0;j<effects.gateEffects.rows.length;j+=3)if(effects.gateEffects.rows[j]===original.gateId){at=j;break;}if(at<0&&codec?.stoppedGateKind&&typeof retainNativeGate==='function'){
      if(!retainedGates.has(original.gateId)){
       const retained=retainNativeGate(original,{template,stopEffects:effects,boundary});
       if(!retained||typeof retained.valid!=='function'||!retained.valid()){retained?.cancel?.();throw Error('Native stopped gate retention unavailable');}

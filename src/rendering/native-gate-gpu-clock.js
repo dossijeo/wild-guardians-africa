@@ -3,7 +3,7 @@ import {Vector4} from 'three';
 import {clamp,float,uniform} from 'three/tsl';
 import {copyNativeGatePresentation} from '../world/native-gate-presentation.js';
 import {copyNativeGateReference} from '../world/native-gate-reference.js';
-import {nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
+import {nativeGateStopCodec} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeStoppedGateSelector} from './native-stopped-clock.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {markRemoteStoppedNode,markRemoteClockNode} from './remote-clock-bindings.js';
@@ -13,11 +13,14 @@ import {floorFloat32} from './float32-time.js';
 // world's prepared boundary protects this motor even when no actor owns it.
 export function createNativeGateGpuClock(presentation,{stopTemplate=null,getStoppedProjection=null,recoveredStop=null}={}){
  if(stopTemplate){
-  const packet=copyNativeGatePresentation(presentation,presentation),selector=copyNativeStoppedGateSelector({kind:'native-farm-arrival-stopped-gate',version:1,stop:stopTemplate,gateId:packet.gateId,mechanism:packet.mechanism}),nativeGate=copyNativeGateReference({gateId:packet.gateId,worldBoundary:packet.worldBoundary});
+  const codec=nativeGateStopCodec(stopTemplate),packet=copyNativeGatePresentation(presentation,presentation);
+  if(!codec)throw Error('Native stopped gate has no motion family');
+  const selector=copyNativeStoppedGateSelector({kind:codec.stoppedGateKind,version:1,stop:stopTemplate,gateId:packet.gateId,mechanism:packet.mechanism}),
+    nativeGate=copyNativeGateReference({gateId:packet.gateId,worldBoundary:packet.worldBoundary});
   if(!sameNativeWorldBoundary(selector.stop.worldBoundary,packet.worldBoundary)||packet.startTime!==packet.endTime||typeof getStoppedProjection!=='function')throw Error('Native stopped gate requires its projected owner');
   const openingNode=markRemoteStoppedNode(uniform(0),selector,packet.startTime,'opening'),start=Object.freeze({at:packet.startTime}),end=Object.freeze({at:packet.endTime});let proof=null,sealed=false;
   const clock=Object.freeze({nativeGate,stoppedSelector:selector,openingNode,timeNode:float(0),status:()=>({sealed,installed:{nativeGate,start,end}}),
-   acceptStopProof(value){if(sealed)throw Error('Native stopped gate is already sealed');const next=nativeFarmArrivalStopCodec.copyAttestation(value);if(!next.projection||!nativeFarmArrivalStopCodec.sameReference(next.preparedReference,selector.stop))throw Error('Native stopped gate lacks its exact final projection');proof=next;return true;},
+   acceptStopProof(value){if(sealed)throw Error('Native stopped gate is already sealed');const next=codec.copyAttestation(value);if(!next.projection||!codec.sameReference(next.preparedReference,selector.stop))throw Error('Native stopped gate lacks its exact final projection');proof=next;return true;},
    readyToCommit(){return !!proof;},seal(){if(!proof)throw Error('Native stopped gate lacks its final receipt');sealed=true;},
    sampleOpening(){const value=getStoppedProjection(selector,packet.startTime);if(!sealed||!value||value.opening<0||value.opening>1||Math.fround(value.opening)!==value.opening||!sameNativeWorldBoundary(value.worldBoundary,proof.reference.worldBoundary))throw Error('Native stopped gate lacks its submitted opening');return value.opening;}
   });

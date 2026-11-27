@@ -7,7 +7,7 @@ import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,co
 import {copyNativeTaskRouteStopAttestation,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
 import {copyNativeIdleStrollStopAttestation,sameNativeIdleStrollStopReference} from '../world/native-idle-stroll-stop.js';
-import {copyNativeStoppedClock} from './native-stopped-clock.js';
+import {copyNativeStoppedClock,isNativeStoppedGate} from './native-stopped-clock.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,copyNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleReferenceCovered,copyNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference} from '../world/native-home-arrival.js';
@@ -612,9 +612,12 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
       if(binding.semantic==='idle-offset'&&(binding.nativeIdleCycle?capabilities.nativeIdleCycleIdlePhaseVersion:binding.nativeFarmArrival?capabilities.nativeFarmArrivalIdlePhaseVersion:capabilities.nativeIdleStrollIdlePhaseVersion)!==1)throw Error('Draw owner does not support native '+(binding.nativeIdleCycle?'Cycle':binding.nativeFarmArrival?'Farm':'Stroll')+' Idle phase clocks');
       if(binding.semantic==='stop-value'&&!binding.nativeStopped)throw TypeError('Native stopped value requires its body');
       if(binding.nativeStopped){
-        const gate=binding.nativeStopped.kind==='native-farm-arrival-stopped-gate',farm=gate||binding.nativeStopped.kind==='native-farm-arrival-stopped-body',task=binding.nativeStopped.kind==='native-task-route-stopped-body';
+        const {kind}=binding.nativeStopped,gate=isNativeStoppedGate(binding.nativeStopped),
+          farm=kind==='native-farm-arrival-stopped-gate'||kind==='native-farm-arrival-stopped-body',
+          task=kind==='native-task-route-stopped-gate'||kind==='native-task-route-stopped-body';
         const clockVersion=task?capabilities.nativeTaskRouteStopClockVersion:farm?capabilities.nativeFarmArrivalStopClockVersion:capabilities.nativeIdleStrollStopClockVersion;
-        if(gate&&capabilities.nativeFarmArrivalStopGateVersion!==1||clockVersion!==1||task&&capabilities.nativeTaskRouteStopVersion!==1||farm&&capabilities.nativeFarmArrivalStopVersion!==1)throw Error('Draw owner does not support native final stopped values');
+        const gateVersion=task?capabilities.nativeTaskRouteStopGateVersion:capabilities.nativeFarmArrivalStopGateVersion;
+        if(gate&&gateVersion!==1||clockVersion!==1||task&&capabilities.nativeTaskRouteStopVersion!==1||farm&&capabilities.nativeFarmArrivalStopVersion!==1)throw Error('Draw owner does not support native final stopped values');
         copyNativeStoppedClock(binding);
       }
       if(binding.semantic==='idle-cycle-watch-knot'&&!binding.nativeIdleCycle)throw TypeError('Native watch knot requires its cycle');

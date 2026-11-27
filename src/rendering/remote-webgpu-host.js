@@ -1,4 +1,5 @@
-import {stop24GateClockMatches,stop24GateSamplesMatch,stopFields} from "../world/native-stop24-task-recovery.js";
+import {recoveredStoppedGateSamplesMatch,stopFields} from "../world/native-stop24-task-recovery.js";
+import {nativeStoppedGateClockMatches} from '../world/native-worker-route-stop-codec.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {submittedRecoveryPose} from './remote-recovery-pose.js';
@@ -12,7 +13,7 @@ import {nativeFarmIdlePhaseOffset,nativeIdleCyclePhaseOffset} from './native-far
 import {nativeClockResourceEnd} from './native-clock-resource-end.js';
 import {copyNativeTaskRouteStopReference,copyNativeTaskRouteStopAttestation,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
-import {copyNativeStoppedClock,nativeStoppedClockKey} from './native-stopped-clock.js';
+import {copyNativeStoppedClock,isNativeStoppedGate,nativeStoppedClockKey} from './native-stopped-clock.js';
 import {copyNativeIdleStrollStopReference,sameNativeIdleStrollStopReference,copyNativeIdleStrollStopAttestation} from '../world/native-idle-stroll-stop.js';
 import {copyNativeIdleStrollReference,sameNativeIdleStrollReference,copyNativeIdleStrollAttestation,nativeIdleStrollReferenceCovered} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleReferenceCovered,copyNativeIdleCycleAttestation,nativeIdleCycleWatchKnot} from '../world/native-idle-cycle.js';
@@ -689,7 +690,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if (!binding.nativeStopped || binding.semantic !== 'stop-value') continue;
       const value = binding.motionRecord.value(binding.stopField);
       if (!Number.isFinite(value)) throw Error('Invalid native stopped value');
-      if(binding.nativeStopped.kind==='native-farm-arrival-stopped-gate'){
+      if(isNativeStoppedGate(binding.nativeStopped)){
         const live=clockBindings.get(`${binding.id}:${binding.byteOffset}`),proof=live?.stoppedGateProjection??Object.freeze({selector:binding.nativeStopped,worldBoundary:binding.motionRecord.worldBoundary,opening:Math.fround(value)});
         if(!proof.worldBoundary||proof.opening!==Math.fround(value)||!sameNativeWorldBoundary(proof.worldBoundary,binding.motionRecord.worldBoundary)||value<0||value>1||!live||nativeStoppedClockKey(live)!==nativeStoppedClockKey(binding))throw Error('Native stopped motor lost its physical binding');
         live.stoppedGateProjection=proof;binding.stoppedGateProjection=proof;binding.motionRecord=retainedStoppedGateRecord(binding,proof);
@@ -754,7 +755,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(!fixedStop)device.queue.writeBuffer(resolve({ [REF]: binding.id }), binding.byteOffset, new Float32Array([submittedValue]));
         if(binding.nativeRestoredWallRepair)nativeTimes.set(binding.restoredRepairRecord.declaration,{nativeRestoredWallRepair:binding.nativeRestoredWallRepair,declaration:binding.restoredRepairRecord.declaration,semantic:'relative',epoch:binding.epoch,relativeTime:submittedValue,elapsed:binding.epoch+submittedValue});
         if(binding.nativeBarrierAddition)nativeTimes.set(binding.barrierOrigin,{nativeBarrierAddition:binding.nativeBarrierAddition,nativeBarrierAdditionBinding:binding.barrierOrigin.proof,semantic:'relative',epoch:binding.epoch,executionEpoch,relativeTime:submittedValue,elapsed:executionEpoch+submittedValue});
-        if(binding.nativeStopped?.kind==='native-farm-arrival-stopped-gate'){
+        if(isNativeStoppedGate(binding.nativeStopped)){
           nativeTimes.set(binding.nativeClockKey,{nativeStopped:binding.nativeStopped,semantic:'stop-value',stopField:'opening',epoch:binding.epoch,worldBoundary:binding.motionRecord.worldBoundary,opening:binding.submittedStopValue});
         }else if(binding.nativeStopped){
           const key=nativeStoppedClockKey({nativeStopped:binding.nativeStopped,semantic:'relative',epoch:binding.epoch});let fact=nativeTimes.get(key);
@@ -934,9 +935,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             recoveryGateMatches(b,id,ref.worldBoundary)&&b.elapsed===row.elapsed));
           if(!gates.every(Boolean))return null;
           const samples=gates.map(gate=>({nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}));
-          const stoppedGates=profile.kind===24?proof.proof.reference.gates.map(gate=>
-            nativeRouteFrame.bindings.find(binding=>stop24GateClockMatches(binding,gate,proof))):[];
-          if(stoppedGates.length&&!stop24GateSamplesMatch(stoppedGates,proof))return null;
+          const stoppedGates=profile.stopProjectionMatches?proof.proof.reference.gates.map(gate=>
+            nativeRouteFrame.bindings.find(binding=>nativeStoppedGateClockMatches(binding,gate,proof.proof.preparedReference))):[];
+          if(stoppedGates.length&&!recoveredStoppedGateSamplesMatch(stoppedGates,proof))return null;
           return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
             ...(inherited?{phaseDelay}:{}),
             ...(profile.stopProjectionMatches?{projection:row.projection,bodyReference:row.bodyReference}:{}),
@@ -1234,7 +1235,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   // actually included in this retained frame's pinned resource snapshot.
   function assertTerminalGateClocks(reference,bindings){
     const source=reference?.sourceHome??reference?.sourceCarry;if(!source)return;
-    for(const id of source.gateIds)if(!bindings.some(b=>!b.nativeRoute&&(b.nativeGate?.gateId===id&&nativeGateReferenceCovered(b.nativeGate,reference.worldBoundary)||b.nativeStopped?.kind==='native-farm-arrival-stopped-gate'&&b.nativeStopped.gateId===id&&nativeGateReferenceCovered({gateId:id,worldBoundary:b.nativeStopped.stop.worldBoundary},reference.worldBoundary))))
+    for(const id of source.gateIds)if(!bindings.some(b=>!b.nativeRoute&&(b.nativeGate?.gateId===id&&nativeGateReferenceCovered(b.nativeGate,reference.worldBoundary)||isNativeStoppedGate(b.nativeStopped)&&b.nativeStopped.gateId===id&&nativeGateReferenceCovered({gateId:id,worldBoundary:b.nativeStopped.stop.worldBoundary},reference.worldBoundary))))
       throw Error(reference.sourceHome?'Native Home absence gate graphics are not prepared':'Native settlement gate graphics are not prepared');
   }
   function validatePreparedWorldBoundary(packet){
@@ -1301,10 +1302,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         if(stopped&&(!preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch)||
            stopFields.some(field=>!preparedBindings.some(b=>b.semantic==='stop-value'&&b.stopField===field&&b.epoch===epoch&&
              profile.sameReference(b.nativeStopped,ref)))))return true;
-        if(profile.kind===24){
+        const predecessor=proof.farm??proof.task;
+        if(stopped&&predecessor){
           const stoppedGates=proof.proof.reference.gates;
-          if(stoppedGates.some(gate=>!preparedBindings.some(binding=>stop24GateClockMatches(binding,gate,proof)))||
-             preparedBindings.some(binding=>proof.farm.gateIds.includes(binding.nativeGate?.gateId)))return true;
+          if(stoppedGates.some(gate=>!preparedBindings.some(binding=>nativeStoppedGateClockMatches(binding,gate,proof.proof.preparedReference)))||
+             preparedBindings.some(binding=>predecessor.gateIds.includes(binding.nativeGate?.gateId)))return true;
         }
         const end=stopped?Number.MAX_SAFE_INTEGER:[15,17,21].includes(profile.kind)?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
@@ -1391,7 +1393,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return {...binding,motionRecord,actionRecord:motionRecord.actionRecord};
       }
       if(binding.nativeStopped){
-        const ref=binding.nativeStopped.stop,boundary=packet.metadata?.nativeWorldBoundary,gate=binding.nativeStopped.kind==='native-farm-arrival-stopped-gate',farm=gate||binding.nativeStopped.kind==='native-farm-arrival-stopped-body',task=binding.nativeStopped.kind==='native-task-route-stopped-body';
+        const ref=binding.nativeStopped.stop,boundary=packet.metadata?.nativeWorldBoundary,gate=isNativeStoppedGate(binding.nativeStopped),
+          farm=ref.kind==='native-farm-arrival-stop-reference',task=ref.kind==='native-task-route-stop-reference';
         if(!routeControl?.status().clock||!packet.metadata?.clock||!worldBoundaryRequired||!boundary||boundary.authorityEpoch!==ref.worldBoundary.authorityEpoch||boundary.nativeSession!==ref.worldBoundary.nativeSession||boundary.ticket<ref.worldBoundary.ticket||boundary.effectiveTime<ref.worldBoundary.effectiveTime)throw Error('Native stopped body requires its causal world');
         // The acquired scalar belongs to this existing physical binding, not to
         // the stopped actor's later lifetime. No cache outside that owner.
@@ -1400,7 +1403,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           if(JSON.stringify(frozen.selector)!==JSON.stringify(binding.nativeStopped)||!nativeGateReferenceCovered({gateId:binding.nativeStopped.gateId,worldBoundary:frozen.worldBoundary},boundary))throw Error('Native stopped motor belongs to another acquired world');
           return {...binding,motionRecord:retainedStoppedGateRecord(binding,frozen)};
         }
-        const motionRecord=routeControl[gate?'admitFarmArrivalStoppedGate':task?'admitTaskRouteStoppedBody':farm?'admitFarmArrivalStoppedBody':'admitStoppedBody'](binding.nativeStopped,{preparingWorldBoundary:preparing?boundary:null});
+        const motionRecord=routeControl[gate?'admitStoppedGate':task?'admitTaskRouteStoppedBody':farm?'admitFarmArrivalStoppedBody':'admitStoppedBody'](binding.nativeStopped,{preparingWorldBoundary:preparing?boundary:null});
         if(preparing&&!motionRecord.isCurrent()&&!(task?sameNativeTaskRouteStopReference:farm?sameNativeFarmArrivalStopReference:sameNativeIdleStrollStopReference)(ref,packet.metadata[task?'nativeTaskRouteStopTemplate':farm?'nativeFarmArrivalStopTemplate':'nativeIdleStrollStopTemplate']))throw Error('Native stopped body differs from its prepared template');
         if(!preparing&&!motionRecord.isCurrent())throw Error('Native stopped body lacks its final projection');
         return {...binding,motionRecord};
@@ -2113,7 +2116,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            if(message.preparedFarmArrivalStopTemplate)try{
              const ref=copyNativeFarmArrivalStopReference(message.preparedFarmArrivalStopTemplate);if(!sameNativeFarmArrivalStopReference(ref,pending?.metadata?.nativeFarmArrivalStopTemplate))throw Error('Native Farm stop lacks its retained template');
              const bindings=quiescenceBindings();
-             for(const gate of ref.gates)if(!bindings.some(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-gate'&&b.nativeStopped.gateId===gate.gateId&&b.nativeStopped.mechanism===gate.mechanism&&b.semantic==='stop-value'&&b.stopField==='opening'&&sameNativeFarmArrivalStopReference(b.nativeStopped.stop,ref)))throw Error('Native Farm stop lacks its prepared motor opening uniform');
+             for(const gate of ref.gates)if(!bindings.some(b=>nativeStoppedGateClockMatches(b,gate,ref)))throw Error('Native Farm stop lacks its prepared motor opening uniform');
              for(const owner of ref.routes){if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='relative'&&sameNativeFarmArrivalStopReference(b.nativeStopped.stop,ref)))throw Error('Native Farm stop lacks its prepared relative clock');if(owner.state!==4)throw Error('Native Farm stop has no suspended graphical owner');for(const field of ['age','x','z','yaw','phase','arrived','runPhase','walkPhase','carryPhase'])if(!bindings.some(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&b.semantic==='stop-value'&&b.stopField===field&&sameNativeFarmArrivalStopReference(b.nativeStopped.stop,ref)))throw Error('Native Farm stop lacks its prepared final-value uniforms');}
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(preparedWorldBoundary&&pending?.metadata?.nativeTaskRouteStopTemplate&&!message.preparedTaskRouteStopTemplate){
@@ -2124,6 +2127,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              const ref=copyNativeTaskRouteStopReference(message.preparedTaskRouteStopTemplate);
              if(!sameNativeTaskRouteStopReference(ref,pending?.metadata?.nativeTaskRouteStopTemplate))throw Error('Native Task stop lacks its retained template');
              const bindings=quiescenceBindings();
+             for(const gate of ref.gates)if(!bindings.some(b=>nativeStoppedGateClockMatches(b,gate,ref)))
+               throw Error('Native Task stop lacks its prepared motor opening uniform');
              for(const owner of ref.routes){
                if(owner.state!==4)throw Error('Native Task stop has no suspended graphical owner');
                const pose=bindings.filter(b=>b.nativeStopped?.actorId===owner.nativeRoute.actorId&&sameNativeTaskRouteStopReference(b.nativeStopped.stop,ref));

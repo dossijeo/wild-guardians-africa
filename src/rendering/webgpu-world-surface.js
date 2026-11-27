@@ -845,10 +845,10 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const workerTask=members.length===1&&([14,15,16,17].includes(members[0].profile.kind)||members[0].profile.stopProjectionMatches);
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||workerTask||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
-    let recoveredFarmGatesCurrent=()=>true;
+    let recoveredStoppedGatesCurrent=()=>true;
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&
-      replayMatches&&recoveredFarmGatesCurrent()&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
+      replayMatches&&recoveredStoppedGatesCurrent()&&sameNativeWorldBoundary(preparedNativeWorldBoundary,replayed)&&
       sameNativeWorldBoundary(remoteGpu.requiredNativeWorldBoundary(),boundary);
     if(!Number.isSafeInteger(recoveryHold)||recoveryHold<1||!remoteGpu||
        !members.every(member=>member.execution.executedThrough===at&&(member.crop?roster:workers))||ownerSignal?.aborted||!current())
@@ -875,13 +875,14 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           await workers.prepareRecoveredTaskSettlement(input,support,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getSettlementElapsed(reference)});
         }else if(profile.stopProjectionMatches){
-          const gates=profile.kind===24&&resources.farmTemplate.gates.length?
-            settlements.recoveredFarmGateOwners(resources,{
+          const template=resources.farmTemplate??resources.taskTemplate;
+          const gates=template?.gates.length?
+            settlements.recoveredStoppedGateOwners(template,resources[profile.bindingField],{
               getStoppedProjection:(selector,epoch)=>nativePickFrame.getStoppedGate(selector,epoch)
             }):null;
           if(gates){
             await waitNativePublication(sequence,ownerSignal??new AbortController().signal,gates.current);
-            recoveredFarmGatesCurrent=gates.current;
+            recoveredStoppedGatesCurrent=gates.current;
           }
           await workers.prepareRecoveredStoppedWorker({...input,terrain:terrainSupport},{signal:ownerSignal,isCurrent:current,
             ...(gates?{prepareGateParticipants:gates.prepare}:{}),

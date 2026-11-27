@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Task25 conserva la apertura de un portón y la pose del trabajador en el mismo corte. NVIDIA confirmó el primer envío del sustituto con apertura parcial. La cola determinista cubre además la hoja ya abierta y el relevo hasta Home19. Quedan el picking y el regreso completo en NVIDIA. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#task25-con-un-portón).
+
 El reemplazo terminal de Stop24 conserva el cuerpo y las hojas de uno o dos portones. NVIDIA confirmó ambos fences y el picking del sustituto. Task14 volvió a adquirir el mismo cuerpo en la partida de un portón. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-del-draw-con-los-motores-detenidos).
 
 Stop12 conserva el cuerpo detenido de Idle22 cuando se pierde Draw con Task14 pendiente. NVIDIA confirmó el picking del sustituto y la readmisión de Task14 en el mismo cuerpo con un solo riego. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#pérdida-con-stop12-adquirido-y-task14-pendiente).

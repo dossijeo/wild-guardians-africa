@@ -1170,7 +1170,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
               {issuedFarmArrival:predecessor,farmArrivalAdmitted:true})};
           actor.proof=proof.bodyReference;
           actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),
-            kind===24?projection.gateEffects.rows:null);
+            projection.gateEffects.rows);
         };
       }
       if(kind===27){
@@ -1317,11 +1317,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(reference.worldBoundary.authorityEpoch!==authorityEpoch||!clock||reference.worldBoundary.nativeSession!==clock.nativeSession||!current()&&!pending()){const error=Error('Native action is obsolete or lacks direct authority proof');error.code='native-action-admission-obsolete';throw error;}
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get actionRecord(){return current()?actor.actionRecord:null;},get executionEpoch(){return current()?actor.actionProof.reference.startTime:null;},get executionEnd(){return current()?actor.actionProof.reference.endTime:null;}});
     },
-    admitFarmArrivalStoppedGate(value,{preparingWorldBoundary=null}={}){
+    admitStoppedGate(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeStoppedGateSelector(value),actorId=reference.stop.sourceRoute.actorId,actor=actors.get(actorId);
+      const family=reference.kind===nativeTaskRouteStopCodec.stoppedGateKind?taskStopFamily:farmStopFamily;
       // Task or Home can request the same stopped body before its first draw.
       // The motor uses that exact projection until the GPU has submitted it.
-      const lease=admitRouteStoppedBody(farmStopFamily,{kind:'native-farm-arrival-stopped-body',version:1,
+      const lease=admitRouteStoppedBody(family,{kind:family.codec.stoppedBodyKind,version:1,
         stop:reference.stop,actorId},{preparingWorldBoundary});
       return Object.freeze({reference,isCurrent:lease.isCurrent,isPrepared:lease.isPrepared,
         get worldBoundary(){return lease.bodyReference?.worldBoundary??null;},

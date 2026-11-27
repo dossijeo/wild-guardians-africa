@@ -18,7 +18,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{nativeWorkerLifecycle,qualifyFarmFlee,qualifyAnimalCrop,qualifyRaidEncounter,recoverEncounterLoss,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,navigationView,raidWaitBindings,getTerrainManifest,prepareNativeTerrainResources,onTerrainChunk,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
  const [sourcePort,drawPort]=pair();
- let graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
+ let graphics=await fixture({capabilities:{nativeAnimalCropVersion:1,width:20,height:10,format:'rgba8unorm',nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeTaskRouteStopGateVersion:1,nativeBarrierAdditionVersion:1,nativeBarrierAdditionClockVersion:1,nativeRestoredWallRepairVersion:1,nativeFarmArrivalVersion:1,nativeFarmArrivalStopVersion:1,nativeFarmArrivalStopClockVersion:1,nativeFarmArrivalStopGateVersion:1,nativeTaskStartVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeTaskConsequenceVersion:1,nativeDeferredResumeVersion:1,nativeTaskActionVersion:1,nativeTaskActionRestoreVersion:1,nativeTaskActionClockVersion:1,nativeResumeVersion:1,nativeSuspendedVersion:1,nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleStrollStopVersion:1,nativeIdleStrollStopClockVersion:1,nativeHomeArrivalVersion:1}},{intentControl:{port:drawPort,session:controlSession},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
  const originalGraphics=graphics,records=[];
  let resourcePorts=new MessageChannel();
  const farmGroups=new Map();
@@ -105,7 +105,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   }
   const homeSource=kind==='home-route'?reference.sourceRequest:arrival?reference.sourceHome.reference.sourceRequest:null;
   const peer=homeSource?.raidSpawnSequence&&!homeSource.recoveryHit&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
-  if((kind==='home-route'||drawFarmGate&&kind==='farm-arrival')&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
+  if((kind==='home-route'||kind==='task-start'||drawFarmGate&&kind==='farm-arrival')&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
    const buffer=graphics.client.device.createBuffer({size:16,usage:72});
    graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,
@@ -120,9 +120,9 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   if(farmGroup){
    const groups=new Map(farmGroups);groups.set(reference.actorId,farmGroup);
    packet=await prepareExistingGroup(graphics,[...groups.values()],{clock,nativeWorldBoundary:resources.worldBoundary,nativeFarmArrivalTemplate:reference},options.signal);
-  }else if(kind==='farm-arrival'&&record.gateGroups?.length){
+  }else if((kind==='farm-arrival'||kind==='task-start')&&record.gateGroups?.length){
    packet=await prepareExistingGroup(graphics,[graphics.group,...record.gateGroups],
-    {clock,nativeWorldBoundary:resources.worldBoundary,nativeFarmArrivalTemplate:reference},options.signal);
+    {clock,nativeWorldBoundary:resources.worldBoundary,[kind==='task-start'?'nativeTaskStartTemplate':'nativeFarmArrivalTemplate']:reference},options.signal);
   }else if(gateGroups?.length&&(kind==='home-route'||arrival)){
    const groups=arrival?[...gateGroups]:[graphics.group,...gateGroups];
    if(peer)groups.push(peer.cropGroup);
@@ -179,9 +179,10 @@ function prepareWorkerStoppedDraw(g,stop,records,record,signal){
  // A motor has its own physical uniform group, omitted by a later removal.
  // The Host supplies its acquired scalar; this fixture supplies no final value.
  const motorGroups=[];record.motorBuffers=[];
- if(!task&&!stroll)for(const gate of stop.gates){const buffer=g.client.device.createBuffer({label:'worker-authority-stopped-motor',size:16,usage:72}),motor=g.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});g.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));g.client.registerClockBinding(buffer,{byteOffset:0,semantic:'stop-value',epoch:stop.worldBoundary.effectiveTime,nativeStopped:{kind:'native-farm-arrival-stopped-gate',version:1,stop,...gate},stopField:'opening'});motorGroups.push(motor);record.motorBuffers.push(buffer);}
+ if(!stroll)for(const gate of stop.gates){const buffer=g.client.device.createBuffer({label:'worker-authority-stopped-motor',size:16,usage:72}),motor=g.client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});g.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));g.client.registerClockBinding(buffer,{byteOffset:0,semantic:'stop-value',epoch:stop.worldBoundary.effectiveTime,nativeStopped:{kind:task?'native-task-route-stopped-gate':'native-farm-arrival-stopped-gate',version:1,stop,...gate},stopField:'opening'});motorGroups.push(motor);record.motorBuffers.push(buffer);}
  record.stoppedGroup=group;
- return prepareExistingGroup(g,[group,...motorGroups],{nativeWorldBoundary:stop.worldBoundary,[task?'nativeTaskRouteStopTemplate':stroll?'nativeIdleStrollStopTemplate':'nativeFarmArrivalStopTemplate']:stop,clock:{version:1,epoch:0,elapsed:stop.worldBoundary.effectiveTime,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:true,segments:[]}},signal);
+ const settled=task?prior.gateGroups?.filter((_,i)=>!stop.gates.some(gate=>gate.gateId===prior.resources.gates[i].gateId))??[]:[];
+ return prepareExistingGroup(g,[group,...motorGroups,...settled],{nativeWorldBoundary:stop.worldBoundary,[task?'nativeTaskRouteStopTemplate':stroll?'nativeIdleStrollStopTemplate':'nativeFarmArrivalStopTemplate']:stop,clock:{version:1,epoch:0,elapsed:stop.worldBoundary.effectiveTime,safeUntil:Number.MAX_SAFE_INTEGER,anchorAbsoluteMs:0,paused:true,segments:[]}},signal);
 }
 
 function prepareExistingGroup(g,group,metadata,signal){

@@ -7,7 +7,7 @@ import {floorFloat32} from './float32-time.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {nativeFarmIdlePhaseOffset,nativeIdleCyclePhaseOffset} from './native-farm-idle-phase.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
-import {nativeStoppedClockKey,copyNativeStoppedBodySelector,copyNativeStoppedClock} from './native-stopped-clock.js';
+import {nativeStoppedClockKey,copyNativeStoppedBodySelector,copyNativeStoppedClock,isNativeStoppedGate} from './native-stopped-clock.js';
 import {sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {copyNativeIdleStrollReference,nativeIdleStrollReferenceCovered} from '../world/native-idle-stroll.js';
 import {copyNativeIdleCycleReference,sameNativeIdleCycleReference,nativeIdleCycleReferenceCovered,copyNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
@@ -79,7 +79,7 @@ export function captureNativeRoutePickFrame(consumer){
    const key=JSON.stringify(reference);if(barrierRepairs.has(key))throw Error('Duplicate submitted solid Repair age');barrierRepairs.set(key,Object.freeze({age,elapsed:binding.elapsed}));continue;
   }
 
-  if(binding?.nativeStopped?.kind==='native-farm-arrival-stopped-gate'){
+  if(isNativeStoppedGate(binding?.nativeStopped)){
    const selector=copyNativeStoppedClock(binding).nativeStopped,world=binding.worldBoundary,value=binding.opening;
    if(!world||!nativeGateReferenceCovered({gateId:selector.gateId,worldBoundary:selector.stop.worldBoundary},world)||!nativeGateReferenceCovered({gateId:selector.gateId,worldBoundary:world},frame.worldBoundary)||world.effectiveTime>frame.clockElapsed||!Number.isFinite(value)||value<0||value>1||Math.fround(value)!==value)throw Error('Invalid submitted stopped motor projection');
    const key=nativeStoppedClockKey(binding);if(stoppedBodies.has(key))throw Error('Duplicate stopped motor projection');stoppedBodies.set(key,Object.freeze({worldBoundary:world,opening:value}));continue;

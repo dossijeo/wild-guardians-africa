@@ -20,7 +20,7 @@ import {cropSpec} from '../src/simulation/rules.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {serialize} from '../src/persistence/snapshots.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
-import {copyStop24Resources,stop24GateSamplesMatch,stop24ProjectionMatches,stopFields} from '../src/world/native-stop24-task-recovery.js';
+import {copyStop24Resources,recoveredStoppedGateSamplesMatch,stop24ProjectionMatches,stopFields} from '../src/world/native-stop24-task-recovery.js';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {createWebGpuAdmittedWall} from '../src/rendering/webgpu-wall-admission.js';
 
@@ -177,8 +177,8 @@ async function replaceStoppedFarm(f,task,releaseTask,oldFrame){
   }
   await new Promise(resolve=>setImmediate(resolve));
   for(const {wall,motor,entity} of walls){
-   assert(wall.recoveredFarmGateCurrent(motor,entity.gateOpen));
-   assert(!wall.recoveredFarmGateCurrent(motor,entity.gateOpen===1?0:1));
+   assert(wall.recoveredStoppedGateCurrent(motor,entity.gateOpen));
+   assert(!wall.recoveredStoppedGateCurrent(motor,entity.gateOpen===1?0:1));
   }
   const pickFrame=()=>captureNativeRoutePickFrame(host.inspect()),prepared=proof.proof.preparedReference;
   await rig.roster.prepareRecoveredStoppedWorker({resources,execution,terrain:rig.terrain,terrainManifest:rig.manifest},{
@@ -225,7 +225,7 @@ async function replaceStoppedFarm(f,task,releaseTask,oldFrame){
   const witness=await f.authority.checkHeldDraw(30,hold,route);
   assert(stop24ProjectionMatches(witness,proof));
   assert.deepEqual(witness.projection,previousBody.projection);
-  assert(stop24GateSamplesMatch(witness.stoppedGates??[],proof));
+  assert(recoveredStoppedGateSamplesMatch(witness.stoppedGates??[],proof));
   const picker=captureNativeRoutePickFrame(host.inspect());
   for(const gate of previousMotors){
    const picked=picker.getStoppedGate(gate.nativeStopped,gate.epoch);
@@ -237,7 +237,7 @@ async function replaceStoppedFarm(f,task,releaseTask,oldFrame){
    await present(motors.slice(1));
    await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
    await present(motors);
-   assert(stop24GateSamplesMatch((await f.authority.checkHeldDraw(30,hold,route)).stoppedGates,proof));
+   assert(recoveredStoppedGateSamplesMatch((await f.authority.checkHeldDraw(30,hold,route)).stoppedGates,proof));
   }
   await f.attachRecoveredResources(replacement);attached=true;
   assert(f.authority.resumeNativeIntentProduction(hold));

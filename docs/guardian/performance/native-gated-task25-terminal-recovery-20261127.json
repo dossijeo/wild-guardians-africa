@@ -1,0 +1,280 @@
+{
+  "base": "3c97b03baec45df71926c70dc677aea4cd62a6df",
+  "baseline": {
+    "log": "gated-task25-before-20261127.log",
+    "sha256": "e9a819156504a32a6b2286a55fd93d2e62b1c642c943ad7710c1b34592ad34c5",
+    "cuts": [
+      {
+        "leadToShiftEnd": 0.55,
+        "at": 10.749999999999892,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 10.699999999999891,
+        "bodyId": 1,
+        "stopGates": [
+          1000000,
+          1,
+          1
+        ],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      },
+      {
+        "leadToShiftEnd": 2,
+        "at": 12.249999999999572,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 12.14999999999957,
+        "bodyId": 1,
+        "stopGates": [],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      }
+    ],
+    "loss": [
+      {
+        "time": 0.55,
+        "hold": {
+          "error": "Error: Native intent production failed: Native resource preparer closed"
+        },
+        "route": null,
+        "faults": [
+          "Error: Native resource preparer closed"
+        ]
+      },
+      {
+        "time": 2,
+        "hold": {
+          "error": "Error: Native intent production failed: Native resource preparer closed"
+        },
+        "route": null,
+        "faults": [
+          "Error: Native resource preparer closed"
+        ]
+      }
+    ]
+  },
+  "candidate": {
+    "log": "gated-task25-recover-source-20261127.log",
+    "sha256": "1c58e6762f988787b7866d1591fc1e6532e9ee78ce2fa4d0451f077ac1bec41e",
+    "cuts": [
+      {
+        "leadToShiftEnd": 0.4,
+        "at": 10.599999999999918,
+        "opening": 0.7499999999998597,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 10.549999999999917,
+        "bodyId": 1,
+        "stopGates": [
+          1000000,
+          1,
+          0.7499999999998597
+        ],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body",
+          "native-task-route-stopped-gate"
+        ]
+      },
+      {
+        "leadToShiftEnd": 2,
+        "at": 12.249999999999572,
+        "opening": 1,
+        "lastTaskTicket": 4,
+        "stopTicket": 7,
+        "effectiveTime": 12.14999999999957,
+        "bodyId": 1,
+        "stopGates": [],
+        "pendingHomeTicket": 8,
+        "submitted": [
+          "native-task-route-stopped-body"
+        ]
+      }
+    ],
+    "loss": [
+      {
+        "time": 0.4,
+        "hold": {
+          "value": {}
+        },
+        "route": {
+          "kind": 25,
+          "actorId": 900011
+        },
+        "faults": []
+      },
+      {
+        "time": 2,
+        "hold": {
+          "value": {}
+        },
+        "route": {
+          "kind": 25,
+          "actorId": 900011
+        },
+        "faults": []
+      }
+    ]
+  },
+  "missingMotorControl": {
+    "tap": "gated-task25-missing-motor-20261127.tap",
+    "sha256": "8f7fcb3f73e35f108d5b3d08544453f2d33fa57ed9db46053559e25358f5595f"
+  },
+  "regressions": {
+    "tap": "gated-task25-impact-20261127.tap",
+    "sha256": "cede911bee15fb3d41ee5af6eed28ebc498239b750d95bf60aef3321ae034754",
+    "passed": 83,
+    "failed": 0,
+    "skipped": 0
+  },
+  "terrainSupport": {
+    "before": {
+      "tap": "task25-gated/terrain-axis-before.tap",
+      "sha256": "554644444a2611bcebd48b75a2ef9da3532efc21e412ef4bc9e00adb9ed83dc7"
+    },
+    "after": {
+      "tap": "task25-gated/terrain-axis-after.tap",
+      "sha256": "fe62b0371923392deba3bd46cfc773804bdae32a9bc94e6ba462aca7f86d37a7",
+      "passed": 13
+    },
+    "native": {
+      "file": "task25-gated/terrain-on-native-after.log",
+      "sha256": "32e6b96988e1050dbb0e45c8714c4169d7cc4bf707da148bc98f0a8f4fe308af",
+      "cases": [
+        {
+          "leadToShiftEnd": 0.4,
+          "valid": true,
+          "segments": 2
+        },
+        {
+          "leadToShiftEnd": 2,
+          "valid": true,
+          "segments": 4
+        }
+      ]
+    }
+  },
+  "hardware": {
+    "file": "task25-gated/nvidia-opening-home-request.failure.json",
+    "sha256": "966fa1402d43230680efa1ebc81223c01434b97b7532db49aa0a4b5e53862d88",
+    "stage": "retained Home18 after physical Task25",
+    "error": "Error: Error: Worker command not admitted: failed\n    at pump (http://127.0.0.1:5294/src/simulation/worker-game-runtime.js:28:77)\n    at Object.submit (http://127.0.0.1:5294/src/simulation/worker-game-runtime.js:91:421)\n    at self.onmessage (http://127.0.0.1:5294/src/simulation/worker-runtime-host.js?worker_file&type=module:227:27)\n    at worker.onmessage (http://127.0.0.1:5294/src/simulation/worker-hosted-runtime.js:36:34)",
+    "acquiredStop": [
+      1000000,
+      1,
+      0.6666666666664955
+    ],
+    "verifiedFullRecovery": false,
+    "followUps": [
+      {
+        "file": "task25-gated/nvidia-opening-traced-startup.failure.json",
+        "sha256": "3bc117050f0b76afae74b65502bd19ea4a3e01fc2a780bfc9ccbd66ebcf58d10",
+        "stage": "replacement picking while held",
+        "error": "Error: Replacement did not pick held worker {\"trials\":[{\"h\":0.7,\"id\":null},{\"h\":1,\"id\":\"plant-900098\"},{\"h\":1.3,\"id\":\"plant-900098\"},{\"h\":0.4,\"id\":null},{\"h\":1.5,\"id\":\"plant-900098\"}],\"y\":15.578267097473145}",
+        "submitted": null,
+        "stopped": {
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "11c42232-afd6-4b6b-8f78-ba17a060cbb6/1",
+            "nativeSession": 1,
+            "ticket": 7,
+            "effectiveTime": 10.449999999999896
+          },
+          "bodyId": 1,
+          "motor": [
+            1000000,
+            1,
+            0.6666666666664955
+          ]
+        },
+        "pendingHomeTicket": 8,
+        "replacementDrained": false,
+        "diagnostic": [
+          {
+            "type": "authority-resource-reply",
+            "at": 1795814130121.7998,
+            "id": 1,
+            "kind": "nativeGateResourcesResult",
+            "ticket": 1
+          },
+          {
+            "type": "authority-resource-reply",
+            "at": 1795814134625.5999,
+            "id": 3,
+            "kind": "nativeGateResourcesResult",
+            "ticket": 4
+          },
+          {
+            "type": "authority-resource-reply",
+            "at": 1795814137133.2,
+            "id": 4,
+            "kind": "nativeGateResourcesResult",
+            "ticket": 6
+          }
+        ]
+      },
+      {
+        "file": "task25-gated/nvidia-opening-final.failure.json",
+        "sha256": "1a5854bc6e7155e0598601de2af0eab5459514bfa3216d0a819f49f8fdf59f38",
+        "stage": "ordinary Idle20 acquisition",
+        "error": "Error: Error: Worker command not admitted: failed",
+        "submitted": null,
+        "stopped": null,
+        "pendingHomeTicket": null,
+        "replacementDrained": false,
+        "diagnostic": []
+      },
+      {
+        "file": "task25-gated/nvidia-opening-warm-owners.failure.json",
+        "sha256": "009605fe6155d89a64790c6701a80ec823190ea53a623f9a069a65a28f0cfc31",
+        "stage": "replacement picking while held",
+        "error": "Error: Replacement did not pick held worker {\"trials\":[{\"dx\":0,\"dz\":0,\"h\":0.7,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1.3,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":0.4,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1.5,\"id\":null},{\"dx\":-0.12,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0.12,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":-0.12,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":0.12,\"h\":1,\"id\":null}],\"y\":15.578267097473145}",
+        "submitted": {
+          "adapter": "nvidia",
+          "original": 54,
+          "replacement": 1,
+          "holdId": 63,
+          "clock": 10.799999999999889,
+          "ticket": 7,
+          "opening": 0.6666666865348816,
+          "body": {
+            "age": 0.3999999761581421,
+            "x": -14,
+            "z": 5.699999809265137,
+            "yaw": 0.03211292251944542,
+            "phase": 0,
+            "runPhase": 23.25,
+            "walkPhase": 7.125,
+            "carryPhase": 9.5,
+            "arrived": 0
+          }
+        },
+        "stopped": {
+          "boundary": {
+            "version": 1,
+            "authorityEpoch": "310e5f32-8279-491a-a184-3091eba8dd3e/1",
+            "nativeSession": 1,
+            "ticket": 7,
+            "effectiveTime": 10.449999999999896
+          },
+          "bodyId": 1,
+          "motor": [
+            1000000,
+            1,
+            0.6666666666664955
+          ]
+        },
+        "pendingHomeTicket": 8,
+        "replacementDrained": true,
+        "diagnostic": []
+      }
+    ]
+  }
+}

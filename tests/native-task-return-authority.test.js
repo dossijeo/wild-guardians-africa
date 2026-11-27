@@ -9,21 +9,32 @@ import {tick} from '../src/simulation/game.js';
 import {MessageChannel} from 'node:worker_threads';
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {floorFloat32} from '../src/float32-time.js';
-import {stopFields} from '../src/world/native-stop24-task-recovery.js';
+import {recoveredStoppedGateSamplesMatch,stopFields} from '../src/world/native-stop24-task-recovery.js';
 import {copyTask25HomeResources} from '../src/world/native-task25-home-recovery.js';
+import {copyNativeStoppedClock} from '../src/rendering/native-stopped-clock.js';
 import {fixture,flush} from './helpers/remote-webgpu-fixture.js';
 
 const deferred=()=>{let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};};
-async function movingTask(profile,onReady,nativeWorkerLifecycle=false,onCommit){
+async function movingTask(profile,onReady,nativeWorkerLifecycle=false,onCommit,gate=null){
  const source=nativeIdleCycleGameFixture({mode:'rest',remaining:5,profile:profile.id,peer:false});let f;
  try{
-  const state=structuredClone(source.state),worker=state.workers[0];state.time=profile.end-.55;
-  const point=source.point(-4,6),target=createPlant(`plant-${state.nextId++}`,'mijo',point.x,point.z,worker.centerId);
+  const state=structuredClone(source.state),worker=state.workers[0];state.time=profile.end-(gate?.lead??.55);
+  const entry=state.villages.find(v=>v.id===worker.villageId);
+  let chunkKeys;
+  if(gate){
+   const center=state.structures.find(row=>row.id===worker.centerId);
+   Object.assign(worker,{x:-14,z:5.7});
+   Object.assign(center,{x:-14,z:2});
+   Object.assign(state.plants.find(row=>row.id==='plant-900098'),{x:worker.x,z:worker.z});
+   state.structures.push({id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,
+    x:-14,z:8.2,yaw:0,hp:60,maxHp:60,status:'intact',villageId:worker.villageId,cost:10,collapseRemaining:0,gateOpen:0});
+   state.nextId=1000001;
+   entry.entry={x:-14,z:4.6};
+   chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
+  }else entry.entry=source.point(-9,0);
+  const point=gate?{x:-14,z:11.8}:source.point(-4,6),target=createPlant(`plant-${state.nextId++}`,'mijo',point.x,point.z,worker.centerId);
   target.growth=999999;for(const slot of target.water)slot.status='manual';state.plants.push(target);
-  // A nearby authored Home endpoint keeps this test about the complete
-  // return transition rather than repeatedly exercising a long clear route.
-  state.villages.find(v=>v.id===worker.villageId).entry=source.point(-9,0);
-  f=await nativeProductionAuthority(state,{onReady,nativeWorkerLifecycle,onCommit});
+  f=await nativeProductionAuthority(state,{onReady,nativeWorkerLifecycle,onCommit,...(chunkKeys?{chunkKeys}:{})});
   await untilProduction(f,()=>f.records.some(r=>r.kind==='initial-idle-body'&&r.committed));
   assert.equal(f.command({kind:'harvest',id:'harvest-before-shift-end',targetId:target.id}).value,true);
   for(let i=0;i<4&&!f.records.some(r=>r.kind==='task-start'&&r.committed);i++){f.advance();await f.present();}
@@ -97,18 +108,47 @@ test('a rejected Task25 preparation never publishes Task25 or Home and fails clo
  }finally{ready.resolve();await t.close();}
 });
 
-for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopped body before resuming Home18 (${endpointFirst?'endpoint first':'hold first'})`,{timeout:30000},async()=>{
- const ready=deferred();let pending,stop,replacement,attached=false;
+for(const {endpointFirst,gate} of [{endpointFirst:false},{endpointFirst:true},
+ {endpointFirst:false,gate:{lead:.4,stopped:true}},{endpointFirst:true,gate:{lead:2,stopped:false}}])
+test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(gate.stopped?'opening gate':'settled gate'):endpointFirst?'endpoint first':'hold first'})`,{timeout:30000},async()=>{
+ const ready=deferred(),stopReady=deferred();let pending,proposedStop,stop,replacement,attached=false;
  const ports=new MessageChannel();
  const t=await movingTask(PROFILES.find(p=>p.id==='youngMale'),record=>{
   if(record.kind==='home-route'&&!pending){pending=record;return ready.promise;}
- },true,(_record,data)=>{stop??=data.nativeTaskRouteStopBinding;});
+  if(gate&&record.kind==='task-route-stop'){proposedStop=record;return stopReady.promise;}
+ },true,(_record,data)=>{stop??=data.nativeTaskRouteStopBinding;},gate);
  const {f}=t;
  try{
-  for(let i=0;i<18&&!pending;i++){f.advance();await f.present();}
+  if(gate){
+   assert.equal(t.start.resources.gates.length,1);
+   for(let i=0;i<45&&!proposedStop;i++){f.advance(.025);await f.present();}
+   await untilProduction(f,()=>proposedStop);
+   const waiting=f.snapshot(),opening=waiting.structures.find(row=>row.id==='structure-1000000').gateOpen;
+   assert.equal(waiting.workers[0].nativeRouteAdmission,'native-task');
+   assert.equal(proposedStop.committed,false);
+   assert.equal(proposedStop.resources.nativeStop.gates.length,gate.stopped?1:0);
+   assert(gate.stopped?opening>0&&opening<1:opening===1);
+   f.advance(.025);await f.present();
+   stopReady.resolve();
+  }
+  for(let i=0;i<18&&!pending;i++){f.advance(.025);await f.present();}
   await untilProduction(f,()=>pending&&f.host.inspect().nativeRouteFrame?.bindings.some(row=>
    row.nativeStopped?.kind==='native-task-route-stopped-body'));
-  const cut=f.snapshot(),worker=cut.workers[0],old=f.host.inspect().nativeRouteFrame.bindings.find(row=>row.nativeStopped);
+  const cut=f.snapshot(),worker=cut.workers[0],bindings=f.host.inspect().nativeRouteFrame.bindings;
+  const old=bindings.find(row=>row.nativeStopped?.kind==='native-task-route-stopped-body');
+  const oldMotor=bindings.find(row=>row.nativeStopped?.kind==='native-task-route-stopped-gate');
+  if(gate){
+   assert.equal(!!oldMotor,gate.stopped);
+   const opening=cut.structures.find(row=>row.id==='structure-1000000').gateOpen;
+   if(gate.stopped){
+    assert(opening>0&&opening<1);
+    assert.equal(oldMotor.opening,Math.fround(opening));
+    assert.deepEqual(oldMotor.worldBoundary,stop.reference.worldBoundary);
+   }else{
+    assert.equal(opening,1);
+    assert(bindings.some(row=>row.nativeGate?.gateId===1000000));
+   }
+  }
   assert.equal(worker.nativeRouteAdmission,'pending-home-resources');
   assert.equal(pending.committed,false);
   const retire=()=>{f.gpu.device.destroy();f.retireResourceEndpoint();ready.resolve();};
@@ -121,7 +161,7 @@ for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopp
   assert(terminal.terminal&&terminal.callbacksSettled&&pending.aborted&&!pending.committed);
   const route=await f.authority.terminalWorkerRoute();
   assert.deepEqual(route,{kind:25,actorId:pending.resources.nativeHome.actorId});
-  replacement=await fixture({capabilities:{nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
+  replacement=await fixture({capabilities:{nativeTaskRouteStopVersion:1,nativeTaskRouteStopClockVersion:1,nativeTaskRouteStopGateVersion:1,nativeHomeRouteVersion:1,nativeHomeArrivalVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
   await assert.rejects(f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,{...route,actorId:199}),
    /Expected current native recovery assignments/);
@@ -130,6 +170,7 @@ for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopp
   assert.deepEqual(resources.stoppedHomeBinding.proof,stop);
   assert.deepEqual(proof.request,pending.resources.nativeHome.sourceRequest);
   assert.deepEqual(resources.taskTemplate.rows,t.start.resources.rows);
+  if(gate)assert.equal(resources.taskTemplate.gates.length,1);
   assert.equal(ref.bodyId,old.bodyReference.bodyId);
   assert.equal(ref.epoch,old.epoch);
   const wrongHome=structuredClone(resources);
@@ -141,19 +182,30 @@ for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopp
 
   const buffer=client.device.createBuffer({size:40,usage:72});
   client.device.queue.writeBuffer(buffer,0,new Float32Array(10));
-  const group=client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  const motorBuffer=oldMotor?client.device.createBuffer({size:4,usage:72}):null;
+  if(motorBuffer){
+   const {nativeStopped,semantic,epoch,stopField}=oldMotor;
+   const binding={nativeStopped,semantic,epoch,stopField,byteOffset:0};
+   client.device.queue.writeBuffer(motorBuffer,0,new Float32Array([0]));
+   assert.throws(()=>copyNativeStoppedClock({...binding,nativeStopped:{...nativeStopped,kind:'native-farm-arrival-stopped-gate'}}),/Invalid native stopped gate/);
+   assert.throws(()=>copyNativeStoppedClock({...binding,nativeStopped:{...nativeStopped,mechanism:42}}),/Invalid native stopped gate/);
+   client.registerClockBinding(motorBuffer,binding);
+  }
+  const group=includeMotor=>client.device.createBindGroup({entries:[buffer,...(includeMotor&&motorBuffer?[motorBuffer]:[])]
+   .map((buffer,binding)=>({binding,resource:{buffer}}))});
   const clock={nativeStopped:ref.selector,epoch:ref.epoch,resourceEnd:Number.MAX_SAFE_INTEGER};
   client.registerClockBinding(buffer,{...clock,byteOffset:0,semantic:'relative'});
-  function frame(){
+  function frame(includeMotor=true){
    client.beginFrame({nativeWorldBoundary:ref.worldBoundary,
     clock:{...f.clock,elapsed:cut.elapsed,safeUntil:cut.elapsed,paused:true,segments:[]}});
    const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{
     view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
-   pass.setPipeline(pipeline);pass.setBindGroup(0,group);pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
+   pass.setPipeline(pipeline);pass.setBindGroup(0,group(includeMotor));pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
    return client.endFrame();
   }
   await assert.rejects(frame(),/Replacement requires its bound worker clock/);
   for(const [i,stopField] of stopFields.entries())client.registerClockBinding(buffer,{...clock,byteOffset:(i+1)*4,semantic:'stop-value',stopField});
+  if(oldMotor)await assert.rejects(frame(false),/Replacement requires its bound worker clock/);
   const drawing=frame();drawing.catch(()=>{});await flush();await host.idle();
   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
   host.present();await drawing;
@@ -163,6 +215,14 @@ for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopp
   const pick=captureNativeRoutePickFrame(host.inspect()).getStoppedBody(ref.selector,ref.epoch);
   assert.equal(pick.x,Math.fround(worker.x));
   assert.equal(pick.walkPhase,Math.fround(worker.walkPhase));
+  assert(recoveredStoppedGateSamplesMatch(witness.stoppedGates??[],proof));
+  if(oldMotor){
+   assert.equal(captureNativeRoutePickFrame(host.inspect()).getStoppedGate(oldMotor.nativeStopped,oldMotor.epoch).opening,oldMotor.opening);
+   const next=frame(false);next.catch(()=>{});await flush();await host.idle();host.present();await next;
+   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
+   const complete=frame();complete.catch(()=>{});await flush();await host.idle();host.present();await complete;
+   assert(recoveredStoppedGateSamplesMatch((await f.authority.checkHeldDraw(30,hold,route)).stoppedGates,proof));
+  }
 
   await f.attachRecoveredResources(replacement);attached=true;
   assert(f.authority.resumeNativeIntentProduction(hold));
@@ -178,7 +238,7 @@ for(const endpointFirst of [false,true])test(`terminal Task25 presents the stopp
   assert.deepEqual(final.ledger,cut.ledger);
   assert.deepEqual(f.faults,[]);
  }finally{
-  ready.resolve();
+  ready.resolve();stopReady.resolve();
   try{await t.close();}finally{
    if(replacement&&!attached){replacement.client.dispose();await replacement.host.dispose();}
    ports.port1.close();ports.port2.close();

@@ -1,4 +1,4 @@
-import {farmStopGatePlateau,sameStop12Source,sameStop24Source} from "../native-stop24-task-recovery.js";
+import {stoppedGatePlateau,sameStop12Source,sameStop24Source} from "../native-stop24-task-recovery.js";
 import {copyTask25HomeSource,sameTask25HomeSource} from '../native-task25-home-recovery.js';
 import {copyNativeTaskStartProposal} from '../native-task-start-presentation.js';
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
@@ -2543,7 +2543,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       revalidate(){if(!current())return {status:'stale'};const result=revalidateNativeWorkerRouteStopProposal(kind,sourceTicket);if(result.status==='revalidated'){candidate=result.proposal;sourceTicket=result.ticket;translation=result.timeTranslation;}return result;},
       binding(reference,preparedReference){
         const proof=nativeWorkerRouteStopBinding(kind,reference,preparedReference,{projection:{version:1,routeEffects:candidate.routeEffects,gateEffects:candidate.gateEffects}});
-        if(proof&&proof.reference.routes.length===1&&(kind===24||!proof.reference.gates.length)){
+        if(proof&&proof.reference.routes.length===1&&(kind!==12||!proof.reference.gates.length)){
           const revoked=readIntentChanges(stopControlFloor).find(change=>change.type==='RouteInvalidated'&&change.actorId===actor&&
             change.state===4&&change.effectiveTime===proof.reference.worldBoundary.effectiveTime&&
             JSON.stringify(change.revokedRouteHandle)===JSON.stringify(proof.reference.sourceRoute.routeHandle));
@@ -2583,15 +2583,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return {...value,request,
       pose:{x:p[0],z:p[1],yaw:p[4],radius:q.pose.radius,runPhase:p[9],walkPhase:p[10],carryPhase:p[11],runRemaining:p[14]}};
   };
-  const stoppedFarmTaskRecovery=actor=>{
-    const source=stoppedTaskRecovery(committedWorkerFarmStop,actor);
-    if(!source||!source.farm.gateIds.length)return source;
-    const {proof,farm,farmTemplate}=source,{worldBoundary,gates}=proof.reference;
+  function stoppedRouteGateSources(proof,predecessor,template){
+    const {worldBoundary,gates}=proof.reference;
     const at=nativeCausalClock().committedThrough,settledGates=[];
-    if(farmTemplate.gates.length!==farm.gateIds.length||gates.some(gate=>!farm.gateIds.includes(gate.gateId)))return null;
-    for(const motor of farmTemplate.gates){
+    if(template.gates.length!==predecessor.gateIds.length||gates.some(gate=>!predecessor.gateIds.includes(gate.gateId)))return null;
+    for(const motor of template.gates){
       const pose=nativeGateMechanismPose(motor.entityId),wall=owningState.structures.find(s=>s.id===motor.entityId);
-      if(!farm.gateIds.includes(motor.gateId)||!wall?.gate||wall.status!=='intact'||wall.hp!==wall.maxHp||wall.wallPresentation||
+      if(!predecessor.gateIds.includes(motor.gateId)||!wall?.gate||wall.status!=='intact'||wall.hp!==wall.maxHp||wall.wallPresentation||
          !pose||pose.nativeSession!==worldBoundary.nativeSession||pose.authorityEpoch!==worldBoundary.authorityEpoch||
          pose.sampledAt!==at||pose.opening!==wall.gateOpen||pose.mechanism!==motor.mechanism||pose.modelId!==motor.modelId||
          !motor.rootMatrix.every((value,i)=>value===pose.rootMatrix[i]))return null;
@@ -2599,11 +2597,17 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       if(index>=0){
         if(gates[index].mechanism!==pose.mechanism||proof.projection.gateEffects.rows[index*3+2]!==pose.opening)return null;
       }else{
-        if(!farmStopGatePlateau(motor,farm,worldBoundary.effectiveTime,pose.opening))return null;
+        if(!stoppedGatePlateau(motor,predecessor,worldBoundary.effectiveTime,pose.opening))return null;
         settledGates.push({gateId:pose.gateId,mechanism:pose.mechanism,opening:pose.opening});
       }
     }
-    return {...source,settledGates};
+    return settledGates;
+  }
+  const stoppedFarmTaskRecovery=actor=>{
+    const source=stoppedTaskRecovery(committedWorkerFarmStop,actor);
+    if(!source)return null;
+    const settledGates=stoppedRouteGateSources(source.proof,source.farm,source.farmTemplate);
+    return settledGates?{...source,settledGates}:null;
   };
   const stoppedStrollTaskRecovery=actor=>stoppedTaskRecovery(committedStrollStop,actor);
   const stoppedTaskHomeRecovery=actorId=>{
@@ -2621,7 +2625,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(held[0]!==actor||held[1]!==old.session||held[2]!==old.slot||held[3]!==owner.resumeGeneration||
        held[4]!==world.effectiveTime||held[6]!==owner.bodyId||held[8]!==request.pose.radius||
        expected.some((number,i)=>held[i+9]!==number))return null;
-    return {...copyTask25HomeSource({...source,request}),taskTemplate:source.taskTemplate};
+    const settledGates=stoppedRouteGateSources(source.proof,source.task,source.taskTemplate);
+    return settledGates?{...copyTask25HomeSource({...source,request,settledGates}),taskTemplate:source.taskTemplate}:null;
   };
   const stopNativeIdleStrollAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(12,options);
   const stopNativeFarmArrivalAfterGpuQuiescence=options=>stopNativeWorkerRouteAfterGpuQuiescence(24,options);
@@ -4158,7 +4163,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       (mark,...boundary)=>{const status=wasm.nav_task_start_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();
         const plan=nativeRouteTiming(candidate.expectedRouteHandle);if(!plan||plan.actorId!==candidate.actorId)throw Error('First native assignment unavailable');
         if(beginNativeRouteExecution().status!=='started')throw Error('First native assignment could not establish its causal boundary');
-        if(nativeWorkerLifecycle&&owningState?.workers.length===1&&!owningState.raid&&!prepared.gates.length){
+        if(nativeWorkerLifecycle&&owningState?.workers.length===1&&!owningState.raid){
           const binding=nativeTaskStartBinding(candidate.actorId);
           preparedTaskForStop=binding?{binding,template:copyNativeTaskStartProposal(prepared)}:null;
         }else preparedTaskForStop=null;

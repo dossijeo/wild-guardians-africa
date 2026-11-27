@@ -1,7 +1,7 @@
 import {createPreparedRuinedWallRepair,createRestoredSolidWallRepair} from './webgpu-wall-repair.js';
 import {copyNativeHomeArrivalProposal,copyNativeHomeArrivalAttestation,sameNativeHomeArrivalReference,nativeHomeArrivalSuccessor} from '../world/native-home-arrival.js';
 import {copyNativeTaskSettlementProposal,copyNativeTaskSettlementAttestation,sameNativeTaskSettlementReference,nativeTaskSettlementSuccessor} from '../world/native-task-settlement.js';
-import {nativeFarmArrivalStopCodec} from '../world/native-worker-route-stop-codec.js';
+import {nativeGateStopCodec} from '../world/native-worker-route-stop-codec.js';
 import {sameNativeWorldBoundary} from '../world/native-world-boundary.js';
 import {copyNativeWorldStopEffects} from '../world/native-suspended-body-reference.js';
 import {NativeWall} from './walls.js';
@@ -57,9 +57,11 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
  // This participates in the existing terrain/body transaction without changing
  // material, clock, geometry or ownership. A complete native journal is required.
  function prepareNativeGateRetention({presentation,template,stopEffects,boundary,signal}){
-  const codec=nativeFarmArrivalStopCodec,reference=codec.copyReference(template),effects=copyNativeWorldStopEffects(stopEffects,boundary);
+  const codec=nativeGateStopCodec(template);
+  if(!codec)throw Error('Native retained gate has no motion family');
+  const reference=codec.copyReference(template),effects=copyNativeWorldStopEffects(stopEffects,boundary);
   if(!sameNativeWorldBoundary(reference.worldBoundary,boundary)||!effects||reference.gates.some(g=>g.gateId===presentation.gateId)||effects.gateEffects.rows.some((v,i)=>i%3===0&&v===presentation.gateId))
-   throw Error('Native retained gate requires an unchanged Farm stop motor journal');
+   throw Error(`Native retained gate requires an unchanged ${codec.kind===24?'Farm':'Task'} stop motor journal`);
   codec.copyProjection({version:1,routeEffects:effects.routeEffects,gateEffects:effects.gateEffects},reference);
   if(closed||!signal||signal.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
   const wall=slot.active,binding=wall.nativeGpuGate;
@@ -139,7 +141,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   const current=binding?.captureRemoval(reference)??(()=>wall.nativeGpuGate==null);
   return ()=>!closed&&!gatePreparation&&slot.upToDate&&slot.active===wall&&(wall.nativeGpuGate??null)===binding&&current();
  }
- function recoveredFarmGateCurrent(presentation,opening){
+ function recoveredStoppedGateCurrent(presentation,opening){
   const wall=slot.active,part=wall?.parts[0],mesh=part?.mesh;
   if(closed||!slot.upToDate||!wall?.gate||wall.entityId!==presentation.entityId||
      wall.lastStatus!=='intact'||wall.visual!==1||wall.gateOpen!==opening||
@@ -155,7 +157,7 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
   if(closed||signal?.aborted||!slot.upToDate||gatePreparation)throw Error('Native gate wall owner unavailable');
   const resident=slot.active?.nativeGpuGate;
   if(recoveredStop){
-   if(resident||!motion.stoppedSelector||!motion.readyToCommit()||!recoveredFarmGateCurrent(presentation,presentation.rows[1]))
+   if(resident||!motion.stoppedSelector||!motion.readyToCommit()||!recoveredStoppedGateCurrent(presentation,presentation.rows[1]))
      throw Error('Recovered stopped gate has no exact replayed wall');
   }else if(motion.stoppedSelector){
    if(!resident)throw Error('Native stopped gate has no resident source');
@@ -181,5 +183,5 @@ export function createWebGpuAdmittedWall({prototypes,entity,elapsed,pipelineAdmi
     rollback(){if(activated){binding.rollback();activated=false;}},finalize(){check();if(!activated||finalized)throw Error('Native gate chunk not attached');if(motion.stoppedSelector&&!motion.readyToCommit())throw Error('Native stopped gate lacks its final receipt');finalized=true;return {retire(){check();participant.finalize();active=false;},notify(){}};},rollbackFinalized(){finalized=false;},cancel(){if(!active)return false;active=false;participant.cancel();return true;}};
   };gatePreparation=participant;return participant;
  }
- return {group:slot.group,initialParticipant,update,prepareNativeRepair,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,recoveredFarmGateCurrent,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
+ return {group:slot.group,initialParticipant,update,prepareNativeRepair,captureNativeRemoval,prepareNativeGate,prepareNativeGateRetention,prepareNativeTerminalGateRetention,recoveredStoppedGateCurrent,get nativeGateLease(){return slot.active?.nativeGpuGate?.lease??null;},get ready(){return slot.ready;},get upToDate(){return slot.upToDate;},get parts(){return slot.active?.parts??[];},dispose(){if(closed)return;gatePreparation?.cancel();closed=true;slot.dispose();}};
 }

@@ -85,9 +85,22 @@ function copyStoppedBody(value){
  return Object.freeze({kind:value.kind,version:1,stop,actorId:value.actorId});
 }
 const sameStoppedBody=(a,b)=>a?.kind===stoppedBodyKind&&b?.kind===stoppedBodyKind&&a.version===1&&b.version===1&&a.actorId===b.actorId&&sameReference(a.stop,b.stop);
- return Object.freeze({kind,referenceKind,ticketKind,attestationKind,translationKind,stoppedBodyKind,copyReference,sameReference,successor,referenceFromProposal,copyProposal,copyTicket,ticketFromProposal,copyAttestation,attestationCovers,copyProjection,copyStoppedBody,sameStoppedBody});
+ return Object.freeze({kind,referenceKind,ticketKind,attestationKind,translationKind,stoppedBodyKind,
+   ...(kind===12?{}:{stoppedGateKind:prefix+'-stopped-gate'}),
+   copyReference,sameReference,successor,referenceFromProposal,copyProposal,copyTicket,ticketFromProposal,copyAttestation,attestationCovers,copyProjection,copyStoppedBody,sameStoppedBody});
 }
 export const nativeIdleStrollStopCodec=createCodec(12,'native-idle-stroll');
 export const nativeFarmArrivalStopCodec=createCodec(24,'native-farm-arrival');
 export const nativeTaskRouteStopCodec=createCodec(25,'native-task-route');
+export function nativeGateStopCodec(reference){
+ if(reference?.kind===nativeFarmArrivalStopCodec.referenceKind)return nativeFarmArrivalStopCodec;
+ if(reference?.kind===nativeTaskRouteStopCodec.referenceKind)return nativeTaskRouteStopCodec;
+ return null;
+}
+export function nativeStoppedGateClockMatches(binding,gate,stop){
+ const selector=binding?.nativeStopped,codec=nativeGateStopCodec(stop);
+ return !!codec&&selector?.kind===codec.stoppedGateKind&&selector.gateId===gate.gateId&&selector.mechanism===gate.mechanism&&
+   binding.semantic==='stop-value'&&binding.stopField==='opening'&&binding.epoch===stop.worldBoundary.effectiveTime&&
+   codec.sameReference(selector.stop,stop);
+}
 export const NATIVE_STOP_POSE_FIELDS=Object.freeze({x:0,z:1,phase:3,yaw:4,arrived:6,runPhase:9,walkPhase:10,carryPhase:11});

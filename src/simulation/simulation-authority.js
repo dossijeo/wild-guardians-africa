@@ -1,4 +1,4 @@
-import {copyStop12Source,copyStop24Source,stop24GateSamplesMatch} from "../world/native-stop24-task-recovery.js";
+import {copyStop12Source,copyStop24Source,recoveredStoppedGateSamplesMatch} from "../world/native-stop24-task-recovery.js";
 import {copyTask25HomeSource} from '../world/native-task25-home-recovery.js';
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
@@ -1754,7 +1754,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
         if(profile.stopProjectionMatches)return row.relativeTime===recoveryFloorFloat32(elapsed-after.binding.reference.epoch)&&
           profile.stopProjectionMatches(row,after.binding)&&after.executedThrough===elapsed&&
-          (profile.kind!==24||stop24GateSamplesMatch(row.stoppedGates??[],after.binding));
+          recoveredStoppedGateSamplesMatch(row.stoppedGates??[],after.binding);
         const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
         const terminal=after.arrived&&(profile.kind===18||profile.kind===26&&live.ruin);
         const age=profile.kind===21&&after.finished?reference.duration:
