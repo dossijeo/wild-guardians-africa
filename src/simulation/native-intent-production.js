@@ -11,7 +11,7 @@ const flightStopMarkers=new Set(['pending-farm-flight-stop','pending-idle-flight
 // source. There is no copied request queue, movement clock or retry timer here.
 export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,restoreRuinedWall=null,ruinedWallWakeKey=null,onError=()=>{}}){
  if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
- let closed=false,fault=null,active=null,last=null,quiescence=null;
+ let closed=false,fault=null,active=null,last=null,lastAnimalMotion=null,quiescence=null;
  const rejectedRuins=new Map();
  function next(onlyActor=null){
   for(const actorId of rejectedRuins.keys())if(!state.workers.some(w=>w.id===actorId&&w.nativeRouteAdmission==='native-action'))rejectedRuins.delete(actorId);
@@ -159,6 +159,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
     if((transaction.obsolete||retiredBeforeReady)&&result.status==='control-failed'){last={actorId:request.actorId,kind:request.kind,status:'cancelled'};return {...result,status:'cancelled'};}
     if(wakeKey!==undefined&&['unsupported','blocked'].includes(result.status))rejectedRuins.set(request.actorId,wakeKey);else rejectedRuins.delete(request.actorId);
     last={actorId:request.actorId,kind:request.kind,status:result.status,...(result.status==='committed'?{publicationSequence:publicationSequence()}:{}),...(result.error?{error:String(result.error)}:{})};
+    lastAnimalMotion=result.status==='committed'?(result.nativeAnimalCropRouteBinding??result.nativeAnimalCropStrikeBinding??null):null;
     if(result.status==='committed-control-failed')throw Error('Native production committed without a live graphical control: '+result.error);
     if(result.status==='control-failed')throw Error(result.error??'Native production control failed');
     return result;
@@ -214,6 +215,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   if(!quiescence?.settled||receipt!==quiescence.receipt)throw Error('Invalid native production quiescence receipt');
   quiescence=null;wake();return true;
  }
- return {wake,quiesce,resume,status:()=>({phase:closed?'closed':fault?'failed':quiescence?quiescence.settled?'suspended':'quiescing':active?'preparing':'idle',fault,active:active?{actorId:active.actorId,kind:active.kind}:null,last:last&&{...last}}),
+ return {wake,quiesce,resume,unpublishedAnimalMotion:(actor,sequence)=>
+  last?.status==='committed'&&last.actorId===actor&&last.publicationSequence===sequence?lastAnimalMotion:null,
+ status:()=>({phase:closed?'closed':fault?'failed':quiescence?quiescence.settled?'suspended':'quiescing':active?'preparing':'idle',fault,active:active?{actorId:active.actorId,kind:active.kind}:null,last:last&&{...last}}),
   dispose(){if(closed)return;closed=true;active?.controller.abort();}};
 }

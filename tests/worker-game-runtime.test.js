@@ -62,7 +62,7 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
-test('publishing the center strike preserves every step before a pending pause',async()=>{
+for(const kind of [26,27])test('publishing center motion '+kind+' preserves every step before a pending pause',async()=>{
  let now=0,wake,sequence=0,elapsed=12;
  const sent=[],seen=[],client={ready:Promise.resolve(),submit(command){
   let resolve;
@@ -71,7 +71,7 @@ test('publishing the center strike preserves every step before a pending pause',
   return {accepted:true,result};
  },dispose(){}};
  const world={createConfirmedReceiver(){return {
-  accept(message){assert.equal(message.centerStrikePublication,undefined);sequence=message.sequence;elapsed=message.elapsed;seen.push(elapsed);return {accepted:true};},
+  accept(message){assert.equal(message.centerMotionPublication,undefined);sequence=message.sequence;elapsed=message.elapsed;seen.push(elapsed);return {accepted:true};},
   status(){return {sequence,lastElapsed:elapsed};}
  };}};
  const runtime=createWorkerGameRuntime({client,world,session:'s',maxBatchSteps:2,now:()=>now,schedule:fn=>(wake=fn,1),cancel(){}});
@@ -87,7 +87,8 @@ test('publishing the center strike preserves every step before a pending pause',
   pause.catch(()=>{});
   assert.equal(sent[1].command.steps,2);
   const worldBoundary={version:1,authorityEpoch:'s',nativeSession:1,ticket:27,effectiveTime:12};
-  await reply(1,{elapsed:12.02,stepsExecuted:0,centerStrikePublication:{version:1,attackId:10,worldBoundary,remainingSeconds:.03}});
+  await reply(1,{elapsed:12.02,stepsExecuted:0,centerMotionPublication:{version:1,kind,actorId:5,
+   ...(kind===27?{attackId:10}:{}),worldBoundary,remainingSeconds:.03}});
   assert.deepEqual(sent[2].command,{kind:'advance',seconds:.03,nightFastForward:true});
   assert.equal(runtime.status().pendingSteps,2);
   await reply(2,{elapsed:12.05});

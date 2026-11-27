@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Si READY de la marcha sucesora llega en el corte de derrumbe, Hosted publica el GO antes de que Surface prepare kind4. NVIDIA confirmó ambos dibujos en orden desde `RaidSpawned`, el cuarto golpe en el mismo cuerpo y el drenaje. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
+
 En Desierto se reprodujo el vencimiento del derrumbe durante el cuarto ataque al centro sucesor, partiendo de una aproximación ya seleccionada. WASM conserva el Strike27 al adquirir kind4 y el reemplazo de Draw vuelve a presentar ese ataque con su edad confirmada. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
 
 Desde `RaidSpawned`, la calificación aislada de Desierto admite el centro elegido por Game cuando su derrumbe deja el corredor al siguiente centro todavía en marcha. NVIDIA presentó los cuatro golpes, la retirada de la huella con el mismo cuerpo en marcha y la ausencia final. Quedan el arranque con Strike27 ya en curso al vencer el derrumbe, las cohortes adicionales y C4. [Recorrido y pruebas](native-desert-mixed-flight-center-20261125.md#nacimiento-con-un-centro-que-caerá-antes-del-último-golpe).

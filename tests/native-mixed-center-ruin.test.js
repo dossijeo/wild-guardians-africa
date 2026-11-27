@@ -161,10 +161,12 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
     reply.then(value=>{result=value;},reason=>{error=reason;});
     for(let f=0;f<1000&&!ready?.packet&&!error&&!result;f++)await world.present();
     if(error)throw error;
-    if(result?.centerStrikePublication){
+    if(result?.centerMotionPublication){
      assert(!publication&&strike?.committed);
-     publication=result.centerStrikePublication;
+     publication=result.centerMotionPublication;
      const binding=acquiredStrike;
+     assert.equal(publication.kind,27);
+     assert.equal(publication.actorId,binding.reference.actorId);
      assert.deepEqual(publication.worldBoundary,binding.reference.worldBoundary);
      assert.equal(publication.attackId,binding.attackId);
      const before=state.elapsed;
@@ -279,7 +281,7 @@ for(const retireFirst of [true,false])test('center ruin recovers the successor a
    await untilProduction(world,()=>settled);
    result=await result;
   }
-  assert(!result.centerStrikePublication);
+  assert(!result.centerMotionPublication);
   await world.present();
   assert.deepEqual(world.faults,[]);
   return JSON.parse(result.snapshot);
@@ -577,7 +579,15 @@ for(const scenario of [
  let releaseFarm,releaseRoute,farmReady=null,routeReady=null,flight=null;
  const farmGate=new Promise(resolve=>{releaseFarm=resolve;});
  const routeGate=new Promise(resolve=>{releaseRoute=resolve;});
+ let routePublication=null;
  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  onPrepare(record){
+   if(secondCenter&&record.kind==='center-ruin'){
+    const source=record.resources.nativeCenterRuin;
+    const route=source.approach??source.retreat;
+    assert.deepEqual(routePublication?.worldBoundary,route.reference.worldBoundary,'Ruin preparation needs the separate acquired route publication');
+   }
+  },
   onCommit(record,receipt){if(record.kind==='home-route')flight=receipt.nativeHomeRouteBinding;},
   onReady(record){
    if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}
@@ -586,8 +596,9 @@ for(const scenario of [
     if(early?'structure-'+ref.targetId===successorId:ref.purpose==='retreat'){routeReady=record;return routeGate;}
    }
   }});
- const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
- const events=[];
+ const step={kind:'advance',seconds:.05,nightFastForward:false,steps:2};
+ const advance=()=>world.command(step);
+ const events=[],remaining=[];
  let confirmed=initial,ruin,workerAtCut,gatesAtCut,snap,ruinPublication,replacement;
  try{
   world.command({kind:'setNavigationView',view});
@@ -596,13 +607,14 @@ for(const scenario of [
   const beforePolygons=secondCenter?polygons():null;
   let spawn=null;
   for(let retry=0;retry<(early?760:540)&&!events.some(row=>row.type==='RaidEnded');retry++){
-   let next=advance();
+   const command=remaining.shift()??step;
+   let next=world.command(command);
    if(next instanceof Promise){
     workerAtCut=confirmed.workers[0];
     gatesAtCut=gates(confirmed);
     let pending=null,error=null;
     void next.then(value=>{pending=value;},reason=>{error=reason;});
-    if(secondCenter){
+    if(secondCenter&&!routeReady?.committed){
      await untilProduction(world,()=>routeReady?.packet);
      for(let f=0;f<4;f++)await world.present();
      assert(!pending&&!error&&!routeReady.committed);
@@ -612,15 +624,30 @@ for(const scenario of [
     for(let f=0;f<1000&&!pending&&!error;f++)await world.present();
     if(error)throw error;
     assert(pending,'Expected the mixed cut to settle');
-    next=ruinPublication=pending;
-    ruin=world.records.findLast(row=>row.kind==='center-ruin');
-    for(let f=0;f<8;f++)await world.present();
-    assert(ruin?.committed);
-    snap=await ruin.packet.presented;
-    if(early){
-     const source=ruin.resources.nativeCenterRuin,draw=world.host.inspect().nativeRouteFrame;
-     assert.equal(draw.worldBoundary.ticket,ruin.commit.nativeCenterRuin.acquired.ticket);
-     assert(draw.bindings.some(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,source.approach.preparedReference)));
+    next=pending;
+    if(pending.centerMotionPublication){
+     assert(!routePublication&&routeReady);
+     await untilProduction(world,()=>routeReady.committed);
+     routePublication=pending.centerMotionPublication;
+     assert.equal(routePublication.kind,26);
+     assert.equal(routePublication.actorId,routeReady.resources.reference.actorId);
+     assert.equal(routePublication.worldBoundary.effectiveTime,pending.elapsed);
+     assert(!pending.events.some(event=>event.type==='StructureRuined'));
+     assert(!world.records.some(record=>record.kind==='center-ruin'));
+     remaining.push({...command,steps:1,seconds:routePublication.remainingSeconds});
+     const full=command.steps-pending.stepsExecuted-1;
+     if(full)remaining.push({...command,steps:full});
+    }else{
+     ruinPublication=pending;
+     ruin=world.records.findLast(row=>row.kind==='center-ruin');
+     for(let f=0;f<8;f++)await world.present();
+     assert(ruin?.committed);
+     snap=await ruin.packet.presented;
+     if(early){
+      const source=ruin.resources.nativeCenterRuin,draw=world.host.inspect().nativeRouteFrame;
+      assert.equal(draw.worldBoundary.ticket,ruin.commit.nativeCenterRuin.acquired.ticket);
+      assert(draw.bindings.some(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,source.approach.preparedReference)));
+     }
     }
    }
    events.push(...next.events);
@@ -666,6 +693,7 @@ for(const scenario of [
   assert.equal(confirmed.structures.find(row=>row.id===destroyedId).status,'ruined');
   if(secondCenter){
    assert.equal(source.center,destroyedId);
+   assert.deepEqual(routePublication?.worldBoundary,route.reference.worldBoundary);
    assert(beforePolygons.some(row=>row.id===source.polygon));
    assert.deepEqual(polygons(),beforePolygons.filter(row=>row.id!==source.polygon));
    assert.equal(confirmed.result,null);

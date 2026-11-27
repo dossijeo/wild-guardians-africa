@@ -751,13 +751,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     try{
       owner.receipt=await nativeProduction.quiesce();
       if(!current())throw Error('Native center ruin source changed');
-      // Quiescing can finish a pending strike. Its acquired program must be
+      // Quiescing can finish pending motion. Its acquired program must be
       // published before Surface can adopt it and prepare the next world.
-      const last=nativeProduction.status().last;
-      if(last?.publicationSequence===sequence&&last.kind==='animal-crop-strike'&&last.status==='committed'){
-        const strike=planner.nativeAnimalCropStrikeExecution(animal.id);
-        if(strike?.binding.reference.purpose==='center')return {
-          version:1,worldBoundary:strike.binding.reference.worldBoundary,attackId:strike.binding.attackId};
+      const motion=nativeProduction.unpublishedAnimalMotion(animal.id,sequence);
+      const ref=motion?.reference;
+      if(ref&&['center','retreat'].includes(ref.purpose)){
+        return {version:1,kind:ref.kind,actorId:ref.actorId,worldBoundary:ref.worldBoundary,
+          ...(ref.kind===27?{attackId:motion.attackId}:{})};
       }
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
@@ -1694,15 +1694,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
        return stepsExecuted<steps&&!residency().missing.length;
      };
-     let recoveryCut=null,centerStrikePublication=null;
+     let recoveryCut=null,centerMotionPublication=null;
      const runSteps=first=>{
        if(restoringFarmFlight){stepsExecuted=0;return;}
        for(let i=first;i<steps;i++){
          const boundary=advanceReal(game,command.seconds,nav,options);
          if(boundary)return boundary.then(stopped=>{
-           if(stopped?.centerStrikePublication){
+           if(stopped?.centerMotionPublication){
              stepsExecuted=i;
-             centerStrikePublication={...stopped.centerStrikePublication,remainingSeconds:stopped.remainingSeconds};
+             centerMotionPublication={...stopped.centerMotionPublication,remainingSeconds:stopped.remainingSeconds};
              return;
            }
            if(stopped){
@@ -1724,10 +1724,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      try{pending=runSteps(0);}catch(error){finishCapture();throw error;}
      if(pending){
        return pending.finally(finishCapture).then(()=>{
-         // A strike acquired during the cut is outside the sampled tick tape.
-         if(centerStrikePublication)motionTrace=worldMotionTrace=null;
+         // Motion acquired during the cut is outside the sampled tick tape.
+         if(centerMotionPublication)motionTrace=worldMotionTrace=null;
          const result=publishResult();
-         if(centerStrikePublication){result.stepsExecuted=stepsExecuted;result.centerStrikePublication=centerStrikePublication;}
+         if(centerMotionPublication){result.stepsExecuted=stepsExecuted;result.centerMotionPublication=centerMotionPublication;}
          const owner=encounterDraftAdvance;
          if(recoveryCut){
            result.encounterRecoveryCut=recoveryCut;

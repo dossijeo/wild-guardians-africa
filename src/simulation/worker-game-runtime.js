@@ -30,20 +30,22 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
   request.result.then(result=>{
    if(closed||fault)return;
    if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);
-   const cut=result.encounterRecoveryCut,strike=result.centerStrikePublication;
-   if(strike!==undefined){
-    const boundary=copyNativeWorldBoundary(strike?.worldBoundary),remaining=strike?.remainingSeconds,done=result.stepsExecuted;
-    if(item.kind!=='steps'||strike?.version!==1||!boundary||!Number.isFinite(result.elapsed)||boundary.effectiveTime>result.elapsed||
-       !Number.isSafeInteger(strike.attackId)||strike.attackId<1||!Number.isSafeInteger(done)||done<0||done>=planned||
+   const cut=result.encounterRecoveryCut,motion=result.centerMotionPublication;
+   if(motion!==undefined){
+    const boundary=copyNativeWorldBoundary(motion?.worldBoundary),remaining=motion?.remainingSeconds,done=result.stepsExecuted;
+    const attack=motion?.kind===27?Number.isSafeInteger(motion.attackId)&&motion.attackId>0:motion?.attackId===undefined;
+    if(item.kind!=='steps'||motion?.version!==1||![26,27].includes(motion.kind)||!attack||
+       !Number.isSafeInteger(motion.actorId)||motion.actorId<1||!boundary||!Number.isFinite(result.elapsed)||boundary.effectiveTime>result.elapsed||
+       !Number.isSafeInteger(done)||done<0||done>=planned||
        !Number.isFinite(remaining)||remaining<=0||remaining>command.seconds||result.unchanged||cut!==undefined)
-     throw Error('Invalid center strike publication boundary');
+     throw Error('Invalid center motion publication boundary');
     if(remaining===command.seconds)queue.unshift({kind:'steps',count:planned-done,seconds:item.seconds,fast:item.fast});
     else{
      const full=planned-done-1;
      if(full)queue.unshift({kind:'steps',count:full,fast:item.fast});
      queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
     }
-    delete result.centerStrikePublication;
+    delete result.centerMotionPublication;
    }else if(cut!==undefined){
     const boundary=copyNativeWorldBoundary(cut?.worldBoundary),remaining=cut?.remainingSeconds,done=result.stepsExecuted;
     if(item.kind!=='steps'||cut?.version!==1||!Number.isSafeInteger(cut.holdId)||cut.holdId<1||
@@ -65,7 +67,7 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
     publication=copyPublication(result,{omit:['snapshot','liveSnapshot'],add:{snapshot:result.liveSnapshot}});
    }
    const accepted=publication.unchanged===true?receiver.acceptUnchanged(publication,meta):receiver.accept(publication,meta);if(!accepted.accepted)throw Error('Confirmed scene publication rejected: '+accepted.reason);
-   if(strike===undefined&&cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
+   if(motion===undefined&&cut===undefined&&planned>1&&result.stepsExecuted<planned)queue.unshift({kind:'steps',count:planned-result.stepsExecuted,fast:item.fast});
    if(diagnostics){const label=command.kind==='tutorialCommand'?`${command.kind}:${command.action}`:command.kind;completedKinds[label]=(completedKinds[label]??0)+1;if(result.diagnostics?.kind==='castAttack')lastAttackDiagnostic=result.diagnostics;}
    confirmed=publication;if(onConfirmedState)try{onConfirmedState(result.sequence);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(onConfirmedEvents&&result.events?.length)try{onConfirmedEvents(result.events);}catch(error){try{onPresentationError(error instanceof Error?error:Error(String(error)));}catch{}}if(item.kind==='chunk')pendingChunks.delete(item.key);addDemands(result);if(item.kind==='command')item.resolve(result);busy=false;activeItem=null;activeSteps=0;if(quiet&&!queue.some(queued=>queued.kind==='command')&&!pendingChunks.size)pausedQuiescent=true;pump();
   }).catch(error=>{busy=false;if(item.kind==='command')item.reject(error);activeItem=null;fail(error);});

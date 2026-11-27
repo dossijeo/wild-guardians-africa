@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+El derrumbe de Desierto admite un READY de marcha retenido hasta el propio corte. NVIDIA confirmó la publicación de la adquisición, el dibujo de kind4 y los cuatro golpes con retirada y drenaje. La activación ordinaria y C4 siguen abiertos. [Recibo y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
+
 Desierto 983 recarga los dos programas de motor de Farm23 mientras Stop24 espera READY. NVIDIA acreditó las dos aperturas parciales, los valores detenidos, la retirada Home19, los cuatro golpes y el regreso a Idle por ambos portones. La aceptación completa de e-R3/e-R4/f-R4 y C4 sigue pendiente. [Recibos y alcance](desert-frozen-gate-checkpoint-20261127.md#recarga-de-farm23-con-dos-programas-de-motor).
 
 Desierto 983 recarga la cohorte de Home18 y ataque al centro con las dos hojas abiertas. NVIDIA acreditó ambos relojes a edad cero, la retirada Home19, los cuatro golpes y el regreso civil por los mismos portones. El control de CPU recarga también entre los cruces y tras Home19. [Recibos y alcance](desert-frozen-gate-checkpoint-20261127.md#huida-y-refugio-con-dos-portones).
