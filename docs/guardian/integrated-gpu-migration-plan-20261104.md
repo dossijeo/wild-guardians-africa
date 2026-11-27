@@ -4,7 +4,7 @@ Sabana 714 pasó el anochecer tras Home19 con el reloj ordinario. Al denegar en 
 
 En Sabana 714 también pasó la recarga con dos trabajadores pagados. El sustituto presentó la ausencia de ambos después de Home19 y, en otra prueba, los dos relojes de Home18 e Idle22 antes de reanudar. [Retiradas](performance/native-savanna-two-home-terminal-20261127.json) · [Rutas activas](performance/native-savanna-two-live-recovery-20261127.json).
 
-Recovery en Sabana también conserva Home18 y el primer Idle21 cuando se pierde Draw antes del READY sucesor. NVIDIA presentó el ciclo terminal y acreditó su relevo posterior. [Recibo y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-home18-y-el-primer-ciclo-idle21).
+Recovery en Sabana conserva Home18 e Idle21 con el sucesor aún pendiente y también después de adquirirlo. NVIDIA presentó ambos relojes antes de reanudar en los dos cortes. [Sucesor pendiente](native-terminal-resource-recovery-20261120.md#reemplazo-con-home18-y-el-primer-ciclo-idle21) · [Sucesor adquirido](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-sucesor-idle21-adquirido).
 
 Si READY de la marcha sucesora llega en el corte de derrumbe, Hosted publica el GO antes de que Surface prepare kind4. NVIDIA confirmó ambos dibujos en orden desde `RaidSpawned`, el cuarto golpe en el mismo cuerpo y el drenaje. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
 

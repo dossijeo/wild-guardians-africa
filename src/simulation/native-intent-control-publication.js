@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -116,7 +116,20 @@ export function createNativeIntentControlPublication({port,session,observe,
       if(data.protocolVersion!==2||data.consumerToken!==consumerToken||data.drained!==true){
         fail(Error('Native GPU retirement lacks a connection-bound drain receipt'));return;
       }
-      consumerDrainReceipt=Object.freeze({type:data.type,protocolVersion:2,session,authorityEpoch,consumerToken,sequence:data.sequence,drained:true});
+      let idleCyclePhases;
+      if(data.idleCyclePhases!==undefined)try{
+        if(!Array.isArray(data.idleCyclePhases)||data.idleCyclePhases.length>32768||!Number.isSafeInteger(data.sequence)||data.sequence>sentSequence)
+          throw Error('Invalid retired Idle cycles');
+        idleCyclePhases=Object.freeze(data.idleCyclePhases.map(copyNativeIdleCycleRecoveryPhase));
+        const actors=new Set(),bodies=new Set();
+        for(const cycle of idleCyclePhases){
+          if(actors.has(cycle.actorId)||bodies.has(cycle.bodyId)||cycle.cycleSequence>data.sequence||!nativeRecoveryCovers(worldBoundary,cycle.worldBoundary))
+            throw Error('Retired Idle cycle phase does not belong to the consumer');
+          actors.add(cycle.actorId);bodies.add(cycle.bodyId);
+        }
+      }catch(error){fail(error);return;}
+      consumerDrainReceipt=Object.freeze({type:data.type,protocolVersion:2,session,authorityEpoch,consumerToken,sequence:data.sequence,drained:true,
+        ...(idleCyclePhases?.length?{idleCyclePhases}:{})});
       drained=true;
       if(retirement)retirement.resolve(Object.freeze({authorityEpoch,session,retirementId:retirement.id,
         sequence:retirement.sequence,effectiveTime:retirement.time,clockSequence:retirement.clockSequence}));
@@ -159,6 +172,7 @@ export function createNativeIntentControlPublication({port,session,observe,
              if(row?.kind!==kind)return false;
              const gates=recoveredNativeGateSamples(row),gateIds=nativeRecoveryGates(proof),boundary=proof.reference.worldBoundary;
              return row.assignmentSequence===nativeRecoverySequence(proof)&&
+               row.phaseDelay===(kind===21?recoveryBaseline.idleCyclePhase?.phaseDelay:undefined)&&
                profile.sameReference(row[profile.clockField],proof.reference)&&Number.isFinite(row.relativeTime)&&row.relativeTime>=0&&
                (gateIds.length===1?row.nativeGates===undefined&&row.nativeGate!==undefined:
                  row.nativeGate===undefined&&row.gateElapsed===undefined&&

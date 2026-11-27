@@ -26,7 +26,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {centerRuinApproachEndpoint,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeStationaryRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeStationaryRefuge,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -1106,20 +1106,21 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
-    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,ordinaryWorkers=false}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,ordinaryWorkers=false,idleCyclePhase=null}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===21){
         const actor=actors.get(ref.actorId),source=actor?.idleCycleSource,at=clock?.committedThrough,start=ref.worldBoundary.effectiveTime;
         const next=actor?.pendingIdleCycleRequest,end=start+ref.duration;
         const current=()=>!closed&&!!clock&&clock.intentSequence===sequence&&clock.committedThrough===at&&
           !!actor&&actor.idleCycleSource===source&&!actor.idleCycleProof&&actor.pendingIdleCycleRequest===next&&cycleState(actor,proof);
-        if(!ordinaryWorkers||!sharedCut||ref.sourceCycleSequence!==0||actors.size!==cohortSize||active.size!==movingCount||
+        if(!ordinaryWorkers||!sharedCut||Boolean(ref.sourceCycleSequence)!==!!idleCyclePhase||
+           idleCyclePhase&&!nativeIdleCycleRecoveryPhaseMatches(idleCyclePhase,proof)||actors.size!==cohortSize||active.size!==movingCount||
            !source?.fromBaseline||!sameNativeIdleCycleAttestation(source.binding,proof)||!nativeRecoveryCovers(boundary,ref.worldBoundary)||
            clock?.nativeSession!==boundary.nativeSession||!(at>=start&&(at<end?!next:next?.requestedAt>=end))||!current())
           throw Error('Recovered Idle cycle conflicts with the fresh control baseline');
         return ()=>{
           if(!current())throw Error('Recovered Idle cycle was revoked before materialization');
-          source.phaseDelay=ref.sourceBody.kind==='native-settled-worker-idle-source'?start:0;
+          source.phaseDelay=idleCyclePhase?.phaseDelay??(ref.sourceBody.kind==='native-settled-worker-idle-source'?start:0);
           installIdleCycleRecord(actor,source);
         };
       }
@@ -1409,6 +1410,16 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         error.code='native-route-admission-obsolete';throw error;
       }
       counters.admissions++;return record;
+    },
+    idleCycleRecoveryPhases(){
+      const phases=[];
+      for(const actor of actors.values()){
+        const proof=actor.idleCycleProof,ref=proof?.reference;
+        if(!ref?.sourceCycleSequence||!cycleRecordCurrent(ref,actor))continue;
+        phases.push(copyNativeIdleCycleRecoveryPhase({version:1,actorId:ref.actorId,bodyId:ref.bodyId,
+          cycleSequence:proof.cycleSequence,worldBoundary:ref.worldBoundary,phaseDelay:actor.idleCycleRecord.phaseDelay}));
+      }
+      return phases;
     },
     status:()=>({authorityEpoch,sequence,effectiveTime:Number.isFinite(effectiveTime)?
       effectiveTime:null,active:active.size,closed,...counters,...(clock?{clock}:{} )}),

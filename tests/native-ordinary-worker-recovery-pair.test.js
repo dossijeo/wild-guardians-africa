@@ -5,21 +5,26 @@ import {MessageChannel} from 'node:worker_threads';
 import {gunzipSync} from 'node:zlib';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
+import {nativeIdleCyclePhaseOffset} from '../src/rendering/native-farm-idle-phase.js';
+import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery.js';
 import {nativeIdleCycleBodyState} from '../src/world/native-idle-cycle-body-source.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 
-for(const loss of ['stroll','cycle','preparer first','hold first'])test(`terminal Draw recovery requires Home18 and ${loss==='stroll'?'Idle22':'Idle21'} at the same cut (${loss})`,async()=>{
- const stationary=loss!=='stroll',duringSuccessor=loss==='preparer first'||loss==='hold first';
+for(const loss of ['stroll','cycle','preparer first','hold first','acquired successor'])test(`terminal Draw recovery requires Home18 and ${loss==='stroll'?'Idle22':'Idle21'} at the same cut (${loss})`,async()=>{
+ const stationary=loss!=='stroll',duringSuccessor=loss==='preparer first'||loss==='hold first',acquiredSuccessor=loss==='acquired successor';
  const save=gunzipSync(readFileSync(new URL('./fixtures/sabana714-d1-two-paid-workers-before-home.json.gz',import.meta.url))).toString();
  const options=savedNativeAuthorityOptions(save),manifest={epoch:'ordinary-worker-pair',chunks:options.chunkKeys.map(key=>{
   const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
  })};
- let successor,release;
+ let successor,release,acquiredCycle;
  const retained=new Promise(resolve=>{release=resolve;});
- const f=await nativeProductionAuthority(JSON.parse(save),{...options,getTerrainManifest:()=>manifest,onPrepare(record){
+ const f=await nativeProductionAuthority(JSON.parse(save),{...options,getTerrainManifest:()=>manifest,onCommit(record,commit){
+  const binding=commit.nativeIdleCycleBinding;
+  if(acquiredSuccessor&&record.kind==='idle-cycle'&&binding.reference.actorId===6&&binding.reference.sourceCycleSequence)acquiredCycle=binding;
+ },onPrepare(record){
   const ref=record.resources.nativeIdleCycle;
   if(duringSuccessor&&!successor&&record.kind==='idle-cycle'&&ref?.actorId===6&&ref.sourceCycleSequence){successor=record;return retained;}
  }});
@@ -32,7 +37,7 @@ for(const loss of ['stroll','cycle','preparer first','hold first'])test(`termina
    for(const key of result.residency?.missing??[])f.command({kind:'addChunk',key});
    await f.present();
    const view=JSON.parse(result.snapshot);
-   if((!duringSuccessor||successor)&&view.workers.some(worker=>worker.nativeRouteAdmission==='native-home')&&
+   if((!duringSuccessor||successor)&&(!acquiredSuccessor||acquiredCycle)&&view.workers.some(worker=>worker.nativeRouteAdmission==='native-home')&&
       view.workers.some(worker=>worker.nativeRouteAdmission===(stationary?'native-idle':'native-idle-stroll'))){state=view;break;}
   }
   assert(state);
@@ -49,16 +54,38 @@ for(const loss of ['stroll','cycle','preparer first','hold first'])test(`termina
   const retired=await f.authority.flushNativeResourcePreparation({forLostDraw:true,allowRetired:true});
   assert(retired.terminal&&retired.callbacksSettled);
   const route=await f.authority.terminalWorkerRoute();
-  assert.deepEqual(route,{version:2,members:[{kind:18,actorId:8},{kind:stationary?21:22,actorId:6}]});
-  replacement=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleCycleVersion:1}},
+  assert(route);
+  const {idleCyclePhase,...membership}=route;
+  assert.deepEqual(membership,{version:2,members:[{kind:18,actorId:8},{kind:stationary?21:22,actorId:6}]});
+  if(acquiredSuccessor){
+   assert.equal(idleCyclePhase.cycleSequence,acquiredCycle.cycleSequence);
+   assert.deepEqual(idleCyclePhase.worldBoundary,acquiredCycle.reference.worldBoundary);
+   await assert.rejects(f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,
+    {...route,idleCyclePhase:{...idleCyclePhase,phaseDelay:idleCyclePhase.phaseDelay+0.01}}),/exact Idle cycle phase/);
+  }else assert.equal(idleCyclePhase,undefined);
+  replacement=await drawFixture({capabilities:{nativeHomeRouteVersion:1,nativeIdleStrollVersion:1,nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
   assert.deepEqual(source.terrainManifest,manifest);
-  const proofs={version:2,members:source.members.map(({resources,execution})=>({kind:resources.kind,proof:execution.binding}))};
+  const proofs={version:2,members:source.members.map(({resources,execution})=>({kind:resources.kind,proof:execution.binding})),idleCyclePhase:source.idleCyclePhase};
+  if(acquiredSuccessor){
+   assert.deepEqual(source.idleCyclePhase,idleCyclePhase);
+   assert.throws(()=>copyNativeRecoveryGroup({...proofs,idleCyclePhase:undefined},source.worldBoundary),/requires its retired phase/);
+  }
   assert.equal(copyNativeRecoveryGroup(proofs,source.worldBoundary).ordinaryWorkers,true);
   assert.throws(()=>copyNativeRecoveryGroup(proofs,{...source.worldBoundary,ticket:source.worldBoundary.ticket+1}),/one world cut/);
   const at=state.elapsed,metadata={nativeWorldBoundary:source.worldBoundary,clock:{...f.clock,elapsed:at,safeUntil:at,paused:true,segments:[]}};
   const {client,host,pipeline}=replacement;
+  const periods=[3.8,4.0416669845581055];
+  function clockGroup(kind,ref,withPhase=false){
+   const home=kind===18,cycle=kind===21,epoch=ref.worldBoundary.effectiveTime;
+   const buffer=client.device.createBuffer({size:16,usage:72});client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
+   client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,
+    ...(cycle?{}:{resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)}),[home?'nativeHome':cycle?'nativeIdleCycle':'nativeStroll']:ref});
+   if(withPhase)for(const [i,period] of periods.entries())client.registerClockBinding(buffer,
+    {byteOffset:4+i*4,semantic:'idle-offset',epoch,period,nativeIdleCycle:ref});
+   return client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+  }
   const groups=source.members.map(({resources,execution})=>{
    const worker=state.workers.find(worker=>worker.id==='worker-'+execution.actorId),cycle=resources.kind===21,ref=execution.binding.reference;
    const pose=cycle?nativeIdleCycleBodyState(ref.sourceBody).pose:execution.pose??execution;
@@ -66,11 +93,7 @@ for(const loss of ['stroll','cycle','preparer first','hold first'])test(`termina
    for(const key of ['x','z','walkPhase','runPhase','carryPhase','runRemaining'])assert.equal(worker[key],pose[key]);
    assert.equal(worker.heading,pose.yaw);
    if(cycle){assert.deepEqual(worker.idleState,execution.idleState);assert.equal(execution.finished,duringSuccessor);}
-   const home=resources.kind===18,epoch=ref.worldBoundary.effectiveTime;
-   const buffer=client.device.createBuffer({size:16,usage:72});client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
-   client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch,
-    ...(cycle?{}:{resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)}),[home?'nativeHome':cycle?'nativeIdleCycle':'nativeStroll']:ref});
-   return client.device.createBindGroup({entries:[{binding:0,resource:{buffer}}]});
+   return clockGroup(resources.kind,ref,cycle&&acquiredSuccessor);
   });
   function frame(bindings){
    client.beginFrame(metadata);
@@ -80,12 +103,20 @@ for(const loss of ['stroll','cycle','preparer first','hold first'])test(`termina
    client.device.queue.submit([encoder.finish()]);return client.endFrame();
   }
   await assert.rejects(frame(groups.slice(0,1)),/Replacement requires its bound worker clock/);
+  const cycleReference=source.members[1].execution.binding.reference;
+  if(acquiredSuccessor)await assert.rejects(frame([groups[0],clockGroup(21,cycleReference)]),/Replacement requires its bound worker clock/);
   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
   const drawing=frame(groups);drawing.catch(()=>{});await flush();await host.idle();
   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
   host.present();await drawing;
   const proof=await f.authority.checkHeldDraw(30,hold,route);
   assert.equal(proof.elapsed,at);
+  if(acquiredSuccessor){
+   assert.equal(proof.members[1].phaseDelay,idleCyclePhase.phaseDelay);
+   const pick=captureNativeRoutePickFrame(host.inspect()),epoch=cycleReference.worldBoundary.effectiveTime;
+   for(const period of periods)assert.equal(pick.getIdleCyclePhaseOffset(cycleReference,period),nativeIdleCyclePhaseOffset({elapsed:at,
+    executionEpoch:epoch,relativeTime:proof.members[1].relativeTime,duration:cycleReference.duration,period,phaseDelay:idleCyclePhase.phaseDelay}));
+  }
   for(const [i,{execution}] of source.members.entries()){
    const ref=execution.binding.reference;
    assert.equal(proof.members[i].relativeTime,floorFloat32(execution.finished?ref.duration:at-ref.worldBoundary.effectiveTime));

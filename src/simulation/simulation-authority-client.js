@@ -104,14 +104,14 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            const {refuge,ruin,encounter,ordinaryWorkers}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
+            const {refuge,ruin,encounter,ordinaryWorkers,idleCyclePhase}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter,idleCyclePhase:q.idleCyclePhase},cut);
             if(ordinaryWorkers&&!nativeWorkerLifecycle)throw Error('Ordinary worker recovery is unavailable');
             if(refuge&&members.length===0){
               if(matchesNativeOrdinaryRefuge(cut,refuge)){
                 if(!nativeWorkerLifecycle)throw Error('Ordinary Home recovery is unavailable');
               }else if(!qualifyRaidEncounter)throw Error('Wounded refuge recovery is unavailable');
             }
-            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(encounter?{encounter}:{})};
+            evidence={...(refuge?{refuge}:{}),...(ruin?{ruin}:{}),...(encounter?{encounter}:{}),...(idleCyclePhase?{idleCyclePhase}:{})};
             const at=members[0]?.execution.executedThrough??encounter?.at??cut.effectiveTime;
             if(at<cut.effectiveTime||!members.every(member=>member.execution.executedThrough===at))
               throw Error('Replacement samples span different times');

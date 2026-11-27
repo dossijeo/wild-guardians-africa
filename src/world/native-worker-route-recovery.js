@@ -171,6 +171,21 @@ export function recoveredNativeGateSamples(row){
 export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.assignmentSequence;
 export const nativeRecoveryGates=proof=>proof.gateIds??[];
 
+export function copyNativeIdleCycleRecoveryPhase(value){
+ const {version,actorId,bodyId,cycleSequence,phaseDelay}=value??{};
+ const worldBoundary=copyNativeWorldBoundary(value?.worldBoundary);
+ if(version!==1||![actorId,bodyId,cycleSequence].every(n=>Number.isSafeInteger(n)&&n>0)||!worldBoundary||
+    !Number.isFinite(phaseDelay)||phaseDelay<0||phaseDelay>worldBoundary.effectiveTime)
+   throw TypeError('Invalid retired Idle cycle phase');
+ return Object.freeze({version,actorId,bodyId,cycleSequence,worldBoundary,phaseDelay});
+}
+
+export function nativeIdleCycleRecoveryPhaseMatches(phase,proof){
+ const ref=proof?.reference;
+ return !!phase&&!!ref&&phase.actorId===ref.actorId&&phase.bodyId===ref.bodyId&&phase.cycleSequence===proof.cycleSequence&&
+   sameNativeWorldBoundary(phase.worldBoundary,ref.worldBoundary);
+}
+
 export function nativeRecoveryCovers(world,source){
  return !!world&&!!source&&world.authorityEpoch===source.authorityEpoch&&world.nativeSession===source.nativeSession&&
    (sameNativeWorldBoundary(world,source)||world.ticket>source.ticket&&world.effectiveTime>=source.effectiveTime);
@@ -237,7 +252,9 @@ export function copyRecoveredEncounterPose(value){
 
 // The current world can include an exact later mutation that retained the
 // moving actor's acquisition. Each surviving clock keeps its origin.
-export function copyNativeRecoveryGroup(value,world){
+export function copyNativeRecoveryGroup(value,world,{awaitingIdleCyclePhase=false}={}){
+ const idleCycleMember=value.version===2&&value.members?.length===2&&value.members[1]?.kind===21&&!value.refuge&&!value.ruin&&!value.encounter;
+ if(value.idleCyclePhase!==undefined&&!idleCycleMember)throw Error('Idle cycle phase requires its recovered cycle');
  if(value.version===undefined&&value.members===undefined&&value.refuge===undefined&&value.ruin===undefined&&value.encounter===undefined)
    return {members:[{kind:value.kind,proof:nativeWorkerRouteRecoveryProfile(value.kind).copyAttestation(value.proof)}]};
  if(value.version!==2||!Array.isArray(value.members))throw Error('Invalid recovery membership');
@@ -288,13 +305,16 @@ export function copyNativeRecoveryGroup(value,world){
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
  const [home,peer]=members.map(member=>member.proof.reference);
- if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>nativeRecoveryGates(proof).length)||
-    members[1].kind===21&&peer.sourceCycleSequence!==0:
+ const inheritedCycle=idleCycleMember&&peer.sourceCycleSequence!==0;
+ const idleCyclePhase=value.idleCyclePhase===undefined?null:copyNativeIdleCycleRecoveryPhase(value.idleCyclePhase);
+ if(idleCyclePhase?(!inheritedCycle||!nativeIdleCycleRecoveryPhaseMatches(idleCyclePhase,members[1].proof)):
+    inheritedCycle&&!awaitingIdleCyclePhase)throw Error('Recovered Idle cycle requires its retired phase');
+ if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>nativeRecoveryGates(proof).length):
     !home.sourceRequest?.raidSpawnSequence||peer.purpose==='retreat')||
     home.actorId===peer.actorId||home.bodyId===peer.bodyId||
     nativeRecoverySequence(members[0].proof)===nativeRecoverySequence(members[1].proof)||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
     members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
    throw Error('Mixed recovery requires two current assignments at one world cut');
- return ordinaryWorkers?{members,ordinaryWorkers:true}:{members};
+ return ordinaryWorkers?{members,ordinaryWorkers:true,...(idleCyclePhase?{idleCyclePhase}:{})}:{members};
 }

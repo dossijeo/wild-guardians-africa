@@ -74,6 +74,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function recoveryBindingMatches(binding,profile,reference){
     return binding.semantic==='relative'&&!!binding[profile.clockField]&&profile.sameReference(binding[profile.clockField],reference);
   }
+  function recoveredIdleOffsetMatches(binding,reference){
+    return binding.semantic==='idle-offset'&&!!binding.nativeIdleCycle&&sameNativeIdleCycleReference(binding.nativeIdleCycle,reference);
+  }
   function recoveryGateMatches(binding,gateId,boundary){
     return binding.semantic==='relative'&&binding.nativeGate?.gateId===gateId&&
       binding.epoch===boundary.effectiveTime&&sameNativeWorldBoundary(binding.nativeGate.worldBoundary,boundary);
@@ -131,6 +134,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   }
   let nativeConsumerRetirement=null;
   let nativeConsumerToken=null,nativeRetirementNotified=false,deviceIsLost=false,nativeDrainPromise=null;
+  let retiredIdleCyclePhases=[];
+  function disposeNativeRouteControl(){
+    if(routeControl&&!routeControl.status().closed)retiredIdleCyclePhases=routeControl.idleCycleRecoveryPhases();
+    routeControl?.dispose();
+  }
   // Terminal callers freeze every submission before capturing this queue.
   // Failure, requested retirement and disposal share its actual completion.
   function drainNativeSubmissions(){return nativeDrainPromise??=Promise.resolve().then(()=>device.queue.onSubmittedWorkDone());}
@@ -138,7 +146,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     if(nativeRetirementNotified)return;nativeRetirementNotified=true;
     try{if(routeControl)intentControl.port.postMessage({type:'intent-control-retired',protocolVersion:2,
       session:intentControl.session,authorityEpoch:routeControl.status().authorityEpoch,
-      sequence:routeControl.status().sequence,consumerToken:nativeConsumerToken,drained:true});}catch{}
+      sequence:routeControl.status().sequence,consumerToken:nativeConsumerToken,drained:true,
+      ...(retiredIdleCyclePhases.length?{idleCyclePhases:retiredIdleCyclePhases}:{})});}catch{}
     intentControl?.port.close?.();
   }
   const mutationSubmissionWaiters=new Set();
@@ -253,7 +262,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     admittingFrame?.cancel();
     discardRetainedPreparations();
     settleMutationSubmissions(error);
-    routeControl?.dispose();settleNativeControl(error);
+    disposeNativeRouteControl();settleNativeControl(error);
     errors.push(error?.stack || String(error));
     // A validation failure stops drawing, not completion of accepted GPU work.
     // Keep its resources until explicit disposal and certify only the real
@@ -912,11 +921,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const members=recovered.members.map(({profile,ref,assignmentSequence,gateIds})=>{
           const row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,ref));
           if(!row)return null;
+          const inherited=profile.kind===21&&ref.sourceCycleSequence!==0;
+          const phaseDelay=inherited&&nativeRouteFrame.bindings.find(b=>recoveredIdleOffsetMatches(b,ref))?.phaseDelay;
+          if(inherited&&!Number.isFinite(phaseDelay))return null;
           const gates=gateIds.map(id=>nativeRouteFrame.bindings.find(b=>
             recoveryGateMatches(b,id,ref.worldBoundary)&&b.elapsed===row.elapsed));
           if(!gates.every(Boolean))return null;
           const samples=gates.map(gate=>({nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}));
           return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
+            ...(inherited?{phaseDelay}:{}),
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
         if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
@@ -1275,6 +1288,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         const epoch=ref.worldBoundary.effectiveTime;
         const end=profile.kind===21?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
+          profile.kind===21&&ref.sourceCycleSequence!==0&&!preparedBindings.some(b=>recoveredIdleOffsetMatches(b,ref)&&b.epoch===epoch)||
           !gateIds.every(id=>preparedBindings.some(b=>recoveryGateMatches(b,id,ref.worldBoundary)&&
             b.resourceEnd===nativeClockResourceEnd(b.epoch,ref.endTime)));
       });
@@ -2375,6 +2389,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
             return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime)&&
+              (row.phaseDelay===undefined||nativeRouteFrame.bindings.some(b=>recoveredIdleOffsetMatches(b,row[profile.clockField])&&
+                b.phaseDelay===row.phaseDelay))&&
               recoveredNativeGateSamples(row).every(gate=>nativeRouteFrame.bindings.some(b=>
                 recoveryGateMatches(b,gate.nativeGate.gateId,gate.nativeGate.worldBoundary)&&b.elapsed===gate.gateElapsed));
           })
@@ -2454,7 +2470,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
-                 {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,ordinaryWorkers:source.ordinaryWorkers===true})
+                 {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,
+                   ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase:source.idleCyclePhase})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,encounter:source.encounter};
@@ -2518,7 +2535,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       admittingFrame?.cancel();discardRetainedPreparations();
       settleMutationSubmissions(Error('Remote GPU disposed during native mutation'));
       settleNativeControl(Error('Remote GPU disposed'));
-      routeControl?.dispose();
+      disposeNativeRouteControl();
       for (const job of pendingResources.values()) job.reject(Error('Remote GPU disposed'));
       pendingResources.clear();
       if (frameHandle !== null) cancelFrame(frameHandle);

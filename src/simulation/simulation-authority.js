@@ -1,7 +1,7 @@
 import {sameNativeIdleStrollAttestation} from '../world/native-idle-stroll.js';
 import {sameNativeIdleCycleAttestation} from '../world/native-idle-cycle.js';
 import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-body.js';
-import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
 import {nativeEncounterCheckpointActors} from './native-encounter-checkpoint.js';
@@ -1366,13 +1366,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(executions.some(row=>!row||row.arrived||row.executedThrough!==game.elapsed)||!recoverableExecution(kind,executions[1]))return null;
     const members=executions.map(({actorId},i)=>({kind:i===0?18:kind,actorId}));
     const proofs=members.map(({kind},i)=>({kind,proof:executions[i].binding}));
-    try{copyNativeRecoveryGroup({version:2,members:proofs},planner.nativeWorldResourceBoundary());}
+    try{copyNativeRecoveryGroup({version:2,members:proofs},planner.nativeWorldResourceBoundary(),{awaitingIdleCyclePhase:true});}
     catch{return null;}
     return {members,executions};
   }
   function recoverableOrdinaryIdleSource(actorId){
     const pair=ordinaryWorkerRecoveryPair(),cycle=pair?.executions[1];
     return pair?.members[1].kind===21&&'worker-'+cycle.actorId===actorId&&cycle.finished?JSON.stringify(cycle.binding):null;
+  }
+  function retiredCyclePhase(group,route,retirement){
+    const cycle=route.members?.[1]?.kind===21?group.executions[1].binding:null;
+    if(!cycle?.reference.sourceCycleSequence)return null;
+    return retirement.idleCyclePhases?.find(phase=>nativeIdleCycleRecoveryPhaseMatches(phase,cycle))??null;
   }
   function recoveryRoute(){
     if(encounterDraftAdvance?.published){
@@ -1483,13 +1488,15 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!executions||!sameNativeWorldBoundary(current.worldBoundary,cut)||
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))return null;
-      await nativeIntentControl.waitForTerminalDraw();
+      const retirement=await nativeIntentControl.waitForTerminalDraw();
       const live=recoveryGroup(route);
       if(nativeProduction.status().phase!=='suspended'||!sameNativeWorldBoundary(cut,planner.nativeWorldResourceBoundary())||
          !live||JSON.stringify(live)!==JSON.stringify(group)||
          live.executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,live.ruin)))
         throw Error('Native assignments changed while waiting for terminal draw');
-      return route;
+      const idleCyclePhase=retiredCyclePhase(live,route,retirement);
+      if(route.members?.[1]?.kind===21&&live.executions[1].binding.reference.sourceCycleSequence&&!idleCyclePhase)return null;
+      return idleCyclePhase?{...route,idleCyclePhase}:route;
     },
     async attachNativeResourcePreparation(port,transportSession){
       if(closed||nativeResourcePreparation&&!['closed','failed'].includes(nativeResourcePreparation.status().phase))throw Error('Native resource attachment unavailable');
@@ -1579,6 +1586,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          !route.members&&!sameNativeWorldBoundary(cut,executions[0].binding.reference.worldBoundary)||
          executions.some((execution,i)=>!recoverableExecution(routes[i].kind,execution,group.ruin)))
         throw Error('Expected current native recovery assignments');
+      const idleCyclePhase=route.members?.[1]?.kind===21?
+        retiredCyclePhase(group,route,await nativeIntentControl.waitForTerminalDraw()):null;
+      if(JSON.stringify(idleCyclePhase)!==JSON.stringify(route.idleCyclePhase??null)||
+         route.members?.[1]?.kind===21&&executions[1].binding.reference.sourceCycleSequence&&!idleCyclePhase)
+        throw Error('Expected the prior consumer’s exact Idle cycle phase');
       const members=executions.map((execution,i)=>{
         const {kind}=routes[i],profile=nativeWorkerRouteRecoveryProfile(kind);
         const binding=execution.binding,ref=binding.reference,boundary=ref.worldBoundary;
@@ -1592,7 +1604,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
 
       const proofs=executions.map((execution,i)=>({kind:routes[i].kind,proof:execution.binding}));
       const evidence={...(group.refuge?{refuge:group.refuge}:{}),...(group.ruin?{ruin:group.ruin}:{}),
-        ...(group.encounter?{encounter:group.encounter}:{})};
+        ...(group.encounter?{encounter:group.encounter}:{}),...(idleCyclePhase?{idleCyclePhase}:{})};
       const attachment=await nativeIntentControl.attach(port,transportSession,
         route.members?{version:2,holdId,members:proofs,...evidence}:{holdId,...proofs[0]});
       const live=recoveryGroup(route);
@@ -1630,6 +1642,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       function sameHeld(profile,after,row,elapsed){
         if(row.kind!==profile.kind||
            row.assignmentSequence!==nativeRecoverySequence(after.binding)||
+           row.phaseDelay!==(profile.kind===21?route.idleCyclePhase?.phaseDelay:undefined)||
            !profile.sameReference(row[profile.clockField],after.binding.reference))return false;
         const reference=after.binding.reference,start=reference.worldBoundary.effectiveTime;
         const terminal=after.arrived&&(profile.kind===18||profile.kind===26&&live.ruin);

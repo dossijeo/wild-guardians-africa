@@ -23,6 +23,9 @@ for(const threaded of [false,true])test(`${threaded?'pthread':'normal'} installe
  const f=await nativeIdleFailedCycleControl({threaded,retry:0});try{
   let p=f.prepareCycle(),proof=f.commitCycle(p);f.install(proof);assert.equal(f.c.admitIdleCycle(proof.reference).idleCycleRecord.phaseDelay,0);let accumulated=0;
   for(const wait of [.7,2.3,.125]){f.advanceCycle();const at=f.state.elapsed;f.state.elapsed+=wait;assert.equal(f.planner.advanceNativeRouteExecution(f.state.elapsed).status,'advanced');f.planner.commitNativeCausalClock();p=f.prepareCycle();const previous=proof;proof=f.commitCycle(p);f.install(proof);accumulated+=proof.reference.worldBoundary.effectiveTime-previous.reference.worldBoundary.effectiveTime-previous.reference.duration;const record=f.c.admitIdleCycle(proof.reference).idleCycleRecord;assert(Math.abs(record.phaseDelay-accumulated)<1e-8);assert.equal(record.phaseUntil,proof.reference.worldBoundary.effectiveTime+proof.reference.duration);assert.equal(typeof record.phaseDelay,'number');assert(!Object.values(record).some(v=>v&&typeof v==='object'));assert(f.state.elapsed>=at);}
+  assert(accumulated>3);
+  assert.deepEqual(f.c.idleCycleRecoveryPhases(),[{version:1,actorId:proof.reference.actorId,bodyId:proof.reference.bodyId,
+   cycleSequence:proof.cycleSequence,worldBoundary:proof.reference.worldBoundary,phaseDelay:accumulated}]);
  }finally{await f.dispose();}
 });
 
