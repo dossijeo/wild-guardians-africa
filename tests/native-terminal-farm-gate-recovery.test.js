@@ -14,8 +14,10 @@ import {gateMeshPrototype} from './helpers/gate-mesh-source.js';
 import {NativeWall} from '../src/rendering/walls.js';
 import {createNativeGateGpuClock} from '../src/rendering/native-gate-gpu-clock.js';
 import {createNativeGateGpuBinding} from '../src/rendering/native-gate-gpu-binding.js';
+import {createPlant} from '../src/simulation/crops.js';
+import {cropSpec} from '../src/simulation/rules.js';
 
-async function gateRouteAuthority(home){
+async function gateRouteAuthority(home,{configure=()=>{},...options}={}){
   const origin=nativeFarmArrivalRouteFixture({peer:false}),state=structuredClone(origin.state);origin.close();
  const start={x:-14,z:11.8},goal={x:-14,z:3.2},gate={
   id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,x:-14,z:8.2,yaw:0,maxHp:60,hp:60,
@@ -27,9 +29,60 @@ async function gateRouteAuthority(home){
  state.villages.find(v=>v.id===worker.villageId).entry={...start};
  center.x+=goal.x-service.x;center.z+=goal.z-service.z;
  state.structures.push(gate);state.nextId=1000001;
+ configure(state,worker);
  const chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
- return nativeProductionAuthority(state,{chunkKeys});
+ return nativeProductionAuthority(state,{chunkKeys,...options});
 }
+
+test('Stop24 draws its acquired motor even when the next Task has already requested the stopped worker',async()=>{
+ let ready,release,commit;
+ const held=new Promise(resolve=>{release=resolve;});
+ const f=await gateRouteAuthority(false,{
+  configure(state,worker){
+   const crop=createPlant('plant-'+state.nextId++,'mijo',-10.6,5.3,worker.centerId);
+   crop.growth=cropSpec(crop.species).growth_seconds-.5;
+   for(const water of crop.water)water.status='manual';
+   state.plants.push(crop);
+  },
+  onReady(record){if(record.kind==='farm-arrival-stop'){ready=record;return held;}},
+  onCommit(record,receipt){if(record.kind==='farm-arrival-stop')commit=receipt;},
+ });
+ try{
+  await untilProduction(f,()=>f.records.some(r=>r.kind==='farm-arrival'&&r.committed));
+  const advance=async()=>{const state=f.advance(.025);await f.present();return state;};
+  for(let i=0;i<30&&!ready;i++)await advance();
+  assert(ready?.packet,'Expected the crop to mature during opening');
+  const before=ready.resources.gateEffects.rows;
+  assert.deepEqual(Array.from(before.slice(0,2)),[1000000,1]);
+  assert(before[2]>.2&&before[2]<.3);
+  const waiting=await advance();
+  assert(waiting.structures.find(s=>s.gate).gateOpen>before[2]);
+  assert.equal(waiting.workers[0].nativeRouteAdmission,'native-farm-arrival');
+  assert.equal(ready.committed,false);
+  release();
+  for(let i=0;i<5&&!commit;i++)await advance();
+  assert(commit);
+  assert.equal(f.snapshot().workers[0].nativeRouteAdmission,'pending-resources');
+  const evidence=commit.nativeFarmArrivalStopBinding;
+  const actual=evidence.projection.gateEffects.rows;
+  assert.deepEqual(Array.from(actual.slice(0,2)),Array.from(before.slice(0,2)));
+  assert(actual[2]>before[2]&&actual[2]<1);
+  let submitted;
+  ready.packet.presented.then(frame=>{submitted=frame;},()=>{});
+  for(let i=0;i<8&&!submitted;i++)await f.present();
+  assert(submitted,'The stopped worker and motor must submit together');
+  const frame=f.host.inspect().nativeRouteFrame;
+  assert.equal(frame.sequence,submitted.sequence);
+  assert.deepEqual(frame.worldBoundary,commit.worldBoundary);
+  const body=frame.bindings.find(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-body');
+  const motor=frame.bindings.find(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-gate');
+  assert.equal(body?.bodyReference.bodyId,1);
+  assert.equal(motor?.nativeStopped.gateId,actual[0]);
+  assert.equal(motor?.nativeStopped.mechanism,actual[1]);
+  assert.equal(motor?.opening,Math.fround(actual[2]));
+  assert.deepEqual(f.faults,[]);
+ }finally{release();await f.close();}
+});
 
 for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
  [23,'farm-arrival','native-farm-arrival','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion'],

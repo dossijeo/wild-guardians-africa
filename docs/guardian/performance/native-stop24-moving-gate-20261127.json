@@ -1,0 +1,16 @@
+{
+  "profile": "Worker Hosted con reloj de laboratorio, Desierto 983, Farm23 a Stop24",
+  "artifact": "gate-checkpoint-hosted-stop-nvidia.json",
+  "sha256": "125cf4e7320e77d4a260b2a379dde402c17c980f1d53437fedeb1dc1ea6e0f47",
+  "adapter": "NVIDIA Turing",
+  "farmTicket": 2,
+  "bodyId": 1,
+  "gateId": 1000000,
+  "mechanism": 1,
+  "ready": {"ticket": 3, "elapsed": 10.500000000000007, "opening": 0.21582444533270184},
+  "acquired": {"ticket": 4, "elapsed": 10.550000000000008, "opening": 0.2991577786660364},
+  "draw": {"sequence": 40, "ticket": 4, "opening": 0.2991577684879303},
+  "drained": true,
+  "rendererErrors": 0,
+  "deterministicHost": {"nextTaskBeforeDraw": true, "baseline": "stale-binding", "focusedRegression": "81/81"}
+}

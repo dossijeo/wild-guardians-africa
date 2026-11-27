@@ -1217,9 +1217,14 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       counters.admissions++;return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||pending(),get actionRecord(){return current()?actor.actionRecord:null;},get executionEpoch(){return current()?actor.actionProof.reference.startTime:null;},get executionEnd(){return current()?actor.actionProof.reference.endTime:null;}});
     },
     admitFarmArrivalStoppedGate(value,{preparingWorldBoundary=null}={}){
-      const reference=copyNativeStoppedGateSelector(value),lease=admitRouteStop(farmStopFamily,reference.stop,{preparingWorldBoundary}),actor=actors.get(reference.stop.sourceRoute.actorId);
-      const current=()=>lease.isCurrent()&&actor?.stoppedProjection?.proof===lease.binding;
-      return Object.freeze({reference,isCurrent:current,isPrepared:()=>current()||lease.isPrepared(),get worldBoundary(){return current()?lease.binding.reference.worldBoundary:null;},value(field){if(field!=='opening'||!current())throw Error('Native stopped motor projection is obsolete');return actor.stoppedProjection.readGate(reference.gateId,reference.mechanism);}});
+      const reference=copyNativeStoppedGateSelector(value),actorId=reference.stop.sourceRoute.actorId,actor=actors.get(actorId);
+      // Task or Home can request the same stopped body before its first draw.
+      // The motor uses that exact projection until the GPU has submitted it.
+      const lease=admitRouteStoppedBody(farmStopFamily,{kind:'native-farm-arrival-stopped-body',version:1,
+        stop:reference.stop,actorId},{preparingWorldBoundary});
+      return Object.freeze({reference,isCurrent:lease.isCurrent,isPrepared:lease.isPrepared,
+        get worldBoundary(){return lease.bodyReference?.worldBoundary??null;},
+        value(field){if(field!=='opening'||!lease.isCurrent())throw Error('Native stopped motor projection is obsolete');return actor.stoppedProjection.readGate(reference.gateId,reference.mechanism);}});
     },
     startGateExecutionEpoch(gate){for(const actor of actors.values()){for(const [proof,current] of [[actor.startProof,startCurrent],[actor.consequenceProof,consequenceCurrent],[actor.homeProof,homeRecordCurrent],[actor.strollProof,strollRecordCurrent],[actor.farmArrivalProof,farmArrivalRecordCurrent]])if(proof&&current(proof.reference,actor)&&proof.gateIds.includes(gate.gateId)&&sameNativeWorldBoundary(proof.preparedReference.worldBoundary,gate.worldBoundary))return (actor.current??actor.revoked).startTime;}return null;},
     installStartedRoutes(boundary,values=[],{bootstrap=false}={}){
