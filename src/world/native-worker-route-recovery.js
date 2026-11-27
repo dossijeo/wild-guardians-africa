@@ -21,6 +21,16 @@ export function matchesNativeWoundedRefuge(world,refuge){
    woundedHomeEndpoint(arrival.sourceHome,world.effectiveTime);
 }
 
+export function matchesNativeOrdinaryRefuge(world,refuge){
+ const arrival=refuge?.reference,home=arrival?.sourceHome;
+ return sameNativeWorldBoundary(world,arrival?.worldBoundary)&&!!home&&home.gateIds.length===0&&
+   !home.reference.sourceRequest?.raidSpawnSequence&&!home.reference.sourceRequest?.recoveryHit;
+}
+
+export function matchesNativeStationaryRefuge(world,refuge){
+ return matchesNativeWoundedRefuge(world,refuge)||matchesNativeOrdinaryRefuge(world,refuge);
+}
+
 export function woundedHomeExecutionAtEndpoint(state,worker,execution){
  if(execution?.arrived!==true||execution.executedThrough!==state.elapsed||
     !woundedHomeEndpoint(execution.binding,state.elapsed))return false;
@@ -239,7 +249,7 @@ export function copyNativeRecoveryGroup(value,world){
  }
  if(value.refuge!==undefined){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge);
-   if(value.members.length===0&&matchesNativeWoundedRefuge(world,refuge))return {members:[],refuge};
+   if(value.members.length===0&&matchesNativeStationaryRefuge(world,refuge))return {members:[],refuge};
    const member=value.members[0],kind=member?.kind;
    if(value.members.length!==1||(kind!==26&&kind!==27))throw Error('Refuge recovery requires the surviving animal');
    const proof=nativeWorkerRouteRecoveryProfile(kind).copyAttestation(member.proof);

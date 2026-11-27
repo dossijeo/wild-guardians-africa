@@ -1211,7 +1211,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const encounter=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
       planner.nativeStationaryEncounterRecovery();
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
-    if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
+    if(civilShieldPhysicsAvailable()&&(qualifyRaidEncounter&&planner.nativeWoundedRefugeRecovery()||
+       nativeWorkerLifecycle&&planner.nativeOrdinaryRefugeRecovery()))
       return {version:2,refuge:true,members:[]};
     if(!['native-home','native-idle-stroll','native-farm-arrival'].includes(admission))return null;
     const kind=admission==='native-home'?18:admission==='native-idle-stroll'?22:23;
@@ -1234,7 +1235,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         encounter.at===planner.nativeCausalClock()?.committedThrough?{executions:[],encounter}:null;
     }
     if(route.refuge&&route.members.length===0){
-      const refuge=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery();
+      const refuge=civilShieldPhysicsAvailable()&&(
+        qualifyRaidEncounter&&planner.nativeWoundedRefugeRecovery()||
+        nativeWorkerLifecycle&&planner.nativeOrdinaryRefugeRecovery());
       return refuge?{executions:[],refuge}:null;
     }
     if(route.refuge||route.ruin||route.encounter){

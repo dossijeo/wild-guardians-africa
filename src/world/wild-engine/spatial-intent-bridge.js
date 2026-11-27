@@ -1,5 +1,5 @@
 import {classifyWorkerEncounter,prepareWorkerEncounter} from '../../simulation/encounters.js';
-import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,copyRecoveredEncounterPose,matchesNativeRefugeRecovery,matchesNativeOrdinaryRefuge,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../native-worker-route-recovery.js';
 import {sameNativeFarmArrivalRouteReference} from '../native-farm-arrival-route.js';
 import {centerSource,verifiesCenter} from '../native-center-ruin-source.js';
 import {copyNativeCenterPlacement} from '../native-center-placement.js';
@@ -257,7 +257,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     throw Error('Unsupported native prop mutation service; rebuild Wild Engine');
   if(wasm.nav_intent_terrain_mutation_version()!==1)
     throw Error('Unsupported native terrain mutation service; rebuild Wild Engine');
-  let raidFlight=null,refuge=null;
+  let raidFlight=null,refuge=null,ordinaryRefuge=null;
   let sequence=0,initialized=false,owningState=null,legacyCropHomes=false,lastIntentSequence=0,restoredWallRepairs=[];
   const controlObservers=new Set();
   // Retention is independent of the event subscription: closing a port or
@@ -782,8 +782,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         if(count||strolls.length||farmCount||homes.length||!sameRecoveredEncounter(encounter,nativeStationaryEncounterRecovery()))
           throw Error('Held stationary encounter changed before bootstrap');
       }else if(arrival&&members.length===0){
-        if(count||strolls.length||farmCount||homes.length||JSON.stringify(arrival)!==JSON.stringify(nativeWoundedRefugeRecovery()))
-          throw Error('Held wounded refuge changed before bootstrap');
+        if(count||strolls.length||farmCount||homes.length||JSON.stringify(arrival)!==JSON.stringify(nativeWoundedRefugeRecovery()??nativeOrdinaryRefugeRecovery()))
+          throw Error('Held Home absence changed before bootstrap');
       }else{
         const single=encounter?nativeEncounterFallRecovery(encounter.version===2?'center':'retreat'):
           ruin?nativeCenterRuinRetreatRecovery():arrival?nativeRefugeCropRecovery(members[0].kind):null;
@@ -1567,8 +1567,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        sameNativeWorldBoundary(cut,homeWorld)===sameNativeWorldBoundary(cut,cropWorld))return null;
     return [home,crop];
   }
-  function currentRefuge(){
-    const game=owningState,saved=refuge;
+  function currentRefuge(saved=refuge){
+    const game=owningState;
     if(!saved||!game||game.raid!==saved.raid||game.workers.length!==1||game.workers[0]!==saved.worker)return null;
     const {worker,issued}=saved,r=issued.reference,cut=nativeWorldBoundary();
     const home=nativeHomeRouteSource(r.sourceHome.reference).home;
@@ -1580,6 +1580,12 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(actual[0]!==1||actual[1]!==issued.retiredSequence||actual[3]!==r.worldBoundary.ticket||
        actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==r.worldBoundary.effectiveTime)return null;
     return issued;
+  }
+  function nativeOrdinaryRefugeRecovery(){
+    const game=owningState,worker=ordinaryRefuge?.worker;
+    if(!game||game.raid||worker?.incapacitated||game.structures.some(s=>s.gate&&s.status!=='ruined'))return null;
+    const issued=currentRefuge(ordinaryRefuge);
+    return matchesNativeOrdinaryRefuge(nativeWorldBoundary(),issued)?issued:null;
   }
   function nativeWoundedRefugeRecovery(){
     if(!qualifyRaidEncounter||owningState?.raid||!refuge?.worker.incapacitated||refuge.worker.hits!==2)return null;
@@ -3618,6 +3624,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       }else if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event){
         refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId};
         raidFlight=null;
+      }else if(!state.raid&&!worker.incapacitated){
+        ordinaryRefuge={worker,raid:null,issued};
       }
       notifyWorkerPlanningChange(state,worker);
       const resources=Object.freeze({version:1,kind:19,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeHomeArrivalBinding:issued});mark({resources,nativeHomeArrivalBinding:issued});return {status:1,value:{resources,nativeHomeArrivalBinding:issued}};
@@ -4303,7 +4311,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     return {restoredIdleStrollIds:workers.map(w=>w.id)};
   };
   const api={get authorityEpoch(){return epoch();},resetFromState,applyEvents,applyCommittedEvents,planTasks,
-    nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,nativeWoundedRefugeRecovery,
+    nativeIntentControlBaseline,nativeWorldResourceBoundary,observeNativeIntentControl,flushNativeIntentControl,nativeCausalClock,commitNativeCausalClock,nativeWoundedRefugeRecovery,nativeOrdinaryRefugeRecovery,
     restoreAssignedTasks,restoreAttackIntents,restoreRetreatIntents,
     restoreHomeIntents,restoreFarmArrivalIntents,restoreInitialIdleIntents,restoreIdleStrollIntents,declareNativeInitialIdleRequest,declareNativeFarmArrivalRequest,
     proposalRoute,pendingTaskRoute,nativeTaskStartBinding,startNativeTaskRouteAfterGpuQuiescence,
@@ -5879,7 +5887,7 @@ export function createEventDrivenTaskPlanner(session,{qualifyFarmFlee=false,nati
       return result;
     },
     get authorityEpoch(){return bridge.authorityEpoch;},
-    nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,nativeWoundedRefugeRecovery:bridge.nativeWoundedRefugeRecovery,
+    nativeIntentControlBaseline:bridge.nativeIntentControlBaseline,nativeWoundedRefugeRecovery:bridge.nativeWoundedRefugeRecovery,nativeOrdinaryRefugeRecovery:bridge.nativeOrdinaryRefugeRecovery,
     nativeWorldResourceBoundary:bridge.nativeWorldResourceBoundary,
     addNativeBarrierAfterGpuQuiescence:bridge.addNativeBarrierAfterGpuQuiescence,
     mutateNativeOverlayAfterGpuQuiescence:bridge.mutateNativeOverlayAfterGpuQuiescence,

@@ -25,7 +25,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeWoundedRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeStationaryRefuge,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -1041,16 +1041,16 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
 
     installRecoveredRefuge(value,boundary){
       const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference;
-      const wounded=matchesNativeWoundedRefuge(boundary,proof);
-      if(closed||!clock||retiredRefuge||!wounded&&!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
+      const stationary=matchesNativeStationaryRefuge(boundary,proof);
+      if(closed||!clock||retiredRefuge||!stationary&&!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
          !nativeRecoveryCovers(boundary,r.worldBoundary)||boundary.authorityEpoch!==authorityEpoch||
          boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime>clock.committedThrough||
-         proof.retiredSequence>clock.intentSequence||wounded&&(proof.retiredSequence!==clock.intentSequence||actors.size||active.size)||
+         proof.retiredSequence>clock.intentSequence||stationary&&(proof.retiredSequence!==clock.intentSequence||actors.size||active.size)||
          actors.has(r.actorId)||active.has(r.actorId))
         throw Error('Recovered Home absence conflicts with the fresh control baseline');
       // Its body stays retired. The receipt is consumed by the same civil
       // Farm request as it would have been on the original Draw.
-      if(!wounded)retiredRefuge=proof;
+      if(!stationary)retiredRefuge=proof;
     },
     installRecoveredEncounterFall(value,ref){
       const fall=copyRecoveredEncounterFall(value),actor=actors.get(ref.actorId),record=actor?.current;

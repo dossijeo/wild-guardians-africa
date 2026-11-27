@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+NVIDIA sustituyó Draw después de Home19 ordinario y verificó la ausencia del cuerpo antes de reanudar. El sustituto presentó la primera ruta de la incursión y drenó. Sigue abierto el disparador de la recuperación espontánea en la campaña continua. [Prueba y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-después-de-home19-ordinario).
+
 NVIDIA recargó el guardado tomado al nacer la incursión en Sabana. El primer dibujo conservó la pose con edad cero; procedieron un solo impacto, Retreat en el mismo cuerpo, la derrota y el drenaje. Standalone y pthread verificaron también el corredor y el READY retenido en CPU. [Evidencia y alcance](native-cold-worker-admission-20261126.md#guardado-entre-raidspawned-y-el-primer-go).
 
 La última campaña continua superó el fallo de Recovery del primer turno y llegó a la tercera noche. Surface rechazó la muestra inicial de una publicación de movimiento mientras esperaba el primer Strike27 del búfalo. El contraste CPU desde el checkpoint previo completó la incursión y no reprodujo la discrepancia. [Recibo y límite](native-cold-worker-admission-20261126.md#publicaciones-durante-la-aproximación-del-búfalo).
