@@ -24,4 +24,16 @@ El recibo `native-savanna-cold-refuge-nvidia.json` y el guardado `native-savanna
 
 El arnés local se genera con `.cache/make-savanna-cold-refuge-audit.mjs`, usando el recorrido diurno anterior como base. El mismo navegador abre dos páginas sucesivas. La segunda recibe los bytes leídos del archivo. El perfil de arranque es `{"nativeWorkerLifecycle":true}` y el insumo es `.cache/savanna-daytime-center-physical-input.json`. El binario standalone y el pthread conservan las importaciones y añaden la exportación invocable `nav_intent_restore_refuge_return`.
 
-La calificación se limita al refugio y a las fases restaurables del facóquero que ataca el centro. El caso de la partida con los dos cuerpos activos, el guardado con un cultivo como blanco y la recuperación de dispositivo del consumidor que acaba de cargar requieren sus propios controles. Los criterios de A6, B y C siguen abiertos.
+## Incursión sobre cultivos
+
+La misma ausencia de Home19 permite guardar el ataque diurno a cultivos en Sabana con un centro operativo y un único trabajador sano ya refugiado, sin hechizos activos. Game conserva el cultivo, la reserva y el identificador del golpe. Para una aproximación pendiente, WASM lee el corredor de ese actor, sesión, solicitud y tipo de destino. El fichero solo conserva los puntos y el estado semántico habitual. La autoridad nueva vuelve a preparar su propio paquete.
+
+El control CPU reinicia durante la marcha, durante el golpe y durante Retreat. También vuelve a guardar el corredor mientras retiene el READY de la autoridad nueva. El primer recorrido falla al pedir el guardado en la preimagen. Los cuatro recorridos conservan los blancos `plant-5` y `plant-7`, una sola aplicación de cada golpe y el regreso de la misma persona al centro. Los pares standalone y pthread añaden `nav_animal_pending_crop_points` y `nav_animal_pending_crop_points_ptr`.
+
+La selección completa pasó 60 de 60 pruebas. SHA-256 de `native-savanna-cold-crop-impact.tap` `ceadd65f522117d17e2c7b59fbe8c81e9a25a930f6cdc45d14425c98f7b24b2f`.
+
+En NVIDIA se escribió el guardado de la aproximación a t=614,35. Tras leerlo, Draw presentó al facóquero a edad cero y el trabajador siguió en el refugio. Los golpes `attack-48` y `attack-52` destruyeron `plant-5` y `plant-7`. `RaidEnded` se confirmó a t=674,44. El mismo `worker-21` / `person-9` adquirió Farm con un cuerpo nuevo a t=678,00 y llegó a Idle a t=710,90 con saldo 190 y sin heridas. Los dos consumidores drenaron sin errores.
+
+En el mismo directorio de QA, `native-savanna-cold-crop-nvidia.json` tiene SHA-256 `0dbb087f649157bb6fdef8fa0651ec796666bf6fdae7da45cf36cd8a4e7a4f1021`. El archivo de partida `native-savanna-cold-crop-nvidia.save.json` tiene SHA-256 `68aa69f6555d90e10a859d106607c1b38db6e754b97d3d63aabf0614a0f358e1`. El arnés usa como insumo `.cache/native-flee-sabana-civil-physical-input.json` y el mismo perfil `nativeWorkerLifecycle`.
+
+La partida con los dos cuerpos activos, los cultivos protegidos por Escudo y la recuperación de dispositivo del consumidor que acaba de cargar requieren sus propios controles. Los criterios de A6, B y C siguen abiertos.

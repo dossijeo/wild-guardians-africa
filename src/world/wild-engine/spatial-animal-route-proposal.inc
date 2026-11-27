@@ -51,35 +51,42 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_route_request(double actor,double bodyId,dou
  intent.animalRouteRequest=request;intent.requiresResources=true;intent.state=PlanningState::AwaitingResources;route.pendingResources=true;intent.resourceRequestedAt=s.effectiveTime;
  request->sequence=emitIntentChange(s,intent);intent.resourceRequestSequence=request->sequence;s.entityRevision++;return 1;
 }
-// A save can read a pending center approach or the owner's pending retreat
-// without staging a second proposal or exposing the unsettled handle.
-static const RouteSlot* pendingCenterCorridor(double actor,double session,double requestSequence,bool retreat){
+// A save can read only the pending corridor for that actor and purpose.
+static const RouteSlot* pendingAnimalCorridor(double actor,double session,double requestSequence,bool retreat,bool center){
  const auto& s=state();
  if(!integer(actor)||!integer(session)||!integer(requestSequence)||session!=double(s.session))return nullptr;
  const auto found=s.activeIntents.find(uint64_t(actor));
  if(found==s.activeIntents.end())return nullptr;
  const auto& intent=found->second;
  const auto& q=intent.animalRouteRequest;
- if(!q||intent.retreat!=retreat||(!retreat&&!q->attackCenter)||q->sequence!=requestSequence||
+ if(!q||intent.retreat!=retreat||q->attackCenter!=center||q->shieldPolygon||q->sequence!=requestSequence||
     !animalRouteRequestCurrent(s,intent))return nullptr;
  const auto& route=s.routeSlots[intent.slot];
  if(route.points.empty()&&(q->x!=intent.approachX||q->z!=intent.approachZ))return nullptr;
  return &route;
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_pending_center_approach_points(double actor,double session,double requestSequence){
- const auto* route=pendingCenterCorridor(actor,session,requestSequence,false);
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,false,true);
  return route?int(route->points.size()/2):-1;
 }
 EMSCRIPTEN_KEEPALIVE const float* nav_animal_pending_center_approach_points_ptr(double actor,double session,double requestSequence){
- const auto* route=pendingCenterCorridor(actor,session,requestSequence,false);
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,false,true);
  return route?route->points.data():nullptr;
 }
 EMSCRIPTEN_KEEPALIVE int nav_animal_pending_retreat_points(double actor,double session,double requestSequence){
- const auto* route=pendingCenterCorridor(actor,session,requestSequence,true);
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,true,false);
  return route?int(route->points.size()/2):-1;
 }
 EMSCRIPTEN_KEEPALIVE const float* nav_animal_pending_retreat_points_ptr(double actor,double session,double requestSequence){
- const auto* route=pendingCenterCorridor(actor,session,requestSequence,true);
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,true,false);
+ return route?route->points.data():nullptr;
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_pending_crop_points(double actor,double session,double requestSequence){
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,false,false);
+ return route?int(route->points.size()/2):-1;
+}
+EMSCRIPTEN_KEEPALIVE const float* nav_animal_pending_crop_points_ptr(double actor,double session,double requestSequence){
+ const auto* route=pendingAnimalCorridor(actor,session,requestSequence,false,false);
  return route?route->points.data():nullptr;
 }
 // The last acquired source is captured only by a scoped Shield commit.

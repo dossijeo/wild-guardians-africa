@@ -22,15 +22,19 @@ function source() {
 const chunkKeys = Array.from({length: 25}, (_, i) => [i % 5, Math.floor(i / 5) - 2].join(','));
 
 for(const mode of ['the worker evacuation and return','the ruin','a cold reload after Home19','a cold reload during a strike',
-  'a cold reload during Retreat','a cold reload with foreign refuge sequence'])test(`a daytime Savanna center target keeps its native body through ${mode}`, async () => {
+  'a cold reload during Retreat','a cold reload with foreign refuge sequence','a cold reload during crop approach',
+  'a cold reload during crop strike','a cold reload during crop Retreat','a cold reload during crop READY'])test(`a daytime Savanna raid keeps its native body through ${mode}`, async () => {
   const collapses=mode==='the ruin',reload=mode.startsWith('a cold reload');
   const foreign=mode.endsWith('foreign refuge sequence');
+  const crop=mode.includes('during crop');
+  const pendingCrop=mode.endsWith('crop READY');
   const state=source();
-  state.plants=[];
+  if(!crop)state.plants=[];
   if(collapses)state.structures[0].hp=146;
   const acquired=[];
-  let retainedHome,releaseHome;
+  let retainedHome,releaseHome,heldCrop,releaseCrop;
   const hold=new Promise(resolve=>{releaseHome=resolve;});
+  const cropHold=new Promise(resolve=>{releaseCrop=resolve;});
   const onCommit=(record,data)=>acquired.push({kind:record.kind,data});
   let f=await nativeProductionAuthority(state,{nativeWorkerLifecycle:true,chunkKeys,
     onCommit,
@@ -59,24 +63,28 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
     for(let i=0;i<70&&!current?.raid;i++)current=await step();
     const [animal]=current.raid.animals;
     const spawn=current.events.findLast(e=>e.type==='RaidSpawned');
-    assert.equal(animal.targetId,center.id);
+    assert.equal(animal.targetId,crop?'plant-5':center.id);
     await untilProduction(f,()=>{f.snapshot();return retainedHome;});
     assert.equal(f.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,false);
     for(let i=0;i<3;i++){
       const waiting=await step();
-      assert.deepEqual([waiting.raid.animals[0].x,waiting.raid.animals[0].z],[animal.x,animal.z]);
       assert.equal(waiting.structures[0].hp,center.hp);
-      assert.ok(!acquired.some(row=>row.kind==='home-route'||row.kind.startsWith('animal-crop-')));
+      assert.ok(!acquired.some(row=>row.kind==='home-route'));
+      if(!crop){
+        assert.deepEqual([waiting.raid.animals[0].x,waiting.raid.animals[0].z],[animal.x,animal.z]);
+        assert.ok(!acquired.some(row=>row.kind.startsWith('animal-crop-')));
+      }
     }
     releaseHome();
     let seenPair=false,checkedRefuge=false,oldEpoch,restoredAbsence;
     for(let i=0;i<1600;i++){
       current=await step();
       const bindings=f.host.inspect().nativeRouteFrame?.bindings??[];
-      if(bindings.some(b=>b.nativeHome)&&bindings.some(b=>b.nativeAnimalCrop?.purpose==='center'))seenPair=true;
+      if(bindings.some(b=>b.nativeHome)&&bindings.some(b=>b.nativeAnimalCrop&&
+          (crop?!b.nativeAnimalCrop.purpose:b.nativeAnimalCrop.purpose==='center')))seenPair=true;
       const phase=current.raid?.animals[0]?.status;
       if(!checkedRefuge&&current.raid&&acquired.some(row=>row.kind==='home-arrival')&&
-          (!mode.endsWith('during a strike')||phase==='attacking')&&(!mode.endsWith('during Retreat')||phase==='retreating')){
+          (!mode.endsWith('strike')||phase==='attacking')&&(!mode.endsWith('Retreat')||phase==='retreating')){
         const saving=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
         assert.equal(saving.saveAvailable,true);
         const disk=prepareWorkerCheckpoint(saving,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
@@ -88,7 +96,8 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
           assert.throws(()=>savedNativeAuthorityOptions(serialize(tampered)),/refuge return/i);
           oldEpoch=acquired.find(row=>row.kind==='home-arrival').data.nativeHomeArrivalBinding.reference.worldBoundary.authorityEpoch;
           await f.close();
-          f=await nativeProductionAuthority(disk.state,{...savedNativeAuthorityOptions(serialize(disk.state)),onCommit,attach:false});
+          f=await nativeProductionAuthority(disk.state,{...savedNativeAuthorityOptions(serialize(disk.state)),onCommit,attach:false,
+            async onReady(record){if(pendingCrop&&record.kind==='animal-crop-route'&&!heldCrop){heldCrop=record;await cropHold;}}});
           const post=f.controlPort.postMessage;
           f.controlPort.postMessage=event=>{
             if(event.restoredRefugeReturn)restoredAbsence=event.restoredRefugeReturn;
@@ -102,9 +111,18 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
           assert(restoredAbsence);
           assert.equal(restoredAbsence.actorId,21);
           assert.notEqual(restoredAbsence.authorityEpoch,oldEpoch);
+          if(pendingCrop)await untilProduction(f,()=>heldCrop?.packet);
           const again=f.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
           assert.equal(again.saveAvailable,true);
           assert.deepEqual(again.nativeAuthorityCheckpoint.refugeReturn,disk.state.workerNativeAuthorityCheckpoint.refugeReturn);
+          if(pendingCrop){
+            const pending=JSON.parse(again.snapshot).raid.animals[0];
+            assert(!heldCrop.committed&&pending.path.length>1);
+            const {reference}=heldCrop.resources;
+            assert.deepEqual(pending.path.at(-1),{x:Math.fround(pending.approach.x),z:Math.fround(pending.approach.z)});
+            assert.equal(reference.actorId,restoredAbsence.animalId);
+            releaseCrop();
+          }
         }
         checkedRefuge=true;
       }
@@ -115,16 +133,20 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
       }
       if(!current.raid&&(collapses||current.workers[0].nativeRouteAdmission==='native-idle'))break;
     }
-    assert(seenPair,'expected the center and refuge clocks in the same submitted packet');
+    assert(seenPair,'expected the attack and refuge clocks in the same submitted packet');
     assert(!foreign,'expected Draw to reject the foreign absence');
     assert(checkedRefuge,'expected the saved live raid after Home19');
     const hits=current.events.filter(e=>e.type==='AnimalLogicalHit'&&e.simulationTime>=spawn.simulationTime);
     const strikes=acquired.filter(row=>row.kind==='animal-crop-strike').map(({data})=>data.nativeAnimalCropStrikeBinding);
     assert.equal(hits.length,collapses?1:animal.hitsRemaining);
     assert.equal(new Set(hits.map(e=>e.attackId)).size,hits.length);
-    assert(hits.every(e=>e.targetId===center.id));
+    assert.deepEqual(hits.map(e=>e.targetId),crop?['plant-5','plant-7']:hits.map(()=>center.id));
+    if(crop){
+      assert.deepEqual(current.events.filter(e=>e.type==='CropDestroyed'&&e.simulationTime>=spawn.simulationTime).map(e=>e.targetId),['plant-5','plant-7']);
+      assert(current.plants.every(plant=>!plant.alive));
+    }
     assert.deepEqual(hits.map(e=>e.attackId),[...new Set(strikes.map(strike=>'attack-'+strike.attackId))]);
-    assert.deepEqual(current.events.filter(e=>e.type==='StructureHit'&&e.animalId===animal.id).map(e=>e.structureHit.hp),collapses?[126]:[560,540]);
+    assert.deepEqual(current.events.filter(e=>e.type==='StructureHit'&&e.animalId===animal.id).map(e=>e.structureHit.hp),crop?[]:collapses?[126]:[560,540]);
     assert.equal(current.events.filter(e=>e.type==='RaidEnded'&&e.simulationTime>=spawn.simulationTime).length,1);
     assert.deepEqual(current.ledger,state.ledger);
     const [returned]=current.workers;
@@ -135,7 +157,7 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
       data.nativeAnimalCropRouteBinding??data.nativeAnimalCropStrikeBinding);
     for(const epoch of new Set(programs.map(({reference})=>reference.worldBoundary.authorityEpoch)))
       assert.equal(new Set(programs.filter(({reference})=>reference.worldBoundary.authorityEpoch===epoch).map(({reference})=>reference.bodyId)).size,1);
-    assert.equal(programs[0].reference.purpose,'center');
+    assert.equal(programs[0].reference.purpose,crop?undefined:'center');
     assert.equal(programs.at(-1).reference.purpose,'retreat');
     const farm=acquired.filter(row=>row.kind==='farm-arrival');
     if(collapses){
@@ -163,7 +185,7 @@ for(const mode of ['the worker evacuation and return','the ruin','a cold reload 
       assert.equal(returnedFarm.sourceRequest.refugeSequence,home.retiredSequence);
       assert.notEqual(returnedFarm.bodyId,home.reference.bodyId);
     }
-  }finally{releaseHome();await f.close();}
+  }finally{releaseHome();releaseCrop();await f.close();}
 });
 
 for(const [profile,complete] of [['qualification',false],['qualification',true],['lifecycle',true]])test(`terminal Draw loss requires both Flight Home and crop clocks (${profile}): ${complete}`, async () => {
