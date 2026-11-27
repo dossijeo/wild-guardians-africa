@@ -122,5 +122,20 @@
     "absenceFrame": 109,
     "elapsed": 47.12800000000112,
     "drained": true
+  },
+  "lossBeforeRuinCommit": {
+    "scope": "Second Edge run. The audit destroys the original device while the kind4 READY reply is retained. This receipt records the loss but has no adapter field.",
+    "file": "center-ruin-pending-loss-red-nvidia-20261128.failure.json",
+    "sha256": "d5107e259a0932fd6f8683697638a5097d8cabef205d1f6ae297c47c17446fe0",
+    "requestId": 9,
+    "preparedTicket": 16,
+    "confirmedElapsed": 37.10800000000027,
+    "intendedSubstepEnd": 37.12800000000027,
+    "approachEndpoint": 37.07300000000027,
+    "oldStrikeCancelled": true,
+    "ruinCommitObserved": false,
+    "ruinEvents": 0,
+    "firstAuthorityError": "Native resource preparer closed",
+    "recoveryReached": false
   }
 }
