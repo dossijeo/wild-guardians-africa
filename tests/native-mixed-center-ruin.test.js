@@ -49,7 +49,7 @@ function mixedState(gated){
  }finally{fixture.close();}
 }
 
-test('a center keeps the exact collapsing impact after the animal starts its next strike',()=>{
+test('a center keeps the exact collapsing impact after the animal starts its next strike',{timeout:90000},async()=>{
  const input=mixedState(false);
  const [firstCenter]=input.structures;
  firstCenter.hp=firstCenter.maxHp;
@@ -81,10 +81,14 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
    assert.fail('The ordinary raid did not reach its expected boundary');
   }finally{session.dispose();}
  }
- const thirdStrike=()=>input.raid?.animals[0];
- run(input,()=>thirdStrike()?.status==='attacking'&&thirdStrike().targetId===doomedId&&
-  thirdStrike().hitsRemaining===2&&input.structures.find(center=>center.id===doomedId).hp===140,2600);
- const saved=deserialize(serialize(input)),oldAttack=thirdStrike().attackId;
+ let approach;
+ run(input,()=>{
+  const actor=input.raid?.animals[0];
+  if(!approach&&actor?.targetId===doomedId&&['entering','walking'].includes(actor.status))approach=deserialize(serialize(input));
+  return actor?.status==='attacking'&&actor.targetId===doomedId&&actor.hitsRemaining===2&&
+   input.structures.find(center=>center.id===doomedId).hp===140;
+ },2600);
+ const saved=deserialize(serialize(input)),oldAttack=input.raid.animals[0].attackId;
  positionCenter(saved,-24,-18);
  const doomed=saved.structures.find(center=>center.id===doomedId),other=saved.structures[0],actor=saved.raid.animals[0];
  assert(!footprintsOverlap(centerFootprint(doomed,saved).footprint,centerFootprint(other,saved).footprint));
@@ -114,6 +118,112 @@ test('a center keeps the exact collapsing impact after the animal starts its nex
  const final=saved.events.filter(event=>event.type==='AnimalLogicalHit'&&event.targetId===other.id);
  assert.equal(final.length,1);
  assert(impact.simulationTime<ruin.simulationTime&&ruin.simulationTime<final[0].simulationTime);
+
+ // Start the native run at the ordinary selected approach, before any hit.
+ // Isolate the two centers and one moving body from the surrounding fixture.
+ assert(approach);
+ approach.workers=[];
+ approach.structures=approach.structures.filter(center=>center.kind==='center');
+ Object.assign(approach.structures[0],{x:-24,z:-18});
+ let release,ready,replacement,releaseStrike,strike,acquiredStrike,publication;
+ const readyGate=new Promise(resolve=>{release=resolve;});
+ const manifest={epoch:'center-ruin-active-strike',chunks:chunkKeys.map(key=>{
+  const [cx,cz]=key.split(',').map(Number);return {cx,cz,revision:1};
+ })};
+ const world=await nativeProductionAuthority(approach,{chunkKeys,navigationView:view,qualifyAnimalCrop:true,
+  getTerrainManifest:()=>manifest,onCommit(record,receipt){
+   if(record===strike)acquiredStrike=receipt.nativeAnimalCropStrikeBinding;
+  },onReady(record){
+   if(record.kind==='center-ruin'){ready=record;return readyGate;}
+   if(record.kind==='animal-crop-strike'&&record.resources.reference.targetId===Number(other.id.slice('structure-'.length))){
+    strike=record;
+    return new Promise(resolve=>{releaseStrike=resolve;});
+   }
+  }});
+ try{
+  await untilProduction(world,()=>world.records.some(row=>row.kind==='animal-crop-route'&&row.committed));
+  const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
+  const intact=polygons(),events=[],pending=[];
+  let state,proof;
+  for(let i=0;i<1600&&state?.raid!==null;i++){
+   const remaining=state?.structures.find(center=>center.id===doomedId)?.collapseRemaining;
+   const command=pending.shift()??{kind:'advance',seconds:.05,steps:2,nightFastForward:false};
+   if(remaining>0&&remaining<=.065&&releaseStrike){
+    releaseStrike();releaseStrike=null;
+    await untilProduction(world,()=>strike.committed);
+   }else if(remaining>0&&remaining<.17&&!strike?.committed){
+    command.seconds=.02;command.steps=1;
+   }
+   let reply=world.command(command);
+   if(reply instanceof Promise){
+    assert(!proof);
+    let result,error;
+    reply.then(value=>{result=value;},reason=>{error=reason;});
+    for(let f=0;f<1000&&!ready?.packet&&!error&&!result;f++)await world.present();
+    if(error)throw error;
+    if(result?.centerStrikePublication){
+     assert(!publication&&strike?.committed);
+     publication=result.centerStrikePublication;
+     const binding=acquiredStrike;
+     assert.deepEqual(publication.worldBoundary,binding.reference.worldBoundary);
+     assert.equal(publication.attackId,binding.attackId);
+     const before=state.elapsed;
+     state=JSON.parse(result.snapshot);
+     const elapsed=state.elapsed-before,left=state.structures.find(center=>center.id===doomedId).collapseRemaining;
+     assert(Math.abs(remaining-elapsed-left)<1e-9);
+     assert(Math.abs(elapsed+publication.remainingSeconds-command.seconds*(result.stepsExecuted+1))<1e-9);
+     assert(left>0&&state.raid.animals[0].attackId==='attack-'+binding.attackId);
+     assert(!ready);
+     pending.push({...command,steps:1,seconds:publication.remainingSeconds});
+     const full=command.steps-result.stepsExecuted-1;
+     if(full)pending.push({...command,steps:full});
+     events.push(...result.events);
+     continue;
+    }
+    const source=ready?.resources.nativeCenterRuin;
+    assert(source?.strike);
+    assert.equal(source.center,doomedId);
+    assert.equal(state.raid.animals[0].attackId,'attack-'+source.strike.attackId);
+    assert.equal(state.structures.find(center=>center.id===doomedId).status,'collapsing');
+    assert.equal(source.strike.reference.targetId,Number(other.id.slice('structure-'.length)));
+    for(let f=0;f<4;f++)await world.present();
+    assert(!result&&!error&&!ready.committed);
+    assert.throws(()=>centerSource({...source,center:other.id}),/Invalid center removal source/);
+    release();
+    for(let f=0;f<1000&&!result&&!error;f++)await world.present();
+    if(error)throw error;
+    assert(result);
+    reply=result;
+    await untilProduction(world,()=>ready.committed);
+    proof=ready.commit.nativeCenterRuin;
+    await world.present();
+    assert.equal((await ready.packet.presented).sequence,ready.packet.sequence);
+    const frame=world.host.inspect().nativeRouteFrame;
+    assert.equal(frame.worldBoundary.ticket,proof.acquired.ticket);
+    const row=frame.bindings.find(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,source.strike.preparedReference));
+    assert(row&&row.executionEpoch===source.strike.reference.worldBoundary.effectiveTime&&row.relativeTime>0);
+    assert.deepEqual(polygons(),intact.filter(row=>row.id!==proof.polygon));
+    const cut=JSON.parse(reply.snapshot);
+    assert.equal(cut.raid.animals[0].attackId,'attack-'+source.strike.attackId);
+    replacement=await recoverRouteAfterRuin(world,proof,cut.elapsed,cut);
+   }
+   events.push(...reply.events);
+   state=JSON.parse(reply.snapshot);
+   for(const key of reply.residency.missing){
+    const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});
+   }
+   await world.present();
+   assert.deepEqual(world.faults,[]);
+  }
+  assert.equal(state.raid,null);
+  assert(publication&&proof&&replacement);
+  const hits=events.filter(event=>event.type==='AnimalLogicalHit'&&event.targetId===other.id);
+  assert.deepEqual(hits.map(hit=>hit.attackId),['attack-'+proof.prepared.strike.attackId]);
+  assert(hits[0].simulationTime>proof.acquired.effectiveTime);
+  assert.equal(state.structures.find(center=>center.id===other.id).hp,580);
+ }finally{
+  releaseStrike?.();release();replacement?.client.dispose();await replacement?.host.dispose();await world.close();
+ }
 });
 
 for(const mode of ['crossing','opening motor','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{

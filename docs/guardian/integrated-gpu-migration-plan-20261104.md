@@ -1,6 +1,6 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
-En Desierto se reprodujo el vencimiento del derrumbe durante el cuarto ataque al centro sucesor. La autoridad ya identifica el tercer impacto durante la preparación. Queda por acreditar kind4 con el Strike27 adquirido y el dibujo correspondiente. [Control de CPU](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
+En Desierto se reprodujo el vencimiento del derrumbe durante el cuarto ataque al centro sucesor, partiendo de una aproximación ya seleccionada. WASM conserva el Strike27 al adquirir kind4 y el reemplazo de Draw vuelve a presentar ese ataque con su edad confirmada. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
 
 En Desierto 983, el reemplazo de Draw tras la ruina adquirida conserva la ruta del facóquero hacia el segundo centro. La partida recargada con opciones públicas completó el golpe pendiente y el retorno civil en NVIDIA. [Prueba del relevo](performance/native-desert-cold-approach-draw-loss-20261127.json). El diario de presentación conserva la primera activación del entorno aunque el checkpoint sea anterior a la subida de las texturas. En NVIDIA, el primer envío del sustituto presentó el mismo inicio y la misma mezcla del 97,2 % que el original a los 48,80 s. [Contraste en NVIDIA](performance/native-desert-environment-before-publication-recovery-20261127.json).
 

@@ -1713,19 +1713,21 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const header=new Float64Array(wasm.memory.buffer,wasm.spatial_world_resource_header_ptr(),9);
     if(header[1]!==cut.nativeSession||header[2]!==cut.ticket||header[3]!==cut.effectiveTime||header[4]!==4||
        !ruin.revisions.every((value,i)=>header[6+i]===value))return null;
-    const original=ruin.prepared.retreat??ruin.prepared.approach;
+    const original=ruin.prepared.retreat??ruin.prepared.approach??ruin.prepared.strike;
     if(!original)return null;
-    const execution=nativeAnimalCropRouteExecution('animal-'+original.reference.actorId,{sharedCut:true});
+    const actorId='animal-'+original.reference.actorId;
+    const execution=ruin.prepared.strike?nativeAnimalCropStrikeExecution(actorId,{sharedCut:true}):
+      nativeAnimalCropRouteExecution(actorId,{sharedCut:true});
     const binding=execution?.binding;
-    if(!binding||binding.assignmentSequence!==original.assignmentSequence||
+    if(!binding||binding.assignmentSequence!==original.assignmentSequence||binding.attackId!==original.attackId||
        !sameNativeAnimalCropReference(original.reference,binding.reference)||
        !sameNativeAnimalCropReference(original.preparedReference,binding.preparedReference))return null;
     return {execution,ruin};
   }
-  function nativeAnimalCropStrikeExecution(actorId){
+  function nativeAnimalCropStrikeExecution(actorId,{sharedCut=false}={}){
     const proof=activeAnimalStrike,r=proof?.reference;
     if(!r||actorId!=='animal-'+r.actorId||
-       !sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary()))return null;
+       !(sharedCut?nativeRecoveryCovers(nativeWorldBoundary(),r.worldBoundary):sameNativeWorldBoundary(r.worldBoundary,nativeWorldBoundary())))return null;
     const animal=owningState?.raid?.animals.find(value=>value.id===actorId);
     if(!animal||animal.magicDown||
        animal.species!=='warthog'&&!(r.purpose==='center'&&nativeShelteredSavannaCenterActor(owningState,animal))||
@@ -1878,15 +1880,25 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   }
 
   function prepareNativeCenterRuin(center,end){
-    const state=owningState,route=activeAnimalRoute,ref=route?.reference,actor=state?.raid?.animals[0];
+    const state=owningState,actor=state?.raid?.animals[0],strike=actor?.status==='attacking';
+    const route=strike?activeAnimalStrike:activeAnimalRoute,ref=route?.reference;
     const retreat=actor?.status==='retreating'&&ref?.purpose==='retreat';
     const approach=actor?.status==='walking'&&ref?.purpose==='center'&&actor.targetId==='structure-'+ref.targetId&&actor.targetId!==center.id;
-    if(!ref||!actor||actor.id!=='animal-'+ref.actorId||!retreat&&!approach||
+    if(!ref||!actor||actor.id!=='animal-'+ref.actorId||!(retreat||approach||strike&&ref.purpose==='center'&&
+       actor.targetId!==center.id&&nativeAnimalCropStrikeExecution(actor.id))||
        !state.structures.includes(center)||center.status!=='collapsing'||
-       !sameNativeWorldBoundary(ref.worldBoundary,nativeWorldBoundary())||typeof wasm.spatial_center_ruin_stage!=='function')
+       !sameNativeWorldBoundary(ref.worldBoundary,nativeWorldBoundary())||
+       typeof (strike?wasm.spatial_center_ruin_stage_strike:wasm.spatial_center_ruin_stage)!=='function')
       throw Error('Center ruin requires an acquired animal route');
-    const handle=routeHandle(ref.worldBoundary.nativeSession,ref.slot,ref.generation);
-    const currentRoute=()=>{const q=nativeAnimalRouteBinding(handle);return !!q&&q.purpose===ref.purpose&&
+    const handle=strike?null:routeHandle(ref.worldBoundary.nativeSession,ref.slot,ref.generation);
+    const currentRoute=()=>{
+      if(strike){
+        if(activeAnimalStrike!==route||wasm.nav_animal_strike_snapshot(ref.actorId)!==1)return false;
+        const row=new Float64Array(wasm.memory.buffer,wasm.nav_animal_strike_snapshot_ptr(),25);
+        return row[1]===ref.actorId&&row[2]===ref.bodyId&&row[3]===ref.targetId&&row[17]===ref.worldBoundary.ticket&&
+          row[19]===route.attackId&&row[22]===route.preparedReference.worldBoundary.ticket;
+      }
+      const q=nativeAnimalRouteBinding(handle);return !!q&&q.purpose===ref.purpose&&
       q.actorId===ref.actorId&&q.bodyId===ref.bodyId&&q.assignmentSequence===route.assignmentSequence&&
       sameNativeWorldBoundary(q.worldBoundary,ref.worldBoundary)&&sameNativeWorldBoundary(q.preparedWorldBoundary,route.preparedReference.worldBoundary);};
     const polygon=session.centerPolygonId(center.id),adoption=session.prepareNativeCenterRuinAdoption(center,state,polygon);
@@ -1895,8 +1907,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const prior=nativeWorldBoundary(),input=wasm.spatial_world_proposal_float_ptr(footprint.length);
     if(!input)throw Error('Center ruin footprint storage unavailable');
     new Float32Array(wasm.memory.buffer,input,footprint.length).set(footprint);
-    if(wasm.spatial_center_ruin_stage(numericId(center.id),polygon,ref.actorId,ref.bodyId,ref.slot,ref.generation,
-      route.assignmentSequence,ref.worldBoundary.ticket,end)!==1)throw Error('Center ruin could not reserve its native substep');
+    const centerId=numericId(center.id),staged=strike?
+      wasm.spatial_center_ruin_stage_strike(centerId,polygon,ref.actorId,ref.bodyId,route.assignmentSequence,ref.worldBoundary.ticket,route.attackId,end):
+      wasm.spatial_center_ruin_stage(centerId,polygon,ref.actorId,ref.bodyId,ref.slot,ref.generation,route.assignmentSequence,ref.worldBoundary.ticket,end);
+    if(staged!==1)throw Error('Center ruin could not reserve its native substep');
     const ticketRow=()=>Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6));
     if(wasm.nav_intent_barrier_proposal_ticket()!==1)throw Error('Reserved center ruin ticket unavailable');
     const [sid,ticket,intent,at,initialClock,kind]=ticketRow(),boundary=Object.freeze({...prior,ticket,effectiveTime:at});
@@ -1904,7 +1918,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     let proof=null;
     try{
       if(sid!==prior.nativeSession||at!==state.elapsed||kind!==4)throw Error('Reserved center ruin ticket differs from authority');
-      const source=centerSource({boundary,previous:prior,[retreat?'retreat':'approach']:route,initialClock,intent,center:center.id,polygon,end,
+      const source=centerSource({boundary,previous:prior,[strike?'strike':retreat?'retreat':'approach']:route,initialClock,intent,center:center.id,polygon,end,
         footprint,revisions:header().slice(6)});
       const resources=Object.freeze({kind:'native-center-ruin-proposal',version:1,worldBoundary:boundary,nativeCenterRuin:source});
       const valid=()=>!proof&&adoption.valid()&&currentRoute()&&state.elapsed===at&&sameNativeWorldBoundary(prior,nativeWorldBoundary())&&

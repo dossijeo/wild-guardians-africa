@@ -2065,8 +2065,10 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                 ruin.intent!==message.sequence||ruin.initialClock!==message.clockSequence)
                throw Error('Center ruin hold has another source');
              const relatives=quiescenceBindings().filter(binding=>binding.semantic==='relative'&&binding.nativeAnimalCrop);
+             const owner=ruin.retreat??ruin.approach??ruin.strike;
              if(!relatives.length||relatives.some(binding=>!binding.motionRecord?.isCurrent()||
-                !sameNativeAnimalCropReference(binding.nativeAnimalCrop,(ruin.retreat??ruin.approach).preparedReference)))
+                !sameNativeAnimalCropReference(binding.nativeAnimalCrop,owner.preparedReference)||
+                ruin.strike&&!binding.motionRecord.matchesCenterRuinStrike(owner)))
                throw Error('Center ruin hold lost its animal route');
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedIdleStrollStopTemplate)try{

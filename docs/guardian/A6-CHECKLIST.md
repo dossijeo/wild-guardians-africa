@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-El control de Desierto conserva el impacto que inició el derrumbe cuando el facóquero ya está atacando al siguiente centro. Está acreditada la selección del hecho de Game. Sigue pendiente adquirir kind4 y presentar la ruina con Strike27 activo. [Control de CPU](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
+El recorrido de Desierto desde una aproximación ya seleccionada conserva el impacto que inició el derrumbe y adquiere kind4 mientras el facóquero ejecuta Strike27 en el siguiente centro. Está acreditado el relevo de Draw con el mismo ataque y un solo golpe tras reanudar. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
 
 En Desierto 983, tras recargar el colapso por la vía pública, se destruyó el dispositivo Draw con la huella del centro ya retirada y el facóquero aún en marcha. NVIDIA confirmó el primer envío del sustituto con la misma ruta y frontera mundial, el golpe pendiente, el regreso a Idle y el drenaje. [Prueba del relevo](performance/native-desert-cold-approach-draw-loss-20261127.json).
 

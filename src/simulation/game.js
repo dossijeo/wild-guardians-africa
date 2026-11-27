@@ -2060,7 +2060,7 @@ export function advanceReal(s,seconds,nav,options={}) {
       prepareClockEvents(s,nav);
     const speed=nightFastForward&&s.time>=300&&!s.raid?5:1;
     const untilBoundary=Math.min(...clockBoundaries(s).filter(t=>t>s.time+1e-9).map(t=>(t-s.time)/speed));
-    const real=Math.min(left,.02,untilBoundary);left-=real;
+    const remainingBeforeSubstep=left,real=Math.min(left,.02,untilBoundary);left-=real;
     const start=onClockSegment?s.elapsed:0;
     if(expireShield){
       const span=real*speed;
@@ -2094,7 +2094,8 @@ export function advanceReal(s,seconds,nav,options={}) {
     });
     if(prepareCenterRuin){
       const span=real*speed,center=s.structures.find(item=>item.kind==='center'&&item.status==='collapsing'&&item.collapseRemaining-span<=1e-9);
-      if(center)return prepareCenterRuin(center,span,consume=>tick(s,span,nav,{clockRate:speed,centerRuin:{center,consume}})).then(()=>{
+      if(center)return prepareCenterRuin(center,span,consume=>tick(s,span,nav,{clockRate:speed,centerRuin:{center,consume}})).then(prelude=>{
+        if(prelude)return {centerStrikePublication:prelude,remainingSeconds:remainingBeforeSubstep};
         if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
         if(onTick)onTick();
         if(left>1e-9)return advanceReal(s,left,nav,options);

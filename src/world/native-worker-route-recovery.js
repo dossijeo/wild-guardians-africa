@@ -240,17 +240,18 @@ export function copyNativeRecoveryGroup(value,world){
    return {members:[{kind:26,proof}],encounter};
  }
  if(value.ruin!==undefined){
-   if(value.refuge!==undefined||value.members.length!==1||value.members[0]?.kind!==26)
-     throw Error('Center ruin recovery requires its surviving animal route');
-   const proof=copyCropAttestation(value.members[0].proof),prepared=centerSource(value.ruin?.prepared);
-   const retained=prepared.retreat??prepared.approach;
-   if(!verifiesCenter(prepared,world,value.ruin)||retained.assignmentSequence!==proof.assignmentSequence||
+   const [member]=value.members,prepared=centerSource(value.ruin?.prepared),kind=prepared.strike?27:26;
+   if(value.refuge!==undefined||value.members.length!==1||member?.kind!==kind)
+     throw Error('Center ruin recovery requires its surviving animal program');
+   const proof=kind===27?copyStrikeAttestation(member.proof):copyCropAttestation(member.proof);
+   const retained=prepared.retreat??prepared.approach??prepared.strike;
+   if(!verifiesCenter(prepared,world,value.ruin)||retained.assignmentSequence!==proof.assignmentSequence||retained.attackId!==proof.attackId||
       !sameNativeAnimalCropReference(retained.reference,proof.reference)||
       !sameNativeAnimalCropReference(retained.preparedReference,proof.preparedReference))
      throw Error('Recovered animal route differs from the acquired center ruin');
    const ruin=Object.freeze({prepared,acquired:copyNativeWorldBoundary(world),center:prepared.center,
      polygon:prepared.polygon,status:'ruined',revisions:Object.freeze([...value.ruin.revisions])});
-   return {members:[{kind:26,proof}],ruin};
+   return {members:[{kind,proof}],ruin};
  }
  if(value.refuge!==undefined){
    const refuge=copyNativeHomeArrivalAttestation(value.refuge);

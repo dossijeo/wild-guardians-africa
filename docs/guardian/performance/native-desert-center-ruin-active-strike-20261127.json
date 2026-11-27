@@ -1,0 +1,232 @@
+{
+  "base": "dcb2d7f1d4235a476a355adf792addb967a96d7b",
+  "scope": "Desert 983, isolated workerless native qualification started from an ordinary save with an acquired target choice. NVIDIA supplies the actual submissions and picking. Timing excludes cadence acceptance.",
+  "input": {
+    "path": ".cache/center-ruin-active-strike-input.json",
+    "sha256": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa"
+  },
+  "serializedInputSHA256": "01d2ce26dc45382edb923578fb9d4b66cf197431970ae21b0672d0d8f3bf5046",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing"
+  },
+  "build": [
+    {
+      "path": "src/world/wild-engine/spatial-savanna.wasm",
+      "sha256": "208bab53630ce4d3d50516a248149b5e69bd2fb3741f34d8750926d1c9c1b848"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.wasm",
+      "sha256": "a5b89605a25ec16b2f5a1c4e7e240190ca471759a26243b898711706ce28e63a"
+    },
+    {
+      "path": "public/wild-engine/spatial-threaded.mjs",
+      "sha256": "71b4a1931384d4d498b1054201c9f8295915d34424ae9311795583d2e646391c"
+    }
+  ],
+  "abi": {
+    "standaloneExports": [
+      901,
+      902
+    ],
+    "pthreadExports": [
+      922,
+      923
+    ],
+    "publicAddition": "spatial_center_ruin_stage_strike",
+    "importsUnchanged": true
+  },
+  "negative": {
+    "confirmedSequence": 522,
+    "elapsed": 36.870000000000516,
+    "state": "walking",
+    "attackId": "attack-29215",
+    "requestedKind": "prepareNativeGateResources",
+    "requestedSequence": 522,
+    "requestedTicket": 17,
+    "error": "Native publication boundary did not arrive",
+    "publishedAfterStrike": false
+  },
+  "qualified": {
+    "bodyId": 1,
+    "actorId": 1000001,
+    "attackId": 29218,
+    "osViewport": [
+      640,
+      480
+    ],
+    "strikeWorld": {
+      "version": 1,
+      "authorityEpoch": "81f8df57-9fd5-4a93-bfa4-a492125c023e/1",
+      "nativeSession": 1,
+      "ticket": 16,
+      "effectiveTime": 37.160000000000544
+    },
+    "preparedStrikeWorld": {
+      "version": 1,
+      "authorityEpoch": "81f8df57-9fd5-4a93-bfa4-a492125c023e/1",
+      "nativeSession": 1,
+      "ticket": 15,
+      "effectiveTime": 36.77000000000051
+    },
+    "preparedRuin": {
+      "version": 1,
+      "authorityEpoch": "81f8df57-9fd5-4a93-bfa4-a492125c023e/1",
+      "nativeSession": 1,
+      "ticket": 17,
+      "effectiveTime": 37.160000000000544
+    },
+    "acquiredRuin": {
+      "version": 1,
+      "authorityEpoch": "81f8df57-9fd5-4a93-bfa4-a492125c023e/1",
+      "nativeSession": 1,
+      "ticket": 17,
+      "effectiveTime": 37.17000000000054
+    },
+    "polygon": 10,
+    "center": "structure-1000000",
+    "firstRuinDraw": {
+      "sequence": 315,
+      "clock": 37.17000000000054,
+      "age": 0.009999999776482582,
+      "meshes": [
+        {
+          "mesh": 51,
+          "geometry": 20,
+          "material": 30,
+          "visible": false,
+          "instances": null
+        },
+        {
+          "mesh": 52,
+          "geometry": 21,
+          "material": 29,
+          "visible": true,
+          "instances": null
+        },
+        {
+          "mesh": 54,
+          "geometry": 22,
+          "material": 31,
+          "visible": true,
+          "instances": 270
+        },
+        {
+          "mesh": 55,
+          "geometry": 23,
+          "material": 32,
+          "visible": true,
+          "instances": 85
+        }
+      ]
+    },
+    "recovery": {
+      "reason": "Error: Error: WebGPU device lost: Device was destroyed.",
+      "checkpoint": 521,
+      "through": 557,
+      "firstDraw": 1,
+      "clock": 37.920000000000606,
+      "age": [
+        0.7599999904632568,
+        0.7599999904632568
+      ],
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 55,
+          "hash": 1152523973
+        },
+        "debris": {
+          "count": 263,
+          "hash": 2110591814
+        },
+        "emitted": 105
+      },
+      "selected": "animal-1000001",
+      "pickingSamples": [
+        {
+          "age": 0.7599999904632568,
+          "actorId": 1000001,
+          "bodyId": 1,
+          "at": 37.920000000000606
+        },
+        {
+          "age": 0.7599999904632568,
+          "actorId": 1000001,
+          "bodyId": 1,
+          "at": 37.920000000000606
+        },
+        {
+          "age": 0.7599999904632568,
+          "actorId": 1000001,
+          "bodyId": 1,
+          "at": 37.920000000000606
+        },
+        {
+          "age": 0.7599999904632568,
+          "actorId": 1000001,
+          "bodyId": 1,
+          "at": 37.920000000000606
+        },
+        {
+          "age": 0.7599999904632568,
+          "actorId": 1000001,
+          "bodyId": 1,
+          "at": 37.920000000000606
+        }
+      ],
+      "activated": "visualRecoveryActivated"
+    },
+    "final": {
+      "hitEvent": "event-29221",
+      "at": 40.87000000000086,
+      "target": "structure-2",
+      "attack": "attack-29218",
+      "successorHp": 580,
+      "hitCount": 1,
+      "raidEndedAt": 47.520000000001424,
+      "gpuDrained": true,
+      "elapsed": 47.62000000000143,
+      "errors": [],
+      "resourceErrors": []
+    }
+  },
+  "artifacts": [
+    {
+      "path": "D:/wild-guardians-qa/center-ruin-active-strike-final-nvidia-20261127.json",
+      "sha256": "b6a29cbb1da1966c60cb77f14d54a1e330adaface4f6b3fd29eb932203463d17"
+    },
+    {
+      "path": "D:/wild-guardians-qa/center-ruin-active-strike-nvidia-20261127.failure.json",
+      "sha256": "da1acf8040df294a7c2a5fe5772db0021a320b6754ab94082a00a0e4b8bc58b1"
+    },
+    {
+      "path": "D:/wild-guardians-qa/center-ruin-active-strike-final-nvidia-20261127.original.png",
+      "sha256": "e231345918cbf20a71c140693e596fd8291375cae349cb632a6ba4001de236cd"
+    },
+    {
+      "path": "D:/wild-guardians-qa/center-ruin-active-strike-final-nvidia-20261127.replacement.png",
+      "sha256": "741d00cac1bb4e532870a730456178ef6a1bbf3fe179c69f7189865e6b1d1c15"
+    }
+  ],
+  "validation": {
+    "node": {
+      "total": 243,
+      "passed": 243,
+      "failed": 0,
+      "skipped": 0
+    },
+    "pthreadBrowser": {
+      "preparationBiomes": 6,
+      "publicationBiomes": 6,
+      "rejectedStaleInputs": 9,
+      "errors": []
+    },
+    "productionBundle": {
+      "modules": 749,
+      "seconds": 45.44,
+      "write": false
+    }
+  }
+}

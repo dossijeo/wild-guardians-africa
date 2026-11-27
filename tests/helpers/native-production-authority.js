@@ -36,8 +36,8 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
    const center=resources.nativeCenterRuin,start=center.boundary.effectiveTime,end=center.end;
-   const reference=(center.retreat??center.approach).preparedReference;
-   const route=records.findLast(item=>item.kind==='animal-crop-route'&&item.committed&&
+   const reference=(center.retreat??center.approach??center.strike).preparedReference;
+   const route=records.findLast(item=>item.kind===(center.strike?'animal-crop-strike':'animal-crop-route')&&item.committed&&
     sameNativeAnimalCropReference(item.resources.reference,reference));
    if(!route)throw Error('Center fixture has no matching animal rig');
    const metadata={nativeWorldBoundary:center.boundary,preparedCenterRuin:center,

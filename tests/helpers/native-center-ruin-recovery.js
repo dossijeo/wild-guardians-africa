@@ -10,8 +10,9 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
  const hold=await world.authority.quiesceNativeIntentProduction();
  const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
  assert(retired.terminal&&retired.callbacksSettled);
- const route=await world.authority.terminalWorkerRoute(),ref=(proof.prepared.retreat??proof.prepared.approach).reference;
- assert.deepEqual(route,{version:2,ruin:true,members:[{kind:26,actorId:ref.actorId}]});
+ const source=proof.prepared.retreat??proof.prepared.approach??proof.prepared.strike;
+ const route=await world.authority.terminalWorkerRoute(),ref=source.reference,kind=ref.kind;
+ assert.deepEqual(route,{version:2,ruin:true,members:[{kind,actorId:ref.actorId}]});
  const [authorityPort,drawPort]=pair();
  const draw=await fixture({capabilities:{nativeAnimalCropVersion:1,nativeFarmArrivalVersion:1,nativeIdleCycleVersion:1}},
   {intentControl:{port:drawPort,session:'production-control',recoveryHold:30},absoluteNow:()=>Number.MAX_SAFE_INTEGER});
@@ -23,7 +24,8 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
   const [{execution,resources}]=q.members;
   assert.equal(execution.executedThrough,at);
   assert.deepEqual(execution.binding.reference,ref);
-  assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
+  if(kind===27)assert.equal(execution.binding.attackId,source.attackId);
+  else assert.deepEqual(resources.presentation.worldBoundary,q.worldBoundary);
   if(state){
    const animal=state.raid.animals[0];
    assert.deepEqual([execution.x,execution.z,execution.phase,execution.yaw],
@@ -38,15 +40,19 @@ export async function recoverRouteAfterRuin(world,proof,at,state=null){
    const requests=await rig.recover({resources,execution,terrainManifest:q.terrainManifest,recoveryCut:q.worldBoundary});
    assert(requests.some(count=>count>0));
   }
-  const evidence={version:2,members:[{kind:26,proof:execution.binding}],ruin:proof};
+  const evidence={version:2,members:[{kind,proof:execution.binding}],ruin:proof};
   assert.deepEqual(copyNativeRecoveryGroup(evidence,q.worldBoundary).ruin,proof);
   const foreign=structuredClone(evidence);
   foreign.ruin.revisions[1]++;
   assert.throws(()=>copyNativeRecoveryGroup(foreign,q.worldBoundary),/differs from the acquired center ruin/);
   assert.throws(()=>copyNativeRecoveryGroup(evidence,ref.worldBoundary),/differs from the acquired center ruin/);
+  if(kind===27){
+   const wrongAttack=structuredClone(evidence);wrongAttack.members[0].proof.attackId++;
+   assert.throws(()=>copyNativeRecoveryGroup(wrongAttack,q.worldBoundary),/differs from the acquired center ruin/);
+  }
   const epoch=ref.worldBoundary.effectiveTime;
   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',nativeAnimalCrop:ref,
-   resourceEnd:nativeClockResourceEnd(epoch,ref.endTime)});
+   resourceEnd:kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime)});
   await assert.rejects(world.authority.checkHeldDraw(30,hold,route),/Missing submitted/);
   const submit=draw.frame(0,{nativeWorldBoundary:q.worldBoundary,
    clock:{version:1,epoch:0,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(e=>e);

@@ -6,10 +6,12 @@ const copyArray=(a,n,valid)=>{
  return Object.freeze([...a]);
 };
 export function centerSource(s){
- const field=s?.retreat?'retreat':'approach';
- const boundary=copyNativeWorldBoundary(s?.boundary),route=copyNativeAnimalCropAttestation(s?.[field],26);
- if(!boundary||s.retreat&&s.approach||route.reference.purpose!==(field==='retreat'?'retreat':'center')||
-   field==='approach'&&'structure-'+route.reference.targetId===s.center||!sameNativeWorldBoundary(route.reference.worldBoundary,s.previous)||
+ const fields=['retreat','approach','strike'].filter(key=>s?.[key]!==undefined);
+ if(fields.length!==1)throw Error('Invalid center removal source');
+ const [field]=fields;
+ const boundary=copyNativeWorldBoundary(s?.boundary),route=copyNativeAnimalCropAttestation(s[field],field==='strike'?27:26);
+ if(!boundary||route.reference.purpose!==(field==='retreat'?'retreat':'center')||
+   field!=='retreat'&&'structure-'+route.reference.targetId===s.center||!sameNativeWorldBoundary(route.reference.worldBoundary,s.previous)||
    boundary.authorityEpoch!==s.previous.authorityEpoch||boundary.nativeSession!==s.previous.nativeSession||
    boundary.ticket<=s.previous.ticket||!(boundary.effectiveTime>=s.previous.effectiveTime)||
    !nat(s.initialClock)||!nat(s.intent)||route.assignmentSequence!==s.intent||

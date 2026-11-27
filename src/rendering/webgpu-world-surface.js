@@ -298,9 +298,9 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
   function onNativeCropStrikeRetired(reference){
    if(closed||!(reference?.kind===27||reference?.kind===26&&reference.purpose==='retreat'))return;
    if(!sameNativeWorldBoundary(reference.worldBoundary,preparedNativeWorldBoundary)){
-    if(reference.kind!==26||!retainedCenterRuin||
+    if(!retainedCenterRuin||
        !sameNativeWorldBoundary(retainedCenterRuin.worldBoundary,preparedNativeWorldBoundary)||
-       !sameNativeAnimalCropReference(reference,retainedCenterRuin.retreat.reference))return;
+       !sameNativeAnimalCropReference(reference,retainedCenterRuin.binding.reference))return;
     retainedCenterRuin=null;
    }
    // The confirmed roster detached the acquired program. Wake its replacement
@@ -328,7 +328,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind)&&record.nativeCenterPlacement===undefined);
     if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
     const ruin=nativeGateProposal?.acquiredWorld?.centerRuin;
-    retainedCenterRuin=direct&&ruin?.retreat?{worldBoundary:next,retreat:ruin.retreat}:null;
+    const binding=ruin?.retreat??ruin?.strike;
+    retainedCenterRuin=direct&&binding?{worldBoundary:next,binding}:null;
     preparedNativeWorldBoundary=next;
    }
   }
@@ -878,7 +879,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state);
       if(!current())throw Error('Recovered route changed during frame admission');
       preparedNativeWorldBoundary=admitted;
-      if(ruin?.prepared.retreat)retainedCenterRuin={worldBoundary:admitted,retreat:ruin.prepared.retreat};
+      const retained=ruin?.prepared.retreat??ruin?.prepared.strike;
+      if(retained)retainedCenterRuin={worldBoundary:admitted,binding:retained};
       if(encounter)recoveredFall={at,sequence,sample:encounter,current:fallCurrent,witness:null};
       nativeRouteResourceRevision++;nativeRouteRejected=false;
       firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};

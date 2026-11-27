@@ -62,6 +62,43 @@ test('batched steps stop for residency and preserve the pending pause order',asy
  const pause=runtime.submit({kind:'pause',reason:'menu'});await complete(1,{stepsExecuted:2,residency:{missing:['1,2']}});assert.deepEqual(sent[2].command,{kind:'addChunk',key:'1,2'});
  await complete(2);assert.equal(sent[3].command.steps,3);await complete(3,{stepsExecuted:3});assert.equal(sent[4].command.kind,'pause');await complete(4);await pause;assert.equal(runtime.status().pendingSteps,0);runtime.dispose();
 });
+test('publishing the center strike preserves every step before a pending pause',async()=>{
+ let now=0,wake,sequence=0,elapsed=12;
+ const sent=[],seen=[],client={ready:Promise.resolve(),submit(command){
+  let resolve;
+  const result=new Promise(done=>{resolve=done;});
+  sent.push({command,resolve,sequence:sent.length+1});
+  return {accepted:true,result};
+ },dispose(){}};
+ const world={createConfirmedReceiver(){return {
+  accept(message){assert.equal(message.centerStrikePublication,undefined);sequence=message.sequence;elapsed=message.elapsed;seen.push(elapsed);return {accepted:true};},
+  status(){return {sequence,lastElapsed:elapsed};}
+ };}};
+ const runtime=createWorkerGameRuntime({client,world,session:'s',maxBatchSteps:2,now:()=>now,schedule:fn=>(wake=fn,1),cancel(){}});
+ async function reply(index,extra={}){
+  const item=sent[index];assert(item);
+  item.resolve({sequence:item.sequence,elapsed,residency:{missing:[]},events:[],...extra});
+  await flush();
+ }
+ try{
+  const startup=runtime.start();await flush();await reply(0);await startup;
+  now=100;wake();
+  const pause=runtime.submit({kind:'pause',reason:'menu'});
+  pause.catch(()=>{});
+  assert.equal(sent[1].command.steps,2);
+  const worldBoundary={version:1,authorityEpoch:'s',nativeSession:1,ticket:27,effectiveTime:12};
+  await reply(1,{elapsed:12.02,stepsExecuted:0,centerStrikePublication:{version:1,attackId:10,worldBoundary,remainingSeconds:.03}});
+  assert.deepEqual(sent[2].command,{kind:'advance',seconds:.03,nightFastForward:true});
+  assert.equal(runtime.status().pendingSteps,2);
+  await reply(2,{elapsed:12.05});
+  assert.deepEqual(sent[3].command,{kind:'advance',seconds:.05,nightFastForward:true});
+  await reply(3,{elapsed:12.1});
+  assert.equal(sent[4].command.kind,'pause');
+  await reply(4);await pause;
+  assert.deepEqual(seen,[12,12.02,12.05,12.1,12.1]);
+  assert.equal(runtime.status().pendingSteps,0);
+ }finally{runtime.dispose();}
+});
 test('an encounter recovery cut preserves the split timestep and later FIFO work',async()=>{
  let now=0,wake,allow=true,confirmed=0;
  const sent=[],publications=[];

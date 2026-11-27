@@ -3152,18 +3152,29 @@ int stageWorldProposal(int kind,int mode,int floatCount,int intCount,bool captur
   return staged;
 }
 // This removal is authorized only for the resident center's exact footprint.
-EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage(int center,int polygon,double actor,double body,double slot,
-    double generation,double assignment,double routeTicket,double end){
+static int stageCenterRuinResources(int center,int polygon,double actor,double body,double slot,
+    double generation,double assignment,double resourceTicket,double attackId,double end){
   const auto it=polygonIndex().byId.find(polygon);
   if(center<=0||it==polygonIndex().byId.end()||it->second.workCenter!=center||it->second.passMask!=0||
      worldProposalFloatInput.empty()||it->second.xy!=worldProposalFloatInput)return -2;
   const SpatialWorldProposalInput input{4,0,{}, {polygon}};
-  const int ok=stageCenterRuin(input,polygonMutation(it->second),center,actor,body,slot,generation,assignment,routeTicket,end);
+  const auto shape=polygonMutation(it->second);
+  const int ok=attackId==0?stageCenterRuin(input,shape,center,actor,body,slot,generation,assignment,resourceTicket,end):
+    stageCenterRuinStrike(input,shape,center,actor,body,assignment,resourceTicket,attackId,end);
   if(ok!=1)return ok;
   std::array<double,6> id{};if(spatialIntentWorldProposalSnapshot(id)!=1)return -2;
   WorldResourcePreview preview;preview.centerCollapse=true;preview.header={1,id[0],id[1],id[3],4,0,
     double(terrainInputRevision),double(overlayRevision),double(residencyRevision)};
   worldResourcePreview=std::make_shared<WorldResourcePreview>(std::move(preview));return 1;
+}
+EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage(int center,int polygon,double actor,double body,double slot,
+    double generation,double assignment,double routeTicket,double end){
+  return stageCenterRuinResources(center,polygon,actor,body,slot,generation,assignment,routeTicket,0,end);
+}
+EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage_strike(int center,int polygon,double actor,double body,
+    double assignment,double strikeTicket,double attackId,double end){
+  if(!(attackId>0))return -1;
+  return stageCenterRuinResources(center,polygon,actor,body,0,0,assignment,strikeTicket,attackId,end);
 }
 EMSCRIPTEN_KEEPALIVE int spatial_world_proposal_stage(int kind,int mode,int floatCount,int intCount){return stageWorldProposal(kind,mode,floatCount,intCount,false);}
 EMSCRIPTEN_KEEPALIVE int spatial_shield_crop_stage_resources(int count,double actor,double body,double slot,double generation,double assignment,double routeTicket){

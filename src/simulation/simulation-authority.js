@@ -739,7 +739,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const eligible=()=>impact&&!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
       civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseImpact(game,animal,center)===impact&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&game.raid.animals[0]===animal&&
-      (animal.status==='retreating'||animal.status==='walking'&&animal.targetId&&animal.targetId!==center.id)&&
+      (animal.status==='retreating'||['walking','attacking'].includes(animal.status)&&animal.targetId&&animal.targetId!==center.id)&&
       nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
     if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified animal route substep');
@@ -751,6 +751,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     try{
       owner.receipt=await nativeProduction.quiesce();
       if(!current())throw Error('Native center ruin source changed');
+      // Quiescing can finish a pending strike. Its acquired program must be
+      // published before Surface can adopt it and prepare the next world.
+      const last=nativeProduction.status().last;
+      if(last?.publicationSequence===sequence&&last.kind==='animal-crop-strike'&&last.status==='committed'){
+        const strike=planner.nativeAnimalCropStrikeExecution(animal.id);
+        if(strike?.binding.reference.purpose==='center')return {
+          version:1,worldBoundary:strike.binding.reference.worldBoundary,attackId:strike.binding.attackId};
+      }
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
       prepared=await owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence});
@@ -1349,9 +1357,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!civilShieldPhysicsAvailable()||game.raid.animals.length!==1)return null;
       const kind=animal.status==='attacking'?27:26;
       const workersAtRefuge=game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id));
-      if(workersAtRefuge&&kind===26){
+      if(workersAtRefuge){
         const ruin=planner.nativeCenterRuinRouteRecovery();
-        if(ruin)return {version:2,ruin:true,members:[{kind:26,actorId:ruin.execution.actorId}]};
+        if(ruin?.execution.binding.reference.kind===kind)return {version:2,ruin:true,members:[{kind,actorId:ruin.execution.actorId}]};
       }
       if(!workersAtRefuge&&qualifyAnimalCrop){
         const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
@@ -1416,10 +1424,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
     if(route.refuge||route.ruin||route.encounter){
       const [member]=route.members;
-      if(route.members.length!==1||(member.kind!==26&&(!route.refuge||member.kind!==27)))return null;
+      if(route.members.length!==1||(member.kind!==26&&(!(route.refuge||route.ruin)||member.kind!==27)))return null;
       const source=route.encounter?planner.nativeEncounterFallRecovery(route.encounter==='approach'?'center':'retreat'):
         route.ruin?planner.nativeCenterRuinRouteRecovery():planner.nativeRefugeCropRecovery(member.kind);
-      if(!source||member.actorId!==source.execution.actorId)return null;
+      if(!source||member.actorId!==source.execution.actorId||route.ruin&&member.kind!==source.execution.binding.reference.kind)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
     }
@@ -1684,12 +1692,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
        return stepsExecuted<steps&&!residency().missing.length;
      };
-     let recoveryCut=null;
+     let recoveryCut=null,centerStrikePublication=null;
      const runSteps=first=>{
        if(restoringFarmFlight){stepsExecuted=0;return;}
        for(let i=first;i<steps;i++){
          const boundary=advanceReal(game,command.seconds,nav,options);
          if(boundary)return boundary.then(stopped=>{
+           if(stopped?.centerStrikePublication){
+             stepsExecuted=i;
+             centerStrikePublication={...stopped.centerStrikePublication,remainingSeconds:stopped.remainingSeconds};
+             return;
+           }
            if(stopped){
              const {lossClaim,acquired}=encounterDraftAdvance;
              completeStep(i);
@@ -1709,7 +1722,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      try{pending=runSteps(0);}catch(error){finishCapture();throw error;}
      if(pending){
        return pending.finally(finishCapture).then(()=>{
+         // A strike acquired during the cut is outside the sampled tick tape.
+         if(centerStrikePublication)motionTrace=worldMotionTrace=null;
          const result=publishResult();
+         if(centerStrikePublication){result.stepsExecuted=stepsExecuted;result.centerStrikePublication=centerStrikePublication;}
          const owner=encounterDraftAdvance;
          if(recoveryCut){
            result.encounterRecoveryCut=recoveryCut;
