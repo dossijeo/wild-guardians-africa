@@ -1,10 +1,14 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Draw descarta los paquetes que quedan por debajo del piso de un hold cancelado. En NVIDIA, el reintento de Task14 y Action15 completó un solo riego y drenó. La prueba fuerza la cancelación y la campaña continua sigue pendiente de aceptación. [Recibo y alcance](native-cold-worker-admission-20261126.md#reintento-de-task14-tras-cancelar-un-hold).
+
+El guardado de la aproximación al centro conserva el corredor de disco sin incorporarlo a la publicación en vivo. Un control NVIDIA guardó durante READY26 y completó el golpe, la retirada y el drenaje. Se conserva el recibo de la campaña que falló en la publicación 7332. [Pruebas y alcance](native-cold-worker-admission-20261126.md#publicación-en-vivo-al-guardar-una-aproximación).
+
 NVIDIA sustituyó Draw después de Home19 ordinario y verificó la ausencia del cuerpo antes de reanudar. El sustituto presentó la primera ruta de la incursión y drenó. Sigue abierto el disparador de la recuperación espontánea en la campaña continua. [Prueba y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-después-de-home19-ordinario).
 
 NVIDIA recargó el guardado tomado al nacer la incursión en Sabana. El primer dibujo conservó la pose con edad cero; procedieron un solo impacto, Retreat en el mismo cuerpo, la derrota y el drenaje. Standalone y pthread verificaron también el corredor y el READY retenido en CPU. [Evidencia y alcance](native-cold-worker-admission-20261126.md#guardado-entre-raidspawned-y-el-primer-go).
 
-La última campaña continua superó el fallo de Recovery del primer turno y llegó a la tercera noche. Surface rechazó la muestra inicial de una publicación de movimiento mientras esperaba el primer Strike27 del búfalo. El contraste CPU desde el checkpoint previo completó la incursión y no reprodujo la discrepancia. [Recibo y límite](native-cold-worker-admission-20261126.md#publicaciones-durante-la-aproximación-del-búfalo).
+Una campaña continua superó el fallo de Recovery del primer turno y llegó a la tercera noche. Surface rechazó la muestra inicial de una publicación de movimiento mientras esperaba el primer Strike27 del búfalo. El contraste CPU desde el checkpoint previo completó la incursión y no reprodujo la discrepancia. [Recibo y límite](native-cold-worker-admission-20261126.md#publicaciones-durante-la-aproximación-del-búfalo).
 
 NVIDIA recargó la aproximación y Strike27 al centro de Sabana. Cada pasada acreditó la pose guardada, un solo impacto, la retirada en el mismo cuerpo y una derrota antes de drenar. Los controles CPU incluyen READY retenido y WASM standalone y pthread. [Pruebas y alcance](native-cold-worker-admission-20261126.md#guardado-de-un-golpe-al-centro-adquirido).
 

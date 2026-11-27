@@ -972,8 +972,23 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     536 dirigidas + 39 y 74 heredadas
     sin skips. Tres auditorías WASM/WebGPU reproducen espera/reanudación y fases/
     presupuesto desde un único paquete durante dos bloqueos de 500 ms cada una,
-    sin nuevas posiciones JS ni trabajo geométrico nativo. Son triángulos de
-    diagnóstico; no hay aceptación gráfica de personajes autónomos.
+    sin nuevas posiciones JS ni trabajo geométrico nativo. Esas tres auditorías
+    usan triángulos de diagnóstico.
+
+    Los controles posteriores ya presentan personajes. En NVIDIA, Farm23 y
+    Home18 recuperan el rig y la hoja mientras se abre un portón. La calificación
+    mixta de Desierto recupera juntos Home18, AttackCenter y la hoja, confirma el
+    cruce del civil y completa el retorno al trabajo. El ensayo de colisión WASM
+    comprueba que el mismo vano abierto da paso al cuerpo del trabajador y
+    bloquea al animal. [Farm23 y Home18](native-terminal-resource-recovery-20261120.md#reemplazo-de-farm23-mientras-abre-un-portón).
+    [Cohorte de Desierto](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-la-apertura-del-portón-en-la-incursión-mixta).
+    [Control de colisión](../../tests/spatial-native-gate-mechanism.test.js).
+
+    e-R3 y e-R4 siguen pendientes. La calificación mixta usa un perfil de
+    desarrollo y controla el reloj para alcanzar el corte de pérdida. Falta la
+    aceptación de las intenciones pertinentes desde el arranque ordinario, con
+    esperas, guardado y restauración, cambios de velocidad y repetición
+    determinista de la partida.
   - [ ] **A6-04.f — Efecto físico/gráfico coordinado.** No hacer efectiva una
     mutación mientras un dibujante pueda cruzar antes de su revocación; depende
     también de A6-06.
