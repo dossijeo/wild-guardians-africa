@@ -51,7 +51,7 @@ import {createWorkerTutorial} from './worker-tutorial.js';
 import {dueCinematicAct,finishCinematicAct} from '../app/campaign-cinematics.js';
 import {reserveEvent,settleEvent,disableMicroEconomy,trackIncome,microState,validateMicroState} from '../microevents/economy.js';
 import {sameCenter} from '../world/native-center-ruin-source.js';
-import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
+import {assignRaidTarget,targetFor,nativeCenterAttackCohort,nativeCenterCollapseImpact,nativeCenterCollapseSite,nativeLiveCenterAttackSite,nativeLiveCenterRaidCanArm,nativeShelteredSavannaCenterActor,nativeCropCohortCurrent,nativeCropRouteSubject,nativeRetreatSubject,savedRaidStrike} from './raids.js';
 import {prepareVillageIsolated,applyVillageIsolatedPlan} from './isolated-village-preflight.js';
 import {observePathMotion} from './locomotion.js';
 import {captureMotionPeers} from './worker-motion-peers.js';
@@ -735,9 +735,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }).catch(error=>{abort();throw error;});
   }
   async function prepareCenterRuin(center,span,advanceSubstep){
-    const animal=game.raid?.animals[0];
-    const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
-      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseSite(game,animal)===center&&
+    const animal=game.raid?.animals[0],impact=nativeCenterCollapseImpact(game,animal,center);
+    const eligible=()=>impact&&!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
+      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseImpact(game,animal,center)===impact&&
       center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&game.raid.animals[0]===animal&&
       (animal.status==='retreating'||animal.status==='walking'&&animal.targetId&&animal.targetId!==center.id)&&
       nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&

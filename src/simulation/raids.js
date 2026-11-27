@@ -838,11 +838,27 @@ export function nativeCenterCollapseSite(state,animal){
  const hit=state.events.findLast(event=>event.type==='AnimalLogicalHit'&&event.attackId===animal.attackId&&
    event.presentation?.target?.kind==='center'&&event.presentation.shield===null);
  const center=hit&&state.structures.find(item=>item.id===hit.targetId&&item.kind==='center');
- if(!center)return null;
+ return hit&&nativeCenterCollapseImpact(state,animal,center)===hit?center:null;
+}
+// The collapsing center retains the impact that started its countdown even
+// after the animal acquires a different target and attack id.
+export function nativeCenterCollapseImpact(state,animal,center){
+ if(!animal||center?.kind!=='center'||center.status!=='collapsing'||!(center.collapseRemaining>0)||
+    !state.structures.includes(center))return null;
  const threshold=collapseThreshold(center)+1e-9;
- return state.events.some(event=>event.type==='StructureHit'&&event.simulationTime===hit.simulationTime&&
-   event.animalId===animal.id&&event.targetId===center.id&&event.structureHit?.kind==='center'&&
-   event.structureHit.previousHp>threshold&&event.structureHit.hp<=threshold)?center:null;
+ const index=state.events.findLastIndex(event=>event.type==='StructureHit'&&event.animalId===animal.id&&
+   event.targetId===center.id&&event.structureHit?.kind==='center'&&event.structureHit.previousHp>threshold&&
+   event.structureHit.hp===center.hp&&event.structureHit.hp<=threshold&&event.structureHit.maxHp===center.maxHp&&
+   event.structureHit.x===center.x&&event.structureHit.z===center.z);
+ if(index<0)return null;
+ const damage=state.events[index],hit=state.events[index+1],pose=hit?.presentation?.animal;
+ if(hit?.type!=='AnimalLogicalHit'||hit.targetId!==center.id||hit.species!==animal.species||
+    !/^attack-[1-9]\d*$/.test(hit.attackId)||hit.presentation?.target?.kind!=='center'||hit.presentation.shield!==null||
+    hit.simulationTime!==damage.simulationTime||hit.presentation.elapsed!==damage.simulationTime||
+    !Number.isFinite(pose?.x)||!Number.isFinite(pose?.z)||pose.x!==damage.presentation?.x||pose.z!==damage.presentation?.z||
+    !(damage.simulationTime<=state.elapsed)||
+    Math.abs(damage.simulationTime+CENTER_COLLAPSE_SECONDS-state.elapsed-center.collapseRemaining)>1e-7)return null;
+ return hit;
 }
 export function nativeShelteredSavannaCenterActor(state,animal){
  if(state.biome!=='sabana'||!nativeCenterAttackCohort(state)||state.raid.animals.length!==1||state.raid.animals[0]!==animal)return false;

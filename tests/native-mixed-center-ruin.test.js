@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {nativeFarmArrivalRouteFixture} from './helpers/native-farm-arrival-route.js';
 import {recoverRouteAfterRuin} from './helpers/native-center-ruin-recovery.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
-import {centerServicePoint} from '../src/world/centers.js';
+import {centerFootprint,centerServicePoint} from '../src/world/centers.js';
+import {footprintsOverlap} from '../src/world/footprints.js';
 import {readFileSync} from 'node:fs';
 import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
 import {sameNativeWorldBoundary,reconcileNativeWorldResources} from '../src/world/native-world-boundary.js';
@@ -14,9 +15,14 @@ import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery.js';
-import {serialize} from '../src/persistence/snapshots.js';
+import {deserialize,serialize} from '../src/persistence/snapshots.js';
 import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
 import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
+import {tick} from '../src/simulation/game.js';
+import {nativeCenterCollapseImpact,nativeCenterCollapseSite} from '../src/simulation/raids.js';
+import {createSpatialGameSession} from '../src/world/wild-engine/spatial-game-session.js';
+import {createSpatialNavigationMovement} from '../src/world/wild-engine/spatial-navigation-movement.js';
+import {createEventDrivenTaskPlanner} from '../src/world/wild-engine/spatial-intent-bridge.js';
 
 const gateId='structure-1000000';
 const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
@@ -42,6 +48,73 @@ function mixedState(gated){
   return state;
  }finally{fixture.close();}
 }
+
+test('a center keeps the exact collapsing impact after the animal starts its next strike',()=>{
+ const input=mixedState(false);
+ const [firstCenter]=input.structures;
+ firstCenter.hp=firstCenter.maxHp;
+ const doomedId='structure-'+input.nextId++;
+ input.structures.push({...firstCenter,id:doomedId,x:-18,z:-12,hp:180});
+ input.dayPlan.at=input.time+10;
+ const positionCenter=(state,x,z)=>{
+  const center=state.structures[0],worker=state.workers[0],village=state.villages.find(row=>row.id===worker.villageId);
+  const dx=x-center.x,dz=z-center.z;
+  Object.assign(center,{x,z});
+  worker.x+=dx;worker.z+=dz;
+  village.entry={x:village.entry.x+dx,z:village.entry.z+dz};
+ };
+ positionCenter(input,-12,-7);
+ const binary=process.env.QA_BARRIER_WASM??new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url);
+ const wasm=new WebAssembly.Module(readFileSync(binary));
+ function run(state,until,limit){
+  const loaded=new Map(),session=createSpatialGameSession(wasm,state,{loaded:()=>loaded});
+  try{
+   for(const key of chunkKeys){
+    const [cx,cz]=key.split(',').map(Number);
+    if(session.core.selectChunk(cx,cz)<0)assert(session.core.addChunk(cx,cz)>=0);
+    loaded.set(key,session.core.chunkPayload());
+   }
+   const nav=createSpatialNavigationMovement(session,state);
+   nav.setActiveBounds(view.bounds);nav.raidView=view;
+   nav.intentTaskPlanner=createEventDrivenTaskPlanner(session);nav.intentTaskPlanner.resetFromState(state);
+   for(let i=0;i<limit;i++){tick(state,.02,nav);if(until())return;}
+   assert.fail('The ordinary raid did not reach its expected boundary');
+  }finally{session.dispose();}
+ }
+ const thirdStrike=()=>input.raid?.animals[0];
+ run(input,()=>thirdStrike()?.status==='attacking'&&thirdStrike().targetId===doomedId&&
+  thirdStrike().hitsRemaining===2&&input.structures.find(center=>center.id===doomedId).hp===140,2600);
+ const saved=deserialize(serialize(input)),oldAttack=thirdStrike().attackId;
+ positionCenter(saved,-24,-18);
+ const doomed=saved.structures.find(center=>center.id===doomedId),other=saved.structures[0],actor=saved.raid.animals[0];
+ assert(!footprintsOverlap(centerFootprint(doomed,saved).footprint,centerFootprint(other,saved).footprint));
+ assert.equal(saved.raid.reservations[actor.reservation],actor.id);
+ let impact=null;
+ run(saved,()=>{
+  if(!impact&&doomed.status==='collapsing'&&actor.status==='attacking'&&actor.targetId===other.id){
+   assert.notEqual(actor.attackId,oldAttack);
+   assert.equal(saved.raid.reservations[actor.reservation],actor.id);
+   assert.equal(nativeCenterCollapseSite(saved,actor),null);
+   impact=nativeCenterCollapseImpact(saved,actor,doomed);
+   assert.equal(impact?.attackId,oldAttack);
+   assert.equal(impact.targetId,doomedId);
+   assert.equal(nativeCenterCollapseImpact(saved,actor,other),null);
+   assert.equal(nativeCenterCollapseImpact(saved,{...actor,id:'animal-1'},doomed),null);
+   const remaining=doomed.collapseRemaining;doomed.collapseRemaining+=.1;
+   assert.equal(nativeCenterCollapseImpact(saved,actor,doomed),null);
+   doomed.collapseRemaining=remaining;
+   const events=saved.events;saved.events=events.filter(event=>event!==impact);
+   assert.equal(nativeCenterCollapseImpact(saved,actor,doomed),null);
+   saved.events=events;
+  }
+  return other.hp===580;
+ },600);
+ assert(impact);
+ const ruin=saved.events.find(event=>event.type==='StructureRuined'&&event.targetId===doomedId);
+ const final=saved.events.filter(event=>event.type==='AnimalLogicalHit'&&event.targetId===other.id);
+ assert.equal(final.length,1);
+ assert(impact.simulationTime<ruin.simulationTime&&ruin.simulationTime<final[0].simulationTime);
+});
 
 for(const mode of ['crossing','opening motor','foreign motor ticket','refuge','strike after Home19','retreat after Home19'])test('mixed center loss recovers the acquired cut: '+mode,async()=>{
  const initial=mixedState(true),receipts=new Map(),[authorityPort,drawPort]=pair();
