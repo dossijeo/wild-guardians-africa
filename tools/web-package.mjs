@@ -1,4 +1,5 @@
 import {packageWallBank} from './package-wall-bank.mjs';
+import {packageBakedAnimations} from './package-baked-animations.mjs';
 import {shareGlbImageFamilies} from './share-glb-image-families.mjs';
 import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync,mkdirSync} from 'node:fs';
 import {resolve,extname,relative,sep,dirname} from 'node:path';
@@ -65,7 +66,7 @@ export function publicText(text,path,manifest){
   const prefix=path.endsWith('.css')?'../'.repeat(path.split('/').length-1):path.startsWith('menu/')||path.startsWith('selector/')?'../':'';
   return text.replace(/(?<![.\w/:+-])\/(assets|content|library|menu|selector|runtime|i18n)(?=\/|\.html)/g,prefix+'$1');
 }
-export function webPackagePlugin(){
+export function webPackagePlugin({retainQaFixtures=false}={}){
   let config;const manifest=()=>{const geometry=JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));const audio=JSON.parse(readFileSync(resolve(config.root,'content/manifests/audio-runtime.json'),'utf8'));const sfx=JSON.parse(readFileSync(resolve(config.root,'content/manifests/sfx-runtime.json'),'utf8'));const images=JSON.parse(readFileSync(resolve(config.root,'content/manifests/image-runtime.json'),'utf8'));return {...geometry,audioCodec:audio.codec,records:[...geometry.records,...audio.records,...sfx.records,...images.records]};};
   return {name:'itch-web-package',configResolved(value){config=value;},
     configureServer(server){server.middlewares.use((req,res,next)=>{try{const path=decodeURIComponent((req.url??'').split('?')[0]).replace(/^\//,'').replace(config.base.replace(/^\//,''),'');const file=resolve(config.root,'public',path);if(!file.startsWith(resolve(config.root,'public')+sep)||!['.html','.js','.json','.css'].includes(extname(file)))return next();const text=publicText(readFileSync(file,'utf8'),path,manifest());res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css'})[extname(file)]);res.end(text);}catch{next();}});},
@@ -87,6 +88,11 @@ export function webPackagePlugin(){
         rmSync(resolve(dist,'content/guardian/voices.json'),{force:true});
       }
       walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));
+      if(!retainQaFixtures){
+        const target=resolve(dist,'qa');
+        if(!target.startsWith(dist+sep))throw Error('QA fixture path escapes package');
+        rmSync(target,{recursive:true,force:true});
+      }
       for(const item of mapping.records.filter(item=>UNUSED_LAB_MODELS.has(item.source))){
         const target=resolve(dist,item.runtime);
         if(!target.startsWith(resolve(dist,'assets')+sep))throw Error('Unused lab model path escapes package');
@@ -136,6 +142,7 @@ export function webPackagePlugin(){
         }
       }
       console.log('Wall buffer bank:',packageWallBank(dist));
+      console.log('Baked animation banks:',packageBakedAnimations(dist));
     }
   };
 }

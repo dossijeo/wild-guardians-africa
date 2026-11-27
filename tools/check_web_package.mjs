@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,UNUSED_ANIMAL_LAB_MODELS,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
+import {bakedAnimationSources} from './package-baked-animations.mjs';
+import {BAKE_BANK_DIRECTORY,readPackedBakedAnimation} from '../src/rendering/baked-animation-assets.js';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -36,6 +38,25 @@ for(const item of manifest.records){
 }
 const packagedModels=JSON.parse(await readFile(resolve(root,'content/models.json'),'utf8'));
 const packagedAssets=JSON.parse(await readFile(resolve(root,'content/web-assets.json'),'utf8'));
+assert(![...inventory].some(path=>path.startsWith('qa/')),'Development fixtures must not ship');
+for(const [profile,sources] of bakedAnimationSources){
+ const bank=`${BAKE_BANK_DIRECTORY}/${profile}`;
+ const [index,binary]=await Promise.all([readFile(resolve(root,bank+'.json')),readFile(resolve(root,bank+'.bin'))]);
+ assert.deepEqual(Object.keys(JSON.parse(index).clips),sources.map(([clip])=>clip),'Incorrect bank inventory: '+profile);
+ const fetcher=async(url,{headers})=>{
+  if(url===bank+'.json')return new Response(index);
+  assert.equal(url,bank+'.bin');
+  const [,start,end]=/^bytes=(\d+)-(\d+)$/.exec(headers.Range).map(Number);
+  return new Response(binary.subarray(start,end+1),{status:206,headers:{'Content-Range':`bytes ${start}-${end}/${binary.length}`}});
+ };
+ for(const [clip,path] of sources){
+  assert(!inventory.has(path+'.json')&&!inventory.has(path+'.bin'),'Individual bake shipped: '+path);
+  const [meta,bytes]=await readPackedBakedAnimation(bank,clip,{fetcher});
+  const source=JSON.parse(publicText(await readFile('public/'+path+'.json','utf8'),path+'.json',packagedAssets));
+  assert.deepEqual(meta,source,'Authored bake metadata changed: '+path);
+  assert.equal(createHash('sha256').update(new Uint8Array(bytes)).digest('hex'),source.sha256,'Authored bake bytes changed: '+path);
+ }
+}
 for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]){
  assert(!packagedModels.some(model=>model.url.replace(/^\//,'')===source),'Unused worker lab model listed in runtime catalogue');
  assert(!packagedAssets.records.some(item=>item.source===source),'Unused worker lab model listed in runtime asset map');
@@ -110,6 +131,6 @@ for(const record of allSpiritRecords){
  assert.deepEqual(cueBank.records[record.id],JSON.parse(publicText(await readFile(`public/content/guardian/lipsync/${record.id}.json`,'utf8'),`content/guardian/lipsync/${record.id}.json`,packagedAssets)),'Packed cues must preserve every authored timing and gesture');
  assert(!inventory.has(`content/guardian/lipsync/${record.id}.json`),'Individual cues duplicated in release');
 }
-assert(files<=1000,'itch.io package exceeds 1000 files');
-assert(bytes<=500_000_000,'itch.io package exceeds 500 MB');
+assert(files<=1000&&bytes<=500_000_000,
+ `itch.io package has ${files} files and ${bytes} bytes; limits are 1000 files and 500000000 bytes`);
 console.log(`PASS: ${files} files / ${bytes} bytes, ${links} relative links, ${packagedAssets.records.filter(item=>item.runtime.endsWith('.glb')).length} runtime GLBs, no unused worker labs, original GLBs, demo village or superseded ground duplicates`);

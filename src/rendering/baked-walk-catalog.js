@@ -1,5 +1,5 @@
 import {ANIMAL_ACTIONS} from '../simulation/animal-actions-data.js';
-import {assetUrl} from './asset-url.js';
+import {ANIMAL_ATTACK_BAKES,animalBakePath,readBakedAnimation} from './baked-animation-assets.js';
 import {createBakedWalkTexture} from './webgpu-baked-walk.js';
 import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
 
@@ -8,9 +8,8 @@ import {prepareWebGpuTexture} from './webgpu-texture-upload.js';
 async function loadBakedAnimalAsset(species,clip,{signal,fetcher=globalThis.fetch,subtle=globalThis.crypto?.subtle}={}){
  if(!Object.hasOwn(ANIMAL_ACTIONS.animals,species)||typeof fetcher!=='function'||typeof subtle?.digest!=='function')throw TypeError('Invalid baked walking request');
  if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
- const root=assetUrl(clip==='Walking'?`/content/gpu-walk/${species}/walking`:clip==='Running'?`/content/gpu-animal-run/${species}/walking`:`/content/gpu-animal-attack/${species}/${clip}/walking`),[metadataResponse,dataResponse]=await Promise.all([fetcher(root+'.json',{signal}),fetcher(root+'.bin',{signal})]);
- if(!metadataResponse.ok||!dataResponse.ok)throw Error('Baked walking asset unavailable: '+species);
- const [meta,buffer]=await Promise.all([metadataResponse.json(),dataResponse.arrayBuffer()]);if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
+ const [meta,buffer]=await readBakedAnimation(species,clip,animalBakePath(species,clip),{fetcher,signal});
+ if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
  const sourceHash=/^\/assets\/([a-f0-9]{64})\.glb$/.exec(ANIMAL_ACTIONS.animals[species].url)?.[1];
  if(!sourceHash||meta?.species!==species||meta.clip!==clip||meta.duration!==ANIMAL_ACTIONS.animals[species].clips[clip]?.duration||meta.sourceSha256!==sourceHash||!/^[a-f0-9]{64}$/.test(meta.sha256??'')||!Array.isArray(meta.boneInverses)||meta.validation?.exactMismatches!==0||meta.validation?.packedMismatches!==0)throw Error('Baked walking source mismatch: '+species);
  const digest=Array.from(new Uint8Array(await subtle.digest('SHA-256',buffer)),value=>value.toString(16).padStart(2,'0')).join('');if(signal?.aborted)throw new DOMException('Baked walking request cancelled','AbortError');
@@ -19,9 +18,8 @@ async function loadBakedAnimalAsset(species,clip,{signal,fetcher=globalThis.fetc
 }
 export function loadBakedWalkAsset(species,options){return loadBakedAnimalAsset(species,'Walking',options);}
 export function loadBakedAnimalRunAsset(species,options){return loadBakedAnimalAsset(species,'Running',options);}
-const animalAttacks=['Charged_Upward_Slash','Right_Hand_Sword_Slash','Weapon_Combo','Weapon_Combo_2'];
 export function createBakedAnimalAttackBank(options={}){
- const banks=new Map(animalAttacks.map(clip=>[clip,createBakedWalkBank({...options,load:(species,loadOptions)=>loadBakedAnimalAsset(species,clip,loadOptions)})]));
+ const banks=new Map(ANIMAL_ATTACK_BAKES.map(clip=>[clip,createBakedWalkBank({...options,load:(species,loadOptions)=>loadBakedAnimalAsset(species,clip,loadOptions)})]));
  return {get(species,clip){const bank=banks.get(clip);return bank?bank.get(species):Promise.reject(TypeError('Unknown animal attack'));},close(){for(const bank of banks.values())bank.close();},dispose(){for(const bank of banks.values())bank.dispose();}};
 }
 
