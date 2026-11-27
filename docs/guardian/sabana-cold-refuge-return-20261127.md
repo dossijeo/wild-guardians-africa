@@ -36,4 +36,4 @@ En NVIDIA se escribió el guardado de la aproximación a t=614,35. Tras leerlo, 
 
 En el mismo directorio de QA, `native-savanna-cold-crop-nvidia.json` tiene SHA-256 `0dbb087f649157bb6fdef8fa0651ec796666bf6fdae7da45cf36cd8a4e7a4f1021`. El archivo de partida `native-savanna-cold-crop-nvidia.save.json` tiene SHA-256 `68aa69f6555d90e10a859d106607c1b38db6e754b97d3d63aabf0614a0f358e1`. El arnés usa como insumo `.cache/native-flee-sabana-civil-physical-input.json` y el mismo perfil `nativeWorkerLifecycle`.
 
-La partida con los dos cuerpos activos, los cultivos protegidos por Escudo y la recuperación de dispositivo del consumidor que acaba de cargar requieren sus propios controles. Los criterios de A6, B y C siguen abiertos.
+El [guardado con los dos cuerpos activos](sabana-active-flight-checkpoint-20261127.md) cubre el tramo anterior a Home19 en Sabana sin portón ni Escudo. Los cultivos protegidos y la recuperación de dispositivo durante la recarga requieren sus propios controles. Los criterios de A6, B y C siguen abiertos.

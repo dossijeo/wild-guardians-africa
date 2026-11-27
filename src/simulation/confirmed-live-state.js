@@ -28,10 +28,10 @@ export function prepareConfirmedStateTransport(state,{projectPaths=false}={}){
  let snapshot=null;return {fields,get snapshot(){return snapshot??='{'+[...fields].map(([key,value])=>JSON.stringify(key)+':'+value).join(',')+'}';}};
 }
 export function deserializeConfirmedState(source){const state=JSON.parse(source);validateSnapshot(state,{livePhysics:true});return state;}
-export function confirmedStateSaveAvailable(state){
+export function confirmedStateSaveAvailable(state,{allowNativeRaidFlight=false}={}){
  const workerBlocked=(state.workers??[]).some(w=>{
   const admission=w.nativeRouteAdmission;
-  return w.nativeRefugeSequence!==undefined||w.status==='fleeing'&&admission==='native-home'||
+  return w.nativeRefugeSequence!==undefined||!allowNativeRaidFlight&&w.status==='fleeing'&&admission==='native-home'||
    ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources'].includes(admission)||
    farmSaveBlocked(state,w)||(admission==='native-idle-stroll'||admission==='pending-stroll-resources')&&!nativeIdleStrollSaveAvailable(state,w);
  });

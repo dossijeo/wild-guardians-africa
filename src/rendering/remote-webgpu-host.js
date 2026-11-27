@@ -2413,7 +2413,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
            const recoveredAnimalId=recovery?.version===2?recovery.members?.find(member=>member.kind===26||member.kind===27)?.proof?.reference?.actorId:
              [26,27].includes(recovery?.kind)?recovery.proof?.reference?.actorId:null;
            routeControl=createNativeRouteControl({authorityEpoch:message.authorityEpoch,
-             restoredRefugeReturn:message.restoredRefugeReturn??null,initialNativeSession:message.clock?.nativeSession,recoveredAnimalId,
+             restoredRefugeReturn:message.restoredRefugeReturn??null,restoredFlight:message.restoredFlight??null,initialNativeSession:message.clock?.nativeSession,recoveredAnimalId,
              initialSequence:message.sequence,initialTime:message.effectiveTime,routes:message.routes,restoredWallRepairs:message.restoredWallRepairs??[],pendingTaskRequests:message.pendingTaskRequests??[],pendingActionRequests:message.pendingActionRequests??[],pendingHomeRequests:message.pendingHomeRequests??[],pendingInitialIdleRequests:message.pendingInitialIdleRequests??[],pendingIdleStrollRequests:message.pendingIdleStrollRequests??[],pendingAnimalCrop:message.pendingAnimalCrop??null,pendingFarmArrivalRequests:message.pendingFarmArrivalRequests===undefined?[]:message.pendingFarmArrivalRequests});
            if(message.consumerToken!==undefined&&(typeof message.consumerToken!=='string'||!message.consumerToken))throw Error('Invalid native consumer identity');
            nativeConsumerToken=message.consumerToken??null;

@@ -52,7 +52,7 @@ function validHandle(handle,epoch){return handle?.authorityEpoch===epoch&&
 // movement model. It owns no independent body motion or collision simulation.
 // Admission resolves a stable record once. Revocation updates that exact record
 // even if preparation has not finished; drawing only reads its time limit.
-export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[],restoredRefugeReturn=null,initialNativeSession=null,recoveredAnimalId=null}={}){
+export function createNativeRouteControl({authorityEpoch,initialSequence=0,initialTime=null,routes=[],pendingTaskRequests=[],pendingActionRequests=[],pendingHomeRequests=[],pendingInitialIdleRequests=[],pendingIdleStrollRequests=[],pendingFarmArrivalRequests=[],pendingAnimalCrop=null,nativeIdleCycles=[],pendingIdleCycleRequests=[],restoredWallRepairs=[],restoredRefugeReturn=null,restoredFlight=null,initialNativeSession=null,recoveredAnimalId=null}={}){
   if(typeof authorityEpoch!=='string'||!authorityEpoch||
      !Number.isSafeInteger(initialSequence)||initialSequence<0||
      initialTime!==null&&(!Number.isFinite(initialTime)||initialTime<0)||!Array.isArray(routes)||!Array.isArray(pendingTaskRequests)||!Array.isArray(pendingActionRequests)||!Array.isArray(pendingHomeRequests)||!Array.isArray(pendingInitialIdleRequests)||!Array.isArray(pendingIdleStrollRequests)||!Array.isArray(pendingFarmArrivalRequests)||!Array.isArray(nativeIdleCycles)||!Array.isArray(pendingIdleCycleRequests))
@@ -111,15 +111,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
     if(!actor||actor.pendingIdleCycleRequest||!sameNativeIdleCycleAttestation(actor.idleCycleSource?.binding,request.sourceCycle)||assignments.has(request.requestSequence)||request.requestSequence>initialSequence||initialTime===null||request.requestedAt>initialTime)throw TypeError('Invalid native pending Idle cycle baseline');
     actor.pendingIdleCycleRequest=request;actor.latestSequence=request.requestSequence;assignments.add(request.requestSequence);
   }
+  if(restoredFlight!==null&&pendingAnimalCrop===null)throw Error('Restored flight lacks its crop request');
   if(pendingAnimalCrop!==null){
     const q=copyPendingAnimalCrop(pendingAnimalCrop);
-    // This first ordinary raid owns the only moving body. A mixed cohort must
-    // establish its own causal transition before it can use the same profile.
-    if(actors.size||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence||
+    const home=actors.get(restoredFlight?.workerActor)?.pendingHomeRequest;
+    if(restoredFlight!==null&&(restoredFlight.version!==1||restoredRefugeReturn!==null||recoveredAnimalId!=null||
+       actors.size!==1||!home||home.version!==2||!id(restoredFlight.raidSpawnSequence)||
+       home.raidSpawnSequence!==restoredFlight.raidSpawnSequence||home.nativeSession!==initialNativeSession||
+       q.nativeSession!==initialNativeSession||q.actorId!==restoredFlight.animalActor||q.actorId===home.actorId||
+       q.bodyId===home.bodyId||q.requestSequence<=home.requestSequence||q.purpose==='retreat'||q.restore||
+       q.previousStrike||q.previousShieldCrop||q.restoredWorkerImpact))throw Error('Invalid restored native flight cohort');
+    if((actors.size&&restoredFlight===null)||q.authorityEpoch!==authorityEpoch||initialTime===null||q.requestSequence>initialSequence||
        q.restore?.requestedAt>initialTime||q.restoredWorkerImpact?.at>initialTime)
       throw Error('Crop request conflicts with its native cohort or baseline');
     const actor=actorContext(q.actorId);actor.state=6;actor.latestSequence=q.requestSequence;
     actor.targetId=q.targetId;actor.cropRequest=q;
+    if(restoredFlight!==null)actor.raidFlightBirth=Object.freeze({workerActor:home.actorId,workerBody:home.bodyId,
+      sourceSequence:home.requestSequence,farmTicket:null,raidSpawnSequence:home.raidSpawnSequence,restored:true});
     if(q.restoredWorkerImpact){
       const worker=actorContext(q.restoredWorkerImpact.actorId);
       worker.state=0;worker.restoredWorkerImpact=q.restoredWorkerImpact;
@@ -184,7 +192,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(birth){
         const peer=actors.get(birth.workerActor);
         let home=peer?.pendingHomeRequest;
-        if(r.purpose==='center'){
+        if(r.purpose==='center'||birth.restored&&(!home||!homeRequestCurrent(home,peer))){
           const moving=peer?.homeProof?.reference,arrived=retiredRefuge?.reference;
           home=moving&&homeRecordCurrent(moving,peer)?moving.sourceRequest:
             !peer&&arrived?.actorId===birth.workerActor?arrived.sourceHome.reference.sourceRequest:null;

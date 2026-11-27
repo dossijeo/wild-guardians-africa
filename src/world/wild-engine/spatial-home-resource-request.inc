@@ -1,8 +1,9 @@
 // Loading a moving Home declares a current, task-free request. It restores
 // semantic pose and destination, never an old corridor or settlement history.
 EMSCRIPTEN_KEEPALIVE int nav_home_request_version(){return 1;}
-EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_request(double actor,double village,double homeX,double homeZ,double yaw,
-    double runPhase,double walkPhase,double carryPhase,double runRemaining){
+static int restoreNativeHomeRequest(double actor,double village,double homeX,double homeZ,double yaw,
+    double runPhase,double walkPhase,double carryPhase,double runRemaining,uint64_t raidSpawnSequence=0,
+    std::vector<float> path={}){
  auto& s=state();if(!integer(actor)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ))return -1;
  for(double v:{yaw,runPhase,walkPhase,carryPhase,runRemaining})if(!std::isfinite(v)||!std::isfinite(float(v)))return -1;
  if(runPhase<0||walkPhase<0||carryPhase<0||runRemaining<0)return -1;
@@ -11,10 +12,34 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_request(double actor,double vil
  if(worker->second.eligible||worker->second.actionActive||worker->second.bodyBound||worker->second.body||worker->second.inactiveSequence||s.activeIntents.count(uint64_t(actor)))return -2;
  for(const auto& [id,task]:s.tasks)if(task.assigned==uint64_t(actor))return -2;
  auto request=std::make_shared<NativeHomeResourceRequest>();request->actor=uint64_t(actor);request->session=s.session;request->village=uint64_t(village);request->homeX=homeX;request->homeZ=homeZ;
+ request->raidSpawnSequence=raidSpawnSequence;request->restoredHomePath=std::move(path);
  request->at=s.effectiveTime;request->x=worker->second.x;request->z=worker->second.z;request->yaw=yaw;request->runPhase=runPhase;request->walkPhase=walkPhase;request->carryPhase=carryPhase;request->runRemaining=runRemaining;request->profile=lazy_selected_context();
  ActiveIntent intent;intent.actor=request->actor;intent.home=true;intent.requiresResources=true;intent.lease=false;intent.state=PlanningState::AwaitingResources;intent.profile=request->profile;
  intent.approachKnown=true;intent.approachX=float(homeX);intent.approachZ=float(homeZ);intent.homeRequest=std::move(request);
  auto& stored=s.activeIntents.emplace(intent.actor,std::move(intent)).first->second;stored.homeRequest->sequence=emitIntentChange(s,stored);s.entityRevision++;return 1;
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restore_home_request(double actor,double village,double homeX,double homeZ,double yaw,
+    double runPhase,double walkPhase,double carryPhase,double runRemaining){
+ return restoreNativeHomeRequest(actor,village,homeX,homeZ,yaw,runPhase,walkPhase,carryPhase,runRemaining);
+}
+EMSCRIPTEN_KEEPALIVE int nav_intent_restore_raid_flight_home(double actor,double event,double village,double homeX,double homeZ,
+    double yaw,double run,double walk,double carry,double budget,int count){
+ auto& s=state();
+ if(!integer(actor)||!integer(event)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ)||
+    count<1||count>4096||s.attackRouteInput.size()!=size_t(count)*2)return -1;
+ if(spatial_world_biome()!=0||spatial_execution_profile_kind()!=0||s.workers.size()!=1||!s.gates.empty()||
+    s.causalClock||s.executionEnabled||s.bodyDomainActive||spatial_body_count()!=0||
+    s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+ const auto worker=s.workers.find(uint64_t(actor));
+ if(worker==s.workers.end()||s.attackRouteInput[s.attackRouteInput.size()-2]!=float(homeX)||
+    s.attackRouteInput.back()!=float(homeZ))return -2;
+ double x=worker->second.x,z=worker->second.z;
+ for(size_t i=0;i<s.attackRouteInput.size();i+=2){
+  const float nx=s.attackRouteInput[i],nz=s.attackRouteInput[i+1];
+  if(!coordinate(nx)||!coordinate(nz)||spatialWorkerFlightSegmentClear(x,z,nx,nz,.28)!=1)return -3;
+  x=nx;z=nz;
+ }
+ return restoreNativeHomeRequest(actor,village,homeX,homeZ,yaw,run,walk,carry,budget,uint64_t(event),s.attackRouteInput);
 }
 static bool snapshotHomeRequest(IntentState& s,const NativeHomeResourceRequest* r){
  s.homeRequestResult.fill(0);if(!r||!r->body||r->session!=s.session)return false;
