@@ -65,27 +65,44 @@ static double farmGateSide(const NativeGate& gate,double x,double z){
 // Reconstruct the existing Farm program at a cold boundary. The request owns
 // the current body and source pose. The archived origin is only input to a
 // new proof, and must reproduce the current physical pose exactly.
+static constexpr size_t farmGateCutOriginWidth=9,farmGateCutMotorWidth=5,farmGateCutTailWidth=2;
+static constexpr size_t farmGateCutBaseWidth=farmGateCutOriginWidth+farmGateCutTailWidth;
+static bool validFarmGateCutWidth(size_t count){
+ return count>=farmGateCutBaseWidth+farmGateCutMotorWidth&&
+  count<=farmGateCutBaseWidth+1024*farmGateCutMotorWidth&&(count-farmGateCutBaseWidth)%farmGateCutMotorWidth==0;
+}
+static double farmGateCutActivation(const RouteSlot& route,double distance){
+ // The hold at this distance can be shared by multiple gates. Its entrance
+ // still precedes every opening delay at that point.
+ const auto hold=std::lower_bound(route.holds.begin(),route.holds.end(),distance,
+  [](const RouteHold& wait,double at){return wait.distance<at;});
+ return hold!=route.holds.end()&&hold->distance==distance?hold->from:routeTimeAtDistance(route,distance);
+}
 static int proveColdFarmGateCut(IntentState& s,const ActiveIntent& intent,
  const std::vector<double>& data,PendingNativeMotionDraft& draft){
- if(data.size()!=16||!nativeFarmArrivalRequestBodyCurrent(s,intent)||!gateStaticProofCurrent(s))return -2;
+ if(!validFarmGateCutWidth(data.size())||!nativeFarmArrivalRequestBodyCurrent(s,intent)||!gateStaticProofCurrent(s))return -2;
  const auto& request=*intent.farmArrivalRequest;
- const double start=data[0],gateId=data[9],gateFrom=data[10],gateTarget=data[11],
-  gateAt=data[12],gateEnd=data[13],routeEnd=data[14];
+ const size_t tail=data.size()-farmGateCutTailWidth;
+ const double start=data[0],routeEnd=data[tail],waiting=data.back();
  if(!std::all_of(data.begin(),data.end(),[](double n){return std::isfinite(n);})||
     start<0||start>=s.effectiveTime||!coordinate(data[1])||!coordinate(data[2])||
     data[4]<0||data[5]<0||data[6]<0||data[7]<0||!(data[8]==0||data[8]==1)||
-    !integer(gateId)||gateFrom<0||gateFrom>=1||gateTarget!=1||
-    gateAt<start||gateEnd<=gateAt||routeEnd<gateEnd||s.effectiveTime>=routeEnd||
-    !(data[15]==0||data[15]==1))return -2;
- const auto found=s.gates.find(uint64_t(gateId));
- if(found==s.gates.end()||!found->second.mesh||!found->second.defined||found->second.status!=0||
-    !found->second.staticSweepCertified||!found->second.crossings.empty())return -2;
- const auto& stationary=found->second;
- if(gateMotionPending(stationary,s.effectiveTime))return -2;
+    s.effectiveTime>=routeEnd||!(waiting==0||waiting==1))return -2;
  draft.gates=s.gates;
- auto& gate=draft.gates.at(uint64_t(gateId));
- gate.from=gateFrom;gate.target=gateTarget;gate.at=gateAt;gate.precedingMotor=false;
- if(gateMotionEnd(gate)!=gateEnd||gateOpening(gate,s.effectiveTime)!=gateOpening(stationary,s.effectiveTime))return -2;
+ std::vector<uint64_t> ids;
+ std::unordered_set<uint64_t> seen;
+ for(size_t i=farmGateCutOriginWidth;i<tail;i+=farmGateCutMotorWidth){
+  const double rawId=data[i],from=data[i+1],target=data[i+2],at=data[i+3],end=data[i+4];
+  if(!integer(rawId)||from<0||from>=1||target!=1||at<start||end<=at||routeEnd<end)return -2;
+  const auto id=uint64_t(rawId);
+  const auto found=s.gates.find(id);
+  if(!seen.insert(id).second||found==s.gates.end()||!found->second.mesh||!found->second.defined||found->second.status!=0||
+     !found->second.staticSweepCertified||!found->second.crossings.empty()||gateMotionPending(found->second,s.effectiveTime))return -2;
+  auto& gate=draft.gates.at(id);
+  gate.from=from;gate.target=target;gate.at=at;gate.precedingMotor=false;
+  if(gateMotionEnd(gate)!=end||gateOpening(gate,s.effectiveTime)!=gateOpening(found->second,s.effectiveTime))return -2;
+  ids.push_back(id);
+ }
 
  auto origin=request;
  origin.x=data[1];origin.z=data[2];origin.yaw=data[3];origin.runPhase=data[4];
@@ -98,13 +115,13 @@ static int proveColdFarmGateCut(IntentState& s,const ActiveIntent& intent,
   true,nullptr,nullptr,nullptr,nullptr,nullptr,&request);
  if(proof!=1)return proof;
  const auto& route=draft.route;
- if(route.gateReservations.size()!=1||route.gateReservations.front()!=uint64_t(gateId)||
-    route.holds.size()!=1||route.holds.front().from!=gateAt||route.holds.front().until!=gateEnd||
-    route.distances.empty()||routeTimeAtDistance(route,route.distances.back())!=routeEnd)return -2;
+ if(route.gateReservations!=ids||route.distances.empty()||routeTimeAtDistance(route,route.distances.back())!=routeEnd)return -2;
+ for(const auto& boundary:draft.boundaries)
+  if(draft.gates.at(boundary.gate).at!=farmGateCutActivation(route,boundary.distance))return -2;
  const auto sample=sampleRouteTiming(route,s.effectiveTime);
  if(sample[0]!=request.x||sample[1]!=request.z||sample[4]!=request.yaw||sample[9]!=request.runPhase||
     sample[10]!=request.walkPhase||sample[11]!=request.carryPhase||sample[14]!=request.runRemaining||
-    sample[6]!=0||(sample[16]==0)!=(data[15]==1))return -2;
+    sample[6]!=0||(sample[16]==0)!=(waiting==1))return -2;
  return 1;
 }
 
@@ -217,7 +234,7 @@ static int stageFarmArrivalRoute(double actor,double session,double sourceSequen
  const auto& r=origin;
  if(double(r.sequence)!=sourceSequence)return -2;
  if(coldGateCut&&(held||savannaWorker||spatial_world_biome()!=1||r.refugeSequence||r.at!=s.effectiveTime||
-    coldGateCut->size()!=16||(*coldGateCut)[8]!=urgent))return -2;
+    !validFarmGateCutWidth(coldGateCut->size())||(*coldGateCut)[8]!=urgent))return -2;
  d.body=r.body;d.slot=held?found->second.slot:uint32_t(s.routeSlots.size());if(!held)for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
  s.reservationResult.fill(0);
@@ -244,9 +261,13 @@ static int stageFarmArrivalRoute(double actor,double session,double sourceSequen
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage(double actor,double session,double sourceSequence,double urgent){return stageFarmArrivalRoute(actor,session,sourceSequence,urgent);}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage_savanna(double actor,double session,double sourceSequence,double urgent){return stageFarmArrivalRoute(actor,session,sourceSequence,urgent,true);}
+EMSCRIPTEN_KEEPALIVE double* nav_farm_arrival_gate_cut_input_ptr(int count){
+ if(count<0||!validFarmGateCutWidth(size_t(count)))return nullptr;
+ auto& input=state().gateInput;input.resize(size_t(count));return input.data();
+}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage_cold_gate(double actor,double session,double sourceSequence){
  const auto& input=state().gateInput;
- return input.size()==16?stageFarmArrivalRoute(actor,session,sourceSequence,input[8],false,&input):-1;
+ return validFarmGateCutWidth(input.size())?stageFarmArrivalRoute(actor,session,sourceSequence,input[8],false,&input):-1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),23):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?p.farmArrivalRoute->header.data():nullptr;}
@@ -295,22 +316,28 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_capture_gate_cut(double actor){
  if(!currentFarmArrivalRoute(actor)||!gateStaticProofCurrent(s)||spatial_world_biome()!=1)return 0;
  const auto& intent=s.activeIntents.at(uint64_t(actor));
  const auto& route=s.routeSlots[intent.slot];
- if(!route.hasExecution||route.distances.empty()||route.gateReservations.size()!=1||
+ if(!route.hasExecution||route.distances.empty()||route.gateReservations.empty()||route.gateReservations.size()>1024||
     route.startTime>=s.effectiveTime||route.executionPose[6]!=0)return 0;
- const uint64_t id=route.gateReservations.front();
- const auto found=s.gates.find(id);if(found==s.gates.end())return 0;
- const auto& gate=found->second;const auto lease=gate.crossings.find(intent.actor);
- const double motorEnd=gateMotionEnd(gate),routeEnd=routeTimeAtDistance(route,route.distances.back());
- if(lease==gate.crossings.end()||lease->second.body!=route.reservationBody||lease->second.slot!=intent.slot||
-    lease->second.generation!=route.generation||gate.precedingMotor||gate.at<route.startTime||
-    gate.target!=1||gate.from>=gate.target||s.effectiveTime>=routeEnd||route.holds.size()!=1)return 0;
- const auto& hold=route.holds.front();
- if(hold.gate!=id||hold.from!=gate.at||hold.until!=motorEnd)return 0;
+ const double routeEnd=routeTimeAtDistance(route,route.distances.back());
+ if(s.effectiveTime>=routeEnd)return 0;
  const auto pose=sampleRouteTiming(route,s.effectiveTime);
  if(pose!=route.executionPose)return 0;
- s.gateResult={route.startTime,route.originX,route.originZ,route.originYaw,route.motionOffset[2],route.motionOffset[3],
-  route.motionOffset[4],route.runBudget,double(route.motionFlags),double(id),gate.from,gate.target,gate.at,
-  motorEnd,routeEnd,pose[16]==0?1.:0.};
+ std::vector<double> cut{route.startTime,route.originX,route.originZ,route.originYaw,route.motionOffset[2],route.motionOffset[3],
+  route.motionOffset[4],route.runBudget,double(route.motionFlags)};
+ for(const uint64_t id:route.gateReservations){
+  const auto found=s.gates.find(id);if(found==s.gates.end())return 0;
+  const auto& gate=found->second;const auto lease=gate.crossings.find(intent.actor);
+  const double end=gateMotionEnd(gate);
+  const auto hold=std::lower_bound(route.holds.begin(),route.holds.end(),gate.at,
+   [](const RouteHold& wait,double at){return wait.from<at;});
+  if(lease==gate.crossings.end()||lease->second.body!=route.reservationBody||lease->second.slot!=intent.slot||
+     lease->second.generation!=route.generation||gate.precedingMotor||gate.at<route.startTime||
+     gate.target!=1||gate.from>=gate.target||end>routeEnd||
+     hold==route.holds.end()||hold->from!=gate.at||hold->until<end)return 0;
+  cut.insert(cut.end(),{double(id),gate.from,gate.target,gate.at,end});
+ }
+ cut.insert(cut.end(),{routeEnd,pose[16]==0?1.:0.});
+ s.gateResult=std::move(cut);
  return int(s.gateResult.size());
 }
 static const NativeFarmArrivalRouteBinding* currentHeldFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeHeldFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}

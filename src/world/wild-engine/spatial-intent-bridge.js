@@ -1629,9 +1629,9 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        farm.executedThrough!==game.elapsed||farm.yaw!==worker.heading||farm.running!==worker.running||
        ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].some(key=>farm[key]!==worker[key]))return null;
     const count=wasm.nav_farm_arrival_capture_gate_cut?.(f.birth.workerActor);
-    if(count!==16)return null;
-    const source=farmStopCutFromNative(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count));
-    return source.cut.waiting===worker.gateWaiting?{...source,spawnSequence:f.event}:null;
+    if(!count)return null;
+    const cut=farmStopCutFromNative(new Float64Array(wasm.memory.buffer,wasm.nav_gate_result_ptr(),count));
+    return cut.waiting===worker.gateWaiting?{cut,spawnSequence:f.event}:null;
   }
   function nativeRaidFlightPendingCheckpoint(){
     const game=owningState,animal=game?.raid?.animals[0],worker=animal&&nativeRaidFlightMember(game,animal);
@@ -2972,9 +2972,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!qualifyFarmFlee||state!==owningState||restoredFarmFlight||!marker.farmStop||
        worker.nativeRouteAdmission!=='pending-farm-flight-restore'||typeof wasm.nav_farm_arrival_route_proposal_stage_cold_gate!=='function')
       throw Error('Native raid flight cannot declare its saved Farm');
-    const {startTime,pose,motionFlags,motor,endTime,waiting}=marker.farmStop;
+    const {startTime,pose,motionFlags,motor,motors,endTime,waiting}=marker.farmStop;
+    const programs=motors??[{gateId:numericId(marker.gate.id),...motor}];
     const seed=Object.freeze([startTime,pose.x,pose.z,pose.yaw,pose.runPhase,pose.walkPhase,pose.carryPhase,pose.runRemaining,
-      motionFlags,numericId(marker.gate.id),motor.from,motor.target,motor.at,motor.endsAt,endTime,Number(waiting)]);
+      motionFlags,...programs.flatMap(row=>[row.gateId,row.from,row.target,row.at,row.endsAt]),endTime,Number(waiting)]);
     restoredFarmFlight={worker,marker,seed};
     if(!declareNativeFarmArrivalRequest(worker).declaration)throw Error('Native restored Farm has no declaration');
   }
@@ -3605,7 +3606,10 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const cut=restoredFarmFlight;
     if(cut?.marker.actorId===actor){
       if(cut.marker.at!==owningState.elapsed)return -2;
-      new Float64Array(wasm.memory.buffer,wasm.nav_gate_input_ptr(8),16).set(cut.seed);
+      const count=cut.seed.length;
+      const ptr=count===16?wasm.nav_gate_input_ptr(8):wasm.nav_farm_arrival_gate_cut_input_ptr?.(count);
+      if(!ptr)throw Error('Native Farm gate checkpoint input unavailable');
+      new Float64Array(wasm.memory.buffer,ptr,count).set(cut.seed);
       const status=wasm.nav_farm_arrival_route_proposal_stage_cold_gate(actor,sessionId,sequence);
       if(status===-2)throw Error('Saved Farm gate program differs from its reconstructed corridor');
       return status;

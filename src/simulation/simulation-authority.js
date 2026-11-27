@@ -471,11 +471,19 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    if(!layout)return null;
    const {gates}=layout;
    if(admission==='pending-farm-flight-stop'){
-    const [gate]=gates;
-    if(gates.length!==1||game.biome!=='desierto')return null;
-    const source=planner.nativeRaidFlightFarmCheckpoint(),motor=gateBindings?.read(gate.id);
-    if(!source||gate.id!=='structure-'+source.gateId||motor?.sampledAt!==game.elapsed||motor.opening!==gate.gateOpen||
-       Object.keys(source.cut.motor).some(key=>source.cut.motor[key]!==motor[key]))return null;
+    if(!gates.length||game.biome!=='desierto')return null;
+    const source=planner.nativeRaidFlightFarmCheckpoint();
+    if(!source)return null;
+    const programs=new Map(source.cut.motors.map(row=>['structure-'+row.gateId,row]));
+    for(const gate of gates){
+     const program=programs.get(gate.id);
+     if(!program){if(!settledGateCheckpointPose(gate))return null;continue;}
+     const motor=gateBindings?.read(gate.id);
+     if(motor?.sampledAt!==game.elapsed||motor.opening!==gate.gateOpen||
+        ['from','target','at','endsAt'].some(key=>program[key]!==motor[key]))return null;
+     programs.delete(gate.id);
+    }
+    if(programs.size)return null;
     return {farmStop:source.cut,gates,pending:{raidSpawnSequence:source.spawnSequence}};
    }
    if(!gates.every(settledGateCheckpointPose))return null;

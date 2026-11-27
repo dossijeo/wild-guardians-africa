@@ -7,24 +7,46 @@ const positive=value=>Number.isSafeInteger(value)&&value>0;
 const pointValue=value=>Number.isFinite(value)&&Math.abs(value)<2147483000;
 const numberFromId=id=>Number(id?.split('-').at(-1));
 
-function copyFarmStopCut(value,at,gate){
- const {startTime,pose,motionFlags,motor,endTime,waiting}=value??{};
- if(!gate||gate.reservedByHome!==undefined||!Number.isFinite(startTime)||startTime<0||startTime>=at||
+function copyFarmStopCut(value,at,gate,gates){
+ const {startTime,pose,motionFlags,motor,motors,endTime,waiting}=value??{};
+ if(!Number.isFinite(startTime)||startTime<0||startTime>=at||
     !pose||!poseFields.every(key=>pointValue(pose[key]))||poseFields.slice(3).some(key=>pose[key]<0)||
-    ![0,1].includes(motionFlags)||typeof waiting!=='boolean'||!motor||!validGateOpening(motor.from)||motor.from>=1||
-    motor.target!==1||!Number.isFinite(motor.at)||motor.at<startTime||
-    !Number.isFinite(motor.endsAt)||motor.endsAt<=motor.at||!Number.isFinite(endTime)||endTime<motor.endsAt||endTime<=at||
-    (at<=motor.at?gate.opening!==motor.from:at>=motor.endsAt?gate.opening!==motor.target:false))
+    ![0,1].includes(motionFlags)||typeof waiting!=='boolean'||!Number.isFinite(endTime)||endTime<=at)
   throw Error('Invalid saved Farm stop program');
- return {startTime,pose:Object.fromEntries(poseFields.map(key=>[key,pose[key]])),motionFlags,
-  motor:{from:motor.from,target:motor.target,at:motor.at,endsAt:motor.endsAt},endTime,waiting};
+ const copyMotor=(row,owner)=>{
+  if(!owner||!row||!validGateOpening(row.from)||row.from>=1||row.target!==1||!Number.isFinite(row.at)||row.at<startTime||
+     !Number.isFinite(row.endsAt)||row.endsAt<=row.at||endTime<row.endsAt||
+     (at<=row.at?owner.opening!==row.from:at>=row.endsAt?owner.opening!==row.target:false))
+   throw Error('Invalid saved Farm stop program');
+  return {from:row.from,target:row.target,at:row.at,endsAt:row.endsAt};
+ };
+ const program={startTime,pose:Object.fromEntries(poseFields.map(key=>[key,pose[key]])),motionFlags};
+ if(!gates){
+  if(!gate||gate.reservedByHome!==undefined||motors!==undefined)throw Error('Invalid saved Farm stop program');
+  return {...program,motor:copyMotor(motor,gate),endTime,waiting};
+ }
+ if(motor!==undefined||!Array.isArray(motors)||!motors.length||motors.length>gates.length)
+  throw Error('Invalid saved Farm stop program');
+ const remaining=new Map(gates.map(row=>[numberFromId(row.id),row]));
+ const claims=[];
+ for(const row of motors){
+  const id=row?.gateId;
+  claims.push({gateId:id,...copyMotor(row,remaining.get(id))});
+  remaining.delete(id);
+ }
+ return {...program,motors:claims,endTime,waiting};
 }
 
 export function farmStopCutFromNative(row){
- const [startTime,x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining,motionFlags,gateId,from,target,at,endsAt,endTime,waiting]=row;
- if(!positive(gateId)||![0,1].includes(waiting))throw Error('Invalid native Farm stop row');
- return {gateId,cut:{startTime,pose:{x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining},motionFlags,
-  motor:{from,target,at,endsAt},endTime,waiting:waiting===1}};
+ const [startTime,x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining,motionFlags]=row;
+ const [endTime,waiting]=row.subarray(row.length-2),motors=[];
+ if(row.length<16||(row.length-11)%5||![0,1].includes(waiting))throw Error('Invalid native Farm stop row');
+ for(let i=9;i<row.length-2;i+=5){
+  const [gateId,from,target,at,endsAt]=row.subarray(i,i+5);
+  if(!positive(gateId))throw Error('Invalid native Farm stop row');
+  motors.push({gateId,from,target,at,endsAt});
+ }
+ return {startTime,pose:{x,z,yaw,runPhase,walkPhase,carryPhase,runRemaining},motionFlags,motors,endTime,waiting:waiting===1};
 }
 
 export function nativeRaidFlightCheckpointLayout(state){
@@ -46,7 +68,7 @@ export function copyNativeRaidFlightCheckpoint(value){
     homePending!==undefined&&(homePending!==true||farmStop!==undefined)||
     (version===1?gates!==undefined||gate!==undefined&&(!validCheckpointGateOpening(gate)||
       gate.reservedByHome!==undefined&&(gate.reservedByHome!==false||!reserved)||reserved&&gate.reservedByHome!==false&&gate.opening!==1):
-      gate!==undefined||farmStop!==undefined||!Array.isArray(gates)||gates.length<2||gates.length>1024||
+      gate!==undefined||!Array.isArray(gates)||gates.length<2||gates.length>1024||
       !gates.every(row=>validCheckpointGateOpening(row)&&typeof row.reservedByHome==='boolean'&&
         (!row.reservedByHome||reserved&&row.opening===1))||new Set(gates.map(row=>row.id)).size!==gates.length)||
     (homePending||farmStop!==undefined?homePath!==undefined:!Array.isArray(homePath)||!homePath.length||homePath.length>4096||
@@ -56,7 +78,7 @@ export function copyNativeRaidFlightCheckpoint(value){
  const animal={x:animalPose.x,z:animalPose.z,yaw:animalPose.yaw,phase:animalPose.phase,
   targetId:animalPose.targetId,reservation:animalPose.reservation};
  return {version,at,spawnSequence,actorId,animalId,personId,contractDay,villageId,centerId,workerPose:pose,animalPose:animal,
-  ...(farmStop!==undefined?{farmStop:copyFarmStopCut(farmStop,at,gate)}:homePending?{homePending}:{homePath:homePath.map(({x,z})=>({x,z}))}),
+  ...(farmStop!==undefined?{farmStop:copyFarmStopCut(farmStop,at,gate,gates)}:homePending?{homePending}:{homePath:homePath.map(({x,z})=>({x,z}))}),
   ...(gates?{gates:gates.map(({id,opening,reservedByHome})=>({id,opening,reservedByHome}))}:
     gate?{gate:{id:gate.id,opening:gate.opening,...(gate.reservedByHome===false?{reservedByHome:false}:{})}}:{})};
 }
@@ -98,6 +120,10 @@ export function nativeRaidFlightCheckpointActors(state,marker){
 
 export function captureNativeRaidFlightCheckpoint(state,worker,animal,spawnSequence,homePath,gates=[],homeGateIds=[],farmStop=null){
  const [gate]=gates,multiple=gates.length>1;
+ if(farmStop&&!multiple){
+  const {motors,...program}=farmStop;
+  farmStop={...program,motor:motors[0]};
+ }
  const marker={version:multiple?2:1,at:state.elapsed,spawnSequence,actorId:numberFromId(worker.id),animalId:numberFromId(animal.id),
   personId:worker.personId,contractDay:worker.contractDay,villageId:worker.villageId,centerId:worker.centerId,
   workerPose:refugeWorkerPose(worker),animalPose:{x:animal.x,z:animal.z,yaw:animal.heading,phase:animal.motionPhase,

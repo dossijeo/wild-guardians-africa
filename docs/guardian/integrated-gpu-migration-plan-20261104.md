@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+La autoridad recarga Farm23 durante la apertura de cualquiera de dos hojas antes de Stop24, con el trabajador y el facóquero de Desierto 983. El control CPU reproduce las muestras de la sesión original. NVIDIA acreditó ambas reservas, Stop24, Home19 y el regreso por los dos portones hasta Idle y drenaje. La aceptación completa de e-R3/e-R4/f-R4 y C4 sigue pendiente. [Recorrido y recibos](desert-frozen-gate-checkpoint-20261127.md#recarga-de-farm23-con-dos-programas-de-motor).
+
 La caducidad antes del primer golpe protegido conserva cuerpo y reserva en la calificación AttackCrops de Sabana. CPU cubre el primer corredor pendiente. NVIDIA confirma el cambio durante la marcha y con el golpe aún pendiente en el borde. También se verificó la cancelación del sucesor pendiente entre golpes, con un único daño posterior al cultivo, Retreat y drenaje. El menú ordinario y C4 siguen abiertos. [Evidencia antes del primer golpe](webgpu-shield.md#caducidad-antes-de-adquirir-el-golpe) · [Evidencia entre golpes](webgpu-shield.md#caducidad-entre-dos-golpes). El corte coincidente conserva el fallo y la pose terminal. [Evidencia del mismo subpaso](webgpu-shield.md#golpe-y-caducidad-en-el-mismo-subpaso).
 
 Escudo puede caducar durante una aproximación AttackCrops adquirida. NVIDIA confirmó que la retirada conserva el facóquero, su objetivo y el reloj de marcha. La calificación cubre una aproximación en Sabana con los civiles en casa. [Recorrido y recibo](webgpu-shield.md#caducidad-durante-attackcrops).
