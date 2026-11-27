@@ -1,3 +1,4 @@
+import {stopFields,stop24ProjectionMatches} from "../world/native-stop24-task-recovery.js";
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
 import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {submittedRecoveryPose} from './remote-recovery-pose.js';
@@ -923,9 +924,9 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(submitted)nativeRouteFrame={sequence:active.sequence,clockElapsed,...(recoveredPose?{recoveredEncounterPose:{...pose,...recoveredPose}}:{}),...(active.admittedRestoredRepairCoverageEnd!=null?{authorityEpoch:routeControl.status().authorityEpoch}:{}),...(clockElapsed===null?{}:{presentationElapsed:floorFloat32((active.admittedMotionBinding||active.admittedBarrierAdditionBinding||active.admittedBarrierClockCoverageEnd!=null||active.admittedRestoredRepairCoverageEnd!=null)?Math.min(clockElapsed,active.metadata.clock.safeUntil):clockElapsed)}),worldBoundary:frameBoundary(active),bindings:Array.from(nativeTimes.values())};
       metrics.nativeFrames++;
       if(recovered&&submitted&&nativeRouteFrame?.sequence===active.sequence&&nativeRouteFrame.clockElapsed===recovered.at){
-        const members=recovered.members.map(({profile,ref,assignmentSequence,gateIds})=>{
+        const members=recovered.members.map(({profile,ref,assignmentSequence,gateIds,proof})=>{
           const row=nativeRouteFrame.bindings.find(b=>recoveryBindingMatches(b,profile,ref));
-          if(!row)return null;
+          if(!row||profile.kind===24&&!stop24ProjectionMatches(row,proof))return null;
           const inherited=profile.kind===21&&ref.sourceCycleSequence!==0;
           const phaseDelay=inherited&&nativeRouteFrame.bindings.find(b=>recoveredIdleOffsetMatches(b,ref))?.phaseDelay;
           if(inherited&&!Number.isFinite(phaseDelay))return null;
@@ -935,6 +936,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           const samples=gates.map(gate=>({nativeGate:gate.nativeGate,gateElapsed:gate.elapsed}));
           return {assignmentSequence,kind:profile.kind,[profile.clockField]:row[profile.clockField],relativeTime:row.relativeTime,
             ...(inherited?{phaseDelay}:{}),
+            ...(profile.kind===24?{projection:row.projection,bodyReference:row.bodyReference}:{}),
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
         if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
@@ -1291,8 +1293,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     const preparedBindings=(packet.preparedClockBindings??Array.from(clockBindings.values())).filter(binding=>packet.resourceSnapshot.has(binding.id));
     if(recovered) {
       const missing=recovered.members.find(({profile,ref,gateIds})=>{
-        const epoch=ref.worldBoundary.effectiveTime;
-        const end=[15,17,21].includes(profile.kind)?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
+        const epoch=profile.kind===24?ref.epoch:ref.worldBoundary.effectiveTime;
+        if(profile.kind===24&&(!preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch)||
+           stopFields.some(field=>!preparedBindings.some(b=>b.semantic==='stop-value'&&b.stopField===field&&b.epoch===epoch&&
+             profile.sameReference(b.nativeStopped,ref)))))return true;
+        const end=profile.kind===24?Number.MAX_SAFE_INTEGER:[15,17,21].includes(profile.kind)?undefined:profile.kind===27?ref.endTime:nativeClockResourceEnd(epoch,ref.endTime);
         return !preparedBindings.some(b=>recoveryBindingMatches(b,profile,ref)&&b.epoch===epoch&&b.resourceEnd===end)||
           profile.kind===21&&ref.sourceCycleSequence!==0&&!preparedBindings.some(b=>recoveredIdleOffsetMatches(b,ref)&&b.epoch===epoch)||
           !gateIds.every(id=>preparedBindings.some(b=>recoveryGateMatches(b,id,ref.worldBoundary)&&
@@ -2392,7 +2397,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             (!recoveredSubmission.encounter||sameRecoveredEncounter(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&
             (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
-            return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime)&&
+            return nativeRouteFrame?.bindings.some(b=>recoveryBindingMatches(b,profile,row[profile.clockField])&&b.relativeTime===row.relativeTime&&(row.kind!==24||JSON.stringify(b.projection)===JSON.stringify(row.projection)))&&
               (row.phaseDelay===undefined||nativeRouteFrame.bindings.some(b=>recoveredIdleOffsetMatches(b,row[profile.clockField])&&
                 b.phaseDelay===row.phaseDelay))&&
               recoveredNativeGateSamples(row).every(gate=>nativeRouteFrame.bindings.some(b=>
@@ -2474,7 +2479,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
              if(source.encounter?.version===3&&source.encounter.at!==message.clock.committedThrough)
                throw Error('Recovered pose differs from the held control clock');
              const members=source.members.map(({kind,proof,idleCyclePhase})=>({
-               profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),
+               profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:nativeRecoverySequence(proof),proof,
                ref:proof.reference,gateIds:nativeRecoveryGates(proof),
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
                  {cohortSize:source.members.length,movingCount:source.members.length-recoveryCycles.length,sharedCut:grouped,ruin:source.ruin,

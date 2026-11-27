@@ -91,12 +91,12 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
               woundedHomeEndpoint(binding,execution.executedThrough)||grouped&&profile.kind===26&&
               centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough)&&
               ['x','z','phase'].every(key=>execution[key]===binding.terminal[key]));
-            const cycle=profile.kind===21,action=profile.kind===15,settlement=profile.kind===17;
-            const end=cycle?ref.worldBoundary.effectiveTime+ref.duration:settlement?Infinity:ref.endTime;
+            const cycle=profile.kind===21,action=profile.kind===15,settlement=profile.kind===17,stopped=profile.kind===24;
+            const end=cycle?ref.worldBoundary.effectiveTime+ref.duration:settlement||stopped?Infinity:ref.endTime;
             const cycleEnd=cycle&&execution?.finished===true&&execution.nextStatus===1&&
               Number.isSafeInteger(execution.nextSequence)&&execution.nextSequence>binding.cycleSequence&&execution.executedThrough>=end;
             if((cycle?execution?.endTime!==end||!cycleEnd&&(execution?.finished!==false||execution.nextStatus!==0):
-                action?execution?.completed!==false:settlement?!!ref.home||grouped:!endpoint&&execution?.arrived!==false)||!Number.isFinite(execution.executedThrough)||
+                action?execution?.completed!==false:settlement?!!ref.home||grouped:stopped?grouped||!resources.farmTemplate||execution?.executedThrough<binding.request.requestedAt:!endpoint&&execution?.arrived!==false)||!Number.isFinite(execution.executedThrough)||
                execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
                (action?nativeTaskActionActor(ref.request):ref.actorId)!==execution.actorId||
                (action?ref.request.bodyId:ref.bodyId)!==execution.bodyId||

@@ -60,6 +60,126 @@
     "terminal-stop24-authority-retire-first-20261127.log": "73186e76da8ceb09fd08f8528e039df5dca142f117ea86e3ea3678ea5a2cb31e",
     "terminal-stop24-authority-live-draw-20261127.log": "69205646140d5aa10233ed873c6d92a19728f0c68cb6d6f0c5dd408ee52b1548",
     "terminal-stop24-source-native-build-20261127.log": "90b1f756d596b229eca7dad67456dd636cf3b83824f9b17ed97a50de72d551fc",
-    "stop24-recovery-native/build/standalone/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505"
+    "stop24-recovery-native/build/standalone/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505",
+    "terminal-stop24-prototype-nvidia-20261127.log": "62ee5812ed52452de1220ad43ec59cfb327fe4cfb6c165a01e61b7819503a86b",
+    "terminal-stop24-paid-prototype-nvidia-20261127.log": "b986dbdab53a4c3965ce14e023ebfab0d64c4565f7c568fe36e7f689ec524076",
+    "native-savanna-stop24-paid-terminal-prototype-20261127-extended.json": "ee6cc0bb24e85422254eabeaa900344c20e6814b6e3006aa74f5d7e79317fb2a",
+    "terminal-stop24-host-rig-shadows-20261127.log": "3a8dc9e4f182a29459b4fb308a1398376dbd4a5fc272a3c099414c137fdbe945",
+    "terminal-stop24-terrain-basis-20261127.log": "f78c3f6732f721b8d29db50e86b3fd5bed73f2d1a787d2102b0e13961e3d3eb3",
+    "terminal-stop24-product-abi-20261127.log": "0cf25898bb848a6752d6c308d1def4b647490f989772a576b4585201d6b96792",
+    "terminal-stop24-product-impact-20261127.tap": "cbcc369182c83adbce5d427715a0e91b2c4ae2e41de43ef12217ee93d7d14822",
+    "terminal-stop24-product-build-20261127.log": "826d2ba88037c85a21787d760128d43e92315189e20de2542fa42e762d1b88bf",
+    "native-savanna-stop24-paid-terminal-installed-20261127-extended.json": "413972b5256cf7421c00963539dfe534aa66196f3d037112c2b175141aa7e81b",
+    "terminal-stop24-installed-nvidia-20261127.log": "f8bcc7d484c2d09f7f7d7ebe5e9c79082749db84ee2de7b1817c6261e7e1e019",
+    "src/world/wild-engine/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505",
+    "public/wild-engine/spatial-threaded.wasm": "c3e639e06c7741d029c7121b27208d53a73012f62fda6ee8341a98f5f8ffc6be",
+    "public/wild-engine/spatial-threaded.mjs": "db23acc026b51a29d5f81da3093005779a2a28a5ad5833576ff7bc871181a894"
+  },
+  "graphicsCpu": {
+    "rig": "worker-6",
+    "meshes": 4,
+    "shadows": 4,
+    "pickSamples": 12,
+    "clockSlots": [
+      "age",
+      "arrived",
+      "carryPhase",
+      "phase",
+      "relative",
+      "runPhase",
+      "walkPhase",
+      "x",
+      "yaw",
+      "z"
+    ],
+    "tableKnots": 36,
+    "tableBytes": 2880,
+    "height": 6.668869972229004,
+    "face": "worker-6",
+    "foot": 6.668869972229004
+  },
+  "hardware": {
+    "gpu": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 105.61999997496605
+      }
+    },
+    "installedSources": true,
+    "scenario": "Sabana 714, tercer turno pagado desde un guardado público",
+    "held": {
+      "id": 140,
+      "floor": 386,
+      "publication": 386,
+      "clock": 1216.2499999994482
+    },
+    "cancelled": {
+      "id": 3,
+      "ticket": 5,
+      "noCommit": true
+    },
+    "original": {
+      "sequence": 101,
+      "ticket": 4,
+      "clock": 1215.9999999994484
+    },
+    "replacement": {
+      "sequence": 1,
+      "ticket": 4,
+      "actorId": 16,
+      "bodyId": 1,
+      "clock": 1216.2499999994482,
+      "projection": {
+        "age": 12.299999237060547,
+        "x": 70.28399658203125,
+        "z": 3,
+        "yaw": 1.5707963705062866,
+        "phase": 12.300000190734863,
+        "runPhase": 0,
+        "walkPhase": 18.450000762939453,
+        "carryPhase": 0,
+        "arrived": 0
+      },
+      "pick": "worker-16",
+      "submittedBeforeActivation": true,
+      "pickBeforeSequence": 2,
+      "pickAfterSequence": 2
+    },
+    "successor": {
+      "ticket": 7,
+      "sequence": 5,
+      "clock": 1216.8499999994476,
+      "crateDelivery": {
+        "id": "event-58",
+        "type": "CrateDelivered",
+        "workerId": "worker-16",
+        "targetId": "crate-18",
+        "species": "platano",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 1284.1999999993864
+      },
+      "payment": {
+        "n": "321",
+        "d": "1"
+      },
+      "balance": {
+        "n": "751",
+        "d": "1"
+      }
+    },
+    "drawDrained": true,
+    "pageErrors": []
   }
 }

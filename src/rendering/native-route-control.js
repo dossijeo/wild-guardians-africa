@@ -936,6 +936,9 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   // Immutable proof associations are checked once per installation. Every replay still
   // checks the live owner, sequence, state and route; revocation clears the proof.
   function proofLeaseCurrent(reference,actor,field,covers,recordCurrent){let observedProof=null,matchesProof=false;return ()=>{const proof=actor?.[field]??null;if(proof!==observedProof){observedProof=proof;matchesProof=!!proof&&covers(proof,reference);}return matchesProof&&recordCurrent(reference,actor);};}
+  function stoppedProjection(proof,pose,gateProjection){
+    return Object.freeze({proof,readGate(gateId,mechanism){const i=proof.reference.gates.findIndex(g=>g.gateId===gateId&&g.mechanism===mechanism);if(i<0||!gateProjection)throw Error('Native stopped motor has no final projection');return gateProjection[i*3+2];},read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];},homePose(radius){return Object.freeze({x:pose[0],z:pose[1],yaw:pose[4],radius,runPhase:pose[9],walkPhase:pose[10],carryPhase:pose[11],runRemaining:pose[14]});}});
+  }
   function installRouteStops(family,boundary,values=[],{bootstrap=false}={}){
     boundary=copyNativeWorldBoundary(boundary);
     if(closed||!clock||bootstrap!==false||!boundary||boundary.authorityEpoch!==authorityEpoch||boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime!==clock.committedThrough||!Array.isArray(values)||values.length>32768)throw Error('Invalid native moving stop attestation boundary');
@@ -951,7 +954,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       }
     }
     // All validation precedes every write, including a bad later proof.
-    for(const {actor,record,proof,reference,pose,gateProjection} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?Object.freeze({proof,readGate(gateId,mechanism){const i=proof.reference.gates.findIndex(g=>g.gateId===gateId&&g.mechanism===mechanism);if(i<0||!gateProjection)throw Error('Native stopped motor has no final projection');return gateProjection[i*3+2];},read(field){if(!Object.hasOwn(NATIVE_STOP_POSE_FIELDS,field))throw TypeError('Invalid native stopped pose field');return pose[NATIVE_STOP_POSE_FIELDS[field]];},homePose(radius){return Object.freeze({x:pose[0],z:pose[1],yaw:pose[4],radius,runPhase:pose[9],walkPhase:pose[10],carryPhase:pose[11],runRemaining:pose[14]});}}):null;}
+    for(const {actor,record,proof,reference,pose,gateProjection} of staged){record.stopProof=proof;actor.proof=reference;actor.stoppedProjection=pose?stoppedProjection(proof,pose,gateProjection):null;}
     return staged.length;
   }
   function admitRouteStop(family,value,{preparingWorldBoundary=null}={}){
@@ -1145,6 +1148,26 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
           if(!current())throw Error('Recovered Idle cycle was revoked before materialization');
           source.phaseDelay=idleCyclePhase?.phaseDelay??(ref.sourceBody.kind==='native-settled-worker-idle-source'?start:0);
           installIdleCycleRecord(actor,source);
+        };
+      }
+      if(kind===24){
+        const actor=actors.get(ref.actorId),request=actor?.pendingTaskRequest,at=clock?.committedThrough;
+        const current=()=>!closed&&!!clock&&clock.committedThrough===at&&clock.intentSequence===sequence&&
+          actors.size===1&&active.size===0&&actor?.state===6&&actor.pendingTaskRequest===request&&!actor.current&&!actor.revoked&&
+          !actor.proof&&!actor.stoppedProjection&&actor.latestSequence===request?.requestSequence;
+        if(sharedCut||cohortSize!==1||!sameNativeWorldBoundary(boundary,ref.worldBoundary)||boundary.authorityEpoch!==authorityEpoch||
+           clock?.nativeSession!==boundary.nativeSession||at<proof.request.requestedAt||
+           !request||JSON.stringify(request)!==JSON.stringify(proof.request)||!current())
+          throw Error('Recovered Stop24 differs from the pending Task source');
+        return ()=>{
+          if(!current())throw Error('Recovered Stop24 was revoked before materialization');
+          const {projection,...stop}=proof.proof,p=stop.reference.sourceRoute,farm=proof.farm;
+          actor.revoked={actorId:ref.actorId,handle:p.routeHandle,assignmentSequence:p.assignmentSequence,
+            startTime:farm.reference.worldBoundary.effectiveTime,safeUntil:ref.worldBoundary.effectiveTime,lastDrawTime:null,actor,
+            revokedState:4,revokedSequence:proof.revokedSequence,stopProof:stop,stoppedTaskRequest:request,
+            issuedFarmArrival:farm,farmArrivalAdmitted:true};
+          actor.proof=proof.bodyReference;
+          actor.stoppedProjection=stoppedProjection(stop,projection.routeEffects.rows.slice(8,26),null);
         };
       }
       if(kind===27){

@@ -27,6 +27,21 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_route(double actor){
   return 1;
 }
 EMSCRIPTEN_KEEPALIVE const double* nav_intent_pending_task_route_ptr(){return state().pendingTaskRouteResult.data();}
+// The new claim owns a stationary pose while its resources are pending. This
+// comparison verifies that owner without reviving the retired route slot.
+EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_body_matches(double session,double slot,double generation,double requestSequence,
+ double actor,double sourceSequence,double body,double at,double profile,double bodyFlags,double radius,
+ double x,double z,double yaw,double runPhase,double walkPhase,double carryPhase,double runRemaining){
+ const auto* route=pendingTaskRoute(session,slot,generation,requestSequence);
+ if(!route||double(route->actor)!=actor)return 0;
+ const auto& s=state();const auto& intent=s.activeIntents.at(route->actor);
+ if(!nativeHeldIdleTaskBodyCurrent(s,intent))return 0;
+ const auto& held=*intent.heldIdleTaskSource;
+ return held.body&&double(held.body)==body&&double(held.sequence)==sourceSequence&&held.at==at&&
+  double(held.profile)==profile&&double(held.bodyFlags)==bodyFlags&&held.radius==radius&&held.x==x&&held.z==z&&held.yaw==yaw&&
+  held.runPhase==runPhase&&held.walkPhase==walkPhase&&held.carryPhase==carryPhase&&held.runRemaining==runRemaining;
+}
+
 EMSCRIPTEN_KEEPALIVE int nav_intent_pending_task_route_points(double session,double slot,double generation,double sequence){
   const auto route=pendingTaskRoute(session,slot,generation,sequence);return route?int(route->points.size()/2):-1;
 }
