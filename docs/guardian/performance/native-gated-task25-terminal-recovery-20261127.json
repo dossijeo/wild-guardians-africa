@@ -195,164 +195,153 @@
     },
     "secondViewFrontEntity": "structure-2"
   },
-  "hardware": {
-    "file": "task25-gated/nvidia-opening-home-request.failure.json",
-    "sha256": "966fa1402d43230680efa1ebc81223c01434b97b7532db49aa0a4b5e53862d88",
-    "stage": "retained Home18 after physical Task25",
-    "error": "Error: Error: Worker command not admitted: failed\n    at pump (http://127.0.0.1:5294/src/simulation/worker-game-runtime.js:28:77)\n    at Object.submit (http://127.0.0.1:5294/src/simulation/worker-game-runtime.js:91:421)\n    at self.onmessage (http://127.0.0.1:5294/src/simulation/worker-runtime-host.js?worker_file&type=module:227:27)\n    at worker.onmessage (http://127.0.0.1:5294/src/simulation/worker-hosted-runtime.js:36:34)",
-    "acquiredStop": [
-      1000000,
-      1,
-      0.6666666666664955
+  "pickAfterCalibration": {
+    "source": "task25-gated/nvidia-opening-visible-foot-qualified.failure.json",
+    "sha256": "f75a56862b2224d8ded37c2f66f4456365add69afd1872eac25f8a7c23e2cef7",
+    "pickLog": "task25-gated/nvidia-opening-visible-foot-qualified.log",
+    "pickLogSha256": "e4d9e7c6f912a1eab306f0c24ca927a99b9cb5709d1dd27907dbbbceb94064d9",
+    "visibleHeight": 16.928699493408203,
+    "entityId": "worker-900011",
+    "hitPoint": [
+      -13.932200759895961,
+      17.707260819292305,
+      5.812998544927116
     ],
-    "verifiedFullRecovery": false,
-    "followUps": [
-      {
-        "file": "task25-gated/nvidia-opening-traced-startup.failure.json",
-        "sha256": "3bc117050f0b76afae74b65502bd19ea4a3e01fc2a780bfc9ccbd66ebcf58d10",
-        "stage": "replacement picking while held",
-        "error": "Error: Replacement did not pick held worker {\"trials\":[{\"h\":0.7,\"id\":null},{\"h\":1,\"id\":\"plant-900098\"},{\"h\":1.3,\"id\":\"plant-900098\"},{\"h\":0.4,\"id\":null},{\"h\":1.5,\"id\":\"plant-900098\"}],\"y\":15.578267097473145}",
-        "submitted": null,
-        "stopped": {
-          "boundary": {
-            "version": 1,
-            "authorityEpoch": "11c42232-afd6-4b6b-8f78-ba17a060cbb6/1",
-            "nativeSession": 1,
-            "ticket": 7,
-            "effectiveTime": 10.449999999999896
-          },
-          "bodyId": 1,
-          "motor": [
-            1000000,
-            1,
-            0.6666666666664955
-          ]
+    "draw": {
+      "adapter": "nvidia",
+      "original": 55,
+      "replacement": 1,
+      "holdId": 64,
+      "clock": 10.799999999999889,
+      "ticket": 7,
+      "opening": 0.6666666865348816,
+      "body": {
+        "age": 0.3999999761581421,
+        "x": -14,
+        "z": 5.699999809265137,
+        "yaw": 0.03211292251944542,
+        "phase": 0,
+        "runPhase": 23.25,
+        "walkPhase": 7.125,
+        "carryPhase": 9.5,
+        "arrived": 0
+      },
+      "visibleHeight": 16.928699493408203
+    },
+    "home18": 10,
+    "home19": 12,
+    "bodyId": 1,
+    "lastPublication": {
+      "sequence": 107,
+      "status": "returning"
+    }
+  },
+  "hardware": {
+    "file": "nvidia-opening-home19-projected.json",
+    "sha256": "4aa9135af7ca3bc76c75dc2ce1fc78200c05f5f0159ce7939fa47895e0246c2f",
+    "adapter": "nvidia",
+    "architecture": "turing",
+    "before": {
+      "before": {
+        "time": 250,
+        "elapsed": 10.399999999999897,
+        "x": -14,
+        "z": 5.7,
+        "admission": "native-task",
+        "status": "walking",
+        "sequence": 54
+      },
+      "after": {
+        "time": 250.05,
+        "elapsed": 10.449999999999896,
+        "x": -14,
+        "z": 5.7,
+        "admission": "native-task",
+        "status": "walking",
+        "sequence": 55
+      },
+      "openingBefore": 0.5833333333331641,
+      "openingAfter": 0.6666666666664955,
+      "reference": {
+        "kind": "native-task-route-stop-reference",
+        "version": 1,
+        "worldBoundary": {
+          "version": 1,
+          "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+          "nativeSession": 1,
+          "ticket": 6,
+          "effectiveTime": 10.399999999999897
         },
-        "pendingHomeTicket": 8,
-        "replacementDrained": false,
-        "diagnostic": [
+        "sourceRoute": {
+          "actorId": 900011,
+          "assignmentSequence": 5,
+          "routeHandle": {
+            "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+            "session": 1,
+            "slot": 0,
+            "generation": 3
+          }
+        },
+        "routes": [
           {
-            "type": "authority-resource-reply",
-            "at": 1795814130121.7998,
-            "id": 1,
-            "kind": "nativeGateResourcesResult",
-            "ticket": 1
-          },
+            "nativeRoute": {
+              "actorId": 900011,
+              "assignmentSequence": 5,
+              "routeHandle": {
+                "authorityEpoch": "ea31ff6c-61c3-411a-861b-89bc63d27ff7/1",
+                "session": 1,
+                "slot": 0,
+                "generation": 3
+              }
+            },
+            "bodyId": 1,
+            "state": 4,
+            "resumeGeneration": 4
+          }
+        ],
+        "gates": [
           {
-            "type": "authority-resource-reply",
-            "at": 1795814134625.5999,
-            "id": 3,
-            "kind": "nativeGateResourcesResult",
-            "ticket": 4
-          },
-          {
-            "type": "authority-resource-reply",
-            "at": 1795814137133.2,
-            "id": 4,
-            "kind": "nativeGateResourcesResult",
-            "ticket": 6
+            "gateId": 1000000,
+            "mechanism": 1
           }
         ]
-      },
-      {
-        "file": "task25-gated/nvidia-opening-final.failure.json",
-        "sha256": "1a5854bc6e7155e0598601de2af0eab5459514bfa3216d0a819f49f8fdf59f38",
-        "stage": "ordinary Idle20 acquisition",
-        "error": "Error: Error: Worker command not admitted: failed",
-        "submitted": null,
-        "stopped": null,
-        "pendingHomeTicket": null,
-        "replacementDrained": false,
-        "diagnostic": []
-      },
-      {
-        "file": "task25-gated/nvidia-opening-warm-owners.failure.json",
-        "sha256": "009605fe6155d89a64790c6701a80ec823190ea53a623f9a069a65a28f0cfc31",
-        "stage": "replacement picking while held",
-        "error": "Error: Replacement did not pick held worker {\"trials\":[{\"dx\":0,\"dz\":0,\"h\":0.7,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1.3,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":0.4,\"id\":null},{\"dx\":0,\"dz\":0,\"h\":1.5,\"id\":null},{\"dx\":-0.12,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0.12,\"dz\":0,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":-0.12,\"h\":1,\"id\":null},{\"dx\":0,\"dz\":0.12,\"h\":1,\"id\":null}],\"y\":15.578267097473145}",
-        "submitted": {
-          "adapter": "nvidia",
-          "original": 54,
-          "replacement": 1,
-          "holdId": 63,
-          "clock": 10.799999999999889,
-          "ticket": 7,
-          "opening": 0.6666666865348816,
-          "body": {
-            "age": 0.3999999761581421,
-            "x": -14,
-            "z": 5.699999809265137,
-            "yaw": 0.03211292251944542,
-            "phase": 0,
-            "runPhase": 23.25,
-            "walkPhase": 7.125,
-            "carryPhase": 9.5,
-            "arrived": 0
-          }
-        },
-        "stopped": {
-          "boundary": {
-            "version": 1,
-            "authorityEpoch": "310e5f32-8279-491a-a184-3091eba8dd3e/1",
-            "nativeSession": 1,
-            "ticket": 7,
-            "effectiveTime": 10.449999999999896
-          },
-          "bodyId": 1,
-          "motor": [
-            1000000,
-            1,
-            0.6666666666664955
-          ]
-        },
-        "pendingHomeTicket": 8,
-        "replacementDrained": true,
-        "diagnostic": []
-      },
-      {
-        "file": "task25-gated/nvidia-opening-ray-owner.failure.json",
-        "sha256": "95a34c5f897933835e1581e0f3b14402acd5d48525b2adcf2ec7e656d6a497d0",
-        "stage": "replacement picking while held",
-        "error": "Error: Replacement did not pick held worker {\"trials\":[{\"view\":0,\"dx\":0,\"dz\":0,\"h\":0.7,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.529968738911553,\"y\":16.928699493408203,\"z\":6.483385259354465}},{\"view\":0,\"dx\":0,\"dz\":0,\"h\":1,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.737268973946039,\"y\":16.928699493408203,\"z\":6.137884861040337}},{\"view\":0,\"dx\":0,\"dz\":0,\"h\":1.3,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.96071651832884,\"y\":16.928699493408203,\"z\":5.765472279965801}},{\"view\":0,\"dx\":0,\"dz\":0,\"h\":0.4,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.337126536388748,\"y\":16.928699493408203,\"z\":6.8047889363560365}},{\"view\":0,\"dx\":0,\"dz\":0,\"h\":1.5,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-14.119608790718257,\"y\":16.928699493408203,\"z\":5.500651820932445}},{\"view\":0,\"dx\":-0.12,\"dz\":0,\"h\":1,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.852014353425037,\"y\":16.928699493408203,\"z\":6.137884861040343}},{\"view\":0,\"dx\":0.12,\"dz\":0,\"h\":1,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.6225235944671,\"y\":16.928699493408203,\"z\":6.137884861040478}},{\"view\":0,\"dx\":0,\"dz\":-0.12,\"h\":1,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.737268973946064,\"y\":16.928699493408203,\"z\":6.023139481561444}},{\"view\":0,\"dx\":0,\"dz\":0.12,\"h\":1,\"id\":null,\"incomplete\":false,\"hitPoint\":{\"x\":-13.737268973946088,\"y\":16.928699493408203,\"z\":6.252630240519203}},{\"view\":1,\"dx\":0,\"dz\":0,\"h\":0.7,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-17.00325097703261,\"y\":19.13135552565415,\"z\":1.1951233437161972}},{\"view\":1,\"dx\":0,\"dz\":0,\"h\":1,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.94066506671126,\"y\":19.151349030845516,\"z\":1.289002209198244}},{\"view\":1,\"dx\":0,\"dz\":0,\"h\":1.3,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.854365514466867,\"y\":19.161759509046647,\"z\":1.4184515375648363}},{\"view\":1,\"dx\":0,\"dz\":0,\"h\":0.4,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-17.046731620933958,\"y\":19.101167008930446,\"z\":1.1299023778641986}},{\"view\":1,\"dx\":0,\"dz\":0,\"h\":1.5,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.77690535855892,\"y\":19.160946116392335,\"z\":1.5346417714267788}},{\"view\":1,\"dx\":-0.12,\"dz\":0,\"h\":1,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.979107764295005,\"y\":19.1573591528939,\"z\":1.2786991428295678}},{\"view\":1,\"dx\":0.12,\"dz\":0,\"h\":1,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.900598744391626,\"y\":19.144309720135958,\"z\":1.301069598986061}},{\"view\":1,\"dx\":0,\"dz\":-0.12,\"h\":1,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.930581714040784,\"y\":19.14252609725886,\"z\":1.2720446896251567}},{\"view\":1,\"dx\":0,\"dz\":0.12,\"h\":1,\"id\":\"structure-2\",\"incomplete\":false,\"hitPoint\":{\"x\":-16.950560047271054,\"y\":19.160007138835304,\"z\":1.3056429369404092}}],\"y\":15.578267097473145}",
-        "submitted": {
-          "adapter": "nvidia",
-          "original": 50,
-          "replacement": 1,
-          "holdId": 65,
-          "clock": 10.799999999999889,
-          "ticket": 7,
-          "opening": 0.6666666865348816,
-          "body": {
-            "age": 0.3999999761581421,
-            "x": -14,
-            "z": 5.699999809265137,
-            "yaw": 0.03211292251944542,
-            "phase": 0,
-            "runPhase": 23.25,
-            "walkPhase": 7.125,
-            "carryPhase": 9.5,
-            "arrived": 0
-          }
-        },
-        "stopped": {
-          "boundary": {
-            "version": 1,
-            "authorityEpoch": "5e768c60-394b-4335-a17b-7d74fffc3372/1",
-            "nativeSession": 1,
-            "ticket": 7,
-            "effectiveTime": 10.449999999999896
-          },
-          "bodyId": 1,
-          "motor": [
-            1000000,
-            1,
-            0.6666666666664955
-          ]
-        },
-        "pendingHomeTicket": 8,
-        "replacementDrained": false,
-        "diagnostic": []
       }
-    ]
+    },
+    "stopAt": 10.449999999999896,
+    "originalDraw": 53,
+    "firstReplacement": {
+      "frame": 1,
+      "hold": 64,
+      "clock": 10.799999999999889,
+      "opening": 0.6666666865348816,
+      "visibleHeight": 16.928699493408203
+    },
+    "pick": [
+      {
+        "view": 0,
+        "dx": 0,
+        "dz": 0,
+        "h": 0.7,
+        "id": "worker-900011",
+        "incomplete": false,
+        "hitPoint": {
+          "x": -13.932200759895961,
+          "y": 17.707260819292305,
+          "z": 5.812998544927116
+        }
+      }
+    ],
+    "home": {
+      "ticket": 10,
+      "previousReadyTicket": 8,
+      "body": 1,
+      "arrived": 13.09999999999984,
+      "retirementTicket": 12
+    },
+    "retirementProjectionSequence": 109,
+    "lastDraw": 23,
+    "firstAbsenceDraw": 22,
+    "drained": true,
+    "unexpectedErrors": []
   }
 }
