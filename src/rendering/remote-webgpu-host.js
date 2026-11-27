@@ -786,6 +786,14 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     }
     return cropDraws;
   }
+  function rejectRevokedPendingMotion(){
+    if(pending&&!pending.preparedWorldBoundary&&pending.admittedClockBindings.some(b=>
+        (b.nativeAnimalCrop||b.nativeHome)&&b.motionRecord?.isRevoked())){
+      const obsolete=pending;pending=null;
+      rejectPreparedFrame(obsolete,'Acquired native program ended before its first presentation',true,'native-route');
+      releaseSnapshot(obsolete.resourceSnapshot);
+    }
+  }
   function present() {
     if (stopped || failed) return;
     frameHandle = requestFrame(present);
@@ -808,14 +816,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
     try {
       const startedAt = absoluteNow();
       currentTexture = null; currentViews = new Map();
-      // The intent port can revoke a submitted program after validation and
-      // before its first RAF. Its producer is waiting for this packet's ACK.
-      if(pending&&!pending.preparedWorldBoundary&&pending.admittedClockBindings.some(b=>
-          (b.nativeAnimalCrop||b.nativeHome)&&b.motionRecord?.isRevoked())){
-        const obsolete=pending;pending=null;
-        rejectPreparedFrame(obsolete,'Acquired native program ended before its first presentation',true,'native-route');
-        releaseSnapshot(obsolete.resourceSnapshot);
-      }
+      rejectRevokedPendingMotion();
       let next = pending;
       if(next?.preparedWorldBoundary&&!frameWorldCurrent(next))next=null;
       if (next) {
@@ -2522,6 +2523,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         }
         if(accepted){metrics.nativeIntentControlAppliedAt=absoluteNow();
           metrics.nativeIntentControlAppliedSequence=routeControl.status().sequence;}
+        if(accepted&&!hidden&&!nativeMutationHold&&!nativeConsumerRetirement)
+          rejectRevokedPendingMotion();
         settleNativeControl();
         intentControl.port.postMessage({type:'intent-control-applied',
           ...(intentControl.session?{session:intentControl.session}:{}),

@@ -418,7 +418,14 @@ try{
     assert(f.host.inspect().pendingSequence!==null,'strike packet admitted before direct retirement');
     assert.equal(outcome,null);count=f.gpu.submitted.length;
    }
-   state=advance();rig.update(structuredClone(state));await f.present();
+   state=advance();rig.update(structuredClone(state));
+   if(queued){
+    // Drain the direct control channel without presenting another frame.
+    for(let wait=0;wait<100&&!outcome;wait++)await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(outcome?.code,'remote-frame-native-route-obsolete','producer released before the next RAF');
+    assert.equal(f.gpu.submitted.length,count);
+   }
+   await f.present();
    if(queued){
     testedQueuedRetirement=true;assert.equal(state.raid.animals[0].hitApplied,true);
     assert.equal(f.host.inspect().pendingSequence,null,'revoked pending packet must release producer');
