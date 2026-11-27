@@ -1,3 +1,5 @@
+import {nativeGateModelId} from './gate-passages.js';
+
 const poseFields=['x','z','yaw','runPhase','walkPhase','carryPhase','runRemaining'];
 const id=value=>Number.isSafeInteger(value)&&value>0;
 const actorNumber=value=>Number(String(value).split('-').at(-1));
@@ -17,20 +19,34 @@ export function refugeWorkerPose(worker){
     walkPhase:worker.walkPhase,carryPhase:worker.carryPhase,runRemaining:worker.runRemaining};
 }
 
+export function nativeDesertRefugeLayout(state){
+  if(state.biome!=='desierto'||state.structures[0]?.kind!=='center'||state.spells.length||
+     state.structures.slice(1).some(structure=>structure.kind!=='wall'))return null;
+  const gates=state.structures.filter(structure=>structure.gate&&structure.status!=='ruined');
+  const [gate]=gates;
+  if(gates.length>1||gate&&(gate.status!=='intact'||gate.hp!==gate.maxHp||
+     !nativeGateModelId(gate.material)||![0,1].includes(gate.gateOpen)))return null;
+  return {gate};
+}
+
 export function copyRefugeReturnCheckpoint(value){
-  const {version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose}=value??{};
+  const {version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose,gate}=value??{};
   if(version!==1||![actorId,animalId,spawnSequence].every(id)||actorId===animalId||
      !Number.isSafeInteger(contractDay)||contractDay<0||
-     ![personId,centerId,villageId].every(key=>typeof key==='string'&&key.length>0))
+     ![personId,centerId,villageId].every(key=>typeof key==='string'&&key.length>0)||
+     gate!==undefined&&(!gate||typeof gate.id!=='string'||!/^structure-[1-9]\d*$/.test(gate.id)||![0,1].includes(gate.opening)))
     throw TypeError('Invalid native refuge return checkpoint');
-  return Object.freeze({version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose:copyPose(pose)});
+  return Object.freeze({version,actorId,animalId,spawnSequence,personId,contractDay,centerId,villageId,pose:copyPose(pose),
+    ...(gate?{gate:Object.freeze({id:gate.id,opening:gate.opening})}:{})});
 }
 
 export function validateRefugeReturnState(state,value){
   const saved=copyRefugeReturnCheckpoint(value),[worker]=state.workers,[animal]=state.raid?.animals??[];
   const spawn=state.events.findLast(event=>event.type==='RaidSpawned');
   const village=state.villages.find(item=>item.id===saved.villageId),home=village?.entry??village;
-  if(state.biome!=='sabana'||state.raid?.daytime!==true||state.raid.animals.length!==1||state.workers.length!==1||
+  const layout=state.biome==='sabana'?{}:nativeDesertRefugeLayout(state);
+  if(!layout||layout.gate?.id!==saved.gate?.id||layout.gate?.gateOpen!==saved.gate?.opening||
+     state.raid?.daytime!==true||state.raid.animals.length!==1||state.workers.length!==1||
      animal?.id!=='animal-'+saved.animalId||animal.species!=='warthog'||worker?.id!=='worker-'+saved.actorId||
      worker.status!=='home'||worker.running!==false||worker.gateWaiting!==false||worker.nativeRouteAdmission||
      worker.raidReturn||worker.hits!==0||worker.incapacitated||worker.taskId||worker.crateId||worker.path?.length||
@@ -44,10 +60,11 @@ export function validateRefugeReturnState(state,value){
   return saved;
 }
 
-export function captureRefugeReturnCheckpoint(state,worker,spawnSequence){
+export function captureRefugeReturnCheckpoint(state,worker,spawnSequence,gate=null){
   return validateRefugeReturnState(state,{version:1,actorId:actorNumber(worker.id),
     animalId:actorNumber(state.raid.animals[0].id),spawnSequence,personId:worker.personId,contractDay:worker.contractDay,
-    centerId:worker.centerId,villageId:worker.villageId,pose:refugeWorkerPose(worker)});
+    centerId:worker.centerId,villageId:worker.villageId,pose:refugeWorkerPose(worker),
+    ...(gate?{gate:{id:gate.id,opening:gate.gateOpen}}:{})});
 }
 
 export function copyRestoredRefugeReturn(value){

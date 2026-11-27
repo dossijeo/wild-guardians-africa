@@ -735,6 +735,8 @@ El ensayo del 27 de noviembre dibujó Stop24 con el cuerpo y el motor todavía e
 
 El guardado de Desierto 983 incluye ahora Home18 y la aproximación al centro con el portón totalmente abierto. La recarga en NVIDIA presentó ambos relojes y el motor, y completó Home19, cuatro golpes y regreso civil a Idle. El motor en tránsito con la incursión activa queda pendiente. [Guardado de la huida activa con portón](desert-active-gate-checkpoint-20261127.md).
 
+Después de Home19, Desierto 983 se guardó desde aproximación, golpe y Retreat. Las tres recargas en NVIDIA conservaron la ausencia del trabajador y el portón abierto. El regreso consumió la retirada de la época nueva. [Guardado del refugio de Desierto](desert-sheltered-raid-checkpoint-20261127.md).
+
 ### Componentes ya implementados, con sus límites
 
 | Componente | Hecho | Límite de lo entregado |

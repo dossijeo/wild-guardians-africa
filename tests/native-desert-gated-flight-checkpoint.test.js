@@ -13,6 +13,17 @@ const input=JSON.parse(gunzipSync(readFileSync(new URL('./fixtures/desierto983-g
 const gateId='structure-'+input.expectedGate;
 const gate=state=>state.structures.find(structure=>structure.gate);
 
+async function tick(f){
+ const step=await f.command({kind:'advance',seconds:.02,steps:2,nightFastForward:false});
+ for(const key of step.residency.missing){
+  const [cx,cz]=key.split(',').map(Number);
+  f.command({kind:'addChunk',cx,cz});
+ }
+ await f.present();
+ assert.deepEqual(f.faults,[]);
+ return JSON.parse(step.snapshot);
+}
+
 async function prepareColdHomeGraphics(state,proposal){
  const module=new WebAssembly.Module(readFileSync(new URL('../src/world/wild-engine/spatial-savanna.wasm',import.meta.url)));
  const loaded=new Map(),session=createSpatialGameSession(module,state,{loaded:()=>loaded});
@@ -63,13 +74,6 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
  let cold,release,held;
  const wait=new Promise(resolve=>{release=resolve;});
  const commits=new Map();
- async function tick(f){
-  const step=await f.command({kind:'advance',seconds:.02,steps:2,nightFastForward:false});
-  for(const key of step.residency.missing){const [cx,cz]=key.split(',').map(Number);f.command({kind:'addChunk',cx,cz});}
-  await f.present();
-  assert.deepEqual(f.faults,[]);
-  return JSON.parse(step.snapshot);
- }
  const pair=f=>{
   const frame=f.host.inspect().nativeRouteFrame;
   const home=frame?.bindings.find(row=>row.nativeHome),animal=frame?.bindings.find(row=>row.nativeAnimalCrop?.purpose==='center');
@@ -125,7 +129,9 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
    firstPair??=pair(cold);
    if(!checkedRefuge&&current.raid&&current.workers[0].status==='home'){
     checkedRefuge=true;
-    assert.equal(cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,false);
+    const sheltered=cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true});
+    assert.equal(sheltered.saveAvailable,true);
+    assert.deepEqual(sheltered.nativeAuthorityCheckpoint.refugeReturn.gate,marker.gate);
    }
    if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
   }
@@ -145,4 +151,87 @@ test('public Desert flight checkpoint reacquires the open gate and both routes',
   assert.equal(raidEvents.filter(event=>event.type==='RaidEnded').length,1);
   assert.deepEqual(current.ledger,disk.state.ledger);
  }finally{release();await cold?.close();await live.close();}
+});
+
+test('a sheltered Desert worker returns through the saved gate after a cold center raid',async()=>{
+ const initial=deserialize(input.snapshot),cuts=new Map(),commits=new Map();
+ const live=await nativeProductionAuthority(initial,{chunkKeys:input.chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
+  onCommit:(record,data)=>commits.set(record.kind,data)});
+ let originalEpoch;
+ try{
+  live.command({kind:'setNavigationView',view:input.navigationView});
+  await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  for(let i=0;i<1750&&cuts.size<3;i++){
+   await tick(live);
+   const current=live.snapshot(),animal=current.raid?.animals[0];
+   const home=commits.get('home-arrival')?.nativeHomeArrivalBinding;
+   if(!home||!animal||current.workers[0].status!=='home')continue;
+   const phase=animal.status==='attacking'?'strike':animal.status==='retreating'?'retreat':'approach';
+   const kind=phase==='strike'?27:26,purpose=phase==='retreat'?'retreat':'center';
+   const draw=live.host.inspect().nativeRouteFrame;
+   if(cuts.has(phase)||!draw?.bindings.some(row=>row.nativeAnimalCrop?.kind===kind&&
+      row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>.1))continue;
+   const result=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+   const disk=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+   assert(disk.saved,`missing ${phase} checkpoint`);
+   assert.equal(disk.state.workers[0].status,'home');
+   assert.deepEqual(disk.state.workerNativeAuthorityCheckpoint.refugeReturn.gate,{id:gateId,opening:1});
+   cuts.set(phase,{disk:disk.state,purpose,kind});
+   originalEpoch=home.reference.worldBoundary.authorityEpoch;
+  }
+  assert.deepEqual([...cuts.keys()],['approach','strike','retreat']);
+ }finally{await live.close();}
+ for(const [phase,{disk,purpose,kind}] of cuts){
+  const changed=structuredClone(disk);
+  gate(changed).gateOpen=0;
+  assert.throws(()=>savedNativeAuthorityOptions(serialize(changed)),/refuge return differs/i);
+  const options=savedNativeAuthorityOptions(serialize(disk));
+  let held,release,absence,returned;
+  const ready=new Promise(resolve=>{release=resolve;});
+  const cold=await nativeProductionAuthority(disk,{...options,attach:false,async onReady(record){
+   if(!held){held=record;await ready;}
+  },onCommit(record,data){
+   if(record.kind==='farm-arrival')returned=data.nativeFarmArrivalBinding;
+  }});
+  try{
+   const post=cold.controlPort.postMessage;
+   cold.controlPort.postMessage=message=>{absence??=message.restoredRefugeReturn;post(message);};
+   await cold.attach();
+   assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
+   assert.notEqual(absence.authorityEpoch,originalEpoch);
+   assert.equal(absence.actorId,900011);
+   assert.deepEqual(cold.snapshot().workers,disk.workers);
+   assert.equal(gate(cold.snapshot()).gateOpen,1);
+   await untilProduction(cold,()=>held?.packet);
+   assert.equal(held.kind,kind===27?'animal-crop-strike':'animal-crop-route');
+   assert.equal(held.resources.reference.purpose,purpose);
+   const waiting=await tick(cold),animal=waiting.raid.animals[0],saved=disk.raid.animals[0];
+   assert.equal(waiting.workers[0].status,'home');
+   assert.equal(waiting.workers[0].walkPhase,disk.workers[0].walkPhase);
+   for(const key of ['x','z','heading','motionPhase','hitsRemaining','attackId','attackRemaining'])
+    assert.equal(animal[key],saved[key],`${phase}: ${key} changed before READY`);
+   assert.equal(cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).saveAvailable,true);
+   release();
+   let current,sawRestoredDraw=false;
+   for(let i=0;i<1850;i++){
+    current=await tick(cold);
+    sawRestoredDraw||=cold.host.inspect().nativeRouteFrame?.bindings.some(row=>
+      row.nativeAnimalCrop?.worldBoundary.authorityEpoch===absence.authorityEpoch&&row.nativeAnimalCrop.kind===kind&&
+      row.nativeAnimalCrop.purpose===purpose&&row.relativeTime>=0);
+    if(!current.raid&&current.workers[0].nativeRouteAdmission==='native-idle')break;
+   }
+   assert(sawRestoredDraw,`missing restored ${phase} draw`);
+   assert.equal(current.workers[0].nativeRouteAdmission,'native-idle');
+   assert.equal(current.workers[0].personId,disk.workers[0].personId);
+   assert.equal(current.workers[0].hits,0);
+   assert.deepEqual(current.ledger,disk.ledger);
+   assert.equal(returned.reference.sourceRequest.refugeSequence,absence.retiredSequence);
+   assert.deepEqual(returned.gateIds,[input.expectedGate]);
+   const hits=current.events.filter(event=>event.type==='StructureHit');
+   assert.deepEqual(hits.map(event=>event.structureHit.hp),input.expectedCenterHits);
+   const logical=current.events.filter(event=>event.type==='AnimalLogicalHit');
+   assert.equal(logical.length,4);
+   assert.equal(new Set(logical.map(event=>event.attackId)).size,4);
+  }finally{release();await cold.close();}
+ }
 });

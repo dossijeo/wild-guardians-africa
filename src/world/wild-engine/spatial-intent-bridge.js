@@ -1058,7 +1058,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   }
   function encounterCheckpointBlocked(refugeReturn=false,raidFlightCheckpoint=false){
     const raid=owningState?.raid;
-    if(nativeWorkerLifecycle&&(owningState?.biome==='sabana'||raidFlight?.cold||refuge?.coldFlight)&&raid&&
+    if((nativeWorkerLifecycle&&(owningState?.biome==='sabana'||raidFlight?.cold||restoredRefuge)||
+        owningState?.biome==='desierto'&&refuge?.raid===raid)&&raid&&
       (!raidFlightCheckpoint&&raidFlight?.raid===raid||!refugeReturn&&(refuge?.raid===raid||restoredRefuge?.raid===raid)))return true;
     const worker=restoredEncounter?.worker??raidFlight?.worker;
     return !!(encounterImpact?.consumed||restoredEncounter)&&!encounterCheckpoint()&&!(worker&&nativeWorkerHomeInactive(worker.id));
@@ -1398,7 +1399,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   const requestRestoredAnimalStrike=(state,animal,bodyId)=>{
     if(state!==owningState||!wasm.nav_animal_strike_restore_request||!Number.isSafeInteger(bodyId)||bodyId<1)return false;
     const subject=nativeCropRouteSubject(state,animal),saved=savedRaidStrike(animal);
-    if(!subject||subject.purpose==='center'&&!nativeShelteredSavannaCenterActor(state,animal)||!saved||saved.attackId>=state.sequence||
+    const refugeOwnsAnimal=restoredRefuge?.raid===state.raid&&restoredRefuge?.saved.animalId===numericId(animal.id);
+    if(!subject||subject.purpose==='center'&&!refugeOwnsAnimal&&!nativeShelteredSavannaCenterActor(state,animal)||!saved||saved.attackId>=state.sequence||
        !Number.isFinite(animal.heading)||!Number.isFinite(animal.motionPhase))return false;
     syncBoundaryTime();
     return wasm.nav_animal_strike_restore_request(numericId(animal.id),wasm.nav_intent_session(),bodyId,numericId(subject.center.id),
@@ -1621,13 +1623,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
        actual[29]!==r.actorId||actual[30]!==r.bodyId||actual[44]!==r.worldBoundary.effectiveTime)return null;
     return issued;
   }
-  function nativeRefugeReturnCheckpoint(){
-    if(restoredRefuge&&nativeWorkerHomeInactive(restoredRefuge.saved.actorId))
-      return validateRefugeReturnState(owningState,restoredRefuge.saved);
+  function nativeRefugeReturnCheckpoint(gate=null){
+    if(restoredRefuge&&restoredRefuge.raid===owningState?.raid&&nativeWorkerHomeInactive(restoredRefuge.saved.actorId))
+      return validateRefugeReturnState(owningState,{...restoredRefuge.saved,gate:gate?{id:gate.id,opening:gate.gateOpen}:undefined});
     const issued=currentRefuge();
     if(!issued||refuge.worker.hits!==0)return null;
     const spawn=issued.reference.sourceHome.reference.sourceRequest?.raidSpawnSequence;
-    return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn):null;
+    return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn,gate):null;
   }
   function nativeOrdinaryRefugeRecovery(){
     const game=owningState,worker=ordinaryRefuge?.worker;
@@ -3682,7 +3684,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         restoredEncounter=null;encounterImpact=null;encounterExhaustion=null;raidFlight=null;
         refuge={worker,raid:null,issued};
       }else if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event){
-        refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId,coldFlight:raidFlight.cold===true};
+        refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId};
         raidFlight=null;
       }else if(!state.raid&&!worker.incapacitated){
         ordinaryRefuge={worker,raid:null,issued};

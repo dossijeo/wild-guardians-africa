@@ -85,7 +85,8 @@ EMSCRIPTEN_KEEPALIVE double nav_intent_restore_refuge_return(double actor,double
  auto& s=state();
  for(double value:{x,z,yaw,run,walk,carry,remaining})if(!std::isfinite(value)||!std::isfinite(float(value)))return -1;
  if(run<0||walk<0||carry<0||remaining<0||!integer(actor))return -1;
- if(spatial_world_biome()!=0||s.causalClock||s.executionEnabled||s.bodyDomainActive||s.proposalOpen||
+ const int biome=spatial_world_biome();
+ if((biome!=0&&biome!=1)||s.causalClock||s.executionEnabled||s.bodyDomainActive||s.proposalOpen||
     s.barrierProposal.pending||s.worldMutationPreview||spatial_body_count()!=0||s.restoredRefugeReturn.actor||
     !s.activeIntents.empty()||nav_intent_worker_inactive(actor)!=1)return -2;
  const auto& worker=s.workers.at(uint64_t(actor));
