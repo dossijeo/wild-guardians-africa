@@ -1168,6 +1168,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===14&&!profile.sameAttestation(actor.startProof,proof)||
+         kind===16&&!profile.sameAttestation(actor.consequenceProof,proof)||
          kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2&&!ordinaryWorkers)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||

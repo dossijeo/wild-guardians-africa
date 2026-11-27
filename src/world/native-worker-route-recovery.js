@@ -13,6 +13,7 @@ import {copyNativeHomeRequestReference,sameNativeHomeRequestReference} from './n
 import {copyNativeTaskStartAttestation} from './native-task-start-attestation.js';
 import {copyNativeTaskActionAttestation,copyNativeTaskActionResources,sameNativeTaskActionAttestation} from './native-task-action-attestation.js';
 import {sameNativeTaskActionReference} from './native-task-action-presentation.js';
+import {copyNativeTaskConsequenceAttestation,sameNativeTaskConsequenceReference} from './native-task-consequence.js';
 import {sameNativeTaskStartReference} from './native-task-start-reference.js';
 import {copyNativeRouteReference,sameNativeRouteReference} from './native-route-reference.js';
 
@@ -115,37 +116,48 @@ function copyStrikeResources(value){
  return Object.freeze({version:1,kind:27,phase:'committed',worldBoundary,nativeAnimalCropStrikeBinding:binding});
 }
 
-function sameTaskStartAttestation(a,b){
+function sameTaskRouteAttestation(a,b,sameReference){
  return !!a&&!!b&&a.assignmentSequence===b.assignmentSequence&&a.projectionVersion===b.projectionVersion&&
-   sameNativeTaskStartReference(a.reference,b.reference)&&sameNativeTaskStartReference(a.preparedReference,b.preparedReference)&&
+   sameReference(a.reference,b.reference)&&sameReference(a.preparedReference,b.preparedReference)&&
    Array.isArray(a.gateIds)&&a.gateIds.length===b.gateIds?.length&&a.gateIds.every((id,i)=>id===b.gateIds[i]);
 }
 
-function copyTaskStartResources(value,cut=null){
- const b=copyNativeTaskStartAttestation(value?.nativeTaskStartBinding),r=b.reference;
+function copyTaskRouteResources(value,cut,kind,bindingField,copyAttestation){
+ const b=copyAttestation(value?.[bindingField]),r=b.reference;
  const worldBoundary=copyNativeWorldBoundary(value.worldBoundary),presentation=copyNativeRoutePresentation(value.presentation);
  const nativeRoute=copyNativeRouteReference(value.nativeRoute);
- if(value.version!==1||value.kind!==14||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
+ if(value.version!==1||value.kind!==kind||value.phase!=='committed'||!sameNativeWorldBoundary(worldBoundary,r.worldBoundary)||
     !sameNativeWorldBoundary(presentation.worldBoundary,cut??worldBoundary)||presentation.motionMode!=='worker'||
+    kind===16&&presentation.motionFlags!==8||
     presentation.startTime!==worldBoundary.effectiveTime||presentation.endTime!==r.endTime||
     !sameNativeRouteReference(nativeRoute,presentation.nativeRoute)||!sameNativeRouteReference(nativeRoute,{actorId:r.actorId,assignmentSequence:b.assignmentSequence,routeHandle:r.expectedRouteHandle})||
     presentation.gates.length!==b.gateIds.length||b.gateIds.some(id=>!presentation.gates.some(gate=>gate.gateId===id)))
-   throw TypeError('Recovered Task14 program differs from the acquired route');
- return Object.freeze({version:1,kind:14,phase:'committed',worldBoundary,nativeRoute,presentation,nativeTaskStartBinding:b});
+   throw TypeError(`Recovered ${kind===14?'Task14':'Carry16'} program differs from the acquired route`);
+ return Object.freeze({version:1,kind,phase:'committed',worldBoundary,nativeRoute,presentation,[bindingField]:b});
 }
 
 const profiles=new Map([
  [14,Object.freeze({
   kind:14,admission:'native-task',executionKind:'native-task-execution',maxGates:1024,
   bindingField:'nativeTaskStartBinding',clockField:'nativeStart',proofField:'startProof',issuedField:'issuedStart',
-  obsoleteCode:'native-start-admission-obsolete',copyResources:copyTaskStartResources,copyAttestation:copyNativeTaskStartAttestation,
-  sameAttestation:sameTaskStartAttestation,sameReference:sameNativeTaskStartReference
+  obsoleteCode:'native-start-admission-obsolete',
+  copyResources:(value,cut)=>copyTaskRouteResources(value,cut,14,'nativeTaskStartBinding',copyNativeTaskStartAttestation),
+  copyAttestation:copyNativeTaskStartAttestation,
+  sameAttestation:(a,b)=>sameTaskRouteAttestation(a,b,sameNativeTaskStartReference),sameReference:sameNativeTaskStartReference
  })],
  [15,Object.freeze({
   kind:15,admission:'native-action',executionKind:'native-task-action-execution',maxGates:0,
   bindingField:'nativeTaskActionBinding',clockField:'nativeAction',
   obsoleteCode:'native-action-admission-obsolete',copyResources:copyNativeTaskActionResources,copyAttestation:copyNativeTaskActionAttestation,
   sameAttestation:sameNativeTaskActionAttestation,sameReference:sameNativeTaskActionReference
+ })],
+ [16,Object.freeze({
+  kind:16,admission:'native-delivery',executionKind:'native-delivery-execution',maxGates:1024,
+  bindingField:'nativeTaskConsequenceBinding',clockField:'nativeConsequence',proofField:'consequenceProof',
+  obsoleteCode:'native-consequence-admission-obsolete',
+  copyResources:(value,cut)=>copyTaskRouteResources(value,cut,16,'nativeTaskConsequenceBinding',copyNativeTaskConsequenceAttestation),
+  copyAttestation:copyNativeTaskConsequenceAttestation,
+  sameAttestation:(a,b)=>sameTaskRouteAttestation(a,b,sameNativeTaskConsequenceReference),sameReference:sameNativeTaskConsequenceReference
  })],
  [18,Object.freeze({
   kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1024,

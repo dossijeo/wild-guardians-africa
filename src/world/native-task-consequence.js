@@ -1,14 +1,14 @@
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from './native-world-boundary.js';
-import {copyNativeTaskActionAttestation} from './native-task-action-attestation.js';
-import {nativeTaskActionActor,sameNativeTaskActionReference} from './native-task-action-presentation.js';
+import {copyNativeTaskActionAttestation,sameNativeTaskActionAttestation} from './native-task-action-attestation.js';
+import {nativeTaskActionActor} from './native-task-action-presentation.js';
 import {copyNativePresentationSamples} from './native-presentation-samples.js';
 import {copyNativeGatePresentation} from './native-gate-presentation.js';
 import {nativeMotionPresentationMatches} from './native-motion-presentation-match.js';
 import {floorFloat32} from '../float32-time.js';
+import {sameNativeRouteReference} from './native-route-reference.js';
 
 const id=n=>Number.isSafeInteger(n)&&n>0;
 const sameHandle=(a,b)=>!!a&&!!b&&['authorityEpoch','session','slot','generation'].every(k=>a[k]===b[k]);
-const sameAction=(a,b)=>!!a&&!!b&&a.actionSequence===b.actionSequence&&sameNativeTaskActionReference(a.reference,b.reference)&&sameNativeTaskActionReference(a.preparedReference,b.preparedReference);
 const sourceKeys=['actorId','bodyId','crateId','centerId'];
 const canonicalReferences=new WeakSet(); // Validated immutable values, never execution permissions.
 export function copyNativeTaskConsequenceReference(value){
@@ -24,7 +24,7 @@ export function copyNativeTaskConsequenceReference(value){
   expectedRouteHandle:Object.freeze({authorityEpoch:h.authorityEpoch,session:h.session,slot:h.slot,generation:h.generation}),worldBoundary});
  canonicalReferences.add(reference);return reference;
 }
-const sameSource=(a,b)=>!!a&&!!b&&sourceKeys.every(k=>a[k]===b[k])&&sameAction(a.sourceAction,b.sourceAction)&&a.destination.x===b.destination.x&&a.destination.z===b.destination.z&&sameHandle(a.expectedRouteHandle,b.expectedRouteHandle);
+const sameSource=(a,b)=>!!a&&!!b&&sourceKeys.every(k=>a[k]===b[k])&&sameNativeTaskActionAttestation(a.sourceAction,b.sourceAction)&&a.destination.x===b.destination.x&&a.destination.z===b.destination.z&&sameHandle(a.expectedRouteHandle,b.expectedRouteHandle);
 export const sameNativeTaskConsequenceReference=(a,b)=>sameSource(a,b)&&a.sourceControlSequence===b.sourceControlSequence&&a.endTime===b.endTime&&sameNativeWorldBoundary(a.worldBoundary,b.worldBoundary);
 export const nativeTaskConsequenceSuccessor=(a,b)=>sameSource(a,b)&&b.worldBoundary.ticket>a.worldBoundary.ticket&&b.worldBoundary.effectiveTime>=a.worldBoundary.effectiveTime&&b.sourceControlSequence>=a.sourceControlSequence;
 export function nativeTaskConsequenceReferenceCovered(reference,boundary){const w=reference.worldBoundary;return !!boundary&&w.authorityEpoch===boundary.authorityEpoch&&w.nativeSession===boundary.nativeSession&&boundary.ticket>=w.ticket&&boundary.effectiveTime>=w.effectiveTime;}
@@ -50,6 +50,23 @@ export function copyNativeTaskConsequenceAttestation(value){
  return Object.freeze({kind:value.kind,version:1,projectionVersion:1,reference,preparedReference,assignmentSequence,gateIds:Object.freeze([...gateIds])});
 }
 export const nativeTaskConsequenceAttestationCovers=(proof,reference)=>sameNativeTaskConsequenceReference(proof?.reference,reference)||sameNativeTaskConsequenceReference(proof?.preparedReference,reference);
+export function nativeDeliveryProjectionMatches(execution,worker,crate,center,at){
+ const proof=execution?.binding,r=proof?.reference,delivery=worker?.nativeDelivery,approach=worker?.deliveryApproach;
+ return !!r&&!!worker&&!!crate&&!!center&&execution.kind==='native-delivery-execution'&&!execution.arrived&&
+   execution.executedThrough===at&&at>=r.worldBoundary.effectiveTime&&at<r.endTime&&
+   sourceKeys.every(key=>execution[key]===r[key])&&
+   sameNativeRouteReference(execution.nativeRoute,{actorId:r.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:r.expectedRouteHandle})&&
+   worker.id===`worker-${r.actorId}`&&worker.status==='carrying'&&worker.nativeRouteAdmission==='native-delivery'&&
+   !worker.taskId&&!worker.incapacitated&&!worker.recovery&&!worker.recoveryExitRemaining&&!worker.fallRemaining&&
+   worker.crateId===crate.id&&crate.id===`crate-${r.crateId}`&&crate.carrierId===worker.id&&crate.delivered===false&&
+   crate.sourcePlantId===`plant-${r.sourceAction.reference.request.targetId}`&&
+   center.id===`structure-${r.centerId}`&&center.status==='intact'&&worker.centerId===center.id&&
+   delivery?.version===1&&delivery.crateId===crate.id&&delivery.centerId===center.id&&
+   approach?.crateId===crate.id&&approach.centerId===center.id&&approach.x===r.destination.x&&approach.z===r.destination.z&&
+   crate.x===worker.x&&crate.z===worker.z&&worker.heading===execution.yaw&&worker.running===false&&
+   worker.gateWaiting===(execution.currentSpeed===0)&&Array.isArray(worker.path)&&worker.path.length===0&&
+   ['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(key=>worker[key]===execution[key]);
+}
 export function nativeTaskConsequencePresentationMatches(prepared,actual,value){
  const b=copyNativeTaskConsequenceAttestation(value),r=b.reference,route=actual?.nativeRoute;
  return sameNativeTaskConsequenceReference(b.preparedReference,prepared.nativeConsequence)&&route?.actorId===r.actorId&&route.assignmentSequence===b.assignmentSequence&&sameHandle(route.routeHandle,r.expectedRouteHandle)&&actual.startTime===r.worldBoundary.effectiveTime&&actual.endTime===r.endTime&&nativeMotionPresentationMatches(prepared,actual,b.gateIds);

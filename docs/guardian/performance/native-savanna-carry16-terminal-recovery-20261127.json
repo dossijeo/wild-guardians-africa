@@ -1,0 +1,203 @@
+{
+  "scenario": "Sabana 714, tercer turno pagado desde guardado público, pérdida terminal de Draw durante Carry16",
+  "baseRevision": "436b92d0b20899850cfe967e70d7051f596fec28",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 87.19000002741814
+    }
+  },
+  "artifacts": {
+    "terminal-carry16-recovery-before-20261127.log": "669db3ed2b19001337596215c0302632be533b6f5394f8e85af7292c8f0d2f91",
+    "native-savanna-carry16-two-hire-probe-20261127.json": "68bf46bcaeaf4f84d697081b8eff37f0833960e6810931a808d9db6ea1ffd4ed",
+    "native-savanna-carry16-terminal-recovery-20261127-extended.json": "f43f0d76f7b16bab315b671aaae74440a0461557457bf3e72045bbc6ee32d0b7",
+    "tests/fixtures/sabana714-d3-before-paid-harvest.json.gz": "9d8a8d333058b0fd2ebba1b80b2be3c1a9c9dcda989a8dea319184f8836a4c4f"
+  },
+  "acquisition": {
+    "assignment": 8,
+    "actorId": 16,
+    "bodyId": 1,
+    "crateId": 18,
+    "centerId": 2,
+    "handle": {
+      "authorityEpoch": "fe180ea0-3352-4714-b82f-54cfe1a74d6d/1",
+      "session": 1,
+      "slot": 0,
+      "generation": 10
+    },
+    "preparedTicket": 9,
+    "ticket": 10
+  },
+  "original": {
+    "sequence": 323,
+    "ticket": 10,
+    "clockElapsed": 1277.1499999993928,
+    "epoch": 1274.0999999993955,
+    "executionEpoch": 1276.949999999393,
+    "relativeTime": 0.19999998807907104,
+    "referenceTicket": 9
+  },
+  "retirement": {
+    "holdId": 719,
+    "publicationFloor": 1758,
+    "heldPublication": 1759,
+    "heldClock": 1277.5499999993924,
+    "drawClosed": true,
+    "drawDrained": true,
+    "callbacksSettled": true
+  },
+  "replacement": {
+    "sequence": 1,
+    "ticket": 10,
+    "clockElapsed": 1277.5499999993924,
+    "epoch": 1276.949999999393,
+    "executionEpoch": 1276.949999999393,
+    "relativeTime": 0.5999999642372131,
+    "referenceTicket": 10,
+    "attachments": [
+      {
+        "index": 0,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 350,
+        "triangles": 640
+      },
+      {
+        "index": 1,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 351,
+        "triangles": 1296
+      },
+      {
+        "index": 2,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 352,
+        "triangles": 480
+      },
+      {
+        "index": 3,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 353,
+        "triangles": 960
+      },
+      {
+        "index": 4,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 354,
+        "triangles": 1296
+      },
+      {
+        "index": 5,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 355,
+        "triangles": 864
+      },
+      {
+        "index": 6,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 356,
+        "triangles": 432
+      },
+      {
+        "index": 7,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 357,
+        "triangles": 5184
+      },
+      {
+        "index": 8,
+        "actorId": "worker-16",
+        "crateId": "crate-18",
+        "geometry": 358,
+        "triangles": 1728
+      }
+    ]
+  },
+  "activation": {
+    "firstSubmitBeforeRequest": true,
+    "completed": true
+  },
+  "pick": {
+    "actorId": "worker-16",
+    "pose": {
+      "x": 87,
+      "z": -6.352000000000589
+    },
+    "trials": [
+      {
+        "height": 0.7,
+        "result": "worker-16"
+      }
+    ],
+    "before": {
+      "sequence": 1,
+      "ticket": 10,
+      "clockElapsed": 1277.5499999993924,
+      "epoch": 1276.949999999393,
+      "executionEpoch": 1276.949999999393,
+      "relativeTime": 0.5999999642372131,
+      "referenceTicket": 10
+    },
+    "after": {
+      "sequence": 2,
+      "ticket": 10,
+      "clockElapsed": 1277.5499999993924,
+      "epoch": 1276.949999999393,
+      "executionEpoch": 1276.949999999393,
+      "relativeTime": 0.5999999642372131,
+      "referenceTicket": 10
+    }
+  },
+  "continuation": {
+    "elapsed": 1282.499999999388,
+    "worker": "worker-16",
+    "delivery": [
+      {
+        "id": "event-58",
+        "type": "CrateDelivered",
+        "workerId": "worker-16",
+        "targetId": "crate-18",
+        "species": "platano",
+        "multiplyIncome": {
+          "n": "0",
+          "d": "1"
+        },
+        "simulationTime": 1282.399999999388
+      }
+    ],
+    "payment": {
+      "n": "321",
+      "d": "1"
+    },
+    "balance": {
+      "n": "751",
+      "d": "1"
+    },
+    "settlementTicket": 12,
+    "carryAcquisitions": 1,
+    "settlementAcquisitions": 1,
+    "drawDrained": true
+  },
+  "pageErrors": [],
+  "console": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "THREE.WebGPURenderer: WebGPU Device Lost:\n\nMessage: Device was destroyed.\nReason: destroyed"
+  ]
+}

@@ -1,6 +1,37 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {nativeTaskConsequenceGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
+import {nativeTaskConsequenceGraphicsFixture,nativeWorkerGraphicsFixture} from './helpers/native-task-consequence-graphics.js';
+import {nativeTaskConsequenceFixture} from './helpers/native-task-consequence.js';
+import {createNativeAdmissionVertical} from './helpers/native-admission-vertical.js';
+
+test('a fresh Carry consumer prepares and picks the attached crate on the acquired corridor',async()=>{
+ const native=nativeTaskConsequenceFixture({admitPeer:false});
+ let f,vertical,handedOff=false;
+ try{
+  vertical=await createNativeAdmissionVertical({planner:native.planner,elapsed:native.state.elapsed,kind:'task-consequence'});
+  const result=await vertical.run(options=>native.planner.startNativeTaskConsequenceAfterGpuQuiescence({...options,actorId:native.actor}));
+  assert.equal(result.status,'committed');
+  await vertical.present();
+  native.advance(.05);
+  const execution=native.planner.projectNativeDeliveryExecution(native.state,native.worker),{nativeRoute}=execution;
+  const resources=result.resources;
+  handedOff=true;
+  f=await nativeWorkerGraphicsFixture(native);
+  f.setPickTime(execution.executedThrough);
+  const actor=f.roster.get(f.actor),bakedPieces=[];
+  await f.roster.prepareRecoveredWorkerRoute({execution,resources,terrain:f.terrain,terrainManifest:f.manifest},
+   {isCurrent:()=>true,getPickTime:f.getPickTime});
+  actor.root.traverse(mesh=>{if(Number.isInteger(mesh._wgWalkAttachmentIndex)&&mesh.visible)bakedPieces.push(mesh);});
+  assert.equal(f.roster.get(f.actor),actor);
+  assert(f.roster.nativeRouteCurrent(f.actor,nativeRoute));
+  assert.deepEqual(bakedPieces.map(mesh=>mesh._wgWalkAttachmentIndex).sort((a,b)=>a-b),Array.from({length:9},(_,i)=>i));
+  const restore=actor.preparePick();
+  assert(bakedPieces.every(mesh=>!mesh.visible));
+  restore();
+  assert(bakedPieces.every(mesh=>mesh.visible));
+  assert.deepEqual(f.errors,[]);
+ }finally{await vertical?.close();if(f)f.close();else if(!handedOff)native.close();}
+});
 
 test('Carry can prepare from the authored rig while rendering still retains the retired historical materials',async()=>{
  const f=await nativeTaskConsequenceGraphicsFixture({historicalSource:true});

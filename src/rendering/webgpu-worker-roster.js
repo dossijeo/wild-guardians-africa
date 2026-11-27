@@ -17,7 +17,7 @@ import {createNativeHomeRouteGpuMotion} from './native-gpu-motion.js';
 import {nativeHomeRequestContinuesIdle,nativeHomeRequestContinuesRepairAction} from '../world/native-home-request-reference.js';
 import {nativeHomeWorkerStatus} from '../world/native-home-request-reference.js';
 import {RECOVERY_EXIT_SECONDS,woundedHomeSourceCurrent,workerRecoveryExitRemaining} from '../simulation/worker-recovery.js';
-import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches} from '../world/native-task-consequence.js';
+import {copyNativeTaskConsequenceProposal,copyNativeTaskConsequenceAttestation,nativeTaskConsequencePresentationMatches,nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
 import {copyNativeTaskSettlementReference,copyNativeTaskSettlementAttestation,nativeTaskSettlementAttestationCovers,sameNativeTaskSettlementReference} from '../world/native-task-settlement.js';
 import {createNativeTaskSettlementGpuMotion} from './native-task-settlement-gpu-motion.js';
 import {copyNativeInitialIdleBodyReference,copyNativeInitialIdleBodyAttestation,nativeInitialIdleBodyAttestationCovers,sameNativeInitialIdleBodyReference,nativeInitialIdleActionSource,nativeTaskCancellationMatchesAction,nativeTaskCancellationMatchesTerminalRoute,nativeTaskCancellationMatchesHeldRoute} from '../world/native-initial-idle-body.js';
@@ -256,7 +256,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
 
     function prepareNativeRoute(actorId,support,options){return prepareWorkerRoute(actorId,support,options,null);}
     function prepareRecoveredWorkerRoute(source,options){
-      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,task=profile.kind===14;
+      const profile=nativeWorkerRouteRecoveryProfile(source?.resources?.kind),farm=profile.kind===23,home=profile.kind===18,task=profile.kind===14,carry=profile.kind===16;
       const resources=profile.copyResources(source.resources,source.recoveryCut),b=resources[profile.bindingField],r=b.reference;
       const actorId='worker-'+r.actorId,entry=entries.get(actorId);
       if(!entry||entry.nativePending||entry.nativeState||b.gateIds.length>profile.maxGates||
@@ -266,8 +266,12 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
         const endpoint=home&&state.workers.length===1&&woundedHomeExecutionAtEndpoint(state,worker,e);
         if(e.kind!==profile.executionKind||e.arrived&&!endpoint||e.actorId!==r.actorId||e.bodyId!==r.bodyId||
            !profile.sameAttestation(e.binding,b)||state.elapsed!==e.executedThrough||
-           !home&&!task&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
+           !home&&!task&&!carry&&entry.profile!==(farm?r.sourceRequest.workerProfile:r.workerProfile)||
            worker.nativeRouteAdmission!==profile.admission)return false;
+        if(carry){
+          const crate=state.crates.find(crate=>crate.id===worker.crateId),center=state.structures.find(center=>center.id===worker.centerId);
+          return nativeLocomotionEntity(entry,true,b.gateIds.length>0)&&nativeDeliveryProjectionMatches(e,worker,crate,center,state.elapsed);
+        }
         if(task){
           const job=tasks.get(worker.taskId);
           return nativeLocomotionEntity(entry,false,b.gateIds.length>0)&&worker.status==='walking'&&
@@ -310,8 +314,9 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
       }catch{return false;}};
       if(!current())throw Error('Recovery pose or committed owner differs');
       const support=source.terrain.prepareNativeRoute(resources.presentation,{terrainManifest:source.terrainManifest});
+      const proofField=carry?'nativeConsequenceBinding':profile.bindingField;
       return prepareWorkerRoute(actorId,support,options,{resources,current,recoveryCut:source.recoveryCut,
-        binding:{[profile.bindingField]:b,[profile.clockField]:r,...(home?{}:farm?
+        binding:{[proofField]:b,[profile.clockField]:r,...(home||carry?{}:farm?
           {farmTaskPolicy:completedFarmPolicy(entry.entity,r.sourceRequest)}:task?
           {taskHomePolicy:farmTaskPolicy(entry.entity)}:{strollHomePolicy:farmTaskPolicy(entry.entity)})}});
     }
@@ -346,7 +351,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const heading=Math.atan2(2*(yaw.w*yaw.y+yaw.x*yaw.z),1-2*(yaw.y*yaw.y+yaw.z*yaw.z)),motionOptions={actorId,support,anchorPosition:anchor,anchorYaw:heading,heightOffset:.025,resourceRegistry},motion=recovery?createRecoveredWorkerRouteGpuMotion({...motionOptions,resources:recovery.resources,recoveryCut:recovery.recoveryCut}):createNativeGpuMotion(motionOptions);
    let variant,binding;
    try{
-    const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};
+    const phases={runningNode:motion.runningNode,idleNode:motion.idleNode,resolve:(fallback,clip,duration)=>motion.resolve(fallback,clip,duration),sampleClip(){if(carrying)return 'Carry_Crate';const pose=motion.sample(getPickTime());return needsIdle&&pose.currentSpeed<=0?'Idle':pose.running?'Run':'Walk_Skip';},sampleForClip:(clip,duration)=>motion.sampleForClip(getPickTime(),clip,duration,recovery&&clip==="Idle"?getPickIdleOffset?.(duration):undefined)};
     if(woundedHome)Object.assign(phases,homeExitPhases(motion,getPickTime,recovery.binding.nativeHome.sourceRequest));
     variant=actor.prepareNativeMotionVariant(phases,{clipBakes,clip:carrying?'Carry_Crate':actor.isBakedIdle?.()?'Idle':!(actor.isBakedWalking?.()||actor.isBakedRunning?.())?'Walk_Skip':null});
     const options={motion,getPickTime,materialAlternatives:variant.materialAlternatives,replicaSources:variant.replicaSources,meshes:variant.materialAlternatives.map(item=>item.mesh)};

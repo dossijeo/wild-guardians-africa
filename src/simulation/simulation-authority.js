@@ -4,6 +4,7 @@ import {sameNativeInitialIdleBodyReference} from '../world/native-initial-idle-b
 import {sameNativeRouteReference} from '../world/native-route-reference.js';
 import {nativeTaskActionProjectionMatches} from '../world/native-task-action-attestation.js';
 import {nativeTaskActionActor} from '../world/native-task-action-presentation.js';
+import {nativeDeliveryProjectionMatches} from '../world/native-task-consequence.js';
 import {centerRuinApproachEndpoint,copyNativeRecoveryGroup,nativeIdleCycleRecoveryPhaseMatches,nativeOrdinaryRecoveryKinds,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,sameRecoveredEncounter,woundedHomeExecutionAtEndpoint} from '../world/native-worker-route-recovery.js';
 import {nativeClockResourceEnd} from '../rendering/native-clock-resource-end.js';
 import {sameNativeHomeArrivalAttestation} from '../world/native-home-arrival.js';
@@ -1341,6 +1342,13 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     });
   }
   function recoveryExecution({kind,actorId}){
+    if(kind===16){
+      const execution=planner.nativeDeliveryExecution(actorId);
+      if(!execution)return null;
+      const worker=game.workers.find(worker=>worker.id==='worker-'+execution.actorId);
+      const crate=game.crates.find(crate=>crate.id===worker?.crateId),center=game.structures.find(center=>center.id===worker?.centerId);
+      return nativeDeliveryProjectionMatches(execution,worker,crate,center,game.elapsed)?execution:null;
+    }
     if(kind===15){
       const execution=planner.nativeTaskActionExecution(actorId),q=execution?.binding.reference.request;
       if(!q)return null;
@@ -1458,8 +1466,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(encounter)return {version:2,encounter:'stationary',workerId:encounter.workerId,members:[]};
     if(qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWoundedRefugeRecovery())
       return {version:2,refuge:true,members:[]};
-    if((admission==='native-task'||admission==='native-action')&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&session.core.wasm.spatial_body_count()===1){
-      const kind=admission==='native-task'?14:15;
+    const kindOfTask=admission==='native-task'?14:admission==='native-action'?15:admission==='native-delivery'?16:null;
+    if(kindOfTask&&nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&session.core.wasm.spatial_body_count()===1){
+      const kind=kindOfTask;
       const execution=recoveryExecution({kind,actorId:worker.id});
       return execution&&worker.id==='worker-'+execution.actorId?{kind,actorId:execution.actorId}:null;
     }

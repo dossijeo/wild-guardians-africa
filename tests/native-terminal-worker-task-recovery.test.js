@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import test from 'node:test';
 import {MessageChannel} from 'node:worker_threads';
+import {gunzipSync} from 'node:zlib';
 import {createSpatialCampaignOpening} from '../tools/experiments/spatial-campaign-opening.mjs';
 import {plant} from '../src/simulation/game.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
@@ -8,29 +10,39 @@ import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end
 import {captureNativeRoutePickFrame} from '../src/rendering/native-route-pick-frame.js';
 import {nativeWorkerRouteRecoveryProfile} from '../src/world/native-worker-route-recovery.js';
 import {nativeTaskActionProjectionMatches} from '../src/world/native-task-action-attestation.js';
+import {nativeDeliveryProjectionMatches} from '../src/world/native-task-consequence.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 import {nativeProductionAuthority,untilProduction} from './helpers/native-production-authority.js';
 import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 
-for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase ${kind} through one watering action`,{timeout:45000},async()=>{
- const profile=nativeWorkerRouteRecoveryProfile(kind),action=kind===15;
- const opening=await createSpatialCampaignOpening();
- const {state,nav}=opening,chunkKeys=[...opening.loaded.keys()];
+async function openWorkerScenario(carry){
+ if(carry){
+  const saved=gunzipSync(readFileSync(new URL('./fixtures/sabana714-d3-before-paid-harvest.json.gz',import.meta.url))).toString();
+  return {state:JSON.parse(saved),options:savedNativeAuthorityOptions(saved)};
+ }
+ const opening=await createSpatialCampaignOpening(),{state,nav}=opening;
  try{
   const center=state.structures.find(item=>item.kind==='center');
   state.tutorial.step='plant';
   assert(plant(state,'first-native-crop','platano',center.x+4,center.z-7,nav));
+  return {state,options:{chunkKeys:[...opening.loaded.keys()],nativeWorkerLifecycle:true}};
  }finally{opening.dispose();}
+}
+
+for(const kind of [14,15,16])test(`terminal Draw recovery preserves acquired phase ${kind} through one ${kind===16?'crate delivery':'watering action'}`,{timeout:45000},async()=>{
+ const profile=nativeWorkerRouteRecoveryProfile(kind),action=kind===15,carry=kind===16;
+ const {state,options}=await openWorkerScenario(carry);
  let releaseFarm,acquired;
  const farmReady=new Promise(resolve=>releaseFarm=resolve);
- const f=await nativeProductionAuthority(state,{chunkKeys,nativeWorkerLifecycle:true,
-  onReady:record=>record.kind==='farm-arrival'?farmReady:undefined,
+ const f=await nativeProductionAuthority(state,{...options,
+  onReady:record=>!carry&&record.kind==='farm-arrival'?farmReady:undefined,
   onCommit(_record,receipt){acquired??=receipt[profile.bindingField];}});
  const ports=new MessageChannel();
  let replacement,attached=false;
  try{
-  f.command({kind:'setNavigationView',view:{bounds:[24,-48,144,48],eye:{x:76,z:30},target:{x:75,z:-4}}});
-  f.command({kind:'openInitialHiring'});
-  f.command({kind:'hire',id:'savanna-first-hire',selection:{youngMale:1}});
+  f.command({kind:'setNavigationView',view:options.navigationView??{bounds:[24,-48,144,48],eye:{x:76,z:30},target:{x:75,z:-4}}});
+  if(!carry)f.command({kind:'openInitialHiring'});
+  f.command({kind:'hire',id:carry?'terminal-carry-third-turn':'savanna-first-hire',selection:{youngMale:1}});
   async function advance(steps){
    const result=await f.command({kind:'advance',seconds:.05,steps,nightFastForward:false});
    for(const key of result.residency?.missing??[])f.command({kind:'addChunk',key});
@@ -39,7 +51,7 @@ for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase 
   }
   let cut;
   for(let i=0;i<600;i++){
-   const current=await advance(2);
+   const current=await advance(carry?4:2);
    if(current.workers[0]?.nativeRouteAdmission==='pending-resources')releaseFarm();
    const frame=f.host.inspect().nativeRouteFrame;
    const earliest=action&&acquired?acquired.reference.request.duration*(3.8/7.2):0;
@@ -58,9 +70,10 @@ for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase 
   const terminal=await f.authority.flushNativeResourcePreparation({forLostDraw:true,allowRetired:true});
   assert(terminal.terminal&&terminal.callbacksSettled);
   const route=await f.authority.terminalWorkerRoute();
-  assert.deepEqual(route,{kind,actorId:6});
+  assert.deepEqual(route,{kind,actorId:carry?16:6});
   replacement=await drawFixture({capabilities:{nativeTaskStartVersion:1,nativeTaskActionVersion:1,nativeTaskActionClockVersion:1,
-   nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1}},
+   nativeTaskConsequenceVersion:1,nativeTaskSettlementVersion:1,nativeInitialIdleBodyVersion:1,nativeIdleCycleVersion:1,nativeIdleCycleIdlePhaseVersion:1,
+   nativeIdleStrollVersion:1}},
    {intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:source}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,hold,route);
   const {execution,resources}=source,ref=acquired.reference,epoch=ref.worldBoundary.effectiveTime;
@@ -79,11 +92,18 @@ for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase 
   }else{
    for(const field of ['x','z','runPhase','walkPhase','carryPhase','runRemaining'])
     assert.equal(execution[field],cut.workers[0][field]);
-   assert.equal('task-'+execution.taskId,cut.workers[0].taskId);
+   if(carry){
+    const worker=cut.workers[0],crate=cut.crates.find(crate=>crate.id===worker.crateId);
+    const center=cut.structures.find(center=>center.id===worker.centerId);
+    assert(nativeDeliveryProjectionMatches(execution,worker,crate,center,cut.elapsed));
+    assert(!nativeDeliveryProjectionMatches(execution,worker,{...crate,carrierId:'worker-100'},center,cut.elapsed));
+    assert(!nativeDeliveryProjectionMatches(execution,worker,{...crate,delivered:true},center,cut.elapsed));
+    assert(!nativeDeliveryProjectionMatches(execution,{...worker,carryPhase:worker.carryPhase+1},crate,center,cut.elapsed));
+   }else assert.equal('task-'+execution.taskId,cut.workers[0].taskId);
    assert.equal(resources.nativeRoute.assignmentSequence,acquired.assignmentSequence);
    assert.throws(()=>profile.copyResources({...resources,nativeRoute:{...resources.nativeRoute,
     routeHandle:{...resources.nativeRoute.routeHandle,generation:resources.nativeRoute.routeHandle.generation+1}}}),
-    /Recovered Task14 program differs/);
+    /Recovered (Task14|Carry16) program differs/);
   }
 
   const {host,client,pipeline}=replacement;
@@ -111,21 +131,30 @@ for(const kind of [14,15])test(`terminal Draw recovery preserves acquired phase 
   assert.equal(witness.assignmentSequence,action?acquired.actionSequence:acquired.assignmentSequence);
   assert.deepEqual(witness[profile.clockField],ref);
   const pick=captureNativeRoutePickFrame(host.inspect());
-  assert.equal(action?pick.getActionElapsed(ref):pick.getStartTime(ref,epoch),action?age:epoch+age);
+  assert.equal(action?pick.getActionElapsed(ref):carry?pick.getConsequenceTime(ref,epoch):pick.getStartTime(ref,epoch),action?age:epoch+age);
   await f.attachRecoveredResources(replacement);attached=true;
   assert(f.authority.resumeNativeIntentProduction(hold));
 
   let later;
+  const crateId=carry?cut.workers[0].crateId:null;
+  const consequence=carry?event=>event.type==='CrateDelivered'&&event.targetId===crateId:event=>event.type==='WaterSatisfied';
   for(let i=0;i<300;i++){
    later=await advance(4);
-   if(later.workers[0].nativeRouteAdmission==='native-idle'&&later.events.some(event=>event.type==='WaterSatisfied'))break;
+   if(later.workers[0].nativeRouteAdmission==='native-idle'&&later.events.some(consequence))break;
   }
   assert.equal(later.workers[0].nativeRouteAdmission,'native-idle');
-  assert.equal(later.events.filter(event=>event.type==='WaterSatisfied').length,1);
+  assert.equal(later.events.filter(consequence).length,1);
   assert.equal(f.records.filter(record=>record.kind==='task-start'&&record.committed).length,1);
   assert.equal(f.records.filter(record=>record.kind==='task-action'&&record.committed).length,1);
   assert.equal(later.workers[0].id,cut.workers[0].id);
-  assert.deepEqual(later.ledger,cut.ledger);
+  if(carry){
+   assert.equal(f.records.filter(record=>record.kind==='task-consequence'&&record.committed).length,1);
+   assert.equal(f.records.filter(record=>record.kind==='task-settlement'&&record.committed).length,1);
+   const crate=later.crates.find(crate=>crate.id===crateId);
+   assert(crate.delivered);
+   assert.equal(crate.carrierId,null);
+   assert.deepEqual(later.ledger.entries,{...cut.ledger.entries,[`deliver:${crateId}`]:{n:'321',d:'1'}});
+  }else assert.deepEqual(later.ledger,cut.ledger);
   assert.deepEqual(f.faults,[]);
  }finally{
   releaseFarm();

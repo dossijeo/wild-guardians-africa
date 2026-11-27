@@ -1,5 +1,7 @@
 # Objetivo activo: completar la migración integrada Wild Guardians
 
+Carry16 conserva el corredor y la caja al perder Draw. El primer dibujo del sustituto en NVIDIA incluyó las nueve piezas de la caja. El trabajador siguió siendo seleccionable y Game liquidó una sola entrega. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-carry16).
+
 Action15 conserva el riego en marcha al perder Draw. NVIDIA confirmó la edad del clip, el picking antes de reanudar, un solo riego y el regreso a Idle con el mismo cuerpo. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-action15).
 
 La pérdida de Draw durante Task14 conserva el corredor de riego adquirido. NVIDIA confirmó el mismo cuerpo y reloj en el sustituto, el picking y un solo riego tras reanudar desde el menú de Sabana 714. [Recorrido y límites](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-durante-task14).
