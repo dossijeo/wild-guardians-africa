@@ -60,7 +60,7 @@ import {captureWorldMotion} from './worker-world-motion.js';
 import {workerPhysicsActivity} from './worker-physics-activity.js';
 import {queryGuardianOrigin,queryGuardianTutorialOrigin} from './guardian-origin-query.js';
 import {validateRefugeReturnState} from '../world/native-refuge-return.js';
-import {captureNativeRaidFlightCheckpoint,nativeRaidFlightCheckpointActors} from './native-raid-flight-checkpoint.js';
+import {captureNativeRaidFlightCheckpoint,nativeRaidFlightCheckpointActors,nativeRaidFlightCheckpointLayout} from './native-raid-flight-checkpoint.js';
 
 export function parseSimulationChunkKey(key){
  if(typeof key!=='string'||!/^(-?\d+),(-?\d+)$/.test(key))throw TypeError('Invalid chunk key');
@@ -119,7 +119,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   let nativeIntentControl=null;
   let nativeResourcePreparation=null;
   let pendingNativeWorldResources=[];
-  let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false;
+  let nativeBodies=null,nativeProduction=null,nativeBirthRevision=null,nativeBirthsPending=false,gateBindings=null;
   let repairFlightProposal=null;
   let liveCenterClockArmed=false;
   const ordinarySavannaFlight=nativeWorkerLifecycle&&game.biome==='sabana';
@@ -173,7 +173,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
-  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinarySavannaFlight,nativeWorkerLifecycle,
+  const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinarySavannaFlight||!!savedFlight,nativeWorkerLifecycle,
     qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
     return repair?.actorId===source.actorId&&repair.actionSequence===source.sourceSequence&&repair.targetId===source.targetId&&
@@ -213,7 +213,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    }
   }
   if(nativeBodies){
-   const bindings=createSpatialGateIntents(session,game);
+   const bindings=gateBindings=createSpatialGateIntents(session,game);
    for(const worker of game.workers)if(worker.status!=='home'){
     const body=nativeBodies.publish(worker.id,{x:worker.x,z:worker.z,radius:WORKER_SPATIAL_PROFILE.radius,kind:0,flags:1});
     if(!bindings.bindWorker(worker.id,body))throw Error('Native restored worker body binding rejected');
@@ -230,6 +230,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
     nav.projectNativeGateLeaves=projectNativeGateLeaves;
     nav.projectNativeGateLeaves();
+    if(savedFlight?.marker.gate&&nativeGateOwners[0].gateOpen!==savedFlight.marker.gate.opening)
+     throw Error('Saved raid flight lost its gate opening during bootstrap');
    }
    if(savedRaidAnimal){
     if(savedApproach&&savedApproach.path!==savedApproachPath)throw Error('Saved native center approach lost its corridor');
@@ -431,11 +433,17 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    return routeReady||strikeReady?planner.nativeRefugeReturnCheckpoint():null;
   }
   function liveRaidFlightCheckpointOwners(){
-   if(!ordinarySavannaFlight||!game.raid?.daytime||game.workers.length!==1||game.workers[0].nativeRouteAdmission!=='native-home'||
-      game.structures.length!==1||game.structures[0].kind!=='center'||game.structures[0].status!=='intact'||
-      nativeGateOwners.length||game.spells.length||!civilShieldPhysicsAvailable())return null;
+   if((!mixedFlight&&!savedFlight)||!game.raid?.daytime||game.workers.length!==1||game.workers[0].nativeRouteAdmission!=='native-home'||
+      !civilShieldPhysicsAvailable())return null;
+   const layout=nativeRaidFlightCheckpointLayout(game);
+   if(!layout)return null;
    const owners=planner.nativeRaidFlightRecoveryExecutions();
-   return owners&&owners.every(owner=>!owner.binding.gateIds.length)?owners:null;
+   if(!owners||owners[1].binding.gateIds.length)return null;
+   const {gate}=layout,ids=owners[0].binding.gateIds;
+   if(!gate)return !ids.length?owners:null;
+   const pose=gateBindings?.read(gate.id);
+   return ids.length===1&&ids[0]===Number(gate.id.split('-').at(-1))&&gate.gateOpen===1&&
+    pose?.sampledAt===game.elapsed&&pose.opening===1&&pose.target===1?owners:null;
   }
   function saveAvailable(refugeReturn=refugeReturnCheckpoint(),flight=null){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
     !planner.encounterCheckpointBlocked(!!refugeReturn,!!flight)&&confirmedStateSaveAvailable(game,{allowNativeRaidFlight:!!flight});}
@@ -499,7 +507,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       sample.firstRemainingPoint*2>=points.length)throw Error('Native raid flight checkpoint lost its Home corridor');
    const path=[];
    for(let i=sample.firstRemainingPoint*2;i<points.length;i+=2)path.push({x:points[i],z:points[i+1]});
-   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path);
+   return captureNativeRaidFlightCheckpoint(state,worker,animal,home.binding.reference.sourceRequest.raidSpawnSequence,path,
+     nativeRaidFlightCheckpointLayout(state)?.gate);
   }
   stopSettlements=observeSettlements(game.ledger,(id,n,d)=>settlements.push({id,n,d,simulationTime:game.elapsed,eventSequence:game.sequence}));
   stopEvents=observeGameEvents(game,event=>{if(event.type==='RaidSpawned'){prepareRaidFlightAnimal(event);prepareLiveCenterAttack(event);prepareShelteredSavannaCenterAttack(event);}events.push(structuredClone(event));if(trackMicroIncome&&(event.type==='Dawn'||event.type==='CrateDelivered'))trackIncome(game,[event]);if(activeHistoricalCapture)try{activeHistoricalCapture.event(game,event,events);}catch{activeHistoricalCapture.invalidate();}});
@@ -1275,7 +1284,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         const approach=animal.status!=='retreating',fall=planner.nativeEncounterFallRecovery(approach?'center':'retreat');
         if(fall)return {version:2,encounter:approach?'approach':'retreat',members:[{kind:26,actorId:fall.execution.actorId}]};
       }
-      if(mixedFlight){
+      if(mixedFlight||savedFlight){
         if(workersAtRefuge){
           const sheltered=planner.nativeRefugeCropRecovery(kind);
           if(sheltered)return {version:2,refuge:true,members:[{kind,actorId:sheltered.execution.actorId}]};
@@ -1848,7 +1857,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const restorableStrike=strikeSource&&(strikeSource.purpose==='center'||crop===strike&&!strikeSource.purpose)&&
       (strikeSource.mode===3&&strike.attackId==='attack-'+strikeSource.strike.attackId||
       strike===savedStrike&&strikeSource.mode===5&&strike.attackId==='attack-'+strikeSource.restore.attackId);
-    const workerLifecycle=captureNativeCheckpoint&&nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute||restorableStrike||raidFlight)&&game.workers.every(worker=>
+    const workerLifecycle=captureNativeCheckpoint&&(!!raidFlight||nativeWorkerLifecycle&&(!game.raid||restorableRaidRoute||restorableStrike))&&game.workers.every(worker=>
       nativeMarkers.has(worker.nativeRouteAdmission)||planner.nativeWorkerHomeInactive(worker.id));
     if(captureNativeCheckpoint&&refugeReturn&&!workerLifecycle)throw Error('Native refuge return lost its restorable animal');
     const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),...(refugeReturn?{refugeReturn}:{}),...(raidFlight?{raidFlight}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;

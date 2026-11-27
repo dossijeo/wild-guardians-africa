@@ -27,7 +27,8 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_raid_flight_home(double actor,double
  auto& s=state();
  if(!integer(actor)||!integer(event)||!integer(village)||!coordinate(homeX)||!coordinate(homeZ)||
     count<1||count>4096||s.attackRouteInput.size()!=size_t(count)*2)return -1;
- if(spatial_world_biome()!=0||spatial_execution_profile_kind()!=0||s.workers.size()!=1||!s.gates.empty()||
+ const int biome=spatial_world_biome();
+ if((biome!=0&&biome!=1)||spatial_execution_profile_kind()!=0||s.workers.size()!=1||!s.gates.empty()||
     s.causalClock||s.executionEnabled||s.bodyDomainActive||spatial_body_count()!=0||
     s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  const auto worker=s.workers.find(uint64_t(actor));
@@ -36,7 +37,9 @@ EMSCRIPTEN_KEEPALIVE int nav_intent_restore_raid_flight_home(double actor,double
  double x=worker->second.x,z=worker->second.z;
  for(size_t i=0;i<s.attackRouteInput.size();i+=2){
   const float nx=s.attackRouteInput[i],nz=s.attackRouteInput[i+1];
-  if(!coordinate(nx)||!coordinate(nz)||spatialWorkerFlightSegmentClear(x,z,nx,nz,.28)!=1)return -3;
+  // Desert Home compiles the gate sweep after the saved gate mechanism has
+  // been installed. Its candidate timing certifies each segment and gate.
+  if(!coordinate(nx)||!coordinate(nz)||(biome==0&&spatialWorkerFlightSegmentClear(x,z,nx,nz,.28)!=1))return -3;
   x=nx;z=nz;
  }
  return restoreNativeHomeRequest(actor,village,homeX,homeZ,yaw,run,walk,carry,budget,uint64_t(event),s.attackRouteInput);

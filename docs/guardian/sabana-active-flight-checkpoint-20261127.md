@@ -26,4 +26,6 @@ La recarga con blanco `structure-2` leyó el guardado del control integrado de C
 
 Standalone y pthread conservan las importaciones y añaden `nav_intent_restore_raid_flight_home`. La prueba pthread invoca la función y comprueba que un corredor ausente se rechaza.
 
-El alcance físico de esta ruta es Sabana con un trabajador sano, un facóquero, un centro en pie y ningún portón ni Escudo activo. En el control determinista de Desierto, el corte a t=13,76 con el portón abierto y ambos relojes presentados conserva el rechazo `physics-active`. El corte durante Stop24, las cohortes con portón o contacto y la pérdida de dispositivo durante una preparación fría siguen sujetos a sus propias pruebas. Se mantienen abiertos los criterios de A6, B y C.
+Este recorrido cubre Sabana con un trabajador sano, un facóquero, un centro en pie y ningún portón ni Escudo activo. El control determinista inicial de Desierto a t=13,76 rechazaba el mismo corte con `physics-active`. El incremento siguiente aceptó la recarga de ese caso con el portón totalmente abierto. [Guardado de la huida activa con portón](desert-active-gate-checkpoint-20261127.md).
+
+El corte durante Stop24, las cohortes con contacto y la pérdida de dispositivo durante una preparación fría siguen sujetos a sus propias pruebas. Se mantienen abiertos los criterios de A6, B y C.

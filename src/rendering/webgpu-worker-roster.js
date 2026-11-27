@@ -576,7 +576,15 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&JSON.stringify(entry.entity)===stamp&&(farm?farmEntity():stroll?strollEntity()&&strollSourceCurrent():home?homeEntity()&&homeProofCurrent():consequence?actionEntity()&&actionProofCurrent():starting?pendingEntity()&&(!previous||settledStartCurrent()||initialStartCurrent()||cycleStartCurrent()||heldStartCurrent()||completedFarmStartCurrent()):nativeLocomotionEntity(entry,carrying,true)&&crateId===previous.crateId)&&support.valid()===true&&entry.nativeState===(activated?candidate:previous);
   const check=()=>{if(!current())throw new DOMException('Native resumed worker changed','AbortError');};
   try{
-   await entry.ready;await entry.bakeResourcePromise;await entry.bakeRequestPromise;check();if((farm||stroll||home||starting)&&!entry.actor?.hasBakedWalking?.())throw Error('Native task locomotion source unavailable');
+   await entry.ready;await entry.bakeResourcePromise;await entry.bakeRequestPromise;check();
+   // A cold fleeing worker can admit its stationary Idle clip while Walk downloads.
+   // Join that installation before asking the same rig to install Walk.
+   if(home&&!entry.actor?.hasBakedWalking?.()&&entry.idlePending){
+    await entry.idleRequestPromise;check();
+    resumeBakedWalk(id,entry);await entry.bakeResourcePromise;check();
+    await entry.bakeRequestPromise;check();
+   }
+   if((farm||stroll||home||starting)&&!entry.actor?.hasBakedWalking?.())throw Error('Native task locomotion source unavailable');
    // Share the existing material-preparation lock with stationary native bodies.
    // Deferred ordinary clip/history installs must not replace this candidate.
    entry.motionPreparing=pending;locked=true;

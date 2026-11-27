@@ -907,7 +907,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const birth={workerActor:marker.actorId,workerBody,sourceSequence:home.requestSequence,
       farmTicket:null,raidSpawnSequence:marker.spawnSequence};
     const pair={raid:state.raid,animal,worker,event:marker.spawnSequence,animalBody:body,workerBody,
-      birth,center:numericId(subject.center.id),centerAttack:subject.purpose==='center',cold:true};
+      birth,center:numericId(subject.center.id),centerAttack:subject.purpose==='center',cold:true,
+      ...(marker.gate?{gateId:numericId(marker.gate.id)}:{})};
     raidFlight=pair;
     if(!requestNativeAnimalCropRoute(state,animal,body)){raidFlight=null;return false;}
     pair.requestSequence=nativeAnimalCropState(animal.id)?.requestSequence;
@@ -1057,7 +1058,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
   }
   function encounterCheckpointBlocked(refugeReturn=false,raidFlightCheckpoint=false){
     const raid=owningState?.raid;
-    if(nativeWorkerLifecycle&&owningState?.biome==='sabana'&&raid&&
+    if(nativeWorkerLifecycle&&(owningState?.biome==='sabana'||raidFlight?.cold||refuge?.coldFlight)&&raid&&
       (!raidFlightCheckpoint&&raidFlight?.raid===raid||!refugeReturn&&(refuge?.raid===raid||restoredRefuge?.raid===raid)))return true;
     const worker=restoredEncounter?.worker??raidFlight?.worker;
     return !!(encounterImpact?.consumed||restoredEncounter)&&!encounterCheckpoint()&&!(worker&&nativeWorkerHomeInactive(worker.id));
@@ -3681,7 +3682,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         restoredEncounter=null;encounterImpact=null;encounterExhaustion=null;raidFlight=null;
         refuge={worker,raid:null,issued};
       }else if(raidFlight?.worker===worker&&source.reference.sourceRequest?.raidSpawnSequence===raidFlight.event){
-        refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId};
+        refuge={worker,raid:raidFlight.raid,issued,contractDay:worker.contractDay,centerId:worker.centerId,coldFlight:raidFlight.cold===true};
         raidFlight=null;
       }else if(!state.raid&&!worker.incapacitated){
         ordinaryRefuge={worker,raid:null,issued};
@@ -3713,12 +3714,17 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(!source||!home||!worker||!village)return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});
     const current=()=>owningState===state&&state.workers.includes(worker)&&state.villages.includes(village)&&(flight?nativeRaidFlightMember(state,state.raid?.animals[0])===worker&&r.raidSpawnSequence===raidFlight?.event:worker.status===nativeHomeWorkerStatus(r))&&(r.recoveryHit?worker.incapacitated&&worker.hits===2&&worker.recoveryExitRemaining===(r.recoveryExit??RECOVERY_EXIT_SECONDS):!worker.incapacitated&&!worker.recoveryExitRemaining)&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&worker.running===false&&worker.gateWaiting===false&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>worker[k]===r.pose[k])&&!worker.taskId&&!worker.crateId&&(fresh?worker.nativeRouteAdmission===(flight?'pending-raid-flight-resources':'pending-home-resources')&&worker.heading===r.pose.yaw&&sameNativeHomeRequestReference(nativeHomeRequestReference(actor),source):!worker.nativeRouteAdmission)&&!worker.path?.length&&numericId(worker.villageId)===home.villageId&&(village.entry??village).x===home.x&&(village.entry??village).z===home.z;
     if(!current())return Promise.resolve({status:'unsupported',authorizedAutonomy:false,authorizedPassage:false});let candidate=null,translation=null,preparedTicket=null;
+    const flightRouteClear=proposal=>{
+      const gateId=raidFlight?.gateId;
+      return (!gateId||proposal.gates.length===1&&proposal.gates[0].gateId===gateId)&&
+        flightCandidateClear(proposal.ticket.session,proposal.ticket.ticket);
+    };
     const protocol={preparedFrameRequired:true,deferred:true,motionKind:'home-route',
       retained(session,ticket){if(!current()||wasm.nav_intent_barrier_proposal_ticket()!==1)return false;const a=new Float64Array(wasm.memory.buffer,wasm.nav_intent_barrier_proposal_ticket_ptr(),6);return a[0]===session&&a[1]===ticket&&a[5]===18;},
-      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;if(flight&&!flightCandidateClear(session,candidate.ticket.ticket)){cancelNativeHomeRouteProposal(candidate.ticket);return {status:'stale'};}translation=result.timeTranslation;}return result;},timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(g=>g.gateId),ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),snapshot:(session,ticket)=>wasm.nav_home_route_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_home_route_proposal_cancel(session,ticket),release(){},
+      revalidate(session,ticket){if(!current())return {status:'stale'};const result=revalidateNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:epoch(),session,ticket});if(result.status==='revalidated'){candidate=result.proposal;if(flight&&!flightRouteClear(candidate)){cancelNativeHomeRouteProposal(candidate.ticket);return {status:'stale'};}translation=result.timeTranslation;}return result;},timeTranslation:()=>translation,gateIds:()=>candidate.gates.map(g=>g.gateId),ticket:()=>wasm.nav_intent_barrier_proposal_ticket(),ticketPtr:()=>wasm.nav_intent_barrier_proposal_ticket_ptr(),snapshot:(session,ticket)=>wasm.nav_home_route_proposal_snapshot(session,ticket),cancel:(session,ticket)=>wasm.nav_home_route_proposal_cancel(session,ticket),release(){},
       capture(boundary){candidate=captureNativeHomeRouteProposal({kind:'native-home-route-proposal-ticket',authorityEpoch:boundary.authorityEpoch,session:boundary.nativeSession,ticket:boundary.ticket});if(!candidate)throw Error('Native Home route resources unavailable');preparedTicket=candidate.ticket.ticket;return candidate;}};
     return commitNativeWorldProposal(getPublication,()=>{if(!current())return -2;const p=prepareNativeHomeRouteProposal(source);
-      if(flight&&p.status==='proposed'&&!flightCandidateClear(p.proposal.ticket.session,p.proposal.ticket.ticket)){cancelNativeHomeRouteProposal(p.proposal.ticket);return 0;}
+      if(flight&&p.status==='proposed'&&!flightRouteClear(p.proposal)){cancelNativeHomeRouteProposal(p.proposal.ticket);return 0;}
       return p.status==='proposed'?1:p.status==='busy'?-4:p.status==='conflict'?0:-2;},(mark,...boundary)=>{
       if(!current()||flight&&!flightCandidateClear(boundary[0],boundary[1]))return {status:-2};const status=wasm.nav_home_route_proposal_commit_bound(...boundary,preparedTicket);if(status!==1)return {status};mark();if(fresh&&beginNativeRouteExecution().status!=='started')throw Error('Restored Home could not establish its native execution boundary');projectNativeHomeRouteExecution(state,worker,{nativeHomeRouteExecution});
       const binding=nativeHomeRouteBinding(actor),nativeRoute=Object.freeze({actorId:actor,routeHandle:binding.reference.expectedRouteHandle,assignmentSequence:binding.assignmentSequence}),resources=Object.freeze({version:1,kind:18,phase:'committed',worldBoundary:nativeWorldBoundary(),nativeRoute,nativeHomeRouteBinding:binding,presentation:captureNativeRoutePresentation(binding.reference.expectedRouteHandle)});mark({resources,nativeRoute,nativeHomeRouteBinding:binding});return {status:1,value:{resources,nativeRoute,nativeHomeRouteBinding:binding}};
