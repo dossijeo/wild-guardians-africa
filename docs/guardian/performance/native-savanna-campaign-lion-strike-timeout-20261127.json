@@ -1,0 +1,63 @@
+{
+  "baselineRevision": "cec581479c7bd078e9efa5f53f79bad029c534fd",
+  "localRecoverySources": {
+    "src/app/main.js": "719324d2cb8371c4e09aa6792e575fd8c1ced554299cc57de7190a67704c8842",
+    "src/app/webgpu-auto-recovery.js": "1f28be1ec76c6cb7f650875ef57c9e3457981512d92668b54f6e681fea33f34f",
+    "src/rendering/confirmed-historical-event-playback.js": "a83baaedf33d72d66bcab98f5a74369bc8ceefb3715520c984f68f3d47a5bd71",
+    "src/rendering/webgpu-frame-recovery.js": "5d83f07b9ff70deb347383fee01cc6742105c691a29a860f76b1361b666d221c"
+  },
+  "artifact": "native-menu-campaign-714-released-floor-event-recovery-extended.json",
+  "sha256": "1beaa3bce7d8d6621a9dc485f04689ba1af0b23b1f501a750f3e4c12be992fe6",
+  "scenario": {
+    "seed": 714,
+    "biome": "sabana",
+    "adapter": "NVIDIA Turing",
+    "fromMenu": true,
+    "day": 4,
+    "nativeWorkerLifecycle": true
+  },
+  "route": {
+    "id": 100,
+    "ticket": 198,
+    "effectiveTime": 2137.898709451765,
+    "minSequence": 33411,
+    "firstApplied": 33370,
+    "firstReceived": 33402,
+    "appliedAfterMs": 2635.419921875,
+    "acquired": {
+      "ticket": 199,
+      "afterMs": 8049.72998046875
+    },
+    "firstDraw": {
+      "sequence": 5436,
+      "elapsed": 2150.448709451811,
+      "afterMs": 8060.02978515625,
+      "age": 0
+    }
+  },
+  "strike": {
+    "id": 101,
+    "ticket": 200,
+    "effectiveTime": 2168.648709451877,
+    "minSequence": 33758,
+    "firstApplied": 33679,
+    "firstReceived": 33704,
+    "appliedAfterMs": 7069.080078125,
+    "preparingAfterMs": 7175.054931640625,
+    "timeoutAfterMs": 10002.204833984375,
+    "hostResponseAfterTimeoutMs": 13.730224609375,
+    "hostResponse": "Prepared world frame unavailable",
+    "ready": false,
+    "acquired": false,
+    "logicalHits": 0
+  },
+  "lastState": {
+    "elapsed": 2176.898709451907,
+    "confirmedSequence": 33863,
+    "balance": 711
+  },
+  "recoveryTriggers": 0,
+  "drained": false,
+  "pageErrors": [],
+  "httpErrors": []
+}
