@@ -43,54 +43,81 @@ function addSecondGate(state){
  state.nextId=1000002;
 }
 
-test('Stop24 draws its acquired motor even when the next Task has already requested the stopped worker',async()=>{
- let ready,release,commit;
- const held=new Promise(resolve=>{release=resolve;});
- const f=await gateRouteAuthority(false,{
+for(const [scenario,{gateCount,maturity,taskReady,stoppedGateIds}] of Object.entries({
+ 'one opening gate':{gateCount:1,maturity:.5,taskReady:true,stoppedGateIds:[1000000]},
+ 'an opening gate and a future gate':{gateCount:2,maturity:.5,taskReady:true,stoppedGateIds:[1000000,1000001]},
+ 'one settled gate':{gateCount:1,maturity:4,taskReady:true,stoppedGateIds:[]},
+ 'a settled gate and a future gate':{gateCount:2,maturity:2.1,taskReady:false,stoppedGateIds:[1000001]},
+}))test('Stop24 presents the stopped worker with '+scenario,async()=>{
+ let stop,task,releaseStop,releaseTask,commit;
+ const stopHeld=new Promise(resolve=>{releaseStop=resolve;});
+ const taskHeld=new Promise(resolve=>{releaseTask=resolve;});
+ const f=await gateRouteAuthority(false,{nativeWorkerLifecycle:true,
   configure(state,worker){
+   if(gateCount===2)addSecondGate(state);
    const crop=createPlant('plant-'+state.nextId++,'mijo',-10.6,5.3,worker.centerId);
-   crop.growth=cropSpec(crop.species).growth_seconds-.5;
+   crop.growth=cropSpec(crop.species).growth_seconds-maturity;
    for(const water of crop.water)water.status='manual';
    state.plants.push(crop);
   },
-  onReady(record){if(record.kind==='farm-arrival-stop'){ready=record;return held;}},
+  onReady(record){
+   if(record.kind==='farm-arrival-stop'){stop=record;return stopHeld;}
+   if(record.kind==='task-start'){task=record;return taskHeld;}
+  },
   onCommit(record,receipt){if(record.kind==='farm-arrival-stop')commit=receipt;},
  });
  try{
-  await untilProduction(f,()=>f.records.some(r=>r.kind==='farm-arrival'&&r.committed));
+  const farm=()=>f.records.find(r=>r.kind==='farm-arrival'&&r.committed);
+  await untilProduction(f,farm);
+  assert.equal(farm().resources.gates.length,gateCount);
   const advance=async()=>{const state=f.advance(.025);await f.present();return state;};
-  for(let i=0;i<30&&!ready;i++)await advance();
-  assert(ready?.packet,'Expected the crop to mature during opening');
-  const before=ready.resources.gateEffects.rows;
-  assert.deepEqual(Array.from(before.slice(0,2)),[1000000,1]);
-  assert(before[2]>.2&&before[2]<.3);
+  for(let i=0;i<140&&!stop;i++)await advance();
+  assert(stop?.packet,'The crop must mature before the Farm route ends');
+  const before=stop.resources.gateEffects.rows;
+  const projectedGateIds=rows=>Array.from(rows).filter((_,i)=>i%3===0);
+  assert.deepEqual(projectedGateIds(before),stoppedGateIds);
   const waiting=await advance();
-  assert(waiting.structures.find(s=>s.gate).gateOpen>before[2]);
+  const openings=state=>state.structures.filter(s=>s.gate).map(s=>s.gateOpen);
+  if(maturity===.5){
+   assert(before[2]>.2&&before[2]<.3);
+   assert(openings(waiting)[0]>before[2]);
+  }
   assert.equal(waiting.workers[0].nativeRouteAdmission,'native-farm-arrival');
-  assert.equal(ready.committed,false);
-  release();
-  for(let i=0;i<5&&!commit;i++)await advance();
-  assert(commit);
-  assert.equal(f.snapshot().workers[0].nativeRouteAdmission,'pending-resources');
-  const evidence=commit.nativeFarmArrivalStopBinding;
-  const actual=evidence.projection.gateEffects.rows;
-  assert.deepEqual(Array.from(actual.slice(0,2)),Array.from(before.slice(0,2)));
-  assert(actual[2]>before[2]&&actual[2]<1);
+  assert.equal(stop.committed,false);
   let submitted;
-  ready.packet.presented.then(frame=>{submitted=frame;},()=>{});
-  for(let i=0;i<8&&!submitted;i++)await f.present();
-  assert(submitted,'The stopped worker and motor must submit together');
+  stop.packet.presented.then(frame=>{submitted=frame;},()=>{});
+  releaseStop();
+  const successorWaiting=()=>taskReady?task:f.authority.nativeIntentProductionStatus().last?.status==='blocked';
+  for(let i=0;i<9&&!successorWaiting();i++)await advance();
+  await untilProduction(f,()=>successorWaiting()&&commit&&submitted);
+  const cut=f.snapshot();
+  assert.equal(cut.workers[0].nativeRouteAdmission,'pending-resources');
+  if(taskReady)assert.equal(task.committed,false);
+  else assert.equal(task,undefined);
+  const actual=commit.nativeFarmArrivalStopBinding.projection.gateEffects.rows;
+  assert.deepEqual(projectedGateIds(actual),stoppedGateIds);
+  const frozenOpenings=openings(cut);
+  if(maturity===.5)assert(actual[2]>before[2]&&actual[2]<1);
+  else assert.equal(frozenOpenings[0],1);
+  if(gateCount===2)assert.equal(frozenOpenings[1],0);
   const frame=f.host.inspect().nativeRouteFrame;
   assert.equal(frame.sequence,submitted.sequence);
   assert.deepEqual(frame.worldBoundary,commit.worldBoundary);
   const body=frame.bindings.find(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-body');
-  const motor=frame.bindings.find(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-gate');
   assert.equal(body?.bodyReference.bodyId,1);
-  assert.equal(motor?.nativeStopped.gateId,actual[0]);
-  assert.equal(motor?.nativeStopped.mechanism,actual[1]);
-  assert.equal(motor?.opening,Math.fround(actual[2]));
+  const motors=frame.bindings.filter(b=>b.nativeStopped?.kind==='native-farm-arrival-stopped-gate');
+  assert.deepEqual(motors.map(b=>b.nativeStopped.gateId),stoppedGateIds);
+  for(const [i,motor] of motors.entries()){
+   assert.equal(motor.nativeStopped.mechanism,actual[3*i+1]);
+   assert.equal(motor.opening,Math.fround(actual[3*i+2]));
+  }
+  const after=await advance();
+  assert.deepEqual(openings(after),frozenOpenings);
+  for(const field of ['x','z','heading','runPhase','walkPhase','carryPhase','runRemaining']){
+   assert.equal(after.workers[0][field],cut.workers[0][field],field);
+  }
   assert.deepEqual(f.faults,[]);
- }finally{release();await f.close();}
+ }finally{releaseStop();releaseTask();await f.close();}
 });
 
 test('the ordinary Home18 checkpoint reacquires the same gate opening and reproduces the crossing',async()=>{

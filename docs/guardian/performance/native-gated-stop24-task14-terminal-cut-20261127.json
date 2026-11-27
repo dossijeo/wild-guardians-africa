@@ -1,0 +1,298 @@
+{
+  "base": "e6922411e9a0c20c0d8201c3387c74c88f8a3984",
+  "evidence": "Game, WASM, MessagePorts and Draw Host with a deterministic GPU queue",
+  "baseline": {
+    "tap": "terminal-gated-stop24-before-20261127.tap",
+    "sha256": "0168aaf14bbdd339ab8d59701c2fc39d603f91526e4129678de2d5f3cac0a912",
+    "cuts": [
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 0.5,
+        "clockElapsed": 10.65000000000001,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 10.600000000000009
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 0.5999999642372131,
+            "x": -13.98981761932373,
+            "z": 11.399983406066895,
+            "phase": 0.37050533294677734,
+            "yaw": 3.1161437034606934,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 7.680757999420166,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 0.3824911119993679,
+            "submittedOpening": 0.3824911117553711
+          }
+        ],
+        "task": {
+          "ticket": 5,
+          "aborted": true,
+          "committed": false
+        },
+        "taskOutcome": "control-failed",
+        "hold": "Error: Native intent production failed: Native resource preparer closed",
+        "recoveryDescriptor": null,
+        "errors": [
+          "Error: Native resource preparer closed"
+        ]
+      },
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 0.5,
+        "clockElapsed": 10.65000000000001,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 10.600000000000009
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 0.5999999642372131,
+            "x": -13.98981761932373,
+            "z": 11.399983406066895,
+            "phase": 0.37050533294677734,
+            "yaw": 3.1161437034606934,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 7.680757999420166,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 0.3824911119993679,
+            "submittedOpening": 0.3824911117553711
+          },
+          {
+            "id": 1000001,
+            "mechanism": 2,
+            "opening": 0,
+            "submittedOpening": 0
+          }
+        ],
+        "task": {
+          "ticket": 5,
+          "aborted": true,
+          "committed": false
+        },
+        "taskOutcome": "control-failed",
+        "hold": "Error: Native intent production failed: Native resource preparer closed",
+        "recoveryDescriptor": null,
+        "errors": [
+          "Error: Native resource preparer closed"
+        ]
+      }
+    ]
+  },
+  "privateNativeSourceProbe": {
+    "tap": "terminal-gated-stop24-native-four-cuts-20261127.tap",
+    "sha256": "ee91e5670c9757ecb42976f6a3a8fdfe676e406f38dbf76be44ebc5c17654167",
+    "cuts": [
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 0.5,
+        "clockElapsed": 10.65000000000001,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 10.600000000000009
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 0.5999999642372131,
+            "x": -13.98981761932373,
+            "z": 11.399983406066895,
+            "phase": 0.37050533294677734,
+            "yaw": 3.1161437034606934,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 7.680757999420166,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 0.3824911119993679,
+            "submittedOpening": 0.3824911117553711,
+            "source": "acquired-stop"
+          }
+        ],
+        "task": {
+          "ticket": 5,
+          "aborted": true,
+          "committed": false
+        },
+        "taskOutcome": "cancelled",
+        "hold": true,
+        "recoveryDescriptor": "Invalid suspended worker task recovery source",
+        "errors": []
+      },
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 0.5,
+        "clockElapsed": 10.65000000000001,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 10.600000000000009
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 0.5999999642372131,
+            "x": -13.98981761932373,
+            "z": 11.399983406066895,
+            "phase": 0.37050533294677734,
+            "yaw": 3.1161437034606934,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 7.680757999420166,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 0.3824911119993679,
+            "submittedOpening": 0.3824911117553711,
+            "source": "acquired-stop"
+          },
+          {
+            "id": 1000001,
+            "mechanism": 2,
+            "opening": 0,
+            "submittedOpening": 0,
+            "source": "acquired-stop"
+          }
+        ],
+        "task": {
+          "ticket": 5,
+          "aborted": true,
+          "committed": false
+        },
+        "taskOutcome": "cancelled",
+        "hold": true,
+        "recoveryDescriptor": "Invalid suspended worker task recovery source",
+        "errors": []
+      },
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 4,
+        "clockElapsed": 14.150000000000059,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 14.100000000000058
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 4.099999904632568,
+            "x": -13.949600219726562,
+            "z": 8.020641326904297,
+            "phase": 3.5,
+            "yaw": 3.1415927410125732,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 12.375,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 1,
+            "submittedOpening": null,
+            "source": "unchanged-plateau"
+          }
+        ],
+        "task": {
+          "ticket": 5,
+          "aborted": true,
+          "committed": false
+        },
+        "taskOutcome": "cancelled",
+        "hold": true,
+        "recoveryDescriptor": "Invalid suspended worker task recovery source",
+        "errors": []
+      },
+      {
+        "worker": "worker-900011",
+        "cropMaturitySeconds": 2.1,
+        "clockElapsed": 12.250000000000032,
+        "frame": 2,
+        "stop": {
+          "ticket": 4,
+          "at": 12.200000000000031
+        },
+        "body": {
+          "id": 1,
+          "pose": {
+            "age": 2.1999998092651367,
+            "x": -13.956028938293457,
+            "z": 10.072559356689453,
+            "phase": 1.600000023841858,
+            "yaw": 3.1161437034606934,
+            "arrived": 0,
+            "runPhase": 23.25,
+            "walkPhase": 9.524999618530273,
+            "carryPhase": 9.5
+          }
+        },
+        "gates": [
+          {
+            "id": 1000000,
+            "mechanism": 1,
+            "opening": 1,
+            "submittedOpening": null,
+            "source": "unchanged-plateau"
+          },
+          {
+            "id": 1000001,
+            "mechanism": 2,
+            "opening": 0,
+            "submittedOpening": 0,
+            "source": "acquired-stop"
+          }
+        ],
+        "task": null,
+        "taskOutcome": "blocked",
+        "hold": true,
+        "recoveryDescriptor": "Invalid suspended worker task recovery source",
+        "errors": []
+      }
+    ]
+  },
+  "regression": {
+    "tap": "terminal-gated-stop24-focus-20261127.tap",
+    "sha256": "c12ca9725a994e1e86f6277625f8bc1abea4e219e479bfbd7c80e7d03a9335c7",
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "testPaths": [
+      "tests/native-terminal-farm-gate-recovery.test.js",
+      "tests/native-terminal-farm-stop-task.test.js"
+    ]
+  },
+  "limits": "The probe retains the authority but the recovery descriptor still refuses gated Stop24. No replacement draw, GPU hardware, or picking was tested."
+}
