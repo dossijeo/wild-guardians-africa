@@ -100,7 +100,11 @@ for(const kind of [26,27])test('publishing center motion '+kind+' preserves ever
   assert.equal(runtime.status().pendingSteps,0);
  }finally{runtime.dispose();}
 });
-test('an encounter recovery cut preserves the split timestep and later FIFO work',async()=>{
+for(const [field,done,elapsed,remaining] of [
+ ['encounterRecoveryCut',0,.02,.03],
+ ['pendingRuinRecoveryCut',0,.02,.03],
+ ['pendingRuinRecoveryCut',1,.05,.05],
+])test(`${field} preserves the interrupted timestep and later FIFO work (${remaining}s remaining)`,async()=>{
  let now=0,wake,allow=true,confirmed=0;
  const sent=[],publications=[];
  const client={ready:Promise.resolve(),submit(command){
@@ -115,7 +119,7 @@ test('an encounter recovery cut preserves the split timestep and later FIFO work
  };}};
  const runtime=createWorkerGameRuntime({client,world,session:'s',stepSeconds:.05,maxBatchSteps:3,
   now:()=>now,schedule:callback=>(wake=callback,1),cancel(){},canDispatch:()=>allow,
-  acceptEncounterRecoveryCut(cut,sequence){
+  acceptNativeRecoveryCut(cut,sequence){
    assert.equal(sequence,2);assert.equal(cut.holdId,7);
    allow=false;runtime.suspendClockCapture();return true;
   }});
@@ -127,19 +131,22 @@ test('an encounter recovery cut preserves the split timestep and later FIFO work
   const started=runtime.start();await flush();await complete(0);await started;
   now=150;wake();assert.equal(sent[1].command.steps,3);
   const pause=runtime.submit({kind:'pause',reason:'menu'});
-  const worldBoundary={version:1,authorityEpoch:'authority',nativeSession:1,ticket:11,effectiveTime:.02};
-  await complete(1,{elapsed:.02,stepsExecuted:0,encounterRecoveryCut:{version:1,holdId:7,worldBoundary,remainingSeconds:.03}});
-  assert.equal(runtime.status().confirmedElapsed,.02);
-  assert.equal(runtime.status().pendingSteps,3);
-  assert.equal(publications[1].encounterRecoveryCut,undefined);
+  const worldBoundary={version:1,authorityEpoch:'authority',nativeSession:1,ticket:11,effectiveTime:field==='encounterRecoveryCut'?elapsed:0};
+  await complete(1,{elapsed,stepsExecuted:done,[field]:{version:1,holdId:7,worldBoundary,remainingSeconds:remaining}});
+  assert.equal(runtime.status().confirmedElapsed,elapsed);
+  assert.equal(runtime.status().pendingSteps,3-done);
+  assert.equal(publications[1][field],undefined);
   now=5000;wake();assert.equal(sent.length,2);
   allow=true;runtime.resumeClockCapture();runtime.resumeDispatch();
-  assert.deepEqual(sent[2].command,{kind:'advance',seconds:.03,nightFastForward:true});
-  await complete(2,{elapsed:.05});
-  assert.deepEqual(sent[3].command,{kind:'advance',seconds:.05,steps:2,nightFastForward:true});
-  await complete(3,{elapsed:.15,stepsExecuted:2});
-  assert.equal(sent[4].command.kind,'pause');
-  await complete(4,{elapsed:.15});await pause;
+  let cursor=2;
+  if(remaining<.05){
+   assert.deepEqual(sent[cursor].command,{kind:'advance',seconds:remaining,nightFastForward:true});
+   await complete(cursor++,{elapsed:.05});
+  }
+  assert.deepEqual(sent[cursor].command,{kind:'advance',seconds:.05,steps:2,nightFastForward:true});
+  await complete(cursor++,{elapsed:.15,stepsExecuted:2});
+  assert.equal(sent[cursor].command.kind,'pause');
+  await complete(cursor,{elapsed:.15});await pause;
   assert.equal(runtime.status().pendingSteps,0);
  }finally{runtime.dispose();}
 });

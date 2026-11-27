@@ -3,7 +3,7 @@ import {validateTutorialUpdateStatus} from '../tutorial/update-status.js';
 import {copyNativeWorldBoundary} from '../world/native-world-boundary.js';
 // Coordinates one authoritative Worker with a presentation-only WorldScene.
 // Its timer is independent of rendering; it never advances the game locally.
-export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,acceptEncounterRecoveryCut=null}){
+export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,nightFastForward=true,captureClockSegments=false,maxCommands=128,controlReserve=8,maxBatchSteps=1,batchWindowSteps=1,diagnostics=false,startupCommand=null,startupSuspended=false,now=()=>performance.now(),schedule=(fn,ms)=>setTimeout(fn,ms),cancel=id=>clearTimeout(id),onError=()=>{},onConfirmedEvents=null,onConfirmedState=null,onPresentationError=onError,canDispatch=()=>true,acceptNativeRecoveryCut=null}){
  if(!client?.ready||typeof client.submit!=='function'||typeof world?.createConfirmedReceiver!=='function'||typeof canDispatch!=='function'||typeof session!=='string'||!session||!Number.isFinite(stepSeconds)||stepSeconds<=0||stepSeconds>1||typeof nightFastForward!=='boolean'||typeof captureClockSegments!=='boolean'||!Number.isSafeInteger(maxCommands)||maxCommands<1||!Number.isSafeInteger(controlReserve)||controlReserve<1||!Number.isSafeInteger(maxBatchSteps)||maxBatchSteps<1||maxBatchSteps>256||!Number.isSafeInteger(batchWindowSteps)||batchWindowSteps<1||batchWindowSteps>maxBatchSteps||batchWindowSteps>1&&batchWindowSteps*stepSeconds>.25)throw TypeError('Invalid worker game runtime');
  if(typeof startupSuspended!=='boolean')throw TypeError('Invalid startup clock policy');
  if(startupCommand!==null&&(!['pause','resume'].includes(startupCommand?.kind)||startupCommand.reason!=='hidden'||Object.keys(startupCommand).length!==2))throw TypeError('Invalid startup visibility command');
@@ -30,7 +30,9 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
   request.result.then(result=>{
    if(closed||fault)return;
    if(result.tutorialUpdate!==undefined)validateTutorialUpdateStatus(result.tutorialUpdate);
-   const cut=result.encounterRecoveryCut,motion=result.centerMotionPublication;
+   const pendingRuin=result.pendingRuinRecoveryCut!==undefined;
+   const cut=pendingRuin?result.pendingRuinRecoveryCut:result.encounterRecoveryCut,motion=result.centerMotionPublication;
+   if(pendingRuin&&result.encounterRecoveryCut!==undefined)throw Error('Conflicting native advance recovery cuts');
    if(motion!==undefined){
     const boundary=copyNativeWorldBoundary(motion?.worldBoundary),remaining=motion?.remainingSeconds,done=result.stepsExecuted;
     const attack=motion?.kind===27?Number.isSafeInteger(motion.attackId)&&motion.attackId>0:motion?.attackId===undefined;
@@ -49,14 +51,19 @@ export function createWorkerGameRuntime({client,world,session,stepSeconds=.05,ni
    }else if(cut!==undefined){
     const boundary=copyNativeWorldBoundary(cut?.worldBoundary),remaining=cut?.remainingSeconds,done=result.stepsExecuted;
     if(item.kind!=='steps'||cut?.version!==1||!Number.isSafeInteger(cut.holdId)||cut.holdId<1||
-       !boundary||boundary.effectiveTime!==result.elapsed||!Number.isFinite(remaining)||remaining<0||remaining>=command.seconds||
+       !boundary||!Number.isFinite(result.elapsed)||!Number.isFinite(remaining)||
+       (pendingRuin?boundary.effectiveTime>result.elapsed||remaining<=0||remaining>command.seconds:
+        boundary.effectiveTime!==result.elapsed||remaining<0||remaining>=command.seconds)||
        !Number.isSafeInteger(done)||done<(remaining?0:1)||done>planned-(remaining?1:0)||result.unchanged||
-       acceptEncounterRecoveryCut?.(cut,result.sequence)!==true)
-      throw Error('Invalid encounter recovery cut');
-    const full=planned-done-(remaining?1:0);
-    if(full)queue.unshift({kind:'steps',count:full,fast:item.fast});
-    if(remaining)queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
-    delete result.encounterRecoveryCut;
+       acceptNativeRecoveryCut?.(cut,result.sequence)!==true)
+      throw Error('Invalid native advance recovery cut');
+    if(remaining===command.seconds)queue.unshift({kind:'steps',count:planned-done,seconds:item.seconds,fast:item.fast});
+    else{
+     const full=planned-done-(remaining?1:0);
+     if(full)queue.unshift({kind:'steps',count:full,seconds:item.seconds,fast:item.fast});
+     if(remaining)queue.unshift({kind:'steps',count:1,seconds:remaining,fast:item.fast});
+    }
+    delete result[pendingRuin?'pendingRuinRecoveryCut':'encounterRecoveryCut'];
    }else if(planned>1&&(!Number.isSafeInteger(result.stepsExecuted)||result.stepsExecuted<1||result.stepsExecuted>planned||result.stepsExecuted<planned&&!result.residency?.missing?.length)){
     throw Error('Invalid worker batch result');
    }

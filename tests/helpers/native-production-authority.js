@@ -44,7 +44,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
    const packet=await prepareExistingGroup(graphics,route.cropGroup,metadata,options.signal);
    packet.presented.catch(()=>{});record.packet=packet;
-   try{await onReady(record);}catch(error){packet.abort();throw error;}
+   try{await onReady(record,options);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,
     commit(data){record.commit=data;record.committed=packet.commit(data.worldBoundary,data.nativeCenterRuin);if(record.committed)onCommit?.(record,data);return record.committed;},
     abort(){record.aborted=true;packet.abort();}};

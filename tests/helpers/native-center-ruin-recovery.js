@@ -7,13 +7,21 @@ import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-
 import {copyNativeRecoveryGroup} from '../../src/world/native-worker-route-recovery.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 
-export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false}={}){
+export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null}={}){
  const stop=()=>world.authority.quiesceNativeIntentProduction({forLostDraw:endpoint});
  const pending=retireFirst?null:stop();pending?.catch(()=>{});
  world.gpu.device.destroy();world.retireResourceEndpoint();
  const hold=await (pending??stop());
- const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true});
+ const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true,...(interrupted?{forLostDraw:true,lossHoldId:30}:{})});
  assert(retired.terminal&&retired.callbacksSettled);
+ if(interrupted){
+  const prefix=await interrupted;
+  assert.equal(prefix.pendingRuinRecoveryCut.holdId,30);
+  state=JSON.parse(prefix.snapshot);
+  assert(Math.abs(state.elapsed-at)<1e-9);
+  at=state.elapsed;
+  assert.throws(()=>world.authority.resumeNativeIntentProduction(hold),/still owns native production/);
+ }
  const source=beforeRuin?proof:proof.prepared.retreat??proof.prepared.approach??proof.prepared.strike;
  const route=await world.authority.terminalWorkerRoute(),ref=source.reference,kind=ref.kind;
  assert.deepEqual(route,beforeRuin?{kind,actorId:ref.actorId}:{version:2,ruin:true,members:[{kind,actorId:ref.actorId}]});

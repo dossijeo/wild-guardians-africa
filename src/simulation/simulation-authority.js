@@ -688,6 +688,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
 
 
   let shieldAdvance=null,centerRuinAdvance=null,encounterDraftAdvance=null;
+  function waitForAdvanceLossClaim(owner,error){
+    return new Promise((resolve,reject)=>{
+      const finish=reason=>{clearTimeout(timer);owner.waitingForLossClaim=null;reason?reject(reason):resolve();};
+      const timer=setTimeout(()=>finish(error),10000);
+      timer.unref?.();
+      owner.waitingForLossClaim=finish;
+    });
+  }
   function prepareEncounterDraft(span){
     if(!nativeProduction||!nativeResourcePreparation||nativeStructurePreparation||shieldAdvance||centerRuinAdvance||encounterDraftAdvance)return null;
     const candidate=planner.prepareEncounterRetreat(game,game.elapsed+span,nav,span);
@@ -727,12 +735,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         try{await submitted;}catch(error){
           if(!owner.lossClaim&&recoverEncounterLoss&&
              (resources.retirementObserved()||consumer.connections().current?.drained)){
-            await new Promise((resolve,reject)=>{
-              const finish=reason=>{clearTimeout(timer);owner.waitingForLossClaim=null;reason?reject(reason):resolve();};
-              const timer=setTimeout(()=>finish(error),10000);
-              timer.unref?.();
-              owner.waitingForLossClaim=finish;
-            });
+            await waitForAdvanceLossClaim(owner,error);
           }
           if(!owner.lossClaim)throw error;
           await owner.lossClaim.retirement;
@@ -750,7 +753,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
     if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified animal route substep');
-    const owner={controller:new AbortController(),resources:nativeResourcePreparation,receipt:null};
+    const owner={controller:new AbortController(),resources:nativeResourcePreparation,consumer:nativeIntentControl,receipt:null};
     centerRuinAdvance=owner;
     const at=game.elapsed,end=at+span,signal=owner.controller.signal;
     const current=()=>eligible()&&centerRuinAdvance===owner&&game.elapsed===at&&!signal.aborted&&owner.resources===nativeResourcePreparation;
@@ -774,10 +777,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
+      owner.beforeHold={at,worldBoundary:source.previous};
       prepared=await owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence});
       if(!current()||!draft.valid()||!prepared.valid()||!sameCenter(prepared.preparedCenterRuin,source)||
          !sameNativeWorldBoundary(prepared.preparedWorldBoundary,source.boundary))
         throw Error('Native center ruin lost its prepared resource');
+      owner.beforeHold=null;
       planner.flushNativeIntentControl();
       hold=await nativeIntentControl.quiesceGpuForMutation({preparedWorldBoundary:source.boundary,preparedCenterRuin:source,signal});
       if(!current()||!draft.valid()||!prepared.valid())throw Error('Native center ruin changed before its substep');
@@ -788,8 +793,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       nativeIntentControl.releaseGpuAfterMutation(hold,{committed:true,worldBoundary:result.worldBoundary,
         acquiredCenterRuin:result.nativeCenterRuin});
     }catch(error){
+      prepared?.abort();
+      const cancelled=draft?.cancel();
+      if(!closed&&owner.beforeHold&&cancelled&&
+         (owner.lossRequested||owner.resources.retirementObserved()||owner.consumer.connections().current?.drained)){
+        if(!owner.lossClaim)await waitForAdvanceLossClaim(owner,error);
+        const {at,worldBoundary}=owner.beforeHold;
+        await owner.lossClaim.retirement;
+        if(closed||game.elapsed!==at||!sameNativeWorldBoundary(worldBoundary,planner.nativeWorldResourceBoundary()))
+          throw Error('Pending center ruin changed its recovery boundary');
+        return {pendingRuinRecovery:{version:1,holdId:owner.lossClaim.holdId,worldBoundary}};
+      }
       owner.failure=error;
-      prepared?.abort();draft?.cancel();
       if(hold&&!entered&&!closed)nativeIntentControl.releaseGpuAfterMutation(hold,{committed:false});
       throw error;
     }
@@ -1627,17 +1642,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         throw TypeError('Invalid encounter recovery hold');
       if(allowRetired&&nativeProduction&&nativeProduction.status().phase!=='suspended')return Promise.reject(Error('Native resource retirement requires suspended production'));
       const encounter=forLostDraw&&encounterDraftAdvance?.acquired;
-      if(encounter){
-        const owner=encounterDraftAdvance;
-        const {consumer,resources,boundary}=encounter;
-        if(owner.lossClaim)throw Error('Encounter loss is already owned');
+      const ruin=forLostDraw&&centerRuinAdvance?.lossRequested&&centerRuinAdvance.beforeHold;
+      if(encounter||ruin){
+        const owner=encounter?encounterDraftAdvance:centerRuinAdvance;
+        const {consumer,resources,boundary}=encounter??{consumer:owner.consumer,resources:owner.resources,boundary:ruin.worldBoundary};
+        if(owner.lossClaim)throw Error('Native advance loss is already owned');
         const retirement=(async()=>{
           const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),consumer.waitForTerminalDraw()]);
-          if(closed||encounterDraftAdvance!==owner||consumer!==nativeIntentControl||
+          if(closed||(encounter?encounterDraftAdvance:centerRuinAdvance)!==owner||consumer!==nativeIntentControl||
              resources!==nativeResourcePreparation||nativeProduction.status().phase!=='suspended'||
              !sameNativeWorldBoundary(boundary,consumer.connections().current?.worldBoundary)||
              !sameNativeWorldBoundary(boundary,planner.nativeWorldResourceBoundary()))
-            throw Error('Encounter retirement changed its native cut');
+            throw Error('Retirement changed the native advance cut');
           return retired;
         })();
         if(lossHoldId===null)return retirement;
@@ -1654,18 +1670,26 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction({forLostDraw=false}={}){
+      if(forLostDraw&&!closed&&centerRuinAdvance?.beforeHold&&centerRuinAdvance.receipt&&!centerRuinAdvance.failure){
+        const owner=centerRuinAdvance;
+        owner.lossRequested=true;
+        owner.controller.abort();
+        return Promise.resolve(owner.receipt);
+      }
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));
       if(closed)return Promise.reject(Error('Simulation authority is closed'));
       return nativeProduction?.quiesce({cancelWoundedHome:forLostDraw&&qualifyRaidEncounter,cancelCenterStrike:forLostDraw,cancelIdleSuccessor:forLostDraw,cancelStoppedTask:forLostDraw,cancelStoppedHome:forLostDraw})??Promise.resolve(null);
     },
     resumeNativeIntentProduction(receipt){
       if(closed)throw Error('Simulation authority is closed');
-      const encounter=encounterDraftAdvance;
-      if(encounter&&(encounter.receipt!==receipt||!encounter.replacementProved))
-        throw Error('Encounter advance still owns native production');
+      const owner=encounterDraftAdvance??centerRuinAdvance;
+      if(owner&&(owner.receipt!==receipt||!owner.replacementProved))
+        throw Error('Interrupted advance still owns native production');
       if(nativeProduction){
-        const resumed=nativeProduction.resume(receipt);
-        if(resumed&&encounter)encounterDraftAdvance=null;
+        // Hosted replays the interrupted substep before admitting the next
+        // graphical action. Do not start Strike27 against the old world here.
+        const resumed=nativeProduction.resume(receipt,{deferWake:owner===centerRuinAdvance&&!!owner});
+        if(resumed&&owner)encounterDraftAdvance=centerRuinAdvance=null;
         return resumed;
       }
       if(receipt!==null)throw TypeError('Invalid native production quiescence receipt');
@@ -1690,6 +1714,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     async attachHeldWorkerRoute(port,transportSession,holdId,receipt,route){
       if(!Number.isSafeInteger(holdId)||holdId<1||closed||nativeProduction?.status().phase!=='suspended'||
          route.encounter===true&&encounterDraftAdvance?.published?.holdId!==holdId||
+         centerRuinAdvance?.published&&centerRuinAdvance.published.holdId!==holdId||
          await nativeProduction.quiesce()!==receipt)throw Error('Exact active native hold required');
       const terminal=await nativeResourcePreparation.settleForRecovery();
       const {current,pending,cohort}=nativeIntentControl.connections();
@@ -1736,6 +1761,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     async checkHeldDraw(holdId,receipt,route){
       if(nativeProduction.status().phase!=='suspended'||await nativeProduction.quiesce()!==receipt)throw Error('Exact hold required');
       if(route.encounter===true&&encounterDraftAdvance)encounterDraftAdvance.replacementProved=false;
+      if(centerRuinAdvance?.published)centerRuinAdvance.replacementProved=false;
       const routes=route.members??[route],previous=recoveryGroup(route);
       const fence=await nativeIntentControl.fenceGpu();
       const draw=fence.recoveredSubmission;
@@ -1752,6 +1778,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         if(encounterDraftAdvance?.published?.holdId!==holdId||encounterDraftAdvance.receipt!==receipt)
           throw Error('Invalid encounter replacement proof');
         encounterDraftAdvance.replacementProved=true;
+      }
+      if(centerRuinAdvance?.published){
+        if(centerRuinAdvance.published.holdId!==holdId||centerRuinAdvance.receipt!==receipt)
+          throw Error('Invalid pending center ruin replacement proof');
+        centerRuinAdvance.replacementProved=true;
       }
       return draw;
       function sameHeld(profile,after,row,elapsed){
@@ -1861,7 +1892,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
        nav.serviceRaidConnectivityDemand?.();stepsExecuted=i+1;
        return stepsExecuted<steps&&!residency().missing.length;
      };
-     let recoveryCut=null,centerMotionPublication=null;
+     let recoveryCut=null,centerMotionPublication=null,pendingRuinRecovery=false;
      const runSteps=first=>{
        if(restoringFarmFlight){stepsExecuted=0;return;}
        for(let i=first;i<steps;i++){
@@ -1870,6 +1901,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
            if(stopped?.centerMotionPublication){
              stepsExecuted=i;
              centerMotionPublication={...stopped.centerMotionPublication,remainingSeconds:stopped.remainingSeconds};
+             return;
+           }
+           if(stopped?.pendingRuinRecovery){
+             stepsExecuted=i;
+             pendingRuinRecovery=true;
+             recoveryCut={...stopped.pendingRuinRecovery,remainingSeconds:stopped.remainingSeconds};
              return;
            }
            if(stopped){
@@ -1895,9 +1932,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          if(centerMotionPublication)motionTrace=worldMotionTrace=null;
          const result=publishResult();
          if(centerMotionPublication){result.stepsExecuted=stepsExecuted;result.centerMotionPublication=centerMotionPublication;}
-         const owner=encounterDraftAdvance;
+         const owner=pendingRuinRecovery?centerRuinAdvance:encounterDraftAdvance;
          if(recoveryCut){
-           result.encounterRecoveryCut=recoveryCut;
+           result[pendingRuinRecovery?'pendingRuinRecoveryCut':'encounterRecoveryCut']=recoveryCut;
            result.stepsExecuted=stepsExecuted;
            owner.published=recoveryCut;
          }else{
@@ -1910,7 +1947,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          // Never serialize the private partial advance as a successful command.
          // Closing the authority aborts the retained resource through its owner.
          const owner=shieldAdvance??centerRuinAdvance??encounterDraftAdvance;if(owner)owner.failure=error;
-         encounterDraftAdvance?.lossClaim?.reject(error);
+         owner?.lossClaim?.reject(error);
          throw error;
        });
      }
@@ -2135,7 +2172,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }
    },
    publishResidentTerrainForQa(publish){if(closed||typeof publish!=='function')throw TypeError('Invalid terrain bootstrap');const selected=session.core.currentChunk();try{for(const key of loaded.keys()){const [x,z]=parseSimulationChunkKey(key);if(session.core.selectChunk(x,z)<0)throw Error('Resident native chunk disappeared: '+key);publish(withMud(session.core.chunkPayload()),game.elapsed);}}finally{if(selected&&session.core.selectChunk(selected.cx,selected.cz)<0)throw Error('Could not restore selected native chunk');}},
-    dispose(){if(closed)return;closed=true;encounterDraftAdvance?.waitingForLossClaim?.(Error('Simulation authority closed'));shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
+    dispose(){if(closed)return;closed=true;(encounterDraftAdvance??centerRuinAdvance)?.waitingForLossClaim?.(Error('Simulation authority closed'));shieldAdvance?.controller.abort();centerRuinAdvance?.controller.abort();nativeStructurePreparation?.controller.abort();nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();presentationJournal.dispose();stopMotion?.();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{physics?.dispose();}finally{try{nativeBodies?.dispose();}finally{session.dispose();}}},
   };
   return authority;
  }catch(error){nativeProduction?.dispose();nativeResourcePreparation?.dispose();nativeIntentControl?.dispose();stopEvents?.();stopSettlements?.();stopTasks?.();stopWorld?.();try{nativeBodies?.dispose();}finally{session?.dispose();}throw error;}

@@ -230,10 +230,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   });
   return hold.promise;
  }
- function resume(receipt){
+ function resume(receipt,{deferWake=false}={}){
   if(closed||fault)throw Error(fault?'Native intent production failed: '+fault:'Native intent production closed');
   if(!quiescence?.settled||receipt!==quiescence.receipt)throw Error('Invalid native production quiescence receipt');
-  quiescence=null;wake();return true;
+  quiescence=null;if(!deferWake)wake();return true;
  }
  return {wake,quiesce,resume,unpublishedAnimalMotion:(actor,sequence)=>
   last?.status==='committed'&&last.actorId===actor&&last.publicationSequence===sequence?lastAnimalMotion:null,

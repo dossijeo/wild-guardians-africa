@@ -1,0 +1,94 @@
+{
+  "base": "7ed746bf0833bbfc2322ca8c871efdba3218e19e",
+  "scope": "Desert. One native animal restored with a chosen center. The audit suspends the clock to select the approach departure and lets Hosted enqueue the interrupted advance normally. Both Draws use NVIDIA Turing. The retry follows replacement, not a second external advance.",
+  "raw": {
+    "file": "pending-ruin-loss-recovery-confirmed-nvidia-20261128.json",
+    "sha256": "c343e7cd751bdc8f7d7e6ea3905603a2c773ad175a61cbca6ed38cf79be1bd38"
+  },
+  "inputs": {
+    ".cache/center-ruin-pending-loss-recovery-physical.mjs": "5a4aac466b400fad02eb4f36945398b17d006fa2ca93a4f85503d383e7c966c4",
+    ".cache/center-ruin-pending-loss-recovery-browser.mjs": "3ba6e202cb578dad97ecf07c09cf89a33e5a42a49002697f522316e4d25e4316",
+    ".cache/center-ruin-earlier-arrival-worker.mjs": "e9ed12b2f2cb54c3858d68b97bf50d30b1f96a8c18c356378745e0d72ab989b6",
+    ".cache/center-ruin-active-strike-input.json": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa",
+    "src/simulation/game.js": "1107bef492202088c397ae131c2bf3aafe85676a2afce70a4cbc527a51b983d3",
+    "src/simulation/simulation-authority.js": "ef02a366bcafc7ac1266bd99c83f5acf07c9250b8d466bddc39a3106c62810ff",
+    "src/simulation/worker-game-runtime.js": "86ec2942094a5b29686b63cd529c36f6cd8c3ca064ba6a538b9e98fa226a5e6c",
+    "src/simulation/worker-runtime-host.js": "60da80bb86f06e03ca956af7b9d451166d1dfff8c37a8132bcc9f7fc9bc99efd"
+  },
+  "original": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 111.59999999403954
+      }
+    },
+    "epoch": "a71eec16-4d2c-4788-98ed-34db391e487f/1",
+    "bodyId": 1,
+    "approachTicket": 14,
+    "endpoint": 37.17300000000028,
+    "lossAt": 37.208000000000276,
+    "preparedRuinRequest": 9,
+    "abandonedRuinTicket": 16,
+    "plannedRuinTime": 37.22800000000028,
+    "queuedStepsAtLoss": 1
+  },
+  "replacement": {
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing",
+      "device": "",
+      "description": "",
+      "imageCopyPreparation": {
+        "version": 1,
+        "formats": [
+          "rgba8unorm",
+          "rgba8unorm-srgb"
+        ],
+        "completed": true,
+        "milliseconds": 74.69999998807907
+      }
+    },
+    "checkpoint": 521,
+    "publication": 533,
+    "firstFrame": 1,
+    "elapsed": 37.208000000000276,
+    "age": 2.1964406967163086,
+    "bodyId": 1,
+    "worldTicket": 14,
+    "centerBodyVisible": true,
+    "picked": "animal-1000001",
+    "pickReads": 6
+  },
+  "ruin": {
+    "event": "event-29218",
+    "center": "structure-1000000",
+    "polygon": 10,
+    "ticket": 17,
+    "at": 37.22800000000028,
+    "frame": 3,
+    "count": 1,
+    "smoke": 85,
+    "debris": 270
+  },
+  "strike": {
+    "id": "attack-29219",
+    "ticket": 19,
+    "bodyId": 1,
+    "at": 41.92800000000068,
+    "count": 1,
+    "hp": 580
+  },
+  "retreat": {
+    "absentFrame": 111,
+    "drained": true
+  }
+}

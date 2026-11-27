@@ -2095,6 +2095,7 @@ export function advanceReal(s,seconds,nav,options={}) {
     if(prepareCenterRuin){
       const span=real*speed,center=s.structures.find(item=>item.kind==='center'&&item.status==='collapsing'&&item.collapseRemaining-span<=1e-9);
       if(center)return prepareCenterRuin(center,span,consume=>tick(s,span,nav,{clockRate:speed,centerRuin:{center,consume}})).then(prelude=>{
+        if(prelude?.pendingRuinRecovery)return {...prelude,remainingSeconds:remainingBeforeSubstep};
         if(prelude)return {centerMotionPublication:prelude,remainingSeconds:remainingBeforeSubstep};
         if(onClockSegment&&s.elapsed>start)onClockSegment({start,end:s.elapsed,realDuration:(s.elapsed-start)/speed,rate:speed});
         if(onTick)onTick();
