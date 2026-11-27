@@ -457,6 +457,74 @@
         },
         "drained": true,
         "unexpectedErrors": []
+      },
+      "settledAndFuture": {
+        "file": "nvidia-task25-settled-future-qualified.json",
+        "sha256": "43643460f370c9512bac6654fe6346af253c89b3812dfc4ecb104461b34387c6",
+        "architecture": "turing",
+        "adapter": "nvidia",
+        "original": 63,
+        "replacement": 1,
+        "holdId": 93,
+        "clock": 12.499999999999483,
+        "ticket": 7,
+        "motors": [
+          {
+            "gateId": 1000001,
+            "mechanism": 2,
+            "opening": 0
+          }
+        ],
+        "settled": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 1
+          }
+        ],
+        "body": {
+          "age": 1.9999998807907104,
+          "x": -13.95145320892334,
+          "z": 7.2112202644348145,
+          "yaw": 0.03211292251944542,
+          "phase": 1.399999976158142,
+          "runPhase": 23.25,
+          "walkPhase": 9.225000381469727,
+          "carryPhase": 9.5,
+          "arrived": 0
+        },
+        "settledLeaf": {
+          "entityId": "structure-1000000",
+          "opening": 1,
+          "native": false,
+          "visible": true,
+          "moved": true
+        },
+        "visibleHeight": 16.928699493408203,
+        "pick": {
+          "view": 0,
+          "dx": 0,
+          "dz": 0,
+          "h": 1,
+          "id": "worker-900011",
+          "incomplete": false,
+          "hitPoint": {
+            "x": -13.890054158772102,
+            "y": 17.997330044024224,
+            "z": 7.298796020205815
+          }
+        },
+        "home": {
+          "previousReadyTicket": 8,
+          "ticket": 10,
+          "bodyId": 1,
+          "retirementTicket": 12,
+          "retiredAt": 16.549999999999418,
+          "snapshot": 174,
+          "firstAbsenceDraw": 34
+        },
+        "drained": true,
+        "unexpectedErrors": []
       }
     }
   }

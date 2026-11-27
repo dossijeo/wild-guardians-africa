@@ -352,7 +352,7 @@ El corredor de la primera Task14 pasa por los portones de zarzas en `(-14, 8,2)`
 
 El sustituto rechaza cada motor detenido que se omita del primer envío. Si una presentación posterior pierde un motor, el fence previo a activar la autoridad también se rechaza. El picking consulta la misma apertura acreditada por Draw. Alterar la apertura ya asentada invalida el programa Task14 que sirve de fuente al reemplazo. Tras el envío completo, Home18 adquiere un ticket nuevo y Home19 retira al mismo trabajador con el saldo intacto. Pasaron las 12 pruebas dirigidas. [Recibo de los dos cortes](performance/native-gated-task25-terminal-recovery-20261127.json).
 
-En NVIDIA Turing, el sustituto presentó ambos motores con aperturas Float32 de 0,6666666865 y 0 en su primer dibujo. El picking seleccionó a `worker-900011` antes de reanudar. Home18 readmitió el cuerpo 1 y Home19 presentó su ausencia en el dibujo 23 con el ticket 12. El saldo se conservó y Draw drenó. Queda el contraste físico del corte con la primera hoja ya abierta. [Recibo de NVIDIA](performance/native-gated-task25-terminal-recovery-20261127.json).
+En NVIDIA Turing, el sustituto presentó ambos motores con aperturas Float32 de 0,6666666865 y 0 en su primer dibujo. En el corte mixto presentó la primera hoja completamente abierta en su malla visible y el uniforme del segundo motor en 0. El picking seleccionó a `worker-900011` antes de reanudar en ambos casos. Home18 readmitió el cuerpo 1 y Home19 presentó su ausencia con el ticket 12 en los dibujos 23 y 34, respectivamente. El saldo se conservó y Draw drenó en ambos recorridos. [Recibos de NVIDIA](performance/native-gated-task25-terminal-recovery-20261127.json).
 
 ## Pérdida con Stop12 adquirido y Task14 pendiente
 
