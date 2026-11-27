@@ -90,10 +90,13 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
               woundedHomeEndpoint(binding,execution.executedThrough)||grouped&&profile.kind===26&&
               centerRuinApproachEndpoint(q.ruin,cut,binding,execution.executedThrough)&&
               ['x','z','phase'].every(key=>execution[key]===binding.terminal[key]));
-            if(!endpoint&&execution?.arrived!==false||!Number.isFinite(execution.executedThrough)||
+            const cycle=profile.kind===21,end=cycle?ref.worldBoundary.effectiveTime+ref.duration:ref.endTime;
+            const cycleEnd=cycle&&execution?.finished===true&&execution.nextStatus===1&&
+              Number.isSafeInteger(execution.nextSequence)&&execution.nextSequence>binding.cycleSequence&&execution.executedThrough>=end;
+            if((cycle?execution?.endTime!==end||!cycleEnd&&(execution?.finished!==false||execution.nextStatus!==0):!endpoint&&execution?.arrived!==false)||!Number.isFinite(execution.executedThrough)||
                execution.kind!==profile.executionKind||resources.worldBoundary.authorityEpoch!==data.authorityEpoch||
                ref.actorId!==execution.actorId||ref.bodyId!==execution.bodyId||
-               execution.executedThrough<ref.worldBoundary.effectiveTime||!endpoint&&execution.executedThrough>=ref.endTime||
+               execution.executedThrough<ref.worldBoundary.effectiveTime||!endpoint&&!cycleEnd&&execution.executedThrough>=end||
                !profile.sameAttestation(binding,execution.binding))
               throw Error('Invalid replacement committed assignment');
             return {execution,resources};

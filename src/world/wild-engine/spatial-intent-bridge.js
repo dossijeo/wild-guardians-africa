@@ -777,6 +777,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const count=wasm.nav_intent_control_snapshot();
     if(count<0)throw Error('Native intent control baseline is incoherent');
     const data=Array.from(new Float64Array(wasm.memory.buffer,wasm.nav_intent_control_snapshot_ptr(),count*6));
+    let recoveredCycle=false;
     const strolls=nativeIdleStrollBindings(),farmCount=wasm.nav_farm_arrival_route_binding_actors?.()??0,
       homes=nativeHomeRouteBindings();
     if(recoveredWorkerRoute?.version===2){
@@ -788,10 +789,13 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         if(count||strolls.length||farmCount||homes.length||JSON.stringify(arrival)!==JSON.stringify(nativeWoundedRefugeRecovery()??nativeOrdinaryRefugeRecovery()))
           throw Error('Held Home absence changed before bootstrap');
       }else if(ordinaryWorkers){
-        const [home,stroll]=members;
-        if(!nativeWorkerLifecycle||owningState?.raid||count!==2||homes.length!==1||strolls.length!==1||farmCount||
+        const [home,idle]=members;
+        recoveredCycle=idle.kind===21;
+        const binding=recoveredCycle?nativeIdleCycleBinding(idle.proof.reference.actorId):strolls[0];
+        if(!nativeWorkerLifecycle||owningState?.raid||count!==(recoveredCycle?1:2)||homes.length!==1||strolls.length!==(recoveredCycle?0:1)||farmCount||
            !nativeWorkerRouteRecoveryProfile(18).sameAttestation(homes[0],home.proof)||
-           !nativeWorkerRouteRecoveryProfile(22).sameAttestation(strolls[0],stroll.proof))
+           !nativeWorkerRouteRecoveryProfile(idle.kind).sameAttestation(binding,idle.proof)||
+           recoveredCycle&&nativeIdleCycleBindings().length!==1)
           throw Error('Held worker routes changed before bootstrap');
       }else{
         const single=encounter?nativeEncounterFallRecovery(encounter.version===2?'center':'retreat'):
@@ -828,7 +832,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     if(clock&&(clock.intentSequence!==wasm.nav_intent_transition_sequence()||clock.committedThrough!==wasm.nav_intent_effective_time()))
       throw Error('Commit the native causal clock before attaching a new draw consumer');
     const pendingTaskRequests=nativeTaskRequestReferences(),pendingActionRequests=nativeTaskActionRestoreReferences(),pendingHomeRequests=nativeHomeRequestReferences(),pendingInitialIdleRequests=nativeInitialIdleRequestReferences(),pendingIdleStrollRequests=nativeIdleStrollRequestReferences(),pendingFarmArrivalRequests=nativeFarmArrivalRequestReferences(),nativeIdleCycles=nativeIdleCycleBindings(),cycleActors=new Set(nativeIdleCycles.map(value=>value.reference.actorId)),pendingIdleCycleRequests=nativeIdleCycles.map(value=>nativeIdleCycleNextRequest(value.reference.actorId)).filter(Boolean),nativeInitialIdleBodies=nativeInitialIdleBodyBindings().filter(value=>!cycleActors.has(value.reference.actorId)),nativeStartedRoutes=Array.from({length:count},(_,i)=>nativeTaskStartBinding(data[i*6])).filter(Boolean),nativeActions=nativeTaskActionBindings(),nativeHomes=recoveredWorkerRoute?.kind===18||recoveredWorkerRoute?.version===2?[]:homes,nativeSettlements=nativeTaskSettlementBindings(),nativeConsequences=Array.from({length:count},(_,i)=>nativeTaskConsequenceBinding(data[i*6])).filter(Boolean);
-    const recoveryKind=recoveredWorkerRoute?.kind;
+    const recoveryKind=recoveredWorkerRoute?.kind,baselineCycles=recoveredCycle?[]:nativeIdleCycles;
     const recoveredAnimal=recoveredWorkerRoute?.version===2?recoveredWorkerRoute.members.find(member=>member.kind===26||member.kind===27)?.proof.reference.actorId??null:
       recoveryKind===26||recoveryKind===27?recoveredWorkerRoute.proof.reference.actorId:null;
     const pendingAnimalCrop=readPendingAnimalCrop(true,recoveredAnimal);
@@ -838,7 +842,7 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
       raidSpawnSequence:raidFlight.event}:null;
     return {...(recoveredWorkerRoute?{recoveredWorkerRoute}:{}),...(pendingAnimalCrop?{pendingAnimalCrop}:{}),
       ...(restoredRefugeReturn?{restoredRefugeReturn}:{}),...(restoredFlight?{restoredFlight}:{}),type:'IntentBaseline',protocolVersion:2,authorityEpoch:epoch(),...(restoredWallRepairs.length?{restoredWallRepairs}:{}),worldBoundary:nativeWorldBoundary(),...(clock?{clock}:{}),
-      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(pendingActionRequests.length?{pendingActionRequests}:{}),...(pendingHomeRequests.length?{pendingHomeRequests}:{}),...(pendingInitialIdleRequests.length?{pendingInitialIdleRequests}:{}),...(pendingIdleStrollRequests.length?{pendingIdleStrollRequests}:{}),...(pendingFarmArrivalRequests.length?{pendingFarmArrivalRequests}:{}),...(nativeInitialIdleBodies.length?{nativeInitialIdleBodies}:{}),...(nativeIdleCycles.length?{nativeIdleCycles}:{}),...(pendingIdleCycleRequests.length?{pendingIdleCycleRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),...(nativeActions.length?{nativeActions}:{}),...(nativeConsequences.length?{nativeConsequences}:{}),...(nativeSettlements.length?{nativeSettlements}:{}),...(nativeHomes.length?{nativeHomes}:{}),
+      sequence:wasm.nav_intent_transition_sequence(),effectiveTime:wasm.nav_intent_effective_time(),...(pendingTaskRequests.length?{pendingTaskRequests}:{}),...(pendingActionRequests.length?{pendingActionRequests}:{}),...(pendingHomeRequests.length?{pendingHomeRequests}:{}),...(pendingInitialIdleRequests.length?{pendingInitialIdleRequests}:{}),...(pendingIdleStrollRequests.length?{pendingIdleStrollRequests}:{}),...(pendingFarmArrivalRequests.length?{pendingFarmArrivalRequests}:{}),...(nativeInitialIdleBodies.length?{nativeInitialIdleBodies}:{}),...(baselineCycles.length?{nativeIdleCycles:baselineCycles}:{}),...(pendingIdleCycleRequests.length?{pendingIdleCycleRequests}:{}),...(nativeStartedRoutes.length?{nativeStartedRoutes}:{}),...(nativeActions.length?{nativeActions}:{}),...(nativeConsequences.length?{nativeConsequences}:{}),...(nativeSettlements.length?{nativeSettlements}:{}),...(nativeHomes.length?{nativeHomes}:{}),
       routes:Array.from({length:count},(_,index)=>{
         const at=index*6;
         return {actorId:data[at],routeHandle:routeHandle(data[at+1],data[at+2],data[at+3]),

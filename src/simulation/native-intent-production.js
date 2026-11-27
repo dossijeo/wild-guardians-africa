@@ -9,7 +9,7 @@ const flightStopMarkers=new Set(['pending-farm-flight-stop','pending-idle-flight
 // Dispatch existing native requests at authority boundaries. Like DetourCrowd's
 // updateMoveRequest, requests stay on their agents and results revalidate their
 // source. There is no copied request queue, movement clock or retry timer here.
-export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,restoreRuinedWall=null,ruinedWallWakeKey=null,onError=()=>{}}){
+export function createNativeIntentProduction({state,planner,bodyId,getPublication,getResources,publicationSequence,terrainManifest=()=>null,stationaryTaskNavigation=null,restoreRuinedWall=null,ruinedWallWakeKey=null,recoverableIdleCycleSource=()=>null,onError=()=>{}}){
  if(!state||!planner||[bodyId,getPublication,getResources,publicationSequence,terrainManifest,onError].some(f=>typeof f!=='function'))throw TypeError('Invalid native intent production');
  let closed=false,fault=null,active=null,last=null,lastAnimalMotion=null,quiescence=null;
  const rejectedRuins=new Map();
@@ -111,7 +111,7 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
    case 'idle-stroll-stop':return JSON.stringify(request.stopRequest);
    case 'initial-idle-body':return JSON.stringify(planner.nativeInitialIdleRequestReference(actor));
    case 'idle-stroll':return JSON.stringify(request.terminalIdleSource??planner.nativeIdleStrollRequestReference(actor)??planner.nativeIdleCycleBinding(actor));
-   case 'idle-cycle':return JSON.stringify(request.terminalIdleSource??planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleCycleBinding(actor)??planner.nativeIdleStrollBinding(actor));
+   case 'idle-cycle':return JSON.stringify(request.terminalIdleSource??planner.nativeIdleCycleBinding(actor)??planner.nativeInitialIdleBodyBinding(actor)??planner.nativeIdleStrollBinding(actor));
    case 'home-route':return JSON.stringify(planner.nativeHomeRequestReference(actor)??planner.nativeTaskSettlementBinding(actor));
    case 'home-arrival':return JSON.stringify(planner.nativeHomeRouteBinding(actor));
    case 'task-start':return JSON.stringify([request.request.requestHandle,request.request.requestSequence,request.policy]);
@@ -139,7 +139,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const request=next();if(!request)return Promise.resolve(null);
   const wakeKey=request.kind==='ruined-wall-repair'?ruinedWallWakeKey?.(request.actorId):undefined;
   const transaction={controller:new AbortController(),actorId:request.actorId,kind:request.kind,requestSequence:request.requestSequence,source:sourceIdentity(request),obsolete:false,promise:null,minSequence:publicationSequence()};active=transaction;
-  const recoverableSource=()=>protectedHomeSource(request.kind,request.actorId)??protectedRuinStrikeSource(request.kind,request.actorId);
+  const recoverableSource=()=>protectedHomeSource(request.kind,request.actorId)??protectedRuinStrikeSource(request.kind,request.actorId)??
+    protectedIdleSuccessorSource(request.kind,request.actorId);
   const protectsSource=recoverableSource()===transaction.source;
   let retiredBeforeReady=false;
   if(['task-start','task-action','stationary-task','task-consequence','ruined-wall-repair'].includes(request.kind))transaction.taskId=state.workers.find(worker=>worker.id===request.actorId)?.taskId;
@@ -190,7 +191,10 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   const execution=planner.nativeCenterRuinRouteRecovery?.()?.execution;
   return execution?.arrived&&actorId==='animal-'+execution.actorId?execution.binding.reference.requestSequence:null;
  }
- function quiesce({cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelRuinStrike=false}={}){
+ function protectedIdleSuccessorSource(kind,actorId){
+  return kind==='idle-cycle'||kind==='idle-stroll'?recoverableIdleCycleSource(actorId):null;
+ }
+ function quiesce({cancelTask=null,cancelCrop=null,cancelWoundedHome=false,cancelRuinStrike=false,cancelIdleSuccessor=false}={}){
   if(closed||fault)return Promise.reject(Error(fault?'Native intent production failed: '+fault:'Native intent production closed'));
   if(quiescence)return quiescence.promise;
   if(active&&!active.promise)return Promise.reject(Error('Native intent production operation is not ready'));
@@ -200,7 +204,8 @@ export function createNativeIntentProduction({state,planner,bodyId,getPublicatio
   if(cancelTask&&active?.actorId===cancelTask.actorId&&active.taskId&&active.taskId===cancelTask.taskId||
      cancelCrop&&active?.kind===cancelCrop.kind&&active.actorId===cancelCrop.actorId&&active.requestSequence===cancelCrop.requestSequence||
      cancelWoundedHome&&active?.source&&protectedHomeSource(active.kind,active.actorId)===active.source||
-     cancelRuinStrike&&active?.source&&protectedRuinStrikeSource(active.kind,active.actorId)===active.source){
+     cancelRuinStrike&&active?.source&&protectedRuinStrikeSource(active.kind,active.actorId)===active.source||
+     cancelIdleSuccessor&&active?.source&&protectedIdleSuccessorSource(active.kind,active.actorId)===active.source){
    active.obsolete=true;active.controller.abort();
   }
   hold.promise=Promise.resolve(active?.promise).then(()=>{

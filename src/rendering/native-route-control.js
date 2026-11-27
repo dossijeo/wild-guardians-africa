@@ -892,6 +892,12 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
   function cycleHomeMatches(request,proof){return nativeHomeRequestContinuesIdleCycle(request,proof);}
   function cycleState(actor,proof){return actor.state===7&&(stationarySequenceCurrent(actor,21,proof.cycleSequence)||actor.pendingIdleCycleRequest?.sourceCycle.cycleSequence===proof.cycleSequence&&actor.latestSequence===actor.pendingIdleCycleRequest.requestSequence)||actor.state===6&&actor.latestSequence>proof.cycleSequence&&(actor.pendingTaskRequest?.requestSequence===actor.latestSequence||actor.pendingHomeRequest?.requestSequence===actor.latestSequence);}
   function cycleRecordCurrent(reference,actor){const proof=actor?.idleCycleProof,record=actor?.idleCycleRecord;return !closed&&!!clock&&!!actor&&!actor.closed&&actors.get(reference.actorId)===actor&&actor.current===null&&!!proof&&!!record&&actor.idleCycleSource?.binding===proof&&record.cycleSequence===proof.cycleSequence&&proof.cycleSequence<=clock.intentSequence&&cycleState(actor,proof);}
+  function installIdleCycleRecord(actor,source){
+    const value=source.binding,r=value.reference,startTime=r.worldBoundary.effectiveTime;
+    actor.idleCycleProof=value;
+    actor.idleCycleRecord={actorId:r.actorId,bodyId:r.bodyId,cycleSequence:value.cycleSequence,startTime,
+      phaseDelay:source.phaseDelay,phaseUntil:Math.min(startTime+r.duration,source.phaseUntil),safeUntil:Infinity,lastDrawTime:null};
+  }
   // Keep one cosmetic delay on the existing association, never old bindings.
   // Inherit only from an installed predecessor playing the same terminal clip.
   function inheritedIdleCyclePhaseDelay(binding,actor){
@@ -993,7 +999,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         if(!sameNativeWorldBoundary(r.worldBoundary,boundary)||value.cycleSequence>sequence||value.cycleSequence>clock.intentSequence||ids.has(r.actorId)||bodies.has(r.bodyId)||!actor||actor.closed||actor.current||actor.actionProof||actor.settlementProof||actor.initialIdleBodyProof||actor.idleCycleProof||!source||source.fromBaseline||!sameNativeIdleCycleAttestation(value,source.binding)||actor.latestSequence>clock.intentSequence||!cycleState(actor,value))throw Error('Native Idle cycle differs from its issued program or current owner');
         ids.add(r.actorId);bodies.add(r.bodyId);staged.push({actor,source});
       }
-      for(const {actor,source} of staged){const value=source.binding,r=value.reference;actor.idleCycleProof=value;actor.idleCycleRecord={actorId:r.actorId,bodyId:r.bodyId,cycleSequence:value.cycleSequence,startTime:r.worldBoundary.effectiveTime,phaseDelay:source.phaseDelay,phaseUntil:Math.min(r.worldBoundary.effectiveTime+r.duration,source.phaseUntil),safeUntil:Infinity,lastDrawTime:null};}return staged.length;
+      for(const {actor,source} of staged)installIdleCycleRecord(actor,source);return staged.length;
     },
     admitIdleCycle(value,{preparingWorldBoundary=null}={}){
       const reference=copyNativeIdleCycleReference(value),actor=actors.get(reference.actorId),boundary=copyNativeWorldBoundary(preparingWorldBoundary),fromFailed=reference.sourceCycleSequence===0&&reference.sourceBody.kind==='native-idle-stroll-failed-source',fromStroll=reference.sourceCycleSequence===0&&isNativeIdleStrollArrivalSource(reference.sourceBody),fromFarm=reference.sourceCycleSequence===0&&reference.sourceBody.kind==='native-farm-arrival-idle-source',fromSettlement=reference.sourceCycleSequence===0&&reference.sourceBody.kind==='native-settled-worker-idle-source',source=reference.sourceCycleSequence?actor?.idleCycleProof:fromFailed?actor?.pendingIdleStrollRequest:fromStroll?actor?.strollProof:fromFarm?actor?.farmArrivalProof:fromSettlement?actor?.settlementProof:actor?.initialIdleBodyProof,next=actor?.pendingIdleCycleRequest,sourceMatches=cyclePreparationSourceMatches(reference,actor),current=proofLeaseCurrent(reference,actor,'idleCycleProof',nativeIdleCycleAttestationCovers,cycleRecordCurrent);
@@ -1100,8 +1106,23 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
-    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false,ruin=null,ordinaryWorkers=false}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,movingCount=cohortSize,sharedCut=false,ruin=null,ordinaryWorkers=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
+      if(kind===21){
+        const actor=actors.get(ref.actorId),source=actor?.idleCycleSource,at=clock?.committedThrough,start=ref.worldBoundary.effectiveTime;
+        const next=actor?.pendingIdleCycleRequest,end=start+ref.duration;
+        const current=()=>!closed&&!!clock&&clock.intentSequence===sequence&&clock.committedThrough===at&&
+          !!actor&&actor.idleCycleSource===source&&!actor.idleCycleProof&&actor.pendingIdleCycleRequest===next&&cycleState(actor,proof);
+        if(!ordinaryWorkers||!sharedCut||ref.sourceCycleSequence!==0||actors.size!==cohortSize||active.size!==movingCount||
+           !source?.fromBaseline||!sameNativeIdleCycleAttestation(source.binding,proof)||!nativeRecoveryCovers(boundary,ref.worldBoundary)||
+           clock?.nativeSession!==boundary.nativeSession||!(at>=start&&(at<end?!next:next?.requestedAt>=end))||!current())
+          throw Error('Recovered Idle cycle conflicts with the fresh control baseline');
+        return ()=>{
+          if(!current())throw Error('Recovered Idle cycle was revoked before materialization');
+          source.phaseDelay=ref.sourceBody.kind==='native-settled-worker-idle-source'?start:0;
+          installIdleCycleRecord(actor,source);
+        };
+      }
       if(kind===27){
         const current=()=>!closed&&!!clock&&actors.size===0&&active.size===0&&
           proof.assignmentSequence===sequence&&clock.intentSequence===sequence&&clock.nativeSession===boundary.nativeSession&&
@@ -1130,7 +1151,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const source=ref.worldBoundary;
       const endpoint=kind===18&&cohortSize===1&&woundedHomeEndpoint(proof,clock?.committedThrough);
       const approachEndpoint=kind===26&&cohortSize===1&&sharedCut&&centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough);
-      if(closed||!clock||actors.size!==cohortSize||active.size!==cohortSize||proof.gateIds.length>profile.maxGates||
+      if(closed||!clock||actors.size!==cohortSize||active.size!==movingCount||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
          kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2&&!ordinaryWorkers)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||

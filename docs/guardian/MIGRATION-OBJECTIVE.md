@@ -934,6 +934,8 @@ El vencimiento tras aplicar una subfrontera histórica usa ahora la retirada ter
 
 NVIDIA recargó un guardado de Sabana 714 con dos trabajadores pagados. Idle20 esperó la preparación histórica del rig y adquirió ambos cuerpos desde las poses guardadas. La pérdida de Draw se probó tras las dos retiradas Home19 y, en otra pasada, con Home18 e Idle22 simultáneos. El sustituto acreditó la ausencia o ambos relojes, según el corte, antes de reabrir el despacho. Quedan las demás combinaciones de rutas activas y la selección automática del perfil en partidas nuevas. [Dos retiradas Home19](performance/native-savanna-two-home-terminal-20261127.json) · [Home18 e Idle22](performance/native-savanna-two-live-recovery-20261127.json).
 
+El mismo guardado acreditó Home18 y el primer Idle21 con el sucesor aún en preparación. En NVIDIA, el sustituto presentó la edad terminal antes de reanudar, el sucesor se admitió después y el cierre drenó. Queda recuperar un ciclo ya adquirido que hereda fase de otro. [Recibo de Home18 e Idle21](performance/native-savanna-home-idle21-recovery-20261127.json).
+
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias

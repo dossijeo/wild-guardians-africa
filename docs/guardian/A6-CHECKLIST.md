@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Sabana 714 recuperó Home18 y el primer Idle21 después de perder Draw con el sucesor de Idle21 aún pendiente. NVIDIA confirmó la edad terminal del ciclo y la adquisición posterior del sucesor. Quedan pendientes la recuperación con fase heredada y el picking en este corte. [Recibo y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-home18-y-el-primer-ciclo-idle21).
+
 El recorrido de Desierto desde una aproximación ya seleccionada conserva el impacto que inició el derrumbe y adquiere kind4 mientras el facóquero ejecuta Strike27 en el siguiente centro. Está acreditado el relevo de Draw con el mismo ataque y un solo golpe tras reanudar. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
 
 En Desierto 983, tras recargar el colapso por la vía pública, se destruyó el dispositivo Draw con la huella del centro ya retirada y el facóquero aún en marcha. NVIDIA confirmó el primer envío del sustituto con la misma ruta y frontera mundial, el golpe pendiente, el regreso a Idle y el drenaje. [Prueba del relevo](performance/native-desert-cold-approach-draw-loss-20261127.json).

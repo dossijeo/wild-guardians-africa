@@ -840,7 +840,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const ordinaryWorkers=members.length===2&&members[0].profile.kind===18&&members[1].profile.kind===22;
+    const ordinaryWorkers=members.length===2&&members[0].profile.kind===18&&[21,22].includes(members[1].profile.kind);
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
@@ -861,6 +861,12 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
           if(profile.kind===27&&ref.purpose==='center')await settlements.prepareCenterStrike(ref.targetId,ownerSignal);
           await roster.prepareRecoveredCrop(input,terrainSupport,{signal:ownerSignal,isCurrent:current,
             getPickAge:reference=>nativePickFrame.getAnimalCropAge(reference)});
+        }else if(profile.kind===21){
+          const support=terrainSupport.prepareNativeIdleCycle(ref);
+          if(!support?.valid())throw Error('Recovered Idle terrain is unavailable');
+          await workers.prepareRecoveredIdleCycle(input,support,{signal:ownerSignal,isCurrent:current,
+            getPickAge:reference=>nativePickFrame.getIdleCycleElapsed(reference),
+            getPickPhaseOffset:(reference,period)=>nativePickFrame.getIdleCyclePhaseOffset(reference,period)});
         }else{
           const home=profile.kind===18,farm=profile.kind===23;
           const gates=(resources.presentation?.gates??[]).map(({nativeRoute,...gate})=>({...gate,worldBoundary:ref.worldBoundary}));
@@ -872,8 +878,9 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
               getPickTime:(gate,epoch)=>nativePickFrame.getGateTime(gate,epoch)})});
         }
       }
-      if(!current()||!members.every(({crop,actorId,resources})=>
-        crop?roster.hasNativeCropOwner():workers.nativeRouteCurrent(actorId,resources.nativeRoute)))
+      if(!current()||!members.every(({crop,actorId,resources,profile,ref})=>
+        crop?roster.hasNativeCropOwner():profile.kind===21?workers.recoveredIdleCycleCurrent(actorId,ref):
+          workers.nativeRouteCurrent(actorId,resources.nativeRoute)))
         throw Error('Replayed rig is no longer current');
       // The static replay may already have admitted the scene without the typed rig.
       // Re-establish the full-scene proof against the newly installed materials.

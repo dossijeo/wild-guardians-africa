@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeRecoveryGroup,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeRecoveryGroup,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -157,13 +157,13 @@ export function createNativeIntentControlPublication({port,session,observe,
            !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              if(row?.kind!==kind)return false;
-             const gates=recoveredNativeGateSamples(row),boundary=proof.reference.worldBoundary;
-             return row.assignmentSequence===proof.assignmentSequence&&
+             const gates=recoveredNativeGateSamples(row),gateIds=nativeRecoveryGates(proof),boundary=proof.reference.worldBoundary;
+             return row.assignmentSequence===nativeRecoverySequence(proof)&&
                profile.sameReference(row[profile.clockField],proof.reference)&&Number.isFinite(row.relativeTime)&&row.relativeTime>=0&&
-               (proof.gateIds.length===1?row.nativeGates===undefined&&row.nativeGate!==undefined:
+               (gateIds.length===1?row.nativeGates===undefined&&row.nativeGate!==undefined:
                  row.nativeGate===undefined&&row.gateElapsed===undefined&&
-                 (proof.gateIds.length===0?row.nativeGates===undefined:Array.isArray(row.nativeGates)))&&
-               Array.isArray(gates)&&gates.length===proof.gateIds.length&&proof.gateIds.every((id,index)=>{
+                 (gateIds.length===0?row.nativeGates===undefined:Array.isArray(row.nativeGates)))&&
+               Array.isArray(gates)&&gates.length===gateIds.length&&gateIds.every((id,index)=>{
                  const sample=gates[index];
                  return sample?.nativeGate?.gateId===id&&sameNativeWorldBoundary(sample.nativeGate.worldBoundary,boundary)&&
                    sample.gateElapsed===boundary.effectiveTime+row.relativeTime;

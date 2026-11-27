@@ -1,5 +1,6 @@
 import {copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,sameNativeFarmArrivalRouteAttestation,sameNativeFarmArrivalRouteReference} from './native-farm-arrival-route.js';
 import {copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,sameNativeIdleStrollAttestation,sameNativeIdleStrollReference} from './native-idle-stroll.js';
+import {copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,sameNativeIdleCycleAttestation,sameNativeIdleCycleReference} from './native-idle-cycle.js';
 import {copyNativeHomeRouteAttestation,copyNativeHomeRouteResources,sameNativeHomeRouteAttestation,sameNativeHomeRouteReference} from './native-home-route.js';
 import {copyNativeHomeArrivalAttestation} from './native-home-arrival.js';
 import {copyNativeAnimalCropAttestation,sameNativeAnimalCropReference} from './native-animal-crop-resource.js';
@@ -117,6 +118,13 @@ const profiles=new Map([
   copyResources:copyNativeHomeRouteResources,copyAttestation:copyNativeHomeRouteAttestation,
   sameAttestation:sameNativeHomeRouteAttestation,sameReference:sameNativeHomeRouteReference
  })],
+ [21,Object.freeze({
+  kind:21,admission:'native-idle',executionKind:'native-idle-cycle-execution',maxGates:0,
+  bindingField:'nativeIdleCycleBinding',clockField:'nativeIdleCycle',
+  obsoleteCode:'native-idle-cycle-admission-obsolete',
+  copyResources:copyNativeIdleCycleResources,copyAttestation:copyNativeIdleCycleAttestation,
+  sameAttestation:sameNativeIdleCycleAttestation,sameReference:sameNativeIdleCycleReference
+ })],
  [22,Object.freeze({
   kind:22,admission:'native-idle-stroll',executionKind:'native-idle-stroll-execution',maxGates:0,
   bindingField:'nativeIdleStrollBinding',clockField:'nativeStroll',issuedField:'issuedStroll',
@@ -159,6 +167,9 @@ export function recoveredNativeGateSamples(row){
  if(row.nativeGates!==undefined)return row.nativeGates;
  return row.nativeGate===undefined?[]:[{nativeGate:row.nativeGate,gateElapsed:row.gateElapsed}];
 }
+
+export const nativeRecoverySequence=proof=>proof.cycleSequence??proof.assignmentSequence;
+export const nativeRecoveryGates=proof=>proof.gateIds??[];
 
 export function nativeRecoveryCovers(world,source){
  return !!world&&!!source&&world.authorityEpoch===source.authorityEpoch&&world.nativeSession===source.nativeSession&&
@@ -272,15 +283,16 @@ export function copyNativeRecoveryGroup(value,world){
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind,proof}],refuge};
  }
- const ordinaryWorkers=value.members[1]?.kind===22;
+ const ordinaryWorkers=[21,22].includes(value.members[1]?.kind);
  if(value.members.length!==2||value.members[0]?.kind!==18||!ordinaryWorkers&&value.members[1]?.kind!==26)
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
  const [home,peer]=members.map(member=>member.proof.reference);
- if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>proof.gateIds.length):
+ if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>nativeRecoveryGates(proof).length)||
+    members[1].kind===21&&peer.sourceCycleSequence!==0:
     !home.sourceRequest?.raidSpawnSequence||peer.purpose==='retreat')||
     home.actorId===peer.actorId||home.bodyId===peer.bodyId||
-    members[0].proof.assignmentSequence===members[1].proof.assignmentSequence||
+    nativeRecoverySequence(members[0].proof)===nativeRecoverySequence(members[1].proof)||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
     members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
    throw Error('Mixed recovery requires two current assignments at one world cut');
