@@ -77,6 +77,11 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
   function recoveredIdleOffsetMatches(binding,reference){
     return binding.semantic==='idle-offset'&&!!binding.nativeIdleCycle&&sameNativeIdleCycleReference(binding.nativeIdleCycle,reference);
   }
+  function includesRecoveredWorkerClock(bindings,actorId){
+    return bindings.some(b=>[b.nativeHome,b.nativeRoute,b.nativeStroll,b.nativeIdleCycle,b.nativeFarmArrival,b.nativeInitialIdleBody,
+      b.nativeResume,b.nativeSuspended,b.nativeStart,b.nativeAction,b.nativeConsequence,b.nativeSettlement,b.nativeStopped]
+      .some(ref=>ref?.actorId===actorId));
+  }
   function recoveryGateMatches(binding,gateId,boundary){
     return binding.semantic==='relative'&&binding.nativeGate?.gateId===gateId&&
       binding.epoch===boundary.effectiveTime&&sameNativeWorldBoundary(binding.nativeGate.worldBoundary,boundary);
@@ -933,14 +938,15 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
             ...(samples.length===1?samples[0]:samples.length?{nativeGates:samples}:{})};
         });
         if((encounter?.version!==3||recoveredPose)&&members.every(Boolean)){
-          if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active));
+          if(recovered.refuge)routeControl.installRecoveredRefuge(recovered.refuge,frameBoundary(active),recovered.refugeWorker);
           if(encounter?.version===3)routeControl.installRecoveredEncounterPose(encounter);
           else if(recovered.encounter)routeControl.installRecoveredEncounterFall(recovered.encounter,recovered.members[0].ref);
           for(const {profile,ref} of recovered.members)
             if(profile.kind===26||profile.kind===27)retainAcquiredCropClock(active,ref);
+          const proveAbsence=recovered.refuge&&(members.length===0||recovered.refugeWorker);
           recoveredSubmission={holdId:recovered.holdId,consumerToken:recovered.consumerToken,frameSequence:active.sequence,
             elapsed:recovered.at,...(recovered.grouped?{members}:members[0]),
-            ...(recovered.refuge&&members.length===0?{refuge:recovered.refuge}:{}),
+            ...(proveAbsence?{refuge:recovered.refuge,worldBoundary:frameBoundary(active)}:{}),
             ...(recovered.encounter?{encounter:recovered.encounter}:{})};
           recovered=null;
         }
@@ -1294,8 +1300,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       });
       if(preparing||!sameNativeWorldBoundary(packet.metadata.nativeWorldBoundary,nativeWorldBoundary)||
          packet.metadata.clock?.elapsed!==recovered.at||packet.metadata.clock?.safeUntil!==recovered.at||
-         recovered.refuge&&preparedBindings.some(({nativeHome,nativeRoute})=>
-           (nativeHome?.actorId??nativeRoute?.actorId)===recovered.refuge.reference.actorId)||
+         recovered.refuge&&includesRecoveredWorkerClock(preparedBindings,recovered.refuge.reference.actorId)||
          recovered.encounter&&(!sameRecoveredEncounter(packet.metadata.recoveredEncounterFall,recovered.encounter)||
            preparedBindings.some(({nativeHome,nativeRoute})=>
              (nativeHome?.actorId??nativeRoute?.actorId)===recovered.encounter.workerId))||
@@ -2382,9 +2387,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
           const rows=recoveredSubmission?.members??[recoveredSubmission];
           const recoveredAtFence=recoveredSubmission?.elapsed===message.effectiveTime&&
             (!recoveredSubmission.refuge||nativeRouteFrame?.clockElapsed===message.effectiveTime&&
-              sameNativeWorldBoundary(nativeRouteFrame.worldBoundary,recoveredSubmission.refuge.reference.worldBoundary)&&
-              !nativeRouteFrame.bindings.some(({nativeHome,nativeRoute})=>
-                (nativeHome?.actorId??nativeRoute?.actorId)===recoveredSubmission.refuge.reference.actorId))&&
+              sameNativeWorldBoundary(nativeRouteFrame.worldBoundary,recoveredSubmission.worldBoundary)&&
+              !includesRecoveredWorkerClock(nativeRouteFrame.bindings,recoveredSubmission.refuge.reference.actorId))&&
             (!recoveredSubmission.encounter||sameRecoveredEncounter(active?.metadata.recoveredEncounterFall,recoveredSubmission.encounter))&&
             (recoveredSubmission.encounter?.version!==3||sameRecoveredEncounter(nativeRouteFrame?.recoveredEncounterPose,recoveredSubmission.encounter))&&rows.every(row=>{
             const profile=nativeWorkerRouteRecoveryProfile(row.kind);
@@ -2475,7 +2479,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                    ordinaryWorkers:source.ordinaryWorkers===true,idleCyclePhase})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
-               refuge:source.refuge,encounter:source.encounter};
+               refuge:source.refuge,refugeWorker:source.refuge&&source.ordinaryWorkers?source.members[0].proof:null,encounter:source.encounter};
            }
            if(worldBoundaryRequired)publishWorldBoundary();
            if(pending&&!frameWorldCurrent(pending)||admittingFrame&&!frameWorldCurrent(admittingFrame.packet))invalidatePendingNativeWorld('Prepared resources precede the native world baseline');

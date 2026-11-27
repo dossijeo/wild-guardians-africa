@@ -823,12 +823,14 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       return center?.kind==='center'&&center.status==='ruined'&&center.hp===0;
     };
     const arrival=source.refuge?.reference;
+    const ordinaryWorkers=grouped&&nativeOrdinaryRecoveryKinds(members.map(({profile})=>profile.kind),!!arrival);
     const homeSource=arrival&&nativeHomeRouteSource(arrival.sourceHome.reference);
     const destination=homeSource?.home;
     const refugeCurrent=()=>{
       if(!arrival)return true;
       const worker=state.workers.find(worker=>worker.id==='worker-'+arrival.actorId);
       return worker?.status==='home'&&!worker.nativeRouteAdmission&&worker.heading===arrival.pose.yaw&&
+        (!ordinaryWorkers||!state.raid&&state.workers.length===2&&!worker.incapacitated&&workers?.get(worker.id)===null)&&
         (!stationaryRefuge||!state.raid&&state.workers.every(peer=>
          peer.status==='home'&&!peer.nativeRouteAdmission&&workers?.get(peer.id)===null)&&
          (homeSource.recoveryHit?worker.incapacitated===true&&worker.hits===2:!worker.incapacitated))&&
@@ -840,7 +842,6 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const ordinaryWorkers=grouped&&nativeOrdinaryRecoveryKinds(members.map(({profile})=>profile.kind));
     const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&

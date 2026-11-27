@@ -12,7 +12,7 @@ import {fixture as drawFixture,flush} from './helpers/remote-webgpu-fixture.js';
 for(const {name,file,count,partial} of [
  {name:'recovers ordinary Home19 before the first Savanna raid',file:'sabana714-d1-native-pending-home.json.gz',count:1},
  {name:'recovers both sheltered workers at the last ordinary Home19',file:'sabana714-d1-two-paid-workers-before-home.json.gz',count:2},
- {name:'rejects an ordinary Home19 recovery while the second worker is still outside',file:'sabana714-d1-two-paid-workers-before-home.json.gz',count:2,partial:true},
+ {name:'rejects an absence-only Home19 recovery while the second worker is still outside',file:'sabana714-d1-two-paid-workers-before-home.json.gz',count:2,partial:true},
 ])test('terminal Draw '+name,{timeout:45000},async()=>{
  const save=gunzipSync(readFileSync(new URL('./fixtures/'+file,import.meta.url))).toString();
  const initial=JSON.parse(save),options=savedNativeAuthorityOptions(save);
@@ -54,7 +54,11 @@ for(const {name,file,count,partial} of [
   assert.equal(resources.callbacksSettled,true);
   assert.equal(resources.terminal,true);
   const route=await f.authority.terminalWorkerRoute();
-  if(partial){assert.equal(route,null);return;}
+  if(partial){
+   await assert.rejects(f.authority.attachHeldWorkerRoute(channel.port1,'production-control',30,hold,
+    {version:2,refuge:true,members:[]}),/Expected current native recovery assignments/);
+   return;
+  }
   assert.deepEqual(route,{version:2,refuge:true,members:[]});
 
   replacement=await drawFixture({capabilities:{nativeHomeArrivalVersion:1}},

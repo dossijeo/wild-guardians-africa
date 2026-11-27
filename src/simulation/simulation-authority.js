@@ -1358,19 +1358,23 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   function ordinaryWorkerRecovery(){
     const count=game.workers.length;
     if(!nativeWorkerLifecycle||game.raid||![1,2].includes(count)||!civilShieldPhysicsAvailable()||
-       session.core.wasm.spatial_body_count()!==count||game.workers.some(worker=>worker.incapacitated))return null;
-    const workers=[...game.workers].sort((a,b)=>Number(b.nativeRouteAdmission==='native-home')-Number(a.nativeRouteAdmission==='native-home'));
+       game.workers.some(worker=>worker.incapacitated))return null;
+    const bodies=session.core.wasm.spatial_body_count(),refuge=bodies<count?planner.nativeOrdinaryRefugeRecovery({withActivePeer:true}):null;
+    if(bodies!==count-(refuge?1:0))return null;
+    const shelteredId=refuge?'worker-'+refuge.reference.actorId:null;
+    const workers=game.workers.filter(worker=>worker.id!==shelteredId)
+      .sort((a,b)=>Number(b.nativeRouteAdmission==='native-home')-Number(a.nativeRouteAdmission==='native-home'));
     const kinds=workers.map(({nativeRouteAdmission})=>nativeRouteAdmission==='native-home'?18:
       nativeRouteAdmission==='native-idle'?21:nativeRouteAdmission==='native-idle-stroll'?22:null);
-    if(!nativeOrdinaryRecoveryKinds(kinds))return null;
+    if(!nativeOrdinaryRecoveryKinds(kinds,!!refuge))return null;
     const executions=workers.map(({id},i)=>kinds[i]===18?planner.nativeHomeRouteExecution(id):
       kinds[i]===21?planner.nativeIdleCycleExecution(id):planner.nativeIdleStrollExecution(id));
     if(executions.some((row,i)=>!row||row.arrived||row.executedThrough!==game.elapsed||!recoverableExecution(kinds[i],row)))return null;
     const members=executions.map(({actorId},i)=>({kind:kinds[i],actorId}));
     const proofs=members.map(({kind},i)=>({kind,proof:executions[i].binding}));
-    try{copyNativeRecoveryGroup({version:2,members:proofs},planner.nativeWorldResourceBoundary(),{awaitingIdleCyclePhase:true});}
+    try{copyNativeRecoveryGroup({version:2,members:proofs,refuge:refuge??undefined},planner.nativeWorldResourceBoundary(),{awaitingIdleCyclePhase:true});}
     catch{return null;}
-    return {members,executions};
+    return {members,executions,...(refuge?{refuge}:{})};
   }
   function recoverableOrdinaryIdleSource(actorId){
     const group=ordinaryWorkerRecovery();
@@ -1428,7 +1432,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(nativeWorkerLifecycle&&civilShieldPhysicsAvailable()&&planner.nativeOrdinaryRefugeRecovery())
       return {version:2,refuge:true,members:[]};
     const ordinary=ordinaryWorkerRecovery();
-    if(ordinary)return {version:2,members:ordinary.members};
+    if(ordinary)return {version:2,members:ordinary.members,...(ordinary.refuge?{refuge:true}:{})};
     if(game.workers.length!==1)return null;
     const worker=game.workers[0],admission=worker.nativeRouteAdmission;
     const encounter=qualifyRaidEncounter&&civilShieldPhysicsAvailable()&&planner.nativeWorldResourceBoundary()&&
@@ -1462,6 +1466,11 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         nativeWorkerLifecycle&&planner.nativeOrdinaryRefugeRecovery());
       return refuge?{executions:[],refuge}:null;
     }
+    if(!route.ruin&&!route.encounter&&nativeOrdinaryRecoveryKinds(route.members.map(({kind})=>kind),!!route.refuge)){
+      const ordinary=ordinaryWorkerRecovery();
+      return ordinary&&!!ordinary.refuge===!!route.refuge&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
+        kind===route.members[i].kind&&actorId===route.members[i].actorId)?ordinary:null;
+    }
     if(route.refuge||route.ruin||route.encounter){
       const [member]=route.members;
       if(route.members.length!==1||(member.kind!==26&&(!(route.refuge||route.ruin)||member.kind!==27)))return null;
@@ -1470,11 +1479,6 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       if(!source||member.actorId!==source.execution.actorId||route.ruin&&member.kind!==source.execution.binding.reference.kind)return null;
       const {execution,...evidence}=source;
       return {executions:[execution],...evidence};
-    }
-    if(nativeOrdinaryRecoveryKinds(route.members.map(({kind})=>kind))){
-      const ordinary=ordinaryWorkerRecovery();
-      return ordinary&&route.members.length===ordinary.members.length&&ordinary.members.every(({kind,actorId},i)=>
-        kind===route.members[i].kind&&actorId===route.members[i].actorId)?{executions:ordinary.executions}:null;
     }
     const pair=planner.nativeRaidFlightRecoveryExecutions();
     return pair&&route.members.length===2&&pair.every((row,i)=>
@@ -1634,7 +1638,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
          draw.elapsed!==planner.nativeCausalClock().committedThrough||!Array.isArray(rows)||rows.length!==routes.length||
          !previous||JSON.stringify(previous)!==JSON.stringify(live)||
          route.encounter&&!sameRecoveredEncounter(draw.encounter,live.encounter)||
-         route.refuge&&!routes.length&&!sameNativeHomeArrivalAttestation(draw.refuge,live.refuge)||
+         route.refuge&&(!routes.length||nativeOrdinaryRecoveryKinds(routes.map(({kind})=>kind),true))&&
+           !sameNativeHomeArrivalAttestation(draw.refuge,live.refuge)||
          !rows.every((row,i)=>sameHeld(nativeWorkerRouteRecoveryProfile(routes[i].kind),live.executions[i],row,draw.elapsed)))
         throw Error('Missing submitted worker route at recovery cut');
       if(route.encounter===true){

@@ -792,7 +792,8 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
         const cycles=nativeIdleCycleBindings(),byKind={18:homes,21:cycles,22:strolls};
         recoveredCycle=cycles.length!==0;
         if(!nativeWorkerLifecycle||owningState?.raid||count!==homes.length+strolls.length||farmCount||
-           owningState?.workers.length!==members.length||homes.length+strolls.length+cycles.length!==members.length||
+           owningState?.workers.length!==members.length+(arrival?1:0)||homes.length+strolls.length+cycles.length!==members.length||
+           arrival&&JSON.stringify(arrival)!==JSON.stringify(nativeOrdinaryRefugeRecovery({withActivePeer:true}))||
            !members.every(({kind,proof})=>byKind[kind].some(binding=>nativeWorkerRouteRecoveryProfile(kind).sameAttestation(binding,proof))))
           throw Error('Held worker routes changed before bootstrap');
       }else{
@@ -1695,13 +1696,16 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const spawn=issued.reference.sourceHome.reference.sourceRequest?.raidSpawnSequence;
     return spawn?captureRefugeReturnCheckpoint(owningState,refuge.worker,spawn,gates):null;
   }
-  function nativeOrdinaryRefugeRecovery(){
+  function nativeOrdinaryRefugeRecovery({withActivePeer=false}={}){
     const game=owningState;
-    if(!game||game.raid||!ordinaryRefuge||wasm.spatial_body_count()!==0||
+    if(!game||game.raid||!ordinaryRefuge||wasm.spatial_body_count()!==(withActivePeer?1:0)||
        game.structures.some(s=>s.gate&&s.status!=='ruined')||
-       game.workers.some(worker=>worker.incapacitated||!nativeWorkerHomeInactive(worker.id)))return null;
+       game.workers.some(worker=>worker.incapacitated)||
+       (withActivePeer?game.workers.length!==2||ordinaryRefuge.worker.status!=='home':
+         game.workers.some(worker=>!nativeWorkerHomeInactive(worker.id))))return null;
     const issued=currentRefuge(ordinaryRefuge,{wholeRoster:true});
-    return matchesNativeOrdinaryRefuge(nativeWorldBoundary(),issued)?issued:null;
+    const cut=withActivePeer?issued?.reference.worldBoundary:nativeWorldBoundary();
+    return matchesNativeOrdinaryRefuge(cut,issued)?issued:null;
   }
   function nativeWoundedRefugeRecovery(){
     if(!qualifyRaidEncounter||owningState?.raid||!refuge?.worker.incapacitated||refuge.worker.hits!==2)return null;

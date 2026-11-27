@@ -940,6 +940,8 @@ En un guardado con un solo trabajador, NVIDIA también acreditó el primer enví
 
 Con los dos trabajadores todavía en Idle21, NVIDIA acreditó las dos adquisiciones en el primer envío del sustituto y seleccionó los dos actores con el reloj retenido. El control CPU exige ambos relojes en el mismo envío. [Prueba de los dos ciclos adquiridos](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
 
+Tras el primer Home19 en Sabana 714, NVIDIA también acreditó la ausencia de ese cuerpo junto al Idle21 que seguía activo. La validación CPU cubre además las adquisiciones posteriores de Idle22 y Home18 del trabajador que sigue fuera. [Prueba del relevo con un trabajador en casa](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-trabajador-refugiado-y-otro-activo).
+
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 
 Conectar el avance cinemático común a entidades, fases persistentes y consecuencias

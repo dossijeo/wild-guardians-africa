@@ -210,6 +210,18 @@ Pasaron 149 pruebas dirigidas de recuperación, transporte, fases y admisión, i
 
 En NVIDIA Turing, el primer envío del sustituto presentó a `worker-6` y `worker-8` en los cuerpos 1 y 2, con las adquisiciones 6 y 8 a la hora retenida de 249,50 s. Los dos ciclos se adquirieron a 248,25 s y presentaron una edad de 1,25 s. El picker seleccionó a ambos actores antes de activar. La partida siguió hasta 249,70 s y drenó con saldo 480. El hardware cubre dos primeros ciclos. La sonda de las dos primeras pasadas exigía edades distintas y confundía una referencia preparada con el commit. El recibo final comprueba cada referencia contra su adquisición y conserva ambos intentos anteriores. [Recibo de NVIDIA](performance/native-savanna-two-idle21-recovery-20261127.json).
 
+## Reemplazo con un trabajador refugiado y otro activo
+
+A 292,60 s, el control de preimagen conserva a `worker-6` en Idle21 y ya ha retirado por Home19 el cuerpo 2 de `worker-8`. El dispositivo anterior drena y la autoridad devuelve un descriptor vacío. La recuperación combina la retirada exacta con la adquisición del cuerpo activo. Comprueba la identidad de ambos, el orden de sus secuencias y la frontera en la que se acredita el primer envío. El retiro puede preceder a una adquisición posterior del trabajador activo.
+
+DetourCrowd conserva el registro del agente desactivado y lo excluye del procesamiento de la multitud. Wild Guardians mantiene el registro económico del trabajador en casa y usa el recibo de Home19 para excluir su cuerpo del consumidor sustituto. La escena comprueba que no esté su rig y el fence comprueba la ausencia de su reloj junto con el programa que sigue activo. [DetourCrowd v1.6.0, `removeAgent`](https://github.com/recastnavigation/recastnavigation/blob/v1.6.0/DetourCrowd/Source/DetourCrowd.cpp#L536-L546).
+
+Los controles CPU cruzan Idle21, Idle22 y Home18 con WASM y los puertos de producción. Rechazan un descriptor de solo ausencia, un corte ajeno, un paquete con el reloj retirado y la activación mientras el paquete correcto aún espera RAF. Tras el primer envío conservan el compañero en casa y el saldo del turno.
+
+Pasaron 187 pruebas dirigidas, incluidos los recorridos de refugio, golpes, incursión y recarga de Sabana. El build WebGPU en memoria terminó en 48,31 s con los binarios WASM existentes.
+
+En NVIDIA Turing, el primer envío del sustituto conservó el ticket mundial 22 a 295,20 s. Presentó el cuerpo 1 de `worker-6` con el Idle21 adquirido en el ticket 20 y una edad de 6,299999714 s. El picker seleccionó a ese trabajador mientras Hosted mantenía el reloj. El cuerpo 2 de `worker-8` siguió retirado y Surface confirmó su ausencia en el roster. Tras reanudar, la partida llegó a 295,40 s y drenó con saldo 480. El hardware cubre Idle21 con Home19. [Recibo de NVIDIA](performance/native-savanna-idle21-with-retired-home19-20261127.json).
+
 `node --test tests/native-ordinary-worker-recovery-pair.test.js` cubre la pérdida tanto durante el ciclo como durante la preparación del sucesor. En esta última verifica el cierre del preparador antes y después del hold, que la preparación retirada no adquiere la orden, y que el sucesor se admite en el sustituto. La regresión conserva el rechazo si falta cualquiera de los dos relojes. Pasaron 139 pruebas dirigidas de Idle, admisión y Recovery. Quedan abiertos el picking físico del sustituto, la combinación con portones y el reemplazo cuando el ciclo adquirido ya hereda una fase de otro ciclo.
 
 ### Vencimiento tras publicar una subfrontera histórica

@@ -1,0 +1,184 @@
+{
+  "scenario": "Sabana 714, recuperación de Idle21 con el otro cuerpo retirado por Home19",
+  "baseRevision": "665de44b97ff1dab9b5cf1bc7ec234fac60c5003",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 87.21000000834465
+    }
+  },
+  "artifacts": {
+    "native-savanna-two-workers-before-home-20261127.json": "dd6006d1012e91791bec19ecfd7c386d0aa384d84e24c05d57969bef7352f757",
+    "idle21-with-retired-home19-before-20261127.log": "304b84d1dd46c396189f5b9d53c9148edb225464ab26d29db0c3191d3c25cc5b",
+    "native-savanna-idle21-with-retired-home19-20261127-extended.json": "270517d50ef7c1cf186551e69e1bb1fd0260f7eddb7db9a36115596d59ee852e"
+  },
+  "original": {
+    "frame": 411,
+    "ticket": 22,
+    "elapsed": 294.94999999996594,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 6.049999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 19,
+        "acquisition": 20
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 6.049999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 19,
+        "acquisition": 20,
+        "phaseDelay": 0,
+        "phaseTime": 294.94999999996594,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 6.049999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 19,
+        "acquisition": 20,
+        "phaseDelay": 0,
+        "phaseTime": 294.94999999996594,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "retirement": {
+    "holdId": 466,
+    "publicationFloor": 1625,
+    "heldPublication": 1625,
+    "closedDrawLastClock": 295.0999999999658,
+    "heldClock": 295.1999999999657,
+    "callbacksSettled": true,
+    "drawClosed": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "frame": 1,
+    "ticket": 22,
+    "elapsed": 295.1999999999657,
+    "clocks": [
+      {
+        "semantic": "relative",
+        "relativeTime": 6.299999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 20,
+        "acquisition": 20
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 6.299999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 20,
+        "acquisition": 20,
+        "phaseDelay": 0,
+        "phaseTime": 295.1999999999657,
+        "phaseOffset": 0,
+        "period": 3.799999952316284
+      },
+      {
+        "semantic": "idle-offset",
+        "relativeTime": 6.299999713897705,
+        "executionEpoch": 288.89999999997144,
+        "actorId": 6,
+        "bodyId": 1,
+        "sourceCycleSequence": 0,
+        "referenceTicket": 20,
+        "acquisition": 20,
+        "phaseDelay": 0,
+        "phaseTime": 295.1999999999657,
+        "phaseOffset": 0,
+        "period": 4.0416669845581055
+      }
+    ]
+  },
+  "refuge": {
+    "worker": "worker-8",
+    "bodyId": 2,
+    "retiredSequence": 19,
+    "ticket": 22,
+    "retiredAt": 294.94999999996594,
+    "clock": 295.1999999999657,
+    "renderActor": false
+  },
+  "picking": {
+    "actor": "worker-6",
+    "pose": {
+      "x": 84.30746459960938,
+      "z": -6.827966690063477
+    },
+    "trials": [
+      {
+        "height": 0.7,
+        "result": "worker-6"
+      }
+    ],
+    "frameBefore": 1,
+    "frameAfter": 2,
+    "elapsed": 295.1999999999657
+  },
+  "resumed": {
+    "elapsed": 295.39999999996553,
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle",
+        "x": 84.30746459960938,
+        "z": -6.827966690063477,
+        "idleState": {
+          "anchorId": "farm-plant-3",
+          "mode": "rest",
+          "elapsed": 6.499999999994088,
+          "remaining": 4.899999856954764,
+          "rng": 2738973767,
+          "approachRetry": 0
+        }
+      },
+      {
+        "id": "worker-8",
+        "status": "home",
+        "x": 60,
+        "z": 0,
+        "idleState": null
+      }
+    ],
+    "balance": "480",
+    "drained": true,
+    "pageErrors": 0
+  },
+  "scope": {
+    "raid": false,
+    "gates": 0,
+    "deviceLoss": "explicit"
+  }
+}

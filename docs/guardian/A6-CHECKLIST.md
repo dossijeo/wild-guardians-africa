@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Sabana 714 recuperó un Idle21 adquirido después de que Home19 retirara al otro trabajador. NVIDIA confirmó el picking del cuerpo activo y la ausencia del cuerpo retirado antes de reanudar. Los cortes con Idle22 y Home18 activos pasan en CPU. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-trabajador-refugiado-y-otro-activo).
+
 Sabana 714 recuperó dos trabajadores con Idle21 adquirido en el mismo corte. NVIDIA confirmó ambos cuerpos y ambos picks antes de reanudar. El control CPU rechaza un primer envío parcial. [Pruebas y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-trabajadores-en-idle21).
 
 Sabana 714 recuperó al único trabajador desde el primer Idle21 en NVIDIA. El sustituto presentó el mismo cuerpo y el picking lo seleccionó al reloj retenido antes de reanudar. Los casos con sucesor pendiente o adquirido pasan en CPU. [Recibo y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-un-solo-trabajador-en-idle21).

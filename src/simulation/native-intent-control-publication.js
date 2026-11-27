@@ -1,6 +1,6 @@
 import {copyNativeShieldCropExpiry,sameNativeShieldCropExpiry} from '../world/native-shield-world.js';
 import {centerSource,sameCenter,verifiesCenter} from '../world/native-center-ruin-source.js';
-import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
+import {copyNativeIdleCycleRecoveryPhase,copyNativeRecoveryGroup,nativeOrdinaryRecoveryKinds,nativeRecoveryCovers,nativeRecoveryGates,nativeRecoverySequence,nativeWorkerRouteRecoveryProfile,recoveredNativeGateSamples,sameRecoveredEncounter} from '../world/native-worker-route-recovery.js';
 import {copyNativeBarrierAdditionReference,sameNativeBarrierAdditionReference,copyNativeBarrierAdditionAttestation} from '../world/native-barrier-addition.js';
 import {copyNativeTaskRouteStopAttestation,copyNativeTaskRouteStopReference,sameNativeTaskRouteStopReference} from '../world/native-task-route-stop.js';
 import {copyNativeFarmArrivalStopReference,sameNativeFarmArrivalStopReference,copyNativeFarmArrivalStopAttestation} from '../world/native-farm-arrival-stop.js';
@@ -163,10 +163,12 @@ export function createNativeIntentControlPublication({port,session,observe,
       if(draw){
         const members=recoveryMembers;
         const rows=recoveryBaseline?.version===2?draw.members:[draw];
+        const refuge=recoveryBaseline?.refuge&&(members?.length===0||nativeOrdinaryRecoveryKinds(members?.map(({kind})=>kind)??[],true));
         if(!members||draw.holdId!==recoveryBaseline.holdId||draw.consumerToken!==consumerToken||
            !Number.isSafeInteger(draw.frameSequence)||draw.frameSequence<1||draw.elapsed!==fence.effectiveTime||
            (recoveryBaseline.encounter?!sameRecoveredEncounter(draw.encounter,recoveryBaseline.encounter):draw.encounter!==undefined)||
-           (recoveryBaseline.refuge&&members.length===0?!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge):draw.refuge!==undefined)||
+           (refuge?(!sameNativeHomeArrivalAttestation(draw.refuge,recoveryBaseline.refuge)||!sameNativeWorldBoundary(draw.worldBoundary,worldBoundary)):
+             draw.refuge!==undefined||draw.worldBoundary!==undefined)||
            !Array.isArray(rows)||rows.length!==members.length||!members.every(({kind,proof,idleCyclePhase},i)=>{
              const row=rows[i],profile=nativeWorkerRouteRecoveryProfile(kind);
              if(row?.kind!==kind)return false;

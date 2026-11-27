@@ -26,7 +26,7 @@ import {copyNativeResumeReference,sameNativeResumeReference} from '../world/nati
 import {copyNativeSuspendedBodyReference,sameNativeSuspendedBodyReference} from '../world/native-suspended-body-reference.js';
 import {nativeIdleStrollStopCodec,nativeFarmArrivalStopCodec,nativeTaskRouteStopCodec,NATIVE_STOP_POSE_FIELDS} from '../world/native-worker-route-stop-codec.js';
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
-import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeStationaryRefuge,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
+import {centerRuinApproachEndpoint,copyNativeIdleCycleRecoveryPhase,copyRecoveredEncounterFall,copyRecoveredEncounterPose,matchesNativeOrdinaryRefugeContinuation,matchesNativeStationaryRefuge,nativeIdleCycleRecoveryPhaseMatches,nativeRecoveryCovers,nativeWorkerRouteRecoveryProfile,woundedHomeEndpoint} from '../world/native-worker-route-recovery.js';
 import {copyNativeTaskActionReference,nativeTaskActionActor} from '../world/native-task-action-presentation.js';
 import {copyNativeTaskActionRestoreReference,sameNativeTaskActionRestoreReference} from '../world/native-task-action-restore-reference.js';
 import {copyNativeTaskActionAttestation,nativeTaskActionAttestationCovers} from '../world/native-task-action-attestation.js';
@@ -1070,10 +1070,13 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       counters.admissions++;return Object.freeze({reference,isPrepared:prepared,validateCommitted});
     },
 
-    installRecoveredRefuge(value,boundary){
+    installRecoveredRefuge(value,boundary,workerProof=null){
       const proof=copyNativeHomeArrivalAttestation(value),r=proof.reference;
-      const stationary=matchesNativeStationaryRefuge(boundary,proof);
-      if(closed||!clock||retiredRefuge||!stationary&&!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
+      const stationary=!workerProof&&matchesNativeStationaryRefuge(boundary,proof);
+      const ordinary=workerProof&&matchesNativeOrdinaryRefugeContinuation(boundary,proof,workerProof)&&
+        actors.size===1&&actors.has(workerProof.reference.actorId);
+      if(closed||!clock||retiredRefuge||workerProof&&!ordinary||
+         !ordinary&&!stationary&&!r.sourceHome.reference.sourceRequest?.raidSpawnSequence||
          !nativeRecoveryCovers(boundary,r.worldBoundary)||boundary.authorityEpoch!==authorityEpoch||
          boundary.nativeSession!==clock.nativeSession||boundary.effectiveTime>clock.committedThrough||
          proof.retiredSequence>clock.intentSequence||stationary&&(proof.retiredSequence!==clock.intentSequence||actors.size||active.size)||
@@ -1081,7 +1084,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
         throw Error('Recovered Home absence conflicts with the fresh control baseline');
       // Its body stays retired. The receipt is consumed by the same civil
       // Farm request as it would have been on the original Draw.
-      if(!stationary)retiredRefuge=proof;
+      if(!stationary&&!ordinary)retiredRefuge=proof;
     },
     installRecoveredEncounterFall(value,ref){
       const fall=copyRecoveredEncounterFall(value),actor=actors.get(ref.actorId),record=actor?.current;
