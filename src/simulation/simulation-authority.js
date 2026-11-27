@@ -146,6 +146,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   if(savedFlightMarker!==undefined&&(savedWorkerLifecycle!==1||savedRefuge!==undefined||savedEncounter))
    throw Error('Saved native raid flight has another owner');
   const savedFlight=savedFlightMarker===undefined?null:nativeRaidFlightCheckpointActors(game,savedFlightMarker);
+  let restoringFarmFlight=!!savedFlight?.marker.farmStop;
   const savedCrop=savedWorkerLifecycle===1&&savedRefuge!==undefined?shelteredCropCheckpointAnimal(game):null;
   const savedRetreat=savedWorkerLifecycle===1?shelteredCenterRetreat(game)??(savedCrop?.status==='retreating'?savedCrop:null):null;
   if(savedRetreat&&(!savedRetreat.path?.length||savedEncounter))throw Error('Saved native Retreat has no restorable corridor');
@@ -184,6 +185,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   // Reuse the session's identity registry, once, before restoring declarations.
   // Binding never republishes or upserts a body after native execution owns it.
   if(nativeRosterSupported)nativeBodies=createSpatialDynamicBodies(session.core.wasm);
+  if(restoringFarmFlight)savedFlight.worker.nativeRouteAdmission='pending-farm-flight-restore';
   const planner=createEventDrivenTaskPlanner(session,{qualifyFarmFlee:qualifyFarmFlee||ordinarySavannaFlight||!!savedFlight||!!savedRefuge,nativeWorkerLifecycle,
     qualifyRaidEncounter:qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop,repairFlightTicket:source=>{
     const repair=repairFlightProposal;
@@ -207,8 +209,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       chunks:resources.chunks.map(({cx,cz})=>({cx,cz})),removed:resources.removed.map(point=>({...point})),...(resources.kind===2?{nativeBarrierAdditionBinding:resources.nativeBarrierAdditionBinding}:{}),
       ...(resources.nativeShield?{nativeShield:resources.nativeShield}:{}),...(resources.nativeCenterRuin?{nativeCenterRuin:resources.nativeCenterRuin}:{}),
       ...(resources.nativeCenterPlacement?{nativeCenterPlacement:resources.nativeCenterPlacement}:{})});
-  }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3,refugeReturn:savedRefuge??null});
-  if(savedFlight)planner.declareRestoredRaidFlightHome(game,savedFlight);
+  }});planner.resetFromState(game,{restoredEncounterApproach:savedEncounter?.version===3||restoringFarmFlight,refugeReturn:savedRefuge??null});
+  if(restoringFarmFlight)planner.declareRestoredRaidFlightFarm(game,savedFlight);
+  else if(savedFlight)planner.declareRestoredRaidFlightHome(game,savedFlight);
   nativeIntentControl=createNativeIntentControlCohort({observe:planner.observeNativeIntentControl,
     onError:error=>onNativeIntentControlError?.(error)});
   const nav=createSpatialNavigationMovement(session,game);stopTasks=planner.observeTasks(game);stopWorld=planner.observeWorld(game);nav.intentTaskPlanner=planner;nav.raidEntryResident=(entry,radii)=>[...raidEntryChunks(entry,radii)].every(key=>loaded.has(key));if(raidWaitBindings!==null||savedWaitBindings!==null)restoreRaidWaitBindings(game,nav,raidWaitBindings??savedWaitBindings);
@@ -249,12 +252,12 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     if(savedApproach&&savedApproach.path!==savedApproachPath)throw Error('Saved native center approach lost its corridor');
     const {id,x,z,radius}=savedRaidAnimal;
     const body=nativeBodies.publish(id,{x,z,radius,kind:1,flags:1});
-    const requested=savedFlight?planner.restoreRaidFlightPair(game,savedFlight,nativeBodies.id(savedFlight.worker.id),body):
+    const requested=restoringFarmFlight|| (savedFlight?planner.restoreRaidFlightPair(game,savedFlight,nativeBodies.id(savedFlight.worker.id),body):
      savedStrike?planner.requestRestoredAnimalStrike(game,savedStrike,body):
-     savedRetreat?planner.requestRestoredAnimalRetreat(game,savedRetreat,body):planner.requestNativeAnimalCropRoute(game,savedApproach,body);
+     savedRetreat?planner.requestRestoredAnimalRetreat(game,savedRetreat,body):planner.requestNativeAnimalCropRoute(game,savedApproach,body));
     if(!requested)throw Error('Saved native animal request rejected');
    }
-   if(planner.commitNativeCausalClock({paused:(inactiveNativeRoster||!!savedFlight)&&(!!game.pauses.length||!!game.result)}).status!=='committed')throw Error('Native worker bootstrap clock unavailable');
+   if(planner.commitNativeCausalClock({paused:restoringFarmFlight||(inactiveNativeRoster||!!savedFlight)&&(!!game.pauses.length||!!game.result)}).status!=='committed')throw Error('Native worker bootstrap clock unavailable');
    installNativeProduction();
   }
   function installNativeProduction(){
@@ -455,11 +458,18 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   function liveRaidFlightCheckpointOwners(){
    const admission=game.workers[0]?.nativeRouteAdmission;
    if((!mixedFlight&&!savedFlight)||!game.raid?.daytime||game.workers.length!==1||
-      !['native-home','pending-raid-flight-resources'].includes(admission)||
+      !['native-home','pending-raid-flight-resources','pending-farm-flight-stop'].includes(admission)||
       !civilShieldPhysicsAvailable())return null;
    const layout=nativeRaidFlightCheckpointLayout(game);
    if(!layout)return null;
    const {gate}=layout;
+   if(admission==='pending-farm-flight-stop'){
+    if(!gate||game.biome!=='desierto')return null;
+    const source=planner.nativeRaidFlightFarmCheckpoint(),motor=gateBindings?.read(gate.id);
+    if(!source||gate.id!=='structure-'+source.gateId||motor?.sampledAt!==game.elapsed||motor.opening!==gate.gateOpen||
+       Object.keys(source.cut.motor).some(key=>source.cut.motor[key]!==motor[key]))return null;
+    return {farmStop:source.cut,gate,pending:{raidSpawnSequence:source.spawnSequence}};
+   }
    if(gate&&!settledGateCheckpointPose(gate))return null;
    if(admission==='pending-raid-flight-resources'){
     const pending=planner.nativeRaidFlightPendingCheckpoint();
@@ -472,7 +482,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    return {home,gate};
   }
   function saveAvailable(refugeReturn=refugeReturnCheckpoint(),flight=null){return !game.pauses.includes('campaign-cinematic')&&(!savedEncounter||!!nativeBodies)&&
-    !planner.encounterCheckpointBlocked(!!refugeReturn,!!flight)&&confirmedStateSaveAvailable(game,{allowNativeRaidFlight:!!flight});}
+    !planner.encounterCheckpointBlocked(!!refugeReturn,!!flight)&&confirmedStateSaveAvailable(game,{allowNativeRaidFlight:!!flight,allowNativeFarmStop:!!flight?.farmStop});}
   function nativeAnimalCheckpointState(refugeReturn,flight){
    const animal=game.raid?.animals[0];
    if(!nativeBodies||!animal||game.raid.animals.length!==1)return game;
@@ -527,9 +537,9 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    }
    return {...game,raid:{...game.raid,animals:[{...animal,path}]}};
   }
-  function captureRaidFlightCheckpoint(state,{pending,home,gate}){
+  function captureRaidFlightCheckpoint(state,{pending,home,gate,farmStop}){
    const [worker]=state.workers,[animal]=state.raid.animals;
-   if(pending)return captureNativeRaidFlightCheckpoint(state,worker,animal,pending.raidSpawnSequence,null,gate);
+   if(pending)return captureNativeRaidFlightCheckpoint(state,worker,animal,pending.raidSpawnSequence,null,gate,true,farmStop);
    const handle=home.nativeRoute.routeHandle,points=planner.routePoints(handle),sample=planner.sampleNativeRoute(handle,state.elapsed);
    if(!points||!sample||sample.x!==worker.x||sample.z!==worker.z||sample.firstRemainingPoint<0||
       sample.firstRemainingPoint*2>=points.length)throw Error('Native raid flight checkpoint lost its Home corridor');
@@ -1613,7 +1623,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     // A completed native admission may have projected Game since the last
     // publication. Publish that actual boundary atomically; a capture started
     // now cannot certify motion from the preceding, unpublished state change.
-    const nativeBoundaryPending=pendingNativeWorldResources.length>0||nativeProduction?.status().last?.publicationSequence===sequence;
+    const lastNative=nativeProduction?.status().last;
+    if(restoringFarmFlight&&lastNative?.kind==='farm-arrival'&&lastNative.status==='committed'){
+     if(!planner.finishRestoredRaidFlightFarm(game,savedFlight,nativeBodies.id(savedFlight.worker.id),nativeBodies.id(savedFlight.animal.id))||
+        !['committed','unchanged'].includes(planner.commitNativeCausalClock({paused:!!game.pauses.length||!!game.result}).status))
+      throw Error('Restored Farm flight lacks its native pair');
+     restoringFarmFlight=false;
+    }
+    const nativeBoundaryPending=pendingNativeWorldResources.length>0||lastNative?.publicationSequence===sequence;
     let value=null,rejection=null,stepsExecuted=null,motionTrace=null,worldMotionTrace=null,motionTopologyBefore=null;const eventBoundaries=captureHistoricalEvents&&command.kind==='advance'?createHistoricalEventBoundaryCapture(game):null,commandLoadedChunks=[],previousTrackedActor=trackedActor,wasSuspended=game.pauses.length>0||!!game.result,clockCapture=command.captureClockSegments===true?{version:1,start:game.elapsed,end:game.elapsed,startPauses:[...game.pauses],endPauses:null,complete:true,segments:[]}:null;
     // trackIncome([]) can repair a stale day even when the game is paused.
     // A native owner may commit Game changes asynchronously, including while
@@ -1637,6 +1654,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      };
      let recoveryCut=null;
      const runSteps=first=>{
+       if(restoringFarmFlight){stepsExecuted=0;return;}
        for(let i=first;i<steps;i++){
          const boundary=advanceReal(game,command.seconds,nav,options);
          if(boundary)return boundary.then(stopped=>{
@@ -1887,6 +1905,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       strike===savedStrike&&strikeSource.mode===5&&strike.attackId==='attack-'+strikeSource.restore.attackId);
     const workerLifecycle=captureNativeCheckpoint&&(!!raidFlight||(nativeWorkerLifecycle||refugeReturn)&&(!game.raid||restorableRaidRoute||restorableStrike))&&game.workers.every(worker=>
       nativeMarkers.has(worker.nativeRouteAdmission)||raidFlight?.homePending&&worker.nativeRouteAdmission==='pending-raid-flight-resources'||
+      raidFlight?.farmStop&&worker.nativeRouteAdmission==='pending-farm-flight-stop'||
       planner.nativeWorkerHomeInactive(worker.id));
     if(captureNativeCheckpoint&&refugeReturn&&!workerLifecycle)throw Error('Native refuge return lost its restorable animal');
     const nativeAuthorityCheckpoint=captureNativeCheckpoint?{version:3,...(encounter?{encounter}:{}),...(workerLifecycle?{workerLifecycle:1}:{}),...(refugeReturn?{refugeReturn}:{}),...(raidFlight?{raidFlight}:{}),wallOwners:session.captureWallOwners(),shieldOwners:session.captureShieldOwners(),chunkKeys:session.core.captureResidentChunks().keys,spatialState:session.core.snapshot(),navigationView:nav.activeBounds&&nav.raidView?{bounds:[...nav.activeBounds],eye:{...nav.raidView.eye},target:{...nav.raidView.target}}:null}:null;

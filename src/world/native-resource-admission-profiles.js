@@ -86,7 +86,7 @@ const profiles=Object.freeze({
     proposalKind:'native-farm-arrival-route-proposal',templateField:'preparedFarmArrivalTemplate',bindingField:'nativeFarmArrivalBinding',releaseField:'nativeFarmArrivals',
     reference:nativeFarmArrivalRouteReferenceFromProposal,sameReference:sameNativeFarmArrivalRouteReference,compatible:routeCompatible,
     receiptCompatible:(receipt,prepared)=>receipt.nativeFarmArrivalVersion===1&&sameNativeFarmArrivalRouteReference(receipt.preparedFarmArrivalTemplate,prepared),
-    attest(native,reference,preparedReference){const actual=issuedRoute(native,reference),fact=native.nativeFarmArrivalRouteBinding(reference.actorId);if(!fact||!sameNativeFarmArrivalRouteReference(fact.reference,reference)||!sameNativeFarmArrivalRouteReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native farm arrival resource association unavailable');return fact;}
+    attest(native,reference,preparedReference){const actual=issuedRoute(native,reference,{farmPublication:true}),fact=native.nativeFarmArrivalRouteBinding(reference.actorId);if(!fact||!sameNativeFarmArrivalRouteReference(fact.reference,reference)||!sameNativeFarmArrivalRouteReference(fact.preparedReference,preparedReference)||fact.assignmentSequence!==actual.assignmentSequence)throw Error('Native farm arrival resource association unavailable');return fact;}
   }),
   'home-route':Object.freeze({
     proposalKind:'native-home-route-proposal',templateField:'preparedHomeRouteTemplate',bindingField:'nativeHomeRouteBinding',releaseField:'nativeHomes',
@@ -155,9 +155,9 @@ const profiles=Object.freeze({
   })
 });
 
-function issuedRoute(native,reference){
+function issuedRoute(native,reference,{farmPublication=false}={}){
   const actual=native.nativeRouteTiming(reference.expectedRouteHandle);
-  if(!actual||actual.actorId!==reference.actorId||actual.startTime!==reference.worldBoundary.effectiveTime||
+  if(!actual||actual.actorId!==reference.actorId||(farmPublication?(actual.publicationStartTime??actual.startTime):actual.startTime)!==reference.worldBoundary.effectiveTime||
     actual.endTime!==reference.endTime||actual.assignmentSequence<=reference.sourceControlSequence||
     native.nativeSuspendedGateRoute(reference.actorId)!==null)
     throw Error('Committed native resume differs from its proposed assignment');

@@ -11,7 +11,7 @@ import {terrainStopProposalProtocol,terrainStopWireProtocol,hasOtherTerrainStopF
 import {nativeIdleCycleBodyState} from '../world/native-idle-cycle-body-source.js';
 import {copyNativeIdleCycleProposal,copyNativeIdleCycleAttestation,copyNativeIdleCycleResources,nativeIdleCyclePresentationMatches,nativeIdleCycleSuccessor} from '../world/native-idle-cycle.js';
 import {copyNativeFarmArrivalRouteProposal,copyNativeFarmArrivalRouteAttestation,copyNativeFarmArrivalRouteResources,nativeFarmArrivalRoutePresentationMatches,nativeFarmArrivalRouteSuccessor} from '../world/native-farm-arrival-route.js';
-import {nativeFarmArrivalExecutionState} from '../world/native-farm-arrival-state.js';
+import {nativeFarmArrivalExecutionState,nativeFarmFlightState} from '../world/native-farm-arrival-state.js';
 import {copyNativeIdleStrollProposal,copyNativeIdleStrollAttestation,copyNativeIdleStrollResources,nativeIdleStrollPresentationMatches,nativeIdleStrollSuccessor,nativeIdleStrollWalkRemaining,nativeIdleStrollApproachesAnchor} from '../world/native-idle-stroll.js';
 import {nativeIdleStrollLiveState} from '../world/native-idle-stroll-state.js';
 import {nativeEntityNumericId} from '../world/native-entity-id.js';
@@ -712,7 +712,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
        }
        if(farm){const q=binding.reference.sourceRequest,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${q.actorId}`);
-        try{const semantic=nativeFarmArrivalExecutionState(state,worker);return (!worker.raidReturn||q.refugeSequence===worker.nativeRefugeSequence)&&worker.profile===q.workerProfile&&semantic.centerId===q.centerId&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}
+        try{const semantic=worker?.nativeRouteAdmission==='pending-farm-flight-stop'?nativeFarmFlightState(state,worker,{executing:true}):nativeFarmArrivalExecutionState(state,worker);return (!worker.raidReturn||q.refugeSequence===worker.nativeRefugeSequence)&&worker.profile===q.workerProfile&&semantic.centerId===q.centerId&&Object.keys(semantic.goal).every(k=>semantic.goal[k]===q.goal[k]);}catch{return false;}
        };onPresentationReady();await waitNativePublication(preparedSequence+1,controller.signal,projected);if(nativeGateProposal===item)nativeGateProposal=null;}
        if(stroll){const r=binding.reference,anchorId=`${r.anchor.kind===1?'farm-plant':'farm-structure'}-${r.anchor.id}`,projected=()=>{
         const worker=state.workers.find(w=>w.id===`worker-${r.actorId}`);if(worker?.nativeRouteAdmission!=='native-idle-stroll')return false;

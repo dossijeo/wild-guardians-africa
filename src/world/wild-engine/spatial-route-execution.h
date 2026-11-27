@@ -46,7 +46,13 @@ static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& inte
  const std::array<double,8> source=origin?origin->pose:std::array<double,8>{r.x,r.z,r.yaw,r.radius,r.runPhase,r.walkPhase,r.carryPhase,r.runRemaining};
  if(origin){uint32_t next=origin->generation+2;if(!next)next=1;
   if(origin->sequence<=r.sequence||origin->sequence>=b->assignmentSequence||origin->at<r.at||origin->at>h[10]||double(next)!=h[4])return false;}
- if(route.originX!=source[0]||route.originZ!=source[1]||route.originYaw!=source[2]||route.radius!=source[3]||route.motionOffset[2]!=source[4]||route.motionOffset[3]!=source[5]||route.motionOffset[4]!=source[6]||route.runBudget!=source[7]||h[8]!=source[0]||h[9]!=source[1]||h[16]!=source[7])return false;
+ if(route.radius!=source[3]||h[8]!=source[0]||h[9]!=source[1]||h[16]!=source[7])return false;
+ if(b->coldGateCut){
+  // The cold native proposal already proved the current request pose by
+  // sampling the reconstructed original program. Keep its two origins distinct.
+  if(origin||route.startTime>=h[10]||h[10]!=r.at)return false;
+ }else if(route.startTime!=h[10]||route.originX!=source[0]||route.originZ!=source[1]||route.originYaw!=source[2]||
+    route.motionOffset[2]!=source[4]||route.motionOffset[3]!=source[5]||route.motionOffset[4]!=source[6]||route.runBudget!=source[7])return false;
  const double endX=route.points.empty()?route.originX:route.points[route.points.size()-2],endZ=route.points.empty()?route.originZ:route.points.back();
  uint32_t resumed=uint32_t(h[4])+1;if(!resumed)resumed=1;
  const auto suspended=s.suspendedBodies.find(r.body);
@@ -56,7 +62,7 @@ static bool farmArrivalBodyCurrent(const IntentState& s,const ActiveIntent& inte
  // Like Stroll, task availability can end before the prepared Home stop.
  // Keep the exact physical owner; an existing Home request stays ineligible.
  return r.actor==intent.actor&&r.session==s.session&&double(r.sequence)==h[21]&&r.at==h[22]&&r.profile==route.profile&&
-  b->assignmentSequence==intent.assignmentSequence&&owned&&double(intent.slot)==h[20]&&route.startTime==h[10]&&double(route.motionFlags)==h[6]&&
+  b->assignmentSequence==intent.assignmentSequence&&owned&&double(intent.slot)==h[20]&&double(route.motionFlags)==h[6]&&
   (!home||!worker->second.eligible)&&!worker->second.actionActive&&worker->second.bodyBound&&!worker->second.inactiveSequence&&worker->second.center==r.center&&worker->second.body==r.body&&r.body==route.reservationBody&&
   center!=s.targets.end()&&center->second.kind==4&&center->second.active&&center->second.status==0&&center->second.serviceKnown&&center->second.serviceX==r.targetX&&center->second.serviceZ==r.targetZ&&center->second.x==r.centerX&&center->second.z==r.centerZ&&
   intent.approachKnown&&intent.approachX==float(home?intent.homeRequest->homeX:r.targetX)&&intent.approachZ==float(home?intent.homeRequest->homeZ:r.targetZ)&&intent.approachRadius==2&&std::hypot(endX-r.targetX,endZ-r.targetZ)<=2&&
@@ -90,8 +96,11 @@ int beginRouteExecution(IntentState& s){
     if(!executionBindingCoherent(s,body,slot))return -3;
     const auto& route=s.routeSlots[slot];SpatialBodyView physical;
     if(route.staticProofStamp!=executionWorldStamp())return -4;
-    if(route.startTime!=s.effectiveTime||!spatialReadBody(body,physical)||
-       physical.x!=route.originX||physical.z!=route.originZ)return -3;
+    const auto& farm=route.farmArrivalBinding;
+    const bool cold=farm&&farm->coldGateCut;
+    const double start=cold?farm->actual.header[10]:route.startTime;
+    const double x=cold?farm->actual.header[8]:route.originX,z=cold?farm->actual.header[9]:route.originZ;
+    if(start!=s.effectiveTime||!spatialReadBody(body,physical)||physical.x!=x||physical.z!=z)return -3;
   }
   s.executionWorldStamp=executionWorldStamp();s.executionEnabled=s.bodyDomainActive=true;s.residencyPinRevision++;
   for(const auto& [body,slot]:s.reservedBodies){

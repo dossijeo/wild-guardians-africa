@@ -279,6 +279,7 @@ struct NativeFarmArrivalRouteOrigin {std::array<double,24> header{};uint64_t tic
 struct NativeFarmArrivalHeldSource {uint64_t sequence=0;uint32_t generation=0;double at=0;std::array<double,8> pose{};};
 struct NativeFarmArrivalRouteBinding {
  NativeFarmArrivalRouteOrigin prepared,actual;uint64_t assignmentSequence=0;
+ bool coldGateCut=false;
  std::optional<NativeFarmArrivalHeldSource> heldSource;
  std::shared_ptr<const NativeFarmArrivalResourceRequest> requestSource;
 };
@@ -451,6 +452,7 @@ struct PendingNativeMotionDraft {
   std::shared_ptr<const NativeFarmArrivalResourceRequest> farmArrivalRequestSource;
   std::shared_ptr<const NativeFarmArrivalRouteBinding> farmArrivalHeldBinding;
   std::optional<NativeFarmArrivalHeldSource> farmArrivalHeldSource;
+  std::vector<double> farmArrivalColdGateCut;
   // Evidence about the previous native-owned draft, never an execution grant.
   // Kept only in the one current proposal; cancelling it drops the evidence.
   std::array<double,11> timeTranslation{};

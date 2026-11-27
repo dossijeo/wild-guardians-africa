@@ -27,9 +27,10 @@ export function prepareWorkerCheckpoint(result,{slotId,policy,savedAt}){
  if(checkpoint?.refugeReturn)validateRefugeReturnState(state,checkpoint.refugeReturn);
  if(flight){
   const {worker}=nativeRaidFlightCheckpointActors(state,flight);
-  if(worker.nativeRouteAdmission!==(flight.homePending?'pending-raid-flight-resources':'native-home'))
-   throw Error('Saved raid flight differs from its declared Home stage');
+  const admission=flight.farmStop?'pending-farm-flight-stop':flight.homePending?'pending-raid-flight-resources':'native-home';
+  if(worker.nativeRouteAdmission!==admission)throw Error('Saved raid flight differs from its declared stage');
   delete worker.nativeRouteAdmission;
+  if(flight.farmStop)delete worker.nativeFarmFlightSample;
   validateSnapshot(state);
  }
  if(physical){if(state.pauses.includes('campaign-cinematic'))return {saved:false,reason:'physics-active',sequence:result.sequence};state.workerPhysicsCheckpoint=physical;}

@@ -61,6 +61,52 @@ static int planFarmArrival(RouteSlot& route,const NativeFarmArrivalResourceReque
 static double farmGateSide(const NativeGate& gate,double x,double z){
  return (x-gate.x)*std::sin(gate.yaw)+(z-gate.z)*std::cos(gate.yaw);
 }
+
+// Reconstruct the existing Farm program at a cold boundary. The request owns
+// the current body and source pose. The archived origin is only input to a
+// new proof, and must reproduce the current physical pose exactly.
+static int proveColdFarmGateCut(IntentState& s,const ActiveIntent& intent,
+ const std::vector<double>& data,PendingNativeMotionDraft& draft){
+ if(data.size()!=16||!nativeFarmArrivalRequestBodyCurrent(s,intent)||!gateStaticProofCurrent(s))return -2;
+ const auto& request=*intent.farmArrivalRequest;
+ const double start=data[0],gateId=data[9],gateFrom=data[10],gateTarget=data[11],
+  gateAt=data[12],gateEnd=data[13],routeEnd=data[14];
+ if(!std::all_of(data.begin(),data.end(),[](double n){return std::isfinite(n);})||
+    start<0||start>=s.effectiveTime||!coordinate(data[1])||!coordinate(data[2])||
+    data[4]<0||data[5]<0||data[6]<0||data[7]<0||!(data[8]==0||data[8]==1)||
+    !integer(gateId)||gateFrom<0||gateFrom>=1||gateTarget!=1||
+    gateAt<start||gateAt>s.effectiveTime||gateEnd<=s.effectiveTime||routeEnd<gateEnd||
+    !(data[15]==0||data[15]==1))return -2;
+ const auto found=s.gates.find(uint64_t(gateId));
+ if(found==s.gates.end()||!found->second.mesh||!found->second.defined||found->second.status!=0||
+    !found->second.staticSweepCertified||!found->second.crossings.empty())return -2;
+ const auto& stationary=found->second;
+ if(gateMotionPending(stationary,s.effectiveTime))return -2;
+ draft.gates=s.gates;
+ auto& gate=draft.gates.at(uint64_t(gateId));
+ gate.from=gateFrom;gate.target=gateTarget;gate.at=gateAt;gate.precedingMotor=false;
+ if(gateMotionEnd(gate)!=gateEnd||gateOpening(gate,s.effectiveTime)!=gateOpening(stationary,s.effectiveTime))return -2;
+
+ auto origin=request;
+ origin.x=data[1];origin.z=data[2];origin.yaw=data[3];origin.runPhase=data[4];
+ origin.walkPhase=data[5];origin.carryPhase=data[6];origin.runRemaining=data[7];
+ const int planned=planFarmArrival(draft.route,origin,start,int(data[8]),false,draft.topology);
+ if(planned!=1)return planned;
+ SpatialBodyView body;
+ if(!spatialReadBody(request.body,body))return -3;
+ const int proof=proveGateRouteAdmission(s,intent,draft.route,request.body,body,draft.gates,draft.boundaries,
+  true,nullptr,nullptr,nullptr,nullptr,nullptr,&request);
+ if(proof!=1)return proof;
+ const auto& route=draft.route;
+ if(route.gateReservations.size()!=1||route.gateReservations.front()!=uint64_t(gateId)||
+    route.distances.empty()||routeTimeAtDistance(route,route.distances.back())!=routeEnd)return -2;
+ const auto sample=sampleRouteTiming(route,s.effectiveTime);
+ if(sample[0]!=request.x||sample[1]!=request.z||sample[4]!=request.yaw||sample[9]!=request.runPhase||
+    sample[10]!=request.walkPhase||sample[11]!=request.carryPhase||sample[14]!=request.runRemaining||
+    sample[6]!=0||(sample[16]==0)!=(data[15]==1))return -2;
+ return 1;
+}
+
 static bool proveFarmArrivalAlternative(IntentState& s,const ActiveIntent& intent,PendingNativeMotionDraft& draft,const SpatialBodyView& body,std::vector<float> points){
  const auto& r=*draft.farmArrivalRequestSource;
  RouteSlot next;next.points=std::move(points);
@@ -151,7 +197,8 @@ static void clearOpposedFarmEgress(IntentState& s,const ActiveIntent& intent,Pen
  if(previous!=r.profile)spatial_select_nav_profile_index(previous);
  s.reservationResult=reservation;s.timingRejection=rejection;
 }
-static int stageFarmArrivalRoute(double actor,double session,double sourceSequence,double urgent,bool savannaWorker=false){
+static int stageFarmArrivalRoute(double actor,double session,double sourceSequence,double urgent,bool savannaWorker=false,
+ const std::vector<double>* coldGateCut=nullptr){
  if(savannaWorker&&spatial_world_biome()!=0)return -2;
  auto& s=state();if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
  if(!integer(actor)||session!=double(s.session)||!integer(sourceSequence)||(urgent!=0&&urgent!=1))return -1;
@@ -168,39 +215,61 @@ static int stageFarmArrivalRoute(double actor,double session,double sourceSequen
  if(held){const auto& p=d.farmArrivalHeldSource->pose;origin.x=p[0];origin.z=p[1];origin.yaw=p[2];origin.radius=p[3];origin.runPhase=p[4];origin.walkPhase=p[5];origin.carryPhase=p[6];origin.runRemaining=p[7];}
  const auto& r=origin;
  if(double(r.sequence)!=sourceSequence)return -2;
+ if(coldGateCut&&(held||savannaWorker||spatial_world_biome()!=1||r.refugeSequence||r.at!=s.effectiveTime||
+    coldGateCut->size()!=16||(*coldGateCut)[8]!=urgent))return -2;
  d.body=r.body;d.slot=held?found->second.slot:uint32_t(s.routeSlots.size());if(!held)for(uint32_t i=0;i<s.routeSlots.size();i++)if(!s.routeSlots[i].active){d.slot=i;break;}
  d.generation=d.slot<s.routeSlots.size()?s.routeSlots[d.slot].generation:0;
- int result=planFarmArrival(d.route,r,s.effectiveTime,int(urgent),savannaWorker,d.topology);if(result!=1)return result;
- SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;s.reservationResult.fill(0);d.gates=s.gates;
- result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,held?nullptr:d.farmArrivalRequestSource.get(),d.farmArrivalHeldBinding.get());
- if(result==1){if(!held)clearOpposedFarmEgress(s,found->second,d,body);}
- else if(result!=0||held||!detourFarmGateApproach(s,found->second,d,body))return result;
- result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
- auto& p=s.barrierProposal;p.kind=23;captureNativeMotionRows(d);const auto& route=d.route;const double length=route.distances.empty()?0:route.distances.back();
+ s.reservationResult.fill(0);
+ if(coldGateCut){
+  const int proof=proveColdFarmGateCut(s,found->second,*coldGateCut,d);if(proof!=1)return proof;
+  d.farmArrivalColdGateCut=*coldGateCut;
+ }else{
+  int result=planFarmArrival(d.route,r,s.effectiveTime,int(urgent),savannaWorker,d.topology);if(result!=1)return result;
+  SpatialBodyView body;if(!spatialReadBody(d.body,body))return -3;d.gates=s.gates;
+  result=proveGateRouteAdmission(s,found->second,d.route,d.body,body,d.gates,d.boundaries,false,nullptr,nullptr,nullptr,nullptr,nullptr,held?nullptr:d.farmArrivalRequestSource.get(),d.farmArrivalHeldBinding.get());
+  if(result==1){if(!held)clearOpposedFarmEgress(s,found->second,d,body);}
+  else if(result!=0||held||!detourFarmGateApproach(s,found->second,d,body))return result;
+ }
+ const int result=stageWorldMutationBoundary(nullptr,0);if(result!=1)return result;
+ auto& p=s.barrierProposal;p.kind=23;
+ captureNativeMotionRows(d,coldGateCut?std::optional<double>{p.at}:std::nullopt);
+ const auto& route=d.route;const double length=route.distances.empty()?0:route.distances.back();
+ const auto cut=coldGateCut?sampleRouteTiming(route,p.at):std::array<double,18>{};
  d.header={1,actor,double(d.body),double(d.generation),double(nextGateRouteGeneration(d.generation)),double(route.profile),double(route.motionFlags),route.radius,
-  route.originX,route.originZ,route.startTime,routeTimeAtDistance(route,length),length,route.speed,route.runDistance,route.runSpeed,route.runBudget,double(route.timingMode),
-  double(route.points.size()/2),double(d.rows.size()/16),double(d.slot),sourceSequence,r.at,double(p.intents)};
+  r.x,r.z,p.at,routeTimeAtDistance(route,length),length-cut[2],route.speed,route.runDistance-cut[12],route.runSpeed,r.runRemaining,double(route.timingMode),
+  double(route.points.size()/2)-cut[5],double(d.rows.size()/16),double(d.slot),sourceSequence,r.at,double(p.intents)};
  p.farmArrivalRoute=std::move(d);return 1;
 }
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_version(){return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage(double actor,double session,double sourceSequence,double urgent){return stageFarmArrivalRoute(actor,session,sourceSequence,urgent);}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage_savanna(double actor,double session,double sourceSequence,double urgent){return stageFarmArrivalRoute(actor,session,sourceSequence,urgent,true);}
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_stage_cold_gate(double actor,double session,double sourceSequence){
+ const auto& input=state().gateInput;
+ return input.size()==16?stageFarmArrivalRoute(actor,session,sourceSequence,input[8],false,&input):-1;
+}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_snapshot(double session,double ticket){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?takeWorldMutationBoundary(session,ticket,double(p.intents),p.at,double(p.clock),23):-1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_proposal_header_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?p.farmArrivalRoute->header.data():nullptr;}
-EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_points(double session,double ticket){const int valid=nav_farm_arrival_route_proposal_snapshot(session,ticket);return valid==1?int(state().barrierProposal.farmArrivalRoute->route.points.size()/2):valid;}
-EMSCRIPTEN_KEEPALIVE const float* nav_farm_arrival_route_proposal_points_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?p.farmArrivalRoute->route.points.data():nullptr;}
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_points(double session,double ticket){const int valid=nav_farm_arrival_route_proposal_snapshot(session,ticket);return valid==1?int(state().barrierProposal.farmArrivalRoute->header[18]):valid;}
+EMSCRIPTEN_KEEPALIVE const float* nav_farm_arrival_route_proposal_points_ptr(){
+ const auto& p=state().barrierProposal;if(!p.pending||p.kind!=23||!p.farmArrivalRoute)return nullptr;
+ const auto& d=*p.farmArrivalRoute;
+ return d.route.points.empty()?nullptr:d.route.points.data()+d.route.points.size()-size_t(d.header[18])*2;
+}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_rows(double session,double ticket){const int valid=nav_farm_arrival_route_proposal_snapshot(session,ticket);return valid==1?int(state().barrierProposal.farmArrivalRoute->rows.size()/16):valid;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_proposal_rows_ptr(){const auto& p=state().barrierProposal;return p.pending&&p.kind==23&&p.farmArrivalRoute?p.farmArrivalRoute->rows.data():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_gates(double session,double ticket){const int valid=nav_farm_arrival_route_proposal_snapshot(session,ticket);if(valid!=1)return valid;auto& s=state();s.gateResult.clear();for(auto id:s.barrierProposal.farmArrivalRoute->route.gateReservations)s.gateResult.push_back(double(id));return int(s.gateResult.size());}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_gate(double session,double ticket,double gateId){
  const int valid=nav_farm_arrival_route_proposal_snapshot(session,ticket);if(valid!=1)return valid;auto& s=state();const auto& d=*s.barrierProposal.farmArrivalRoute;
  if(!integer(gateId)||std::find(d.route.gateReservations.begin(),d.route.gateReservations.end(),uint64_t(gateId))==d.route.gateReservations.end())return -1;
- const auto gate=d.gates.find(uint64_t(gateId));if(gate==d.gates.end()||!gate->second.mesh)return -2;s.gateResult.clear();return captureNativeGateRouteCurve(s,d.route,gate->second);
+ const auto gate=d.gates.find(uint64_t(gateId));if(gate==d.gates.end()||!gate->second.mesh)return -2;
+ s.gateResult.clear();return captureNativeGateRouteCurve(s,d.route,gate->second,d.header[10]);
 }
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_cancel(double session,double ticket){auto& p=state().barrierProposal;if(!p.pending||p.kind!=23||session!=double(p.session)||ticket!=double(p.ticket))return 0;clearWorldMutationProposal(p);return 1;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_revalidate(double session,double ticket){
  auto& s=state();auto& p=s.barrierProposal;if(!p.pending||p.kind!=23||!p.farmArrivalRoute||session!=double(p.session)||ticket!=double(p.ticket))return -1;
- auto old=std::move(*p.farmArrivalRoute);clearWorldMutationProposal(p);if(!farmArrivalRouteSourceCurrent(s,old))return -2;const int result=stageFarmArrivalRoute(old.header[1],session,old.header[21],old.header[6],old.route.workerDrySweep);if(result!=1)return result;
+ auto old=std::move(*p.farmArrivalRoute);clearWorldMutationProposal(p);if(!farmArrivalRouteSourceCurrent(s,old))return -2;
+ const auto* coldGateCut=old.farmArrivalColdGateCut.empty()?nullptr:&old.farmArrivalColdGateCut;
+ const int result=stageFarmArrivalRoute(old.header[1],session,old.header[21],old.header[6],old.route.workerDrySweep,coldGateCut);if(result!=1)return result;
  auto& next=*p.farmArrivalRoute;next.previousFarmArrival=NativeFarmArrivalRouteOrigin{old.header,uint64_t(ticket)};
  const bool same=old.farmArrivalRequestSource==next.farmArrivalRequestSource&&old.farmArrivalHeldBinding==next.farmArrivalHeldBinding&&old.slot==next.slot&&old.generation==next.generation;
  next.timeTranslation={2,ticket,double(p.ticket),old.header[10],old.header[11],next.header[10],next.header[11],same&&sameNativeMotionDraft(old,next)?1.:0.,sameNativeMotionGates(s,old,next)?1.:0.,same&&sameNativeMotionDraft(old,next,true)?1.:0.,sameNativeMotionGates(s,old,next,true)?1.:0.};return 1;
@@ -210,7 +279,7 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_commit_bound(double ses
  auto& s=state();const auto& p=s.barrierProposal;if(!p.pending||p.kind!=23||!p.farmArrivalRoute||!integer(preparedTicket))return -1;
  const int valid=takeWorldMutationBoundary(session,ticket,sequence,time,clockSequence,23);if(valid!=1)return valid;const auto& d=*p.farmArrivalRoute;
  if(!farmArrivalRouteSourceCurrent(s,d)||d.slot>s.routeSlots.size()||d.slot<s.routeSlots.size()&&(s.routeSlots[d.slot].active&&!d.farmArrivalHeldSource||s.routeSlots[d.slot].generation!=d.generation)){clearWorldMutationProposal(s.barrierProposal);return -2;}
- auto binding=std::make_shared<NativeFarmArrivalRouteBinding>();binding->actual={d.header,uint64_t(ticket)};binding->requestSource=d.farmArrivalRequestSource;binding->heldSource=d.farmArrivalHeldSource;
+ auto binding=std::make_shared<NativeFarmArrivalRouteBinding>();binding->actual={d.header,uint64_t(ticket)};binding->requestSource=d.farmArrivalRequestSource;binding->heldSource=d.farmArrivalHeldSource;binding->coldGateCut=!d.farmArrivalColdGateCut.empty();
  if(preparedTicket==ticket)binding->prepared=binding->actual;else if(d.previousFarmArrival&&preparedTicket==double(d.previousFarmArrival->ticket)&&d.timeTranslation[9]==1&&d.timeTranslation[10]==1)binding->prepared=*d.previousFarmArrival;else return -9;
  auto draft=std::move(*s.barrierProposal.farmArrivalRoute);clearWorldMutationProposal(s.barrierProposal);auto& intent=s.activeIntents.at(draft.route.actor);const auto& r=*draft.farmArrivalRequestSource;
  intent.approachKnown=true;intent.approachX=float(r.targetX);intent.approachZ=float(r.targetZ);intent.approachRadius=2;
@@ -218,14 +287,36 @@ EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_proposal_commit_bound(double ses
  binding->assignmentSequence=intent.assignmentSequence;s.routeSlots[intent.slot].farmArrivalBinding=std::move(binding);s.entityRevision++;spatialRecordMotionResourceBoundary(session,ticket,time,23);return 1;
 }
 static const NativeFarmArrivalRouteBinding* currentFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
+// Cut a program from the actual bound slot and its articulated crossing.
+// The disk candidate contains values only; session, ticket and body remain local.
+EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_capture_gate_cut(double actor){
+ auto& s=state();s.gateResult.clear();
+ if(!currentFarmArrivalRoute(actor)||!gateStaticProofCurrent(s)||spatial_world_biome()!=1)return 0;
+ const auto& intent=s.activeIntents.at(uint64_t(actor));
+ const auto& route=s.routeSlots[intent.slot];
+ if(!route.hasExecution||route.distances.empty()||route.gateReservations.size()!=1||
+    route.startTime>=s.effectiveTime||route.executionPose[6]!=0)return 0;
+ const uint64_t id=route.gateReservations.front();
+ const auto found=s.gates.find(id);if(found==s.gates.end())return 0;
+ const auto& gate=found->second;const auto lease=gate.crossings.find(intent.actor);
+ if(lease==gate.crossings.end()||lease->second.body!=route.reservationBody||lease->second.slot!=intent.slot||
+    lease->second.generation!=route.generation||gate.precedingMotor||gate.at>s.effectiveTime||
+    gate.target!=1||gate.from>=gate.target||!gateMotionPending(gate,s.effectiveTime))return 0;
+ const auto pose=sampleRouteTiming(route,s.effectiveTime);
+ if(pose!=route.executionPose)return 0;
+ s.gateResult={route.startTime,route.originX,route.originZ,route.originYaw,route.motionOffset[2],route.motionOffset[3],
+  route.motionOffset[4],route.runBudget,double(route.motionFlags),double(id),gate.from,gate.target,gate.at,
+  gateMotionEnd(gate),routeTimeAtDistance(route,route.distances.back()),pose[16]==0?1.:0.};
+ return int(s.gateResult.size());
+}
 static const NativeFarmArrivalRouteBinding* currentHeldFarmArrivalRoute(double actor){const auto& s=state();if(!integer(actor))return nullptr;const auto found=s.activeIntents.find(uint64_t(actor));return found!=s.activeIntents.end()&&nativeHeldFarmArrivalBodyCurrent(s,found->second)?s.routeSlots[found->second.slot].farmArrivalBinding.get():nullptr;}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_snapshot(double actor){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();const auto b=currentFarmArrivalRoute(actor);if(!b)return 0;out={1,double(b->assignmentSequence),double(b->prepared.ticket),double(b->actual.ticket)};out.insert(out.end(),b->prepared.header.begin(),b->prepared.header.end());out.insert(out.end(),b->actual.header.begin(),b->actual.header.end());return 1;}
 EMSCRIPTEN_KEEPALIVE const double* nav_farm_arrival_route_binding_ptr(){return state().farmArrivalRouteBindingResult.data();}
 // Bounded metadata from the same route owner. Reuse execution scratch so typed
 // execution reads never copy a whole corridor or maintain an endpoint registry.
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_destination_snapshot(double actor){
- auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);if(!currentFarmArrivalRoute(actor))return 0;
- const auto& route=s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];out[0]=1;out[1]=route.points.empty()?route.originX:route.points[route.points.size()-2];out[2]=route.points.empty()?route.originZ:route.points.back();out[3]=double(route.points.size()/2);return 1;
+ auto& s=state();auto& out=s.farmArrivalExecutionResult;out.fill(0);const auto* binding=currentFarmArrivalRoute(actor);if(!binding)return 0;
+ const auto& route=s.routeSlots[s.activeIntents.at(uint64_t(actor)).slot];out[0]=1;out[1]=route.points.empty()?route.originX:route.points[route.points.size()-2];out[2]=route.points.empty()?route.originZ:route.points.back();out[3]=binding->actual.header[18];return 1;
 }
 static int farmArrivalBindingActors(bool held){auto& s=state();auto& out=s.farmArrivalRouteBindingResult;out.clear();std::vector<uint64_t> actors;for(const auto& [actor,intent]:s.activeIntents)if(intent.state==(held?PlanningState::WaitingBlocked:PlanningState::RouteActive)&&intent.slot<s.routeSlots.size()&&s.routeSlots[intent.slot].farmArrivalBinding){if(!(held?currentHeldFarmArrivalRoute(double(actor)):currentFarmArrivalRoute(double(actor))))return -1;actors.push_back(actor);}std::sort(actors.begin(),actors.end());for(auto id:actors)out.push_back(double(id));return int(actors.size());}
 EMSCRIPTEN_KEEPALIVE int nav_farm_arrival_route_binding_actors(){return farmArrivalBindingActors(false);}

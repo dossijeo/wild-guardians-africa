@@ -26,7 +26,7 @@ Los controles de CPU generan sus guardados mediante el coordinador público. Rec
 
 ## Portón en marcha antes de Stop24
 
-El guardado durante el movimiento del motor sigue pendiente. A t=10,52, el trabajador espera en el vano con la asignación Farm23 y su reserva de la hoja. La apertura es 0,24915777866600486. WASM conserva el inicio de apertura en 10,370505332800386 y el final en 10,970505332800386. Stop24 tiene READY retenido y el coordinador devuelve `physics-active`.
+En la preimagen del guardado durante el movimiento del motor, a t=10,52, el trabajador espera en el vano con la asignación Farm23 y su reserva de la hoja. La apertura es 0,24915777866600486. WASM conserva el inicio de apertura en 10,370505332800386 y el final en 10,970505332800386. Stop24 tiene READY retenido y el coordinador devuelve `physics-active`.
 
 Dos controles conservaron esa asignación mientras avanzaba el reloj. Al soltar READY en t=10,60 el trabajador seguía quieto. Al soltarlo en t=11,08 ya había reanudado la marcha y avanzado 0,118 m. Ambos readmitieron Stop24 con el ticket preparado 3 y el adquirido 4. El Host con cola determinista presentó el paquete 2 en cada caso. El recibo de Stop24 identifica el mismo motor y acredita su apertura en el GO, 0,3824911119993354 en el primer recorrido y 1 en el segundo. Desde ahí vuelve a estar disponible el guardado público de Home pendiente.
 
@@ -53,3 +53,17 @@ El productor ordinario y ambos puertos también entregaron el programa a un Host
 El candidato se conserva en `.cache/desert-farm-gate-stage-source`. El standalone privado `desert-farm-gate-stage-final/standalone/spatial-savanna.wasm` tiene SHA-256 `9d2765a88bd285e34d149f946cbfe23ccd3622fff043adc99abc01e1358a2eff`. Los recibos `desert-farm-gate-stage-{hold,through-aperture,host}.json` se reproducen con `.cache/desert-farm-gate-stage-probe.mjs` y los controles `desert-farm-gate-stage-{conformance,host}.mjs`. Sus SHA-256 son `80fd657a709f38dd80dc1fa74da98e57102e9e945fc2ac7c8ad5da7e8c16ff14`, `60dbc9dc36609fc46f515339d33ce25c8b4a15390979b42139af1c1ecf606fd0` y `4b3ddcfbb7f8d03867dd6f443238c654ccf2ab3774ae5cb98233ed24601c3e87`.
 
 Pasaron 66 pruebas de regresión de Farm, motores, proxies y admisión causal con el candidato privado. La fuente, binario y recibos están identificados en `.cache/desert-farm-gate-stage-manifest.json`.
+
+### Guardado público con Farm23 y el motor aún adquiridos
+
+En el corte de Desierto 983 a 10,52 s, el guardado público conserva el origen del programa de Farm, la pose ejecutada y los tiempos del motor. El archivo conserva `RaidSpawned` 29208 y el corredor pendiente hacia el centro. La nueva autoridad reconstruye la reserva con su propio cuerpo y su propio ticket. La tabla gráfica comienza en el instante guardado y WASM sigue evaluando el programa desde su origen de 10,00 s.
+
+Con Farm READY retenido, el control de CPU solicita dos pasos y ejecuta cero. El primer envío escribe edad cero para Farm y la hora exacta de 10,52 s para la hoja, abierta a 0,24915777866600486. Después de retener el nuevo Stop24, la hoja alcanza 0,3824911119993354 y se detiene a 10,60 s. El mismo trabajador vuelve a Idle a 61,80 s, conserva su contrato y el saldo, y el centro queda con 520 HP después de los cuatro golpes. Un tiempo de motor adulterado que pasa la validación de formato se rechaza en WASM antes de solicitar recursos a Draw.
+
+```powershell
+node --test --test-name-pattern="public raid checkpoint reacquires" tests/native-desert-gated-flight-checkpoint.test.js
+```
+
+El control usa Game, los dos puertos y el Host con cola GPU determinista. Pasaron 468 pruebas de checkpoint, movimiento, Farm, admisión y Stop24. La prueba anterior de las dos rutas adquiridas toma pasos de 0,01 s al acercarse a su corte. Con pasos de 0,02 s, el primer dibujo que cumple el criterio puede llegar cuando WASM ya confirmó la llegada de Home. La prueba sigue exigiendo ambas edades positivas y que la autoridad autorice el guardado antes de Home19.
+
+La receta de compilación conserva las importaciones y las exportaciones previas y añade las dos entradas de Farm para capturar y readmitir el corte. Standalone `f15890f9a03978a2940c109caacc32f7ec24d2c938c694be60e06ca7d3d51065`, pthread `ee153bb61562e8e5f49d6e680be83a0118228a6ae2ddc0850455d9b2975757ff`. El archivo de disco y el recibo de CPU están en `E:/wild-guardians-qa/native-menu-20261126/desert-farm-flight-disk-{cut.save,cycle}.json`. Queda por acreditar este corte con la escena completa en NVIDIA.

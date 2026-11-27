@@ -27,8 +27,8 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentations(double session,double slot
   }
   return int(s.gateResult.size());
 }
-static int captureNativeGateRouteCurve(IntentState& s,const RouteSlot& route,const NativeGate& gate){
-  const double begin=route.startTime,end=routeTimeAtDistance(route,route.distances.back());
+static int captureNativeGateRouteCurve(IntentState& s,const RouteSlot& route,const NativeGate& gate,std::optional<double> cut=std::nullopt){
+  const double begin=cut.value_or(route.startTime),end=routeTimeAtDistance(route,route.distances.back());
   std::vector<double> times{begin,end};for(double at:gateMotionKnots(gate))if(at>begin&&at<end)times.push_back(at);
   std::sort(times.begin(),times.end());times.erase(std::unique(times.begin(),times.end()),times.end());
   s.gateResult={double(gate.id),double(gate.mechanism),double(gate.mesh->id),gate.hx,gate.hz};
@@ -43,7 +43,8 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_route_presentation(double session,double slot,
       std::find(route.gateReservations.begin(),route.gateReservations.end(),id)==route.gateReservations.end())return -1;
   const auto found=s.gates.find(id);if(found==s.gates.end()||!found->second.mesh)return -2;
   const auto& gate=found->second;
-  return captureNativeGateRouteCurve(s,route,gate);
+  const auto& farm=route.farmArrivalBinding;
+  return captureNativeGateRouteCurve(s,route,gate,farm&&farm->coldGateCut?std::optional<double>{farm->actual.header[10]}:std::nullopt);
 }
 
 // Opt-in native admission only. It does not publish a GPU clock/permission or
@@ -150,12 +151,14 @@ EMSCRIPTEN_KEEPALIVE int nav_gate_resume_route(double session,double slot,double
   nav_intent_route_timing(session,slot,double(s.routeSlots[size_t(slot)].generation));return 1;
 }
 
-static void captureNativeMotionRows(PendingNativeMotionDraft& draft){
-  const auto& route=draft.route;std::vector<double> knots{route.startTime};reservationKnots({&route},route.startTime,knots);
+static void captureNativeMotionRows(PendingNativeMotionDraft& draft,std::optional<double> cut=std::nullopt){
+  const auto& route=draft.route;const double begin=cut.value_or(route.startTime);
+  const auto origin=cut?sampleRouteTiming(route,begin):std::array<double,18>{};
+  std::vector<double> knots{begin};reservationKnots({&route},begin,knots);
   std::sort(knots.begin(),knots.end());knots.erase(std::unique(knots.begin(),knots.end()),knots.end());
   for(size_t i=0;i<knots.size();i++){
     const double at=knots[i];const auto pose=sampleRouteTiming(route,at),right=i+1<knots.size()?sampleRouteTiming(route,at+(knots[i+1]-at)*.5):pose;
-    draft.rows.insert(draft.rows.end(),{at,pose[0],pose[1],pose[2],pose[3],right[4],right[5],right[6],pose[9],pose[10],pose[11],pose[12],pose[13],pose[14],right[15],right[16]});
+    draft.rows.insert(draft.rows.end(),{at,pose[0],pose[1],pose[2]-origin[2],pose[3]-origin[3],right[4],right[5]-origin[5],right[6],pose[9],pose[10],pose[11],pose[12]-origin[12],pose[13]-origin[13],pose[14],right[15],right[16]});
   }
 }
 

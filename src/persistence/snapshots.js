@@ -144,7 +144,7 @@ export function validateSnapshot(state,{livePhysics=false}={}) {
       if(strolling)(livePhysics&&worker.nativeRouteAdmission==='native-idle-stroll'?nativeIdleStrollLiveState:nativeIdleStrollSavedState)(state,worker);
       const liveRaidFlight=livePhysics&&state.raid?.daytime===true&&worker.status==='fleeing'&&worker.path===null&&!worker.taskId&&!worker.crateId&&
         !worker.incapacitated&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
-        ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
+        ['pending-farm-flight-restore','pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop','pending-raid-flight-resources','native-home'].includes(worker.nativeRouteAdmission);
       const recoveringHome=livePhysics&&!state.raid&&worker.status==='incapacitated'&&worker.incapacitated===true&&worker.hits===2&&
         worker.path===null&&!worker.taskId&&!worker.crateId&&!worker.recovery&&!worker.fallRemaining&&!worker.raidReturn&&
         ['native-home','pending-home-resources'].includes(worker.nativeRouteAdmission)&&

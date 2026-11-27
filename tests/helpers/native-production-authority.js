@@ -13,7 +13,7 @@ const kinds={prepareNativeAnimalCropRouteResources:['animal-crop-route'],prepare
 
 // Actual authority and both production ports, existing remote draw Host and
 // retained packets; the GPU queue is deterministic, not hardware/visual QA.
-export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),nativeWorkerLifecycle=false,qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,navigationView=null,raidWaitBindings=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,drawAllFarmActors=false,prepareNativeTerrainResources=null,onTerrainChunk=null,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
+export async function nativeProductionAuthority(state,{chunkKeys=Array.from({length:9},(_,i)=>`${i%3-1},${Math.floor(i/3)-1}`),nativeWorkerLifecycle=false,qualifyFarmFlee=false,qualifyAnimalCrop=false,qualifyRaidEncounter=false,recoverEncounterLoss=false,qualifyShieldExpiry=false,qualifyRunningShield=false,emptyBeastPhysics=false,nativeBootstrap=null,navigationView=null,raidWaitBindings=null,onPrepare=()=>{},onReady=()=>{},onCommit=null,attach=true,transportSession=null,onNativeIntentControlError=()=>{},compactPausedAcks=false,compactViewAcks=false,observeWorldMotion=false,captureHistoricalEvents=false,drawAllFarmActors=false,drawFarmGate=false,prepareNativeTerrainResources=null,onTerrainChunk=null,getTerrainManifest=()=>({epoch:'deterministic-host-test',chunks:[]})}={}){
  const controlSession=transportSession??'production-control',resourceSession=transportSession??'production-resources';
  const faults=[],authority=createSimulationAuthority(module,serialize(state),chunkKeys,{nativeWorkerLifecycle,qualifyFarmFlee,qualifyAnimalCrop,qualifyRaidEncounter,recoverEncounterLoss,qualifyShieldExpiry,qualifyRunningShield,nativeBootstrap,navigationView,raidWaitBindings,getTerrainManifest,prepareNativeTerrainResources,onTerrainChunk,compactPausedAcks,compactViewAcks,observeWorldMotion,captureHistoricalEvents,onNativeIntentControlError:e=>{faults.push(String(e));onNativeIntentControlError(e);}});
  const [sourcePort,drawPort]=pair();
@@ -102,7 +102,7 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   }
   const homeSource=kind==='home-route'?reference.sourceRequest:arrival?reference.sourceHome.reference.sourceRequest:null;
   const peer=homeSource?.raidSpawnSequence&&!homeSource.recoveryHit&&records.findLast(r=>r.kind==='animal-crop-route'&&r.committed);
-  if(kind==='home-route'&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
+  if((kind==='home-route'||drawFarmGate&&kind==='farm-arrival')&&resources.gates.length)record.gateGroups=resources.gates.map(gate=>{
    const buffer=graphics.client.device.createBuffer({size:16,usage:72});
    graphics.client.device.queue.writeBuffer(buffer,0,new Float32Array(4));
    graphics.client.registerClockBinding(buffer,{byteOffset:0,semantic:'relative',epoch:resources.startTime,
@@ -117,6 +117,9 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
   if(farmGroup){
    const groups=new Map(farmGroups);groups.set(reference.actorId,farmGroup);
    packet=await prepareExistingGroup(graphics,[...groups.values()],{clock,nativeWorldBoundary:resources.worldBoundary,nativeFarmArrivalTemplate:reference},options.signal);
+  }else if(kind==='farm-arrival'&&record.gateGroups?.length){
+   packet=await prepareExistingGroup(graphics,[graphics.group,...record.gateGroups],
+    {clock,nativeWorldBoundary:resources.worldBoundary,nativeFarmArrivalTemplate:reference},options.signal);
   }else if(gateGroups?.length&&(kind==='home-route'||arrival)){
    const groups=arrival?[...gateGroups]:[graphics.group,...gateGroups];
    if(peer)groups.push(peer.cropGroup);

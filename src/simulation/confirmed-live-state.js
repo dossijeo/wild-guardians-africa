@@ -28,12 +28,12 @@ export function prepareConfirmedStateTransport(state,{projectPaths=false}={}){
  let snapshot=null;return {fields,get snapshot(){return snapshot??='{'+[...fields].map(([key,value])=>JSON.stringify(key)+':'+value).join(',')+'}';}};
 }
 export function deserializeConfirmedState(source){const state=JSON.parse(source);validateSnapshot(state,{livePhysics:true});return state;}
-export function confirmedStateSaveAvailable(state,{allowNativeRaidFlight=false}={}){
+export function confirmedStateSaveAvailable(state,{allowNativeRaidFlight=false,allowNativeFarmStop=false}={}){
  const workerBlocked=(state.workers??[]).some(w=>{
   const admission=w.nativeRouteAdmission;
   return w.nativeRefugeSequence!==undefined||!allowNativeRaidFlight&&
    (w.status==='fleeing'&&admission==='native-home'||admission==='pending-raid-flight-resources')||
-   ['pending-farm-flight-stop','pending-idle-flight-stop','pending-task-flight-stop'].includes(admission)||
+   admission==='pending-farm-flight-stop'&&!allowNativeFarmStop||['pending-farm-flight-restore','pending-idle-flight-stop','pending-task-flight-stop'].includes(admission)||
    farmSaveBlocked(state,w)||(admission==='native-idle-stroll'||admission==='pending-stroll-resources')&&!nativeIdleStrollSaveAvailable(state,w);
  });
  return !workerBlocked&&!(state.raid?.animals??[]).some(a=>a.magicDown||a.magicImpact&&state.elapsed>=guardianImpactTime(a.magicImpact)&&state.elapsed-guardianImpactTime(a.magicImpact)<.5);
