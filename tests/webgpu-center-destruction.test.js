@@ -80,3 +80,32 @@ test('a center first seen during collapse reconstructs both bursts at its saved 
   assert.equal(alreadyRuined.status().smoke,0);
  }finally{cold.dispose();live.dispose();alreadyRuined.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
+
+test('a replay integrates the confirmed ruin while the first damage meshes are still preparing',async()=>{
+ const scene=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());scene.add(mesh);
+ const template=createWebGpuCenterDestructionTemplate({gltf:{scene},building:{seed:123},renderer:{library:{}}});
+ const pending=[],live=template.instantiate(),replay=createWebGpuAdmittedCenterDamage({damage:template.instantiate(),
+  pipelineAdmission:{prepare:()=>new Promise(resolve=>pending.push(resolve))}});
+ const camera=new THREE.PerspectiveCamera();camera.position.set(6,4,8);camera.lookAt(0,0,0);
+ const t1=47.97,published=48;
+ const collapsing={kind:'center',status:'collapsing',hp:120,maxHp:600};
+ const ruined={...collapsing,status:'ruined',hp:0,collapseRemaining:0};
+ const turn=()=>new Promise(resolve=>setImmediate(resolve));
+ try{
+  for(const at of [47.8,47.85,47.9,47.95]){
+   const sample={...collapsing,collapseRemaining:t1-at};
+   live.update(sample,at);replay.update(sample,at);await turn();
+   assert(!replay.ready&&!replay.group.visible);
+  }
+  live.update(ruined,t1);live.update(ruined,published);live.prepare(camera);
+  replay.update(ruined,published,t1);await turn();
+  assert.equal(pending.length,2);
+  pending[0]();await turn();assert(!replay.ready);
+  pending[1]();await turn();assert(replay.ready);replay.prepare(camera);
+  assert(live.status().smoke>0&&live.status().debris>175);
+  assert.deepEqual(replay.status(),live.status());
+  const expected=effectBuffers(live);
+  assert(effectBuffers(replay).every(({bytes},i)=>Buffer.from(bytes).equals(expected[i].bytes)),
+    'the original and recovered particle buffers must agree');
+ }finally{replay.dispose();live.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});

@@ -4,29 +4,33 @@ import {confirmedCenterDamage} from './webgpu-center-destruction.js';
 // The same destruction instance owns particles across phase changes. Admission
 // temporarily visits its real meshes, without replacing their effect state.
 export function createWebGpuAdmittedCenterDamage({damage,pipelineAdmission,onReady=()=>{},onError=()=>{}}={}){
- if(!damage?.group?.isGroup||typeof damage.update!=='function'||typeof damage.prepare!=='function'||typeof damage.status!=='function'||typeof damage.dispose!=='function'||typeof pipelineAdmission?.prepare!=='function'||typeof onReady!=='function'||typeof onError!=='function')throw TypeError('Invalid admitted center damage');
+ if(!damage?.group?.isGroup||typeof damage.update!=='function'||typeof damage.advanceEffects!=='function'||typeof damage.present!=='function'||typeof damage.prepare!=='function'||typeof damage.status!=='function'||typeof damage.dispose!=='function'||typeof pipelineAdmission?.prepare!=='function'||typeof onReady!=='function'||typeof onError!=='function')throw TypeError('Invalid admitted center damage');
  const group=damage.group,body=group.children[0],ash=group.children[1];if(!body?.isMesh||!ash?.isMesh)throw TypeError('Invalid center damage meshes');
  let closed=false,activeStage=null,pending=null,latest=null,enabled=false;
  const stage=entity=>{const value=confirmedCenterDamage(entity);if(!Number.isFinite(value))throw Error('Invalid confirmed center damage');return {body:value<.9998,ash:value>.23};};
  const key=value=>`${value.body}:${value.ash}`;
  function cancel(){if(!pending)return;const old=pending;pending=null;old.abort();}
- function update(entity,time){
+ function update(entity,time,ruinAt=null){
   if(closed)return;
   if(acquiredRuin){
    if(time===acquiredRuin.publishedAt&&JSON.stringify(entity)===acquiredRuin.stamp)return;
    if(time<acquiredRuin.end||time===acquiredRuin.end&&entity.status!=='ruined')throw Error('Center ruin publication differs from acquisition');
    acquiredRuin=null;
   }
-  enabled=true;latest={entity,time};const target=stage(entity),targetKey=key(target);
-  if(activeStage===targetKey){cancel();damage.update(entity,time);group.visible=true;return;}
+  const target=stage(entity),targetKey=key(target);
+  // Admission can delay mesh visibility while replay is applying successive
+  // confirmed boundaries. Those boundaries still drive the particle kernel.
+  damage.advanceEffects(entity,time,ruinAt);
+  enabled=true;latest={entity,time};
+  if(activeStage===targetKey){cancel();damage.present(entity);group.visible=true;return;}
   if(pending?.stage===targetKey)return;
   cancel();const controller=new AbortController();controller.stage=targetKey;pending=controller;
   let objects;
-  if(activeStage===null){damage.update(entity,time);group.visible=false;objects=[group];}
+  if(activeStage===null){damage.present(entity);group.visible=false;objects=[group];}
   else{objects=[];if(target.body&&!body.visible)objects.push(body);if(target.ash&&!ash.visible)objects.push(ash);}
   const publish=()=>{
    if(closed||pending!==controller||controller.signal.aborted||!enabled)return;
-   damage.update(latest.entity,latest.time);pending=null;activeStage=targetKey;group.visible=true;try{onReady();}catch(error){onError(error);}
+   damage.present(latest.entity);pending=null;activeStage=targetKey;group.visible=true;try{onReady();}catch(error){onError(error);}
   };
   Promise.resolve().then(async()=>{if(typeof pipelineAdmission.prepareManyAndPublish==='function')await pipelineAdmission.prepareManyAndPublish(objects.map(object=>({object,options:{signal:controller.signal}})),publish);else{for(const object of objects)await pipelineAdmission.prepare(object,{signal:controller.signal});publish();}}).catch(error=>{if(closed||pending!==controller||controller.signal.aborted)return;pending=null;onError(error);});
  }

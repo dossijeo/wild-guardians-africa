@@ -1,0 +1,357 @@
+{
+  "base": "fa6c01e4799abd0a2275926d6b8d3ce583958c40",
+  "checkpoint": {
+    "snapshotSha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "sequence": 1,
+    "replayedSequence": 33
+  },
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "firstComparison": {
+    "original": {
+      "sequence": 19,
+      "first": false,
+      "cut": 48.550000000002065,
+      "clock": 48.550000000002065,
+      "age": 0.75,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 2513977478
+        },
+        "debris": {
+          "count": 261,
+          "hash": 555835316
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "first": true,
+      "cut": 48.550000000002065,
+      "clock": 48.550000000002065,
+      "age": 0.75,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1900290477
+        },
+        "debris": {
+          "count": 261,
+          "hash": 3268961514
+        },
+        "emitted": 95
+      }
+    },
+    "source": {
+      "path": "D:/wild-guardians-qa/cold-collapse-approach-fidelity-base-nvidia-20261127.json",
+      "sha256": "037f832b4ce533e6d56eeb97560cd6aa098b24a1b6811ab2098149979e1a73f2"
+    }
+  },
+  "intermediateComparison": {
+    "original": {
+      "sequence": 24,
+      "first": false,
+      "cut": 48.60000000000207,
+      "clock": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "first": true,
+      "cut": 48.60000000000207,
+      "clock": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1813295763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 3786223890
+        },
+        "emitted": 95
+      }
+    },
+    "updates": [
+      [
+        [
+          null,
+          47.800000000002,
+          0.9895000000000002,
+          null,
+          0.15999999999999762,
+          null
+        ],
+        [
+          47.800000000002,
+          47.800000000002,
+          0.9895000000000002,
+          null,
+          0.15999999999999762,
+          null
+        ],
+        [
+          47.800000000002,
+          47.850000000002005,
+          0.9927812500000002,
+          null,
+          0.10999999999999763,
+          null
+        ],
+        [
+          47.850000000002005,
+          47.90000000000201,
+          0.9960625000000002,
+          null,
+          0.05999999999999762,
+          null
+        ],
+        [
+          47.90000000000201,
+          47.950000000002014,
+          0.9993437500000002,
+          null,
+          0.009999999999997618,
+          null
+        ],
+        [
+          47.950000000002014,
+          47.97000000000202,
+          1,
+          null,
+          null,
+          null
+        ],
+        [
+          47.97000000000202,
+          48.00000000000202,
+          1,
+          null,
+          null,
+          47.97000000000202
+        ]
+      ],
+      [
+        [
+          null,
+          47.800000000002,
+          0.9895000000000002,
+          null,
+          0.15999999999999762,
+          null
+        ],
+        [
+          47.800000000002,
+          48.00000000000202,
+          1,
+          null,
+          null,
+          47.97000000000202
+        ],
+        [
+          48.00000000000202,
+          48.00000000000202,
+          1,
+          null,
+          null,
+          47.97000000000202
+        ]
+      ]
+    ],
+    "source": {
+      "path": "D:/wild-guardians-qa/cold-collapse-approach-fidelity-history-nvidia-20261127.json",
+      "sha256": "980f191b5c0e809b9db44ccdd89e4f3112080c3ff1a3d06007d2f822030ac5e2"
+    }
+  },
+  "finalComparison": {
+    "original": {
+      "sequence": 20,
+      "first": false,
+      "cut": 48.60000000000207,
+      "clock": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "first": true,
+      "cut": 48.60000000000207,
+      "clock": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "world": {
+      "version": 1,
+      "authorityEpoch": "ea922106-e2e0-4797-936a-e511209d5c62/1",
+      "nativeSession": 1,
+      "ticket": 3,
+      "effectiveTime": 47.97000000000202
+    },
+    "cameraMatch": true,
+    "source": {
+      "path": "D:/wild-guardians-qa/cold-collapse-approach-fidelity-final-nvidia-20261127.json",
+      "sha256": "c6da4c6d4e2b12d183907f4ae05af15698d48c06f8e92bb26065a618e9719ea8"
+    }
+  },
+  "cpu": {
+    "passed": 42,
+    "regression": {
+      "path": ".cache/cold-collapse-fidelity-regression.tap",
+      "sha256": "6b1d2c842f06aa1b870217b7ce703af1ec0e711ebb592d09329c04d2eb4f5173"
+    },
+    "mutants": [
+      {
+        "name": "skip-pending",
+        "path": ".cache/cold-collapse-fidelity-skip-pending.tap",
+        "sha256": "d28a6b3e2b3a3a09a111f01018417033a631810fdd59e7dd1b51a1239a3d02fb"
+      },
+      {
+        "name": "omit-time",
+        "path": ".cache/cold-collapse-fidelity-omit-time.tap",
+        "sha256": "4220b06742d1cef7900d453a31789dafdade410df6068220e148fcc7f0520719"
+      }
+    ]
+  },
+  "pick": {
+    "coordinate": {
+      "x": 5.913902548980796e-16,
+      "y": -0.0032688144570275517
+    },
+    "result": {
+      "entityId": "animal-1000003",
+      "hitPoint": {
+        "x": -23.141347846713074,
+        "y": 18.453831118467026,
+        "z": -16.357343313557386
+      },
+      "point": {
+        "x": -23.141347846713078,
+        "z": -15.32527122381052
+      },
+      "sequence": 33
+    },
+    "samples": [
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      },
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      },
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      },
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      },
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      },
+      {
+        "age": 0.7999999523162842,
+        "actorId": 1000003,
+        "bodyId": 1,
+        "at": 48.60000000000207
+      }
+    ]
+  },
+  "continuation": {
+    "hits": [
+      {
+        "attackId": "attack-29209",
+        "targetId": "structure-1000002",
+        "simulationTime": 38.32000000000052
+      },
+      {
+        "attackId": "attack-29212",
+        "targetId": "structure-1000002",
+        "simulationTime": 40.04000000000079
+      },
+      {
+        "attackId": "attack-29215",
+        "targetId": "structure-1000002",
+        "simulationTime": 44.760000000001526
+      },
+      {
+        "attackId": "attack-29219",
+        "targetId": "structure-2",
+        "simulationTime": 68.47000000000313
+      }
+    ],
+    "idle": 91.7500000000018,
+    "drained": true,
+    "expectedDeviceLossPageNotices": 2
+  },
+  "measurement": "FNV-1a over active interleaved CPU buffer spans recorded in the submitted packet, paired at the same confirmed elapsed and camera. No GPU pixel readback."
+}

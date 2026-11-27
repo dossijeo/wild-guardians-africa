@@ -35,7 +35,7 @@ export function createWebGpuDestructionEffects({root,kernel,building,noise,softD
    }
   }
  }
- function update(value,elapsed,initial=null,collapseRemaining=null){
+ function update(value,elapsed,initial=null,collapseRemaining=null,ruinAt=null){
   if(closed)return;
   if(last===null){
    if(Number.isFinite(collapseRemaining)){
@@ -53,6 +53,9 @@ export function createWebGpuDestructionEffects({root,kernel,building,noise,softD
    }else native.initialize(Number.isFinite(initial)?initial:value);
    last=elapsed;
   }
+  // The live prepared packet applies the ruin inside the publication. Replay
+  // must keep that integration cut even when it receives only the final row.
+  if(ruinAt!==null&&last<ruinAt&&ruinAt<elapsed){native.frame(value,ruinAt-last);last=ruinAt;}
   if(elapsed<last)native.restore(value);else native.frame(value,elapsed-last);
   last=elapsed;
  }
