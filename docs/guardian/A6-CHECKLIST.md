@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-NVIDIA confirmó la recuperación de Home18 e Idle21 con dos portones. El primer envío conservó ambos cuerpos y ambos motores. Los dos trabajadores fueron seleccionables con la autoridad suspendida y la partida avanzó y drenó después de reanudar. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
+NVIDIA confirmó la recuperación de Home18 e Idle21 con dos portones. El primer envío conservó ambos cuerpos y ambos motores. Los dos trabajadores fueron seleccionables con la autoridad suspendida. Tras reanudar, el mismo cuerpo cruzó ambos portones y se retiró una sola vez en Home19. El segundo siguió con Idle21 y permaneció seleccionable hasta el drenaje. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
 
 NVIDIA confirmó la recuperación de Task25 con dos portones. En un corte la primera hoja estaba abriendo y en el otro ya estaba abierta. El segundo motor seguía cerrado en ambos. El sustituto acreditó el picking, Home19 y el drenaje. Los controles deterministas rechazan la omisión de cada motor detenido. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#task25-con-dos-portones).
 

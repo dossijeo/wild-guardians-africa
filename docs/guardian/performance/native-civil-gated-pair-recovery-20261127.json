@@ -168,5 +168,95 @@
       "probe-civil-gated-recovery-browser.mjs": "eadd46a8ec203ad611303ed130e479caae0b04965d1be9a45e41dfcf0d04e096",
       "civil-gated-pair-browser.js": "c4f23cdff918e4a7b53ac0e186e5bbe528407341007069c27fc57119ceba38c9"
     }
+  },
+  "nvidiaHome19": {
+    "revision": "129a5488b2413a788119966329b4bec40f50f7e9",
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "firstReplacement": {
+      "sequence": 1,
+      "clockElapsed": 10.049999999999999,
+      "holdId": 81,
+      "publicationSequence": 79,
+      "homeBody": 2,
+      "idleBody": 1
+    },
+    "openings": [
+      {
+        "id": "structure-1000001",
+        "at": 10.149999999999997,
+        "opening": 0.24999999999999467
+      },
+      {
+        "id": "structure-1000000",
+        "at": 12.34999999999995,
+        "opening": 0.13855593496240104
+      }
+    ],
+    "arrival": {
+      "count": 1,
+      "actorId": 900012,
+      "bodyId": 2,
+      "ticket": 8,
+      "effectiveTime": 19.549999999999923,
+      "retiredSequence": 8,
+      "sourceHomeTicket": 4,
+      "sourceAssignmentSequence": 6,
+      "pose": {
+        "x": -14,
+        "z": 11.800000190734863,
+        "yaw": -0.025448932697636185,
+        "radius": 0.28,
+        "runPhase": 23.25,
+        "walkPhase": 19.070768976570374,
+        "carryPhase": 9.5,
+        "runRemaining": 40
+      }
+    },
+    "absence": {
+      "sequence": 73,
+      "clockElapsed": 19.649999999999924,
+      "gates": [
+        {
+          "id": 1000001,
+          "ticket": 4,
+          "elapsed": 19.16386318206787
+        },
+        {
+          "id": 1000000,
+          "ticket": 4,
+          "elapsed": 19.16386318206787
+        }
+      ],
+      "idleBody": 1,
+      "idleTicket": 6
+    },
+    "continuingPick": {
+      "actor": "worker-900011",
+      "sequence": 176,
+      "hitPoint": {
+        "x": -10.49999715506511,
+        "y": 18.46001815855443,
+        "z": 11.8800022759479
+      }
+    },
+    "finalElapsed": 19.649999999999924,
+    "ledgerUnchanged": true,
+    "drawDrained": true,
+    "errors": [],
+    "artifacts": {
+      "civil-gated-pair-home19-nvidia-20261127.json": "3c69b00ec131cfecf5eadcb05b940bc6459c3622d9378dcb2b675475c7245ef4",
+      "civil-gated-pair-home19-nvidia-20261127.log": "4b7f7bae785483853203c032b44ca4d493810c74341fc7ba7cd50cb3d95b3889"
+    },
+    "harness": {
+      "probe-civil-gated-pair-home19-browser.mjs": "6ca4c01edfda350ab39608a998552b07c86382dda7db432ff5890c9516e7a348",
+      "civil-gated-pair-home19-browser.js": "b3148cd34fac989565ef64a15cac4622751b8aeb1d5eba8b6c88327b1db5e650"
+    },
+    "wasm": {
+      "public/wild-engine/spatial-threaded.wasm": "c3e639e06c7741d029c7121b27208d53a73012f62fda6ee8341a98f5f8ffc6be",
+      "src/world/wild-engine/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505"
+    }
   }
 }

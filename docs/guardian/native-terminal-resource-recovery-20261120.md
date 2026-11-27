@@ -186,7 +186,9 @@ La recuperación del par admite los motores del Home18 civil. Sus uniformes y el
 
 En la primera prueba de NVIDIA, Surface rechazó el sustituto mientras cargaba los portones. Ahora espera a los dos propietarios con el verificador y la espera de publicación existentes. El control de Surface comprueba que disponer de un solo motor mantiene la espera y que cancelar o cambiar un propietario la rechaza sin preparar el primer envío.
 
-En NVIDIA Turing, el primer envío del sustituto conservó el corte de 10,05 s, los cuerpos 2 y 1 y la edad de 0,049999997 s de ambos. La hoja más próxima estaba abriendo y la segunda seguía cerrada. Los motores mantuvieron el reloj de Home18. Los dos picks devolvieron sus trabajadores bajo el hold. Después de activarse, la partida avanzó a 10,15 s con el mismo saldo y el sustituto confirmó el drenaje. El recorrido termina con Home18 aún activo. [Recibo de CPU y NVIDIA](performance/native-civil-gated-pair-recovery-20261127.json).
+En NVIDIA Turing, el primer envío del sustituto conservó el corte de 10,05 s, los cuerpos 2 y 1 y la edad de 0,049999997 s de ambos. La hoja más próxima estaba abriendo y la segunda seguía cerrada. Los motores mantuvieron el reloj de Home18 y los dos trabajadores fueron seleccionables con la autoridad suspendida.
+
+La continuación abrió ambos portones en orden. Home19 se adquirió una sola vez a 19,55 s para el cuerpo 2 y conservó el recibo de Home18. El envío 73, bajo el ticket 8 de Home19, presentó ambos motores y el cuerpo 1 de Idle21 sin el vínculo de marcha del cuerpo retirado. El trabajador que quedó fuera seguía siendo seleccionable. La partida terminó el control a 19,65 s con el mismo saldo y Draw confirmó el drenaje. [Recibo de CPU y NVIDIA](performance/native-civil-gated-pair-recovery-20261127.json).
 
 ## Reemplazo con un sucesor Idle21 adquirido
 
