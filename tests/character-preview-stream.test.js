@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash, webcrypto } from 'node:crypto';
+import { gzipSync } from 'node:zlib';
 import { openCharacterPreviewStream } from '../src/rendering/character-preview-stream.js';
 
 const hash = data => createHash('sha256').update(data).digest('hex');
@@ -81,4 +82,84 @@ test('a failed texture cancels its concurrent downloads without closing the stre
   assert.equal(cancelled, true);
   assert.equal(Buffer.from(await stream.loadPreview()).toString(), 'geometry');
   stream.close();
+});
+
+function packedFixture() {
+  const x = fixture();
+  const replace = (file, bytes) => {
+    x.files.set(file.path, bytes);
+    Object.assign(file, { bytes: bytes.length, sha256: hash(bytes) });
+  };
+  const preview = x.manifest.preview;
+  replace(preview, Buffer.alloc(300, 17));
+  const encoded = gzipSync(x.files.get(preview.path));
+  x.files.delete(preview.path);
+  preview.stored = { path: 'preview.glb.gz', bytes: encoded.length, encoding: 'gzip' };
+  x.files.set(preview.stored.path, encoded);
+
+  for (const [name, variant] of Object.entries(x.manifest.variants)) {
+    const [material,, texture] = variant.files;
+    replace(texture, Buffer.alloc(100, 1));
+    const other = { path: texture.path.replace('tex.', 'other.') };
+    replace(other, Buffer.alloc(200, 2));
+    variant.files.push(other);
+
+    const gltf = JSON.parse(x.files.get(material.path));
+    gltf.images.unshift({ uri: other.path.split('/').at(-1) });
+    replace(material, Buffer.from(JSON.stringify(gltf)));
+
+    const raw = Buffer.concat([x.files.get(texture.path), x.files.get(other.path)]);
+    const encoding = name === 'bc7' ? 'gzip' : 'identity';
+    const data = encoding === 'gzip' ? gzipSync(raw) : raw;
+    variant.textureBank = { path: `${name}/textures.bin`, bytes: data.length, encoding };
+    x.files.set(variant.textureBank.path, data);
+    x.files.delete(texture.path);
+    x.files.delete(other.path);
+  }
+  x.files.set('package.json', Buffer.from(JSON.stringify(x.manifest)));
+  return x;
+}
+
+test('packed delivery preserves both texture formats and postpones the selected bank until hydration', async () => {
+  for (const features of [[], ['texture-compression-bc']]) {
+    const x = packedFixture(), stream = await open(x, { features });
+    try {
+      assert.deepEqual(await stream.loadPreview(), Uint8Array.from(Buffer.alloc(300, 17)));
+      const metadata = await stream.loadMetadata();
+      assert.equal(x.callLog.some(path => path.endsWith('textures.bin')), false);
+      const textures = await stream.loadTextures(metadata);
+      assert.deepEqual([...textures.keys()], metadata.texturePaths);
+      const [first, second] = textures.values();
+      assert.notEqual(first.buffer, second.buffer);
+      assert.deepEqual(first, Uint8Array.from(Buffer.alloc(200, 2)));
+      assert.deepEqual(second, Uint8Array.from(Buffer.alloc(100, 1)));
+      assert.deepEqual(x.callLog.filter(path => path.endsWith('textures.bin')), [`${stream.variant}/textures.bin`]);
+    } finally { stream.close(); }
+  }
+});
+
+test('packed delivery rejects damaged decoded bytes and malformed records in an unused fallback', async () => {
+  const x = packedFixture(), stream = await open(x), metadata = await stream.loadMetadata();
+  x.files.get('webp/textures.bin')[4] ^= 1;
+  await assert.rejects(stream.loadTextures(metadata), /hash mismatch/);
+  stream.close();
+  x.manifest.variants.webp.textureBank.path = '../undeclared.bin';
+  x.files.set('package.json', Buffer.from(JSON.stringify(x.manifest)));
+  await assert.rejects(open(x, { features: ['texture-compression-bc'] }), /storage record/);
+});
+
+test('closing cancels a packed texture download before any result can be published', async () => {
+  const x = packedFixture(), fetchImpl = x.fetchImpl;
+  let start;
+  const started = new Promise(resolve => { start = resolve; });
+  x.fetchImpl = (url, options) => {
+    if (!url.endsWith('textures.bin')) return fetchImpl(url, options);
+    start();
+    return new Promise((_, reject) => options.signal.addEventListener('abort', () => reject(options.signal.reason), { once: true }));
+  };
+  const stream = await open(x, { features: ['texture-compression-bc'] });
+  const pending = stream.loadTextures(await stream.loadMetadata());
+  await started;
+  stream.close();
+  await assert.rejects(pending, { name: 'AbortError' });
 });

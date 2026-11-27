@@ -1,7 +1,6 @@
 import { selectCharacterPreviewVariant } from './character-preview-package.js';
 
 const MANIFEST_LIMIT = 1024 * 1024;
-const FILE_LIMIT = 256 * 1024 * 1024;
 const encoder = new TextDecoder('utf-8', { fatal: true });
 const abortError = () => new DOMException('Character preview cancelled', 'AbortError');
 
@@ -31,6 +30,47 @@ async function readBounded(response, limit, signal) {
   return data;
 }
 
+// Allocate one output buffer per resource so the data Worker can transfer each
+// texture independently, including on the raw-byte fallback path.
+async function unpackStoredFiles(encoded, storage, files, signal) {
+  if (encoded.byteLength !== storage.bytes) throw Error('Stored character resource size mismatch');
+  if (storage.encoding === 'identity') {
+    let offset = 0;
+    return files.map(file => {
+      const bytes = encoded.slice(offset, offset + file.bytes);
+      offset += file.bytes;
+      return bytes;
+    });
+  }
+
+  const buffers = files.map(file => new Uint8Array(file.bytes));
+  const reader = new Blob([encoded]).stream().pipeThrough(new DecompressionStream('gzip')).getReader();
+  let index = 0, offset = 0;
+  try {
+    while (true) {
+      if (signal.aborted) throw abortError();
+      const { value, done } = await reader.read();
+      if (done) break;
+      let start = 0;
+      while (start < value.byteLength) {
+        const bytes = buffers[index];
+        if (!bytes) throw Error('Stored character resource exceeds decoded size');
+        const size = Math.min(value.byteLength - start, bytes.byteLength - offset);
+        bytes.set(value.subarray(start, start + size), offset);
+        start += size;
+        offset += size;
+        if (offset === bytes.byteLength) { index++; offset = 0; }
+      }
+    }
+  } catch (error) {
+    await reader.cancel().catch(() => {});
+    throw error;
+  } finally { reader.releaseLock(); }
+  if (signal.aborted) throw abortError();
+  if (index !== buffers.length) throw Error('Stored character resource is truncated');
+  return buffers;
+}
+
 // Use from a Worker: hashing, parsing and asset bytes must not burden the UI.
 // Texture bytes are not fetched until loadTextures() is explicitly requested.
 export async function openCharacterPreviewStream(packageUrl, { features = [], signal, fetchImpl = globalThis.fetch, subtle = globalThis.crypto?.subtle } = {}) {
@@ -45,24 +85,36 @@ export async function openCharacterPreviewStream(packageUrl, { features = [], si
     const manifest = JSON.parse(encoder.decode(manifestBytes)), variant = selectCharacterPreviewVariant(manifest, features);
     const files = new Map(variant.files.map(file => [file.path, file]));
     const jsonPath = `${variant.name}/materials.gltf`, mappingPath = `${variant.name}/mapping.json`;
+    const bankFiles = variant.textureBank ? variant.files.filter(file => file.path.endsWith(variant.name === 'bc7' ? '.ktx2' : '.webp')) : null;
     let closed = false; const validMetadata = new WeakSet();
     const assertOpen = () => { if (closed || controller.signal.aborted) throw abortError(); };
-    async function load(file, loadSignal = controller.signal) {
+    async function download(resource, loadSignal) {
       assertOpen();
       if (loadSignal.aborted) throw abortError();
-      if (file.bytes > FILE_LIMIT) throw Error(`Character file exceeds limit: ${file.path}`);
-      const target = new URL(file.path, url);
+      const target = new URL(resource.path, url);
       if (target.origin !== url.origin) throw Error('Character package escaped its origin');
-      const data = await readBounded(await fetchImpl(target.href, { signal: loadSignal, redirect: 'error' }), file.bytes, loadSignal);
+      return readBounded(await fetchImpl(target.href, { signal: loadSignal, redirect: 'error' }), resource.bytes, loadSignal);
+    }
+    async function verify(file, data, loadSignal) {
       if (data.length !== file.bytes) throw Error(`Character file size mismatch: ${file.path}`);
       const digest = Array.from(new Uint8Array(await subtle.digest('SHA-256', data))).map(byte => byte.toString(16).padStart(2, '0')).join('');
       assertOpen(); if (loadSignal.aborted) throw abortError();
       if (digest !== file.sha256) throw Error(`Character file hash mismatch: ${file.path}`);
       return data;
     }
+    async function load(file, loadSignal = controller.signal) {
+      return verify(file, await download(file, loadSignal), loadSignal);
+    }
     return {
       id: manifest.id, variant: variant.name,
-      async loadPreview() { return load(manifest.preview); },
+      async loadPreview() {
+        const file = manifest.preview;
+        if (!file.stored) return load(file);
+        const signal = controller.signal;
+        const encoded = await download(file.stored, signal);
+        const [bytes] = await unpackStoredFiles(encoded, file.stored, [file], signal);
+        return verify(file, bytes, signal);
+      },
       async loadMetadata() {
         const [materialBytes, mappingBytes] = await Promise.all([load(files.get(jsonPath)), load(files.get(mappingPath))]);
         assertOpen();
@@ -76,6 +128,9 @@ export async function openCharacterPreviewStream(packageUrl, { features = [], si
           return path;
         });
         if (!texturePaths.length || texturePaths.length > 16 || new Set(texturePaths).size !== texturePaths.length) throw Error('Invalid character texture list');
+        if (bankFiles && (bankFiles.length !== texturePaths.length || bankFiles.some(file => !texturePaths.includes(file.path)))) {
+          throw Error('Mixed standalone and banked character textures');
+        }
         const metadata = Object.freeze({ materials, mapping, texturePaths: Object.freeze(texturePaths) }); validMetadata.add(metadata); return metadata;
       },
       async loadTextures(metadata) {
@@ -84,6 +139,12 @@ export async function openCharacterPreviewStream(packageUrl, { features = [], si
         const batch = new AbortController(), cancelBatch = () => batch.abort();
         controller.signal.addEventListener('abort', cancelBatch, { once: true });
         try {
+          if (bankFiles) {
+            const encoded = await download(variant.textureBank, batch.signal);
+            const bytes = await unpackStoredFiles(encoded, variant.textureBank, bankFiles, batch.signal);
+            const data = new Map(await Promise.all(bankFiles.map(async (file, i) => [file.path, await verify(file, bytes[i], batch.signal)])));
+            return new Map(metadata.texturePaths.map(path => [path, data.get(path)]));
+          }
           const entries = await Promise.all(metadata.texturePaths.map(async path => [path, await load(files.get(path), batch.signal)]));
           assertOpen(); return new Map(entries);
         } catch (error) {

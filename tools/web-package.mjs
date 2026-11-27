@@ -1,7 +1,8 @@
 import {packageWallBank} from './package-wall-bank.mjs';
 import {packageBakedAnimations} from './package-baked-animations.mjs';
+import {packageCharacterPreviews} from './package-character-previews.mjs';
 import {shareGlbImageFamilies} from './share-glb-image-families.mjs';
-import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync,mkdirSync} from 'node:fs';
+import {readFileSync,readdirSync,statSync,writeFileSync,rmSync,existsSync,mkdirSync,copyFileSync} from 'node:fs';
 import {resolve,extname,relative,sep,dirname} from 'node:path';
 // Original GLBs used only by the four unlinked worker reference labs. Gameplay
 // loads the separate optimized worker rigs listed in content/worker-actions.json.
@@ -66,11 +67,41 @@ export function publicText(text,path,manifest){
   const prefix=path.endsWith('.css')?'../'.repeat(path.split('/').length-1):path.startsWith('menu/')||path.startsWith('selector/')?'../':'';
   return text.replace(/(?<![.\w/:+-])\/(assets|content|library|menu|selector|runtime|i18n)(?=\/|\.html)/g,prefix+'$1');
 }
+function copyReleasePublic(source,dist,replaced,generated,retainQaFixtures){
+  if(dist===source||dist.startsWith(source+sep))throw Error('Build output overlaps public assets');
+  function copy(directory,prefix=''){
+    mkdirSync(resolve(dist,prefix),{recursive:true});
+    for(const name of readdirSync(directory)){
+      const path=prefix+name;
+      if(replaced.has(path)||generated.has(path)||(!retainQaFixtures&&path==='qa'))continue;
+      const input=resolve(directory,name);
+      if(statSync(input).isDirectory())copy(input,path+'/');
+      else copyFileSync(input,resolve(dist,path));
+    }
+  }
+  copy(source);
+}
+
 export function webPackagePlugin({retainQaFixtures=false}={}){
-  let config;const manifest=()=>{const geometry=JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));const audio=JSON.parse(readFileSync(resolve(config.root,'content/manifests/audio-runtime.json'),'utf8'));const sfx=JSON.parse(readFileSync(resolve(config.root,'content/manifests/sfx-runtime.json'),'utf8'));const images=JSON.parse(readFileSync(resolve(config.root,'content/manifests/image-runtime.json'),'utf8'));return {...geometry,audioCodec:audio.codec,records:[...geometry.records,...audio.records,...sfx.records,...images.records]};};
-  return {name:'itch-web-package',configResolved(value){config=value;},
+  let config,stagePublic=false,wroteBundle=false;
+  const manifest=()=>{const geometry=JSON.parse(readFileSync(resolve(config.root,'content/manifests/web-assets.json'),'utf8'));const audio=JSON.parse(readFileSync(resolve(config.root,'content/manifests/audio-runtime.json'),'utf8'));const sfx=JSON.parse(readFileSync(resolve(config.root,'content/manifests/sfx-runtime.json'),'utf8'));const images=JSON.parse(readFileSync(resolve(config.root,'content/manifests/image-runtime.json'),'utf8'));return {...geometry,audioCodec:audio.codec,records:[...geometry.records,...audio.records,...sfx.records,...images.records]};};
+  return {name:'itch-web-package',
+    config(input,{command}){
+      stagePublic=command==='build'&&input.build?.copyPublicDir!==false;
+      if(stagePublic)return {build:{copyPublicDir:false}};
+    },
+    configResolved(value){config=value;},
     configureServer(server){server.middlewares.use((req,res,next)=>{try{const path=decodeURIComponent((req.url??'').split('?')[0]).replace(/^\//,'').replace(config.base.replace(/^\//,''),'');const file=resolve(config.root,'public',path);if(!file.startsWith(resolve(config.root,'public')+sep)||!['.html','.js','.json','.css'].includes(extname(file)))return next();const text=publicText(readFileSync(file,'utf8'),path,manifest());res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css'})[extname(file)]);res.end(text);}catch{next();}});},
-    closeBundle(){if(config.command!=='build')return;const dist=resolve(config.root,config.build.outDir),mapping=manifest();
+    writeBundle({ dir },bundle){
+      const dist=resolve(config.root,config.build.outDir);
+      if(!dir||resolve(dir)!==dist)return;
+      if(stagePublic&&config.publicDir&&existsSync(config.publicDir)){
+        const replaced=new Set(manifest().records.map(item=>item.source));
+        copyReleasePublic(config.publicDir,dist,replaced,new Set(Object.keys(bundle)),retainQaFixtures);
+      }
+      wroteBundle=true;
+    },
+    closeBundle(){if(!wroteBundle||config.command!=='build')return;const dist=resolve(config.root,config.build.outDir),mapping=manifest();
       const originals=readdirSync(resolve(config.root,'public/assets')).filter(name=>name.endsWith('.glb')).sort(),covered=mapping.records.filter(item=>item.source.endsWith('.glb')).map(item=>item.source.slice('assets/'.length)).sort();
       if(JSON.stringify(originals)!==JSON.stringify(covered))throw Error('GLB inventory changed: run npm run assets:compress before building');
       function walk(dir){for(const name of readdirSync(dir)){const file=resolve(dir,name);if(statSync(file).isDirectory())walk(file);else if(['.html','.js','.json','.css'].includes(extname(file))&&!relative(dist,file).replaceAll('\\','/').startsWith('assets/')){const path=relative(dist,file).replaceAll('\\','/');writeFileSync(file,publicText(readFileSync(file,'utf8'),path,mapping));}}}
@@ -87,7 +118,7 @@ export function webPackagePlugin({retainQaFixtures=false}={}){
         // This selector belongs only to development QA pages, not the game.
         rmSync(resolve(dist,'content/guardian/voices.json'),{force:true});
       }
-      walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source));
+      walk(dist);for(const item of mapping.records)rmSync(resolve(dist,item.source),{force:true});
       if(!retainQaFixtures){
         const target=resolve(dist,'qa');
         if(!target.startsWith(dist+sep))throw Error('QA fixture path escapes package');
@@ -143,6 +174,7 @@ export function webPackagePlugin({retainQaFixtures=false}={}){
       }
       console.log('Wall buffer bank:',packageWallBank(dist));
       console.log('Baked animation banks:',packageBakedAnimations(dist));
+      console.log('Character preview banks:',packageCharacterPreviews(dist));
     }
   };
 }

@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import {createHash} from 'node:crypto';
+import {createHash,webcrypto} from 'node:crypto';
 import {publicText,UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,UNUSED_ANIMAL_LAB_MODELS,QA_ONLY_VISUAL_DIRECTORIES,RETIRED_MENU_ASSETS,QA_ONLY_VILLAGE_FILES,QA_ONLY_GROUND_FILES} from './web-package.mjs';
 import {bakedAnimationSources} from './package-baked-animations.mjs';
 import {BAKE_BANK_DIRECTORY,readPackedBakedAnimation} from '../src/rendering/baked-animation-assets.js';
+import {openCharacterPreviewStream} from '../src/rendering/character-preview-stream.js';
 import {readFile,readdir,stat} from 'node:fs/promises';
 import {resolve,extname,dirname,relative} from 'node:path';
 const root=resolve('dist'),manifest=JSON.parse(await readFile('content/manifests/web-assets.json','utf8'));let files=0,bytes=0,links=0;
@@ -55,6 +56,35 @@ for(const [profile,sources] of bakedAnimationSources){
   const source=JSON.parse(publicText(await readFile('public/'+path+'.json','utf8'),path+'.json',packagedAssets));
   assert.deepEqual(meta,source,'Authored bake metadata changed: '+path);
   assert.equal(createHash('sha256').update(new Uint8Array(bytes)).digest('hex'),source.sha256,'Authored bake bytes changed: '+path);
+ }
+}
+for(const profile of bakedAnimationSources.keys()){
+ const dir=`content/character-preview/${profile}/`, path=dir+'package.json';
+ const source=JSON.parse(publicText(await readFile('public/'+path,'utf8'),path,packagedAssets));
+ const packaged=JSON.parse(await readFile(resolve(root,path),'utf8'));
+ const {stored,...preview}=packaged.preview;
+ assert.deepEqual(preview,source.preview,'Character preview identity changed: '+profile);
+ if(stored)assert(!inventory.has(dir+preview.path),'Standalone character preview shipped: '+profile);
+ const fetchImpl=async url=>{
+  const name=new URL(url).pathname.slice(1);
+  assert(name.startsWith(dir)&&inventory.has(name),'Character resource missing: '+name);
+  return new Response(await readFile(resolve(root,name)));
+ };
+ for(const name of ['bc7','webp']){
+  const {textureBank,...variant}=packaged.variants[name];
+  assert(textureBank,'Missing character texture bank: '+profile+'/'+name);
+  assert.deepEqual(variant,source.variants[name],'Character variant identity changed: '+profile+'/'+name);
+  for(const file of variant.files.filter(file=>/\.(ktx2|webp)$/.test(file.path)))
+   assert(!inventory.has(dir+file.path),'Standalone character texture shipped: '+dir+file.path);
+  const stream=await openCharacterPreviewStream('https://package.test/'+path,{
+   features:name==='bc7'?['texture-compression-bc']:[],fetchImpl,subtle:webcrypto.subtle
+  });
+  try{
+   assert.equal(stream.variant,name);
+   await stream.loadPreview();
+   const textures=await stream.loadTextures(await stream.loadMetadata());
+   assert.equal(textures.size,variant.files.filter(file=>/\.(ktx2|webp)$/.test(file.path)).length);
+  }finally{stream.close();}
  }
 }
 for(const source of [...UNUSED_WORKER_LAB_MODELS,UNUSED_CROP_LAB_MODEL,...UNUSED_ANIMAL_LAB_MODELS]){
