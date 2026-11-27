@@ -4,10 +4,10 @@ import {nativeWorkerGraphicsFixture} from './native-task-consequence-graphics.js
 
 // Initial actors use the common original-asset fixture without any action,
 // Carry or settlement history. Admission/renderer here remain test doubles.
-export async function nativeInitialIdleBodyGraphicsFixture({mode='rest',profile='youngMale',coldWalk=false,beforeBake=()=>{}}={}){
+export async function nativeInitialIdleBodyGraphicsFixture({mode='rest',profile='youngMale',coldWalk=false,beforeBake=()=>{},historicalMotion=null}={}){
  const native=nativeInitialIdleGameFixture({mode,profile,peer:true});let f;
  try{
-  f=await nativeWorkerGraphicsFixture({...native,actor:native.worker.id},{idle:true,alert:true,coldWalk,beforeBake,clips:['Walk_Skip','Idle','Alert'],initialClip:mode==='watch'?'Alert':'Idle'});
+  f=await nativeWorkerGraphicsFixture({...native,actor:native.worker.id},{idle:true,alert:true,coldWalk,beforeBake,historicalMotion,clips:['Walk_Skip','Idle','Alert'],initialClip:mode==='watch'?'Alert':'Idle'});
   const result=f.planner.prepareNativeInitialIdleBodyProposal(f.planner.nativeInitialIdleRequestReference(native.actor));assert.equal(result.status,'proposed');const proposal=result.proposal,support=f.terrain.prepareNativeInitialIdleBody(proposal.nativeInitialIdleBody);assert(support?.valid());let age=0;
   const tuple=()=>{assert.equal(f.w.nav_intent_barrier_proposal_ticket(),1);return Array.from(new Float64Array(f.w.memory.buffer,f.w.nav_intent_barrier_proposal_ticket_ptr(),6));};
   return {...f,nativeActor:native.actor,proposal,support,tuple,setPickAge:value=>age=value,getPickAge:()=>age,

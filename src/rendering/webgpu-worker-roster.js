@@ -398,7 +398,7 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
  function prepareNativeIdleCycleProposal(support,options){return prepareNativeStationaryIdleProposal(support,options,true);}
  async function prepareNativeStationaryIdleProposal(support,{getPickAge,getPickPhaseOffset=null,reuseClock=null,signal}={},cycle=false){
   const copyRef=cycle?copyNativeIdleCycleReference:copyNativeInitialIdleBodyReference,copyProof=cycle?copyNativeIdleCycleAttestation:copyNativeInitialIdleBodyAttestation,covers=cycle?nativeIdleCycleAttestationCovers:nativeInitialIdleBodyAttestationCovers,key=cycle?'nativeIdleCycle':'nativeInitialIdleBody',bindingKey=cycle?'nativeIdleCycleBinding':'nativeInitialIdleBodyBinding';
-  let ref=copyRef(support?.reference);const id=`worker-${ref.actorId}`,entry=entries.get(id),previous=entry?.nativeState,oldMotion=entry?.motion,oldBinding=entry?.motionBinding,q=cycle?nativeIdleCycleBodyState(ref.sourceBody):ref.sourceRequest,fromFailed=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-failed-source',fromStroll=cycle&&ref.sourceCycleSequence===0&&isNativeIdleStrollArrivalSource(q),fromFarm=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-farm-arrival-idle-source',fromSettlement=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-settled-worker-idle-source';
+  let ref=copyRef(support?.reference);const id=`worker-${ref.actorId}`,entry=entries.get(id),previous=entry?.nativeState,q=cycle?nativeIdleCycleBodyState(ref.sourceBody):ref.sourceRequest,fromFailed=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-idle-stroll-failed-source',fromStroll=cycle&&ref.sourceCycleSequence===0&&isNativeIdleStrollArrivalSource(q),fromFarm=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-farm-arrival-idle-source',fromSettlement=cycle&&ref.sourceCycleSequence===0&&q.kind==='native-settled-worker-idle-source';
   const completedAction=cycle?null:nativeInitialIdleActionSource(ref);
   const cancellation=cycle?null:ref.cancellationSource,cancelsAction=cancellation?.phase===15,cancelsPendingAction=cancellation?.phase===6;
   const sourceCurrent=()=>{
@@ -444,7 +444,8 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
    const sourcePhase=fromSettlement?idle===null&&!e.nativeTaskAction:fromFarm?idle===null&&e.destinationId===null&&farmPathMetadataCurrent(e)&&!e.nativeTaskAction:fromStroll?!!stroll&&!!idle&&Object.keys(idle).every(k=>['anchorId','mode','elapsed','remaining','rng','approachRetry','destination'].includes(k))&&idle.mode==='walk'&&idle.elapsed===0&&idle.remaining===nativeIdleStrollWalkRemaining(stroll)&&idle.anchorId===strollAnchor&&idle.rng===stroll.walkRng&&idle.approachRetry===strollRetry&&e.destinationId===(nativeIdleStrollApproachesAnchor(stroll)?strollAnchor:`idle-${id}`)&&idle.destination?.id===e.destinationId&&idle.destination.x===stroll.destination.x&&idle.destination.z===stroll.destination.z:cycle?!!idle&&['rest','watch'].includes(idle.mode)&&(!ref.sourceCycleSequence?JSON.stringify(idle)===JSON.stringify(ref.initialState):true):JSON.stringify(idle)===JSON.stringify(q.idleState);
    return !!e&&e.profile===q.workerProfile&&nativeEntityNumericId(e.centerId)===q.centerId&&e.status===(fromFarm?'arriving':'idle')&&e.nativeRouteAdmission===(fromSettlement?undefined:fromFarm?'native-farm-arrival':fromStroll?'native-idle-stroll':cycle?'native-idle':'pending-idle-resources')&&e.path===null&&!e.taskId&&!e.crateId&&!e.recovery&&!e.recoveryExitRemaining&&!e.fallRemaining&&!e.incapacitated&&!e.raidReturn&&e.running===false&&e.gateWaiting===false&&e.heading===q.pose.yaw&&['x','z','runPhase','walkPhase','carryPhase','runRemaining'].every(k=>e[k]===q.pose[k])&&sourcePhase;
   };
-  if(closed||!entry||historyRun||entry.nativePending||entry.motionPreparing||!sourceCurrent()||cycle&&!!previous&&!previous.variant.current()||!pipelineAdmission||!bakedIdleBank||!bakedAlertBank||support?.kind!==(cycle?'native-idle-cycle-terrain-support':'native-initial-idle-body-terrain-support')||support.valid?.()!==true||typeof getPickAge!=='function'||signal?.aborted||!entityCurrent())throw Error('Native initial Idle body has no matching pending worker');
+  const historicalReady=!cycle&&!previous?entry?.motionPreparing?.ready:null;
+  if(closed||!entry||historyRun||entry.nativePending||entry.motionPreparing&&!historicalReady||!sourceCurrent()||cycle&&!!previous&&!previous.variant.current()||!pipelineAdmission||!bakedIdleBank||!bakedAlertBank||support?.kind!==(cycle?'native-idle-cycle-terrain-support':'native-initial-idle-body-terrain-support')||support.valid?.()!==true||typeof getPickAge!=='function'||signal?.aborted||!entityCurrent())throw Error('Native initial Idle body has no matching pending worker');
   const entityStamp=()=>{
    if(!cancelsAction)return JSON.stringify(entry.entity);
    const {nativeTaskAction,actionRemaining,...owned}=entry.entity;
@@ -452,8 +453,17 @@ export function createWebGpuWorkerRoster({scene,residency,state,assetBank,render
   };
   const stamp=entityStamp(),controller=new AbortController(),abort=()=>controller.abort(),pending={controller,stage:'loading',[key]:ref};entry.nativePending=pending;signal?.addEventListener('abort',abort,{once:true});let candidate=null,activated=false,finished=false,locked=false;
   const current=()=>!closed&&!finished&&!controller.signal.aborted&&entries.get(id)===entry&&entry.nativePending===pending&&(!locked||entry.motionPreparing===pending)&&entityStamp()===stamp&&entityCurrent()&&support.valid()===true&&sourceCurrent()&&entry.nativeState===(activated?candidate:previous);
-  const check=()=>{if(!current())throw new DOMException('Native initial Idle worker changed','AbortError');};
+  const check=()=>{if(!current()||historicalReady&&historyRun)throw new DOMException('Native initial Idle worker changed','AbortError');};
   try{
+   // The native reservation blocks new preparation while the original rig
+   // finishes its current binding. Take the replacement source after that handoff.
+   if(historicalReady){
+    let cancelWait;
+    try{await Promise.race([historicalReady,new Promise((_,reject)=>{cancelWait=()=>reject(new DOMException('Native initial Idle preparation cancelled','AbortError'));controller.signal.addEventListener('abort',cancelWait,{once:true});})]);}
+    finally{controller.signal.removeEventListener('abort',cancelWait);}
+    check();
+   }
+   const oldMotion=entry.motion,oldBinding=entry.motionBinding;
    await entry.ready;check();
    requestBakedWalk(id,entry);await entry.bakeResourcePromise;check();
    // Download readiness is not installation readiness. An already-started

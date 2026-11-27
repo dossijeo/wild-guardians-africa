@@ -15,8 +15,42 @@ import {actorAsset} from './helpers/actor-geometry.js';
 import {prepareWorkerClips} from '../src/rendering/worker-clips.js';
 import {createWebGpuConfirmedWorker} from '../src/rendering/webgpu-confirmed-worker.js';
 import {createNativeInitialIdleBodyGpuMotion} from '../src/rendering/native-initial-idle-body-gpu-motion.js';
+import {createConfirmedHistoricalClock} from '../src/rendering/confirmed-historical-clock.js';
 
 function meshes(root){const out=[];root.traverse(mesh=>{if(mesh.isMesh&&!mesh.userData.wgCpuPickProxy)out.push({mesh,geometry:mesh.geometry,index:mesh.geometry.index,material:mesh.material,visible:mesh.visible});});return out;}
+
+for(const abortWhileWaiting of [false,true])test(`cold initial Idle joins the historical rig owner (${abortWhileWaiting?'abort and retry':'handoff'})`,async()=>{
+ const f=await nativeInitialIdleBodyGraphicsFixture({mode:'watch',profile:'olderFemale',historicalMotion:{actorIds:[],clock:createConfirmedHistoricalClock({initialElapsed:10})}});
+ let enter,release;
+ const entered=new Promise(resolve=>{enter=resolve;}),released=new Promise(resolve=>{release=resolve;});
+ const controller=new AbortController(),prepare=f.admission.prepareAndPublish;
+ let part,request;
+ try{
+  const actor=f.roster.get(f.actor),geometry=meshes(actor.root),source=f.body(1);
+  f.admission.prepareAndPublish=async(root,options,publish)=>{
+   f.admission.prepareAndPublish=prepare;
+   enter();await released;return prepare(root,options,publish);
+  };
+  f.roster.setHistoricalActors([f.actor]);
+  await entered;
+  const start=signal=>f.roster.prepareNativeInitialIdleBodyProposal(f.support,{getPickAge:f.getPickAge,signal});
+  request=start(controller.signal);request.catch(()=>{});
+  assert.equal(await Promise.race([request,new Promise(resolve=>setImmediate(()=>resolve(null)))]),null);
+  assert.equal(f.roster.status().nativePreparing,1);
+  assert.equal(f.roster.status().native,0);
+  if(abortWhileWaiting){
+   controller.abort();await assert.rejects(request,{name:'AbortError'});
+   assert.equal(f.roster.status().nativePreparing,0);
+   request=start();
+  }
+  release();part=await request;
+  assert(part.valid());part.activate();part.rollback();assert(part.valid());
+  part.activate();const proof=f.commit();part.finalize(proof);f.sync();f.flush();
+  assert.equal(f.roster.get(f.actor),actor);assert.equal(f.acquires,1);assert.equal(f.roster.status().native,1);
+  for(const before of geometry){assert.equal(before.mesh.geometry,before.geometry);assert.equal(before.mesh.geometry.index,before.index);}
+  assert.deepEqual(f.body(1),source);assert.deepEqual(f.errors,[]);
+ }finally{release();await request?.catch(()=>{});part?.cancel();f.close();}
+});
 
 for(const profile of PROFILES)for(const mode of ['rest','watch'])test(`${profile.id} initial ${mode} prepares reversibly on its original actor and geometry`,async()=>{
  const f=await nativeInitialIdleBodyGraphicsFixture({mode,profile:profile.id});let part;try{
