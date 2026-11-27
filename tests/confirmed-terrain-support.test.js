@@ -20,6 +20,27 @@ test('grid intersections preserve exact chunk-plane coordinates and source endpo
 test('confirmed support follows the real piecewise triangular terrain including stationary intervals',()=>{
  const f=setup();try{const result=f.support.prepare(preview());assert.ok(result);assert.equal(result.valid(),true);const actor=result.actors[0],sample=createActorTerrainSampler(f.residency);assert.ok(actor.segments.length>3);assert.equal(actor.segments[0].t0,0);assert.equal(actor.segments.at(-1).t1,2);for(const part of actor.segments){assert.ok(part.t1>part.t0);for(const fraction of [.15,.5,.85]){const x=part.x0+(part.x1-part.x0)*fraction,z=part.z0+(part.z1-part.z0)*fraction,y=part.y0+(part.y1-part.y0)*fraction;assert.ok(Math.abs(y-sample(x,z))<.0001);}}}finally{f.close();}
 });
+
+test('integer grid lines split once at each shared axis and diagonal crossing',()=>{
+ const f=setup();
+ try{
+  const a=5.7,b=Math.fround(4.6),start=10.599999999999918,end=11.618518606821613;
+  for(const [x0,z0,x1,z1] of [[-14,a,-14,b],[-14,b,-14,a],[a,-14,b,-14],[b,-14,a,-14]]){
+   const input=preview(x0,z0,x1,z1),actor=input.trace.actors[0];
+   input.trace.start=input.start=actor.start.at=actor.segments[0].t0=start;
+   input.trace.end=input.end=actor.end.at=actor.segments[0].t1=end;
+   const support=f.support.prepare(input);
+   assert(support?.valid());
+   const [first,second,...extra]=support.actors[0].segments;
+   assert.equal(extra.length,0);
+   assert.deepEqual([first.t0,first.x0,first.z0],[start,x0,z0]);
+   assert.deepEqual([second.t1,second.x1,second.z1],[end,x1,z1]);
+   assert.deepEqual([first.t1,first.x1,first.z1],[second.t0,second.x0,second.z0]);
+   assert.deepEqual([first.x1,first.z1],x0===x1?[-14,5]:[5,-14]);
+   assert(first.t0<first.t1&&first.t1<second.t1);
+  }
+ }finally{f.close();}
+});
 test('support rejects missing geometry, noncanonical topology, chunk crossings and unrelated safety failures',()=>{
  const f=setup({maxPieces:1});try{assert.equal(f.support.prepare(preview()),null);const large=createConfirmedTerrainSupport({residency:f.residency});try{assert.equal(large.prepare(preview(23.5,0,24.5,0)),null);const unsafe=preview();unsafe.reasons.push('physics');assert.equal(large.prepare(unsafe),null);const mismatched=preview();mismatched.trace.terrainManifest.epoch='old';assert.equal(large.prepare(mismatched),null);f.residency.get(0,0).geometry.index.array[0]=9;f.residency.get(0,0).geometry.index.needsUpdate=true;assert.equal(large.prepare(preview()),null);}finally{large.dispose();}}finally{f.close();}
 });

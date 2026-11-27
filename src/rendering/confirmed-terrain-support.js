@@ -109,7 +109,11 @@ export function createConfirmedTerrainSupport({residency,maxPieces=16384,maxActo
   function sample(x,z){if(!Number.isFinite(x)||!Number.isFinite(z))return null;const key=`${x},${z}`;if(samples.has(key))return samples.get(key);const cx=Math.floor((x+24)/48),cz=Math.floor((z+24)/48);if(!entryAt(cx,cz))return null;const exact=residency.surface(x,z),actual=sampleActorTerrain(x,z);if(!Number.isFinite(exact)||!Number.isFinite(actual)||Math.abs(exact-actual)>heightTolerance)return null;const value={height:exact};samples.set(key,value);return value;}
   function piece(out,t0,t1,x0,z0,x1,z1){
    const cuts=[{t:0,x:x0,z:z0},{t:1,x:x1,z:z1}],budget=maxPieces-count;
-   if(!addCuts(cuts,x0,x1,budget,'x')||!addCuts(cuts,z0,z1,budget,'z')||!addCuts(cuts,x0+z0,x1+z1,budget,'sum'))return false;
+   if(!addCuts(cuts,x0,x1,budget,'x')||!addCuts(cuts,z0,z1,budget,'z'))return false;
+   // On an integer grid line the diagonal crossings coincide with the axis
+   // crossings. Computing both can round the same instant to different cuts.
+   const onGridLine=x0===x1&&Number.isInteger(x0)||z0===z1&&Number.isInteger(z0);
+   if(!onGridLine&&!addCuts(cuts,x0+z0,x1+z1,budget,'sum'))return false;
    cuts.sort((a,b)=>a.t-b.t);const unique=[];for(const cut of cuts){const previous=unique.at(-1);if(previous?.t===cut.t)Object.assign(previous,cut);else unique.push({...cut});}
    // Compute one shared intersection per grid plane, preserving its known
    // coordinate and the exact native endpoints/times. Reusing it on both sides
