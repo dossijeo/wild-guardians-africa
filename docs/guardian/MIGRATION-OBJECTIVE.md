@@ -900,7 +900,7 @@ aceptación con personajes, sin publicaciones periódicas de posición JS.
 
 ## Próximo bloqueo
 
-En la campaña continua de Sabana, el primer corredor del león puede agotar el plazo mientras prepara sus pipelines. La repetición desde el cuarto amanecer atribuye 1,585 s al tramo del productor entre cerrar el paquete e iniciar su envío y 1,296 s a la admisión en Draw. El siguiente corte mide el prefijo del FIFO y la concesión de créditos. La campaña completa debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Corte del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
+El transporte por lotes superó en NVIDIA el primer corredor del león desde el cuarto amanecer de Sabana. La autoridad adquirió a los 9,048 s de la solicitud, Draw presentó la edad inicial cero y la sesión drenó. La campaña desde el menú debe volver a acreditar los cinco relevos de incursión, el último dibujo y el drenaje. [Cortes del plazo y alcance](native-cold-worker-admission-20261126.md#campaña-continua-hasta-el-nacimiento-del-león).
 
 El alta de Escudo con reloj en marcha y su caducidad conservan sus calificaciones acotadas. La aceptación del perfil ordinario de Escudo, Flee y Recovery sigue los criterios del [estado por vertical](MIGRATION-VERTICALS.md).
 

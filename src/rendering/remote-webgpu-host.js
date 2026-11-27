@@ -44,6 +44,7 @@ import {validRemoteTexturePreparation} from './remote-texture-preparation.js';
 import {externalImageUploadRegions} from './remote-resource-uploads.js';
 import {rejectedFramePreparations,closePreparationImages} from './remote-frame-preparations.js';
 import {remoteDrawPipelineEntries,prepareRemoteFirstUse} from './remote-prepared-first-use.js';
+import {isRemoteResourceBatchItem,remoteResourceBatchLimit} from './remote-resource-batch.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const NATIVE_ADMISSION_OBSOLETE=new Set(['native-route-admission-obsolete','native-idle-cycle-admission-obsolete','native-initial-idle-body-admission-obsolete','native-settlement-admission-obsolete','native-home-arrival-admission-obsolete','native-idle-stroll-admission-obsolete','native-home-admission-obsolete','native-consequence-admission-obsolete','native-action-admission-obsolete','native-start-admission-obsolete','native-resume-admission-obsolete','native-stroll-stop-admission-obsolete','native-farm-arrival-stop-admission-obsolete','native-farm-arrival-admission-obsolete','native-suspended-admission-obsolete']);
@@ -1930,12 +1931,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       default: throw Error(`Unknown remote GPU message ${message.type}`);
     }
   }
-  port.onmessage = event => {
-    const message = event.data;
-    if(message.transportSequence!==undefined){
-      if(!Number.isSafeInteger(message.transportSequence)||message.transportSequence!==lastTransportSequence+1){fail(Error('Invalid remote resource transport sequence'));return;}
-      lastTransportSequence=message.transportSequence;
-    }
+  function enqueueResourceMessage(message,dispatchReceipt=message){
     if(message.type==='frame'||message.type==='prepare-world-frame'||message.type==='operation')message.nativeMutationEpoch=nativeMutationEpoch;
     if (message.type === 'frame' || message.type==='prepare-world-frame'||message.type === 'fence') message.receivedAt = absoluteNow();
     if(message.type==='cancel-world-frame'){try{if(message.version!==1)throw Error('Unsupported prepared world frame cancellation');cancelPreparedWorldFrame(message.sequence);}catch(error){fail(error);}return;}
@@ -1958,7 +1954,28 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
         return;
       }
       reply(message,null,error);fail(error);
-    }).finally(() => { queuedMessages--;acknowledgeDispatch(message); });
+    }).finally(() => { queuedMessages--;if(dispatchReceipt)acknowledgeDispatch(dispatchReceipt); });
+  }
+  port.onmessage = event => {
+    const message = event.data;
+    if(message.type==='resource-batch'){
+      const items=message.messages;
+      if(!Array.isArray(items)||items.length<1||items.length>remoteResourceBatchLimit||
+         items.includes(undefined)||!items.every(isRemoteResourceBatchItem)||!Number.isSafeInteger(message.transportSequence)||
+         message.transportSequence!==lastTransportSequence+items.length){
+        fail(Error('Invalid remote resource batch'));return;
+      }
+      if(queuedMessages+items.length>maxFrameOperations){fail(Error('Remote resource queue exceeds safety limit'));return;}
+      lastTransportSequence=message.transportSequence;
+      for(let index=0;index<items.length;index++)
+        enqueueResourceMessage(items[index],index===items.length-1?message:null);
+      return;
+    }
+    if(message.transportSequence!==undefined){
+      if(!Number.isSafeInteger(message.transportSequence)||message.transportSequence!==lastTransportSequence+1){fail(Error('Invalid remote resource transport sequence'));return;}
+      lastTransportSequence=message.transportSequence;
+    }
+    enqueueResourceMessage(message);
   };
   port.start?.();
   if(intentControl){

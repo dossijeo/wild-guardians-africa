@@ -25,6 +25,7 @@ import {sameNativeResumeReference} from '../world/native-resume-reference.js';
 // The producer owns Three's object graph, never the native GPU device. Only
 // serializable WebGPU descriptors and commands cross this boundary.
 import {copyNativeWorldBoundary,sameNativeWorldBoundary} from '../world/native-world-boundary.js';
+import {isRemoteResourceBatchItem,remoteResourceBatchLimit} from './remote-resource-batch.js';
 const REF = '__remoteGpuId';
 const CURRENT = '@canvas';
 const ENCODER_METHODS = ['copyBufferToBuffer','copyBufferToTexture','copyTextureToBuffer','copyTextureToTexture','clearBuffer','resolveQuerySet','insertDebugMarker','pushDebugGroup','popDebugGroup'];
@@ -45,12 +46,18 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   let outbound = Promise.resolve(),disposalPromise=null;
   // Bound structured-clone/dispatch work BEFORE it reaches the draw event loop.
   // Credits acknowledge FIFO dispatch only, never GPU completion or ownership.
-  const transportEnabled=capabilities.resourceTransportVersion===1,transportWindow=8,transportPending=new Set();
-  let transportSequence=0,transportWake=null,transportPeak=0;
-  function stopTransport(error){const wake=transportWake;transportWake=null;transportPending.clear();wake?.reject(error);}
-  async function transportCapacity(){
-    if(transportPending.size>=transportWindow)await new Promise((resolve,reject)=>{transportWake={resolve,reject};});
+  const transportEnabled=capabilities.resourceTransportVersion===1,transportWindow=8,transportPending=new Map();
+  const transportBatches=transportEnabled&&capabilities.resourceBatchVersion===1;
+  let transportSequence=0,transportWake=null,transportPeak=0,transportInFlight=0,openResourceBatch=null;
+  function stopTransport(error){const wake=transportWake;transportWake=null;transportPending.clear();transportInFlight=0;openResourceBatch=null;wake?.reject(error);}
+  async function transportCapacity(count=1){
+    while(transportInFlight+count>transportWindow)await new Promise((resolve,reject)=>{transportWake={resolve,reject};});
     if(disposed||fatalError)throw fatalError||Error('Remote GPU disposed');
+  }
+  function reserveTransport(count=1){
+    transportSequence+=count;transportInFlight+=count;
+    transportPending.set(transportSequence,count);transportPeak=Math.max(transportPeak,transportInFlight);
+    return transportSequence;
   }
   let requiredWorldBoundary=null, texturePreparation=null;
   const pending = new Map(), clockBindings = new Map(), canvasViewIds = new Set();
@@ -126,9 +133,31 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   function closeUnsentImages(packet){
     for(const op of packet?.operations??[])if(op.prepareImage)Promise.resolve(op.prepareImage).then(bitmap=>bitmap.close()).catch(()=>{});
   }
+  function sendResourceBatchItem(message){
+    let batch=openResourceBatch;
+    if(!batch){
+      batch=openResourceBatch={messages:[],retained:[],transfers:new Set(),sent:null};
+      outbound=outbound.then(async()=>{
+        if(openResourceBatch===batch)openResourceBatch=null;
+        const count=batch.messages.length;
+        await transportCapacity(count);
+        const transportSequence=reserveTransport(count);
+        port.postMessage({type:'resource-batch',transportSequence,messages:batch.messages},[...batch.transfers]);
+      }).finally(()=>releaseReferences(batch.retained));
+      outbound.catch(fail);batch.sent=outbound;
+    }
+    batch.messages.push(message);
+    batch.retained.push(...retainReferences(collectReferences(message)));
+    const bytes=message.type==='unmap'?message.bytes:message.op?.args?.[2]?.buffer;
+    if(bytes instanceof ArrayBuffer)batch.transfers.add(bytes);
+    if(batch.messages.length===remoteResourceBatchLimit)openResourceBatch=null;
+    return batch.sent;
+  }
   function send(message) {
     if (disposed) throw Error('Remote GPU is disposed');
     if (fatalError) throw fatalError;
+    if(transportBatches&&isRemoteResourceBatchItem(message))return sendResourceBatchItem(message);
+    openResourceBatch=null;
     // Cancellation must overtake a preparing packet which holds a transport
     // credit while awaiting dependencies/first use. It grants no drawing right.
     if(transportEnabled&&message.type==='cancel-world-frame'){port.postMessage(message);return;}
@@ -151,7 +180,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
         ownedImages.push(bitmap);
       }
       if (message.type === 'frame') message.packet.transportTiming.postedAt = absoluteNow();
-      if(transportEnabled){message.transportSequence=++transportSequence;transportPending.add(transportSequence);transportPeak=Math.max(transportPeak,transportPending.size);}
+      if(transportEnabled)message.transportSequence=reserveTransport();
       const transfers=new Set();
       if(transportEnabled){
         for(const op of operations){
@@ -421,7 +450,9 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
   port.onmessage = event => {
     const message = event.data;
     if(message.type==='resource-dispatched'){
-      if(!transportEnabled||!transportPending.delete(message.transportSequence)){fail(Error('Invalid remote resource dispatch acknowledgement'));return;}
+      const acknowledged=transportPending.get(message.transportSequence);
+      if(!transportEnabled||acknowledged===undefined){fail(Error('Invalid remote resource dispatch acknowledgement'));return;}
+      transportPending.delete(message.transportSequence);transportInFlight-=acknowledged;
       const wake=transportWake;transportWake=null;wake?.resolve();
     } else if (message.type === 'reply') {
       const entry = pending.get(message.requestId);
@@ -616,7 +647,7 @@ export function createRemoteWebGpuClient({ port, capabilities, onError = () => {
     // Only the preparation owner knows when it has applied that native world.
     requiredNativeWorldBoundary:()=>requiredWorldBoundary,
     setCameraMailbox(mailbox) { send({ type: 'camera-mailbox', mailbox }); },
-    inspect: () => ({ ...metrics, transportInFlight:transportPending.size,transportPeak, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
+    inspect: () => ({ ...metrics, transportInFlight,transportPeak, pendingFrame: pendingFrame?.sequence || null, openFrame: frame?.sequence || null, clockBindings: clockBindings.size, retainedResources: retainedCounts.size, weakResources: weakResources.size, finalizationAvailable: !!finalizer, frameTimings: frameTimings.slice(), fenceTimings: fenceTimings.slice(), backend: 'remote-webgpu', failed: !!fatalError }),
     inspectAsync: () => request({ type: 'inspect' }).then(consumer => ({ ...api.inspect(), consumer })),
     // Stop/drain happens at the draw owner. A preparer closing its own port
     // cannot certify that the independent queue stopped submitting.
