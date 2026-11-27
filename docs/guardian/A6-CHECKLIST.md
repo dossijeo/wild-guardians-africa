@@ -1,6 +1,6 @@
 # Seguimiento de cierre de A6
 
-Una preparación nativa que espera una publicación lejana puede completar su último tramo tras el ACK del checkpoint. El contraste aislado en NVIDIA alcanzó la publicación 7178 con cuatro esperas de dibujo frente a cinco y validó el token de picking tras cada ACK. Falta acreditar ese resultado en la campaña completa de Sabana. [Comparación y alcance](performance/native-sabana-source-checkpoint-20261127.json).
+El recorrido en Edge desde el cuarto amanecer de Sabana 714 llegó al primer golpe del león y drenó. Durante la preparación de Strike27, Surface retomó la aplicación después del checkpoint 7216 y alcanzó la publicación 7228 antes del siguiente ACK de dibujo. El contraste aislado en NVIDIA conservó el token de picking y pasó de cinco esperas de dibujo a cuatro. Route26 llegó a READY en 9,43 s durante el recorrido de Edge. [Comparación y alcance](performance/native-sabana-source-checkpoint-20261127.json).
 
 NVIDIA confirmó la recuperación de Home18 e Idle21 con dos portones. El primer envío conservó ambos cuerpos y ambos motores. Los dos trabajadores fueron seleccionables con la autoridad suspendida. Tras reanudar, el mismo cuerpo cruzó ambos portones y se retiró una sola vez en Home19. El segundo siguió con Idle21 y permaneció seleccionable hasta el drenaje. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
 

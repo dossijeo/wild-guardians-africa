@@ -124,5 +124,268 @@
     "isolated-dawn-nvidia.json": "56cb76bb2f747f42a77c12515af5959bb5cfed60d4d56b11316c0bf6b7f79d4e",
     "native-source-checkpoint-integration-20261127.tap": "1928439b5a1369e20b0af166bbafce84184b4220dc8797b1979b625ed41ca8d9",
     "astra-lion-dawn-ready-20261127-2201-checkpoint.json": "a2adb1f93f9c63a0bab1f82d586b0d8c932a5d5dac63002f2ba430a15873e5f5"
+  },
+  "integratedLion": {
+    "revision": "cc795f9890c34bd5d154150dd42763a77afc9d58",
+    "gameWasmControl": {
+      "base": {
+        "start": 401,
+        "target": 485,
+        "frames": [
+          401,
+          425,
+          449,
+          458,
+          482
+        ],
+        "elapsed": 2161.699999998921,
+        "actor": "animal-21",
+        "position": [
+          82.29254150390625,
+          3.3601131439208984
+        ],
+        "phase": 23.817064855702778,
+        "targetId": "structure-2"
+      },
+      "candidate": {
+        "start": 401,
+        "target": 485,
+        "frames": [
+          401,
+          425,
+          449,
+          466
+        ],
+        "elapsed": 2161.699999998921,
+        "actor": "animal-21",
+        "position": [
+          82.29254150390625,
+          3.3601131439208984
+        ],
+        "phase": 23.817064855702778,
+        "targetId": "structure-2"
+      },
+      "draws": [
+        {
+          "ticket": 2,
+          "kind": 26,
+          "body": 1,
+          "firstAge": 0
+        },
+        {
+          "ticket": 4,
+          "kind": 27,
+          "body": 1,
+          "firstAge": 0
+        }
+      ],
+      "hits": [
+        [
+          "attack-81",
+          "structure-2"
+        ]
+      ],
+      "damage": {
+        "kind": "center",
+        "x": 83,
+        "z": 0,
+        "previousHp": 345,
+        "hp": 305,
+        "maxHp": 600,
+        "criticalThreshold": 252,
+        "firstHitThisRaid": true
+      },
+      "scope": "Original rig and deterministic GPU queue. The checkpoint is placed within 84 actual publications.",
+      "hashes": {
+        "live-lion-base.json": "5da269bd60863847d7b6deba427c88fbbe47923d341c96630c6beb148725886d",
+        "live-lion-candidate.json": "480b8ee80f45fa803c898ed6456bb55c8d8475b8dd450176db86b731a4942798",
+        "live-lion-control.mjs": "c4ed89c5ef962a8c003ccfc0882de2bcec7a53cc2b4f302b91faf3bd7743b266"
+      }
+    },
+    "browser": {
+      "scope": "Edge with the production WebGPU receiver and renderer. Adapter identity is absent from these raw receipts.",
+      "night": {
+        "success": true,
+        "saveElapsed": 2137.4999999988336,
+        "finalElapsed": 2169.398709451839,
+        "hashes": {
+          "sol-lion-cold-entry-base-20261127.json": "df19fbbd6e183f523b7c73d031145d8b5ea202efc58ca14a11ecc29889fb0174",
+          "sabana-second-night-fourth-night-cut-save.json": "4a64bb230a2ddc6a3a187207247cf8f18b44b7a00ea17d76ddd44a6b18f8aa66"
+        },
+        "httpDiagnostics": [],
+        "diagnostics": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "route": {
+          "actorId": 21,
+          "bodyId": 1,
+          "ticket": 3,
+          "kind": 26,
+          "requestId": 2,
+          "requiredPublication": 21,
+          "appliedWhenRequestWaited": 18,
+          "firstSubmit": 36,
+          "origin": 2141.148709451736,
+          "frameClock": 2141.148709451736,
+          "firstAge": 0,
+          "requestToReadyMs": 7882.155029296875,
+          "requestToCommitMs": 7944.14990234375
+        },
+        "strike": {
+          "actorId": 21,
+          "bodyId": 1,
+          "ticket": 5,
+          "kind": 27,
+          "requestId": 3,
+          "requiredPublication": 621,
+          "appliedWhenRequestWaited": 619,
+          "firstSubmit": 136,
+          "origin": 2167.548709451832,
+          "frameClock": 2167.6487094518325,
+          "firstAge": 0,
+          "requestToReadyMs": 2620.76513671875,
+          "requestToCommitMs": 2656.94482421875
+        },
+        "hit": {
+          "id": "attack-86",
+          "target": "structure-2",
+          "elapsed": 2169.0987094518377
+        },
+        "hp": 305,
+        "coldRoute": [
+          {
+            "phase": "shared-asset-end",
+            "ms": 271.794999986887
+          },
+          {
+            "phase": "root-admission-end",
+            "ms": 2535.7450000047684
+          },
+          {
+            "phase": "entry",
+            "ms": 1425.3849999904633
+          },
+          {
+            "phase": "previous-admissions",
+            "ms": 0.05500000715255737
+          },
+          {
+            "phase": "walk",
+            "ms": 4042.969999998808
+          },
+          {
+            "phase": "run",
+            "ms": 419.10499998927116
+          }
+        ],
+        "strikePrepare": {
+          "pipelineMs": 2083.625,
+          "captureMs": 201.02490234375
+        },
+        "drained": true
+      },
+      "dawn": {
+        "success": true,
+        "saveElapsed": 1799.9999999989377,
+        "finalElapsed": 2175.248709451901,
+        "hashes": {
+          "sol-lion-cold-entry-dawn-20261127.json": "653de3c43301b68316926dda0db590d218dce76407544cad1c8b1ff0bd4bb079",
+          "native-menu-campaign-714-released-floor-event-recovery-dawn-4.json": "f709274acf6e9bf4c21cb5818bdd91a282cb04ad4902041110aab574c7c53595"
+        },
+        "httpDiagnostics": [],
+        "diagnostics": [
+          "Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "Failed to load resource: the server responded with a status of 404 (Not Found)"
+        ],
+        "route": {
+          "actorId": 24,
+          "bodyId": 2,
+          "ticket": 10,
+          "kind": 26,
+          "requestId": 5,
+          "requiredPublication": 6921,
+          "appliedWhenRequestWaited": 6836,
+          "firstSubmit": 1381,
+          "origin": 2147.5987094518005,
+          "frameClock": 2147.5987094518005,
+          "firstAge": 0,
+          "requestToReadyMs": 9431.044921875,
+          "requestToCommitMs": 9498.530029296875
+        },
+        "strike": {
+          "actorId": 24,
+          "bodyId": 2,
+          "ticket": 12,
+          "kind": 27,
+          "requestId": 6,
+          "requiredPublication": 7228,
+          "appliedWhenRequestWaited": 7159,
+          "firstSubmit": 1417,
+          "origin": 2171.8487094518887,
+          "frameClock": 2171.8487094518887,
+          "firstAge": 0,
+          "requestToReadyMs": 6348.590087890625,
+          "requestToCommitMs": 6392.9501953125
+        },
+        "hit": {
+          "id": "attack-104",
+          "target": "structure-2",
+          "elapsed": 2173.3987094518943
+        },
+        "hp": 305,
+        "coldRoute": [
+          {
+            "phase": "shared-asset-end",
+            "ms": 387.1650000214577
+          },
+          {
+            "phase": "root-admission-end",
+            "ms": 2136.375
+          },
+          {
+            "phase": "entry",
+            "ms": 2489.0799999833107
+          },
+          {
+            "phase": "previous-admissions",
+            "ms": 0.034999996423721313
+          },
+          {
+            "phase": "walk-load-wait",
+            "ms": 34.08000001311302
+          },
+          {
+            "phase": "walk",
+            "ms": 1475.8200000226498
+          },
+          {
+            "phase": "run",
+            "ms": 427.96000000834465
+          }
+        ],
+        "strikePrepare": {
+          "pipelineMs": 2159.724853515625,
+          "captureMs": 300.554931640625
+        },
+        "drained": true,
+        "strikeSourceCheckpoint": {
+          "lastSequenceBeforeCheckpoint": 7216,
+          "firstBlockedSequence": 7217,
+          "subsequentAppliedThrough": [
+            7216,
+            7224,
+            7228
+          ],
+          "nextOrdinaryDrawAckSequence": 7228,
+          "acksWhileWaitingForSource": [
+            7159,
+            7183,
+            7207
+          ],
+          "latencyFromRequestToPublicationMs": 3536.110107421875
+        }
+      }
+    }
   }
 }
