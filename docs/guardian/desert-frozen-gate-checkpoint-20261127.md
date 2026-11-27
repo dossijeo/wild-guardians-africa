@@ -66,4 +66,19 @@ node --test --test-name-pattern="public raid checkpoint reacquires" tests/native
 
 El control usa Game, los dos puertos y el Host con cola GPU determinista. Pasaron 468 pruebas de checkpoint, movimiento, Farm, admisión y Stop24. La prueba anterior de las dos rutas adquiridas toma pasos de 0,01 s al acercarse a su corte. Con pasos de 0,02 s, el primer dibujo que cumple el criterio puede llegar cuando WASM ya confirmó la llegada de Home. La prueba sigue exigiendo ambas edades positivas y que la autoridad autorice el guardado antes de Home19.
 
-La receta de compilación conserva las importaciones y las exportaciones previas y añade las dos entradas de Farm para capturar y readmitir el corte. Standalone `f15890f9a03978a2940c109caacc32f7ec24d2c938c694be60e06ca7d3d51065`, pthread `ee153bb61562e8e5f49d6e680be83a0118228a6ae2ddc0850455d9b2975757ff`. El archivo de disco y el recibo de CPU están en `E:/wild-guardians-qa/native-menu-20261126/desert-farm-flight-disk-{cut.save,cycle}.json`. Queda por acreditar este corte con la escena completa en NVIDIA.
+La receta de compilación conserva las importaciones y las exportaciones previas y añade las dos entradas de Farm para capturar y readmitir el corte. Standalone `f15890f9a03978a2940c109caacc32f7ec24d2c938c694be60e06ca7d3d51065`, pthread `ee153bb61562e8e5f49d6e680be83a0118228a6ae2ddc0850455d9b2975757ff`. El archivo de disco y el recibo de CPU están en `E:/wild-guardians-qa/native-menu-20261126/desert-farm-flight-disk-{cut.save,cycle}.json`.
+
+### Recarga del motor y Stop24 en NVIDIA
+
+En la primera pasada, el dibujo de Farm y el reloj de la hoja coincidieron con el guardado. Stop24 falló en el roster porque el `RaidSpawned` original de 10,50 s precedía al nuevo GO de Farm a 10,52 s. El roster conserva ahora el nacimiento confirmado al preparar el Farm frío. Solo esa identidad permite que el nacimiento preceda al nuevo GO. El control con el rig original reproduce el fallo de la preimagen y rechaza otra identidad con el mismo tiempo. Pasaron 40 pruebas de rigs, admisión y Stop24.
+
+En NVIDIA Turing, el dibujo 17 presentó Farm23 y su motor con el ticket 2, el reloj de la hoja a 10,52 s y la edad de movimiento en cero. La apertura confirmada era 0,24915777866600486. El arnés retuvo el nuevo READY de Stop24 hasta verificar ese dibujo. GO 4 tomó el mismo cuerpo y la misma hoja a 10,52 s. Home18 tomó el ticket 6 y Home19 retiró el cuerpo con el ticket 9. Se confirmó un `RaidEnded` a 62,61 s y el regreso civil readquirió el portón con Farm23, ticket 29. El mismo trabajador volvió a Idle a 73,57 s. Game conservó el saldo, el contrato, el único nacimiento de la incursión y los cuatro golpes que dejaron el centro en 520 HP. Draw devolvió `{disposed:true}` sin errores de preparación ni de recursos.
+
+Una corrida previa llegó a Idle pero el arnés comparó un nombre de propuesta con `kind:24` y se detuvo antes del drenaje. La corrida final usa el tipo real, el mismo archivo guardado y el reloj normal de Hosted tras Stop24. Acredita el reloj del motor y el dibujo enviado. La medida directa del vértice de la hoja sigue correspondiendo a las tres recargas estáticas anteriores.
+
+| Archivo | SHA-256 |
+| --- | --- |
+| `desert-farm-flight-disk-cut.save.json` | `aa6ac32744dc2bccbe7a21bd9a66b91c584a2630e44227cc6bc13d2e7ccf02a6` |
+| `desert-farm-flight-disk-nvidia-final.json` | `2db525de368a2bb7c222f333f7b04f135ac6031982146f171aad3699b1371015` |
+
+Ambos archivos están en `E:/wild-guardians-qa/native-menu-20261126`. El arnés local `.cache/desert-farm-flight-disk-nvidia.mjs` carga `desert-farm-flight-disk-nvidia-input.json` mediante `QA_FLEE_INPUT`, pasa el guardado por `QA_ACTIVE_FLIGHT_REPLAY_SAVED` y usa `QA_FLEE_PENDING_FARM=true`, `QA_FLEE_EXPECT_ANIMAL=true` y `QA_FLEE_EXPECT_CIVIL_RETURN=true`. La ejecución usa Edge con el backend Worker y Draw remoto y conserva tres cambios locales heredados de escena, precarga y destrucción en el checkout. La selección dirigida y la prueba física se completaron. El empaquetado web completo quedó sin ejecutar porque la copia inicial de `public` ocupa 2,65 GB y los destinos disponibles tenían menos espacio libre.
