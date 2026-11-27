@@ -343,5 +343,121 @@
     "firstAbsenceDraw": 22,
     "drained": true,
     "unexpectedErrors": []
+  },
+  "twoGates": {
+    "cpu": {
+      "log": "accepted-two-gates.log",
+      "sha256": "47ba91a635559c807930c663094a68cf06b096bf0f72321a48a371d15f5803d6",
+      "testLog": "task25-two-gate-focus.tap",
+      "testLogSha256": "d5b7923e9452c685e4f09e91a7b599ad0ebcf81d88ab6e71cc4b9affe6f48088",
+      "passed": 12,
+      "cuts": [
+        {
+          "leadToShiftEnd": 0.4,
+          "at": 10.599999999999918,
+          "opening": 0.7499999999998597,
+          "stopTicket": 7,
+          "stoppedAt": 10.549999999999917,
+          "stoppedMotors": [
+            1000000,
+            1,
+            0.7499999999998597,
+            1000001,
+            2,
+            0
+          ],
+          "pendingHomeTicket": 8,
+          "references": [
+            "native-task-route-stopped-body",
+            "native-task-route-stopped-gate",
+            "native-task-route-stopped-gate"
+          ]
+        },
+        {
+          "leadToShiftEnd": 2,
+          "at": 12.249999999999572,
+          "opening": 1,
+          "stopTicket": 7,
+          "stoppedAt": 12.14999999999957,
+          "stoppedMotors": [
+            1000001,
+            2,
+            0
+          ],
+          "pendingHomeTicket": 8,
+          "references": [
+            1000000,
+            "native-task-route-stopped-body",
+            "native-task-route-stopped-gate"
+          ]
+        }
+      ],
+      "omittedMotorControls": [
+        "first replacement submission",
+        "latest fence before activation"
+      ]
+    },
+    "hardware": {
+      "openingAndFuture": {
+        "file": "nvidia-task25-opening-future.json",
+        "sha256": "bc02e1e4e2b40dea47d287855270c4e97fb16fff1693ce9b4a0535cdcf568542",
+        "architecture": "turing",
+        "adapter": "nvidia",
+        "original": 53,
+        "replacement": 1,
+        "holdId": 63,
+        "clock": 10.74999999999989,
+        "ticket": 7,
+        "motors": [
+          {
+            "gateId": 1000000,
+            "mechanism": 1,
+            "opening": 0.6666666865348816
+          },
+          {
+            "gateId": 1000001,
+            "mechanism": 2,
+            "opening": 0
+          }
+        ],
+        "settled": [],
+        "body": {
+          "age": 0.3999999761581421,
+          "x": -14,
+          "z": 5.699999809265137,
+          "yaw": 0.03211292251944542,
+          "phase": 0,
+          "runPhase": 23.25,
+          "walkPhase": 7.125,
+          "carryPhase": 9.5,
+          "arrived": 0
+        },
+        "visibleHeight": 16.928699493408203,
+        "pick": {
+          "view": 0,
+          "dx": 0,
+          "dz": 0,
+          "h": 0.7,
+          "id": "worker-900011",
+          "incomplete": false,
+          "hitPoint": {
+            "x": -13.932200556777847,
+            "y": 17.707261054652296,
+            "z": 5.812998883457315
+          }
+        },
+        "home": {
+          "previousReadyTicket": 8,
+          "ticket": 10,
+          "bodyId": 1,
+          "retirementTicket": 12,
+          "retiredAt": 12.899999999999844,
+          "snapshot": 106,
+          "firstAbsenceDraw": 23
+        },
+        "drained": true,
+        "unexpectedErrors": []
+      }
+    }
   }
 }

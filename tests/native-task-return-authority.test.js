@@ -29,10 +29,14 @@ async function movingTask(profile,onReady,nativeWorkerLifecycle=false,onCommit,g
    state.structures.push({id:'structure-1000000',created:29207,kind:'wall',material:'zarzas',gate:true,
     x:-14,z:8.2,yaw:0,hp:60,maxHp:60,status:'intact',villageId:worker.villageId,cost:10,collapseRemaining:0,gateOpen:0});
    state.nextId=1000001;
+   if(gate.count===2){
+    state.structures.push({...state.structures.at(-1),id:'structure-1000001',created:29208,z:11.1});
+    state.nextId=1000002;
+   }
    entry.entry={x:-14,z:4.6};
    chunkKeys=[...Array.from({length:9},(_,i)=>[i%3-1,Math.floor(i/3)-1].join(',')),'2,-1','2,0','2,1'];
   }else entry.entry=source.point(-9,0);
-  const point=gate?{x:-14,z:11.8}:source.point(-4,6),target=createPlant(`plant-${state.nextId++}`,'mijo',point.x,point.z,worker.centerId);
+  const point=gate?{x:-14,z:gate.count===2?13.4:11.8}:source.point(-4,6),target=createPlant(`plant-${state.nextId++}`,'mijo',point.x,point.z,worker.centerId);
   target.growth=999999;for(const slot of target.water)slot.status='manual';state.plants.push(target);
   f=await nativeProductionAuthority(state,{onReady,nativeWorkerLifecycle,onCommit,...(chunkKeys?{chunkKeys}:{})});
   await untilProduction(f,()=>f.records.some(r=>r.kind==='initial-idle-body'&&r.committed));
@@ -108,9 +112,14 @@ test('a rejected Task25 preparation never publishes Task25 or Home and fails clo
  }finally{ready.resolve();await t.close();}
 });
 
-for(const {endpointFirst,gate} of [{endpointFirst:false},{endpointFirst:true},
- {endpointFirst:false,gate:{lead:.4,stopped:true}},{endpointFirst:true,gate:{lead:2,stopped:false}}])
-test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(gate.stopped?'opening gate':'settled gate'):endpointFirst?'endpoint first':'hold first'})`,{timeout:30000},async()=>{
+for(const {name,endpointFirst=false,gate} of [
+ {name:'hold first'},{name:'endpoint first',endpointFirst:true},
+ {name:'opening gate',gate:{lead:.4,count:1,opening:true}},
+ {name:'settled gate',endpointFirst:true,gate:{lead:2,count:1,opening:false}},
+ {name:'opening and future gates',gate:{lead:.4,count:2,opening:true}},
+ {name:'settled and future gates',endpointFirst:true,gate:{lead:2,count:2,opening:false}}
+])
+test(`terminal Task25 presents the stopped body before resuming Home18 (${name})`,{timeout:30000},async()=>{
  const ready=deferred(),stopReady=deferred();let pending,proposedStop,stop,replacement,attached=false;
  const ports=new MessageChannel();
  const t=await movingTask(PROFILES.find(p=>p.id==='youngMale'),record=>{
@@ -120,14 +129,15 @@ test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(
  const {f}=t;
  try{
   if(gate){
-   assert.equal(t.start.resources.gates.length,1);
+   assert.deepEqual(t.start.resources.gates.map(row=>row.gateId),gate.count===2?[1000000,1000001]:[1000000]);
    for(let i=0;i<45&&!proposedStop;i++){f.advance(.025);await f.present();}
    await untilProduction(f,()=>proposedStop);
    const waiting=f.snapshot(),opening=waiting.structures.find(row=>row.id==='structure-1000000').gateOpen;
    assert.equal(waiting.workers[0].nativeRouteAdmission,'native-task');
    assert.equal(proposedStop.committed,false);
-   assert.equal(proposedStop.resources.nativeStop.gates.length,gate.stopped?1:0);
-   assert(gate.stopped?opening>0&&opening<1:opening===1);
+   const expectedIds=[...(gate.opening?[1000000]:[]),...(gate.count===2?[1000001]:[])];
+   assert.deepEqual(proposedStop.resources.nativeStop.gates.map(row=>row.gateId),expectedIds);
+   assert(gate.opening?opening>0&&opening<1:opening===1);
    f.advance(.025);await f.present();
    stopReady.resolve();
   }
@@ -136,17 +146,20 @@ test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(
    row.nativeStopped?.kind==='native-task-route-stopped-body'));
   const cut=f.snapshot(),worker=cut.workers[0],bindings=f.host.inspect().nativeRouteFrame.bindings;
   const old=bindings.find(row=>row.nativeStopped?.kind==='native-task-route-stopped-body');
-  const oldMotor=bindings.find(row=>row.nativeStopped?.kind==='native-task-route-stopped-gate');
+  const oldMotors=bindings.filter(row=>row.nativeStopped?.kind==='native-task-route-stopped-gate');
   if(gate){
-   assert.equal(!!oldMotor,gate.stopped);
+   assert.deepEqual(oldMotors.map(row=>row.nativeStopped.gateId),stop.reference.gates.map(row=>row.gateId));
    const opening=cut.structures.find(row=>row.id==='structure-1000000').gateOpen;
-   if(gate.stopped){
-    assert(opening>0&&opening<1);
-    assert.equal(oldMotor.opening,Math.fround(opening));
-    assert.deepEqual(oldMotor.worldBoundary,stop.reference.worldBoundary);
-   }else{
+   if(gate.opening)assert(opening>0&&opening<1);
+   else{
     assert.equal(opening,1);
     assert(bindings.some(row=>row.nativeGate?.gateId===1000000));
+   }
+   if(gate.count===2)assert.equal(cut.structures.find(row=>row.id==='structure-1000001').gateOpen,0);
+   for(const motor of oldMotors){
+    const wall=cut.structures.find(row=>row.id===`structure-${motor.nativeStopped.gateId}`);
+    assert.equal(motor.opening,Math.fround(wall.gateOpen));
+    assert.deepEqual(motor.worldBoundary,stop.reference.worldBoundary);
    }
   }
   assert.equal(worker.nativeRouteAdmission,'pending-home-resources');
@@ -170,7 +183,13 @@ test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(
   assert.deepEqual(resources.stoppedHomeBinding.proof,stop);
   assert.deepEqual(proof.request,pending.resources.nativeHome.sourceRequest);
   assert.deepEqual(resources.taskTemplate.rows,t.start.resources.rows);
-  if(gate)assert.equal(resources.taskTemplate.gates.length,1);
+  assert.deepEqual(resources.taskTemplate.gates,t.start.resources.gates);
+  if(gate&&!gate.opening){
+   assert.deepEqual(proof.settledGates,[{gateId:1000000,mechanism:t.start.resources.gates[0].mechanism,opening:1}]);
+   const changed=structuredClone(resources);
+   changed.stoppedHomeBinding.settledGates[0].opening=.5;
+   assert.throws(()=>copyTask25HomeResources(changed),/lost its admitted Task table/);
+  }
   assert.equal(ref.bodyId,old.bodyReference.bodyId);
   assert.equal(ref.epoch,old.epoch);
   const wrongHome=structuredClone(resources);
@@ -182,30 +201,30 @@ test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(
 
   const buffer=client.device.createBuffer({size:40,usage:72});
   client.device.queue.writeBuffer(buffer,0,new Float32Array(10));
-  const motorBuffer=oldMotor?client.device.createBuffer({size:4,usage:72}):null;
-  if(motorBuffer){
-   const {nativeStopped,semantic,epoch,stopField}=oldMotor;
+  const motorBuffers=oldMotors.map(({nativeStopped,semantic,epoch,stopField})=>{
+   const motorBuffer=client.device.createBuffer({size:4,usage:72});
    const binding={nativeStopped,semantic,epoch,stopField,byteOffset:0};
    client.device.queue.writeBuffer(motorBuffer,0,new Float32Array([0]));
    assert.throws(()=>copyNativeStoppedClock({...binding,nativeStopped:{...nativeStopped,kind:'native-farm-arrival-stopped-gate'}}),/Invalid native stopped gate/);
    assert.throws(()=>copyNativeStoppedClock({...binding,nativeStopped:{...nativeStopped,mechanism:42}}),/Invalid native stopped gate/);
    client.registerClockBinding(motorBuffer,binding);
-  }
-  const group=includeMotor=>client.device.createBindGroup({entries:[buffer,...(includeMotor&&motorBuffer?[motorBuffer]:[])]
+   return {id:nativeStopped.gateId,buffer:motorBuffer};
+  });
+  const group=omittedGate=>client.device.createBindGroup({entries:[buffer,...motorBuffers.filter(motor=>motor.id!==omittedGate).map(motor=>motor.buffer)]
    .map((buffer,binding)=>({binding,resource:{buffer}}))});
   const clock={nativeStopped:ref.selector,epoch:ref.epoch,resourceEnd:Number.MAX_SAFE_INTEGER};
   client.registerClockBinding(buffer,{...clock,byteOffset:0,semantic:'relative'});
-  function frame(includeMotor=true){
+  function frame(omittedGate=null){
    client.beginFrame({nativeWorldBoundary:ref.worldBoundary,
     clock:{...f.clock,elapsed:cut.elapsed,safeUntil:cut.elapsed,paused:true,segments:[]}});
    const encoder=client.device.createCommandEncoder(),pass=encoder.beginRenderPass({colorAttachments:[{
     view:client.context.getCurrentTexture().createView(),loadOp:'clear',storeOp:'store'}]});
-   pass.setPipeline(pipeline);pass.setBindGroup(0,group(includeMotor));pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
+   pass.setPipeline(pipeline);pass.setBindGroup(0,group(omittedGate));pass.draw(3);pass.end();client.device.queue.submit([encoder.finish()]);
    return client.endFrame();
   }
   await assert.rejects(frame(),/Replacement requires its bound worker clock/);
   for(const [i,stopField] of stopFields.entries())client.registerClockBinding(buffer,{...clock,byteOffset:(i+1)*4,semantic:'stop-value',stopField});
-  if(oldMotor)await assert.rejects(frame(false),/Replacement requires its bound worker clock/);
+  for(const {id} of motorBuffers)await assert.rejects(frame(id),/Replacement requires its bound worker clock/);
   const drawing=frame();drawing.catch(()=>{});await flush();await host.idle();
   await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
   host.present();await drawing;
@@ -216,9 +235,10 @@ test(`terminal Task25 presents the stopped body before resuming Home18 (${gate?(
   assert.equal(pick.x,Math.fround(worker.x));
   assert.equal(pick.walkPhase,Math.fround(worker.walkPhase));
   assert(recoveredStoppedGateSamplesMatch(witness.stoppedGates??[],proof));
-  if(oldMotor){
-   assert.equal(captureNativeRoutePickFrame(host.inspect()).getStoppedGate(oldMotor.nativeStopped,oldMotor.epoch).opening,oldMotor.opening);
-   const next=frame(false);next.catch(()=>{});await flush();await host.idle();host.present();await next;
+  const pickFrame=captureNativeRoutePickFrame(host.inspect());
+  for(const motor of oldMotors){
+   assert.equal(pickFrame.getStoppedGate(motor.nativeStopped,motor.epoch).opening,motor.opening);
+   const next=frame(motor.nativeStopped.gateId);next.catch(()=>{});await flush();await host.idle();host.present();await next;
    await assert.rejects(f.authority.checkHeldDraw(30,hold,route),/Missing submitted worker route/);
    const complete=frame();complete.catch(()=>{});await flush();await host.idle();host.present();await complete;
    assert(recoveredStoppedGateSamplesMatch((await f.authority.checkHeldDraw(30,hold,route)).stoppedGates,proof));

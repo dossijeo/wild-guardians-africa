@@ -346,6 +346,14 @@ En NVIDIA, el Draw original presentó Task25 en el dibujo 54 y se destruyó con 
 
 Con la altura de la malla visible, el primer rayo del sustituto seleccionó a `worker-900011` mientras la autoridad seguía suspendida. Home18 adquirió el ticket 10 para el cuerpo 1 después de reanudar. El READY 8 del consumidor retirado quedó sin adquirir. Home19 retiró el mismo cuerpo con el ticket 12 a 13,10 s. El arnés publicó el snapshot 109 después del GO sin avanzar el reloj. NVIDIA presentó la ausencia en el dibujo 22, conservó el saldo y drenó el sustituto. El contraste físico cubre un trabajador civil y un portón en apertura parcial. [Recibo de las pruebas](performance/native-gated-task25-terminal-recovery-20261127.json).
 
+### Task25 con dos portones
+
+El corredor de la primera Task14 pasa por los portones de zarzas en `(-14, 8,2)` y `(-14, 11,1)`. La cola determinista de Draw verifica dos cortes reales de Game y WASM con el mismo cuerpo. Si el primer motor todavía abre, Task25 congela las aperturas en 0,75 y 0. Si el primero ya terminó, conserva la hoja abierta y detiene el segundo motor en 0. En ambos cortes Home18 seguía pendiente al perder Draw.
+
+El sustituto rechaza cada motor detenido que se omita del primer envío. Si una presentación posterior pierde un motor, el fence previo a activar la autoridad también se rechaza. El picking consulta la misma apertura acreditada por Draw. Alterar la apertura ya asentada invalida el programa Task14 que sirve de fuente al reemplazo. Tras el envío completo, Home18 adquiere un ticket nuevo y Home19 retira al mismo trabajador con el saldo intacto. Pasaron las 12 pruebas dirigidas. [Recibo de los dos cortes](performance/native-gated-task25-terminal-recovery-20261127.json).
+
+En NVIDIA Turing, el sustituto presentó ambos motores con aperturas Float32 de 0,6666666865 y 0 en su primer dibujo. El picking seleccionó a `worker-900011` antes de reanudar. Home18 readmitió el cuerpo 1 y Home19 presentó su ausencia en el dibujo 23 con el ticket 12. El saldo se conservó y Draw drenó. Queda el contraste físico del corte con la primera hoja ya abierta. [Recibo de NVIDIA](performance/native-gated-task25-terminal-recovery-20261127.json).
+
 ## Pérdida con Stop12 adquirido y Task14 pendiente
 
 El control usa una siembra ordinaria durante el paseo Idle22 de un trabajador. En la preimagen, el dibujo 4 ya había presentado Stop12 con el ticket 8 y Task14 seguía esperando el ticket 9 a 10,45 s. Al retirar Draw, la preparación se canceló sin adquirir y la autoridad falló con `Native resource preparer closed`.
