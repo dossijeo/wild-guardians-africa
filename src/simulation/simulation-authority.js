@@ -1639,10 +1639,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
           throw Error('Saved encounter requires an acquired approach before advancing');
         return authority.execute(command);
       });
-    if(command.kind==='advance'&&!game.pauses.length&&savedRetreat&&nativeCenterCollapseSite(game,savedRetreat)?.status==='collapsing'&&
-       planner.nativeAnimalCropState(savedRetreat.id)?.mode===1)
+    if(command.kind==='advance'&&!game.pauses.length&&savedRaidRoute&&nativeCenterCollapseSite(game,savedRaidRoute)?.status==='collapsing'&&
+       planner.nativeAnimalCropState(savedRaidRoute.id)?.mode===1)
       return nativeProduction.wake().then(result=>{
-        if(closed||result?.status!=='committed')throw Error('Saved collapse requires an acquired Retreat before advancing');
+        if(closed||result?.status!=='committed')throw Error('Saved collapse requires an acquired animal route before advancing');
         return authority.execute(command);
       });
     if(nativeStructurePreparation?.commandSequence!==undefined){
@@ -1675,7 +1675,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
      if(qualifyShieldExpiry&&nativeBodies&&
         game.spells.some(spell=>spell.kind==='shield'&&spell.remaining<=command.seconds*steps*(command.nightFastForward?5:1)+1e-9))
        options.expireShield=expireNativeShield;
-     if(nativeBodies&&(qualifyAnimalCrop||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
+     const restoredCenter=savedRaidAnimal&&game.raid?.animals[0]===savedRaidAnimal&&shelteredCenterCheckpointSite(game,savedRaidAnimal);
+     if(nativeBodies&&(qualifyAnimalCrop||restoredCenter||nativeWorkerLifecycle&&nativeShelteredSavannaCenterActor(game,game.raid?.animals[0])))
        options.prepareCenterRuin=prepareCenterRuin;
      if(qualifyRaidEncounter&&qualifyFarmFlee&&qualifyAnimalCrop&&nativeBodies)options.prepareEncounterDraft=prepareEncounterDraft;
      const completeStep=i=>{

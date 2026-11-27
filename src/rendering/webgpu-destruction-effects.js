@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {MeshBasicNodeMaterial} from 'three/webgpu';
 import {attribute,cameraFar,cameraNear,cameraProjectionMatrix,cameraViewMatrix,clamp,cos,dot,exp,float,length,mix,modelWorldMatrix,normalize,orthographicDepthToViewZ,perspectiveDepthToViewZ,select,sin,smoothstep,texture3D,uniform,varying,vec2,vec3,vec4} from 'three/tsl';
 import {createNativeDestructionEffects,destructionDebrisVertices} from './destruction-effects-native.js';
+import {COLLAPSE_SECONDS,COLLAPSE_THRESHOLD} from './destruction-native.js';
 
 // Native debris and smoke simulation, isolated to presentation; the authoritative
 // state supplies damage and time. Uses the original geometry and noise texture.
@@ -34,5 +35,26 @@ export function createWebGpuDestructionEffects({root,kernel,building,noise,softD
    }
   }
  }
- return {captureRuin,get needsSoftDepth(){return !closed&&!!softDepth&&smokeGeo.instanceCount>0;},setSoftDepthEnabled(value){if(typeof value!=='boolean')throw TypeError('Invalid destruction soft depth state');depthEnabled.value=value?1:0;},update(value,elapsed,initial=null){if(closed)return;if(last===null){native.initialize(Number.isFinite(initial)?initial:value);last=elapsed;}if(elapsed<last)native.restore(value);else native.frame(value,elapsed-last);last=elapsed;},prepare(camera){if(closed)return;root.updateWorldMatrix(true,false);camera.updateWorldMatrix(true,false);inverse.copy(root.matrixWorld).invert();eye.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(inverse);right.value.setFromMatrixColumn(camera.matrixWorld,0).transformDirection(inverse);up.value.setFromMatrixColumn(camera.matrixWorld,1).transformDirection(inverse);const terminal=ruinStep===null?null:native.terminalInstances(ruinStep,eye.toArray());for(const [packed,buffer,geometry,stride] of [[terminal?.debris??native.debrisInstances(),debrisBuffer,debrisGeo,12],[terminal?.smoke??native.smokeInstances(eye.toArray()),smokeBuffer,smokeGeo,11]]){buffer.array.set(packed.data.subarray(0,packed.count*stride));buffer.clearUpdateRanges();if(packed.count){buffer.addUpdateRange(0,packed.count*stride);buffer.needsUpdate=true;}geometry.instanceCount=packed.count;}},status(){return {smoke:smokeGeo.instanceCount,debris:debrisGeo.instanceCount,emitted:native.stats.debrisEmitted};},dispose(){if(closed)return;closed=true;native.clear();root.remove(smoke,debris);smokeGeo.dispose();smokeMat.dispose();debrisGeo.dispose();debrisMat.dispose();}};
+ function update(value,elapsed,initial=null,collapseRemaining=null){
+  if(closed)return;
+  if(last===null){
+   if(Number.isFinite(collapseRemaining)){
+    // A new instance can enter during collapse. Rebuild its seeded bursts at
+    // the saved age using the same integration limit as the live effect.
+    const age=Math.max(0,Math.min(COLLAPSE_SECONDS,COLLAPSE_SECONDS-collapseRemaining));
+    native.setDamage(COLLAPSE_THRESHOLD);
+    let at=0;
+    for(let step=1;at<age;step++){
+     const next=Math.min(age,step/30);
+     const damage=next===age?value:COLLAPSE_THRESHOLD+(1-COLLAPSE_THRESHOLD)*(1-(COLLAPSE_SECONDS-next)/COLLAPSE_SECONDS);
+     native.frame(damage,next-at);
+     at=next;
+    }
+   }else native.initialize(Number.isFinite(initial)?initial:value);
+   last=elapsed;
+  }
+  if(elapsed<last)native.restore(value);else native.frame(value,elapsed-last);
+  last=elapsed;
+ }
+ return {captureRuin,update,get needsSoftDepth(){return !closed&&!!softDepth&&smokeGeo.instanceCount>0;},setSoftDepthEnabled(value){if(typeof value!=='boolean')throw TypeError('Invalid destruction soft depth state');depthEnabled.value=value?1:0;},prepare(camera){if(closed)return;root.updateWorldMatrix(true,false);camera.updateWorldMatrix(true,false);inverse.copy(root.matrixWorld).invert();eye.setFromMatrixPosition(camera.matrixWorld).applyMatrix4(inverse);right.value.setFromMatrixColumn(camera.matrixWorld,0).transformDirection(inverse);up.value.setFromMatrixColumn(camera.matrixWorld,1).transformDirection(inverse);const terminal=ruinStep===null?null:native.terminalInstances(ruinStep,eye.toArray());for(const [packed,buffer,geometry,stride] of [[terminal?.debris??native.debrisInstances(),debrisBuffer,debrisGeo,12],[terminal?.smoke??native.smokeInstances(eye.toArray()),smokeBuffer,smokeGeo,11]]){buffer.array.set(packed.data.subarray(0,packed.count*stride));buffer.clearUpdateRanges();if(packed.count){buffer.addUpdateRange(0,packed.count*stride);buffer.needsUpdate=true;}geometry.instanceCount=packed.count;}},status(){return {smoke:smokeGeo.instanceCount,debris:debrisGeo.instanceCount,emitted:native.stats.debrisEmitted};},dispose(){if(closed)return;closed=true;native.clear();root.remove(smoke,debris);smokeGeo.dispose();smokeMat.dispose();debrisGeo.dispose();debrisMat.dispose();}};
 }

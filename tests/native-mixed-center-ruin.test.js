@@ -14,6 +14,9 @@ import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
 import {nativeClockResourceEnd} from '../src/rendering/native-clock-resource-end.js';
 import {copyNativeRecoveryGroup} from '../src/world/native-worker-route-recovery.js';
+import {serialize} from '../src/persistence/snapshots.js';
+import {prepareWorkerCheckpoint} from '../src/persistence/prepare-worker-checkpoint.js';
+import {savedNativeAuthorityOptions} from '../src/simulation/native-authority-checkpoint.js';
 
 const gateId='structure-1000000';
 const view={bounds:[-48,-48,48,48],eye:{x:-10,z:-24},target:{x:-10,z:0}};
@@ -418,4 +421,100 @@ for(const scenario of [
    }
   }
  }finally{releaseFarm();releaseRoute();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
+});
+
+test('a cold successor approach keeps the collapsing center until the original substep', {timeout:90000},async()=>{
+ const initial=mixedState(true),civil=initial.structures[0],original=initial.structures.find(row=>row.id===gateId);
+ initial.structures.push({...original,id:`structure-${initial.nextId++}`,created:original.created+1,z:5.3});
+ initial.dayPlan.at=initial.time+10;
+ const doomed={...civil,id:`structure-${initial.nextId++}`,x:-18,z:-12,hp:180};
+ initial.structures.push(doomed);
+ civil.hp=600;
+ const advance=world=>world.command({kind:'advance',seconds:.02,steps:2,nightFastForward:false});
+ const observe=value=>{
+  const pending={done:false};
+  void Promise.resolve(value).then(reply=>{pending.reply=reply;pending.done=true;},error=>{pending.error=error;pending.done=true;});
+  return pending;
+ };
+ async function finish(world,pending){
+  for(let i=0;i<1000&&!pending.done;i++)await world.present();
+  if(pending.error)throw pending.error;
+  assert(pending.reply,'Expected the authority command to complete');
+  for(const key of pending.reply.residency.missing){
+   const [cx,cz]=key.split(',').map(Number);world.command({kind:'addChunk',cx,cz});
+  }
+  await world.present();
+  assert.deepEqual(world.faults,[]);
+  return JSON.parse(pending.reply.snapshot);
+ }
+ const live=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true});
+ let disk,expectedRuin;
+ try{
+  live.command({kind:'setNavigationView',view});
+  await untilProduction(live,()=>live.records.some(row=>row.kind==='farm-arrival'&&row.committed));
+  for(let i=0;i<1800&&!expectedRuin;i++){
+   const state=await finish(live,observe(advance(live))),center=state.structures.find(row=>row.id===doomed.id);
+   if(!disk&&center.status==='collapsing'&&center.collapseRemaining<.18&&state.raid?.animals[0].targetId===civil.id){
+    const frame=live.host.inspect().nativeRouteFrame;
+    assert(frame.bindings.some(row=>row.nativeAnimalCrop?.targetId===2&&row.relativeTime>0));
+    const result=live.command({kind:'snapshot',nativeAuthorityCheckpoint:true,visualTerrain:true});
+    const cut=prepareWorkerCheckpoint(result,{slotId:initial.slotId,policy:{nativeAuthority:true},savedAt:0});
+    assert(cut.saved);
+    disk=cut.state;
+   }
+   expectedRuin=state.events.find(event=>event.type==='StructureRuined'&&event.targetId===doomed.id);
+  }
+ }finally{await live.close();}
+ assert(disk&&expectedRuin);
+ assert.equal(disk.structures.find(row=>row.id===doomed.id).hp,120);
+ assert.equal(disk.raid.animals[0].hitsRemaining,1);
+ const before=disk.workerNativeAuthorityCheckpoint.spatialState.polygons;
+ const options=savedNativeAuthorityOptions(serialize(disk));
+ let release,ready;
+ const held=new Promise(resolve=>{release=resolve;});
+ const cold=await nativeProductionAuthority(disk,{...options,onReady(record){
+  if(!ready&&record.kind==='animal-crop-route'){ready=record;return held;}
+ }});
+ try{
+  assert(cold.authority.verifyNativeBootstrap(options.nativeBootstrap));
+  await untilProduction(cold,()=>ready?.packet);
+  const saved=cold.snapshot();
+  assert.equal(saved.elapsed,disk.elapsed);
+  assert.deepEqual(saved.structures,disk.structures);
+  assert.deepEqual(saved.raid.animals[0],disk.raid.animals[0]);
+  const first=observe(advance(cold));
+  for(let i=0;i<6;i++)await cold.present();
+  assert(!first.done,'The saved collapse advanced before the successor READY');
+  assert(!ready.committed&&!cold.records.some(row=>row.kind==='center-ruin'));
+  release();
+  let state=await finish(cold,first),ruin;
+  for(let i=0;i<1700;i++){
+   if(!ruin){
+    ruin=cold.records.find(row=>row.kind==='center-ruin'&&row.committed);
+    if(ruin){
+     const proof=ruin.commit.nativeCenterRuin;
+     assert(before.some(row=>row.id===proof.polygon));
+     assert.equal(proof.center,doomed.id);
+     assert.equal(proof.acquired.effectiveTime,expectedRuin.simulationTime);
+     assert(sameNativeAnimalCropReference(proof.prepared.approach.preparedReference,ready.resources.reference));
+     assert.equal((await ruin.packet.presented).sequence,ruin.packet.sequence);
+     assert.deepEqual(cold.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons,
+      before.filter(row=>row.id!==proof.polygon));
+    }
+   }
+   if(!state.raid&&state.workers[0].nativeRouteAdmission==='native-idle')break;
+   state=await finish(cold,observe(advance(cold)));
+  }
+  assert(ruin);
+  assert.equal(state.raid,null);
+  assert.equal(state.workers[0].nativeRouteAdmission,'native-idle');
+  assert.equal(state.workers[0].personId,disk.workers[0].personId);
+  assert.deepEqual(state.ledger,disk.ledger);
+  assert.deepEqual(state.structures.filter(row=>row.gate),disk.structures.filter(row=>row.gate));
+  const hits=state.events.filter(event=>event.type==='AnimalLogicalHit');
+  assert.deepEqual(hits.slice(0,3),disk.events.filter(event=>event.type==='AnimalLogicalHit'));
+  assert.deepEqual(hits.map(event=>event.targetId),[doomed.id,doomed.id,doomed.id,civil.id]);
+  assert.equal(new Set(hits.map(event=>event.attackId)).size,4);
+  assert.equal(state.structures.find(row=>row.id===civil.id).hp,580);
+ }finally{release();await cold.close();}
 });

@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En Desierto 983 se recarga el colapso del centro antes de retirar su huella. NVIDIA confirmó la espera de READY, la primera ruina con humo y escombros y la marcha al siguiente centro con las dos hojas asentadas. [Prueba y alcance](native-desert-mixed-flight-center-20261125.md#recarga-durante-el-colapso-con-la-aproximación-adquirida).
+
 Desierto 983 recarga dos centros y dos portones asentados durante la huida y tras Home19, durante aproximación, golpe y Retreat. NVIDIA confirmó las cuatro épocas, ambas hojas y la vuelta al centro civil. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros-y-dos-portones).
 
 NVIDIA presentó la ruina de Desierto 983 con la aproximación del facóquero activa tras Home19, en recorridos con uno y dos portones. WASM conserva las hojas asentadas y la asignación del animal. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#derrumbe-tras-cruzar-portones).

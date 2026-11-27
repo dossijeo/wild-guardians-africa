@@ -1,4 +1,10 @@
 import test from 'node:test';import assert from 'node:assert/strict';import * as THREE from 'three';import {MeshStandardNodeMaterial} from 'three/webgpu';import {createWebGpuCenterDestructionTemplate} from '../src/rendering/webgpu-center-destruction.js';import {createWebGpuAdmittedCenterDamage} from '../src/rendering/webgpu-center-damage-admission.js';
+import {COLLAPSE_SECONDS} from '../src/rendering/destruction-native.js';
+
+const effectBuffers=owner=>[[owner.group.children[2],'aOffset'],[owner.group.children[3],'aPosSize']].map(([part,name])=>{
+ const buffer=part.geometry.getAttribute(name).data,count=part.geometry.instanceCount;
+ return {count,bytes:Uint8Array.from(new Uint8Array(buffer.array.buffer,0,count*buffer.stride*buffer.array.BYTES_PER_ELEMENT))};
+});
 test('center damage keeps separate instance state and restores intact geometry after repair',()=>{const source=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());source.add(mesh);const template=createWebGpuCenterDestructionTemplate({gltf:{scene:source},building:{seed:123},renderer:{library:{}}}),first=template.instantiate(),second=template.instantiate();first.update({status:'ruined',hp:0,maxHp:100});second.update({status:'intact',hp:100,maxHp:100});assert.equal(first.group.children[0].visible,false);assert.equal(first.group.children[1].visible,true);assert.equal(second.group.children[0].visible,true);assert.equal(second.group.children[1].visible,false);first.update({status:'intact',hp:100,maxHp:100});assert.equal(first.group.children[0].visible,true);assert.equal(first.group.children[1].visible,false);assert.throws(()=>first.update({status:'intact',hp:0,maxHp:0}),/Invalid/);first.dispose();second.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();});
 test('admission preserves the real destruction instance across ash transitions',async()=>{
  const source=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());source.add(mesh);
@@ -21,27 +27,56 @@ test('retained center ruin packs the same particles as the next confirmed frame'
  const damaged={...active,status:'collapsing',hp:120},ruined={...damaged,status:'ruined',hp:0,collapseRemaining:0};
  const published=3.1,end=3.21;
  const prepare=(owner,entity,time)=>{owner.update(entity,time);owner.prepare(camera);};
- const packing=owner=>[[owner.group.children[2],'aOffset'],[owner.group.children[3],'aPosSize']].map(([part,name])=>{
-  const buffer=part.geometry.getAttribute(name).data,count=part.geometry.instanceCount;
-  return {count,bytes:Uint8Array.from(new Uint8Array(buffer.array.buffer,0,count*buffer.stride*buffer.array.BYTES_PER_ELEMENT))};
- });
  try{
   for(const owner of [retained,ordinary]){
    prepare(owner,active,0);
    for(let step=1;step<62;step++)prepare(owner,{...damaged,collapseRemaining:3.25-step*.05},step*.05);
    prepare(owner,{...damaged,collapseRemaining:.11},published);
   }
-  const before=packing(retained);
+  const before=effectBuffers(retained);
   assert(before.every(pack=>pack.count>0));
   prepare(ordinary,ruined,end);
-  const expected=packing(ordinary);
+  const expected=effectBuffers(ordinary);
   assert(before.every((pack,i)=>!Buffer.from(pack.bytes).equals(expected[i].bytes)));
-  const record=()=>{retained.prepare(camera);return packing(retained);};
+  const record=()=>{retained.prepare(camera);return effectBuffers(retained);};
   assert.deepEqual(retained.captureRuin(published,end,record),expected);
-  assert.deepEqual(packing(retained),before);
+  assert.deepEqual(effectBuffers(retained),before);
   assert.throws(()=>retained.captureRuin(published,end,()=>{record();throw Error('capture cancelled');}),/capture cancelled/);
-  assert.deepEqual(packing(retained),before);
+  assert.deepEqual(effectBuffers(retained),before);
   prepare(retained,ruined,end);
-  assert.deepEqual(packing(retained),expected);
+  assert.deepEqual(effectBuffers(retained),expected);
  }finally{retained.dispose();ordinary.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});
+
+test('a center first seen during collapse reconstructs both bursts at its saved age',()=>{
+ const gltf=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());
+ gltf.add(mesh);
+ const template=createWebGpuCenterDestructionTemplate({gltf:{scene:gltf},building:{seed:123},renderer:{library:{}}});
+ const cold=template.instantiate(),live=template.instantiate(),alreadyRuined=template.instantiate();
+ const camera=new THREE.PerspectiveCamera();camera.position.set(6,4,8);camera.lookAt(0,0,0);
+ const active={kind:'center',status:'intact',hp:140,maxHp:600};
+ const collapsing={...active,status:'collapsing',hp:120},ruined={...collapsing,status:'ruined',hp:0,collapseRemaining:0};
+ const age=COLLAPSE_SECONDS-.16,published=47.8,end=published+.16;
+ const saved={...collapsing,collapseRemaining:.16};
+ try{
+  live.update(active,0);
+  live.update({...collapsing,collapseRemaining:COLLAPSE_SECONDS},0);
+  for(let step=1;step/30<age;step++)live.update({...collapsing,collapseRemaining:COLLAPSE_SECONDS-step/30},step/30);
+  live.update(saved,age);live.prepare(camera);
+  cold.update(saved,published);cold.prepare(camera);
+  assert(cold.status().smoke>0&&cold.status().emitted>0);
+  assert.deepEqual(cold.status(),live.status());
+  assert.deepEqual(effectBuffers(cold),effectBuffers(live));
+  const before=effectBuffers(cold);
+  cold.update(saved,published);cold.prepare(camera);
+  assert.deepEqual(effectBuffers(cold),before);
+  const last=published+.15;
+  cold.update({...saved,collapseRemaining:.01},last);
+  const terminal=cold.captureRuin(last,end,()=>{cold.prepare(camera);return effectBuffers(cold);});
+  assert(terminal[1].count>0);
+  cold.update(ruined,end);cold.prepare(camera);
+  assert.deepEqual(effectBuffers(cold),terminal);
+  alreadyRuined.update(ruined,end);alreadyRuined.prepare(camera);
+  assert.equal(alreadyRuined.status().smoke,0);
+ }finally{cold.dispose();live.dispose();alreadyRuined.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
