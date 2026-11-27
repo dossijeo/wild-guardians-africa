@@ -1,3 +1,4 @@
+import {createPresentationRecoveryReplay} from '../src/simulation/presentation-recovery-replay.js';
 import {preparePresentationRecoveryRetry} from '../src/simulation/presentation-recovery-journal.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -191,4 +192,58 @@ test('failed attachment retries from the intact base while abandoning only its p
 test('retry does not detach a channel when its journal boundary is incomplete',()=>{
  const journal=createPresentationRecoveryJournal(),port={postMessage(){},start(){},close(){}},stream=openVisualStream(port,'s',()=>{},{recoveryJournal:journal,onCheckpointAcknowledged(){}}),base={sequence:1};
  try{journal.begin(1);journal.confirm(1);assert.throws(()=>preparePresentationRecoveryRetry(journal,stream,base,2),{code:'recovery-incomplete'});assert.equal(stream.status().detached,false);}finally{stream.close();journal.dispose();}
+});
+
+test('the acknowledged water environment is replayed at its publication and survives checkpoint renewal',()=>{
+ const journal=createPresentationRecoveryJournal({strictBoundaries:true}),sent=[],bases=[];
+ const port={postMessage:value=>sent.push(value),close(){}};
+ const stream=openVisualStream(port,'s',()=>{},{receiptAcknowledgements:true,timelineHandshake:true,presentationCheckpoint:true,
+  recoveryJournal:journal,onCheckpointAcknowledged:value=>bases.push(value)});
+ const packet=(sequence,elapsed,checkpoint=false)=>({sequence,elapsed,snapshot:JSON.stringify({suppressed:[],elapsed}),events:[],physicsPose:null,
+  ...(checkpoint?{terrainCheckpoint:{sequence,chunks:[]}}:{})});
+ const receive=(kind,sequence,extra={})=>port.onmessage({data:{kind,session:'s',sequence,...extra}});
+ const ackCheckpoint=(sequence,elapsed)=>{const part={version:1,sequence,elapsed};receive('publicationAck',sequence,{presentationCheckpoint:{...part,guardian:part,agriculture:part,blessing:part}});};
+ const activation={version:1,sequence:2,readyAt:Math.fround(48.3)};
+ try{
+  receive('presentationTimelineHello',0,{version:1,maxPublications:8,maxBytes:1000000});
+  stream.publish(packet(1,47.8,true),true);
+  receive('publicationReceipt',1);ackCheckpoint(1,47.8);
+  stream.publish(packet(2,48.3),true);receive('publicationReceipt',2);
+  assert.equal(journal.waterEnvironmentActivation(),null);
+  receive('publicationAck',2,{waterEnvironmentActivation:activation});
+  assert.deepEqual(sent.at(-1),{kind:'waterEnvironmentCommitted',session:'s',activation});
+  assert.equal(bases[0].waterEnvironmentActivation,undefined);
+  assert.deepEqual(journal.waterEnvironmentActivation(),activation);
+  assert.throws(()=>journal.recordWaterEnvironmentActivation(activation,2,48.3),/journal activation/);
+
+  const output=[],replayPort={postMessage:message=>output.push(message)};
+  const replay=createPresentationRecoveryReplay({port:replayPort,session:'s',checkpoint:bases[0],journal,atomicBoundaries:true});
+  assert.equal(output[0].checkpoint.waterEnvironmentActivation,undefined);
+  replayPort.onmessage({data:{kind:'recoveryAck',session:'s',id:1,sequence:1,phase:'checkpoint'}});
+  assert.deepEqual(output[1].waterEnvironmentActivation,activation);
+  assert.equal(output[1].publication.elapsed,48.3);
+  replay.dispose();
+
+  stream.publish(packet(3,48.45,true),true);
+  receive('publicationReceipt',3);ackCheckpoint(3,48.45);
+  const renewed=createPresentationRecoveryReplay({port:replayPort,session:'s',checkpoint:bases[1],journal,atomicBoundaries:true});
+  assert.deepEqual(output.at(-1).checkpoint.waterEnvironmentActivation,activation);
+  renewed.dispose();
+ }finally{stream.close();journal.dispose();}
+});
+
+test('a water environment acknowledgement cannot claim a different simulation time',()=>{
+ const journal=createPresentationRecoveryJournal({strictBoundaries:true}),sent=[];
+ const port={postMessage:message=>sent.push(message),close(){}};
+ const stream=openVisualStream(port,'s',()=>{},{receiptAcknowledgements:true,timelineHandshake:true,presentationCheckpoint:true,recoveryJournal:journal,onCheckpointAcknowledged(){}});
+ const receive=(kind,fields)=>port.onmessage({data:{kind,session:'s',...fields}});
+ try{
+  receive('presentationTimelineHello',{version:1,maxPublications:8,maxBytes:1000000});
+  stream.publish({sequence:1,elapsed:4,snapshot:'{"elapsed":4,"suppressed":[]}',events:[]},true);
+  receive('publicationReceipt',{sequence:1});
+  receive('publicationAck',{sequence:1,waterEnvironmentActivation:{version:1,sequence:1,readyAt:3}});
+  assert.equal(sent.at(-1).kind,'presentationFailure');
+  assert.match(stream.status().recoveryFailure,/journal activation/);
+  assert.equal(journal.waterEnvironmentActivation(),null);
+ }finally{stream.close();journal.dispose();}
 });

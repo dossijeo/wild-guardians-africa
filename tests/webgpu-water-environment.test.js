@@ -60,3 +60,33 @@ test('environment recovery rejects missing uploads and leaves cancelled fades un
   assert.deepEqual(environment.exportRecoveryCheckpoint(),{version:1,readyAt:9});
  }finally{environment.dispose();}
 });
+
+test('uploaded recovery textures become visible only at their acknowledged publication',async()=>{
+ const renderer={backend:{isWebGPUBackend:true,device:{queue:{onSubmittedWorkDone:async()=>{}},lost:new Promise(()=>{})}},initTexture(){}};
+ const original=createWebGpuWaterEnvironment({renderer,clockNode:uniform(47.8),deferredPublication:true});
+ const replacement=createWebGpuWaterEnvironment({renderer,clockNode:uniform(47.8),deferredPublication:true});
+ try{
+  await original.install([pixels(5),pixels(6)]);
+  assert.equal(original.status().installed,true);
+  assert.equal(original.exportRecoveryCheckpoint(),null);
+  assert.equal(original.day.value.image.data[0],64);
+  const activation=original.proposeActivation(2,48.3);
+  assert.deepEqual(activation,{version:1,sequence:2,readyAt:Math.fround(48.3)});
+  assert.equal(original.proposeActivation(3,48.35),null);
+  assert.throws(()=>original.confirmActivation({...activation,sequence:3}),/acknowledgement/);
+  assert.equal(original.day.value.image.data[0],64);
+  original.confirmActivation(activation);
+  assert.equal(original.day.value.image.data[0],5);
+  assert.equal(original.proposeActivation(3,48.35),null);
+
+  await replacement.install([pixels(5),pixels(6)]);
+  assert.equal(replacement.exportRecoveryCheckpoint(),null);
+  const abandoned=replacement.proposeActivation(3,48.35);
+  replacement.resetPendingActivation();
+  assert.throws(()=>replacement.confirmActivation(abandoned),/acknowledgement/);
+  await replacement.restoreRecoveryCheckpoint(activation,{elapsed:48.3});
+  assert.deepEqual(replacement.exportRecoveryCheckpoint(),original.exportRecoveryCheckpoint());
+  await assert.rejects(replacement.restoreRecoveryCheckpoint({...activation,readyAt:48},{elapsed:48.3}),/activation changed/);
+  assert.equal(replacement.proposeActivation(4,48.4),null);
+ }finally{replacement.dispose();original.dispose();}
+});

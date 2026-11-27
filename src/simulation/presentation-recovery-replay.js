@@ -9,6 +9,8 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
  if(retainedCheckpoint!==null&&!atomicBoundaries)throw Error('Retained recovery requires atomic boundaries');
  const journalBase=checkpoint.sequence,initial=journal.status();if(initial.closed||initial.base!==journalBase)throw Error('Recovery checkpoint and journal mismatch');const groupLimit=maxGroupBytes??initial.maxBytes;if(atomicBoundaries&&(!Number.isSafeInteger(groupLimit)||groupLimit<1))throw TypeError('Invalid recovery boundary capacity');
  const retained=retainedCheckpoint===null?null:projectRetainedPresentationCheckpoint({journal,checkpoint,...retainedCheckpoint});if(retained)checkpoint=retained.checkpoint;const base=checkpoint.sequence;
+ const environment=atomicBoundaries?journal.waterEnvironmentActivation?.():null;
+ if(environment&&environment.sequence<=base)checkpoint={...checkpoint,waterEnvironmentActivation:environment};
  let paused=deferStart,closed=false,failed=false,waiting=null,id=0,index=retained?.index??0,cursor=base,started=false,caught=false,terrainPending=false,group=[],groupBytes=0;
  function fail(error){if(closed||failed)return;failed=true;group=[];groupBytes=0;try{onError(error instanceof Error?error:Error(String(error)));}catch{}}
  function send(phase,sequence,payload){const message={kind:'recovery'+phase[0].toUpperCase()+phase.slice(1),session,id:++id,sequence,...payload};waiting={id,phase,sequence};port.postMessage(message);}
@@ -20,7 +22,8 @@ export function createPresentationRecoveryReplay({port,session,checkpoint,journa
     if(entry.sequence!==cursor+1||(entry.firstSequence??entry.sequence)!==entry.sequence)throw Error('Recovery boundary sequence gap');
     if(entry.kind==='terrain'){if(!Array.isArray(entry.chunks))throw Error('Invalid recovery terrain');const bytes=estimateRetainedBytes(entry);if(bytes>groupLimit-groupBytes)throw Error('Recovery boundary capacity exceeded');group.push(entry);groupBytes+=bytes;continue;}
     if(entry.kind!=='publication'||entry.publication?.sequence!==entry.sequence||typeof entry.tick!=='boolean')throw Error('Invalid recovery publication');
-    const bytes=estimateRetainedBytes(entry);if(bytes>groupLimit-groupBytes)throw Error('Recovery boundary capacity exceeded');const terrain=group.map(item=>({chunks:item.chunks,...(item.terrainManifest?{terrainManifest:item.terrainManifest}:{})}));send('boundary',entry.sequence,{terrain,publication:entry.publication,tick:entry.tick,options:entry.options});waiting.entries=group.length+1;group=[];groupBytes=0;return;
+    const activation=environment?.sequence===entry.sequence?environment:null;
+    const bytes=estimateRetainedBytes(entry)+(activation?estimateRetainedBytes(activation):0);if(bytes>groupLimit-groupBytes)throw Error('Recovery boundary capacity exceeded');const terrain=group.map(item=>({chunks:item.chunks,...(item.terrainManifest?{terrainManifest:item.terrainManifest}:{})}));send('boundary',entry.sequence,{terrain,publication:entry.publication,tick:entry.tick,options:entry.options,...(activation?{waterEnvironmentActivation:activation}:{})});waiting.entries=group.length+1;group=[];groupBytes=0;return;
    }
   }
   const entry=journal.entry(index);if(!entry){if(!terrainPending&&!caught){caught=true;onCaughtUp({sequence:cursor,entries:index});}return;}caught=false;
