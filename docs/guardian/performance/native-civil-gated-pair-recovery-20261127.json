@@ -258,5 +258,84 @@
       "public/wild-engine/spatial-threaded.wasm": "c3e639e06c7741d029c7121b27208d53a73012f62fda6ee8341a98f5f8ffc6be",
       "src/world/wild-engine/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505"
     }
+  },
+  "publicDiskReload": {
+    "revision": "e57b2ef6e241cfba24fd493f4bd512ef81024bec",
+    "checkpointVersion": 3,
+    "adapter": {
+      "vendor": "nvidia",
+      "architecture": "turing"
+    },
+    "cutTime": 10.400000000000006,
+    "poses": [
+      [
+        "worker-900011",
+        -10.6,
+        11.8,
+        0.37,
+        23.25,
+        7.125,
+        9.5,
+        40
+      ],
+      [
+        "worker-900012",
+        -14,
+        3.2,
+        0.012385906506801088,
+        23.25,
+        7.125,
+        9.5,
+        40
+      ]
+    ],
+    "gateReady": [
+      {
+        "id": 1000001,
+        "opening": 0.25000000000000355
+      },
+      {
+        "id": 1000000,
+        "opening": 0
+      }
+    ],
+    "homePreparedTicket": 3,
+    "homeAcquiredTicket": 4,
+    "idleAcquiredTicket": 6,
+    "worldTicket": 6,
+    "firstJointFrame": 37,
+    "picks": [
+      {
+        "actor": "worker-900012",
+        "sequence": 91
+      },
+      {
+        "actor": "worker-900011",
+        "sequence": 91
+      }
+    ],
+    "home19Ticket": 8,
+    "home19Time": 19.89999999999994,
+    "absenceFrame": 101,
+    "remainingActor": 900011,
+    "maxOpening": [
+      1,
+      1
+    ],
+    "endTime": 19.999999999999943,
+    "ledgerUnchanged": true,
+    "drawDrained": true,
+    "errors": [],
+    "artifacts": {
+      "civil-gate-live-pair-save-20261127.json": "f6a4f9040339586beb839e668518c1e24fad1c74e1fd629f02dd8b53acf53f91",
+      "civil-gated-pair-public-save-nvidia-20261127.json": "f9a98b687393e144c20107bbe40fee580c80a5c65685ed128895a45eddefab15",
+      "civil-gated-pair-public-save-nvidia-20261127.log": "351efeb20b0b3d6727edf37f817444d198d1a21b9ede8fec807f0c030610436b",
+      "civil-gated-pair-public-save-20261127.log": "d5f6527912ab7ab1d424fed341b27f6197ae74709d9e05be16aa83a5bf831615"
+    },
+    "harness": {
+      "probe-civil-gated-pair-public-save.mjs": "b3f7bfde9536a6ee9567aa4b8df65090cdf51ca143a6658956c5643b4848d173",
+      "probe-civil-gated-pair-public-save-browser.mjs": "4860d1a216a5a79d6eebff508c365582514093876db78c54e4595dd1cb214d18",
+      "civil-gated-pair-public-save-browser.js": "f47e2969d9cf034fa4974ed14fb4e771aadf28a004e20365e0254dc0b266282f"
+    }
   }
 }
