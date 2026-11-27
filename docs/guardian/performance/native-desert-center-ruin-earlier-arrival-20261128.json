@@ -1,0 +1,126 @@
+{
+  "base": "242be1b972cf598f28877f8276e5a970497992e0",
+  "scope": "Desert, one physical animal, ordinary center selection restored before the first hit. Controlled .020 s collapse substep, with the successor at the endpoint and its first Strike27 READY withheld. The original and replacement Draw ran on NVIDIA.",
+  "raw": {
+    "file": "center-ruin-earlier-arrival-nvidia-20261128.json",
+    "sha256": "30d9bea315a8237d004cdf2be000bdcb2e6c795ec730b8f8ca7be2aeccae2753"
+  },
+  "inputs": {
+    ".cache/center-ruin-active-strike-input.json": "3c0c2c34cd9206a1dbed07db59369ab0264d68f16e0eb8301da02d2c1f7742fa",
+    ".cache/center-ruin-earlier-arrival-physical.mjs": "dabbe67fc295deb706321941ee9390900c79828d7fca83c37b050588aad50da5",
+    ".cache/center-ruin-earlier-arrival-browser.mjs": "1bbf8ab5ab1a86e954aaced7c493ad9a0e35ce678c598dfd2665357563f04042",
+    ".cache/center-ruin-earlier-arrival-worker.mjs": "e9ed12b2f2cb54c3858d68b97bf50d30b1f96a8c18c356378745e0d72ab989b6",
+    "src/world/wild-engine/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505",
+    "public/wild-engine/spatial-threaded.wasm": "c3e639e06c7741d029c7121b27208d53a73012f62fda6ee8341a98f5f8ffc6be"
+  },
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 77.40000000596046
+    }
+  },
+  "preRuin": {
+    "approachTicket": 14,
+    "endpoint": 36.423000000000215,
+    "substepStart": 36.45800000000021,
+    "originalStrikeRequestId": 8,
+    "originalStrikeReady": 15,
+    "cancelObserved": true,
+    "sameRequestSequence": 15
+  },
+  "ruin": {
+    "ticket": 16,
+    "elapsed": 36.478000000000215,
+    "polygon": 10,
+    "center": "structure-1000000",
+    "submit": 292,
+    "age": 2.1964406967163086,
+    "visual": [
+      {
+        "mesh": 110,
+        "geometry": 28,
+        "material": 54,
+        "visible": false,
+        "instances": null
+      },
+      {
+        "mesh": 111,
+        "geometry": 29,
+        "material": 53,
+        "visible": true,
+        "instances": null
+      },
+      {
+        "mesh": 113,
+        "geometry": 30,
+        "material": 55,
+        "visible": true,
+        "instances": 270
+      },
+      {
+        "mesh": 114,
+        "geometry": 31,
+        "material": 56,
+        "visible": true,
+        "instances": 77
+      }
+    ],
+    "originalRetryReady": 17
+  },
+  "replacement": {
+    "checkpoint": 456,
+    "sequence": 517,
+    "activationSequence": 517,
+    "firstFrame": 1,
+    "elapsed": 36.478000000000215,
+    "age": 2.1964406967163086,
+    "actorId": 1000001,
+    "bodyId": 1,
+    "pose": [
+      -19.34705352783203,
+      -17.71636199951172,
+      -2.6904487332264315,
+      12.10641186649201
+    ],
+    "particles": {
+      "body": false,
+      "ash": true,
+      "smoke": {
+        "count": 77,
+        "hash": 4030340571
+      },
+      "debris": {
+        "count": 270,
+        "hash": 3383646391
+      },
+      "emitted": 105
+    },
+    "picking": {
+      "entityId": "animal-1000001",
+      "age": 2.1964406967163086,
+      "times": 6
+    }
+  },
+  "strike": {
+    "replacementReady": 18,
+    "ticket": 19,
+    "id": "attack-29219",
+    "at": 41.19800000000062,
+    "count": 1,
+    "hp": 580
+  },
+  "retreat": {
+    "absenceFrame": 109,
+    "elapsed": 47.12800000000112,
+    "drained": true
+  }
+}

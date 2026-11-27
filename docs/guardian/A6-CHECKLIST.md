@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+En Desierto, NVIDIA confirmó la cancelación de Strike27 antes de la ruina con el facóquero ya llegado al centro sucesor. Tras la pérdida de Draw, el primer envío conservó su cuerpo y pose terminal, acreditó el picking y la misma petición aplicó un solo golpe con un ticket nuevo. La pérdida antes de adquirir la retirada sigue abierta. [Recibo del derrumbe y el relevo](performance/native-desert-center-ruin-earlier-arrival-20261128.json).
+
 El recorrido en Edge desde el cuarto amanecer de Sabana 714 llegó al primer golpe del león y drenó. Durante la preparación de Strike27, Surface retomó la aplicación después del checkpoint 7216 y alcanzó la publicación 7228 antes del siguiente ACK de dibujo. El contraste aislado en NVIDIA conservó el token de picking y pasó de cinco esperas de dibujo a cuatro. Route26 llegó a READY en 9,43 s durante el recorrido de Edge. [Comparación y alcance](performance/native-sabana-source-checkpoint-20261127.json).
 
 El rig de la llegada nocturna en Sabana admite Walking en su primer ticket si la variante ya está lista. En la recarga de la cuarta noche, NVIDIA confirmó Route26, Strike27, el primer golpe y el drenaje. Route26 llegó a READY en 6,01 s en esa pasada. El control tarda en entregar Walking y comprueba que el rig puede publicarse primero. [Recibo de admisión inicial](performance/native-sabana-lion-initial-walking-20261127.json).
