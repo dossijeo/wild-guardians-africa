@@ -6,15 +6,17 @@ const copyArray=(a,n,valid)=>{
  return Object.freeze([...a]);
 };
 export function centerSource(s){
- const boundary=copyNativeWorldBoundary(s?.boundary),exit=copyNativeAnimalCropAttestation(s?.retreat,26);
- if(!boundary||exit.reference.purpose!=='retreat'||!sameNativeWorldBoundary(exit.reference.worldBoundary,s.previous)||
+ const field=s?.retreat?'retreat':'approach';
+ const boundary=copyNativeWorldBoundary(s?.boundary),route=copyNativeAnimalCropAttestation(s?.[field],26);
+ if(!boundary||s.retreat&&s.approach||route.reference.purpose!==(field==='retreat'?'retreat':'center')||
+   field==='approach'&&'structure-'+route.reference.targetId===s.center||!sameNativeWorldBoundary(route.reference.worldBoundary,s.previous)||
    boundary.authorityEpoch!==s.previous.authorityEpoch||boundary.nativeSession!==s.previous.nativeSession||
    boundary.ticket<=s.previous.ticket||!(boundary.effectiveTime>=s.previous.effectiveTime)||
-   !nat(s.initialClock)||!nat(s.intent)||exit.assignmentSequence!==s.intent||
+   !nat(s.initialClock)||!nat(s.intent)||route.assignmentSequence!==s.intent||
    !/^structure-[1-9]\d*$/.test(s.center)||!nat(s.polygon)||!s.polygon||
    !Number.isFinite(s.end)||s.end<=boundary.effectiveTime||s.end>boundary.effectiveTime+.020000001||
-   s.end>=exit.reference.endTime)throw Error('Invalid center removal source');
- return Object.freeze({boundary,previous:exit.reference.worldBoundary,retreat:exit,initialClock:s.initialClock,intent:s.intent,
+   s.end>=route.reference.endTime)throw Error('Invalid center removal source');
+ return Object.freeze({boundary,previous:route.reference.worldBoundary,[field]:route,initialClock:s.initialClock,intent:s.intent,
    center:s.center,polygon:s.polygon,end:s.end,revisions:copyArray(s.revisions,3,nat),
    footprint:copyArray(s.footprint,48,x=>Number.isFinite(x)&&x===Math.fround(x))});
 }

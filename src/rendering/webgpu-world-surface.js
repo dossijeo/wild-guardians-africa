@@ -328,7 +328,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     const direct=acquiredDirectWorldPublication(message,admitted,next),requiresDirect=message.nativeWorldResources?.some(record=>record.kind===2||nativeShieldWorldKind(record.kind)&&record.nativeCenterPlacement===undefined);
     if(requiresDirect?!direct:!sameNativeWorldBoundary(next,admitted?.nativeWorldBoundary)&&!direct)throw Error('Live native terrain did not consume its prepared proposal');
     const ruin=nativeGateProposal?.acquiredWorld?.centerRuin;
-    retainedCenterRuin=direct&&ruin?{worldBoundary:next,retreat:ruin.retreat}:null;
+    retainedCenterRuin=direct&&ruin?.retreat?{worldBoundary:next,retreat:ruin.retreat}:null;
     preparedNativeWorldBoundary=next;
    }
   }
@@ -857,7 +857,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
       const admitted=await admitRecoveredNativeWorld(boundary,sequence,ownerSignal,state);
       if(!current())throw Error('Recovered route changed during frame admission');
       preparedNativeWorldBoundary=admitted;
-      if(ruin)retainedCenterRuin={worldBoundary:admitted,retreat:ruin.prepared.retreat};
+      if(ruin?.prepared.retreat)retainedCenterRuin={worldBoundary:admitted,retreat:ruin.prepared.retreat};
       if(encounter)recoveredFall={at,sequence,sample:encounter,current:fallCurrent,witness:null};
       nativeRouteResourceRevision++;nativeRouteRejected=false;
       firstReplacementFrame={at:state.elapsed,sequence,worldBoundary:preparedNativeWorldBoundary,revision:nativeRouteResourceRevision};

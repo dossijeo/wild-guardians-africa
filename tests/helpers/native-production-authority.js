@@ -4,6 +4,7 @@ import {createSimulationAuthority} from '../../src/simulation/simulation-authori
 import {serialize} from '../../src/persistence/snapshots.js';
 import {attachNativeResourcePreparationEndpoint} from '../../src/rendering/native-resource-preparation-receiver.js';
 import {nativeResourceAdmissionProfile} from '../../src/world/native-resource-admission-profiles.js';
+import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-resource.js';
 import {pair,fixture,flush,preparedWorldDraw} from './remote-webgpu-fixture.js';
 import {prepareHomeAbsenceDraw} from './native-home-arrival-remote.js';
 import {NATIVE_STOP_POSE_FIELDS} from '../../src/world/native-worker-route-stop-codec.js';
@@ -35,11 +36,13 @@ export async function nativeProductionAuthority(state,{chunkKeys=Array.from({len
    await graphics.client.whenFrameSettled();
    if(options.signal.aborted)throw new DOMException('Preparation cancelled','AbortError');
    const center=resources.nativeCenterRuin,start=center.boundary.effectiveTime,end=center.end;
-   const retreat=records.findLast(item=>item.kind==='animal-crop-route'&&item.committed);
-   if(retreat?.resources.reference.purpose!=='retreat')throw Error('Center fixture has no Retreat rig');
+   const reference=(center.retreat??center.approach).preparedReference;
+   const route=records.findLast(item=>item.kind==='animal-crop-route'&&item.committed&&
+    sameNativeAnimalCropReference(item.resources.reference,reference));
+   if(!route)throw Error('Center fixture has no matching animal rig');
    const metadata={nativeWorldBoundary:center.boundary,preparedCenterRuin:center,
     clock:{...clock,elapsed:start,safeUntil:end,segments:[{start,end,rate:1,realDuration:end-start}]}};
-   const packet=await prepareExistingGroup(graphics,retreat.cropGroup,metadata,options.signal);
+   const packet=await prepareExistingGroup(graphics,route.cropGroup,metadata,options.signal);
    packet.presented.catch(()=>{});record.packet=packet;
    try{await onReady(record);}catch(error){packet.abort();throw error;}
    return {preparedWorldBoundary:packet.preparedWorldBoundary,preparedCenterRuin:center,valid:packet.valid,

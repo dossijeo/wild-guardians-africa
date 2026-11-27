@@ -10,7 +10,7 @@ import {activeCrops} from './active-crops.js';
 import {retireFarmHistory} from './retire-farm-history.js';
 import {RAID_NOTICE_TEXT} from './raid-notice.js';
 import {warmRaidNavigation} from '../world/raid-navigation-warmth.js';
-import {centerBoundaryPoint,centerCulture,centerDeliveryPoint} from '../world/centers.js';
+import {centerBoundaryPoint,centerCulture,centerDeliveryPoint,centerFootprint} from '../world/centers.js';
 import {BALANCE as B} from './balance.js';
 import {nextRandom,randomInt,attraction,threatTier,animalSpec,operational,hitStructure,collapseThreshold,CENTER_COLLAPSE_SECONDS} from './rules.js';
 import {createRaidCompositionIndex} from './raid-composition-index.js';
@@ -32,6 +32,7 @@ import {targetReservationKey,targetReserved,reservedApproachClear,reconcileTarge
 import {applyCropImpact,cropImpactDamage,CROP_HIT_POINTS} from './crop-impact-health.js';
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.z-b.z),entrySelections=new WeakMap();
 const RETREAT_SPEED=3.8;
+const APPROACH_SPEED=1.5;
 const cropTargetIndexes=new WeakMap();
 const raidRegionDecisions=new WeakMap();
 const reservationReconciliation=new WeakMap();
@@ -807,16 +808,30 @@ export function nativeLiveCenterRaidCanArm(state,plan){
  const animal={species,damageProfile:actor?.damageProfile,hitsRemaining:actor?.hits??animalSpec(species).hit_budget_max};
  return state.structures.every(center=>center.status==='ruined'||operational(center)&&centerSurvivesStrikes(center,animal,animal.hitsRemaining));
 }
-export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=null){
+export function nativeLiveCenterAttackSite(state,animal,target,mixedApproach=null,nav=null){
  if(!nativeCenterAttackSite(state,target))return false;
  if(!state.structures.some(center=>center!==target&&center.kind==='center')||
     centerSurvivesStrikes(target,animal,animal.hitsRemaining))return true;
- // Before its final blow the animal may need to select another target. The
- // collapse transaction also needs a retreat that lasts through the substep.
+ // The collapse transaction needs an acquired route that lasts through its substep.
  const exit=animal.exit??animal.spawn;
- return !!mixedApproach&&!!exit&&centerSurvivesStrikes(target,animal,animal.hitsRemaining-1)&&
-   Math.hypot(Math.fround(mixedApproach.x)-Math.fround(exit.x),Math.fround(mixedApproach.z)-Math.fround(exit.z))>
-   (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
+ if(!mixedApproach||!exit)return false;
+ if(centerSurvivesStrikes(target,animal,animal.hitsRemaining-1))
+  return Math.hypot(Math.fround(mixedApproach.x)-Math.fround(exit.x),Math.fround(mixedApproach.z)-Math.fround(exit.z))>
+    (CENTER_COLLAPSE_SECONDS+.02)*RETREAT_SPEED;
+ if(!nav||state.biome!=='desierto'||state.spells.length||state.structures.some(structure=>
+   structure.kind==='center'&&structure.status==='collapsing'||structure.gate&&structure.status!=='ruined'))return false;
+ const centers=state.structures.filter(center=>center!==target&&operational(center));
+ if(centers.length!==1)return false;
+ const [next]=centers,damage=animalStructureDamage(animal);
+ const untilCollapse=Math.max(1,Math.ceil((target.hp-collapseThreshold(target)-1e-9)/damage));
+ if(!centerSurvivesStrikes(next,animal,animal.hitsRemaining-untilCollapse))return false;
+ // Every approach lies within the footprint radius plus its interaction gap.
+ // The existing moving-route receipt must remain live through the collapse.
+ const hull=centerFootprint(next,state).footprint;
+ const clearance=Math.max(...hull.map(point=>dist(point,next)))+animal.radius+.5;
+ const from={...animal,x:Math.fround(mixedApproach.x),z:Math.fround(mixedApproach.z)};
+ return dist(from,next)-clearance>(CENTER_COLLAPSE_SECONDS+.02)*APPROACH_SPEED&&
+   !!reachableApproach(from,next,nav)?.path?.length;
 }
 export function nativeCenterCollapseSite(state,animal){
  if(!animal?.hitApplied||!animal.attackId)return null;
@@ -1003,7 +1018,9 @@ export function updateRaid(s,dt,nav) {
       continue;
     }
     if(successor?.purpose==='center'){
-      if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor))throw Error('Native center strike lost its next stationary source');
+      const selected=successor.collapsed?targetFor(s,a,nav):null;
+      if(!nav.intentTaskPlanner.requestNativeCenterSuccessor(s,a,successor,selected))throw Error('Native center strike lost its successor');
+      if(selected)assignRaidTarget(s,a,{...selected,approach:{point:selected.approach.point,path:null}},nav);
       continue;
     }
     if(!crop&&a.hitApplied&&nav.intentTaskPlanner?.nativeFinishedAnimalRetreat?.(s,a)){
@@ -1277,7 +1294,7 @@ export function updateRaid(s,dt,nav) {
       nav.intentTaskPlanner?.registerAttackIntent(s,a,target,a.path??[]);
     }
     if(a.status!=='attacking') {
-      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:1.5,
+      if(walkTo(s,a,a.approach,dt,nav,{speed:a.status==='entering'?3.8:APPROACH_SPEED,
         worker:false,externallyPlanned:!!nav.intentTaskPlanner})) {
         if(nav.intentTaskPlanner&&(!reservedApproachClear(s,a,a.approach)||
           !actorSegmentClear(a.approach,a.approach,a,actorBlockers(s,a,false))))

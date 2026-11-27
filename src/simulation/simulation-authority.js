@@ -327,7 +327,7 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
    const body=nativeBodies.publish(animal.id,{x:animal.x,z:animal.z,radius:animal.radius,kind:1,flags:1});
    let selected;
    try{
-    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,paceCenter,()=>targetFor(game,animal,nav,!centerCohort));
+    selected=planner.declareRaidFlightPair(game,animal,worker,raidSpawnSequence,body,paceCenter,()=>targetFor(game,animal,nav,!centerCohort),nav);
     if(selected)assignRaidTarget(game,animal,selected,nav);
    }finally{if(!selected)nativeBodies.remove(animal.id);}
   }
@@ -735,12 +735,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }).catch(error=>{abort();throw error;});
   }
   async function prepareCenterRuin(center,span,advanceSubstep){
+    const animal=game.raid?.animals[0];
     const eligible=()=>!closed&&!shieldAdvance&&!nativeStructurePreparation&&nativeProduction&&nativeResourcePreparation&&
-      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseSite(game,game.raid?.animals[0])===center&&
-      center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&
-      game.raid.animals[0].status==='retreating'&&nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
+      civilShieldPhysicsAvailable()&&game.workers.every(worker=>planner.nativeWorkerHomeInactive(worker.id))&&nativeCenterCollapseSite(game,animal)===center&&
+      center.kind==='center'&&center.status==='collapsing'&&game.raid?.animals.length===1&&game.raid.animals[0]===animal&&
+      (animal.status==='retreating'||animal.status==='walking'&&animal.targetId&&animal.targetId!==center.id)&&
+      nativeCenterAttackCohort(game)&&nativeCropCohortCurrent(game,planner)&&
       !game.spells.some(spell=>spell.remaining>1e-9&&spell.remaining<span);
-    if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified Retreat substep');
+    if(centerRuinAdvance||!eligible())throw Error('Native center ruin requires a certified animal route substep');
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,receipt:null};
     centerRuinAdvance=owner;
     const at=game.elapsed,end=at+span,signal=owner.controller.signal;

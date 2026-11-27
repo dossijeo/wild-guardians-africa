@@ -1944,7 +1944,7 @@ extern "C" EMSCRIPTEN_KEEPALIVE int nav_gate_addition_proposal_pose(double sessi
  std::copy(root.begin(),root.end(),out.begin()+8);std::copy(leaf.begin(),leaf.end(),out.begin()+24);return 1;
 }
 
-static bool collapseRetreatCurrent(IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
+static bool collapseRouteCurrent(IntentState& s,const PendingBarrierProposal::CenterCollapse& c){
   if(s.activeIntents.size()!=1||s.reservedBodies.size()!=1||spatial_body_count()!=1||s.gateMotionProposal.pending||
      c.slot>=s.routeSlots.size()||!s.executionEnabled||s.clockPaused||!s.causalClock)return false;
   for(const auto& [id,gate]:s.gates)
@@ -1952,20 +1952,21 @@ static bool collapseRetreatCurrent(IntentState& s,const PendingBarrierProposal::
        gateMotionPending(gate,s.clockThrough)||gateMotionEnd(gate)>s.clockThrough||
        gateOpening(gate,s.clockThrough)!=gate.target)return false;
   const auto it=s.activeIntents.find(c.actor);
-  if(it==s.activeIntents.end()||!it->second.retreat||it->second.slot!=c.slot||it->second.generation!=c.generation)return false;
+  if(it==s.activeIntents.end()||it->second.animalStrike||it->second.slot!=c.slot||it->second.generation!=c.generation)return false;
   const auto& r=s.routeSlots[c.slot];
   return r.generation==c.generation&&r.actor==c.actor&&r.reservationBody==c.body&&r.hasExecution&&
-    r.gateReservations.empty()&&executionBindingCoherent(s,c.body,c.slot)&&c.binding&&r.animalRouteBinding==c.binding&&
+    r.gateReservations.empty()&&executionBindingCoherent(s,c.body,c.slot)&&c.binding&&c.binding->source&&r.animalRouteBinding==c.binding&&
+    (it->second.retreat||c.binding->source->attackCenter)&&
     c.binding->actual.ticket==c.routeTicket&&c.binding->assignmentSequence==c.assignment&&c.end<c.binding->actual.header[11];
 }
-int stageCenterRuin(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,
+int stageCenterRuin(const SpatialWorldProposalInput& input,const SpatialStaticMutation& shape,int center,
     double actor,double body,double slot,double gen,double assignment,double routeTicket,double end){
   auto& s=state();
   if(!integer(actor)||!integer(body)||!integer(slot,true)||slot>=s.routeSlots.size()||!integer(gen)||
      !integer(assignment)||!integer(routeTicket)||!std::isfinite(end)||end<=s.effectiveTime||end>s.effectiveTime+.020000001)return -1;
   const PendingBarrierProposal::CenterCollapse c{uint64_t(actor),uint64_t(body),uint64_t(slot),uint64_t(gen),
     uint64_t(assignment),uint64_t(routeTicket),end,s.routeSlots[size_t(slot)].animalRouteBinding};
-  if(!collapseRetreatCurrent(s,c))return -2;
+  if(!collapseRouteCurrent(s,c)||c.binding->source->target==uint64_t(center))return -2;
   const int ok=spatialIntentStageWorld(input,&shape,1,true);
   if(ok==1)s.barrierProposal.centerCollapse=c;
   return ok;
@@ -1976,7 +1977,7 @@ int takeCenterRuin(double session,double ticket,double end,SpatialWorldProposalI
   const auto& c=*p.centerCollapse;
   if(c.end!=end||end!=s.effectiveTime||s.clockThrough!=p.at||s.session!=p.session||s.clockSequence!=p.clock||
      s.clockIntentSequence!=p.intents||s.intentSequence!=p.intents||s.sequence!=p.facts||s.gateRevision!=p.gates||
-     s.residencyPinRevision!=p.reservations||executionWorldStamp()!=p.world||!collapseRetreatCurrent(s,c))return -2;
+     s.residencyPinRevision!=p.reservations||executionWorldStamp()!=p.world||!collapseRouteCurrent(s,c))return -2;
   const auto& route=s.routeSlots[c.slot];
   const auto start=sampleRouteTiming(route,p.at),expected=sampleRouteTiming(route,end);
   const uint64_t moved=(start[0]!=expected[0]||start[1]!=expected[1])?1:0;
@@ -4082,6 +4083,23 @@ EMSCRIPTEN_KEEPALIVE int nav_animal_plan_finished_center(double actorId,double a
   if(!spatialReadBody(finished.body,origin))return -2;
   return requestAttackCenterRoute(actorId,targetId,origin,double(finished.body),0,
     approachX,approachZ,0,finished.yaw,finished.phase);
+}
+EMSCRIPTEN_KEEPALIVE int nav_animal_plan_center_after_collapse(double actor,double attack,double targetId,int count,
+                                                            double approachX,double approachZ){
+  auto& s=state();
+  if(!integer(actor)||!integer(attack)||!integer(targetId)||count<1||count>4096||
+     !coordinate(approachX)||!coordinate(approachZ))return -1;
+  if(s.barrierProposal.pending||s.worldMutationPreview||s.proposalOpen)return -4;
+  if(spatial_world_biome()!=1||nav_animal_finished_strike_snapshot(actor)!=1)return 0;
+  const auto& finished=*s.finishedAnimalStrike;
+  const auto previous=s.targets.find(finished.target),target=s.targets.find(uint64_t(targetId));
+  SpatialBodyView origin;
+  if(finished.attack!=attack||finished.target!=finished.center||finished.target==targetId||
+     previous==s.targets.end()||previous->second.kind!=4||previous->second.status!=1||
+     target==s.targets.end()||!intactAttackCenter(target->second)||
+     s.attackRouteInput.size()!=size_t(count)*2||s.attackRouteInput.back()!=float(approachZ)||
+     s.attackRouteInput[size_t(count)*2-2]!=float(approachX)||!spatialReadBody(finished.body,origin))return -2;
+  return requestAttackCenterRoute(actor,targetId,origin,double(finished.body),count,approachX,approachZ,0,finished.yaw,finished.phase);
 }
 // Both continuations start from the finished strike's exact body and lease.
 // Only an installed matching Shield permits another strike at the old site.

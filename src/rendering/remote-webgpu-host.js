@@ -2066,8 +2066,8 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                throw Error('Center ruin hold has another source');
              const relatives=quiescenceBindings().filter(binding=>binding.semantic==='relative'&&binding.nativeAnimalCrop);
              if(!relatives.length||relatives.some(binding=>!binding.motionRecord?.isCurrent()||
-                !sameNativeAnimalCropReference(binding.nativeAnimalCrop,ruin.retreat.preparedReference)))
-               throw Error('Center ruin hold lost its Retreat');
+                !sameNativeAnimalCropReference(binding.nativeAnimalCrop,(ruin.retreat??ruin.approach).preparedReference)))
+               throw Error('Center ruin hold lost its animal route');
            }catch(error){intentControl.port.postMessage({...message,type:'intent-mutation-quiesced',accepted:false});throw error;}
            if(message.preparedIdleStrollStopTemplate)try{
              const ref=copyNativeIdleStrollStopReference(message.preparedIdleStrollStopTemplate);if(!sameNativeIdleStrollStopReference(ref,pending?.metadata?.nativeIdleStrollStopTemplate))throw Error('Native moving stop lacks its retained template');

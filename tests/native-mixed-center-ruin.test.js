@@ -8,7 +8,7 @@ import {readFileSync} from 'node:fs';
 import {nativeFrameReadiness} from '../src/rendering/webgpu-frame-recovery.js';
 import {sameNativeWorldBoundary,reconcileNativeWorldResources} from '../src/world/native-world-boundary.js';
 import {sameNativeAnimalCropReference} from '../src/world/native-animal-crop-resource.js';
-import {verifiesCenter} from '../src/world/native-center-ruin-source.js';
+import {centerSource,verifiesCenter} from '../src/world/native-center-ruin-source.js';
 import {nativeShieldWorldKind} from '../src/world/native-shield-world.js';
 import {fixture,flush,pair} from './helpers/remote-webgpu-fixture.js';
 import {floorFloat32} from '../src/rendering/float32-time.js';
@@ -251,21 +251,25 @@ for(const scenario of [
  {gated:true,pendingFarm:true,name:'when RaidSpawned cancels Farm before the gate'},
  {gated:true,recover:true,name:'through terminal Draw loss during Retreat'},
  {gated:false,secondCenter:true,name:'when the second center collapses on the final hit'},
+ {gated:false,secondCenter:true,early:true,name:'during the approach to the successor center'},
 ])test('center ruin preserves the certified refuge '+scenario.name,{timeout:90000},async()=>{
- const {gated,pendingFarm,secondCenter}=scenario;
+ const {gated,pendingFarm,secondCenter,early}=scenario;
  const initial=mixedState(gated),workerId=initial.workers[0].id,civilCenter=initial.workers[0].centerId;
  if(secondCenter){
-  initial.structures.push({...initial.structures[0],id:`structure-${initial.nextId++}`,x:-18,z:-12});
+  initial.structures.push({...initial.structures[0],id:`structure-${initial.nextId++}`,x:-18,z:-12,hp:early?180:200});
   initial.structures[0].hp=600;
  }
  const destroyedId=(secondCenter?initial.structures.at(-1):initial.structures[0]).id;
- let releaseFarm,releaseRetreat,farmReady=null,retreatReady=null;
+ let releaseFarm,releaseRoute,farmReady=null,routeReady=null;
  const farmGate=new Promise(resolve=>{releaseFarm=resolve;});
- const retreatGate=new Promise(resolve=>{releaseRetreat=resolve;});
+ const routeGate=new Promise(resolve=>{releaseRoute=resolve;});
  const world=await nativeProductionAuthority(initial,{chunkKeys,qualifyFarmFlee:true,qualifyAnimalCrop:true,
   onReady(record){
    if(pendingFarm&&record.kind==='farm-arrival'&&!farmReady){farmReady=record;return farmGate;}
-   if(secondCenter&&record.resources.reference?.purpose==='retreat'&&!retreatReady){retreatReady=record;return retreatGate;}
+   if(secondCenter&&!routeReady&&record.kind==='animal-crop-route'){
+    const ref=record.resources.reference;
+    if(early?'structure-'+ref.targetId===civilCenter:ref.purpose==='retreat'){routeReady=record;return routeGate;}
+   }
   }});
  const advance=()=>world.command({kind:'advance',seconds:.05,nightFastForward:false,steps:2});
  const events=[];
@@ -276,7 +280,7 @@ for(const scenario of [
   const polygons=()=>world.command({kind:'snapshot',nativeAuthorityCheckpoint:true}).nativeAuthorityCheckpoint.spatialState.polygons;
   const beforePolygons=secondCenter?polygons():null;
   let spawn=null;
-  for(let retry=0;retry<540&&!events.some(row=>row.type==='RaidEnded');retry++){
+  for(let retry=0;retry<(early?760:540)&&!events.some(row=>row.type==='RaidEnded');retry++){
    let next=advance();
    if(next instanceof Promise){
     workerAtCut=confirmed.workers[0];
@@ -284,11 +288,11 @@ for(const scenario of [
     let pending=null,error=null;
     void next.then(value=>{pending=value;},reason=>{error=reason;});
     if(secondCenter){
-     await untilProduction(world,()=>retreatReady?.packet);
+     await untilProduction(world,()=>routeReady?.packet);
      for(let f=0;f<4;f++)await world.present();
-     assert(!pending&&!error&&!retreatReady.committed);
+     assert(!pending&&!error&&!routeReady.committed);
      assert(!world.records.some(row=>row.kind==='center-ruin'));
-     releaseRetreat();
+     releaseRoute();
     }
     for(let f=0;f<1000&&!pending&&!error;f++)await world.present();
     if(error)throw error;
@@ -298,6 +302,11 @@ for(const scenario of [
     for(let f=0;f<8;f++)await world.present();
     assert(ruin?.committed);
     snap=await ruin.packet.presented;
+    if(early){
+     const source=ruin.resources.nativeCenterRuin,draw=world.host.inspect().nativeRouteFrame;
+     assert.equal(draw.worldBoundary.ticket,ruin.commit.nativeCenterRuin.acquired.ticket);
+     assert(draw.bindings.some(row=>sameNativeAnimalCropReference(row.nativeAnimalCrop,source.approach.preparedReference)));
+    }
    }
    events.push(...next.events);
    confirmed=JSON.parse(next.snapshot);
@@ -329,11 +338,12 @@ for(const scenario of [
   const end=confirmed.workers.find(row=>row.id===workerId);
   if(!secondCenter)assert.deepEqual([end.status,end.x,end.z],[workerAtCut.status,workerAtCut.x,workerAtCut.z]);
   const source=ruin.resources.nativeCenterRuin;
-  assert.equal(source.retreat.reference.purpose,'retreat');
-  assert.equal(source.retreat.reference.bodyId,2);
+  const route=source.retreat??source.approach;
+  assert.equal(route.reference.purpose,early?'center':'retreat');
+  assert.equal(route.reference.bodyId,2);
   assert.equal(snap.sequence,ruin.packet.sequence);
   assert.deepEqual(events.filter(row=>row.type==='StructureHit').map(row=>[row.targetId,row.structureHit.hp]),
-   [180,160,140,120].map(hp=>[destroyedId,hp]));
+   early?[[destroyedId,160],[destroyedId,140],[destroyedId,120],[civilCenter,580]]:[180,160,140,120].map(hp=>[destroyedId,hp]));
   assert.equal(events.filter(row=>row.type==='WorkerHit').length,0);
   assert.deepEqual(events.filter(row=>row.type==='StructureRuined').map(row=>[row.targetId,row.simulationTime]),
    [[destroyedId,source.end]]);
@@ -344,7 +354,14 @@ for(const scenario of [
    assert(beforePolygons.some(row=>row.id===source.polygon));
    assert.deepEqual(polygons(),beforePolygons.filter(row=>row.id!==source.polygon));
    assert.equal(confirmed.result,null);
-   assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
+   if(early){
+    assert.equal('structure-'+source.approach.reference.targetId,civilCenter);
+    assert.throws(()=>centerSource({...source,center:civilCenter}),/Invalid center removal source/);
+    const hits=events.filter(row=>row.type==='AnimalLogicalHit');
+    assert.equal(new Set(hits.map(row=>row.attackId)).size,4);
+    assert(hits[2].simulationTime<route.reference.worldBoundary.effectiveTime&&
+     route.reference.worldBoundary.effectiveTime<source.end&&source.end<hits[3].simulationTime);
+   }else assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
    for(let i=0;i<350&&confirmed.workers[0].nativeRouteAdmission!=='native-idle';i++){
     const next=await advance();
     confirmed=JSON.parse(next.snapshot);
@@ -353,7 +370,7 @@ for(const scenario of [
    assert.equal(confirmed.workers[0].nativeRouteAdmission,'native-idle');
    assert.equal(confirmed.workers[0].centerId,civilCenter);
    assert.equal(confirmed.workers[0].personId,initial.workers[0].personId);
-   assert.equal(confirmed.structures.find(row=>row.id===civilCenter).hp,600);
+   assert.equal(confirmed.structures.find(row=>row.id===civilCenter).hp,early?580:600);
    assert.deepEqual(confirmed.ledger,initial.ledger);
    assert.deepEqual(world.faults,[]);
   }
@@ -375,5 +392,5 @@ for(const scenario of [
    assert.equal(confirmed.result,'defeat');
    assertRetreatRetiresAfterRuin(ruinPublication,ruin.commit.nativeCenterRuin,confirmed.structures);
   }
- }finally{releaseFarm();releaseRetreat();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
+ }finally{releaseFarm();releaseRoute();replacement?.client.dispose();await replacement?.host.dispose();await world.close();}
 });

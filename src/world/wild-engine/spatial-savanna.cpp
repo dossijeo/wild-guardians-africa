@@ -3158,7 +3158,7 @@ EMSCRIPTEN_KEEPALIVE int spatial_center_ruin_stage(int center,int polygon,double
   if(center<=0||it==polygonIndex().byId.end()||it->second.workCenter!=center||it->second.passMask!=0||
      worldProposalFloatInput.empty()||it->second.xy!=worldProposalFloatInput)return -2;
   const SpatialWorldProposalInput input{4,0,{}, {polygon}};
-  const int ok=stageCenterRuin(input,polygonMutation(it->second),actor,body,slot,generation,assignment,routeTicket,end);
+  const int ok=stageCenterRuin(input,polygonMutation(it->second),center,actor,body,slot,generation,assignment,routeTicket,end);
   if(ok!=1)return ok;
   std::array<double,6> id{};if(spatialIntentWorldProposalSnapshot(id)!=1)return -2;
   WorldResourcePreview preview;preview.centerCollapse=true;preview.header={1,id[0],id[1],id[3],4,0,
