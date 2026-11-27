@@ -840,7 +840,8 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
     // Draw and terrain support must all attest the route before publishing it.
     const woundedHome=members.length===1&&members[0].profile.kind===18&&
       members[0].ref.sourceRequest?.recoveryHit&&members[0].resources.presentation?.gates.length===0;
-    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||members.some(member=>member.crop))&&
+    const ordinaryWorkers=members.length===2&&members[0].profile.kind===18&&members[1].profile.kind===22;
+    const replayMatches=sameNativeWorldBoundary(replayed,boundary)||(stationary||woundedHome||stationaryRefuge||ordinaryWorkers||members.some(member=>member.crop))&&
       (!replayed||nativeRecoveryCovers(boundary,replayed));
     const current=()=>!closed&&timelineRecovering&&firstReplacementFrame===null&&recoveryHold!==null&&recoveryHold===source.holdId&&
       stream.status().sequence===sequence&&state.elapsed===at&&refugeCurrent()&&ruinCurrent()&&encounterCurrent()&&

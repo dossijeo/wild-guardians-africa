@@ -101,7 +101,8 @@ export function createSimulationAuthorityClient({snapshot,chunkKeys,raidWaitBind
           let evidence={};
           if(grouped){
             const proofs=members.map(({execution,resources})=>({kind:resources.kind,proof:execution.binding}));
-            const {refuge,ruin,encounter}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
+            const {refuge,ruin,encounter,ordinaryWorkers}=copyNativeRecoveryGroup({version:2,members:proofs,refuge:q.refuge,ruin:q.ruin,encounter:q.encounter},cut);
+            if(ordinaryWorkers&&!nativeWorkerLifecycle)throw Error('Ordinary worker recovery is unavailable');
             if(refuge&&members.length===0){
               if(matchesNativeOrdinaryRefuge(cut,refuge)){
                 if(!nativeWorkerLifecycle)throw Error('Ordinary Home recovery is unavailable');

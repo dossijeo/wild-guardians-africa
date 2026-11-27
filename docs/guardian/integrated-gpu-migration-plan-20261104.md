@@ -2,7 +2,7 @@
 
 Sabana 714 pasó el anochecer tras Home19 con el reloj ordinario. Al denegar en otro recorrido el certificado posterior al evento real `NightStarted`, NVIDIA acreditó el drenaje del consumidor incompleto, el primer dibujo del sustituto, la activación y la primera marcha del facóquero. [Prueba de Recovery y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-tras-aplicar-el-evento-del-primer-anochecer).
 
-En Sabana 714 también pasó la recarga con dos trabajadores pagados y el reemplazo tras el último Home19. El sustituto presentó ambos cuerpos ausentes antes de reabrir el despacho y dibujó la primera aproximación animal. [Recibo NVIDIA](performance/native-savanna-two-home-terminal-20261127.json).
+En Sabana 714 también pasó la recarga con dos trabajadores pagados. El sustituto presentó la ausencia de ambos después de Home19 y, en otra prueba, los dos relojes de Home18 e Idle22 antes de reanudar. [Retiradas](performance/native-savanna-two-home-terminal-20261127.json) · [Rutas activas](performance/native-savanna-two-live-recovery-20261127.json).
 
 Si READY de la marcha sucesora llega en el corte de derrumbe, Hosted publica el GO antes de que Surface prepare kind4. NVIDIA confirmó ambos dibujos en orden desde `RaidSpawned`, el cuarto golpe en el mismo cuerpo y el drenaje. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
 

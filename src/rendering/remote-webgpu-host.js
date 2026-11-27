@@ -2449,7 +2449,7 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
                profile:nativeWorkerRouteRecoveryProfile(kind),assignmentSequence:proof.assignmentSequence,
                ref:proof.reference,gateIds:proof.gateIds,
                install:routeControl.prepareRecoveredWorkerRoute(kind,proof,nativeWorldBoundary,
-                 {cohortSize:source.members.length,sharedCut:grouped,ruin:source.ruin})
+                 {cohortSize:source.members.length,sharedCut:grouped,ruin:source.ruin,ordinaryWorkers:source.ordinaryWorkers===true})
              }));
              recovered={holdId:q.holdId,consumerToken:q.consumerToken,grouped,members,at:message.clock.committedThrough,
                refuge:source.refuge,encounter:source.encounter};

@@ -1100,7 +1100,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       worker.state=0;
       worker.encounterRecovery={hit:pose.hit,body:pose.workerBody,at:pose.impactAt};
     },
-    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false,ruin=null}={}) {
+    prepareRecoveredWorkerRoute(kind,input,boundary,{cohortSize=1,sharedCut=false,ruin=null,ordinaryWorkers=false}={}) {
       const profile=nativeWorkerRouteRecoveryProfile(kind),proof=profile.copyAttestation(input),ref=proof.reference;
       if(kind===27){
         const current=()=>!closed&&!!clock&&actors.size===0&&active.size===0&&
@@ -1132,7 +1132,7 @@ export function createNativeRouteControl({authorityEpoch,initialSequence=0,initi
       const approachEndpoint=kind===26&&cohortSize===1&&sharedCut&&centerRuinApproachEndpoint(ruin,boundary,proof,clock?.committedThrough);
       if(closed||!clock||actors.size!==cohortSize||active.size!==cohortSize||proof.gateIds.length>profile.maxGates||
          !record||active.get(ref.actorId)!==record||record.lastDrawTime!==null||actor.strollProof||actor.farmArrivalProof||actor.homeProof||
-         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2)||
+         kind===18&&Boolean(ref.sourceRequest?.raidSpawnSequence)!==(cohortSize===2&&!ordinaryWorkers)||
          actor.latestSequence!==proof.assignmentSequence||!matches(record,{actorId:ref.actorId,assignmentSequence:proof.assignmentSequence,routeHandle:handle})||
          !(sharedCut?nativeRecoveryCovers(boundary,source):sameNativeWorldBoundary(boundary,source))||record.startTime!==source.effectiveTime||
          clock.nativeSession!==boundary.nativeSession||clock.intentSequence!==sequence||

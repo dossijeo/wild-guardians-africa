@@ -272,15 +272,17 @@ export function copyNativeRecoveryGroup(value,world){
      throw Error('Crop recovery differs from the acquired refuge cut');
    return {members:[{kind,proof}],refuge};
  }
- if(value.members.length!==2||value.members[0]?.kind!==18||value.members[1]?.kind!==26)
+ const ordinaryWorkers=value.members[1]?.kind===22;
+ if(value.members.length!==2||value.members[0]?.kind!==18||!ordinaryWorkers&&value.members[1]?.kind!==26)
    throw Error('Invalid mixed recovery membership');
  const members=value.members.map(({kind,proof})=>({kind,proof:nativeWorkerRouteRecoveryProfile(kind).copyAttestation(proof)}));
- const [home,crop]=members.map(member=>member.proof.reference);
- if(!home.sourceRequest?.raidSpawnSequence||crop.purpose==='retreat'||
-    home.actorId===crop.actorId||home.bodyId===crop.bodyId||
+ const [home,peer]=members.map(member=>member.proof.reference);
+ if((ordinaryWorkers?home.sourceRequest?.raidSpawnSequence||home.sourceRequest?.recoveryHit||members.some(({proof})=>proof.gateIds.length):
+    !home.sourceRequest?.raidSpawnSequence||peer.purpose==='retreat')||
+    home.actorId===peer.actorId||home.bodyId===peer.bodyId||
     members[0].proof.assignmentSequence===members[1].proof.assignmentSequence||
     !members.every(({proof})=>nativeRecoveryCovers(world,proof.reference.worldBoundary))||
     members.filter(({proof})=>sameNativeWorldBoundary(world,proof.reference.worldBoundary)).length!==1)
    throw Error('Mixed recovery requires two current assignments at one world cut');
- return {members};
+ return ordinaryWorkers?{members,ordinaryWorkers:true}:{members};
 }

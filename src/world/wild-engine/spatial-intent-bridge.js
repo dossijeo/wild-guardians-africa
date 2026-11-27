@@ -780,13 +780,19 @@ export function createSpatialIntentBridge(session,{qualifyFarmFlee=false,nativeW
     const strolls=nativeIdleStrollBindings(),farmCount=wasm.nav_farm_arrival_route_binding_actors?.()??0,
       homes=nativeHomeRouteBindings();
     if(recoveredWorkerRoute?.version===2){
-      const {members,refuge:arrival,ruin,encounter}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
+      const {members,refuge:arrival,ruin,encounter,ordinaryWorkers}=copyNativeRecoveryGroup(recoveredWorkerRoute,nativeWorldBoundary());
       if(encounter?.version===3){
         if(count||strolls.length||farmCount||homes.length||!sameRecoveredEncounter(encounter,nativeStationaryEncounterRecovery()))
           throw Error('Held stationary encounter changed before bootstrap');
       }else if(arrival&&members.length===0){
         if(count||strolls.length||farmCount||homes.length||JSON.stringify(arrival)!==JSON.stringify(nativeWoundedRefugeRecovery()??nativeOrdinaryRefugeRecovery()))
           throw Error('Held Home absence changed before bootstrap');
+      }else if(ordinaryWorkers){
+        const [home,stroll]=members;
+        if(!nativeWorkerLifecycle||owningState?.raid||count!==2||homes.length!==1||strolls.length!==1||farmCount||
+           !nativeWorkerRouteRecoveryProfile(18).sameAttestation(homes[0],home.proof)||
+           !nativeWorkerRouteRecoveryProfile(22).sameAttestation(strolls[0],stroll.proof))
+          throw Error('Held worker routes changed before bootstrap');
       }else{
         const single=encounter?nativeEncounterFallRecovery(encounter.version===2?'center':'retreat'):
           ruin?nativeCenterRuinRouteRecovery():arrival?nativeRefugeCropRecovery(members[0].kind):null;

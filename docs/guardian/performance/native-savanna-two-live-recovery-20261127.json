@@ -1,0 +1,145 @@
+{
+  "scenario": "Sabana 714, sustitución terminal con Home18 e Idle22 adquiridos",
+  "baseRevision": "1ca0ce690c78ecb67a620c5a8d9c83d7c909e82c",
+  "adapter": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "device": "",
+    "description": "",
+    "imageCopyPreparation": {
+      "version": 1,
+      "formats": [
+        "rgba8unorm",
+        "rgba8unorm-srgb"
+      ],
+      "completed": true,
+      "milliseconds": 116.29000002145767
+    }
+  },
+  "artifacts": {
+    "native-savanna-two-workers-before-home-20261127.json": "dd6006d1012e91791bec19ecfd7c386d0aa384d84e24c05d57969bef7352f757",
+    "savanna-two-live-recovery-baseline-20261127.log": "499520962ca24fd64726c8680caadb1e9dacb3449f82530d4917fb2190807b63",
+    "native-savanna-two-live-recovery-20261127-extended.json": "62bdac40331010ed23c965211b99c8af58db28daf983b2f5b79806d80c7414cc",
+    "native-savanna-two-live-recovery-final-20261127-extended.json": "8656a8935c04e5db0198844b72da61901703847f14e1d0b7c166e3d296f20b5c",
+    "native-savanna-two-live-recovery-held-clock-20261127-extended.json": "55dd4029e09a3adc35c4bc06cf7bf30183289000b900fcde0e3f09ed603b5e1a"
+  },
+  "original": {
+    "frame": 200,
+    "ticket": 14,
+    "at": 270.1499999999885,
+    "bindings": [
+      {
+        "kind": 18,
+        "actorId": 8,
+        "bodyId": 2,
+        "executionEpoch": 252.2500000000005,
+        "relativeTime": 17.899999618530273
+      },
+      {
+        "kind": 22,
+        "actorId": 6,
+        "bodyId": 1,
+        "executionEpoch": 270.1499999999885,
+        "relativeTime": 0
+      }
+    ]
+  },
+  "retirement": {
+    "publicationFloor": 684,
+    "callbacksSettled": true,
+    "drawClosed": true,
+    "drawDrained": true
+  },
+  "replacement": {
+    "frame": 1,
+    "ticket": 14,
+    "at": 270.2499999999884,
+    "bindings": [
+      {
+        "kind": 18,
+        "actorId": 8,
+        "bodyId": 2,
+        "executionEpoch": 252.2500000000005,
+        "relativeTime": 17.999998092651367
+      },
+      {
+        "kind": 22,
+        "actorId": 6,
+        "bodyId": 1,
+        "executionEpoch": 270.1499999999885,
+        "relativeTime": 0.09999999403953552
+      }
+    ]
+  },
+  "activation": [
+    {
+      "stage": "request",
+      "sequence": 684
+    },
+    {
+      "stage": "fifo-barrier",
+      "sequence": 684
+    },
+    {
+      "stage": "candidate-drain",
+      "sequence": 685
+    }
+  ],
+  "resumed": {
+    "elapsed": 270.39999999998827,
+    "workers": [
+      {
+        "id": "worker-6",
+        "status": "idle",
+        "nativeRouteAdmission": "native-idle-stroll",
+        "x": 86.03585311606007,
+        "z": -4.9633850097876016
+      },
+      {
+        "id": "worker-8",
+        "status": "returning",
+        "nativeRouteAdmission": "native-home",
+        "x": 73.65144493399849,
+        "z": -12
+      }
+    ],
+    "balance": "480",
+    "drained": true,
+    "pageErrors": 0
+  },
+  "authoritativeCutCheck": {
+    "closedDrawLastClock": 270.39999999998827,
+    "heldClock": 270.54999999998813,
+    "heldPublication": 677,
+    "firstDraw": {
+      "frame": 1,
+      "ticket": 14,
+      "at": 270.54999999998813,
+      "bindings": [
+        {
+          "kind": 18,
+          "actorId": 8,
+          "bodyId": 2,
+          "executionEpoch": 252.40000000000055,
+          "relativeTime": 18.149999618530273
+        },
+        {
+          "kind": 22,
+          "actorId": 6,
+          "bodyId": 1,
+          "executionEpoch": 270.29999999998836,
+          "relativeTime": 0.2499999850988388
+        }
+      ]
+    },
+    "previousProbeRejectedBecauseLastClockLaggedHeldClock": true,
+    "resumed": 270.74999999998795,
+    "drained": true
+  },
+  "scope": {
+    "gates": 0,
+    "raid": false,
+    "deviceLoss": "explicit",
+    "recoveredPickChecked": false
+  }
+}
