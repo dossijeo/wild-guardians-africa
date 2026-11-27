@@ -1,0 +1,128 @@
+{
+  "candidate": "c6ca7e1b6cdfcbfb5cd72b5a5556efe82311de07",
+  "integrationBase": "95099509688d790f19aaa2b8cb5bd5071a711253",
+  "sourcesNormalizedLf": {
+    "src/rendering/confirmed-presentation-stream.js": "92ba0f82b342b9f493591b1ab6e7f04946003499cd5b81105b755041de9bc806",
+    "src/rendering/confirmed-timeline-pump.js": "5f1702ae4dc4b707b127e575a0ae85f5e3fd4f4651d4757e95cba98c48595861"
+  },
+  "case": {
+    "seed": 714,
+    "checkpointPublication": 7151,
+    "requestedPublication": 7178
+  },
+  "integration": {
+    "tests": 172,
+    "pass": 172,
+    "fail": 0,
+    "skipped": 0
+  },
+  "cpuReplay": {
+    "base": [
+      7094,
+      7118,
+      7142,
+      7151,
+      7175
+    ],
+    "candidate": [
+      7094,
+      7118,
+      7142,
+      7159
+    ],
+    "baseAppliedThrough": 7183,
+    "candidateAppliedThrough": 7178,
+    "candidateCheckpointAcknowledgements": 1
+  },
+  "nvidia": {
+    "scope": "Minimal draw using the production receiver, client and Host on NVIDIA Turing. Stable Game state, replayed sequence and timing, controlled clock anchor.",
+    "missing": "Full Sabana Game run and Strike27 qualification.",
+    "pickFrameTokenValidatedAfterEveryAck": true,
+    "runs": [
+      {
+        "variant": "base",
+        "submittedPublications": [
+          7094,
+          7118,
+          7142,
+          7151,
+          7175
+        ],
+        "throughSequence": 7183,
+        "throughTime": 2164.0487094518603,
+        "wallMilliseconds": 6225.39990234375,
+        "checkpointAcknowledgements": 1,
+        "ordered": true,
+        "drained": true,
+        "errors": []
+      },
+      {
+        "variant": "checkpoint",
+        "submittedPublications": [
+          7094,
+          7118,
+          7142,
+          7159
+        ],
+        "throughSequence": 7178,
+        "throughTime": 2163.5487094518585,
+        "wallMilliseconds": 5212.800048828125,
+        "checkpointAcknowledgements": 1,
+        "ordered": true,
+        "drained": true,
+        "errors": []
+      },
+      {
+        "variant": "checkpoint",
+        "submittedPublications": [
+          7094,
+          7118,
+          7142,
+          7159
+        ],
+        "throughSequence": 7178,
+        "throughTime": 2163.5487094518585,
+        "wallMilliseconds": 5234.39990234375,
+        "checkpointAcknowledgements": 1,
+        "ordered": true,
+        "drained": true,
+        "errors": []
+      },
+      {
+        "variant": "base",
+        "submittedPublications": [
+          7094,
+          7118,
+          7142,
+          7151,
+          7175
+        ],
+        "throughSequence": 7183,
+        "throughTime": 2164.0487094518603,
+        "wallMilliseconds": 6213.300048828125,
+        "checkpointAcknowledgements": 1,
+        "ordered": true,
+        "drained": true,
+        "errors": []
+      }
+    ]
+  },
+  "campaign": {
+    "stage": "before fourth raid",
+    "requestId": 5,
+    "kind": "prepareNativeAnimalCropRouteResources",
+    "minimumSequence": 5772,
+    "result": "Route26 preparation timed out before the Strike27 cut."
+  },
+  "evidence": {
+    "manifest.json": "0d8c1c8117d2f420fd927c56c6c6073fc8a540fd6fce41811e3452fb6c4429ed",
+    "checkpoint-before.tap": "eebf18a12443313cff974dc49498255239aff2be9f0e6dc28187b2c8a5ce447b",
+    "replay-dawn-base.json": "555bf5c9a165b2213d27d3a35d8adf84b7361471d65060086a771c6921710a52",
+    "replay-dawn-candidate.json": "bbeda1ce6ab5ed774c7eec3c0e37862f11c6f6a58e7e48ad250e52fab4f61aaf",
+    "replay-dawn-clock.mjs": "ca7c805d239e3c58cb2a4bdc0b6656122797352ff4c5d4fc098c21022ca7e9ce",
+    "isolated-hardware.mjs": "c5f40f3b8801b6e13164ee66419d6dbfc8ea54a76dca17c7dbbf64f8e96e93c0",
+    "isolated-dawn-nvidia.json": "56cb76bb2f747f42a77c12515af5959bb5cfed60d4d56b11316c0bf6b7f79d4e",
+    "native-source-checkpoint-integration-20261127.tap": "1928439b5a1369e20b0af166bbafce84184b4220dc8797b1979b625ed41ca8d9",
+    "astra-lion-dawn-ready-20261127-2201-checkpoint.json": "a2adb1f93f9c63a0bab1f82d586b0d8c932a5d5dac63002f2ba430a15873e5f5"
+  }
+}

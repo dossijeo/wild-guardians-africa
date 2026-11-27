@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+Una preparación nativa que espera una publicación lejana puede completar su último tramo tras el ACK del checkpoint. El contraste aislado en NVIDIA alcanzó la publicación 7178 con cuatro esperas de dibujo frente a cinco y validó el token de picking tras cada ACK. Falta acreditar ese resultado en la campaña completa de Sabana. [Comparación y alcance](performance/native-sabana-source-checkpoint-20261127.json).
+
 NVIDIA confirmó la recuperación de Home18 e Idle21 con dos portones. El primer envío conservó ambos cuerpos y ambos motores. Los dos trabajadores fueron seleccionables con la autoridad suspendida. Tras reanudar, el mismo cuerpo cruzó ambos portones y se retiró una sola vez en Home19. El segundo siguió con Idle21 y permaneció seleccionable hasta el drenaje. [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#home18-con-dos-portones-e-idle21).
 
 El guardado público de la misma pareja conservó las poses, las fases y la primera hoja al 25 %. La recarga en NVIDIA adquirió los dos civiles y ambos motores, permitió seleccionar a los dos trabajadores y presentó Home19 con Idle21 todavía activo. [Recibo de guardado y recarga](performance/native-civil-gated-pair-recovery-20261127.json).

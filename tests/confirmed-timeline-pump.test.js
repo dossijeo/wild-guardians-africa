@@ -27,6 +27,29 @@ test('native resource preparation applies ordered slices up to its exact publica
  }finally{yields[0]();await prepare;pump.dispose();}
 });
 
+test('a final available slice reaches the exact source in the same draw',async()=>{
+ const f=fixture(Array.from({length:10},(_,i)=>({sequence:i+1,elapsed:i+1})));
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2}),turns=[];
+ let release;
+ const preparing=pump.withOrdinaryPublications(()=>new Promise(resolve=>{release=resolve;}),{minSequence:7});
+ try{
+  const count=await pump.advanceNativePreparationSource({isCurrent:()=>true,yieldBetween:async()=>{turns.push(f.stream.status().sequence);}});
+  assert.equal(count,7);
+  assert.deepEqual(turns,[2,4,6]);
+  assert.equal(f.stream.status().sequence,7);
+ }finally{release();await preparing;pump.dispose();}
+});
+
+test('a native source initially inside the ordinary draw window retains the ordinary path',async()=>{
+ const f=fixture([{sequence:1,elapsed:1},{sequence:2,elapsed:2}]);
+ const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});
+ await pump.withOrdinaryPublications(async()=>{
+  assert.equal(pump.hasNativePreparationBacklog(),false);
+  assert.equal(pump.advance(),2);
+ },{minSequence:1});
+ pump.dispose();
+});
+
 for(const stop of ['retired preparation','replaced surface','terrain pending'])test('native preparation catch-up stops for '+stop,async()=>{
  const f=fixture(Array.from({length:16},(_,i)=>({sequence:i+1,elapsed:i+1})));
  const pump=createConfirmedTimelinePump({stream:f.stream,maxBoundaries:2});

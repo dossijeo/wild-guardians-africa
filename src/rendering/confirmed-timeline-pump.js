@@ -57,22 +57,31 @@ export function createConfirmedTimelinePump({stream,maxBoundaries=8,onPreview=nu
  function nativePreparationBacklog(){
   if(closed||hidden||pending||eventRun||!ordinaryPublicationUsers.size)return 0;
   let target=-1;
-  for(const request of ordinaryPublicationUsers)target=Math.max(target,request.minSequence);
+  for(const request of ordinaryPublicationUsers)target=Math.max(target,request.catchUpThrough);
   return Math.max(0,target-stream.status().sequence);
  }
  return {advance,
-  hasNativePreparationBacklog:()=>nativePreparationBacklog()>maxBoundaries,
+  hasNativePreparationBacklog:()=>nativePreparationBacklog()>0,
   async advanceNativePreparationSource({yieldBetween,isCurrent}){
    let count=0;
-   // Apply the same ordered boundaries in their normal-sized turns, with up
-   // to two additional turns before recording this frame.
-   for(let turn=0;turn<3;turn++){
+   // If only a final slice remains, give the waiting preparation its exact
+   // source before we record another intermediate packet. Each slice still
+   // yields, and a blocked stream gives the frame back to the renderer.
+   for(let turn=0;turn<4;turn++){
     if(!isCurrent())return null;
-    const limit=Math.min(maxBoundaries,nativePreparationBacklog());
-    if(limit===0)break;
+    const backlog=nativePreparationBacklog();
+    if(!backlog||turn===3&&backlog>maxBoundaries)break;
+    const limit=Math.min(maxBoundaries,backlog);
     const applied=advance(limit);
     count+=applied;
-    if(applied<limit||turn===2||nativePreparationBacklog()===0)break;
+    const remaining=nativePreparationBacklog();
+    if(remaining===0||turn===3||turn===2&&remaining>maxBoundaries)break;
+    if(applied<limit){
+     // A committed recovery checkpoint may briefly hide a queued successor
+     // while its acknowledgement is prepared. Give it the normal task yield.
+     const timeline=stream.timelineStatus();
+     if(!applied||!timeline.checkpointPending||!timeline.pending)break;
+    }
     await yieldBetween();
    }
    return count;
@@ -81,7 +90,10 @@ export function createConfirmedTimelinePump({stream,maxBoundaries=8,onPreview=nu
    if(!Number.isSafeInteger(minSequence)||minSequence< -1)throw TypeError('Invalid native source publication');
    // Keep committing through the existing stream while a native preparation
    // waits for its source. An already opened interval still owns its endpoint.
-   const request={minSequence};
+   // Keep the ordinary draw path for requests already within one normal turn.
+   // A larger catch-up keeps its exact endpoint through its final short turn.
+   const catchUpThrough=minSequence>=0&&minSequence-stream.status().sequence>maxBoundaries?minSequence:-1;
+   const request={catchUpThrough};
    ordinaryPublicationUsers.add(request);
    try{return await operation(pending?.sequence??eventRun?.status().sequence??null);}
    finally{ordinaryPublicationUsers.delete(request);}
