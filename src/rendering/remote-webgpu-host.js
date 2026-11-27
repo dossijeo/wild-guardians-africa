@@ -814,17 +814,20 @@ export function createRemoteWebGpuHost({ device, context, canvas, port, intentCo
       if(next&&next.nativeMutationEpoch!==nativeMutationEpoch)next=null;
       if(next&&!next.preparedWorldBoundary&&routeControl?.status().clock){
         const presented=frameTime.status(),coverage=frameClock(next);
-        // Direct control may overtake an ordinary recording on the resource
-        // channel. Discard only the expired pending coverage, never rewind the
-        // active frame or widen this packet's lease to admit it.
-        if(presented.elapsed!==null&&coverage?.epoch===presented.epoch&&coverage.safeUntil<presented.elapsed){
+        const behindPresentation=presented.elapsed!==null&&coverage?.epoch===presented.epoch&&coverage.safeUntil<presented.elapsed;
+        const behindMutationFloor=nativeMutationFloor!==null&&coverage?.safeUntil<nativeMutationFloor;
+        // Neither the submitted clock nor the released mutation floor can
+        // move backwards. Reject the packet so its producer can record again.
+        if(behindPresentation||behindMutationFloor){
           const obsolete=pending;pending=null;next=null;
-          const retained=rejectPreparedFrame(obsolete,'Prepared clock coverage precedes the presented frame',true,'native-clock',{
-            epoch:presented.epoch,safeUntil:coverage.safeUntil,presentedThrough:presented.elapsed,
+          const reason=behindPresentation?'Prepared clock coverage precedes the presented frame':'Prepared clock coverage precedes the native mutation floor';
+          const retained=rejectPreparedFrame(obsolete,reason,true,'native-clock',{
+            epoch:coverage.epoch,safeUntil:coverage.safeUntil,
+            ...(behindPresentation?{presentedThrough:presented.elapsed}:{mutationFloor:nativeMutationFloor}),
           });
           // A submitted Home absence has no native clocks to keep moving.
           // Hold its last time so recapture can catch up to it.
-          if(retained&&obsolete.metadata.preparedInterval&&active?.admittedMotionBinding?.reference?.kind==='native-home-arrival-reference'&&
+          if(behindPresentation&&retained&&obsolete.metadata.preparedInterval&&active?.admittedMotionBinding?.reference?.kind==='native-home-arrival-reference'&&
              frameWorldCurrent(active)&&sameNativeWorldBoundary(frameBoundary(active),frameBoundary(obsolete))&&
              !active.admittedClockBindings.some(nativePresentationBinding))active.replacementClockCeiling=presented.elapsed;
           releaseSnapshot(obsolete.resourceSnapshot);

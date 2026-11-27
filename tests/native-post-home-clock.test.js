@@ -69,6 +69,10 @@ test('Home19 continues after Draw rejects an expired prepared interval in the sa
   assert.equal(surface.retain(rejection,rejectedMetadata),false);
   world=state;
   assert.equal(surface.retain({...rejection,code:rejection.code,clockRejection:{...rejection.clockRejection,presentedThrough:ends[0]}},rejectedMetadata),false);
+  const floorRejection={code:rejection.code,resourcePreparationsRetained:true,
+   clockRejection:{epoch:0,safeUntil:ends[0],mutationFloor:ends.at(-1)}};
+  assert.deepEqual(rejectedHistoricalIntervalTarget(floorRejection,rejectedMetadata,state),boundary);
+  assert.equal(rejectedHistoricalIntervalTarget({...floorRejection,clockRejection:{...floorRejection.clockRejection,mutationFloor:ends[0]}},rejectedMetadata,state),null);
   assert.equal(surface.retain(rejection,{...rejectedMetadata,preparedInterval:{...historical.preparedInterval,token:2}}),false);
   assert.equal(cancelled,0);assert.equal(applied,0);
   assert.equal(surface.retain(rejection,rejectedMetadata),true);

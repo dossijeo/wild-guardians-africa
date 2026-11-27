@@ -913,6 +913,23 @@ test('a cancelled native hold never advances expired prepared resources beyond t
   await flush();const count=f.gpu.submitted.length;now=5000;f.host.present();
   assert.equal(f.gpu.submitted.length,count,'expired packet remains frozen instead of being extended beyond its resources');
   assert.equal(f.host.inspect().nativeMutationFloor,11);assert.equal(f.host.inspect().failed,false);assert.deepEqual(f.errors,[]);
+  const intermediate=f.frame(0,{clock:{version:1,epoch:0,elapsed:10.5,safeUntil:10.75,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:10.5,end:10.75,rate:1,realDuration:.25}]}});
+  intermediate.catch(()=>{});
+  await flush();await f.host.idle();
+  assert.equal(f.host.inspect().pendingSequence,2);
+  f.host.present();
+  assert.equal(f.host.inspect().pendingSequence,null,'coverage behind the released fence cannot await a future opportunity');
+  assert.equal(f.gpu.submitted.length,count);
+  await assert.rejects(intermediate,error=>error.code==='remote-frame-native-clock-obsolete'&&
+   error.resourcePreparationsRetained===true&&error.clockRejection.mutationFloor===11);
+  native.advance(11.25);native.bridge.commitNativeCausalClock();await flush();
+  const replacement=f.frame(0,{clock:{version:1,epoch:0,elapsed:11,safeUntil:11.25,anchorAbsoluteMs:0,paused:false,
+   segments:[{start:11,end:11.25,rate:1,realDuration:.25}]}});
+  await flush();await f.host.idle();f.host.present();
+  assert.equal((await replacement).sequence,3);
+  assert.equal(f.host.inspect().nativeMutationFloor,11);
+  assert(f.host.inspect().frameTime.elapsed>=11);
  }finally{source?.dispose();f.host.dispose();native.session.dispose();}
 });
 

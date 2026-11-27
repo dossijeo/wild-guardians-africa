@@ -30,11 +30,12 @@ export function nativeFrameReadiness({prepared=null,required=null,proposal=null,
 
 export function rejectedHistoricalIntervalTarget(error,metadata,state){
  const proof=error?.clockRejection,clock=metadata?.clock,interval=metadata?.preparedInterval;
+ const expiredThrough=proof?.mutationFloor??proof?.presentedThrough;
  if(error?.code!=='remote-frame-native-clock-obsolete'||error.resourcePreparationsRetained!==true||
     !interval||!clock||!proof||!Number.isFinite(clock.epoch)||proof.epoch!==clock.epoch||
     !Number.isFinite(interval.end)||interval.end!==clock.safeUntil||
     !Number.isFinite(proof.safeUntil)||proof.safeUntil<interval.end||
-    !Number.isFinite(proof.presentedThrough)||proof.presentedThrough<=proof.safeUntil)return null;
+    !Number.isFinite(expiredThrough)||expiredThrough<=proof.safeUntil)return null;
  const boundary=copyNativeWorldBoundary(metadata.nativeWorldBoundary??null);
  return boundary&&sameNativeWorldBoundary(boundary,state.prepared)&&sameNativeWorldBoundary(boundary,state.required)&&
    nativeFrameReadiness({...state,resumeTarget:boundary})==='ready'?boundary:null;

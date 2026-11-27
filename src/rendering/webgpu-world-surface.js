@@ -314,7 +314,7 @@ export async function createWebGpuWorldSurface({signal,recoveryHold=null,canvas,
    let target=rejectedNativeFrameTarget(error,metadata,state);
    if(!target){
     target=rejectedHistoricalIntervalTarget(error,metadata,state);
-    if(!target||timelinePump?.discardExpiredPreparedInterval(metadata.preparedInterval,error.clockRejection.presentedThrough)!==true)return false;
+    if(!target||timelinePump?.discardExpiredPreparedInterval(metadata.preparedInterval,error.clockRejection.mutationFloor??error.clockRejection.presentedThrough)!==true)return false;
    }
    nativeResumeTarget=target;nativeRejectedFrame=renderer.info.frame;
    // Three's per-frame nodes must execute on its next real Animation frame.
