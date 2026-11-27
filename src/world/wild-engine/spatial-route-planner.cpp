@@ -275,6 +275,24 @@ int spatial_world_route(float fromX,float fromZ,float toX,float toZ){
     out.points=std::move(bestRoute);out.view=out.points.data();
     return int(out.points.size()/2);
   }
+  // A saved body can resume from between a portal's original waypoints.
+  // If the grid has no clear connector, certify the remaining sub-grid leg
+  // directly, without forcing the body to go back through the entrance.
+  for(int id=0;id<lazy_portal_count();id++)for(int reverse=0;reverse<2;reverse++){
+    float p[4];if(!lazy_portal_world_points(id*2+reverse,p))continue;
+    const Point a{p[0],p[1]},b{p[2],p[3]};
+    const double dx=double(b.x)-a.x,dz=double(b.z)-a.z;
+    const double along=(double(start.x)-a.x)*dx+(double(start.z)-a.z)*dz;
+    const float full=distance(a,b),remaining=distance(start,b);
+    if(along<=0||along>=dx*dx+dz*dz||remaining>=full)continue;
+    const float length=remaining+distance(b,end);
+    if(length>=bestLength||!clearWorld(start,b)||!clearWorld(b,end))continue;
+    bestLength=length;bestRoute={b.x,b.z,end.x,end.z};
+  }
+  if(!bestRoute.empty()){
+    out.points=std::move(bestRoute);out.view=out.points.data();
+    return int(out.points.size()/2);
+  }
   out.points.clear();
   if(unknown||!startReachable||!endReachable){
     out.reason=!startReachable?1:!endReachable?2:3;

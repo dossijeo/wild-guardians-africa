@@ -1,5 +1,7 @@
 # Seguimiento de cierre de A6
 
+La recarga civil de Farm23 y Home18 conserva la pose y las aperturas de dos portones mientras espera READY. La sesión nueva vuelve a adquirir ambos motores y continúa hasta Idle o Home19. Los cuatro cortes de apertura parcial pasan con WASM y Host determinista. El checkpoint multirreserva de cohortes mixtas sigue pendiente. [Control y alcance](native-terminal-resource-recovery-20261120.md#recarga-de-disco-civil-con-dos-portones).
+
 El control CPU de pérdida de Draw después del derrumbe conserva el Retreat del rinoceronte, su cuota y el mundo adquirido. La autoridad reanuda tras verificar el primer envío del sustituto. Queda el contraste físico. [Recorrido y límites](native-cold-worker-admission-20261126.md#recuperación-tras-perder-draw-durante-la-retirada-del-rinoceronte).
 
 La quinta noche de Sabana conserva la cuota del rinoceronte al retirar el único centro. NVIDIA presentó Retreat y el derrumbe en la misma frontera kind4, después presentó la ausencia y drenó. Game confirmó la derrota ordinaria. [Recorrido y límites](native-cold-worker-admission-20261126.md#quinta-noche-de-sabana-y-derrota-tras-el-derrumbe).

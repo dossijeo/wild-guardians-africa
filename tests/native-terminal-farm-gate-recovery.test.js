@@ -37,6 +37,12 @@ async function gateRouteAuthority(home,{configure=()=>{},...options}={}){
  return nativeProductionAuthority(state,{chunkKeys,...options});
 }
 
+function addSecondGate(state){
+ const first=state.structures.find(row=>row.id==='structure-1000000');
+ state.structures.push({...first,id:'structure-1000001',created:state.nextId,z:5.3});
+ state.nextId=1000002;
+}
+
 test('Stop24 draws its acquired motor even when the next Task has already requested the stopped worker',async()=>{
  let ready,release,commit;
  const held=new Promise(resolve=>{release=resolve;});
@@ -162,16 +168,84 @@ test('the ordinary Home18 checkpoint reacquires the same gate opening and reprod
  assert.deepEqual(await replay(),await replay());
 });
 
+for(const [routeKind,home] of [['farm-arrival',false],['home-route',true]])for(const index of [0,1])
+test(`the ordinary ${routeKind} disk checkpoint resumes while opening gate ${index+1} of two`,async t=>{
+ const ids=home?[1000001,1000000]:[1000000,1000001];
+ const leaf=(state,id)=>state.structures.find(gate=>gate.id===`structure-${id}`);
+ const openings=state=>ids.map(id=>leaf(state,id).gateOpen);
+ const pose=w=>[w.id,w.x,w.z,w.heading,w.runPhase,w.walkPhase,w.carryPhase,w.runRemaining];
+ const moving='native-'+(home?'home':'farm-arrival'),pending=home?'pending-home-resources':'pending-farm-arrival-resources';
+ const source=await gateRouteAuthority(home,{nativeWorkerLifecycle:true,configure:addSecondGate,drawFarmGate:true});
+ let saved,originEpoch,release,held;
+ const ready=new Promise(resolve=>{release=resolve;});
+ try{
+  await untilProduction(source,()=>source.records.some(row=>row.kind===routeKind&&row.committed));
+  const acquired=source.records.find(row=>row.kind===routeKind&&row.committed);
+  originEpoch=acquired.resources.worldBoundary.authorityEpoch;
+  assert.deepEqual(acquired.resources.gates.map(gate=>gate.gateId),ids);
+  for(let i=0;i<240;i++){
+   const state=source.advance(.025);await source.present();
+   const opening=leaf(state,ids[index]).gateOpen;
+   if(state.workers[0].nativeRouteAdmission!==moving||!(opening>.2&&opening<.6))continue;
+   const result=source.command({kind:'snapshot',visualTerrain:true,nativeAuthorityCheckpoint:true});
+   const disk=prepareWorkerCheckpoint(await result,{slotId:state.slotId,policy:{nativeAuthority:true},savedAt:0});
+   assert(disk.saved,'The active gate checkpoint must be publicly saveable');
+   assert.deepEqual(pose(disk.state.workers[0]),pose(state.workers[0]));
+   assert.deepEqual(openings(disk.state),openings(state));
+   // The second motor starts before the actor crosses the first leaf.
+   assert(home?state.workers[0].z<leaf(state,ids[0]).z:state.workers[0].z>leaf(state,ids[0]).z);
+   saved=disk.state;break;
+  }
+  assert(saved,'Expected a checkpoint on the selected partial opening');
+ }finally{await source.close();}
+
+ const options=savedNativeAuthorityOptions(serialize(saved));
+ const restored=await nativeProductionAuthority(saved,{...options,drawFarmGate:true,onReady(row){
+  if(row.kind===routeKind&&!held){held=row;return ready;}
+ }});
+ try{
+  assert(restored.authority.verifyNativeBootstrap(options.nativeBootstrap));
+  await untilProduction(restored,()=>held?.packet);
+  assert.equal(held.committed,false);
+  let staged=restored.snapshot();
+  assert.equal(staged.workers[0].nativeRouteAdmission,pending);
+  assert.deepEqual(pose(staged.workers[0]),pose(saved.workers[0]));
+  assert.deepEqual(openings(staged),openings(saved));
+  assert.notEqual(held.resources.worldBoundary.authorityEpoch,originEpoch);
+  assert.deepEqual(new Set(held.resources.gates.map(gate=>gate.gateId)),new Set(ids));
+  for(let i=0;i<3;i++){
+   staged=restored.advance(.025);await restored.present();
+   assert.deepEqual(pose(staged.workers[0]),pose(saved.workers[0]));
+   assert.deepEqual(openings(staged),openings(saved));
+  }
+  release();
+  await untilProduction(restored,()=>restored.records.some(r=>r.kind===routeKind&&r.committed));
+  const acquired=restored.records.find(r=>r.kind===routeKind&&r.committed);
+  await restored.present();await acquired.packet.presented;
+  const draw=restored.host.inspect().nativeRouteFrame;
+  assert.deepEqual(draw.bindings.filter(row=>row.nativeGate).map(row=>row.nativeGate.gateId).sort(),[...ids].sort());
+  let final;
+  let z=saved.workers[0].z;
+  for(let i=0;i<320;i++){
+   final=restored.advance(.05);await restored.present();
+   const next=final.workers[0].z;
+   assert(home?next>=z-1e-6:next<=z+1e-6,'A restored route must not send the worker back through a portal entrance');
+   z=next;
+   if(home?final.workers[0].status==='home':final.workers[0].nativeRouteAdmission==='native-idle')break;
+  }
+  assert.equal(final.workers[0].status,home?'home':'idle');
+  assert.equal(final.workers[0].id,saved.workers[0].id);
+  assert.deepEqual(final.ledger,saved.ledger);
+  assert.deepEqual(restored.faults,[]);
+  t.diagnostic(JSON.stringify({saved:saved.elapsed,restored:staged.elapsed,openings:openings(saved),ids:acquired.resources.gates.map(gate=>gate.gateId),end:final.elapsed}));
+ }finally{release();await restored.close();}
+});
+
 for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
  [23,'farm-arrival','native-farm-arrival','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion'],
  [18,'home-route','native-home','nativeHome','nativeHomeRouteBinding','nativeHomeRouteVersion']
 ])for(const count of [1,2])for(const mode of ['exact','missing','earlier ticket'])test(`recovered ${routeKind} requires ${count} actual gate clocks (${mode})`,async t=>{
- const f=await gateRouteAuthority(kind===18,{configure(state){
-  if(count===1)return;
-  const first=state.structures.find(row=>row.id==='structure-1000000');
-  state.structures.push({...first,id:'structure-1000001',created:state.nextId,z:5.3});
-  state.nextId=1000002;
- }}),ports=new MessageChannel();
+ const f=await gateRouteAuthority(kind===18,count===2?{configure:addSecondGate}:{}),ports=new MessageChannel();
  const walls=[];
  let draw,rig,admission,reattached=false;
  try{
