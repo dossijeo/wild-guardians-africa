@@ -994,6 +994,12 @@ esta lista ni presentar más pruebas aisladas como cierre del producto.
     [Cohorte de Desierto](native-desert-mixed-flight-center-20261125.md#pérdida-de-draw-durante-la-apertura-del-portón-en-la-incursión-mixta).
     [Control de colisión](../../tests/spatial-native-gate-mechanism.test.js).
 
+    El reemplazo de Draw durante Farm23 y Home18 también acredita las dos hojas
+    del mismo corredor en ambos fences y en sentidos inversos. NVIDIA verifica
+    el picking, la continuación hasta Idle o Home19 y el drenaje. Los controles
+    deterministas conservan el veto si falta un motor en el último dibujo.
+    [Recorrido y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-con-dos-portones-en-el-mismo-corredor).
+
     e-R3 y e-R4 siguen pendientes. La calificación mixta usa un perfil de
     desarrollo y controla el reloj para alcanzar el corte de pérdida. Falta la
     aceptación de las intenciones pertinentes desde el arranque ordinario, con

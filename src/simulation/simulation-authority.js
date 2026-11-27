@@ -1279,24 +1279,26 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
   function setGuardianTerrainEpoch(epoch,manifest=null){if(closed||epoch!==null&&(typeof epoch!=='string'||!epoch)||manifest!==null&&(manifest?.epoch!==epoch||!Array.isArray(manifest.chunks)))throw TypeError('Invalid guardian terrain epoch');guardianTerrainEpoch=epoch;guardianTerrainManifest=manifest===null?null:structuredClone(manifest);}
   function recoveryGateCurrent(kind,execution,presentation=null){
     const {gateIds,reference}=execution.binding;
-    if(!gateIds.length)return true;
-    if(gateIds.length>nativeWorkerRouteRecoveryProfile(kind).maxGates||nativeGateOwners.length!==1)return false;
-    const [gate]=nativeGateOwners,gateId=gateIds[0],at=execution.executedThrough;
-    if(gate.id!=='structure-'+gateId||gate.status!=='intact'||gate.hp!==gate.maxHp||gate.wallPresentation)return false;
-    const pose=planner.nativeGateMechanismPose(gate.id),boundary=reference.worldBoundary;
-    if(!pose||pose.gateId!==gateId||pose.nativeSession!==boundary.nativeSession||pose.authorityEpoch!==boundary.authorityEpoch||
-       pose.sampledAt!==at||at!==game.elapsed||pose.opening!==gate.gateOpen)return false;
-    if(!presentation)return true;
-    const [motor]=presentation.gates,rows=motor?.rows;
-    if(presentation.gates.length!==1||motor.gateId!==gateId||motor.mechanism!==pose.mechanism||motor.modelId!==pose.modelId||
-       !motor.rootMatrix.every((value,index)=>value===pose.rootMatrix[index]))return false;
-    // Capture the already-admitted affine program. Require it to continue
-    // through the end of its movement rather than truncating at Farm arrival.
-    const last=rows.length-2;
-    if(last===0||rows[last+1]!==rows[last-1])return false;
-    let i=0;while(i<last&&rows[i+2]<=at)i+=2;
-    const opening=i===last?rows[i+1]:rows[i+1]+(rows[i+3]-rows[i+1])*(at-rows[i])/(rows[i+2]-rows[i]);
-    return Math.abs(opening-pose.opening)<=1e-9;
+    if(gateIds.length>nativeWorkerRouteRecoveryProfile(kind).maxGates||
+       presentation&&presentation.gates.length!==gateIds.length)return false;
+    const at=execution.executedThrough,boundary=reference.worldBoundary;
+    return gateIds.every(gateId=>{
+      const gate=nativeGateOwners.find(owner=>owner.id==='structure-'+gateId);
+      if(!gate||gate.status!=='intact'||gate.hp!==gate.maxHp||gate.wallPresentation)return false;
+      const pose=planner.nativeGateMechanismPose(gate.id);
+      if(!pose||pose.gateId!==gateId||pose.nativeSession!==boundary.nativeSession||pose.authorityEpoch!==boundary.authorityEpoch||
+         pose.sampledAt!==at||at!==game.elapsed||pose.opening!==gate.gateOpen)return false;
+      if(!presentation)return true;
+      const motor=presentation.gates.find(row=>row.gateId===gateId),rows=motor?.rows;
+      if(!motor||motor.mechanism!==pose.mechanism||motor.modelId!==pose.modelId||
+         !motor.rootMatrix.every((value,index)=>value===pose.rootMatrix[index]))return false;
+      // Check each admitted motor through its own final plateau.
+      const last=rows.length-2;
+      if(last===0||rows[last+1]!==rows[last-1])return false;
+      let i=0;while(i<last&&rows[i+2]<=at)i+=2;
+      const opening=i===last?rows[i+1]:rows[i+1]+(rows[i+3]-rows[i+1])*(at-rows[i])/(rows[i+2]-rows[i]);
+      return Math.abs(opening-pose.opening)<=1e-9;
+    });
   }
   function recoveryExecution({kind,actorId}){
     return kind===27?planner.nativeAnimalCropStrikeExecution('animal-'+actorId):

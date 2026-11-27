@@ -165,23 +165,30 @@ test('the ordinary Home18 checkpoint reacquires the same gate opening and reprod
 for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
  [23,'farm-arrival','native-farm-arrival','nativeFarmArrival','nativeFarmArrivalBinding','nativeFarmArrivalVersion'],
  [18,'home-route','native-home','nativeHome','nativeHomeRouteBinding','nativeHomeRouteVersion']
-])for(const mode of ['exact','missing','earlier ticket'])test(`recovered ${routeKind} requires the actual gate clock (${mode})`,async t=>{
- const f=await gateRouteAuthority(kind===18),ports=new MessageChannel();
- let draw,rig,binding,wallMesh,prototype,admission;
+])for(const count of [1,2])for(const mode of ['exact','missing','earlier ticket'])test(`recovered ${routeKind} requires ${count} actual gate clocks (${mode})`,async t=>{
+ const f=await gateRouteAuthority(kind===18,{configure(state){
+  if(count===1)return;
+  const first=state.structures.find(row=>row.id==='structure-1000000');
+  state.structures.push({...first,id:'structure-1000001',created:state.nextId,z:5.3});
+  state.nextId=1000002;
+ }}),ports=new MessageChannel();
+ const walls=[];
+ let draw,rig,admission,reattached=false;
  try{
   await untilProduction(f,()=>f.records.some(row=>row.kind===routeKind&&row.committed));
   let view,wall;
   for(let i=0;i<100;i++){
     view=f.advance(.025);await f.present();
-    wall=view.structures.find(g=>g.id==='structure-1000000');
-    if(wall.gateOpen>.2&&wall.gateOpen<.65)break;
+    wall=view.structures.find(g=>g.gate&&g.gateOpen>.2&&g.gateOpen<.65);
+    if(wall)break;
   }
-  assert(wall.gateOpen>.2&&wall.gateOpen<.65);
+  assert(wall,'The test must destroy Draw while a gate is opening');
   assert.equal(view.workers[0].nativeRouteAdmission,marker);
   const originalBinding=f.host.inspect().nativeRouteFrame.bindings.find(b=>b[clockField]?.actorId===900011);
   assert(originalBinding?.relativeTime>0);
   const acquired=f.records.find(row=>row.kind===routeKind&&row.committed);
-  assert.equal(acquired.resources.gates.length,1);
+  const ids=acquired.resources.gates.map(gate=>gate.gateId);
+  assert.deepEqual(new Set(ids),new Set(count===1?[1000000]:[1000000,1000001]));
   f.gpu.device.destroy();f.retireResourceEndpoint();
   const receipt=await f.authority.quiesceNativeIntentProduction();
   const retired=await f.authority.flushNativeResourcePreparation({allowRetired:true});
@@ -192,16 +199,16 @@ for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
   draw=await fixture({capabilities},{intentControl:{port:ports.port2,session:'production-control',recoveryHold:30}});
   const {recoveredWorkerRoute:q}=await f.authority.attachHeldWorkerRoute(ports.port1,'production-control',30,receipt,route);
   const ref=q.resources[bindingField].reference,boundary=ref.worldBoundary,epoch=boundary.effectiveTime,at=q.execution.executedThrough;
-  assert.equal(q.resources.presentation.gates.length,1);
-  assert.equal(q.resources.presentation.gates[0].gateId,1000000);
+  assert.deepEqual(q.resources.presentation.gates.map(g=>g.gateId),ids);
   const expectAge=floorFloat32(at-epoch),resourceEnd=nativeClockResourceEnd(epoch,ref.endTime);
   draw.client.registerClockBinding(draw.buffer,{byteOffset:0,epoch,semantic:'relative',[clockField]:ref,resourceEnd});
   const controlOnly=await f.authority.checkHeldDraw(30,receipt,route).catch(error=>error);
   assert.match(controlOnly.message,/Missing submitted/);
   const badMode=mode==='exact'?null:mode;
-  if(badMode!=='missing'){
-   draw.client.registerClockBinding(draw.buffer,{byteOffset:4,epoch,semantic:'relative',resourceEnd,
-     nativeGate:{gateId:1000000,worldBoundary:badMode==='earlier ticket'?
+  for(const [i,gateId] of ids.entries()){
+   if(badMode==='missing'&&i===ids.length-1)continue;
+   draw.client.registerClockBinding(draw.buffer,{byteOffset:4*(i+1),epoch,semantic:'relative',resourceEnd,
+     nativeGate:{gateId,worldBoundary:badMode==='earlier ticket'&&i===ids.length-1?
         q.resources[bindingField].preparedReference.worldBoundary:boundary}});
   }
   if(!badMode){
@@ -221,23 +228,29 @@ for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
    const renderer={...rig.renderer,compileAsync:async()=>{}};
    admission=createWebGpuPipelineAdmission({renderer,scene:rig.scene,camera:new PerspectiveCamera()});
    rig.admission.prepareManyAndPublish=admission.prepareManyAndPublish.bind(admission);
-   prototype=gateMeshPrototype(wall.material);prototype.material.dispose();
-   prototype.material=new MeshStandardNodeMaterial({side:DoubleSide});
-   wallMesh=new NativeWall({[wall.material+'_puerta']:prototype},wall,at);
-   const parent=new Group(),{nativeRoute,...geometry}=q.resources.presentation.gates[0],motor={...geometry,worldBoundary:boundary};
-   new Matrix4().fromArray(motor.rootMatrix).decompose(parent.position,parent.quaternion,parent.scale);
-   parent.scale.divide(wallMesh.scale);parent.add(wallMesh);rig.scene.add(parent);
-   const motion=createNativeGateGpuClock(motor);
-   binding=createNativeGateGpuBinding({wall:wallMesh,presentation:motor,motion,getPickTime:()=>epoch+expectAge});
-   const participant={request:{object:wallMesh,options:{include:[binding.mesh],materialAlternatives:binding.materialAlternatives}},
-    valid:()=>binding.canActivate(),activate:()=>binding.activate(),
+   const participants=q.resources.presentation.gates.map(({nativeRoute,...geometry})=>{
+    const wall=view.structures.find(row=>row.id===`structure-${geometry.gateId}`);
+    const prototype=gateMeshPrototype(wall.material);prototype.material.dispose();
+    prototype.material=new MeshStandardNodeMaterial({side:DoubleSide});
+    const wallMesh=new NativeWall({[wall.material+'_puerta']:prototype},wall,at);
+    const parent=new Group(),motor={...geometry,worldBoundary:boundary};
+    new Matrix4().fromArray(motor.rootMatrix).decompose(parent.position,parent.quaternion,parent.scale);
+    parent.scale.divide(wallMesh.scale);parent.add(wallMesh);rig.scene.add(parent);
+    const motion=createNativeGateGpuClock(motor);
+    const binding=createNativeGateGpuBinding({wall:wallMesh,presentation:motor,motion,getPickTime:()=>epoch+expectAge});
+    walls.push({binding,wallMesh,prototype,wall});
+    return {request:{object:wallMesh,options:{include:[binding.mesh],materialAlternatives:binding.materialAlternatives}},
+     valid:()=>binding.canActivate(),activate:()=>binding.activate(),
      finalize:()=>binding.commit(),cancel:()=>binding.dispose()};
+   });
    await rig.roster.prepareRecoveredWorkerRoute({...q,terrain:rig.terrain,terrainManifest:rig.manifest},
     {signal:new AbortController().signal,isCurrent:()=>true,getPickTime:()=>epoch+expectAge,
-     getPickIdleOffset:()=>0,prepareGateParticipants:()=>[participant]});
+     getPickIdleOffset:()=>0,prepareGateParticipants:()=>participants});
    assert(rig.roster.nativeRouteCurrent(actor.id,q.resources.nativeRoute));
-   assert.equal(wallMesh.nativeGpuGate,binding);
-   assert(Math.abs(binding.sampleOpening(epoch+expectAge)-wall.gateOpen)<2e-6);
+   for(const {wallMesh,binding,wall} of walls){
+    assert.equal(wallMesh.nativeGpuGate,binding);
+    assert(Math.abs(binding.sampleOpening(epoch+expectAge)-wall.gateOpen)<2e-6);
+   }
   }
   const frame=draw.frame(3,{nativeWorldBoundary:boundary,
      clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}}).catch(error=>error);
@@ -249,18 +262,41 @@ for(const [kind,routeKind,marker,clockField,bindingField,capability] of [
   }else{
    const held=await f.authority.checkHeldDraw(30,receipt,route);
    assert.equal(held.relativeTime,expectAge);
-   assert.equal(held.gateElapsed,epoch+expectAge);
-   assert.equal(held.nativeGate.gateId,1000000);
-   assert.equal(new Float32Array(draw.gpu.buffers[0].data.buffer)[1],expectAge);
+   const samples=held.nativeGates??[held];
+   assert.deepEqual(samples.map(sample=>sample.nativeGate.gateId),ids);
+   assert.deepEqual(samples.map(sample=>sample.gateElapsed),ids.map(()=>epoch+expectAge));
+   assert.deepEqual(Array.from(new Float32Array(draw.gpu.buffers[0].data.buffer).slice(1,count+1)),ids.map(()=>expectAge));
    const next=draw.frame(4,{nativeWorldBoundary:boundary,
      clock:{version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]}});
    await flush();await draw.host.idle();draw.host.present();await next;
    assert.deepEqual(await f.authority.checkHeldDraw(30,receipt,route),held);
    assert.equal(draw.host.inspect().nativeRouteFrame.sequence,2);
-   t.diagnostic(JSON.stringify({at,opening:wall.gateOpen,bodyId:ref.bodyId,gateId:held.nativeGate.gateId,age:held.relativeTime}));
+   if(count===2){
+    const clock={version:1,epoch:1,elapsed:at,safeUntil:at,anchorAbsoluteMs:0,paused:true,segments:[]};
+    const last={byteOffset:8,epoch,semantic:'relative',resourceEnd};
+    const present=async value=>{
+     const packet=draw.frame(value,{nativeWorldBoundary:boundary,clock});
+     await flush();await draw.host.idle();draw.host.present();await packet;
+    };
+    draw.client.registerClockBinding(draw.buffer,last);
+    await present(5);
+    await assert.rejects(f.authority.checkHeldDraw(30,receipt,route),/Missing submitted/);
+    draw.client.registerClockBinding(draw.buffer,{...last,nativeGate:{gateId:ids.at(-1),worldBoundary:boundary}});
+    await present(6);
+    assert.deepEqual(await f.authority.checkHeldDraw(30,receipt,route),held);
+    await f.attachRecoveredResources(draw);reattached=true;
+    assert.equal(f.authority.resumeNativeIntentProduction(receipt),true);
+    const restarted=f.advance(.025);
+    assert(restarted.elapsed>at);
+    assert.equal(restarted.workers[0].nativeRouteAdmission,marker);
+    assert(restarted.structures.some(gate=>gate.id===wall.id&&gate.gateOpen>wall.gateOpen));
+   }
+   t.diagnostic(JSON.stringify({at,opening:wall.gateOpen,bodyId:ref.bodyId,ids,age:held.relativeTime}));
   }
  }finally{
-  admission?.dispose();binding?.dispose();wallMesh?.dispose();prototype?.material.dispose();rig?.close();
-  draw?.client.dispose();await draw?.host.dispose();ports?.port1.close();ports?.port2.close();await f.close();
+  admission?.dispose();for(const {binding,wallMesh,prototype} of walls){binding.dispose();wallMesh.dispose();prototype.material.dispose();}
+  rig?.close();
+  if(!reattached){draw?.client.dispose();await draw?.host.dispose();}
+  ports.port1.close();ports.port2.close();await f.close();
  }
 });

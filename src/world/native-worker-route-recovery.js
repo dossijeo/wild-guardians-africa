@@ -102,7 +102,7 @@ function copyStrikeResources(value){
 
 const profiles=new Map([
  [18,Object.freeze({
-  kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1,
+  kind:18,admission:'native-home',executionKind:'native-home-route-execution',maxGates:1024,
   bindingField:'nativeHomeRouteBinding',clockField:'nativeHome',proofField:'homeProof',
   obsoleteCode:'native-home-admission-obsolete',
   copyResources:copyNativeHomeRouteResources,copyAttestation:copyNativeHomeRouteAttestation,
@@ -117,7 +117,7 @@ const profiles=new Map([
   sameAttestation:sameNativeIdleStrollAttestation,sameReference:sameNativeIdleStrollReference
  })],
  [23,Object.freeze({
-  kind:23,admission:'native-farm-arrival',executionKind:'native-farm-arrival-route-execution',maxGates:1,
+  kind:23,admission:'native-farm-arrival',executionKind:'native-farm-arrival-route-execution',maxGates:1024,
   bindingField:'nativeFarmArrivalBinding',clockField:'nativeFarmArrival',issuedField:'issuedFarmArrival',
   proofField:'farmArrivalProof',admittedField:'farmArrivalAdmitted',
   obsoleteCode:'native-farm-arrival-admission-obsolete',
@@ -144,6 +144,11 @@ export function nativeWorkerRouteRecoveryProfile(kind){
  const profile=profiles.get(kind);
  if(!profile)throw TypeError('Unsupported worker route recovery kind');
  return profile;
+}
+
+export function recoveredNativeGateSamples(row){
+ if(row.nativeGates!==undefined)return row.nativeGates;
+ return row.nativeGate===undefined?[]:[{nativeGate:row.nativeGate,gateElapsed:row.gateElapsed}];
 }
 
 export function nativeRecoveryCovers(world,source){
