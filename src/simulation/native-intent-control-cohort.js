@@ -60,7 +60,15 @@ export function createNativeIntentControlCohort({observe,onError=()=>{},publicat
       if(status().closed||boundary!==transaction)throw Error('Native GPU cohort hold became obsolete');
       const first=transaction.receipts[0];
       transaction.receipt=Object.freeze({...first,holdId:transaction.id});return transaction.receipt;
-    }catch(error){fail(error);if(boundary===transaction)boundary=null;throw error;}
+    }catch(error){
+      // A connection-bound terminal receipt can end an outstanding fence.
+      // The caller still receives a rejection and cannot commit the mutation.
+      const retired=transaction.members.length===1&&current===transaction.members[0]&&
+        current.status().drained&&!current.status().fault;
+      if(!retired)fail(error);
+      if(boundary===transaction)boundary=null;
+      throw error;
+    }
   }
   async function waitForMutationOpportunity(options={}){
     const transaction=begin('opportunity'),controller=new AbortController(),abort=()=>controller.abort();

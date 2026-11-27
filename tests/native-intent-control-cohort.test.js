@@ -92,6 +92,33 @@ test('membership is frozen during a physical proposal and a copied old cohort re
  }finally{a.dispose();b.dispose();f.dispose();}
 });
 
+test('only retirement of the exact consumer can abandon a fence and keep the cohort replaceable',async()=>{
+ for(const genuine of [true,false]){
+  const f=setup(),a=consumer({quiesce:false}),b=consumer();
+  try{
+   await f.cohort.attach(a.port,'cohort');
+   const baseline=await a.request('IntentBaseline'),before=f.session.core.snapshot();
+   const fence=f.cohort.quiesceGpuForMutation();
+   const rejected=assert.rejects(fence,genuine?/fence closed: consumer-retired/:/retirement lacks/);
+   const request=await a.request('IntentMutationQuiesce');
+   await assert.rejects(f.cohort.attach(b.port,'cohort'),/unavailable/);
+   a.send({type:'intent-control-retired',protocolVersion:2,session:request.session,authorityEpoch:request.authorityEpoch,
+    sequence:request.sequence,consumerToken:genuine?baseline.consumerToken:'previous-consumer',drained:true});
+   await rejected;
+   assert.deepEqual(f.session.core.snapshot(),before);
+   if(genuine){
+    assert.equal((await f.cohort.waitForTerminalDraw()).consumerToken,baseline.consumerToken);
+    await f.cohort.attach(b.port,'cohort');
+    assert.equal(f.cohort.status().coherent,true);
+    assert.deepEqual(f.errors,[]);
+   }else{
+    assert.equal(f.cohort.status().closed,true);
+    await assert.rejects(f.cohort.attach(b.port,'cohort'),/unavailable/);
+   }
+  }finally{a.dispose();b.dispose();f.dispose();}
+ }
+});
+
 test('an undrained or silently lost predecessor stays registered and blocks both physical commit and later replacement',async()=>{
  for(const kind of ['silent','forged','retired']){
   const f=setup(),a=consumer({retire:false}),b=consumer(),c=consumer();

@@ -7,9 +7,10 @@ import {sameNativeAnimalCropReference} from '../../src/world/native-animal-crop-
 import {copyNativeRecoveryGroup} from '../../src/world/native-worker-route-recovery.js';
 import {createSimulationAuthorityClient} from '../../src/simulation/simulation-authority-client.js';
 
-export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null}={}){
+export async function recoverRouteAfterRuin(world,proof,at,state=null,{endpoint=false,retireFirst=true,beforeRuin=false,interrupted=null,beforeRetiring=null}={}){
  const stop=()=>world.authority.quiesceNativeIntentProduction({forLostDraw:endpoint});
  const pending=retireFirst?null:stop();pending?.catch(()=>{});
+ if(beforeRetiring)await beforeRetiring();
  world.gpu.device.destroy();world.retireResourceEndpoint();
  const hold=await (pending??stop());
  const retired=await world.authority.flushNativeResourcePreparation({allowRetired:true,...(interrupted?{forLostDraw:true,lossHoldId:30}:{})});

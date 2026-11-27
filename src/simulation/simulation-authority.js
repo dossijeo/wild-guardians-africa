@@ -756,8 +756,8 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     const owner={controller:new AbortController(),resources:nativeResourcePreparation,consumer:nativeIntentControl,receipt:null};
     centerRuinAdvance=owner;
     const at=game.elapsed,end=at+span,signal=owner.controller.signal;
-    const current=()=>eligible()&&centerRuinAdvance===owner&&game.elapsed===at&&!signal.aborted&&owner.resources===nativeResourcePreparation;
-    let draft=null,prepared=null,hold=null,entered=false;
+    const current=()=>eligible()&&centerRuinAdvance===owner&&game.elapsed===at&&!signal.aborted&&!owner.lossRequested&&owner.resources===nativeResourcePreparation;
+    let draft=null,prepared=null,hold=null;
     try{
       // An already arrived approach can retain its exact endpoint through
       // the ruin. Its pending strike must prepare again against the new world.
@@ -777,16 +777,22 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
       }
       draft=planner.prepareNativeCenterRuin(center,end);
       const {resources}=draft,source=resources.nativeCenterRuin;
-      owner.beforeHold={at,worldBoundary:source.previous};
+      owner.uncommitted={at,worldBoundary:source.previous};
       prepared=await owner.resources.prepareNativeGateResources(resources,{signal,minSequence:sequence});
       if(!current()||!draft.valid()||!prepared.valid()||!sameCenter(prepared.preparedCenterRuin,source)||
          !sameNativeWorldBoundary(prepared.preparedWorldBoundary,source.boundary))
         throw Error('Native center ruin lost its prepared resource');
-      owner.beforeHold=null;
       planner.flushNativeIntentControl();
-      hold=await nativeIntentControl.quiesceGpuForMutation({preparedWorldBoundary:source.boundary,preparedCenterRuin:source,signal});
-      if(!current()||!draft.valid()||!prepared.valid())throw Error('Native center ruin changed before its substep');
-      entered=true;advanceSubstep(draft.consume);
+      let finishFence;
+      owner.fenceSettled=new Promise(resolve=>{finishFence=resolve;});
+      try{
+        hold=await nativeIntentControl.quiesceGpuForMutation({preparedWorldBoundary:source.boundary,preparedCenterRuin:source,signal});
+        if(!current()||!draft.valid()||!prepared.valid()){
+          if(!closed)nativeIntentControl.releaseGpuAfterMutation(hold,{committed:false});
+          throw Error('Native center ruin changed before its substep');
+        }
+      }finally{finishFence();}
+      owner.uncommitted=null;advanceSubstep(draft.consume);
       const result=draft.finish();
       planner.flushNativeIntentControl();
       if(!prepared.commit(result))throw Error('Native center ruin did not commit its graphical resources');
@@ -795,17 +801,16 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     }catch(error){
       prepared?.abort();
       const cancelled=draft?.cancel();
-      if(!closed&&owner.beforeHold&&cancelled&&
+      if(!closed&&owner.uncommitted&&cancelled&&
          (owner.lossRequested||owner.resources.retirementObserved()||owner.consumer.connections().current?.drained)){
         if(!owner.lossClaim)await waitForAdvanceLossClaim(owner,error);
-        const {at,worldBoundary}=owner.beforeHold;
+        const {at,worldBoundary}=owner.uncommitted;
         await owner.lossClaim.retirement;
         if(closed||game.elapsed!==at||!sameNativeWorldBoundary(worldBoundary,planner.nativeWorldResourceBoundary()))
           throw Error('Pending center ruin changed its recovery boundary');
         return {pendingRuinRecovery:{version:1,holdId:owner.lossClaim.holdId,worldBoundary}};
       }
       owner.failure=error;
-      if(hold&&!entered&&!closed)nativeIntentControl.releaseGpuAfterMutation(hold,{committed:false});
       throw error;
     }
   }
@@ -1642,13 +1647,14 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
         throw TypeError('Invalid encounter recovery hold');
       if(allowRetired&&nativeProduction&&nativeProduction.status().phase!=='suspended')return Promise.reject(Error('Native resource retirement requires suspended production'));
       const encounter=forLostDraw&&encounterDraftAdvance?.acquired;
-      const ruin=forLostDraw&&centerRuinAdvance?.lossRequested&&centerRuinAdvance.beforeHold;
+      const ruin=forLostDraw&&centerRuinAdvance?.lossRequested&&centerRuinAdvance.uncommitted;
       if(encounter||ruin){
         const owner=encounter?encounterDraftAdvance:centerRuinAdvance;
         const {consumer,resources,boundary}=encounter??{consumer:owner.consumer,resources:owner.resources,boundary:ruin.worldBoundary};
         if(owner.lossClaim)throw Error('Native advance loss is already owned');
         const retirement=(async()=>{
-          const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),consumer.waitForTerminalDraw()]);
+          const terminal=ruin?Promise.resolve(owner.fenceSettled).then(()=>consumer.waitForTerminalDraw()):consumer.waitForTerminalDraw();
+          const [retired]=await Promise.all([resources.settleForRecovery({waitForRetirement:true}),terminal]);
           if(closed||(encounter?encounterDraftAdvance:centerRuinAdvance)!==owner||consumer!==nativeIntentControl||
              resources!==nativeResourcePreparation||nativeProduction.status().phase!=='suspended'||
              !sameNativeWorldBoundary(boundary,consumer.connections().current?.worldBoundary)||
@@ -1670,10 +1676,10 @@ export function createSimulationAuthority(module,snapshot,chunkKeys,{nativeWorke
     },
     nativeIntentProductionStatus:()=>nativeProduction?{...nativeProduction.status(),publicationSequence:sequence}:{phase:nativeRestoration?'unsupported-cohort':'inactive',fault:null,active:null,last:null},
     quiesceNativeIntentProduction({forLostDraw=false}={}){
-      if(forLostDraw&&!closed&&centerRuinAdvance?.beforeHold&&centerRuinAdvance.receipt&&!centerRuinAdvance.failure){
+      if(forLostDraw&&!closed&&centerRuinAdvance?.uncommitted&&centerRuinAdvance.receipt&&!centerRuinAdvance.failure){
         const owner=centerRuinAdvance;
         owner.lossRequested=true;
-        owner.controller.abort();
+        if(!owner.fenceSettled)owner.controller.abort();
         return Promise.resolve(owner.receipt);
       }
       if(shieldAdvance||centerRuinAdvance||nativeStructurePreparation)return Promise.reject(Error('Native production is held by a world mutation'));

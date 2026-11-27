@@ -234,7 +234,11 @@ for(const {alreadyArrived,retireFirst,lossBeforeRuin=false,interrupt=null} of [
  {alreadyArrived:true,retireFirst:true,lossBeforeRuin:true},
  {alreadyArrived:true,retireFirst:true,interrupt:{prefix:.05,steps:2}},
  {alreadyArrived:true,retireFirst:false,interrupt:{prefix:.02,steps:1}},
-])test('center ruin recovers the successor approach '+(interrupt?'while the ruin READY is withheld':lossBeforeRuin?'before preparing the ruin':alreadyArrived?
+ {alreadyArrived:true,retireFirst:true,interrupt:{prefix:.05,steps:2,fence:true}},
+ {alreadyArrived:true,retireFirst:false,interrupt:{prefix:.02,steps:1,fence:true}},
+ {alreadyArrived:true,retireFirst:false,interrupt:{prefix:.02,steps:1,fence:true,ackAfterLossRequest:true}},
+])test('center ruin recovers the successor approach '+(interrupt?.ackAfterLossRequest?'when the ruin fence ACK races the loss request':
+ interrupt?.fence?'while the ruin fence is pending':interrupt?'while the ruin READY is withheld':lossBeforeRuin?'before preparing the ruin':alreadyArrived?
  'after its earlier arrival':'when it reaches its endpoint in the ruin substep')+' (retire first: '+retireFirst+')',{timeout:90000},async()=>{
  const before=mixedState(false);
  before.workers=[];
@@ -270,7 +274,8 @@ for(const {alreadyArrived,retireFirst,lossBeforeRuin=false,interrupt=null} of [
   onReady(record,{signal}={}){
    if(interrupt&&record.kind==='center-ruin'&&!abandonedRuin){
     abandonedRuin=record;
-    return new Promise(resolve=>signal.addEventListener('abort',resolve,{once:true}));
+    if(!interrupt.fence)return new Promise(resolve=>signal.addEventListener('abort',resolve,{once:true}));
+    return;
    }
    if(record.resources.reference?.targetId!==target)return;
    if(record.kind==='animal-crop-route'){approach=record;return approachReady;}
@@ -342,12 +347,43 @@ for(const {alreadyArrived,retireFirst,lossBeforeRuin=false,interrupt=null} of [
   if(interrupt){
    const oldStrike=strikeBeforeRuin;
    strikeBeforeRuin=null;
+   let finishFence;
+   if(interrupt.fence){
+    const send=world.controlPort.postMessage;
+    world.controlPort.postMessage=message=>{
+     if(message.type==='IntentMutationQuiesce'&&message.preparedCenterRuin){
+      world.controlPort.postMessage=send;
+      const queue=world.gpu.device.queue,wait=queue.onSubmittedWorkDone;
+      queue.onSubmittedWorkDone=()=>{
+       queue.onSubmittedWorkDone=wait;
+       return new Promise(resolve=>{finishFence=resolve;});
+      };
+     }
+     send(message);
+    };
+   }
    const pending=world.command({kind:'advance',seconds:.05,steps:interrupt.steps,nightFastForward:false,captureClockSegments:true});
    pending.catch(()=>{});
-   await untilProduction(world,()=>!!abandonedRuin?.packet);
+   await untilProduction(world,()=>interrupt.fence?!!finishFence:!!abandonedRuin?.packet);
    assert(oldStrike.aborted&&!oldStrike.committed);
    assert(!abandonedRuin.committed);
-   replacement=await recoverRouteAfterRuin(world,route,cut,state,{endpoint:true,retireFirst,beforeRuin:true,interrupted:pending});
+   const beforeRetiring=interrupt.ackAfterLossRequest?async()=>{
+    const send=world.controlPort.postMessage;
+    let stopped;
+    world.controlPort.postMessage=message=>{
+     if(message.type==='IntentMutationRelease')stopped=message;
+     send(message);
+    };
+    try{
+     finishFence();
+     await untilProduction(world,()=>!!stopped);
+     assert.equal(stopped.committed,false);
+     assert.equal(abandonedRuin.committed,false);
+    }finally{world.controlPort.postMessage=send;}
+   }:null;
+   try{
+    replacement=await recoverRouteAfterRuin(world,route,cut,state,{endpoint:true,retireFirst,beforeRuin:true,interrupted:pending,beforeRetiring});
+   }finally{finishFence?.();}
    const interrupted=await pending,descriptor=interrupted.pendingRuinRecoveryCut;
    state=JSON.parse(interrupted.snapshot);
    assert(Math.abs(state.elapsed-cut)<1e-9);
