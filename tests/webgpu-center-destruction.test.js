@@ -109,3 +109,47 @@ test('a replay integrates the confirmed ruin while the first damage meshes are s
     'the original and recovered particle buffers must agree');
  }finally{replay.dispose();live.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
 });
+
+test('a renewed center checkpoint restores active particles and later emissions on a new instance',()=>{
+ const scene=new THREE.Group(),mesh=new THREE.Mesh(new THREE.BoxGeometry(4,3,4),new MeshStandardNodeMaterial());scene.add(mesh);
+ const template=createWebGpuCenterDestructionTemplate({gltf:{scene},building:{seed:123},renderer:{library:{}}});
+ const original=template.instantiate(),midway=template.instantiate(),replacement=template.instantiate();
+ const camera=new THREE.PerspectiveCamera();camera.position.set(6,4,8);camera.lookAt(0,0,0);
+ const center={id:'structure-2',kind:'center',status:'collapsing',hp:120,maxHp:600};
+ const ruined={...center,status:'ruined',hp:0,collapseRemaining:0};
+ const collapsing=elapsed=>({...center,collapseRemaining:COLLAPSE_SECONDS-elapsed});
+ const at=2.5,after=COLLAPSE_SECONDS+.3;
+ function compare(other){
+  original.prepare(camera);other.prepare(camera);
+  assert.deepEqual(other.status(),original.status());
+  assert.deepEqual(effectBuffers(other),effectBuffers(original));
+ }
+ try{
+  original.update(collapsing(0),0);
+  for(let step=1;step<=50;step++)original.update(collapsing(step/20),step/20);
+  const inFlight=original.exportRecoveryState(at);
+  midway.update(collapsing(at),at);
+  midway.restoreRecoveryState(inFlight,collapsing(at),at);
+  compare(midway);
+  for(let step=51;step/20<COLLAPSE_SECONDS;step++)for(const owner of [original,midway])owner.update(collapsing(step/20),step/20);
+  for(const owner of [original,midway]){owner.update(ruined,COLLAPSE_SECONDS);owner.update(ruined,after);}
+  compare(midway);
+  const cut=original.exportRecoveryState(after);
+  assert(cut.smoke.length>0&&cut.debris.length>0);
+  const secondView=camera.clone();secondView.position.set(-7,4,-10);secondView.lookAt(0,0,0);
+  original.prepare(secondView);
+  assert(original.exportRecoveryState(after).smoke.every((particle,i)=>particle.phase===cut.smoke[i].phase),
+   'packing smoke for another camera must preserve the checkpoint order');
+  replacement.update(ruined,after);replacement.prepare(camera);assert.equal(replacement.status().smoke,0);
+  assert.throws(()=>replacement.restoreRecoveryState({...cut,seed:124},ruined,after),/Invalid center destruction recovery state/);
+  const malformed=structuredClone(cut);malformed.smoke[0].p[0]=NaN;
+  assert.throws(()=>replacement.restoreRecoveryState(malformed,ruined,after),/Invalid center destruction recovery state/);
+  assert.equal(replacement.status().smoke,0);
+  replacement.restoreRecoveryState(cut,ruined,after);compare(replacement);
+  const serialized=structuredClone(cut);cut.debris[0].p[0]+=100;
+  assert.deepEqual(replacement.exportRecoveryState(after),serialized);
+  for(const elapsed of [after+.05,after+.5,after+6]){
+   original.update(ruined,elapsed);replacement.update(ruined,elapsed);compare(replacement);
+  }
+ }finally{replacement.dispose();midway.dispose();original.dispose();template.dispose();mesh.geometry.dispose();mesh.material.dispose();}
+});

@@ -4,6 +4,8 @@ En Desierto 983, tras recargar el colapso por la vía pública, se destruyó el 
 
 El mismo relevo conservó las huellas de humo y escombros durante el replay desde antes de la ruina. El picker seleccionó al facóquero con la edad presentada por el sustituto. [Contraste en NVIDIA](performance/native-desert-cold-ruin-draw-fidelity-20261127.json).
 
+El checkpoint renovado después de la ruina también conserva las partículas activas en el primer envío del sustituto. La comparación de capturas mantiene abierta una diferencia de color del terreno. [Prueba del checkpoint renovado](performance/native-desert-post-ruin-checkpoint-recovery-20261127.json).
+
 En Desierto 983 se recarga el colapso del centro antes de retirar su huella. NVIDIA confirmó la espera de READY, la primera ruina con humo y escombros y la marcha al siguiente centro con las dos hojas asentadas. [Prueba y alcance](native-desert-mixed-flight-center-20261125.md#recarga-durante-el-colapso-con-la-aproximación-adquirida).
 
 Desierto 983 recarga dos centros y dos portones asentados durante la huida y tras Home19, durante aproximación, golpe y Retreat. NVIDIA confirmó las cuatro épocas, ambas hojas y la vuelta al centro civil. [Recorrido y evidencia](native-desert-mixed-flight-center-20261125.md#guardado-con-dos-centros-y-dos-portones).

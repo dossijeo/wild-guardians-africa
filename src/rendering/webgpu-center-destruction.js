@@ -97,7 +97,7 @@ export function createWebGpuCenterDestructionTemplate({gltf,building,renderer,so
    for(let i=0;i<8;i++)holes[i].value.fromArray(kernel.holes,i*4);
    body.visible=value<.9998;ash.visible=value>.23;
   }
-  const item={group,advanceEffects,present,captureRuin:(publishedAt,elapsed,record)=>effects.captureRuin(publishedAt,elapsed,record),get needsSoftDepth(){return effects.needsSoftDepth;},setSoftDepthEnabled(value){effects.setSoftDepthEnabled(value);},update(entity,elapsed=0,ruinAt=null){advanceEffects(entity,elapsed,ruinAt);present(entity);},prepare(camera){effects.prepare(camera);},status(){return effects.status();},dispose(){if(!instances.delete(item))return;effects.dispose();material.dispose();group.clear();}};instances.add(item);return item;
+  const item={group,advanceEffects,present,exportRecoveryState:effects.exportRecoveryState,restoreRecoveryState:(state,entity,elapsed)=>effects.restoreRecoveryState(state,elapsed,checkedDamage(entity)),captureRuin:(publishedAt,elapsed,record)=>effects.captureRuin(publishedAt,elapsed,record),get needsSoftDepth(){return effects.needsSoftDepth;},setSoftDepthEnabled(value){effects.setSoftDepthEnabled(value);},update(entity,elapsed=0,ruinAt=null){advanceEffects(entity,elapsed,ruinAt);present(entity);},prepare(camera){effects.prepare(camera);},status(){return effects.status();},dispose(){if(!instances.delete(item))return;effects.dispose();material.dispose();group.clear();}};instances.add(item);return item;
  }
  return {instantiate,dispose(){if(disposed)return;disposed=true;for(const item of [...instances])item.dispose();geometry.dispose();noise.dispose();ashGeometry.dispose();ashMaterial.dispose();}};
 }

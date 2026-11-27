@@ -1,0 +1,382 @@
+{
+  "base": "4225eb17132591a22850f71c04be1636701c181d",
+  "hardware": {
+    "vendor": "nvidia",
+    "architecture": "turing",
+    "viewport": [
+      640,
+      480
+    ],
+    "quality": "muy_baja"
+  },
+  "method": "Same-camera, same-frame-clock comparison of active particle-buffer FNV-1a hashes in acknowledged draws. No GPU pixel readback.",
+  "before": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/ruined-center-checkpoint-before-nvidia-20261127.json",
+      "sha256": "1dbf17d63c02f0481b8964735705076e42e70509b5e0ce65f3886b40c1690b53"
+    },
+    "sourceSaveSha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "checkpoint": {
+      "sequence": 35,
+      "center": "ruined",
+      "elapsed": 48.60000000000207,
+      "replayedSequence": 41,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "56fb7d67-2691-44f6-abad-4224f4a731b1/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 47.97000000000202
+      },
+      "confirmedParticleState": null
+    },
+    "original": {
+      "sequence": 21,
+      "first": false,
+      "cut": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "height": 17.494628590852294,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "first": true,
+      "cut": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "height": 17.494628590852294,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 0,
+          "hash": 2166136261
+        },
+        "debris": {
+          "count": 175,
+          "hash": 37977765
+        },
+        "emitted": 0
+      }
+    },
+    "picking": {
+      "pick": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -23.141347846713074,
+          "y": 18.453831118467026,
+          "z": -16.357343313557386
+        },
+        "point": {
+          "x": -23.141347846713078,
+          "z": -15.32527122381052
+        },
+        "sequence": 41
+      },
+      "samples": [
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        }
+      ]
+    },
+    "idle": 91.9500000000018,
+    "drained": true,
+    "expectedDeviceLossPageNotices": 2
+  },
+  "after": {
+    "raw": {
+      "path": "D:/wild-guardians-qa/ruined-center-checkpoint-final-nvidia-20261127.json",
+      "sha256": "bff8bf86b96d00c3d8568968b3ecd7c9dd25e0667739ddaf1697a4eb2c8a4cf2"
+    },
+    "sourceSaveSha256": "1ef476a31b9fd34152ce36e918f92d621e2a0bc0e7818da939ce6483ae0f6156",
+    "checkpoint": {
+      "sequence": 34,
+      "center": "ruined",
+      "elapsed": 48.60000000000207,
+      "replayedSequence": 44,
+      "world": {
+        "version": 1,
+        "authorityEpoch": "cc5f9e7e-9901-49d3-b12f-73f0cb5743d6/1",
+        "nativeSession": 1,
+        "ticket": 3,
+        "effectiveTime": 47.97000000000202
+      },
+      "confirmedParticleState": [
+        {
+          "id": "structure-1000002",
+          "culture": "mapungubwe",
+          "smoke": 51,
+          "debris": 85,
+          "emitted": 95
+        }
+      ]
+    },
+    "original": {
+      "sequence": 26,
+      "first": false,
+      "cut": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "height": 17.494628590852294,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "replacement": {
+      "sequence": 1,
+      "first": true,
+      "cut": 48.60000000000207,
+      "age": 0.7999999523162842,
+      "height": 17.494628590852294,
+      "cameraY": 25.494628590852294,
+      "particles": {
+        "body": false,
+        "ash": true,
+        "smoke": {
+          "count": 51,
+          "hash": 1093868763
+        },
+        "debris": {
+          "count": 260,
+          "hash": 31231650
+        },
+        "emitted": 95
+      }
+    },
+    "picking": {
+      "pick": {
+        "entityId": "animal-1000003",
+        "hitPoint": {
+          "x": -23.141347846713074,
+          "y": 18.453831118467026,
+          "z": -16.357343313557386
+        },
+        "point": {
+          "x": -23.141347846713078,
+          "z": -15.32527122381052
+        },
+        "sequence": 44
+      },
+      "samples": [
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        },
+        {
+          "age": 0.7999999523162842,
+          "actorId": 1000003,
+          "bodyId": 1,
+          "at": 48.60000000000207
+        }
+      ]
+    },
+    "idle": 91.9000000000018,
+    "drained": true,
+    "expectedDeviceLossPageNotices": 1
+  },
+  "screenshots": {
+    "method": "Visible WebGPU canvas captured by Chromium compositor through Playwright after draw acknowledgement and before resume.",
+    "width": 640,
+    "height": 480,
+    "images": [
+      {
+        "path": "D:/wild-guardians-qa/ruined-center-checkpoint-final-nvidia-20261127.original.png",
+        "sha256": "1f1da3711b17a3808f3219513b6bf64d3ecbfd865584784f32e98cec8df3139e"
+      },
+      {
+        "path": "D:/wild-guardians-qa/ruined-center-checkpoint-final-nvidia-20261127.replacement.png",
+        "sha256": "493c9ae4f233fe27cf875c8a5ae1ca2e7386bc6e441981107d7f9ad87c197c11"
+      }
+    ],
+    "equalPixels": 39983,
+    "differentPixels": 267217,
+    "pixelsWithAnyChannelDriftAbove2": 246968,
+    "meanAbsoluteErrorRgb": [
+      0.2277734375,
+      1.9519791666666666,
+      10.446145833333333
+    ],
+    "maxChannelDrift": 19,
+    "differenceBounds": [
+      0,
+      0,
+      640,
+      480
+    ],
+    "samplePixels": [
+      {
+        "xy": [
+          500,
+          440
+        ],
+        "original": [
+          220,
+          167,
+          59
+        ],
+        "replacement": [
+          220,
+          164,
+          45
+        ]
+      },
+      {
+        "xy": [
+          30,
+          450
+        ],
+        "original": [
+          219,
+          166,
+          59
+        ],
+        "replacement": [
+          219,
+          163,
+          44
+        ]
+      },
+      {
+        "xy": [
+          219,
+          172
+        ],
+        "original": [
+          109,
+          103,
+          89
+        ],
+        "replacement": [
+          109,
+          103,
+          89
+        ]
+      },
+      {
+        "xy": [
+          115,
+          65
+        ],
+        "original": [
+          132,
+          128,
+          108
+        ],
+        "replacement": [
+          132,
+          128,
+          108
+        ]
+      },
+      {
+        "xy": [
+          324,
+          213
+        ],
+        "original": [
+          114,
+          13,
+          2
+        ],
+        "replacement": [
+          114,
+          13,
+          2
+        ]
+      }
+    ]
+  },
+  "cpu": {
+    "passed": 71,
+    "regression": {
+      "path": ".cache/ruined-center-checkpoint-regression.tap",
+      "sha256": "952cd7fb8d75eacfe65b646a6e6ea5fe77ee281b5b3bfdfa06a2275a631b6c97"
+    },
+    "cameraRegression": {
+      "path": ".cache/ruined-center-camera-before.tap",
+      "sha256": "e9538d34fcdcf2b3fe137bf8160c3b8611a9959e097cf1a0c11d7b3c65437aee"
+    }
+  }
+}
