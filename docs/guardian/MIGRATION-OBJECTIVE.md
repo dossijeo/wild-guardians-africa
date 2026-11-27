@@ -18,7 +18,7 @@ Draw descarta los paquetes que quedan por debajo del piso de un hold cancelado. 
 
 El guardado de la aproximación al centro conserva el corredor de disco sin incorporarlo a la publicación en vivo. Un control NVIDIA guardó durante READY26 y completó el golpe, la retirada y el drenaje. Se conserva el recibo de la campaña que falló en la publicación 7332. [Pruebas y alcance](native-cold-worker-admission-20261126.md#publicación-en-vivo-al-guardar-una-aproximación).
 
-NVIDIA sustituyó Draw después de Home19 ordinario y verificó la ausencia del cuerpo antes de reanudar. El sustituto presentó la primera ruta de la incursión y drenó. Sigue abierto el disparador de la recuperación espontánea en la campaña continua. [Prueba y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-terminal-después-de-home19-ordinario).
+NVIDIA sustituyó Draw después de Home19 ordinario y después de aplicar la subfrontera real de `NightStarted`. El segundo control retuvo el certificado de la continuación. El consumidor incompleto conservó su último ACK y el sustituto acreditó la ausencia del trabajador, completó la activación y presentó la marcha del facóquero. Sigue abierto el disparador espontáneo de la campaña continua. [Prueba y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-tras-aplicar-el-evento-del-primer-anochecer).
 
 NVIDIA recargó el guardado tomado al nacer la incursión en Sabana. El primer dibujo conservó la pose con edad cero; procedieron un solo impacto, Retreat en el mismo cuerpo, la derrota y el drenaje. Standalone y pthread verificaron también el corredor y el READY retenido en CPU. [Evidencia y alcance](native-cold-worker-admission-20261126.md#guardado-entre-raidspawned-y-el-primer-go).
 

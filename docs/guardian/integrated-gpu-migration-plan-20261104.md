@@ -1,5 +1,7 @@
 # Plan de cierre estructural y migración de Wild Guardians
 
+Sabana 714 pasó el anochecer tras Home19 con el reloj ordinario. Al denegar en otro recorrido el certificado posterior al evento real `NightStarted`, NVIDIA acreditó el drenaje del consumidor incompleto, el primer dibujo del sustituto, la activación y la primera marcha del facóquero. [Prueba de Recovery y alcance](native-terminal-resource-recovery-20261120.md#reemplazo-tras-aplicar-el-evento-del-primer-anochecer).
+
 Si READY de la marcha sucesora llega en el corte de derrumbe, Hosted publica el GO antes de que Surface prepare kind4. NVIDIA confirmó ambos dibujos en orden desde `RaidSpawned`, el cuarto golpe en el mismo cuerpo y el drenaje. [Recorrido y alcance](native-desert-mixed-flight-center-20261125.md#ready-de-marcha-retenido-hasta-el-derrumbe).
 
 En Desierto se reprodujo el vencimiento del derrumbe durante el cuarto ataque al centro sucesor, partiendo de una aproximación ya seleccionada. WASM conserva el Strike27 al adquirir kind4 y el reemplazo de Draw vuelve a presentar ese ataque con su edad confirmada. [Pruebas y alcance](native-desert-mixed-flight-center-20261125.md#golpe-sucesor-al-vencer-el-derrumbe).
