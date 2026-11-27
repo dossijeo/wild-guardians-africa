@@ -1,0 +1,65 @@
+{
+  "base": "52aaeecee4d578bfad6a018f44bc694176726e24",
+  "scenario": "Sabana, primer trabajador pagado, Farm23 a Stop24 y Task14 retenida antes de READY",
+  "evidence": "cpu-deterministic-gpu-queue",
+  "baseline": {
+    "at": 8.4499999999999,
+    "worker": {
+      "id": "worker-6",
+      "admission": "pending-resources",
+      "pose": [
+        66.4239999999999,
+        2,
+        1.5707963267948966,
+        11.699999999999857
+      ],
+      "taskId": "task-7"
+    },
+    "farmAssignment": 3,
+    "farmGeneration": 2,
+    "stopTicket": 4,
+    "stopAt": 8.249999999999904,
+    "taskTicket": 5,
+    "taskRequest": 5,
+    "pendingGeneration": 5,
+    "nativeBody": 1,
+    "initialError": "Native resource preparer closed",
+    "previousStopEvaluatorStillCurrent": false,
+    "farmSlotRetainedAfterTaskClaim": false
+  },
+  "comparison": {
+    "exactHeldPoseAccepted": true,
+    "changedOperandsRejected": 18,
+    "taskCommitInvalidatesPendingSource": true
+  },
+  "replacementPreparation": {
+    "holdFirst": {
+      "aborted": true,
+      "callbacksSettled": true,
+      "terminal": true
+    },
+    "endpointFirst": {
+      "aborted": true,
+      "callbacksSettled": true,
+      "terminal": true
+    },
+    "liveDraw": {
+      "drawAlive": true,
+      "aborted": false,
+      "committed": true,
+      "body": 1
+    },
+    "newConsumerAttached": false,
+    "resumedAfterReplacement": false
+  },
+  "evidenceFiles": {
+    "terminal-stop24-pending-task-before-20261127.log": "0ef05ce34f053bc448a5ae7f774e93ec95cc8401a6540de81f162bfbccc9d780",
+    "terminal-stop24-source-20261127.log": "e5a0d0b097739e8e8d315e9f566fbbf046c4b57702959c2b42783fdd2b57e8ac",
+    "terminal-stop24-source-native-positive-20261127.log": "01f5a9ee23e563c77897c8516f2148f171b931a0c6de542afe941b7f7988cded",
+    "terminal-stop24-authority-hold-first-20261127.log": "a10c8d38c69cb8a5252d8fdd81c736908747f22c1641ecf1945b87a528670bd2",
+    "terminal-stop24-authority-retire-first-20261127.log": "73186e76da8ceb09fd08f8528e039df5dca142f117ea86e3ea3678ea5a2cb31e",
+    "terminal-stop24-authority-live-draw-20261127.log": "69205646140d5aa10233ed873c6d92a19728f0c68cb6d6f0c5dd408ee52b1548",
+    "terminal-stop24-source-native-build-20261127.log": "90b1f756d596b229eca7dad67456dd636cf3b83824f9b17ed97a50de72d551fc",
+    "stop24-recovery-native/build/standalone/spatial-savanna.wasm": "74e05776f913f3c49c881103a59b8e29fc7c1de591854e45a330034a8581e505"
+  }
+}
